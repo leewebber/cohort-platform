@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/text_styles.dart';
+
 class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key});
 
@@ -9,12 +11,7 @@ class SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text.toUpperCase(),
-      style: const TextStyle(
-        color: Color(0xFFA3E635),
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-        letterSpacing: 1.3,
-      ),
+      style: CohortTextStyles.eyebrow,
     );
   }
 }

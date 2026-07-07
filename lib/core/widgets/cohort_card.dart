@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../theme/colors.dart';
+import '../theme/radius.dart';
+import '../theme/spacing.dart';
+
 class CohortCard extends StatelessWidget {
   const CohortCard({
     super.key,
@@ -14,25 +18,23 @@ class CohortCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final card = Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(CohortSpacing.lg),
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
-        borderRadius: BorderRadius.circular(18),
+        color: CohortColors.surfaceRaised,
+        borderRadius: CohortRadius.largeRadius,
         border: Border.all(
-          color: const Color(0xFF25302C),
+          color: CohortColors.border,
           width: 1,
         ),
       ),
       child: child,
     );
 
-    if (onTap == null) {
-      return card;
-    }
+    if (onTap == null) return card;
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
+      borderRadius: CohortRadius.largeRadius,
       child: card,
     );
   }

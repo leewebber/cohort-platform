@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../theme/colors.dart';
+import '../theme/radius.dart';
+import '../theme/text_styles.dart';
+
 class CohortButton extends StatelessWidget {
   const CohortButton({
     super.key,
@@ -18,20 +22,14 @@ class CohortButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFA3E635),
-          foregroundColor: const Color(0xFF0B0F0E),
+          backgroundColor: CohortColors.olive,
+          foregroundColor: CohortColors.background,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: CohortRadius.mediumRadius,
           ),
         ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        child: Text(label, style: CohortTextStyles.button),
       ),
     );
   }

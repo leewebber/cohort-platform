@@ -1,114 +1,107 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/spacing.dart';
+import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_button.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import '../protocols/protocol_library_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  void _openProtocolLibrary(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const ProtocolLibraryScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SectionTitle('Cohort Field Manual'),
-              const SizedBox(height: 12),
+              const SectionTitle('Cohort Field Manual'),
+              const SizedBox(height: CohortSpacing.md),
               const Text(
-                "What's today's mission?",
-                style: TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w800,
-                  height: 1.05,
-                ),
+                "What's today's focus?",
+                style: CohortTextStyles.h1,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: CohortSpacing.md),
               const Text(
-                'Select a protocol, build your week, or generate the right session for today.',
-                style: TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 15,
-                  height: 1.4,
-                ),
+                'Train with purpose. Choose the right session for your goal, equipment and recovery state.',
+                style: CohortTextStyles.body,
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: CohortSpacing.xl),
 
               CohortCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionTitle("Today's Focus"),
-                    const SizedBox(height: 18),
-                    const Text(
-                      'Train with intent.',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                      ),
+                  children: const [
+                    SectionTitle("Today's Recommendation"),
+                    SizedBox(height: CohortSpacing.lg),
+                    Text(
+                      'Generate the right session for today.',
+                      style: CohortTextStyles.h2,
                     ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Choose the session that matches your goal, equipment and recovery state.',
-                      style: TextStyle(
-                        color: Color(0xFF9CA3AF),
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
+                    SizedBox(height: CohortSpacing.sm),
+                    Text(
+                      'Soon you’ll be able to select your goal, equipment, time and recovery state.',
+                      style: CohortTextStyles.small,
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: CohortSpacing.lg),
 
               CohortButton(
                 label: "Generate Today's Protocol",
                 onPressed: () {},
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: CohortSpacing.xl),
 
-              SectionTitle('Field Manual'),
-              const SizedBox(height: 14),
+              const SectionTitle('Main Tools'),
+              const SizedBox(height: CohortSpacing.md),
 
               CohortCard(
-                onTap: () {},
+                onTap: () => _openProtocolLibrary(context),
                 child: const _HomeActionRow(
-                  title: 'Browse Library',
-                  subtitle: 'Search and filter the full protocol library.',
+                  title: 'Protocol Library',
+                  subtitle: 'Browse and search the full Cohort protocol library.',
                   status: 'OPEN',
                 ),
               ),
-              const SizedBox(height: 12),
-              CohortCard(
-                child: const _HomeActionRow(
-                  title: 'Build My Week',
-                  subtitle: 'Generate a balanced week from the Cohort blueprint.',
+              const SizedBox(height: CohortSpacing.md),
+              const CohortCard(
+                child: _HomeActionRow(
+                  title: 'Weekly Blueprint',
+                  subtitle: 'Build a balanced week from the Cohort training structure.',
                   status: 'SOON',
                 ),
               ),
-              const SizedBox(height: 12),
-              CohortCard(
-                child: const _HomeActionRow(
+              const SizedBox(height: CohortSpacing.md),
+              const CohortCard(
+                child: _HomeActionRow(
                   title: 'Training Log',
                   subtitle: 'Record completed sessions and track progress.',
                   status: 'SOON',
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: CohortSpacing.xxl),
 
               const Center(
                 child: Text(
-                  'Train hard. Train intelligently. Stay ready.',
-                  style: TextStyle(
-                    color: Color(0xFF6B7280),
-                    fontSize: 12,
-                  ),
+                  'Build physical capability.',
+                  style: CohortTextStyles.muted,
                 ),
               ),
             ],
@@ -138,34 +131,14 @@ class _HomeActionRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 13,
-                  height: 1.35,
-                ),
-              ),
+              Text(title, style: CohortTextStyles.cardTitle),
+              const SizedBox(height: CohortSpacing.sm),
+              Text(subtitle, style: CohortTextStyles.small),
             ],
           ),
         ),
-        const SizedBox(width: 16),
-        Text(
-          status,
-          style: const TextStyle(
-            color: Color(0xFFA3E635),
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
+        const SizedBox(width: CohortSpacing.lg),
+        Text(status, style: CohortTextStyles.eyebrow),
       ],
     );
   }

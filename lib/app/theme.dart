@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../core/theme/colors.dart';
+
 final ThemeData cohortTheme = ThemeData(
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: const Color(0xFF0B0F0E),
+  scaffoldBackgroundColor: CohortColors.background,
   colorScheme: ColorScheme.fromSeed(
-    seedColor: const Color(0xFFA3E635),
+    seedColor: CohortColors.olive,
     brightness: Brightness.dark,
+    surface: CohortColors.surface,
+  ),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: CohortColors.background,
+    foregroundColor: CohortColors.textPrimary,
+    elevation: 0,
+    centerTitle: false,
   ),
   useMaterial3: true,
 );
