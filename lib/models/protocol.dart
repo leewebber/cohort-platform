@@ -9,6 +9,7 @@ class Protocol {
   final String? recovery;
   final String? description;
   final String? mainSession;
+  final String? coachingNotes;
   final String? trainingQuality;
   final String? sessionType;
   final String? environment;
@@ -25,6 +26,7 @@ class Protocol {
     this.recovery,
     this.description,
     this.mainSession,
+    this.coachingNotes,
     this.trainingQuality,
     this.sessionType,
     this.environment,
@@ -43,6 +45,7 @@ class Protocol {
       recovery: map['recovery_cost'],
       description: map['purpose'],
       mainSession: map['main_session'] ?? map['original_workout'],
+      coachingNotes: map['coaching_notes'],
       trainingQuality: map['training_quality'],
       sessionType: map['session_type'],
       environment: map['environment'],

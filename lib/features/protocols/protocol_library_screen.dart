@@ -18,12 +18,10 @@ class ProtocolLibraryScreen extends StatefulWidget {
   const ProtocolLibraryScreen({super.key});
 
   @override
-  State<ProtocolLibraryScreen> createState() =>
-      _ProtocolLibraryScreenState();
+  State<ProtocolLibraryScreen> createState() => _ProtocolLibraryScreenState();
 }
 
-class _ProtocolLibraryScreenState
-    extends State<ProtocolLibraryScreen> {
+class _ProtocolLibraryScreenState extends State<ProtocolLibraryScreen> {
   final ProtocolRepository _repository = ProtocolRepository();
 
   late Future<List<Protocol>> _protocolsFuture;
@@ -63,6 +61,15 @@ class _ProtocolLibraryScreenState
     );
   }
 
+  void _openProtocolDetail(Protocol protocol) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProtocolDetailScreen(protocol: protocol),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,16 +77,16 @@ class _ProtocolLibraryScreenState
         child: FutureBuilder<List<Protocol>>(
           future: _protocolsFuture,
           builder: (context, snapshot) {
-            if (snapshot.connectionState ==
-                ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasError) {
               return Center(
-                child: Text(snapshot.error.toString()),
+                child: Text(
+                  snapshot.error.toString(),
+                  style: CohortTextStyles.body,
+                ),
               );
             }
 
@@ -92,55 +99,34 @@ class _ProtocolLibraryScreenState
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton(
-                    onPressed: () =>
-                        Navigator.pop(context),
+                    onPressed: () => Navigator.pop(context),
                     child: const Text('← Back'),
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.md,
-                  ),
-
-                  const SectionTitle('FIELD MANUAL'),
-
-                  const SizedBox(
-                    height: CohortSpacing.sm,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.md),
+                  const SectionTitle('Field Manual'),
+                  const SizedBox(height: CohortSpacing.sm),
                   const Text(
                     'Protocol Library',
                     style: CohortTextStyles.h1,
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.md,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.md),
                   const Text(
                     'Search and discover training protocols.',
                     style: CohortTextStyles.body,
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.xl,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.xl),
                   CohortSearchBar(
+                    hintText: 'Search protocols...',
                     onChanged: (value) {
                       setState(() {
                         _search = value;
                       });
                     },
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.lg,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.lg),
                   FutureBuilder<List<String>>(
                     future: _goalsFuture,
                     builder: (context, goalSnapshot) {
@@ -148,45 +134,23 @@ class _ProtocolLibraryScreenState
                         title: 'Goal',
                         value: _filters.goal ?? 'Any',
                         onTap: () {
-                          _openGoalFilter(
-                            goalSnapshot.data ?? [],
-                          );
+                          _openGoalFilter(goalSnapshot.data ?? []);
                         },
                       );
                     },
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.lg,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.lg),
                   Text(
                     '${protocols.length} Protocols Available',
                     style: CohortTextStyles.muted,
                   ),
-
-                  const SizedBox(
-                    height: CohortSpacing.lg,
-                  ),
-
+                  const SizedBox(height: CohortSpacing.lg),
                   ...protocols.map(
                     (protocol) => Padding(
-                      padding: const EdgeInsets.only(
-                        bottom: 12,
-                      ),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: ProtocolCard(
                         protocol: protocol,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProtocolDetailScreen(
-                                protocol: protocol,
-                              ),
-                            ),
-                          );
-                        },
+                        onTap: () => _openProtocolDetail(protocol),
                       ),
                     ),
                   ),

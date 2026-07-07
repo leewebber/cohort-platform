@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/attribute_grid.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
-import '../../../core/widgets/info_tile.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/protocol.dart';
+import '../widgets/protocol_header.dart';
 
 class ProtocolDetailScreen extends StatelessWidget {
   const ProtocolDetailScreen({
@@ -32,33 +33,12 @@ class ProtocolDetailScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.md),
 
-              SectionTitle(protocol.goal ?? 'Protocol'),
-
-              const SizedBox(height: CohortSpacing.sm),
-
-              Text(
-                protocol.name,
-                style: CohortTextStyles.h1,
-              ),
-
-              const SizedBox(height: CohortSpacing.sm),
-
-              Text(
-                [
-                  if (protocol.durationMin != null)
-                    '${protocol.durationMin} min',
-                  if (protocol.capability != null)
-                    protocol.capability!,
-                  if (protocol.equipment != null)
-                    protocol.equipment!,
-                ].join(' • '),
-                style: CohortTextStyles.body,
-              ),
+              ProtocolHeader(protocol: protocol),
 
               const SizedBox(height: CohortSpacing.xl),
 
               if (protocol.description != null &&
-                  protocol.description!.isNotEmpty)
+                  protocol.description!.trim().isNotEmpty)
                 _SectionCard(
                   title: 'Purpose',
                   child: Text(
@@ -68,7 +48,7 @@ class ProtocolDetailScreen extends StatelessWidget {
                 ),
 
               if (protocol.mainSession != null &&
-                  protocol.mainSession!.isNotEmpty)
+                  protocol.mainSession!.trim().isNotEmpty)
                 _SectionCard(
                   title: 'Session',
                   child: Text(
@@ -77,48 +57,38 @@ class ProtocolDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-              const SizedBox(height: CohortSpacing.lg),
-
-              const SectionTitle('Session Details'),
-
-              const SizedBox(height: CohortSpacing.lg),
-
-              InfoTile(
-                label: 'Training Quality',
-                value: protocol.trainingQuality,
-              ),
-
-              InfoTile(
-                label: 'Session Type',
-                value: protocol.sessionType,
-              ),
-
-              InfoTile(
-                label: 'Body Focus',
-                value: protocol.capability,
-              ),
-
-              InfoTile(
-                label: 'Demand',
-                value: protocol.demand,
-              ),
-
-              InfoTile(
-                label: 'Recovery Cost',
-                value: protocol.recovery,
-              ),
-
-              InfoTile(
-                label: 'Environment',
-                value: protocol.environment,
-              ),
-
-              InfoTile(
-                label: 'Suitable For',
-                value: protocol.suitableFor,
-              ),
-
               const SizedBox(height: CohortSpacing.xl),
+
+              const SectionTitle('Attributes'),
+
+              const SizedBox(height: CohortSpacing.md),
+
+              AttributeGrid(
+                attributes: {
+                  'Training Quality': protocol.trainingQuality,
+                  'Session Type': protocol.sessionType,
+                  'Primary Focus': protocol.capability,
+                  'Training Demand': protocol.demand,
+                  'Recovery Requirement': protocol.recovery,
+                  'Environment': protocol.environment,
+                  'Suitable For': protocol.suitableFor,
+                },
+              ),
+
+              if (protocol.coachingNotes != null &&
+                  protocol.coachingNotes!.trim().isNotEmpty) ...[
+                const SizedBox(height: CohortSpacing.xl),
+
+                _SectionCard(
+                  title: 'Coach Notes',
+                  child: Text(
+                    protocol.coachingNotes!,
+                    style: CohortTextStyles.body,
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: CohortSpacing.xxl),
 
               CohortButton(
                 label: 'Start Session',

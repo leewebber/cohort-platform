@@ -5,6 +5,7 @@ import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_button.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,6 +15,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const ProtocolLibraryScreen(),
+      ),
+    );
+  }
+
+  void _openExerciseLibrary(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const ExerciseLibraryScreen(),
       ),
     );
   }
@@ -68,7 +77,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.xl),
 
-              const SectionTitle('Main Tools'),
+              const SectionTitle('Knowledge'),
               const SizedBox(height: CohortSpacing.md),
 
               CohortCard(
@@ -80,6 +89,21 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _openExerciseLibrary(context),
+                child: const _HomeActionRow(
+                  title: 'Exercise Library',
+                  subtitle: 'Browse movements, cues and coaching knowledge.',
+                  status: 'OPEN',
+                ),
+              ),
+
+              const SizedBox(height: CohortSpacing.xl),
+
+              const SectionTitle('Planning'),
+              const SizedBox(height: CohortSpacing.md),
+
               const CohortCard(
                 child: _HomeActionRow(
                   title: 'Weekly Blueprint',
