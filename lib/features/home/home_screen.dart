@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
-import '../../core/widgets/cohort_button.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import '../../core/widgets/today_session_card.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 
@@ -36,43 +36,55 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionTitle('Cohort Field Manual'),
+              const SectionTitle('Cohort'),
               const SizedBox(height: CohortSpacing.md),
               const Text(
-                "What's today's focus?",
+                'Today',
                 style: CohortTextStyles.h1,
               ),
               const SizedBox(height: CohortSpacing.md),
               const Text(
-                'Train with purpose. Choose the right session for your goal, equipment and recovery state.',
+                'Know the plan. Execute with confidence.',
                 style: CohortTextStyles.body,
               ),
+
               const SizedBox(height: CohortSpacing.xl),
 
-              CohortCard(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    SectionTitle("Today's Recommendation"),
-                    SizedBox(height: CohortSpacing.lg),
-                    Text(
-                      'Generate the right session for today.',
-                      style: CohortTextStyles.h2,
-                    ),
-                    SizedBox(height: CohortSpacing.sm),
-                    Text(
-                      'Soon you’ll be able to select your goal, equipment, time and recovery state.',
-                      style: CohortTextStyles.small,
-                    ),
-                  ],
-                ),
+              const TodaySessionCard(
+                title: 'Bodyweight Grinder',
+                subtitle: 'Capacity • Full Body',
+                weekLabel: 'Cohort Foundation • Week 1 • Monday',
+                duration: '30 minutes',
+                status: 'Planned Session',
               ),
 
-              const SizedBox(height: CohortSpacing.lg),
+              const SizedBox(height: CohortSpacing.xl),
 
-              CohortButton(
-                label: "Generate Today's Protocol",
-                onPressed: () {},
+              const SectionTitle('Need to Adapt?'),
+              const SizedBox(height: CohortSpacing.md),
+
+              const CohortCard(
+                child: _AdaptationRow(
+                  title: 'Travelling',
+                  subtitle: 'Preserve the training intent with limited equipment.',
+                  icon: Icons.flight_takeoff,
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+              const CohortCard(
+                child: _AdaptationRow(
+                  title: 'Limited Equipment',
+                  subtitle: 'Find the closest available version of today’s session.',
+                  icon: Icons.fitness_center,
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+              const CohortCard(
+                child: _AdaptationRow(
+                  title: 'Poor Recovery',
+                  subtitle: 'Reduce load or volume while protecting progress.',
+                  icon: Icons.bedtime,
+                ),
               ),
 
               const SizedBox(height: CohortSpacing.xl),
@@ -84,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                 onTap: () => _openProtocolLibrary(context),
                 child: const _HomeActionRow(
                   title: 'Protocol Library',
-                  subtitle: 'Browse and search the full Cohort protocol library.',
+                  subtitle: 'Browse structured training sessions.',
                   status: 'OPEN',
                 ),
               ),
@@ -96,27 +108,6 @@ class HomeScreen extends StatelessWidget {
                   title: 'Exercise Library',
                   subtitle: 'Browse movements, cues and coaching knowledge.',
                   status: 'OPEN',
-                ),
-              ),
-
-              const SizedBox(height: CohortSpacing.xl),
-
-              const SectionTitle('Planning'),
-              const SizedBox(height: CohortSpacing.md),
-
-              const CohortCard(
-                child: _HomeActionRow(
-                  title: 'Weekly Blueprint',
-                  subtitle: 'Build a balanced week from the Cohort training structure.',
-                  status: 'SOON',
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const CohortCard(
-                child: _HomeActionRow(
-                  title: 'Training Log',
-                  subtitle: 'Record completed sessions and track progress.',
-                  status: 'SOON',
                 ),
               ),
 
@@ -132,6 +123,38 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AdaptationRow extends StatelessWidget {
+  const _AdaptationRow({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 24),
+        const SizedBox(width: CohortSpacing.lg),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: CohortTextStyles.cardTitle),
+              const SizedBox(height: CohortSpacing.sm),
+              Text(subtitle, style: CohortTextStyles.small),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -5,8 +5,11 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/attribute_grid.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../core/widgets/protocol_step_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../../data/repositories/protocol_step_repository.dart';
 import '../../../models/protocol.dart';
+import '../../../models/protocol_step.dart';
 import '../widgets/protocol_header.dart';
 
 class ProtocolDetailScreen extends StatelessWidget {
@@ -16,6 +19,9 @@ class ProtocolDetailScreen extends StatelessWidget {
   });
 
   final Protocol protocol;
+
+  static const ProtocolStepRepository _stepRepository =
+      ProtocolStepRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +53,10 @@ class ProtocolDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-              if (protocol.mainSession != null &&
-                  protocol.mainSession!.trim().isNotEmpty)
-                _SectionCard(
-                  title: 'Session',
-                  child: Text(
-                    protocol.mainSession!,
-                    style: CohortTextStyles.body,
-                  ),
-                ),
+              _ProtocolStepsSection(
+                protocol: protocol,
+                stepRepository: _stepRepository,
+              ),
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -78,7 +79,6 @@ class ProtocolDetailScreen extends StatelessWidget {
               if (protocol.coachingNotes != null &&
                   protocol.coachingNotes!.trim().isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.xl),
-
                 _SectionCard(
                   title: 'Coach Notes',
                   child: Text(
@@ -100,6 +100,68 @@ class ProtocolDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ProtocolStepsSection extends StatelessWidget {
+  const _ProtocolStepsSection({
+    required this.protocol,
+    required this.stepRepository,
+  });
+
+  final Protocol protocol;
+  final ProtocolStepRepository stepRepository;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<List<ProtocolStep>>(
+      future: stepRepository.getProtocolSteps(protocol.protocolId),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const _SectionCard(
+            title: 'Session',
+            child: Text(
+              'Loading session...',
+              style: CohortTextStyles.body,
+            ),
+          );
+        }
+
+        final steps = snapshot.data ?? [];
+
+        if (steps.isNotEmpty) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: CohortSpacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SectionTitle('Session'),
+                const SizedBox(height: CohortSpacing.md),
+                ...steps.map(
+                  (step) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: ProtocolStepCard(step: step),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (protocol.mainSession != null &&
+            protocol.mainSession!.trim().isNotEmpty) {
+          return _SectionCard(
+            title: 'Session',
+            child: Text(
+              protocol.mainSession!,
+              style: CohortTextStyles.body,
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
     );
   }
 }

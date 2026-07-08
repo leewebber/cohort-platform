@@ -1,16 +1,20 @@
-import '../../core/services/supabase_service.dart';
 import '../../models/exercise.dart';
+import 'base_repository.dart';
 
-class ExerciseRepository {
-  Future<List<Exercise>> getExercises() async {
-    final response = await SupabaseService.client
-        .from('exercises_v2')
-        .select()
-        .eq('published', true)
-        .order('name');
+class ExerciseRepository extends BaseRepository<Exercise> {
+  @override
+  String get tableName => 'exercises_v2';
 
-    return response
-        .map<Exercise>((item) => Exercise.fromMap(item))
-        .toList();
+  @override
+  Exercise fromMap(Map<String, dynamic> map) {
+    return Exercise.fromMap(map);
+  }
+
+  Future<List<Exercise>> getExercises() {
+    return getWhere(
+      column: 'published',
+      value: true,
+      orderBy: 'name',
+    );
   }
 }
