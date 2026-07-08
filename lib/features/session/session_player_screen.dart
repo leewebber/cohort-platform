@@ -8,6 +8,7 @@ import '../../core/widgets/session_progress_bar.dart';
 import '../../core/widgets/session_step_card.dart';
 import '../../data/repositories/exercise_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
+import '../../data/repositories/training_session_repository.dart';
 import '../../models/exercise.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
@@ -17,10 +18,12 @@ class SessionPlayerScreen extends StatefulWidget {
     super.key,
     required this.protocolId,
     this.displayTitle,
+    this.trainingSessionId,
   });
 
   final String protocolId;
   final String? displayTitle;
+  final int? trainingSessionId;
 
   String get sessionLabel => displayTitle ?? protocolId;
 
@@ -31,6 +34,7 @@ class SessionPlayerScreen extends StatefulWidget {
 class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   final _stepRepository = const ProtocolStepRepository();
   final _exerciseRepository = ExerciseRepository();
+  final _trainingSessionRepository = const TrainingSessionRepository();
 
   bool _isTimerRunning = false;
   late final Future<List<SessionStep>> _stepsFuture;
@@ -76,8 +80,16 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     setState(() => _isTimerRunning = true);
   }
 
-  void _finishSession() {
+  Future<void> _finishSession() async {
     setState(() => _isTimerRunning = false);
+
+    final sessionId = widget.trainingSessionId;
+    if (sessionId != null) {
+      await _trainingSessionRepository.completeSession(sessionId);
+    }
+
+    if (!mounted) return;
+
     Navigator.pop(context);
   }
 

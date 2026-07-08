@@ -8,9 +8,11 @@ import '../../core/widgets/today_session_card.dart';
 import '../../data/repositories/athlete_state_repository.dart';
 import '../../data/repositories/programme_repository.dart';
 import '../../data/repositories/protocol_repository.dart';
+import '../../data/repositories/training_session_repository.dart';
 import '../../models/athlete_state.dart';
 import '../../models/programme.dart';
 import '../../models/protocol.dart';
+import '../../models/training_session_status.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 import '../session/session_player_screen.dart';
@@ -38,12 +40,14 @@ class HomeScreen extends StatelessWidget {
     BuildContext context, {
     required String protocolId,
     String? displayTitle,
+    int? trainingSessionId,
   }) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SessionPlayerScreen(
           protocolId: protocolId,
           displayTitle: displayTitle,
+          trainingSessionId: trainingSessionId,
         ),
       ),
     );
@@ -73,11 +77,16 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: CohortSpacing.xl),
 
               _TodaySessionSection(
-                onBeginSession: (protocolId, displayTitle) =>
+                onBeginSession: ({
+                  required protocolId,
+                  displayTitle,
+                  required trainingSessionId,
+                }) =>
                     _openSessionPlayer(
                   context,
                   protocolId: protocolId,
                   displayTitle: displayTitle,
+                  trainingSessionId: trainingSessionId,
                 ),
               ),
 
@@ -167,7 +176,11 @@ class _TodaySessionSection extends StatefulWidget {
     required this.onBeginSession,
   });
 
-  final void Function(String protocolId, String? displayTitle) onBeginSession;
+  final void Function({
+    required String protocolId,
+    String? displayTitle,
+    required int trainingSessionId,
+  }) onBeginSession;
 
   @override
   State<_TodaySessionSection> createState() => _TodaySessionSectionState();
@@ -179,6 +192,7 @@ class _TodaySessionSectionState extends State<_TodaySessionSection> {
   final _athleteStateRepository = const AthleteStateRepository();
   final _programmeRepository = ProgrammeRepository();
   final _protocolRepository = ProtocolRepository();
+  final _trainingSessionRepository = const TrainingSessionRepository();
 
   late final Future<_TodaySessionData?> _todaySessionFuture;
 
@@ -252,6 +266,46 @@ class _TodaySessionSectionState extends State<_TodaySessionSection> {
     return '$durationMin minutes';
   }
 
+  Future<void> _beginSession(_TodaySessionData data) async {
+    debugPrint('[Begin] pressed');
+
+    final protocolId = data.athleteState.currentProtocolId;
+    if (protocolId == null) {
+      debugPrint('[Begin] aborted: current_protocol_id is null');
+      return;
+    }
+
+    final payload = {
+      'athlete_id': _athleteId,
+      'protocol_id': protocolId,
+      'status': TrainingSessionStatus.inProgress.dbValue,
+      'programme_id': data.athleteState.programmeId,
+      'week_number': data.athleteState.currentWeek,
+    };
+    debugPrint('[Begin] createSession payload: $payload');
+
+    try {
+      final session = await _trainingSessionRepository.createSession(
+        athleteId: _athleteId,
+        protocolId: protocolId,
+        status: TrainingSessionStatus.inProgress,
+        programmeId: data.athleteState.programmeId,
+        weekNumber: data.athleteState.currentWeek,
+      );
+
+      debugPrint('[Begin] createSession success: id=${session.id}');
+
+      widget.onBeginSession(
+        protocolId: protocolId,
+        displayTitle: data.protocol?.name,
+        trainingSessionId: session.id,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('[Begin] createSession failed: $error');
+      debugPrint('[Begin] stackTrace: $stackTrace');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<_TodaySessionData?>(
@@ -282,10 +336,7 @@ class _TodaySessionSectionState extends State<_TodaySessionSection> {
           status: 'Planned Session',
           onPressed: data.athleteState.currentProtocolId == null
               ? null
-              : () => widget.onBeginSession(
-                    data.athleteState.currentProtocolId!,
-                    protocol.name,
-                  ),
+              : () => _beginSession(data),
         );
       },
     );
