@@ -1,0 +1,38 @@
+---
+description: Use existing protocol and exercise data instead of inventing coaching content
+alwaysApply: true
+---
+
+# Representative Training Data
+
+Never invent coaching or training content if representative data already exists in the project or Supabase.
+
+## Prefer existing sources
+
+When building UI, placeholders, or wiring:
+
+- Use **Protocol** and **ProtocolStep** for session structure, prescriptions, and notes
+- Use **Exercise** for movement names, cues, execution, and coaching knowledge
+- Map stored models into runtime models (e.g. `ProtocolStep` → `SessionStep`) rather than hardcoding fictional steps
+
+## Placeholder wiring
+
+Placeholder logic is fine, but the content should still come from real records when available.
+
+```dart
+// ❌ BAD — invented coaching copy
+SessionStep(
+  title: 'Air Squat',
+  prescription: '3 sets × 12 reps • Controlled tempo',
+  coachCue: 'Sit back and down...',
+)
+
+// ✅ GOOD — derived from existing protocol/exercise data
+SessionStep.fromProtocolStep(step, exercise: exercise)
+```
+
+## When data is missing
+
+- Use minimal neutral labels (e.g. "Step 1", "Movement") rather than fabricated coaching language
+- Do not guess sets, reps, cues, or session names
+- Ask before inventing content that could misrepresent Cohort programming
