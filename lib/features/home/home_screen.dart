@@ -7,6 +7,7 @@ import '../../core/widgets/section_title.dart';
 import '../../core/widgets/today_session_card.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
+import '../session/session_player_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,6 +24,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const ExerciseLibraryScreen(),
+      ),
+    );
+  }
+
+  void _openSessionPlayer(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const SessionPlayerScreen(),
       ),
     );
   }
@@ -50,12 +59,13 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.xl),
 
-              const TodaySessionCard(
+              TodaySessionCard(
                 title: 'Bodyweight Grinder',
                 subtitle: 'Capacity • Full Body',
                 weekLabel: 'Cohort Foundation • Week 1 • Monday',
                 duration: '30 minutes',
                 status: 'Planned Session',
+                onPressed: () => _openSessionPlayer(context),
               ),
 
               const SizedBox(height: CohortSpacing.xl),
