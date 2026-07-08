@@ -19,6 +19,17 @@ class ProgrammeRepository extends BaseRepository<Programme> {
       orderBy: 'name',
     );
   }
+
+  Future<Programme?> getProgrammeById(String programmeId) async {
+    final results = await getWhere(
+      column: 'programme_id',
+      value: programmeId,
+    );
+
+    if (results.isEmpty) return null;
+
+    return results.first;
+  }
 }
 
 class ProgrammeWeekRepository

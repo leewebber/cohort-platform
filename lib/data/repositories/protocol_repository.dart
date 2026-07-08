@@ -13,6 +13,18 @@ class ProtocolRepository {
         .toList();
   }
 
+  Future<Protocol?> getProtocolById(String protocolId) async {
+    final response = await SupabaseService.client
+        .from('performance_protocols')
+        .select()
+        .eq('protocol_id', protocolId)
+        .maybeSingle();
+
+    if (response == null) return null;
+
+    return Protocol.fromMap(response);
+  }
+
   Future<List<String>> getGoals() {
     return _getDistinctValues('primary_capability');
   }

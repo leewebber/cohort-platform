@@ -17,4 +17,15 @@ class ExerciseRepository extends BaseRepository<Exercise> {
       orderBy: 'name',
     );
   }
+
+  Future<Exercise?> getExerciseById(String exerciseId) async {
+    final results = await getWhere(
+      column: 'exercise_id',
+      value: exerciseId,
+    );
+
+    if (results.isEmpty) return null;
+
+    return results.first;
+  }
 }

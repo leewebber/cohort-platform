@@ -99,11 +99,13 @@ class _CircuitStepRow extends StatelessWidget {
                 step.title,
                 style: CohortTextStyles.cardTitle,
               ),
-              const SizedBox(height: CohortSpacing.xs),
-              Text(
-                step.prescription,
-                style: CohortTextStyles.small,
-              ),
+              if (step.prescription != null) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  step.prescription!,
+                  style: CohortTextStyles.small,
+                ),
+              ],
             ],
           ),
         ),
