@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
+import '../../core/widgets/adaptation_bottom_sheet.dart';
+import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
 import '../../core/widgets/today_session_card.dart';
@@ -12,13 +14,18 @@ import '../../data/repositories/training_session_repository.dart';
 import '../../models/athlete_state.dart';
 import '../../models/programme.dart';
 import '../../models/protocol.dart';
+import '../../models/training_session.dart';
 import '../../models/training_session_status.dart';
+import '../admin/admin_protocol_editor_screen.dart';
+import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 import '../session/session_player_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  static const _athleteId = 'lee';
 
   void _openProtocolLibrary(BuildContext context) {
     Navigator.of(context).push(
@@ -32,6 +39,14 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const ExerciseLibraryScreen(),
+      ),
+    );
+  }
+
+  void _openAdminProtocolEditor(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const AdminProtocolEditorScreen(),
       ),
     );
   }
@@ -51,6 +66,41 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openAdaptationSheet(BuildContext context) async {
+    final request = await showAdaptationBottomSheet(context);
+    if (request == null || !context.mounted) return;
+
+    const athleteStateRepository = AthleteStateRepository();
+    final protocolRepository = ProtocolRepository();
+
+    final athleteState =
+        await athleteStateRepository.getAthleteState(_athleteId);
+    final protocolId = athleteState?.currentProtocolId;
+    if (protocolId == null) {
+      debugPrint('[Adaptation] aborted: current_protocol_id is null');
+      return;
+    }
+
+    final currentProtocol = await protocolRepository.getProtocolById(protocolId);
+    if (currentProtocol == null) {
+      debugPrint('[Adaptation] aborted: protocol not found for $protocolId');
+      return;
+    }
+
+    const decisionService = AdaptationDecisionService();
+    final decision = decisionService.evaluate(
+      currentProtocol: currentProtocol,
+      request: request,
+    );
+
+    debugPrint('[Adaptation] request: $request');
+    debugPrint('[Adaptation] decision: ${decision.message}');
+
+    if (!context.mounted) return;
+
+    await showAdaptationDecisionBottomSheet(context, decision);
   }
 
   @override
@@ -95,28 +145,9 @@ class HomeScreen extends StatelessWidget {
               const SectionTitle('Need to Adapt?'),
               const SizedBox(height: CohortSpacing.md),
 
-              const CohortCard(
-                child: _AdaptationRow(
-                  title: 'Travelling',
-                  subtitle: 'Preserve the training intent with limited equipment.',
-                  icon: Icons.flight_takeoff,
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const CohortCard(
-                child: _AdaptationRow(
-                  title: 'Limited Equipment',
-                  subtitle: 'Find the closest available version of today’s session.',
-                  icon: Icons.fitness_center,
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const CohortCard(
-                child: _AdaptationRow(
-                  title: 'Poor Recovery',
-                  subtitle: 'Reduce load or volume while protecting progress.',
-                  icon: Icons.bedtime,
-                ),
+              CohortCard(
+                onTap: () => _openAdaptationSheet(context),
+                child: const _AdaptationPromptRow(),
               ),
 
               const SizedBox(height: CohortSpacing.xl),
@@ -142,6 +173,16 @@ class HomeScreen extends StatelessWidget {
                   status: 'OPEN',
                 ),
               ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _openAdminProtocolEditor(context),
+                child: const _HomeActionRow(
+                  title: 'Admin Protocol Editor',
+                  subtitle: 'Edit protocol metadata for adaptation.',
+                  status: 'ADMIN',
+                ),
+              ),
 
               const SizedBox(height: CohortSpacing.xxl),
 
@@ -164,11 +205,19 @@ class _TodaySessionData {
     required this.athleteState,
     this.programme,
     this.protocol,
+    this.latestTrainingSession,
   });
 
   final AthleteState athleteState;
   final Programme? programme;
   final Protocol? protocol;
+  final TrainingSession? latestTrainingSession;
+}
+
+enum _TodaySessionState {
+  planned,
+  inProgress,
+  completed,
 }
 
 class _TodaySessionSection extends StatefulWidget {
@@ -220,11 +269,94 @@ class _TodaySessionSectionState extends State<_TodaySessionSection> {
           )
         : null;
 
+    final latestTrainingSession =
+        athleteState.currentProtocolId != null
+            ? await _trainingSessionRepository
+                .getLatestSessionForAthleteAndProtocol(
+                athleteId: _athleteId,
+                protocolId: athleteState.currentProtocolId!,
+              )
+            : null;
+
     return _TodaySessionData(
       athleteState: athleteState,
       programme: programme,
       protocol: protocol,
+      latestTrainingSession: latestTrainingSession,
     );
+  }
+
+  bool _isToday(TrainingSession session) {
+    final reference = session.startedAt ?? session.createdAt;
+    if (reference == null) return false;
+
+    final now = DateTime.now().toUtc();
+    return reference.year == now.year &&
+        reference.month == now.month &&
+        reference.day == now.day;
+  }
+
+  _TodaySessionState _resolveSessionState(_TodaySessionData data) {
+    final session = data.latestTrainingSession;
+    if (session == null || !_isToday(session)) {
+      return _TodaySessionState.planned;
+    }
+
+    switch (session.status) {
+      case TrainingSessionStatus.inProgress:
+        return _TodaySessionState.inProgress;
+      case TrainingSessionStatus.completed:
+        return _TodaySessionState.completed;
+      default:
+        return _TodaySessionState.planned;
+    }
+  }
+
+  String _statusLabel(_TodaySessionState state) {
+    switch (state) {
+      case _TodaySessionState.planned:
+        return 'Planned Session';
+      case _TodaySessionState.inProgress:
+        return 'In Progress';
+      case _TodaySessionState.completed:
+        return 'Completed Today';
+    }
+  }
+
+  String _buttonLabel(_TodaySessionState state) {
+    switch (state) {
+      case _TodaySessionState.planned:
+        return 'Begin';
+      case _TodaySessionState.inProgress:
+        return 'Resume';
+      case _TodaySessionState.completed:
+        return 'View Session';
+    }
+  }
+
+  void _openExistingSession(_TodaySessionData data) {
+    final protocolId = data.athleteState.currentProtocolId;
+    final session = data.latestTrainingSession;
+    if (protocolId == null || session == null) return;
+
+    widget.onBeginSession(
+      protocolId: protocolId,
+      displayTitle: data.protocol?.name,
+      trainingSessionId: session.id,
+    );
+  }
+
+  Future<void> _handleSessionAction(
+    _TodaySessionData data,
+    _TodaySessionState state,
+  ) async {
+    switch (state) {
+      case _TodaySessionState.planned:
+        await _beginSession(data);
+      case _TodaySessionState.inProgress:
+      case _TodaySessionState.completed:
+        _openExistingSession(data);
+    }
   }
 
   String _buildSubtitle(_TodaySessionData data) {
@@ -327,49 +459,49 @@ class _TodaySessionSectionState extends State<_TodaySessionSection> {
         }
 
         final protocol = data.protocol!;
+        final sessionState = _resolveSessionState(data);
 
         return TodaySessionCard(
           title: protocol.name,
           subtitle: _buildSubtitle(data),
           weekLabel: _buildWeekLabel(data),
           duration: _buildDuration(protocol),
-          status: 'Planned Session',
+          status: _statusLabel(sessionState),
+          buttonLabel: _buttonLabel(sessionState),
           onPressed: data.athleteState.currentProtocolId == null
               ? null
-              : () => _beginSession(data),
+              : () => _handleSessionAction(data, sessionState),
         );
       },
     );
   }
 }
 
-class _AdaptationRow extends StatelessWidget {
-  const _AdaptationRow({
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-
-  final String title;
-  final String subtitle;
-  final IconData icon;
+class _AdaptationPromptRow extends StatelessWidget {
+  const _AdaptationPromptRow();
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 24),
-        const SizedBox(width: CohortSpacing.lg),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: CohortTextStyles.cardTitle),
+              Text(
+                'Adjust Today’s Session',
+                style: CohortTextStyles.cardTitle,
+              ),
               const SizedBox(height: CohortSpacing.sm),
-              Text(subtitle, style: CohortTextStyles.small),
+              Text(
+                'Tell us what is affecting today’s session.',
+                style: CohortTextStyles.small,
+              ),
             ],
           ),
         ),
+        const SizedBox(width: CohortSpacing.lg),
+        Text('OPEN', style: CohortTextStyles.eyebrow),
       ],
     );
   }

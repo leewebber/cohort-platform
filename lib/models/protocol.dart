@@ -14,6 +14,17 @@ class Protocol {
   final String? sessionType;
   final String? environment;
   final String? suitableFor;
+  final String? durationCategory;
+  final String? technicalComplexity;
+  final String? secondaryCapability;
+  final String? requiredEquipment;
+  final String? optionalEquipment;
+  final int? adaptability;
+  final bool? runningRequired;
+  final bool? runningReplaceable;
+  final bool? hotelFriendly;
+  final bool? indoorFriendly;
+  final bool? noiseFriendly;
 
   const Protocol({
     required this.protocolId,
@@ -31,6 +42,17 @@ class Protocol {
     this.sessionType,
     this.environment,
     this.suitableFor,
+    this.durationCategory,
+    this.technicalComplexity,
+    this.secondaryCapability,
+    this.requiredEquipment,
+    this.optionalEquipment,
+    this.adaptability,
+    this.runningRequired,
+    this.runningReplaceable,
+    this.hotelFriendly,
+    this.indoorFriendly,
+    this.noiseFriendly,
   });
 
   factory Protocol.fromMap(Map<String, dynamic> map) {
@@ -50,6 +72,36 @@ class Protocol {
       sessionType: map['session_type'],
       environment: map['environment'],
       suitableFor: map['suitable_for'],
+      durationCategory: map['duration_category'],
+      technicalComplexity: map['technical_complexity'],
+      secondaryCapability: map['secondary_capability'],
+      requiredEquipment: map['required_equipment'],
+      optionalEquipment: map['optional_equipment'],
+      adaptability: _nullableInt(map['adaptability']),
+      runningRequired: _nullableBool(map['running_required']),
+      runningReplaceable: _nullableBool(map['running_replaceable']),
+      hotelFriendly: _nullableBool(map['hotel_friendly']),
+      indoorFriendly: _nullableBool(map['indoor_friendly']),
+      noiseFriendly: _nullableBool(map['noise_friendly']),
     );
+  }
+
+  static int? _nullableInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    return int.tryParse(value.toString());
+  }
+
+  static bool? _nullableBool(dynamic value) {
+    if (value == null) return null;
+    if (value is bool) return value;
+    final normalized = value.toString().trim().toLowerCase();
+    if (normalized == 'true' || normalized == 't' || normalized == '1') {
+      return true;
+    }
+    if (normalized == 'false' || normalized == 'f' || normalized == '0') {
+      return false;
+    }
+    return null;
   }
 }

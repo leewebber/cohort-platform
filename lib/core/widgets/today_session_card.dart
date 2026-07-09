@@ -14,6 +14,7 @@ class TodaySessionCard extends StatelessWidget {
     required this.weekLabel,
     required this.duration,
     this.status = 'Planned Session',
+    this.buttonLabel = 'Begin',
     this.onPressed,
   });
 
@@ -22,6 +23,7 @@ class TodaySessionCard extends StatelessWidget {
   final String weekLabel;
   final String duration;
   final String status;
+  final String buttonLabel;
   final VoidCallback? onPressed;
 
   @override
@@ -83,7 +85,7 @@ class TodaySessionCard extends StatelessWidget {
           const SizedBox(height: CohortSpacing.xl),
 
           CohortButton(
-            label: 'Begin',
+            label: buttonLabel,
             onPressed: onPressed ?? () {},
           ),
         ],

@@ -73,6 +73,24 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
     );
   }
 
+  Future<TrainingSession?> getLatestSessionForAthleteAndProtocol({
+    required String athleteId,
+    required String protocolId,
+  }) async {
+    final response = await SupabaseService.client
+        .from(tableName)
+        .select()
+        .eq('athlete_id', athleteId)
+        .eq('protocol_id', protocolId)
+        .order('created_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+
+    if (response == null) return null;
+
+    return fromMap(response);
+  }
+
   Future<TrainingSession?> completeSession(int id) async {
     final existing = await getSessionById(id);
     if (existing == null) return null;

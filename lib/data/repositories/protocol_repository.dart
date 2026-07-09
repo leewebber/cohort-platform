@@ -1,5 +1,6 @@
 import '../../core/services/supabase_service.dart';
 import '../../models/protocol.dart';
+import '../../models/protocol_metadata_update.dart';
 
 class ProtocolRepository {
   Future<List<Protocol>> getProtocols() async {
@@ -21,6 +22,20 @@ class ProtocolRepository {
         .maybeSingle();
 
     if (response == null) return null;
+
+    return Protocol.fromMap(response);
+  }
+
+  Future<Protocol> updateProtocol({
+    required String protocolId,
+    required ProtocolMetadataUpdate metadata,
+  }) async {
+    final response = await SupabaseService.client
+        .from('performance_protocols')
+        .update(metadata.toUpdateMap())
+        .eq('protocol_id', protocolId)
+        .select()
+        .single();
 
     return Protocol.fromMap(response);
   }
