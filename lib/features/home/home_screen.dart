@@ -10,15 +10,20 @@ import '../../core/widgets/today_session_card.dart';
 import '../../data/repositories/athlete_state_repository.dart';
 import '../../data/repositories/programme_repository.dart';
 import '../../data/repositories/protocol_repository.dart';
+import '../../data/repositories/exercise_repository.dart';
+import '../../data/repositories/protocol_step_repository.dart';
 import '../../data/repositories/training_session_repository.dart';
 import '../../models/athlete_state.dart';
+import '../../models/movement_profile.dart';
 import '../../models/programme.dart';
 import '../../models/protocol.dart';
+import '../../models/protocol_analysis.dart';
 import '../../models/training_session.dart';
 import '../../models/training_session_status.dart';
 import '../admin/admin_protocol_editor_screen.dart';
 import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
+import '../protocol_analysis/services/protocol_analyzer.dart';
 import '../protocols/protocol_library_screen.dart';
 import '../session/session_player_screen.dart';
 
@@ -103,6 +108,77 @@ class HomeScreen extends StatelessWidget {
     await showAdaptationDecisionBottomSheet(context, decision);
   }
 
+  // TODO(debug): Remove temporary ProtocolAnalyzer hook once analysis UI exists.
+  Future<void> _analyzeCurrentProtocol() async {
+    const athleteStateRepository = AthleteStateRepository();
+    final analyzer = ProtocolAnalyzer(
+      ProtocolRepository(),
+      const ProtocolStepRepository(),
+      ExerciseRepository(),
+    );
+
+    final athleteState =
+        await athleteStateRepository.getAthleteState(_athleteId);
+    final protocolId = athleteState?.currentProtocolId?.trim();
+    if (protocolId == null || protocolId.isEmpty) {
+      debugPrint('[ProtocolAnalyzer] aborted: current_protocol_id is null');
+      return;
+    }
+
+    try {
+      final analysis = await analyzer.analyseProtocol(protocolId);
+      _debugPrintProtocolAnalysis(analysis);
+    } catch (error, stackTrace) {
+      debugPrint('[ProtocolAnalyzer] failed: $error');
+      debugPrint('[ProtocolAnalyzer] stackTrace: $stackTrace');
+    }
+  }
+
+  void _debugPrintProtocolAnalysis(ProtocolAnalysis analysis) {
+    debugPrint('[ProtocolAnalyzer] protocolId: ${analysis.protocolId}');
+    debugPrint('[ProtocolAnalyzer] protocolName: ${analysis.protocolName}');
+    debugPrint('[ProtocolAnalyzer] exerciseCount: ${analysis.exerciseCount}');
+    debugPrint('[ProtocolAnalyzer] stepCount: ${analysis.stepCount}');
+    debugPrint(
+      '[ProtocolAnalyzer] requiredEquipmentSummary: ${analysis.requiredEquipmentSummary}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] bodyFocusSummary: ${analysis.bodyFocusSummary}',
+    );
+    debugPrint('[ProtocolAnalyzer] hasRunning: ${analysis.hasRunning}');
+    debugPrint('[ProtocolAnalyzer] hasErg: ${analysis.hasErg}');
+
+    final profile = analysis.movementProfile;
+    if (profile == null) {
+      debugPrint('[ProtocolAnalyzer] movementProfile: null');
+      return;
+    }
+
+    _debugPrintMovementProfile(profile);
+  }
+
+  void _debugPrintMovementProfile(MovementProfile profile) {
+    debugPrint('[ProtocolAnalyzer] movementProfile.push: ${profile.push}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.pull: ${profile.pull}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.squat: ${profile.squat}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.hinge: ${profile.hinge}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.lunge: ${profile.lunge}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.carry: ${profile.carry}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.core: ${profile.core}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.running: ${profile.running}');
+    debugPrint('[ProtocolAnalyzer] movementProfile.erg: ${profile.erg}');
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.upperBody: ${profile.upperBody}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.lowerBody: ${profile.lowerBody}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.totalMovements: ${profile.totalMovements}',
+    );
+    debugPrint('[ProtocolAnalyzer] movementProfile summary: $profile');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,6 +257,16 @@ class HomeScreen extends StatelessWidget {
                   title: 'Admin Protocol Editor',
                   subtitle: 'Edit protocol metadata for adaptation.',
                   status: 'ADMIN',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _analyzeCurrentProtocol,
+                child: const _HomeActionRow(
+                  title: 'Analyze Current Protocol',
+                  subtitle: 'Temporary debug hook for ProtocolAnalyzer output.',
+                  status: 'DEBUG',
                 ),
               ),
 
