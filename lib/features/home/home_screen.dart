@@ -13,17 +13,25 @@ import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/exercise_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
 import '../../data/repositories/training_session_repository.dart';
+import '../../models/adaptation_decision.dart';
+import '../../models/adaptation_reason.dart';
+import '../../models/adaptation_request.dart';
+import '../../models/adaptation_session_environment.dart';
 import '../../models/athlete_state.dart';
 import '../../models/movement_profile.dart';
 import '../../models/programme.dart';
 import '../../models/protocol.dart';
 import '../../models/protocol_analysis.dart';
+import '../../models/protocol_similarity_result.dart';
+import '../../models/session_fingerprint.dart';
 import '../../models/training_session.dart';
 import '../../models/training_session_status.dart';
 import '../admin/admin_protocol_editor_screen.dart';
+import '../adaptation/services/adaptation_candidate_filter.dart';
 import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocol_analysis/services/protocol_analyzer.dart';
+import '../protocol_analysis/services/protocol_similarity_service.dart';
 import '../protocols/protocol_library_screen.dart';
 import '../session/session_player_screen.dart';
 
@@ -151,10 +159,16 @@ class HomeScreen extends StatelessWidget {
     final profile = analysis.movementProfile;
     if (profile == null) {
       debugPrint('[ProtocolAnalyzer] movementProfile: null');
-      return;
+    } else {
+      _debugPrintMovementProfile(profile);
     }
 
-    _debugPrintMovementProfile(profile);
+    final fingerprint = analysis.fingerprint;
+    if (fingerprint == null) {
+      debugPrint('[ProtocolAnalyzer] fingerprint: null');
+    } else {
+      _debugPrintSessionFingerprint(fingerprint);
+    }
   }
 
   void _debugPrintMovementProfile(MovementProfile profile) {
@@ -176,7 +190,436 @@ class HomeScreen extends StatelessWidget {
     debugPrint(
       '[ProtocolAnalyzer] movementProfile.totalMovements: ${profile.totalMovements}',
     );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.pushPercent: ${_formatPercent(profile.pushPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.pullPercent: ${_formatPercent(profile.pullPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.squatPercent: ${_formatPercent(profile.squatPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.hingePercent: ${_formatPercent(profile.hingePercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.lungePercent: ${_formatPercent(profile.lungePercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.carryPercent: ${_formatPercent(profile.carryPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.corePercent: ${_formatPercent(profile.corePercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.runningPercent: ${_formatPercent(profile.runningPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.ergPercent: ${_formatPercent(profile.ergPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.upperBodyPercent: ${_formatPercent(profile.upperBodyPercent)}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.lowerBodyPercent: ${_formatPercent(profile.lowerBodyPercent)}',
+    );
     debugPrint('[ProtocolAnalyzer] movementProfile summary: $profile');
+  }
+
+  String _formatPercent(double value) {
+    if (value == value.roundToDouble()) {
+      return '${value.round()}%';
+    }
+    return '$value%';
+  }
+
+  void _debugPrintSessionFingerprint(SessionFingerprint fingerprint) {
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.structureType: ${fingerprint.structureType.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.pacingStyle: ${fingerprint.pacingStyle.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.dominantStimulus: ${fingerprint.dominantStimulus.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.equipmentDependency: ${fingerprint.equipmentDependency.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.movementBias: ${fingerprint.movementBias.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.transitionDensity: ${fingerprint.transitionDensity.name}',
+    );
+    debugPrint(
+      '[ProtocolAnalyzer] fingerprint.substitutionDifficulty: ${fingerprint.substitutionDifficulty.name}',
+    );
+    debugPrint('[ProtocolAnalyzer] fingerprint summary: $fingerprint');
+  }
+
+  // TODO(debug): Remove temporary similarity hook once adaptation ranking exists.
+  Future<void> _compareBw001Similarity() async {
+    const sourceProtocolId = 'BW-001';
+    const similarityService = ProtocolSimilarityService();
+    final analyzer = ProtocolAnalyzer(
+      ProtocolRepository(),
+      const ProtocolStepRepository(),
+      ExerciseRepository(),
+    );
+    final protocolRepository = ProtocolRepository();
+
+    try {
+      final sourceAnalysis = await analyzer.analyseProtocol(sourceProtocolId);
+      if (sourceAnalysis.stepCount == 0) {
+        debugPrint(
+          '[ProtocolSimilarity] aborted: $sourceProtocolId has no analysable steps',
+        );
+        return;
+      }
+
+      final protocols = await protocolRepository.getProtocols();
+      final candidateAnalyses = <ProtocolAnalysis>[];
+      final noStepProtocolIds = <String>[];
+      var protocolsWithSteps = 1;
+      var protocolsWithoutSteps = 0;
+      var protocolsFailedAnalysis = 0;
+
+      for (final protocol in protocols) {
+        if (protocol.protocolId == sourceProtocolId) {
+          continue;
+        }
+
+        try {
+          final analysis = await analyzer.analyseProtocol(protocol.protocolId);
+          if (analysis.stepCount > 0) {
+            candidateAnalyses.add(analysis);
+            protocolsWithSteps++;
+          } else {
+            protocolsWithoutSteps++;
+            noStepProtocolIds.add(protocol.protocolId);
+          }
+        } catch (error) {
+          protocolsFailedAnalysis++;
+          debugPrint(
+            '[ProtocolSimilarity] skipped ${protocol.protocolId}: $error',
+          );
+        }
+      }
+
+      _debugPrintSimilarityDiagnostics(
+        totalProtocolsLoaded: protocols.length,
+        protocolsWithSteps: protocolsWithSteps,
+        protocolsWithoutSteps: protocolsWithoutSteps,
+        protocolsFailedAnalysis: protocolsFailedAnalysis,
+        noStepProtocolIds: noStepProtocolIds,
+      );
+
+      final results = similarityService.rankCandidates(
+        source: sourceAnalysis,
+        candidates: candidateAnalyses,
+      );
+
+      debugPrint(
+        '[ProtocolSimilarity] compared $sourceProtocolId against '
+        '${candidateAnalyses.length} protocols with analysable steps',
+      );
+
+      final topMatches = results.take(5).toList();
+      if (topMatches.isEmpty) {
+        debugPrint('[ProtocolSimilarity] no comparable protocols found');
+        return;
+      }
+
+      for (var index = 0; index < topMatches.length; index++) {
+        _debugPrintSimilarityResult(topMatches[index], rank: index + 1);
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[ProtocolSimilarity] failed: $error');
+      debugPrint('[ProtocolSimilarity] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once adaptation ranking is wired to athlete UI.
+  Future<void> _compareBw001SuitableAlternatives() async {
+    const sourceProtocolId = 'FG-009';
+    const debugRequest = AdaptationRequest(
+      reason: AdaptationReason.environment,
+      environment: AdaptationSessionEnvironment.hotelRoom,
+    );
+    const candidateFilter = AdaptationCandidateFilter();
+    const decisionService = AdaptationDecisionService();
+    const similarityService = ProtocolSimilarityService();
+    final analyzer = ProtocolAnalyzer(
+      ProtocolRepository(),
+      const ProtocolStepRepository(),
+      ExerciseRepository(),
+    );
+    final protocolRepository = ProtocolRepository();
+
+    try {
+      final currentProtocol =
+          await protocolRepository.getProtocolById(sourceProtocolId);
+      if (currentProtocol == null) {
+        debugPrint(
+          '[AdaptationSimilarity] aborted: $sourceProtocolId not found',
+        );
+        return;
+      }
+
+      final sourceAnalysis = await analyzer.analyseProtocol(sourceProtocolId);
+      if (sourceAnalysis.stepCount == 0) {
+        debugPrint(
+          '[AdaptationSimilarity] aborted: $sourceProtocolId has no analysable steps',
+        );
+        return;
+      }
+
+      final decision = decisionService.evaluate(
+        currentProtocol: currentProtocol,
+        request: debugRequest,
+      );
+
+      _debugPrintHotelRoomDecisionDiagnostics(
+        currentProtocol: currentProtocol,
+        request: debugRequest,
+        decision: decision,
+      );
+
+      final selfFilterResult = candidateFilter.evaluate(
+        currentProtocol: currentProtocol,
+        candidateProtocol: currentProtocol,
+        request: debugRequest,
+      );
+      debugPrint(
+        '[AdaptationDecision] candidateFilterOnCurrent.isSuitable: '
+        '${selfFilterResult.isSuitable}',
+      );
+      debugPrint(
+        '[AdaptationDecision] candidateFilterOnCurrent.rejectionReason: '
+        '${selfFilterResult.rejectionReason ?? 'none'}',
+      );
+
+      if (decision.decisionType == AdaptationDecisionType.keepOriginal) {
+        debugPrint(
+          '[AdaptationSimilarity] keeping planned session — '
+          'no alternative ranking',
+        );
+        return;
+      }
+
+      final protocols = await protocolRepository.getProtocols();
+      final protocolById = {
+        for (final protocol in protocols) protocol.protocolId: protocol,
+      };
+      final suitableAnalyses = <ProtocolAnalysis>[];
+      final rejectedCandidates = <String, String>{};
+      var protocolsWithoutSteps = 0;
+      var protocolsFailedAnalysis = 0;
+
+      for (final protocol in protocols) {
+        if (protocol.protocolId == sourceProtocolId) {
+          continue;
+        }
+
+        try {
+          final analysis = await analyzer.analyseProtocol(protocol.protocolId);
+          if (analysis.stepCount == 0) {
+            protocolsWithoutSteps++;
+            continue;
+          }
+
+          final filterResult = candidateFilter.evaluate(
+            currentProtocol: currentProtocol,
+            candidateProtocol: protocol,
+            request: debugRequest,
+          );
+
+          if (filterResult.isSuitable) {
+            suitableAnalyses.add(analysis);
+          } else {
+            rejectedCandidates[protocol.protocolId] =
+                filterResult.rejectionReason ?? 'Unsuitable';
+          }
+        } catch (error) {
+          protocolsFailedAnalysis++;
+          debugPrint(
+            '[AdaptationSimilarity] skipped ${protocol.protocolId}: $error',
+          );
+        }
+      }
+
+      debugPrint(
+        '[AdaptationSimilarity] diagnostics: total protocols loaded: '
+        '${protocols.length}',
+      );
+      debugPrint(
+        '[AdaptationSimilarity] diagnostics: suitable candidates: '
+        '${suitableAnalyses.length}',
+      );
+      debugPrint(
+        '[AdaptationSimilarity] diagnostics: rejected candidates: '
+        '${rejectedCandidates.length}',
+      );
+      debugPrint(
+        '[AdaptationSimilarity] diagnostics: protocols without steps: '
+        '$protocolsWithoutSteps',
+      );
+      debugPrint(
+        '[AdaptationSimilarity] diagnostics: protocols failed analysis: '
+        '$protocolsFailedAnalysis',
+      );
+
+      final rejectionPreview = rejectedCandidates.entries.take(5).toList();
+      for (final rejection in rejectionPreview) {
+        debugPrint(
+          '[AdaptationSimilarity] rejected ${rejection.key}: ${rejection.value}',
+        );
+      }
+
+      if (suitableAnalyses.any(
+        (analysis) => analysis.protocolId == 'FG-009',
+      )) {
+        debugPrint(
+          '[AdaptationSimilarity] warning: FG-009 incorrectly ranked as '
+          'suitable for Hotel Room',
+        );
+      }
+
+      final results = similarityService.rankCandidates(
+        source: sourceAnalysis,
+        candidates: suitableAnalyses,
+      );
+
+      debugPrint(
+        '[AdaptationSimilarity] ranked $sourceProtocolId against '
+        '${suitableAnalyses.length} suitable alternatives',
+      );
+
+      final topMatches = results.take(5).toList();
+      if (topMatches.isEmpty) {
+        debugPrint('[AdaptationSimilarity] no suitable alternatives found');
+        return;
+      }
+
+      for (var index = 0; index < topMatches.length; index++) {
+        final result = topMatches[index];
+        final candidateName =
+            protocolById[result.candidateProtocolId]?.name ??
+                result.candidateProtocolId;
+
+        _debugPrintSimilarityResult(
+          result,
+          rank: index + 1,
+          logPrefix: '[AdaptationSimilarity]',
+          candidateName: candidateName,
+        );
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[AdaptationSimilarity] failed: $error');
+      debugPrint('[AdaptationSimilarity] stackTrace: $stackTrace');
+    }
+  }
+
+  void _debugPrintHotelRoomDecisionDiagnostics({
+    required Protocol currentProtocol,
+    required AdaptationRequest request,
+    required AdaptationDecision decision,
+  }) {
+    debugPrint('[AdaptationDecision] request: $request');
+    debugPrint(
+      '[AdaptationDecision] currentProtocolId: ${currentProtocol.protocolId}',
+    );
+    debugPrint(
+      '[AdaptationDecision] currentProtocolName: ${currentProtocol.name}',
+    );
+    debugPrint(
+      '[AdaptationDecision] environment: ${request.environment?.label}',
+    );
+    debugPrint(
+      '[AdaptationDecision] requiredEquipment: '
+      '${currentProtocol.requiredEquipment ?? 'none'}',
+    );
+    debugPrint(
+      '[AdaptationDecision] hotelFriendly: ${currentProtocol.hotelFriendly}',
+    );
+    debugPrint(
+      '[AdaptationDecision] indoorFriendly: ${currentProtocol.indoorFriendly}',
+    );
+    debugPrint('[AdaptationDecision] decisionType: ${decision.decisionType}');
+    debugPrint('[AdaptationDecision] decisionMessage: ${decision.message}');
+  }
+
+  void _debugPrintSimilarityDiagnostics({
+    required int totalProtocolsLoaded,
+    required int protocolsWithSteps,
+    required int protocolsWithoutSteps,
+    required int protocolsFailedAnalysis,
+    required List<String> noStepProtocolIds,
+  }) {
+    debugPrint(
+      '[ProtocolSimilarity] diagnostics: total protocols loaded: '
+      '$totalProtocolsLoaded',
+    );
+    debugPrint(
+      '[ProtocolSimilarity] diagnostics: protocols with steps: '
+      '$protocolsWithSteps',
+    );
+    debugPrint(
+      '[ProtocolSimilarity] diagnostics: protocols without steps: '
+      '$protocolsWithoutSteps',
+    );
+    debugPrint(
+      '[ProtocolSimilarity] diagnostics: protocols failed analysis: '
+      '$protocolsFailedAnalysis',
+    );
+
+    final previewIds = noStepProtocolIds.take(10).toList();
+    if (previewIds.isEmpty) {
+      debugPrint(
+        '[ProtocolSimilarity] diagnostics: no steps skipped ids: none',
+      );
+      return;
+    }
+
+    debugPrint(
+      '[ProtocolSimilarity] diagnostics: no steps skipped ids (first 10): '
+      '${previewIds.join(', ')}',
+    );
+
+    if (noStepProtocolIds.length > previewIds.length) {
+      debugPrint(
+        '[ProtocolSimilarity] diagnostics: no steps skipped ids: '
+        '${noStepProtocolIds.length - previewIds.length} more not shown',
+      );
+    }
+  }
+
+  void _debugPrintSimilarityResult(
+    ProtocolSimilarityResult result, {
+    required int rank,
+    String logPrefix = '[ProtocolSimilarity]',
+    String? candidateName,
+  }) {
+    final scoreLabel = result.score == result.score.roundToDouble()
+        ? result.score.round().toString()
+        : result.score.toStringAsFixed(1);
+    final candidateLabel = candidateName == null
+        ? result.candidateProtocolId
+        : '${result.candidateProtocolId} ($candidateName)';
+
+    debugPrint(
+      '$logPrefix #$rank $candidateLabel score: $scoreLabel',
+    );
+
+    if (result.reasons.isEmpty) {
+      debugPrint('$logPrefix #$rank reasons: none');
+      return;
+    }
+
+    for (final reason in result.reasons) {
+      debugPrint('$logPrefix #$rank reason: $reason');
+    }
   }
 
   @override
@@ -266,6 +709,28 @@ class HomeScreen extends StatelessWidget {
                 child: const _HomeActionRow(
                   title: 'Analyze Current Protocol',
                   subtitle: 'Temporary debug hook for ProtocolAnalyzer output.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _compareBw001Similarity,
+                child: const _HomeActionRow(
+                  title: 'Compare BW-001 Similarity',
+                  subtitle:
+                      'Temporary debug hook for top protocol similarity matches.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _compareBw001SuitableAlternatives,
+                child: const _HomeActionRow(
+                  title: 'Compare BW-001 Suitable Alternatives',
+                  subtitle:
+                      'Filter by adaptation constraints, then rank by similarity.',
                   status: 'DEBUG',
                 ),
               ),

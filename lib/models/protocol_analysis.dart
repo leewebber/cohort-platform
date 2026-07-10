@@ -1,4 +1,5 @@
 import 'movement_profile.dart';
+import 'session_fingerprint.dart';
 
 /// Analysis output from [ProtocolAnalyzer].
 ///
@@ -16,6 +17,7 @@ class ProtocolAnalysis {
     required this.hasRunning,
     required this.hasErg,
     this.movementProfile,
+    this.fingerprint,
   });
 
   final String protocolId;
@@ -27,6 +29,7 @@ class ProtocolAnalysis {
   final bool hasRunning;
   final bool hasErg;
   final MovementProfile? movementProfile;
+  final SessionFingerprint? fingerprint;
 }
 
 // ---------------------------------------------------------------------------
@@ -38,8 +41,8 @@ class ProtocolAnalysis {
 //   views for adaptation similarity. See [MovementProfile].
 //
 // TODO(Fingerprint):
-//   Compute the experiential signature described in
-//   07 Documentation/31_Protocol_Fingerprints.md.
+//   Weight fingerprint fields by reps, time, and distance from step
+//   prescriptions. See [SessionFingerprint].
 //
 // TODO(Equipment Dependency):
 //   Measure how tightly the session depends on specific equipment beyond

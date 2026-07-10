@@ -31,6 +31,54 @@ class MovementProfile {
   final int lowerBody;
   final int totalMovements;
 
+  /// Share of classified steps tagged with push (0–100).
+  double get pushPercent => _movementPercent(push);
+
+  /// Share of classified steps tagged with pull (0–100).
+  double get pullPercent => _movementPercent(pull);
+
+  /// Share of classified steps tagged with squat (0–100).
+  double get squatPercent => _movementPercent(squat);
+
+  /// Share of classified steps tagged with hinge (0–100).
+  double get hingePercent => _movementPercent(hinge);
+
+  /// Share of classified steps tagged with lunge (0–100).
+  double get lungePercent => _movementPercent(lunge);
+
+  /// Share of classified steps tagged with carry (0–100).
+  double get carryPercent => _movementPercent(carry);
+
+  /// Share of classified steps tagged with core (0–100).
+  double get corePercent => _movementPercent(core);
+
+  /// Share of classified steps tagged with running (0–100).
+  double get runningPercent => _movementPercent(running);
+
+  /// Share of classified steps tagged with erg (0–100).
+  double get ergPercent => _movementPercent(erg);
+
+  /// Share of body-region steps tagged upper body (0–100).
+  double get upperBodyPercent => _bodyRegionPercent(upperBody);
+
+  /// Share of body-region steps tagged lower body (0–100).
+  double get lowerBodyPercent => _bodyRegionPercent(lowerBody);
+
+  double _movementPercent(int count) {
+    if (totalMovements == 0) {
+      return 0;
+    }
+    return count / totalMovements * 100;
+  }
+
+  double _bodyRegionPercent(int count) {
+    final total = upperBody + lowerBody;
+    if (total == 0) {
+      return 0;
+    }
+    return count / total * 100;
+  }
+
   @override
   String toString() {
     return 'MovementProfile('
