@@ -1,0 +1,355 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../core/services/supabase_service.dart';
+import '../../../data/repositories/protocol_repository.dart';
+import '../../../data/repositories/protocol_step_repository.dart';
+import '../../../models/protocol_builder_save_result.dart';
+import '../../../models/protocol_draft.dart';
+import '../../../models/protocol_draft_summary.dart';
+import '../../../models/protocol_step_draft.dart';
+
+/// Thrown when a draft fails validation or cannot be saved.
+class ProtocolBuilderException implements Exception {
+  const ProtocolBuilderException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => message;
+}
+
+/// Persists coach-authored [ProtocolDraft] rows to Supabase.
+///
+/// ## Transaction limitation
+/// The Supabase Flutter client does not expose multi-table transactions here.
+/// Saves run as: upsert protocol → delete existing steps → insert draft steps.
+/// If step insertion fails after deletion, the protocol may temporarily have no
+/// steps until the coach saves again.
+class ProtocolBuilderService {
+  ProtocolBuilderService({
+    ProtocolRepository? protocolRepository,
+    ProtocolStepRepository? protocolStepRepository,
+  })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
+        _protocolStepRepository =
+            protocolStepRepository ?? const ProtocolStepRepository();
+
+  final ProtocolRepository _protocolRepository;
+  final ProtocolStepRepository _protocolStepRepository;
+
+  static const _sessionFormatToSessionType = {
+    'circuit': 'Circuit',
+    'structured_strength': 'Strength',
+    'intervals': 'Running',
+    'recovery_flow': 'Recovery',
+  };
+
+  static const _sessionTypeToSessionFormat = {
+    'circuit': 'circuit',
+    'strength': 'structured_strength',
+    'running': 'intervals',
+    'intervals': 'intervals',
+    'recovery': 'recovery_flow',
+  };
+
+  Future<List<ProtocolDraftSummary>> getDraftProtocols() async {
+    try {
+      final response = await SupabaseService.client
+          .from('performance_protocols')
+          .select('protocol_id, name, session_type, duration_min')
+          .eq('published', false)
+          .order('name');
+
+      return response
+          .map<ProtocolDraftSummary>(
+            (row) => ProtocolDraftSummary.fromMap(
+              Map<String, dynamic>.from(row),
+            ),
+          )
+          .toList();
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+    } catch (error) {
+      throw ProtocolBuilderException(
+        'We could not load draft protocols right now. Please try again.',
+      );
+    }
+  }
+
+  Future<ProtocolDraft> loadDraft(String protocolId) async {
+    final trimmedId = protocolId.trim();
+    if (trimmedId.isEmpty) {
+      throw const ProtocolBuilderException('Protocol ID is required.');
+    }
+
+    try {
+      final protocolRow = await SupabaseService.client
+          .from('performance_protocols')
+          .select()
+          .eq('protocol_id', trimmedId)
+          .maybeSingle();
+
+      if (protocolRow == null) {
+        throw ProtocolBuilderException(
+          'Draft $trimmedId could not be found.',
+        );
+      }
+
+      final published = protocolRow['published'] == true;
+      if (published) {
+        throw ProtocolBuilderException(
+          'Protocol $trimmedId is already published.',
+        );
+      }
+
+      final steps = await _protocolStepRepository.getProtocolSteps(trimmedId);
+
+      return _draftFromProtocolRow(
+        Map<String, dynamic>.from(protocolRow),
+        steps
+            .map(ProtocolStepDraft.fromProtocolStep)
+            .toList(growable: false),
+      );
+    } on ProtocolBuilderException {
+      rethrow;
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+    } catch (error) {
+      throw ProtocolBuilderException(
+        'We could not open this draft right now. Please try again.',
+      );
+    }
+  }
+
+  Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) {
+    return _persistDraft(draft, published: false);
+  }
+
+  Future<ProtocolBuilderSaveResult> publishDraft(ProtocolDraft draft) {
+    return _persistDraft(draft, published: true);
+  }
+
+  Future<ProtocolBuilderSaveResult> _persistDraft(
+    ProtocolDraft draft, {
+    required bool published,
+  }) async {
+    _validateDraft(draft);
+
+    final protocolId = draft.protocolId.trim();
+    final existingProtocol =
+        await _protocolRepository.getProtocolById(protocolId);
+    final created = existingProtocol == null;
+
+    final protocolMap = _buildProtocolUpsertMap(
+      draft,
+      published: published,
+    );
+    final orderedSteps = _orderedSteps(draft.steps);
+    final stepMaps = orderedSteps
+        .map((step) {
+          final map = step.toStepMap(protocolId: protocolId);
+          map.remove('id');
+          return map;
+        })
+        .toList();
+
+    try {
+      await SupabaseService.client
+          .from('performance_protocols')
+          .upsert(
+            protocolMap,
+            onConflict: 'protocol_id',
+          );
+
+      await SupabaseService.client
+          .from('protocol_steps')
+          .delete()
+          .eq('protocol_id', protocolId);
+
+      if (stepMaps.isNotEmpty) {
+        await SupabaseService.client.from('protocol_steps').insert(stepMaps);
+      }
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+    } catch (error) {
+      throw ProtocolBuilderException(
+        published
+            ? 'We could not publish your protocol right now. Please try again.'
+            : 'We could not save your protocol right now. Please try again.',
+      );
+    }
+
+    if (published) {
+      return ProtocolBuilderSaveResult.published(
+        protocolId: protocolId,
+        created: created,
+        stepCount: orderedSteps.length,
+      );
+    }
+
+    return ProtocolBuilderSaveResult.draft(
+      protocolId: protocolId,
+      created: created,
+      stepCount: orderedSteps.length,
+    );
+  }
+
+  void _validateDraft(ProtocolDraft draft) {
+    final messages = <String>[];
+
+    if (draft.protocolId.trim().isEmpty) {
+      messages.add('Protocol ID is required.');
+    }
+
+    if (draft.name.trim().isEmpty) {
+      messages.add('Protocol name is required.');
+    }
+
+    if (draft.sessionFormat == null || draft.sessionFormat!.trim().isEmpty) {
+      messages.add('Session format is required.');
+    }
+
+    if (draft.steps.isEmpty) {
+      messages.add('Add at least one session step.');
+    }
+
+    final orderedSteps = _orderedSteps(draft.steps);
+
+    for (var index = 0; index < orderedSteps.length; index++) {
+      final step = orderedSteps[index];
+      final expectedOrder = index + 1;
+
+      if (step.stepOrder != expectedOrder) {
+        messages.add(
+          'Step order must run from 1 to ${orderedSteps.length} without gaps.',
+        );
+        break;
+      }
+
+      if (step.title.trim().isEmpty) {
+        messages.add('Every step needs a title (step ${step.stepOrder}).');
+      }
+    }
+
+    if (messages.isNotEmpty) {
+      throw ProtocolBuilderException(messages.join(' '));
+    }
+  }
+
+  List<ProtocolStepDraft> _orderedSteps(List<ProtocolStepDraft> steps) {
+    final ordered = List<ProtocolStepDraft>.from(steps)
+      ..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
+
+    return ordered;
+  }
+
+  Map<String, dynamic> _buildProtocolUpsertMap(
+    ProtocolDraft draft, {
+    required bool published,
+  }) {
+    final map = Map<String, dynamic>.from(draft.toProtocolMap());
+    map['published'] = published;
+    _applySessionFormatFallback(map, draft.sessionFormat);
+    return map;
+  }
+
+  ProtocolDraft _draftFromProtocolRow(
+    Map<String, dynamic> row,
+    List<ProtocolStepDraft> steps,
+  ) {
+    return ProtocolDraft(
+      protocolId: row['protocol_id']?.toString() ?? '',
+      name: row['name']?.toString() ?? '',
+      steps: steps,
+      primaryCapability: row['primary_capability']?.toString(),
+      secondaryCapability: row['secondary_capability']?.toString(),
+      sessionType: row['session_type']?.toString(),
+      sessionFormat: _deriveSessionFormat(row['session_type']?.toString()),
+      durationMin: _nullableInt(row['duration_min']),
+      durationCategory: row['duration_category']?.toString(),
+      physiologicalDemand: row['physiological_demand']?.toString(),
+      recoveryCost: row['recovery_cost']?.toString(),
+      technicalComplexity: row['technical_complexity']?.toString(),
+      environment: row['environment']?.toString(),
+      requiredEquipment: row['required_equipment']?.toString(),
+      optionalEquipment: row['optional_equipment']?.toString(),
+      suitableFor: row['suitable_for']?.toString(),
+      adaptability: _nullableInt(row['adaptability']),
+      runningRequired: _nullableBool(row['running_required']),
+      runningReplaceable: _nullableBool(row['running_replaceable']),
+      hotelFriendly: _nullableBool(row['hotel_friendly']),
+      indoorFriendly: _nullableBool(row['indoor_friendly']),
+      noiseFriendly: _nullableBool(row['noise_friendly']),
+      coachingNotes: row['coaching_notes']?.toString(),
+      purpose: row['purpose']?.toString(),
+    );
+  }
+
+  /// `session_format` is validated in the builder but not yet a DB column.
+  /// When `session_type` is empty, map format to a vocabulary session type
+  /// so execution routing can resolve after save.
+  void _applySessionFormatFallback(
+    Map<String, dynamic> map,
+    String? sessionFormat,
+  ) {
+    final currentSessionType = map['session_type']?.toString().trim();
+    if (currentSessionType != null && currentSessionType.isNotEmpty) {
+      return;
+    }
+
+    final mappedType = _sessionFormatToSessionType[sessionFormat?.trim()];
+    if (mappedType != null) {
+      map['session_type'] = mappedType;
+    }
+  }
+
+  String? _deriveSessionFormat(String? sessionType) {
+    final normalized = sessionType?.trim().toLowerCase();
+    if (normalized == null || normalized.isEmpty) {
+      return null;
+    }
+
+    return _sessionTypeToSessionFormat[normalized];
+  }
+
+  static int? _nullableInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    return int.tryParse(value.toString());
+  }
+
+  static bool? _nullableBool(dynamic value) {
+    if (value == null) return null;
+    if (value is bool) return value;
+    final normalized = value.toString().trim().toLowerCase();
+    if (normalized == 'true' || normalized == 't' || normalized == '1') {
+      return true;
+    }
+    if (normalized == 'false' || normalized == 'f' || normalized == '0') {
+      return false;
+    }
+    return null;
+  }
+
+  String _friendlyDatabaseMessage(PostgrestException error) {
+    final code = error.code ?? '';
+    final message = error.message.toLowerCase();
+
+    if (code == '23503' || message.contains('foreign key')) {
+      if (message.contains('exercise')) {
+        return 'One of the selected exercises could not be found. Check exercise links and try again.';
+      }
+
+      return 'A linked record could not be found. Check your entries and try again.';
+    }
+
+    if (code == '23505' || message.contains('duplicate key')) {
+      return 'A protocol with this ID already exists. Use a different protocol ID or save again to update it.';
+    }
+
+    if (code == '42501' || message.contains('permission denied')) {
+      return 'You do not have permission to save protocols right now.';
+    }
+
+    return 'We could not save your protocol right now. Please try again.';
+  }
+}

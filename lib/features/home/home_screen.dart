@@ -27,6 +27,8 @@ import '../../models/session_fingerprint.dart';
 import '../../models/training_session.dart';
 import '../../models/training_session_status.dart';
 import '../admin/admin_protocol_editor_screen.dart';
+import '../admin/protocol_builder_screen.dart';
+import '../admin/protocol_drafts_screen.dart';
 import '../adaptation/services/adaptation_candidate_filter.dart';
 import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
@@ -60,6 +62,22 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const AdminProtocolEditorScreen(),
+      ),
+    );
+  }
+
+  void _openProtocolBuilder(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const ProtocolBuilderScreen(),
+      ),
+    );
+  }
+
+  void _openProtocolDrafts(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const ProtocolDraftsScreen(),
       ),
     );
   }
@@ -700,6 +718,29 @@ class HomeScreen extends StatelessWidget {
                   title: 'Admin Protocol Editor',
                   subtitle: 'Edit protocol metadata for adaptation.',
                   status: 'ADMIN',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              const SectionTitle('Coach Studio'),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _openProtocolBuilder(context),
+                child: const _HomeActionRow(
+                  title: 'Protocol Builder',
+                  subtitle: 'Create and save unpublished protocol drafts.',
+                  status: 'COACH',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _openProtocolDrafts(context),
+                child: const _HomeActionRow(
+                  title: 'Draft Protocols',
+                  subtitle: 'Reopen unpublished protocols and continue editing.',
+                  status: 'COACH',
                 ),
               ),
               const SizedBox(height: CohortSpacing.md),

@@ -7,11 +7,15 @@ import '../../core/widgets/section_title.dart';
 import '../../core/widgets/session_progress_bar.dart';
 import '../../core/widgets/session_step_card.dart';
 import '../../data/repositories/exercise_repository.dart';
+import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
 import '../../data/repositories/training_session_repository.dart';
 import '../../models/exercise.dart';
+import '../../models/protocol.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
+import 'services/session_execution_router.dart';
+import 'widgets/strength_session_view.dart';
 
 class SessionPlayerScreen extends StatefulWidget {
   const SessionPlayerScreen({
@@ -31,18 +35,44 @@ class SessionPlayerScreen extends StatefulWidget {
   State<SessionPlayerScreen> createState() => _SessionPlayerScreenState();
 }
 
+class _SessionPlayerContent {
+  const _SessionPlayerContent({
+    required this.mode,
+    required this.steps,
+  });
+
+  final SessionExecutionMode mode;
+  final List<SessionStep> steps;
+}
+
 class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
+  final _protocolRepository = ProtocolRepository();
   final _stepRepository = const ProtocolStepRepository();
   final _exerciseRepository = ExerciseRepository();
   final _trainingSessionRepository = const TrainingSessionRepository();
+  static const _executionRouter = SessionExecutionRouter();
 
   bool _isTimerRunning = false;
-  late final Future<List<SessionStep>> _stepsFuture;
+  late final Future<_SessionPlayerContent> _contentFuture;
 
   @override
   void initState() {
     super.initState();
-    _stepsFuture = _loadSessionSteps();
+    _contentFuture = _loadSessionContent();
+  }
+
+  Future<_SessionPlayerContent> _loadSessionContent() async {
+    final protocol = await _protocolRepository.getProtocolById(widget.protocolId);
+    final steps = await _loadSessionSteps();
+    final mode = _executionRouter.determineExecutionMode(
+      protocol ??
+          Protocol(
+            protocolId: widget.protocolId,
+            name: widget.sessionLabel,
+          ),
+    );
+
+    return _SessionPlayerContent(mode: mode, steps: steps);
   }
 
   Future<List<SessionStep>> _loadSessionSteps() async {
@@ -93,14 +123,57 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     Navigator.pop(context);
   }
 
+  Widget _buildExecutionView({
+    required SessionExecutionMode mode,
+    required List<SessionStep> steps,
+  }) {
+    switch (mode) {
+      case SessionExecutionMode.circuit:
+        // TODO(Execution): Replace with CircuitSessionView.
+        return CircuitSessionCard(
+          steps: steps,
+          isTimerRunning: _isTimerRunning,
+          onStartTimer: _startTimer,
+          onFinishSession: _finishSession,
+        );
+      case SessionExecutionMode.structuredStrength:
+        return StrengthSessionView(
+          sessionTitle: widget.sessionLabel,
+          steps: steps,
+          onFinishSession: _finishSession,
+        );
+      case SessionExecutionMode.intervals:
+        // TODO(Execution): Replace with IntervalSessionView.
+        return _legacyGuidedPlayer(steps);
+      case SessionExecutionMode.recoveryFlow:
+        // TODO(Execution): Replace with RecoverySessionView.
+        return _legacyGuidedPlayer(steps);
+    }
+  }
+
+  Widget _legacyGuidedPlayer(List<SessionStep> steps) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SessionProgressBar(
+          currentStep: steps.first.stepNumber,
+          totalSteps: steps.length,
+        ),
+        const SizedBox(height: CohortSpacing.xl),
+        SessionStepCard(
+          step: steps.first,
+          onComplete: () {},
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final mode = executionModeForSession(widget.sessionLabel);
-
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder<List<SessionStep>>(
-          future: _stepsFuture,
+        child: FutureBuilder<_SessionPlayerContent>(
+          future: _contentFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Padding(
@@ -112,7 +185,9 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
               );
             }
 
-            final steps = snapshot.data ?? [];
+            final content = snapshot.data;
+            final steps = content?.steps ?? [];
+            final mode = content?.mode ?? SessionExecutionMode.circuit;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -142,23 +217,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
                       'No session steps available.',
                       style: CohortTextStyles.body,
                     )
-                  else if (mode == SessionExecutionMode.guidedSteps) ...[
-                    SessionProgressBar(
-                      currentStep: steps.first.stepNumber,
-                      totalSteps: steps.length,
-                    ),
-                    const SizedBox(height: CohortSpacing.xl),
-                    SessionStepCard(
-                      step: steps.first,
-                      onComplete: () {},
-                    ),
-                  ] else
-                    CircuitSessionCard(
-                      steps: steps,
-                      isTimerRunning: _isTimerRunning,
-                      onStartTimer: _startTimer,
-                      onFinishSession: _finishSession,
-                    ),
+                  else
+                    _buildExecutionView(mode: mode, steps: steps),
                 ],
               ),
             );
