@@ -43,4 +43,30 @@ class ProtocolBuilderSaveResult {
       message: 'Published protocol $protocolId with $stepCount steps.',
     );
   }
+
+  factory ProtocolBuilderSaveResult.savedChanges({
+    required String protocolId,
+    required int stepCount,
+  }) {
+    return ProtocolBuilderSaveResult(
+      protocolId: protocolId,
+      created: false,
+      stepCount: stepCount,
+      published: true,
+      message: 'Saved changes to $protocolId with $stepCount steps.',
+    );
+  }
+
+  factory ProtocolBuilderSaveResult.unpublished({
+    required String protocolId,
+    required int stepCount,
+  }) {
+    return ProtocolBuilderSaveResult(
+      protocolId: protocolId,
+      created: false,
+      stepCount: stepCount,
+      published: false,
+      message: 'Unpublished protocol $protocolId. It is now a draft.',
+    );
+  }
 }

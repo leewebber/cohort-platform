@@ -11,12 +11,24 @@ class SessionStep {
     required this.title,
     this.prescription,
     this.coachCue,
+    this.prescribedSets,
+    this.prescribedReps,
+    this.prescribedLoad,
+    this.prescribedRest,
+    this.protocolStepId,
+    this.exerciseId,
   });
 
   final int stepNumber;
   final String title;
   final String? prescription;
   final String? coachCue;
+  final String? prescribedSets;
+  final String? prescribedReps;
+  final String? prescribedLoad;
+  final String? prescribedRest;
+  final int? protocolStepId;
+  final String? exerciseId;
 
   factory SessionStep.fromProtocolStep(
     ProtocolStep step, {
@@ -27,6 +39,12 @@ class SessionStep {
       title: step.title,
       prescription: _prescriptionFromStep(step),
       coachCue: _coachCueFromStep(step, exercise),
+      prescribedSets: step.sets,
+      prescribedReps: step.reps,
+      prescribedLoad: step.load,
+      prescribedRest: step.rest,
+      protocolStepId: step.id,
+      exerciseId: step.exerciseId,
     );
   }
 

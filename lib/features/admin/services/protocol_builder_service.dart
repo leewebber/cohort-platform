@@ -51,6 +51,30 @@ class ProtocolBuilderService {
     'recovery': 'recovery_flow',
   };
 
+  Future<List<ProtocolDraftSummary>> getPublishedProtocols() async {
+    try {
+      final response = await SupabaseService.client
+          .from('performance_protocols')
+          .select('protocol_id, name, session_type, duration_min')
+          .eq('published', true)
+          .order('name');
+
+      return response
+          .map<ProtocolDraftSummary>(
+            (row) => ProtocolDraftSummary.fromMap(
+              Map<String, dynamic>.from(row),
+            ),
+          )
+          .toList();
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+    } catch (error) {
+      throw ProtocolBuilderException(
+        'We could not load published protocols right now. Please try again.',
+      );
+    }
+  }
+
   Future<List<ProtocolDraftSummary>> getDraftProtocols() async {
     try {
       final response = await SupabaseService.client
@@ -75,7 +99,7 @@ class ProtocolBuilderService {
     }
   }
 
-  Future<ProtocolDraft> loadDraft(String protocolId) async {
+  Future<ProtocolDraft> loadProtocol(String protocolId) async {
     final trimmedId = protocolId.trim();
     if (trimmedId.isEmpty) {
       throw const ProtocolBuilderException('Protocol ID is required.');
@@ -90,14 +114,7 @@ class ProtocolBuilderService {
 
       if (protocolRow == null) {
         throw ProtocolBuilderException(
-          'Draft $trimmedId could not be found.',
-        );
-      }
-
-      final published = protocolRow['published'] == true;
-      if (published) {
-        throw ProtocolBuilderException(
-          'Protocol $trimmedId is already published.',
+          'Protocol $trimmedId could not be found.',
         );
       }
 
@@ -115,22 +132,48 @@ class ProtocolBuilderService {
       throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
     } catch (error) {
       throw ProtocolBuilderException(
-        'We could not open this draft right now. Please try again.',
+        'We could not open this protocol right now. Please try again.',
       );
     }
+  }
+
+  /// Loads a draft or published protocol. Prefer [loadProtocol].
+  Future<ProtocolDraft> loadDraft(String protocolId) {
+    return loadProtocol(protocolId);
   }
 
   Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) {
     return _persistDraft(draft, published: false);
   }
 
+  Future<ProtocolBuilderSaveResult> savePublishedChanges(ProtocolDraft draft) {
+    return _persistDraft(
+      draft,
+      published: true,
+      resultKind: _PersistResultKind.savedChanges,
+    );
+  }
+
+  Future<ProtocolBuilderSaveResult> unpublishDraft(ProtocolDraft draft) {
+    return _persistDraft(
+      draft,
+      published: false,
+      resultKind: _PersistResultKind.unpublished,
+    );
+  }
+
   Future<ProtocolBuilderSaveResult> publishDraft(ProtocolDraft draft) {
-    return _persistDraft(draft, published: true);
+    return _persistDraft(
+      draft,
+      published: true,
+      resultKind: _PersistResultKind.published,
+    );
   }
 
   Future<ProtocolBuilderSaveResult> _persistDraft(
     ProtocolDraft draft, {
     required bool published,
+    _PersistResultKind resultKind = _PersistResultKind.draft,
   }) async {
     _validateDraft(draft);
 
@@ -172,25 +215,61 @@ class ProtocolBuilderService {
       throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
     } catch (error) {
       throw ProtocolBuilderException(
-        published
-            ? 'We could not publish your protocol right now. Please try again.'
-            : 'We could not save your protocol right now. Please try again.',
+        _failureMessageFor(resultKind),
       );
     }
 
-    if (published) {
-      return ProtocolBuilderSaveResult.published(
-        protocolId: protocolId,
-        created: created,
-        stepCount: orderedSteps.length,
-      );
-    }
-
-    return ProtocolBuilderSaveResult.draft(
+    return _resultFor(
+      resultKind: resultKind,
       protocolId: protocolId,
       created: created,
       stepCount: orderedSteps.length,
     );
+  }
+
+  String _failureMessageFor(_PersistResultKind resultKind) {
+    switch (resultKind) {
+      case _PersistResultKind.published:
+        return 'We could not publish your protocol right now. Please try again.';
+      case _PersistResultKind.savedChanges:
+        return 'We could not save your changes right now. Please try again.';
+      case _PersistResultKind.unpublished:
+        return 'We could not unpublish your protocol right now. Please try again.';
+      case _PersistResultKind.draft:
+        return 'We could not save your protocol right now. Please try again.';
+    }
+  }
+
+  ProtocolBuilderSaveResult _resultFor({
+    required _PersistResultKind resultKind,
+    required String protocolId,
+    required bool created,
+    required int stepCount,
+  }) {
+    switch (resultKind) {
+      case _PersistResultKind.published:
+        return ProtocolBuilderSaveResult.published(
+          protocolId: protocolId,
+          created: created,
+          stepCount: stepCount,
+        );
+      case _PersistResultKind.savedChanges:
+        return ProtocolBuilderSaveResult.savedChanges(
+          protocolId: protocolId,
+          stepCount: stepCount,
+        );
+      case _PersistResultKind.unpublished:
+        return ProtocolBuilderSaveResult.unpublished(
+          protocolId: protocolId,
+          stepCount: stepCount,
+        );
+      case _PersistResultKind.draft:
+        return ProtocolBuilderSaveResult.draft(
+          protocolId: protocolId,
+          created: created,
+          stepCount: stepCount,
+        );
+    }
   }
 
   void _validateDraft(ProtocolDraft draft) {
@@ -260,6 +339,7 @@ class ProtocolBuilderService {
       protocolId: row['protocol_id']?.toString() ?? '',
       name: row['name']?.toString() ?? '',
       steps: steps,
+      published: row['published'] == true,
       primaryCapability: row['primary_capability']?.toString(),
       secondaryCapability: row['secondary_capability']?.toString(),
       sessionType: row['session_type']?.toString(),
@@ -352,4 +432,11 @@ class ProtocolBuilderService {
 
     return 'We could not save your protocol right now. Please try again.';
   }
+}
+
+enum _PersistResultKind {
+  draft,
+  published,
+  savedChanges,
+  unpublished,
 }

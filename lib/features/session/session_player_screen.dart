@@ -14,7 +14,11 @@ import '../../models/exercise.dart';
 import '../../models/protocol.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
+import 'models/strength_session_finish_summary.dart';
 import 'services/session_execution_router.dart';
+import 'services/session_wins_builder.dart';
+import 'services/strength_session_leave_coordinator.dart';
+import 'session_review_screen.dart';
 import 'widgets/strength_session_view.dart';
 
 class SessionPlayerScreen extends StatefulWidget {
@@ -39,10 +43,12 @@ class _SessionPlayerContent {
   const _SessionPlayerContent({
     required this.mode,
     required this.steps,
+    this.athleteId,
   });
 
   final SessionExecutionMode mode;
   final List<SessionStep> steps;
+  final String? athleteId;
 }
 
 class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
@@ -51,9 +57,12 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   final _exerciseRepository = ExerciseRepository();
   final _trainingSessionRepository = const TrainingSessionRepository();
   static const _executionRouter = SessionExecutionRouter();
+  static const _sessionWinsBuilder = SessionWinsBuilder();
 
   bool _isTimerRunning = false;
   late final Future<_SessionPlayerContent> _contentFuture;
+  StrengthSessionLeaveCoordinator? _strengthLeaveCoordinator;
+  SessionExecutionMode? _resolvedMode;
 
   @override
   void initState() {
@@ -64,6 +73,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   Future<_SessionPlayerContent> _loadSessionContent() async {
     final protocol = await _protocolRepository.getProtocolById(widget.protocolId);
     final steps = await _loadSessionSteps();
+    final athleteId = await _resolveAthleteId();
     final mode = _executionRouter.determineExecutionMode(
       protocol ??
           Protocol(
@@ -72,7 +82,26 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           ),
     );
 
-    return _SessionPlayerContent(mode: mode, steps: steps);
+    return _SessionPlayerContent(
+      mode: mode,
+      steps: steps,
+      athleteId: athleteId,
+    );
+  }
+
+  Future<String?> _resolveAthleteId() async {
+    final sessionId = widget.trainingSessionId;
+    if (sessionId == null) {
+      return null;
+    }
+
+    final session = await _trainingSessionRepository.getSessionById(sessionId);
+    final athleteId = session?.athleteId.trim();
+    if (athleteId == null || athleteId.isEmpty) {
+      return null;
+    }
+
+    return athleteId;
   }
 
   Future<List<SessionStep>> _loadSessionSteps() async {
@@ -110,6 +139,56 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     setState(() => _isTimerRunning = true);
   }
 
+  Future<void> _finishStrengthSession(
+    StrengthSessionFinishSummary summary,
+  ) async {
+    setState(() => _isTimerRunning = false);
+
+    final sessionId = widget.trainingSessionId;
+    if (sessionId != null) {
+      await _trainingSessionRepository.completeSession(sessionId);
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    final wins = _sessionWinsBuilder.build(summary);
+
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (reviewContext) => SessionReviewScreen(
+          sessionTitle: summary.sessionTitle,
+          wins: wins,
+          sessionNote: summary.sessionNote,
+          endedEarly: summary.endedEarly,
+          completedExerciseCount: summary.completedExerciseCount,
+          totalExerciseCount: summary.totalExerciseCount,
+          endReasonLabel: summary.endReasonLabel,
+          onReturnHome: () => Navigator.of(reviewContext).pop(),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleBackNavigation() async {
+    final isStrengthSession =
+        _resolvedMode == SessionExecutionMode.structuredStrength;
+    final coordinator = _strengthLeaveCoordinator;
+
+    if (isStrengthSession &&
+        widget.trainingSessionId != null &&
+        coordinator != null &&
+        coordinator.hasRecordedProgress()) {
+      await coordinator.confirmLeave(context);
+      return;
+    }
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  }
+
   Future<void> _finishSession() async {
     setState(() => _isTimerRunning = false);
 
@@ -126,6 +205,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   Widget _buildExecutionView({
     required SessionExecutionMode mode,
     required List<SessionStep> steps,
+    String? athleteId,
   }) {
     switch (mode) {
       case SessionExecutionMode.circuit:
@@ -140,7 +220,12 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
         return StrengthSessionView(
           sessionTitle: widget.sessionLabel,
           steps: steps,
-          onFinishSession: _finishSession,
+          trainingSessionId: widget.trainingSessionId,
+          athleteId: athleteId,
+          onFinishSession: _finishStrengthSession,
+          onLeaveCoordinatorReady: (coordinator) {
+            _strengthLeaveCoordinator = coordinator;
+          },
         );
       case SessionExecutionMode.intervals:
         // TODO(Execution): Replace with IntervalSessionView.
@@ -188,38 +273,56 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
             final content = snapshot.data;
             final steps = content?.steps ?? [];
             final mode = content?.mode ?? SessionExecutionMode.circuit;
+            final athleteId = content?.athleteId;
+            _resolvedMode = mode;
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('← Back'),
-                  ),
+            final interceptBack = mode == SessionExecutionMode.structuredStrength &&
+                widget.trainingSessionId != null;
 
-                  const SizedBox(height: CohortSpacing.md),
+            return PopScope(
+              canPop: !interceptBack,
+              onPopInvokedWithResult: (didPop, result) async {
+                if (didPop) {
+                  return;
+                }
+                await _handleBackNavigation();
+              },
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: _handleBackNavigation,
+                      child: const Text('← Back'),
+                    ),
 
-                  const SectionTitle('Session'),
+                    const SizedBox(height: CohortSpacing.md),
 
-                  const SizedBox(height: CohortSpacing.md),
+                    const SectionTitle('Session'),
 
-                  Text(
-                    widget.sessionLabel,
-                    style: CohortTextStyles.h1,
-                  ),
+                    const SizedBox(height: CohortSpacing.md),
 
-                  const SizedBox(height: CohortSpacing.xl),
+                    Text(
+                      widget.sessionLabel,
+                      style: CohortTextStyles.h1,
+                    ),
 
-                  if (steps.isEmpty)
-                    const Text(
-                      'No session steps available.',
-                      style: CohortTextStyles.body,
-                    )
-                  else
-                    _buildExecutionView(mode: mode, steps: steps),
-                ],
+                    const SizedBox(height: CohortSpacing.xl),
+
+                    if (steps.isEmpty)
+                      const Text(
+                        'No session steps available.',
+                        style: CohortTextStyles.body,
+                      )
+                    else
+                      _buildExecutionView(
+                        mode: mode,
+                        steps: steps,
+                        athleteId: athleteId,
+                      ),
+                  ],
+                ),
               ),
             );
           },

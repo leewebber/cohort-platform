@@ -12,6 +12,7 @@ import '../../models/protocol_builder_save_result.dart';
 import '../../models/protocol_draft.dart';
 import '../../models/protocol_metadata_vocabulary.dart';
 import '../../models/protocol_step_draft.dart';
+import '../session/session_preview_screen.dart';
 import 'services/protocol_builder_service.dart';
 
 /// Coach-facing protocol authoring screen.
@@ -87,11 +88,13 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
   List<String> _validationMessages = [];
   bool _isSaving = false;
   bool _isPublishing = false;
+  bool _isUnpublishing = false;
   bool _protocolIdLocked = false;
+  bool _isPublished = false;
   ProtocolBuilderSaveResult? _saveSuccessResult;
   String? _saveErrorMessage;
 
-  bool get _isBusy => _isSaving || _isPublishing;
+  bool get _isBusy => _isSaving || _isPublishing || _isUnpublishing;
 
   @override
   void initState() {
@@ -104,7 +107,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
     final exercises = await _exerciseRepository.getExercises();
 
     if (widget.protocolId != null) {
-      final draft = await _builderService.loadDraft(widget.protocolId!);
+      final draft = await _builderService.loadProtocol(widget.protocolId!);
       if (mounted) {
         setState(() => _applyDraft(draft));
       }
@@ -140,6 +143,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
       ..clear()
       ..addAll(draft.steps.map((step) => step.localId));
     _protocolIdLocked = true;
+    _isPublished = draft.published;
     _validationMessages = [];
     _saveSuccessResult = null;
     _saveErrorMessage = null;
@@ -284,28 +288,6 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
     );
   }
 
-  List<String> _validateDraft() {
-    final messages = <String>[];
-
-    if (_protocolIdController.text.trim().isEmpty) {
-      messages.add('Protocol ID is required.');
-    }
-
-    if (_nameController.text.trim().isEmpty) {
-      messages.add('Protocol name is required.');
-    }
-
-    if (_sessionFormat == null || _sessionFormat!.trim().isEmpty) {
-      messages.add('Session format is required.');
-    }
-
-    if (_steps.isEmpty) {
-      messages.add('Add at least one session step.');
-    }
-
-    return messages;
-  }
-
   void _saveDraft() async {
     if (_isBusy) return;
 
@@ -325,6 +307,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
         _saveSuccessResult = result;
         _isSaving = false;
         _protocolIdLocked = true;
+        _isPublished = false;
       });
 
       await _showSaveSuccessDialog(result);
@@ -368,6 +351,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
         _saveSuccessResult = result;
         _isPublishing = false;
         _protocolIdLocked = true;
+        _isPublished = true;
       });
 
       await _showPublishSuccessDialog(result);
@@ -388,6 +372,135 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
         _saveErrorMessage =
             'We could not publish your protocol right now. Please try again.';
         _isPublishing = false;
+      });
+    }
+  }
+
+  void _savePublishedChanges() async {
+    if (_isBusy) return;
+
+    setState(() {
+      _isSaving = true;
+      _validationMessages = [];
+      _saveSuccessResult = null;
+      _saveErrorMessage = null;
+    });
+
+    try {
+      final result =
+          await _builderService.savePublishedChanges(_buildDraft());
+
+      if (!mounted) return;
+
+      setState(() {
+        _saveSuccessResult = result;
+        _isSaving = false;
+        _protocolIdLocked = true;
+        _isPublished = true;
+      });
+
+      await _showSavedChangesDialog(result);
+    } on ProtocolBuilderException catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _validationMessages = [error.message];
+        _isSaving = false;
+      });
+    } catch (error, stackTrace) {
+      debugPrint('[ProtocolBuilder] save changes failed: $error');
+      debugPrint(stackTrace.toString());
+
+      if (!mounted) return;
+
+      setState(() {
+        _saveErrorMessage =
+            'We could not save your changes right now. Please try again.';
+        _isSaving = false;
+      });
+    }
+  }
+
+  void _unpublishDraft() async {
+    if (_isBusy) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text(
+            'Unpublish protocol?',
+            style: CohortTextStyles.h2,
+          ),
+          content: Text(
+            'This will remove the protocol from the published list. '
+            'Athletes will no longer see it until you publish again.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(
+                'Cancel',
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.textSecondary,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(
+                'Unpublish',
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.danger,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() {
+      _isUnpublishing = true;
+      _validationMessages = [];
+      _saveSuccessResult = null;
+      _saveErrorMessage = null;
+    });
+
+    try {
+      final result = await _builderService.unpublishDraft(_buildDraft());
+
+      if (!mounted) return;
+
+      setState(() {
+        _saveSuccessResult = result;
+        _isUnpublishing = false;
+        _protocolIdLocked = true;
+        _isPublished = false;
+      });
+
+      await _showUnpublishSuccessDialog(result);
+    } on ProtocolBuilderException catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _validationMessages = [error.message];
+        _isUnpublishing = false;
+      });
+    } catch (error, stackTrace) {
+      debugPrint('[ProtocolBuilder] unpublish failed: $error');
+      debugPrint(stackTrace.toString());
+
+      if (!mounted) return;
+
+      setState(() {
+        _saveErrorMessage =
+            'We could not unpublish your protocol right now. Please try again.';
+        _isUnpublishing = false;
       });
     }
   }
@@ -467,6 +580,70 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
     );
   }
 
+  Future<void> _showSavedChangesDialog(
+    ProtocolBuilderSaveResult result,
+  ) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text(
+            'Changes saved',
+            style: CohortTextStyles.h2,
+          ),
+          content: Text(
+            result.message,
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Continue',
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showUnpublishSuccessDialog(
+    ProtocolBuilderSaveResult result,
+  ) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text(
+            'Protocol unpublished',
+            style: CohortTextStyles.h2,
+          ),
+          content: Text(
+            result.message,
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Continue',
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _clearDraft() {
     setState(() {
       _protocolIdController.clear();
@@ -486,6 +663,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
       _steps = [];
       _customisedTitles.clear();
       _protocolIdLocked = false;
+      _isPublished = false;
       _validationMessages = [];
       _saveSuccessResult = null;
       _saveErrorMessage = null;
@@ -493,14 +671,31 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
   }
 
   void _previewDraft() {
-    final messages = _validateDraft();
-    setState(() => _validationMessages = messages);
+    if (_isBusy) return;
 
-    if (messages.isNotEmpty) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SessionPreviewScreen(
+          draft: _buildDraft(),
+        ),
+      ),
+    );
+  }
 
-    final draft = _buildDraft();
-    debugPrint('[ProtocolBuilder] preview draft: $draft');
-    debugPrint('[ProtocolBuilder] steps: ${draft.steps.length}');
+  String _successEyebrow(ProtocolBuilderSaveResult result) {
+    if (result.message.startsWith('Unpublished')) {
+      return 'Unpublished';
+    }
+
+    if (result.message.startsWith('Saved changes')) {
+      return 'Changes saved';
+    }
+
+    if (result.published) {
+      return 'Published';
+    }
+
+    return 'Draft saved';
   }
 
   @override
@@ -566,7 +761,8 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
                   const SizedBox(height: CohortSpacing.sm),
                   const Text(
                     'Create structured sessions with metadata and ordered steps. '
-                    'Save keeps unpublished drafts; publish makes them live.',
+                    'Save keeps unpublished drafts; publish makes them live. '
+                    'Preview shows the athlete session without saving.',
                     style: CohortTextStyles.body,
                   ),
                   const SizedBox(height: CohortSpacing.xl),
@@ -783,9 +979,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            _saveSuccessResult!.published
-                                ? 'Published'
-                                : 'Draft saved',
+                            _successEyebrow(_saveSuccessResult!),
                             style: CohortTextStyles.eyebrow.copyWith(
                               color: CohortColors.success,
                             ),
@@ -864,8 +1058,16 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
                           alignment: Alignment.center,
                           children: [
                             CohortButton(
-                              label: _isSaving ? 'Saving...' : 'Save Draft',
-                              onPressed: _isBusy ? () {} : _saveDraft,
+                              label: _isSaving
+                                  ? 'Saving...'
+                                  : _isPublished
+                                      ? 'Save Changes'
+                                      : 'Save Draft',
+                              onPressed: _isBusy
+                                  ? () {}
+                                  : _isPublished
+                                      ? _savePublishedChanges
+                                      : _saveDraft,
                             ),
                             if (_isSaving)
                               const Positioned(
@@ -892,27 +1094,52 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
                     ],
                   ),
                   const SizedBox(height: CohortSpacing.md),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CohortButton(
-                        label: _isPublishing ? 'Publishing...' : 'Publish',
-                        onPressed: _isBusy ? () {} : _publishDraft,
-                      ),
-                      if (_isPublishing)
-                        const Positioned(
-                          right: CohortSpacing.lg,
-                          child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: CohortColors.background,
+                  if (_isPublished)
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CohortButton(
+                          label: _isUnpublishing
+                              ? 'Unpublishing...'
+                              : 'Unpublish',
+                          onPressed: _isBusy ? () {} : _unpublishDraft,
+                        ),
+                        if (_isUnpublishing)
+                          const Positioned(
+                            right: CohortSpacing.lg,
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: CohortColors.background,
+                              ),
                             ),
                           ),
+                      ],
+                    )
+                  else
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CohortButton(
+                          label: _isPublishing ? 'Publishing...' : 'Publish',
+                          onPressed: _isBusy ? () {} : _publishDraft,
                         ),
-                    ],
-                  ),
+                        if (_isPublishing)
+                          const Positioned(
+                            right: CohortSpacing.lg,
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: CohortColors.background,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                 ],
               ),
             );

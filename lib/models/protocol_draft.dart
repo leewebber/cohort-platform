@@ -9,6 +9,7 @@ class ProtocolDraft {
     required this.protocolId,
     required this.name,
     required this.steps,
+    this.published = false,
     this.primaryCapability,
     this.secondaryCapability,
     this.sessionType,
@@ -35,6 +36,7 @@ class ProtocolDraft {
   final String protocolId;
   final String name;
   final List<ProtocolStepDraft> steps;
+  final bool published;
 
   final String? primaryCapability;
   final String? secondaryCapability;
@@ -62,6 +64,7 @@ class ProtocolDraft {
     String? protocolId,
     String? name,
     List<ProtocolStepDraft>? steps,
+    bool? published,
     String? primaryCapability,
     String? secondaryCapability,
     String? sessionType,
@@ -88,6 +91,7 @@ class ProtocolDraft {
       protocolId: protocolId ?? this.protocolId,
       name: name ?? this.name,
       steps: steps ?? this.steps,
+      published: published ?? this.published,
       primaryCapability: primaryCapability ?? this.primaryCapability,
       secondaryCapability: secondaryCapability ?? this.secondaryCapability,
       sessionType: sessionType ?? this.sessionType,

@@ -1,4 +1,4 @@
-/// Lightweight row for unpublished protocol drafts in Coach Studio.
+/// Lightweight row for protocol lists in Coach Studio.
 class ProtocolDraftSummary {
   const ProtocolDraftSummary({
     required this.protocolId,
