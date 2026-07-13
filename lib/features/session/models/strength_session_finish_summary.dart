@@ -19,7 +19,7 @@ class StrengthSessionFinishSummary {
   final int completedExerciseCount;
   final int totalExerciseCount;
 
-  /// Local-only until `training_sessions` gains a completion reason column.
+  /// Athlete-selected reason when [endedEarly] is true.
   final String? endReasonLabel;
 }
 

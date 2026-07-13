@@ -1,5 +1,6 @@
 import '../../core/services/supabase_service.dart';
 import '../../models/training_session.dart';
+import '../../models/training_session_completion_context.dart';
 import '../../models/training_session_status.dart';
 import 'base_repository.dart';
 
@@ -91,14 +92,30 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
     return fromMap(response);
   }
 
-  Future<TrainingSession?> completeSession(int id) async {
+  Future<TrainingSession?> completeSession(
+    int id, {
+    TrainingSessionCompletionContext? completion,
+  }) async {
     final existing = await getSessionById(id);
     if (existing == null) return null;
 
     final completedAt = DateTime.now().toUtc();
+    final context = completion ?? const TrainingSessionCompletionContext();
+    final sessionNote = context.sessionNote?.trim();
+    final completionReason = context.completionReason?.trim();
+
     final updateMap = <String, dynamic>{
       'status': TrainingSessionStatus.completed.dbValue,
       'completed_at': completedAt.toIso8601String(),
+      'ended_early': context.endedEarly,
+      if (sessionNote != null && sessionNote.isNotEmpty)
+        'session_note': sessionNote,
+      if (completionReason != null && completionReason.isNotEmpty)
+        'completion_reason': completionReason,
+      if (context.completedExerciseCount != null)
+        'completed_exercise_count': context.completedExerciseCount,
+      if (context.totalExerciseCount != null)
+        'total_exercise_count': context.totalExerciseCount,
     };
 
     if (existing.startedAt != null) {

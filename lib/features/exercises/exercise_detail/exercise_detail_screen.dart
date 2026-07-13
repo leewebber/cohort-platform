@@ -3,18 +3,22 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/attribute_grid.dart';
+import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/metadata_row.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
+import '../exercise_history/exercise_history_screen.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
   const ExerciseDetailScreen({
     super.key,
     required this.exercise,
+    this.athleteId,
   });
 
   final Exercise exercise;
+  final String? athleteId;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,14 @@ class ExerciseDetailScreen extends StatelessWidget {
                 icon: Icons.speed_outlined,
                 text: exercise.technicalComplexity,
               ),
+
+              if (_canOpenHistory) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                CohortButton(
+                  label: 'View exercise history',
+                  onPressed: () => _openExerciseHistory(context),
+                ),
+              ],
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -167,6 +179,27 @@ class ExerciseDetailScreen extends StatelessWidget {
 
   bool _hasText(String? value) {
     return value != null && value.trim().isNotEmpty;
+  }
+
+  bool get _canOpenHistory {
+    final resolvedAthleteId = athleteId?.trim();
+    return resolvedAthleteId != null && resolvedAthleteId.isNotEmpty;
+  }
+
+  void _openExerciseHistory(BuildContext context) {
+    final resolvedAthleteId = athleteId?.trim();
+    if (resolvedAthleteId == null || resolvedAthleteId.isEmpty) {
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ExerciseHistoryScreen(
+          exercise: exercise,
+          athleteId: resolvedAthleteId,
+        ),
+      ),
+    );
   }
 }
 

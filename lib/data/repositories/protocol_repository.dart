@@ -26,6 +26,35 @@ class ProtocolRepository {
     return Protocol.fromMap(response);
   }
 
+  /// Resolves protocol display names for a set of ids in one query.
+  Future<Map<String, String>> getProtocolNamesByIds(
+    Set<String> protocolIds,
+  ) async {
+    if (protocolIds.isEmpty) {
+      return const {};
+    }
+
+    final response = await SupabaseService.client
+        .from('performance_protocols')
+        .select('protocol_id, name')
+        .inFilter('protocol_id', protocolIds.toList());
+
+    final names = <String, String>{};
+    for (final row in response) {
+      final map = Map<String, dynamic>.from(row);
+      final protocolId = map['protocol_id']?.toString().trim();
+      final name = map['name']?.toString().trim();
+      if (protocolId == null || protocolId.isEmpty) {
+        continue;
+      }
+
+      names[protocolId] =
+          name == null || name.isEmpty ? protocolId : name;
+    }
+
+    return names;
+  }
+
   Future<Protocol> updateProtocol({
     required String protocolId,
     required ProtocolMetadataUpdate metadata,

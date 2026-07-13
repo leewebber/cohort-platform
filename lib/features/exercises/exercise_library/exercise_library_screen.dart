@@ -10,7 +10,12 @@ import '../../../models/exercise.dart';
 import '../exercise_detail/exercise_detail_screen.dart';
 
 class ExerciseLibraryScreen extends StatefulWidget {
-  const ExerciseLibraryScreen({super.key});
+  const ExerciseLibraryScreen({
+    super.key,
+    this.athleteId,
+  });
+
+  final String? athleteId;
 
   @override
   State<ExerciseLibraryScreen> createState() => _ExerciseLibraryScreenState();
@@ -33,7 +38,10 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ExerciseDetailScreen(exercise: exercise),
+        builder: (_) => ExerciseDetailScreen(
+          exercise: exercise,
+          athleteId: widget.athleteId,
+        ),
       ),
     );
   }

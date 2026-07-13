@@ -54,7 +54,9 @@ class HomeScreen extends StatelessWidget {
   void _openExerciseLibrary(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const ExerciseLibraryScreen(),
+        builder: (_) => const ExerciseLibraryScreen(
+          athleteId: _athleteId,
+        ),
       ),
     );
   }

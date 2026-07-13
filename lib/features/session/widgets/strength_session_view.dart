@@ -8,9 +8,11 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/session_progress_bar.dart';
 import '../../../data/repositories/training_session_set_repository.dart';
+import '../../../models/exercise.dart';
 import '../../../models/exercise_progress_result.dart';
 import '../../../models/previous_exercise_performance.dart';
 import '../../../models/session_step.dart';
+import '../../exercises/exercise_history/exercise_history_screen.dart';
 import '../models/early_session_end_reason.dart';
 import '../models/strength_rest_timer_state.dart';
 import '../models/strength_session_finish_summary.dart';
@@ -27,11 +29,8 @@ import '../services/strength_set_performance_mapper.dart';
 /// `training_session_sets` when [trainingSessionId] is provided.
 ///
 /// v0.3 exercise notes map to `athlete_note` on the final completed set for
-/// that exercise. Session notes are local-only — `training_sessions` has no
-/// notes column yet.
-///
-/// Early-end reason is also local to the finish summary until
-/// `training_sessions` gains `ended_early` / `completion_reason` columns.
+/// that exercise. Session notes persist on `training_sessions.session_note`
+/// when the session is completed.
 class StrengthSessionView extends StatefulWidget {
   const StrengthSessionView({
     super.key,
@@ -780,6 +779,30 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     await widget.onFinishSession(_buildFinishSummary());
   }
 
+  void _openExerciseHistory(BuildContext context, SessionStep step) {
+    final exerciseId = step.exerciseId?.trim();
+    final athleteId = widget.athleteId?.trim();
+    if (exerciseId == null ||
+        exerciseId.isEmpty ||
+        athleteId == null ||
+        athleteId.isEmpty) {
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ExerciseHistoryScreen(
+          exercise: Exercise(
+            exerciseId: exerciseId,
+            name: step.title,
+            published: true,
+          ),
+          athleteId: athleteId,
+        ),
+      ),
+    );
+  }
+
   Future<void> _persistCompletedSet({
     required int stepNumber,
     required StrengthSetEntry entry,
@@ -911,6 +934,10 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
             ),
             onCompleteExercise: () =>
                 _completeExercise(widget.steps[index].stepNumber),
+            onSeeFullHistory: () => _openExerciseHistory(
+              context,
+              widget.steps[index],
+            ),
           ),
         ],
         if (_isRealSession && !_allExercisesComplete) ...[
@@ -958,6 +985,7 @@ class _StrengthExerciseCard extends StatelessWidget {
     required this.onAddSet,
     required this.onRemoveExtraSet,
     required this.onCompleteExercise,
+    this.onSeeFullHistory,
   });
 
   final _StrengthExerciseLog log;
@@ -976,6 +1004,7 @@ class _StrengthExerciseCard extends StatelessWidget {
   final VoidCallback onAddSet;
   final void Function(String localId) onRemoveExtraSet;
   final VoidCallback onCompleteExercise;
+  final VoidCallback? onSeeFullHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -1068,6 +1097,9 @@ class _StrengthExerciseCard extends StatelessWidget {
                 return _PreviousPerformanceSection(
                   performance: snapshot.data,
                   isLoading: snapshot.connectionState == ConnectionState.waiting,
+                  canOpenFullHistory: onSeeFullHistory != null &&
+                      (snapshot.data?.hasHistory ?? false),
+                  onSeeFullHistory: onSeeFullHistory,
                 );
               },
             ),
@@ -1272,10 +1304,14 @@ class _PreviousPerformanceSection extends StatelessWidget {
   const _PreviousPerformanceSection({
     required this.performance,
     required this.isLoading,
+    required this.canOpenFullHistory,
+    this.onSeeFullHistory,
   });
 
   final PreviousExercisePerformance? performance;
   final bool isLoading;
+  final bool canOpenFullHistory;
+  final VoidCallback? onSeeFullHistory;
 
   static const _opportunityItems = [
     'More weight',
@@ -1312,6 +1348,21 @@ class _PreviousPerformanceSection extends StatelessWidget {
                 style: CohortTextStyles.body,
               ),
             ),
+          if (canOpenFullHistory && onSeeFullHistory != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: onSeeFullHistory,
+                child: Text(
+                  'See full history',
+                  style: CohortTextStyles.body.copyWith(
+                    color: CohortColors.olive,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ] else
           Text(
             'This is your first recorded performance.',
@@ -1759,7 +1810,7 @@ class _SessionNoteFieldState extends State<_SessionNoteField> {
         ),
         const SizedBox(height: CohortSpacing.xs),
         Text(
-          'Session notes stay on this device for now.',
+          'Saved when you finish the session.',
           style: CohortTextStyles.small,
         ),
       ],

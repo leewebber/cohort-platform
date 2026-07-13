@@ -14,6 +14,7 @@ import '../../models/exercise.dart';
 import '../../models/protocol.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
+import '../../models/training_session_completion_context.dart';
 import 'models/strength_session_finish_summary.dart';
 import 'services/session_execution_router.dart';
 import 'services/session_wins_builder.dart';
@@ -146,7 +147,16 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
 
     final sessionId = widget.trainingSessionId;
     if (sessionId != null) {
-      await _trainingSessionRepository.completeSession(sessionId);
+      await _trainingSessionRepository.completeSession(
+        sessionId,
+        completion: TrainingSessionCompletionContext(
+          sessionNote: summary.sessionNote,
+          endedEarly: summary.endedEarly,
+          completionReason: summary.endReasonLabel,
+          completedExerciseCount: summary.completedExerciseCount,
+          totalExerciseCount: summary.totalExerciseCount,
+        ),
+      );
     }
 
     if (!mounted) {

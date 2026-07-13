@@ -13,6 +13,11 @@ class TrainingSession {
     this.startedAt,
     this.completedAt,
     this.durationSeconds,
+    this.sessionNote,
+    this.endedEarly = false,
+    this.completionReason,
+    this.completedExerciseCount,
+    this.totalExerciseCount,
     this.createdAt,
     this.updatedAt,
   });
@@ -27,6 +32,11 @@ class TrainingSession {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final int? durationSeconds;
+  final String? sessionNote;
+  final bool endedEarly;
+  final String? completionReason;
+  final int? completedExerciseCount;
+  final int? totalExerciseCount;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -37,11 +47,16 @@ class TrainingSession {
       protocolId: _trimStringRequired(map['protocol_id']),
       status: TrainingSessionStatusDb.fromDb(map['status']?.toString()),
       programmeId: _trimString(map['programme_id']),
-      weekNumber: map['week_number'],
+      weekNumber: _nullableInt(map['week_number']),
       day: _trimString(map['day']),
       startedAt: _parseDateTime(map['started_at']),
       completedAt: _parseDateTime(map['completed_at']),
-      durationSeconds: map['duration_seconds'],
+      durationSeconds: _nullableInt(map['duration_seconds']),
+      sessionNote: _trimString(map['session_note']),
+      endedEarly: map['ended_early'] == true,
+      completionReason: _trimString(map['completion_reason']),
+      completedExerciseCount: _nullableInt(map['completed_exercise_count']),
+      totalExerciseCount: _nullableInt(map['total_exercise_count']),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
     );
@@ -69,6 +84,18 @@ class TrainingSession {
 
   static String _trimStringRequired(dynamic value) {
     return value?.toString().trim() ?? '';
+  }
+
+  static int? _nullableInt(dynamic value) {
+    if (value == null) {
+      return null;
+    }
+
+    if (value is int) {
+      return value;
+    }
+
+    return int.tryParse(value.toString());
   }
 
   static DateTime? _parseDateTime(dynamic value) {
