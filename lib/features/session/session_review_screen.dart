@@ -125,6 +125,7 @@ class _SessionWinCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final accentColor = switch (win.type) {
       SessionWinType.loadProgress ||
+      SessionWinType.paceProgress ||
       SessionWinType.repProgress ||
       SessionWinType.volumeProgress ||
       SessionWinType.rpeProgress =>

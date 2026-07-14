@@ -17,6 +17,7 @@ class SessionWin {
 
 enum SessionWinType {
   loadProgress,
+  paceProgress,
   repProgress,
   volumeProgress,
   rpeProgress,

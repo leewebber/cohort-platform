@@ -11,15 +11,21 @@ import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
 import '../../data/repositories/training_session_repository.dart';
 import '../../models/exercise.dart';
+import '../../models/interval_session_plan.dart';
 import '../../models/protocol.dart';
+import '../../models/protocol_step.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
 import '../../models/training_session_completion_context.dart';
+import 'models/interval_session_finish_summary.dart';
 import 'models/strength_session_finish_summary.dart';
+import 'services/interval_session_plan_builder.dart';
+import 'services/interval_session_leave_coordinator.dart';
 import 'services/session_execution_router.dart';
 import 'services/session_wins_builder.dart';
 import 'services/strength_session_leave_coordinator.dart';
 import 'session_review_screen.dart';
+import 'widgets/interval_session_view.dart';
 import 'widgets/strength_session_view.dart';
 
 class SessionPlayerScreen extends StatefulWidget {
@@ -45,11 +51,15 @@ class _SessionPlayerContent {
     required this.mode,
     required this.steps,
     this.athleteId,
+    this.intervalPlan,
+    this.intervalPlanError,
   });
 
   final SessionExecutionMode mode;
   final List<SessionStep> steps;
   final String? athleteId;
+  final IntervalSessionPlan? intervalPlan;
+  final String? intervalPlanError;
 }
 
 class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
@@ -59,10 +69,12 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   final _trainingSessionRepository = const TrainingSessionRepository();
   static const _executionRouter = SessionExecutionRouter();
   static const _sessionWinsBuilder = SessionWinsBuilder();
+  static const _intervalPlanBuilder = IntervalSessionPlanBuilder();
 
   bool _isTimerRunning = false;
   late final Future<_SessionPlayerContent> _contentFuture;
   StrengthSessionLeaveCoordinator? _strengthLeaveCoordinator;
+  IntervalSessionLeaveCoordinator? _intervalLeaveCoordinator;
   SessionExecutionMode? _resolvedMode;
 
   @override
@@ -73,20 +85,36 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
 
   Future<_SessionPlayerContent> _loadSessionContent() async {
     final protocol = await _protocolRepository.getProtocolById(widget.protocolId);
-    final steps = await _loadSessionSteps();
+    final protocolSteps =
+        await _stepRepository.getProtocolSteps(widget.protocolId);
+    final steps = await _sessionStepsFromProtocolSteps(protocolSteps);
     final athleteId = await _resolveAthleteId();
-    final mode = _executionRouter.determineExecutionMode(
-      protocol ??
-          Protocol(
-            protocolId: widget.protocolId,
-            name: widget.sessionLabel,
-          ),
-    );
+    final resolvedProtocol = protocol ??
+        Protocol(
+          protocolId: widget.protocolId,
+          name: widget.sessionLabel,
+        );
+    final mode = _executionRouter.determineExecutionMode(resolvedProtocol);
+
+    IntervalSessionPlan? intervalPlan;
+    String? intervalPlanError;
+    if (mode == SessionExecutionMode.intervals) {
+      try {
+        intervalPlan = _intervalPlanBuilder.build(
+          protocol: resolvedProtocol,
+          steps: protocolSteps,
+        );
+      } on StateError catch (error) {
+        intervalPlanError = error.message;
+      }
+    }
 
     return _SessionPlayerContent(
       mode: mode,
       steps: steps,
       athleteId: athleteId,
+      intervalPlan: intervalPlan,
+      intervalPlanError: intervalPlanError,
     );
   }
 
@@ -105,10 +133,9 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     return athleteId;
   }
 
-  Future<List<SessionStep>> _loadSessionSteps() async {
-    final protocolSteps =
-        await _stepRepository.getProtocolSteps(widget.protocolId);
-
+  Future<List<SessionStep>> _sessionStepsFromProtocolSteps(
+    List<ProtocolStep> protocolSteps,
+  ) async {
     final exerciseIds = protocolSteps
         .map((step) => step.exerciseId)
         .whereType<String>()
@@ -194,9 +221,59 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
       return;
     }
 
+    final intervalCoordinator = _intervalLeaveCoordinator;
+    if (_resolvedMode == SessionExecutionMode.intervals &&
+        widget.trainingSessionId != null &&
+        intervalCoordinator != null &&
+        intervalCoordinator.hasRecordedProgress()) {
+      await intervalCoordinator.confirmLeave(context);
+      return;
+    }
+
     if (mounted) {
       Navigator.pop(context);
     }
+  }
+
+  Future<void> _finishIntervalSession(
+    IntervalSessionFinishSummary summary,
+  ) async {
+    setState(() => _isTimerRunning = false);
+
+    final sessionId = widget.trainingSessionId;
+    if (sessionId != null) {
+      await _trainingSessionRepository.completeSession(
+        sessionId,
+        completion: TrainingSessionCompletionContext(
+          sessionNote: summary.sessionNote,
+          endedEarly: summary.endedEarly,
+          completionReason: summary.endReasonLabel,
+          completedExerciseCount: summary.completedWorkCount,
+          totalExerciseCount: summary.totalWorkCount,
+        ),
+      );
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    final wins = _sessionWinsBuilder.buildInterval(summary);
+
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (reviewContext) => SessionReviewScreen(
+          sessionTitle: summary.sessionTitle,
+          wins: wins,
+          sessionNote: summary.sessionNote,
+          endedEarly: summary.endedEarly,
+          completedExerciseCount: summary.completedWorkCount,
+          totalExerciseCount: summary.totalWorkCount,
+          endReasonLabel: summary.endReasonLabel,
+          onReturnHome: () => Navigator.of(reviewContext).pop(),
+        ),
+      ),
+    );
   }
 
   Future<void> _finishSession() async {
@@ -216,6 +293,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     required SessionExecutionMode mode,
     required List<SessionStep> steps,
     String? athleteId,
+    IntervalSessionPlan? intervalPlan,
+    String? intervalPlanError,
   }) {
     switch (mode) {
       case SessionExecutionMode.circuit:
@@ -238,8 +317,31 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           },
         );
       case SessionExecutionMode.intervals:
-        // TODO(Execution): Replace with IntervalSessionView.
-        return _legacyGuidedPlayer(steps);
+        if (intervalPlanError != null) {
+          return Text(
+            intervalPlanError,
+            style: CohortTextStyles.body,
+          );
+        }
+
+        if (intervalPlan == null) {
+          return const Text(
+            'Unable to compile interval session plan.',
+            style: CohortTextStyles.body,
+          );
+        }
+
+        return IntervalSessionView(
+          sessionTitle: widget.sessionLabel,
+          plan: intervalPlan,
+          trainingSessionId: widget.trainingSessionId,
+          athleteId: athleteId,
+          protocolId: widget.protocolId,
+          onFinishSession: _finishIntervalSession,
+          onLeaveCoordinatorReady: (coordinator) {
+            _intervalLeaveCoordinator = coordinator;
+          },
+        );
       case SessionExecutionMode.recoveryFlow:
         // TODO(Execution): Replace with RecoverySessionView.
         return _legacyGuidedPlayer(steps);
@@ -284,10 +386,16 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
             final steps = content?.steps ?? [];
             final mode = content?.mode ?? SessionExecutionMode.circuit;
             final athleteId = content?.athleteId;
+            final intervalPlan = content?.intervalPlan;
+            final intervalPlanError = content?.intervalPlanError;
             _resolvedMode = mode;
 
-            final interceptBack = mode == SessionExecutionMode.structuredStrength &&
-                widget.trainingSessionId != null;
+            final interceptBack = widget.trainingSessionId != null &&
+                (mode == SessionExecutionMode.structuredStrength ||
+                    mode == SessionExecutionMode.intervals);
+
+            final hasIntervalPlanError = mode == SessionExecutionMode.intervals &&
+                intervalPlanError != null;
 
             return PopScope(
               canPop: !interceptBack,
@@ -320,9 +428,21 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
 
                     const SizedBox(height: CohortSpacing.xl),
 
-                    if (steps.isEmpty)
+                    if (hasIntervalPlanError)
+                      Text(
+                        intervalPlanError,
+                        style: CohortTextStyles.body,
+                      )
+                    else if (steps.isEmpty &&
+                        mode != SessionExecutionMode.intervals)
                       const Text(
                         'No session steps available.',
+                        style: CohortTextStyles.body,
+                      )
+                    else if (mode == SessionExecutionMode.intervals &&
+                        intervalPlan == null)
+                      const Text(
+                        'Unable to compile interval session plan.',
                         style: CohortTextStyles.body,
                       )
                     else
@@ -330,6 +450,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
                         mode: mode,
                         steps: steps,
                         athleteId: athleteId,
+                        intervalPlan: intervalPlan,
+                        intervalPlanError: intervalPlanError,
                       ),
                   ],
                 ),

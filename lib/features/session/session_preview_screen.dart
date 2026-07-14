@@ -7,13 +7,16 @@ import '../../core/widgets/circuit_session_card.dart';
 import '../../core/widgets/section_title.dart';
 import '../../core/widgets/session_progress_bar.dart';
 import '../../core/widgets/session_step_card.dart';
+import '../../models/interval_session_plan.dart';
 import '../../models/protocol.dart';
 import '../../models/protocol_draft.dart';
 import '../../models/protocol_step.dart';
 import '../../models/protocol_step_draft.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
+import 'services/interval_session_plan_builder.dart';
 import 'services/session_execution_router.dart';
+import 'widgets/interval_session_view.dart';
 import 'widgets/strength_session_view.dart';
 
 /// In-memory protocol preview for Coach Studio.
@@ -34,6 +37,7 @@ class SessionPreviewScreen extends StatefulWidget {
 
 class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   static const _executionRouter = SessionExecutionRouter();
+  static const _intervalPlanBuilder = IntervalSessionPlanBuilder();
 
   static const _sessionFormatToSessionType = {
     'circuit': 'Circuit',
@@ -60,6 +64,23 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     return _executionRouter.determineExecutionMode(_protocolFromDraft(widget.draft));
   }
 
+  _CompiledIntervalPlan? get _compiledIntervalPlan {
+    if (_executionMode != SessionExecutionMode.intervals) {
+      return null;
+    }
+
+    try {
+      return _CompiledIntervalPlan(
+        plan: _intervalPlanBuilder.build(
+          protocol: _protocolFromDraft(widget.draft),
+          steps: _protocolStepsFromDraft(widget.draft),
+        ),
+      );
+    } on StateError catch (error) {
+      return _CompiledIntervalPlan(error: error.message);
+    }
+  }
+
   void _startTimer() {
     setState(() => _isTimerRunning = true);
   }
@@ -72,6 +93,9 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   Widget build(BuildContext context) {
     final steps = _steps;
     final mode = _executionMode;
+    final intervalCompilation = _compiledIntervalPlan;
+    final intervalPlan = intervalCompilation?.plan;
+    final intervalPlanError = intervalCompilation?.error;
 
     return Scaffold(
       body: SafeArea(
@@ -94,13 +118,28 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
                 style: CohortTextStyles.h1,
               ),
               const SizedBox(height: CohortSpacing.xl),
-              if (steps.isEmpty)
+              if (intervalPlanError != null)
+                Text(
+                  intervalPlanError,
+                  style: CohortTextStyles.body,
+                )
+              else if (steps.isEmpty && mode != SessionExecutionMode.intervals)
                 const Text(
                   'No session steps available.',
                   style: CohortTextStyles.body,
                 )
+              else if (mode == SessionExecutionMode.intervals &&
+                  intervalPlan == null)
+                const Text(
+                  'Unable to compile interval session plan.',
+                  style: CohortTextStyles.body,
+                )
               else
-                _buildExecutionView(mode: mode, steps: steps),
+                _buildExecutionView(
+                  mode: mode,
+                  steps: steps,
+                  intervalPlan: intervalPlan,
+                ),
             ],
           ),
         ),
@@ -111,6 +150,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   Widget _buildExecutionView({
     required SessionExecutionMode mode,
     required List<SessionStep> steps,
+    IntervalSessionPlan? intervalPlan,
   }) {
     switch (mode) {
       case SessionExecutionMode.circuit:
@@ -127,7 +167,19 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
           onFinishSession: (_) async => _exitPreview(),
         );
       case SessionExecutionMode.intervals:
-        return _legacyGuidedPlayer(steps);
+        if (intervalPlan == null) {
+          return const Text(
+            'Unable to compile interval session plan.',
+            style: CohortTextStyles.body,
+          );
+        }
+
+        return IntervalSessionView(
+          sessionTitle: _sessionTitle,
+          plan: intervalPlan,
+          previewMode: true,
+          onFinishSession: (_) async => _exitPreview(),
+        );
       case SessionExecutionMode.recoveryFlow:
         return _legacyGuidedPlayer(steps);
     }
@@ -184,6 +236,28 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     return ordered.map(_sessionStepFromDraft).toList(growable: false);
   }
 
+  static List<ProtocolStep> _protocolStepsFromDraft(ProtocolDraft draft) {
+    final ordered = List<ProtocolStepDraft>.from(draft.steps)
+      ..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
+
+    return ordered
+        .map(
+          (stepDraft) => ProtocolStep(
+            id: stepDraft.persistedId ?? 0,
+            protocolId: draft.protocolId,
+            stepOrder: stepDraft.stepOrder,
+            section: stepDraft.section ?? '',
+            stepType: stepDraft.stepType ?? '',
+            displayStyle: stepDraft.displayStyle ?? 'exercise',
+            exerciseId: stepDraft.exerciseId,
+            title: stepDraft.title,
+            notes: stepDraft.notes,
+            metadata: stepDraft.toMetadataMap(),
+          ),
+        )
+        .toList(growable: false);
+  }
+
   static SessionStep _sessionStepFromDraft(ProtocolStepDraft draft) {
     final protocolStep = ProtocolStep(
       id: draft.persistedId ?? 0,
@@ -200,6 +274,16 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
 
     return SessionStep.fromProtocolStep(protocolStep);
   }
+}
+
+class _CompiledIntervalPlan {
+  const _CompiledIntervalPlan({
+    this.plan,
+    this.error,
+  });
+
+  final IntervalSessionPlan? plan;
+  final String? error;
 }
 
 class _PreviewBanner extends StatelessWidget {

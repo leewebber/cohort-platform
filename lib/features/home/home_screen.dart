@@ -36,6 +36,7 @@ import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocol_analysis/services/protocol_analyzer.dart';
 import '../protocol_analysis/services/protocol_similarity_service.dart';
 import '../protocols/protocol_library_screen.dart';
+import '../session/services/interval_session_plan_builder.dart';
 import '../session/session_player_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -285,6 +286,37 @@ class HomeScreen extends StatelessWidget {
       '[ProtocolAnalyzer] fingerprint.substitutionDifficulty: ${fingerprint.substitutionDifficulty.name}',
     );
     debugPrint('[ProtocolAnalyzer] fingerprint summary: $fingerprint');
+  }
+
+  Future<void> _compileRn006IntervalPlan() async {
+    const protocolId = 'RN-006';
+    final protocolRepository = ProtocolRepository();
+    const stepRepository = ProtocolStepRepository();
+    const planBuilder = IntervalSessionPlanBuilder();
+
+    try {
+      final protocol = await protocolRepository.getProtocolById(protocolId);
+      if (protocol == null) {
+        debugPrint(
+          '[IntervalSessionPlanBuilder] aborted: protocol not found for $protocolId',
+        );
+        return;
+      }
+
+      final steps = await stepRepository.getProtocolSteps(protocolId);
+      if (steps.isEmpty) {
+        debugPrint(
+          '[IntervalSessionPlanBuilder] aborted: no protocol steps for $protocolId',
+        );
+        return;
+      }
+
+      final plan = planBuilder.build(protocol: protocol, steps: steps);
+      IntervalSessionPlanBuilder.debugPrintPlan(plan);
+    } catch (error, stackTrace) {
+      debugPrint('[IntervalSessionPlanBuilder] failed: $error');
+      debugPrint('[IntervalSessionPlanBuilder] stackTrace: $stackTrace');
+    }
   }
 
   // TODO(debug): Remove temporary similarity hook once adaptation ranking exists.
@@ -782,6 +814,17 @@ class HomeScreen extends StatelessWidget {
                   title: 'Compare BW-001 Similarity',
                   subtitle:
                       'Temporary debug hook for top protocol similarity matches.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _compileRn006IntervalPlan,
+                child: const _HomeActionRow(
+                  title: 'Compile RN-006 Interval Plan',
+                  subtitle:
+                      'Temporary debug hook for IntervalSessionPlanBuilder output.',
                   status: 'DEBUG',
                 ),
               ),
