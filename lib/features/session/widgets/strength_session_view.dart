@@ -6,14 +6,21 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
-import '../../../core/widgets/session_progress_bar.dart';
 import '../../../data/repositories/training_session_set_repository.dart';
 import '../../../models/exercise.dart';
 import '../../../models/exercise_progress_result.dart';
 import '../../../models/previous_exercise_performance.dart';
 import '../../../models/session_step.dart';
 import '../../exercises/exercise_history/exercise_history_screen.dart';
-import '../models/early_session_end_reason.dart';
+import '../models/early_session_end_result.dart';
+import '../models/session_leave_decision.dart';
+import 'shared/early_session_end_dialog.dart';
+import 'shared/previous_performance_shell.dart';
+import 'shared/progress_result_card.dart';
+import 'shared/session_execution_header.dart';
+import 'shared/session_finish_actions.dart';
+import 'shared/session_note_field.dart';
+import 'shared/session_progress_summary.dart';
 import '../models/strength_rest_timer_state.dart';
 import '../models/strength_session_finish_summary.dart';
 import '../models/strength_set_entry.dart';
@@ -348,7 +355,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       return;
     }
 
-    final choice = await showDialog<_LeaveSessionChoice>(
+    final choice = await showDialog<SessionLeaveDecision>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
@@ -364,7 +371,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
           actions: [
             TextButton(
               onPressed: () =>
-                  Navigator.of(dialogContext).pop(_LeaveSessionChoice.resumeLater),
+                  Navigator.of(dialogContext).pop(SessionLeaveDecision.resumeLater),
               child: Text(
                 'Resume later',
                 style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
@@ -372,7 +379,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
             ),
             TextButton(
               onPressed: () =>
-                  Navigator.of(dialogContext).pop(_LeaveSessionChoice.endEarly),
+                  Navigator.of(dialogContext).pop(SessionLeaveDecision.endEarly),
               child: Text(
                 'End session early',
                 style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
@@ -380,7 +387,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
             ),
             TextButton(
               onPressed: () =>
-                  Navigator.of(dialogContext).pop(_LeaveSessionChoice.cancel),
+                  Navigator.of(dialogContext).pop(SessionLeaveDecision.cancel),
               child: Text(
                 'Cancel',
                 style: CohortTextStyles.body,
@@ -391,27 +398,29 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       },
     );
 
-    if (!context.mounted || choice == null || choice == _LeaveSessionChoice.cancel) {
+    if (!context.mounted || choice == null || choice == SessionLeaveDecision.cancel) {
       return;
     }
 
     switch (choice) {
-      case _LeaveSessionChoice.resumeLater:
+      case SessionLeaveDecision.resumeLater:
         Navigator.of(context).pop();
-      case _LeaveSessionChoice.endEarly:
+      case SessionLeaveDecision.endEarly:
         await _showEndSessionEarlyDialog(context);
-      case _LeaveSessionChoice.cancel:
+      case SessionLeaveDecision.cancel:
         break;
     }
   }
 
   Future<void> _showEndSessionEarlyDialog(BuildContext context) async {
-    final result = await showDialog<_EndSessionEarlyResult>(
+    final result = await showDialog<EarlySessionEndResult>(
       context: context,
       builder: (dialogContext) {
-        return _EndSessionEarlyDialog(
-          completedExerciseCount: _completedExerciseCountForSummary,
-          totalExerciseCount: widget.steps.length,
+        return EarlySessionEndDialog(
+          completedCount: _completedExerciseCountForSummary,
+          totalCount: widget.steps.length,
+          unitLabel: 'exercises',
+          emphasizeConfirmButton: true,
         );
       },
     );
@@ -860,24 +869,17 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'STRUCTURED STRENGTH',
-          style: CohortTextStyles.eyebrow,
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        Text(
-          widget.sessionTitle,
-          style: CohortTextStyles.h2,
+        SessionExecutionHeader(
+          modeLabel: 'STRUCTURED STRENGTH',
+          sessionTitle: widget.sessionTitle,
         ),
         const SizedBox(height: CohortSpacing.xl),
-        SessionProgressBar(
-          currentStep: _completedCount == 0 ? 1 : _completedCount,
-          totalSteps: widget.steps.length,
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        Text(
-          '$_completedCount of ${widget.steps.length} exercises complete',
-          style: CohortTextStyles.small,
+        SessionProgressSummary(
+          completedCount: _completedCount,
+          totalCount: widget.steps.length,
+          summaryLabel:
+              '$_completedCount of ${widget.steps.length} exercises complete',
+          showProgressBar: true,
         ),
         if (_isHydratingSession) ...[
           const SizedBox(height: CohortSpacing.xs),
@@ -942,31 +944,22 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
         ],
         if (_isRealSession && !_allExercisesComplete) ...[
           const SizedBox(height: CohortSpacing.xl),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () => _showEndSessionEarlyDialog(context),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: CohortColors.textSecondary,
-                side: const BorderSide(color: CohortColors.border),
-              ),
-              child: Text(
-                'End Session Early',
-                style: CohortTextStyles.body,
-              ),
-            ),
+          SessionFinishActions(
+            showEndSessionEarly: true,
+            onEndSessionEarly: () => _showEndSessionEarlyDialog(context),
           ),
         ],
         if (_allExercisesComplete) ...[
           const SizedBox(height: CohortSpacing.xl),
-          _SessionNoteField(
+          SessionNoteField(
             value: _sessionNote,
             onChanged: (value) => setState(() => _sessionNote = value),
+            helperText: 'Saved when you finish the session.',
           ),
           const SizedBox(height: CohortSpacing.md),
-          CohortButton(
-            label: 'Finish Session',
-            onPressed: _handleFinishSession,
+          SessionFinishActions(
+            showFinishSession: true,
+            onFinishSession: _handleFinishSession,
           ),
         ],
       ],
@@ -1047,7 +1040,13 @@ class _StrengthExerciseCard extends StatelessWidget {
                   ],
                   if (log.progressResult != null) ...[
                     const SizedBox(height: CohortSpacing.md),
-                    _ProgressResultCard(result: log.progressResult!),
+                    ProgressResultCard(
+                      title: log.progressResult!.title,
+                      message: log.progressResult!.message,
+                      accentColor: _exerciseProgressAccent(
+                        log.progressResult!.progressType,
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -1252,54 +1251,6 @@ class _StrengthRestTimerBar extends StatelessWidget {
   }
 }
 
-class _ProgressResultCard extends StatelessWidget {
-  const _ProgressResultCard({required this.result});
-
-  final ExerciseProgressResult result;
-
-  @override
-  Widget build(BuildContext context) {
-    final accentColor = switch (result.progressType) {
-      ExerciseProgressType.firstPerformance => CohortColors.olive,
-      ExerciseProgressType.loadProgress ||
-      ExerciseProgressType.repProgress ||
-      ExerciseProgressType.volumeProgress ||
-      ExerciseProgressType.rpeProgress =>
-        CohortColors.success,
-      ExerciseProgressType.matchedPerformance => CohortColors.olive,
-      ExerciseProgressType.mixedResult => CohortColors.warning,
-      ExerciseProgressType.insufficientData => CohortColors.textSecondary,
-    };
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(CohortSpacing.md),
-      decoration: BoxDecoration(
-        color: CohortColors.surfaceRaised,
-        borderRadius: CohortRadius.smallRadius,
-        border: Border.all(color: accentColor.withValues(alpha: 0.35)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            result.title,
-            style: CohortTextStyles.small.copyWith(
-              color: accentColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: CohortSpacing.xs),
-          Text(
-            result.message,
-            style: CohortTextStyles.small,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _PreviousPerformanceSection extends StatelessWidget {
   const _PreviousPerformanceSection({
     required this.performance,
@@ -1322,69 +1273,70 @@ class _PreviousPerformanceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Text(
-        'Loading previous performance...',
-        style: CohortTextStyles.small,
-      );
-    }
-
     final hasHistory = performance?.hasHistory ?? false;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (hasHistory) ...[
-          Text(
-            'LAST PERFORMANCE',
-            style: CohortTextStyles.eyebrow,
-          ),
-          const SizedBox(height: CohortSpacing.sm),
-          for (final set in performance!.sets)
-            Padding(
-              padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-              child: Text(
-                set.displayLine,
-                style: CohortTextStyles.body,
-              ),
-            ),
-          if (canOpenFullHistory && onSeeFullHistory != null) ...[
-            const SizedBox(height: CohortSpacing.sm),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                onPressed: onSeeFullHistory,
-                child: Text(
-                  'See full history',
-                  style: CohortTextStyles.body.copyWith(
-                    color: CohortColors.olive,
-                  ),
+    return PreviousPerformanceShell(
+      isLoading: isLoading,
+      content: hasHistory
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'LAST PERFORMANCE',
+                  style: CohortTextStyles.eyebrow,
                 ),
-              ),
-            ),
-          ],
-        ] else
-          Text(
-            'This is your first recorded performance.',
-            style: CohortTextStyles.body,
-          ),
-        const SizedBox(height: CohortSpacing.xl),
-        Text(
-          "Today's Opportunity",
-          style: CohortTextStyles.eyebrow,
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        for (final item in _opportunityItems)
-          Padding(
-            padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-            child: Text(
-              '• $item',
+                const SizedBox(height: CohortSpacing.sm),
+                for (final set in performance!.sets)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
+                    child: Text(
+                      set.displayLine,
+                      style: CohortTextStyles.body,
+                    ),
+                  ),
+                if (canOpenFullHistory && onSeeFullHistory != null) ...[
+                  const SizedBox(height: CohortSpacing.sm),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: onSeeFullHistory,
+                      child: Text(
+                        'See full history',
+                        style: CohortTextStyles.body.copyWith(
+                          color: CohortColors.olive,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            )
+          : null,
+      emptyState: hasHistory
+          ? null
+          : Text(
+              'This is your first recorded performance.',
               style: CohortTextStyles.body,
             ),
-          ),
-      ],
+      opportunitySection: const TodaysOpportunitySection(
+        items: _opportunityItems,
+      ),
     );
   }
+}
+
+Color _exerciseProgressAccent(ExerciseProgressType progressType) {
+  return switch (progressType) {
+    ExerciseProgressType.firstPerformance => CohortColors.olive,
+    ExerciseProgressType.loadProgress ||
+    ExerciseProgressType.repProgress ||
+    ExerciseProgressType.volumeProgress ||
+    ExerciseProgressType.rpeProgress =>
+      CohortColors.success,
+    ExerciseProgressType.matchedPerformance => CohortColors.olive,
+    ExerciseProgressType.mixedResult => CohortColors.warning,
+    ExerciseProgressType.insufficientData => CohortColors.textSecondary,
+  };
 }
 
 class _StrengthSetRow extends StatefulWidget {
@@ -1735,88 +1687,6 @@ class _AthleteNoteFieldState extends State<_AthleteNoteField> {
   }
 }
 
-class _SessionNoteField extends StatefulWidget {
-  const _SessionNoteField({
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String? value;
-  final ValueChanged<String> onChanged;
-
-  @override
-  State<_SessionNoteField> createState() => _SessionNoteFieldState();
-}
-
-class _SessionNoteFieldState extends State<_SessionNoteField> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.value ?? '');
-  }
-
-  @override
-  void didUpdateWidget(covariant _SessionNoteField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value && widget.value != _controller.text) {
-      _controller.text = widget.value ?? '';
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'SESSION NOTE',
-          style: CohortTextStyles.eyebrow,
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        TextField(
-          controller: _controller,
-          style: CohortTextStyles.body,
-          maxLines: 3,
-          onChanged: widget.onChanged,
-          decoration: InputDecoration(
-            hintText: 'Optional reflection for this session',
-            hintStyle: CohortTextStyles.small,
-            isDense: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: CohortSpacing.md,
-              vertical: CohortSpacing.md,
-            ),
-            border: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.border),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.border),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.borderStrong),
-            ),
-          ),
-        ),
-        const SizedBox(height: CohortSpacing.xs),
-        Text(
-          'Saved when you finish the session.',
-          style: CohortTextStyles.small,
-        ),
-      ],
-    );
-  }
-}
 
 class _StrengthInputField extends StatelessWidget {
   const _StrengthInputField({
@@ -1861,116 +1731,6 @@ class _StrengthInputField extends StatelessWidget {
               borderRadius: CohortRadius.smallRadius,
               borderSide: const BorderSide(color: CohortColors.borderStrong),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-enum _LeaveSessionChoice {
-  resumeLater,
-  endEarly,
-  cancel,
-}
-
-class _EndSessionEarlyResult {
-  const _EndSessionEarlyResult({this.reason});
-
-  final EarlySessionEndReason? reason;
-}
-
-class _EndSessionEarlyDialog extends StatefulWidget {
-  const _EndSessionEarlyDialog({
-    required this.completedExerciseCount,
-    required this.totalExerciseCount,
-  });
-
-  final int completedExerciseCount;
-  final int totalExerciseCount;
-
-  @override
-  State<_EndSessionEarlyDialog> createState() => _EndSessionEarlyDialogState();
-}
-
-class _EndSessionEarlyDialogState extends State<_EndSessionEarlyDialog> {
-  EarlySessionEndReason? _selectedReason;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: CohortColors.surfaceRaised,
-      title: Text(
-        'End session early?',
-        style: CohortTextStyles.cardTitle,
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'You have completed ${widget.completedExerciseCount} of '
-              '${widget.totalExerciseCount} exercises. End this session now?',
-              style: CohortTextStyles.body,
-            ),
-            const SizedBox(height: CohortSpacing.lg),
-            Text(
-              'Reason (optional)',
-              style: CohortTextStyles.muted,
-            ),
-            const SizedBox(height: CohortSpacing.sm),
-            for (final reason in EarlySessionEndReason.values)
-              Padding(
-                padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-                child: InkWell(
-                  onTap: () => setState(() {
-                    _selectedReason =
-                        _selectedReason == reason ? null : reason;
-                  }),
-                  borderRadius: CohortRadius.smallRadius,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: CohortSpacing.md,
-                      vertical: CohortSpacing.sm,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _selectedReason == reason
-                          ? CohortColors.oliveSoft
-                          : Colors.transparent,
-                      borderRadius: CohortRadius.smallRadius,
-                      border: Border.all(
-                        color: _selectedReason == reason
-                            ? CohortColors.olive
-                            : CohortColors.border,
-                      ),
-                    ),
-                    child: Text(
-                      reason.label,
-                      style: CohortTextStyles.small,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            'Cancel',
-            style: CohortTextStyles.body,
-          ),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(
-            _EndSessionEarlyResult(reason: _selectedReason),
-          ),
-          child: Text(
-            'End session',
-            style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
           ),
         ),
       ],

@@ -1,6 +1,8 @@
+import '../../../models/circuit_progress_result.dart';
 import '../../../models/exercise_progress_result.dart';
 import '../../../models/interval_progress_result.dart';
 import '../../../models/session_win.dart';
+import '../models/circuit_session_finish_summary.dart';
 import '../models/interval_session_finish_summary.dart';
 import '../models/strength_session_finish_summary.dart';
 
@@ -88,6 +90,116 @@ class SessionWinsBuilder {
     }
 
     return wins.take(_maxWins).toList(growable: false);
+  }
+
+  List<SessionWin> buildCircuit(CircuitSessionFinishSummary summary) {
+    final wins = <SessionWin>[];
+
+    final progress = summary.progressResult;
+    if (progress != null) {
+      final win = _winFromCircuitProgress(progress);
+      if (win != null) {
+        wins.add(win);
+      }
+    }
+
+    if (summary.endedEarly) {
+      wins.add(
+        const SessionWin(
+          type: SessionWinType.completedAsPlanned,
+          title: 'Completed the work that was available today.',
+          message: 'You logged meaningful work before ending the session.',
+        ),
+      );
+    }
+
+    if (wins.isEmpty) {
+      return const [
+        SessionWin(
+          type: SessionWinType.completedAsPlanned,
+          title: 'Session completed as programmed',
+          message: 'You moved through today\'s plan with focus and intent.',
+        ),
+      ];
+    }
+
+    return wins.take(_maxWins).toList(growable: false);
+  }
+
+  SessionWin? _winFromCircuitProgress(CircuitProgressResult result) {
+    switch (result.progressType) {
+      case CircuitProgressType.insufficientData:
+        return SessionWin(
+          type: SessionWinType.completedAsPlanned,
+          title: result.headline,
+          message: result.message,
+          supportingDetail:
+              result.reasons.isNotEmpty ? result.reasons.first : null,
+        );
+      case CircuitProgressType.mixedResult:
+        return SessionWin(
+          type: SessionWinType.completedAsPlanned,
+          title: result.headline,
+          message: result.message,
+          supportingDetail:
+              result.reasons.isNotEmpty ? result.reasons.first : null,
+        );
+      case CircuitProgressType.moreRoundsOrReps:
+        return _circuitWin(
+          type: SessionWinType.repProgress,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.fasterCompletion:
+        return _circuitWin(
+          type: SessionWinType.paceProgress,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.moreWorkCompleted:
+        return _circuitWin(
+          type: SessionWinType.repProgress,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.heavierLoad:
+        return _circuitWin(
+          type: SessionWinType.loadProgress,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.effortImproved:
+        return _circuitWin(
+          type: SessionWinType.rpeProgress,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.firstPerformance:
+        return _circuitWin(
+          type: SessionWinType.firstPerformance,
+          headline: result.headline,
+          result: result,
+        );
+      case CircuitProgressType.matchedPerformance:
+        return _circuitWin(
+          type: SessionWinType.matchedPerformance,
+          headline: result.headline,
+          result: result,
+        );
+    }
+  }
+
+  SessionWin _circuitWin({
+    required SessionWinType type,
+    required String headline,
+    required CircuitProgressResult result,
+  }) {
+    return SessionWin(
+      type: type,
+      title: headline,
+      message: result.message,
+      supportingDetail: result.reasons.isNotEmpty ? result.reasons.first : null,
+    );
   }
 
   SessionWin? _winFromIntervalProgress(IntervalProgressResult result) {

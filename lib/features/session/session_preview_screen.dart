@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
-import '../../core/widgets/circuit_session_card.dart';
 import '../../core/widgets/section_title.dart';
 import '../../core/widgets/session_progress_bar.dart';
 import '../../core/widgets/session_step_card.dart';
+import '../../models/circuit_session_plan.dart';
 import '../../models/interval_session_plan.dart';
 import '../../models/protocol.dart';
 import '../../models/protocol_draft.dart';
@@ -14,9 +13,12 @@ import '../../models/protocol_step.dart';
 import '../../models/protocol_step_draft.dart';
 import '../../models/session_execution_mode.dart';
 import '../../models/session_step.dart';
+import 'services/circuit_session_plan_builder.dart';
 import 'services/interval_session_plan_builder.dart';
 import 'services/session_execution_router.dart';
+import 'widgets/circuit_session_view.dart';
 import 'widgets/interval_session_view.dart';
+import 'widgets/shared/preview_mode_banner.dart';
 import 'widgets/strength_session_view.dart';
 
 /// In-memory protocol preview for Coach Studio.
@@ -38,6 +40,7 @@ class SessionPreviewScreen extends StatefulWidget {
 class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   static const _executionRouter = SessionExecutionRouter();
   static const _intervalPlanBuilder = IntervalSessionPlanBuilder();
+  static const _circuitPlanBuilder = CircuitSessionPlanBuilder();
 
   static const _sessionFormatToSessionType = {
     'circuit': 'Circuit',
@@ -45,8 +48,6 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     'intervals': 'Running',
     'recovery_flow': 'Recovery',
   };
-
-  bool _isTimerRunning = false;
 
   String get _sessionTitle {
     final name = widget.draft.name.trim();
@@ -81,8 +82,21 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     }
   }
 
-  void _startTimer() {
-    setState(() => _isTimerRunning = true);
+  _CompiledCircuitPlan? get _compiledCircuitPlan {
+    if (_executionMode != SessionExecutionMode.circuit) {
+      return null;
+    }
+
+    try {
+      return _CompiledCircuitPlan(
+        plan: _circuitPlanBuilder.build(
+          protocol: _protocolFromDraft(widget.draft),
+          steps: _protocolStepsFromDraft(widget.draft),
+        ),
+      );
+    } on StateError catch (error) {
+      return _CompiledCircuitPlan(error: error.message);
+    }
   }
 
   void _exitPreview() {
@@ -96,6 +110,9 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     final intervalCompilation = _compiledIntervalPlan;
     final intervalPlan = intervalCompilation?.plan;
     final intervalPlanError = intervalCompilation?.error;
+    final circuitCompilation = _compiledCircuitPlan;
+    final circuitPlan = circuitCompilation?.plan;
+    final circuitPlanError = circuitCompilation?.error;
 
     return Scaffold(
       body: SafeArea(
@@ -109,7 +126,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
                 child: const Text('← Back to Builder'),
               ),
               const SizedBox(height: CohortSpacing.md),
-              const _PreviewBanner(),
+              const PreviewModeBanner(),
               const SizedBox(height: CohortSpacing.xl),
               const SectionTitle('Session'),
               const SizedBox(height: CohortSpacing.md),
@@ -123,7 +140,14 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
                   intervalPlanError,
                   style: CohortTextStyles.body,
                 )
-              else if (steps.isEmpty && mode != SessionExecutionMode.intervals)
+              else if (circuitPlanError != null)
+                Text(
+                  circuitPlanError,
+                  style: CohortTextStyles.body,
+                )
+              else if (steps.isEmpty &&
+                  mode != SessionExecutionMode.intervals &&
+                  mode != SessionExecutionMode.circuit)
                 const Text(
                   'No session steps available.',
                   style: CohortTextStyles.body,
@@ -134,11 +158,18 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
                   'Unable to compile interval session plan.',
                   style: CohortTextStyles.body,
                 )
+              else if (mode == SessionExecutionMode.circuit &&
+                  circuitPlan == null)
+                const Text(
+                  'Unable to compile circuit session plan.',
+                  style: CohortTextStyles.body,
+                )
               else
                 _buildExecutionView(
                   mode: mode,
                   steps: steps,
                   intervalPlan: intervalPlan,
+                  circuitPlan: circuitPlan,
                 ),
             ],
           ),
@@ -151,14 +182,22 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     required SessionExecutionMode mode,
     required List<SessionStep> steps,
     IntervalSessionPlan? intervalPlan,
+    CircuitSessionPlan? circuitPlan,
   }) {
     switch (mode) {
       case SessionExecutionMode.circuit:
-        return CircuitSessionCard(
-          steps: steps,
-          isTimerRunning: _isTimerRunning,
-          onStartTimer: _startTimer,
-          onFinishSession: _exitPreview,
+        if (circuitPlan == null) {
+          return const Text(
+            'Unable to compile circuit session plan.',
+            style: CohortTextStyles.body,
+          );
+        }
+
+        return CircuitSessionView(
+          sessionTitle: _sessionTitle,
+          plan: circuitPlan,
+          previewMode: true,
+          onFinishSession: (_) async => _exitPreview(),
         );
       case SessionExecutionMode.structuredStrength:
         return StrengthSessionView(
@@ -286,35 +325,12 @@ class _CompiledIntervalPlan {
   final String? error;
 }
 
-class _PreviewBanner extends StatelessWidget {
-  const _PreviewBanner();
+class _CompiledCircuitPlan {
+  const _CompiledCircuitPlan({
+    this.plan,
+    this.error,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(CohortSpacing.md),
-      decoration: BoxDecoration(
-        color: CohortColors.oliveSoft,
-        border: Border.all(color: CohortColors.borderStrong),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'PREVIEW MODE',
-            style: CohortTextStyles.eyebrow.copyWith(
-              color: CohortColors.olive,
-            ),
-          ),
-          const SizedBox(height: CohortSpacing.xs),
-          Text(
-            'No progress will be saved.',
-            style: CohortTextStyles.small,
-          ),
-        ],
-      ),
-    );
-  }
+  final CircuitSessionPlan? plan;
+  final String? error;
 }

@@ -36,6 +36,7 @@ import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../protocol_analysis/services/protocol_analyzer.dart';
 import '../protocol_analysis/services/protocol_similarity_service.dart';
 import '../protocols/protocol_library_screen.dart';
+import '../session/services/circuit_session_plan_builder.dart';
 import '../session/services/interval_session_plan_builder.dart';
 import '../session/session_player_screen.dart';
 
@@ -316,6 +317,42 @@ class HomeScreen extends StatelessWidget {
     } catch (error, stackTrace) {
       debugPrint('[IntervalSessionPlanBuilder] failed: $error');
       debugPrint('[IntervalSessionPlanBuilder] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove temporary circuit plan hook once CircuitSessionView exists.
+  Future<void> _compileCircuitDebugPlans() async {
+    const protocolIds = ['BW-001', 'BD-001', 'FG-009'];
+    final protocolRepository = ProtocolRepository();
+    const stepRepository = ProtocolStepRepository();
+    const planBuilder = CircuitSessionPlanBuilder();
+
+    for (final protocolId in protocolIds) {
+      try {
+        final protocol = await protocolRepository.getProtocolById(protocolId);
+        if (protocol == null) {
+          debugPrint(
+            '[CircuitSessionPlanBuilder] aborted: protocol not found for $protocolId',
+          );
+          continue;
+        }
+
+        final steps = await stepRepository.getProtocolSteps(protocolId);
+        if (steps.isEmpty) {
+          debugPrint(
+            '[CircuitSessionPlanBuilder] aborted: no protocol steps for $protocolId',
+          );
+          continue;
+        }
+
+        final plan = planBuilder.build(protocol: protocol, steps: steps);
+        CircuitSessionPlanBuilder.debugPrintPlan(plan);
+      } catch (error, stackTrace) {
+        debugPrint(
+          '[CircuitSessionPlanBuilder] failed for $protocolId: $error',
+        );
+        debugPrint('[CircuitSessionPlanBuilder] stackTrace: $stackTrace');
+      }
     }
   }
 
@@ -825,6 +862,17 @@ class HomeScreen extends StatelessWidget {
                   title: 'Compile RN-006 Interval Plan',
                   subtitle:
                       'Temporary debug hook for IntervalSessionPlanBuilder output.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _compileCircuitDebugPlans,
+                child: const _HomeActionRow(
+                  title: 'Compile Circuit Debug Plans',
+                  subtitle:
+                      'Temporary debug hook for BW-001, BD-001, and FG-009 circuit plans.',
                   status: 'DEBUG',
                 ),
               ),

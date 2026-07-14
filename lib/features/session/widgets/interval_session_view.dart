@@ -16,7 +16,15 @@ import '../../../models/interval_session_execution_state.dart';
 import '../../../models/interval_progress_result.dart';
 import '../../../models/interval_session_plan.dart';
 import '../../../models/previous_interval_performance.dart';
-import '../models/early_session_end_reason.dart';
+import '../models/early_session_end_result.dart';
+import '../models/session_leave_decision.dart';
+import 'shared/early_session_end_dialog.dart';
+import 'shared/previous_performance_shell.dart';
+import 'shared/progress_result_card.dart';
+import 'shared/session_execution_header.dart';
+import 'shared/session_finish_actions.dart';
+import 'shared/session_note_field.dart';
+import 'shared/session_progress_summary.dart';
 import '../models/interval_session_finish_summary.dart';
 import '../models/strength_rest_timer_state.dart';
 import '../services/interval_metric_calculator.dart';
@@ -569,7 +577,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       return;
     }
 
-    final choice = await showDialog<_LeaveSessionChoice>(
+    final choice = await showDialog<SessionLeaveDecision>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
@@ -585,7 +593,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext)
-                  .pop(_LeaveSessionChoice.resumeLater),
+                  .pop(SessionLeaveDecision.resumeLater),
               child: Text(
                 'Resume later',
                 style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
@@ -593,7 +601,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
             ),
             TextButton(
               onPressed: () =>
-                  Navigator.of(dialogContext).pop(_LeaveSessionChoice.endEarly),
+                  Navigator.of(dialogContext).pop(SessionLeaveDecision.endEarly),
               child: Text(
                 'End session early',
                 style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
@@ -601,7 +609,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
             ),
             TextButton(
               onPressed: () =>
-                  Navigator.of(dialogContext).pop(_LeaveSessionChoice.cancel),
+                  Navigator.of(dialogContext).pop(SessionLeaveDecision.cancel),
               child: Text(
                 'Cancel',
                 style: CohortTextStyles.body,
@@ -614,16 +622,16 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
 
     if (!context.mounted ||
         choice == null ||
-        choice == _LeaveSessionChoice.cancel) {
+        choice == SessionLeaveDecision.cancel) {
       return;
     }
 
     switch (choice) {
-      case _LeaveSessionChoice.resumeLater:
+      case SessionLeaveDecision.resumeLater:
         Navigator.of(context).pop();
-      case _LeaveSessionChoice.endEarly:
+      case SessionLeaveDecision.endEarly:
         await _confirmEndSessionEarly();
-      case _LeaveSessionChoice.cancel:
+      case SessionLeaveDecision.cancel:
         break;
     }
   }
@@ -705,12 +713,13 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
   }
 
   Future<void> _confirmEndSessionEarly() async {
-    final result = await showDialog<_IntervalEndSessionEarlyResult>(
+    final result = await showDialog<EarlySessionEndResult>(
       context: context,
       builder: (dialogContext) {
-        return _IntervalEndSessionEarlyDialog(
-          completedWorkCount: _executionState.completedWorkPhaseCount,
-          totalWorkCount: _executionState.totalWorkPhaseCount,
+        return EarlySessionEndDialog(
+          completedCount: _executionState.completedWorkPhaseCount,
+          totalCount: _executionState.totalWorkPhaseCount,
+          unitLabel: 'work intervals',
         );
       },
     );
@@ -732,15 +741,17 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.plan.modality.name.toUpperCase(),
-          style: CohortTextStyles.eyebrow,
+        SessionExecutionHeader(
+          modeLabel: widget.plan.modality.name.toUpperCase(),
         ),
         const SizedBox(height: CohortSpacing.sm),
-        Text(
-          '${_executionState.completedWorkPhaseCount} of '
-          '${_executionState.totalWorkPhaseCount} work intervals complete',
-          style: CohortTextStyles.body,
+        SessionProgressSummary(
+          completedCount: _executionState.completedWorkPhaseCount,
+          totalCount: _executionState.totalWorkPhaseCount,
+          summaryLabel:
+              '${_executionState.completedWorkPhaseCount} of '
+              '${_executionState.totalWorkPhaseCount} work intervals complete',
+          summaryTextStyle: CohortTextStyles.body,
         ),
         if (_isHydratingSession) ...[
           const SizedBox(height: CohortSpacing.sm),
@@ -820,86 +831,34 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
         ],
         if (_canFinishSession && _progressResult != null) ...[
           const SizedBox(height: CohortSpacing.xl),
-          _IntervalProgressResultCard(result: _progressResult!),
+          ProgressResultCard(
+            eyebrow: 'TODAY\'S RESULT',
+            title: _progressResult!.headline,
+            message: _progressResult!.message,
+            accentColor: _intervalProgressAccent(_progressResult!.progressType),
+            variant: ProgressResultCardVariant.card,
+          ),
         ],
         if (_isRealSession && _hasRecordedWorkProgress) ...[
           const SizedBox(height: CohortSpacing.xl),
-          _IntervalSessionNoteField(
+          SessionNoteField(
             value: _executionState.sessionNote,
             onChanged: _updateSessionNote,
+            label: 'SESSION NOTE (OPTIONAL)',
+            hintText: 'How did today feel?',
+            useFilledBackground: true,
           ),
         ],
         const SizedBox(height: CohortSpacing.xl),
-        if (_canFinishSession)
-          CohortButton(
-            label: 'Finish Session',
-            onPressed: () => _finishSession(),
-          ),
-        if (_isRealSession &&
-            _hasRecordedWorkProgress &&
-            !_canFinishSession) ...[
-          const SizedBox(height: CohortSpacing.md),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: _confirmEndSessionEarly,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: CohortColors.textSecondary,
-                side: const BorderSide(color: CohortColors.border),
-              ),
-              child: Text(
-                'End Session Early',
-                style: CohortTextStyles.body,
-              ),
-            ),
-          ),
-        ],
+        SessionFinishActions(
+          showFinishSession: _canFinishSession,
+          onFinishSession: () => _finishSession(),
+          showEndSessionEarly: _isRealSession &&
+              _hasRecordedWorkProgress &&
+              !_canFinishSession,
+          onEndSessionEarly: _confirmEndSessionEarly,
+        ),
       ],
-    );
-  }
-}
-
-class _IntervalProgressResultCard extends StatelessWidget {
-  const _IntervalProgressResultCard({required this.result});
-
-  final IntervalProgressResult result;
-
-  @override
-  Widget build(BuildContext context) {
-    final accentColor = switch (result.progressType) {
-      IntervalProgressType.firstPerformance => CohortColors.olive,
-      IntervalProgressType.averagePaceImproved ||
-      IntervalProgressType.consistencyImproved ||
-      IntervalProgressType.effortImproved ||
-      IntervalProgressType.moreWorkCompleted =>
-        CohortColors.success,
-      IntervalProgressType.matchedPerformance => CohortColors.olive,
-      IntervalProgressType.mixedResult => CohortColors.warning,
-      IntervalProgressType.insufficientData => CohortColors.textSecondary,
-    };
-
-    return CohortCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'TODAY\'S RESULT',
-            style: CohortTextStyles.eyebrow.copyWith(color: accentColor),
-          ),
-          const SizedBox(height: CohortSpacing.sm),
-          Text(
-            result.headline,
-            style: CohortTextStyles.cardTitle.copyWith(color: accentColor),
-          ),
-          if (result.message.trim().isNotEmpty) ...[
-            const SizedBox(height: CohortSpacing.xs),
-            Text(
-              result.message,
-              style: CohortTextStyles.small,
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
@@ -921,83 +880,81 @@ class _PreviousIntervalPerformanceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Text(
-        'Loading previous performance...',
-        style: CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
-      );
-    }
+    final hasHistory = performance?.hasHistory ?? false;
 
-    if (!hasLoaded) {
-      return const SizedBox.shrink();
-    }
-
-    if (performance == null || !performance!.hasHistory) {
-      return CohortCard(
-        child: Text(
-          'This is your first recorded interval performance.',
-          style: CohortTextStyles.body,
-        ),
-      );
-    }
-
-    final data = performance!;
-
-    return CohortCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'LAST PERFORMANCE',
-            style: CohortTextStyles.eyebrow.copyWith(color: CohortColors.olive),
-          ),
-          const SizedBox(height: CohortSpacing.md),
-          for (final rep in data.reps) ...[
-            Text(
-              'Rep ${rep.repNumber} — ${rep.displayLine}',
-              style: CohortTextStyles.small,
-            ),
-            const SizedBox(height: CohortSpacing.xs),
-          ],
-          if (data.averagePaceSecondsPerKm != null) ...[
-            const SizedBox(height: CohortSpacing.sm),
-            Text(
-              'Average pace: ${metricCalculator.formatPaceSecondsPerKm(data.averagePaceSecondsPerKm, modality: modality) ?? ''}',
-              style: CohortTextStyles.body,
-            ),
-          ],
-          if (data.paceDropOffSeconds != null) ...[
-            const SizedBox(height: CohortSpacing.xs),
-            Text(
-              'Pacing spread: ${data.paceDropOffSeconds!.round()} sec',
-              style: CohortTextStyles.body,
-            ),
-          ],
-          if (data.averageRpe != null) ...[
-            const SizedBox(height: CohortSpacing.xs),
-            Text(
-              'Average RPE: ${data.averageRpe!.toStringAsFixed(1)}',
-              style: CohortTextStyles.body,
-            ),
-          ],
-          const SizedBox(height: CohortSpacing.lg),
-          Text(
-            "TODAY'S OPPORTUNITY",
-            style: CohortTextStyles.eyebrow,
-          ),
-          const SizedBox(height: CohortSpacing.sm),
-          for (final opportunity in PreviousIntervalPerformance.todayOpportunities)
-            Padding(
-              padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-              child: Text(
-                '• $opportunity',
-                style: CohortTextStyles.small,
-              ),
-            ),
-        ],
+    return PreviousPerformanceShell(
+      isLoading: isLoading,
+      visible: hasLoaded,
+      loadingTextStyle:
+          CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
+      emptyState: Text(
+        'This is your first recorded interval performance.',
+        style: CohortTextStyles.body,
       ),
+      content: hasHistory
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'LAST PERFORMANCE',
+                  style: CohortTextStyles.eyebrow.copyWith(
+                    color: CohortColors.olive,
+                  ),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                for (final rep in performance!.reps) ...[
+                  Text(
+                    'Rep ${rep.repNumber} — ${rep.displayLine}',
+                    style: CohortTextStyles.small,
+                  ),
+                  const SizedBox(height: CohortSpacing.xs),
+                ],
+                if (performance!.averagePaceSecondsPerKm != null) ...[
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Average pace: ${metricCalculator.formatPaceSecondsPerKm(performance!.averagePaceSecondsPerKm, modality: modality) ?? ''}',
+                    style: CohortTextStyles.body,
+                  ),
+                ],
+                if (performance!.paceDropOffSeconds != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(
+                    'Pacing spread: ${performance!.paceDropOffSeconds!.round()} sec',
+                    style: CohortTextStyles.body,
+                  ),
+                ],
+                if (performance!.averageRpe != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(
+                    'Average RPE: ${performance!.averageRpe!.toStringAsFixed(1)}',
+                    style: CohortTextStyles.body,
+                  ),
+                ],
+                const SizedBox(height: CohortSpacing.lg),
+                TodaysOpportunitySection(
+                  items: PreviousIntervalPerformance.todayOpportunities,
+                  useUppercaseEyebrow: true,
+                ),
+              ],
+            )
+          : null,
+      wrapInCard: true,
     );
   }
+}
+
+Color _intervalProgressAccent(IntervalProgressType progressType) {
+  return switch (progressType) {
+    IntervalProgressType.firstPerformance => CohortColors.olive,
+    IntervalProgressType.averagePaceImproved ||
+    IntervalProgressType.consistencyImproved ||
+    IntervalProgressType.effortImproved ||
+    IntervalProgressType.moreWorkCompleted =>
+      CohortColors.success,
+    IntervalProgressType.matchedPerformance => CohortColors.olive,
+    IntervalProgressType.mixedResult => CohortColors.warning,
+    IntervalProgressType.insufficientData => CohortColors.textSecondary,
+  };
 }
 
 class _SessionPlanOverview extends StatelessWidget {
@@ -1768,185 +1725,6 @@ class _RecoveryTimerBar extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _IntervalEndSessionEarlyResult {
-  const _IntervalEndSessionEarlyResult({this.reason});
-
-  final EarlySessionEndReason? reason;
-}
-
-class _IntervalEndSessionEarlyDialog extends StatefulWidget {
-  const _IntervalEndSessionEarlyDialog({
-    required this.completedWorkCount,
-    required this.totalWorkCount,
-  });
-
-  final int completedWorkCount;
-  final int totalWorkCount;
-
-  @override
-  State<_IntervalEndSessionEarlyDialog> createState() =>
-      _IntervalEndSessionEarlyDialogState();
-}
-
-class _IntervalEndSessionEarlyDialogState
-    extends State<_IntervalEndSessionEarlyDialog> {
-  EarlySessionEndReason? _selectedReason;
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: CohortColors.surfaceRaised,
-      title: Text(
-        'End session early?',
-        style: CohortTextStyles.cardTitle,
-      ),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'You have completed ${widget.completedWorkCount} of '
-              '${widget.totalWorkCount} work intervals. End this session now?',
-              style: CohortTextStyles.body,
-            ),
-            const SizedBox(height: CohortSpacing.lg),
-            Text('Reason (optional)', style: CohortTextStyles.muted),
-            const SizedBox(height: CohortSpacing.sm),
-            for (final reason in EarlySessionEndReason.values)
-              Padding(
-                padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-                child: InkWell(
-                  onTap: () => setState(() {
-                    _selectedReason =
-                        _selectedReason == reason ? null : reason;
-                  }),
-                  borderRadius: CohortRadius.smallRadius,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: CohortSpacing.md,
-                      vertical: CohortSpacing.sm,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _selectedReason == reason
-                          ? CohortColors.oliveSoft
-                          : Colors.transparent,
-                      borderRadius: CohortRadius.smallRadius,
-                      border: Border.all(
-                        color: _selectedReason == reason
-                            ? CohortColors.olive
-                            : CohortColors.border,
-                      ),
-                    ),
-                    child: Text(reason.label, style: CohortTextStyles.small),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(
-            _IntervalEndSessionEarlyResult(reason: _selectedReason),
-          ),
-          child: const Text('End session'),
-        ),
-      ],
-    );
-  }
-}
-
-enum _LeaveSessionChoice {
-  resumeLater,
-  endEarly,
-  cancel,
-}
-
-class _IntervalSessionNoteField extends StatefulWidget {
-  const _IntervalSessionNoteField({
-    required this.value,
-    required this.onChanged,
-  });
-
-  final String? value;
-  final ValueChanged<String> onChanged;
-
-  @override
-  State<_IntervalSessionNoteField> createState() =>
-      _IntervalSessionNoteFieldState();
-}
-
-class _IntervalSessionNoteFieldState extends State<_IntervalSessionNoteField> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.value ?? '');
-  }
-
-  @override
-  void didUpdateWidget(covariant _IntervalSessionNoteField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.value != oldWidget.value && widget.value != _controller.text) {
-      _controller.text = widget.value ?? '';
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'SESSION NOTE (OPTIONAL)',
-          style: CohortTextStyles.eyebrow,
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        TextField(
-          controller: _controller,
-          onChanged: widget.onChanged,
-          maxLines: 3,
-          style: CohortTextStyles.body,
-          decoration: InputDecoration(
-            hintText: 'How did today feel?',
-            hintStyle: CohortTextStyles.small.copyWith(
-              color: CohortColors.textMuted,
-            ),
-            filled: true,
-            fillColor: CohortColors.surface,
-            border: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.border),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.border),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: CohortRadius.smallRadius,
-              borderSide: const BorderSide(color: CohortColors.olive),
-            ),
-            contentPadding: const EdgeInsets.all(CohortSpacing.md),
-          ),
-        ),
-      ],
     );
   }
 }
