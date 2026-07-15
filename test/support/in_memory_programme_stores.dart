@@ -1,5 +1,6 @@
 import 'package:cohort_platform/data/repositories/athlete_state_store.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_store.dart';
+import 'package:cohort_platform/data/repositories/programme_slot_outcome_delete_result.dart';
 import 'package:cohort_platform/data/repositories/programme_slot_outcome_store.dart';
 import 'package:cohort_platform/data/repositories/programme_store_exception.dart';
 import 'package:cohort_platform/data/repositories/programme_template_tree_assembler.dart';
@@ -329,6 +330,12 @@ class InMemoryProgrammeSlotOutcomeStore implements ProgrammeSlotOutcomeStore {
 
   final InMemoryProgrammeTables tables;
 
+  /// When true, [deleteOutcomesForAssignment] throws an RLS-style access error.
+  bool denyDelete = false;
+
+  /// When true, simulates RLS blocking DELETE (returns zero without removing rows).
+  bool simulateRlsBlockedDelete = false;
+
   void _guardRead() {
     if (tables.denyReads) {
       throw ProgrammeStoreException(
@@ -411,6 +418,41 @@ class InMemoryProgrammeSlotOutcomeStore implements ProgrammeSlotOutcomeStore {
     tables.outcomes[index] = outcome;
     return outcome;
   }
+
+  @override
+  Future<ProgrammeSlotOutcomeDeleteResult> deleteOutcomesForAssignment({
+    required String assignmentId,
+  }) async {
+    if (denyDelete) {
+      throw ProgrammeStoreException(
+        'permission denied for table programme_slot_outcomes',
+        code: '42501',
+        operation: 'deleteOutcomesForAssignment',
+        tableName: 'programme_slot_outcomes',
+      );
+    }
+
+    _guardWrite();
+
+    if (simulateRlsBlockedDelete) {
+      return const ProgrammeSlotOutcomeDeleteResult(
+        deletedCount: 0,
+        deletedIds: [],
+      );
+    }
+
+    final deleted = tables.outcomes
+        .where((outcome) => outcome.assignmentId == assignmentId)
+        .toList();
+    tables.outcomes.removeWhere(
+      (outcome) => outcome.assignmentId == assignmentId,
+    );
+
+    return ProgrammeSlotOutcomeDeleteResult(
+      deletedCount: deleted.length,
+      deletedIds: deleted.map((outcome) => outcome.id).toList(),
+    );
+  }
 }
 
 class InMemoryAthleteStateStore implements AthleteStateStore {
@@ -440,16 +482,42 @@ class InMemoryAthleteStateStore implements AthleteStateStore {
   Future<AthleteState?> getByAthleteId(String athleteId) async {
     _guardRead();
 
-    for (final state in tables.athleteStates) {
-      if (state.athleteId == athleteId) return state;
+    final matches = tables.athleteStates
+        .where((state) => state.athleteId == athleteId)
+        .toList();
+
+    if (matches.length > 1) {
+      throw ProgrammeStoreException(
+        'athlete_state has duplicate rows for athlete_id $athleteId',
+        code: '23505',
+        operation: 'getByAthleteId',
+        tableName: 'athlete_state',
+        conflictTarget: 'athlete_id',
+      );
     }
 
-    return null;
+    if (matches.isEmpty) return null;
+
+    return matches.first;
   }
 
   @override
   Future<void> upsertProjection(AthleteState projection) async {
     _guardWrite();
+
+    final matches = tables.athleteStates
+        .where((row) => row.athleteId == projection.athleteId)
+        .toList();
+
+    if (matches.length > 1) {
+      throw ProgrammeStoreException(
+        'athlete_state has duplicate rows for athlete_id ${projection.athleteId}',
+        code: '23505',
+        operation: 'upsertProjection',
+        tableName: 'athlete_state',
+        conflictTarget: 'athlete_id',
+      );
+    }
 
     final index = tables.athleteStates
         .indexWhere((row) => row.athleteId == projection.athleteId);

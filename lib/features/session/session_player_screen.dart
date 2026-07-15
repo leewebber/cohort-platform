@@ -9,6 +9,8 @@ import '../../data/repositories/exercise_repository.dart';
 import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
 import '../../data/repositories/training_session_repository.dart';
+import '../../features/programme/models/programme_execution_context.dart';
+import '../../features/programme/models/programme_progression_result.dart';
 import '../../models/circuit_session_plan.dart';
 import '../../models/exercise.dart';
 import '../../models/interval_session_plan.dart';
@@ -24,6 +26,7 @@ import 'services/circuit_session_leave_coordinator.dart';
 import 'services/circuit_session_plan_builder.dart';
 import 'services/interval_session_plan_builder.dart';
 import 'services/interval_session_leave_coordinator.dart';
+import 'services/programme_session_progression_coordinator.dart';
 import 'services/session_execution_router.dart';
 import 'services/session_wins_builder.dart';
 import 'services/strength_session_leave_coordinator.dart';
@@ -38,11 +41,13 @@ class SessionPlayerScreen extends StatefulWidget {
     required this.protocolId,
     this.displayTitle,
     this.trainingSessionId,
+    this.programmeContext,
   });
 
   final String protocolId;
   final String? displayTitle;
   final int? trainingSessionId;
+  final ProgrammeExecutionContext? programmeContext;
 
   String get sessionLabel => displayTitle ?? protocolId;
 
@@ -79,8 +84,10 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   static const _sessionWinsBuilder = SessionWinsBuilder();
   static const _intervalPlanBuilder = IntervalSessionPlanBuilder();
   static const _circuitPlanBuilder = CircuitSessionPlanBuilder();
+  final _programmeCoordinator = ProgrammeSessionProgressionCoordinator();
 
   late final Future<_SessionPlayerContent> _contentFuture;
+  bool _programmeStartMarked = false;
   StrengthSessionLeaveCoordinator? _strengthLeaveCoordinator;
   IntervalSessionLeaveCoordinator? _intervalLeaveCoordinator;
   CircuitSessionLeaveCoordinator? _circuitLeaveCoordinator;
@@ -157,6 +164,58 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     return athleteId;
   }
 
+  Future<void> _markProgrammeSessionStarted(String? athleteId) async {
+    if (_programmeStartMarked || athleteId == null) return;
+
+    final sessionId = widget.trainingSessionId;
+    if (sessionId == null || widget.programmeContext == null) return;
+
+    _programmeStartMarked = true;
+
+    try {
+      final result = await _programmeCoordinator.markSessionStartedIfProgrammeBacked(
+        athleteId: athleteId,
+        programmeContext: widget.programmeContext,
+        trainingSessionId: sessionId,
+      );
+      if (result != null) {
+        debugPrint('[ProgrammeProgression] session started: $result');
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeProgression] mark started failed: $error');
+      debugPrint('[ProgrammeProgression] stackTrace: $stackTrace');
+    }
+  }
+
+  Future<ProgrammeProgressionResult?> _progressProgrammeAfterCompletion({
+    required String? athleteId,
+    required int sessionId,
+    required bool endedEarly,
+    String? resolutionNote,
+  }) async {
+    if (athleteId == null || widget.programmeContext == null) {
+      return null;
+    }
+
+    try {
+      final result = await _programmeCoordinator.handleSessionCompleted(
+        athleteId: athleteId,
+        programmeContext: widget.programmeContext,
+        trainingSessionId: sessionId,
+        endedEarly: endedEarly,
+        resolutionNote: resolutionNote,
+      );
+      if (result != null) {
+        debugPrint('[ProgrammeProgression] session completed: $result');
+      }
+      return result;
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeProgression] completion failed: $error');
+      debugPrint('[ProgrammeProgression] stackTrace: $stackTrace');
+      return null;
+    }
+  }
+
   Future<List<SessionStep>> _sessionStepsFromProtocolSteps(
     List<ProtocolStep> protocolSteps,
   ) async {
@@ -191,6 +250,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     StrengthSessionFinishSummary summary,
   ) async {
     final sessionId = widget.trainingSessionId;
+    final athleteId = await _resolveAthleteId();
+
     if (sessionId != null) {
       await _trainingSessionRepository.completeSession(
         sessionId,
@@ -201,6 +262,13 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           completedExerciseCount: summary.completedExerciseCount,
           totalExerciseCount: summary.totalExerciseCount,
         ),
+      );
+
+      await _progressProgrammeAfterCompletion(
+        athleteId: athleteId,
+        sessionId: sessionId,
+        endedEarly: summary.endedEarly,
+        resolutionNote: summary.endReasonLabel,
       );
     }
 
@@ -266,6 +334,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     IntervalSessionFinishSummary summary,
   ) async {
     final sessionId = widget.trainingSessionId;
+    final athleteId = await _resolveAthleteId();
+
     if (sessionId != null) {
       await _trainingSessionRepository.completeSession(
         sessionId,
@@ -276,6 +346,13 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           completedExerciseCount: summary.completedWorkCount,
           totalExerciseCount: summary.totalWorkCount,
         ),
+      );
+
+      await _progressProgrammeAfterCompletion(
+        athleteId: athleteId,
+        sessionId: sessionId,
+        endedEarly: summary.endedEarly,
+        resolutionNote: summary.endReasonLabel,
       );
     }
 
@@ -313,6 +390,8 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     CircuitSessionFinishSummary summary,
   ) async {
     final sessionId = widget.trainingSessionId;
+    final athleteId = await _resolveAthleteId();
+
     if (sessionId != null) {
       await _trainingSessionRepository.completeSession(
         sessionId,
@@ -322,6 +401,13 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           completionReason: summary.completionReason,
           completedExerciseCount: _circuitCompletedCount(summary),
         ),
+      );
+
+      await _progressProgrammeAfterCompletion(
+        athleteId: athleteId,
+        sessionId: sessionId,
+        endedEarly: summary.endedEarly,
+        resolutionNote: summary.completionReason,
       );
     }
 
@@ -465,6 +551,11 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
             final circuitPlan = content?.circuitPlan;
             final circuitPlanError = content?.circuitPlanError;
             _resolvedMode = mode;
+
+            if (snapshot.connectionState == ConnectionState.done &&
+                athleteId != null) {
+              _markProgrammeSessionStarted(athleteId);
+            }
 
             final interceptBack = widget.trainingSessionId != null &&
                 (mode == SessionExecutionMode.structuredStrength ||

@@ -6,26 +6,22 @@ import '../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
-import '../../core/widgets/today_session_card.dart';
-import '../../data/repositories/athlete_state_repository.dart';
-import '../../data/repositories/programme_repository.dart';
+import 'widgets/home_today_session_section.dart';
+import '../programme/debug/programme_debug_actions.dart';
+import '../programme/debug/programme_debug_resolution_cache.dart';
 import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/exercise_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
-import '../../data/repositories/training_session_repository.dart';
 import '../../models/adaptation_decision.dart';
 import '../../models/adaptation_reason.dart';
 import '../../models/adaptation_request.dart';
 import '../../models/adaptation_session_environment.dart';
-import '../../models/athlete_state.dart';
+import '../../data/repositories/athlete_state_repository.dart';
 import '../../models/movement_profile.dart';
-import '../../models/programme.dart';
 import '../../models/protocol.dart';
 import '../../models/protocol_analysis.dart';
 import '../../models/protocol_similarity_result.dart';
 import '../../models/session_fingerprint.dart';
-import '../../models/training_session.dart';
-import '../../models/training_session_status.dart';
 import '../admin/admin_protocol_editor_screen.dart';
 import '../admin/protocol_builder_screen.dart';
 import '../admin/protocol_drafts_screen.dart';
@@ -38,7 +34,6 @@ import '../protocol_analysis/services/protocol_similarity_service.dart';
 import '../protocols/protocol_library_screen.dart';
 import '../session/services/circuit_session_plan_builder.dart';
 import '../session/services/interval_session_plan_builder.dart';
-import '../session/session_player_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -91,23 +86,6 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const PublishedProtocolsScreen(),
-      ),
-    );
-  }
-
-  void _openSessionPlayer(
-    BuildContext context, {
-    required String protocolId,
-    String? displayTitle,
-    int? trainingSessionId,
-  }) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => SessionPlayerScreen(
-          protocolId: protocolId,
-          displayTitle: displayTitle,
-          trainingSessionId: trainingSessionId,
-        ),
       ),
     );
   }
@@ -438,6 +416,105 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  // TODO(debug): Remove once programme-driven Home replaces manual projection.
+  Future<void> _resolveTestProgramme() async {
+    try {
+      await ProgrammeDebugActions.ensureFoundationTestAssignment();
+      final service = ProgrammeDebugActions.createTodaySessionService();
+      final resolution = await service.resolveForAthlete(_athleteId);
+
+      ProgrammeDebugResolutionCache.store(resolution);
+
+      debugPrint('[ProgrammeResolve] assignment ensured for $_athleteId');
+      debugPrint('[ProgrammeResolve] result: $resolution');
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeResolve] failed: $error');
+      debugPrint('[ProgrammeResolve] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once athlete_state sync is wired to Home load.
+  Future<void> _syncResolvedSession() async {
+    final resolution = ProgrammeDebugResolutionCache.lastResolution;
+    if (resolution == null) {
+      debugPrint(
+        '[ProgrammeSync] aborted: run Resolve Test Programme first',
+      );
+      return;
+    }
+
+    try {
+      final syncService = ProgrammeDebugActions.createAthleteStateSyncService();
+      await syncService.syncFromResolvedSession(
+        athleteId: _athleteId,
+        resolution: resolution,
+      );
+
+      const athleteStateRepository = AthleteStateRepository();
+      final athleteState =
+          await athleteStateRepository.getAthleteState(_athleteId);
+
+      debugPrint('[ProgrammeSync] projection updated for $_athleteId');
+      debugPrint('[ProgrammeSync] athlete_state: $athleteState');
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeSync] failed: $error');
+      debugPrint('[ProgrammeSync] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme progression is production-wired.
+  Future<void> _completeCurrentProgrammeSlot({required bool partial}) async {
+    try {
+      final assignment = await ProgrammeDebugActions.ensureFoundationTestAssignment();
+      final previousCursor =
+          'week ${assignment.currentWeek} ${assignment.currentDayKey} '
+          'slot ${assignment.currentSessionOrder}';
+
+      final resolution = await ProgrammeDebugActions.resolveCurrentTestSession();
+      ProgrammeDebugResolutionCache.clear();
+
+      final progression = ProgrammeDebugActions.createProgressionService();
+      final result = partial
+          ? await progression.completeSessionPartial(
+              athleteId: _athleteId,
+              resolution: resolution,
+            )
+          : await progression.completeSession(
+              athleteId: _athleteId,
+              resolution: resolution,
+            );
+
+      debugPrint('[ProgrammeProgress] previous cursor: $previousCursor');
+      debugPrint('[ProgrammeProgress] outcome: ${result.outcome}');
+      debugPrint(
+        '[ProgrammeProgress] updated cursor: week '
+        '${result.updatedAssignment?.currentWeek} '
+        '${result.updatedAssignment?.currentDayKey} '
+        'slot ${result.updatedAssignment?.currentSessionOrder}',
+      );
+      debugPrint('[ProgrammeProgress] next session: ${result.nextResolvedSession}');
+      debugPrint('[ProgrammeProgress] status: ${result.status}');
+      if (result.nextResolvedSession != null) {
+        ProgrammeDebugResolutionCache.store(result.nextResolvedSession!);
+      } else {
+        ProgrammeDebugResolutionCache.clear();
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeProgress] failed: $error');
+      debugPrint('[ProgrammeProgress] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme progression is production-wired.
+  Future<void> _resetTestProgrammeAssignment() async {
+    try {
+      await ProgrammeDebugActions.resetTestProgrammeAssignment();
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeReset] failed: $error');
+      debugPrint('[ProgrammeReset] stackTrace: $stackTrace');
+    }
+  }
+
   // TODO(debug): Remove once adaptation ranking is wired to athlete UI.
   Future<void> _compareBw001SuitableAlternatives() async {
     const sourceProtocolId = 'FG-009';
@@ -743,19 +820,7 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.xl),
 
-              _TodaySessionSection(
-                onBeginSession: ({
-                  required protocolId,
-                  displayTitle,
-                  required trainingSessionId,
-                }) =>
-                    _openSessionPlayer(
-                  context,
-                  protocolId: protocolId,
-                  displayTitle: displayTitle,
-                  trainingSessionId: trainingSessionId,
-                ),
-              ),
+              const HomeTodaySessionSection(),
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -835,6 +900,11 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: CohortSpacing.md),
 
+              const SizedBox(height: CohortSpacing.xl),
+
+              const SectionTitle('DEBUG'),
+              const SizedBox(height: CohortSpacing.md),
+
               CohortCard(
                 onTap: _analyzeCurrentProtocol,
                 child: const _HomeActionRow(
@@ -887,6 +957,61 @@ class HomeScreen extends StatelessWidget {
                   status: 'DEBUG',
                 ),
               ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _resolveTestProgramme,
+                child: const _HomeActionRow(
+                  title: 'Resolve Test Programme',
+                  subtitle:
+                      'Ensure COHORT-FOUNDATION-TEST assignment and print resolution.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _syncResolvedSession,
+                child: const _HomeActionRow(
+                  title: 'Sync Resolved Session',
+                  subtitle:
+                      'Project last debug resolution into athlete_state.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _completeCurrentProgrammeSlot(partial: false),
+                child: const _HomeActionRow(
+                  title: 'Complete Current Programme Slot',
+                  subtitle:
+                      'Upsert completed outcome and advance test assignment.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () => _completeCurrentProgrammeSlot(partial: true),
+                child: const _HomeActionRow(
+                  title: 'Complete Current Slot Partial',
+                  subtitle:
+                      'Upsert completed_partial outcome and advance cursor.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _resetTestProgrammeAssignment,
+                child: const _HomeActionRow(
+                  title: 'Reset Test Programme Assignment',
+                  subtitle:
+                      'Reset cursor to week 1 day_1 slot 1 and clear outcomes.',
+                  status: 'DEBUG',
+                ),
+              ),
 
               const SizedBox(height: CohortSpacing.xxl),
 
@@ -900,283 +1025,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _TodaySessionData {
-  const _TodaySessionData({
-    required this.athleteState,
-    this.programme,
-    this.protocol,
-    this.latestTrainingSession,
-  });
-
-  final AthleteState athleteState;
-  final Programme? programme;
-  final Protocol? protocol;
-  final TrainingSession? latestTrainingSession;
-}
-
-enum _TodaySessionState {
-  planned,
-  inProgress,
-  completed,
-}
-
-class _TodaySessionSection extends StatefulWidget {
-  const _TodaySessionSection({
-    required this.onBeginSession,
-  });
-
-  final void Function({
-    required String protocolId,
-    String? displayTitle,
-    required int trainingSessionId,
-  }) onBeginSession;
-
-  @override
-  State<_TodaySessionSection> createState() => _TodaySessionSectionState();
-}
-
-class _TodaySessionSectionState extends State<_TodaySessionSection> {
-  static const _athleteId = 'lee';
-
-  final _athleteStateRepository = const AthleteStateRepository();
-  final _programmeRepository = ProgrammeRepository();
-  final _protocolRepository = ProtocolRepository();
-  final _trainingSessionRepository = const TrainingSessionRepository();
-
-  late final Future<_TodaySessionData?> _todaySessionFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _todaySessionFuture = _loadTodaySession();
-  }
-
-  Future<_TodaySessionData?> _loadTodaySession() async {
-    final athleteState =
-        await _athleteStateRepository.getAthleteState(_athleteId);
-
-    if (athleteState == null) return null;
-
-    final programme = athleteState.programmeId != null
-        ? await _programmeRepository.getProgrammeById(
-            athleteState.programmeId!,
-          )
-        : null;
-
-    final protocol = athleteState.currentProtocolId != null
-        ? await _protocolRepository.getProtocolById(
-            athleteState.currentProtocolId!,
-          )
-        : null;
-
-    final latestTrainingSession =
-        athleteState.currentProtocolId != null
-            ? await _trainingSessionRepository
-                .getLatestSessionForAthleteAndProtocol(
-                athleteId: _athleteId,
-                protocolId: athleteState.currentProtocolId!,
-              )
-            : null;
-
-    return _TodaySessionData(
-      athleteState: athleteState,
-      programme: programme,
-      protocol: protocol,
-      latestTrainingSession: latestTrainingSession,
-    );
-  }
-
-  bool _isToday(TrainingSession session) {
-    final reference = session.startedAt ?? session.createdAt;
-    if (reference == null) return false;
-
-    final now = DateTime.now().toUtc();
-    return reference.year == now.year &&
-        reference.month == now.month &&
-        reference.day == now.day;
-  }
-
-  _TodaySessionState _resolveSessionState(_TodaySessionData data) {
-    final session = data.latestTrainingSession;
-    if (session == null || !_isToday(session)) {
-      return _TodaySessionState.planned;
-    }
-
-    switch (session.status) {
-      case TrainingSessionStatus.inProgress:
-        return _TodaySessionState.inProgress;
-      case TrainingSessionStatus.completed:
-        return _TodaySessionState.completed;
-      default:
-        return _TodaySessionState.planned;
-    }
-  }
-
-  String _statusLabel(_TodaySessionState state) {
-    switch (state) {
-      case _TodaySessionState.planned:
-        return 'Planned Session';
-      case _TodaySessionState.inProgress:
-        return 'In Progress';
-      case _TodaySessionState.completed:
-        return 'Completed Today';
-    }
-  }
-
-  String _buttonLabel(_TodaySessionState state) {
-    switch (state) {
-      case _TodaySessionState.planned:
-        return 'Begin';
-      case _TodaySessionState.inProgress:
-        return 'Resume';
-      case _TodaySessionState.completed:
-        return 'View Session';
-    }
-  }
-
-  void _openExistingSession(_TodaySessionData data) {
-    final protocolId = data.athleteState.currentProtocolId;
-    final session = data.latestTrainingSession;
-    if (protocolId == null || session == null) return;
-
-    widget.onBeginSession(
-      protocolId: protocolId,
-      displayTitle: data.protocol?.name,
-      trainingSessionId: session.id,
-    );
-  }
-
-  Future<void> _handleSessionAction(
-    _TodaySessionData data,
-    _TodaySessionState state,
-  ) async {
-    switch (state) {
-      case _TodaySessionState.planned:
-        await _beginSession(data);
-      case _TodaySessionState.inProgress:
-      case _TodaySessionState.completed:
-        _openExistingSession(data);
-    }
-  }
-
-  String _buildSubtitle(_TodaySessionData data) {
-    final parts = <String>[];
-
-    final goal = data.athleteState.currentGoal?.trim();
-    if (goal != null && goal.isNotEmpty) {
-      parts.add(goal);
-    }
-
-    final capability = data.protocol?.capability?.trim();
-    if (capability != null && capability.isNotEmpty) {
-      parts.add(capability);
-    }
-
-    return parts.join(' • ');
-  }
-
-  String _buildWeekLabel(_TodaySessionData data) {
-    final parts = <String>[];
-
-    final programmeName = data.programme?.name.trim();
-    if (programmeName != null && programmeName.isNotEmpty) {
-      parts.add(programmeName);
-    }
-
-    final week = data.athleteState.currentWeek;
-    if (week != null) {
-      parts.add('Week $week');
-    }
-
-    return parts.join(' • ');
-  }
-
-  String _buildDuration(Protocol? protocol) {
-    final durationMin = protocol?.durationMin;
-    if (durationMin == null) return '';
-
-    return '$durationMin minutes';
-  }
-
-  Future<void> _beginSession(_TodaySessionData data) async {
-    debugPrint('[Begin] pressed');
-
-    final protocolId = data.athleteState.currentProtocolId;
-    if (protocolId == null) {
-      debugPrint('[Begin] aborted: current_protocol_id is null');
-      return;
-    }
-
-    final payload = {
-      'athlete_id': _athleteId,
-      'protocol_id': protocolId,
-      'status': TrainingSessionStatus.inProgress.dbValue,
-      'programme_id': data.athleteState.programmeId,
-      'week_number': data.athleteState.currentWeek,
-    };
-    debugPrint('[Begin] createSession payload: $payload');
-
-    try {
-      final session = await _trainingSessionRepository.createSession(
-        athleteId: _athleteId,
-        protocolId: protocolId,
-        status: TrainingSessionStatus.inProgress,
-        programmeId: data.athleteState.programmeId,
-        weekNumber: data.athleteState.currentWeek,
-      );
-
-      debugPrint('[Begin] createSession success: id=${session.id}');
-
-      widget.onBeginSession(
-        protocolId: protocolId,
-        displayTitle: data.protocol?.name,
-        trainingSessionId: session.id,
-      );
-    } catch (error, stackTrace) {
-      debugPrint('[Begin] createSession failed: $error');
-      debugPrint('[Begin] stackTrace: $stackTrace');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<_TodaySessionData?>(
-      future: _todaySessionFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text(
-            'Loading session...',
-            style: CohortTextStyles.body,
-          );
-        }
-
-        final data = snapshot.data;
-        if (data == null || data.protocol == null) {
-          return const Text(
-            'No session scheduled.',
-            style: CohortTextStyles.body,
-          );
-        }
-
-        final protocol = data.protocol!;
-        final sessionState = _resolveSessionState(data);
-
-        return TodaySessionCard(
-          title: protocol.name,
-          subtitle: _buildSubtitle(data),
-          weekLabel: _buildWeekLabel(data),
-          duration: _buildDuration(protocol),
-          status: _statusLabel(sessionState),
-          buttonLabel: _buttonLabel(sessionState),
-          onPressed: data.athleteState.currentProtocolId == null
-              ? null
-              : () => _handleSessionAction(data, sessionState),
-        );
-      },
     );
   }
 }

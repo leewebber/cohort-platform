@@ -122,7 +122,19 @@ The long arc. An athlete is on a programme with a current week, goal, and assign
 
 ### Today's Session
 
-Home surfaces the athlete's scheduled work: planned, in progress, or completed today. Beginning creates (or resumes) a `training_sessions` row in `in_progress`. The session is the **parent record** for all performance data written during execution.
+Home surfaces the athlete's scheduled work: planned, in progress, or completed today. **Production Home (v0.1)** resolves today's work from `TodaySessionService` using the active `ProgrammeAssignment` cursor — not from manual `athlete_state.current_protocol_id` alone. Manual protocol selection remains available when the athlete has no active programme assignment (ad-hoc sessions).
+
+| Home state | Source | Begin/Resume |
+|------------|--------|--------------|
+| Programme executable slot | `TodaySessionService` → effective protocol | Yes — passes `ProgrammeExecutionContext` |
+| Rest day | `TodaySessionService` | No — optional manual continue to next day (V0.1) |
+| Day complete | `TodaySessionService` + `suggestedNextCursor` | Continue programme action only |
+| Programme complete | `TodaySessionService` | No session |
+| No active programme | `athlete_state.current_protocol_id` fallback | Yes — manual session (no programme context) |
+
+Beginning creates (or resumes) a `training_sessions` row in `in_progress`. Programme-backed begins also call `ProgrammeProgressionService.markSessionStarted` to upsert `in_progress` slot outcome. Returning to Home after session completion re-resolves via `TodaySessionService` so the next programme state appears immediately.
+
+The session is the **parent record** for all performance data written during execution.
 
 ### Decision Engine
 
@@ -412,8 +424,41 @@ Snapshot as of v0.1 / v1 strength and interval milestones. Detail lives in `35_S
 | `TrainingSessionCompletionContext` | Live — early end + session note |
 | `SessionReviewScreen` | Live |
 | Preview non-persistence | Live |
+| Programme progression bridge (v0.1) | Live — optional `ProgrammeExecutionContext` via coordinator |
+| Home programme resolution (v0.1) | Live — `HomeTodaySessionSection` + manual fallback |
 | Resume + leave dialog (strength & intervals) | Live |
 | Decision Engine integration | Future |
+
+---
+
+## 10.1 Programme progression bridge (v0.1)
+
+Completed execution now feeds the Programme Engine through a **shared coordinator** — not through mode-specific views.
+
+```
+SessionPlayerScreen (shared shell)
+  → training_sessions.complete
+  → ProgrammeSessionProgressionCoordinator
+      → ProgrammeProgressionService
+          1. programme_slot_outcome upsert
+          2. programme_assignments cursor advance
+          3. TodaySessionService resolve next
+          4. athlete_state projection sync
+  → SessionReviewScreen
+```
+
+**Design constraints:**
+- Strength, interval, and circuit views are unchanged — completion still flows through `SessionPlayerScreen._finish*Session`
+- Programme logic lives in `lib/features/programme/services/`, not in execution views
+- Optional `ProgrammeExecutionContext` on `SessionPlayerScreen` links a session to an assignment slot
+- Manual sessions (no context) preserve pre-programme behaviour
+- Preview mode never creates training sessions or programme outcomes
+
+`ProgrammeAssignment` remains source of truth. `athlete_state` is updated only as a denormalised projection after resolve/progression — Home does not read it as the programme cursor when an active assignment exists.
+
+**Home handoff:** `ProgrammeExecutionContext.fromResolvedSession` is built from the executable `ResolvedTodaySession` and passed into `SessionPlayerScreen`. Manual sessions omit `programmeContext` and preserve pre-programme behaviour.
+
+See `43_Programme_Engine_Service_Contracts.md` §3.5–3.7 for resolution kinds, progression rules, idempotency, stale-resolution protection, and the temporary lack of a single DB transaction.
 
 ---
 

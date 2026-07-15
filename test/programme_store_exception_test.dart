@@ -22,5 +22,24 @@ void main() {
 
       expect(error.isUniqueViolation, isTrue);
     });
+
+    test('detects missing conflict target for upsert (42P10)', () {
+      final error = ProgrammeStoreException.fromDynamic(
+        Exception(
+          'PostgrestException(message: there is no unique or exclusion constraint matching the ON CONFLICT specification, code: 42P10)',
+        ),
+        fallbackMessage: 'Failed to upsert athlete state projection',
+        operation: 'upsertProjection',
+        tableName: 'athlete_state',
+        conflictTarget: 'athlete_id',
+      );
+
+      expect(error.isMissingConflictTarget, isTrue);
+      expect(error.operation, 'upsertProjection');
+      expect(error.tableName, 'athlete_state');
+      expect(error.conflictTarget, 'athlete_id');
+      expect(error.toString(), contains('[upsertProjection]'));
+      expect(error.toString(), contains('onConflict: athlete_id'));
+    });
   });
 }

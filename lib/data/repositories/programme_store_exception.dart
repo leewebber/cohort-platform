@@ -8,6 +8,9 @@ class ProgrammeStoreException implements Exception {
     this.details,
     this.hint,
     this.cause,
+    this.operation,
+    this.tableName,
+    this.conflictTarget,
   });
 
   final String message;
@@ -15,6 +18,9 @@ class ProgrammeStoreException implements Exception {
   final String? details;
   final String? hint;
   final Object? cause;
+  final String? operation;
+  final String? tableName;
+  final String? conflictTarget;
 
   bool get isAccessDenied {
     final normalizedCode = code?.trim();
@@ -27,9 +33,14 @@ class ProgrammeStoreException implements Exception {
 
   bool get isUniqueViolation => code?.trim() == '23505';
 
+  bool get isMissingConflictTarget => code?.trim() == '42P10';
+
   factory ProgrammeStoreException.fromDynamic(
     Object error, {
     String fallbackMessage = 'Programme store operation failed',
+    String? operation,
+    String? tableName,
+    String? conflictTarget,
   }) {
     if (error is ProgrammeStoreException) return error;
 
@@ -41,12 +52,18 @@ class ProgrammeStoreException implements Exception {
         details: parsed.details,
         hint: parsed.hint,
         cause: error,
+        operation: operation,
+        tableName: tableName,
+        conflictTarget: conflictTarget,
       );
     }
 
     return ProgrammeStoreException(
       error.toString(),
       cause: error,
+      operation: operation,
+      tableName: tableName,
+      conflictTarget: conflictTarget,
     );
   }
 
@@ -89,9 +106,14 @@ class ProgrammeStoreException implements Exception {
 
   @override
   String toString() {
-    final buffer = StringBuffer('ProgrammeStoreException: $message');
+    final buffer = StringBuffer('ProgrammeStoreException');
+    if (operation != null) buffer.write('[$operation]');
+    buffer.write(': $message');
+    if (tableName != null) buffer.write(' (table: $tableName)');
+    if (conflictTarget != null) buffer.write(' (onConflict: $conflictTarget)');
     if (code != null) buffer.write(' (code: $code)');
     if (details != null) buffer.write(' details: $details');
+    if (hint != null) buffer.write(' hint: $hint');
     return buffer.toString();
   }
 }

@@ -1,4 +1,5 @@
 import '../../models/programme_slot_outcome.dart';
+import 'programme_slot_outcome_delete_result.dart';
 
 /// Persistence boundary for per-assignment slot outcomes.
 ///
@@ -18,4 +19,12 @@ abstract class ProgrammeSlotOutcomeStore {
   });
 
   Future<ProgrammeSlotOutcome> upsert(ProgrammeSlotOutcome outcome);
+
+  /// Deletes all outcomes for [assignmentId] and returns how many rows were removed.
+  ///
+  /// Callers that expect existing rows must verify [ProgrammeSlotOutcomeDeleteResult.deletedCount]
+  /// matches the pre-delete count — RLS may block DELETE without raising an error.
+  Future<ProgrammeSlotOutcomeDeleteResult> deleteOutcomesForAssignment({
+    required String assignmentId,
+  });
 }

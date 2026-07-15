@@ -26,6 +26,8 @@ class AthleteStateSupabaseStore implements AthleteStateStore {
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to fetch athlete state projection',
+        operation: 'getByAthleteId',
+        tableName: _tableName,
       );
     }
   }
@@ -40,7 +42,12 @@ class AthleteStateSupabaseStore implements AthleteStateStore {
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
-        fallbackMessage: 'Failed to upsert athlete state projection',
+        fallbackMessage:
+            'Failed to upsert athlete state projection — ensure '
+            'athlete_state_athlete_id_unique constraint exists',
+        operation: 'upsertProjection',
+        tableName: _tableName,
+        conflictTarget: _upsertConflict,
       );
     }
   }
@@ -58,6 +65,8 @@ class AthleteStateSupabaseStore implements AthleteStateStore {
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to clear athlete programme projection',
+        operation: 'clearProgrammeProjection',
+        tableName: _tableName,
       );
     }
   }

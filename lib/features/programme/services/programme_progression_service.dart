@@ -1,26 +1,52 @@
-import '../../../models/programme_assignment.dart';
-import '../../../models/programme_slot_outcome.dart';
-import '../../../models/programme_version_session_slot.dart';
+import '../../../models/programme_vocabulary.dart';
+import '../models/programme_progression_result.dart';
+import '../models/resolved_today_session.dart';
 
 /// Advances assignment cursor after slot and day resolution.
 ///
 /// See `43_Programme_Engine_Service_Contracts.md` §3.7.
 abstract class ProgrammeProgressionService {
-  Future<ProgrammeAssignment> progressAfterSlotResolved({
-    required String assignmentId,
-    required String sessionSlotId,
-    required int trainingSessionId,
+  Future<ProgrammeProgressionResult> markSessionStarted({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    int? trainingSessionId,
   });
 
-  bool isDayComplete({
-    required List<ProgrammeVersionSessionSlot> slots,
-    required List<ProgrammeSlotOutcome> outcomes,
+  Future<ProgrammeProgressionResult> completeSession({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    int? trainingSessionId,
+    String? resolutionNote,
   });
 
-  Future<ProgrammeAssignment> moveCursorTo({
-    required String assignmentId,
-    required int weekNumber,
-    required String dayKey,
-    int sessionOrder = 1,
+  Future<ProgrammeProgressionResult> completeSessionPartial({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    int? trainingSessionId,
+    String? resolutionNote,
+  });
+
+  Future<ProgrammeProgressionResult> skipSession({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    String? resolutionNote,
+  });
+
+  Future<ProgrammeProgressionResult> replaceSession({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    required String replacementProtocolId,
+    int? trainingSessionId,
+    String? resolutionNote,
+  });
+
+  Future<ProgrammeProgressionResult> resolveAfterOutcome({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
+    required ProgrammeSlotOutcomeStatus outcomeStatus,
+    int? trainingSessionId,
+    String? replacementProtocolId,
+    String? resolutionNote,
+    bool advanceCursor = true,
   });
 }

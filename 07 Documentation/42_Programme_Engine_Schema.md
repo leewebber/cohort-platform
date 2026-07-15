@@ -333,6 +333,14 @@ weekdayLabel = formatInTimeZone(calendarDate, assignment.timezone)
 
 `AthleteStateSyncService` writes these fields after assignment changes, progression, or today resolution. Home may read `athlete_state` for speed but must not maintain an independent cursor.
 
+### One row per athlete
+
+`athlete_state` is a **projection cache only** — `programme_assignments` remains source of truth. The table enforces **one row per `athlete_id`** via constraint `athlete_state_athlete_id_unique`. `AthleteStateSupabaseStore.upsertProjection` uses `onConflict: 'athlete_id'`, which requires that unique constraint (PostgreSQL `42P10` otherwise).
+
+**Migration:** `supabase/migrations/20260715150000_add_athlete_state_athlete_unique.sql`
+
+Before applying, run the duplicate diagnostic queries in that file. The migration aborts if any `athlete_id` has more than one row — consolidate manually, then re-apply.
+
 ---
 
 ## 9. Migration file
@@ -401,16 +409,41 @@ Service-role bypass for batch migration only — **never in Flutter**.
 
 ### Current development policies (implemented)
 
-**Migration:** `supabase/migrations/20260715130000_add_programme_engine_dev_policies.sql`
+**Migrations:**
+- `supabase/migrations/20260715130000_add_programme_engine_dev_policies.sql`
+- `supabase/migrations/20260715140000_fix_programme_dev_rls_recursion.sql` — fixes PostgreSQL `54001` infinite recursion
+- `supabase/migrations/20260715160000_allow_dev_programme_outcome_reset.sql` — temporary DELETE for dev athlete outcome reset
 
 RLS is **enabled** on all Programme Engine tables. Temporary `dev_programme_*` policies allow:
 
 - **Catalogue reads:** published Cohort Global (`approved_for_global = true`)
 - **Draft reads/writes:** unpublished Cohort Global templates (`owner_type = global`, `lifecycle_status = draft`)
 - **Assignment access:** athlete allowlist `['lee']` via `cohort_programme_dev_athlete_ids()`
-- **Slot outcomes:** scoped through assignment athlete allowlist
+- **Slot outcomes:** scoped through assignment athlete allowlist (SELECT/INSERT/UPDATE/DELETE for dev reset)
 
 Coach-private and organisation content has **no policies** and remains inaccessible via anon key.
+
+#### RLS recursion fix (54001)
+
+**Problem:** The original `dev_programme_versions_select_catalogue` policy called `cohort_programme_version_is_dev_readable(id)`, which queried `programme_versions` under the caller's RLS context. That re-entered the same policy → infinite recursion → PostgREST/PostgreSQL error `54001`.
+
+The same cycle affected `dev_programme_versions_update_draft_global` via `cohort_programme_version_is_dev_draft_global()`.
+
+**Fix (`20260715140000`):**
+
+| Layer | Approach |
+|-------|----------|
+| `programme_versions` SELECT/UPDATE | **Direct row predicates** — no helper function calls in policies |
+| Child tables + lineages | **Narrow `SECURITY DEFINER` helpers** (`STABLE`, `SET search_path = public, pg_temp`) that check parent version visibility without re-entering RLS loops |
+| Identity allowlists | Remain `SECURITY INVOKER` (`cohort_programme_dev_athlete_ids`, `cohort_programme_dev_coach_id`) |
+
+`SECURITY DEFINER` is used only for parent-lookup bridges (version/week/day). Execute is revoked from `PUBLIC` and granted to `anon` / `authenticated` only. These helpers are **temporary** and must be dropped when Supabase Auth ownership policies replace the dev model.
+
+**Temporary limitations (unchanged):**
+- No blanket public write — only draft Cohort Global templates
+- No coach-private or organisation access
+- Anon key still used (no Supabase Auth session)
+- Service-role key never used in Flutter
 
 **Before beta:** drop dev policies/functions; replace with `auth.uid()` ownership model. See `43_Programme_Engine_Service_Contracts.md` §8.
 

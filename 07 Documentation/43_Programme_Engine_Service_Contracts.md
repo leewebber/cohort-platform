@@ -1,8 +1,9 @@
 # 43 — Programme Engine Service Contracts
 
-**Status:** Canonical service design (v0.1) — stores implemented  
+**Status:** Canonical service design (v0.1) — stores + schedule services implemented  
 **Related:** `41_Programme_Engine.md`, `42_Programme_Engine_Schema.md`  
-**Stores:** Supabase implementations in `lib/data/repositories/*_supabase_store.dart`
+**Stores:** Supabase implementations in `lib/data/repositories/*_supabase_store.dart`  
+**Services (v0.1):** `ProgrammeScheduleResolver`, `TodaySessionService`, `AthleteStateSyncService`
 
 ---
 
@@ -29,7 +30,7 @@ Supabase tables (§42)
 
 ## 2. Store interfaces (repositories)
 
-Persistence boundaries for test doubles. **Supabase implementations** are live; business services remain future work.
+Persistence boundaries for test doubles. **Supabase implementations** are live. **Schedule services v0.1** are implemented; assignment, publishing, progression, and outcome services remain future work.
 
 | Store interface | Supabase implementation |
 |-----------------|-------------------------|
@@ -95,6 +96,12 @@ abstract class ProgrammeSlotOutcomeStore {
     required String dayKey,
   });
   Future<ProgrammeSlotOutcome> upsert(ProgrammeSlotOutcome outcome);
+
+  /// Deletes all outcomes for [assignmentId]. Returns deleted row count and ids.
+  /// Reset workflows must verify count when outcomes were visible pre-delete.
+  Future<ProgrammeSlotOutcomeDeleteResult> deleteOutcomesForAssignment({
+    required String assignmentId,
+  });
 }
 ```
 
@@ -206,52 +213,68 @@ abstract class ProgrammeAssignmentService {
 
 ---
 
-### 3.4 `ProgrammeScheduleResolver`
+### 3.4 `ProgrammeScheduleResolver` — **implemented (v0.1)**
 
-Pure resolution over template + assignment cursor. No I/O beyond store reads.
+Pure, read-only resolution over assignment cursor + pinned template tree + slot outcomes. **No I/O, no mutation.**
+
+**Implementation:** `ProgrammeScheduleResolverImpl`  
+**Models:** `ProgrammeScheduleResolution`, `ProgrammeSuggestedCursor`  
+**Errors:** `ProgrammeScheduleException` / `ProgrammeScheduleErrorCode`
 
 ```dart
 abstract class ProgrammeScheduleResolver {
-  Future<ProgrammeTemplate> loadTemplateForAssignment(
-    ProgrammeAssignment assignment,
-  );
-
-  ProgrammeVersionDay? dayForCursor({
-    required ProgrammeTemplate template,
-    required int weekNumber,
-    required String dayKey,
-  });
-
-  List<ProgrammeVersionSessionSlot> slotsForDay({
-    required ProgrammeTemplate template,
-    required int weekNumber,
-    required String dayKey,
-  });
-
-  ProgrammeVersionSessionSlot? slotForCursor({
-    required ProgrammeTemplate template,
+  ProgrammeScheduleResolution resolve({
     required ProgrammeAssignment assignment,
-  });
-
-  /// Display-only — not persisted.
-  String? weekdayLabelForCursor({
-    required ProgrammeAssignment assignment,
-    required ProgrammeVersionDay day,
-  });
-
-  ProgrammeVersionDay? nextDay({
-    required ProgrammeTemplate template,
-    required int weekNumber,
-    required String dayKey,
+    required ProgrammeTemplateTree tree,
+    required List<ProgrammeSlotOutcome> outcomes,
   });
 }
 ```
 
+#### Cursor-based v0.1 rules
+
+| Input | Rule |
+|-------|------|
+| Week | `assignment.currentWeekNumber` must exist in loaded tree |
+| Day | `assignment.currentDayKey` (`day_N` ordinal) must exist in that week |
+| Slots | Ordered by `sessionOrder`; duplicate day keys or slot orders throw typed errors |
+| Current slot | `in_progress` outcome takes priority; else first unresolved **required** slot |
+| Optional slots | Surfaced in `optionalUnresolvedSlots` but never block day advancement |
+
+#### Outcome status handling
+
+| Category | Statuses |
+|----------|----------|
+| Resolved (advance past slot) | `completed`, `completed_partial`, `skipped`, `replaced` |
+| Unresolved / current | `scheduled`, `in_progress`, `rescheduled` |
+| Rescheduled | Remains current until replacement destination is explicitly complete |
+
+#### Resolution kinds
+
+| Kind | When |
+|------|------|
+| `executableSlot` | Required or optional slot with effective protocol |
+| `restDay` | Day type `rest` or empty slot list — no protocol ID |
+| `dayComplete` | All required slots on cursor day resolved; later day exists |
+| `programmeComplete` | All required slots resolved and no later day/week exists |
+
+#### Suggested next cursor
+
+When a day is complete (or on rest day), resolver returns `ProgrammeSuggestedCursor` with the **next** week/day/slot — **without mutating** the assignment. Progression service (future) applies this after explicit advancement.
+
+- Same week: next `day_key` by `day_order`
+- Week rollover: first day of next week by `week_number`
+- Programme end: `suggestedNextCursor = null`
+
+#### Typed validation errors
+
+Throws `ProgrammeScheduleException` for: empty programme structure, missing current week/day, duplicate day keys, duplicate slot order, slot/outcome outside loaded version tree, malformed assignment cursor.
+
 ---
 
-### 3.5 `TodaySessionService`
+### 3.5 `TodaySessionService` — **implemented (v0.1)**
 
-Primary Home entry point. Combines assignment, template, slot outcomes, and execution state.
+**Implementation:** `TodaySessionServiceImpl`
 
 ```dart
 abstract class TodaySessionService {
@@ -259,128 +282,151 @@ abstract class TodaySessionService {
 }
 ```
 
-**Resolution steps:**
-1. Load active assignment (not paused) — else `ResolvedTodaySession.noAssignment`
-2. Load template for pinned version
-3. Resolve day from cursor — if `rest` → `ResolvedTodaySession.restDay`
-4. Load slot outcomes for day; select cursor slot
-5. Load `training_sessions` for athlete + effective `protocol_id`
-6. Map execution status to display state (Begin / Resume / Completed)
-7. Return `ResolvedTodaySession` with programme context labels
+**Resolution steps (v0.1):**
+1. Load active assignment — if none → `ResolvedTodaySession.noActiveProgramme` (not an exception)
+2. Load pinned `ProgrammeTemplateTree` for `programmeVersionId`
+3. Load all `programme_slot_outcomes` for assignment
+4. Delegate to `ProgrammeScheduleResolver.resolve`
+5. Map to `ResolvedTodaySession` including effective protocol (`replacementProtocolId` when outcome is `replaced`, else planned `protocolId`)
 
-Does **not** advance cursor. Does **not** write `athlete_state` (caller or sync service handles that).
+Does **not** create `TrainingSession`. Does **not** advance assignment cursor. Does **not** write `athlete_state` directly (Home calls `AthleteStateSyncService` after resolve).
+
+**Home (production v0.1):** `HomeTodaySessionLoader` resolves via `TodaySessionService.resolveForAthlete('lee')` on load. Programme-backed states take precedence over manual `athlete_state.current_protocol_id`. When resolution is `noActiveProgramme`, Home falls back to manual protocol selection. After resolve, Home syncs `athlete_state` as a projection only.
+
+| Resolution kind | Home UI |
+|-----------------|---------|
+| `executable` | `TodaySessionCard` with programme week/day, slot title, required/optional label; Begin/Resume passes `ProgrammeExecutionContext` |
+| `restDay` | Rest Day card — no Begin; optional **Continue to next programme day** (manual V0.1 progression) |
+| `dayComplete` | Day Complete card — **Continue programme** applies `suggestedNextCursor` |
+| `programmeComplete` | Programme Complete card — no session launch |
+| `noActiveProgramme` | Manual `athlete_state.current_protocol_id` fallback (ad-hoc sessions preserved) |
+| resolve error | Error card with Retry — never shows stale manual protocol |
+
+Temporary DEBUG actions remain in a labelled **DEBUG** section and are not required for normal Home.
+
+**Implementation:** `lib/features/home/services/home_today_session_loader.dart`, `lib/features/home/widgets/home_today_session_section.dart`
 
 ---
 
-### 3.6 `ProgrammeSlotOutcomeService`
+### 3.6 `ProgrammeSlotOutcomeService` — **implemented (v0.1)**
 
-Bridges Execution Engine events to programme slot state.
+**Implementation:** `ProgrammeSlotOutcomeServiceImpl`
+
+Bridges Execution Engine events to programme slot state. Slot outcomes remain separate from `training_sessions.status`.
 
 ```dart
 abstract class ProgrammeSlotOutcomeService {
-  Future<ProgrammeSlotOutcome> markScheduled({
-    required String assignmentId,
-    required ProgrammeVersionSessionSlot slot,
-    required int weekNumber,
-    required String dayKey,
-  });
-
-  Future<ProgrammeSlotOutcome> markInProgress({
-    required String assignmentId,
-    required String sessionSlotId,
-    required int trainingSessionId,
-  });
-
-  Future<ProgrammeSlotOutcome> markCompleted({
-    required String assignmentId,
-    required String sessionSlotId,
-    required int trainingSessionId,
-  });
-
-  /// Session ended_early — does not advance day.
-  Future<ProgrammeSlotOutcome> markCompletedPartial({
-    required String assignmentId,
-    required String sessionSlotId,
-    required int trainingSessionId,
-  });
-
-  Future<ProgrammeSlotOutcome> markSkipped({
-    required String assignmentId,
-    required String sessionSlotId,
-  });
-
-  Future<ProgrammeSlotOutcome> markReplaced({
-    required String assignmentId,
-    required String sessionSlotId,
-    required String resolvedProtocolId,
+  Future<ProgrammeSlotOutcome> upsertFromResolution({
+    required ResolvedTodaySession resolution,
+    required ProgrammeSlotOutcomeStatus outcomeStatus,
     int? trainingSessionId,
+    String? replacementProtocolId,
+    String? resolutionNote,
+    DateTime? resolvedAt,
   });
 }
 ```
 
+**Rules (v0.1):**
+- Always persists `assignment_id`, `session_slot_id`, `week_number`, `day_key`, `session_order`
+- Idempotent on `(assignment_id, session_slot_id)` via store upsert
+- Preserves distinct statuses: `scheduled`, `in_progress`, `completed`, `completed_partial`, `skipped`, `replaced`, `rescheduled`
+- Sets `resolved_at` on terminal outcomes unless explicitly provided
+
 ---
 
-### 3.7 `ProgrammeProgressionService`
+### 3.7 `ProgrammeProgressionService` — **implemented (v0.1)**
 
-Advances assignment cursor after slot/day resolution.
+**Implementation:** `ProgrammeProgressionServiceImpl`  
+**Result DTO:** `ProgrammeProgressionResult` / `ProgrammeProgressionStatus`  
+**Execution bridge:** `ProgrammeSessionProgressionCoordinator`  
+**Context DTO:** `ProgrammeExecutionContext`
 
 ```dart
 abstract class ProgrammeProgressionService {
-  /// Called after session review or explicit coach action.
-  Future<ProgrammeAssignment> progressAfterSlotResolved({
-    required String assignmentId,
-    required String sessionSlotId,
-    required int trainingSessionId,
-  });
-
-  /// Returns true when all required slots have terminal outcomes.
-  bool isDayComplete({
-    required List<ProgrammeVersionSessionSlot> slots,
-    required List<ProgrammeSlotOutcome> outcomes,
-  });
-
-  /// Manual cursor move — coach tooling (future).
-  Future<ProgrammeAssignment> moveCursorTo({
-    required String assignmentId,
-    required int weekNumber,
-    required String dayKey,
-    int sessionOrder = 1,
-  });
+  Future<ProgrammeProgressionResult> markSessionStarted({...});
+  Future<ProgrammeProgressionResult> completeSession({...});
+  Future<ProgrammeProgressionResult> completeSessionPartial({...});
+  Future<ProgrammeProgressionResult> skipSession({...});
+  Future<ProgrammeProgressionResult> replaceSession({...});
+  Future<ProgrammeProgressionResult> resolveAfterOutcome({...});
 }
 ```
 
-**`progressAfterSlotResolved` rules:**
-1. Idempotency: skip if `trainingSessionId == assignment.lastProgressedTrainingSessionId`
-2. Record outcome via `ProgrammeSlotOutcomeService` if not already terminal
-3. If day incomplete → update `current_session_order` to next unresolved required slot only
-4. If day complete → advance day/week per `ProgrammeScheduleResolver.nextDay`
-5. If programme complete → `status = completed`
-6. Update `lastProgressedTrainingSessionId`
-7. Call `AthleteStateSyncService.syncFromAssignment`
+#### Progression order (v0.1)
 
-**Ended early:** `completed_partial` counts as terminal for the slot but does not by itself complete the day unless all other required slots are also terminal.
+```
+1. Validate assignment + stale-resolution guard
+2. Upsert programme_slot_outcome
+3. Advance ProgrammeAssignment cursor (when terminal + rules allow)
+4. Resolve next session via TodaySessionService
+5. Sync athlete_state projection
+```
+
+**No single database transaction yet.** Steps run sequentially. Later-step failure returns `ProgrammeProgressionStatus.partialSuccess` with warnings — never silent partial success.
+
+**Before beta:** wrap steps 2–4 in a Postgres RPC/transaction.
+
+#### Cursor advancement rules
+
+| Outcome | Advance cursor? |
+|---------|-----------------|
+| `in_progress` | No |
+| `completed` / `completed_partial` / `skipped` | Yes — next required slot on same day, else next day/week via resolver `suggestedNextCursor` |
+| `replaced` | Only when `trainingSessionId` provided (replacement session completed) |
+| `rescheduled` | No — remains unresolved until destination completes |
+
+Optional unresolved slots never block day advancement. Rest days update cursor but clear `current_protocol_id` from `athlete_state`. Programme complete sets assignment `status = completed` and `completed_at`.
+
+#### Idempotency + stale protection
+
+- Repeating the same terminal completion for the same `trainingSessionId` when `last_progressed_training_session_id` already matches → no double advance
+- `ResolvedTodaySession` must match assignment cursor (`week`, `day_key`, `slot_order`) or returns `staleResolution`
+- Outcome upsert failure prevents cursor update (throws `ProgrammeProgressionException`)
+
+#### Partial failure statuses
+
+| Status | Meaning |
+|--------|---------|
+| `completed` | Full workflow succeeded |
+| `programmeComplete` | Assignment marked complete |
+| `partialSuccess` | Outcome saved but assignment sync and/or `athlete_state` sync failed |
+| `staleResolution` | Input resolution no longer matches assignment cursor |
+| `noActiveProgramme` | No active assignment for athlete |
+
+**Ended early:** `completed_partial` is terminal for the slot and follows the same required-slot advancement rules as `completed`.
 
 ---
 
-### 3.8 `AthleteStateSyncService`
+### 3.8 `AthleteStateSyncService` — **implemented (v0.1)**
 
-Denormalised projection — single writer for programme fields on `athlete_state`.
+Denormalised projection — single writer for programme fields on `athlete_state`. **`ProgrammeAssignment` remains source of truth.**
+
+**Implementation:** `AthleteStateSyncServiceImpl`
 
 ```dart
 abstract class AthleteStateSyncService {
-  Future<void> syncFromAssignment({
-    required ProgrammeAssignment assignment,
-    String? resolvedProtocolId,
-    String? sessionStatus,
+  Future<void> syncFromResolvedSession({
+    required String athleteId,
+    required ResolvedTodaySession resolution,
   });
 
   Future<void> clearProgrammeProjection(String athleteId);
 }
 ```
 
-**Writes:** `current_programme_id`, `current_week`, `current_day`, `current_protocol_id`, `session_status`.
+**v0.1 projection rules:**
 
-**Never writes:** independent cursor values not derived from assignment.
+| Resolution kind | `athlete_state` writes |
+|-----------------|------------------------|
+| `executable` | `current_programme_id` (lineage code), `current_week`, `current_day`, `current_protocol_id` (effective), `session_status` (outcome status) |
+| `restDay`, `dayComplete`, `programmeComplete` | Preserve programme/week/day context; **clear** `current_protocol_id` and `session_status` |
+| `paused` | Programme context + `session_status = paused`; clear protocol |
+| `noActiveProgramme` | No automatic write (use `clearProgrammeProjection`) |
+
+Sync is **idempotent** — skips upsert when projection unchanged.
+
+**Never writes:** cursor values independent of assignment; assignment ID (not on `athlete_state` schema v1).
 
 ---
 
@@ -402,33 +448,36 @@ Built by `ProgrammeVersionStore.loadTemplate`.
 
 ### 4.2 `ResolvedTodaySession`
 
-| Variant | When |
-|---------|------|
-| `planned` | Required slot; no in-progress session today |
-| `inProgress` | Matching `training_sessions.status = in_progress` |
-| `completed` | Slot outcome terminal + session completed |
-| `completedPartial` | Slot `completed_partial`; day may remain open |
-| `restDay` | Day type rest |
+| Kind | When |
+|------|------|
+| `noActiveProgramme` | No active assignment |
 | `paused` | Assignment paused |
-| `noAssignment` | No active assignment |
+| `executable` | Current required/optional slot with effective protocol |
+| `restDay` | Rest day at cursor |
+| `dayComplete` | All required slots resolved; suggested next cursor returned |
+| `programmeComplete` | No later day/week |
 
-**Shared fields:** `assignment`, `lineageCode`, `versionNumber`, `weekNumber`, `dayKey`, `weekdayLabel`, `slot`, `effectiveProtocolId`, `slotOutcome`, `trainingSessionId`.
+**Shared fields:** `assignmentId`, `programmeVersionId`, `lineageCode`, `programmeName`, `versionNumber`, `weekNumber`, `dayKey`, `dayTitle`, `dayType`, `dayIntent`, `slotId`, `slotOrder`, `slotTitle`, `plannedProtocolId`, `effectiveProtocolId`, `outcomeStatus`, `isOptional`, `isRestDay`, `programmeComplete`, `suggestedNextCursor`, `optionalUnresolvedSlotCount`.
 
 ---
 
-## 5. Integration hooks (future, not implemented)
+## 5. Integration hooks
 
-| Trigger | Service |
-|---------|---------|
-| Home load | `TodaySessionService.resolveForAthlete` |
-| Session player open | `ProgrammeSlotOutcomeService.markInProgress` |
-| Session finish (normal) | `ProgrammeSlotOutcomeService.markCompleted` → `ProgrammeProgressionService.progressAfterSlotResolved` |
-| Session ended early | `ProgrammeSlotOutcomeService.markCompletedPartial` (no progression) |
-| Session review dismiss / Home return | `ProgrammeProgressionService.progressAfterSlotResolved` (if completed) |
-| Coach assigns programme | `ProgrammeAssignmentService.assignAthlete` |
-| Decision Engine substitution | `ProgrammeSlotOutcomeService.markReplaced` |
+| Trigger | Service | Status |
+|---------|---------|--------|
+| Home load (production) | `TodaySessionService` → `AthleteStateSyncService` → `HomeTodaySessionSection` | **Live (v0.1)** |
+| Home load (manual fallback) | `athlete_state.current_protocol_id` when no active assignment | **Live (v0.1)** |
+| Home rest/day-complete continue | `HomeProgrammeContinuationService` (applies `suggestedNextCursor`) | **Live (v0.1)** |
+| Session player open (programme-backed) | `ProgrammeProgressionService.markSessionStarted` + `ProgrammeExecutionContext` | **Live (v0.1)** |
+| Session finish (normal) | `training_sessions.complete` → `ProgrammeProgressionService.completeSession` | **Live (v0.1)** |
+| Session ended early | `training_sessions.complete` → `ProgrammeProgressionService.completeSessionPartial` | **Live (v0.1)** |
+| Manual / preview session | No programme progression | Preserved |
+| Coach assigns programme | `ProgrammeAssignmentService.assignAthlete` | Pending |
+| Decision Engine substitution | `ProgrammeProgressionService.replaceSession` | Service live; DE hook pending |
 
-Execution Engine files are **not** modified in this milestone. Hooks are documented for the wiring milestone.
+**Coordinator:** `ProgrammeSessionProgressionCoordinator` in `lib/features/session/services/`. Called from `SessionPlayerScreen` after `training_sessions` completion. Requires optional `ProgrammeExecutionContext` — manual sessions omit it and preserve existing behaviour. Preview mode never passes programme context.
+
+Execution Engine views (strength/interval/circuit) are **not** modified — integration is at the shared `SessionPlayerScreen` completion boundary only.
 
 ---
 
@@ -459,20 +508,44 @@ lib/
     programme_store_exception.dart
   core/constants/
     programme_dev_identity.dart
+  features/home/
+    models/home_today_session_state.dart
+    services/home_today_session_loader.dart
+    services/home_today_session_services.dart
+    services/home_programme_continuation_service.dart
+    widgets/home_today_session_section.dart
   features/programme/
     models/
       programme_template.dart
       programme_catalog_entry.dart
+      programme_schedule_resolution.dart
+      programme_suggested_cursor.dart
+      programme_execution_context.dart
+      programme_progression_result.dart
       resolved_today_session.dart
+    errors/
+      programme_schedule_exception.dart
+      programme_progression_exception.dart
+    debug/
+      programme_debug_actions.dart
+      programme_debug_resolution_cache.dart
+      programme_dev_fixtures.dart
     services/
       programme_catalog_service.dart
       programme_publishing_service.dart
       programme_assignment_service.dart
       programme_schedule_resolver.dart
+      programme_schedule_resolver_impl.dart
       today_session_service.dart
+      today_session_service_impl.dart
       programme_slot_outcome_service.dart
+      programme_slot_outcome_service_impl.dart
       programme_progression_service.dart
+      programme_progression_service_impl.dart
       athlete_state_sync_service.dart
+      athlete_state_sync_service_impl.dart
+  features/session/services/
+    programme_session_progression_coordinator.dart
 ```
 
 ---
@@ -486,14 +559,15 @@ lib/
 | 3. Supabase stores | Done — see §2 |
 | 4. Seed fixture | Done — `supabase/seed/cohort_foundation_test_programme.sql` |
 | 5. Store tests | Done — `test/programme_stores_test.dart` |
-| 6. `ProgrammeScheduleResolver` | Pending |
+| 6. `ProgrammeScheduleResolver` | Done — `programme_schedule_resolver_impl.dart` |
 | 7. `ProgrammeAssignmentService` + outcome seeding | Pending |
-| 8. `TodaySessionService` | Pending |
-| 9. `AthleteStateSyncService` | Pending |
-| 10. Home refactor | Pending |
-| 11. Progression hooks from session review | Pending |
-| 12. Legacy data migration | Pending |
-| 13. Coach Studio UI | Pending |
+| 8. `TodaySessionService` | Done — `today_session_service_impl.dart` |
+| 9. `AthleteStateSyncService` | Done — `athlete_state_sync_service_impl.dart` |
+| 10. `ProgrammeSlotOutcomeService` + `ProgrammeProgressionService` | Done — v0.1 |
+| 11. Session completion integration | Done — `ProgrammeSessionProgressionCoordinator` |
+| 12. Home refactor | Done — `HomeTodaySessionSection` resolves from `TodaySessionService`; manual protocol is fallback only |
+| 13. Legacy data migration | Pending |
+| 14. Coach Studio UI | Pending |
 
 ---
 
@@ -547,8 +621,8 @@ psql <connection> -f supabase/seed/cohort_foundation_test_programme.sql
 
 | Limitation | Notes |
 |------------|-------|
-| No business services yet | Stores only — no `TodaySessionService`, progression, or publishing logic |
-| Home unchanged | Still reads legacy `athlete_state` manual cursor |
+| Assignment/progression services pending | Resolver + Today + Sync only — no auto cursor advancement |
+| Home production path | Resolves from `TodaySessionService`; manual `athlete_state` is fallback when no active assignment; DEBUG section retained temporarily |
 | Dev RLS is temporary | Anon write access limited but still broader than production |
 | `saveTemplateTree` replaces structure | Deletes and re-inserts weeks/days/slots for a draft version |
 | No legacy data migration | `programmes` / `programme_sessions` tables still used by legacy repository |

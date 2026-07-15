@@ -1,5 +1,6 @@
 import '../../core/services/supabase_service.dart';
 import '../../models/programme_slot_outcome.dart';
+import 'programme_slot_outcome_delete_result.dart';
 import 'programme_slot_outcome_store.dart';
 import 'programme_store_exception.dart';
 
@@ -108,6 +109,39 @@ class ProgrammeSlotOutcomeSupabaseStore implements ProgrammeSlotOutcomeStore {
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to upsert programme slot outcome',
+      );
+    }
+  }
+
+  @override
+  Future<ProgrammeSlotOutcomeDeleteResult> deleteOutcomesForAssignment({
+    required String assignmentId,
+  }) async {
+    try {
+      final response = await SupabaseService.client
+          .from(_tableName)
+          .delete()
+          .eq('assignment_id', assignmentId.trim())
+          .select('id');
+
+      final rows = (response as List)
+          .map((row) => Map<String, dynamic>.from(row as Map))
+          .toList();
+      final deletedIds = rows
+          .map((row) => row['id']?.toString())
+          .whereType<String>()
+          .toList();
+
+      return ProgrammeSlotOutcomeDeleteResult(
+        deletedCount: deletedIds.length,
+        deletedIds: deletedIds,
+      );
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to delete programme slot outcomes',
+        operation: 'deleteOutcomesForAssignment',
+        tableName: _tableName,
       );
     }
   }
