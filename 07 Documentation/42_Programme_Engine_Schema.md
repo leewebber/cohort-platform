@@ -413,15 +413,33 @@ Service-role bypass for batch migration only — **never in Flutter**.
 - `supabase/migrations/20260715130000_add_programme_engine_dev_policies.sql`
 - `supabase/migrations/20260715140000_fix_programme_dev_rls_recursion.sql` — fixes PostgreSQL `54001` infinite recursion
 - `supabase/migrations/20260715160000_allow_dev_programme_outcome_reset.sql` — temporary DELETE for dev athlete outcome reset
+- `supabase/migrations/20260716150000_allow_dev_coach_programme_authoring.sql` — temporary dev-coach Coach Studio authoring (lineage → draft tree)
 
 RLS is **enabled** on all Programme Engine tables. Temporary `dev_programme_*` policies allow:
 
 - **Catalogue reads:** published Cohort Global (`approved_for_global = true`)
 - **Draft reads/writes:** unpublished Cohort Global templates (`owner_type = global`, `lifecycle_status = draft`)
+- **Coach Studio authoring:** coach_private drafts owned by `dev-coach` (see below)
 - **Assignment access:** athlete allowlist `['lee']` via `cohort_programme_dev_athlete_ids()`
 - **Slot outcomes:** scoped through assignment athlete allowlist (SELECT/INSERT/UPDATE/DELETE for dev reset)
 
-Coach-private and organisation content has **no policies** and remains inaccessible via anon key.
+Organisation content has **no policies** and remains inaccessible via anon key.
+
+#### Dev-coach Coach Studio authoring (`20260716150000`)
+
+**Gap fixed:** New Programme creates `coach_private` + `owner_type = coach` + `owner_id = dev-coach` rows. Prior dev policies only covered Cohort Global templates. Lineage INSERT could also fail with `42501` when no permissive INSERT policy was present.
+
+**Additive `dev_programme_*_coach` policies** (temporary, owner-scoped):
+
+| Table | Dev-coach access |
+|-------|------------------|
+| `programme_lineages` | INSERT/SELECT/UPDATE when `created_by = dev-coach`; DELETE only when no published versions and no assignments |
+| `programme_versions` | INSERT/UPDATE/DELETE coach_private drafts owned by `dev-coach`; SELECT draft + published coach catalogue rows |
+| Template children | Read/write when parent version passes `cohort_programme_version_is_dev_coach_*` SECURITY DEFINER helpers |
+
+Helpers use `SECURITY DEFINER`, `STABLE`, `SET search_path = public, pg_temp`, no dynamic SQL. Execute revoked from `PUBLIC`, granted to `anon`/`authenticated` only.
+
+**Before beta:** drop `dev_programme_*_coach` policies and `cohort_programme_*_coach_*` helpers; replace anon writes with `auth.uid()` ownership. Published versions remain immutable in place.
 
 #### RLS recursion fix (54001)
 
@@ -439,11 +457,12 @@ The same cycle affected `dev_programme_versions_update_draft_global` via `cohort
 
 `SECURITY DEFINER` is used only for parent-lookup bridges (version/week/day). Execute is revoked from `PUBLIC` and granted to `anon` / `authenticated` only. These helpers are **temporary** and must be dropped when Supabase Auth ownership policies replace the dev model.
 
-**Temporary limitations (unchanged):**
-- No blanket public write — only draft Cohort Global templates
-- No coach-private or organisation access
-- Anon key still used (no Supabase Auth session)
+**Temporary limitations (unchanged where noted):**
+- No blanket public write — draft writes are owner-scoped (`dev-coach` or Cohort Global templates)
+- Organisation access remains denied
+- Anon key still used (no Supabase Auth session) — **replace with `auth.uid()` before beta**
 - Service-role key never used in Flutter
+- Published versions are not mutable in place (coach or global)
 
 **Before beta:** drop dev policies/functions; replace with `auth.uid()` ownership model. See `43_Programme_Engine_Service_Contracts.md` §8.
 

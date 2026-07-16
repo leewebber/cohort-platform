@@ -1,9 +1,10 @@
 # 43 — Programme Engine Service Contracts
 
 **Status:** Canonical service design (v0.1) — stores + schedule services implemented  
-**Related:** `41_Programme_Engine.md`, `42_Programme_Engine_Schema.md`  
+**Related:** `41_Programme_Engine.md`, `42_Programme_Engine_Schema.md`, `44_Programme_Builder.md`, `45_Coach_Studio_Programme_Catalogue.md`  
 **Stores:** Supabase implementations in `lib/data/repositories/*_supabase_store.dart`  
-**Services (v0.1):** `ProgrammeScheduleResolver`, `TodaySessionService`, `AthleteStateSyncService`
+**Services (v0.1):** `ProgrammeScheduleResolver`, `TodaySessionService`, `AthleteStateSyncService`, `ProgrammeAssignmentService`  
+**Builder (v0.1 scaffold):** Models + contracts in `lib/features/programme_builder/` — see `44_Programme_Builder.md`
 
 ---
 
@@ -180,6 +181,39 @@ abstract class ProgrammePublishingService {
 - Sets `lifecycle_status = published`, `published_at = now()`
 - Child rows become immutable (enforced by store/RLS)
 - Does not reassign active athletes
+
+**Clone Version** (`cloneToNewDraft`): same lineage, version N → N+1 draft. Used when editing a published programme.
+
+**Not duplicate programme** — that is `ProgrammeBuilderService.duplicateProgramme` (new lineage, v1). See `44_Programme_Builder.md` §8.
+
+---
+
+### 3.2.1 Programme Builder services — **contracts only (v0.1)**
+
+**Canonical doc:** `44_Programme_Builder.md`  
+**Location:** `lib/features/programme_builder/`
+
+| Service | Role | Implementation |
+|---------|------|----------------|
+| `ProgrammeBuilderService` | Draft CRUD, structural edits, undo/redo, duplicate programme | Contract only |
+| `ProgrammeBuilderValidationService` | Validate tree, publish checks, `buildPublishReadiness` | `ProgrammeBuilderValidationServiceImpl` |
+| `ProgrammeBuilderCompiler` | `ProgrammeBuilderDocument` ↔ `ProgrammeTemplateTree` | Implemented |
+| `ProgrammeBuilderPreviewService` | Structural + athlete-facing preview DTOs | Contract only |
+| `ProgrammeBuilderProtocolPickerService` | Protocol catalogue for slot assignment | Contract only |
+| `ProgrammeBuilderPublishCoordinator` | Validate → save if dirty → publish | Contract only |
+
+**Boundary rules:**
+
+| Concern | Owner |
+|---------|-------|
+| Author template versions | Programme Builder (`ProgrammeBuilderService` + `ProgrammePublishingService`) |
+| Assign published versions to athletes | `ProgrammeAssignmentService` only |
+| Resolve today's session | `TodaySessionService` |
+| Home UI | Reads `TodaySessionService` — **never creates assignments** |
+
+**Undo/redo:** client-only `ProgrammeBuilderHistory` — in-memory document snapshots, not persisted to Supabase.
+
+**Dirty state:** `ProgrammeBuilderDocument.isDirty` / `lastSavedAt` — client session metadata separate from persisted `ProgrammeVersion` rows.
 
 ---
 
@@ -672,7 +706,9 @@ lib/
 | 11. Session completion integration | Done — `ProgrammeSessionProgressionCoordinator` |
 | 12. Home refactor | Done — `HomeTodaySessionSection` resolves from `TodaySessionService`; manual protocol is fallback only |
 | 13. Legacy data migration | Pending |
-| 14. Coach Studio UI | Pending |
+| 14. Programme Builder scaffold | Done — models + contracts; see `44_Programme_Builder.md` |
+| 15. Coach Studio UI | Done — Programme Catalogue v0.1; see `45_Coach_Studio_Programme_Catalogue.md` |
+| 16. Programme Editor UI | Pending |
 
 ---
 
@@ -742,3 +778,4 @@ psql <connection> -f supabase/seed/cohort_foundation_test_programme.sql
 |----------|-------|
 | `41_Programme_Engine.md` | Architecture |
 | `42_Programme_Engine_Schema.md` | Tables and indexes |
+| `44_Programme_Builder.md` | Coach Studio authoring, validation, preview, clone/duplicate |

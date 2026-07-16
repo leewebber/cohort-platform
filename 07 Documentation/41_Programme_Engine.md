@@ -1,7 +1,7 @@
 # 41 — Programme Engine
 
 **Status:** Canonical architecture (v0.1 design)  
-**Related:** `38_Execution_Engine_Architecture.md`, `34_Protocol_Builder.md`, `SessionPlayerScreen`, `athlete_state`, `programmes`, `programme_weeks`, `programme_sessions`, `training_sessions`
+**Related:** `38_Execution_Engine_Architecture.md`, `34_Protocol_Builder.md`, `44_Programme_Builder.md`, `SessionPlayerScreen`, `athlete_state`, `programmes`, `programme_weeks`, `programme_sessions`, `training_sessions`
 
 ---
 
@@ -13,6 +13,7 @@ The Programme Engine owns the **long arc** — the structured multi-week plan th
 
 | Layer | Owns |
 |-------|------|
+| **Programme Builder** | Draft authoring, validation, publishing (see `44_Programme_Builder.md`) |
 | **Programme Engine** | What the athlete is training toward, where they are in the plan, and which protocol is prescribed today |
 | **Decision Engine** | Whether today's prescribed route should change given constraints, recovery, and evidence |
 | **Execution Engine** | How the athlete performs today's protocol and what evidence is recorded |
@@ -342,20 +343,28 @@ Existing `AdaptationDecisionService` (protocol-level) will gain programme contex
 
 ## 11. Launch programme workflow (Coach Studio)
 
-End-to-end coach journey — UI future; architecture defined here.
+End-to-end coach journey — **Programme Builder UI** future; architecture in `44_Programme_Builder.md`.
 
 ```
-1. Create programme (draft)
-2. Define phases (optional)
-3. Add weeks
-4. Add days and session slots
-5. Assign protocol references per slot
-6. Set metadata and intent labels
-7. Preview weeks (read-only compiled view)
-8. Publish → immutable version snapshot
-9. Assign athlete → ProgrammeAssignment created at week 1 / day 1
-10. Athlete sees Today's Session on Home
+1. Create programme (draft) — ProgrammeBuilderService
+2. Define phases (optional — UI deferred)
+3. Add weeks / days / session slots
+4. Assign protocol references per slot — Protocol picker
+5. Set metadata and intent labels
+6. Preview weeks (structural + athlete-facing display)
+7. Publish → immutable version snapshot — ProgrammePublishingService
+8. Assign athlete → ProgrammeAssignmentService (not Home, not Builder)
+9. Athlete sees Today's Session on Home — TodaySessionService
 ```
+
+**Assignment rule:** `ProgrammeAssignmentService` is the sole production entry point for athlete assignment. **Home never creates assignments.**
+
+### Copy workflows
+
+| Workflow | Lineage | Version | Service |
+|----------|---------|---------|---------|
+| **Clone Version** | Unchanged | N → N+1 draft | `ProgrammePublishingService.cloneToNewDraft` |
+| **Duplicate Programme** | New code | v1 draft | `ProgrammeBuilderService.duplicateProgramme` |
 
 ### Preview
 
@@ -394,7 +403,7 @@ Coach preview compiles draft to a read-only week grid — similar to protocol pr
 
 | Feature | Description |
 |---------|-------------|
-| Programme builder UI | Coach Studio authoring |
+| `45_Coach_Studio_Programme_Catalogue.md` | Coach Studio Programme Catalogue UI |
 | Phase macros | Visual block periodisation |
 | Calendar-aware scheduling | Real weekday mapping from `start_date` |
 | Missed-session policies | Skip, compress, extend programme |
@@ -479,6 +488,8 @@ The Programme Engine stops at **protocol_id resolution**. Execution Engine respo
 | `42_Programme_Engine_Schema.md` | Database tables, indexes, RLS, legacy migration |
 | `43_Programme_Engine_Service_Contracts.md` | Store and service interfaces |
 | `38_Execution_Engine_Architecture.md` | Session lifecycle and mode contract |
+| `44_Programme_Builder.md` | Coach Studio authoring, publishing, clone/duplicate |
+| `45_Coach_Studio_Programme_Catalogue.md` | Programme Catalogue UI and orchestration |
 | `34_Protocol_Builder.md` | Protocol authoring (referenced by session slots) |
 | `35_Strength_Performance_Logging.md` | Strength execution persistence |
 | `37_Interval_Execution_Engine.md` | Interval execution |
