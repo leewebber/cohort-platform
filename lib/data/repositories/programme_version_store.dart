@@ -36,4 +36,8 @@ abstract class ProgrammeVersionStore {
   Future<List<ProgrammeCatalogEntry>> listCatalogueVersions(
     ProgrammeCatalogueQuery query,
   );
+
+  Future<ProgrammeLineage> insertLineage(ProgrammeLineage lineage);
+
+  Future<void> deleteDraftVersion(String versionId);
 }

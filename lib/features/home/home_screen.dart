@@ -26,9 +26,10 @@ import '../../models/protocol_analysis.dart';
 import '../../models/protocol_similarity_result.dart';
 import '../../models/session_fingerprint.dart';
 import '../admin/admin_protocol_editor_screen.dart';
-import '../admin/protocol_builder_screen.dart';
-import '../admin/protocol_drafts_screen.dart';
-import '../admin/published_protocols_screen.dart';
+import '../coach_studio/coach_studio_home_screen.dart';
+import '../coach_studio/models/coach_studio_navigation_state.dart';
+import '../coach_studio/programmes/programme_catalogue_screen.dart';
+import '../coach_studio/programmes/services/programme_catalogue_services.dart';
 import '../adaptation/services/adaptation_candidate_filter.dart';
 import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
@@ -104,26 +105,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _openProtocolBuilder(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const ProtocolBuilderScreen(),
-      ),
-    );
-  }
+  void _openCoachStudio(BuildContext context) {
+    final navigationState = CoachStudioNavigationState.instance;
 
-  void _openProtocolDrafts(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const ProtocolDraftsScreen(),
-      ),
-    );
-  }
+    if (navigationState.shouldOpenProgrammesDirectly) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => ProgrammeCatalogueScreen(
+            controller: ProgrammeCatalogueServices.createController(),
+          ),
+        ),
+      );
+      return;
+    }
 
-  void _openPublishedProtocols(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const PublishedProtocolsScreen(),
+        builder: (_) => CoachStudioHomeScreen(
+          openProgrammesDirectly: navigationState.shouldOpenProgrammesDirectly,
+        ),
       ),
     );
   }
@@ -977,30 +977,11 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: CohortSpacing.md),
 
               CohortCard(
-                onTap: () => _openProtocolBuilder(context),
+                onTap: () => _openCoachStudio(context),
                 child: const _HomeActionRow(
-                  title: 'Protocol Builder',
-                  subtitle: 'Create and save unpublished protocol drafts.',
-                  status: 'COACH',
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-
-              CohortCard(
-                onTap: () => _openProtocolDrafts(context),
-                child: const _HomeActionRow(
-                  title: 'Draft Protocols',
-                  subtitle: 'Reopen unpublished protocols and continue editing.',
-                  status: 'COACH',
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-
-              CohortCard(
-                onTap: () => _openPublishedProtocols(context),
-                child: const _HomeActionRow(
-                  title: 'Published Protocols',
-                  subtitle: 'Browse and edit live protocols.',
+                  title: 'Coach Studio',
+                  subtitle:
+                      'Programmes, protocols, and coach authoring tools.',
                   status: 'COACH',
                 ),
               ),

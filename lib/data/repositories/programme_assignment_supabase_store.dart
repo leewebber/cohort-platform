@@ -148,4 +148,21 @@ class ProgrammeAssignmentSupabaseStore implements ProgrammeAssignmentStore {
       );
     }
   }
+
+  @override
+  Future<int> countAssignmentsForVersion(String programmeVersionId) async {
+    try {
+      final response = await SupabaseService.client
+          .from(_tableName)
+          .select('id')
+          .eq('programme_version_id', programmeVersionId.trim());
+
+      return response.length;
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to count programme assignments for version',
+      );
+    }
+  }
 }

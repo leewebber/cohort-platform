@@ -159,14 +159,21 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
   Future<ProgrammeVersion> saveDraftVersion(ProgrammeVersion version) async {
     _guardWrite();
 
-    final index = tables.versions.indexWhere((row) => row.id == version.id);
+    final resolved = version.id.isEmpty
+        ? version.copyWith(
+            id: 'version-${tables.versions.length + 1}',
+            updatedAt: DateTime.now().toUtc(),
+          )
+        : version.copyWith(updatedAt: DateTime.now().toUtc());
+
+    final index = tables.versions.indexWhere((row) => row.id == resolved.id);
     if (index == -1) {
-      tables.versions.add(version);
-      return version;
+      tables.versions.add(resolved);
+      return resolved;
     }
 
-    tables.versions[index] = version;
-    return version;
+    tables.versions[index] = resolved;
+    return resolved;
   }
 
   @override
@@ -231,6 +238,17 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
             return false;
           }
 
+          if (query.lifecycleStatus != null &&
+              version.lifecycleStatus != query.lifecycleStatus) {
+            return false;
+          }
+
+          if (query.primaryGoal != null &&
+              query.primaryGoal!.trim().isNotEmpty &&
+              version.primaryGoal != query.primaryGoal) {
+            return false;
+          }
+
           return true;
         })
         .map(
@@ -249,9 +267,55 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
             primaryGoal: version.primaryGoal,
             sessionsPerWeek: version.sessionsPerWeek,
             approvedForGlobal: version.approvedForGlobal,
+            updatedAt: version.updatedAt,
+            publishedAt: version.publishedAt,
+            archivedAt: version.archivedAt,
           ),
         )
+        .where((entry) {
+          final term = query.searchTerm?.trim().toLowerCase();
+          if (term == null || term.isEmpty) return true;
+
+          return entry.name.toLowerCase().contains(term) ||
+              entry.lineageCode.toLowerCase().contains(term) ||
+              (entry.description?.toLowerCase().contains(term) ?? false);
+        })
         .toList();
+  }
+
+  @override
+  Future<ProgrammeLineage> insertLineage(ProgrammeLineage lineage) async {
+    _guardWrite();
+
+    final created = lineage.copyWith(
+      id: lineage.id.isEmpty
+          ? 'lineage-${tables.lineages.length + 1}'
+          : lineage.id,
+      createdAt: DateTime.now().toUtc(),
+      updatedAt: DateTime.now().toUtc(),
+    );
+    tables.lineages.add(created);
+    return created;
+  }
+
+  @override
+  Future<void> deleteDraftVersion(String versionId) async {
+    _guardWrite();
+
+    final weekIds = tables.weeks
+        .where((week) => week.versionId == versionId)
+        .map((week) => week.id)
+        .toList();
+    final dayIds = tables.days
+        .where((day) => weekIds.contains(day.weekId))
+        .map((day) => day.id)
+        .toList();
+
+    tables.slots.removeWhere((slot) => dayIds.contains(slot.dayId));
+    tables.days.removeWhere((day) => weekIds.contains(day.weekId));
+    tables.weeks.removeWhere((week) => week.versionId == versionId);
+    tables.phases.removeWhere((phase) => phase.versionId == versionId);
+    tables.versions.removeWhere((version) => version.id == versionId);
   }
 }
 
@@ -358,6 +422,17 @@ class InMemoryProgrammeAssignmentStore implements ProgrammeAssignmentStore {
     return tables.assignments
         .where((assignment) => assignment.athleteId == athleteId)
         .toList();
+  }
+
+  @override
+  Future<int> countAssignmentsForVersion(String programmeVersionId) async {
+    _guardRead();
+
+    return tables.assignments
+        .where(
+          (assignment) => assignment.programmeVersionId == programmeVersionId,
+        )
+        .length;
   }
 }
 

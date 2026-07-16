@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../core/services/supabase_service.dart';
 import '../../features/programme/models/programme_catalog_entry.dart';
 import '../../features/programme/models/programme_template.dart';
@@ -250,10 +252,13 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
           .single();
 
       return ProgrammeVersion.fromMap(Map<String, dynamic>.from(response));
-    } catch (error) {
+    } catch (error, stackTrace) {
+      _logStoreFailure('insert version', error, stackTrace);
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to save programme draft version',
+        operation: 'saveDraftVersion',
+        tableName: _versionsTable,
       );
     }
   }
@@ -305,10 +310,13 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
           }
         }
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      _logStoreFailure('save template tree', error, stackTrace);
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to save programme template tree',
+        operation: 'saveTemplateTree',
+        tableName: _weeksTable,
       );
     }
   }
@@ -338,7 +346,18 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
         request = request.eq('approved_for_global', true);
       }
 
-      final response = await request.order('name', ascending: true);
+      if (query.lifecycleStatus != null) {
+        request = request.eq(
+          'lifecycle_status',
+          query.lifecycleStatus!.dbValue,
+        );
+      }
+
+      if (query.primaryGoal != null && query.primaryGoal!.trim().isNotEmpty) {
+        request = request.eq('primary_goal', query.primaryGoal!.trim());
+      }
+
+      final response = await request.order('updated_at', ascending: false);
 
       return response
           .map((row) => _catalogEntryFromRow(Map<String, dynamic>.from(row)))
@@ -347,6 +366,7 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
             if (term == null || term.isEmpty) return true;
 
             return entry.name.toLowerCase().contains(term) ||
+                entry.lineageCode.toLowerCase().contains(term) ||
                 (entry.description?.toLowerCase().contains(term) ?? false);
           })
           .toList();
@@ -383,7 +403,56 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       primaryGoal: row['primary_goal']?.toString(),
       sessionsPerWeek: row['sessions_per_week'],
       approvedForGlobal: row['approved_for_global'] == true,
+      updatedAt: _parseDateTime(row['updated_at']),
+      publishedAt: _parseDateTime(row['published_at']),
+      archivedAt: _parseDateTime(row['archived_at']),
     );
+  }
+
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    return DateTime.tryParse(value.toString());
+  }
+
+  @override
+  Future<ProgrammeLineage> insertLineage(ProgrammeLineage lineage) async {
+    try {
+      final payload = lineage.toInsertMap();
+      payload.remove('id');
+
+      final response = await SupabaseService.client
+          .from(_lineagesTable)
+          .insert(payload)
+          .select()
+          .single();
+
+      return ProgrammeLineage.fromMap(Map<String, dynamic>.from(response));
+    } catch (error, stackTrace) {
+      _logStoreFailure('insert lineage', error, stackTrace);
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to create programme lineage',
+        operation: 'insertLineage',
+        tableName: _lineagesTable,
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteDraftVersion(String versionId) async {
+    try {
+      await SupabaseService.client
+          .from(_versionsTable)
+          .delete()
+          .eq('id', versionId.trim())
+          .eq('lifecycle_status', ProgrammeLifecycleStatus.draft.dbValue);
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to delete programme draft version',
+      );
+    }
   }
 
   Map<String, dynamic> _phaseInsertMap(
@@ -446,5 +515,14 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       if (slot.coachNote != null) 'coach_note': slot.coachNote,
       if (slot.athleteNote != null) 'athlete_note': slot.athleteNote,
     };
+  }
+
+  static void _logStoreFailure(
+    String stage,
+    Object error,
+    StackTrace stackTrace,
+  ) {
+    debugPrint('[ProgrammeCreate] store $stage exception=$error');
+    debugPrint('[ProgrammeCreate] stackTrace=$stackTrace');
   }
 }

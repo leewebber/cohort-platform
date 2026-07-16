@@ -13,4 +13,6 @@ abstract class ProgrammeAssignmentStore {
   Future<ProgrammeAssignment> update(ProgrammeAssignment assignment);
 
   Future<List<ProgrammeAssignment>> listForAthlete(String athleteId);
+
+  Future<int> countAssignmentsForVersion(String programmeVersionId);
 }
