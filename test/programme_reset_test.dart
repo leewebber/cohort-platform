@@ -2,8 +2,10 @@ import 'package:cohort_platform/data/repositories/programme_store_exception.dart
 import 'package:cohort_platform/features/programme/debug/programme_dev_fixtures.dart';
 import 'package:cohort_platform/features/programme/debug/programme_debug_actions.dart';
 import 'package:cohort_platform/features/programme/debug/programme_debug_resolution_cache.dart';
+import 'package:cohort_platform/features/programme/models/programme_assignment_operation_result.dart';
 import 'package:cohort_platform/features/programme/models/resolved_today_session.dart';
 import 'package:cohort_platform/features/programme/services/athlete_state_sync_service_impl.dart';
+import 'package:cohort_platform/features/programme/services/programme_assignment_development_service_impl.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_resolver_impl.dart';
 import 'package:cohort_platform/features/programme/services/today_session_service_impl.dart';
 import 'package:cohort_platform/models/programme_slot_outcome.dart';
@@ -61,13 +63,25 @@ void main() {
       );
     }
 
-    Future<void> reset() {
+    Future<ProgrammeAssignmentOperationResult> reset() {
       return ProgrammeDebugActions.resetTestProgrammeAssignment(
         assignmentStore: assignmentStore,
         slotOutcomeStore: outcomeStore,
         versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
+        developmentService: ProgrammeAssignmentDevelopmentServiceImpl(
+          assignmentStore: assignmentStore,
+          slotOutcomeStore: outcomeStore,
+          versionStore: versionStore,
+          scheduleResolver: const ProgrammeScheduleResolverImpl(),
+          todaySessionService: TodaySessionServiceImpl(
+            assignmentStore: assignmentStore,
+            versionStore: versionStore,
+            slotOutcomeStore: outcomeStore,
+            scheduleResolver: const ProgrammeScheduleResolverImpl(),
+          ),
+          athleteStateSyncService: AthleteStateSyncServiceImpl(
+            athleteStateStore: athleteStore,
+          ),
         ),
       );
     }
@@ -75,8 +89,9 @@ void main() {
     test('reset removes completed day_1 outcome', () async {
       tables.outcomes.add(completedDayOneOutcome());
 
-      await reset();
+      final result = await reset();
 
+      expect(result.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(tables.outcomes, isEmpty);
     });
 
@@ -121,22 +136,14 @@ void main() {
       expect(tables.outcomes, isEmpty);
     });
 
-    test('zero deleted when outcomes existed returns an error', () async {
+    test('zero deleted when outcomes existed returns failed result', () async {
       tables.outcomes.add(completedDayOneOutcome());
       outcomeStore.simulateRlsBlockedDelete = true;
 
-      expect(
-        reset,
-        throwsA(
-          isA<ProgrammeStoreException>()
-              .having((error) => error.operation, 'operation', 'ProgrammeReset')
-              .having(
-                (error) => error.message,
-                'message',
-                contains('DELETE removed 0 rows'),
-              ),
-        ),
-      );
+      final result = await reset();
+
+      expect(result.status, ProgrammeAssignmentOperationStatus.failed);
+      expect(result.warnings.first, contains('DELETE removed 0 rows'));
       expect(tables.outcomes, isNotEmpty);
       expect(tables.assignments.first.currentDayKey, 'day_1');
     });
@@ -145,18 +152,10 @@ void main() {
       tables.outcomes.add(completedDayOneOutcome());
       outcomeStore.denyDelete = true;
 
-      expect(
-        reset,
-        throwsA(
-          isA<ProgrammeStoreException>()
-              .having((error) => error.isAccessDenied, 'accessDenied', isTrue)
-              .having(
-                (error) => error.operation,
-                'operation',
-                'deleteOutcomesForAssignment',
-              ),
-        ),
-      );
+      final result = await reset();
+
+      expect(result.status, ProgrammeAssignmentOperationStatus.failed);
+      expect(result.warnings.first, contains('permission denied'));
       expect(tables.outcomes, isNotEmpty);
     });
 

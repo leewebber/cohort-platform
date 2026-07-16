@@ -269,6 +269,90 @@ void main() {
       expect(executable.executionContext.isProgrammeBacked, isTrue);
     });
 
+    test(
+      'differing slot display_title still launches BW-001 with protocol name primary',
+      () async {
+        final tables = InMemoryProgrammeTables();
+        final versionId = ProgrammeDevFixtures.foundationTestVersionId;
+        await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
+          version:
+              ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
+          tree: ProgrammeScheduleTestFixtures.singleWeekTree(
+            versionId: versionId,
+            days: [
+              ProgrammeScheduleTestFixtures.trainingDay(
+                id: 'day-1',
+                weekId: 'week-1',
+                dayKey: 'day_1',
+                dayOrder: 1,
+                slots: [
+                  ProgrammeScheduleTestFixtures.requiredSlot(
+                    id: 'slot-1',
+                    dayId: 'day-1',
+                    sessionOrder: 1,
+                    protocolId: 'BW-001',
+                    displayTitle: 'Monday Conditioning',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+        tables.assignments.add(
+          ProgrammeScheduleTestFixtures.assignment().copyWith(
+            id: devAssignmentId,
+            programmeVersionId: versionId,
+            lineageCode: ProgrammeDevFixtures.foundationTestLineageCode,
+          ),
+        );
+
+        final protocolsWithCanonicalName = {
+          'BW-001': const Protocol(
+            protocolId: 'BW-001',
+            name: 'Bodyweight Grinder',
+          ),
+          'RN-006': Protocol(protocolId: 'RN-006', name: 'Run Intervals'),
+        };
+
+        final loader = HomeTodaySessionLoader(
+          todaySessionService: TodaySessionServiceImpl(
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            versionStore: InMemoryProgrammeVersionStore(tables),
+            slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+            scheduleResolver: const ProgrammeScheduleResolverImpl(),
+          ),
+          athleteStateSyncService: AthleteStateSyncServiceImpl(
+            athleteStateStore: InMemoryAthleteStateStore(tables),
+          ),
+          athleteStateRepository: _StubAthleteStateRepository(null),
+          protocolRepository:
+              _StubProtocolRepository(protocolsWithCanonicalName),
+          programmeRepository: _StubProgrammeRepository(const {}),
+          trainingSessionRepository: _StubTrainingSessionRepository(),
+        );
+
+        final state = await loader.load(athleteId);
+
+        expect(state, isA<HomeTodaySessionProgrammeExecutable>());
+        final executable = state as HomeTodaySessionProgrammeExecutable;
+        expect(executable.protocol.protocolId, 'BW-001');
+        expect(executable.protocol.name, 'Bodyweight Grinder');
+        expect(executable.executionContext.effectiveProtocolId, 'BW-001');
+        expect(executable.resolution.slotTitle, 'Monday Conditioning');
+        expect(
+          HomeTodaySessionLabels.canonicalSessionTitle(executable.protocol),
+          'Bodyweight Grinder',
+        );
+        expect(
+          HomeTodaySessionLabels.executableSubtitle(
+            executable.resolution,
+            executable.protocol,
+          ),
+          'Required session • Monday Conditioning',
+        );
+      },
+    );
+
     test('refresh after progression shows next day executable', () async {
       final tables = InMemoryProgrammeTables();
       await seedFoundationAssignment(tables);

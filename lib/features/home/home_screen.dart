@@ -6,9 +6,12 @@ import '../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import 'controllers/home_today_session_refresh_controller.dart';
+import 'debug/home_debug_programme_refresh_policy.dart';
 import 'widgets/home_today_session_section.dart';
 import '../programme/debug/programme_debug_actions.dart';
 import '../programme/debug/programme_debug_resolution_cache.dart';
+import '../programme/models/programme_assignment_operation_result.dart';
 import '../../data/repositories/protocol_repository.dart';
 import '../../data/repositories/exercise_repository.dart';
 import '../../data/repositories/protocol_step_repository.dart';
@@ -35,10 +38,45 @@ import '../protocols/protocol_library_screen.dart';
 import '../session/services/circuit_session_plan_builder.dart';
 import '../session/services/interval_session_plan_builder.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
+  final _todaySessionRefreshController = HomeTodaySessionRefreshController();
+
   static const _athleteId = 'lee';
+
+  void _refreshTodaySessionAfterDebug({
+    required String action,
+    required String source,
+    String? successMessage,
+  }) {
+    debugPrint('[HomeDebug] action=$action succeeded');
+    debugPrint('[HomeDebug] invoking refresh source=$source');
+
+    final sectionState = _todaySessionSectionKey.currentState;
+    debugPrint(
+      '[HomeDebug] todaySectionCurrentState=${sectionState != null} '
+      'callbackAttached=${_todaySessionRefreshController.hasListener}',
+    );
+
+    if (sectionState != null) {
+      sectionState.refresh(source: source);
+    } else {
+      _todaySessionRefreshController.requestRefresh(source: source);
+    }
+
+    if (successMessage != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(successMessage)),
+      );
+    }
+  }
 
   void _openProtocolLibrary(BuildContext context) {
     Navigator.of(context).push(
@@ -417,15 +455,40 @@ class HomeScreen extends StatelessWidget {
   }
 
   // TODO(debug): Remove once programme-driven Home replaces manual projection.
+  Future<void> _assignTestProgramme() async {
+    try {
+      final result = await ProgrammeDebugActions.assignTestProgramme();
+      if (result.resolvedTodaySession != null) {
+        ProgrammeDebugResolutionCache.store(result.resolvedTodaySession!);
+      }
+
+      debugPrint('[ProgrammeAssign] result: $result');
+      if (result.warnings.isNotEmpty) {
+        debugPrint('[ProgrammeAssign] warnings: ${result.warnings}');
+      }
+
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterAssign(result)) {
+        _refreshTodaySessionAfterDebug(
+          action: 'assign',
+          source: 'programme_assign',
+          successMessage: 'Test programme assigned',
+        );
+      } else if (result.status == ProgrammeAssignmentOperationStatus.failed) {
+        debugPrint('[HomeDebug] action=assign failed');
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[ProgrammeAssign] failed: $error');
+      debugPrint('[ProgrammeAssign] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme-driven Home replaces manual projection.
   Future<void> _resolveTestProgramme() async {
     try {
-      await ProgrammeDebugActions.ensureFoundationTestAssignment();
-      final service = ProgrammeDebugActions.createTodaySessionService();
-      final resolution = await service.resolveForAthlete(_athleteId);
+      final resolution = await ProgrammeDebugActions.resolveCurrentTestSession();
 
       ProgrammeDebugResolutionCache.store(resolution);
 
-      debugPrint('[ProgrammeResolve] assignment ensured for $_athleteId');
       debugPrint('[ProgrammeResolve] result: $resolution');
     } catch (error, stackTrace) {
       debugPrint('[ProgrammeResolve] failed: $error');
@@ -465,7 +528,17 @@ class HomeScreen extends StatelessWidget {
   // TODO(debug): Remove once programme progression is production-wired.
   Future<void> _completeCurrentProgrammeSlot({required bool partial}) async {
     try {
-      final assignment = await ProgrammeDebugActions.ensureFoundationTestAssignment();
+      final assignmentService = ProgrammeDebugActions.createAssignmentService();
+      final assignment =
+          await assignmentService.getCurrentAssignment(athleteId: _athleteId);
+      if (assignment == null) {
+        debugPrint(
+          '[ProgrammeProgress] aborted: no active assignment for $_athleteId '
+          '— run Assign Test Programme first',
+        );
+        return;
+      }
+
       final previousCursor =
           'week ${assignment.currentWeek} ${assignment.currentDayKey} '
           'slot ${assignment.currentSessionOrder}';
@@ -499,6 +572,19 @@ class HomeScreen extends StatelessWidget {
       } else {
         ProgrammeDebugResolutionCache.clear();
       }
+
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterProgression(result)) {
+        _refreshTodaySessionAfterDebug(
+          action: partial ? 'complete_partial' : 'complete',
+          source: partial ? 'programme_complete_partial' : 'programme_complete',
+          successMessage: 'Current slot completed',
+        );
+      } else {
+        debugPrint(
+          '[HomeDebug] action=${partial ? 'complete_partial' : 'complete'} '
+          'skipped refresh status=${result.status}',
+        );
+      }
     } catch (error, stackTrace) {
       debugPrint('[ProgrammeProgress] failed: $error');
       debugPrint('[ProgrammeProgress] stackTrace: $stackTrace');
@@ -508,8 +594,25 @@ class HomeScreen extends StatelessWidget {
   // TODO(debug): Remove once programme progression is production-wired.
   Future<void> _resetTestProgrammeAssignment() async {
     try {
-      await ProgrammeDebugActions.resetTestProgrammeAssignment();
+      final result = await ProgrammeDebugActions.resetTestProgrammeAssignment();
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(result)) {
+        _refreshTodaySessionAfterDebug(
+          action: 'reset',
+          source: 'programme_reset',
+          successMessage: 'Test programme reset',
+        );
+      } else if (result.status == ProgrammeAssignmentOperationStatus.failed ||
+          result.status == ProgrammeAssignmentOperationStatus.noAssignment) {
+        debugPrint('[HomeDebug] action=reset failed warnings=${result.warnings}');
+        debugPrint('[ProgrammeReset] failed: ${result.warnings}');
+      } else {
+        debugPrint(
+          '[HomeDebug] action=reset skipped refresh '
+          'status=${result.status} assignment=${result.assignment?.id}',
+        );
+      }
     } catch (error, stackTrace) {
+      debugPrint('[HomeDebug] action=reset failed');
       debugPrint('[ProgrammeReset] failed: $error');
       debugPrint('[ProgrammeReset] stackTrace: $stackTrace');
     }
@@ -820,7 +923,10 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.xl),
 
-              const HomeTodaySessionSection(),
+              HomeTodaySessionSection(
+                key: _todaySessionSectionKey,
+                refreshController: _todaySessionRefreshController,
+              ),
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -960,11 +1066,22 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: CohortSpacing.md),
 
               CohortCard(
+                onTap: _assignTestProgramme,
+                child: const _HomeActionRow(
+                  title: 'Assign Test Programme',
+                  subtitle:
+                      'Assign COHORT-FOUNDATION-TEST v1 to dev athlete via ProgrammeAssignmentService.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
                 onTap: _resolveTestProgramme,
                 child: const _HomeActionRow(
                   title: 'Resolve Test Programme',
                   subtitle:
-                      'Ensure COHORT-FOUNDATION-TEST assignment and print resolution.',
+                      'Resolve only — never creates or repairs assignments.',
                   status: 'DEBUG',
                 ),
               ),

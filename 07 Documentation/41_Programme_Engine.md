@@ -384,8 +384,8 @@ Coach preview compiles draft to a read-only week grid — similar to protocol pr
 1. Apply migration `42_Programme_Engine_Schema.md` §9
 2. Implement stores (Supabase repositories)
 3. `ProgrammeScheduleResolver` + `TodaySessionService`
-4. `ProgrammeAssignmentService` + slot outcome seeding
-5. Home refactor: resolve today from assignment
+4. `ProgrammeAssignmentService` — **done (v0.1)**; outcome seeding deferred to progression
+5. Home refactor: resolve today from assignment — **done (v0.1)**; Home never creates assignments
 6. Progression hooks from session review
 7. Legacy data migration from `programmes` / `programme_sessions`
 8. Global catalogue + enrolment

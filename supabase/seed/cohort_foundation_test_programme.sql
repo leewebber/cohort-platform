@@ -5,7 +5,7 @@
 -- Structure:
 --   Version 1 (draft)
 --   Week 1
---     day_1: BW-001 structured strength
+--     day_1: BW-001 bodyweight grinder
 --     day_2: RN-006 intervals
 --     day_3: rest
 --     day_4: FG-009 circuit
@@ -94,7 +94,7 @@ JOIN programme_versions v ON v.id = w.version_id
 JOIN programme_lineages l ON l.id = v.lineage_id
 JOIN (
   VALUES
-    ('aaaaaaaa-bbbb-cccc-dddd-000000000101'::uuid, 'day_1', 1, 'Strength', 'training'),
+    ('aaaaaaaa-bbbb-cccc-dddd-000000000101'::uuid, 'day_1', 1, 'Bodyweight', 'training'),
     ('aaaaaaaa-bbbb-cccc-dddd-000000000102'::uuid, 'day_2', 2, 'Intervals', 'training'),
     ('aaaaaaaa-bbbb-cccc-dddd-000000000103'::uuid, 'day_3', 3, 'Rest', 'rest'),
     ('aaaaaaaa-bbbb-cccc-dddd-000000000104'::uuid, 'day_4', 4, 'Circuit', 'training')
@@ -133,7 +133,7 @@ JOIN (
       'day_1',
       1,
       'BW-001',
-      'Structured Strength',
+      'Bodyweight Grinder',
       'morning',
       'required'
     ),

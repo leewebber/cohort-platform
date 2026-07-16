@@ -70,6 +70,31 @@ class ProgrammeAssignment {
 
   bool get isPaused => status == ProgrammeAssignmentStatus.paused;
 
+  /// Pre-persist assignment draft — [id] is empty until the store inserts.
+  factory ProgrammeAssignment.forCreate({
+    required String athleteId,
+    required String programmeVersionId,
+    required String lineageCode,
+    required DateTime startedAt,
+    String? timezone,
+    int currentWeek = 1,
+    String currentDayKey = 'day_1',
+    int currentSessionOrder = 1,
+  }) {
+    return ProgrammeAssignment(
+      id: '',
+      athleteId: athleteId,
+      programmeVersionId: programmeVersionId,
+      lineageCode: lineageCode,
+      status: ProgrammeAssignmentStatus.active,
+      startedAt: startedAt,
+      timezone: timezone,
+      currentWeek: currentWeek,
+      currentDayKey: currentDayKey,
+      currentSessionOrder: currentSessionOrder,
+    );
+  }
+
   factory ProgrammeAssignment.fromMap(Map<String, dynamic> map) {
     return ProgrammeAssignment(
       id: _trimStringRequired(map['id']),
@@ -93,9 +118,11 @@ class ProgrammeAssignment {
     );
   }
 
+  /// Insert payload for a new row — never includes [id].
+  ///
+  /// Database default `gen_random_uuid()` assigns the primary key.
   Map<String, dynamic> toInsertMap() {
     return {
-      if (id.isNotEmpty) 'id': id,
       'athlete_id': athleteId,
       'programme_version_id': programmeVersionId,
       'lineage_code': lineageCode,
@@ -113,6 +140,9 @@ class ProgrammeAssignment {
         'last_progressed_training_session_id': lastProgressedTrainingSessionId,
     };
   }
+
+  /// Update payload — excludes [id]; filter updates by persisted UUID in store.
+  Map<String, dynamic> toUpdateMap() => toInsertMap();
 
   ProgrammeAssignment copyWith({
     String? id,

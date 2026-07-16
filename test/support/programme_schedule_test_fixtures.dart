@@ -274,12 +274,14 @@ class ProgrammeScheduleTestFixtures {
     required String dayId,
     required int sessionOrder,
     required String protocolId,
+    String? displayTitle,
   }) {
     return ProgrammeVersionSessionSlot(
       id: id,
       dayId: dayId,
       sessionOrder: sessionOrder,
       protocolId: protocolId,
+      displayTitle: displayTitle,
     );
   }
 

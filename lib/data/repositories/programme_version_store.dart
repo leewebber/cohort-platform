@@ -10,7 +10,14 @@ import '../../models/programme_version.dart';
 abstract class ProgrammeVersionStore {
   Future<ProgrammeLineage?> getLineageByCode(String code);
 
+  Future<ProgrammeLineage?> getLineageById(String lineageId);
+
   Future<ProgrammeVersion?> getVersionById(String versionId);
+
+  Future<ProgrammeVersion?> getVersionByLineageAndNumber({
+    required String lineageCode,
+    required int versionNumber,
+  });
 
   Future<ProgrammeVersion?> getPublishedVersion({
     required String lineageCode,

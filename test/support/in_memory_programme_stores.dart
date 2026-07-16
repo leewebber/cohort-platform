@@ -71,6 +71,35 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
   }
 
   @override
+  Future<ProgrammeLineage?> getLineageById(String lineageId) async {
+    _guardRead();
+
+    for (final lineage in tables.lineages) {
+      if (lineage.id == lineageId) return lineage;
+    }
+
+    return null;
+  }
+
+  @override
+  Future<ProgrammeVersion?> getVersionByLineageAndNumber({
+    required String lineageCode,
+    required int versionNumber,
+  }) async {
+    final lineage = await getLineageByCode(lineageCode);
+    if (lineage == null) return null;
+
+    for (final version in tables.versions) {
+      if (version.lineageId == lineage.id &&
+          version.versionNumber == versionNumber) {
+        return version;
+      }
+    }
+
+    return null;
+  }
+
+  @override
   Future<ProgrammeVersion?> getVersionById(String versionId) async {
     _guardRead();
 
@@ -230,6 +259,7 @@ class InMemoryProgrammeAssignmentStore implements ProgrammeAssignmentStore {
   InMemoryProgrammeAssignmentStore(this.tables);
 
   final InMemoryProgrammeTables tables;
+  int _fakeAssignmentIdSequence = 0;
 
   void _guardRead() {
     if (tables.denyReads) {
@@ -287,8 +317,14 @@ class InMemoryProgrammeAssignmentStore implements ProgrammeAssignmentStore {
       }
     }
 
-    tables.assignments.add(assignment);
-    return assignment;
+    final persisted = assignment.id.trim().isEmpty
+        ? assignment.copyWith(
+            id: 'assignment-test-${++_fakeAssignmentIdSequence}',
+          )
+        : assignment;
+
+    tables.assignments.add(persisted);
+    return persisted;
   }
 
   @override

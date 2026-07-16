@@ -10,25 +10,33 @@ import '../../../models/training_session_status.dart';
 import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/resolved_today_session.dart';
-import '../../session/services/programme_session_progression_coordinator.dart';
 import '../../session/session_player_screen.dart';
+import '../controllers/home_today_session_refresh_controller.dart';
 import '../models/home_today_session_state.dart';
-import '../services/home_programme_continuation_service.dart';
 import '../services/home_today_session_loader.dart';
 import '../services/home_today_session_services.dart';
 
 class HomeTodaySessionSection extends StatefulWidget {
-  const HomeTodaySessionSection({super.key});
+  const HomeTodaySessionSection({
+    super.key,
+    this.refreshController,
+    this.loader,
+    this.loadOverride,
+    this.athleteId = 'lee',
+  });
+
+  final HomeTodaySessionRefreshController? refreshController;
+  final HomeTodaySessionLoader? loader;
+  final Future<HomeTodaySessionState> Function(String athleteId)? loadOverride;
+  final String athleteId;
 
   @override
-  State<HomeTodaySessionSection> createState() =>
-      _HomeTodaySessionSectionState();
+  State<HomeTodaySessionSection> createState() => HomeTodaySessionSectionState();
 }
 
-class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
-  static const _athleteId = 'lee';
-
-  final _loader = HomeTodaySessionServices.createLoader();
+class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
+  late final HomeTodaySessionLoader _loader =
+      widget.loader ?? HomeTodaySessionServices.createLoader();
   final _continuationService =
       HomeTodaySessionServices.createContinuationService();
   final _progressionCoordinator =
@@ -36,18 +44,101 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   final _trainingSessionRepository = const TrainingSessionRepository();
 
   late Future<HomeTodaySessionState> _sessionFuture;
+  int _refreshGeneration = 0;
   bool _isContinuing = false;
 
   @override
   void initState() {
     super.initState();
-    _sessionFuture = _loader.load(_athleteId);
+    widget.refreshController?.attach(refresh);
+    _sessionFuture = _loadSession(source: 'initial');
   }
 
-  void refresh() {
+  @override
+  void didUpdateWidget(covariant HomeTodaySessionSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.refreshController != widget.refreshController) {
+      oldWidget.refreshController?.detach();
+    }
+    widget.refreshController?.attach(refresh);
+  }
+
+  @override
+  void dispose() {
+    widget.refreshController?.detach();
+    super.dispose();
+  }
+
+  /// Reloads today's programme session from [TodaySessionService].
+  void refresh({required String source}) {
+    debugPrint('[HomeRefresh] refresh entered source=$source mounted=$mounted');
+    if (!mounted) return;
+
     setState(() {
-      _sessionFuture = _loader.load(_athleteId);
+      _sessionFuture = _loadSession(source: source);
     });
+  }
+
+  Future<HomeTodaySessionState> _loadSession({required String source}) {
+    final generation = ++_refreshGeneration;
+    debugPrint('[HomeRefresh] load started source=$source generation=$generation');
+
+    final Future<HomeTodaySessionState> loadFuture;
+    if (widget.loadOverride != null) {
+      loadFuture = widget.loadOverride!(widget.athleteId);
+    } else {
+      loadFuture = _loader.load(widget.athleteId);
+    }
+
+    return loadFuture.then((state) {
+      if (!mounted || generation != _refreshGeneration) {
+        debugPrint(
+          '[HomeRefresh] ignored stale response source=$source '
+          'generation=$generation active=$_refreshGeneration',
+        );
+        throw _StaleHomeTodaySessionRefresh();
+      }
+
+      _logResolvedState(state);
+      return state;
+    });
+  }
+
+  void _logResolvedState(HomeTodaySessionState state) {
+    switch (state) {
+      case HomeTodaySessionProgrammeExecutable():
+        final resolution = state.resolution;
+        debugPrint(
+          '[HomeRefresh] resolved kind=${resolution.kind.name} '
+          'week=${resolution.weekNumber} day=${resolution.dayKey} '
+          'protocol=${state.protocol.protocolId}',
+        );
+      case HomeTodaySessionRestDay():
+        debugPrint(
+          '[HomeRefresh] resolved kind=restDay '
+          'week=${state.resolution.weekNumber} day=${state.resolution.dayKey}',
+        );
+      case HomeTodaySessionDayComplete():
+        debugPrint(
+          '[HomeRefresh] resolved kind=dayComplete '
+          'week=${state.resolution.weekNumber} day=${state.resolution.dayKey}',
+        );
+      case HomeTodaySessionProgrammeComplete():
+        debugPrint('[HomeRefresh] resolved kind=programmeComplete');
+      case HomeTodaySessionPaused():
+        debugPrint('[HomeRefresh] resolved kind=paused');
+      case HomeTodaySessionManual():
+        debugPrint(
+          '[HomeRefresh] resolved kind=manual '
+          'protocol=${state.protocol.protocolId}',
+        );
+      case HomeTodaySessionError():
+        debugPrint('[HomeRefresh] resolved kind=error');
+      case HomeTodaySessionEmpty():
+        debugPrint('[HomeRefresh] resolved kind=empty');
+      case HomeTodaySessionLoading():
+        debugPrint('[HomeRefresh] resolved kind=loading');
+    }
   }
 
   bool _isToday(TrainingSession session) {
@@ -119,7 +210,7 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       ),
     );
 
-    if (mounted) refresh();
+    if (mounted) refresh(source: 'session_return');
   }
 
   Future<void> _beginProgrammeSession(
@@ -132,7 +223,7 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
 
       await _openSessionPlayer(
         protocolId: state.executionContext.effectiveProtocolId,
-        displayTitle: state.resolution.slotTitle ?? state.protocol.name,
+        displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
       );
@@ -143,7 +234,7 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
 
     try {
       final session = await _trainingSessionRepository.createSession(
-        athleteId: _athleteId,
+        athleteId: widget.athleteId,
         protocolId: state.executionContext.effectiveProtocolId,
         status: TrainingSessionStatus.inProgress,
         programmeId: state.resolution.lineageCode,
@@ -151,14 +242,14 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       );
 
       await _progressionCoordinator.markSessionStartedIfProgrammeBacked(
-        athleteId: _athleteId,
+        athleteId: widget.athleteId,
         programmeContext: state.executionContext,
         trainingSessionId: session.id,
       );
 
       await _openSessionPlayer(
         protocolId: state.executionContext.effectiveProtocolId,
-        displayTitle: state.resolution.slotTitle ?? state.protocol.name,
+        displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
       );
@@ -194,7 +285,7 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
 
     try {
       final session = await _trainingSessionRepository.createSession(
-        athleteId: _athleteId,
+        athleteId: widget.athleteId,
         protocolId: protocolId,
         status: TrainingSessionStatus.inProgress,
         programmeId: state.athleteState.programmeId,
@@ -218,10 +309,10 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     setState(() => _isContinuing = true);
     try {
       await _continuationService.continueFromSuggestedCursor(
-        athleteId: _athleteId,
+        athleteId: widget.athleteId,
         resolution: resolution,
       );
-      refresh();
+      refresh(source: 'programme_continue');
     } catch (error, stackTrace) {
       debugPrint('[HomeTodaySession] continue failed: $error');
       debugPrint('[HomeTodaySession] stackTrace: $stackTrace');
@@ -248,7 +339,7 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           const SizedBox(height: CohortSpacing.xl),
           CohortButton(
             label: 'Retry',
-            onPressed: refresh,
+            onPressed: () => refresh(source: 'retry'),
           ),
         ],
       ),
@@ -299,7 +390,17 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     return FutureBuilder<HomeTodaySessionState>(
       future: _sessionFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError && snapshot.error is! _StaleHomeTodaySessionRefresh) {
+          return _buildError(
+            HomeTodaySessionError(
+              error: snapshot.error!,
+              message: 'Could not resolve today\'s programme session.',
+            ),
+          );
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError) {
           return const Text(
             'Loading session...',
             style: CohortTextStyles.body,
@@ -328,9 +429,12 @@ class _HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
               final buttonState =
                   _resolveButtonState(state.latestTrainingSession);
               return TodaySessionCard(
-                title: state.resolution.slotTitle ?? state.protocol.name,
-                subtitle: HomeTodaySessionLabels.slotRequirementLabel(
+                title: HomeTodaySessionLabels.canonicalSessionTitle(
+                  state.protocol,
+                ),
+                subtitle: HomeTodaySessionLabels.executableSubtitle(
                   state.resolution,
+                  state.protocol,
                 ),
                 weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
                 duration: _buildDuration(state.protocol.durationMin),
@@ -418,3 +522,5 @@ enum _SessionButtonState {
   inProgress,
   completed,
 }
+
+class _StaleHomeTodaySessionRefresh implements Exception {}

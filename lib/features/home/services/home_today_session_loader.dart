@@ -4,6 +4,7 @@ import '../../../data/repositories/athlete_state_repository.dart';
 import '../../../data/repositories/programme_repository.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../data/repositories/training_session_repository.dart';
+import '../../../models/protocol.dart';
 import '../../programme/errors/programme_schedule_exception.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/resolved_today_session.dart';
@@ -222,5 +223,42 @@ class HomeTodaySessionLabels {
 
   static String slotRequirementLabel(ResolvedTodaySession resolution) {
     return resolution.isOptional ? 'Optional session' : 'Required session';
+  }
+
+  /// Canonical session title — always from the loaded protocol record.
+  static String canonicalSessionTitle(Protocol protocol) {
+    return protocol.name;
+  }
+
+  /// Coach-authored slot label when it adds context beyond the protocol name.
+  static String? slotContextLabel(
+    ResolvedTodaySession resolution,
+    Protocol protocol,
+  ) {
+    final slotTitle = resolution.slotTitle?.trim();
+    if (slotTitle == null || slotTitle.isEmpty) {
+      return null;
+    }
+
+    if (slotTitle.toLowerCase() == protocol.name.trim().toLowerCase()) {
+      return null;
+    }
+
+    return slotTitle;
+  }
+
+  /// Programme executable card subtitle: requirement plus optional slot context.
+  static String executableSubtitle(
+    ResolvedTodaySession resolution,
+    Protocol protocol,
+  ) {
+    final parts = <String>[slotRequirementLabel(resolution)];
+
+    final context = slotContextLabel(resolution, protocol);
+    if (context != null) {
+      parts.add(context);
+    }
+
+    return parts.join(' • ');
   }
 }

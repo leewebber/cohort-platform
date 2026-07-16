@@ -16,6 +16,36 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
   static final _ordinalDayKeyPattern = RegExp(r'^day_[1-9][0-9]*$');
 
   @override
+  ProgrammeSuggestedCursor resolveInitialCursor({
+    required ProgrammeTemplateTree tree,
+  }) {
+    _validateTreeStructure(tree);
+
+    final sortedWeeks = tree.weekNodes.toList()
+      ..sort(
+        (left, right) =>
+            left.week.weekNumber.compareTo(right.week.weekNumber),
+      );
+
+    for (final weekNode in sortedWeeks) {
+      final sortedDays = weekNode.sortedDays;
+      if (sortedDays.isEmpty) continue;
+
+      _validateWeekDays(weekNode);
+
+      return _cursorForDayNode(
+        weekNumber: weekNode.week.weekNumber,
+        dayNode: sortedDays.first,
+      );
+    }
+
+    throw ProgrammeScheduleException(
+      ProgrammeScheduleErrorCode.emptyProgrammeStructure,
+      'Programme template has no schedulable days',
+    );
+  }
+
+  @override
   ProgrammeScheduleResolution resolve({
     required ProgrammeAssignment assignment,
     required ProgrammeTemplateTree tree,
@@ -289,14 +319,26 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
     required int weekNumber,
     required ProgrammeTemplateDayNode dayNode,
   }) {
-    final firstSlot = dayNode.sortedSlots.isNotEmpty
-        ? dayNode.sortedSlots.first
-        : null;
+    final day = dayNode.day;
+    final sortedSlots = dayNode.sortedSlots;
+
+    if (day.isRestDay || sortedSlots.isEmpty) {
+      return ProgrammeSuggestedCursor(
+        weekNumber: weekNumber,
+        dayKey: day.dayKey,
+        slotOrder: 1,
+      );
+    }
+
+    final requiredSlots =
+        sortedSlots.where((slot) => slot.isRequiredForProgression).toList();
+    final targetSlot =
+        requiredSlots.isNotEmpty ? requiredSlots.first : sortedSlots.first;
 
     return ProgrammeSuggestedCursor(
       weekNumber: weekNumber,
-      dayKey: dayNode.day.dayKey,
-      slotOrder: firstSlot?.sessionOrder ?? 1,
+      dayKey: day.dayKey,
+      slotOrder: targetSlot.sessionOrder,
     );
   }
 

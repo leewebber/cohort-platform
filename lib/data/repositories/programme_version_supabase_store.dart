@@ -48,6 +48,53 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
   }
 
   @override
+  Future<ProgrammeLineage?> getLineageById(String lineageId) async {
+    try {
+      final response = await SupabaseService.client
+          .from(_lineagesTable)
+          .select()
+          .eq('id', lineageId.trim())
+          .maybeSingle();
+
+      if (response == null) return null;
+
+      return ProgrammeLineage.fromMap(Map<String, dynamic>.from(response));
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to fetch programme lineage by id',
+      );
+    }
+  }
+
+  @override
+  Future<ProgrammeVersion?> getVersionByLineageAndNumber({
+    required String lineageCode,
+    required int versionNumber,
+  }) async {
+    final lineage = await getLineageByCode(lineageCode);
+    if (lineage == null) return null;
+
+    try {
+      final response = await SupabaseService.client
+          .from(_versionsTable)
+          .select()
+          .eq('lineage_id', lineage.id)
+          .eq('version_number', versionNumber)
+          .maybeSingle();
+
+      if (response == null) return null;
+
+      return ProgrammeVersion.fromMap(Map<String, dynamic>.from(response));
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to fetch programme version by lineage',
+      );
+    }
+  }
+
+  @override
   Future<ProgrammeVersion?> getVersionById(String versionId) async {
     try {
       final response = await SupabaseService.client

@@ -8,6 +8,7 @@ import 'package:cohort_platform/features/programme/models/programme_progression_
 import 'package:cohort_platform/features/programme/models/resolved_today_session.dart';
 import 'package:cohort_platform/features/programme/services/athlete_state_sync_service_impl.dart';
 import 'package:cohort_platform/features/programme/debug/programme_debug_actions.dart';
+import 'package:cohort_platform/features/programme/services/programme_assignment_service_impl.dart';
 import 'package:cohort_platform/features/programme/services/programme_progression_service.dart';
 import 'package:cohort_platform/features/programme/services/programme_progression_service_impl.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_resolver_impl.dart';
@@ -98,19 +99,30 @@ void main() {
       expect(resolved.weekNumber, 1);
     });
 
-    test('ensureFoundationTestAssignment preserves progressed cursor', () async {
+    test('getCurrentAssignment preserves progressed cursor after assign', () async {
       tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
         dayKey: 'day_2',
         slotOrder: 1,
       );
 
       final store = InMemoryProgrammeAssignmentStore(tables);
-      final assignment = await ProgrammeDebugActions.ensureFoundationTestAssignment(
+      final current = await ProgrammeAssignmentServiceImpl(
         assignmentStore: store,
-      );
+        versionStore: InMemoryProgrammeVersionStore(tables),
+        scheduleResolver: const ProgrammeScheduleResolverImpl(),
+        todaySessionService: TodaySessionServiceImpl(
+          assignmentStore: store,
+          versionStore: InMemoryProgrammeVersionStore(tables),
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+          scheduleResolver: const ProgrammeScheduleResolverImpl(),
+        ),
+        athleteStateSyncService: AthleteStateSyncServiceImpl(
+          athleteStateStore: InMemoryAthleteStateStore(tables),
+        ),
+      ).getCurrentAssignment(athleteId: 'lee');
 
-      expect(assignment.currentDayKey, 'day_2');
-      expect(assignment.currentWeek, 1);
+      expect(current?.currentDayKey, 'day_2');
+      expect(current?.currentWeek, 1);
     });
 
     test('completed_partial advances day but preserves remaining required slots', () async {

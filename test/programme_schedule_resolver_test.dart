@@ -5,6 +5,8 @@ import 'package:cohort_platform/features/programme/services/athlete_state_sync_s
 import 'package:cohort_platform/features/programme/services/programme_schedule_resolver_impl.dart';
 import 'package:cohort_platform/features/programme/services/today_session_service_impl.dart';
 import 'package:cohort_platform/models/athlete_state.dart';
+import 'package:cohort_platform/features/programme/models/programme_template.dart';
+import 'package:cohort_platform/models/programme_version_week.dart';
 import 'package:cohort_platform/models/programme_assignment.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -418,6 +420,82 @@ void main() {
       expect(assignment.currentWeek, beforeWeek);
       expect(assignment.currentDayKey, beforeDay);
       expect(assignment.currentSessionOrder, beforeSlot);
+    });
+
+    test('resolveInitialCursor returns first required slot on flat programme', () {
+      final cursor = resolver.resolveInitialCursor(
+        tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+      );
+
+      expect(cursor.weekNumber, 1);
+      expect(cursor.dayKey, 'day_1');
+      expect(cursor.slotOrder, 1);
+    });
+
+    test('resolveInitialCursor returns rest day when programme begins with rest', () {
+      final cursor = resolver.resolveInitialCursor(
+        tree: ProgrammeScheduleTestFixtures.singleWeekTree(
+          days: [
+            ProgrammeScheduleTestFixtures.restDay(
+              id: 'day-1',
+              weekId: 'week-1',
+              dayKey: 'day_1',
+              dayOrder: 1,
+            ),
+            ProgrammeScheduleTestFixtures.trainingDay(
+              id: 'day-2',
+              weekId: 'week-1',
+              dayKey: 'day_2',
+              dayOrder: 2,
+              slots: [
+                ProgrammeScheduleTestFixtures.requiredSlot(
+                  id: 'slot-2',
+                  dayId: 'day-2',
+                  sessionOrder: 1,
+                  protocolId: 'RN-006',
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+      expect(cursor.dayKey, 'day_1');
+      expect(cursor.slotOrder, 1);
+    });
+
+    test('resolveInitialCursor does not assume week 1 exists', () {
+      final weekTwo = ProgrammeVersionWeek(
+        id: 'week-2',
+        versionId: 'version-1',
+        weekNumber: 2,
+      );
+      final day = ProgrammeScheduleTestFixtures.trainingDay(
+        id: 'day-10',
+        weekId: 'week-2',
+        dayKey: 'day_1',
+        dayOrder: 1,
+        slots: [
+          ProgrammeScheduleTestFixtures.requiredSlot(
+            id: 'slot-10',
+            dayId: 'day-10',
+            sessionOrder: 3,
+            protocolId: 'FG-009',
+          ),
+        ],
+      );
+      final tree = ProgrammeTemplateTree(
+        template: ProgrammeTemplate(
+          version: ProgrammeScheduleTestFixtures.version(),
+          weeks: [weekTwo],
+        ),
+        weekNodes: [ProgrammeTemplateWeekNode(week: weekTwo, days: [day])],
+      );
+
+      final cursor = resolver.resolveInitialCursor(tree: tree);
+
+      expect(cursor.weekNumber, 2);
+      expect(cursor.slotOrder, 3);
     });
   });
 

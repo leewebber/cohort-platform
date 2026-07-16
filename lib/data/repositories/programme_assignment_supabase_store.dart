@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../core/services/supabase_service.dart';
 import '../../models/programme_assignment.dart';
 import '../../models/programme_vocabulary.dart';
@@ -64,17 +66,32 @@ class ProgrammeAssignmentSupabaseStore implements ProgrammeAssignmentStore {
     }
 
     try {
+      final payload = assignment.toInsertMap();
+      payload.remove('id');
+
+      debugPrint(
+        '[ProgrammeAssignment] insert payload containsId=${payload.containsKey('id')}',
+      );
+
       final response = await SupabaseService.client
           .from(_tableName)
-          .insert(assignment.toInsertMap())
+          .insert(payload)
           .select()
           .single();
 
-      return ProgrammeAssignment.fromMap(Map<String, dynamic>.from(response));
+      final inserted =
+          ProgrammeAssignment.fromMap(Map<String, dynamic>.from(response));
+      debugPrint(
+        '[ProgrammeAssignment] inserted assignmentId=${inserted.id}',
+      );
+
+      return inserted;
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to create programme assignment',
+        operation: 'insert',
+        tableName: _tableName,
       );
     }
   }
@@ -94,7 +111,7 @@ class ProgrammeAssignmentSupabaseStore implements ProgrammeAssignmentStore {
     try {
       final response = await SupabaseService.client
           .from(_tableName)
-          .update(assignment.toInsertMap())
+          .update(assignment.toUpdateMap())
           .eq('id', assignment.id)
           .select()
           .single();

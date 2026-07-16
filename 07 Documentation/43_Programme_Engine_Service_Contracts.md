@@ -52,7 +52,12 @@ Loads and persists versioned programme templates.
 ```dart
 abstract class ProgrammeVersionStore {
   Future<ProgrammeLineage?> getLineageByCode(String code);
+  Future<ProgrammeLineage?> getLineageById(String lineageId);
   Future<ProgrammeVersion?> getVersionById(String versionId);
+  Future<ProgrammeVersion?> getVersionByLineageAndNumber({
+    required String lineageCode,
+    required int versionNumber,
+  });
   Future<ProgrammeVersion?> getPublishedVersion({
     required String lineageCode,
     required int versionNumber,
@@ -178,38 +183,126 @@ abstract class ProgrammePublishingService {
 
 ---
 
-### 3.3 `ProgrammeAssignmentService`
+### 3.3 `ProgrammeAssignmentService` — **implemented (v0.1)**
 
-Athlete enrolment and lifecycle.
+**Sole production entry point** for athlete programme assignment lifecycle. Coach Studio and onboarding will call this same service.
+
+**Implementation:** `ProgrammeAssignmentServiceImpl`  
+**Wiring:** `ProgrammeAssignmentServices`  
+**Result DTO:** `ProgrammeAssignmentOperationResult` / `ProgrammeAssignmentOperationStatus`
 
 ```dart
 abstract class ProgrammeAssignmentService {
-  Future<ProgrammeAssignment> assignAthlete({
+  Future<ProgrammeAssignment?> getCurrentAssignment({
     required String athleteId,
-    required String publishedVersionId,
-    required DateTime startedAt,
-    String? timezone,
   });
 
-  Future<ProgrammeAssignment> pauseAssignment(String assignmentId);
-  Future<ProgrammeAssignment> resumeAssignment(String assignmentId);
-  Future<ProgrammeAssignment> completeAssignment(String assignmentId);
-
-  /// Marks old assignment reassigned; creates new active assignment.
-  Future<ProgrammeAssignment> reassignAthlete({
+  Future<ProgrammeAssignmentOperationResult> assignProgramme({
     required String athleteId,
-    required String newPublishedVersionId,
+    required String programmeVersionId,
     required DateTime startedAt,
-    String? timezone,
+    required String timezone,
+    bool replaceExistingActive = false,
+    bool allowUnpublishedVersion = false,
+  });
+
+  Future<ProgrammeAssignmentOperationResult> assignByLineageVersion({...});
+
+  Future<ProgrammeAssignmentOperationResult> pauseAssignment({
+    required String assignmentId,
+    String? reason,
+  });
+
+  Future<ProgrammeAssignmentOperationResult> resumeAssignment({
+    required String assignmentId,
+  });
+
+  Future<ProgrammeAssignmentOperationResult> completeAssignment({
+    required String assignmentId,
+  });
+
+  Future<ProgrammeAssignmentOperationResult> cancelOrReplaceActiveAssignment({
+    required String athleteId,
+    required String newProgrammeVersionId,
+    required DateTime startedAt,
+    required String timezone,
+    bool allowUnpublishedVersion = false,
   });
 }
 ```
 
-**Assign side effects:**
-1. Supersede existing active assignment if present (`reassigned`)
-2. Insert new `active` assignment at week 1 / `day_1` / session order 1
-3. Seed `programme_slot_outcomes` as `scheduled` for visible horizon (current day minimum; full week optional v1)
-4. Call `AthleteStateSyncService.syncFromAssignment`
+#### Boundary rules
+
+| Layer | Responsibility |
+|-------|----------------|
+| `ProgrammeAssignmentService` | Create, replace, pause, resume, complete assignments |
+| `TodaySessionService` | Resolve today's session from persisted assignment |
+| `HomeTodaySessionLoader` | Display/resolve only — **never creates or repairs assignments** |
+| `AthleteStateSyncService` | Projection writer only — runs after successful resolution |
+
+Screens and coach features should call `getCurrentAssignment` on the service — not `ProgrammeAssignmentStore` directly.
+
+#### Assign workflow (v0.1)
+
+1. Validate programme version (reject missing, archived; reject unpublished unless `allowUnpublishedVersion`)
+2. Resolve lineage code snapshot via `ProgrammeVersionStore.getLineageById`
+3. Enforce one-active-assignment rule (`alreadyActiveConflict` when active exists and `replaceExistingActive = false`)
+4. Resolve initial cursor via `ProgrammeScheduleResolver.resolveInitialCursor` — never hardcode week 1 / day_1 / slot 1
+5. Insert `active` assignment with pinned `programmeVersionId`
+6. Call `TodaySessionService.resolveForAthlete(athleteId)` — fresh post-insert resolution only
+7. Call `AthleteStateSyncService.syncFromResolvedSession`
+8. Return `assigned` or `partialSuccess` if projection sync fails (assignment remains valid)
+
+**No outcome seeding on assign in v0.1.** `ProgrammeProgressionService` creates/upserts slot outcomes lazily when a session starts.
+
+#### Replace workflow (v0.1)
+
+- Old active assignment → `reassigned` (not `completed`)
+- New assignment created through the same assign workflow
+- After successful insert: `old.supersededByAssignmentId = new.id`
+- Historical assignments and outcomes are preserved — never deleted
+
+#### Pause / resume / complete
+
+| Operation | Assignment | Outcomes | Projection |
+|-----------|------------|----------|------------|
+| Pause | `paused`, `pausedAt` set; cursor preserved | untouched | clear executable protocol; preserve programme context |
+| Resume | `active`, `pausedAt` cleared | untouched | re-resolve + sync |
+| Complete | `completed`, `completedAt` set | untouched | `clearProgrammeProjection` |
+
+#### Diagnostics
+
+```
+[ProgrammeAssignment] operation=...
+[ProgrammeAssignment] athlete=...
+[ProgrammeAssignment] version=...
+[ProgrammeAssignment] existingActive=...
+[ProgrammeAssignment] cursor=...
+[ProgrammeAssignment] result=...
+[ProgrammeAssignment] projectionSynced=...
+```
+
+---
+
+### 3.3.1 `ProgrammeAssignmentDevelopmentService` — **temporary dev tooling**
+
+**Not part of the production interface.** Never used by Home, Coach Studio, onboarding, or athlete flows.
+
+**Implementation:** `ProgrammeAssignmentDevelopmentServiceImpl`
+
+```dart
+abstract class ProgrammeAssignmentDevelopmentService {
+  Future<ProgrammeAssignmentOperationResult> resetAssignment({
+    required String assignmentId,
+    required int weekNumber,
+    required String dayKey,
+    required int slotOrder,
+    bool clearOutcomes = false,
+  });
+}
+```
+
+Resets cursor, optionally clears outcomes (with delete-count verification), re-resolves via `TodaySessionService`, and syncs `athlete_state`. DEBUG actions call this service — not direct store orchestration.
 
 ---
 
@@ -227,6 +320,11 @@ abstract class ProgrammeScheduleResolver {
     required ProgrammeAssignment assignment,
     required ProgrammeTemplateTree tree,
     required List<ProgrammeSlotOutcome> outcomes,
+  });
+
+  /// Initial cursor for new assignments — never assumes week 1 / day_1 / slot 1.
+  ProgrammeSuggestedCursor resolveInitialCursor({
+    required ProgrammeTemplateTree tree,
   });
 }
 ```
@@ -472,7 +570,9 @@ Built by `ProgrammeVersionStore.loadTemplate`.
 | Session finish (normal) | `training_sessions.complete` → `ProgrammeProgressionService.completeSession` | **Live (v0.1)** |
 | Session ended early | `training_sessions.complete` → `ProgrammeProgressionService.completeSessionPartial` | **Live (v0.1)** |
 | Manual / preview session | No programme progression | Preserved |
-| Coach assigns programme | `ProgrammeAssignmentService.assignAthlete` | Pending |
+| Coach assigns programme | `ProgrammeAssignmentService.assignProgramme` / `assignByLineageVersion` | **Live (v0.1)** — DEBUG only; Coach Studio pending |
+| DEBUG assign test programme | `ProgrammeAssignmentService.assignByLineageVersion` (`allowUnpublishedVersion: true`) | **Live (v0.1)** |
+| DEBUG reset assignment | `ProgrammeAssignmentDevelopmentService.resetAssignment` | **Live (v0.1)** — dev tooling only |
 | Decision Engine substitution | `ProgrammeProgressionService.replaceSession` | Service live; DE hook pending |
 
 **Coordinator:** `ProgrammeSessionProgressionCoordinator` in `lib/features/session/services/`. Called from `SessionPlayerScreen` after `training_sessions` completion. Requires optional `ProgrammeExecutionContext` — manual sessions omit it and preserve existing behaviour. Preview mode never passes programme context.
@@ -534,6 +634,11 @@ lib/
       programme_catalog_service.dart
       programme_publishing_service.dart
       programme_assignment_service.dart
+      programme_assignment_service_impl.dart
+      programme_assignment_services.dart
+      programme_assignment_development_service.dart
+      programme_assignment_development_service_impl.dart
+      programme_assignment_operation_result.dart
       programme_schedule_resolver.dart
       programme_schedule_resolver_impl.dart
       today_session_service.dart
@@ -560,7 +665,7 @@ lib/
 | 4. Seed fixture | Done — `supabase/seed/cohort_foundation_test_programme.sql` |
 | 5. Store tests | Done — `test/programme_stores_test.dart` |
 | 6. `ProgrammeScheduleResolver` | Done — `programme_schedule_resolver_impl.dart` |
-| 7. `ProgrammeAssignmentService` + outcome seeding | Pending |
+| 7. `ProgrammeAssignmentService` | Done — v0.1; no outcome seeding on assign |
 | 8. `TodaySessionService` | Done — `today_session_service_impl.dart` |
 | 9. `AthleteStateSyncService` | Done — `athlete_state_sync_service_impl.dart` |
 | 10. `ProgrammeSlotOutcomeService` + `ProgrammeProgressionService` | Done — v0.1 |
