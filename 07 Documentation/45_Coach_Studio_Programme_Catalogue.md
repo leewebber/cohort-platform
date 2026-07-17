@@ -1,7 +1,7 @@
 # 45 — Coach Studio Programme Catalogue
 
 **Status:** Canonical architecture (v0.1 implemented)  
-**Related:** `44_Programme_Builder.md`, `43_Programme_Engine_Service_Contracts.md`, `41_Programme_Engine.md`, `46_Programme_Editor.md`  
+**Related:** `44_Programme_Builder.md`, `43_Programme_Engine_Service_Contracts.md`, `41_Programme_Engine.md`, `46_Programme_Editor.md`, `47_Embedded_Session_Authoring.md`  
 **UI location:** `lib/features/coach_studio/`  
 **Boundary:** Catalogue lists and orchestrates — Builder edits, Publishing freezes, Assignment assigns later.
 
@@ -46,7 +46,7 @@ flowchart LR
 | Handoff | Data passed | Boundary rule |
 |---------|-------------|---------------|
 | Catalogue → Builder | `versionId` draft document | Catalogue never mutates tree structure directly |
-| Builder → Protocol Picker | `protocol_id` selection | Slots reference protocols only |
+| Builder → Protocol Picker | Cohort `protocol_id` selection | Official Cohort Protocols via `listCohortProtocols()` (M1) |
 | Builder → Preview | Compiled preview DTOs | No assignment, no execution persistence |
 | Builder → Publishing | Validated draft `versionId` | Publish freezes immutable snapshot |
 | Publishing → Assignment | Published `programme_versions.id` | Only published versions assignable |
@@ -64,7 +64,7 @@ flowchart LR
 | Section | v0.1 | Route |
 |---------|------|-------|
 | Programmes | OPEN | `ProgrammeCatalogueScreen` |
-| Protocols | OPEN | Protocol Builder / Drafts / Published hub |
+| Training Library | OPEN | Cohort Protocols + Session Library (`48_Training_Library.md`) |
 | Exercises | SOON | — |
 | Athletes | SOON | — |
 | Settings | SOON | — |
@@ -188,7 +188,7 @@ Built by `ProgrammeSeedTemplateBuilder` in service layer. Persistence uses `__UN
 
 Submit calls `ProgrammeBuilderService.createDraftProgramme(seedTemplate: …)` → navigates to `ProgrammeEditorScreen`.
 
-**RLS requirement:** New Programme persists `programme_lineages` → `programme_versions` → template tree via anon key. Temporary dev-coach policies in `20260716150000_allow_dev_coach_programme_authoring.sql` must be applied. No Supabase Auth session yet — `ProgrammeDevIdentity.coachId` (`dev-coach`) is the authoring owner. Replace with `auth.uid()` before beta.
+**RLS requirement:** New Programme persists `programme_lineages` → `programme_versions` → template tree via anon key. Temporary dev-coach policies in `20260716150000_allow_dev_coach_programme_authoring.sql` plus corrective migrations `20260717110000` (lineage INSERT…RETURNING) and `20260717120000` (version INSERT…RETURNING) must be applied. No Supabase Auth session yet — `ProgrammeDevIdentity.coachId` (`dev-coach`) is the authoring owner. Replace with `auth.uid()` before beta.
 
 ---
 

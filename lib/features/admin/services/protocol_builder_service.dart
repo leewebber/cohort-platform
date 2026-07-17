@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/services/supabase_service.dart';
@@ -7,6 +8,7 @@ import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
 import '../../../models/protocol_step_draft.dart';
+import '../../../models/training_content_vocabulary.dart';
 
 /// Thrown when a draft fails validation or cannot be saved.
 class ProtocolBuilderException implements Exception {
@@ -120,12 +122,22 @@ class ProtocolBuilderService {
 
       final steps = await _protocolStepRepository.getProtocolSteps(trimmedId);
 
-      return _draftFromProtocolRow(
+      final draft = _draftFromProtocolRow(
         Map<String, dynamic>.from(protocolRow),
         steps
             .map(ProtocolStepDraft.fromProtocolStep)
             .toList(growable: false),
       );
+
+      if (kDebugMode) {
+        debugPrint(
+          '[ProtocolBuilderService] loaded contentKind=${draft.contentKind.dbValue} '
+          'scope=${draft.authoringScope.dbValue} '
+          'endorsement=${draft.endorsementStatus.dbValue}',
+        );
+      }
+
+      return draft;
     } on ProtocolBuilderException {
       rethrow;
     } on PostgrestException catch (error) {
@@ -142,8 +154,32 @@ class ProtocolBuilderService {
     return loadProtocol(protocolId);
   }
 
+  /// Loads a published official Cohort Protocol eligible for coach copy (M5).
+  Future<ProtocolDraft> loadCohortProtocolForCopy(String protocolId) async {
+    final draft = await loadProtocol(protocolId);
+    if (draft.contentKind != TrainingContentKind.cohortProtocol ||
+        draft.authoringScope != TrainingAuthoringScope.cohortGlobal ||
+        draft.endorsementStatus != TrainingEndorsementStatus.cohortEndorsed ||
+        !draft.published) {
+      throw ProtocolBuilderException(
+        'Only published official Cohort Protocols can be copied.',
+      );
+    }
+    return draft;
+  }
+
   Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) {
     return _persistDraft(draft, published: false);
+  }
+
+  /// Persists a reusable coach Session available in Session Library.
+  ///
+  /// `published=true` means library-available for the owning coach — not
+  /// Cohort endorsement or athlete catalogue publication.
+  Future<ProtocolBuilderSaveResult> saveCoachLibrarySession(
+    ProtocolDraft draft,
+  ) {
+    return _persistDraft(draft, published: true);
   }
 
   Future<ProtocolBuilderSaveResult> savePublishedChanges(ProtocolDraft draft) {
@@ -335,7 +371,7 @@ class ProtocolBuilderService {
     Map<String, dynamic> row,
     List<ProtocolStepDraft> steps,
   ) {
-    return ProtocolDraft(
+    final base = ProtocolDraft(
       protocolId: row['protocol_id']?.toString() ?? '',
       name: row['name']?.toString() ?? '',
       steps: steps,
@@ -361,6 +397,11 @@ class ProtocolBuilderService {
       noiseFriendly: _nullableBool(row['noise_friendly']),
       coachingNotes: row['coaching_notes']?.toString(),
       purpose: row['purpose']?.toString(),
+    );
+
+    return ProtocolDraft.applyTrainingContentMetadata(
+      draft: base,
+      row: row,
     );
   }
 

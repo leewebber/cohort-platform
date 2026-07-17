@@ -1,7 +1,7 @@
 # 46 — Programme Editor
 
 **Status:** Canonical architecture (v0.1 implemented)  
-**Related:** `44_Programme_Builder.md`, `45_Coach_Studio_Programme_Catalogue.md`, `43_Programme_Engine_Service_Contracts.md`  
+**Related:** `44_Programme_Builder.md`, `45_Coach_Studio_Programme_Catalogue.md`, `43_Programme_Engine_Service_Contracts.md`, `47_Embedded_Session_Authoring.md`  
 **UI location:** `lib/features/coach_studio/programmes/`  
 **Boundary:** Editor mutates in-memory documents; persistence is explicit via `ProgrammeBuilderService`.
 
@@ -84,7 +84,7 @@ Undo/redo call `ProgrammeBuilderHistory` directly — not persisted to Supabase.
 
 ### Development RLS (temporary)
 
-Coach Studio authoring uses the anon key with `ProgrammeDevIdentity.coachId` (`dev-coach`). Migration `20260716150000_allow_dev_coach_programme_authoring.sql` adds narrowly scoped `dev_programme_*_coach` policies so New Programme can persist:
+Coach Studio authoring uses the anon key with `ProgrammeDevIdentity.coachId` (`dev-coach`). Migrations `20260716150000_allow_dev_coach_programme_authoring.sql`, `20260717110000_fix_dev_coach_lineage_insert_policy.sql`, and `20260717120000_fix_dev_coach_programme_version_authoring_policy.sql` add narrowly scoped dev-coach policies so New Programme can persist:
 
 ```
 programme_lineages → programme_versions → weeks → days → slots
@@ -120,15 +120,71 @@ Implemented via `ProgrammeBuilderEditOperations` (pure transforms) and `Programm
 
 ---
 
-## 5. Protocol picker
+## 5. Protocol picker and session authoring
 
-`ProgrammeBuilderProtocolPickerServiceImpl` queries published protocols only:
+### Cohort Protocol picker
 
-```
-performance_protocols WHERE published = true
-```
+`ProgrammeBuilderProtocolPickerServiceImpl` loads the official Cohort Protocol catalogue via `ProtocolRepository.listCohortProtocols()`:
 
-Selection stores **only** `protocolId` on the slot. No protocol editing inside Programme Editor.
+- `content_kind = cohort_protocol`
+- `authoring_scope = cohort_global`
+- `published = true`
+
+Sheet title: **Cohort Protocols**. Empty slot action label: **Use Cohort Protocol**.
+
+After selecting a protocol, coaches choose:
+
+- **Add unchanged** — live reference to official Cohort Protocol (existing M2 behaviour)
+- **Copy and customise** — deep-clone → embedded Session Builder → Save & Attach
+- **Preview** — read-only `SessionPreviewScreen`
+
+### Copy and customise (M5)
+
+Assigned Cohort Protocol slots show **Preview**, **Copy and customise**, **Change**, **Remove** (not Edit Session).
+
+On successful copy save, the slot references the new coach Session — not the original Protocol. Source Protocol remains in the library unchanged.
+
+Slot conflict: if the slot content changed while the builder was open, save returns a conflict status; saved Session remains available where applicable.
+
+### Build New Session (M2 + M3)
+
+Empty slots offer **Build New Session**, opening `EmbeddedSessionBuilderScreen` with `ProgrammeSessionAuthoringContext`.
+
+- Creates in-memory `ProtocolDraft` (`programme_only` session defaults)
+- Preview uses current unsaved draft via `SessionPreviewScreen`
+- **Save & Attach** (M3) persists Session + attaches to slot in-memory via coordinator
+- Cancel returns without service calls or slot mutation
+
+### Edit Session (M3)
+
+Programme-only Session slots (classified via `ProgrammeSessionSlotContentClassifier`) show **Edit Session**:
+
+- Loads existing draft through coordinator-wrapped `ProtocolBuilderService`
+- Preserves durable internal ID on save
+- Updates slot display title when Session name changes
+- Returns to same slot selection
+
+### Slot action rules (M3)
+
+| Slot content | Actions |
+|--------------|---------|
+| Empty | Use Cohort Protocol, **Use Session Library**, Build New Session |
+| Cohort Protocol | Preview, **Copy and customise**, Change, Remove |
+| Programme session | Edit Session, Remove |
+| Session Library reference | Change Session, Remove |
+| Copied coach Session (programme-only) | Edit Session, Remove |
+| Unknown / legacy | Replace, Remove |
+
+Cohort Protocol slots display code + title. Programme session slots display title + “Programme session” label — no internal ID.
+
+### Recovery states (M3)
+
+| Outcome | Coach message |
+|---------|---------------|
+| Attached | Session added to programme |
+| Save failed | Session could not be saved |
+| Partial attach | Session saved, but could not be added to the programme → Retry adding to programme |
+| Stale slot | Reopen slot guidance |
 
 ---
 

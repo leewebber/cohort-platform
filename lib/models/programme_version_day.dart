@@ -1,4 +1,5 @@
 import 'programme_vocabulary.dart';
+import '../core/utils/database_uuid.dart';
 
 /// One day within a programme version week.
 ///
@@ -50,8 +51,7 @@ class ProgrammeVersionDay {
   }
 
   Map<String, dynamic> toInsertMap() {
-    return {
-      if (id.isNotEmpty) 'id': id,
+    return DatabaseUuid.includeUuidIdIfValid({
       'week_id': weekId,
       'day_key': dayKey,
       'day_order': dayOrder,
@@ -60,7 +60,7 @@ class ProgrammeVersionDay {
       if (intent != null) 'intent': intent!.dbValue,
       if (coachNote != null) 'coach_note': coachNote,
       if (athleteNote != null) 'athlete_note': athleteNote,
-    };
+    }, id);
   }
 
   static String? _trimString(dynamic value) {

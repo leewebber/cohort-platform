@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../admin/protocol_builder_screen.dart';
-import '../admin/protocol_drafts_screen.dart';
-import '../admin/published_protocols_screen.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import '../training_library/screens/training_library_screen.dart';
 import 'models/coach_studio_navigation_state.dart';
 import 'models/coach_studio_section.dart';
 import 'programmes/programme_catalogue_screen.dart';
@@ -57,8 +55,8 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
             controller: _catalogueController,
           ),
         ),
-      CoachStudioSection.protocols => MaterialPageRoute(
-          builder: (_) => const _ProtocolsHubScreen(),
+      CoachStudioSection.trainingLibrary => MaterialPageRoute(
+          builder: (_) => const TrainingLibraryScreen(),
         ),
       _ => null,
     };
@@ -95,7 +93,7 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
               const Text('Authoring tools', style: CohortTextStyles.h1),
               const SizedBox(height: CohortSpacing.sm),
               const Text(
-                'Build programmes, protocols, and coach content.',
+                'Build programmes and manage training content.',
                 style: CohortTextStyles.body,
               ),
               const SizedBox(height: CohortSpacing.xl),
@@ -150,62 +148,6 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
                       ),
                     );
                   },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ProtocolsHubScreen extends StatelessWidget {
-  const _ProtocolsHubScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Coach Studio'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const Text('Protocols', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.xl),
-              CohortCard(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProtocolBuilderScreen(),
-                  ),
-                ),
-                child: const Text('Protocol Builder', style: CohortTextStyles.body),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              CohortCard(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProtocolDraftsScreen(),
-                  ),
-                ),
-                child: const Text('Draft Protocols', style: CohortTextStyles.body),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              CohortCard(
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const PublishedProtocolsScreen(),
-                  ),
-                ),
-                child: const Text(
-                  'Published Protocols',
-                  style: CohortTextStyles.body,
                 ),
               ),
             ],

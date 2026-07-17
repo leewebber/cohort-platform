@@ -1,3 +1,4 @@
+import 'package:cohort_platform/core/utils/database_uuid.dart';
 import 'package:cohort_platform/data/repositories/athlete_state_store.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_store.dart';
 import 'package:cohort_platform/data/repositories/programme_slot_outcome_delete_result.dart';
@@ -199,12 +200,88 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
     tables.weeks.removeWhere((row) => row.versionId == savedVersion.id);
     tables.phases.removeWhere((row) => row.versionId == savedVersion.id);
 
-    tables.phases.addAll(tree.template.phases);
+    var generatedIdCounter = 0;
+    String resolvePersistedId(String candidate) {
+      if (DatabaseUuid.isValidDatabaseUuid(candidate)) {
+        return candidate.trim();
+      }
+
+      generatedIdCounter += 1;
+      final suffix = generatedIdCounter.toRadixString(16).padLeft(12, '0');
+      return '00000000-0000-4000-8000-$suffix';
+    }
+
+    final phaseIdsByLocalId = <String, String>{};
+    for (final phase in tree.template.phases) {
+      final phaseId = resolvePersistedId(phase.id);
+      phaseIdsByLocalId[phase.id] = phaseId;
+      tables.phases.add(
+        ProgrammeVersionPhase(
+          id: phaseId,
+          versionId: savedVersion.id,
+          phaseOrder: phase.phaseOrder,
+          title: phase.title,
+          intent: phase.intent,
+          coachNote: phase.coachNote,
+        ),
+      );
+    }
+
     for (final weekNode in tree.weekNodes) {
-      tables.weeks.add(weekNode.week);
+      final weekId = resolvePersistedId(weekNode.week.id);
+      final phaseId = weekNode.week.phaseId == null
+          ? null
+          : phaseIdsByLocalId[weekNode.week.phaseId!] ??
+              (DatabaseUuid.isValidDatabaseUuid(weekNode.week.phaseId)
+                  ? weekNode.week.phaseId!.trim()
+                  : null);
+
+      tables.weeks.add(
+        ProgrammeVersionWeek(
+          id: weekId,
+          versionId: savedVersion.id,
+          phaseId: phaseId,
+          weekNumber: weekNode.week.weekNumber,
+          title: weekNode.week.title,
+          intent: weekNode.week.intent,
+          coachNote: weekNode.week.coachNote,
+          athleteNote: weekNode.week.athleteNote,
+        ),
+      );
+
       for (final dayNode in weekNode.days) {
-        tables.days.add(dayNode.day);
-        tables.slots.addAll(dayNode.slots);
+        final dayId = resolvePersistedId(dayNode.day.id);
+        tables.days.add(
+          ProgrammeVersionDay(
+            id: dayId,
+            weekId: weekId,
+            dayKey: dayNode.day.dayKey,
+            dayOrder: dayNode.day.dayOrder,
+            title: dayNode.day.title,
+            dayType: dayNode.day.dayType,
+            intent: dayNode.day.intent,
+            coachNote: dayNode.day.coachNote,
+            athleteNote: dayNode.day.athleteNote,
+          ),
+        );
+
+        for (final slot in dayNode.slots) {
+          final slotId = resolvePersistedId(slot.id);
+          tables.slots.add(
+            ProgrammeVersionSessionSlot(
+              id: slotId,
+              dayId: dayId,
+              sessionOrder: slot.sessionOrder,
+              protocolId: slot.protocolId,
+              displayTitle: slot.displayTitle,
+              timeOfDay: slot.timeOfDay,
+              isOptional: slot.isOptional,
+              completionExpectation: slot.completionExpectation,
+              coachNote: slot.coachNote,
+              athleteNote: slot.athleteNote,
+            ),
+          );
+        }
       }
     }
   }

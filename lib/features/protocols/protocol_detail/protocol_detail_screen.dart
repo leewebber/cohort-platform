@@ -16,9 +16,11 @@ class ProtocolDetailScreen extends StatelessWidget {
   const ProtocolDetailScreen({
     super.key,
     required this.protocol,
+    this.onCopyToSessionLibrary,
   });
 
   final Protocol protocol;
+  final VoidCallback? onCopyToSessionLibrary;
 
   static const ProtocolStepRepository _stepRepository =
       ProtocolStepRepository();
@@ -89,6 +91,14 @@ class ProtocolDetailScreen extends StatelessWidget {
               ],
 
               const SizedBox(height: CohortSpacing.xxl),
+
+              if (onCopyToSessionLibrary != null) ...[
+                CohortButton(
+                  label: 'Copy to Session Library',
+                  onPressed: onCopyToSessionLibrary!,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+              ],
 
               CohortButton(
                 label: 'Start Session',

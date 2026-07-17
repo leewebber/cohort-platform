@@ -414,6 +414,8 @@ Service-role bypass for batch migration only — **never in Flutter**.
 - `supabase/migrations/20260715140000_fix_programme_dev_rls_recursion.sql` — fixes PostgreSQL `54001` infinite recursion
 - `supabase/migrations/20260715160000_allow_dev_programme_outcome_reset.sql` — temporary DELETE for dev athlete outcome reset
 - `supabase/migrations/20260716150000_allow_dev_coach_programme_authoring.sql` — temporary dev-coach Coach Studio authoring (lineage → draft tree)
+- `supabase/migrations/20260717110000_fix_dev_coach_lineage_insert_policy.sql` — fixes `42501` on `insertLineage` INSERT…RETURNING (direct `created_by` SELECT predicate)
+- `supabase/migrations/20260717120000_fix_dev_coach_programme_version_authoring_policy.sql` — fixes `42501` on `saveDraftVersion` INSERT…RETURNING (direct row SELECT/UPDATE predicates for coach_private drafts)
 
 RLS is **enabled** on all Programme Engine tables. Temporary `dev_programme_*` policies allow:
 
@@ -433,8 +435,8 @@ Organisation content has **no policies** and remains inaccessible via anon key.
 
 | Table | Dev-coach access |
 |-------|------------------|
-| `programme_lineages` | INSERT/SELECT/UPDATE when `created_by = dev-coach`; DELETE only when no published versions and no assignments |
-| `programme_versions` | INSERT/UPDATE/DELETE coach_private drafts owned by `dev-coach`; SELECT draft + published coach catalogue rows |
+| `programme_lineages` | INSERT/SELECT/UPDATE when `created_by = dev-coach` (direct row predicate on `created_by`; supports PostgREST INSERT…RETURNING); DELETE only when no published versions and no assignments |
+| `programme_versions` | INSERT/UPDATE/DELETE coach_private drafts owned by `dev-coach` under dev-coach lineages; SELECT via direct row predicates on `owner_type` / `owner_id` / `library_scope` (supports PostgREST INSERT…RETURNING); `created_by` may be NULL in current Flutter payload |
 | Template children | Read/write when parent version passes `cohort_programme_version_is_dev_coach_*` SECURITY DEFINER helpers |
 
 Helpers use `SECURITY DEFINER`, `STABLE`, `SET search_path = public, pg_temp`, no dynamic SQL. Execute revoked from `PUBLIC`, granted to `anon`/`authenticated` only.

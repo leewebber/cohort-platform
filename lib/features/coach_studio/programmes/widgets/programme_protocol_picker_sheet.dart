@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/services/programme_builder_protocol_picker_service.dart';
+import 'cohort_protocol_programme_options_sheet.dart';
 
 typedef ProgrammeProtocolListLoader = Future<List<ProgrammeBuilderProtocolOption>>
     Function({String? searchTerm});
@@ -25,6 +26,7 @@ class _ProgrammeProtocolPickerSheetState
   final _searchController = TextEditingController();
   List<ProgrammeBuilderProtocolOption> _options = const [];
   bool _loading = true;
+  Object? _error;
 
   @override
   void initState() {
@@ -40,15 +42,28 @@ class _ProgrammeProtocolPickerSheetState
   }
 
   Future<void> _load() async {
-    setState(() => _loading = true);
-    final options = await widget.listProtocols(
-      searchTerm: _searchController.text.trim(),
-    );
-    if (!mounted) return;
     setState(() {
-      _options = options;
-      _loading = false;
+      _loading = true;
+      _error = null;
     });
+
+    try {
+      final options = await widget.listProtocols(
+        searchTerm: _searchController.text.trim(),
+      );
+      if (!mounted) return;
+      setState(() {
+        _options = options;
+        _loading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _error = error;
+        _options = const [];
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -63,7 +78,7 @@ class _ProgrammeProtocolPickerSheetState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Choose protocol', style: CohortTextStyles.h2),
+          Text('Cohort Protocols', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.md),
           TextField(
             controller: _searchController,
@@ -77,6 +92,40 @@ class _ProgrammeProtocolPickerSheetState
               padding: EdgeInsets.all(CohortSpacing.lg),
               child: CircularProgressIndicator(),
             )
+          else if (_error != null)
+            Padding(
+              padding: const EdgeInsets.all(CohortSpacing.lg),
+              child: Column(
+                children: [
+                  Text(
+                    'We could not load protocols right now.',
+                    style: CohortTextStyles.body,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: CohortSpacing.md),
+                  TextButton(onPressed: _load, child: const Text('Retry')),
+                ],
+              ),
+            )
+          else if (_options.isEmpty &&
+              _searchController.text.trim().isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(CohortSpacing.lg),
+              child: Text(
+                'No protocols are available in the library yet.',
+                style: CohortTextStyles.body,
+                textAlign: TextAlign.center,
+              ),
+            )
+          else if (_options.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(CohortSpacing.lg),
+              child: Text(
+                'No protocols match your search.',
+                style: CohortTextStyles.body,
+                textAlign: TextAlign.center,
+              ),
+            )
           else
             Flexible(
               child: ListView.builder(
@@ -85,7 +134,10 @@ class _ProgrammeProtocolPickerSheetState
                 itemBuilder: (context, index) {
                   final option = _options[index];
                   return ListTile(
-                    title: Text(option.name, style: CohortTextStyles.cardTitle),
+                    title: Text(
+                      option.name,
+                      style: CohortTextStyles.cardTitle,
+                    ),
                     subtitle: Text(
                       [
                         option.protocolId,
@@ -97,7 +149,21 @@ class _ProgrammeProtocolPickerSheetState
                       ].join(' • '),
                       style: CohortTextStyles.small,
                     ),
-                    onTap: () => Navigator.pop(context, option),
+                    onTap: () async {
+                      final selection =
+                          await showModalBottomSheet<
+                              CohortProtocolProgrammeSelection>(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) =>
+                            CohortProtocolProgrammeOptionsSheet(
+                          protocol: option,
+                        ),
+                      );
+                      if (selection != null && context.mounted) {
+                        Navigator.pop(context, selection);
+                      }
+                    },
                   );
                 },
               ),

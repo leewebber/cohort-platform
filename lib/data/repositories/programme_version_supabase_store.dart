@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../core/services/supabase_service.dart';
+import '../../core/utils/database_uuid.dart';
 import '../../features/programme/models/programme_catalog_entry.dart';
 import '../../features/programme/models/programme_template.dart';
 import '../../models/programme_lineage.dart';
@@ -233,6 +234,10 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
   Future<ProgrammeVersion> saveDraftVersion(ProgrammeVersion version) async {
     try {
       final payload = version.toInsertMap();
+      final operation = version.id.isEmpty ? 'insert' : 'update';
+      debugPrint(
+        '[ProgrammeCreate] saveDraftVersion operation=$operation payload=$payload',
+      );
 
       if (version.id.isEmpty) {
         final response = await SupabaseService.client
@@ -282,31 +287,79 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
           .eq('version_id', savedVersion.id);
 
       for (final phase in tree.template.phases) {
-        await SupabaseService.client
+        final phasePayload = _phaseInsertMap(savedVersion.id, phase);
+        _logTreeNodeInsert(
+          kind: 'phase',
+          localId: phase.id,
+          payload: phasePayload,
+        );
+
+        final insertedPhase = await SupabaseService.client
             .from(_phasesTable)
-            .insert(_phaseInsertMap(savedVersion.id, phase));
+            .insert(phasePayload)
+            .select()
+            .single();
+
+        debugPrint(
+          '[ProgrammeTreeSave] inserted phase id=${insertedPhase['id']}',
+        );
       }
 
       for (final weekNode in tree.weekNodes) {
+        final weekPayload = _weekInsertMap(savedVersion.id, weekNode.week);
+        _logTreeNodeInsert(
+          kind: 'week',
+          localId: weekNode.week.id,
+          payload: weekPayload,
+        );
+
         final insertedWeek = await SupabaseService.client
             .from(_weeksTable)
-            .insert(_weekInsertMap(savedVersion.id, weekNode.week))
+            .insert(weekPayload)
             .select()
             .single();
 
         final weekId = insertedWeek['id']?.toString() ?? '';
+        debugPrint('[ProgrammeTreeSave] inserted week id=$weekId');
+
         for (final dayNode in weekNode.sortedDays) {
+          final dayPayload = _dayInsertMap(weekId, dayNode.day);
+          _logTreeNodeInsert(
+            kind: 'day',
+            localId: dayNode.day.id,
+            payload: dayPayload,
+            parentLabel: 'parentWeek=$weekId',
+          );
+
           final insertedDay = await SupabaseService.client
               .from(_daysTable)
-              .insert(_dayInsertMap(weekId, dayNode.day))
+              .insert(dayPayload)
               .select()
               .single();
 
           final dayId = insertedDay['id']?.toString() ?? '';
+          debugPrint(
+            '[ProgrammeTreeSave] inserted day id=$dayId parentWeek=$weekId',
+          );
+
           for (final slot in dayNode.sortedSlots) {
-            await SupabaseService.client
+            final slotPayload = _slotInsertMap(dayId, slot);
+            _logTreeNodeInsert(
+              kind: 'slot',
+              localId: slot.id,
+              payload: slotPayload,
+              parentLabel: 'parentDay=$dayId',
+            );
+
+            final insertedSlot = await SupabaseService.client
                 .from(_slotsTable)
-                .insert(_slotInsertMap(dayId, slot));
+                .insert(slotPayload)
+                .select()
+                .single();
+
+            debugPrint(
+              '[ProgrammeTreeSave] inserted slot id=${insertedSlot['id']} parentDay=$dayId',
+            );
           }
         }
       }
@@ -420,6 +473,7 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
     try {
       final payload = lineage.toInsertMap();
       payload.remove('id');
+      debugPrint('[ProgrammeCreate] insertLineage payload=$payload');
 
       final response = await SupabaseService.client
           .from(_lineagesTable)
@@ -459,62 +513,40 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
     String versionId,
     ProgrammeVersionPhase phase,
   ) {
-    return {
-      if (phase.id.isNotEmpty) 'id': phase.id,
-      'version_id': versionId,
-      'phase_order': phase.phaseOrder,
-      'title': phase.title,
-      if (phase.intent != null) 'intent': phase.intent!.dbValue,
-      if (phase.coachNote != null) 'coach_note': phase.coachNote,
-    };
+    return phase.toInsertMap()..['version_id'] = versionId;
   }
 
   Map<String, dynamic> _weekInsertMap(
     String versionId,
     ProgrammeVersionWeek week,
   ) {
-    return {
-      if (week.id.isNotEmpty) 'id': week.id,
-      'version_id': versionId,
-      if (week.phaseId != null) 'phase_id': week.phaseId,
-      'week_number': week.weekNumber,
-      if (week.title != null) 'title': week.title,
-      if (week.intent != null) 'intent': week.intent!.dbValue,
-      if (week.coachNote != null) 'coach_note': week.coachNote,
-      if (week.athleteNote != null) 'athlete_note': week.athleteNote,
-    };
+    return week.toInsertMap()..['version_id'] = versionId;
   }
 
   Map<String, dynamic> _dayInsertMap(String weekId, ProgrammeVersionDay day) {
-    return {
-      if (day.id.isNotEmpty) 'id': day.id,
-      'week_id': weekId,
-      'day_key': day.dayKey,
-      'day_order': day.dayOrder,
-      if (day.title != null) 'title': day.title,
-      'day_type': day.dayType.dbValue,
-      if (day.intent != null) 'intent': day.intent!.dbValue,
-      if (day.coachNote != null) 'coach_note': day.coachNote,
-      if (day.athleteNote != null) 'athlete_note': day.athleteNote,
-    };
+    return day.toInsertMap()..['week_id'] = weekId;
   }
 
   Map<String, dynamic> _slotInsertMap(
     String dayId,
     ProgrammeVersionSessionSlot slot,
   ) {
-    return {
-      if (slot.id.isNotEmpty) 'id': slot.id,
-      'day_id': dayId,
-      'session_order': slot.sessionOrder,
-      'protocol_id': slot.protocolId,
-      if (slot.displayTitle != null) 'display_title': slot.displayTitle,
-      'time_of_day': slot.timeOfDay.dbValue,
-      'is_optional': slot.isOptional,
-      'completion_expectation': slot.completionExpectation.dbValue,
-      if (slot.coachNote != null) 'coach_note': slot.coachNote,
-      if (slot.athleteNote != null) 'athlete_note': slot.athleteNote,
-    };
+    return slot.toInsertMap()..['day_id'] = dayId;
+  }
+
+  static void _logTreeNodeInsert({
+    required String kind,
+    required String localId,
+    required Map<String, dynamic> payload,
+    String? parentLabel,
+  }) {
+    final persistedId = DatabaseUuid.persistedIdOrNull(localId);
+    final sendsId = payload.containsKey('id');
+    final suffix = parentLabel == null ? '' : ' $parentLabel';
+    debugPrint(
+      '[ProgrammeTreeSave] $kind localId=$localId '
+      'persistedId=$persistedId sendsId=$sendsId$suffix',
+    );
   }
 
   static void _logStoreFailure(

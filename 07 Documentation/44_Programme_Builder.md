@@ -1,8 +1,58 @@
 # 44 — Programme Builder
 
 **Status:** Canonical architecture (v0.1 implemented)  
-**Related:** `41_Programme_Engine.md`, `42_Programme_Engine_Schema.md`, `45_Coach_Studio_Programme_Catalogue.md`, `46_Programme_Editor.md`  
+**Related:** `41_Programme_Engine.md`, `42_Programme_Engine_Schema.md`, `45_Coach_Studio_Programme_Catalogue.md`, `46_Programme_Editor.md`, `47_Embedded_Session_Authoring.md`  
 **Runtime boundary:** Programme Builder authors template versions. Programme Engine assigns, resolves, and progresses athletes.
+
+---
+
+## Canonical terminology
+
+- **Protocol** — Cohort-endorsed official training content.
+- **Session** — Coach-authored or customised workout.
+- **Template** — Reusable starting structure copied on use.
+- **Programme Session** — Executable content occupying a programme slot.
+
+Programme slots store `protocol_id` references. M1 picker surfaces official Cohort Protocols via `ProtocolRepository.listCohortProtocols()`. **M2** adds **Build New Session**. **M3** adds **Save & Attach** — Session content saves immediately; slot assignment is in-memory until the normal programme Save.
+
+### Save & Attach (M3)
+
+Embedded Session Builder uses `ProgrammeSessionAuthoringCoordinator`:
+
+1. **Save Session** — `ProtocolBuilderService.saveDraft` persists the programme-only Session row immediately (`content_kind=session`, `authoring_scope=programme_only`, `published=false`).
+2. **Attach to slot** — `ProgrammeEditorController.assignProtocol` updates the in-memory `ProgrammeBuilderDocument` (protocol id + display title).
+3. **Mark dirty** — document `hasUnsavedChanges=true`; coach must use normal **Save programme** to persist the slot assignment to Supabase.
+
+Session save success does **not** guarantee programme document save success. Partial attach failures offer **Retry adding to programme** without creating a second Session row.
+
+Internal Session IDs are opaque UUIDs — not coach-facing catalogue codes. Slot display uses the Session **name**.
+
+### Use Session Library (M4)
+
+Empty programme slots offer **Use Session Library** alongside Use Cohort Protocol and Build New Session.
+
+- Opens reusable Session picker (`SessionLibraryPickerSheet`)
+- Attaches existing Session by **live reference** — no copy, no new row
+- `ProgrammeSessionAuthoringCoordinator.attachExistingSession` validates ownership/classification
+- Document marked dirty; programme Save persists slot assignment
+
+**Live reference consequence:** editing a reusable Session updates all referencing programme slots. See `48_Training_Library.md`.
+
+### Copy and customise Cohort Protocol (M5)
+
+From the Cohort Protocol picker or an assigned Cohort slot:
+
+- **Add unchanged** attaches the official Protocol by reference (no editable copy)
+- **Copy and customise** opens embedded Session Builder with a deep-cloned draft
+
+Save destinations in embedded builder:
+
+| Destination | Classification | Notes |
+|-------------|----------------|-------|
+| This programme only | `programme_only`, `published=false` | Independent row; slot shows Session title |
+| Session Library | `coach_private`, `published=true` | One reusable row; attached by live reference; warning shown |
+
+Lineage stored in `source_content_id` — does not imply Cohort endorsement.
 
 ---
 
@@ -54,7 +104,7 @@ flowchart LR
 | Handoff | Data passed | Boundary rule |
 |---------|-------------|---------------|
 | Protocol Builder → Library | `protocol_id`, steps, metadata | Protocols are authored independently of programmes |
-| Library → Programme Builder | Published `protocol_id` references | Slots reference protocols; no step embedding |
+| Library → Programme Builder | Published Cohort `protocol_id` references | `listCohortProtocols()` — official catalogue only in M1 |
 | Programme Builder → Programme Engine | Published `programme_versions` + template tree | Only **published** versions are assignable |
 | Programme Engine → Execution Engine | `effectiveProtocolId` from resolution | Engine never reads draft rows |
 | Execution Engine → Evidence | `training_sessions`, sets, intervals | Programme slot outcomes are separate vocabulary |
@@ -122,6 +172,18 @@ draft → published → archived
 | `lineageCode` | `programme_lineages.code` |
 | `versionId` | `programme_versions.id` |
 | `versionNumber` | Monotonic per lineage |
+
+### Client localId vs persisted UUID
+
+| Concept | Scope | Example |
+|---------|-------|---------|
+| `localId` | Editor/session identity on draft nodes (`ProgrammeWeekDraft`, etc.) | `week-1`, `day-2`, `slot-3` |
+| Persisted `id` | Supabase UUID primary key on engine rows | `11111111-1111-4111-8111-111111111111` |
+| Parent FK | Always the persisted UUID returned by the parent insert (`week_id`, `day_id`) | Set from `.insert().select().single()` |
+
+Seed templates may use deterministic local ids (`week-1`). `ProgrammeBuilderCompiler.toTemplateTree()` copies local ids into in-memory engine models for FK wiring during the session, but `ProgrammeVersionSupabaseStore.saveTemplateTree()` **omits** non-UUID ids from insert payloads so Postgres generates real UUIDs.
+
+**Pre-beta:** replace multi-step New Programme create (lineage → version → tree) with one transactional Supabase RPC. Partial failures currently surface `ProgrammePartialCreationState` diagnostics; no auto-delete yet.
 
 ---
 

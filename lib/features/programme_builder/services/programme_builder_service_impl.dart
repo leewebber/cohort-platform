@@ -6,6 +6,7 @@ import '../../../models/programme_vocabulary.dart';
 import '../../programme/models/programme_catalog_entry.dart';
 import '../../programme/services/programme_catalog_entry_mapper.dart';
 import '../diagnostics/programme_create_diagnostics.dart';
+import '../models/programme_partial_creation_state.dart';
 import '../models/programme_builder_document.dart';
 import '../models/programme_builder_operation_result.dart';
 import '../models/programme_seed_template.dart';
@@ -75,6 +76,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       );
     }
 
+    String? createdLineageId;
+    String? createdVersionId;
+
     try {
       ProgrammeCreateDiagnostics.log('insert lineage start');
       final lineage = await _versionStore.insertLineage(
@@ -84,6 +88,7 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
           createdBy: coachId,
         ),
       );
+      createdLineageId = lineage.id;
       ProgrammeCreateDiagnostics.log('insert lineage success id=${lineage.id}');
 
       final versionRow = _compiler.toVersionRow(
@@ -99,6 +104,7 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
 
       ProgrammeCreateDiagnostics.log('insert version start');
       final savedVersion = await _versionStore.saveDraftVersion(versionRow);
+      createdVersionId = savedVersion.id;
       ProgrammeCreateDiagnostics.log('insert version success id=${savedVersion.id}');
 
       final template = _compiler.assignLocalIds(
@@ -119,10 +125,33 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
 
       final tree = _compiler.toTemplateTree(document);
       ProgrammeCreateDiagnostics.log('save template tree start');
-      await _versionStore.saveTemplateTree(
-        version: savedVersion,
-        tree: tree,
-      );
+      try {
+        await _versionStore.saveTemplateTree(
+          version: savedVersion,
+          tree: tree,
+        );
+      } on ProgrammeStoreException catch (error, stackTrace) {
+        ProgrammeCreateDiagnostics.logException(
+          error,
+          stackTrace: stackTrace,
+          stage: 'saveTemplateTree',
+        );
+        final partialCreation = ProgrammePartialCreationState(
+          lineageId: lineage.id,
+          versionId: savedVersion.id,
+          failureStage: error.operation ?? 'saveTemplateTree',
+        );
+        ProgrammeCreateDiagnostics.logPartialCreation(partialCreation);
+        final warnings = [
+          ...ProgrammeCreateDiagnostics.warningsFromStoreException(error),
+          ...partialCreation.toDiagnosticLines(),
+        ];
+        return ProgrammeBuilderOperationResult(
+          status: ProgrammeBuilderOperationStatus.storeFailed,
+          warnings: warnings,
+          partialCreation: partialCreation,
+        );
+      }
       ProgrammeCreateDiagnostics.log('save template tree success');
 
       final result = ProgrammeBuilderOperationResult(
@@ -137,11 +166,25 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
         stackTrace: stackTrace,
         stage: 'createDraftProgramme',
       );
-      final warnings = ProgrammeCreateDiagnostics.warningsFromStoreException(error);
+      final partialCreation = (createdLineageId != null || createdVersionId != null)
+          ? ProgrammePartialCreationState(
+              lineageId: createdLineageId,
+              versionId: createdVersionId,
+              failureStage: error.operation ?? 'createDraftProgramme',
+            )
+          : null;
+      if (partialCreation != null) {
+        ProgrammeCreateDiagnostics.logPartialCreation(partialCreation);
+      }
+      final warnings = [
+        ...ProgrammeCreateDiagnostics.warningsFromStoreException(error),
+        if (partialCreation != null) ...partialCreation.toDiagnosticLines(),
+      ];
       ProgrammeCreateDiagnostics.log('warnings=${warnings.join(' | ')}');
       return ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.storeFailed,
         warnings: warnings,
+        partialCreation: partialCreation,
       );
     } catch (error, stackTrace) {
       ProgrammeCreateDiagnostics.logException(

@@ -1,4 +1,5 @@
 import 'protocol_step_draft.dart';
+import 'training_content_vocabulary.dart';
 
 /// Editable in-memory representation of a protocol before save.
 ///
@@ -10,6 +11,15 @@ class ProtocolDraft {
     required this.name,
     required this.steps,
     this.published = false,
+    this.contentKind = TrainingContentKind.cohortProtocol,
+    this.authoringScope = TrainingAuthoringScope.cohortGlobal,
+    this.endorsementStatus = TrainingEndorsementStatus.cohortEndorsed,
+    this.ownerId,
+    this.organisationId,
+    this.programmeVersionId,
+    this.sourceContentId,
+    this.sourceContentKind,
+    this.sourceVersionId,
     this.primaryCapability,
     this.secondaryCapability,
     this.sessionType,
@@ -38,6 +48,16 @@ class ProtocolDraft {
   final List<ProtocolStepDraft> steps;
   final bool published;
 
+  final TrainingContentKind contentKind;
+  final TrainingAuthoringScope authoringScope;
+  final TrainingEndorsementStatus endorsementStatus;
+  final String? ownerId;
+  final String? organisationId;
+  final String? programmeVersionId;
+  final String? sourceContentId;
+  final TrainingContentKind? sourceContentKind;
+  final String? sourceVersionId;
+
   final String? primaryCapability;
   final String? secondaryCapability;
   final String? sessionType;
@@ -65,6 +85,15 @@ class ProtocolDraft {
     String? name,
     List<ProtocolStepDraft>? steps,
     bool? published,
+    TrainingContentKind? contentKind,
+    TrainingAuthoringScope? authoringScope,
+    TrainingEndorsementStatus? endorsementStatus,
+    String? ownerId,
+    String? organisationId,
+    String? programmeVersionId,
+    String? sourceContentId,
+    TrainingContentKind? sourceContentKind,
+    String? sourceVersionId,
     String? primaryCapability,
     String? secondaryCapability,
     String? sessionType,
@@ -92,6 +121,15 @@ class ProtocolDraft {
       name: name ?? this.name,
       steps: steps ?? this.steps,
       published: published ?? this.published,
+      contentKind: contentKind ?? this.contentKind,
+      authoringScope: authoringScope ?? this.authoringScope,
+      endorsementStatus: endorsementStatus ?? this.endorsementStatus,
+      ownerId: ownerId ?? this.ownerId,
+      organisationId: organisationId ?? this.organisationId,
+      programmeVersionId: programmeVersionId ?? this.programmeVersionId,
+      sourceContentId: sourceContentId ?? this.sourceContentId,
+      sourceContentKind: sourceContentKind ?? this.sourceContentKind,
+      sourceVersionId: sourceVersionId ?? this.sourceVersionId,
       primaryCapability: primaryCapability ?? this.primaryCapability,
       secondaryCapability: secondaryCapability ?? this.secondaryCapability,
       sessionType: sessionType ?? this.sessionType,
@@ -121,6 +159,15 @@ class ProtocolDraft {
     return {
       'protocol_id': protocolId,
       'name': name,
+      'content_kind': contentKind.dbValue,
+      'authoring_scope': authoringScope.dbValue,
+      'endorsement_status': endorsementStatus.dbValue,
+      'owner_id': _nullableString(ownerId),
+      'organisation_id': _nullableString(organisationId),
+      'programme_version_id': _nullableString(programmeVersionId),
+      'source_content_id': _nullableString(sourceContentId),
+      'source_content_kind': sourceContentKind?.dbValue,
+      'source_version_id': _nullableString(sourceVersionId),
       'primary_capability': _nullableString(primaryCapability),
       'secondary_capability': _nullableString(secondaryCapability),
       'session_type': _nullableString(sessionType),
@@ -142,6 +189,35 @@ class ProtocolDraft {
       'coaching_notes': _nullableString(coachingNotes),
       'purpose': _nullableString(purpose),
     };
+  }
+
+  /// Parses training content metadata from a `performance_protocols` row.
+  static ProtocolDraft applyTrainingContentMetadata({
+    required ProtocolDraft draft,
+    required Map<String, dynamic> row,
+  }) {
+    return draft.copyWith(
+      contentKind: TrainingContentKindDb.fromDb(row['content_kind']?.toString()),
+      authoringScope:
+          TrainingAuthoringScopeDb.fromDb(row['authoring_scope']?.toString()),
+      endorsementStatus: TrainingEndorsementStatusDb.fromDb(
+        row['endorsement_status']?.toString(),
+      ),
+      ownerId: row['owner_id']?.toString(),
+      organisationId: row['organisation_id']?.toString(),
+      programmeVersionId: row['programme_version_id']?.toString(),
+      sourceContentId: row['source_content_id']?.toString(),
+      sourceContentKind: _parseSourceContentKind(row['source_content_kind']),
+      sourceVersionId: row['source_version_id']?.toString(),
+    );
+  }
+
+  static TrainingContentKind? _parseSourceContentKind(dynamic value) {
+    if (value == null) return null;
+    final normalized = value.toString().trim();
+    if (normalized.isEmpty) return null;
+
+    return TrainingContentKindDb.fromDb(normalized);
   }
 
   static String? _nullableString(String? value) {

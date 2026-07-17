@@ -1,4 +1,5 @@
 import 'programme_vocabulary.dart';
+import '../core/utils/database_uuid.dart';
 
 /// A schedulable session slot within a programme version day.
 ///
@@ -58,8 +59,7 @@ class ProgrammeVersionSessionSlot {
   }
 
   Map<String, dynamic> toInsertMap() {
-    return {
-      if (id.isNotEmpty) 'id': id,
+    return DatabaseUuid.includeUuidIdIfValid({
       'day_id': dayId,
       'session_order': sessionOrder,
       'protocol_id': protocolId,
@@ -69,7 +69,7 @@ class ProgrammeVersionSessionSlot {
       'completion_expectation': completionExpectation.dbValue,
       if (coachNote != null) 'coach_note': coachNote,
       if (athleteNote != null) 'athlete_note': athleteNote,
-    };
+    }, id);
   }
 
   static String? _trimString(dynamic value) {

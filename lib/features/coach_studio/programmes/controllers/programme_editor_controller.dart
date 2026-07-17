@@ -99,6 +99,10 @@ class ProgrammeEditorController {
 
   bool get hasUnsavedChanges => document?.hasUnsavedChanges ?? false;
 
+  ProgrammeBuilderService get builderService => _builderService;
+
+  String get versionId => _versionId;
+
   bool get canPublish =>
       !isReadOnly &&
       !isSaving &&

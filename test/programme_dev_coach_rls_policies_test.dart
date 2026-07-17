@@ -8,11 +8,21 @@ void main() {
   final migrationFile = File(
     'supabase/migrations/20260716150000_allow_dev_coach_programme_authoring.sql',
   );
+  final lineageFixMigrationFile = File(
+    'supabase/migrations/20260717110000_fix_dev_coach_lineage_insert_policy.sql',
+  );
+  final versionFixMigrationFile = File(
+    'supabase/migrations/20260717120000_fix_dev_coach_programme_version_authoring_policy.sql',
+  );
 
   late String migrationSql;
+  late String lineageFixMigrationSql;
+  late String versionFixMigrationSql;
 
   setUpAll(() {
     migrationSql = migrationFile.readAsStringSync();
+    lineageFixMigrationSql = lineageFixMigrationFile.readAsStringSync();
+    versionFixMigrationSql = versionFixMigrationFile.readAsStringSync();
   });
 
   group('dev-coach RLS migration contract', () {
@@ -72,6 +82,79 @@ void main() {
       expect(migrationSql, contains('anon can insert a dev-coach lineage'));
       expect(migrationSql, contains("owner_id = 'other-coach'"));
       expect(migrationSql, contains('Cohort Global reads still work'));
+    });
+  });
+
+  group('lineage insert policy fix migration', () {
+    test('migration file exists', () {
+      expect(lineageFixMigrationFile.existsSync(), isTrue);
+    });
+
+    test('uses direct created_by predicates for lineage insert/select/update', () {
+      expect(
+        lineageFixMigrationSql,
+        contains('WITH CHECK (created_by = cohort_programme_dev_coach_id())'),
+      );
+      expect(
+        lineageFixMigrationSql,
+        contains('USING (created_by = cohort_programme_dev_coach_id())'),
+      );
+    });
+
+    test('preserves global catalogue select policy', () {
+      expect(lineageFixMigrationSql, contains('dev_programme_lineages_select'));
+      expect(lineageFixMigrationSql, contains('intentionally preserved'));
+    });
+
+    test('documents anon validation with rollback', () {
+      expect(lineageFixMigrationSql, contains('SET LOCAL ROLE anon'));
+      expect(lineageFixMigrationSql, contains("'RLS-DEV-TEST-TEMP'"));
+      expect(lineageFixMigrationSql, contains("'other-coach'"));
+      expect(lineageFixMigrationSql, contains('ROLLBACK'));
+    });
+  });
+
+  group('version authoring policy fix migration', () {
+    test('migration file exists', () {
+      expect(versionFixMigrationFile.existsSync(), isTrue);
+    });
+
+    test('uses direct row predicates for version select and draft update', () {
+      expect(versionFixMigrationSql, contains('dev_programme_versions_select_coach'));
+      expect(
+        versionFixMigrationSql,
+        contains("owner_type = 'coach'"),
+      );
+      expect(
+        versionFixMigrationSql,
+        contains('owner_id = cohort_programme_dev_coach_id()'),
+      );
+      expect(
+        versionFixMigrationSql,
+        contains("library_scope = 'coach_private'"),
+      );
+    });
+
+    test('insert policy uses SECURITY DEFINER lineage helper', () {
+      expect(
+        versionFixMigrationSql,
+        contains('cohort_programme_lineage_is_dev_coach_owned(lineage_id)'),
+      );
+      expect(versionFixMigrationSql, contains('SECURITY DEFINER'));
+      expect(versionFixMigrationSql, contains('SET search_path = public, pg_temp'));
+    });
+
+    test('preserves global catalogue select policy', () {
+      expect(versionFixMigrationSql, contains('select_catalogue'));
+      expect(versionFixMigrationSql, contains('intentionally preserved'));
+    });
+
+    test('documents anon validation sequence with rollback', () {
+      expect(versionFixMigrationSql, contains('SET LOCAL ROLE anon'));
+      expect(versionFixMigrationSql, contains("'other-coach'"));
+      expect(versionFixMigrationSql, contains("'published'"));
+      expect(versionFixMigrationSql, contains("'organisation'"));
+      expect(versionFixMigrationSql, contains('ROLLBACK'));
     });
   });
 

@@ -1,4 +1,5 @@
 import 'programme_vocabulary.dart';
+import '../core/utils/database_uuid.dart';
 
 /// Optional macro block within a programme version.
 ///
@@ -36,14 +37,13 @@ class ProgrammeVersionPhase {
   }
 
   Map<String, dynamic> toInsertMap() {
-    return {
-      if (id.isNotEmpty) 'id': id,
+    return DatabaseUuid.includeUuidIdIfValid({
       'version_id': versionId,
       'phase_order': phaseOrder,
       'title': title,
       if (intent != null) 'intent': intent!.dbValue,
       if (coachNote != null) 'coach_note': coachNote,
-    };
+    }, id);
   }
 
   static String? _trimString(dynamic value) {

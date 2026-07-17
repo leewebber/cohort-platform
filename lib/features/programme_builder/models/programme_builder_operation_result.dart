@@ -1,5 +1,6 @@
 import 'programme_validation_result.dart';
 import 'programme_builder_document.dart';
+import 'programme_partial_creation_state.dart';
 
 /// Typed builder workflow status.
 enum ProgrammeBuilderOperationStatus {
@@ -27,6 +28,7 @@ class ProgrammeBuilderOperationResult {
     this.publishedVersionId,
     this.sourceVersionId,
     this.newLineageCode,
+    this.partialCreation,
   });
 
   final ProgrammeBuilderOperationStatus status;
@@ -36,6 +38,7 @@ class ProgrammeBuilderOperationResult {
   final String? publishedVersionId;
   final String? sourceVersionId;
   final String? newLineageCode;
+  final ProgrammePartialCreationState? partialCreation;
 
   bool get isSuccess =>
       status == ProgrammeBuilderOperationStatus.created ||

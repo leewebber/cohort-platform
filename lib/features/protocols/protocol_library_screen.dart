@@ -33,7 +33,7 @@ class _ProtocolLibraryScreenState extends State<ProtocolLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    _protocolsFuture = _repository.getProtocols();
+    _protocolsFuture = _repository.listCohortProtocols();
     _goalsFuture = _repository.getGoals();
   }
 

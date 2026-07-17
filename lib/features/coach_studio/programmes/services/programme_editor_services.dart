@@ -16,6 +16,9 @@ import '../../../programme_builder/services/programme_builder_service.dart';
 import '../../../programme_builder/services/programme_builder_service_impl.dart';
 import '../../../programme_builder/services/programme_builder_validation_service.dart';
 import '../../../programme_builder/services/programme_builder_validation_service_impl.dart';
+import '../../../admin/services/protocol_builder_service.dart';
+import '../../../programme_builder/services/programme_session_authoring_coordinator.dart';
+import '../../../programme_builder/services/programme_session_authoring_services.dart';
 import '../controllers/programme_editor_controller.dart';
 
 /// Production wiring for Programme Editor.
@@ -52,7 +55,7 @@ class ProgrammeEditorServices {
       validationService: validationService,
       publishCoordinator: publishCoordinator,
       previewService: const ProgrammeBuilderPreviewServiceImpl(),
-      protocolPickerService: const ProgrammeBuilderProtocolPickerServiceImpl(),
+      protocolPickerService: ProgrammeBuilderProtocolPickerServiceImpl(),
       protocolNameResolver: ProgrammeBuilderProtocolNameResolverImpl(),
       coachId: coachId,
       versionId: versionId,
@@ -80,7 +83,7 @@ class ProgrammeEditorServices {
   }
 
   static ProgrammeBuilderProtocolPickerService createProtocolPickerService() {
-    return const ProgrammeBuilderProtocolPickerServiceImpl();
+    return ProgrammeBuilderProtocolPickerServiceImpl();
   }
 
   static ProgrammeBuilderProtocolNameResolver createProtocolNameResolver() {
@@ -105,6 +108,16 @@ class ProgrammeEditorServices {
   static ProgrammeBuilderValidationService createValidationService() {
     return ProgrammeBuilderValidationServiceImpl(
       scheduleResolver: const ProgrammeScheduleResolverImpl(),
+    );
+  }
+
+  static ProgrammeSessionAuthoringCoordinator createSessionAuthoringCoordinator({
+    required ProgrammeEditorController controller,
+    ProtocolBuilderService? protocolBuilderService,
+  }) {
+    return ProgrammeSessionAuthoringServices.createCoordinator(
+      controller: controller,
+      protocolBuilderService: protocolBuilderService,
     );
   }
 }

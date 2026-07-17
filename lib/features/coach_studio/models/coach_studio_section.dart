@@ -1,7 +1,7 @@
 /// Coach Studio landing sections.
 enum CoachStudioSection {
   programmes,
-  protocols,
+  trainingLibrary,
   exercises,
   athletes,
   settings,
@@ -11,7 +11,7 @@ extension CoachStudioSectionLabels on CoachStudioSection {
   String get title {
     return switch (this) {
       CoachStudioSection.programmes => 'Programmes',
-      CoachStudioSection.protocols => 'Protocols',
+      CoachStudioSection.trainingLibrary => 'Training Library',
       CoachStudioSection.exercises => 'Exercises',
       CoachStudioSection.athletes => 'Athletes',
       CoachStudioSection.settings => 'Settings',
@@ -22,8 +22,8 @@ extension CoachStudioSectionLabels on CoachStudioSection {
     return switch (this) {
       CoachStudioSection.programmes =>
         'Multi-week curricula, drafts, and publishing.',
-      CoachStudioSection.protocols =>
-        'Session protocols, drafts, and published library.',
+      CoachStudioSection.trainingLibrary =>
+        'Cohort Protocols, Session Library, and reusable workouts.',
       CoachStudioSection.exercises => 'Movement library and coaching knowledge.',
       CoachStudioSection.athletes => 'Roster, assignments, and athlete context.',
       CoachStudioSection.settings => 'Studio preferences and administration.',
@@ -32,6 +32,6 @@ extension CoachStudioSectionLabels on CoachStudioSection {
 
   bool get isAvailableInV01 {
     return this == CoachStudioSection.programmes ||
-        this == CoachStudioSection.protocols;
+        this == CoachStudioSection.trainingLibrary;
   }
 }

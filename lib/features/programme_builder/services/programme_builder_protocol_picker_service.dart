@@ -19,7 +19,7 @@ class ProgrammeBuilderProtocolOption {
 abstract class ProgrammeBuilderProtocolPickerService {
   Future<List<ProgrammeBuilderProtocolOption>> listSelectableProtocols({
     String? searchTerm,
-    int limit = 50,
+    int limit = 100,
   });
 
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId);

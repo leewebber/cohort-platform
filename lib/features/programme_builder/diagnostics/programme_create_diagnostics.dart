@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../../data/repositories/programme_store_exception.dart';
 import '../models/programme_builder_operation_result.dart';
+import '../models/programme_partial_creation_state.dart';
 
 /// Debug logging for New Programme creation flows.
 ///
@@ -30,6 +31,9 @@ class ProgrammeCreateDiagnostics {
 
   static void logOperationResult(ProgrammeBuilderOperationResult result) {
     log('result status=${result.status.name}');
+    if (result.partialCreation != null) {
+      logPartialCreation(result.partialCreation!);
+    }
     if (result.warnings.isNotEmpty) {
       log('warnings=${result.warnings.join(' | ')}');
     }
@@ -38,6 +42,12 @@ class ProgrammeCreateDiagnostics {
         'validation blocking=${result.validation!.blockingIssueCount} '
         'warnings=${result.validation!.warningCount}',
       );
+    }
+  }
+
+  static void logPartialCreation(ProgrammePartialCreationState partialCreation) {
+    for (final line in partialCreation.toDiagnosticLines()) {
+      log(line);
     }
   }
 
@@ -60,9 +70,13 @@ class ProgrammeCreateDiagnostics {
   static String debugDetailFromOperationResult(
     ProgrammeBuilderOperationResult result,
   ) {
-    if (result.warnings.isEmpty) {
-      return 'status=${result.status.name}';
+    final lines = <String>['status=${result.status.name}'];
+    if (result.partialCreation != null) {
+      lines.addAll(result.partialCreation!.toDiagnosticLines());
     }
-    return 'status=${result.status.name}\n${result.warnings.join('\n')}';
+    if (result.warnings.isNotEmpty) {
+      lines.addAll(result.warnings);
+    }
+    return lines.join('\n');
   }
 }

@@ -1,4 +1,5 @@
 import 'programme_vocabulary.dart';
+import '../core/utils/database_uuid.dart';
 
 /// One numbered week within a programme version snapshot.
 ///
@@ -41,16 +42,15 @@ class ProgrammeVersionWeek {
   }
 
   Map<String, dynamic> toInsertMap() {
-    return {
-      if (id.isNotEmpty) 'id': id,
+    return DatabaseUuid.includeUuidIdIfValid({
       'version_id': versionId,
-      if (phaseId != null) 'phase_id': phaseId,
+      if (DatabaseUuid.isValidDatabaseUuid(phaseId)) 'phase_id': phaseId!.trim(),
       'week_number': weekNumber,
       if (title != null) 'title': title,
       if (intent != null) 'intent': intent!.dbValue,
       if (coachNote != null) 'coach_note': coachNote,
       if (athleteNote != null) 'athlete_note': athleteNote,
-    };
+    }, id);
   }
 
   static String? _trimString(dynamic value) {

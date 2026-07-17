@@ -1,78 +1,72 @@
-import '../../../core/services/supabase_service.dart';
+import '../../../data/repositories/protocol_repository.dart';
+import '../diagnostics/programme_protocol_picker_diagnostics.dart';
+import 'programme_builder_protocol_option_mapper.dart';
 import 'programme_builder_protocol_picker_service.dart';
 
 /// Published protocol catalogue for programme slot assignment.
 class ProgrammeBuilderProtocolPickerServiceImpl
     implements ProgrammeBuilderProtocolPickerService {
-  const ProgrammeBuilderProtocolPickerServiceImpl();
+  ProgrammeBuilderProtocolPickerServiceImpl({
+    ProtocolRepository? protocolRepository,
+    ProgrammeBuilderProtocolOptionMapper? mapper,
+  })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
+        _mapper = mapper ?? const ProgrammeBuilderProtocolOptionMapper();
+
+  final ProtocolRepository _protocolRepository;
+  final ProgrammeBuilderProtocolOptionMapper _mapper;
+
+  static const _catalogPublishedFilter = 'published=true (cohort_protocol catalogue)';
 
   @override
   Future<List<ProgrammeBuilderProtocolOption>> listSelectableProtocols({
     String? searchTerm,
-    int limit = 50,
+    int limit = 100,
   }) async {
-    final response = await SupabaseService.client
-        .from('performance_protocols')
-        .select(
-          'protocol_id, name, session_type, duration_min, equipment, required_equipment',
-        )
-        .eq('published', true)
-        .order('name')
-        .limit(limit);
+    ProgrammeProtocolPickerDiagnostics.log('load start');
+    ProgrammeProtocolPickerDiagnostics.log(
+      'source method=ProtocolRepository.listCohortProtocols',
+    );
+    ProgrammeProtocolPickerDiagnostics.log(
+      'published filter=$_catalogPublishedFilter',
+    );
+    ProgrammeProtocolPickerDiagnostics.log('searchTerm=${searchTerm ?? ''}');
 
-    final options = response
-        .map((row) => _fromRow(Map<String, dynamic>.from(row)))
-        .toList();
+    final protocols = await _protocolRepository.listCohortProtocols(
+      limit: limit,
+    );
 
-    final term = searchTerm?.trim().toLowerCase();
-    if (term == null || term.isEmpty) return options;
+    ProgrammeProtocolPickerDiagnostics.log(
+      'raw row count=${protocols.length}',
+    );
 
-    return options
-        .where(
-          (option) =>
-              option.name.toLowerCase().contains(term) ||
-              option.protocolId.toLowerCase().contains(term),
-        )
-        .toList();
+    final mapped = _mapper.mapProtocols(
+      protocols,
+      onSkip: (protocolId, reason) {
+        ProgrammeProtocolPickerDiagnostics.logSkippedRow(
+          protocolId: protocolId,
+          reason: reason,
+        );
+      },
+    );
+
+    ProgrammeProtocolPickerDiagnostics.log(
+      'mapped option count=${mapped.length}',
+    );
+
+    final visible = _mapper.applySearch(mapped, searchTerm);
+
+    ProgrammeProtocolPickerDiagnostics.log(
+      'final visible count=${visible.length}',
+    );
+
+    return visible;
   }
 
   @override
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId) async {
-    final response = await SupabaseService.client
-        .from('performance_protocols')
-        .select(
-          'protocol_id, name, session_type, duration_min, equipment, required_equipment',
-        )
-        .eq('protocol_id', protocolId.trim())
-        .eq('published', true)
-        .maybeSingle();
+    final protocol = await _protocolRepository.getProtocolById(protocolId.trim());
+    if (protocol == null) return null;
 
-    if (response == null) return null;
-    return _fromRow(Map<String, dynamic>.from(response));
-  }
-
-  ProgrammeBuilderProtocolOption _fromRow(Map<String, dynamic> row) {
-    final equipment = row['equipment']?.toString().trim();
-    final requiredEquipment = row['required_equipment']?.toString().trim();
-    final equipmentSummary = [
-      if (requiredEquipment != null && requiredEquipment.isNotEmpty)
-        requiredEquipment,
-      if (equipment != null && equipment.isNotEmpty) equipment,
-    ].join(' • ');
-
-    return ProgrammeBuilderProtocolOption(
-      protocolId: row['protocol_id']?.toString() ?? '',
-      name: row['name']?.toString() ?? '',
-      sessionType: row['session_type']?.toString(),
-      durationMin: _nullableInt(row['duration_min']),
-      equipmentSummary:
-          equipmentSummary.isEmpty ? null : equipmentSummary,
-    );
-  }
-
-  int? _nullableInt(dynamic value) {
-    if (value == null) return null;
-    if (value is int) return value;
-    return int.tryParse(value.toString());
+    return _mapper.mapProtocol(protocol);
   }
 }
