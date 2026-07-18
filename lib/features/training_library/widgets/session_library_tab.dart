@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/current_coach_identity.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/search_bar.dart';
 import '../../../features/admin/services/protocol_builder_service.dart';
@@ -115,7 +116,7 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       await _load();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result!.coachMessage ?? 'Session saved')),
+        const SnackBar(content: Text(CoachStudioFeedback.sessionSaved)),
       );
     }
   }
@@ -148,7 +149,7 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       await _load();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result!.coachMessage ?? 'Session updated')),
+        const SnackBar(content: Text(CoachStudioFeedback.sessionUpdated)),
       );
     }
   }
@@ -159,7 +160,10 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       if (!mounted) return;
       await Navigator.of(context).push<void>(
         MaterialPageRoute<void>(
-          builder: (_) => SessionPreviewScreen(draft: draft),
+          builder: (_) => SessionPreviewScreen(
+            draft: draft,
+            backLabel: '← Session Library',
+          ),
         ),
       );
     } catch (_) {
@@ -173,7 +177,7 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
   @override
   Widget build(BuildContext context) {
     if (_loading && _summaries.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const CoachStudioLoadingState(message: 'Loading Sessions…');
     }
 
     if (_error != null && _summaries.isEmpty) {
@@ -200,12 +204,13 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       padding: const EdgeInsets.all(24),
       children: [
         const Text(
-          'Reusable coach-authored Sessions for any programme.',
+          'Reusable Sessions you can add to any programme.',
           style: CohortTextStyles.body,
         ),
         const SizedBox(height: CohortSpacing.lg),
-        CohortButton(label: 'New Session', onPressed: _createSession),
-        const SizedBox(height: CohortSpacing.lg),
+        if (!isEmptyLibrary)
+          CohortButton(label: 'New Session', onPressed: _createSession),
+        if (!isEmptyLibrary) const SizedBox(height: CohortSpacing.lg),
         CohortSearchBar(
           hintText: 'Search Sessions...',
           onChanged: _onSearchChanged,
@@ -217,18 +222,12 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
             child: Center(child: CircularProgressIndicator()),
           )
         else if (isEmptyLibrary)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('No Sessions yet', style: CohortTextStyles.h2),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'Create reusable Sessions here, then add them to any programme.',
-                style: CohortTextStyles.body,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              CohortButton(label: 'New Session', onPressed: _createSession),
-            ],
+          CoachStudioEmptyState(
+            title: 'No Sessions yet',
+            message:
+                'Create reusable Sessions here and use them in any programme.',
+            actionLabel: 'New Session',
+            onAction: _createSession,
           )
         else if (isEmptySearch)
           const Text(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
@@ -294,10 +295,7 @@ class _EmbeddedSessionBuilderScreenState
           future: _exercisesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('Loading exercises...'),
-              );
+              return const CoachStudioLoadingState(message: 'Loading exercises…');
             }
 
             if (snapshot.hasError) {
@@ -403,9 +401,9 @@ class _EmbeddedSessionBuilderScreenState
                       Row(
                         children: [
                           Expanded(
-                            child: CohortButton(
+                            child: CohortSecondaryButton(
                               label: 'Preview',
-                              onPressed: _isSaving ? () {} : _preview,
+                              onPressed: _isSaving ? null : _preview,
                             ),
                           ),
                         ],
@@ -413,7 +411,7 @@ class _EmbeddedSessionBuilderScreenState
                       const SizedBox(height: CohortSpacing.md),
                       CohortButton(
                         label: _isSaving ? 'Saving session…' : 'Save & Attach',
-                        onPressed: _isSaving ? () {} : _saveAndAttach,
+                        onPressed: _isSaving ? null : _saveAndAttach,
                       ),
                       if (_partialState != null) ...[
                         const SizedBox(height: CohortSpacing.md),

@@ -29,9 +29,11 @@ class SessionPreviewScreen extends StatefulWidget {
   const SessionPreviewScreen({
     super.key,
     required this.draft,
+    this.backLabel = '← Back',
   });
 
   final ProtocolDraft draft;
+  final String backLabel;
 
   @override
   State<SessionPreviewScreen> createState() => _SessionPreviewScreenState();
@@ -56,7 +58,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     final protocolId = widget.draft.protocolId.trim();
     if (protocolId.isNotEmpty) return protocolId;
 
-    return 'Protocol Preview';
+    return 'Session preview';
   }
 
   List<SessionStep> get _steps => _stepsFromDraft(widget.draft);
@@ -123,7 +125,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
             children: [
               TextButton(
                 onPressed: _exitPreview,
-                child: const Text('← Back to Builder'),
+                child: Text(widget.backLabel),
               ),
               const SizedBox(height: CohortSpacing.md),
               const PreviewModeBanner(),

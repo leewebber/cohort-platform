@@ -90,9 +90,9 @@ void main() {
     );
 
     expect(find.text('Programmes'), findsOneWidget);
-    expect(find.text('Protocols'), findsOneWidget);
+    expect(find.text('Training Library'), findsOneWidget);
     expect(find.text('Exercises'), findsOneWidget);
-    expect(find.text('SOON'), findsWidgets);
+    expect(find.text('Soon'), findsWidgets);
   });
 
   testWidgets('Programmes navigation from landing', (tester) async {
@@ -107,7 +107,7 @@ void main() {
     await tester.tap(find.text('Programmes'));
     await tester.pumpAndSettle();
 
-    expect(find.text('New'), findsOneWidget);
+    expect(find.text('New programme'), findsOneWidget);
     expect(find.text('Drafts'), findsOneWidget);
   });
 

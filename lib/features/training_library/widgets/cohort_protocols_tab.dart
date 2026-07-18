@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../../../core/widgets/search_bar.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../models/protocol.dart';
@@ -154,7 +155,9 @@ class _CohortProtocolsTabState extends State<CohortProtocolsTab> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const CoachStudioLoadingState(
+        message: 'Loading Cohort Protocols…',
+      );
     }
 
     if (_error != null) {
@@ -192,9 +195,13 @@ class _CohortProtocolsTabState extends State<CohortProtocolsTab> {
         Text('${visible.length} protocols', style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.lg),
         if (visible.isEmpty)
-          const Text(
-            'No Cohort Protocols match your search.',
-            style: CohortTextStyles.body,
+          CoachStudioEmptyState(
+            title: _search.trim().isEmpty
+                ? 'No Cohort Protocols available'
+                : 'No matches found',
+            message: _search.trim().isEmpty
+                ? 'Official Cohort Protocols will appear here when published.'
+                : 'Try a different search term.',
           )
         else
           ...visible.map(

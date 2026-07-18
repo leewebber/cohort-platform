@@ -102,7 +102,7 @@ void main() {
       expect(find.text('Build New Session'), findsOneWidget);
     });
 
-    testWidgets('cohort protocol slot shows code and hides Edit Session',
+    testWidgets('cohort protocol slot shows title and hides Edit Session',
         (tester) async {
       const slot = ProgrammeSessionSlotDraft(
         localId: 'slot-1',
@@ -130,7 +130,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Cohort Protocol'), findsOneWidget);
-      expect(find.text('RN-006'), findsOneWidget);
+      expect(find.text('Classic Threshold'), findsWidgets);
+      expect(find.text('RN-006'), findsNothing);
       expect(find.text('Preview'), findsOneWidget);
       expect(find.text('Copy and customise'), findsOneWidget);
       expect(find.text('Change'), findsOneWidget);

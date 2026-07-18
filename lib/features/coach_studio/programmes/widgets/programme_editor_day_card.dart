@@ -4,6 +4,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../models/programme_day_draft.dart';
+import '../../../../models/programme_session_slot_draft.dart';
 import '../../../../models/programme_vocabulary.dart';
 import '../../../programme_builder/models/programme_builder_constants.dart';
 import '../../../programme_builder/models/programme_builder_path.dart';
@@ -71,7 +72,7 @@ class ProgrammeEditorDayCard extends StatelessWidget {
             if (day.intent != null) ...[
               const SizedBox(height: CohortSpacing.xs),
               Text(
-                day.intent!.name,
+                day.intent!.displayLabel,
                 style: CohortTextStyles.small,
               ),
             ],
@@ -92,8 +93,8 @@ class ProgrammeEditorDayCard extends StatelessWidget {
                     ProgrammeBuilderConstants.isUnassignedProtocolId(
                       slot.protocolId,
                     )
-                        ? 'No protocol'
-                        : slot.protocolId;
+                        ? 'No session selected'
+                        : _slotDisplayLabel(slot);
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
@@ -139,9 +140,17 @@ class ProgrammeEditorDayCard extends StatelessWidget {
   String _dayTitle(ProgrammeDayDraft day) {
     final title = day.title?.trim();
     if (title != null && title.isNotEmpty) {
-      return '${day.dayKey} · $title';
+      return title;
     }
-    return day.dayKey.replaceAll('_', ' ');
+    return 'Day ${day.dayOrder}';
+  }
+
+  String _slotDisplayLabel(ProgrammeSessionSlotDraft slot) {
+    final title = slot.displayTitle?.trim();
+    if (title != null && title.isNotEmpty) {
+      return title;
+    }
+    return 'Session assigned';
   }
 
   Future<void> _handleMenu(BuildContext context, String value) async {

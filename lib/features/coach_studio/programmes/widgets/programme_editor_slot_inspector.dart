@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/widgets/coach_studio_ui.dart';
+import '../../../../core/theme/text_styles.dart';
 import '../../../admin/services/protocol_builder_service.dart';
 import '../../../programme_builder/models/programme_builder_constants.dart';
 import '../../../programme_builder/models/cohort_protocol_customisation_result.dart';
@@ -183,7 +185,7 @@ class _ProgrammeEditorSlotInspectorState
                 .map(
                   (value) => DropdownMenuItem(
                     value: value,
-                    child: Text(value.name),
+                    child: Text(value.displayLabel),
                   ),
                 )
                 .toList(),
@@ -300,10 +302,8 @@ class _ProgrammeEditorSlotInspectorState
 
     if (result.isAttached) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            result.coachMessage ?? 'Session added to programme',
-          ),
+        const SnackBar(
+          content: Text(CoachStudioFeedback.sessionAddedToProgramme),
         ),
       );
       setState(_reloadContentKind);
@@ -367,7 +367,10 @@ class _ProgrammeEditorSlotInspectorState
 
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => SessionPreviewScreen(draft: draft),
+        builder: (_) => SessionPreviewScreen(
+          draft: draft,
+          backLabel: '← Programme Editor',
+        ),
       ),
     );
   }
@@ -485,10 +488,8 @@ class _ProgrammeEditorSlotInspectorState
 
     if (result.isAttached) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            result.coachMessage ?? 'Session added to programme',
-          ),
+        const SnackBar(
+          content: Text(CoachStudioFeedback.sessionAddedToProgramme),
         ),
       );
       setState(_reloadContentKind);
@@ -528,22 +529,22 @@ class _AssignedContentHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (contentKind) {
       case ProgrammeSlotContentKind.empty:
-        return Text(
-          'Choose how to fill this training slot.',
-          style: CohortTextStyles.body,
+        return const CoachStudioEmptyState(
+          title: 'No session selected',
+          message:
+              'Choose a Cohort Protocol, use your Session Library, or build a new Session.',
         );
       case ProgrammeSlotContentKind.cohortProtocol:
+        final title = slot.displayTitle?.trim();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Cohort Protocol', style: CohortTextStyles.body),
             const SizedBox(height: CohortSpacing.xs),
-            Text(slot.protocolId, style: CohortTextStyles.cardTitle),
-            if (slot.displayTitle != null &&
-                slot.displayTitle!.trim().isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.xs),
-              Text(slot.displayTitle!, style: CohortTextStyles.body),
-            ],
+            Text(
+              title != null && title.isNotEmpty ? title : 'Cohort Protocol',
+              style: CohortTextStyles.cardTitle,
+            ),
           ],
         );
       case ProgrammeSlotContentKind.programmeSession:

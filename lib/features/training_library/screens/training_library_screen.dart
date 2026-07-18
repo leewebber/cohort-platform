@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
-import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../diagnostics/training_library_diagnostics.dart';
 import '../models/training_library_tab.dart';
 import '../widgets/cohort_protocols_tab.dart';
@@ -66,30 +66,24 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('← Coach Studio'),
-                  ),
-                  const SizedBox(height: CohortSpacing.md),
-                  const Text('Training Library', style: CohortTextStyles.h1),
-                  const SizedBox(height: CohortSpacing.sm),
-                  const Text(
+              child: CoachStudioPageHeader(
+                backLabel: '← Coach Studio',
+                onBack: () => Navigator.pop(context),
+                title: 'Training Library',
+                subtitle:
                     'Browse official Cohort Protocols and manage reusable Sessions.',
-                    style: CohortTextStyles.body,
-                  ),
-                  const SizedBox(height: CohortSpacing.lg),
-                  TabBar(
-                    controller: _tabController,
-                    tabs: TrainingLibraryTab.values
-                        .map((tab) => Tab(text: tab.title))
-                        .toList(),
-                  ),
-                ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: TabBar(
+                controller: _tabController,
+                tabs: TrainingLibraryTab.values
+                    .map((tab) => Tab(text: tab.title))
+                    .toList(),
+              ),
+            ),
+            const SizedBox(height: CohortSpacing.sm),
             Expanded(
               child: TabBarView(
                 controller: _tabController,

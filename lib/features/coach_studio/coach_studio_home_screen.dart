@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
-import '../../core/widgets/section_title.dart';
+import '../../core/widgets/coach_studio_ui.dart';
 import '../training_library/screens/training_library_screen.dart';
 import 'models/coach_studio_navigation_state.dart';
 import 'models/coach_studio_section.dart';
@@ -83,18 +84,11 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const SectionTitle('Coach Studio'),
-              const SizedBox(height: CohortSpacing.md),
-              const Text('Authoring tools', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'Build programmes and manage training content.',
-                style: CohortTextStyles.body,
+              CoachStudioPageHeader(
+                backLabel: '← Back',
+                onBack: () => Navigator.pop(context),
+                title: 'Coach Studio',
+                subtitle: 'Build programmes and manage training content.',
               ),
               const SizedBox(height: CohortSpacing.xl),
               Expanded(
@@ -132,8 +126,8 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
                                   const SizedBox(height: CohortSpacing.xs),
                                   Text(
                                     'Last opened',
-                                    style: CohortTextStyles.body.copyWith(
-                                      color: CohortTextStyles.body.color,
+                                    style: CohortTextStyles.small.copyWith(
+                                      color: CohortColors.olive,
                                     ),
                                   ),
                                 ],
@@ -141,8 +135,13 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
                             ),
                           ),
                           Text(
-                            available ? 'OPEN' : 'SOON',
-                            style: CohortTextStyles.body,
+                            available ? 'Open' : 'Soon',
+                            style: CohortTextStyles.small.copyWith(
+                              color: available
+                                  ? CohortColors.olive
+                                  : CohortColors.textMuted,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),

@@ -33,7 +33,7 @@ class SessionLibraryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Coach-authored', style: CohortTextStyles.eyebrow),
+          Text('Coach Session', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.xs),
           Text(summary.title, style: CohortTextStyles.cardTitle),
           if (metadata.isNotEmpty) ...[

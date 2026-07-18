@@ -4,6 +4,7 @@ import '../../../core/services/current_coach_identity.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
@@ -135,10 +136,7 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
           future: _exercisesFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('Loading exercises...'),
-              );
+              return const CoachStudioLoadingState(message: 'Loading exercises…');
             }
 
             if (snapshot.hasError) {
@@ -215,16 +213,16 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      CohortButton(
+                      CohortSecondaryButton(
                         label: 'Preview',
-                        onPressed: _isSaving ? () {} : _preview,
+                        onPressed: _isSaving ? null : _preview,
                       ),
                       const SizedBox(height: CohortSpacing.md),
                       CohortButton(
                         label: _isSaving
                             ? 'Saving session…'
-                            : (widget.isEdit ? 'Save Session' : 'Save Session'),
-                        onPressed: _isSaving ? () {} : _save,
+                            : (widget.isEdit ? 'Save changes' : 'Save Session'),
+                        onPressed: _isSaving ? null : _save,
                       ),
                     ],
                   ),

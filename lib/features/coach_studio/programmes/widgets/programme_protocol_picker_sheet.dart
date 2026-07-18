@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/services/programme_builder_protocol_picker_service.dart';
 import 'cohort_protocol_programme_options_sheet.dart';
 
@@ -83,7 +84,8 @@ class _ProgrammeProtocolPickerSheetState
           TextField(
             controller: _searchController,
             decoration: const InputDecoration(
-              labelText: 'Search by name or protocol ID',
+              labelText: 'Search Cohort Protocols',
+              hintText: 'Search by name',
             ),
           ),
           const SizedBox(height: CohortSpacing.md),
@@ -140,7 +142,6 @@ class _ProgrammeProtocolPickerSheetState
                     ),
                     subtitle: Text(
                       [
-                        option.protocolId,
                         if (option.sessionType != null) option.sessionType!,
                         if (option.durationMin != null)
                           '${option.durationMin} min',

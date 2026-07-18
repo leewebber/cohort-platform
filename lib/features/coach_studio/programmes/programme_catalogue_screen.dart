@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
+import '../../../core/widgets/search_bar.dart';
+import '../../../core/theme/spacing.dart';
+import '../../../core/theme/text_styles.dart';
 import '../../../models/programme_vocabulary.dart';
 import '../../programme/models/programme_catalog_entry.dart';
 import 'controllers/programme_catalogue_controller.dart';
@@ -31,8 +35,6 @@ class ProgrammeCatalogueScreen extends StatefulWidget {
 }
 
 class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
-  final _searchController = TextEditingController();
-
   ProgrammeCatalogueController get _controller => widget.controller;
 
   @override
@@ -45,7 +47,6 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
   @override
   void dispose() {
     _controller.removeListener(_onControllerChanged);
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -184,29 +185,20 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Coach Studio'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text('Programmes', style: CohortTextStyles.h1),
-                  ),
-                  TextButton(
-                    onPressed:
-                        _controller.isActionInProgress ? null : _openNewProgramme,
-                    child: const Text('New'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              TextField(
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  hintText: 'Search name or lineage code',
+              CoachStudioPageHeader(
+                backLabel: '← Coach Studio',
+                onBack: () => Navigator.pop(context),
+                title: 'Programmes',
+                subtitle: 'Create and manage training programmes.',
+                trailing: TextButton(
+                  onPressed:
+                      _controller.isActionInProgress ? null : _openNewProgramme,
+                  child: const Text('New programme'),
                 ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+              CohortSearchBar(
+                hintText: 'Search programmes…',
                 onChanged: _controller.setSearchTerm,
               ),
               const SizedBox(height: CohortSpacing.sm),

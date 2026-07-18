@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/attribute_grid.dart';
+import '../../../core/widgets/coach_studio_ui.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/protocol_step_card.dart';
@@ -97,13 +98,7 @@ class ProtocolDetailScreen extends StatelessWidget {
                   label: 'Copy to Session Library',
                   onPressed: onCopyToSessionLibrary!,
                 ),
-                const SizedBox(height: CohortSpacing.md),
               ],
-
-              CohortButton(
-                label: 'Start Session',
-                onPressed: () {},
-              ),
 
               const SizedBox(height: CohortSpacing.xxl),
             ],
