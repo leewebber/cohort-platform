@@ -5,6 +5,8 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../performance/controllers/performance_capture_controller.dart';
+import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
@@ -24,7 +26,9 @@ class SessionOverviewScreen extends StatefulWidget {
     this.programmeContextLabel,
     this.athleteId,
     SessionExecutionLoader? loader,
-  }) : _loader = loader;
+    PerformanceRecordSaveCoordinator? saveCoordinator,
+  })  : _loader = loader,
+        _saveCoordinator = saveCoordinator;
 
   final String protocolId;
   final String? displayTitle;
@@ -33,6 +37,7 @@ class SessionOverviewScreen extends StatefulWidget {
   final String? programmeContextLabel;
   final String? athleteId;
   final SessionExecutionLoader? _loader;
+  final PerformanceRecordSaveCoordinator? _saveCoordinator;
 
   @override
   State<SessionOverviewScreen> createState() => _SessionOverviewScreenState();
@@ -41,6 +46,8 @@ class SessionOverviewScreen extends StatefulWidget {
 class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
   late final SessionExecutionLoader _loader =
       widget._loader ?? SessionExecutionLoader();
+  late final PerformanceRecordSaveCoordinator _saveCoordinator =
+      widget._saveCoordinator ?? PerformanceRecordSaveCoordinator();
   late Future<SessionExecutionLoadResult> _loadFuture;
 
   @override
@@ -58,7 +65,7 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
         trainingSessionId: widget.trainingSessionId,
       );
 
-  void _startSession(SessionExecutionPlan plan) {
+  Future<void> _startSession(SessionExecutionPlan plan) async {
     final restored = AthleteSessionMemoryStore.instance.read(_sessionKey);
     final controller = SessionExecutionController(
       plan: plan,
@@ -69,17 +76,51 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
     final continueSession =
         restored?.sessionStatus == SessionExecutionStatus.inProgress;
 
+    PerformanceCaptureController? performanceController;
+    if (widget.trainingSessionId != null && widget.athleteId != null) {
+      final existingRecord = await _saveCoordinator.loadInProgressDraftAsRecord(
+        athleteId: widget.athleteId!,
+        trainingSessionId: widget.trainingSessionId!,
+      );
+
+      if (existingRecord != null) {
+        performanceController =
+            _saveCoordinator.restoreControllerFromRecord(existingRecord);
+      } else {
+        performanceController =
+            PerformanceCaptureController.initializeFromExecutionPlan(
+          plan: plan,
+          athleteId: widget.athleteId!,
+          trainingSessionId: widget.trainingSessionId!,
+          programmeContext: widget.programmeContext,
+        );
+        await _saveCoordinator.createOrResumeInProgress(
+          controller: performanceController,
+        );
+      }
+    }
+
     if (!continueSession) {
       controller.startSession();
     }
 
-    Navigator.of(context).push(
+    if (!mounted) return;
+
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ActiveSessionScreen(
           controller: controller,
+          performanceController: performanceController ??
+              PerformanceCaptureController.initializeFromExecutionPlan(
+                plan: plan,
+                athleteId: widget.athleteId ?? 'preview',
+                trainingSessionId: widget.trainingSessionId ?? 0,
+                programmeContext: widget.programmeContext,
+              ),
           trainingSessionId: widget.trainingSessionId,
           programmeContext: widget.programmeContext,
           athleteId: widget.athleteId,
+          saveCoordinator: _saveCoordinator,
         ),
       ),
     );

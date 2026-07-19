@@ -6,6 +6,7 @@ import '../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
+import '../../performance/screens/training_history_screen.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'debug/home_debug_programme_refresh_policy.dart';
 import 'widgets/home_today_session_section.dart';
@@ -926,6 +927,25 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeTodaySessionSection(
                 key: _todaySessionSectionKey,
                 refreshController: _todaySessionRefreshController,
+              ),
+
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => TrainingHistoryScreen(
+                        athleteId: _athleteId,
+                      ),
+                    ),
+                  );
+                },
+                child: const _HomeActionRow(
+                  title: 'Training History',
+                  subtitle: 'Review completed sessions and performance records.',
+                  status: 'OPEN',
+                ),
               ),
 
               const SizedBox(height: CohortSpacing.xl),

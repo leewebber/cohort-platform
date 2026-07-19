@@ -21,6 +21,7 @@ class AthleteBlockCard extends StatelessWidget {
     required this.onLaunchTimer,
     required this.onOpenExercise,
     this.showActions = true,
+    this.performanceSection,
   });
 
   final SessionExecutionBlock block;
@@ -33,6 +34,7 @@ class AthleteBlockCard extends StatelessWidget {
   final VoidCallback? onLaunchTimer;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
   final bool showActions;
+  final Widget? performanceSection;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +112,10 @@ class AthleteBlockCard extends StatelessWidget {
                 Text('Coach notes', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.xs),
                 Text(block.coachNotes!, style: CohortTextStyles.body),
+              ],
+              if (performanceSection != null) ...[
+                const SizedBox(height: CohortSpacing.lg),
+                performanceSection!,
               ],
               if (showActions) ...[
                 const SizedBox(height: CohortSpacing.lg),

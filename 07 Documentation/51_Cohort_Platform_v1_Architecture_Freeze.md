@@ -275,7 +275,8 @@ Legacy steps remain until:
 | Navigation | Widget / `Navigator` |
 | Athlete execution | `ActiveSessionState` + `SessionExecutionController` |
 | Timer runtime | `BlockTimerController` (ephemeral) |
-| Performance results (M8) | **Not implemented** — must not land in `ProtocolDraft` |
+| Performance capture draft (M8) | `ActivePerformanceDraft` + `PerformanceCaptureController` |
+| Performance records (M8) | `TrainingSessionRecord` tree via `PerformanceRecordSaveCoordinator` |
 
 ---
 
@@ -384,7 +385,7 @@ Unresolved before public beta: production auth, athlete data isolation audit, se
 
 ## 18. Approved extension points
 
-**M8 Performance Logging:** attach to `ActiveSessionState` / `training_sessions` — block results, exercise results, RPE, notes, persistent restoration.
+**M8 Performance Logging (implemented):** `TrainingSessionRecord` domain with snapshot-backed history — see `07 Documentation/52_M8_Performance_Capture_and_Training_History.md`. Do not store results in authoring models or `SessionExecutionPlan`.
 
 **M9 Versioning:** content revisions, snapshots, pinned programme references.
 

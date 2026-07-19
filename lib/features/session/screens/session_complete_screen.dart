@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
+import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../performance/models/training_session_record.dart';
+import '../../performance/models/training_session_record_status.dart';
 import '../models/active_session_state.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 
@@ -10,10 +13,12 @@ class SessionCompleteScreen extends StatelessWidget {
     super.key,
     required this.state,
     required this.onDone,
+    this.savedRecord,
   });
 
   final ActiveSessionState state;
   final VoidCallback onDone;
+  final TrainingSessionRecord? savedRecord;
 
   String? _elapsedLabel() {
     final started = state.startedAt;
@@ -48,6 +53,13 @@ class SessionCompleteScreen extends StatelessWidget {
                 elapsedLabel: _elapsedLabel(),
                 contextLabel: state.plan.programmeContextLabel,
               ),
+              if (savedRecord != null) ...[
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  'Saved to training history (${savedRecord!.status.displayLabel}).',
+                  style: CohortTextStyles.body,
+                ),
+              ],
               const Spacer(),
               CohortButton(label: 'Done', onPressed: onDone),
               const SizedBox(height: CohortSpacing.lg),
