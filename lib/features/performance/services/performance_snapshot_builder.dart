@@ -85,11 +85,7 @@ class PerformanceSnapshotBuilder {
             .toList(growable: false),
       );
 
-      final captureMode = BlockCaptureModeResolver.resolve(
-        blockType: block.blockType,
-        workoutFormat: block.workoutFormat,
-        linkedExerciseCount: block.linkedExercises.length,
-      );
+      final captureMode = BlockCaptureModeResolver.resolveForBlock(block);
       final resultType = BlockCaptureModeResolver.resultTypeFor(captureMode);
 
       return BlockPerformanceDraft(

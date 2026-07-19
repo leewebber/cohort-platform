@@ -7,10 +7,22 @@ import 'performance_result_type.dart';
 class BlockCaptureModeResolver {
   const BlockCaptureModeResolver._();
 
+  static BlockCaptureMode resolveForBlock(SessionExecutionBlock block) {
+    return resolve(
+      blockType: block.blockType,
+      workoutFormat: block.workoutFormat,
+      linkedExerciseCount: block.linkedExercises.length,
+      content: block.content,
+      hasTimer: block.hasTimer,
+    );
+  }
+
   static BlockCaptureMode resolve({
     required SessionBlockType blockType,
     required WorkoutFormat workoutFormat,
     required int linkedExerciseCount,
+    String content = '',
+    bool hasTimer = false,
   }) {
     switch (workoutFormat) {
       case WorkoutFormat.amrap:
@@ -32,9 +44,13 @@ class BlockCaptureModeResolver {
       return BlockCaptureMode.strength;
     }
 
+    if (linkedExerciseCount > 0 &&
+        _hasStructuredStrengthPrescription(content)) {
+      return BlockCaptureMode.strength;
+    }
+
     if (blockType == SessionBlockType.custom &&
-        linkedExerciseCount == 0 &&
-        workoutFormat == WorkoutFormat.none) {
+        _hasStructuredEndurancePrescription(content)) {
       return BlockCaptureMode.endurance;
     }
 
@@ -42,7 +58,29 @@ class BlockCaptureModeResolver {
       return BlockCaptureMode.completion;
     }
 
+    if (blockType == SessionBlockType.custom &&
+        linkedExerciseCount == 0 &&
+        (hasTimer || _hasStructuredEndurancePrescription(content))) {
+      return BlockCaptureMode.endurance;
+    }
+
     return BlockCaptureMode.completion;
+  }
+
+  /// Legacy converter emits these labels from structured step metadata.
+  static bool _hasStructuredStrengthPrescription(String content) {
+    return _hasStructuredLabel(content, 'Sets') ||
+        _hasStructuredLabel(content, 'Reps') ||
+        _hasStructuredLabel(content, 'Load');
+  }
+
+  static bool _hasStructuredEndurancePrescription(String content) {
+    return _hasStructuredLabel(content, 'Duration') ||
+        _hasStructuredLabel(content, 'Distance');
+  }
+
+  static bool _hasStructuredLabel(String content, String label) {
+    return RegExp('^$label:\\s*\\S', multiLine: true).hasMatch(content.trim());
   }
 
   static PerformanceResultType resultTypeFor(BlockCaptureMode mode) {

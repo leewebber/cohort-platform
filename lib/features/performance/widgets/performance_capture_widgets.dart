@@ -6,7 +6,9 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../models/active_performance_draft.dart';
 import '../models/performance_result_data.dart';
+import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
+import 'performance_numeric_field.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
 
@@ -139,37 +141,89 @@ class _ResultEditorBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final result = blockDraft.resultData;
-    if (result is AmrapResultData) {
-      return _AmrapEditor(result: result, onChanged: onResultChanged);
+    final mode = _effectiveCaptureMode(blockDraft);
+    switch (mode) {
+      case BlockCaptureMode.strength:
+        return _StrengthEditor(
+          blockDraft: blockDraft,
+          onAddSet: onAddSet,
+          onUpdateSet: onUpdateSet,
+          onDuplicateSet: onDuplicateSet,
+          onRemoveSet: onRemoveSet,
+        );
+      case BlockCaptureMode.amrap:
+        return _AmrapEditor(
+          result: blockDraft.resultData as AmrapResultData? ?? const AmrapResultData(),
+          onChanged: onResultChanged,
+        );
+      case BlockCaptureMode.forTime:
+        return _ForTimeEditor(
+          result: blockDraft.resultData as ForTimeResultData? ??
+              const ForTimeResultData(),
+          onChanged: onResultChanged,
+          onApplyElapsedSeconds: onApplyElapsedSeconds,
+        );
+      case BlockCaptureMode.interval:
+        return _IntervalEditor(
+          result: blockDraft.resultData as IntervalResultData? ??
+              const IntervalResultData(),
+          onChanged: onResultChanged,
+        );
+      case BlockCaptureMode.endurance:
+        return _DistanceEditor(
+          result: blockDraft.resultData as DistanceResultData? ??
+              const DistanceResultData(),
+          onChanged: onResultChanged,
+        );
+      case BlockCaptureMode.rounds:
+        return _RoundsEditor(
+          result: blockDraft.resultData as RoundsResultData? ??
+              const RoundsResultData(),
+          onChanged: onResultChanged,
+        );
+      case BlockCaptureMode.customMetric:
+        return _CustomMetricEditor(
+          result: blockDraft.resultData as CustomMetricResultData? ??
+              const CustomMetricResultData(),
+          onChanged: onResultChanged,
+        );
+      case BlockCaptureMode.completion:
+      case BlockCaptureMode.auto:
+        return _CompletionEditor(
+          result: blockDraft.resultData,
+          onChanged: onResultChanged,
+        );
     }
-    if (result is ForTimeResultData) {
-      return _ForTimeEditor(
-        result: result,
-        onChanged: onResultChanged,
-        onApplyElapsedSeconds: onApplyElapsedSeconds,
-      );
+  }
+
+  BlockCaptureMode _effectiveCaptureMode(BlockPerformanceDraft blockDraft) {
+    if (blockDraft.captureMode != BlockCaptureMode.auto) {
+      return blockDraft.captureMode;
     }
-    if (result is IntervalResultData) {
-      return _IntervalEditor(result: result, onChanged: onResultChanged);
+    return _captureModeFromResultType(blockDraft.resultType);
+  }
+
+  BlockCaptureMode _captureModeFromResultType(PerformanceResultType resultType) {
+    switch (resultType) {
+      case PerformanceResultType.strength:
+        return BlockCaptureMode.strength;
+      case PerformanceResultType.amrap:
+        return BlockCaptureMode.amrap;
+      case PerformanceResultType.forTime:
+        return BlockCaptureMode.forTime;
+      case PerformanceResultType.interval:
+        return BlockCaptureMode.interval;
+      case PerformanceResultType.distance:
+        return BlockCaptureMode.endurance;
+      case PerformanceResultType.rounds:
+        return BlockCaptureMode.rounds;
+      case PerformanceResultType.customMetric:
+        return BlockCaptureMode.customMetric;
+      case PerformanceResultType.duration:
+        return BlockCaptureMode.endurance;
+      case PerformanceResultType.completion:
+        return BlockCaptureMode.completion;
     }
-    if (result is DistanceResultData) {
-      return _DistanceEditor(result: result, onChanged: onResultChanged);
-    }
-    if (result is RoundsResultData) {
-      return _RoundsEditor(result: result, onChanged: onResultChanged);
-    }
-    if (result is StrengthResultData ||
-        blockDraft.exerciseResults.isNotEmpty) {
-      return _StrengthEditor(
-        blockDraft: blockDraft,
-        onAddSet: onAddSet,
-        onUpdateSet: onUpdateSet,
-        onDuplicateSet: onDuplicateSet,
-        onRemoveSet: onRemoveSet,
-      );
-    }
-    return _CompletionEditor(result: result, onChanged: onResultChanged);
   }
 }
 
@@ -182,17 +236,17 @@ class _AmrapEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          decoration: const InputDecoration(labelText: 'Rounds'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(text: '${result.rounds}'),
+        PerformanceNumericField(
+          key: const ValueKey('amrap-rounds'),
+          label: 'Rounds',
+          value: '${result.rounds}',
           onChanged: (value) =>
               onChanged(result.copyWith(rounds: int.tryParse(value) ?? 0)),
         ),
-        TextField(
-          decoration: const InputDecoration(labelText: 'Extra reps'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(text: '${result.extraReps}'),
+        PerformanceNumericField(
+          key: const ValueKey('amrap-extra-reps'),
+          label: 'Extra reps',
+          value: '${result.extraReps}',
           onChanged: (value) => onChanged(
             result.copyWith(extraReps: int.tryParse(value) ?? 0),
           ),
@@ -218,12 +272,9 @@ class _ForTimeEditor extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          decoration: const InputDecoration(labelText: 'Elapsed seconds'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(
-            text: result.elapsedSeconds?.toString() ?? '',
-          ),
+        PerformanceNumericField(
+          label: 'Elapsed seconds',
+          value: result.elapsedSeconds?.toString() ?? '',
           onChanged: (value) => onChanged(
             result.copyWith(elapsedSeconds: int.tryParse(value)),
           ),
@@ -236,7 +287,8 @@ class _ForTimeEditor extends StatelessWidget {
         ),
         if (onApplyElapsedSeconds != null)
           TextButton(
-            onPressed: () => onApplyElapsedSeconds!(result.elapsedSeconds ?? 0),
+            onPressed: () =>
+                onApplyElapsedSeconds!(result.elapsedSeconds ?? 0),
             child: const Text('Use timer elapsed time'),
           ),
       ],
@@ -251,13 +303,10 @@ class _IntervalEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        labelText:
-            'Intervals completed${result.totalIntervals == null ? '' : ' / ${result.totalIntervals}'}',
-      ),
-      keyboardType: TextInputType.number,
-      controller: TextEditingController(text: '${result.intervalsCompleted}'),
+    return PerformanceNumericField(
+      label:
+          'Intervals completed${result.totalIntervals == null ? '' : ' / ${result.totalIntervals}'}',
+      value: '${result.intervalsCompleted}',
       onChanged: (value) => onChanged(
         result.copyWith(intervalsCompleted: int.tryParse(value) ?? 0),
       ),
@@ -274,21 +323,16 @@ class _DistanceEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          decoration: InputDecoration(
-            labelText: 'Distance (${result.distanceUnit})',
-          ),
-          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          controller: TextEditingController(text: result.distance?.toString() ?? ''),
+        PerformanceNumericField(
+          label: 'Distance (${result.distanceUnit})',
+          value: result.distance?.toString() ?? '',
+          allowDecimal: true,
           onChanged: (value) =>
               onChanged(result.copyWith(distance: double.tryParse(value))),
         ),
-        TextField(
-          decoration: const InputDecoration(labelText: 'Duration (seconds)'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(
-            text: result.durationSeconds?.toString() ?? '',
-          ),
+        PerformanceNumericField(
+          label: 'Duration (seconds)',
+          value: result.durationSeconds?.toString() ?? '',
           onChanged: (value) => onChanged(
             result.copyWith(durationSeconds: int.tryParse(value)),
           ),
@@ -307,20 +351,48 @@ class _RoundsEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          decoration: const InputDecoration(labelText: 'Rounds completed'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(text: '${result.roundsCompleted}'),
+        PerformanceNumericField(
+          label: 'Rounds completed',
+          value: '${result.roundsCompleted}',
           onChanged: (value) => onChanged(
             result.copyWith(roundsCompleted: int.tryParse(value) ?? 0),
           ),
         ),
-        TextField(
-          decoration: const InputDecoration(labelText: 'Extra reps'),
-          keyboardType: TextInputType.number,
-          controller: TextEditingController(text: '${result.extraReps}'),
+        PerformanceNumericField(
+          label: 'Extra reps',
+          value: '${result.extraReps}',
           onChanged: (value) => onChanged(
             result.copyWith(extraReps: int.tryParse(value) ?? 0),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CustomMetricEditor extends StatelessWidget {
+  const _CustomMetricEditor({required this.result, required this.onChanged});
+
+  final CustomMetricResultData result;
+  final ValueChanged<PerformanceResultData> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          decoration: const InputDecoration(labelText: 'Metric label'),
+          controller: TextEditingController(text: result.label ?? ''),
+          onChanged: (value) => onChanged(
+            result.copyWith(label: value.trim().isEmpty ? null : value.trim()),
+          ),
+        ),
+        PerformanceNumericField(
+          label: 'Value',
+          value: result.numericValue?.toString() ?? '',
+          allowDecimal: true,
+          onChanged: (value) => onChanged(
+            result.copyWith(numericValue: double.tryParse(value)),
           ),
         ),
       ],
@@ -381,11 +453,10 @@ class _StrengthEditor extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(labelText: 'Set ${set.setNumber} reps'),
-                      keyboardType: TextInputType.number,
-                      controller:
-                          TextEditingController(text: set.reps?.toString() ?? ''),
+                    child: PerformanceNumericField(
+                      key: ValueKey('${set.setResultId}-reps'),
+                      label: 'Set ${set.setNumber} reps',
+                      value: set.reps?.toString() ?? '',
                       onChanged: (value) => onUpdateSet(
                         exercise.sourceExerciseId,
                         set.setResultId,
@@ -396,12 +467,11 @@ class _StrengthEditor extends StatelessWidget {
                   ),
                   const SizedBox(width: CohortSpacing.sm),
                   Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(labelText: 'Load (${set.loadUnit})'),
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      controller:
-                          TextEditingController(text: set.load?.toString() ?? ''),
+                    child: PerformanceNumericField(
+                      key: ValueKey('${set.setResultId}-load'),
+                      label: 'Load (${set.loadUnit})',
+                      value: set.load?.toString() ?? '',
+                      allowDecimal: true,
                       onChanged: (value) => onUpdateSet(
                         exercise.sourceExerciseId,
                         set.setResultId,

@@ -6,7 +6,7 @@ import '../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
-import '../../performance/screens/training_history_screen.dart';
+import '../performance/screens/training_history_screen.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'debug/home_debug_programme_refresh_policy.dart';
 import 'widgets/home_today_session_section.dart';
