@@ -4,11 +4,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../data/repositories/protocol_step_repository.dart';
+import '../../../data/repositories/session_block_repository.dart';
 import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
 import '../../../models/protocol_step_draft.dart';
+import '../../../models/session_block.dart';
 import '../../../models/training_content_vocabulary.dart';
+import '../../session_builder/services/protocol_draft_block_resolver.dart';
+import '../../session_builder/services/session_block_validation.dart';
 
 /// Thrown when a draft fails validation or cannot be saved.
 class ProtocolBuilderException implements Exception {
@@ -31,12 +35,22 @@ class ProtocolBuilderService {
   ProtocolBuilderService({
     ProtocolRepository? protocolRepository,
     ProtocolStepRepository? protocolStepRepository,
+    SessionBlockRepository? sessionBlockRepository,
+    ProtocolDraftBlockResolver? blockResolver,
+    SessionBlockValidation? blockValidation,
   })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
         _protocolStepRepository =
-            protocolStepRepository ?? const ProtocolStepRepository();
+            protocolStepRepository ?? const ProtocolStepRepository(),
+        _sessionBlockRepository =
+            sessionBlockRepository ?? const SessionBlockRepository(),
+        _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
+        _blockValidation = blockValidation ?? const SessionBlockValidation();
 
   final ProtocolRepository _protocolRepository;
   final ProtocolStepRepository _protocolStepRepository;
+  final SessionBlockRepository _sessionBlockRepository;
+  final ProtocolDraftBlockResolver _blockResolver;
+  final SessionBlockValidation _blockValidation;
 
   static const _sessionFormatToSessionType = {
     'circuit': 'Circuit',
@@ -121,13 +135,17 @@ class ProtocolBuilderService {
       }
 
       final steps = await _protocolStepRepository.getProtocolSteps(trimmedId);
+      final blocks = await _sessionBlockRepository.getSessionBlocks(trimmedId);
 
       final draft = _draftFromProtocolRow(
         Map<String, dynamic>.from(protocolRow),
         steps
             .map(ProtocolStepDraft.fromProtocolStep)
             .toList(growable: false),
+        blocks: blocks,
       );
+
+      return _blockResolver.withResolvedBlocks(draft);
 
       if (kDebugMode) {
         debugPrint(
@@ -213,16 +231,18 @@ class ProtocolBuilderService {
   }) async {
     _validateDraft(draft);
 
-    final protocolId = draft.protocolId.trim();
+    final syncedDraft = _blockResolver.withSyncedStepsFromBlocks(draft);
+    final protocolId = syncedDraft.protocolId.trim();
     final existingProtocol =
         await _protocolRepository.getProtocolById(protocolId);
     final created = existingProtocol == null;
 
     final protocolMap = _buildProtocolUpsertMap(
-      draft,
+      syncedDraft,
       published: published,
     );
-    final orderedSteps = _orderedSteps(draft.steps);
+    final orderedSteps = _orderedSteps(syncedDraft.steps);
+    final orderedBlocks = _orderedBlocks(_blockResolver.resolveBlocks(syncedDraft));
     final stepMaps = orderedSteps
         .map((step) {
           final map = step.toStepMap(protocolId: protocolId);
@@ -247,6 +267,11 @@ class ProtocolBuilderService {
       if (stepMaps.isNotEmpty) {
         await SupabaseService.client.from('protocol_steps').insert(stepMaps);
       }
+
+      await _sessionBlockRepository.replaceSessionBlocks(
+        sessionId: protocolId,
+        blocks: orderedBlocks,
+      );
     } on PostgrestException catch (error) {
       throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
     } catch (error) {
@@ -323,31 +348,23 @@ class ProtocolBuilderService {
       messages.add('Session format is required.');
     }
 
-    if (draft.steps.isEmpty) {
-      messages.add('Add at least one session step.');
-    }
-
-    final orderedSteps = _orderedSteps(draft.steps);
-
-    for (var index = 0; index < orderedSteps.length; index++) {
-      final step = orderedSteps[index];
-      final expectedOrder = index + 1;
-
-      if (step.stepOrder != expectedOrder) {
-        messages.add(
-          'Step order must run from 1 to ${orderedSteps.length} without gaps.',
-        );
-        break;
-      }
-
-      if (step.title.trim().isEmpty) {
-        messages.add('Every step needs a title (step ${step.stepOrder}).');
-      }
-    }
+    final blocks = _blockResolver.resolveBlocks(draft);
+    messages.addAll(
+      _blockValidation.validateSession(
+        name: draft.name,
+        blocks: blocks,
+      ),
+    );
 
     if (messages.isNotEmpty) {
       throw ProtocolBuilderException(messages.join(' '));
     }
+  }
+
+  List<SessionBlock> _orderedBlocks(List<SessionBlock> blocks) {
+    final ordered = List<SessionBlock>.from(blocks)
+      ..sort((a, b) => a.position.compareTo(b.position));
+    return ordered;
   }
 
   List<ProtocolStepDraft> _orderedSteps(List<ProtocolStepDraft> steps) {
@@ -369,12 +386,14 @@ class ProtocolBuilderService {
 
   ProtocolDraft _draftFromProtocolRow(
     Map<String, dynamic> row,
-    List<ProtocolStepDraft> steps,
-  ) {
+    List<ProtocolStepDraft> steps, {
+    List<SessionBlock> blocks = const [],
+  }) {
     final base = ProtocolDraft(
       protocolId: row['protocol_id']?.toString() ?? '',
       name: row['name']?.toString() ?? '',
       steps: steps,
+      blocks: blocks,
       published: row['published'] == true,
       primaryCapability: row['primary_capability']?.toString(),
       secondaryCapability: row['secondary_capability']?.toString(),

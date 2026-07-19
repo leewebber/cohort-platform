@@ -9,6 +9,7 @@ import 'package:cohort_platform/features/session_builder/services/session_builde
 import 'package:cohort_platform/features/session_builder/widgets/session_builder_view.dart';
 import 'package:cohort_platform/models/exercise.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/training_content_vocabulary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -47,7 +48,7 @@ void main() {
   });
 
   group('SessionBuilderEditingState', () {
-    test('add step and build draft retains metadata', () {
+    test('add block and build draft retains metadata', () {
       const draft = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Threshold',
@@ -56,9 +57,10 @@ void main() {
       );
 
       final state = SessionBuilderEditingState(draft: draft);
-      state.addStep();
+      state.addBlock(SessionBlockType.strength);
 
       final built = state.buildDraft();
+      expect(built.blocks, hasLength(1));
       expect(built.steps, hasLength(1));
       expect(built.contentKind, TrainingContentKind.cohortProtocol);
       expect(built.protocolId, 'RN-006');
@@ -191,7 +193,7 @@ void main() {
       expect(latest?.name, 'Updated Name');
     });
 
-    testWidgets('add step emits draft with one step', (tester) async {
+    testWidgets('add block emits draft with one block', (tester) async {
       ProtocolDraft? latest;
 
       await tester.pumpWidget(
@@ -202,6 +204,7 @@ void main() {
                 draft: const ProtocolDraft(
                   protocolId: 'local-session-1',
                   name: 'Session',
+                  sessionFormat: 'structured_strength',
                   steps: [],
                 ),
                 exercises: exercises,
@@ -217,9 +220,12 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Add exercise'));
-      await tester.pump();
+      await tester.tap(find.text('Add Block'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Strength').last);
+      await tester.pumpAndSettle();
 
+      expect(latest?.blocks, hasLength(1));
       expect(latest?.steps, hasLength(1));
     });
 

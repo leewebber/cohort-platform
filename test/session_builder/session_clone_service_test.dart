@@ -1,3 +1,4 @@
+import 'package:cohort_platform/features/session_builder/services/protocol_draft_block_resolver.dart';
 import 'package:cohort_platform/features/session_builder/models/cohort_protocol_copy_destination.dart';
 import 'package:cohort_platform/features/session_builder/services/session_clone_service.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
@@ -9,6 +10,7 @@ import '../support/programme_session_authoring_test_support.dart';
 
 void main() {
   const cloneService = SessionCloneService();
+  const resolver = ProtocolDraftBlockResolver();
 
   group('SessionCloneService', () {
     test('creates independent ProtocolDraft and step objects', () {
@@ -27,6 +29,12 @@ void main() {
       expect(identical(clone.steps.first, source.steps.first), isFalse);
       expect(clone.steps.first.persistedId, isNull);
       expect(clone.steps.first.localId, isNot(source.steps.first.localId));
+      expect(clone.blocks, isNotEmpty);
+      expect(clone.blocks.first.persistedId, isNull);
+      expect(
+        resolver.resolveBlocks(source).first.localId,
+        isNot(clone.blocks.first.localId),
+      );
     });
 
     test('source remains unchanged after clone edits', () {

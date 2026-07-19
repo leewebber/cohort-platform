@@ -11,8 +11,9 @@ import '../../../models/protocol_metadata_vocabulary.dart';
 import '../controllers/session_builder_editing_state.dart';
 import '../models/session_builder_constants.dart';
 import '../models/session_builder_display_context.dart';
+import 'add_block_sheet.dart';
+import 'session_block_editor_card.dart';
 import 'session_builder_form_widgets.dart';
-import 'session_builder_step_editor_card.dart';
 
 /// Route-independent shared authoring presentation for Protocol/Session drafts.
 ///
@@ -285,52 +286,92 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_editing.steps.isEmpty)
+              if (_editing.blocks.isEmpty)
                 Text(
                   display.useCoachFacingTerminology
-                      ? 'No blocks yet. Add your first exercise or instruction.'
-                      : 'No steps yet. Add the first movement or instruction.',
+                      ? 'No blocks yet. Add your first warm-up, strength, or conditioning block.'
+                      : 'No blocks yet. Add the first session block.',
                   style: CohortTextStyles.body,
                 ),
-              for (var index = 0; index < _editing.steps.length; index++) ...[
+              for (var index = 0; index < _editing.blocks.length; index++) ...[
                 if (index > 0) const SizedBox(height: CohortSpacing.md),
-                SessionBuilderStepEditorCard(
-                  key: ValueKey(_editing.steps[index].localId),
-                  step: _editing.steps[index],
+                SessionBlockEditorCard(
+                  key: ValueKey(_editing.blocks[index].localId),
+                  block: _editing.blocks[index],
                   exercises: widget.exercises,
                   useCoachLabels: display.useCoachFacingTerminology,
                   canMoveUp: index > 0,
-                  canMoveDown: index < _editing.steps.length - 1,
+                  canMoveDown: index < _editing.blocks.length - 1,
                   onChanged: (updated) => _setStateAndEmit(
-                    () => _editing.updateStep(updated),
+                    () => _editing.updateBlock(updated),
                   ),
-                  onTitleCustomised: () => _editing.markTitleCustomised(
-                    _editing.steps[index].localId,
-                  ),
-                  onExerciseSelected: (exercise, currentTitle) {
-                    _setStateAndEmit(
-                      () => _editing.onExerciseSelected(
-                        localId: _editing.steps[index].localId,
-                        exercise: exercise,
-                        currentTitle: currentTitle,
-                      ),
-                    );
-                  },
                   onMoveUp: () => _setStateAndEmit(
-                    () => _editing.moveStep(_editing.steps[index].localId, -1),
+                    () => _editing.moveBlock(_editing.blocks[index].localId, -1),
                   ),
                   onMoveDown: () => _setStateAndEmit(
-                    () => _editing.moveStep(_editing.steps[index].localId, 1),
+                    () => _editing.moveBlock(_editing.blocks[index].localId, 1),
+                  ),
+                  onDuplicate: () => _setStateAndEmit(
+                    () => _editing.duplicateBlock(_editing.blocks[index].localId),
                   ),
                   onDelete: () => _setStateAndEmit(
-                    () => _editing.deleteStep(_editing.steps[index].localId),
+                    () => _editing.deleteBlock(_editing.blocks[index].localId),
+                  ),
+                  onWorkoutFormatChanged: (format) => _setStateAndEmit(
+                    () => _editing.updateWorkoutFormat(
+                      _editing.blocks[index].localId,
+                      format,
+                    ),
+                  ),
+                  onTimerConfigurationChanged: (configuration) => _setStateAndEmit(
+                    () => _editing.updateTimerConfiguration(
+                      _editing.blocks[index].localId,
+                      configuration,
+                    ),
+                  ),
+                  onAddExercise: (exercise) => _setStateAndEmit(
+                    () => _editing.addExerciseLink(
+                      _editing.blocks[index].localId,
+                      exercise,
+                    ),
+                  ),
+                  onRemoveExercise: (linkLocalId) => _setStateAndEmit(
+                    () => _editing.removeExerciseLink(
+                      _editing.blocks[index].localId,
+                      linkLocalId,
+                    ),
+                  ),
+                  onMoveExerciseUp: (linkLocalId) => _setStateAndEmit(
+                    () => _editing.moveExerciseLink(
+                      _editing.blocks[index].localId,
+                      linkLocalId,
+                      -1,
+                    ),
+                  ),
+                  onMoveExerciseDown: (linkLocalId) => _setStateAndEmit(
+                    () => _editing.moveExerciseLink(
+                      _editing.blocks[index].localId,
+                      linkLocalId,
+                      1,
+                    ),
+                  ),
+                  onExerciseLabelChanged: (linkLocalId, label) => _setStateAndEmit(
+                    () => _editing.updateExerciseLinkLabel(
+                      _editing.blocks[index].localId,
+                      linkLocalId,
+                      label,
+                    ),
                   ),
                 ),
               ],
               const SizedBox(height: CohortSpacing.lg),
               CohortButton(
                 label: display.addStepLabel,
-                onPressed: () => _setStateAndEmit(_editing.addStep),
+                onPressed: () async {
+                  final blockType = await showAddBlockSheet(context);
+                  if (blockType == null || !mounted) return;
+                  _setStateAndEmit(() => _editing.addBlock(blockType));
+                },
               ),
             ],
           ),

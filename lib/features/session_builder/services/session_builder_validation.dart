@@ -1,9 +1,13 @@
 import '../../../models/protocol_draft.dart';
-import '../../../models/protocol_step_draft.dart';
+import '../services/protocol_draft_block_resolver.dart';
+import 'session_block_validation.dart';
 
 /// Validation tiers for Session Builder — separate from publish persistence rules.
 class SessionBuilderValidation {
   SessionBuilderValidation._();
+
+  static const _blockResolver = ProtocolDraftBlockResolver();
+  static const _blockValidation = SessionBlockValidation();
 
   /// Minimum checks before opening in-memory preview.
   static List<String> previewReadinessMessages(ProtocolDraft draft) {
@@ -17,11 +21,12 @@ class SessionBuilderValidation {
       messages.add('Choose a session type before previewing.');
     }
 
-    if (draft.steps.isEmpty) {
-      messages.add('Add at least one block or exercise before previewing.');
-    } else {
-      messages.addAll(_stepMessages(draft.steps));
-    }
+    messages.addAll(
+      _blockValidation.validateSession(
+        name: draft.name,
+        blocks: _blockResolver.resolveBlocks(draft),
+      ),
+    );
 
     return messages;
   }
@@ -39,20 +44,5 @@ class SessionBuilderValidation {
 
   static bool canPreview(ProtocolDraft draft) {
     return previewReadinessMessages(draft).isEmpty;
-  }
-
-  static List<String> _stepMessages(List<ProtocolStepDraft> steps) {
-    final messages = <String>[];
-    final ordered = List<ProtocolStepDraft>.from(steps)
-      ..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
-
-    for (var index = 0; index < ordered.length; index++) {
-      final step = ordered[index];
-      if (step.title.trim().isEmpty) {
-        messages.add('Block ${index + 1} needs a title.');
-      }
-    }
-
-    return messages;
   }
 }

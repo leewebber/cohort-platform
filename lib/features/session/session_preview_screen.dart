@@ -5,6 +5,9 @@ import '../../core/theme/text_styles.dart';
 import '../../core/widgets/section_title.dart';
 import '../../core/widgets/session_progress_bar.dart';
 import '../../core/widgets/session_step_card.dart';
+import '../../features/session_builder/services/protocol_draft_block_resolver.dart';
+import '../../features/session_builder/services/session_execution_plan_builder.dart';
+import '../../features/session_builder/widgets/session_block_preview_list.dart';
 import '../../models/circuit_session_plan.dart';
 import '../../models/interval_session_plan.dart';
 import '../../models/protocol.dart';
@@ -38,6 +41,8 @@ class SessionPreviewScreen extends StatefulWidget {
 }
 
 class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
+  static const _blockResolver = ProtocolDraftBlockResolver();
+  static const _executionPlanBuilder = SessionExecutionPlanBuilder();
   static const _executionRouter = SessionExecutionRouter();
   static const _intervalPlanBuilder = IntervalSessionPlanBuilder();
   static const _circuitPlanBuilder = CircuitSessionPlanBuilder();
@@ -135,6 +140,15 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
                 style: CohortTextStyles.h1,
               ),
               const SizedBox(height: CohortSpacing.xl),
+              SessionBlockPreviewList(
+                plan: _executionPlanBuilder.build(
+                  sessionTitle: _sessionTitle,
+                  blocks: _blockResolver.resolveBlocks(widget.draft),
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.xl),
+              const SectionTitle('Execution preview'),
+              const SizedBox(height: CohortSpacing.md),
               if (intervalPlanError != null)
                 Text(
                   intervalPlanError,
@@ -269,15 +283,17 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   }
 
   static List<SessionStep> _stepsFromDraft(ProtocolDraft draft) {
-    final ordered = List<ProtocolStepDraft>.from(draft.steps)
-      ..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
+    final ordered = List<ProtocolStepDraft>.from(
+      _blockResolver.resolveSteps(draft),
+    )..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
 
     return ordered.map(_sessionStepFromDraft).toList(growable: false);
   }
 
   static List<ProtocolStep> _protocolStepsFromDraft(ProtocolDraft draft) {
-    final ordered = List<ProtocolStepDraft>.from(draft.steps)
-      ..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
+    final ordered = List<ProtocolStepDraft>.from(
+      _blockResolver.resolveSteps(draft),
+    )..sort((a, b) => a.stepOrder.compareTo(b.stepOrder));
 
     return ordered
         .map(

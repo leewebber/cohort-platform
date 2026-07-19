@@ -1,11 +1,17 @@
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_step_draft.dart';
+import '../../../models/session_block.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../models/cohort_protocol_copy_destination.dart';
+import 'protocol_draft_block_resolver.dart';
 
 /// Deep-clones Cohort Protocol content into independent coach Session drafts.
 class SessionCloneService {
-  const SessionCloneService();
+  const SessionCloneService({
+    ProtocolDraftBlockResolver? blockResolver,
+  }) : _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver();
+
+  final ProtocolDraftBlockResolver _blockResolver;
 
   static const localCloneIdPrefix = 'local-copy-session-';
 
@@ -31,6 +37,15 @@ class SessionCloneService {
         : TrainingAuthoringScope.coachPrivate;
 
     final copiedName = _copiedSessionName(source.name);
+    final sourceBlocks = _blockResolver.resolveBlocks(source);
+    final clonedBlocks = sourceBlocks
+        .asMap()
+        .entries
+        .map(
+          (entry) => entry.value.deepClone(position: entry.key + 1),
+        )
+        .toList(growable: false);
+
     final clonedSteps = source.steps
         .asMap()
         .entries
@@ -45,6 +60,7 @@ class SessionCloneService {
     return ProtocolDraft(
       protocolId: newContentId,
       name: copiedName,
+      blocks: clonedBlocks,
       steps: clonedSteps,
       published: destination == CohortProtocolCopyDestination.sessionLibrary,
       contentKind: TrainingContentKind.session,

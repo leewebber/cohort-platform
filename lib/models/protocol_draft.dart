@@ -1,4 +1,5 @@
 import 'protocol_step_draft.dart';
+import 'session_block.dart';
 import 'training_content_vocabulary.dart';
 
 /// Editable in-memory representation of a protocol before save.
@@ -10,6 +11,7 @@ class ProtocolDraft {
     required this.protocolId,
     required this.name,
     required this.steps,
+    this.blocks = const [],
     this.published = false,
     this.contentKind = TrainingContentKind.cohortProtocol,
     this.authoringScope = TrainingAuthoringScope.cohortGlobal,
@@ -46,6 +48,8 @@ class ProtocolDraft {
   final String protocolId;
   final String name;
   final List<ProtocolStepDraft> steps;
+  /// Modular Session blocks (M6). Authoring source of truth when non-empty.
+  final List<SessionBlock> blocks;
   final bool published;
 
   final TrainingContentKind contentKind;
@@ -84,6 +88,7 @@ class ProtocolDraft {
     String? protocolId,
     String? name,
     List<ProtocolStepDraft>? steps,
+    List<SessionBlock>? blocks,
     bool? published,
     TrainingContentKind? contentKind,
     TrainingAuthoringScope? authoringScope,
@@ -120,6 +125,7 @@ class ProtocolDraft {
       protocolId: protocolId ?? this.protocolId,
       name: name ?? this.name,
       steps: steps ?? this.steps,
+      blocks: blocks ?? this.blocks,
       published: published ?? this.published,
       contentKind: contentKind ?? this.contentKind,
       authoringScope: authoringScope ?? this.authoringScope,
