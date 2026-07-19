@@ -29,6 +29,8 @@ class SessionBlock {
   final String? coachNotes;
   final int position;
 
+  String get stableId => persistedId ?? 'legacy-$position';
+
   SessionBlock copyWith({
     String? localId,
     String? persistedId,

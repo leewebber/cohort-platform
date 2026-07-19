@@ -142,6 +142,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
               const SizedBox(height: CohortSpacing.xl),
               SessionBlockPreviewList(
                 plan: _executionPlanBuilder.build(
+                  sessionId: widget.draft.protocolId,
                   sessionTitle: _sessionTitle,
                   blocks: _blockResolver.resolveBlocks(widget.draft),
                 ),

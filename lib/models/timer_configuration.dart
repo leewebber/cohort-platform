@@ -205,6 +205,9 @@ class TimerConfiguration {
     return messages;
   }
 
+  bool isValidForFormat(WorkoutFormat format) =>
+      validateForFormat(format).isEmpty;
+
   String summaryForFormat(WorkoutFormat format) {
     return switch (format) {
       WorkoutFormat.none => 'No timer',

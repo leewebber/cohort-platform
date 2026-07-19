@@ -10,7 +10,7 @@ import '../../../models/training_session_status.dart';
 import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/resolved_today_session.dart';
-import '../../session/session_player_screen.dart';
+import '../../session/screens/session_overview_screen.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
 import '../models/home_today_session_state.dart';
 import '../services/home_today_session_loader.dart';
@@ -198,14 +198,17 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     String? displayTitle,
     required int trainingSessionId,
     ProgrammeExecutionContext? programmeContext,
+    String? programmeContextLabel,
   }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => SessionPlayerScreen(
+        builder: (_) => SessionOverviewScreen(
           protocolId: protocolId,
           displayTitle: displayTitle,
           trainingSessionId: trainingSessionId,
           programmeContext: programmeContext,
+          programmeContextLabel: programmeContextLabel,
+          athleteId: widget.athleteId,
         ),
       ),
     );
@@ -226,6 +229,10 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
+        programmeContextLabel: HomeTodaySessionLabels.executableSubtitle(
+          state.resolution,
+          state.protocol,
+        ),
       );
       return;
     }
@@ -252,6 +259,10 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
+        programmeContextLabel: HomeTodaySessionLabels.executableSubtitle(
+          state.resolution,
+          state.protocol,
+        ),
       );
     } catch (error, stackTrace) {
       debugPrint('[Begin] programme session failed: $error');

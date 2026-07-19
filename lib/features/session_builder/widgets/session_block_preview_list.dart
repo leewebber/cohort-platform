@@ -4,6 +4,7 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../session/models/session_execution_plan.dart';
 import '../services/session_execution_plan_builder.dart';
 
 class SessionBlockPreviewList extends StatelessWidget {
@@ -87,11 +88,11 @@ class _BlockPreviewCard extends StatelessWidget {
               ),
             ),
           ],
-          if (block.linkedExerciseSummaries.isNotEmpty) ...[
+          if (block.linkedExercises.isNotEmpty) ...[
             const SizedBox(height: CohortSpacing.md),
             Text('Linked exercises', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.xs),
-            for (final exercise in block.linkedExerciseSummaries)
+            for (final exercise in block.linkedExercises)
               Padding(
                 padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
                 child: Text(exercise.displayName, style: CohortTextStyles.body),
