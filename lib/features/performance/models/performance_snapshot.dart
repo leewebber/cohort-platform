@@ -50,6 +50,7 @@ class BlockPerformanceSnapshot {
     this.timerSummary,
     this.coachNotes,
     this.exercises = const [],
+    this.performanceCaptureMode,
   });
 
   final String sourceBlockId;
@@ -61,6 +62,7 @@ class BlockPerformanceSnapshot {
   final String? timerSummary;
   final String? coachNotes;
   final List<ExercisePerformanceSnapshot> exercises;
+  final String? performanceCaptureMode;
 
   Map<String, dynamic> toJson() => {
         'schemaVersion': 1,
@@ -72,6 +74,8 @@ class BlockPerformanceSnapshot {
         'position': position,
         if (timerSummary != null) 'timerSummary': timerSummary,
         if (coachNotes != null) 'coachNotes': coachNotes,
+        if (performanceCaptureMode != null)
+          'performanceCaptureMode': performanceCaptureMode,
         'exercises': exercises.map((e) => e.toJson()).toList(),
       };
 
@@ -88,6 +92,7 @@ class BlockPerformanceSnapshot {
           : int.tryParse(json['position']?.toString() ?? '') ?? 0,
       timerSummary: _trim(json['timerSummary']),
       coachNotes: _trim(json['coachNotes']),
+      performanceCaptureMode: _trim(json['performanceCaptureMode']),
       exercises: exercisesJson is List
           ? exercisesJson
               .whereType<Map>()

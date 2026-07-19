@@ -188,6 +188,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     final activeBlock = state.activeBlock;
     final activeDraft =
         activeBlock == null ? null : _blockDraft(activeBlock.blockId);
+    final isSingleBlock = state.totalBlocks <= 1;
 
     return Scaffold(
       body: SafeArea(
@@ -212,44 +213,46 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                 completed: state.completedCount,
               ),
               const SizedBox(height: CohortSpacing.lg),
-              Row(
-                children: [
-                  Expanded(
-                    child: CohortButton(
-                      label: 'Previous',
-                      onPressed: activeIndex > 0
-                          ? () {
-                              _controller.goToPreviousBlock();
-                              _performanceController.setActiveBlock(
-                                _controller.state.activeBlock?.blockId,
-                              );
-                              _persistDraft();
-                              _refresh();
-                            }
-                          : () {},
+              if (!isSingleBlock) ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: CohortButton(
+                        label: 'Previous',
+                        onPressed: activeIndex > 0
+                            ? () {
+                                _controller.goToPreviousBlock();
+                                _performanceController.setActiveBlock(
+                                  _controller.state.activeBlock?.blockId,
+                                );
+                                _persistDraft();
+                                _refresh();
+                              }
+                            : () {},
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: CohortSpacing.sm),
-                  Expanded(
-                    child: CohortButton(
-                      label: 'Next',
-                      onPressed: activeIndex < state.totalBlocks - 1
-                          ? () {
-                              _controller.goToNextBlock();
-                              _performanceController.setActiveBlock(
-                                _controller.state.activeBlock?.blockId,
-                              );
-                              _persistDraft();
-                              _refresh();
-                            }
-                          : () {},
+                    const SizedBox(width: CohortSpacing.sm),
+                    Expanded(
+                      child: CohortButton(
+                        label: 'Next',
+                        onPressed: activeIndex < state.totalBlocks - 1
+                            ? () {
+                                _controller.goToNextBlock();
+                                _performanceController.setActiveBlock(
+                                  _controller.state.activeBlock?.blockId,
+                                );
+                                _persistDraft();
+                                _refresh();
+                              }
+                            : () {},
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              Text('CURRENT BLOCK', style: CohortTextStyles.eyebrow),
-              const SizedBox(height: CohortSpacing.md),
+                  ],
+                ),
+                const SizedBox(height: CohortSpacing.xl),
+                Text('CURRENT BLOCK', style: CohortTextStyles.eyebrow),
+                const SizedBox(height: CohortSpacing.md),
+              ],
               if (activeBlock != null)
                 AthleteBlockCard(
                   block: activeBlock,
@@ -313,38 +316,40 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                           },
                         ),
                 ),
-              const SizedBox(height: CohortSpacing.xl),
-              Text('ALL BLOCKS', style: CohortTextStyles.eyebrow),
-              const SizedBox(height: CohortSpacing.md),
-              for (var index = 0; index < state.plan.blocks.length; index++) ...[
-                if (index > 0) const SizedBox(height: CohortSpacing.md),
-                Builder(
-                  builder: (context) {
-                    final block = state.plan.blocks[index];
-                    final isActive = index == activeIndex;
-                    return AthleteBlockCard(
-                      block: block,
-                      isExpanded:
-                          state.isBlockExpanded(block.blockId) || isActive,
-                      isActive: isActive,
-                      isComplete: state.isBlockComplete(block.blockId),
-                      onToggleExpanded: () {
-                        _controller.toggleBlockExpanded(block.blockId);
-                        if (!isActive) _controller.goToBlock(index);
-                        _performanceController.setActiveBlock(block.blockId);
-                        _persistDraft();
-                        _refresh();
-                      },
-                      onMarkComplete: () => _syncBlockComplete(block.blockId),
-                      onReopen: () => _syncBlockReopen(block.blockId),
-                      onLaunchTimer: block.hasTimer
-                          ? () => _launchTimer(block)
-                          : null,
-                      onOpenExercise: _openExercise,
-                      showActions: isActive,
-                    );
-                  },
-                ),
+              if (!isSingleBlock) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                Text('ALL BLOCKS', style: CohortTextStyles.eyebrow),
+                const SizedBox(height: CohortSpacing.md),
+                for (var index = 0; index < state.plan.blocks.length; index++) ...[
+                  if (index > 0) const SizedBox(height: CohortSpacing.md),
+                  Builder(
+                    builder: (context) {
+                      final block = state.plan.blocks[index];
+                      final isActive = index == activeIndex;
+                      return AthleteBlockCard(
+                        block: block,
+                        isExpanded:
+                            state.isBlockExpanded(block.blockId) || isActive,
+                        isActive: isActive,
+                        isComplete: state.isBlockComplete(block.blockId),
+                        onToggleExpanded: () {
+                          _controller.toggleBlockExpanded(block.blockId);
+                          if (!isActive) _controller.goToBlock(index);
+                          _performanceController.setActiveBlock(block.blockId);
+                          _persistDraft();
+                          _refresh();
+                        },
+                        onMarkComplete: () => _syncBlockComplete(block.blockId),
+                        onReopen: () => _syncBlockReopen(block.blockId),
+                        onLaunchTimer: block.hasTimer
+                            ? () => _launchTimer(block)
+                            : null,
+                        onOpenExercise: _openExercise,
+                        showActions: isActive,
+                      );
+                    },
+                  ),
+                ],
               ],
               const SizedBox(height: CohortSpacing.xl),
               CohortButton(label: 'Finish Session', onPressed: _finishSession),

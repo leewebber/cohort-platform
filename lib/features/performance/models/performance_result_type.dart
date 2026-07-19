@@ -6,6 +6,7 @@ enum PerformanceResultType {
   interval,
   distance,
   duration,
+  endurance,
   rounds,
   customMetric,
 }
@@ -27,6 +28,8 @@ extension PerformanceResultTypeDb on PerformanceResultType {
         return 'distance';
       case PerformanceResultType.duration:
         return 'duration';
+      case PerformanceResultType.endurance:
+        return 'endurance';
       case PerformanceResultType.rounds:
         return 'rounds';
       case PerformanceResultType.customMetric:
@@ -48,6 +51,8 @@ extension PerformanceResultTypeDb on PerformanceResultType {
         return PerformanceResultType.distance;
       case 'duration':
         return PerformanceResultType.duration;
+      case 'endurance':
+        return PerformanceResultType.endurance;
       case 'rounds':
         return PerformanceResultType.rounds;
       case 'custom_metric':

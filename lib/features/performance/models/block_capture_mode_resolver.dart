@@ -1,3 +1,4 @@
+import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/workout_format.dart';
 import '../../session/models/session_execution_plan.dart';
@@ -8,6 +9,9 @@ class BlockCaptureModeResolver {
   const BlockCaptureModeResolver._();
 
   static BlockCaptureMode resolveForBlock(SessionExecutionBlock block) {
+    final explicit = _explicitCaptureMode(block.performanceCaptureMode);
+    if (explicit != null) return explicit;
+
     return resolve(
       blockType: block.blockType,
       workoutFormat: block.workoutFormat,
@@ -15,6 +19,23 @@ class BlockCaptureModeResolver {
       content: block.content,
       hasTimer: block.hasTimer,
     );
+  }
+
+  static BlockCaptureMode? _explicitCaptureMode(
+    BlockPerformanceCaptureMode mode,
+  ) {
+    if (mode == BlockPerformanceCaptureMode.automatic) return null;
+    return switch (mode) {
+      BlockPerformanceCaptureMode.completion => BlockCaptureMode.completion,
+      BlockPerformanceCaptureMode.strength => BlockCaptureMode.strength,
+      BlockPerformanceCaptureMode.endurance => BlockCaptureMode.endurance,
+      BlockPerformanceCaptureMode.amrap => BlockCaptureMode.amrap,
+      BlockPerformanceCaptureMode.forTime => BlockCaptureMode.forTime,
+      BlockPerformanceCaptureMode.intervals => BlockCaptureMode.interval,
+      BlockPerformanceCaptureMode.rounds => BlockCaptureMode.rounds,
+      BlockPerformanceCaptureMode.customMetric => BlockCaptureMode.customMetric,
+      BlockPerformanceCaptureMode.automatic => null,
+    };
   }
 
   static BlockCaptureMode resolve({
@@ -49,8 +70,7 @@ class BlockCaptureModeResolver {
       return BlockCaptureMode.strength;
     }
 
-    if (blockType == SessionBlockType.custom &&
-        _hasStructuredEndurancePrescription(content)) {
+    if (_hasStructuredEndurancePrescription(content)) {
       return BlockCaptureMode.endurance;
     }
 
@@ -94,7 +114,7 @@ class BlockCaptureModeResolver {
       case BlockCaptureMode.interval:
         return PerformanceResultType.interval;
       case BlockCaptureMode.endurance:
-        return PerformanceResultType.distance;
+        return PerformanceResultType.endurance;
       case BlockCaptureMode.rounds:
         return PerformanceResultType.rounds;
       case BlockCaptureMode.customMetric:
@@ -119,7 +139,7 @@ class BlockCaptureModeResolver {
           totalIntervals: block.timerConfiguration?.rounds,
         );
       case BlockCaptureMode.endurance:
-        return const DistanceResultData();
+        return const EnduranceResultData();
       case BlockCaptureMode.rounds:
         return const RoundsResultData();
       case BlockCaptureMode.customMetric:

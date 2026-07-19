@@ -12,13 +12,13 @@ class SessionCompleteScreen extends StatelessWidget {
   const SessionCompleteScreen({
     super.key,
     required this.state,
-    required this.onDone,
     this.savedRecord,
+    this.onDone,
   });
 
   final ActiveSessionState state;
-  final VoidCallback onDone;
   final TrainingSessionRecord? savedRecord;
+  final VoidCallback? onDone;
 
   String? _elapsedLabel() {
     final started = state.startedAt;
@@ -29,6 +29,14 @@ class SessionCompleteScreen extends StatelessWidget {
     final seconds = duration.inSeconds % 60;
     if (minutes > 0) return '$minutes min ${seconds}s';
     return '${seconds}s';
+  }
+
+  void _handleDone(BuildContext context) {
+    if (onDone != null) {
+      onDone!();
+      return;
+    }
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override
@@ -61,7 +69,10 @@ class SessionCompleteScreen extends StatelessWidget {
                 ),
               ],
               const Spacer(),
-              CohortButton(label: 'Done', onPressed: onDone),
+              CohortButton(
+                label: 'Done',
+                onPressed: () => _handleDone(context),
+              ),
               const SizedBox(height: CohortSpacing.lg),
             ],
           ),

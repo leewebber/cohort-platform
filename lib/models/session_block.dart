@@ -1,3 +1,4 @@
+import 'block_performance_capture_mode.dart';
 import 'session_block_exercise_link.dart';
 import 'session_block_type.dart';
 import 'timer_configuration.dart';
@@ -16,6 +17,7 @@ class SessionBlock {
     this.timerConfiguration,
     this.linkedExercises = const [],
     this.coachNotes,
+    this.performanceCaptureMode = BlockPerformanceCaptureMode.automatic,
   });
 
   final String localId;
@@ -28,6 +30,7 @@ class SessionBlock {
   final List<SessionBlockExerciseLink> linkedExercises;
   final String? coachNotes;
   final int position;
+  final BlockPerformanceCaptureMode performanceCaptureMode;
 
   String get stableId => persistedId ?? 'legacy-$position';
 
@@ -42,6 +45,7 @@ class SessionBlock {
     List<SessionBlockExerciseLink>? linkedExercises,
     String? coachNotes,
     int? position,
+    BlockPerformanceCaptureMode? performanceCaptureMode,
     bool clearTimerConfiguration = false,
     bool clearCoachNotes = false,
   }) {
@@ -58,6 +62,8 @@ class SessionBlock {
       linkedExercises: linkedExercises ?? this.linkedExercises,
       coachNotes: clearCoachNotes ? null : (coachNotes ?? this.coachNotes),
       position: position ?? this.position,
+      performanceCaptureMode:
+          performanceCaptureMode ?? this.performanceCaptureMode,
     );
   }
 
@@ -72,6 +78,7 @@ class SessionBlock {
       'timer_config': timerConfiguration?.toJson(),
       'coach_notes': _nullable(coachNotes),
       'position': position,
+      'performance_capture_mode': performanceCaptureMode.dbValue,
     };
   }
 
@@ -100,6 +107,9 @@ class SessionBlock {
       linkedExercises: linkedExercises,
       coachNotes: row['coach_notes']?.toString(),
       position: row['position'] as int? ?? 1,
+      performanceCaptureMode: BlockPerformanceCaptureModeDb.fromDb(
+        row['performance_capture_mode']?.toString(),
+      ),
     );
   }
 
@@ -114,6 +124,10 @@ class SessionBlock {
       content: '',
       workoutFormat: WorkoutFormat.none,
       position: position,
+      performanceCaptureMode: BlockPerformanceCaptureModeDb.resolveDefault(
+        blockType: blockType,
+        workoutFormat: WorkoutFormat.none,
+      ),
     );
   }
 
@@ -144,6 +158,7 @@ class SessionBlock {
       linkedExercises: clonedLinks,
       coachNotes: coachNotes,
       position: position,
+      performanceCaptureMode: performanceCaptureMode,
     );
   }
 

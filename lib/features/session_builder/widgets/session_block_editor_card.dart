@@ -4,6 +4,7 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/exercise.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_type.dart';
@@ -239,6 +240,20 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
                   orElse: () => block.workoutFormat,
                 );
                 widget.onWorkoutFormatChanged(format);
+              },
+            ),
+            SessionBuilderDropdown(
+              label: 'Performance capture',
+              value: block.performanceCaptureMode.coachLabel,
+              options: BlockPerformanceCaptureMode.values
+                  .map((mode) => mode.coachLabel)
+                  .toList(growable: false),
+              onChanged: (value) {
+                final mode = BlockPerformanceCaptureMode.values.firstWhere(
+                  (item) => item.coachLabel == value,
+                  orElse: () => block.performanceCaptureMode,
+                );
+                widget.onChanged(block.copyWith(performanceCaptureMode: mode));
               },
             ),
             WorkoutContentEditor(

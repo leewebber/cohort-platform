@@ -1,4 +1,5 @@
 import '../../../core/utils/database_uuid.dart';
+import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/workout_format.dart';
 import '../../programme/models/programme_execution_context.dart';
@@ -44,6 +45,7 @@ class PerformanceSnapshotBuilder {
               position: block.position,
               timerSummary: block.timerSummary,
               coachNotes: block.coachNotes,
+              performanceCaptureMode: block.performanceCaptureMode.dbValue,
               exercises: block.linkedExercises
                   .asMap()
                   .entries
@@ -72,6 +74,7 @@ class PerformanceSnapshotBuilder {
         position: block.position,
         timerSummary: block.timerSummary,
         coachNotes: block.coachNotes,
+        performanceCaptureMode: block.performanceCaptureMode.dbValue,
         exercises: block.linkedExercises
             .asMap()
             .entries

@@ -9,6 +9,8 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import 'performance_numeric_field.dart';
+import '../services/endurance_metrics_calculator.dart';
+import '../services/performance_result_summary_formatter.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
 
@@ -36,6 +38,31 @@ class PerformanceSaveIndicator extends StatelessWidget {
 }
 
 enum PerformanceSaveState { idle, saving, saved, error }
+
+class _MaterialSwitchListTile extends StatelessWidget {
+  const _MaterialSwitchListTile({
+    required this.title,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: SwitchListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(title),
+        value: value,
+        onChanged: onChanged,
+      ),
+    );
+  }
+}
 
 class SessionRpeSelector extends StatelessWidget {
   const SessionRpeSelector({
@@ -170,9 +197,9 @@ class _ResultEditorBody extends StatelessWidget {
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.endurance:
-        return _DistanceEditor(
-          result: blockDraft.resultData as DistanceResultData? ??
-              const DistanceResultData(),
+        return _EnduranceEditor(
+          result: blockDraft.resultData as EnduranceResultData? ??
+              const EnduranceResultData(),
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.rounds:
@@ -214,6 +241,8 @@ class _ResultEditorBody extends StatelessWidget {
       case PerformanceResultType.interval:
         return BlockCaptureMode.interval;
       case PerformanceResultType.distance:
+        return BlockCaptureMode.endurance;
+      case PerformanceResultType.endurance:
         return BlockCaptureMode.endurance;
       case PerformanceResultType.rounds:
         return BlockCaptureMode.rounds;
@@ -279,9 +308,8 @@ class _ForTimeEditor extends StatelessWidget {
             result.copyWith(elapsedSeconds: int.tryParse(value)),
           ),
         ),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: const Text('Completed'),
+        _MaterialSwitchListTile(
+          title: 'Completed',
           value: result.completed,
           onChanged: (value) => onChanged(result.copyWith(completed: value)),
         ),
@@ -310,6 +338,107 @@ class _IntervalEditor extends StatelessWidget {
       onChanged: (value) => onChanged(
         result.copyWith(intervalsCompleted: int.tryParse(value) ?? 0),
       ),
+    );
+  }
+}
+
+class _EnduranceEditor extends StatefulWidget {
+  const _EnduranceEditor({required this.result, required this.onChanged});
+
+  final EnduranceResultData result;
+  final ValueChanged<PerformanceResultData> onChanged;
+
+  @override
+  State<_EnduranceEditor> createState() => _EnduranceEditorState();
+}
+
+class _EnduranceEditorState extends State<_EnduranceEditor> {
+  late final TextEditingController _noteController;
+
+  @override
+  void initState() {
+    super.initState();
+    _noteController = TextEditingController(text: widget.result.note ?? '');
+  }
+
+  @override
+  void didUpdateWidget(covariant _EnduranceEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.result.note != oldWidget.result.note &&
+        widget.result.note != _noteController.text) {
+      _noteController.text = widget.result.note ?? '';
+    }
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  static const _units = ['km', 'mi', 'm'];
+
+  @override
+  Widget build(BuildContext context) {
+    final result = widget.result;
+    final paceOrSpeed = EnduranceMetricsCalculator.formatPaceOrSpeed(
+      distance: result.distance,
+      distanceUnit: result.distanceUnit,
+      durationSeconds: result.durationSeconds,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PerformanceNumericField(
+          label: 'Distance',
+          value: result.distance?.toString() ?? '',
+          allowDecimal: true,
+          onChanged: (value) => widget.onChanged(
+            result.copyWith(distance: double.tryParse(value)),
+          ),
+        ),
+        DropdownButtonFormField<String>(
+          value: _units.contains(result.distanceUnit) ? result.distanceUnit : 'km',
+          decoration: const InputDecoration(labelText: 'Distance unit'),
+          items: _units
+              .map(
+                (unit) => DropdownMenuItem(value: unit, child: Text(unit)),
+              )
+              .toList(growable: false),
+          onChanged: (value) {
+            if (value == null) return;
+            widget.onChanged(result.copyWith(distanceUnit: value));
+          },
+        ),
+        PerformanceNumericField(
+          label: 'Duration (seconds)',
+          value: result.durationSeconds?.toString() ?? '',
+          onChanged: (value) => widget.onChanged(
+            result.copyWith(durationSeconds: int.tryParse(value)),
+          ),
+        ),
+        if (paceOrSpeed != null) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text(paceOrSpeed, style: CohortTextStyles.small),
+        ],
+        PerformanceNumericField(
+          label: 'Average heart rate (optional)',
+          value: result.averageHeartRate?.toString() ?? '',
+          onChanged: (value) => widget.onChanged(
+            result.copyWith(averageHeartRate: int.tryParse(value)),
+          ),
+        ),
+        TextField(
+          controller: _noteController,
+          decoration: const InputDecoration(
+            labelText: 'Note (optional)',
+          ),
+          onChanged: (value) => widget.onChanged(
+            result.copyWith(note: value.trim().isEmpty ? null : value.trim()),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -402,19 +531,15 @@ class _CustomMetricEditor extends StatelessWidget {
 
 class _CompletionEditor extends StatelessWidget {
   const _CompletionEditor({required this.result, required this.onChanged});
+
   final PerformanceResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final completion =
-        result is CompletionResultData ? result as CompletionResultData : const CompletionResultData();
-    return SwitchListTile(
-      contentPadding: EdgeInsets.zero,
-      title: const Text('Completed'),
-      value: completion.completed,
-      onChanged: (value) =>
-          onChanged(completion.copyWith(completed: value)),
+    return Text(
+      'Use Mark block complete below when you finish this block.',
+      style: CohortTextStyles.small,
     );
   }
 }
@@ -571,34 +696,11 @@ class HistoricalBlockResultCard extends StatelessWidget {
           const SizedBox(height: CohortSpacing.sm),
           PrescribedPerformedSection(
             prescribed: block.blockSnapshot.content,
-            performed: _performedSummary(block),
+            performed: PerformanceResultSummaryFormatter.formatBlock(block),
           ),
         ],
       ),
     );
-  }
-
-  String _performedSummary(TrainingBlockResult block) {
-    final result = block.resultData;
-    if (result is AmrapResultData) {
-      return '${result.rounds} rounds + ${result.extraReps} reps';
-    }
-    if (result is ForTimeResultData && result.elapsedSeconds != null) {
-      return '${result.elapsedSeconds}s';
-    }
-    if (result is IntervalResultData) {
-      return '${result.intervalsCompleted} intervals';
-    }
-    if (result is DistanceResultData) {
-      return '${result.distance ?? '-'} ${result.distanceUnit}';
-    }
-    if (block.exerciseResults.any((e) => e.setResults.isNotEmpty)) {
-      final sets = block.exerciseResults
-          .expand((e) => e.setResults.where((s) => s.completed))
-          .length;
-      return '$sets sets logged';
-    }
-    return block.status.displayLabel;
   }
 }
 

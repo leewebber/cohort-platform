@@ -26,6 +26,8 @@ sealed class PerformanceResultData {
         return DistanceResultData.fromJson(json);
       case PerformanceResultType.duration:
         return DurationResultData.fromJson(json);
+      case PerformanceResultType.endurance:
+        return EnduranceResultData.fromJson(json);
       case PerformanceResultType.rounds:
         return RoundsResultData.fromJson(json);
       case PerformanceResultType.customMetric:
@@ -282,6 +284,67 @@ class DistanceResultData extends PerformanceResultData {
       distance: distance ?? this.distance,
       distanceUnit: distanceUnit ?? this.distanceUnit,
       durationSeconds: durationSeconds ?? this.durationSeconds,
+      note: note ?? this.note,
+    );
+  }
+}
+
+class EnduranceResultData extends PerformanceResultData {
+  const EnduranceResultData({
+    this.completed = true,
+    this.distance,
+    this.distanceUnit = 'km',
+    this.durationSeconds,
+    this.averageHeartRate,
+    this.note,
+  });
+
+  final bool completed;
+  final double? distance;
+  final String distanceUnit;
+  final int? durationSeconds;
+  final int? averageHeartRate;
+  final String? note;
+
+  @override
+  PerformanceResultType get resultType => PerformanceResultType.endurance;
+
+  @override
+  Map<String, dynamic> toJson() => {
+        'resultType': resultType.dbValue,
+        'completed': completed,
+        if (distance != null) 'distance': distance,
+        'distanceUnit': distanceUnit,
+        if (durationSeconds != null) 'durationSeconds': durationSeconds,
+        if (averageHeartRate != null) 'averageHeartRate': averageHeartRate,
+        if (note != null) 'note': note,
+      };
+
+  factory EnduranceResultData.fromJson(Map<String, dynamic> json) {
+    return EnduranceResultData(
+      completed: json['completed'] != false,
+      distance: _nullableDouble(json['distance']),
+      distanceUnit: _trim(json['distanceUnit']) ?? 'km',
+      durationSeconds: _nullableInt(json['durationSeconds']),
+      averageHeartRate: _nullableInt(json['averageHeartRate']),
+      note: _trim(json['note']),
+    );
+  }
+
+  EnduranceResultData copyWith({
+    bool? completed,
+    double? distance,
+    String? distanceUnit,
+    int? durationSeconds,
+    int? averageHeartRate,
+    String? note,
+  }) {
+    return EnduranceResultData(
+      completed: completed ?? this.completed,
+      distance: distance ?? this.distance,
+      distanceUnit: distanceUnit ?? this.distanceUnit,
+      durationSeconds: durationSeconds ?? this.durationSeconds,
+      averageHeartRate: averageHeartRate ?? this.averageHeartRate,
       note: note ?? this.note,
     );
   }

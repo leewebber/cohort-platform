@@ -1,3 +1,4 @@
+import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/exercise.dart';
 import '../../../models/protocol.dart';
 import '../../../models/session_block.dart';
@@ -30,6 +31,7 @@ class SessionExecutionBlock {
     this.timerSummary,
     this.linkedExercises = const [],
     this.coachNotes,
+    this.performanceCaptureMode = BlockPerformanceCaptureMode.automatic,
   });
 
   final String blockId;
@@ -42,6 +44,7 @@ class SessionExecutionBlock {
   final String? timerSummary;
   final List<SessionExecutionExerciseSummary> linkedExercises;
   final String? coachNotes;
+  final BlockPerformanceCaptureMode performanceCaptureMode;
 
   String get blockTypeLabel => blockType.displayLabel;
   String? get workoutFormatLabel =>
@@ -90,6 +93,7 @@ class SessionExecutionBlock {
       coachNotes: block.coachNotes?.trim().isEmpty == true
           ? null
           : block.coachNotes?.trim(),
+      performanceCaptureMode: block.performanceCaptureMode,
     );
   }
 

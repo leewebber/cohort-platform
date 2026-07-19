@@ -86,7 +86,6 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           builder: (_) => SessionCompleteScreen(
             state: widget.executionController.state,
             savedRecord: result.record,
-            onDone: () => Navigator.of(context).popUntil((route) => route.isFirst),
           ),
         ),
       );

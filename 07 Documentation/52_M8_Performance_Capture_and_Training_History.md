@@ -57,10 +57,15 @@ Typed application models in `lib/features/performance/models/performance_result_
 - `IntervalResultData`
 - `DistanceResultData`
 - `DurationResultData`
+- `EnduranceResultData` *(M8.1 — distance, duration, optional HR; pace derived at display)*
 - `RoundsResultData`
 - `CustomMetricResultData`
 
-Capture mode defaults are resolved by `BlockCaptureModeResolver` from block type, workout format, and linked exercises. Workout text is never parsed into sets/reps.
+Capture mode defaults are resolved by `BlockCaptureModeResolver` from explicit block `performance_capture_mode` (M8.1), block type, workout format, and structured legacy labels. Workout free text is never parsed into sets/reps.
+
+Modern app-authored blocks may persist explicit performance capture mode via Session Builder. Snapshots record the mode for historical rendering.
+
+Historical summaries use `PerformanceResultSummaryFormatter` (M8.1) and adapt wording to the recorded result type.
 
 ## Runtime flow
 

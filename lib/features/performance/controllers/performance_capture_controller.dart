@@ -210,6 +210,7 @@ class PerformanceCaptureController {
         status: TrainingBlockResultStatus.completed,
         startedAt: block.startedAt ?? DateTime.now().toUtc(),
         completedAt: DateTime.now().toUtc(),
+        resultData: _syncResultCompletion(block.resultData, completed: true),
       );
     });
   }
@@ -220,6 +221,7 @@ class PerformanceCaptureController {
       (block) => block.copyWith(
         status: TrainingBlockResultStatus.inProgress,
         completedAt: null,
+        resultData: _syncResultCompletion(block.resultData, completed: false),
       ),
     );
   }
@@ -296,5 +298,22 @@ class PerformanceCaptureController {
   static String? _trim(String? value) {
     final trimmed = value?.trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  static PerformanceResultData _syncResultCompletion(
+    PerformanceResultData? resultData, {
+    required bool completed,
+  }) {
+    final result = resultData ?? const CompletionResultData();
+    if (result is CompletionResultData) {
+      return result.copyWith(completed: completed);
+    }
+    if (result is EnduranceResultData) {
+      return result.copyWith(completed: completed);
+    }
+    if (result is ForTimeResultData) {
+      return result.copyWith(completed: completed);
+    }
+    return result;
   }
 }

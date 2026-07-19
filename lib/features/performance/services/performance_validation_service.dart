@@ -91,6 +91,21 @@ class PerformanceValidationService {
         errors['$prefix.durationSeconds'] =
             'Duration must be greater than zero.';
       }
+    } else if (resultData is EnduranceResultData) {
+      if (resultData.distance != null && resultData.distance! <= 0) {
+        errors['$prefix.distance'] = 'Distance must be greater than zero.';
+      }
+      if (resultData.durationSeconds != null &&
+          resultData.durationSeconds! <= 0) {
+        errors['$prefix.durationSeconds'] =
+            'Duration must be greater than zero.';
+      }
+      if (resultData.averageHeartRate != null &&
+          (resultData.averageHeartRate! < 30 ||
+              resultData.averageHeartRate! > 250)) {
+        errors['$prefix.averageHeartRate'] =
+            'Average heart rate must be between 30 and 250 bpm.';
+      }
     } else if (resultData is DurationResultData) {
       if (resultData.durationSeconds != null &&
           resultData.durationSeconds! <= 0) {
