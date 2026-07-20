@@ -22,6 +22,9 @@ class AthleteBlockCard extends StatelessWidget {
     required this.onOpenExercise,
     this.showActions = true,
     this.performanceSection,
+    this.showBlockNavigation = false,
+    this.onPrevious,
+    this.onNext,
   });
 
   final SessionExecutionBlock block;
@@ -35,6 +38,9 @@ class AthleteBlockCard extends StatelessWidget {
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
   final bool showActions;
   final Widget? performanceSection;
+  final bool showBlockNavigation;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +101,39 @@ class AthleteBlockCard extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.md),
                 Text('Exercises', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.sm),
-                Wrap(
-                  spacing: CohortSpacing.sm,
-                  runSpacing: CohortSpacing.sm,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (final exercise in block.linkedExercises)
-                      LinkedExerciseChip(
-                        label: exercise.displayName,
-                        onTap: () => onOpenExercise(exercise),
+                      Semantics(
+                        button: true,
+                        label: 'Open exercise ${exercise.athleteLabel}',
+                        child: InkWell(
+                          onTap: () => onOpenExercise(exercise),
+                          borderRadius: BorderRadius.circular(4),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: CohortSpacing.xs,
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '• ',
+                                  style: CohortTextStyles.body.copyWith(
+                                    color: CohortColors.textSecondary,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    exercise.athleteLabel,
+                                    style: CohortTextStyles.body,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -116,6 +147,22 @@ class AthleteBlockCard extends StatelessWidget {
               if (performanceSection != null) ...[
                 const SizedBox(height: CohortSpacing.lg),
                 performanceSection!,
+              ],
+              if (showBlockNavigation) ...[
+                const SizedBox(height: CohortSpacing.md),
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: onPrevious,
+                      child: const Text('< Previous'),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: onNext,
+                      child: const Text('Next >'),
+                    ),
+                  ],
+                ),
               ],
               if (showActions) ...[
                 const SizedBox(height: CohortSpacing.lg),
@@ -132,7 +179,7 @@ class AthleteBlockCard extends StatelessWidget {
                       const SizedBox(width: CohortSpacing.sm),
                     Expanded(
                       child: CohortButton(
-                        label: isComplete ? 'Reopen block' : 'Mark complete',
+                        label: isComplete ? 'Reopen block' : 'Mark block complete',
                         onPressed: isComplete ? onReopen : onMarkComplete,
                       ),
                     ),
@@ -180,7 +227,7 @@ class SessionOverviewBlockSummary extends StatelessWidget {
                 ],
                 if (block.linkedExercises.isNotEmpty)
                   Text(
-                    '${block.linkedExercises.length} linked exercise${block.linkedExercises.length == 1 ? '' : 's'}',
+                    '${block.linkedExercises.length} exercise${block.linkedExercises.length == 1 ? '' : 's'}',
                     style: CohortTextStyles.small,
                   ),
               ],

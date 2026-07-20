@@ -25,6 +25,18 @@ class AthleteSessionMemoryStore {
   void clear(String sessionKey) {
     _sessions.remove(sessionKey);
   }
+
+  /// Clears in-memory session execution state for a protocol (developer reset).
+  int clearForProtocol(String protocolId) {
+    final suffix = ':$protocolId';
+    final keys = _sessions.keys
+        .where((key) => key.endsWith(suffix))
+        .toList(growable: false);
+    for (final key in keys) {
+      _sessions.remove(key);
+    }
+    return keys.length;
+  }
 }
 
 class SessionExecutionController {
@@ -64,7 +76,7 @@ class SessionExecutionController {
     final blockId = _state.plan.blocks[index].blockId;
     _state = _state.copyWith(
       activeBlockIndex: index,
-      expandedBlockIds: {..._state.expandedBlockIds, blockId},
+      expandedBlockIds: {blockId},
       sessionStatus: SessionExecutionStatus.inProgress,
     );
     _persist();
@@ -97,7 +109,7 @@ class SessionExecutionController {
       activeBlockIndex: nextIndex ?? _state.activeBlockIndex,
       expandedBlockIds: nextIndex == null
           ? _state.expandedBlockIds
-          : {..._state.expandedBlockIds, _state.plan.blocks[nextIndex].blockId},
+          : {_state.plan.blocks[nextIndex].blockId},
     );
     _persist();
   }

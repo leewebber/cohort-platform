@@ -32,6 +32,13 @@ abstract class PerformanceRecordStore {
     int limit = 25,
     int offset = 0,
   });
+
+  /// Developer-only scoped cleanup for founder acceptance test resets.
+  Future<int> deleteFounderScopedRecords({
+    required String athleteId,
+    required String sourceProtocolId,
+    String? assignmentId,
+  });
 }
 
 class PerformanceRecordStoreException implements Exception {

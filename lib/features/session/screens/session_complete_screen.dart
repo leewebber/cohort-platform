@@ -64,7 +64,7 @@ class SessionCompleteScreen extends StatelessWidget {
               if (savedRecord != null) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text(
-                  'Saved to training history (${savedRecord!.status.displayLabel}).',
+                  'Saved to training history.',
                   style: CohortTextStyles.body,
                 ),
               ],

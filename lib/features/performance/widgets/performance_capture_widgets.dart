@@ -4,10 +4,13 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../session/models/session_execution_plan.dart';
+import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../models/active_performance_draft.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
+import 'endurance_duration_field.dart';
 import 'performance_numeric_field.dart';
 import '../services/endurance_metrics_calculator.dart';
 import '../services/performance_result_summary_formatter.dart';
@@ -27,7 +30,7 @@ class PerformanceSaveIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = switch (state) {
-      PerformanceSaveState.idle => 'Draft ready',
+      PerformanceSaveState.idle => 'Ready to save',
       PerformanceSaveState.saving => 'Saving…',
       PerformanceSaveState.saved => 'Saved',
       PerformanceSaveState.error => errorMessage ?? 'Save failed',
@@ -80,6 +83,11 @@ class SessionRpeSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Session RPE (optional)', style: CohortTextStyles.cardTitle),
+        const SizedBox(height: CohortSpacing.xs),
+        Text(
+          'How hard did the session feel? 1 = very easy, 10 = maximal.',
+          style: CohortTextStyles.small,
+        ),
         const SizedBox(height: CohortSpacing.sm),
         Wrap(
           spacing: CohortSpacing.sm,
@@ -108,6 +116,7 @@ class BlockResultEditor extends StatelessWidget {
     required this.onDuplicateSet,
     required this.onRemoveSet,
     this.onApplyElapsedSeconds,
+    this.linkedExercises = const [],
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -121,9 +130,36 @@ class BlockResultEditor extends StatelessWidget {
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
+  final List<SessionExecutionExerciseSummary> linkedExercises;
+
+  static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
+    return _captureModeFor(blockDraft) != BlockCaptureMode.completion;
+  }
+
+  static BlockCaptureMode _captureModeFor(BlockPerformanceDraft blockDraft) {
+    if (blockDraft.captureMode != BlockCaptureMode.auto) {
+      return blockDraft.captureMode;
+    }
+    return switch (blockDraft.resultType) {
+      PerformanceResultType.strength => BlockCaptureMode.strength,
+      PerformanceResultType.amrap => BlockCaptureMode.amrap,
+      PerformanceResultType.forTime => BlockCaptureMode.forTime,
+      PerformanceResultType.interval => BlockCaptureMode.interval,
+      PerformanceResultType.distance => BlockCaptureMode.endurance,
+      PerformanceResultType.endurance => BlockCaptureMode.endurance,
+      PerformanceResultType.rounds => BlockCaptureMode.rounds,
+      PerformanceResultType.customMetric => BlockCaptureMode.customMetric,
+      PerformanceResultType.duration => BlockCaptureMode.endurance,
+      PerformanceResultType.completion => BlockCaptureMode.completion,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!showsCaptureFields(blockDraft)) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -131,6 +167,7 @@ class BlockResultEditor extends StatelessWidget {
         const SizedBox(height: CohortSpacing.sm),
         _ResultEditorBody(
           blockDraft: blockDraft,
+          linkedExercises: linkedExercises,
           onResultChanged: onResultChanged,
           onAddSet: onAddSet,
           onUpdateSet: onUpdateSet,
@@ -146,6 +183,7 @@ class BlockResultEditor extends StatelessWidget {
 class _ResultEditorBody extends StatelessWidget {
   const _ResultEditorBody({
     required this.blockDraft,
+    required this.linkedExercises,
     required this.onResultChanged,
     required this.onAddSet,
     required this.onUpdateSet,
@@ -155,6 +193,7 @@ class _ResultEditorBody extends StatelessWidget {
   });
 
   final BlockPerformanceDraft blockDraft;
+  final List<SessionExecutionExerciseSummary> linkedExercises;
   final ValueChanged<PerformanceResultData> onResultChanged;
   final void Function(String exerciseId) onAddSet;
   final void Function(
@@ -173,6 +212,7 @@ class _ResultEditorBody extends StatelessWidget {
       case BlockCaptureMode.strength:
         return _StrengthEditor(
           blockDraft: blockDraft,
+          linkedExercises: linkedExercises,
           onAddSet: onAddSet,
           onUpdateSet: onUpdateSet,
           onDuplicateSet: onDuplicateSet,
@@ -224,35 +264,7 @@ class _ResultEditorBody extends StatelessWidget {
   }
 
   BlockCaptureMode _effectiveCaptureMode(BlockPerformanceDraft blockDraft) {
-    if (blockDraft.captureMode != BlockCaptureMode.auto) {
-      return blockDraft.captureMode;
-    }
-    return _captureModeFromResultType(blockDraft.resultType);
-  }
-
-  BlockCaptureMode _captureModeFromResultType(PerformanceResultType resultType) {
-    switch (resultType) {
-      case PerformanceResultType.strength:
-        return BlockCaptureMode.strength;
-      case PerformanceResultType.amrap:
-        return BlockCaptureMode.amrap;
-      case PerformanceResultType.forTime:
-        return BlockCaptureMode.forTime;
-      case PerformanceResultType.interval:
-        return BlockCaptureMode.interval;
-      case PerformanceResultType.distance:
-        return BlockCaptureMode.endurance;
-      case PerformanceResultType.endurance:
-        return BlockCaptureMode.endurance;
-      case PerformanceResultType.rounds:
-        return BlockCaptureMode.rounds;
-      case PerformanceResultType.customMetric:
-        return BlockCaptureMode.customMetric;
-      case PerformanceResultType.duration:
-        return BlockCaptureMode.endurance;
-      case PerformanceResultType.completion:
-        return BlockCaptureMode.completion;
-    }
+    return BlockResultEditor._captureModeFor(blockDraft);
   }
 }
 
@@ -381,7 +393,7 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
   @override
   Widget build(BuildContext context) {
     final result = widget.result;
-    final paceOrSpeed = EnduranceMetricsCalculator.formatPaceOrSpeed(
+    final liveMetric = EnduranceMetricsCalculator.liveMetric(
       distance: result.distance,
       distanceUnit: result.distanceUnit,
       durationSeconds: result.durationSeconds,
@@ -411,16 +423,17 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
             widget.onChanged(result.copyWith(distanceUnit: value));
           },
         ),
-        PerformanceNumericField(
-          label: 'Duration (seconds)',
-          value: result.durationSeconds?.toString() ?? '',
-          onChanged: (value) => widget.onChanged(
-            result.copyWith(durationSeconds: int.tryParse(value)),
+        EnduranceDurationField(
+          durationSeconds: result.durationSeconds,
+          onDurationSecondsChanged: (seconds) => widget.onChanged(
+            result.copyWith(durationSeconds: seconds),
           ),
         ),
-        if (paceOrSpeed != null) ...[
+        if (liveMetric != null) ...[
           const SizedBox(height: CohortSpacing.sm),
-          Text(paceOrSpeed, style: CohortTextStyles.small),
+          Text(liveMetric.label, style: CohortTextStyles.eyebrow),
+          const SizedBox(height: CohortSpacing.xs),
+          Text(liveMetric.value, style: CohortTextStyles.body),
         ],
         PerformanceNumericField(
           label: 'Average heart rate (optional)',
@@ -537,16 +550,14 @@ class _CompletionEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Use Mark block complete below when you finish this block.',
-      style: CohortTextStyles.small,
-    );
+    return const SizedBox.shrink();
   }
 }
 
 class _StrengthEditor extends StatelessWidget {
   const _StrengthEditor({
     required this.blockDraft,
+    required this.linkedExercises,
     required this.onAddSet,
     required this.onUpdateSet,
     required this.onDuplicateSet,
@@ -554,6 +565,7 @@ class _StrengthEditor extends StatelessWidget {
   });
 
   final BlockPerformanceDraft blockDraft;
+  final List<SessionExecutionExerciseSummary> linkedExercises;
   final void Function(String exerciseId) onAddSet;
   final void Function(
     String exerciseId,
@@ -563,14 +575,27 @@ class _StrengthEditor extends StatelessWidget {
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
 
+  SessionExecutionExerciseSummary? _summaryFor(String exerciseId) {
+    for (final summary in linkedExercises) {
+      if (summary.exerciseId == exerciseId) return summary;
+    }
+    return null;
+  }
+
+  String _exerciseLabel(ExercisePerformanceDraft exercise) {
+    return AthleteExerciseLabelResolver.fromExerciseDraft(
+      exercise,
+      executionSummary: _summaryFor(exercise.sourceExerciseId),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final exercise in blockDraft.exerciseResults) ...[
-          Text(exercise.exerciseSnapshot.displayName,
-              style: CohortTextStyles.cardTitle),
+          Text(_exerciseLabel(exercise), style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.sm),
           for (final set in exercise.sets)
             Padding(
@@ -693,6 +718,20 @@ class HistoricalBlockResultCard extends StatelessWidget {
         children: [
           Text(block.blockSnapshot.title, style: CohortTextStyles.cardTitle),
           Text(block.status.displayLabel, style: CohortTextStyles.small),
+          if (block.exerciseResults.isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text('Exercises', style: CohortTextStyles.eyebrow),
+            for (final exercise in block.exerciseResults) ...[
+              const SizedBox(height: CohortSpacing.xs),
+              Text(
+                AthleteExerciseLabelResolver.fromExerciseResult(
+                  exercise,
+                  historical: true,
+                ),
+                style: CohortTextStyles.body,
+              ),
+            ],
+          ],
           const SizedBox(height: CohortSpacing.sm),
           PrescribedPerformedSection(
             prescribed: block.blockSnapshot.content,

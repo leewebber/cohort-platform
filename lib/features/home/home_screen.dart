@@ -456,6 +456,84 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // TODO(debug): Remove once programme-driven Home replaces manual projection.
+  Future<void> _installFounderAcceptanceProgramme() async {
+    try {
+      final result =
+          await ProgrammeDebugActions.installFounderAcceptanceProgramme();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result.summaryMessage)),
+      );
+      debugPrint('[FounderAcceptanceInstall] $result');
+    } catch (error, stackTrace) {
+      debugPrint('[FounderAcceptanceInstall] failed: $error');
+      debugPrint('[FounderAcceptanceInstall] stackTrace: $stackTrace');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Install failed: $error')),
+      );
+    }
+  }
+
+  // TODO(debug): Remove once programme-driven Home replaces manual projection.
+  Future<void> _assignFounderAcceptanceProgramme() async {
+    try {
+      final result =
+          await ProgrammeDebugActions.assignFounderAcceptanceProgramme();
+      if (result.resolvedTodaySession != null) {
+        ProgrammeDebugResolutionCache.store(result.resolvedTodaySession!);
+      }
+
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterAssign(result)) {
+        _refreshTodaySessionAfterDebug(
+          action: 'assign_founder',
+          source: 'founder_programme_assign',
+          successMessage: 'Founder Acceptance Programme assigned and synced',
+        );
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[FounderAcceptanceAssign] failed: $error');
+      debugPrint('[FounderAcceptanceAssign] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme-driven Home replaces manual projection.
+  Future<void> _resolveFounderAcceptanceProgramme() async {
+    try {
+      final resolution =
+          await ProgrammeDebugActions.resolveFounderAcceptanceProgramme();
+      ProgrammeDebugResolutionCache.store(resolution);
+      debugPrint('[FounderAcceptanceResolve] result: $resolution');
+    } catch (error, stackTrace) {
+      debugPrint('[FounderAcceptanceResolve] failed: $error');
+      debugPrint('[FounderAcceptanceResolve] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme progression is production-wired.
+  Future<void> _resetFounderAcceptanceProgrammeAssignment() async {
+    try {
+      final result =
+          await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment();
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(result)) {
+        _refreshTodaySessionAfterDebug(
+          action: 'reset_founder',
+          source: 'founder_programme_reset',
+          successMessage: 'Founder Acceptance Programme reset',
+        );
+      } else if (result.status == ProgrammeAssignmentOperationStatus.failed ||
+          result.status == ProgrammeAssignmentOperationStatus.noAssignment) {
+        debugPrint(
+          '[FounderAcceptanceReset] failed warnings=${result.warnings}',
+        );
+      }
+    } catch (error, stackTrace) {
+      debugPrint('[FounderAcceptanceReset] failed: $error');
+      debugPrint('[FounderAcceptanceReset] stackTrace: $stackTrace');
+    }
+  }
+
+  // TODO(debug): Remove once programme-driven Home replaces manual projection.
   Future<void> _assignTestProgramme() async {
     try {
       final result = await ProgrammeDebugActions.assignTestProgramme();
@@ -1125,6 +1203,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: _resetTestProgrammeAssignment,
                 child: const _HomeActionRow(
                   title: 'Reset Test Programme Assignment',
+                  subtitle:
+                      'Reset cursor to week 1 day_1 slot 1 and clear outcomes.',
+                  status: 'DEBUG',
+                ),
+              ),
+
+              const SizedBox(height: CohortSpacing.xl),
+              Text('Founder Acceptance', style: CohortTextStyles.eyebrow),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _installFounderAcceptanceProgramme,
+                child: const _HomeActionRow(
+                  title: 'Install Founder Acceptance Programme',
+                  subtitle:
+                      'Create or update M8 Modern Capture Test programme content.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _assignFounderAcceptanceProgramme,
+                child: const _HomeActionRow(
+                  title: 'Assign Founder Acceptance Programme',
+                  subtitle:
+                      'Assign FOUNDER-ACCEPTANCE-PROGRAMME v1 to dev athlete.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _resolveFounderAcceptanceProgramme,
+                child: const _HomeActionRow(
+                  title: 'Resolve Founder Acceptance Programme',
+                  subtitle:
+                      'Resolve only — never creates or repairs assignments.',
+                  status: 'DEBUG',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: _resetFounderAcceptanceProgrammeAssignment,
+                child: const _HomeActionRow(
+                  title: 'Reset Founder Acceptance Programme',
                   subtitle:
                       'Reset cursor to week 1 day_1 slot 1 and clear outcomes.',
                   status: 'DEBUG',

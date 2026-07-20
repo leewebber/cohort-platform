@@ -2,9 +2,22 @@ import '../../core/services/supabase_service.dart';
 import '../../models/session_block.dart';
 import '../../models/session_block_exercise_link.dart';
 
-class SessionBlockRepository {
+/// Persistence boundary for modular session blocks and linked exercises.
+abstract class SessionBlockRepository {
   const SessionBlockRepository();
 
+  Future<List<SessionBlock>> getSessionBlocks(String sessionId);
+
+  Future<void> replaceSessionBlocks({
+    required String sessionId,
+    required List<SessionBlock> blocks,
+  });
+}
+
+class SupabaseSessionBlockRepository extends SessionBlockRepository {
+  const SupabaseSessionBlockRepository();
+
+  @override
   Future<List<SessionBlock>> getSessionBlocks(String sessionId) async {
     final blockRows = await SupabaseService.client
         .from('session_blocks')
@@ -49,6 +62,7 @@ class SessionBlockRepository {
         .toList(growable: false);
   }
 
+  @override
   Future<void> replaceSessionBlocks({
     required String sessionId,
     required List<SessionBlock> blocks,

@@ -138,6 +138,31 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     return records;
   }
 
+  @override
+  Future<int> deleteFounderScopedRecords({
+    required String athleteId,
+    required String sourceProtocolId,
+    String? assignmentId,
+  }) async {
+    final filter = SupabaseService.client
+        .from('training_session_records')
+        .delete()
+        .eq('athlete_id', athleteId);
+
+    final response = assignmentId != null && assignmentId.isNotEmpty
+        ? await filter
+            .or(
+              'source_protocol_id.eq.$sourceProtocolId,'
+              'assignment_id.eq.$assignmentId',
+            )
+            .select('record_id')
+        : await filter
+            .eq('source_protocol_id', sourceProtocolId)
+            .select('record_id');
+
+    return (response as List).length;
+  }
+
   Future<void> _upsertRecordTree(TrainingSessionRecord record) async {
     await SupabaseService.client
         .from('training_session_records')

@@ -173,7 +173,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       case _SessionButtonState.inProgress:
         return 'In Progress';
       case _SessionButtonState.completed:
-        return 'Completed Today';
+        return 'Completed today';
     }
   }
 
@@ -184,7 +184,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       case _SessionButtonState.inProgress:
         return 'Resume';
       case _SessionButtonState.completed:
-        return 'View Session';
+        return 'View summary';
     }
   }
 

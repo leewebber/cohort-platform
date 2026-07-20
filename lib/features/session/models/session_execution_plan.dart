@@ -3,6 +3,7 @@ import '../../../models/exercise.dart';
 import '../../../models/protocol.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_exercise_link.dart';
+import '../services/athlete_exercise_label_resolver.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
@@ -11,12 +12,18 @@ class SessionExecutionExerciseSummary {
   const SessionExecutionExerciseSummary({
     required this.exerciseId,
     required this.displayName,
+    this.displayLabelOverride,
     this.exercise,
   });
 
   final String exerciseId;
   final String displayName;
+  final String? displayLabelOverride;
   final Exercise? exercise;
+
+  /// Athlete-facing label with resolver fallbacks.
+  String get athleteLabel =>
+      AthleteExerciseLabelResolver.fromExecutionSummary(this);
 }
 
 class SessionExecutionBlock {
@@ -73,6 +80,7 @@ class SessionExecutionBlock {
           (link) => SessionExecutionExerciseSummary(
             exerciseId: link.exerciseId,
             displayName: _displayName(link, exercisesById),
+            displayLabelOverride: link.displayLabelOverride,
             exercise: exercisesById[link.exerciseId],
           ),
         )
@@ -101,9 +109,10 @@ class SessionExecutionBlock {
     SessionBlockExerciseLink link,
     Map<String, Exercise> exercisesById,
   ) {
-    final override = link.displayLabelOverride?.trim();
-    if (override != null && override.isNotEmpty) return override;
-    return exercisesById[link.exerciseId]?.name ?? link.exerciseId;
+    return AthleteExerciseLabelResolver.fromExerciseLink(
+      link: link,
+      exercise: exercisesById[link.exerciseId],
+    );
   }
 }
 

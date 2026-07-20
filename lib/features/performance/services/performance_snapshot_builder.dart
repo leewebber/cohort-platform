@@ -3,6 +3,7 @@ import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/workout_format.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/active_performance_draft.dart';
 import '../models/block_capture_mode_resolver.dart';
@@ -13,6 +14,18 @@ import '../models/training_block_result_status.dart';
 
 class PerformanceSnapshotBuilder {
   const PerformanceSnapshotBuilder();
+
+  ExercisePerformanceSnapshot exerciseSnapshotFromSummary(
+    SessionExecutionExerciseSummary summary, {
+    required int position,
+  }) {
+    return ExercisePerformanceSnapshot(
+      sourceExerciseId: summary.exerciseId,
+      displayName: AthleteExerciseLabelResolver.fromExecutionSummary(summary),
+      labelOverride: summary.displayLabelOverride,
+      position: position,
+    );
+  }
 
   SessionPerformanceSnapshot buildSessionSnapshot({
     required SessionExecutionPlan plan,
@@ -50,9 +63,8 @@ class PerformanceSnapshotBuilder {
                   .asMap()
                   .entries
                   .map(
-                    (entry) => ExercisePerformanceSnapshot(
-                      sourceExerciseId: entry.value.exerciseId,
-                      displayName: entry.value.displayName,
+                    (entry) => exerciseSnapshotFromSummary(
+                      entry.value,
                       position: entry.key + 1,
                     ),
                   )
@@ -79,9 +91,8 @@ class PerformanceSnapshotBuilder {
             .asMap()
             .entries
             .map(
-              (entry) => ExercisePerformanceSnapshot(
-                sourceExerciseId: entry.value.exerciseId,
-                displayName: entry.value.displayName,
+              (entry) => exerciseSnapshotFromSummary(
+                entry.value,
                 position: entry.key + 1,
               ),
             )
@@ -110,9 +121,8 @@ class PerformanceSnapshotBuilder {
               (entry) => ExercisePerformanceDraft(
                 exerciseResultId: DatabaseUuid.newV4(),
                 sourceExerciseId: entry.value.exerciseId,
-                exerciseSnapshot: ExercisePerformanceSnapshot(
-                  sourceExerciseId: entry.value.exerciseId,
-                  displayName: entry.value.displayName,
+                exerciseSnapshot: exerciseSnapshotFromSummary(
+                  entry.value,
                   position: entry.key + 1,
                 ),
                 position: entry.key + 1,

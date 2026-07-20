@@ -132,4 +132,19 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
 
     return fromMap(response);
   }
+
+  /// Developer-only scoped cleanup for founder acceptance test resets.
+  Future<int> deleteForAthleteAndProtocol({
+    required String athleteId,
+    required String protocolId,
+  }) async {
+    final response = await SupabaseService.client
+        .from(tableName)
+        .delete()
+        .eq('athlete_id', athleteId)
+        .eq('protocol_id', protocolId)
+        .select('id');
+
+    return (response as List).length;
+  }
 }

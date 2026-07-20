@@ -127,5 +127,31 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
     return records.sublist(offset, end);
   }
 
+  @override
+  Future<int> deleteFounderScopedRecords({
+    required String athleteId,
+    required String sourceProtocolId,
+    String? assignmentId,
+  }) async {
+    final keysToRemove = <String>[];
+    for (final entry in _recordsById.entries) {
+      final record = entry.value;
+      if (record.athleteId != athleteId) continue;
+
+      final matchesProtocol = record.sourceProtocolId == sourceProtocolId;
+      final matchesAssignment = assignmentId != null &&
+          assignmentId.isNotEmpty &&
+          record.assignmentId == assignmentId;
+      if (matchesProtocol || matchesAssignment) {
+        keysToRemove.add(entry.key);
+      }
+    }
+
+    for (final key in keysToRemove) {
+      _recordsById.remove(key);
+    }
+    return keysToRemove.length;
+  }
+
   void clear() => _recordsById.clear();
 }

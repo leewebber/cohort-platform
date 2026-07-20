@@ -118,8 +118,33 @@ When `totalBlocks <= 1`:
 
 - No GPS, wearables, or external integrations
 - Legacy protocols not bulk-migrated
-- Duration entry for endurance uses seconds (not mm:ss picker)
 - For Time editor retains a Completed toggle (distinct from block completion semantics)
+
+## M8.1.5 — Final founder acceptance cleanup
+
+**Exercise label resolution (installed content):** Founder strength links now persist `displayLabelOverride` (`Back Squat`, `Bench Press`) from `FounderAcceptanceContent.exerciseDisplayNames`. Runtime resolution via `SessionExecutionBlock.fromSessionBlock()` → `AthleteExerciseLabelResolver.fromExerciseLink()` no longer depends on catalogue seed data for the founder programme.
+
+**Athlete-facing wording:**
+
+| Surface | Change |
+|---------|--------|
+| Home / Overview subtitle | “Required session” → “Today's session” |
+| Home completed state | “Completed Today” → “Completed today”; “View Session” → “View summary” |
+| Review save indicator | “Draft ready” → “Ready to save” |
+| Review RPE | Helper: “How hard did the session feel? 1 = very easy, 10 = maximal.” |
+| Session complete | “Saved to training history.” (status suffix removed) |
+
+**Endurance derived metrics:** Pace shown only for `km` / `mi` / `m`; speed only for `km/h`, `kph`, `mph`. Unsupported units hide the live derived metric rather than inventing values such as `40.0 watts/h`.
+
+**Tests:** `test/founder_acceptance/founder_acceptance_exercise_labels_test.dart` covers install → plan build → snapshot → active session UI using real `FounderAcceptanceContent`.
+
+## M8.1.6 — Preserve exercise label overrides in execution projection
+
+Installed founder content persists `display_label_override` on block exercise links. Runtime athlete execution now preserves that override on `SessionExecutionExerciseSummary.displayLabelOverride` and resolves labels via `AthleteExerciseLabelResolver.fromExecutionSummary`.
+
+Performance snapshots copy override into `ExercisePerformanceSnapshot.labelOverride` at capture time.
+
+**Reinstall required:** existing Supabase rows created before M8.1.5 may still have `display_label_override = NULL`. Run **Install Founder Acceptance Programme** once after deploying M8.1.6.
 
 ## Future legacy content migration backlog
 
@@ -135,8 +160,9 @@ High-value rebuild candidates after founder sign-off:
 - Endurance: `performance_result_data.dart`, `performance_capture_widgets.dart`, `endurance_metrics_calculator.dart`
 - Summaries: `performance_result_summary_formatter.dart`
 - Capture resolution: `block_capture_mode_resolver.dart`, `block_performance_capture_mode.dart`, `session_block.dart`
-- UX: `active_session_screen.dart`
+- UX: `active_session_screen.dart`, `home_today_session_section.dart`, `home_today_session_loader.dart`
+- Labels: `founder_acceptance_content.dart`, `athlete_exercise_label_resolver.dart`
 - Authoring: `session_block_editor_card.dart`
 - Snapshots: `performance_snapshot.dart`, `performance_snapshot_builder.dart`
 - Migration: `20260719170000_add_block_performance_capture_mode.sql`
-- Tests: `test/m8/m8_1_founder_polish_test.dart`, `test/support/m8_modern_capture_test_fixtures.dart`
+- Tests: `test/m8/m8_1_founder_polish_test.dart`, `test/founder_acceptance/founder_acceptance_exercise_labels_test.dart`, `test/support/m8_modern_capture_test_fixtures.dart`

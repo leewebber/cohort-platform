@@ -155,12 +155,7 @@ class WorkoutContentText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (content.trim().isEmpty) {
-      return Text(
-        'Follow the linked exercises and timer for this block.',
-        style: CohortTextStyles.body.copyWith(
-          fontStyle: FontStyle.italic,
-        ),
-      );
+      return const SizedBox.shrink();
     }
 
     return Text(

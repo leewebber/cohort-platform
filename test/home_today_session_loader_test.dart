@@ -348,7 +348,7 @@ void main() {
             executable.resolution,
             executable.protocol,
           ),
-          'Required session • Monday Conditioning',
+          "Today's session • Monday Conditioning",
         );
       },
     );

@@ -28,7 +28,7 @@ class ProgrammeSessionDisplayLabels {
   }
 
   static String slotRequirementLabel({required bool isOptional}) {
-    return isOptional ? 'Optional session' : 'Required session';
+    return isOptional ? 'Optional session' : "Today's session";
   }
 
   static String executableSubtitle({

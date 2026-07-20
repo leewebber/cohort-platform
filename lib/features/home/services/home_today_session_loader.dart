@@ -222,7 +222,7 @@ class HomeTodaySessionLabels {
   }
 
   static String slotRequirementLabel(ResolvedTodaySession resolution) {
-    return resolution.isOptional ? 'Optional session' : 'Required session';
+    return resolution.isOptional ? 'Optional session' : "Today's session";
   }
 
   /// Canonical session title — always from the loaded protocol record.

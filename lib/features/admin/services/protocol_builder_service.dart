@@ -42,7 +42,7 @@ class ProtocolBuilderService {
         _protocolStepRepository =
             protocolStepRepository ?? const ProtocolStepRepository(),
         _sessionBlockRepository =
-            sessionBlockRepository ?? const SessionBlockRepository(),
+            sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
         _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
         _blockValidation = blockValidation ?? const SessionBlockValidation();
 

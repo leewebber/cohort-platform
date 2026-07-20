@@ -50,7 +50,7 @@ void main() {
         protocol,
       );
 
-      expect(subtitle, 'Required session • Monday Conditioning');
+      expect(subtitle, "Today's session • Monday Conditioning");
       expect(subtitle, isNot(contains('Bodyweight Grinder')));
     });
 
@@ -60,14 +60,14 @@ void main() {
           resolution(slotTitle: null),
           protocol,
         ),
-        'Required session',
+        "Today's session",
       );
       expect(
         HomeTodaySessionLabels.executableSubtitle(
           resolution(slotTitle: '   '),
           protocol,
         ),
-        'Required session',
+        "Today's session",
       );
     });
 
@@ -77,14 +77,14 @@ void main() {
           resolution(slotTitle: 'Bodyweight Grinder'),
           protocol,
         ),
-        'Required session',
+        "Today's session",
       );
       expect(
         HomeTodaySessionLabels.executableSubtitle(
           resolution(slotTitle: 'bodyweight grinder'),
           protocol,
         ),
-        'Required session',
+        "Today's session",
       );
     });
   });

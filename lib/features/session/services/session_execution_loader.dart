@@ -25,7 +25,7 @@ class SessionExecutionLoader {
         _protocolStepRepository =
             protocolStepRepository ?? const ProtocolStepRepository(),
         _sessionBlockRepository =
-            sessionBlockRepository ?? const SessionBlockRepository(),
+            sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
         _exerciseRepository = exerciseRepository ?? ExerciseRepository(),
         _legacyConverter = legacyConverter ?? const ProtocolStepToBlockConverter();
 

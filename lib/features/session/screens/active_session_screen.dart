@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
-import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
 import '../../../features/programme/models/programme_execution_context.dart';
@@ -185,9 +184,6 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   Widget build(BuildContext context) {
     final state = _controller.state;
     final activeIndex = state.activeBlockIndex;
-    final activeBlock = state.activeBlock;
-    final activeDraft =
-        activeBlock == null ? null : _blockDraft(activeBlock.blockId);
     final isSingleBlock = state.totalBlocks <= 1;
 
     return Scaffold(
@@ -213,143 +209,110 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                 completed: state.completedCount,
               ),
               const SizedBox(height: CohortSpacing.lg),
-              if (!isSingleBlock) ...[
-                Row(
-                  children: [
-                    Expanded(
-                      child: CohortButton(
-                        label: 'Previous',
-                        onPressed: activeIndex > 0
-                            ? () {
-                                _controller.goToPreviousBlock();
-                                _performanceController.setActiveBlock(
-                                  _controller.state.activeBlock?.blockId,
+              for (var index = 0; index < state.plan.blocks.length; index++) ...[
+                if (index > 0) const SizedBox(height: CohortSpacing.md),
+                Builder(
+                  builder: (context) {
+                    final block = state.plan.blocks[index];
+                    final isActive = index == activeIndex;
+                    final isExpanded =
+                        isActive || state.isBlockExpanded(block.blockId);
+                    final blockDraft =
+                        isActive ? _blockDraft(block.blockId) : null;
+
+                    return AthleteBlockCard(
+                      block: block,
+                      isExpanded: isExpanded,
+                      isActive: isActive,
+                      isComplete: state.isBlockComplete(block.blockId),
+                      onToggleExpanded: () {
+                        if (isActive) return;
+                        _controller.toggleBlockExpanded(block.blockId);
+                        _refresh();
+                      },
+                      onMarkComplete: () => _syncBlockComplete(block.blockId),
+                      onReopen: () => _syncBlockReopen(block.blockId),
+                      onLaunchTimer: block.hasTimer
+                          ? () => _launchTimer(block)
+                          : null,
+                      onOpenExercise: _openExercise,
+                      showActions: isActive,
+                      showBlockNavigation: !isSingleBlock && isActive,
+                      onPrevious: !isSingleBlock && activeIndex > 0
+                          ? () {
+                              _controller.goToPreviousBlock();
+                              _performanceController.setActiveBlock(
+                                _controller.state.activeBlock?.blockId,
+                              );
+                              _persistDraft();
+                              _refresh();
+                            }
+                          : null,
+                      onNext: !isSingleBlock &&
+                              activeIndex < state.totalBlocks - 1
+                          ? () {
+                              _controller.goToNextBlock();
+                              _performanceController.setActiveBlock(
+                                _controller.state.activeBlock?.blockId,
+                              );
+                              _persistDraft();
+                              _refresh();
+                            }
+                          : null,
+                      performanceSection: blockDraft == null ||
+                              !BlockResultEditor.showsCaptureFields(blockDraft)
+                          ? null
+                          : BlockResultEditor(
+                              blockDraft: blockDraft,
+                              linkedExercises: block.linkedExercises,
+                              onResultChanged: (result) {
+                                _performanceController.updateBlockResultData(
+                                  block.blockId,
+                                  result,
                                 );
                                 _persistDraft();
                                 _refresh();
-                              }
-                            : () {},
-                      ),
-                    ),
-                    const SizedBox(width: CohortSpacing.sm),
-                    Expanded(
-                      child: CohortButton(
-                        label: 'Next',
-                        onPressed: activeIndex < state.totalBlocks - 1
-                            ? () {
-                                _controller.goToNextBlock();
-                                _performanceController.setActiveBlock(
-                                  _controller.state.activeBlock?.blockId,
+                              },
+                              onAddSet: (exerciseId) {
+                                _performanceController.addSet(
+                                  block.blockId,
+                                  exerciseId,
                                 );
                                 _persistDraft();
                                 _refresh();
-                              }
-                            : () {},
-                      ),
-                    ),
-                  ],
+                              },
+                              onUpdateSet: (exerciseId, setResultId, update) {
+                                _performanceController.updateSet(
+                                  block.blockId,
+                                  exerciseId,
+                                  setResultId,
+                                  update,
+                                );
+                                _persistDraft();
+                                _refresh();
+                              },
+                              onDuplicateSet: (exerciseId, setResultId) {
+                                _performanceController.duplicateSet(
+                                  block.blockId,
+                                  exerciseId,
+                                  setResultId,
+                                );
+                                _persistDraft();
+                                _refresh();
+                              },
+                              onRemoveSet: (exerciseId, setResultId) {
+                                _performanceController.removeSet(
+                                  block.blockId,
+                                  exerciseId,
+                                  setResultId,
+                                );
+                                _persistDraft();
+                                _refresh();
+                              },
+                            ),
+                    );
+                  },
                 ),
-                const SizedBox(height: CohortSpacing.xl),
-                Text('CURRENT BLOCK', style: CohortTextStyles.eyebrow),
-                const SizedBox(height: CohortSpacing.md),
-              ],
-              if (activeBlock != null)
-                AthleteBlockCard(
-                  block: activeBlock,
-                  isExpanded: true,
-                  isActive: true,
-                  isComplete: state.isBlockComplete(activeBlock.blockId),
-                  onToggleExpanded: () {},
-                  onMarkComplete: () => _syncBlockComplete(activeBlock.blockId),
-                  onReopen: () => _syncBlockReopen(activeBlock.blockId),
-                  onLaunchTimer: activeBlock.hasTimer
-                      ? () => _launchTimer(activeBlock)
-                      : null,
-                  onOpenExercise: _openExercise,
-                  performanceSection: activeDraft == null
-                      ? null
-                      : BlockResultEditor(
-                          blockDraft: activeDraft,
-                          onResultChanged: (result) {
-                            _performanceController.updateBlockResultData(
-                              activeBlock.blockId,
-                              result,
-                            );
-                            _persistDraft();
-                            _refresh();
-                          },
-                          onAddSet: (exerciseId) {
-                            _performanceController.addSet(
-                              activeBlock.blockId,
-                              exerciseId,
-                            );
-                            _persistDraft();
-                            _refresh();
-                          },
-                          onUpdateSet: (exerciseId, setResultId, update) {
-                            _performanceController.updateSet(
-                              activeBlock.blockId,
-                              exerciseId,
-                              setResultId,
-                              update,
-                            );
-                            _persistDraft();
-                            _refresh();
-                          },
-                          onDuplicateSet: (exerciseId, setResultId) {
-                            _performanceController.duplicateSet(
-                              activeBlock.blockId,
-                              exerciseId,
-                              setResultId,
-                            );
-                            _persistDraft();
-                            _refresh();
-                          },
-                          onRemoveSet: (exerciseId, setResultId) {
-                            _performanceController.removeSet(
-                              activeBlock.blockId,
-                              exerciseId,
-                              setResultId,
-                            );
-                            _persistDraft();
-                            _refresh();
-                          },
-                        ),
-                ),
-              if (!isSingleBlock) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                Text('ALL BLOCKS', style: CohortTextStyles.eyebrow),
-                const SizedBox(height: CohortSpacing.md),
-                for (var index = 0; index < state.plan.blocks.length; index++) ...[
-                  if (index > 0) const SizedBox(height: CohortSpacing.md),
-                  Builder(
-                    builder: (context) {
-                      final block = state.plan.blocks[index];
-                      final isActive = index == activeIndex;
-                      return AthleteBlockCard(
-                        block: block,
-                        isExpanded:
-                            state.isBlockExpanded(block.blockId) || isActive,
-                        isActive: isActive,
-                        isComplete: state.isBlockComplete(block.blockId),
-                        onToggleExpanded: () {
-                          _controller.toggleBlockExpanded(block.blockId);
-                          if (!isActive) _controller.goToBlock(index);
-                          _performanceController.setActiveBlock(block.blockId);
-                          _persistDraft();
-                          _refresh();
-                        },
-                        onMarkComplete: () => _syncBlockComplete(block.blockId),
-                        onReopen: () => _syncBlockReopen(block.blockId),
-                        onLaunchTimer: block.hasTimer
-                            ? () => _launchTimer(block)
-                            : null,
-                        onOpenExercise: _openExercise,
-                        showActions: isActive,
-                      );
-                    },
-                  ),
-                ],
               ],
               const SizedBox(height: CohortSpacing.xl),
               CohortButton(label: 'Finish Session', onPressed: _finishSession),
