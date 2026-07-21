@@ -8,8 +8,10 @@ import '../../../models/programme_session_slot_draft.dart';
 import '../../../models/programme_week_draft.dart';
 import '../../programme_builder/models/programme_builder_document.dart';
 import 'controllers/programme_editor_controller.dart';
+import 'controllers/programme_intelligence_controller.dart';
 import 'models/programme_editor_view_state.dart';
 import 'services/programme_editor_services.dart';
+import 'services/programme_intelligence_services.dart';
 import 'programme_preview_screen.dart';
 import 'widgets/programme_editor_day_card.dart';
 import 'widgets/programme_editor_header.dart';
@@ -18,6 +20,7 @@ import 'widgets/programme_editor_slot_inspector.dart';
 import 'widgets/programme_editor_unsaved_dialog.dart';
 import 'widgets/programme_editor_validation_sheet.dart';
 import 'widgets/programme_editor_week_nav.dart';
+import 'widgets/intelligence/programme_intelligence_section.dart';
 
 class ProgrammeEditorScreen extends StatefulWidget {
   const ProgrammeEditorScreen({
@@ -36,6 +39,8 @@ class ProgrammeEditorScreen extends StatefulWidget {
 class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
   late final ProgrammeEditorController _controller;
   late final bool _ownsController;
+  late final ProgrammeIntelligenceController _intelligenceController;
+  late final bool _ownsIntelligenceController;
 
   @override
   void initState() {
@@ -44,12 +49,19 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
     _controller = widget.controller ??
         ProgrammeEditorServices.createController(versionId: widget.versionId);
     _controller.addListener(_onControllerChanged);
+    _ownsIntelligenceController = true;
+    _intelligenceController = ProgrammeIntelligenceServices.createController(
+      versionId: widget.versionId,
+    );
     _controller.load();
   }
 
   @override
   void dispose() {
     _controller.removeListener(_onControllerChanged);
+    if (_ownsIntelligenceController) {
+      _intelligenceController.dispose();
+    }
     super.dispose();
   }
 
@@ -277,6 +289,16 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
                   ),
                 );
               },
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.42,
+              ),
+              child: SingleChildScrollView(
+                child: ProgrammeIntelligenceSection(
+                  controller: _intelligenceController,
+                ),
+              ),
             ),
             if (isCompact)
               ProgrammeEditorWeekNav(

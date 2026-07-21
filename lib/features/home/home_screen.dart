@@ -7,6 +7,8 @@ import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
 import '../performance/screens/training_history_screen.dart';
+import '../auth/controllers/auth_controller.dart';
+import '../auth/services/current_user_session.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'debug/home_debug_programme_refresh_policy.dart';
 import 'widgets/home_today_session_section.dart';
@@ -41,7 +43,12 @@ import '../session/services/circuit_session_plan_builder.dart';
 import '../session/services/interval_session_plan_builder.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+    this.authController,
+  });
+
+  final AuthController? authController;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -51,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
   final _todaySessionRefreshController = HomeTodaySessionRefreshController();
 
-  static const _athleteId = 'lee';
+  String get _athleteId =>
+      CurrentUserSession.requireInstance.athleteId;
 
   void _refreshTodaySessionAfterDebug({
     required String action,
@@ -91,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openExerciseLibrary(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => const ExerciseLibraryScreen(
+        builder: (_) => ExerciseLibraryScreen(
           athleteId: _athleteId,
         ),
       ),
@@ -988,7 +996,20 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionTitle('Cohort'),
+              Row(
+                children: [
+                  const Expanded(child: SectionTitle('Cohort')),
+                  if (widget.authController != null)
+                    TextButton(
+                      onPressed: () async {
+                        await widget.authController!.signOut();
+                      },
+                      child: Text(
+                        CurrentUserSession.requireInstance.profile.displayName,
+                      ),
+                    ),
+                ],
+              ),
               const SizedBox(height: CohortSpacing.md),
               const Text(
                 'Today',
@@ -1005,6 +1026,7 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeTodaySessionSection(
                 key: _todaySessionSectionKey,
                 refreshController: _todaySessionRefreshController,
+                athleteId: _athleteId,
               ),
 
               const SizedBox(height: CohortSpacing.md),

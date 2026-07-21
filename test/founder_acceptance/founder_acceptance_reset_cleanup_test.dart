@@ -1,3 +1,4 @@
+import 'package:cohort_platform/core/constants/programme_dev_identity.dart';
 import 'package:cohort_platform/features/founder_acceptance/founder_acceptance_content.dart';
 import 'package:cohort_platform/features/founder_acceptance/founder_acceptance_dev_fixtures.dart';
 import 'package:cohort_platform/features/founder_acceptance/founder_acceptance_installer.dart';
@@ -39,7 +40,7 @@ void main() {
     late FounderAcceptanceRuntimeResetService resetService;
     late SessionExecutionPlan plan;
 
-    const athleteId = ProgrammeDebugActions.devAthleteId;
+    const athleteId = ProgrammeDevIdentity.athleteId;
     const founderProtocolId = FounderAcceptanceContent.protocolId;
     const unrelatedProtocolId = 'foundation-session-a';
     const founderAssignmentId = 'founder-assignment-test';

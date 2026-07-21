@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
 
-import '../features/home/home_screen.dart';
+import '../features/auth/controllers/auth_controller.dart';
+import '../features/auth/screens/auth_gate.dart';
 import 'theme.dart';
 
-class CohortPlatformApp extends StatelessWidget {
+class CohortPlatformApp extends StatefulWidget {
   const CohortPlatformApp({super.key});
+
+  @override
+  State<CohortPlatformApp> createState() => _CohortPlatformAppState();
+}
+
+class _CohortPlatformAppState extends State<CohortPlatformApp> {
+  late final AuthController _authController;
+
+  @override
+  void initState() {
+    super.initState();
+    _authController = AuthController();
+  }
+
+  @override
+  void dispose() {
+    _authController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +32,7 @@ class CohortPlatformApp extends StatelessWidget {
       title: 'Cohort Platform',
       debugShowCheckedModeBanner: false,
       theme: cohortTheme,
-      home: const HomeScreen(),
+      home: AuthGate(controller: _authController),
     );
   }
 }

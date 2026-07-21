@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../../../core/constants/programme_dev_identity.dart';
+import '../../auth/services/current_user_session.dart';
 import '../../../data/repositories/athlete_state_supabase_store.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_assignment_supabase_store.dart';
@@ -33,7 +34,8 @@ import 'programme_dev_fixtures.dart';
 class ProgrammeDebugActions {
   ProgrammeDebugActions._();
 
-  static const devAthleteId = ProgrammeDevIdentity.athleteId;
+  static String get devAthleteId =>
+      CurrentUserSession.maybeInstance?.athleteId ?? ProgrammeDevIdentity.athleteId;
 
   static TodaySessionService createTodaySessionService({
     ProgrammeAssignmentStore? assignmentStore,
