@@ -1,5 +1,6 @@
 import 'package:cohort_platform/core/utils/database_uuid.dart';
 import 'package:cohort_platform/data/repositories/session_lineage_store.dart';
+import 'package:cohort_platform/features/session_revision/models/session_revision_usage_models.dart';
 import 'package:cohort_platform/models/session_lineage.dart';
 import 'package:cohort_platform/models/session_revision_vocabulary.dart';
 
@@ -53,6 +54,18 @@ class InMemorySessionLineageStore extends SessionLineageStore {
   @override
   Future<String?> getLineageIdForRevision(String protocolId) async {
     return revisionMetadata[protocolId]?.sessionLineageId;
+  }
+
+  @override
+  Future<SessionRevisionIdentity?> getRevisionIdentity(String protocolId) async {
+    final metadata = revisionMetadata[protocolId];
+    if (metadata == null) return null;
+
+    return SessionRevisionIdentity(
+      protocolId: protocolId,
+      sessionLineageId: metadata.sessionLineageId,
+      revisionNumber: metadata.revisionNumber,
+    );
   }
 
   @override

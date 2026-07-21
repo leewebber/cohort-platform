@@ -1,5 +1,6 @@
 import '../../core/services/supabase_service.dart';
 import '../../core/utils/database_uuid.dart';
+import '../../features/session_revision/models/session_revision_usage_models.dart';
 import '../../models/session_lineage.dart';
 import '../../models/session_revision_vocabulary.dart';
 import 'session_lineage_store.dart';
@@ -82,6 +83,28 @@ class SessionLineageSupabaseStore extends SessionLineageStore {
         .maybeSingle();
 
     return response?['session_lineage_id']?.toString();
+  }
+
+  @override
+  Future<SessionRevisionIdentity?> getRevisionIdentity(String protocolId) async {
+    final response = await SupabaseService.client
+        .from(_protocolsTable)
+        .select('protocol_id, session_lineage_id, revision_number')
+        .eq('protocol_id', protocolId.trim())
+        .maybeSingle();
+
+    if (response == null) return null;
+
+    final lineageId = response['session_lineage_id']?.toString().trim();
+    if (lineageId == null || lineageId.isEmpty) return null;
+
+    return SessionRevisionIdentity(
+      protocolId: response['protocol_id']?.toString() ?? protocolId.trim(),
+      sessionLineageId: lineageId,
+      revisionNumber: response['revision_number'] is int
+          ? response['revision_number'] as int
+          : int.tryParse(response['revision_number']?.toString() ?? '') ?? 1,
+    );
   }
 
   @override
