@@ -1,5 +1,6 @@
 import 'protocol_step_draft.dart';
 import 'session_block.dart';
+import 'session_revision_vocabulary.dart';
 import 'training_content_vocabulary.dart';
 
 /// Editable in-memory representation of a protocol before save.
@@ -22,6 +23,11 @@ class ProtocolDraft {
     this.sourceContentId,
     this.sourceContentKind,
     this.sourceVersionId,
+    this.sessionLineageId,
+    this.revisionNumber = 1,
+    this.lifecycleStatus = SessionRevisionLifecycleStatus.draft,
+    this.publishedAt,
+    this.archivedAt,
     this.primaryCapability,
     this.secondaryCapability,
     this.sessionType,
@@ -61,6 +67,11 @@ class ProtocolDraft {
   final String? sourceContentId;
   final TrainingContentKind? sourceContentKind;
   final String? sourceVersionId;
+  final String? sessionLineageId;
+  final int revisionNumber;
+  final SessionRevisionLifecycleStatus lifecycleStatus;
+  final DateTime? publishedAt;
+  final DateTime? archivedAt;
 
   final String? primaryCapability;
   final String? secondaryCapability;
@@ -84,6 +95,12 @@ class ProtocolDraft {
   final String? coachingNotes;
   final String? purpose;
 
+  bool get isRevisionEditable =>
+      lifecycleStatus == SessionRevisionLifecycleStatus.draft;
+
+  bool get isRevisionPublished =>
+      lifecycleStatus == SessionRevisionLifecycleStatus.published;
+
   ProtocolDraft copyWith({
     String? protocolId,
     String? name,
@@ -99,6 +116,13 @@ class ProtocolDraft {
     String? sourceContentId,
     TrainingContentKind? sourceContentKind,
     String? sourceVersionId,
+    String? sessionLineageId,
+    int? revisionNumber,
+    SessionRevisionLifecycleStatus? lifecycleStatus,
+    DateTime? publishedAt,
+    DateTime? archivedAt,
+    bool clearPublishedAt = false,
+    bool clearArchivedAt = false,
     String? primaryCapability,
     String? secondaryCapability,
     String? sessionType,
@@ -136,6 +160,12 @@ class ProtocolDraft {
       sourceContentId: sourceContentId ?? this.sourceContentId,
       sourceContentKind: sourceContentKind ?? this.sourceContentKind,
       sourceVersionId: sourceVersionId ?? this.sourceVersionId,
+      sessionLineageId: sessionLineageId ?? this.sessionLineageId,
+      revisionNumber: revisionNumber ?? this.revisionNumber,
+      lifecycleStatus: lifecycleStatus ?? this.lifecycleStatus,
+      publishedAt:
+          clearPublishedAt ? null : (publishedAt ?? this.publishedAt),
+      archivedAt: clearArchivedAt ? null : (archivedAt ?? this.archivedAt),
       primaryCapability: primaryCapability ?? this.primaryCapability,
       secondaryCapability: secondaryCapability ?? this.secondaryCapability,
       sessionType: sessionType ?? this.sessionType,
@@ -174,6 +204,11 @@ class ProtocolDraft {
       'source_content_id': _nullableString(sourceContentId),
       'source_content_kind': sourceContentKind?.dbValue,
       'source_version_id': _nullableString(sourceVersionId),
+      'session_lineage_id': _nullableString(sessionLineageId),
+      'revision_number': revisionNumber,
+      'lifecycle_status': lifecycleStatus.dbValue,
+      if (publishedAt != null) 'published_at': publishedAt!.toIso8601String(),
+      if (archivedAt != null) 'archived_at': archivedAt!.toIso8601String(),
       'primary_capability': _nullableString(primaryCapability),
       'secondary_capability': _nullableString(secondaryCapability),
       'session_type': _nullableString(sessionType),
@@ -215,7 +250,26 @@ class ProtocolDraft {
       sourceContentId: row['source_content_id']?.toString(),
       sourceContentKind: _parseSourceContentKind(row['source_content_kind']),
       sourceVersionId: row['source_version_id']?.toString(),
+      sessionLineageId: row['session_lineage_id']?.toString(),
+      revisionNumber: row['revision_number'] is int
+          ? row['revision_number'] as int
+          : int.tryParse(row['revision_number']?.toString() ?? '') ?? 1,
+      lifecycleStatus: row['lifecycle_status'] != null
+          ? SessionRevisionLifecycleStatusDb.fromDb(
+              row['lifecycle_status']?.toString(),
+            )
+          : SessionRevisionLifecycleStatusDb.fromPublishedBoolean(
+              row['published'] == true,
+            ),
+      publishedAt: _parseDateTime(row['published_at']),
+      archivedAt: _parseDateTime(row['archived_at']),
     );
+  }
+
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    return DateTime.tryParse(value.toString());
   }
 
   static TrainingContentKind? _parseSourceContentKind(dynamic value) {

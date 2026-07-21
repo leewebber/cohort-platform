@@ -5,11 +5,14 @@ import '../../../core/services/supabase_service.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../data/repositories/protocol_step_repository.dart';
 import '../../../data/repositories/session_block_repository.dart';
+import '../../../data/repositories/session_lineage_store.dart';
+import '../../../data/repositories/session_lineage_supabase_store.dart';
 import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
 import '../../../models/protocol_step_draft.dart';
 import '../../../models/session_block.dart';
+import '../../../models/session_revision_vocabulary.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../../session_builder/services/protocol_draft_block_resolver.dart';
 import '../../session_builder/services/session_block_validation.dart';
@@ -36,6 +39,7 @@ class ProtocolBuilderService {
     ProtocolRepository? protocolRepository,
     ProtocolStepRepository? protocolStepRepository,
     SessionBlockRepository? sessionBlockRepository,
+    SessionLineageStore? sessionLineageStore,
     ProtocolDraftBlockResolver? blockResolver,
     SessionBlockValidation? blockValidation,
   })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
@@ -43,12 +47,15 @@ class ProtocolBuilderService {
             protocolStepRepository ?? const ProtocolStepRepository(),
         _sessionBlockRepository =
             sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
+        _sessionLineageStore =
+            sessionLineageStore ?? const SessionLineageSupabaseStore(),
         _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
         _blockValidation = blockValidation ?? const SessionBlockValidation();
 
   final ProtocolRepository _protocolRepository;
   final ProtocolStepRepository _protocolStepRepository;
   final SessionBlockRepository _sessionBlockRepository;
+  final SessionLineageStore _sessionLineageStore;
   final ProtocolDraftBlockResolver _blockResolver;
   final SessionBlockValidation _blockValidation;
 
@@ -145,17 +152,18 @@ class ProtocolBuilderService {
         blocks: blocks,
       );
 
-      return _blockResolver.withResolvedBlocks(draft);
+      final resolved = _blockResolver.withResolvedBlocks(draft);
 
       if (kDebugMode) {
         debugPrint(
-          '[ProtocolBuilderService] loaded contentKind=${draft.contentKind.dbValue} '
-          'scope=${draft.authoringScope.dbValue} '
-          'endorsement=${draft.endorsementStatus.dbValue}',
+          '[ProtocolBuilderService] loaded contentKind=${resolved.contentKind.dbValue} '
+          'scope=${resolved.authoringScope.dbValue} '
+          'endorsement=${resolved.endorsementStatus.dbValue} '
+          'revision=${resolved.revisionNumber} lifecycle=${resolved.lifecycleStatus.dbValue}',
         );
       }
 
-      return draft;
+      return resolved;
     } on ProtocolBuilderException {
       rethrow;
     } on PostgrestException catch (error) {
@@ -231,15 +239,50 @@ class ProtocolBuilderService {
   }) async {
     _validateDraft(draft);
 
-    final syncedDraft = _blockResolver.withSyncedStepsFromBlocks(draft);
+    var syncedDraft = _blockResolver.withSyncedStepsFromBlocks(draft);
     final protocolId = syncedDraft.protocolId.trim();
     final existingProtocol =
         await _protocolRepository.getProtocolById(protocolId);
     final created = existingProtocol == null;
 
+    if (!created) {
+      await _assertRevisionEditable(protocolId);
+    }
+
+    if (created &&
+        (syncedDraft.sessionLineageId == null ||
+            syncedDraft.sessionLineageId!.trim().isEmpty)) {
+      final lineage = await _sessionLineageStore.insertLineage(
+        displayName: syncedDraft.name.trim().isEmpty
+            ? protocolId
+            : syncedDraft.name.trim(),
+      );
+      syncedDraft = syncedDraft.copyWith(
+        sessionLineageId: lineage.id,
+        revisionNumber: 1,
+        lifecycleStatus: published
+            ? SessionRevisionLifecycleStatus.published
+            : SessionRevisionLifecycleStatus.draft,
+        publishedAt: published ? DateTime.now().toUtc() : null,
+      );
+    }
+
+    final lifecycleStatus = _resolveLifecycleStatus(
+      draft: syncedDraft,
+      published: published,
+      resultKind: resultKind,
+    );
+    syncedDraft = syncedDraft.copyWith(
+      published: lifecycleStatus == SessionRevisionLifecycleStatus.published,
+      lifecycleStatus: lifecycleStatus,
+      publishedAt: lifecycleStatus == SessionRevisionLifecycleStatus.published
+          ? (syncedDraft.publishedAt ?? DateTime.now().toUtc())
+          : syncedDraft.publishedAt,
+    );
+
     final protocolMap = _buildProtocolUpsertMap(
       syncedDraft,
-      published: published,
+      published: lifecycleStatus == SessionRevisionLifecycleStatus.published,
     );
     final orderedSteps = _orderedSteps(syncedDraft.steps);
     final orderedBlocks = _orderedBlocks(_blockResolver.resolveBlocks(syncedDraft));
@@ -286,6 +329,37 @@ class ProtocolBuilderService {
       created: created,
       stepCount: orderedSteps.length,
     );
+  }
+
+  Future<void> _assertRevisionEditable(String protocolId) async {
+    final status =
+        await _sessionLineageStore.getRevisionLifecycleStatus(protocolId);
+    if (status == SessionRevisionLifecycleStatus.published) {
+      throw ProtocolBuilderException(
+        'Published session revisions cannot be edited in place. '
+        'Create a new revision instead.',
+      );
+    }
+    if (status == SessionRevisionLifecycleStatus.archived) {
+      throw ProtocolBuilderException(
+        'Archived session revisions cannot be edited in place. '
+        'Create a new revision instead.',
+      );
+    }
+  }
+
+  SessionRevisionLifecycleStatus _resolveLifecycleStatus({
+    required ProtocolDraft draft,
+    required bool published,
+    required _PersistResultKind resultKind,
+  }) {
+    if (resultKind == _PersistResultKind.published || published) {
+      return SessionRevisionLifecycleStatus.published;
+    }
+    if (draft.lifecycleStatus == SessionRevisionLifecycleStatus.archived) {
+      return SessionRevisionLifecycleStatus.archived;
+    }
+    return SessionRevisionLifecycleStatus.draft;
   }
 
   String _failureMessageFor(_PersistResultKind resultKind) {
