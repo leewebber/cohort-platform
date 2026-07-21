@@ -1,3 +1,4 @@
+import '../../features/session_revision/models/session_revision_usage_models.dart';
 import '../../models/session_lineage.dart';
 import '../../models/session_revision_vocabulary.dart';
 
@@ -19,6 +20,8 @@ abstract class SessionLineageStore {
   );
 
   Future<String?> getLineageIdForRevision(String protocolId);
+
+  Future<SessionRevisionIdentity?> getRevisionIdentity(String protocolId);
 
   Future<void> updateRevisionLifecycle({
     required String protocolId,
