@@ -8,12 +8,16 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
 import '../../../models/protocol_draft.dart';
+import '../../coach_studio/governance/controllers/session_governance_controller.dart';
+import '../../coach_studio/governance/services/coach_studio_governance_services.dart';
+import '../../coach_studio/governance/widgets/session_governance_section.dart';
 import '../../session/session_preview_screen.dart';
 import '../../session_builder/models/session_builder_display_context.dart';
 import '../../session_builder/services/session_builder_validation.dart';
 import '../../session_builder/services/programme_session_persistence_validation.dart';
 import '../../session_builder/widgets/session_builder_view.dart';
-import '../models/session_library_authoring_result.dart';
+import '../../session_revision/models/session_revision_action_vocabulary.dart';
+import '../../session_revision/services/session_revision_service.dart';
 import '../services/session_library_authoring_coordinator.dart';
 import '../services/session_library_draft_factory.dart';
 
@@ -26,6 +30,8 @@ class LibrarySessionBuilderScreen extends StatefulWidget {
     this.initialDraft,
     this.isEdit = false,
     this.loadExercises,
+    this.governanceController,
+    this.revisionService,
   });
 
   final SessionLibraryAuthoringCoordinator coordinator;
@@ -33,6 +39,8 @@ class LibrarySessionBuilderScreen extends StatefulWidget {
   final ProtocolDraft? initialDraft;
   final bool isEdit;
   final Future<List<Exercise>> Function()? loadExercises;
+  final SessionGovernanceController? governanceController;
+  final SessionRevisionService? revisionService;
 
   @override
   State<LibrarySessionBuilderScreen> createState() =>
@@ -45,6 +53,12 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
   String? _coachMessage;
   bool _isSaving = false;
   late final Future<List<Exercise>> _exercisesFuture;
+  SessionGovernanceController? _governanceController;
+  late final SessionRevisionService _revisionService;
+  bool _ownsGovernanceController = false;
+
+  bool get _showGovernance =>
+      widget.isEdit && _draft.protocolId.trim().isNotEmpty;
 
   @override
   void initState() {
@@ -55,6 +69,30 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
         );
     _exercisesFuture = widget.loadExercises?.call() ??
         Future<List<Exercise>>.value(const []);
+    _revisionService = widget.revisionService ??
+        CoachStudioGovernanceServices.createRevisionService();
+    _initGovernanceController();
+  }
+
+  void _initGovernanceController() {
+    if (!_showGovernance) return;
+    if (widget.governanceController != null) {
+      _governanceController = widget.governanceController;
+      return;
+    }
+    _ownsGovernanceController = true;
+    _governanceController = CoachStudioGovernanceServices.createSessionGovernanceController(
+      protocolId: _draft.protocolId,
+      sessionDisplayName: _draft.name,
+    );
+  }
+
+  @override
+  void dispose() {
+    if (_ownsGovernanceController) {
+      _governanceController?.dispose();
+    }
+    super.dispose();
   }
 
   SessionBuilderDisplayContext get _displayContext =>
@@ -65,6 +103,21 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
       _draft = draft;
       _coachMessage = null;
     });
+    _governanceController?.updateSessionDisplayName(draft.name);
+  }
+
+  void _onGovernanceDraftChanged(ProtocolDraft draft) {
+    setState(() => _draft = draft);
+    _governanceController?.updateSessionDisplayName(draft.name);
+  }
+
+  void _onGovernanceDeleted() {
+    Navigator.pop(context);
+  }
+
+  bool get _canEditContent {
+    if (!_showGovernance) return true;
+    return _governanceController?.isEditAllowed ?? true;
   }
 
   void _cancel() {
@@ -88,7 +141,7 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
   }
 
   Future<void> _save() async {
-    if (_isSaving) return;
+    if (_isSaving || !_canEditContent) return;
 
     final validationMessages =
         ProgrammeSessionPersistenceValidation.validateForSave(_draft);
@@ -189,13 +242,41 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
                           ),
                         ),
                         const SizedBox(height: CohortSpacing.xl),
-                        SessionBuilderView(
-                          draft: _draft,
-                          exercises: exercises,
-                          displayContext: _displayContext,
-                          capabilities: SessionBuilderCapabilities.librarySession(),
-                          onDraftChanged: _onDraftChanged,
-                          validationMessages: _feedbackMessages,
+                        if (_showGovernance && _governanceController != null) ...[
+                          SessionGovernanceSection(
+                            controller: _governanceController!,
+                            revisionService: _revisionService,
+                            draft: _draft,
+                            onDraftChanged: _onGovernanceDraftChanged,
+                            onDeleted: _onGovernanceDeleted,
+                          ),
+                          if (!_canEditContent) ...[
+                            Text(
+                              _governanceController!
+                                      .decisionFor(SessionRevisionAction.edit)
+                                      ?.userMessage ??
+                                  'This Session Revision cannot be edited in place.',
+                              style: CohortTextStyles.body.copyWith(
+                                color: CohortColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: CohortSpacing.lg),
+                          ],
+                        ],
+                        AbsorbPointer(
+                          absorbing: !_canEditContent,
+                          child: Opacity(
+                            opacity: _canEditContent ? 1 : 0.55,
+                            child: SessionBuilderView(
+                              draft: _draft,
+                              exercises: exercises,
+                              displayContext: _displayContext,
+                              capabilities:
+                                  SessionBuilderCapabilities.librarySession(),
+                              onDraftChanged: _onDraftChanged,
+                              validationMessages: _feedbackMessages,
+                            ),
+                          ),
                         ),
                         if (_coachMessage != null) ...[
                           const SizedBox(height: CohortSpacing.lg),
@@ -224,7 +305,7 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
                         label: _isSaving
                             ? 'Saving session…'
                             : (widget.isEdit ? 'Save Session' : 'Save Session'),
-                        onPressed: _isSaving ? () {} : _save,
+                        onPressed: (_isSaving || !_canEditContent) ? () {} : _save,
                       ),
                     ],
                   ),

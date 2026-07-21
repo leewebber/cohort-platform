@@ -8,6 +8,9 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/metadata_row.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
+import '../../coach_studio/governance/services/coach_studio_governance_services.dart';
+import '../../coach_studio/governance/widgets/exercise_usage_panel.dart';
+import '../../exercise_relationship/services/exercise_relationship_service.dart';
 import '../exercise_history/exercise_history_screen.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
@@ -15,10 +18,12 @@ class ExerciseDetailScreen extends StatelessWidget {
     super.key,
     required this.exercise,
     this.athleteId,
+    this.exerciseRelationshipService,
   });
 
   final Exercise exercise;
   final String? athleteId;
+  final ExerciseRelationshipService? exerciseRelationshipService;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +72,14 @@ class ExerciseDetailScreen extends StatelessWidget {
                   onPressed: () => _openExerciseHistory(context),
                 ),
               ],
+
+              const SizedBox(height: CohortSpacing.xl),
+
+              ExerciseUsagePanel(
+                exerciseId: exercise.exerciseId,
+                loadUsage: (exerciseId) => _relationshipService
+                    .tryGetUsageForExercise(exerciseId),
+              ),
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -180,6 +193,10 @@ class ExerciseDetailScreen extends StatelessWidget {
   bool _hasText(String? value) {
     return value != null && value.trim().isNotEmpty;
   }
+
+  ExerciseRelationshipService get _relationshipService =>
+      exerciseRelationshipService ??
+      CoachStudioGovernanceServices.createExerciseRelationshipService();
 
   bool get _canOpenHistory {
     final resolvedAthleteId = athleteId?.trim();
