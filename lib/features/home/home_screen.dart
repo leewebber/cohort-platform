@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/theme/spacing.dart';
@@ -12,6 +13,7 @@ import '../auth/services/current_user_session.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'debug/home_debug_programme_refresh_policy.dart';
 import 'widgets/home_today_session_section.dart';
+import '../coach_athlete/widgets/join_coach_card.dart';
 import '../programme/debug/programme_debug_actions.dart';
 import '../programme/debug/programme_debug_resolution_cache.dart';
 import '../programme/models/programme_assignment_operation_result.dart';
@@ -1029,6 +1031,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 athleteId: _athleteId,
               ),
 
+              JoinCoachCard(
+                onJoined: () => _refreshTodaySessionAfterDebug(
+                  action: 'join_coach',
+                  source: 'join_coach',
+                  successMessage: 'Coach linked. Training will appear when assigned.',
+                ),
+              ),
+
               const SizedBox(height: CohortSpacing.md),
 
               CohortCard(
@@ -1107,6 +1117,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: CohortSpacing.md),
 
+              if (kDebugMode) ...[
               const SizedBox(height: CohortSpacing.xl),
 
               const SectionTitle('DEBUG'),
@@ -1277,6 +1288,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   status: 'DEBUG',
                 ),
               ),
+
+              ],
 
               const SizedBox(height: CohortSpacing.xxl),
 

@@ -10,6 +10,7 @@ import 'models/coach_studio_section.dart';
 import 'programmes/programme_catalogue_screen.dart';
 import 'programmes/controllers/programme_catalogue_controller.dart';
 import 'programmes/services/programme_catalogue_services.dart';
+import '../coach_athlete/screens/athlete_roster_screen.dart';
 
 class CoachStudioHomeScreen extends StatefulWidget {
   const CoachStudioHomeScreen({
@@ -57,6 +58,9 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
         ),
       CoachStudioSection.trainingLibrary => MaterialPageRoute(
           builder: (_) => const TrainingLibraryScreen(),
+        ),
+      CoachStudioSection.athletes => MaterialPageRoute(
+          builder: (_) => const AthleteRosterScreen(),
         ),
       _ => null,
     };

@@ -22,7 +22,7 @@ class HomeTodaySessionSection extends StatefulWidget {
     this.refreshController,
     this.loader,
     this.loadOverride,
-    this.athleteId = 'lee',
+    required this.athleteId,
   });
 
   final HomeTodaySessionRefreshController? refreshController;

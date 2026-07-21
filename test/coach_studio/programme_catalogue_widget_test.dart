@@ -84,14 +84,16 @@ class _NoopValidationService implements ProgrammeBuilderValidationService {
 }
 
 void main() {
-  testWidgets('Coach Studio landing shows sections and SOON labels', (tester) async {
+  testWidgets('Coach Studio landing shows sections and availability labels', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(home: CoachStudioHomeScreen()),
     );
 
     expect(find.text('Programmes'), findsOneWidget);
-    expect(find.text('Protocols'), findsOneWidget);
+    expect(find.text('Training Library'), findsOneWidget);
+    expect(find.text('Athletes'), findsOneWidget);
     expect(find.text('Exercises'), findsOneWidget);
+    expect(find.text('OPEN'), findsWidgets);
     expect(find.text('SOON'), findsWidgets);
   });
 

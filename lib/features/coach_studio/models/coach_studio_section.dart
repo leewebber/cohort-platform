@@ -32,6 +32,7 @@ extension CoachStudioSectionLabels on CoachStudioSection {
 
   bool get isAvailableInV01 {
     return this == CoachStudioSection.programmes ||
-        this == CoachStudioSection.trainingLibrary;
+        this == CoachStudioSection.trainingLibrary ||
+        this == CoachStudioSection.athletes;
   }
 }
