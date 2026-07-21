@@ -90,7 +90,7 @@ BEGIN
       session_lineage_id = new_lineage_id,
       revision_number = 1,
       lifecycle_status = CASE
-        WHEN lower(trim(coalesce(protocol_row.published, ''))) = 'true' 'published'
+        WHEN lower(trim(coalesce(protocol_row.published, ''))) = 'true' THEN 'published'
         ELSE 'draft'
       END,
       published_at = CASE
