@@ -1,5 +1,5 @@
 import 'package:cohort_platform/features/session_builder/services/protocol_draft_block_resolver.dart';
-import 'package:cohort_platform/data/repositories/session_lineage_store.dart';
+import 'package:cohort_platform/features/session_revision/models/session_revision_action_decision.dart';
 import 'package:cohort_platform/features/session_revision/services/session_revision_clone.dart';
 import 'package:cohort_platform/features/session_revision/services/session_revision_service.dart';
 import 'package:cohort_platform/models/programme_version_session_slot.dart';
@@ -182,6 +182,12 @@ void main() {
     });
 
     test('reject createNewSessionRevision from draft source', () async {
+      lineageStore.seedRevision(
+        protocolId: 'session-draft',
+        sessionLineageId: 'lineage-1',
+        revisionNumber: 1,
+        lifecycleStatus: SessionRevisionLifecycleStatus.draft,
+      );
       builder.seed(
         _publishedRevisionDraft(
           protocolId: 'session-draft',
@@ -194,7 +200,7 @@ void main() {
 
       expect(
         () => service.createNewSessionRevision(sourceProtocolId: 'session-draft'),
-        throwsA(isA<SessionLineageStoreException>()),
+        throwsA(isA<SessionRevisionPolicyException>()),
       );
     });
   });

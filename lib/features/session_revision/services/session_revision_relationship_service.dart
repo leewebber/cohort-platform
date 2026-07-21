@@ -3,6 +3,7 @@ import '../../../data/repositories/session_lineage_supabase_store.dart';
 import '../../../data/repositories/session_revision_relationship_store.dart';
 import '../../../data/repositories/session_revision_relationship_supabase_store.dart';
 import '../models/content_usage_vocabulary.dart';
+import '../models/session_revision_action_decision.dart';
 import '../models/session_revision_usage_models.dart';
 
 /// Read-only service for Session Revision usage relationships (M9.2).
@@ -63,6 +64,58 @@ class SessionRevisionRelationshipService {
       programmeReferenceCount: countDistinctProgrammeVersions(programmeReferences),
       slotReferenceCount: programmeReferences.length,
     );
+  }
+
+  /// Safe usage lookup for policy evaluation — distinguishes not found,
+  /// successful empty usage, and lookup failure.
+  Future<SessionRevisionUsageLookupResult> tryGetUsageForRevision(
+    String protocolId,
+  ) async {
+    final normalizedProtocolId = protocolId.trim();
+    if (normalizedProtocolId.isEmpty) {
+      return const SessionRevisionUsageLookupResult.revisionNotFound();
+    }
+
+    final identity =
+        await _lineageStore.getRevisionIdentity(normalizedProtocolId);
+    if (identity == null) {
+      return const SessionRevisionUsageLookupResult.revisionNotFound();
+    }
+
+    try {
+      final programmeReferences =
+          await getProgrammeReferences(normalizedProtocolId);
+      final activeAssignmentReferences =
+          await getActiveAssignmentReferences(normalizedProtocolId);
+      final historicalUsage = await getHistoricalUsage(normalizedProtocolId);
+
+      final hasDirectAuthoredUsage = programmeReferences.isNotEmpty;
+      final hasActiveOperationalUsage = activeAssignmentReferences.isNotEmpty;
+      final hasHistoricalUsage = historicalUsage.hasUsage;
+
+      return SessionRevisionUsageLookupResult.success(
+        SessionRevisionUsageSummary(
+          protocolId: identity.protocolId,
+          sessionLineageId: identity.sessionLineageId,
+          revisionNumber: identity.revisionNumber,
+          programmeReferences: programmeReferences,
+          activeAssignmentReferences: activeAssignmentReferences,
+          historicalUsage: historicalUsage,
+          classifications: buildUsageClassifications(
+            hasDirectAuthoredUsage: hasDirectAuthoredUsage,
+            hasActiveOperationalUsage: hasActiveOperationalUsage,
+            hasHistoricalUsage: hasHistoricalUsage,
+          ),
+          programmeReferenceCount:
+              countDistinctProgrammeVersions(programmeReferences),
+          slotReferenceCount: programmeReferences.length,
+        ),
+      );
+    } catch (error) {
+      return SessionRevisionUsageLookupResult.lookupFailed(
+        error.toString(),
+      );
+    }
   }
 
   Future<List<SessionRevisionProgrammeReference>> getProgrammeReferences(

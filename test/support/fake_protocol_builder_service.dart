@@ -31,6 +31,17 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
 
   @override
   Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) async {
+    final existing = draftsById[draft.protocolId];
+    if (existing != null &&
+        (existing.lifecycleStatus == SessionRevisionLifecycleStatus.published ||
+            existing.lifecycleStatus ==
+                SessionRevisionLifecycleStatus.archived)) {
+      throw ProtocolBuilderException(
+        'Published session revisions cannot be edited in place. '
+        'Create a new revision instead.',
+      );
+    }
+
     saveDraftCalls.add(draft);
     draftsById[draft.protocolId] = draft;
     return ProtocolBuilderSaveResult.draft(
