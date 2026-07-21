@@ -2,6 +2,9 @@ import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/training_session_completion_context.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/services/programme_session_progression_coordinator.dart';
+import '../../adaptation/models/adaptation_execution_result.dart';
+import '../../adaptation/services/adaptation_execution_coordinator.dart';
+import '../../programme/models/programme_progression_result.dart';
 import '../controllers/performance_capture_controller.dart';
 import '../mappers/performance_record_mapper.dart';
 import '../models/training_session_record.dart';
@@ -14,11 +17,15 @@ class PerformanceCompletionResult {
     required this.record,
     this.progressionFailed = false,
     this.progressionMessage,
+    this.progressionResult,
+    this.adaptationResult,
   });
 
   final TrainingSessionRecord record;
   final bool progressionFailed;
   final String? progressionMessage;
+  final ProgrammeProgressionResult? progressionResult;
+  final AdaptationExecutionResult? adaptationResult;
 }
 
 class PerformanceRecordSaveCoordinator {
@@ -26,15 +33,19 @@ class PerformanceRecordSaveCoordinator {
     PerformanceRecordStore? store,
     TrainingSessionRepository? trainingSessionRepository,
     ProgrammeSessionProgressionCoordinator? progressionCoordinator,
+    AdaptationExecutionCoordinator? adaptationCoordinator,
   })  : _store = store ?? SupabasePerformanceRecordStore(),
         _trainingSessionRepository =
             trainingSessionRepository ?? const TrainingSessionRepository(),
         _progressionCoordinator =
-            progressionCoordinator ?? ProgrammeSessionProgressionCoordinator();
+            progressionCoordinator ?? ProgrammeSessionProgressionCoordinator(),
+        _adaptationCoordinator =
+            adaptationCoordinator ?? AdaptationExecutionCoordinator();
 
   final PerformanceRecordStore _store;
   final TrainingSessionRepository _trainingSessionRepository;
   final ProgrammeSessionProgressionCoordinator _progressionCoordinator;
+  final AdaptationExecutionCoordinator _adaptationCoordinator;
 
   Future<TrainingSessionRecord> createOrResumeInProgress({
     required PerformanceCaptureController controller,
@@ -79,9 +90,12 @@ class PerformanceRecordSaveCoordinator {
 
     var progressionFailed = false;
     String? progressionMessage;
+    ProgrammeProgressionResult? progressionResult;
+    AdaptationExecutionResult? adaptationResult;
+
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
       try {
-        await _progressionCoordinator.handleSessionCompleted(
+        progressionResult = await _progressionCoordinator.handleSessionCompleted(
           athleteId: athleteId,
           programmeContext: programmeContext,
           trainingSessionId: trainingSessionId,
@@ -92,12 +106,31 @@ class PerformanceRecordSaveCoordinator {
         progressionFailed = true;
         progressionMessage = error.toString();
       }
+
+      if (!progressionFailed) {
+        try {
+          adaptationResult = await _adaptationCoordinator.executeAfterSessionCompleted(
+            athleteId: athleteId,
+            record: record,
+            programmeContext: programmeContext,
+            trainingSessionId: trainingSessionId,
+            endedEarly: endedEarly,
+            progressionResult: progressionResult,
+          );
+        } catch (_) {
+          adaptationResult = AdaptationExecutionResult.skipped(
+            'Adaptation execution failed',
+          );
+        }
+      }
     }
 
     return PerformanceCompletionResult(
       record: record,
       progressionFailed: progressionFailed,
       progressionMessage: progressionMessage,
+      progressionResult: progressionResult,
+      adaptationResult: adaptationResult,
     );
   }
 

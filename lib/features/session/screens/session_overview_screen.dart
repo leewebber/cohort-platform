@@ -5,6 +5,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../adaptation/services/adaptation_prescription_service.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../programme/models/programme_execution_context.dart';
@@ -48,15 +49,31 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
       widget._loader ?? SessionExecutionLoader();
   late final PerformanceRecordSaveCoordinator _saveCoordinator =
       widget._saveCoordinator ?? PerformanceRecordSaveCoordinator();
+  late final AdaptationPrescriptionService _prescriptionService =
+      AdaptationPrescriptionService();
   late Future<SessionExecutionLoadResult> _loadFuture;
 
   @override
   void initState() {
     super.initState();
-    _loadFuture = _loader.load(
+    _loadFuture = _loadSession();
+  }
+
+  Future<SessionExecutionLoadResult> _loadSession() async {
+    var loadOverrides = const <String, String>{};
+    final programmeContext = widget.programmeContext;
+    if (programmeContext != null && programmeContext.isProgrammeBacked) {
+      loadOverrides = await _prescriptionService.loadLoadOverrides(
+        assignmentId: programmeContext.assignmentId,
+        sessionSlotId: programmeContext.sessionSlotId,
+      );
+    }
+
+    return _loader.load(
       protocolId: widget.protocolId,
       displayTitle: widget.displayTitle,
       programmeContextLabel: widget.programmeContextLabel,
+      prescriptionLoadOverrides: loadOverrides,
     );
   }
 

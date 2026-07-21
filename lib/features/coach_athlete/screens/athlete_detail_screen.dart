@@ -244,6 +244,32 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
             style: CohortTextStyles.body,
           ),
         ),
+        if (_controller.latestAdaptation != null) ...[
+          const SizedBox(height: CohortSpacing.lg),
+          const SectionTitle('Latest adaptation'),
+          const SizedBox(height: CohortSpacing.sm),
+          CohortCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _controller.latestAdaptation!.explanation,
+                  style: CohortTextStyles.body,
+                ),
+                if (_controller.latestAdaptation!.affectedSlotIds.isNotEmpty) ...[
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Affected future sessions: '
+                    '${_controller.latestAdaptation!.affectedSlotIds.length}',
+                    style: CohortTextStyles.small.copyWith(
+                      color: CohortColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
         if (_controller.errorMessage != null) ...[
           const SizedBox(height: CohortSpacing.sm),
           Text(

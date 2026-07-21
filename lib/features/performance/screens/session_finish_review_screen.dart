@@ -86,6 +86,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           builder: (_) => SessionCompleteScreen(
             state: widget.executionController.state,
             savedRecord: result.record,
+            adaptationMessage: result.adaptationResult?.athleteMessage,
           ),
         ),
       );

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../adaptation/models/programme_adaptation_event.dart';
+import '../../adaptation/services/adaptation_prescription_service.dart';
 import '../../programme/models/programme_catalog_entry.dart';
 import '../models/coach_athlete_operation_result.dart';
 import '../models/coach_athlete_roster_entry.dart';
@@ -79,6 +81,10 @@ class AthleteDetailController extends ChangeNotifier {
   List<ProgrammeCatalogEntry> publishedProgrammes = const [];
   bool isAssigning = false;
   String? assignmentSuccessMessage;
+  ProgrammeAdaptationEvent? latestAdaptation;
+
+  final AdaptationPrescriptionService _adaptationPrescriptionService =
+      AdaptationPrescriptionService();
 
   Future<void> load() async {
     status = AthleteDetailStatus.loading;
@@ -99,6 +105,13 @@ class AthleteDetailController extends ChangeNotifier {
     hasActiveAssignment = assignment != null;
     activeProgrammeName = athlete.activeProgrammeName;
     activeProgrammeVersionLabel = athlete.activeProgrammeVersionLabel;
+
+    if (assignment != null) {
+      latestAdaptation = await _adaptationPrescriptionService
+          .getLatestForAssignment(assignment.id);
+    } else {
+      latestAdaptation = null;
+    }
 
     final catalogueResult = await _service.listPublishedProgrammes();
     publishedProgrammes = catalogueResult.value ?? const [];

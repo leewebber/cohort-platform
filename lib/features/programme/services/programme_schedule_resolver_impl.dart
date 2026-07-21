@@ -263,9 +263,10 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
     required ProgrammeVersionSessionSlot slot,
     required ProgrammeSlotOutcome? outcome,
   }) {
-    if (outcome?.outcomeStatus == ProgrammeSlotOutcomeStatus.replaced) {
-      final replacement = outcome?.replacementProtocolId?.trim();
-      if (replacement != null && replacement.isNotEmpty) {
+    final replacement = outcome?.replacementProtocolId?.trim();
+    if (replacement != null && replacement.isNotEmpty) {
+      if (outcome?.outcomeStatus == ProgrammeSlotOutcomeStatus.replaced ||
+          outcome?.outcomeStatus == ProgrammeSlotOutcomeStatus.scheduled) {
         return replacement;
       }
     }

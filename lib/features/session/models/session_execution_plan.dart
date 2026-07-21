@@ -125,6 +125,7 @@ class SessionExecutionPlan {
     this.durationMin,
     this.coachNotes,
     this.programmeContextLabel,
+    this.prescriptionLoadOverrides = const {},
   });
 
   final String sessionId;
@@ -134,6 +135,7 @@ class SessionExecutionPlan {
   final int? durationMin;
   final String? coachNotes;
   final String? programmeContextLabel;
+  final Map<String, String> prescriptionLoadOverrides;
 
   bool get hasExecutableBlocks =>
       blocks.any((block) => block.hasAthleteVisibleContent);

@@ -13,11 +13,13 @@ class SessionCompleteScreen extends StatelessWidget {
     super.key,
     required this.state,
     this.savedRecord,
+    this.adaptationMessage,
     this.onDone,
   });
 
   final ActiveSessionState state;
   final TrainingSessionRecord? savedRecord;
+  final String? adaptationMessage;
   final VoidCallback? onDone;
 
   String? _elapsedLabel() {
@@ -65,6 +67,13 @@ class SessionCompleteScreen extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.md),
                 Text(
                   'Saved to training history.',
+                  style: CohortTextStyles.body,
+                ),
+              ],
+              if (adaptationMessage != null) ...[
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  adaptationMessage!,
                   style: CohortTextStyles.body,
                 ),
               ],

@@ -39,6 +39,7 @@ class SessionExecutionLoader {
     required String protocolId,
     String? displayTitle,
     String? programmeContextLabel,
+    Map<String, String> prescriptionLoadOverrides = const {},
   }) async {
     final trimmedId = protocolId.trim();
     final protocol = await _protocolRepository.getProtocolById(trimmedId);
@@ -74,6 +75,7 @@ class SessionExecutionLoader {
         durationMin: protocol?.durationMin,
         coachNotes: protocol?.coachingNotes,
         programmeContextLabel: programmeContextLabel,
+        prescriptionLoadOverrides: prescriptionLoadOverrides,
       ),
     );
   }
