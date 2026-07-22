@@ -7,7 +7,6 @@ import '../../../core/widgets/cohort_button.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
 import '../widgets/auth_scaffold.dart';
-import 'login_screen.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   const EmailVerificationScreen({
@@ -30,13 +29,7 @@ class EmailVerificationScreen extends StatelessWidget {
       footer: TextButton(
         onPressed: isLoading
             ? null
-            : () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (_) => LoginScreen(controller: controller),
-                  ),
-                );
-              },
+            : controller.returnToSignIn,
         child: const Text('Back to sign in'),
       ),
       child: Column(

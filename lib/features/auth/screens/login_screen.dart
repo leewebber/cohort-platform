@@ -27,10 +27,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_onAuthChanged);
+  }
+
+  @override
   void dispose() {
+    widget.controller.removeListener(_onAuthChanged);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _onAuthChanged() {
+    if (!mounted) return;
+
+    final status = widget.controller.state.status;
+    if (status == AuthStatus.authenticated ||
+        status == AuthStatus.profileRequired) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      return;
+    }
+
+    setState(() {});
   }
 
   Future<void> _submit() async {

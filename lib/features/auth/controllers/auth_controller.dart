@@ -26,6 +26,8 @@ class AuthController extends ChangeNotifier {
 
   AuthViewState _state;
   StreamSubscription<AuthState>? _authSubscription;
+  Future<void>? _sessionRefreshInFlight;
+  Future<void>? _userBootstrapInFlight;
 
   AuthViewState get state => _state;
 
@@ -70,7 +72,7 @@ class AuthController extends ChangeNotifier {
         return;
       }
 
-      await _refreshFromSession();
+      await _resolveAuthenticatedUser(response.user!);
     } on AuthException catch (error) {
       _state = _state.copyWith(
         status: AuthStatus.error,
@@ -185,6 +187,14 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void returnToSignIn() {
+    _state = _state.copyWith(
+      status: AuthStatus.unauthenticated,
+      clearError: true,
+    );
+    notifyListeners();
+  }
+
   Future<void> requestPasswordReset({required String email}) async {
     _state = _state.copyWith(
       status: AuthStatus.loading,
@@ -208,11 +218,29 @@ class AuthController extends ChangeNotifier {
     }
   }
 
-  Future<void> _refreshFromSession() async {
+  Future<void> _refreshFromSession() {
+    final inFlight = _sessionRefreshInFlight;
+    if (inFlight != null) {
+      return inFlight;
+    }
+
+    final refresh = _performSessionRefresh();
+    _sessionRefreshInFlight = refresh;
+    return refresh.whenComplete(() {
+      if (identical(_sessionRefreshInFlight, refresh)) {
+        _sessionRefreshInFlight = null;
+      }
+    });
+  }
+
+  Future<void> _performSessionRefresh() async {
     final session = _authService.currentSession;
     final user = _authService.currentUser;
 
     if (session == null || user == null) {
+      if (_userBootstrapInFlight != null) {
+        return;
+      }
       CurrentUserSession.clear();
       _state = _state.copyWith(
         status: AuthStatus.unauthenticated,
@@ -223,6 +251,25 @@ class AuthController extends ChangeNotifier {
       return;
     }
 
+    await _resolveAuthenticatedUser(user);
+  }
+
+  Future<void> _resolveAuthenticatedUser(User user) {
+    final inFlight = _userBootstrapInFlight;
+    if (inFlight != null) {
+      return inFlight;
+    }
+
+    final bootstrap = _performUserBootstrap(user);
+    _userBootstrapInFlight = bootstrap;
+    return bootstrap.whenComplete(() {
+      if (identical(_userBootstrapInFlight, bootstrap)) {
+        _userBootstrapInFlight = null;
+      }
+    });
+  }
+
+  Future<void> _performUserBootstrap(User user) async {
     try {
       final profile = await _profileProvisioningService.loadProfile(user.id);
       if (profile == null) {

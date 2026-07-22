@@ -36,7 +36,15 @@ class _AuthGateState extends State<AuthGate> {
   }
 
   void _onChanged() {
-    if (mounted) setState(() {});
+    if (!mounted) return;
+
+    final status = widget.controller.state.status;
+    if (status == AuthStatus.authenticated ||
+        status == AuthStatus.profileRequired) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+
+    setState(() {});
   }
 
   @override

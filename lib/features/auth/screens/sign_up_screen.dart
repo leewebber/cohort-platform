@@ -48,6 +48,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (!mounted) return;
     if (widget.controller.state.status == AuthStatus.awaitingEmailConfirmation) {
       Navigator.of(context).popUntil((route) => route.isFirst);
+    } else if (widget.controller.state.status == AuthStatus.authenticated ||
+        widget.controller.state.status == AuthStatus.profileRequired) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       setState(() {});
     }
