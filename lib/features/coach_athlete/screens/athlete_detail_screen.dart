@@ -6,6 +6,8 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../coach_operations/services/coach_operations_services.dart';
+import '../../performance/screens/training_history_screen.dart';
 import '../../programme/models/programme_catalog_entry.dart';
 import '../controllers/coach_athlete_controllers.dart';
 import '../models/coach_athlete_roster_entry.dart';
@@ -15,31 +17,43 @@ class AthleteDetailScreen extends StatefulWidget {
   const AthleteDetailScreen({
     super.key,
     required this.athlete,
+    this.openAssignOnLoad = false,
+    this.controller,
   });
 
   final CoachAthleteRosterEntry athlete;
+  final bool openAssignOnLoad;
+  final AthleteDetailController? controller;
 
   @override
   State<AthleteDetailScreen> createState() => _AthleteDetailScreenState();
 }
 
 class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
-  late final AthleteDetailController _controller = AthleteDetailController(
-    service: CoachAthleteServices.createService(),
-    athlete: widget.athlete,
-  );
+  late final AthleteDetailController _controller = widget.controller ??
+      AthleteDetailController(
+        service: CoachAthleteServices.createService(),
+        athlete: widget.athlete,
+        dailyStatusService: CoachOperationsServices.createDailyStatusService(),
+      );
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(_onChanged);
-    _controller.load();
+    _controller.load().then((_) {
+      if (widget.openAssignOnLoad && mounted) {
+        _showAssignSheet(replaceExisting: _controller.hasActiveAssignment);
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.removeListener(_onChanged);
-    _controller.dispose();
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
     super.dispose();
   }
 
@@ -47,7 +61,7 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
     if (mounted) setState(() {});
   }
 
-  Future<void> _showAssignSheet() async {
+  Future<void> _showAssignSheet({bool replaceExisting = false}) async {
     if (_controller.publishedProgrammes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -74,18 +88,25 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                   left: CohortSpacing.lg,
                   right: CohortSpacing.lg,
                   top: CohortSpacing.lg,
-                  bottom: MediaQuery.viewInsetsOf(context).bottom + CohortSpacing.lg,
+                  bottom:
+                      MediaQuery.viewInsetsOf(context).bottom + CohortSpacing.lg,
                 ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Assign programme', style: CohortTextStyles.h2),
+                      Text(
+                        replaceExisting ? 'Replace programme' : 'Assign programme',
+                        style: CohortTextStyles.h2,
+                      ),
                       const SizedBox(height: CohortSpacing.sm),
                       Text(
-                        'Choose a published programme and start date for '
-                        '${widget.athlete.displayName}.',
+                        replaceExisting
+                            ? 'Choose a new programme to replace the current assignment for '
+                                '${widget.athlete.displayName}.'
+                            : 'Choose a published programme and start date for '
+                                '${widget.athlete.displayName}.',
                         style: CohortTextStyles.body.copyWith(
                           color: CohortColors.textSecondary,
                         ),
@@ -129,11 +150,10 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                           }
                         },
                       ),
-                      if (_controller.hasActiveAssignment) ...[
+                      if (replaceExisting) ...[
                         const SizedBox(height: CohortSpacing.sm),
                         Text(
-                          'This athlete already has an active programme. '
-                          'Confirming will replace it.',
+                          'Confirming will replace the current active programme.',
                           style: CohortTextStyles.small.copyWith(
                             color: CohortColors.warning,
                           ),
@@ -143,7 +163,9 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                       CohortButton(
                         label: _controller.isAssigning
                             ? 'Assigning…'
-                            : 'Confirm assignment',
+                            : replaceExisting
+                                ? 'Confirm replacement'
+                                : 'Confirm assignment',
                         onPressed: _controller.isAssigning
                             ? () {}
                             : () async {
@@ -154,7 +176,7 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                                   entry: entry,
                                   startDate: startDate,
                                   timezone: timezone,
-                                  replaceExisting: _controller.hasActiveAssignment,
+                                  replaceExisting: replaceExisting,
                                 );
 
                                 if (!context.mounted) return;
@@ -182,6 +204,16 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
     );
   }
 
+  void _openHistory() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => TrainingHistoryScreen(
+          athleteId: widget.athlete.athleteId,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,11 +230,11 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
               Text(widget.athlete.displayName, style: CohortTextStyles.h1),
               const SizedBox(height: CohortSpacing.lg),
               Expanded(child: _buildBody()),
-              CohortButton(
-                label: 'Assign programme',
-                onPressed: _controller.status == AthleteDetailStatus.ready
-                    ? _showAssignSheet
-                    : () {},
+              _QuickActions(
+                hasActiveAssignment: _controller.hasActiveAssignment,
+                onAssign: () => _showAssignSheet(),
+                onReplace: () => _showAssignSheet(replaceExisting: true),
+                onViewHistory: _openHistory,
               ),
             ],
           ),
@@ -231,17 +263,84 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
       );
     }
 
+    final snapshot = _controller.operationalSnapshot;
+
     return ListView(
       children: [
-        const SectionTitle('Current assignment'),
+        const SectionTitle('Current programme'),
         const SizedBox(height: CohortSpacing.sm),
         CohortCard(
-          child: Text(
-            _controller.hasActiveAssignment
-                ? '${_controller.activeProgrammeName ?? widget.athlete.activeProgrammeName ?? 'Programme'} · '
-                    '${_controller.activeProgrammeVersionLabel ?? widget.athlete.activeProgrammeVersionLabel ?? ''}'
-                : 'No active programme assigned.',
-            style: CohortTextStyles.body,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                snapshot?.programmeName ??
+                    _controller.activeProgrammeName ??
+                    widget.athlete.activeProgrammeName ??
+                    'No active programme assigned.',
+                style: CohortTextStyles.cardTitle,
+              ),
+              if (_controller.hasActiveAssignment) ...[
+                if (snapshot?.weekDayLabel != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(snapshot!.weekDayLabel!, style: CohortTextStyles.body),
+                ],
+                if (snapshot?.progressLabel != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(
+                    snapshot!.progressLabel!,
+                    style: CohortTextStyles.small.copyWith(
+                      color: CohortColors.textSecondary,
+                    ),
+                  ),
+                ],
+                if (_controller.activeProgrammeVersionLabel != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(
+                    _controller.activeProgrammeVersionLabel!,
+                    style: CohortTextStyles.small.copyWith(
+                      color: CohortColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.lg),
+        const SectionTitle('Compliance'),
+        const SizedBox(height: CohortSpacing.sm),
+        CohortCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                snapshot?.complianceLabel ?? 'No programme assigned',
+                style: CohortTextStyles.body.copyWith(
+                  color: snapshot?.needsAttention == true
+                      ? CohortColors.warning
+                      : null,
+                ),
+              ),
+              if (snapshot?.todayStatusLabel != null) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  'Today: ${snapshot!.todayStatusLabel}',
+                  style: CohortTextStyles.small.copyWith(
+                    color: CohortColors.textSecondary,
+                  ),
+                ),
+              ],
+              if (snapshot?.lastActivityLabel != null) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  'Last activity: ${snapshot!.lastActivityLabel}',
+                  style: CohortTextStyles.small.copyWith(
+                    color: CohortColors.textSecondary,
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
         if (_controller.latestAdaptation != null) ...[
@@ -256,7 +355,8 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                   _controller.latestAdaptation!.explanation,
                   style: CohortTextStyles.body,
                 ),
-                if (_controller.latestAdaptation!.affectedSlotIds.isNotEmpty) ...[
+                if (_controller
+                    .latestAdaptation!.affectedSlotIds.isNotEmpty) ...[
                   const SizedBox(height: CohortSpacing.sm),
                   Text(
                     'Affected future sessions: '
@@ -270,6 +370,43 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
             ),
           ),
         ],
+        const SizedBox(height: CohortSpacing.lg),
+        const SectionTitle('Recent sessions'),
+        const SizedBox(height: CohortSpacing.sm),
+        if (_controller.recentSessions.isEmpty)
+          const CohortCard(
+            child: Text(
+              'No completed sessions recorded yet.',
+              style: CohortTextStyles.body,
+            ),
+          )
+        else
+          for (final record in _controller.recentSessions)
+            Padding(
+              padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+              child: CohortCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      record.sessionSnapshot.sessionTitle.isNotEmpty
+                          ? record.sessionSnapshot.sessionTitle
+                          : (record.sourceProtocolId ?? 'Session'),
+                      style: CohortTextStyles.cardTitle,
+                    ),
+                    if (record.completedAt != null) ...[
+                      const SizedBox(height: CohortSpacing.xs),
+                      Text(
+                        _formatDate(record.completedAt!.toLocal()),
+                        style: CohortTextStyles.small.copyWith(
+                          color: CohortColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
         if (_controller.errorMessage != null) ...[
           const SizedBox(height: CohortSpacing.sm),
           Text(
@@ -277,6 +414,42 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
             style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
           ),
         ],
+      ],
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}
+
+class _QuickActions extends StatelessWidget {
+  const _QuickActions({
+    required this.hasActiveAssignment,
+    required this.onAssign,
+    required this.onReplace,
+    required this.onViewHistory,
+  });
+
+  final bool hasActiveAssignment;
+  final VoidCallback onAssign;
+  final VoidCallback onReplace;
+  final VoidCallback onViewHistory;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        CohortButton(
+          label: hasActiveAssignment ? 'Replace programme' : 'Assign programme',
+          onPressed: hasActiveAssignment ? onReplace : onAssign,
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+        CohortButton(
+          label: 'View history',
+          onPressed: onViewHistory,
+        ),
       ],
     );
   }

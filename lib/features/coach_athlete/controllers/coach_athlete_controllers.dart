@@ -2,10 +2,15 @@ import 'package:flutter/foundation.dart';
 
 import '../../adaptation/models/programme_adaptation_event.dart';
 import '../../adaptation/services/adaptation_prescription_service.dart';
+import '../../performance/models/training_session_record.dart';
+import '../../performance/repositories/performance_record_store.dart';
+import '../../performance/repositories/supabase_performance_record_store.dart';
 import '../../programme/models/programme_catalog_entry.dart';
 import '../models/coach_athlete_operation_result.dart';
 import '../models/coach_athlete_roster_entry.dart';
 import '../services/coach_athlete_service.dart';
+import '../../coach_operations/models/coach_athlete_daily_snapshot.dart';
+import '../../coach_operations/services/coach_athlete_daily_status_service.dart';
 
 enum JoinCoachStatus {
   idle,
@@ -67,11 +72,18 @@ class AthleteDetailController extends ChangeNotifier {
   AthleteDetailController({
     required CoachAthleteService service,
     required CoachAthleteRosterEntry athlete,
+    CoachAthleteDailyStatusService? dailyStatusService,
+    PerformanceRecordStore? performanceRecordStore,
   })  : _service = service,
-        athlete = athlete;
+        athlete = athlete,
+        _dailyStatusService = dailyStatusService,
+        _performanceRecordStore =
+            performanceRecordStore ?? SupabasePerformanceRecordStore();
 
   final CoachAthleteService _service;
   final CoachAthleteRosterEntry athlete;
+  final CoachAthleteDailyStatusService? _dailyStatusService;
+  final PerformanceRecordStore _performanceRecordStore;
 
   AthleteDetailStatus status = AthleteDetailStatus.loading;
   String? errorMessage;
@@ -82,6 +94,8 @@ class AthleteDetailController extends ChangeNotifier {
   bool isAssigning = false;
   String? assignmentSuccessMessage;
   ProgrammeAdaptationEvent? latestAdaptation;
+  CoachAthleteDailySnapshot? operationalSnapshot;
+  List<TrainingSessionRecord> recentSessions = const [];
 
   final AdaptationPrescriptionService _adaptationPrescriptionService =
       AdaptationPrescriptionService();
@@ -115,6 +129,21 @@ class AthleteDetailController extends ChangeNotifier {
 
     final catalogueResult = await _service.listPublishedProgrammes();
     publishedProgrammes = catalogueResult.value ?? const [];
+
+    final dailyStatusService = _dailyStatusService;
+    if (dailyStatusService != null) {
+      try {
+        operationalSnapshot =
+            await dailyStatusService.loadSnapshotForAthlete(athlete.athleteId);
+      } on CoachAthleteDailyStatusException catch (error) {
+        errorMessage = error.message;
+      }
+    }
+
+    recentSessions = await _performanceRecordStore.listHistory(
+      athleteId: athlete.athleteId,
+      limit: 5,
+    );
 
     status = AthleteDetailStatus.ready;
     notifyListeners();

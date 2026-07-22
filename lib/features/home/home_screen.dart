@@ -31,6 +31,7 @@ import '../../models/protocol_analysis.dart';
 import '../../models/protocol_similarity_result.dart';
 import '../../models/session_fingerprint.dart';
 import '../admin/admin_protocol_editor_screen.dart';
+import '../coach_operations/screens/coach_home_dashboard_screen.dart';
 import '../coach_studio/coach_studio_home_screen.dart';
 import '../coach_studio/models/coach_studio_navigation_state.dart';
 import '../coach_studio/programmes/programme_catalogue_screen.dart';
@@ -112,6 +113,14 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const AdminProtocolEditorScreen(),
+      ),
+    );
+  }
+
+  void _openCoachHome(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CoachHomeDashboardScreen(),
       ),
     );
   }
@@ -1102,6 +1111,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: CohortSpacing.md),
+
+              const SectionTitle('Coach Home'),
+              const SizedBox(height: CohortSpacing.md),
+
+              if (CurrentUserSession.requireInstance.isCoach) ...[
+                CohortCard(
+                  onTap: () => _openCoachHome(context),
+                  child: const _HomeActionRow(
+                    title: 'My Athletes',
+                    subtitle:
+                        'Daily operations — who trained, who is due, who needs attention.',
+                    status: 'COACH',
+                  ),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+              ],
 
               const SectionTitle('Coach Studio'),
               const SizedBox(height: CohortSpacing.md),
