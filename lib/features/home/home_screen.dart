@@ -33,10 +33,7 @@ import '../../models/session_fingerprint.dart';
 import '../admin/admin_protocol_editor_screen.dart';
 import '../beta_support/beta_support_screen.dart';
 import '../coach_operations/screens/coach_home_dashboard_screen.dart';
-import '../coach_studio/coach_studio_home_screen.dart';
-import '../coach_studio/models/coach_studio_navigation_state.dart';
-import '../coach_studio/programmes/programme_catalogue_screen.dart';
-import '../coach_studio/programmes/services/programme_catalogue_services.dart';
+import '../coach_studio/coach_studio_access.dart';
 import '../adaptation/services/adaptation_candidate_filter.dart';
 import '../adaptation/services/adaptation_decision_service.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
@@ -127,26 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openCoachStudio(BuildContext context) {
-    final navigationState = CoachStudioNavigationState.instance;
-
-    if (navigationState.shouldOpenProgrammesDirectly) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => ProgrammeCatalogueScreen(
-            controller: ProgrammeCatalogueServices.createController(),
-          ),
-        ),
-      );
-      return;
-    }
-
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => CoachStudioHomeScreen(
-          openProgrammesDirectly: navigationState.shouldOpenProgrammesDirectly,
-        ),
-      ),
-    );
+    CoachStudioAccess.open(context);
   }
 
   Future<void> _openAdaptationSheet(BuildContext context) async {

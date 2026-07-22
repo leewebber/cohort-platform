@@ -16,7 +16,7 @@ class SessionLibraryAuthoringServices {
       protocolBuilderService:
           protocolBuilderService ?? ProtocolBuilderService(),
       idGenerator: idGenerator ?? const UuidTrainingContentIdGenerator(),
-      coachIdentity: coachIdentity ?? const DevCoachIdentity(),
+      coachIdentity: coachIdentity ?? const AuthenticatedCoachIdentity(),
     );
   }
 }

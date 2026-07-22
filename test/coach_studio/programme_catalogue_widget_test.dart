@@ -86,7 +86,11 @@ class _NoopValidationService implements ProgrammeBuilderValidationService {
 void main() {
   testWidgets('Coach Studio landing shows sections and availability labels', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(home: CoachStudioHomeScreen()),
+      MaterialApp(
+        home: CoachStudioHomeScreen(
+          catalogueController: _FakeCatalogueController(),
+        ),
+      ),
     );
 
     expect(find.text('Programmes'), findsOneWidget);

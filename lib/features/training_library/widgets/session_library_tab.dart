@@ -47,7 +47,7 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
             coachIdentity: widget.coachIdentity,
           );
   late final CurrentCoachIdentity _coachIdentity =
-      widget.coachIdentity ?? const DevCoachIdentity();
+      widget.coachIdentity ?? const AuthenticatedCoachIdentity();
 
   List<TrainingLibraryItemSummary> _summaries = const [];
   bool _loading = true;

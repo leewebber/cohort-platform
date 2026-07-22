@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/programme_dev_identity.dart';
+import '../../../core/services/authenticated_identity.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -83,7 +83,7 @@ class _NewProgrammeScreenState extends State<NewProgrammeScreen> {
       description: _nullable(_descriptionController.text),
       libraryScope: _libraryScope,
       ownerType: ProgrammeOwnerType.coach,
-      ownerId: ProgrammeDevIdentity.coachId,
+      ownerId: AuthenticatedIdentity.requireCoachId(),
       durationWeeks: durationWeeks,
       primaryGoal: _nullable(_goalController.text),
     );

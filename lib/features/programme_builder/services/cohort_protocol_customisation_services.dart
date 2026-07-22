@@ -30,7 +30,7 @@ class CohortProtocolCustomisationServices {
       programmeSessionCoordinator: programmeSessionCoordinator,
       librarySessionCoordinator: librarySessionCoordinator,
       sessionCloneService: sessionCloneService ?? const SessionCloneService(),
-      coachIdentity: coachIdentity ?? const DevCoachIdentity(),
+      coachIdentity: coachIdentity ?? const AuthenticatedCoachIdentity(),
       assignmentPort: programmeController == null
           ? null
           : ProgrammeEditorSessionAssignmentPort(
@@ -80,7 +80,7 @@ class CohortProtocolCustomisationServices {
         protocolBuilderService: protocolService,
         assignmentPort: _NoOpAssignmentPort(),
         idGenerator: idGenerator ?? const UuidTrainingContentIdGenerator(),
-        coachIdentity: coachIdentity ?? const DevCoachIdentity(),
+        coachIdentity: coachIdentity ?? const AuthenticatedCoachIdentity(),
       ),
       librarySessionCoordinator: SessionLibraryAuthoringServices.createCoordinator(
         protocolBuilderService: protocolService,

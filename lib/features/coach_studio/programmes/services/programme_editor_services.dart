@@ -1,4 +1,4 @@
-import '../../../../core/constants/programme_dev_identity.dart';
+import '../../../../core/services/authenticated_identity.dart';
 import '../../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../programme/services/programme_publishing_service.dart';
@@ -27,7 +27,21 @@ class ProgrammeEditorServices {
 
   static ProgrammeEditorController createController({
     required String versionId,
-    String coachId = ProgrammeDevIdentity.coachId,
+  }) {
+    final coachId = AuthenticatedIdentity.requireCoachId();
+    return _createController(versionId: versionId, coachId: coachId);
+  }
+
+  static ProgrammeEditorController createControllerForCoachId({
+    required String versionId,
+    required String coachId,
+  }) {
+    return _createController(versionId: versionId, coachId: coachId);
+  }
+
+  static ProgrammeEditorController _createController({
+    required String versionId,
+    required String coachId,
   }) {
     final versionStore = const ProgrammeVersionSupabaseStore();
     final assignmentStore = const ProgrammeAssignmentSupabaseStore();
@@ -62,9 +76,8 @@ class ProgrammeEditorServices {
     );
   }
 
-  static ProgrammeBuilderService createBuilderService({
-    String coachId = ProgrammeDevIdentity.coachId,
-  }) {
+  static ProgrammeBuilderService createBuilderService() {
+    AuthenticatedIdentity.requireCoachId();
     final versionStore = const ProgrammeVersionSupabaseStore();
     final assignmentStore = const ProgrammeAssignmentSupabaseStore();
     final validationService = ProgrammeBuilderValidationServiceImpl(
@@ -90,10 +103,9 @@ class ProgrammeEditorServices {
     return ProgrammeBuilderProtocolNameResolverImpl();
   }
 
-  static ProgrammeBuilderPublishCoordinator createPublishCoordinator({
-    String coachId = ProgrammeDevIdentity.coachId,
-  }) {
-    final builderService = createBuilderService(coachId: coachId);
+  static ProgrammeBuilderPublishCoordinator createPublishCoordinator() {
+    AuthenticatedIdentity.requireCoachId();
+    final builderService = createBuilderService();
     return ProgrammeBuilderPublishCoordinatorImpl(
       builderService: builderService,
       publishingService: ProgrammePublishingServiceImpl(

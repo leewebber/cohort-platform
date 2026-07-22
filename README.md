@@ -28,7 +28,9 @@ If `.env` is missing or incomplete, the app shows a configuration screen instead
 
 ## Supabase migrations
 
-Apply migrations in timestamp order from `supabase/migrations/`. See `07 Documentation/70_V2_0_Beta_Readiness_And_Production_Hardening.md` for the full ordered list and hosted deployment checklist.
+Apply migrations in timestamp order from `supabase/migrations/`. See `07 Documentation/70_V2_0_Beta_Readiness_And_Production_Hardening.md` for the full ordered list and `07 Documentation/71_V2_0_Production_Identity_And_RLS_Lockdown.md` for Sprint 8 identity/RLS lockdown.
+
+**Sprint 8 requirement:** apply `20260722130000_production_identity_rls_lockdown.sql` before private beta. Coach Studio requires a signed-in user with coach role; the app no longer falls back to `dev-coach`.
 
 ## Tests
 
@@ -44,3 +46,4 @@ Product and engineering docs live in `07 Documentation/`. Start with:
 - `64_V2_0_Authentication_And_Profiles.md`
 - `69_V2_0_Coach_Daily_Operations.md`
 - `70_V2_0_Beta_Readiness_And_Production_Hardening.md`
+- `71_V2_0_Production_Identity_And_RLS_Lockdown.md`

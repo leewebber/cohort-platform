@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../core/constants/programme_dev_identity.dart';
+import '../auth/services/current_user_session.dart';
+import '../programme/debug/programme_debug_identity.dart';
 import '../../core/services/supabase_service.dart';
 import '../../data/repositories/programme_version_supabase_store.dart';
 import '../../data/repositories/programme_version_store.dart';
@@ -30,6 +31,12 @@ class FounderAcceptanceInstaller {
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeVersionStore _versionStore;
+
+  String get _authoringCoachId {
+    ProgrammeDebugIdentity.assertDebugMode();
+    return CurrentUserSession.maybeInstance?.coachId ??
+        ProgrammeDebugIdentity.coachId;
+  }
 
   Future<FounderAcceptanceInstallResult> install() async {
     final existingLineage = await _versionStore.getLineageByCode(
@@ -100,7 +107,7 @@ class FounderAcceptanceInstaller {
       ProgrammeLineage(
         id: FounderAcceptanceDevFixtures.lineageId,
         code: FounderAcceptanceContent.programmeLineageCode,
-        createdBy: ProgrammeDevIdentity.coachId,
+        createdBy: _authoringCoachId,
       ),
     );
   }
@@ -132,7 +139,7 @@ class FounderAcceptanceInstaller {
           description: FounderAcceptanceContent.programmeDescription,
           durationWeeks: 1,
           sessionsPerWeek: 1,
-          createdBy: ProgrammeDevIdentity.coachId,
+          createdBy: _authoringCoachId,
         ),
       );
     } else {
@@ -155,7 +162,7 @@ class FounderAcceptanceInstaller {
         {
           'id': FounderAcceptanceDevFixtures.lineageId,
           'code': FounderAcceptanceContent.programmeLineageCode,
-          'created_by': ProgrammeDevIdentity.coachId,
+          'created_by': _authoringCoachId,
         },
         onConflict: 'code',
       );
@@ -179,7 +186,7 @@ class FounderAcceptanceInstaller {
         description: FounderAcceptanceContent.programmeDescription,
         durationWeeks: 1,
         sessionsPerWeek: 1,
-        createdBy: ProgrammeDevIdentity.coachId,
+        createdBy: _authoringCoachId,
       );
 
       await SupabaseService.client.from('programme_versions').upsert(

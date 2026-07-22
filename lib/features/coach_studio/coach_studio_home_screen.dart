@@ -8,9 +8,11 @@ import '../training_library/screens/training_library_screen.dart';
 import 'models/coach_studio_navigation_state.dart';
 import 'models/coach_studio_section.dart';
 import 'programmes/programme_catalogue_screen.dart';
-import 'programmes/controllers/programme_catalogue_controller.dart';
-import 'programmes/services/programme_catalogue_services.dart';
+import '../../core/errors/user_facing_error_messages.dart';
+import '../../core/services/authenticated_identity.dart';
+import 'coach_studio_access.dart';
 import '../coach_operations/screens/coach_home_dashboard_screen.dart';
+import 'programmes/controllers/programme_catalogue_controller.dart';
 
 class CoachStudioHomeScreen extends StatefulWidget {
   const CoachStudioHomeScreen({
@@ -27,18 +29,33 @@ class CoachStudioHomeScreen extends StatefulWidget {
 }
 
 class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
-  late final ProgrammeCatalogueController _catalogueController =
-      widget.catalogueController ??
-          ProgrammeCatalogueServices.createController();
+  ProgrammeCatalogueController? _catalogueController;
+  String? _accessErrorMessage;
 
   @override
   void initState() {
     super.initState();
+    _initializeCatalogueController();
 
-    if (widget.openProgrammesDirectly) {
+    if (widget.openProgrammesDirectly && _catalogueController != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _openSection(CoachStudioSection.programmes, replace: true);
       });
+    }
+  }
+
+  void _initializeCatalogueController() {
+    if (widget.catalogueController != null) {
+      _catalogueController = widget.catalogueController;
+      return;
+    }
+
+    try {
+      _catalogueController = CoachStudioAccess.createCatalogueController();
+    } on AuthenticatedIdentityException catch (error) {
+      _accessErrorMessage = error.userMessage;
+    } catch (error) {
+      _accessErrorMessage = UserFacingErrorMessages.from(error);
     }
   }
 
@@ -50,10 +67,24 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
 
     if (!section.isAvailableInV01) return;
 
+    final controller = _catalogueController;
+    if (section == CoachStudioSection.programmes && controller == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            _accessErrorMessage ??
+                'Coach access is required to open Coach Studio.',
+          ),
+        ),
+      );
+      return;
+    }
+
     final route = switch (section) {
       CoachStudioSection.programmes => MaterialPageRoute(
           builder: (_) => ProgrammeCatalogueScreen(
-            controller: _catalogueController,
+            controller: controller!,
           ),
         ),
       CoachStudioSection.trainingLibrary => MaterialPageRoute(
@@ -100,6 +131,13 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
                 'Build programmes and manage training content.',
                 style: CohortTextStyles.body,
               ),
+              if (_accessErrorMessage != null) ...[
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  _accessErrorMessage!,
+                  style: CohortTextStyles.body,
+                ),
+              ],
               const SizedBox(height: CohortSpacing.xl),
               Expanded(
                 child: ListView.separated(

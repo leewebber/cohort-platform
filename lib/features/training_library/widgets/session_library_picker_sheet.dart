@@ -54,7 +54,7 @@ class _SessionLibraryPickerSheetState extends State<SessionLibraryPickerSheet> {
             coachIdentity: widget.coachIdentity,
           );
   late final CurrentCoachIdentity _coachIdentity =
-      widget.coachIdentity ?? const DevCoachIdentity();
+      widget.coachIdentity ?? const AuthenticatedCoachIdentity();
 
   final _searchController = TextEditingController();
   List<TrainingLibraryItemSummary> _items = const [];

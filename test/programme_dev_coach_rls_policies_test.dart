@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cohort_platform/core/constants/programme_dev_identity.dart';
+import 'support/programme_dev_identity.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:flutter_test/flutter_test.dart';
 

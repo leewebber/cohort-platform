@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../core/constants/programme_dev_identity.dart';
+import '../../../core/services/authenticated_identity.dart';
 import '../../auth/services/current_user_session.dart';
 import '../../../data/repositories/athlete_state_supabase_store.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
@@ -29,13 +29,17 @@ import '../../founder_acceptance/founder_acceptance_installer.dart';
 import '../../founder_acceptance/founder_acceptance_install_result.dart';
 import '../../founder_acceptance/founder_acceptance_runtime_reset_service.dart';
 import 'programme_dev_fixtures.dart';
+import 'programme_debug_identity.dart';
 
 /// Temporary Home debug helpers for programme service validation.
 class ProgrammeDebugActions {
   ProgrammeDebugActions._();
 
-  static String get devAthleteId =>
-      CurrentUserSession.maybeInstance?.athleteId ?? ProgrammeDevIdentity.athleteId;
+  static String get devAthleteId {
+    ProgrammeDebugIdentity.assertDebugMode();
+    return AuthenticatedIdentity.maybeAthleteId() ??
+        ProgrammeDebugIdentity.athleteId;
+  }
 
   static TodaySessionService createTodaySessionService({
     ProgrammeAssignmentStore? assignmentStore,

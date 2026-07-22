@@ -22,7 +22,7 @@ class ProgrammeSessionAuthoringServices {
         controller: controller,
       ),
       idGenerator: idGenerator ?? const UuidTrainingContentIdGenerator(),
-      coachIdentity: coachIdentity ?? const DevCoachIdentity(),
+      coachIdentity: coachIdentity ?? const AuthenticatedCoachIdentity(),
     );
   }
 }

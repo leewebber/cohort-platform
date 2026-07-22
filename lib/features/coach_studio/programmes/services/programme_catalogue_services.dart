@@ -1,4 +1,4 @@
-import '../../../../core/constants/programme_dev_identity.dart';
+import '../../../../core/services/authenticated_identity.dart';
 import '../../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../programme/services/programme_catalog_service.dart';
@@ -18,8 +18,19 @@ import '../controllers/programme_catalogue_controller.dart';
 class ProgrammeCatalogueServices {
   ProgrammeCatalogueServices._();
 
-  static ProgrammeCatalogueController createController({
-    String coachId = ProgrammeDevIdentity.coachId,
+  static ProgrammeCatalogueController createController() {
+    final coachId = AuthenticatedIdentity.requireCoachId();
+    return _createController(coachId: coachId);
+  }
+
+  static ProgrammeCatalogueController createControllerForCoachId({
+    required String coachId,
+  }) {
+    return _createController(coachId: coachId);
+  }
+
+  static ProgrammeCatalogueController _createController({
+    required String coachId,
   }) {
     final versionStore = const ProgrammeVersionSupabaseStore();
     final assignmentStore = const ProgrammeAssignmentSupabaseStore();
@@ -59,9 +70,8 @@ class ProgrammeCatalogueServices {
     );
   }
 
-  static ProgrammeBuilderService createBuilderService({
-    String coachId = ProgrammeDevIdentity.coachId,
-  }) {
+  static ProgrammeBuilderService createBuilderService() {
+    AuthenticatedIdentity.requireCoachId();
     final versionStore = const ProgrammeVersionSupabaseStore();
     final assignmentStore = const ProgrammeAssignmentSupabaseStore();
     final validationService = ProgrammeBuilderValidationServiceImpl(
@@ -75,12 +85,10 @@ class ProgrammeCatalogueServices {
     );
   }
 
-  static ProgrammeCatalogService createCatalogService({
-    String coachId = ProgrammeDevIdentity.coachId,
-  }) {
+  static ProgrammeCatalogService createCatalogService() {
     return ProgrammeCatalogServiceImpl(
       versionStore: const ProgrammeVersionSupabaseStore(),
-      coachId: coachId,
+      coachId: AuthenticatedIdentity.requireCoachId(),
     );
   }
 
@@ -90,10 +98,9 @@ class ProgrammeCatalogueServices {
     );
   }
 
-  static ProgrammeBuilderPublishCoordinator createPublishCoordinator({
-    String coachId = ProgrammeDevIdentity.coachId,
-  }) {
-    final builderService = createBuilderService(coachId: coachId);
+  static ProgrammeBuilderPublishCoordinator createPublishCoordinator() {
+    final coachId = AuthenticatedIdentity.requireCoachId();
+    final builderService = createBuilderService();
     return ProgrammeBuilderPublishCoordinatorImpl(
       builderService: builderService,
       publishingService: createPublishingService(),

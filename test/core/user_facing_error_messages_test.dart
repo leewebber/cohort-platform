@@ -1,8 +1,20 @@
 import 'package:cohort_platform/core/errors/user_facing_error_messages.dart';
+import 'package:cohort_platform/core/services/authenticated_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('UserFacingErrorMessages', () {
+    test('maps authenticated identity failures', () {
+      expect(
+        UserFacingErrorMessages.from(
+          const AuthenticatedIdentityException(
+            'Coach access is required to open Coach Studio.',
+          ),
+        ),
+        'Coach access is required to open Coach Studio.',
+      );
+    });
+
     test('maps permission denied', () {
       expect(
         UserFacingErrorMessages.from(Exception('permission denied for table x')),
