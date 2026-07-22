@@ -9,6 +9,7 @@ import '../../../programme_impact/services/programme_version_impact_service.dart
 import '../../../programme_migration/models/programme_migration_plan_models.dart';
 import '../../../programme_migration/services/programme_migration_planner_service.dart';
 import '../models/programme_intelligence_view_state.dart';
+import '../../coach_studio_error_messages.dart';
 
 /// Orchestrates M10.1–M10.3 services for Coach Studio Programme Intelligence.
 class ProgrammeIntelligenceController extends ChangeNotifier {
@@ -73,10 +74,11 @@ class ProgrammeIntelligenceController extends ChangeNotifier {
             lineageVersions: _sortedLineageVersions(versions),
           );
       }
-    } catch (error) {
+    } catch (error, stackTrace) {
+      debugPrint('Impact lookup failed: $error\n$stackTrace');
       _state = _state.copyWith(
         impactStatus: ProgrammeIntelligenceCardStatus.error,
-        impactError: error.toString(),
+        impactError: CoachStudioErrorMessages.fromObject(error),
       );
     }
 

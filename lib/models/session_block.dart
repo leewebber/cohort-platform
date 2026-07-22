@@ -132,7 +132,7 @@ class SessionBlock {
   }
 
   SessionBlock deepClone({required int position, String? titleSuffix}) {
-    final clonedLinks = linkedExercises
+      final clonedLinks = linkedExercises
         .asMap()
         .entries
         .map(
@@ -142,6 +142,7 @@ class SessionBlock {
             exerciseId: entry.value.exerciseId,
             position: entry.value.position,
             displayLabelOverride: entry.value.displayLabelOverride,
+            prescription: entry.value.prescription,
           ),
         )
         .toList(growable: false);
@@ -164,6 +165,9 @@ class SessionBlock {
 
   bool get hasMeaningfulContent {
     if (content.trim().isNotEmpty) return true;
+    if (linkedExercises.any((link) => link.hasStructuredPrescription)) {
+      return true;
+    }
     if (linkedExercises.isNotEmpty) return true;
     if (workoutFormat != WorkoutFormat.none &&
         timerConfiguration != null &&

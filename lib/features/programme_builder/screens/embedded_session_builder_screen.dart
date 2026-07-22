@@ -6,6 +6,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
+import '../../exercises/services/exercise_catalogue_service.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../../programme_builder/models/cohort_protocol_customisation_result.dart';
@@ -71,7 +72,7 @@ class _EmbeddedSessionBuilderScreenState
           widget.authoringContext,
         );
     _exercisesFuture = widget.loadExercises?.call() ??
-        Future<List<Exercise>>.value(const []);
+        ExerciseCatalogueService().loadPublishedExercises();
 
     EmbeddedSessionBuilderDiagnostics.log(
       'opened intent=${widget.authoringContext.authoringIntent.name} '

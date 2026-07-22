@@ -4,6 +4,7 @@ import '../../../models/protocol_metadata_vocabulary.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_exercise_link.dart';
 import '../../../models/session_block_type.dart';
+import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../../../models/workout_format.dart';
@@ -297,6 +298,77 @@ class SessionBuilderEditingState {
                   : link,
             )
             .toList(),
+      ),
+    );
+  }
+
+  void upsertStrengthExercisePrescription({
+    required String blockLocalId,
+    required Exercise exercise,
+    required StrengthExercisePrescription prescription,
+    String? linkLocalId,
+  }) {
+    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+    if (blockIndex < 0) return;
+
+    final block = blocks[blockIndex];
+    if (linkLocalId != null) {
+      updateBlock(
+        block.copyWith(
+          linkedExercises: block.linkedExercises
+              .map(
+                (link) => link.localId == linkLocalId
+                    ? link.copyWith(
+                        exerciseId: exercise.exerciseId,
+                        prescription: prescription,
+                      )
+                    : link,
+              )
+              .toList(),
+        ),
+      );
+      return;
+    }
+
+    if (block.linkedExercises.any((link) => link.exerciseId == exercise.exerciseId)) {
+      return;
+    }
+
+    final nextPosition = block.linkedExercises.length + 1;
+    updateBlock(
+      block.copyWith(
+        linkedExercises: [
+          ...block.linkedExercises,
+          SessionBlockExerciseLink(
+            localId: 'link-${DateTime.now().microsecondsSinceEpoch}',
+            exerciseId: exercise.exerciseId,
+            position: nextPosition,
+            prescription: prescription,
+          ),
+        ],
+      ),
+    );
+  }
+
+  void duplicateExerciseLink(String blockLocalId, String linkLocalId) {
+    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+    if (blockIndex < 0) return;
+
+    final block = blocks[blockIndex];
+    final linkIndex =
+        block.linkedExercises.indexWhere((link) => link.localId == linkLocalId);
+    if (linkIndex < 0) return;
+
+    final duplicate = block.linkedExercises[linkIndex].duplicateWithNewIdentity();
+    final reordered = List<SessionBlockExerciseLink>.from(block.linkedExercises);
+    reordered.insert(linkIndex + 1, duplicate);
+
+    updateBlock(
+      block.copyWith(
+        linkedExercises: [
+          for (var i = 0; i < reordered.length; i++)
+            reordered[i].copyWith(position: i + 1),
+        ],
       ),
     );
   }

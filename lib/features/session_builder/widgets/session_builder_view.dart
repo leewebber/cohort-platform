@@ -362,6 +362,25 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       label,
                     ),
                   ),
+                  onUpsertStrengthExercise: ({
+                    required exercise,
+                    required prescription,
+                    linkLocalId,
+                  }) =>
+                      _setStateAndEmit(
+                    () => _editing.upsertStrengthExercisePrescription(
+                      blockLocalId: _editing.blocks[index].localId,
+                      exercise: exercise,
+                      prescription: prescription,
+                      linkLocalId: linkLocalId,
+                    ),
+                  ),
+                  onDuplicateExercise: (linkLocalId) => _setStateAndEmit(
+                    () => _editing.duplicateExerciseLink(
+                      _editing.blocks[index].localId,
+                      linkLocalId,
+                    ),
+                  ),
                 ),
               ],
               const SizedBox(height: CohortSpacing.lg),

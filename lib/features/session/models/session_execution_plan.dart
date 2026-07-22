@@ -3,6 +3,7 @@ import '../../../models/exercise.dart';
 import '../../../models/protocol.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_exercise_link.dart';
+import '../../../models/strength_exercise_prescription.dart';
 import '../services/athlete_exercise_label_resolver.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/timer_configuration.dart';
@@ -14,12 +15,14 @@ class SessionExecutionExerciseSummary {
     required this.displayName,
     this.displayLabelOverride,
     this.exercise,
+    this.prescription,
   });
 
   final String exerciseId;
   final String displayName;
   final String? displayLabelOverride;
   final Exercise? exercise;
+  final StrengthExercisePrescription? prescription;
 
   /// Athlete-facing label with resolver fallbacks.
   String get athleteLabel =>
@@ -64,6 +67,9 @@ class SessionExecutionBlock {
 
   bool get hasAthleteVisibleContent {
     if (content.trim().isNotEmpty) return true;
+    if (linkedExercises.any((exercise) => exercise.prescription?.hasStructuredData == true)) {
+      return true;
+    }
     if (linkedExercises.isNotEmpty) return true;
     if (hasTimer) return true;
     if (coachNotes?.trim().isNotEmpty == true) return true;
@@ -82,6 +88,7 @@ class SessionExecutionBlock {
             displayName: _displayName(link, exercisesById),
             displayLabelOverride: link.displayLabelOverride,
             exercise: exercisesById[link.exerciseId],
+            prescription: link.prescription,
           ),
         )
         .toList(growable: false);

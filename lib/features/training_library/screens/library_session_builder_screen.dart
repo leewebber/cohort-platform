@@ -7,6 +7,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../models/exercise.dart';
+import '../../exercises/services/exercise_catalogue_service.dart';
 import '../../../models/protocol_draft.dart';
 import '../../coach_studio/governance/controllers/session_governance_controller.dart';
 import '../../coach_studio/governance/services/coach_studio_governance_services.dart';
@@ -68,7 +69,7 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
           ownerId: widget.coachIdentity?.coachId,
         );
     _exercisesFuture = widget.loadExercises?.call() ??
-        Future<List<Exercise>>.value(const []);
+        ExerciseCatalogueService().loadPublishedExercises();
     _revisionService = widget.revisionService ??
         CoachStudioGovernanceServices.createRevisionService();
     _initGovernanceController();

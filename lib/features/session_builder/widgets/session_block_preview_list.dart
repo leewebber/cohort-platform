@@ -4,8 +4,9 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../models/session_block_type.dart';
 import '../../session/models/session_execution_plan.dart';
-import '../services/session_execution_plan_builder.dart';
+import '../../session/widgets/strength_prescription_display.dart';
 
 class SessionBlockPreviewList extends StatelessWidget {
   const SessionBlockPreviewList({
@@ -77,7 +78,12 @@ class _BlockPreviewCard extends StatelessWidget {
           ),
           if (block.content.trim().isNotEmpty) ...[
             const SizedBox(height: CohortSpacing.md),
-            Text(block.content, style: CohortTextStyles.body),
+            Text(
+              block.blockType.supportsStructuredStrengthPrescription
+                  ? block.content.trim()
+                  : block.content,
+              style: CohortTextStyles.body,
+            ),
           ],
           if (block.timerSummary != null) ...[
             const SizedBox(height: CohortSpacing.sm),
@@ -88,7 +94,12 @@ class _BlockPreviewCard extends StatelessWidget {
               ),
             ),
           ],
-          if (block.linkedExercises.isNotEmpty) ...[
+          if (block.linkedExercises.any(
+            (exercise) => exercise.prescription?.hasStructuredData == true,
+          )) ...[
+            const SizedBox(height: CohortSpacing.md),
+            StrengthPrescriptionList(exercises: block.linkedExercises),
+          ] else if (block.linkedExercises.isNotEmpty) ...[
             const SizedBox(height: CohortSpacing.md),
             Text('Linked exercises', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.xs),

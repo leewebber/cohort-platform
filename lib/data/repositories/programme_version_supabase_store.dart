@@ -240,6 +240,7 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       );
 
       if (version.id.isEmpty) {
+        _applyAuthenticatedCoachOwnership(payload);
         final response = await SupabaseService.client
             .from(_versionsTable)
             .insert(payload)
@@ -473,6 +474,7 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
     try {
       final payload = lineage.toInsertMap();
       payload.remove('id');
+      _applyAuthenticatedLineageOwnership(payload);
       debugPrint('[ProgrammeCreate] insertLineage payload=$payload');
 
       final response = await SupabaseService.client
@@ -556,5 +558,22 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
   ) {
     debugPrint('[ProgrammeCreate] store $stage exception=$error');
     debugPrint('[ProgrammeCreate] stackTrace=$stackTrace');
+  }
+
+  /// Binds lineage ownership to the active Supabase auth user for RLS INSERT checks.
+  static void _applyAuthenticatedLineageOwnership(Map<String, dynamic> payload) {
+    final authUserId = SupabaseService.client.auth.currentUser?.id?.trim();
+    if (authUserId == null || authUserId.isEmpty) return;
+    payload['created_by'] = authUserId;
+  }
+
+  /// Binds coach-private draft ownership to the active Supabase auth user.
+  static void _applyAuthenticatedCoachOwnership(Map<String, dynamic> payload) {
+    final authUserId = SupabaseService.client.auth.currentUser?.id?.trim();
+    if (authUserId == null || authUserId.isEmpty) return;
+    if (payload['owner_type'] == ProgrammeOwnerType.coach.dbValue) {
+      payload['owner_id'] = authUserId;
+    }
+    payload.putIfAbsent('created_by', () => authUserId);
   }
 }

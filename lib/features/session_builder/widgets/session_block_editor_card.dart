@@ -11,7 +11,9 @@ import '../../../models/session_block_type.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../../../models/session_block_exercise_link.dart';
+import '../../../models/strength_exercise_prescription.dart';
 import 'session_builder_form_widgets.dart';
+import 'strength_exercise_prescription_sheet.dart';
 import 'workout_content_editor.dart';
 
 class SessionBlockEditorCard extends StatefulWidget {
@@ -33,6 +35,8 @@ class SessionBlockEditorCard extends StatefulWidget {
     required this.onMoveExerciseUp,
     required this.onMoveExerciseDown,
     required this.onExerciseLabelChanged,
+    this.onUpsertStrengthExercise,
+    this.onDuplicateExercise,
     this.initiallyExpanded = true,
     this.useCoachLabels = false,
   });
@@ -53,6 +57,12 @@ class SessionBlockEditorCard extends StatefulWidget {
   final void Function(String linkLocalId) onMoveExerciseUp;
   final void Function(String linkLocalId) onMoveExerciseDown;
   final void Function(String linkLocalId, String? label) onExerciseLabelChanged;
+  final void Function({
+    required Exercise exercise,
+    required StrengthExercisePrescription prescription,
+    String? linkLocalId,
+  })? onUpsertStrengthExercise;
+  final ValueChanged<String>? onDuplicateExercise;
   final bool initiallyExpanded;
   final bool useCoachLabels;
 
@@ -114,6 +124,46 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
   String? _emptyToNull(String value) {
     final trimmed = value.trim();
     return trimmed.isEmpty ? null : trimmed;
+  }
+
+  bool get _usesStructuredStrength =>
+      widget.block.blockType.supportsStructuredStrengthPrescription;
+
+  String _exerciseName(SessionBlockExerciseLink link) {
+    for (final exercise in widget.exercises) {
+      if (exercise.exerciseId == link.exerciseId) {
+        return exercise.name;
+      }
+    }
+    return 'Exercise unavailable — choose another from the library';
+  }
+
+  Exercise? _exerciseForLink(SessionBlockExerciseLink link) {
+    for (final exercise in widget.exercises) {
+      if (exercise.exerciseId == link.exerciseId) {
+        return exercise;
+      }
+    }
+    return null;
+  }
+
+  Future<void> _openStrengthExerciseSheet({SessionBlockExerciseLink? link}) async {
+    if (widget.onUpsertStrengthExercise == null) return;
+
+    final result = await showStrengthExercisePrescriptionSheet(
+      context: context,
+      initialExercise: link == null ? null : _exerciseForLink(link),
+      initialExerciseId: link?.exerciseId,
+      initialPrescription: link?.prescription,
+      title: link == null ? 'Add exercise' : 'Edit exercise',
+    );
+    if (result == null || !mounted) return;
+
+    widget.onUpsertStrengthExercise!(
+      exercise: result.exercise,
+      prescription: result.prescription,
+      linkLocalId: link?.localId,
+    );
   }
 
   IconData _iconForType(SessionBlockType type) {
@@ -257,7 +307,9 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
               },
             ),
             WorkoutContentEditor(
-              label: 'Workout content',
+              label: _usesStructuredStrength
+                  ? 'Block instructions (optional)'
+                  : 'Workout content',
               controller: _contentController,
               onChanged: (value) => _emitChanged(content: value),
             ),
@@ -271,59 +323,97 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
                 onChanged: widget.onTimerConfigurationChanged,
               ),
             ],
-            Text('Exercises used', style: CohortTextStyles.eyebrow),
-            const SizedBox(height: CohortSpacing.sm),
-            for (var index = 0; index < block.linkedExercises.length; index++) ...[
-              _ExerciseLinkRow(
-                link: block.linkedExercises[index],
-                exercises: widget.exercises,
-                canMoveUp: index > 0,
-                canMoveDown: index < block.linkedExercises.length - 1,
-                onRemove: () =>
-                    widget.onRemoveExercise(block.linkedExercises[index].localId),
-                onMoveUp: () =>
-                    widget.onMoveExerciseUp(block.linkedExercises[index].localId),
-                onMoveDown: () => widget.onMoveExerciseDown(
-                  block.linkedExercises[index].localId,
-                ),
-                onLabelChanged: (label) => widget.onExerciseLabelChanged(
-                  block.linkedExercises[index].localId,
-                  label,
-                ),
-              ),
+            if (_usesStructuredStrength) ...[
+              Text('Exercises', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
-            ],
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButton<Exercise?>(
-                    isExpanded: true,
-                    value: _selectedExerciseToAdd,
-                    hint: const Text('Select exercise to link'),
-                    items: widget.exercises
-                        .map(
-                          (exercise) => DropdownMenuItem<Exercise?>(
-                            value: exercise,
-                            child: Text(exercise.name),
-                          ),
-                        )
-                        .toList(growable: false),
-                    onChanged: (exercise) =>
-                        setState(() => _selectedExerciseToAdd = exercise),
+              for (var index = 0; index < block.linkedExercises.length; index++) ...[
+                StrengthExercisePrescriptionCard(
+                  exerciseName: _exerciseName(block.linkedExercises[index]),
+                  prescription: block.linkedExercises[index].prescription,
+                  canMoveUp: index > 0,
+                  canMoveDown: index < block.linkedExercises.length - 1,
+                  onEdit: () => _openStrengthExerciseSheet(
+                    link: block.linkedExercises[index],
+                  ),
+                  onDuplicate: () => widget.onDuplicateExercise?.call(
+                    block.linkedExercises[index].localId,
+                  ),
+                  onRemove: () => widget.onRemoveExercise(
+                    block.linkedExercises[index].localId,
+                  ),
+                  onMoveUp: () => widget.onMoveExerciseUp(
+                    block.linkedExercises[index].localId,
+                  ),
+                  onMoveDown: () => widget.onMoveExerciseDown(
+                    block.linkedExercises[index].localId,
                   ),
                 ),
-                const SizedBox(width: CohortSpacing.sm),
-                TextButton(
-                  onPressed: _selectedExerciseToAdd == null
-                      ? null
-                      : () {
-                          widget.onAddExercise(_selectedExerciseToAdd!);
-                          setState(() => _selectedExerciseToAdd = null);
-                        },
-                  child: const Text('Link'),
-                ),
+                const SizedBox(height: CohortSpacing.sm),
               ],
-            ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: widget.onUpsertStrengthExercise == null
+                      ? null
+                      : () => _openStrengthExerciseSheet(),
+                  child: const Text('+ Add exercise'),
+                ),
+              ),
+            ] else ...[
+              Text('Exercises used', style: CohortTextStyles.eyebrow),
+              const SizedBox(height: CohortSpacing.sm),
+              for (var index = 0; index < block.linkedExercises.length; index++) ...[
+                _ExerciseLinkRow(
+                  link: block.linkedExercises[index],
+                  exercises: widget.exercises,
+                  canMoveUp: index > 0,
+                  canMoveDown: index < block.linkedExercises.length - 1,
+                  onRemove: () =>
+                      widget.onRemoveExercise(block.linkedExercises[index].localId),
+                  onMoveUp: () =>
+                      widget.onMoveExerciseUp(block.linkedExercises[index].localId),
+                  onMoveDown: () => widget.onMoveExerciseDown(
+                    block.linkedExercises[index].localId,
+                  ),
+                  onLabelChanged: (label) => widget.onExerciseLabelChanged(
+                    block.linkedExercises[index].localId,
+                    label,
+                  ),
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+              ],
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButton<Exercise?>(
+                      isExpanded: true,
+                      value: _selectedExerciseToAdd,
+                      hint: const Text('Select exercise to link'),
+                      items: widget.exercises
+                          .map(
+                            (exercise) => DropdownMenuItem<Exercise?>(
+                              value: exercise,
+                              child: Text(exercise.name),
+                            ),
+                          )
+                          .toList(growable: false),
+                      onChanged: (exercise) =>
+                          setState(() => _selectedExerciseToAdd = exercise),
+                    ),
+                  ),
+                  const SizedBox(width: CohortSpacing.sm),
+                  TextButton(
+                    onPressed: _selectedExerciseToAdd == null
+                        ? null
+                        : () {
+                            widget.onAddExercise(_selectedExerciseToAdd!);
+                            setState(() => _selectedExerciseToAdd = null);
+                          },
+                    child: const Text('Link'),
+                  ),
+                ],
+              ),
+            ],
             SessionBuilderTextField(
               label: 'Coach notes',
               controller: _coachNotesController,

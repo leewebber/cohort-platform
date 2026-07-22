@@ -472,7 +472,7 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
 
     final stepRows = await SupabaseService.client
         .from(_stepsTable)
-        .select('step_id, exercise_id, protocol_id, title')
+        .select('id, exercise_id, protocol_id')
         .inFilter('protocol_id', targetProtocolIds)
         .not('exercise_id', 'is', null);
 

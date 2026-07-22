@@ -5,8 +5,8 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/exercise_card.dart';
 import '../../../core/widgets/search_bar.dart';
 import '../../../core/widgets/section_title.dart';
-import '../../../data/repositories/exercise_repository.dart';
 import '../../../models/exercise.dart';
+import '../services/exercise_catalogue_service.dart';
 import '../exercise_detail/exercise_detail_screen.dart';
 
 class ExerciseLibraryScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class ExerciseLibraryScreen extends StatefulWidget {
 }
 
 class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
-  final ExerciseRepository _repository = ExerciseRepository();
+  final ExerciseCatalogueService _catalogueService = ExerciseCatalogueService();
 
   late Future<List<Exercise>> _future;
 
@@ -31,7 +31,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
   @override
   void initState() {
     super.initState();
-    _future = _repository.getExercises();
+    _future = _catalogueService.loadPublishedExercises();
   }
 
   void _openExerciseDetail(Exercise exercise) {
@@ -66,22 +66,10 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
               );
             }
 
-            var exercises = snapshot.data ?? [];
-
-            if (_search.isNotEmpty) {
-              final query = _search.toLowerCase();
-
-              exercises = exercises.where((exercise) {
-                return exercise.name.toLowerCase().contains(query) ||
-                    (exercise.movementPattern ?? '')
-                        .toLowerCase()
-                        .contains(query) ||
-                    (exercise.primaryMuscles ?? '')
-                        .toLowerCase()
-                        .contains(query) ||
-                    (exercise.equipment ?? '').toLowerCase().contains(query);
-              }).toList();
-            }
+            var exercises = ExerciseCatalogueService.filter(
+              snapshot.data ?? const [],
+              _search,
+            );
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),

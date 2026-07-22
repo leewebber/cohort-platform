@@ -56,4 +56,10 @@ extension SessionBlockTypeDb on SessionBlockType {
       _ => SessionBlockType.custom,
     };
   }
+
+  /// Block types that use structured exercise prescriptions (Sprint 10).
+  bool get supportsStructuredStrengthPrescription {
+    return this == SessionBlockType.strength ||
+        this == SessionBlockType.accessory;
+  }
 }

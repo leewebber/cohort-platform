@@ -5,7 +5,9 @@ import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/widgets/cohort_button.dart';
 import '../../../../core/widgets/cohort_card.dart';
+import '../../../../models/session_block_type.dart';
 import '../../models/session_execution_plan.dart';
+import '../strength_prescription_display.dart';
 import 'athlete_session_components.dart';
 
 class AthleteBlockCard extends StatelessWidget {
@@ -97,7 +99,12 @@ class AthleteBlockCard extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.sm),
                 TimerSummaryText(summary: block.timerSummary!),
               ],
-              if (block.linkedExercises.isNotEmpty) ...[
+              if (block.linkedExercises.any(
+                (exercise) => exercise.prescription?.hasStructuredData == true,
+              )) ...[
+                const SizedBox(height: CohortSpacing.md),
+                StrengthPrescriptionList(exercises: block.linkedExercises),
+              ] else if (block.linkedExercises.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text('Exercises', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.sm),
@@ -138,7 +145,8 @@ class AthleteBlockCard extends StatelessWidget {
                   ],
                 ),
               ],
-              if (block.coachNotes != null) ...[
+              if (block.coachNotes != null &&
+                  !block.blockType.supportsStructuredStrengthPrescription) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text('Coach notes', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.xs),

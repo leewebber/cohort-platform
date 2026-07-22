@@ -1,4 +1,5 @@
 import '../../../models/session_block.dart';
+import '../../../models/session_block_type.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 
@@ -67,6 +68,15 @@ class SessionBlockValidation {
         messages.add('linked exercises must reference a valid exercise.');
       } else if (!seenExerciseIds.add(link.exerciseId.trim())) {
         messages.add('duplicate exercise links are not allowed in one block.');
+      }
+
+      if (block.blockType.supportsStructuredStrengthPrescription &&
+          link.prescription != null) {
+        messages.addAll(
+          link.prescription!
+              .validate(requireComplete: true)
+              .map((message) => 'exercise prescription: $message'),
+        );
       }
     }
 
