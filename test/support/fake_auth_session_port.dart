@@ -61,10 +61,15 @@ class FakeAuthSessionPort implements AuthSessionPort {
   Future<AuthResponse> signUp({
     required String email,
     required String password,
+    String? displayName,
+    Set<String>? roleNames,
   }) async {
     setAuthenticated(userId: 'user-new', email: email);
-    return AuthResponse(session: session, user: user);
+    return AuthResponse(session: null, user: user);
   }
+
+  @override
+  Future<void> resendSignupVerification({required String email}) async {}
 
   @override
   Future<void> signOut() async {

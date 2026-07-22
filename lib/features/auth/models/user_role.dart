@@ -1,7 +1,15 @@
 /// Roles a Cohort user can hold. One user may be coach, athlete, or both.
 enum UserRole {
   coach,
-  athlete,
+  athlete;
+
+  static UserRole? fromName(String value) {
+    return switch (value.trim().toLowerCase()) {
+      'coach' => UserRole.coach,
+      'athlete' => UserRole.athlete,
+      _ => null,
+    };
+  }
 }
 
 extension UserRoleLabels on UserRole {

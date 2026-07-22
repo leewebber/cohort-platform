@@ -69,15 +69,67 @@ class FakeAuthSessionPort implements AuthSessionPort {
   Future<AuthResponse> signUp({
     required String email,
     required String password,
+    String? displayName,
+    Set<String>? roleNames,
   }) async {
-    setAuthenticated(userId: 'user-new', email: email);
-    return AuthResponse(session: session, user: user);
+    user = User(
+      id: 'user-new',
+      appMetadata: const {},
+      userMetadata: {
+        if (displayName != null) 'display_name': displayName,
+        if (roleNames != null) 'roles': roleNames.toList(),
+      },
+      aud: 'authenticated',
+      createdAt: DateTime.now().toIso8601String(),
+      email: email,
+    );
+    return AuthResponse(session: null, user: user);
   }
+
+  @override
+  Future<void> resendSignupVerification({required String email}) async {}
 
   @override
   Future<void> signOut() async {
     setSignedOut();
   }
+
+  @override
+  Future<void> resetPassword({required String email}) async {}
+}
+
+class ThrowingSignUpAuthPort implements AuthSessionPort {
+  @override
+  Session? get currentSession => null;
+
+  @override
+  User? get currentUser => null;
+
+  @override
+  Stream<AuthState> get authStateChanges => const Stream.empty();
+
+  @override
+  Future<AuthResponse> signIn({
+    required String email,
+    required String password,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+    String? displayName,
+    Set<String>? roleNames,
+  }) async {
+    throw const AuthException('Signup failed');
+  }
+
+  @override
+  Future<void> resendSignupVerification({required String email}) async {}
+
+  @override
+  Future<void> signOut() async {}
 
   @override
   Future<void> resetPassword({required String email}) async {}
@@ -183,6 +235,69 @@ void main() {
 
       expect(controller.state.status.name, 'error');
       expect(controller.state.errorMessage, 'Email or password is incorrect.');
+    });
+
+    test('signUp with unconfirmed email enters awaiting confirmation state', () async {
+      final controller = AuthController(
+        authService: authService,
+        profileProvisioningService: profileService,
+      );
+
+      await controller.signUp(
+        email: 'alex@example.com',
+        password: 'secret123',
+        displayName: 'Alex',
+        roles: {UserRole.athlete},
+      );
+
+      expect(controller.state.status.name, 'awaitingEmailConfirmation');
+      expect(controller.state.pendingEmail, 'alex@example.com');
+      expect(controller.state.pendingDisplayName, 'Alex');
+      expect(controller.state.pendingRoles, {UserRole.athlete});
+      expect(CurrentUserSession.maybeInstance, isNull);
+    });
+
+    test('signUp failure clears loading and surfaces error', () async {
+      final controller = AuthController(
+        authService: ThrowingSignUpAuthPort(),
+        profileProvisioningService: profileService,
+      );
+
+      await controller.signUp(
+        email: 'alex@example.com',
+        password: 'secret123',
+        displayName: 'Alex',
+        roles: {UserRole.athlete},
+      );
+
+      expect(controller.state.status.name, 'error');
+      expect(controller.state.errorMessage, isNotNull);
+    });
+
+    test('profileRequired prefills pending signup metadata', () async {
+      authService.setAuthenticated(userId: 'user-new', email: 'alex@example.com');
+      authService.user = User(
+        id: 'user-new',
+        appMetadata: const {},
+        userMetadata: const {
+          'display_name': 'Alex',
+          'roles': ['athlete', 'coach'],
+        },
+        aud: 'authenticated',
+        createdAt: DateTime.now().toIso8601String(),
+        email: 'alex@example.com',
+      );
+
+      final controller = AuthController(
+        authService: authService,
+        profileProvisioningService: profileService,
+      );
+
+      await controller.initialize();
+
+      expect(controller.state.status.name, 'profileRequired');
+      expect(controller.state.pendingDisplayName, 'Alex');
+      expect(controller.state.pendingRoles, {UserRole.athlete, UserRole.coach});
     });
 
     test('signOut clears session', () async {

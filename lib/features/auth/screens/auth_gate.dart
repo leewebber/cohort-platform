@@ -5,6 +5,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../home/home_screen.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
+import 'email_verification_screen.dart';
 import 'login_screen.dart';
 import 'profile_setup_screen.dart';
 
@@ -50,10 +51,12 @@ class _AuthGateState extends State<AuthGate> {
       AuthStatus.profileRequired => ProfileSetupScreen(
           controller: widget.controller,
         ),
-      AuthStatus.unauthenticated ||
-      AuthStatus.error ||
-      AuthStatus.awaitingEmailConfirmation =>
-        LoginScreen(controller: widget.controller),
+      AuthStatus.unauthenticated || AuthStatus.error => LoginScreen(
+          controller: widget.controller,
+        ),
+      AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
+          controller: widget.controller,
+        ),
     };
   }
 }

@@ -15,7 +15,11 @@ abstract interface class AuthSessionPort {
   Future<AuthResponse> signUp({
     required String email,
     required String password,
+    String? displayName,
+    Set<String>? roleNames,
   });
+
+  Future<void> resendSignupVerification({required String email});
 
   Future<void> signOut();
 

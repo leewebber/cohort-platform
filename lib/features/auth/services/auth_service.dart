@@ -33,10 +33,26 @@ class AuthService implements AuthSessionPort {
   Future<AuthResponse> signUp({
     required String email,
     required String password,
+    String? displayName,
+    Set<String>? roleNames,
   }) {
     return _client.auth.signUp(
       email: email.trim(),
       password: password,
+      data: {
+        if (displayName != null && displayName.trim().isNotEmpty)
+          'display_name': displayName.trim(),
+        if (roleNames != null && roleNames.isNotEmpty)
+          'roles': roleNames.toList(),
+      },
+    );
+  }
+
+  @override
+  Future<void> resendSignupVerification({required String email}) {
+    return _client.auth.resend(
+      type: OtpType.signup,
+      email: email.trim(),
     );
   }
 

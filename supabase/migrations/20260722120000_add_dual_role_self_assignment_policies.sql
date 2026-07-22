@@ -29,7 +29,7 @@ CREATE POLICY programme_assignments_dual_role_self_insert
   FOR INSERT
   TO authenticated
   WITH CHECK (
-    athlete_id = auth.uid()::TEXT
+    athlete_id = auth.uid()
     AND cohort_auth_is_dual_role_coach_athlete()
   );
 

@@ -13,6 +13,7 @@ class AuthFormField extends StatelessWidget {
     this.keyboardType,
     this.textInputAction,
     this.autocorrect = true,
+    this.enabled = true,
   });
 
   final String label;
@@ -21,6 +22,7 @@ class AuthFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final bool autocorrect;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class AuthFormField extends StatelessWidget {
           keyboardType: keyboardType,
           textInputAction: textInputAction,
           autocorrect: autocorrect,
+          enabled: enabled,
           decoration: InputDecoration(
             filled: true,
             fillColor: CohortColors.surface,

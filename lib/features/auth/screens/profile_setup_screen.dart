@@ -25,7 +25,20 @@ class ProfileSetupScreen extends StatefulWidget {
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final _displayNameController = TextEditingController();
-  Set<UserRole> _selectedRoles = {UserRole.athlete, UserRole.coach};
+  Set<UserRole> _selectedRoles = {UserRole.athlete};
+
+  @override
+  void initState() {
+    super.initState();
+    final state = widget.controller.state;
+    final pendingName = state.pendingDisplayName;
+    if (pendingName != null && pendingName.trim().isNotEmpty) {
+      _displayNameController.text = pendingName.trim();
+    }
+    if (state.pendingRoles != null && state.pendingRoles!.isNotEmpty) {
+      _selectedRoles = Set<UserRole>.from(state.pendingRoles!);
+    }
+  }
 
   @override
   void dispose() {
@@ -59,6 +72,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           ),
           const SizedBox(height: CohortSpacing.lg),
           Text('YOUR ROLES', style: CohortTextStyles.eyebrow),
+          const SizedBox(height: CohortSpacing.xs),
+          Text(
+            'Select all that apply.',
+            style: CohortTextStyles.small.copyWith(color: CohortColors.textSecondary),
+          ),
           const SizedBox(height: CohortSpacing.sm),
           RoleSelectionChips(
             selectedRoles: _selectedRoles,

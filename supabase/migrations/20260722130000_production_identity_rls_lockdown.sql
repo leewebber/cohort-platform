@@ -512,14 +512,14 @@ CREATE POLICY programme_assignments_athlete_select
   ON programme_assignments
   FOR SELECT
   TO authenticated
-  USING (athlete_id = auth.uid()::TEXT);
+  USING (athlete_id = auth.uid());
 
 CREATE POLICY programme_assignments_athlete_update
   ON programme_assignments
   FOR UPDATE
   TO authenticated
-  USING (athlete_id = auth.uid()::TEXT)
-  WITH CHECK (athlete_id = auth.uid()::TEXT);
+  USING (athlete_id = auth.uid())
+  WITH CHECK (athlete_id = auth.uid());
 
 -- programme_assignments_dual_role_self_insert retained from 20260722120000
 
@@ -555,7 +555,7 @@ CREATE POLICY programme_slot_outcomes_athlete_select
       SELECT 1
       FROM programme_assignments a
       WHERE a.id = programme_slot_outcomes.assignment_id
-        AND a.athlete_id = auth.uid()::TEXT
+        AND a.athlete_id = auth.uid()
     )
   );
 
@@ -568,7 +568,7 @@ CREATE POLICY programme_slot_outcomes_athlete_insert
       SELECT 1
       FROM programme_assignments a
       WHERE a.id = programme_slot_outcomes.assignment_id
-        AND a.athlete_id = auth.uid()::TEXT
+        AND a.athlete_id = auth.uid()
     )
   );
 
@@ -581,7 +581,7 @@ CREATE POLICY programme_slot_outcomes_athlete_update
       SELECT 1
       FROM programme_assignments a
       WHERE a.id = programme_slot_outcomes.assignment_id
-        AND a.athlete_id = auth.uid()::TEXT
+        AND a.athlete_id = auth.uid()
     )
   )
   WITH CHECK (
@@ -589,7 +589,7 @@ CREATE POLICY programme_slot_outcomes_athlete_update
       SELECT 1
       FROM programme_assignments a
       WHERE a.id = programme_slot_outcomes.assignment_id
-        AND a.athlete_id = auth.uid()::TEXT
+        AND a.athlete_id = auth.uid()
     )
   );
 

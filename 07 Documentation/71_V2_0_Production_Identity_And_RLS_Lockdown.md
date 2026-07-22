@@ -102,6 +102,18 @@ Production authenticated policies:
 - `cohort_programme_dev_athlete_ids()` → auth athlete UUID array or empty
 - Coach SECURITY DEFINER helpers use `auth.uid()` ownership (no `created_by IS NULL` write paths)
 
+### programme_assignments.athlete_id type alignment
+
+Migration `20260721155000_convert_programme_assignments_athlete_id_to_uuid.sql` (runs **before** adaptation events):
+
+- **Production type:** `UUID NOT NULL` referencing `profiles.id`
+- **Legacy invalid values** (e.g. dev-athlete `'lee'`): deleted before conversion; dependent slot outcomes/adaptation events cascade via `assignment_id`
+- **Valid UUID without profile row:** deleted before FK enforcement
+- **Indexes:** `programme_assignments_one_active_per_athlete`, `idx_programme_assignments_athlete_status`, `idx_programme_assignments_cursor` rebuild on `ALTER TYPE`
+- **Helpers:** `cohort_coach_has_active_athlete(UUID)` plus TEXT wrapper for `training_session_records.athlete_id` (still TEXT)
+
+Migration `20260722140000_normalize_programme_assignment_uuid_rls.sql` updates Sprint 8 production policies to compare `athlete_id = auth.uid()` without `::TEXT` casts.
+
 ---
 
 ## SECURITY DEFINER review

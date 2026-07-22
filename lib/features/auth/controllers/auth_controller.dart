@@ -102,6 +102,8 @@ class AuthController extends ChangeNotifier {
       final response = await _authService.signUp(
         email: email,
         password: password,
+        displayName: displayName,
+        roleNames: roles.map((role) => role.name).toSet(),
       );
 
       final user = response.user;
@@ -118,7 +120,9 @@ class AuthController extends ChangeNotifier {
         _state = _state.copyWith(
           status: AuthStatus.awaitingEmailConfirmation,
           pendingEmail: email.trim(),
-          errorMessage: null,
+          pendingDisplayName: displayName.trim(),
+          pendingRoles: Set<UserRole>.from(roles),
+          clearError: true,
         );
         notifyListeners();
         return;
@@ -227,6 +231,8 @@ class AuthController extends ChangeNotifier {
           status: AuthStatus.profileRequired,
           clearProfile: true,
           clearError: true,
+          pendingDisplayName: _readPendingDisplayName(user),
+          pendingRoles: _readPendingRoles(user),
         );
         notifyListeners();
         return;
@@ -276,6 +282,74 @@ class AuthController extends ChangeNotifier {
       );
       notifyListeners();
     }
+  }
+
+  Future<void> resendVerificationEmail() async {
+    final email = _state.pendingEmail?.trim();
+    if (email == null || email.isEmpty) {
+      _state = _state.copyWith(
+        errorMessage: 'Enter your email again from the sign-up form.',
+      );
+      notifyListeners();
+      return;
+    }
+
+    _state = _state.copyWith(
+      status: AuthStatus.loading,
+      clearError: true,
+    );
+    notifyListeners();
+
+    try {
+      await _authService.resendSignupVerification(email: email);
+      _state = _state.copyWith(
+        status: AuthStatus.awaitingEmailConfirmation,
+        errorMessage: 'Verification email sent. Check your inbox.',
+      );
+      notifyListeners();
+    } on AuthException catch (error) {
+      _state = _state.copyWith(
+        status: AuthStatus.awaitingEmailConfirmation,
+        errorMessage: _friendlyAuthMessage(error.message),
+      );
+      notifyListeners();
+    } catch (error) {
+      _state = _state.copyWith(
+        status: AuthStatus.awaitingEmailConfirmation,
+        errorMessage: UserFacingErrorMessages.from(error),
+      );
+      notifyListeners();
+    }
+  }
+
+  String? _readPendingDisplayName(User user) {
+    if (_state.pendingDisplayName != null &&
+        _state.pendingDisplayName!.trim().isNotEmpty) {
+      return _state.pendingDisplayName!.trim();
+    }
+
+    final metadataName = user.userMetadata?['display_name'];
+    if (metadataName is String && metadataName.trim().isNotEmpty) {
+      return metadataName.trim();
+    }
+    return null;
+  }
+
+  Set<UserRole>? _readPendingRoles(User user) {
+    if (_state.pendingRoles != null && _state.pendingRoles!.isNotEmpty) {
+      return Set<UserRole>.from(_state.pendingRoles!);
+    }
+
+    final metadataRoles = user.userMetadata?['roles'];
+    if (metadataRoles is List) {
+      final roles = metadataRoles
+          .whereType<String>()
+          .map(UserRole.fromName)
+          .whereType<UserRole>()
+          .toSet();
+      if (roles.isNotEmpty) return roles;
+    }
+    return null;
   }
 
   String _friendlyAuthMessage(String message) {

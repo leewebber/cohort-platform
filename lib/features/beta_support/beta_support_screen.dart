@@ -27,9 +27,9 @@ class BetaSupportScreen extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 child: const Text('← Back'),
               ),
-              const SectionTitle('Beta support'),
+              const SectionTitle('Help & feedback'),
               const SizedBox(height: CohortSpacing.sm),
-              Text('Help during beta testing', style: CohortTextStyles.h1),
+              Text('Share feedback during beta', style: CohortTextStyles.h1),
               const SizedBox(height: CohortSpacing.lg),
               CohortCard(
                 child: Column(

@@ -1,4 +1,5 @@
 import 'user_profile.dart';
+import 'user_role.dart';
 
 enum AuthStatus {
   initial,
@@ -16,12 +17,16 @@ class AuthViewState {
     this.profile,
     this.errorMessage,
     this.pendingEmail,
+    this.pendingDisplayName,
+    this.pendingRoles,
   });
 
   final AuthStatus status;
   final UserProfile? profile;
   final String? errorMessage;
   final String? pendingEmail;
+  final String? pendingDisplayName;
+  final Set<UserRole>? pendingRoles;
 
   factory AuthViewState.initial() {
     return const AuthViewState(status: AuthStatus.initial);
@@ -35,6 +40,10 @@ class AuthViewState {
     bool clearError = false,
     String? pendingEmail,
     bool clearPendingEmail = false,
+    String? pendingDisplayName,
+    bool clearPendingDisplayName = false,
+    Set<UserRole>? pendingRoles,
+    bool clearPendingRoles = false,
   }) {
     return AuthViewState(
       status: status ?? this.status,
@@ -42,6 +51,11 @@ class AuthViewState {
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       pendingEmail:
           clearPendingEmail ? null : (pendingEmail ?? this.pendingEmail),
+      pendingDisplayName: clearPendingDisplayName
+          ? null
+          : (pendingDisplayName ?? this.pendingDisplayName),
+      pendingRoles:
+          clearPendingRoles ? null : (pendingRoles ?? this.pendingRoles),
     );
   }
 }
