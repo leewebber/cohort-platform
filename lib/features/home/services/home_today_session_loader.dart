@@ -2,13 +2,20 @@ import 'package:flutter/foundation.dart';
 
 import '../../../data/repositories/athlete_state_repository.dart';
 import '../../../data/repositories/programme_repository.dart';
+import '../../../data/repositories/programme_slot_outcome_store.dart';
+import '../../../data/repositories/programme_slot_outcome_supabase_store.dart';
+import '../../../data/repositories/programme_version_store.dart';
+import '../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../data/repositories/training_session_repository.dart';
+import '../../../models/programme_vocabulary.dart';
 import '../../../models/protocol.dart';
 import '../../programme/errors/programme_schedule_exception.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
 import '../../programme/services/athlete_state_sync_service.dart';
+import '../../programme/services/programme_progress_summary_service.dart';
 import '../../programme/services/today_session_service.dart';
 import '../models/home_today_session_state.dart';
 
@@ -21,12 +28,21 @@ class HomeTodaySessionLoader {
     required ProtocolRepository protocolRepository,
     required ProgrammeRepository programmeRepository,
     required TrainingSessionRepository trainingSessionRepository,
+    ProgrammeVersionStore? programmeVersionStore,
+    ProgrammeSlotOutcomeStore? programmeSlotOutcomeStore,
+    ProgrammeProgressSummaryService? progressSummaryService,
   })  : _todaySessionService = todaySessionService,
         _athleteStateSyncService = athleteStateSyncService,
         _athleteStateRepository = athleteStateRepository,
         _protocolRepository = protocolRepository,
         _programmeRepository = programmeRepository,
-        _trainingSessionRepository = trainingSessionRepository;
+        _trainingSessionRepository = trainingSessionRepository,
+        _programmeVersionStore =
+            programmeVersionStore ?? const ProgrammeVersionSupabaseStore(),
+        _programmeSlotOutcomeStore =
+            programmeSlotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
+        _progressSummaryService =
+            progressSummaryService ?? const ProgrammeProgressSummaryService();
 
   final TodaySessionService _todaySessionService;
   final AthleteStateSyncService _athleteStateSyncService;
@@ -34,6 +50,9 @@ class HomeTodaySessionLoader {
   final ProtocolRepository _protocolRepository;
   final ProgrammeRepository _programmeRepository;
   final TrainingSessionRepository _trainingSessionRepository;
+  final ProgrammeVersionStore _programmeVersionStore;
+  final ProgrammeSlotOutcomeStore _programmeSlotOutcomeStore;
+  final ProgrammeProgressSummaryService _progressSummaryService;
 
   Future<HomeTodaySessionState> load(String athleteId) async {
     try {
@@ -86,13 +105,25 @@ class HomeTodaySessionLoader {
       case ResolvedTodaySessionKind.executable:
         return _loadProgrammeExecutable(athleteId, resolution);
       case ResolvedTodaySessionKind.restDay:
-        return HomeTodaySessionRestDay(resolution: resolution);
+        return HomeTodaySessionRestDay(
+          resolution: resolution,
+          progressSummary: await _loadProgressSummary(resolution),
+        );
       case ResolvedTodaySessionKind.dayComplete:
-        return HomeTodaySessionDayComplete(resolution: resolution);
+        return HomeTodaySessionDayComplete(
+          resolution: resolution,
+          progressSummary: await _loadProgressSummary(resolution),
+        );
       case ResolvedTodaySessionKind.programmeComplete:
-        return HomeTodaySessionProgrammeComplete(resolution: resolution);
+        return HomeTodaySessionProgrammeComplete(
+          resolution: resolution,
+          progressSummary: await _loadProgressSummary(resolution),
+        );
       case ResolvedTodaySessionKind.paused:
-        return HomeTodaySessionPaused(resolution: resolution);
+        return HomeTodaySessionPaused(
+          resolution: resolution,
+          progressSummary: await _loadProgressSummary(resolution),
+        );
     }
   }
 
@@ -138,7 +169,41 @@ class HomeTodaySessionLoader {
       protocol: protocol,
       executionContext: executionContext,
       latestTrainingSession: latestTrainingSession,
+      progressSummary: await _loadProgressSummary(resolution),
     );
+  }
+
+  Future<ProgrammeProgressSummary?> _loadProgressSummary(
+    ResolvedTodaySession resolution,
+  ) async {
+    final assignmentId = resolution.assignmentId?.trim();
+    final versionId = resolution.programmeVersionId?.trim();
+    final weekNumber = resolution.weekNumber;
+    if (assignmentId == null ||
+        assignmentId.isEmpty ||
+        versionId == null ||
+        versionId.isEmpty ||
+        weekNumber == null) {
+      return null;
+    }
+
+    try {
+      final tree = await _programmeVersionStore.loadTemplateTree(versionId);
+      if (tree == null) return null;
+
+      final outcomes =
+          await _programmeSlotOutcomeStore.listForAssignment(assignmentId);
+
+      return _progressSummaryService.summarize(
+        tree: tree,
+        outcomes: outcomes,
+        currentWeek: weekNumber,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('[HomeTodaySession] progress summary failed: $error');
+      debugPrint('[HomeTodaySession] stackTrace: $stackTrace');
+      return null;
+    }
   }
 
   Future<HomeTodaySessionState> _loadManualFallback(String athleteId) async {
@@ -203,11 +268,6 @@ class HomeTodaySessionLabels {
   static String weekLabel(ResolvedTodaySession resolution) {
     final parts = <String>[];
 
-    final programmeName = resolution.programmeName?.trim();
-    if (programmeName != null && programmeName.isNotEmpty) {
-      parts.add(programmeName);
-    }
-
     final week = resolution.weekNumber;
     if (week != null) {
       parts.add('Week $week');
@@ -219,6 +279,45 @@ class HomeTodaySessionLabels {
     }
 
     return parts.join(' • ');
+  }
+
+  static String? programmeName(ResolvedTodaySession resolution) {
+    final name = resolution.programmeName?.trim();
+    if (name == null || name.isEmpty) return null;
+    return name;
+  }
+
+  static String? sessionGoal(ResolvedTodaySession resolution) {
+    final intent = resolution.dayIntent;
+    if (intent == null) return null;
+    return 'Session goal: ${intent.displayLabel}';
+  }
+
+  static String? adaptationNotice(
+    ResolvedTodaySession resolution,
+    Protocol protocol,
+  ) {
+    final planned = resolution.plannedProtocolId?.trim();
+    final effective = resolution.effectiveProtocolId?.trim();
+    if (planned == null ||
+        effective == null ||
+        planned.isEmpty ||
+        effective.isEmpty ||
+        planned == effective) {
+      return null;
+    }
+
+    return 'Adapted for today — ${protocol.name} replaces the originally planned session.';
+  }
+
+  static String? progressLabel(ProgrammeProgressSummary? summary) {
+    if (summary == null) return null;
+    return summary.displayLabel;
+  }
+
+  static String estimatedDuration(int? durationMin) {
+    if (durationMin == null) return '';
+    return '$durationMin min estimated';
   }
 
   static String slotRequirementLabel(ResolvedTodaySession resolution) {

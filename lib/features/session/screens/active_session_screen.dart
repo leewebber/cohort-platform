@@ -4,6 +4,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
 import '../../../features/programme/models/programme_execution_context.dart';
+import '../../../features/programme/models/programme_progress_summary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/models/active_performance_draft.dart';
 import '../../performance/screens/session_finish_review_screen.dart';
@@ -22,6 +23,7 @@ class ActiveSessionScreen extends StatefulWidget {
     required this.performanceController,
     this.trainingSessionId,
     this.programmeContext,
+    this.programmeProgress,
     this.athleteId,
     this.saveCoordinator,
   });
@@ -30,6 +32,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final PerformanceCaptureController performanceController;
   final int? trainingSessionId;
   final ProgrammeExecutionContext? programmeContext;
+  final ProgrammeProgressSummary? programmeProgress;
   final String? athleteId;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
 
@@ -157,6 +160,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           trainingSessionId: trainingSessionId,
           athleteId: widget.athleteId!,
           programmeContext: widget.programmeContext,
+          programmeProgress: widget.programmeProgress,
           saveCoordinator: widget.saveCoordinator ?? _saveCoordinator,
         ),
       ),

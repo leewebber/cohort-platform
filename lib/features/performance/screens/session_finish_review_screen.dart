@@ -4,6 +4,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/performance_capture_controller.dart';
 import '../models/training_session_record_status.dart';
 import '../services/performance_record_save_coordinator.dart';
@@ -19,6 +20,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
     required this.trainingSessionId,
     required this.athleteId,
     this.programmeContext,
+    this.programmeProgress,
     this.saveCoordinator,
   });
 
@@ -27,6 +29,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
   final int trainingSessionId;
   final String athleteId;
   final ProgrammeExecutionContext? programmeContext;
+  final ProgrammeProgressSummary? programmeProgress;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
 
   @override
@@ -87,6 +90,8 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             state: widget.executionController.state,
             savedRecord: result.record,
             adaptationMessage: result.adaptationResult?.athleteMessage,
+            progressionResult: result.progressionResult,
+            programmeProgress: widget.programmeProgress,
           ),
         ),
       );

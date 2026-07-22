@@ -15,6 +15,7 @@ import '../models/session_execution_status.dart';
 import '../services/session_execution_loader.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 import '../widgets/athlete/athlete_session_components.dart';
+import '../services/session_execution_launcher.dart';
 import 'active_session_screen.dart';
 
 class SessionOverviewScreen extends StatefulWidget {
@@ -25,20 +26,27 @@ class SessionOverviewScreen extends StatefulWidget {
     this.trainingSessionId,
     this.programmeContext,
     this.programmeContextLabel,
+    this.sessionGoal,
+    this.adaptationNotice,
     this.athleteId,
     SessionExecutionLoader? loader,
     PerformanceRecordSaveCoordinator? saveCoordinator,
+    SessionExecutionLauncher? sessionLauncher,
   })  : _loader = loader,
-        _saveCoordinator = saveCoordinator;
+        _saveCoordinator = saveCoordinator,
+        _sessionLauncher = sessionLauncher;
 
   final String protocolId;
   final String? displayTitle;
   final int? trainingSessionId;
   final ProgrammeExecutionContext? programmeContext;
   final String? programmeContextLabel;
+  final String? sessionGoal;
+  final String? adaptationNotice;
   final String? athleteId;
   final SessionExecutionLoader? _loader;
   final PerformanceRecordSaveCoordinator? _saveCoordinator;
+  final SessionExecutionLauncher? _sessionLauncher;
 
   @override
   State<SessionOverviewScreen> createState() => _SessionOverviewScreenState();
@@ -49,6 +57,8 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
       widget._loader ?? SessionExecutionLoader();
   late final PerformanceRecordSaveCoordinator _saveCoordinator =
       widget._saveCoordinator ?? PerformanceRecordSaveCoordinator();
+  late final SessionExecutionLauncher _sessionLauncher =
+      widget._sessionLauncher ?? SessionExecutionLauncher();
   late final AdaptationPrescriptionService _prescriptionService =
       AdaptationPrescriptionService();
   late Future<SessionExecutionLoadResult> _loadFuture;
@@ -83,6 +93,21 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
       );
 
   Future<void> _startSession(SessionExecutionPlan plan) async {
+    final trainingSessionId = widget.trainingSessionId;
+    final athleteId = widget.athleteId;
+
+    if (trainingSessionId != null && athleteId != null) {
+      await _sessionLauncher.launchActiveSessionWithPlan(
+        context: context,
+        plan: plan,
+        protocolId: widget.protocolId,
+        trainingSessionId: trainingSessionId,
+        athleteId: athleteId,
+        programmeContext: widget.programmeContext,
+      );
+      return;
+    }
+
     final restored = AthleteSessionMemoryStore.instance.read(_sessionKey);
     final controller = SessionExecutionController(
       plan: plan,
@@ -92,30 +117,6 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
 
     final continueSession =
         restored?.sessionStatus == SessionExecutionStatus.inProgress;
-
-    PerformanceCaptureController? performanceController;
-    if (widget.trainingSessionId != null && widget.athleteId != null) {
-      final existingRecord = await _saveCoordinator.loadInProgressDraftAsRecord(
-        athleteId: widget.athleteId!,
-        trainingSessionId: widget.trainingSessionId!,
-      );
-
-      if (existingRecord != null) {
-        performanceController =
-            _saveCoordinator.restoreControllerFromRecord(existingRecord);
-      } else {
-        performanceController =
-            PerformanceCaptureController.initializeFromExecutionPlan(
-          plan: plan,
-          athleteId: widget.athleteId!,
-          trainingSessionId: widget.trainingSessionId!,
-          programmeContext: widget.programmeContext,
-        );
-        await _saveCoordinator.createOrResumeInProgress(
-          controller: performanceController,
-        );
-      }
-    }
 
     if (!continueSession) {
       controller.startSession();
@@ -127,16 +128,16 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
       MaterialPageRoute(
         builder: (_) => ActiveSessionScreen(
           controller: controller,
-          performanceController: performanceController ??
+          performanceController:
               PerformanceCaptureController.initializeFromExecutionPlan(
-                plan: plan,
-                athleteId: widget.athleteId ?? 'preview',
-                trainingSessionId: widget.trainingSessionId ?? 0,
-                programmeContext: widget.programmeContext,
-              ),
-          trainingSessionId: widget.trainingSessionId,
+            plan: plan,
+            athleteId: athleteId ?? 'preview',
+            trainingSessionId: trainingSessionId ?? 0,
+            programmeContext: widget.programmeContext,
+          ),
+          trainingSessionId: trainingSessionId,
           programmeContext: widget.programmeContext,
-          athleteId: widget.athleteId,
+          athleteId: athleteId,
           saveCoordinator: _saveCoordinator,
         ),
       ),
@@ -196,6 +197,8 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text('Session overview', style: CohortTextStyles.cardTitle),
+                        const SizedBox(height: CohortSpacing.md),
                         if (plan.durationMin != null)
                           Text(
                             '${plan.durationMin} min estimated',
@@ -205,8 +208,25 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
                           '${plan.blockCount} block${plan.blockCount == 1 ? '' : 's'}',
                           style: CohortTextStyles.small,
                         ),
+                        if (widget.sessionGoal?.trim().isNotEmpty == true) ...[
+                          const SizedBox(height: CohortSpacing.md),
+                          Text(widget.sessionGoal!, style: CohortTextStyles.body),
+                        ],
+                        if (widget.adaptationNotice?.trim().isNotEmpty ==
+                            true) ...[
+                          const SizedBox(height: CohortSpacing.md),
+                          Text(
+                            widget.adaptationNotice!,
+                            style: CohortTextStyles.small,
+                          ),
+                        ],
                         if (plan.coachNotes?.trim().isNotEmpty == true) ...[
                           const SizedBox(height: CohortSpacing.md),
+                          Text(
+                            'Coach notes',
+                            style: CohortTextStyles.small,
+                          ),
+                          const SizedBox(height: CohortSpacing.xs),
                           Text(plan.coachNotes!, style: CohortTextStyles.body),
                         ],
                       ],

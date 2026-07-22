@@ -98,12 +98,13 @@ void main() {
     TodaySessionServiceImpl? todaySessionService,
   }) {
     final versionStore = InMemoryProgrammeVersionStore(tables);
+    final slotOutcomeStore = InMemoryProgrammeSlotOutcomeStore(tables);
     return HomeTodaySessionLoader(
       todaySessionService: todaySessionService ??
           TodaySessionServiceImpl(
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             versionStore: versionStore,
-            slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+            slotOutcomeStore: slotOutcomeStore,
             scheduleResolver: const ProgrammeScheduleResolverImpl(),
           ),
       athleteStateSyncService: AthleteStateSyncServiceImpl(
@@ -113,6 +114,8 @@ void main() {
       protocolRepository: _StubProtocolRepository(protocols),
       programmeRepository: _StubProgrammeRepository(const {}),
       trainingSessionRepository: _StubTrainingSessionRepository(),
+      programmeVersionStore: versionStore,
+      programmeSlotOutcomeStore: slotOutcomeStore,
     );
   }
 

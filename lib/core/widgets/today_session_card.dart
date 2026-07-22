@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../theme/text_styles.dart';
 import 'cohort_button.dart';
@@ -13,8 +12,12 @@ class TodaySessionCard extends StatelessWidget {
     required this.subtitle,
     required this.weekLabel,
     required this.duration,
+    this.programmeName,
+    this.sessionGoal,
+    this.progressLabel,
+    this.adaptationNotice,
     this.status = 'Planned Session',
-    this.buttonLabel = 'Begin',
+    this.buttonLabel = 'START SESSION',
     this.onPressed,
   });
 
@@ -22,6 +25,10 @@ class TodaySessionCard extends StatelessWidget {
   final String subtitle;
   final String weekLabel;
   final String duration;
+  final String? programmeName;
+  final String? sessionGoal;
+  final String? progressLabel;
+  final String? adaptationNotice;
   final String status;
   final String buttonLabel;
   final VoidCallback? onPressed;
@@ -33,40 +40,52 @@ class TodaySessionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'TODAY',
+            "TODAY'S TRAINING",
             style: CohortTextStyles.eyebrow,
           ),
-
           const SizedBox(height: CohortSpacing.lg),
-
           Text(
             title,
             style: CohortTextStyles.h2,
           ),
-
+          if (programmeName != null && programmeName!.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(programmeName!, style: CohortTextStyles.cardTitle),
+          ],
           const SizedBox(height: CohortSpacing.xs),
-
           Text(
             subtitle,
             style: CohortTextStyles.body,
           ),
-
           const SizedBox(height: CohortSpacing.lg),
-
           Text(
             weekLabel,
             style: CohortTextStyles.small,
           ),
-
-          const SizedBox(height: CohortSpacing.xs),
-
-          Text(
-            duration,
-            style: CohortTextStyles.small,
-          ),
-
+          if (duration.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              duration,
+              style: CohortTextStyles.small,
+            ),
+          ],
+          if (sessionGoal != null && sessionGoal!.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(sessionGoal!, style: CohortTextStyles.body),
+          ],
+          if (progressLabel != null && progressLabel!.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(progressLabel!, style: CohortTextStyles.small),
+          ],
+          if (adaptationNotice != null &&
+              adaptationNotice!.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(
+              adaptationNotice!,
+              style: CohortTextStyles.small,
+            ),
+          ],
           const SizedBox(height: CohortSpacing.lg),
-
           Row(
             children: [
               const Icon(
@@ -81,9 +100,7 @@ class TodaySessionCard extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: CohortSpacing.xl),
-
           CohortButton(
             label: buttonLabel,
             onPressed: onPressed ?? () {},

@@ -3,6 +3,7 @@ import '../../../models/programme.dart';
 import '../../../models/protocol.dart';
 import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
 
 /// Resolved Home view state for the Today section.
@@ -35,36 +36,54 @@ class HomeTodaySessionProgrammeExecutable extends HomeTodaySessionState {
     required this.protocol,
     required this.executionContext,
     this.latestTrainingSession,
+    this.progressSummary,
   });
 
   final ResolvedTodaySession resolution;
   final Protocol protocol;
   final ProgrammeExecutionContext executionContext;
   final TrainingSession? latestTrainingSession;
+  final ProgrammeProgressSummary? progressSummary;
 }
 
 class HomeTodaySessionRestDay extends HomeTodaySessionState {
-  const HomeTodaySessionRestDay({required this.resolution});
+  const HomeTodaySessionRestDay({
+    required this.resolution,
+    this.progressSummary,
+  });
 
   final ResolvedTodaySession resolution;
+  final ProgrammeProgressSummary? progressSummary;
 }
 
 class HomeTodaySessionDayComplete extends HomeTodaySessionState {
-  const HomeTodaySessionDayComplete({required this.resolution});
+  const HomeTodaySessionDayComplete({
+    required this.resolution,
+    this.progressSummary,
+  });
 
   final ResolvedTodaySession resolution;
+  final ProgrammeProgressSummary? progressSummary;
 }
 
 class HomeTodaySessionProgrammeComplete extends HomeTodaySessionState {
-  const HomeTodaySessionProgrammeComplete({required this.resolution});
+  const HomeTodaySessionProgrammeComplete({
+    required this.resolution,
+    this.progressSummary,
+  });
 
   final ResolvedTodaySession resolution;
+  final ProgrammeProgressSummary? progressSummary;
 }
 
 class HomeTodaySessionPaused extends HomeTodaySessionState {
-  const HomeTodaySessionPaused({required this.resolution});
+  const HomeTodaySessionPaused({
+    required this.resolution,
+    this.progressSummary,
+  });
 
   final ResolvedTodaySession resolution;
+  final ProgrammeProgressSummary? progressSummary;
 }
 
 /// Manual ad-hoc session from athlete_state when no active programme assignment.

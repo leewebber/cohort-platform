@@ -230,6 +230,13 @@ class SessionOverviewBlockSummary extends StatelessWidget {
                     '${block.linkedExercises.length} exercise${block.linkedExercises.length == 1 ? '' : 's'}',
                     style: CohortTextStyles.small,
                   ),
+                if (block.coachNotes?.trim().isNotEmpty == true) ...[
+                  const SizedBox(height: CohortSpacing.xs),
+                  Text(
+                    block.coachNotes!.trim(),
+                    style: CohortTextStyles.small,
+                  ),
+                ],
               ],
             ),
           ),

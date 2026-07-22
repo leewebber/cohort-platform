@@ -441,7 +441,8 @@ void main() {
         ),
       );
 
-      expect(find.text('Saved to training history.'), findsOneWidget);
+      expect(find.text('Session saved'), findsOneWidget);
+      expect(find.textContaining('saved to training history'), findsOneWidget);
       expect(find.textContaining('(Completed)'), findsNothing);
     });
   });

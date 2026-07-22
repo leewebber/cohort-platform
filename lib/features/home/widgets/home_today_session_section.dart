@@ -9,8 +9,10 @@ import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/training_session_status.dart';
 import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
 import '../../session/screens/session_overview_screen.dart';
+import '../../session/services/session_execution_launcher.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
 import '../models/home_today_session_state.dart';
 import '../services/home_today_session_loader.dart';
@@ -42,6 +44,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   final _progressionCoordinator =
       HomeTodaySessionServices.createProgressionCoordinator();
   final _trainingSessionRepository = const TrainingSessionRepository();
+  final _sessionLauncher = SessionExecutionLauncher();
 
   late Future<HomeTodaySessionState> _sessionFuture;
   int _refreshGeneration = 0;
@@ -180,25 +183,26 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   String _buttonLabel(_SessionButtonState state) {
     switch (state) {
       case _SessionButtonState.planned:
-        return 'Begin';
+        return 'START SESSION';
       case _SessionButtonState.inProgress:
-        return 'Resume';
+        return 'RESUME SESSION';
       case _SessionButtonState.completed:
-        return 'View summary';
+        return 'VIEW SESSION';
     }
   }
 
   String _buildDuration(int? durationMin) {
-    if (durationMin == null) return '';
-    return '$durationMin minutes';
+    return HomeTodaySessionLabels.estimatedDuration(durationMin);
   }
 
-  Future<void> _openSessionPlayer({
+  Future<void> _openSessionOverview({
     required String protocolId,
     String? displayTitle,
     required int trainingSessionId,
     ProgrammeExecutionContext? programmeContext,
     String? programmeContextLabel,
+    String? sessionGoal,
+    String? adaptationNotice,
   }) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -208,9 +212,33 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           trainingSessionId: trainingSessionId,
           programmeContext: programmeContext,
           programmeContextLabel: programmeContextLabel,
+          sessionGoal: sessionGoal,
+          adaptationNotice: adaptationNotice,
           athleteId: widget.athleteId,
         ),
       ),
+    );
+
+    if (mounted) refresh(source: 'session_return');
+  }
+
+  Future<void> _launchActiveSession({
+    required String protocolId,
+    required int trainingSessionId,
+    String? displayTitle,
+    ProgrammeExecutionContext? programmeContext,
+    String? programmeContextLabel,
+    ProgrammeProgressSummary? programmeProgress,
+  }) async {
+    await _sessionLauncher.launchActiveSession(
+      context: context,
+      protocolId: protocolId,
+      trainingSessionId: trainingSessionId,
+      athleteId: widget.athleteId,
+      displayTitle: displayTitle,
+      programmeContext: programmeContext,
+      programmeContextLabel: programmeContextLabel,
+      programmeProgress: programmeProgress,
     );
 
     if (mounted) refresh(source: 'session_return');
@@ -220,19 +248,41 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     HomeTodaySessionProgrammeExecutable state,
     _SessionButtonState buttonState,
   ) async {
-    if (buttonState != _SessionButtonState.planned) {
+    final contextLabel = HomeTodaySessionLabels.executableSubtitle(
+      state.resolution,
+      state.protocol,
+    );
+
+    if (buttonState == _SessionButtonState.completed) {
       final session = state.latestTrainingSession;
       if (session == null) return;
 
-      await _openSessionPlayer(
+      await _openSessionOverview(
         protocolId: state.executionContext.effectiveProtocolId,
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
-        programmeContextLabel: HomeTodaySessionLabels.executableSubtitle(
+        programmeContextLabel: contextLabel,
+        sessionGoal: HomeTodaySessionLabels.sessionGoal(state.resolution),
+        adaptationNotice: HomeTodaySessionLabels.adaptationNotice(
           state.resolution,
           state.protocol,
         ),
+      );
+      return;
+    }
+
+    if (buttonState == _SessionButtonState.inProgress) {
+      final session = state.latestTrainingSession;
+      if (session == null) return;
+
+      await _launchActiveSession(
+        protocolId: state.executionContext.effectiveProtocolId,
+        displayTitle: state.protocol.name,
+        trainingSessionId: session.id,
+        programmeContext: state.executionContext,
+        programmeContextLabel: contextLabel,
+        programmeProgress: state.progressSummary,
       );
       return;
     }
@@ -254,15 +304,13 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         trainingSessionId: session.id,
       );
 
-      await _openSessionPlayer(
+      await _launchActiveSession(
         protocolId: state.executionContext.effectiveProtocolId,
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
         programmeContext: state.executionContext,
-        programmeContextLabel: HomeTodaySessionLabels.executableSubtitle(
-          state.resolution,
-          state.protocol,
-        ),
+        programmeContextLabel: contextLabel,
+        programmeProgress: state.progressSummary,
       );
     } catch (error, stackTrace) {
       debugPrint('[Begin] programme session failed: $error');
@@ -280,11 +328,23 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       return;
     }
 
-    if (buttonState != _SessionButtonState.planned) {
+    if (buttonState == _SessionButtonState.completed) {
       final session = state.latestTrainingSession;
       if (session == null) return;
 
-      await _openSessionPlayer(
+      await _openSessionOverview(
+        protocolId: protocolId,
+        displayTitle: state.protocol.name,
+        trainingSessionId: session.id,
+      );
+      return;
+    }
+
+    if (buttonState == _SessionButtonState.inProgress) {
+      final session = state.latestTrainingSession;
+      if (session == null) return;
+
+      await _launchActiveSession(
         protocolId: protocolId,
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
@@ -303,7 +363,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         weekNumber: state.athleteState.currentWeek,
       );
 
-      await _openSessionPlayer(
+      await _launchActiveSession(
         protocolId: protocolId,
         displayTitle: state.protocol.name,
         trainingSessionId: session.id,
@@ -334,6 +394,37 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     }
   }
 
+  Widget _buildLoadingCard() {
+    return const CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("TODAY'S TRAINING", style: CohortTextStyles.eyebrow),
+          SizedBox(height: CohortSpacing.lg),
+          Text('Loading today\'s training...', style: CohortTextStyles.body),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyCard() {
+    return CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("TODAY'S TRAINING", style: CohortTextStyles.eyebrow),
+          const SizedBox(height: CohortSpacing.lg),
+          const Text('No programme assigned', style: CohortTextStyles.h2),
+          const SizedBox(height: CohortSpacing.sm),
+          const Text(
+            'When your coach assigns a programme, today\'s session will appear here.',
+            style: CohortTextStyles.body,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildError(HomeTodaySessionError state) {
     return CohortCard(
       child: Column(
@@ -342,11 +433,16 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           const Text('TODAY', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.lg),
           const Text(
-            'Could not load programme session',
+            'Could not load today\'s training',
             style: CohortTextStyles.h2,
           ),
           const SizedBox(height: CohortSpacing.sm),
           Text(state.message, style: CohortTextStyles.body),
+          const SizedBox(height: CohortSpacing.sm),
+          const Text(
+            'Check your connection and try again.',
+            style: CohortTextStyles.small,
+          ),
           const SizedBox(height: CohortSpacing.xl),
           CohortButton(
             label: 'Retry',
@@ -362,6 +458,8 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     required String subtitle,
     required String weekLabel,
     required String status,
+    String? programmeName,
+    String? progressLabel,
     String? buttonLabel,
     VoidCallback? onPressed,
   }) {
@@ -369,13 +467,21 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('TODAY', style: CohortTextStyles.eyebrow),
+          const Text("TODAY'S TRAINING", style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.lg),
           Text(title, style: CohortTextStyles.h2),
+          if (programmeName != null && programmeName.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(programmeName, style: CohortTextStyles.cardTitle),
+          ],
           const SizedBox(height: CohortSpacing.xs),
           Text(subtitle, style: CohortTextStyles.body),
           const SizedBox(height: CohortSpacing.lg),
           Text(weekLabel, style: CohortTextStyles.small),
+          if (progressLabel != null && progressLabel.trim().isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(progressLabel, style: CohortTextStyles.small),
+          ],
           const SizedBox(height: CohortSpacing.lg),
           Row(
             children: [
@@ -412,30 +518,18 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
 
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.hasError) {
-          return const Text(
-            'Loading session...',
-            style: CohortTextStyles.body,
-          );
+          return _buildLoadingCard();
         }
 
         final state = snapshot.data;
         if (state == null) {
-          return const Text(
-            'No session scheduled.',
-            style: CohortTextStyles.body,
-          );
+          return _buildEmptyCard();
         }
 
         return switch (state) {
-          HomeTodaySessionLoading() => const Text(
-              'Loading session...',
-              style: CohortTextStyles.body,
-            ),
+          HomeTodaySessionLoading() => _buildLoadingCard(),
           HomeTodaySessionError() => _buildError(state),
-          HomeTodaySessionEmpty() => const Text(
-              'No session scheduled.',
-              style: CohortTextStyles.body,
-            ),
+          HomeTodaySessionEmpty() => _buildEmptyCard(),
           HomeTodaySessionProgrammeExecutable() => () {
               final buttonState =
                   _resolveButtonState(state.latestTrainingSession);
@@ -447,8 +541,19 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
                   state.resolution,
                   state.protocol,
                 ),
+                programmeName:
+                    HomeTodaySessionLabels.programmeName(state.resolution),
                 weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
                 duration: _buildDuration(state.protocol.durationMin),
+                sessionGoal:
+                    HomeTodaySessionLabels.sessionGoal(state.resolution),
+                progressLabel: HomeTodaySessionLabels.progressLabel(
+                  state.progressSummary,
+                ),
+                adaptationNotice: HomeTodaySessionLabels.adaptationNotice(
+                  state.resolution,
+                  state.protocol,
+                ),
                 status: _statusLabel(buttonState),
                 buttonLabel: _buttonLabel(buttonState),
                 onPressed: () => _beginProgrammeSession(state, buttonState),
@@ -466,16 +571,13 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
               }
 
               final weekParts = <String>[];
-              final programmeName = state.programme?.name.trim();
-              if (programmeName != null && programmeName.isNotEmpty) {
-                weekParts.add(programmeName);
-              }
               final week = state.athleteState.currentWeek;
               if (week != null) weekParts.add('Week $week');
 
               return TodaySessionCard(
                 title: state.protocol.name,
-                subtitle: parts.join(' • '),
+                subtitle: parts.isEmpty ? "Today's session" : parts.join(' • '),
+                programmeName: state.programme?.name,
                 weekLabel: weekParts.join(' • '),
                 duration: _buildDuration(state.protocol.durationMin),
                 status: _statusLabel(buttonState),
@@ -486,7 +588,12 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           HomeTodaySessionRestDay() => _buildProgrammeStatusCard(
               title: 'Rest Day',
               subtitle: 'Recovery is part of the programme.',
+              programmeName:
+                  HomeTodaySessionLabels.programmeName(state.resolution),
               weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
+              progressLabel: HomeTodaySessionLabels.progressLabel(
+                state.progressSummary,
+              ),
               status: 'Rest Day',
               buttonLabel: _isContinuing
                   ? 'Continuing...'
@@ -498,7 +605,12 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           HomeTodaySessionDayComplete() => _buildProgrammeStatusCard(
               title: 'Day Complete',
               subtitle: 'Required sessions for this day are finished.',
+              programmeName:
+                  HomeTodaySessionLabels.programmeName(state.resolution),
               weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
+              progressLabel: HomeTodaySessionLabels.progressLabel(
+                state.progressSummary,
+              ),
               status: 'Day Complete',
               buttonLabel:
                   _isContinuing ? 'Continuing...' : 'Continue programme',
@@ -508,18 +620,26 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             ),
           HomeTodaySessionProgrammeComplete() => _buildProgrammeStatusCard(
               title: 'Programme Complete',
-              subtitle: state.resolution.programmeName ??
+              subtitle: 'Congratulations — you finished this programme block.',
+              programmeName: state.resolution.programmeName ??
                   state.resolution.lineageCode ??
-                  'Your programme is complete.',
+                  'Your programme',
               weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
+              progressLabel: HomeTodaySessionLabels.progressLabel(
+                state.progressSummary,
+              ),
               status: 'Programme Complete',
             ),
           HomeTodaySessionPaused() => _buildProgrammeStatusCard(
               title: 'Programme Paused',
-              subtitle: state.resolution.programmeName ??
+              subtitle: 'Resume your programme to continue training.',
+              programmeName: state.resolution.programmeName ??
                   state.resolution.lineageCode ??
-                  'Resume your programme to continue.',
+                  'Your programme',
               weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
+              progressLabel: HomeTodaySessionLabels.progressLabel(
+                state.progressSummary,
+              ),
               status: 'Paused',
             ),
         };
