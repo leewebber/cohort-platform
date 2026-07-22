@@ -1,30 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
+import 'package:cohort_platform/features/auth/screens/auth_gate.dart';
+import 'package:cohort_platform/features/auth/services/profile_provisioning_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cohort_platform/main.dart';
+import 'support/fake_auth_session_port.dart';
+import 'support/in_memory_profile_repository.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('AuthGate shows login when unauthenticated', (tester) async {
+    final controller = AuthController(
+      authService: FakeAuthSessionPort(),
+      profileProvisioningService: ProfileProvisioningService(
+        profileRepository: InMemoryProfileRepository(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AuthGate(controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Sign in'), findsOneWidget);
+    controller.dispose();
   });
 }

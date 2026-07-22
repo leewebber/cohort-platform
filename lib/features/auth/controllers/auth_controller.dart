@@ -7,6 +7,8 @@ import '../models/auth_view_state.dart';
 import '../models/user_role.dart';
 import '../services/auth_session_port.dart';
 import '../services/auth_service.dart';
+import '../../../core/errors/user_facing_error_messages.dart';
+import '../../../core/services/user_session_cache.dart';
 import '../services/current_user_session.dart';
 import '../services/profile_provisioning_service.dart';
 
@@ -172,6 +174,7 @@ class AuthController extends ChangeNotifier {
   Future<void> signOut() async {
     await _authService.signOut();
     CurrentUserSession.clear();
+    UserSessionCache.clearAll();
     _state = AuthViewState.initial().copyWith(
       status: AuthStatus.unauthenticated,
     );
@@ -240,7 +243,7 @@ class AuthController extends ChangeNotifier {
     } catch (error) {
       _state = _state.copyWith(
         status: AuthStatus.error,
-        errorMessage: error.toString(),
+        errorMessage: UserFacingErrorMessages.from(error),
       );
       notifyListeners();
     }

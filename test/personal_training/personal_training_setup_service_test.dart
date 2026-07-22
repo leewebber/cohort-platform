@@ -100,7 +100,7 @@ void main() {
         lifecycleStatus: ProgrammeLifecycleStatus.published,
       ),
       tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-        versionId: 'version-1',
+        programmeVersionId: 'version-1',
       ),
     );
   }

@@ -149,7 +149,7 @@ void main() {
       );
 
       expect(tables.assignments.first.currentSessionOrder, 2);
-      expect(result.nextResolvedSession?.slotId, 'slot-2');
+      expect(result.nextResolvedSession?.slotId, ProgrammeScheduleTestFixtures.slot2Id);
     });
 
     test('skipped outcome advances using required-slot rules', () async {
@@ -277,14 +277,14 @@ void main() {
       final singleDayTree = ProgrammeScheduleTestFixtures.singleWeekTree(
         days: [
           ProgrammeScheduleTestFixtures.trainingDay(
-            id: 'day-1',
-            weekId: 'week-1',
+            id: ProgrammeScheduleTestFixtures.day1Id,
+            weekId: ProgrammeScheduleTestFixtures.week1Id,
             dayKey: 'day_1',
             dayOrder: 1,
             slots: [
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-1',
-                dayId: 'day-1',
+                id: ProgrammeScheduleTestFixtures.slot1Id,
+                dayId: ProgrammeScheduleTestFixtures.day1Id,
                 sessionOrder: 1,
                 protocolId: 'BW-001',
               ),
@@ -489,7 +489,7 @@ void main() {
 
       final context = ProgrammeExecutionContext.fromResolvedSession(resolution);
       expect(context.assignmentId, 'assignment-1');
-      expect(context.sessionSlotId, 'slot-1');
+      expect(context.sessionSlotId, ProgrammeScheduleTestFixtures.slot1Id);
       expect(context.effectiveProtocolId, 'BW-001');
     });
   });

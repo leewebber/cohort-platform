@@ -6,7 +6,12 @@ import 'core/services/supabase_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SupabaseService.initialize();
+  final initResult = await SupabaseService.tryInitialize();
 
-  runApp(const CohortPlatformApp());
+  runApp(
+    CohortPlatformApp(
+      configurationError:
+          initResult.isConfigured ? null : initResult.errorMessage,
+    ),
+  );
 }

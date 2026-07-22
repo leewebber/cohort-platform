@@ -19,7 +19,7 @@ void main() {
       );
       final outcomes = [
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           dayKey: 'day_1',
         ),
@@ -52,7 +52,7 @@ void main() {
       );
       final outcomes = [
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           dayKey: 'day_1',
         ),
@@ -110,7 +110,7 @@ void main() {
         ProgrammeSlotOutcome(
           id: 'outcome-1',
           assignmentId: assignment.id,
-          sessionSlotId: 'slot-1',
+          sessionSlotId: ProgrammeScheduleTestFixtures.slot1Id,
           weekNumber: 1,
           dayKey: 'day_1',
           sessionOrder: 1,

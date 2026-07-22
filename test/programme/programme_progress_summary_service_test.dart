@@ -15,7 +15,7 @@ void main() {
         ProgrammeSlotOutcome(
           id: 'outcome-1',
           assignmentId: 'assignment-1',
-          sessionSlotId: 'slot-1',
+          sessionSlotId: ProgrammeScheduleTestFixtures.slot1Id,
           weekNumber: 1,
           dayKey: 'day_1',
           sessionOrder: 1,
@@ -24,7 +24,7 @@ void main() {
         ProgrammeSlotOutcome(
           id: 'outcome-2',
           assignmentId: 'assignment-1',
-          sessionSlotId: 'slot-2',
+          sessionSlotId: ProgrammeScheduleTestFixtures.slot2Id,
           weekNumber: 1,
           dayKey: 'day_2',
           sessionOrder: 1,

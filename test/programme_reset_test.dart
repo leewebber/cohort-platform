@@ -39,7 +39,7 @@ void main() {
       await versionStore.saveTemplateTree(
         version: version,
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-          versionId: versionId,
+          programmeVersionId: versionId,
         ),
       );
       tables.assignments.add(
@@ -53,7 +53,7 @@ void main() {
 
     ProgrammeSlotOutcome completedDayOneOutcome({
       String dayKey = 'day_1',
-      String slotId = 'slot-1',
+      String slotId = ProgrammeScheduleTestFixtures.slot1Id,
     }) {
       return ProgrammeScheduleTestFixtures.outcome(
         slotId: slotId,
@@ -124,7 +124,7 @@ void main() {
       tables.outcomes.addAll([
         completedDayOneOutcome(),
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-2',
+          slotId: ProgrammeScheduleTestFixtures.slot2Id,
           status: ProgrammeSlotOutcomeStatus.skipped,
           assignmentId: devAssignmentId,
           dayKey: 'day_2',
@@ -166,7 +166,10 @@ void main() {
             assignment: ProgrammeScheduleTestFixtures.assignment(
               dayKey: 'day_2',
             ),
-            tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+            tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
+              programmeVersionId:
+                  ProgrammeDevFixtures.foundationTestVersionId,
+            ),
             outcomes: [
               completedDayOneOutcome(),
             ],
@@ -191,11 +194,11 @@ void main() {
       final tables = InMemoryProgrammeTables()
         ..outcomes.addAll([
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-2',
+            slotId: ProgrammeScheduleTestFixtures.slot2Id,
             status: ProgrammeSlotOutcomeStatus.skipped,
             dayKey: 'day_2',
           ),

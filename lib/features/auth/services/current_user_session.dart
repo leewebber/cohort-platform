@@ -1,3 +1,4 @@
+import '../../../core/services/user_session_cache.dart';
 import '../models/user_profile.dart';
 
 /// Active authenticated session used by athlete and coach workflows.
@@ -32,6 +33,9 @@ class CurrentUserSession {
   bool get isAthlete => profile.isAthlete;
 
   static void bind(UserProfile profile) {
+    if (_instance?.userId != profile.id) {
+      UserSessionCache.clearAll();
+    }
     _instance = CurrentUserSession._(
       userId: profile.id,
       profile: profile,

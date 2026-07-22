@@ -31,6 +31,7 @@ import '../../models/protocol_analysis.dart';
 import '../../models/protocol_similarity_result.dart';
 import '../../models/session_fingerprint.dart';
 import '../admin/admin_protocol_editor_screen.dart';
+import '../beta_support/beta_support_screen.dart';
 import '../coach_operations/screens/coach_home_dashboard_screen.dart';
 import '../coach_studio/coach_studio_home_screen.dart';
 import '../coach_studio/models/coach_studio_navigation_state.dart';
@@ -1138,6 +1139,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   subtitle:
                       'Programmes, protocols, and coach authoring tools.',
                   status: 'COACH',
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+
+              const SizedBox(height: CohortSpacing.md),
+
+              CohortCard(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const BetaSupportScreen(),
+                    ),
+                  );
+                },
+                child: const _HomeActionRow(
+                  title: 'Beta support',
+                  subtitle:
+                      'Copy diagnostics or report a problem during beta testing.',
+                  status: 'BETA',
                 ),
               ),
               const SizedBox(height: CohortSpacing.md),

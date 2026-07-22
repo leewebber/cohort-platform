@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../features/auth/controllers/auth_controller.dart';
 import '../features/auth/screens/auth_gate.dart';
+import 'configuration_error_screen.dart';
 import 'theme.dart';
 
 class CohortPlatformApp extends StatefulWidget {
-  const CohortPlatformApp({super.key});
+  const CohortPlatformApp({
+    super.key,
+    this.configurationError,
+  });
+
+  final String? configurationError;
 
   @override
   State<CohortPlatformApp> createState() => _CohortPlatformAppState();
@@ -32,7 +38,9 @@ class _CohortPlatformAppState extends State<CohortPlatformApp> {
       title: 'Cohort Platform',
       debugShowCheckedModeBanner: false,
       theme: cohortTheme,
-      home: AuthGate(controller: _authController),
+      home: widget.configurationError == null
+          ? AuthGate(controller: _authController)
+          : ConfigurationErrorScreen(message: widget.configurationError!),
     );
   }
 }

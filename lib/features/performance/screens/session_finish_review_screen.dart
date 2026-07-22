@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -60,6 +61,8 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
   }
 
   Future<void> _saveAndFinish() async {
+    if (_saveState == PerformanceSaveState.saving) return;
+
     setState(() {
       _saveState = PerformanceSaveState.saving;
       _errorMessage = null;
@@ -82,6 +85,15 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
       );
 
       if (!mounted) return;
+
+      if (result.progressionFailed) {
+        setState(() {
+          _saveState = PerformanceSaveState.error;
+          _errorMessage = UserFacingErrorMessages.sessionProgressionWarning();
+        });
+        return;
+      }
+
       setState(() => _saveState = PerformanceSaveState.saved);
 
       await Navigator.of(context).pushReplacement(
@@ -99,7 +111,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
       if (!mounted) return;
       setState(() {
         _saveState = PerformanceSaveState.error;
-        _errorMessage = error.toString();
+        _errorMessage = UserFacingErrorMessages.sessionSaveFailure(error);
       });
     }
   }
@@ -145,7 +157,12 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
                 errorMessage: _errorMessage,
               ),
               const SizedBox(height: CohortSpacing.lg),
-              CohortButton(label: 'Save and finish', onPressed: _saveAndFinish),
+              CohortButton(
+                label: 'Save and finish',
+                onPressed: _saveState == PerformanceSaveState.saving
+                    ? () {}
+                    : _saveAndFinish,
+              ),
               const SizedBox(height: CohortSpacing.sm),
               TextButton(
                 onPressed: () => Navigator.pop(context),

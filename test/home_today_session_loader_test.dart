@@ -124,7 +124,7 @@ void main() {
     await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
       version: ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
       tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-        versionId: versionId,
+        programmeVersionId: versionId,
       ),
     );
     tables.assignments.add(
@@ -184,17 +184,17 @@ void main() {
       await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
         version: ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
         tree: ProgrammeScheduleTestFixtures.singleWeekTree(
-          versionId: versionId,
+          programmeVersionId: versionId,
           days: [
             ProgrammeScheduleTestFixtures.trainingDay(
-              id: 'day-1',
-              weekId: 'week-1',
+              id: ProgrammeScheduleTestFixtures.day1Id,
+              weekId: ProgrammeScheduleTestFixtures.week1Id,
               dayKey: 'day_1',
               dayOrder: 1,
               slots: [
                 ProgrammeScheduleTestFixtures.requiredSlot(
-                  id: 'slot-1',
-                  dayId: 'day-1',
+                  id: ProgrammeScheduleTestFixtures.slot1Id,
+                  dayId: ProgrammeScheduleTestFixtures.day1Id,
                   sessionOrder: 1,
                   protocolId: 'BW-001',
                 ),
@@ -212,7 +212,7 @@ void main() {
       );
       tables.outcomes.add(
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           assignmentId: devAssignmentId,
         ),
@@ -244,7 +244,7 @@ void main() {
       await seedFoundationAssignment(tables);
       tables.outcomes.add(
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           assignmentId: devAssignmentId,
         ),
@@ -268,7 +268,7 @@ void main() {
 
       final executable = state as HomeTodaySessionProgrammeExecutable;
       expect(executable.executionContext.assignmentId, devAssignmentId);
-      expect(executable.executionContext.sessionSlotId, 'slot-1');
+      expect(executable.executionContext.sessionSlotId, ProgrammeScheduleTestFixtures.slot1Id);
       expect(executable.executionContext.isProgrammeBacked, isTrue);
     });
 
@@ -281,7 +281,7 @@ void main() {
           version:
               ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
           tree: ProgrammeScheduleTestFixtures.singleWeekTree(
-            versionId: versionId,
+            programmeVersionId: versionId,
             days: [
               ProgrammeScheduleTestFixtures.trainingDay(
                 id: 'day-1',
@@ -361,7 +361,7 @@ void main() {
       await seedFoundationAssignment(tables);
       tables.outcomes.add(
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           assignmentId: devAssignmentId,
         ),

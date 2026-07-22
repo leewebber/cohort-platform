@@ -7,56 +7,74 @@ import 'package:cohort_platform/models/programme_version_session_slot.dart';
 import 'package:cohort_platform/models/programme_version_week.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
 
+/// Shared programme schedule fixtures using persisted UUID ids so in-memory
+/// stores do not remap slot/day/week ids during saveTemplateTree.
 class ProgrammeScheduleTestFixtures {
+  static const versionId = 'version-1';
+  static const lineageId = 'lineage-1';
+  static const week1Id = '00000000-0000-4000-8000-000000000011';
+  static const week2Id = '00000000-0000-4000-8000-000000000012';
+  static const day1Id = '00000000-0000-4000-8000-000000000101';
+  static const day2Id = '00000000-0000-4000-8000-000000000102';
+  static const day3Id = '00000000-0000-4000-8000-000000000103';
+  static const day4Id = '00000000-0000-4000-8000-000000000104';
+  static const day5Id = '00000000-0000-4000-8000-000000000105';
+  static const slot1Id = '00000000-0000-4000-8000-000000000001';
+  static const slot2Id = '00000000-0000-4000-8000-000000000002';
+  static const slot3Id = '00000000-0000-4000-8000-000000000003';
+  static const slot4Id = '00000000-0000-4000-8000-000000000004';
+  static const slot5Id = '00000000-0000-4000-8000-000000000005';
+  static const assignmentId = 'assignment-1';
+
   static ProgrammeTemplateTree foundationWeekOneTree({
-    String versionId = 'version-1',
+    String programmeVersionId = versionId,
   }) {
     return twoWeekTree(
-      versionId: versionId,
+      versionIdParam: programmeVersionId,
       weekOneDays: [
         trainingDay(
-          id: 'day-1',
-          weekId: 'week-1',
+          id: day1Id,
+          weekId: week1Id,
           dayKey: 'day_1',
           dayOrder: 1,
           slots: [
             requiredSlot(
-              id: 'slot-1',
-              dayId: 'day-1',
+              id: slot1Id,
+              dayId: day1Id,
               sessionOrder: 1,
               protocolId: 'BW-001',
             ),
           ],
         ),
         trainingDay(
-          id: 'day-2',
-          weekId: 'week-1',
+          id: day2Id,
+          weekId: week1Id,
           dayKey: 'day_2',
           dayOrder: 2,
           slots: [
             requiredSlot(
-              id: 'slot-2',
-              dayId: 'day-2',
+              id: slot2Id,
+              dayId: day2Id,
               sessionOrder: 1,
               protocolId: 'RN-006',
             ),
           ],
         ),
         restDay(
-          id: 'day-3',
-          weekId: 'week-1',
+          id: day3Id,
+          weekId: week1Id,
           dayKey: 'day_3',
           dayOrder: 3,
         ),
         trainingDay(
-          id: 'day-4',
-          weekId: 'week-1',
+          id: day4Id,
+          weekId: week1Id,
           dayKey: 'day_4',
           dayOrder: 4,
           slots: [
             requiredSlot(
-              id: 'slot-4',
-              dayId: 'day-4',
+              id: slot4Id,
+              dayId: day4Id,
               sessionOrder: 1,
               protocolId: 'FG-009',
             ),
@@ -70,20 +88,20 @@ class ProgrammeScheduleTestFixtures {
     return singleWeekTree(
       days: [
         trainingDay(
-          id: 'day-1',
-          weekId: 'week-1',
+          id: day1Id,
+          weekId: week1Id,
           dayKey: 'day_1',
           dayOrder: 1,
           slots: [
             requiredSlot(
-              id: 'slot-1',
-              dayId: 'day-1',
+              id: slot1Id,
+              dayId: day1Id,
               sessionOrder: 1,
               protocolId: 'BW-001',
             ),
             requiredSlot(
-              id: 'slot-2',
-              dayId: 'day-1',
+              id: slot2Id,
+              dayId: day1Id,
               sessionOrder: 2,
               protocolId: 'RN-006',
             ),
@@ -97,34 +115,34 @@ class ProgrammeScheduleTestFixtures {
     return singleWeekTree(
       days: [
         trainingDay(
-          id: 'day-1',
-          weekId: 'week-1',
+          id: day1Id,
+          weekId: week1Id,
           dayKey: 'day_1',
           dayOrder: 1,
           slots: [
             requiredSlot(
-              id: 'slot-1',
-              dayId: 'day-1',
+              id: slot1Id,
+              dayId: day1Id,
               sessionOrder: 1,
               protocolId: 'BW-001',
             ),
             optionalSlot(
-              id: 'slot-2',
-              dayId: 'day-1',
+              id: slot2Id,
+              dayId: day1Id,
               sessionOrder: 2,
               protocolId: 'FG-009',
             ),
           ],
         ),
         trainingDay(
-          id: 'day-2',
-          weekId: 'week-1',
+          id: day2Id,
+          weekId: week1Id,
           dayKey: 'day_2',
           dayOrder: 2,
           slots: [
             requiredSlot(
-              id: 'slot-3',
-              dayId: 'day-2',
+              id: slot3Id,
+              dayId: day2Id,
               sessionOrder: 1,
               protocolId: 'RN-006',
             ),
@@ -137,24 +155,24 @@ class ProgrammeScheduleTestFixtures {
   static ProgrammeTemplateTree twoWeekTree({
     required List<ProgrammeTemplateDayNode> weekOneDays,
     List<ProgrammeTemplateDayNode>? weekTwoDays,
-    String versionId = 'version-1',
+    String versionIdParam = versionId,
   }) {
     final weekOne = ProgrammeVersionWeek(
-      id: 'week-1',
-      versionId: versionId,
+      id: week1Id,
+      versionId: versionIdParam,
       weekNumber: 1,
       title: 'Week 1',
     );
     final weekTwo = ProgrammeVersionWeek(
-      id: 'week-2',
-      versionId: versionId,
+      id: week2Id,
+      versionId: versionIdParam,
       weekNumber: 2,
       title: 'Week 2',
     );
 
     return ProgrammeTemplateTree(
       template: ProgrammeTemplate(
-        version: version().copyWith(id: versionId),
+        version: version().copyWith(id: versionIdParam),
         weeks: [weekOne, weekTwo],
       ),
       weekNodes: [
@@ -164,14 +182,14 @@ class ProgrammeScheduleTestFixtures {
           days: weekTwoDays ??
               [
                 trainingDay(
-                  id: 'day-5',
-                  weekId: 'week-2',
+                  id: day5Id,
+                  weekId: week2Id,
                   dayKey: 'day_1',
                   dayOrder: 1,
                   slots: [
                     requiredSlot(
-                      id: 'slot-5',
-                      dayId: 'day-5',
+                      id: slot5Id,
+                      dayId: day5Id,
                       sessionOrder: 1,
                       protocolId: 'BW-001',
                     ),
@@ -185,24 +203,27 @@ class ProgrammeScheduleTestFixtures {
 
   static ProgrammeTemplateTree singleWeekTree({
     required List<ProgrammeTemplateDayNode> days,
-    String versionId = 'version-1',
+    String programmeVersionId = versionId,
   }) {
     final week = ProgrammeVersionWeek(
-      id: 'week-1',
-      versionId: versionId,
+      id: week1Id,
+      versionId: programmeVersionId,
       weekNumber: 1,
     );
 
     return ProgrammeTemplateTree(
-      template: ProgrammeTemplate(version: version().copyWith(id: versionId), weeks: [week]),
+      template: ProgrammeTemplate(
+        version: version().copyWith(id: programmeVersionId),
+        weeks: [week],
+      ),
       weekNodes: [ProgrammeTemplateWeekNode(week: week, days: days)],
     );
   }
 
   static ProgrammeVersion version() {
     return ProgrammeVersion(
-      id: 'version-1',
-      lineageId: 'lineage-1',
+      id: versionId,
+      lineageId: lineageId,
       versionNumber: 1,
       lifecycleStatus: ProgrammeLifecycleStatus.draft,
       libraryScope: ProgrammeLibraryScope.cohortGlobal,
@@ -215,11 +236,14 @@ class ProgrammeScheduleTestFixtures {
     int week = 1,
     String dayKey = 'day_1',
     int slotOrder = 1,
+    String athleteId = 'lee',
+    String? id,
+    String? programmeVersionId,
   }) {
     return ProgrammeAssignment(
-      id: 'assignment-1',
-      athleteId: 'lee',
-      programmeVersionId: 'version-1',
+      id: id ?? assignmentId,
+      athleteId: athleteId,
+      programmeVersionId: programmeVersionId ?? versionId,
       lineageCode: 'COHORT-FOUNDATION-TEST',
       status: ProgrammeAssignmentStatus.active,
       startedAt: DateTime.utc(2026, 7, 15),
@@ -304,7 +328,7 @@ class ProgrammeScheduleTestFixtures {
   static ProgrammeSlotOutcome outcome({
     required String slotId,
     required ProgrammeSlotOutcomeStatus status,
-    String assignmentId = 'assignment-1',
+    String? assignmentId,
     String? replacementProtocolId,
     int weekNumber = 1,
     String dayKey = 'day_1',
@@ -312,7 +336,7 @@ class ProgrammeScheduleTestFixtures {
   }) {
     return ProgrammeSlotOutcome(
       id: 'outcome-$slotId',
-      assignmentId: assignmentId,
+      assignmentId: assignmentId ?? ProgrammeScheduleTestFixtures.assignmentId,
       sessionSlotId: slotId,
       weekNumber: weekNumber,
       dayKey: dayKey,

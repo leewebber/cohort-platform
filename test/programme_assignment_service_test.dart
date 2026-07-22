@@ -107,7 +107,7 @@ void main() {
     await versionStore.saveTemplateTree(
       version: publishedVersion(id: versionId),
       tree: tree ?? ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-        versionId: versionId,
+        programmeVersionId: versionId,
       ),
     );
   }
@@ -239,7 +239,7 @@ void main() {
       );
 
       expect(result.assignment?.currentSessionOrder, 1);
-      expect(result.resolvedTodaySession?.slotId, 'slot-1');
+      expect(result.resolvedTodaySession?.slotId, ProgrammeScheduleTestFixtures.slot1Id);
     });
 
     test('initial cursor does not assume week 1 day_1 slot 1', () async {
@@ -311,7 +311,7 @@ void main() {
       await versionStore.saveTemplateTree(
         version: publishedVersion(id: newVersionId).copyWith(versionNumber: 2),
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-          versionId: newVersionId,
+          programmeVersionId: newVersionId,
         ),
       );
 
@@ -543,7 +543,7 @@ void main() {
       await seedActiveAssignment();
       tables.outcomes.add(
         ProgrammeScheduleTestFixtures.outcome(
-          slotId: 'slot-1',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
           status: ProgrammeSlotOutcomeStatus.completed,
           assignmentId: 'assignment-dev',
         ),

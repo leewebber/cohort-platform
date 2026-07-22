@@ -26,7 +26,7 @@ void main() {
       );
 
       expect(resolution.kind, ProgrammeScheduleResolutionKind.executableSlot);
-      expect(resolution.slot?.id, 'slot-1');
+      expect(resolution.slot?.id, ProgrammeScheduleTestFixtures.slot1Id);
       expect(resolution.plannedProtocolId, 'BW-001');
       expect(resolution.effectiveProtocolId, 'BW-001');
       expect(resolution.outcomeStatus, ProgrammeSlotOutcomeStatus.scheduled);
@@ -38,17 +38,17 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-2',
+            slotId: ProgrammeScheduleTestFixtures.slot2Id,
             status: ProgrammeSlotOutcomeStatus.inProgress,
           ),
         ],
       );
 
-      expect(resolution.slot?.id, 'slot-2');
+      expect(resolution.slot?.id, ProgrammeScheduleTestFixtures.slot2Id);
       expect(resolution.outcomeStatus, ProgrammeSlotOutcomeStatus.inProgress);
     });
 
@@ -58,13 +58,13 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completedPartial,
           ),
         ],
       );
 
-      expect(resolution.slot?.id, 'slot-2');
+      expect(resolution.slot?.id, ProgrammeScheduleTestFixtures.slot2Id);
     });
 
     test('multiple required slots stay on same day until all resolved', () {
@@ -73,7 +73,7 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
         ],
@@ -81,7 +81,7 @@ void main() {
 
       expect(resolution.weekNumber, 1);
       expect(resolution.dayKey, 'day_1');
-      expect(resolution.slot?.id, 'slot-2');
+      expect(resolution.slot?.id, ProgrammeScheduleTestFixtures.slot2Id);
     });
 
     test('optional slot does not block day advancement', () {
@@ -90,7 +90,7 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.optionalSlotDayTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
         ],
@@ -107,7 +107,7 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
         ],
@@ -124,11 +124,11 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-2',
+            slotId: ProgrammeScheduleTestFixtures.slot2Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
         ],
@@ -144,7 +144,7 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-4',
+            slotId: ProgrammeScheduleTestFixtures.slot4Id,
             status: ProgrammeSlotOutcomeStatus.completed,
             dayKey: 'day_4',
           ),
@@ -206,14 +206,14 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.rescheduled,
           ),
         ],
       );
 
       expect(resolution.kind, ProgrammeScheduleResolutionKind.executableSlot);
-      expect(resolution.slot?.id, 'slot-1');
+      expect(resolution.slot?.id, ProgrammeScheduleTestFixtures.slot1Id);
       expect(resolution.outcomeStatus, ProgrammeSlotOutcomeStatus.rescheduled);
     });
 
@@ -227,7 +227,7 @@ void main() {
             dayOrder: 1,
             slots: [
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-1',
+                id: ProgrammeScheduleTestFixtures.slot1Id,
                 dayId: 'day-1',
                 sessionOrder: 1,
                 protocolId: 'BW-001',
@@ -242,7 +242,7 @@ void main() {
         tree: tree,
         outcomes: [
           ProgrammeScheduleTestFixtures.outcome(
-            slotId: 'slot-1',
+            slotId: ProgrammeScheduleTestFixtures.slot1Id,
             status: ProgrammeSlotOutcomeStatus.completed,
           ),
         ],
@@ -323,7 +323,7 @@ void main() {
             dayOrder: 1,
             slots: [
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-1',
+                id: ProgrammeScheduleTestFixtures.slot1Id,
                 dayId: 'day-1',
                 sessionOrder: 1,
                 protocolId: 'BW-001',
@@ -337,7 +337,7 @@ void main() {
             dayOrder: 2,
             slots: [
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-2',
+                id: ProgrammeScheduleTestFixtures.slot2Id,
                 dayId: 'day-1b',
                 sessionOrder: 1,
                 protocolId: 'RN-006',
@@ -373,13 +373,13 @@ void main() {
             dayOrder: 1,
             slots: [
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-1',
+                id: ProgrammeScheduleTestFixtures.slot1Id,
                 dayId: 'day-1',
                 sessionOrder: 1,
                 protocolId: 'BW-001',
               ),
               ProgrammeScheduleTestFixtures.requiredSlot(
-                id: 'slot-2',
+                id: ProgrammeScheduleTestFixtures.slot2Id,
                 dayId: 'day-1',
                 sessionOrder: 1,
                 protocolId: 'RN-006',
@@ -449,7 +449,7 @@ void main() {
               dayOrder: 2,
               slots: [
                 ProgrammeScheduleTestFixtures.requiredSlot(
-                  id: 'slot-2',
+                  id: ProgrammeScheduleTestFixtures.slot2Id,
                   dayId: 'day-2',
                   sessionOrder: 1,
                   protocolId: 'RN-006',
@@ -624,11 +624,11 @@ void main() {
           tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
           outcomes: [
             ProgrammeScheduleTestFixtures.outcome(
-              slotId: 'slot-1',
+              slotId: ProgrammeScheduleTestFixtures.slot1Id,
               status: ProgrammeSlotOutcomeStatus.completed,
             ),
             ProgrammeScheduleTestFixtures.outcome(
-              slotId: 'slot-2',
+              slotId: ProgrammeScheduleTestFixtures.slot2Id,
               status: ProgrammeSlotOutcomeStatus.completed,
             ),
           ],

@@ -26,6 +26,10 @@ class AthleteSessionMemoryStore {
     _sessions.remove(sessionKey);
   }
 
+  void clearAll() {
+    _sessions.clear();
+  }
+
   /// Clears in-memory session execution state for a protocol (developer reset).
   int clearForProtocol(String protocolId) {
     final suffix = ':$protocolId';

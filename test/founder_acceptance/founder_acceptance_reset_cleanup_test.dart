@@ -516,7 +516,7 @@ Future<void> seedFoundationActiveAssignment({
       id: versionId,
     ),
     tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-      versionId: versionId,
+      programmeVersionId: versionId,
     ),
   );
   tables.assignments.add(
@@ -528,7 +528,7 @@ Future<void> seedFoundationActiveAssignment({
   );
   tables.outcomes.add(
     ProgrammeScheduleTestFixtures.outcome(
-      slotId: 'slot-1',
+      slotId: ProgrammeScheduleTestFixtures.slot1Id,
       status: ProgrammeSlotOutcomeStatus.completed,
       assignmentId: foundationAssignmentId,
     ),

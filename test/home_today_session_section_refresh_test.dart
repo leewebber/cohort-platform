@@ -93,6 +93,7 @@ void main() {
             body: HomeTodaySessionSection(
               refreshController: controller,
               loadOverride: loadOverride,
+              athleteId: 'lee',
             ),
           ),
         ),
@@ -105,7 +106,7 @@ void main() {
 
       controller.requestRefresh(source: 'programme_reset');
       await tester.pump();
-      expect(find.text('Loading session...'), findsOneWidget);
+      expect(find.text('Loading today\'s training...'), findsOneWidget);
 
       await tester.pumpAndSettle();
 
@@ -140,6 +141,7 @@ void main() {
             body: HomeTodaySessionSection(
               refreshController: controller,
               loadOverride: loadOverride,
+              athleteId: 'lee',
             ),
           ),
         ),
@@ -176,6 +178,7 @@ void main() {
             body: HomeTodaySessionSection(
               refreshController: controller,
               loadOverride: loadOverride,
+              athleteId: 'lee',
             ),
           ),
         ),
@@ -214,6 +217,7 @@ void main() {
             body: HomeTodaySessionSection(
               refreshController: controller,
               loadOverride: loadOverride,
+              athleteId: 'lee',
             ),
           ),
         ),
@@ -251,6 +255,7 @@ void main() {
             body: HomeTodaySessionSection(
               key: sectionKey,
               loadOverride: loadOverride,
+              athleteId: 'lee',
             ),
           ),
         ),
