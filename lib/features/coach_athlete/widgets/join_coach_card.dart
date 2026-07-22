@@ -21,6 +21,12 @@ class JoinCoachCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final isDualRole = session.isCoach && session.isAthlete;
+    final title = isDualRole ? 'Join a coach' : 'Join your coach';
+    final body = isDualRole
+        ? 'Prefer coach-led training? Link to another coach with an invitation code.'
+        : 'Have an invitation code? Link to your coach to receive training.';
+
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.md),
       child: CohortCard(
@@ -31,15 +37,12 @@ class JoinCoachCard extends StatelessWidget {
             ),
           );
         },
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Join your coach', style: CohortTextStyles.cardTitle),
-            SizedBox(height: CohortSpacing.xs),
-            Text(
-              'Have an invitation code? Link to your coach to receive training.',
-              style: CohortTextStyles.body,
-            ),
+            Text(title, style: CohortTextStyles.cardTitle),
+            const SizedBox(height: CohortSpacing.xs),
+            Text(body, style: CohortTextStyles.body),
           ],
         ),
       ),

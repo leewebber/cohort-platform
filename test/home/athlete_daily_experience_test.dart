@@ -1,3 +1,5 @@
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/core/widgets/today_session_card.dart';
 import 'package:cohort_platform/features/home/models/home_today_session_state.dart';
 import 'package:cohort_platform/features/home/services/home_today_session_loader.dart';
@@ -39,6 +41,8 @@ ActiveSessionState _testSessionState({
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+
+  tearDown(CurrentUserSession.clear);
 
   ResolvedTodaySession executableResolution() {
     return ResolvedTodaySession(
@@ -130,11 +134,22 @@ void main() {
 
   group('HomeTodaySessionSection states', () {
     testWidgets('empty state explains no programme assigned', (tester) async {
+      CurrentUserSession.bind(
+        const UserProfile(
+          id: 'alex',
+          displayName: 'Alex',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
+
       await tester.pumpWidget(
         MaterialApp(
-          home: HomeTodaySessionSection(
-            athleteId: 'lee',
-            loadOverride: (_) async => const HomeTodaySessionEmpty(),
+          home: Scaffold(
+            body: HomeTodaySessionSection(
+              athleteId: 'alex',
+              loadOverride: (_) async => const HomeTodaySessionEmpty(),
+            ),
           ),
         ),
       );
@@ -142,7 +157,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('No programme assigned'), findsOneWidget);
-      expect(find.textContaining('coach assigns'), findsOneWidget);
+      expect(find.textContaining('Join your coach'), findsOneWidget);
     });
 
     testWidgets('rest day card shows recovery copy', (tester) async {

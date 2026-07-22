@@ -5,6 +5,8 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/today_session_card.dart';
+import '../../auth/services/current_user_session.dart';
+import '../../personal_training/screens/personal_training_setup_screen.dart';
 import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/training_session_status.dart';
 import '../../../models/training_session.dart';
@@ -408,6 +410,35 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   }
 
   Widget _buildEmptyCard() {
+    final session = CurrentUserSession.maybeInstance;
+    final isDualRole =
+        session?.isCoach == true && session?.isAthlete == true;
+    final isAthleteOnly =
+        session?.isAthlete == true && session?.isCoach != true;
+
+    if (isDualRole) {
+      return CohortCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("TODAY'S TRAINING", style: CohortTextStyles.eyebrow),
+            const SizedBox(height: CohortSpacing.lg),
+            const Text('Set up your training', style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.sm),
+            const Text(
+              'Choose a published programme and start training through Cohort.',
+              style: CohortTextStyles.body,
+            ),
+            const SizedBox(height: CohortSpacing.xl),
+            CohortButton(
+              label: 'CHOOSE PROGRAMME',
+              onPressed: _openPersonalTrainingSetup,
+            ),
+          ],
+        ),
+      );
+    }
+
     return CohortCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,13 +447,27 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           const SizedBox(height: CohortSpacing.lg),
           const Text('No programme assigned', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.sm),
-          const Text(
-            'When your coach assigns a programme, today\'s session will appear here.',
+          Text(
+            isAthleteOnly
+                ? 'Join your coach to receive a programme, or ask them to assign training.'
+                : 'When a programme is assigned, today\'s session will appear here.',
             style: CohortTextStyles.body,
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _openPersonalTrainingSetup() async {
+    final assigned = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => const PersonalTrainingSetupScreen(),
+      ),
+    );
+
+    if (assigned == true && mounted) {
+      refresh(source: 'personal_training_assigned');
+    }
   }
 
   Widget _buildError(HomeTodaySessionError state) {
