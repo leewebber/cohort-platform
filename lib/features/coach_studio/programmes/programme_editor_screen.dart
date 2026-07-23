@@ -46,7 +46,8 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
   void initState() {
     super.initState();
     _ownsController = widget.controller == null;
-    _controller = widget.controller ??
+    _controller =
+        widget.controller ??
         ProgrammeEditorServices.createController(versionId: widget.versionId);
     _controller.addListener(_onControllerChanged);
     _ownsIntelligenceController = true;
@@ -163,9 +164,7 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
         if (didPop) return;
         await _handleExit();
       },
-      child: Scaffold(
-        body: SafeArea(child: _buildBody()),
-      ),
+      child: Scaffold(body: SafeArea(child: _buildBody())),
     );
   }
 
@@ -227,10 +226,11 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
                 controller: _controller,
               ),
               onSave: () async {
+                final messenger = ScaffoldMessenger.maybeOf(context);
                 final result = await _controller.save();
                 if (!mounted) return;
                 if (result.message != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger?.showSnackBar(
                     SnackBar(content: Text(result.message!)),
                   );
                 }
@@ -256,6 +256,7 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
                 );
               },
               onPublish: () async {
+                final messenger = ScaffoldMessenger.maybeOf(context);
                 final confirmed = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -279,7 +280,7 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
 
                 final result = await _controller.publish();
                 if (!mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
+                messenger?.showSnackBar(
                   SnackBar(
                     content: Text(
                       result.success
@@ -301,10 +302,7 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
               ),
             ),
             if (isCompact)
-              ProgrammeEditorWeekNav(
-                controller: _controller,
-                isCompact: true,
-              ),
+              ProgrammeEditorWeekNav(controller: _controller, isCompact: true),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,11 +335,11 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
                                   day: day,
                                   onSelectSlot: (slotLocalId) =>
                                       _openSlotInspector(
-                                    weekLocalId: selectedWeek.localId,
-                                    dayLocalId: day.localId,
-                                    slotLocalId: slotLocalId,
-                                    isCompact: isCompact,
-                                  ),
+                                        weekLocalId: selectedWeek.localId,
+                                        dayLocalId: day.localId,
+                                        slotLocalId: slotLocalId,
+                                        isCompact: isCompact,
+                                      ),
                                 ),
                               if (!_controller.isReadOnly)
                                 TextButton(

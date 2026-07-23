@@ -35,9 +35,7 @@ Future<void> _pumpHome(
 }) async {
   CurrentUserSession.bind(profile);
   await tester.pumpWidget(
-    MaterialApp(
-      home: HomeScreen(authController: authController),
-    ),
+    MaterialApp(home: HomeScreen(authController: authController)),
   );
   await tester.pumpAndSettle();
 }
@@ -51,7 +49,9 @@ void main() {
   });
 
   group('Production home navigation', () {
-    testWidgets('athlete-only profile sees athlete destinations only', (tester) async {
+    testWidgets('athlete-only profile sees athlete destinations only', (
+      tester,
+    ) async {
       await _pumpHome(
         tester,
         profile: const UserProfile(
@@ -67,41 +67,63 @@ void main() {
       expect(find.text('Adjust Today’s Session'), findsOneWidget);
       expect(find.text('Protocol Library'), findsOneWidget);
       expect(find.text('Help & feedback'), findsOneWidget);
+      expect(
+        find.text(
+          'Have an invitation code? Link to your coach to receive training.',
+        ),
+        findsNothing,
+      );
 
       expect(find.text('Coach Studio'), findsNothing);
       expect(find.text('My Athletes'), findsNothing);
       expect(find.text('Internal tools'), findsNothing);
 
       for (final label in _forbiddenProductionLabels) {
-        expect(find.text(label), findsNothing, reason: 'Found forbidden label: $label');
+        expect(
+          find.text(label),
+          findsNothing,
+          reason: 'Found forbidden label: $label',
+        );
       }
     });
 
-    testWidgets('coach-only profile sees coach destinations without athlete Today', (tester) async {
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
-          id: 'coach-1',
-          displayName: 'Sam',
-          isCoach: true,
-          isAthlete: false,
-        ),
-      );
+    testWidgets(
+      'coach-only profile sees coach destinations without athlete Today',
+      (tester) async {
+        await _pumpHome(
+          tester,
+          profile: const UserProfile(
+            id: 'coach-1',
+            displayName: 'Sam',
+            isCoach: true,
+            isAthlete: false,
+          ),
+        );
 
-      expect(find.text('Coach Studio'), findsOneWidget);
-      expect(find.text('My Athletes'), findsOneWidget);
-      expect(find.textContaining('Manage athletes and programmes'), findsOneWidget);
+        expect(find.text('Coach Studio'), findsOneWidget);
+        expect(find.text('My Athletes'), findsOneWidget);
+        expect(
+          find.textContaining('Manage athletes and programmes'),
+          findsOneWidget,
+        );
 
-      expect(find.text('Training History'), findsNothing);
-      expect(find.text('Adjust Today’s Session'), findsNothing);
-      expect(find.text('Internal tools'), findsNothing);
+        expect(find.text('Training History'), findsNothing);
+        expect(find.text('Adjust Today’s Session'), findsNothing);
+        expect(find.text('Internal tools'), findsNothing);
 
-      for (final label in _forbiddenProductionLabels) {
-        expect(find.text(label), findsNothing, reason: 'Found forbidden label: $label');
-      }
-    });
+        for (final label in _forbiddenProductionLabels) {
+          expect(
+            find.text(label),
+            findsNothing,
+            reason: 'Found forbidden label: $label',
+          );
+        }
+      },
+    );
 
-    testWidgets('dual-role profile sees athlete and coach sections', (tester) async {
+    testWidgets('dual-role profile sees athlete and coach sections', (
+      tester,
+    ) async {
       await _pumpHome(
         tester,
         profile: const UserProfile(
@@ -117,13 +139,26 @@ void main() {
       expect(find.text('Coach Studio'), findsOneWidget);
       expect(find.text('My Athletes'), findsOneWidget);
       expect(find.text('Internal tools'), findsNothing);
+      expect(find.text('Join a coach'), findsNothing);
+      expect(
+        find.text(
+          'Prefer coach-led training? Link to another coach with an invitation code.',
+        ),
+        findsNothing,
+      );
 
       for (final label in _forbiddenProductionLabels) {
-        expect(find.text(label), findsNothing, reason: 'Found forbidden label: $label');
+        expect(
+          find.text(label),
+          findsNothing,
+          reason: 'Found forbidden label: $label',
+        );
       }
     });
 
-    testWidgets('internal tools entry appears only when explicitly enabled', (tester) async {
+    testWidgets('internal tools entry appears only when explicitly enabled', (
+      tester,
+    ) async {
       InternalToolsPolicy.enableForTesting();
 
       await _pumpHome(
@@ -145,25 +180,28 @@ void main() {
       expect(find.text('Admin Protocol Editor'), findsOneWidget);
     });
 
-    testWidgets('account header opens account surface when controller provided', (tester) async {
-      final auth = AuthController(authService: FakeAuthSessionPort());
-      await auth.initialize();
+    testWidgets(
+      'account header opens account surface when controller provided',
+      (tester) async {
+        final auth = AuthController(authService: FakeAuthSessionPort());
+        await auth.initialize();
 
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
-          id: 'athlete-1',
-          displayName: 'Alex',
-          isCoach: false,
-          isAthlete: true,
-        ),
-        authController: auth,
-      );
+        await _pumpHome(
+          tester,
+          profile: const UserProfile(
+            id: 'athlete-1',
+            displayName: 'Alex',
+            isCoach: false,
+            isAthlete: true,
+          ),
+          authController: auth,
+        );
 
-      await tester.tap(find.text('Alex'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Alex'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Sign out'), findsOneWidget);
-    });
+        expect(find.text('Sign out'), findsOneWidget);
+      },
+    );
   });
 }

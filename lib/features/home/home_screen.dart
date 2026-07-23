@@ -14,7 +14,6 @@ import '../auth/controllers/auth_controller.dart';
 import '../auth/screens/account_screen.dart';
 import '../auth/services/current_user_session.dart';
 import '../beta_support/beta_support_screen.dart';
-import '../coach_athlete/widgets/join_coach_card.dart';
 import '../coach_operations/screens/coach_home_dashboard_screen.dart';
 import '../coach_studio/coach_studio_access.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
@@ -25,10 +24,7 @@ import 'controllers/home_today_session_refresh_controller.dart';
 import 'widgets/home_today_session_section.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    super.key,
-    this.authController,
-  });
+  const HomeScreen({super.key, this.authController});
 
   final AuthController? authController;
 
@@ -42,59 +38,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String get _athleteId => CurrentUserSession.requireInstance.athleteId;
 
-  void _refreshTodaySession({
-    required String source,
-    String? successMessage,
-  }) {
-    final sectionState = _todaySessionSectionKey.currentState;
-    if (sectionState != null) {
-      sectionState.refresh(source: source);
-    } else {
-      _todaySessionRefreshController.requestRefresh(source: source);
-    }
-
-    if (successMessage != null && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(successMessage)),
-      );
-    }
-  }
-
   void _openAccount(BuildContext context) {
     final controller = widget.authController;
     if (controller == null) return;
 
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AccountScreen(controller: controller),
-      ),
+      MaterialPageRoute(builder: (_) => AccountScreen(controller: controller)),
     );
   }
 
   void _openProtocolLibrary(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const ProtocolLibraryScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const ProtocolLibraryScreen()));
   }
 
   void _openExerciseLibrary(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => ExerciseLibraryScreen(
-          athleteId: _athleteId,
-        ),
+        builder: (_) => ExerciseLibraryScreen(athleteId: _athleteId),
       ),
     );
   }
 
   void _openCoachHome(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const CoachHomeDashboardScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const CoachHomeDashboardScreen()));
   }
 
   void _openCoachStudio(BuildContext context) {
@@ -102,11 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openInternalTools(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => const InternalToolsScreen(),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => const InternalToolsScreen()));
   }
 
   Future<void> _openAdaptationSheet(BuildContext context) async {
@@ -116,14 +84,17 @@ class _HomeScreenState extends State<HomeScreen> {
     const athleteStateRepository = AthleteStateRepository();
     final protocolRepository = ProtocolRepository();
 
-    final athleteState =
-        await athleteStateRepository.getAthleteState(_athleteId);
+    final athleteState = await athleteStateRepository.getAthleteState(
+      _athleteId,
+    );
     final protocolId = athleteState?.currentProtocolId;
     if (protocolId == null) {
       return;
     }
 
-    final currentProtocol = await protocolRepository.getProtocolById(protocolId);
+    final currentProtocol = await protocolRepository.getProtocolById(
+      protocolId,
+    );
     if (currentProtocol == null) {
       return;
     }
@@ -185,25 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   athleteId: _athleteId,
                 ),
               ],
-              if (ProductionNavigationPolicy.showJoinCoachCard()) ...[
-                const SizedBox(height: CohortSpacing.md),
-                JoinCoachCard(
-                  onJoined: () => _refreshTodaySession(
-                    source: 'join_coach',
-                    successMessage:
-                        'Coach linked. Training will appear when assigned.',
-                  ),
-                ),
-              ],
               if (ProductionNavigationPolicy.showTrainingHistory()) ...[
                 const SizedBox(height: CohortSpacing.md),
                 CohortCard(
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) => TrainingHistoryScreen(
-                          athleteId: _athleteId,
-                        ),
+                        builder: (_) =>
+                            TrainingHistoryScreen(athleteId: _athleteId),
                       ),
                     );
                   },
@@ -332,10 +292,7 @@ class _AdaptationPromptRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Adjust Today’s Session',
-                style: CohortTextStyles.cardTitle,
-              ),
+              Text('Adjust Today’s Session', style: CohortTextStyles.cardTitle),
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 'Tell us what is affecting today’s session.',

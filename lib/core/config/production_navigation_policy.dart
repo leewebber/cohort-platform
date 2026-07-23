@@ -10,8 +10,6 @@ class ProductionNavigationPolicy {
 
   static bool showAthleteTodayExperience() => _profile().isAthlete;
 
-  static bool showJoinCoachCard() => _profile().isAthlete;
-
   static bool showTrainingHistory() => _profile().isAthlete;
 
   static bool showAdaptationPrompt() => _profile().isAthlete;
