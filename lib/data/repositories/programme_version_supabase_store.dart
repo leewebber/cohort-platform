@@ -476,6 +476,7 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       difficulty: row['difficulty']?.toString(),
       primaryGoal: row['primary_goal']?.toString(),
       sessionsPerWeek: row['sessions_per_week'],
+      equipmentRequirements: row['equipment_requirements']?.toString(),
       approvedForGlobal: row['approved_for_global'] == true,
       updatedAt: _parseDateTime(row['updated_at']),
       publishedAt: _parseDateTime(row['published_at']),

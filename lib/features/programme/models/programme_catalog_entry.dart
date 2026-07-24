@@ -69,6 +69,7 @@ class ProgrammeCatalogEntry {
     this.difficulty,
     this.primaryGoal,
     this.sessionsPerWeek,
+    this.equipmentRequirements,
     this.approvedForGlobal = false,
     this.ownerId,
     this.updatedAt,
@@ -91,6 +92,7 @@ class ProgrammeCatalogEntry {
   final String? difficulty;
   final String? primaryGoal;
   final int? sessionsPerWeek;
+  final String? equipmentRequirements;
   final bool approvedForGlobal;
   final DateTime? updatedAt;
   final DateTime? publishedAt;
@@ -112,6 +114,7 @@ class ProgrammeCatalogEntry {
     String? difficulty,
     String? primaryGoal,
     int? sessionsPerWeek,
+    String? equipmentRequirements,
     bool? approvedForGlobal,
     DateTime? updatedAt,
     DateTime? publishedAt,
@@ -133,6 +136,8 @@ class ProgrammeCatalogEntry {
       difficulty: difficulty ?? this.difficulty,
       primaryGoal: primaryGoal ?? this.primaryGoal,
       sessionsPerWeek: sessionsPerWeek ?? this.sessionsPerWeek,
+      equipmentRequirements:
+          equipmentRequirements ?? this.equipmentRequirements,
       approvedForGlobal: approvedForGlobal ?? this.approvedForGlobal,
       updatedAt: updatedAt ?? this.updatedAt,
       publishedAt: publishedAt ?? this.publishedAt,

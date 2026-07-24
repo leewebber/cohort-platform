@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/config/production_navigation_policy.dart';
+import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/adaptation_bottom_sheet.dart';
@@ -20,6 +21,7 @@ import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../internal_tools/internal_tools_screen.dart';
 import '../performance/screens/training_history_screen.dart';
 import '../protocols/protocol_library_screen.dart';
+import '../programme/screens/athlete_programme_screen.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'widgets/home_today_session_section.dart';
 
@@ -75,6 +77,23 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const InternalToolsScreen()));
+  }
+
+  Future<void> _openProgramme(BuildContext context) async {
+    final switched = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => AthleteProgrammeScreen(
+          athleteId: _athleteId,
+          refreshController: _todaySessionRefreshController,
+        ),
+      ),
+    );
+
+    if (switched == true) {
+      _todaySessionRefreshController.requestRefresh(
+        source: 'athlete_programme_screen',
+      );
+    }
   }
 
   Future<void> _openAdaptationSheet(BuildContext context) async {
@@ -154,6 +173,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   key: _todaySessionSectionKey,
                   refreshController: _todaySessionRefreshController,
                   athleteId: _athleteId,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                Center(
+                  child: TextButton(
+                    onPressed: () => _openProgramme(context),
+                    style: TextButton.styleFrom(
+                      foregroundColor: CohortColors.textMuted,
+                      textStyle: CohortTextStyles.muted,
+                    ),
+                    child: const Text('Programme'),
+                  ),
                 ),
               ],
               if (ProductionNavigationPolicy.showTrainingHistory()) ...[
