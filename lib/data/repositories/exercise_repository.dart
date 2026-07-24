@@ -28,4 +28,33 @@ class ExerciseRepository extends BaseRepository<Exercise> {
 
     return results.first;
   }
+
+  Future<Exercise?> getExerciseBySlug(String slug) async {
+    final trimmed = slug.trim();
+    if (trimmed.isEmpty) return null;
+
+    final results = await getWhere(
+      column: 'slug',
+      value: trimmed,
+    );
+
+    if (results.isEmpty) return null;
+
+    return results.first;
+  }
+
+  Future<Exercise?> getExerciseByExactName(String name) async {
+    final trimmed = name.trim();
+    if (trimmed.isEmpty) return null;
+
+    final results = await getWhere(
+      column: 'name',
+      value: trimmed,
+    );
+
+    if (results.isEmpty) return null;
+    if (results.length > 1) return null;
+
+    return results.first;
+  }
 }

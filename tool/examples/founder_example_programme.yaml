@@ -1,0 +1,42 @@
+schema_version: 1
+
+programme:
+  import_key: founder-example-v1
+  title: Founder Example Programme
+  code: FOUNDER-EXAMPLE
+  description: Minimal example for founder programme importer tests.
+  objective: Validate importer wiring.
+  duration_weeks: 1
+
+weeks:
+  - week_number: 1
+    title: Foundation
+    days:
+      - day_number: 1
+        display_name: Monday
+        is_rest_day: false
+        sessions:
+          - title: Upper Strength
+            session_type: strength
+            estimated_duration_minutes: 60
+            coach_notes: Stay controlled on every working set.
+            blocks:
+              - title: Primary Strength
+                block_type: strength
+                order: 1
+                exercises:
+                  - exercise_slug: dumbbell-floor-press
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 8
+                      load:
+                        value: 24
+                        unit: kg
+                      rest_seconds: 90
+                      target_rpe: 8
+                      tempo: "3-0-1"
+                      notes: Controlled reps
+      - day_number: 2
+        display_name: Tuesday
+        is_rest_day: true

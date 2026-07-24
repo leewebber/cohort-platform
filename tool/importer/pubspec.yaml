@@ -1,0 +1,16 @@
+name: founder_importer
+description: Pure-Dart Founder Programme Importer CLI for Cohort Platform.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  dotenv: ^4.2.0
+  supabase: ^2.13.4
+  yaml: ^3.1.3
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

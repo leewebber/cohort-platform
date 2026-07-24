@@ -72,6 +72,17 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
   }
 
   @override
+  Future<ProgrammeLineage?> getLineageByImportKey(String importKey) async {
+    _guardRead();
+
+    for (final lineage in tables.lineages) {
+      if (lineage.importKey == importKey) return lineage;
+    }
+
+    return null;
+  }
+
+  @override
   Future<ProgrammeLineage?> getLineageById(String lineageId) async {
     _guardRead();
 

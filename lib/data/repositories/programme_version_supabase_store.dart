@@ -51,6 +51,26 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
   }
 
   @override
+  Future<ProgrammeLineage?> getLineageByImportKey(String importKey) async {
+    try {
+      final response = await SupabaseService.client
+          .from(_lineagesTable)
+          .select()
+          .eq('import_key', importKey.trim())
+          .maybeSingle();
+
+      if (response == null) return null;
+
+      return ProgrammeLineage.fromMap(Map<String, dynamic>.from(response));
+    } catch (error) {
+      throw ProgrammeStoreException.fromDynamic(
+        error,
+        fallbackMessage: 'Failed to fetch programme lineage by import key',
+      );
+    }
+  }
+
+  @override
   Future<ProgrammeLineage?> getLineageById(String lineageId) async {
     try {
       final response = await SupabaseService.client

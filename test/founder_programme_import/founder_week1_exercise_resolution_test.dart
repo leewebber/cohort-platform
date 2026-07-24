@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:cohort_platform/features/founder_programme_import/founder_programme_import_models.dart';
-import 'package:cohort_platform/features/founder_programme_import/founder_programme_prescription_mapper.dart';
-import 'package:cohort_platform/models/exercise.dart';
+import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
+import 'package:founder_importer/features/founder_programme_import/founder_programme_prescription_mapper.dart';
+import 'package:founder_importer/models/exercise.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Week 1 founder programme labels mapped to catalogue slugs after Wave 1 library.

@@ -1,0 +1,643 @@
+schema_version: 1
+
+programme:
+  import_key: founder-spartan-physique-v1
+  title: Spartan Physique Block 1
+  code: SPARTAN-PHYSIQUE
+  description: >
+    Block 1 Week 1 — build a lean, strong, athletic Spartan physique with upper-body
+    relative strength, single-leg and posterior-chain work, aerobic base, and consistent
+    bodyweight and core training.
+  objective: >
+    Prioritise upper-body relative strength and muscular development while maintaining
+    posterior-chain and unilateral leg work, aerobic capacity, and core stability.
+  duration_weeks: 1
+  sessions_per_week: 1
+
+weeks:
+  - week_number: 1
+    title: Week 1
+    days:
+      - day_number: 1
+        display_name: Monday
+        is_rest_day: false
+        sessions:
+          - title: Upper Strength
+            session_type: strength
+            estimated_duration_minutes: 75
+            coach_notes: >
+              Prioritise movement quality over load. Do not train compound lifts to failure.
+              Keep 1-2 reps in reserve. Log load and completed reps for all strength exercises.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: >
+                  Easy Bike 5 min easy — gradually increase cadence and body temperature.
+                  Band Pull Apart 2×20, 30s rest. Scapular Push-up 2×12–15, 30s rest.
+                exercises:
+                  - exercise_slug: dead-hang
+                    order: 1
+                    prescription:
+                      sets: 2
+                      reps:
+                        type: duration
+                        text: 20-30 seconds
+                      rest_seconds: 30
+              - title: Primary Lift
+                block_type: strength
+                order: 2
+                exercises:
+                  - exercise_slug: weighted-pull-up
+                    order: 1
+                    prescription:
+                      sets: 5
+                      reps: 5
+                      rest_seconds: 150
+                      load:
+                        unit: rir
+                        value: 2
+                      notes: Full dead hang, chest tall, drive elbows down. Leave 1-2 RIR.
+              - title: Strength
+                block_type: strength
+                order: 3
+                exercises:
+                  - exercise_slug: incline-dumbbell-press
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps:
+                        type: range
+                        min: 6
+                        max: 8
+                      rest_seconds: 120
+                      load:
+                        unit: rir
+                        value: 2
+                  - exercise_slug: chest-supported-row
+                    order: 2
+                    prescription:
+                      sets: 4
+                      reps: 8
+                      rest_seconds: 105
+                      load:
+                        unit: rir
+                        value: 2
+                  - exercise_slug: weighted-dip
+                    order: 3
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: range
+                        min: 6
+                        max: 8
+                      rest_seconds: 120
+                      load:
+                        unit: rir
+                        value: 2
+                      notes: Controlled depth, shoulders depressed, no bouncing.
+              - title: Accessory
+                block_type: accessory
+                order: 4
+                exercises:
+                  - exercise_slug: lateral-raise
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 15
+                      rest_seconds: 52
+                  - exercise_slug: face-pull
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 15
+                      rest_seconds: 52
+              - title: Arms
+                block_type: accessory
+                order: 5
+                exercises:
+                  - exercise_slug: hammer-curl
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps: 10
+                      rest_seconds: 60
+                  - exercise_slug: rope-triceps-pushdown
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 10
+                      rest_seconds: 60
+              - title: Carry
+                block_type: conditioning
+                order: 6
+                exercises:
+                  - exercise_slug: farmer-carry
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps:
+                        type: distance
+                        text: 40 metres
+                      rest_seconds: 75
+                      notes: Heavy, tall posture, short controlled steps.
+
+      - day_number: 2
+        display_name: Tuesday
+        is_rest_day: false
+        sessions:
+          - title: Aerobic Base
+            session_type: running
+            estimated_duration_minutes: 70
+            coach_notes: >
+              Build aerobic capacity while accumulating low-fatigue bodyweight and core work.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: >
+                  Walking 5 min easy. Dynamic running preparation 5 min — leg swings, ankle rocks,
+                  walking lunges, easy jogging.
+                exercises:
+                  - exercise_slug: full-body-mobility-flow
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps: 1
+                      notes: Complete warm-up sequence in block coach notes.
+              - title: Main Running Block
+                block_type: conditioning
+                order: 2
+                coach_notes: >
+                  Zone 2 — maintain conversational pace; nasal breathing where practical;
+                  do not chase pace; reduce pace in heat or hills to maintain aerobic intensity.
+                exercises:
+                  - exercise_slug: easy-run
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 50 minutes
+                      load:
+                        unit: rpe
+                        value: 4
+                      notes: Easy aerobic / Zone 2. RPE 3-4.
+              - title: Bodyweight Strength
+                block_type: strength
+                order: 3
+                exercises:
+                  - exercise_slug: pull-up
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: max_effort
+                        text: AMRAP
+                      rest_seconds: 90
+                      load:
+                        unit: rir
+                        value: 2
+                      notes: Stop each set before technical failure.
+                  - exercise_slug: push-up
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 20
+                      rest_seconds: 60
+              - title: Core
+                block_type: core
+                order: 4
+                exercises:
+                  - exercise_slug: hanging-leg-raise
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps: 12
+                      rest_seconds: 60
+                  - exercise_slug: plank
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: duration
+                        text: 60 seconds
+                      rest_seconds: 45
+              - title: Mobility
+                block_type: cool_down
+                order: 5
+                coach_notes: >
+                  10-15 minutes. Complete GOWOD or an equivalent full-body mobility routine.
+                exercises:
+                  - exercise_slug: full-body-mobility-flow
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 10-15 minutes
+                      notes: GOWOD or equivalent — not a separate exercise row.
+
+      - day_number: 3
+        display_name: Wednesday
+        is_rest_day: false
+        sessions:
+          - title: Lower Strength
+            session_type: strength
+            estimated_duration_minutes: 70
+            coach_notes: >
+              Unilateral strength is a priority. Keep hips level and knee tracking controlled.
+              Do not shorten range of motion to increase load.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: >
+                  Easy Bike 5 min. Hip mobility 5 min — hip flexor mobilisation, adductor rocks,
+                  hamstring sweeps, bodyweight hinges.
+                exercises:
+                  - exercise_slug: bulgarian-split-squat
+                    order: 1
+                    prescription:
+                      sets: 2
+                      reps: 8
+                      rest_seconds: 30
+                      load:
+                        unit: bodyweight
+                      notes: Bodyweight only, each side.
+              - title: Primary Lift
+                block_type: strength
+                order: 2
+                exercises:
+                  - exercise_slug: romanian-deadlift
+                    order: 1
+                    prescription:
+                      sets: 5
+                      reps: 5
+                      rest_seconds: 150
+                      load:
+                        unit: rir
+                        value: 2
+                      notes: Neutral spine, push hips back, control the eccentric.
+              - title: Strength
+                block_type: strength
+                order: 3
+                exercises:
+                  - exercise_slug: bulgarian-split-squat
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 8
+                      rest_seconds: 105
+                      load:
+                        unit: rir
+                        value: 2
+                      notes: Each side.
+                  - exercise_slug: walking-lunge
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 20
+                      rest_seconds: 90
+                      notes: 20 total steps. Controlled stride and stable knee position.
+              - title: Accessory
+                block_type: accessory
+                order: 4
+                exercises:
+                  - exercise_slug: standing-calf-raise
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 15
+                      rest_seconds: 60
+                      notes: Full stretch and strong pause at the top.
+                  - exercise_slug: tibialis-raise
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 15
+                      rest_seconds: 52
+              - title: Core
+                block_type: core
+                order: 5
+                exercises:
+                  - exercise_slug: copenhagen-plank
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: duration
+                        text: 30 seconds each side
+                      rest_seconds: 45
+              - title: Carry
+                block_type: conditioning
+                order: 6
+                exercises:
+                  - exercise_slug: suitcase-carry
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: distance
+                        text: 40 metres each side
+                      rest_seconds: 60
+                      notes: Resist leaning toward the load.
+
+      - day_number: 4
+        display_name: Thursday
+        is_rest_day: false
+        sessions:
+          - title: Tempo Engine
+            session_type: intervals
+            estimated_duration_minutes: 60
+            coach_notes: >
+              Improve sustained running speed and threshold control without maximal VO2 work.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: >
+                  Running drills 5 min after easy jog — leg swings, A-skips, high knees,
+                  two short progressive strides.
+                exercises:
+                  - exercise_slug: easy-run
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 10 minutes easy
+              - title: Main Running Block
+                block_type: conditioning
+                order: 2
+                coach_notes: >
+                  Controlled tempo / threshold. Run all six repetitions at a repeatable pace;
+                  first rep controlled; do not sprint the final minute; avoid VO2 max effort;
+                  pace may reduce in heat while maintaining correct physiological effort.
+                exercises:
+                  - exercise_slug: threshold-run
+                    order: 1
+                    prescription:
+                      sets: 6
+                      reps:
+                        type: duration
+                        text: 4 min work / 2 min easy jog recovery
+                      load:
+                        unit: rpe
+                        value: 7
+              - title: Bodyweight Strength
+                block_type: strength
+                order: 3
+                exercises:
+                  - exercise_slug: dip
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps: 15
+                      rest_seconds: 75
+                  - exercise_slug: pull-up
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 8
+                      rest_seconds: 75
+              - title: Core
+                block_type: core
+                order: 4
+                exercises:
+                  - exercise_slug: hollow-hold
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: duration
+                        text: 40 seconds
+                      rest_seconds: 45
+                  - exercise_slug: side-plank
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps:
+                        type: duration
+                        text: 40 seconds each side
+                      rest_seconds: 45
+              - title: Cooldown / Mobility
+                block_type: cool_down
+                order: 5
+                coach_notes: >
+                  5-10 minutes easy walking followed by light lower-body mobility.
+                exercises:
+                  - exercise_slug: full-body-mobility-flow
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 5-10 minutes
+
+      - day_number: 5
+        display_name: Friday
+        is_rest_day: false
+        sessions:
+          - title: Upper Hypertrophy
+            session_type: strength
+            estimated_duration_minutes: 75
+            coach_notes: >
+              Hypertrophy-focused session — controlled eccentrics, sufficient rest to maintain output.
+              Not a conditioning circuit.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: >
+                  Easy Bike 5 min. Band shoulder warm-up 2 rounds — Band Pull Apart 15 reps,
+                  Band External Rotation 12 each side, Scapular Push-up 10 reps.
+                exercises:
+                  - exercise_slug: full-body-mobility-flow
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps: 1
+                      notes: Follow band shoulder warm-up in block coach notes.
+              - title: Primary Lift
+                block_type: strength
+                order: 2
+                exercises:
+                  - exercise_slug: weighted-chin-up
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 8
+                      rest_seconds: 120
+                      load:
+                        unit: rir
+                        value: 2
+              - title: Strength
+                block_type: strength
+                order: 3
+                exercises:
+                  - exercise_slug: incline-dumbbell-press
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 10
+                      rest_seconds: 105
+                      load:
+                        unit: rir
+                        value: 2
+                  - exercise_slug: cable-row
+                    order: 2
+                    prescription:
+                      sets: 4
+                      reps: 10
+                      rest_seconds: 90
+                      load:
+                        unit: rir
+                        value: 2
+                  - exercise_slug: dumbbell-strict-press
+                    order: 3
+                    prescription:
+                      sets: 3
+                      reps: 10
+                      rest_seconds: 90
+                      load:
+                        unit: rir
+                        value: 2
+              - title: Accessory
+                block_type: accessory
+                order: 4
+                exercises:
+                  - exercise_slug: lateral-raise
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 15
+                      rest_seconds: 52
+                  - exercise_slug: reverse-fly
+                    order: 2
+                    prescription:
+                      sets: 4
+                      reps: 15
+                      rest_seconds: 52
+              - title: Arms
+                block_type: accessory
+                order: 5
+                exercises:
+                  - exercise_slug: incline-dumbbell-curl
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps: 12
+                      rest_seconds: 60
+                  - exercise_slug: rope-triceps-pushdown
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 12
+                      rest_seconds: 60
+              - title: Core
+                block_type: core
+                order: 6
+                exercises:
+                  - exercise_slug: ab-wheel-rollout
+                    order: 1
+                    prescription:
+                      sets: 4
+                      reps: 10
+                      rest_seconds: 60
+                      notes: Maintain posterior pelvic tilt; avoid lumbar extension.
+
+      - day_number: 6
+        display_name: Saturday
+        is_rest_day: false
+        sessions:
+          - title: Long Warrior Run
+            session_type: running
+            estimated_duration_minutes: 95
+            coach_notes: >
+              Develop aerobic durability; finish with Spartan-themed bodyweight work without
+              compromising recovery.
+            blocks:
+              - title: Warm Up
+                block_type: warm_up
+                order: 1
+                coach_notes: Walking 5 min easy, then easy jog 5 min.
+                exercises:
+                  - exercise_slug: easy-run
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 5 minutes easy jog after walking
+              - title: Main Running Block
+                block_type: conditioning
+                order: 2
+                coach_notes: >
+                  Long easy aerobic / Zone 2. Relax and enjoy the run; no pace target;
+                  conversational effort; walking short hills is acceptable to control intensity.
+                exercises:
+                  - exercise_slug: easy-run
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 75 minutes
+                      load:
+                        unit: rpe
+                        value: 4
+                      notes: RPE 3-4.
+              - title: Warrior Circuit
+                block_type: conditioning
+                order: 3
+                coach_notes: >
+                  Complete 3 rounds. Move steadily between exercises; rest 60-90 seconds between
+                  rounds if needed; do not race the circuit.
+                exercises:
+                  - exercise_slug: walking-lunge
+                    order: 1
+                    prescription:
+                      sets: 3
+                      reps: 20
+                      notes: 20 total steps per round.
+                  - exercise_slug: pull-up
+                    order: 2
+                    prescription:
+                      sets: 3
+                      reps: 8
+                      notes: Per round.
+                  - exercise_slug: push-up
+                    order: 3
+                    prescription:
+                      sets: 3
+                      reps: 20
+                      notes: Per round.
+                  - exercise_slug: hanging-knee-raise
+                    order: 4
+                    prescription:
+                      sets: 3
+                      reps: 15
+                      notes: Per round.
+              - title: Cooldown
+                block_type: cool_down
+                order: 4
+                coach_notes: >
+                  10 minutes easy walking, light stretching — calves, hip flexors, hamstrings,
+                  upper back.
+                exercises:
+                  - exercise_slug: full-body-mobility-flow
+                    order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 10 minutes
+
+      - day_number: 7
+        display_name: Sunday
+        is_rest_day: true
+        coach_notes: >
+          Recovery is part of the programme. Do not add a hard training session.
+          Optional — easy walk; GOWOD or equivalent mobility; dead hangs; light stretching.
+          All activity should leave the athlete feeling better than before.
