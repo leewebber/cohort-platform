@@ -4,7 +4,7 @@ import 'package:cohort_platform/models/training_content_vocabulary.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final cohortPublished = const [
+  final cohortPublished = [
     Protocol(protocolId: 'RN-006', name: 'Classic Threshold'),
     Protocol(protocolId: 'ST-001', name: 'Lower Body A'),
   ];

@@ -13,10 +13,10 @@ void main() {
   const mapper = ProgrammeBuilderProtocolOptionMapper();
 
   final catalogProtocols = [
-    const Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder', sessionType: 'strength', durationMin: 45, equipment: 'Bodyweight'),
-    const Protocol(protocolId: 'RN-006', name: 'Classic Threshold', sessionType: 'interval', durationMin: 60),
-    const Protocol(protocolId: 'FG-009', name: 'Full Gym Chipper', sessionType: 'circuit', durationMin: 50, equipment: 'Gym'),
-    const Protocol(protocolId: 'ST-001', name: 'Lower Body A', sessionType: 'strength', durationMin: 55),
+    Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder', sessionType: 'strength', durationMin: 45, equipment: 'Bodyweight'),
+    Protocol(protocolId: 'RN-006', name: 'Classic Threshold', sessionType: 'interval', durationMin: 60),
+    Protocol(protocolId: 'FG-009', name: 'Full Gym Chipper', sessionType: 'circuit', durationMin: 50, equipment: 'Gym'),
+    Protocol(protocolId: 'ST-001', name: 'Lower Body A', sessionType: 'strength', durationMin: 55),
     Protocol(
       protocolId: 'EQ-001',
       name: 'Equipment List Protocol',
@@ -24,8 +24,8 @@ void main() {
       requiredEquipment: 'Kettlebell',
       optionalEquipment: 'Dumbbell',
     ),
-    const Protocol(protocolId: '', name: 'Missing Id'),
-    const Protocol(protocolId: 'NONAME-001', name: ''),
+    Protocol(protocolId: '', name: 'Missing Id'),
+    Protocol(protocolId: 'NONAME-001', name: ''),
   ];
 
   ProgrammeBuilderProtocolPickerService serviceWithCatalog(
@@ -50,7 +50,7 @@ void main() {
 
     test('null session_type and duration do not drop row', () {
       final option = mapper.mapProtocol(
-        const Protocol(protocolId: 'REST-001', name: 'Recovery Walk'),
+        Protocol(protocolId: 'REST-001', name: 'Recovery Walk'),
       );
 
       expect(option, isNotNull);
@@ -60,7 +60,7 @@ void main() {
 
     test('missing name falls back to protocol_id', () {
       final option = mapper.mapProtocol(
-        const Protocol(protocolId: 'NONAME-001', name: ''),
+        Protocol(protocolId: 'NONAME-001', name: ''),
       );
 
       expect(option?.name, 'NONAME-001');
@@ -68,7 +68,7 @@ void main() {
 
     test('combines required and optional equipment without dropping row', () {
       final option = mapper.mapProtocol(
-        const Protocol(
+        Protocol(
           protocolId: 'EQ-001',
           name: 'Equipment List Protocol',
           requiredEquipment: 'Kettlebell',
@@ -82,7 +82,7 @@ void main() {
 
     test('malformed json-like equipment string is kept as summary text', () {
       final option = mapper.mapProtocol(
-        const Protocol(
+        Protocol(
           protocolId: 'EQ-002',
           name: 'Broken Equipment',
           equipment: '[Kettlebell, Dumbbell]',

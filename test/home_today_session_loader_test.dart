@@ -310,7 +310,7 @@ void main() {
         );
 
         final protocolsWithCanonicalName = {
-          'BW-001': const Protocol(
+          'BW-001': Protocol(
             protocolId: 'BW-001',
             name: 'Bodyweight Grinder',
           ),

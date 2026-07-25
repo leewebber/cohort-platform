@@ -84,7 +84,7 @@ void main() {
     test('throws when no executable movements are present', () {
       expect(
         () => builder.build(
-          protocol: const Protocol(
+          protocol: Protocol(
             protocolId: 'EMPTY-001',
             name: 'Instruction only',
             sessionType: 'circuit',
@@ -121,7 +121,7 @@ void main() {
     test('throws when score type is incompatible with format', () {
       expect(
         () => builder.build(
-          protocol: const Protocol(
+          protocol: Protocol(
             protocolId: 'BAD-001',
             name: 'Bad score mapping',
             sessionType: 'amrap',

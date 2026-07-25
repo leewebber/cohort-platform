@@ -47,7 +47,7 @@ void main() {
     test('throws when no work phases are present', () {
       expect(
         () => builder.build(
-          protocol: const Protocol(
+          protocol: Protocol(
             protocolId: 'EMPTY-001',
             name: 'Instruction only',
             sessionType: 'running',
@@ -78,7 +78,7 @@ void main() {
     test('throws when steps list is empty', () {
       expect(
         () => builder.build(
-          protocol: const Protocol(
+          protocol: Protocol(
             protocolId: 'EMPTY-002',
             name: 'No steps',
           ),
@@ -90,7 +90,7 @@ void main() {
 
     test('derives rowing modality from equipment metadata', () {
       final plan = builder.build(
-        protocol: const Protocol(
+        protocol: Protocol(
           protocolId: 'ROW-001',
           name: 'Row intervals',
           sessionType: 'intervals',

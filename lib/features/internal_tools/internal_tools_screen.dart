@@ -4,7 +4,7 @@ import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
-import '../adaptation_metadata_completeness_screen.dart';
+import 'adaptation_metadata_completeness_screen.dart';
 import '../admin/admin_protocol_editor_screen.dart';
 import '../auth/services/current_user_session.dart';
 import 'internal_tools_debug_actions.dart';

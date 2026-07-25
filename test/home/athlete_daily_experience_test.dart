@@ -117,7 +117,7 @@ void main() {
     test('adaptation notice appears when protocol differs', () {
       final notice = HomeTodaySessionLabels.adaptationNotice(
         executableResolution(),
-        const Protocol(protocolId: 'RN-006', name: 'Recovery Flow'),
+        Protocol(protocolId: 'RN-006', name: 'Recovery Flow'),
       );
 
       expect(notice, contains('Recovery Flow'));
