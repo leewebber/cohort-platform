@@ -57,7 +57,7 @@ void main() {
   group('ProtocolDraftBlockResolver', () {
     test('resolveSteps projects blocks for execution compatibility', () {
       final draft = resolver.withSyncedStepsFromBlocks(
-        const ProtocolDraft(
+        ProtocolDraft(
           protocolId: 'session-1',
           name: 'Test',
           sessionFormat: 'structured_strength',

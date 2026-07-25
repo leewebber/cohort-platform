@@ -49,7 +49,7 @@ void main() {
 
   group('SessionBuilderEditingState', () {
     test('add block and build draft retains metadata', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Threshold',
         steps: [],
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('editing name does not reset classification', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Threshold',
         steps: [],
@@ -84,7 +84,7 @@ void main() {
 
   group('SessionBuilderValidation', () {
     test('preview requires name, format, and steps', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'local-session-1',
         name: '',
         steps: [],
@@ -104,7 +104,7 @@ void main() {
           home: Scaffold(
             body: SingleChildScrollView(
               child: SessionBuilderView(
-                draft: const ProtocolDraft(
+                draft: ProtocolDraft(
                   protocolId: 'local-session-slot-1',
                   name: 'Week 1 Session',
                   steps: [],
@@ -138,7 +138,7 @@ void main() {
           home: Scaffold(
             body: SingleChildScrollView(
               child: SessionBuilderView(
-                draft: const ProtocolDraft(
+                draft: ProtocolDraft(
                   protocolId: 'RN-006',
                   name: 'Threshold',
                   steps: [],
@@ -169,7 +169,7 @@ void main() {
           home: Scaffold(
             body: SingleChildScrollView(
               child: SessionBuilderView(
-                draft: const ProtocolDraft(
+                draft: ProtocolDraft(
                   protocolId: 'local-session-1',
                   name: 'Original',
                   steps: [],
@@ -201,7 +201,7 @@ void main() {
           home: Scaffold(
             body: SingleChildScrollView(
               child: SessionBuilderView(
-                draft: const ProtocolDraft(
+                draft: ProtocolDraft(
                   protocolId: 'local-session-1',
                   name: 'Session',
                   sessionFormat: 'structured_strength',

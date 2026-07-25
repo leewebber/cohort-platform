@@ -95,6 +95,9 @@ class SessionCloneService {
       noiseFriendly: source.noiseFriendly,
       coachingNotes: source.coachingNotes,
       purpose: source.purpose,
+      primarySessionIntent: source.primarySessionIntent,
+      secondarySessionIntents: source.secondarySessionIntents,
+      minimumViableDurationMin: source.minimumViableDurationMin,
     );
   }
 

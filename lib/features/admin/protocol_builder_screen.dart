@@ -39,7 +39,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
 
   late final Future<List<Exercise>> _bootstrapFuture;
 
-  ProtocolDraft _draft = const ProtocolDraft(
+  ProtocolDraft _draft = ProtocolDraft(
     protocolId: '',
     name: '',
     steps: [],
@@ -444,7 +444,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
 
   void _clearDraft() {
     setState(() {
-      _draft = const ProtocolDraft(
+      _draft = ProtocolDraft(
         protocolId: '',
         name: '',
         steps: [],

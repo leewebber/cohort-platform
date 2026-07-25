@@ -72,7 +72,7 @@ void main() {
 
   group('ProtocolDraft metadata mapping', () {
     test('null legacy row fields load safe non-endorsed fallbacks', () {
-      const base = ProtocolDraft(
+      final base = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Classic Threshold',
         steps: [],
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('explicit cohort row loads correctly', () {
-      const base = ProtocolDraft(
+      final base = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Classic Threshold',
         steps: [],
@@ -110,7 +110,7 @@ void main() {
     });
 
     test('toProtocolMap retains metadata columns', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'SES-001',
         name: 'Coach Session',
         steps: [],
@@ -134,7 +134,7 @@ void main() {
 
     test('editing ordinary fields does not reset default cohort classification',
         () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Classic Threshold',
         steps: [],
@@ -150,7 +150,7 @@ void main() {
 
   group('TrainingContentClassification invariants', () {
     test('cohort protocol invariant', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'RN-006',
         name: 'Classic Threshold',
         steps: [],
@@ -164,7 +164,7 @@ void main() {
     });
 
     test('programme-only session requires programmeVersionId', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'SES-P1',
         name: 'Week 1 Session',
         steps: [],
@@ -177,7 +177,7 @@ void main() {
     });
 
     test('reusable coach session requires ownerId', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'SES-001',
         name: 'My Session',
         steps: [],
@@ -192,7 +192,7 @@ void main() {
     });
 
     test('session template is not programme builder attachable', () {
-      const draft = ProtocolDraft(
+      final draft = ProtocolDraft(
         protocolId: 'TPL-001',
         name: 'Template',
         steps: [],

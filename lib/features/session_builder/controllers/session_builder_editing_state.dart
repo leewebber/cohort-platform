@@ -1,11 +1,14 @@
+import '../../../domain/adaptation/adaptation_domain.dart';
 import '../../../models/exercise.dart';
 import '../../../models/protocol_draft.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/protocol_metadata_vocabulary.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_exercise_link.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/timer_configuration.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../../../models/workout_format.dart';
 import '../services/protocol_draft_block_resolver.dart';
@@ -35,6 +38,10 @@ class SessionBuilderEditingState {
   Set<String> selectedOptionalEquipment = {};
   Set<String> selectedSuitableFor = {};
   int? durationMin;
+  SessionIntent? primarySessionIntent;
+  List<SessionIntent> secondarySessionIntents =
+      SessionAdaptationMetadataCodec.emptySecondaries;
+  int? minimumViableDurationMin;
   List<SessionBlock> blocks = [];
 
   TrainingContentKind contentKind = TrainingContentKind.cohortProtocol;
@@ -61,6 +68,9 @@ class SessionBuilderEditingState {
     technicalComplexity = draft.technicalComplexity;
     environment = draft.environment;
     durationMin = draft.durationMin;
+    primarySessionIntent = draft.primarySessionIntent;
+    secondarySessionIntents = draft.secondarySessionIntents;
+    minimumViableDurationMin = draft.minimumViableDurationMin;
     selectedRequiredEquipment = ProtocolMetadataVocabulary.parseCommaSeparated(
       draft.requiredEquipment,
     );
@@ -94,6 +104,9 @@ class SessionBuilderEditingState {
         primaryCapability: primaryCapability,
         secondaryCapability: secondaryCapability,
         durationMin: durationMin,
+        primarySessionIntent: primarySessionIntent,
+        secondarySessionIntents: secondarySessionIntents,
+        minimumViableDurationMin: minimumViableDurationMin,
         physiologicalDemand: physiologicalDemand,
         recoveryCost: recoveryCost,
         technicalComplexity: technicalComplexity,

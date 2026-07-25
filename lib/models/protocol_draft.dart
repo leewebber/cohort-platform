@@ -1,14 +1,16 @@
 import 'protocol_step_draft.dart';
+import 'session_adaptation_metadata_codec.dart';
 import 'session_block.dart';
 import 'session_revision_vocabulary.dart';
 import 'training_content_vocabulary.dart';
+import '../domain/adaptation/adaptation_domain.dart';
 
 /// Editable in-memory representation of a protocol before save.
 ///
 /// Maps to `performance_protocols` and a list of [ProtocolStepDraft] rows.
 /// See `07 Documentation/34_Protocol_Builder.md`.
 class ProtocolDraft {
-  const ProtocolDraft({
+  ProtocolDraft({
     required this.protocolId,
     required this.name,
     required this.steps,
@@ -49,7 +51,16 @@ class ProtocolDraft {
     this.noiseFriendly,
     this.coachingNotes,
     this.purpose,
-  });
+    this.primarySessionIntent,
+    List<SessionIntent>? secondarySessionIntents,
+    int? minimumViableDurationMin,
+  }) : secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+          primary: primarySessionIntent,
+          secondary: secondarySessionIntents ?? SessionAdaptationMetadataCodec.emptySecondaries,
+        ),
+       minimumViableDurationMin = SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
+          minimumViableDurationMin,
+        );
 
   final String protocolId;
   final String name;
@@ -94,6 +105,9 @@ class ProtocolDraft {
   final bool? noiseFriendly;
   final String? coachingNotes;
   final String? purpose;
+  final SessionIntent? primarySessionIntent;
+  final List<SessionIntent> secondarySessionIntents;
+  final int? minimumViableDurationMin;
 
   bool get isRevisionEditable =>
       lifecycleStatus == SessionRevisionLifecycleStatus.draft;
@@ -144,7 +158,25 @@ class ProtocolDraft {
     bool? noiseFriendly,
     String? coachingNotes,
     String? purpose,
+    SessionIntent? primarySessionIntent,
+    List<SessionIntent>? secondarySessionIntents,
+    int? minimumViableDurationMin,
+    bool clearPrimarySessionIntent = false,
+    bool clearSecondarySessionIntents = false,
+    bool clearMinimumViableDurationMin = false,
   }) {
+    final resolvedPrimary = clearPrimarySessionIntent
+        ? null
+        : (primarySessionIntent ?? this.primarySessionIntent);
+    final resolvedSecondary = clearSecondarySessionIntents
+        ? SessionAdaptationMetadataCodec.emptySecondaries
+        : (secondarySessionIntents ?? this.secondarySessionIntents);
+    final resolvedMin = clearMinimumViableDurationMin
+        ? null
+        : SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
+            minimumViableDurationMin ?? this.minimumViableDurationMin,
+          );
+
     return ProtocolDraft(
       protocolId: protocolId ?? this.protocolId,
       name: name ?? this.name,
@@ -187,6 +219,9 @@ class ProtocolDraft {
       noiseFriendly: noiseFriendly ?? this.noiseFriendly,
       coachingNotes: coachingNotes ?? this.coachingNotes,
       purpose: purpose ?? this.purpose,
+      primarySessionIntent: resolvedPrimary,
+      secondarySessionIntents: resolvedSecondary,
+      minimumViableDurationMin: resolvedMin,
     );
   }
 
@@ -229,7 +264,97 @@ class ProtocolDraft {
       'noise_friendly': noiseFriendly,
       'coaching_notes': _nullableString(coachingNotes),
       'purpose': _nullableString(purpose),
+      ..._adaptationMetadataMap(),
     };
+  }
+
+  Map<String, dynamic> _adaptationMetadataMap() {
+    final map = <String, dynamic>{};
+    SessionAdaptationMetadataCodec.writeToMap(
+      target: map,
+      primarySessionIntent: primarySessionIntent,
+      secondarySessionIntents: secondarySessionIntents,
+      minimumViableDurationMin: minimumViableDurationMin,
+    );
+    return map;
+  }
+
+  /// Merges adaptation metadata from a `performance_protocols` row (or JSON map).
+  static ProtocolDraft mergeAdaptationFromRow({
+    required ProtocolDraft draft,
+    required Map<String, dynamic> row,
+  }) {
+    SessionIntent? primary;
+    List<SessionIntent>? secondary;
+    int? minDuration;
+
+    SessionAdaptationMetadataCodec.applyFromMap(
+      map: row,
+      apply: ({
+        SessionIntent? primarySessionIntent,
+        List<SessionIntent> secondarySessionIntents = SessionAdaptationMetadataCodec.emptySecondaries,
+        int? minimumViableDurationMin,
+      }) {
+        primary = primarySessionIntent;
+        secondary = secondarySessionIntents;
+        minDuration = minimumViableDurationMin;
+      },
+    );
+
+    if (primary == null &&
+        secondary == null &&
+        minDuration == null &&
+        !row.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent) &&
+        !row.containsKey(SessionAdaptationMetadataKeys.secondarySessionIntents) &&
+        !row.containsKey(SessionAdaptationMetadataKeys.minimumViableDurationMin)) {
+      return draft;
+    }
+
+    return draft.copyWith(
+      primarySessionIntent: row.containsKey(
+            SessionAdaptationMetadataKeys.primarySessionIntent,
+          )
+          ? primary
+          : draft.primarySessionIntent,
+      secondarySessionIntents: row.containsKey(
+            SessionAdaptationMetadataKeys.secondarySessionIntents,
+          )
+          ? (secondary ?? SessionAdaptationMetadataCodec.emptySecondaries)
+          : draft.secondarySessionIntents,
+      minimumViableDurationMin: row.containsKey(
+            SessionAdaptationMetadataKeys.minimumViableDurationMin,
+          )
+          ? minDuration
+          : draft.minimumViableDurationMin,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ProtocolDraft &&
+        other.protocolId == protocolId &&
+        other.name == name &&
+        other.primarySessionIntent == primarySessionIntent &&
+        _listEquals(other.secondarySessionIntents, secondarySessionIntents) &&
+        other.minimumViableDurationMin == minimumViableDurationMin;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        protocolId,
+        name,
+        primarySessionIntent,
+        Object.hashAll(secondarySessionIntents),
+        minimumViableDurationMin,
+      );
+
+  static bool _listEquals<T>(List<T> a, List<T> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 
   /// Parses training content metadata from a `performance_protocols` row.

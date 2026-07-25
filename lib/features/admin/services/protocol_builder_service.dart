@@ -7,6 +7,7 @@ import '../../../data/repositories/protocol_step_repository.dart';
 import '../../../data/repositories/session_block_repository.dart';
 import '../../../data/repositories/session_lineage_store.dart';
 import '../../../data/repositories/session_lineage_supabase_store.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
@@ -453,6 +454,7 @@ class ProtocolBuilderService {
     required bool published,
   }) {
     final map = Map<String, dynamic>.from(draft.toProtocolMap());
+    SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
     map['published'] = published;
     _applySessionFormatFallback(map, draft.sessionFormat);
     return map;
@@ -492,8 +494,11 @@ class ProtocolBuilderService {
       purpose: row['purpose']?.toString(),
     );
 
-    return ProtocolDraft.applyTrainingContentMetadata(
-      draft: base,
+    return ProtocolDraft.mergeAdaptationFromRow(
+      draft: ProtocolDraft.applyTrainingContentMetadata(
+        draft: base,
+        row: row,
+      ),
       row: row,
     );
   }
