@@ -52,6 +52,19 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
   }
 
   @override
+  Future<ProtocolBuilderSaveResult> saveCoachLibrarySession(
+    ProtocolDraft draft,
+  ) async {
+    saveDraftCalls.add(draft);
+    draftsById[draft.protocolId] = draft.copyWith(published: true);
+    return ProtocolBuilderSaveResult.draft(
+      protocolId: draft.protocolId,
+      created: !draftsById.containsKey(draft.protocolId),
+      stepCount: draft.steps.length,
+    );
+  }
+
+  @override
   Future<ProtocolBuilderSaveResult> publishDraft(ProtocolDraft draft) async {
     publishDraftCalls.add(draft);
     final published = draft.copyWith(
