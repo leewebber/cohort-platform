@@ -3,6 +3,7 @@ import '../../../models/protocol_metadata_vocabulary.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_block_type.dart';
 import '../contracts/adaptation_metadata_contracts.dart';
+import '../planning/planned_block_duration_estimator.dart';
 import '../vocabulary/impact_level.dart';
 import 'adaptation_evaluation_result.dart';
 
@@ -41,6 +42,15 @@ class PlannedSessionAdaptationInputFactory {
               linkedExerciseIds: block.linkedExercises
                   .map((link) => link.exerciseId)
                   .toList(growable: false),
+              estimatedDurationMinutes:
+                  PlannedBlockDurationEstimator.estimatedMinutesFromBlock(block),
+              estimatedDurationUnknown:
+                  PlannedBlockDurationEstimator.estimatedMinutesFromBlock(block) ==
+                      null,
+              exercisePrescriptions:
+                  PlannedBlockDurationEstimator.prescriptionsFromBlock(block),
+              policyMinimumViablePrescription:
+                  block.adaptationPolicy?.minimumViablePrescription,
             ),
           )
           .toList(growable: false),

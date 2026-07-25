@@ -1,0 +1,22 @@
+/// Stable rationale codes for adaptation plan steps and findings.
+enum AdaptationPlanRationaleCode {
+  noAdaptationRequired,
+  durationReductionRequired,
+  prescriptionReductionPreferred,
+  optionalBlockRemovalRequired,
+  importantBlockReductionRequired,
+  essentialBlockProtected,
+  removalPreventedByPolicy,
+  reductionPreventedByPolicy,
+  minimumViableDurationProtected,
+  belowMinimumViableDuration,
+  insufficientDurationMetadata,
+  unresolvedDurationDeficit,
+  exactDurationCannotBeConfirmed,
+  explicitPolicyApplied,
+  derivedPolicyApplied,
+  unsupportedPrescriptionStructure,
+  primaryIntentPreserved,
+  primaryIntentAtRisk,
+  blockPreservedUnchanged,
+}

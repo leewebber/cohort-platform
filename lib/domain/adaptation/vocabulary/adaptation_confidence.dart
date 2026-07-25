@@ -2,6 +2,9 @@
 ///
 /// Distinct from [AdaptationFidelity], which describes intent preservation
 /// of a possible adapted session — not evaluator evidence quality.
+///
+/// Assigned only by [SessionAdaptationReadOnlyEvaluator] from structured
+/// [AdaptationConfidenceFindingCode] signals (see evaluator docs).
 enum AdaptationConfidence {
   high,
   moderate,

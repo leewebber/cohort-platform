@@ -630,6 +630,22 @@ class SessionAdaptationReadOnlyEvaluator {
     return AdaptationEvaluationOutcome.adaptable;
   }
 
+  /// Deterministic [AdaptationConfidence] from metadata completeness and
+  /// constraint evidence (not from [AdaptationFidelity] or outcome alone).
+  ///
+  /// **Low:** missing primary intent; time shortening without minimum viable
+  /// duration (or planned duration when time is active); any active-constraint
+  /// metadata gap (equipment, environment, impact, movement); or two or more
+  /// such gaps ([AdaptationConfidenceFindingCode.multipleMaterialUnknowns]).
+  ///
+  /// **High:** primary intent present; no active-constraint metadata gaps; time
+  /// fields sufficient when a time constraint applies; and at least one block
+  /// carries explicit adaptation metadata (derived-only block defaults cap at
+  /// moderate — they do not force low). Confirmed incompatibilities with
+  /// complete metadata remain high confidence.
+  ///
+  /// **Moderate:** all other supported cases (e.g. derived block defaults with
+  /// otherwise complete session metadata).
   _ConfidenceAssessment _deriveAdaptationConfidence({
     required PlannedSessionAdaptationInput session,
     required AdaptationConstraintContext constraints,

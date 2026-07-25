@@ -1,4 +1,5 @@
 import '../contracts/block_adaptation_policy.dart';
+import '../contracts/minimum_viable_prescription.dart';
 import '../vocabulary/adaptation_action_type.dart';
 import '../vocabulary/adaptation_confidence.dart';
 import '../vocabulary/adaptation_fidelity.dart';
@@ -188,6 +189,10 @@ class PlannedBlockAdaptationInput {
     this.explicitPriority,
     this.explicitPolicy,
     this.linkedExerciseIds = const [],
+    this.estimatedDurationMinutes,
+    this.estimatedDurationUnknown = true,
+    this.exercisePrescriptions = const [],
+    this.policyMinimumViablePrescription,
   });
 
   final String localId;
@@ -196,6 +201,32 @@ class PlannedBlockAdaptationInput {
   final BlockPriority? explicitPriority;
   final BlockAdaptationPolicy? explicitPolicy;
   final List<String> linkedExerciseIds;
+
+  /// Reliable block duration in whole minutes when sourced from timer metadata.
+  final int? estimatedDurationMinutes;
+
+  /// When false, [estimatedDurationMinutes] is authoritative for planning math.
+  final bool estimatedDurationUnknown;
+  final List<PlannedExercisePrescriptionInput> exercisePrescriptions;
+  final MinimumViablePrescription? policyMinimumViablePrescription;
+}
+
+class PlannedExercisePrescriptionInput {
+  const PlannedExercisePrescriptionInput({
+    required this.exerciseLinkLocalId,
+    required this.exerciseId,
+    this.sets,
+    this.reps,
+    this.restSeconds,
+    this.supportsStructuredReduction = false,
+  });
+
+  final String exerciseLinkLocalId;
+  final String exerciseId;
+  final int? sets;
+  final int? reps;
+  final int? restSeconds;
+  final bool supportsStructuredReduction;
 }
 
 /// Minimal exercise metadata used by the read-only evaluator.
