@@ -26,6 +26,9 @@ void main() {
       for (final value in AdaptationFidelity.values) {
         expect(AdaptationFidelityDb.fromDb(value.dbValue), value);
       }
+      for (final value in AdaptationConfidence.values) {
+        expect(AdaptationConfidenceDb.fromDb(value.dbValue), value);
+      }
       for (final value in AdaptationAuditEventType.values) {
         expect(AdaptationAuditEventTypeDb.fromDb(value.dbValue), value);
       }

@@ -11,3 +11,7 @@ export 'contracts/adaptation_validation_result.dart';
 export 'contracts/adaptation_metadata_contracts.dart';
 export 'mapping/adaptation_reason_mapping.dart';
 export 'mapping/session_block_type_adaptation_policy.dart';
+export 'evaluation/adaptation_constraint_context.dart';
+export 'evaluation/adaptation_evaluation_result.dart';
+export 'evaluation/planned_session_adaptation_input_factory.dart';
+export 'evaluation/session_adaptation_read_only_evaluator.dart';

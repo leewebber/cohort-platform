@@ -20,5 +20,6 @@ export 'adaptation_constraint_scope.dart';
 export 'adaptation_constraint_severity.dart';
 export 'adaptation_action_type.dart';
 export 'adaptation_fidelity.dart';
+export 'adaptation_confidence.dart';
 export 'adaptation_audit_event_type.dart';
 export 'canonical_technical_complexity.dart';
