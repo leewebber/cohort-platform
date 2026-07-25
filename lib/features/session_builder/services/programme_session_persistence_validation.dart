@@ -1,4 +1,5 @@
 import '../../../models/protocol_draft.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/training_content_classification.dart';
 import '../../../models/training_content_vocabulary.dart';
 import 'protocol_draft_block_resolver.dart';
@@ -26,6 +27,15 @@ class ProgrammeSessionPersistenceValidation {
       _blockValidation.validateSession(
         name: draft.name,
         blocks: _blockResolver.resolveBlocks(draft),
+      ),
+    );
+
+    messages.addAll(
+      SessionAdaptationMetadataValidation.validate(
+        primarySessionIntent: draft.primarySessionIntent,
+        secondarySessionIntents: draft.secondarySessionIntents,
+        minimumViableDurationMin: draft.minimumViableDurationMin,
+        plannedDurationMin: draft.durationMin,
       ),
     );
 

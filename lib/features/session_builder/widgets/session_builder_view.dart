@@ -12,6 +12,7 @@ import '../controllers/session_builder_editing_state.dart';
 import '../models/session_builder_constants.dart';
 import '../models/session_builder_display_context.dart';
 import 'add_block_sheet.dart';
+import 'session_adaptation_metadata_section.dart';
 import 'session_block_editor_card.dart';
 import 'session_builder_form_widgets.dart';
 
@@ -47,6 +48,7 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
   late final TextEditingController _protocolIdController;
   late final TextEditingController _nameController;
   late final TextEditingController _durationMinController;
+  late final TextEditingController _minimumViableDurationController;
 
   @override
   void initState() {
@@ -58,9 +60,35 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
     _durationMinController = TextEditingController(
       text: _editing.durationMin?.toString() ?? '',
     );
+    _minimumViableDurationController = TextEditingController(
+      text: _editing.minimumViableDurationMin?.toString() ?? '',
+    );
     _protocolIdController.addListener(_syncTextFieldsToDraft);
     _nameController.addListener(_syncTextFieldsToDraft);
     _durationMinController.addListener(_syncTextFieldsToDraft);
+    _minimumViableDurationController.addListener(_syncMinimumViableDuration);
+  }
+
+  void _syncMinimumViableDuration() {
+    final parsed = int.tryParse(_minimumViableDurationController.text.trim());
+    _editing.setMinimumViableDurationMin(parsed);
+    _emitDraft();
+  }
+
+  @override
+  void didUpdateWidget(covariant SessionBuilderView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.draft.protocolId != widget.draft.protocolId ||
+        oldWidget.draft.primarySessionIntent != widget.draft.primarySessionIntent ||
+        oldWidget.draft.minimumViableDurationMin !=
+            widget.draft.minimumViableDurationMin) {
+      _editing.applyDraft(widget.draft);
+      _protocolIdController.text = _editing.protocolId;
+      _nameController.text = _editing.name;
+      _durationMinController.text = _editing.durationMin?.toString() ?? '';
+      _minimumViableDurationController.text =
+          _editing.minimumViableDurationMin?.toString() ?? '';
+    }
   }
 
   void _syncTextFieldsToDraft() {
@@ -76,9 +104,11 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
     _protocolIdController.removeListener(_syncTextFieldsToDraft);
     _nameController.removeListener(_syncTextFieldsToDraft);
     _durationMinController.removeListener(_syncTextFieldsToDraft);
+    _minimumViableDurationController.removeListener(_syncMinimumViableDuration);
     _protocolIdController.dispose();
     _nameController.dispose();
     _durationMinController.dispose();
+    _minimumViableDurationController.dispose();
     super.dispose();
   }
 
@@ -176,6 +206,15 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   controller: _durationMinController,
                   keyboardType: TextInputType.number,
                 ),
+                if (capabilities.showAdaptationMetadataFields) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  SessionAdaptationMetadataSection(
+                    editing: _editing,
+                    minimumViableDurationController:
+                        _minimumViableDurationController,
+                    onChanged: () => _setStateAndEmit(() {}),
+                  ),
+                ],
                 if (capabilities.showCohortMetadataFields) ...[
                   SessionBuilderDropdown(
                     label: 'physiological_demand',

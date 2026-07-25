@@ -8,7 +8,6 @@ import '../../../models/session_block_exercise_link.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/timer_configuration.dart';
-import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../../../models/workout_format.dart';
 import '../services/protocol_draft_block_resolver.dart';
@@ -137,6 +136,26 @@ class SessionBuilderEditingState {
         sourceVersionId: sourceVersionId,
       ),
     );
+  }
+
+  void setPrimarySessionIntent(SessionIntent? intent) {
+    primarySessionIntent = intent;
+    secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+      primary: primarySessionIntent,
+      secondary: secondarySessionIntents,
+    );
+  }
+
+  void setSecondarySessionIntents(List<SessionIntent> intents) {
+    secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+      primary: primarySessionIntent,
+      secondary: intents,
+    );
+  }
+
+  void setMinimumViableDurationMin(int? value) {
+    minimumViableDurationMin =
+        SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(value);
   }
 
   void addBlock(SessionBlockType blockType) {

@@ -220,7 +220,13 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Add Block'));
+      final addBlock = find.text('Add Block').last;
+      await tester.scrollUntilVisible(
+        addBlock,
+        500,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(addBlock);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Strength').last);
       await tester.pumpAndSettle();

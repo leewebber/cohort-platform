@@ -1,4 +1,5 @@
 import '../../../models/protocol_draft.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../services/protocol_draft_block_resolver.dart';
 import 'session_block_validation.dart';
 
@@ -38,6 +39,15 @@ class SessionBuilderValidation {
     if (draft.name.trim().isEmpty) {
       messages.add('Session name is recommended.');
     }
+
+    messages.addAll(
+      SessionAdaptationMetadataValidation.validate(
+        primarySessionIntent: draft.primarySessionIntent,
+        secondarySessionIntents: draft.secondarySessionIntents,
+        minimumViableDurationMin: draft.minimumViableDurationMin,
+        plannedDurationMin: draft.durationMin,
+      ),
+    );
 
     return messages;
   }

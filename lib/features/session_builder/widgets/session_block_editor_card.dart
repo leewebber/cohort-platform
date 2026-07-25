@@ -12,6 +12,7 @@ import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../../../models/session_block_exercise_link.dart';
 import '../../../models/strength_exercise_prescription.dart';
+import 'session_block_adaptation_metadata_section.dart';
 import 'session_builder_form_widgets.dart';
 import 'strength_exercise_prescription_sheet.dart';
 import 'workout_content_editor.dart';
@@ -305,6 +306,10 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
                 );
                 widget.onChanged(block.copyWith(performanceCaptureMode: mode));
               },
+            ),
+            SessionBlockAdaptationMetadataSection(
+              block: block,
+              onChanged: widget.onChanged,
             ),
             WorkoutContentEditor(
               label: _usesStructuredStrength

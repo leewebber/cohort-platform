@@ -36,6 +36,7 @@ class SessionBuilderTextField extends StatelessWidget {
     this.keyboardType,
     this.readOnly = false,
     this.onChanged,
+    this.helperText,
   });
 
   final String label;
@@ -43,6 +44,7 @@ class SessionBuilderTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool readOnly;
   final ValueChanged<String>? onChanged;
+  final String? helperText;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,15 @@ class SessionBuilderTextField extends StatelessWidget {
             ),
             decoration: const InputDecoration(isDense: true),
           ),
+          if (helperText != null && helperText!.isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              helperText!,
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.textSecondary,
+              ),
+            ),
+          ],
         ],
       ),
     );

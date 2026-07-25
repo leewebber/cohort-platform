@@ -14,53 +14,7 @@ import '../support/in_memory_protocol_row_store.dart';
 import '../support/in_memory_session_block_repository.dart';
 import '../support/programme_session_authoring_test_support.dart'
     hide FakeProtocolBuilderService;
-
-/// Fully adaptation-tagged upper body strength session for founder-style code authoring.
-ProtocolDraft fullyTaggedUpperBodyStrengthSession({
-  required String protocolId,
-  required String programmeVersionId,
-}) {
-  return programmeSession(
-    protocolId: protocolId,
-    name: 'Upper Body Strength',
-    programmeVersionId: programmeVersionId,
-    ownerId: 'dev-coach',
-    sessionFormat: 'structured_strength',
-    durationMin: 60,
-    primarySessionIntent: SessionIntent.upperBodyStrength,
-    secondarySessionIntents: const [SessionIntent.upperBodyHypertrophy],
-    minimumViableDurationMin: 35,
-    blocks: [
-      block(
-        type: SessionBlockType.warmUp,
-        content: 'Row and shoulder prep',
-        performanceCaptureMode: BlockPerformanceCaptureMode.completion,
-      ),
-      block(
-        type: SessionBlockType.strength,
-        title: 'Main strength',
-        blockPriority: BlockPriority.essential,
-        adaptationPolicy: const BlockAdaptationPolicy(
-          canRemove: false,
-          canShorten: false,
-          canReduceVolume: true,
-          canReduceIntensity: true,
-          canIncreaseRest: true,
-          canSuperset: false,
-          canReplaceExercises: true,
-          canReplaceBlock: false,
-        ),
-        linkedExercises: [
-          exerciseLink(exerciseId: 'BP-001', position: 1),
-        ],
-      ),
-      block(
-        type: SessionBlockType.accessory,
-        blockPriority: BlockPriority.secondary,
-      ),
-    ],
-  );
-}
+import '../support/programme_code_authoring_fixtures.dart';
 
 void main() {
   group('ProgrammeCodeSessionAuthoringValidation', () {

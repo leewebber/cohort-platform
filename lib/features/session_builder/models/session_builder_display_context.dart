@@ -93,12 +93,14 @@ class SessionBuilderCapabilities {
     this.allowProtocolIdEdit = true,
     this.showProtocolIdField = true,
     this.showCohortMetadataFields = true,
+    this.showAdaptationMetadataFields = true,
     this.useCoachFieldLabels = false,
   });
 
   final bool allowProtocolIdEdit;
   final bool showProtocolIdField;
   final bool showCohortMetadataFields;
+  final bool showAdaptationMetadataFields;
   final bool useCoachFieldLabels;
 
   factory SessionBuilderCapabilities.cohortProtocolAdmin({
@@ -108,6 +110,7 @@ class SessionBuilderCapabilities {
       allowProtocolIdEdit: !protocolIdLocked,
       showProtocolIdField: true,
       showCohortMetadataFields: true,
+      showAdaptationMetadataFields: true,
       useCoachFieldLabels: false,
     );
   }
@@ -117,6 +120,7 @@ class SessionBuilderCapabilities {
       allowProtocolIdEdit: false,
       showProtocolIdField: false,
       showCohortMetadataFields: false,
+      showAdaptationMetadataFields: true,
       useCoachFieldLabels: true,
     );
   }
@@ -126,6 +130,7 @@ class SessionBuilderCapabilities {
       allowProtocolIdEdit: false,
       showProtocolIdField: false,
       showCohortMetadataFields: false,
+      showAdaptationMetadataFields: true,
       useCoachFieldLabels: true,
     );
   }
