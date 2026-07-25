@@ -119,7 +119,7 @@ class SessionBlock {
   }
 
   Map<String, dynamic> toRowMap({required String sessionId}) {
-    return {
+    final map = <String, dynamic>{
       if (persistedId != null) 'block_id': persistedId,
       'session_id': sessionId,
       'block_type': blockType.dbValue,
@@ -131,6 +131,12 @@ class SessionBlock {
       'position': position,
       'performance_capture_mode': performanceCaptureMode.dbValue,
     };
+    SessionBlockAdaptationMetadataCodec.writeExplicitToMap(
+      target: map,
+      blockPriority: blockPriority,
+      adaptationPolicy: adaptationPolicy,
+    );
+    return map;
   }
 
   factory SessionBlock.fromRow(

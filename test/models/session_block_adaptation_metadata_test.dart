@@ -139,6 +139,13 @@ void main() {
         block.toRowMap(sessionId: 'sess-1'),
         isNot(contains(SessionBlockAdaptationMetadataKeys.adaptationPolicy)),
       );
+
+      final explicit = block.copyWith(blockPriority: BlockPriority.secondary);
+      expect(
+        explicit.toRowMap(sessionId: 'sess-1')[
+            SessionBlockAdaptationMetadataKeys.blockPriority],
+        'secondary',
+      );
     });
 
     test('unknown priority value fails safely without crashing session load', () {

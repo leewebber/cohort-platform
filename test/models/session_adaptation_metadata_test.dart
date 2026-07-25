@@ -191,19 +191,38 @@ void main() {
   });
 
   group('SessionAdaptationMetadataCodec.stripPendingPersistenceColumns', () {
-    test('removes adaptation keys from upsert map', () {
-      final map = ProtocolDraft(
-        protocolId: 'id',
-        name: 'Name',
-        steps: const [],
-        primarySessionIntent: SessionIntent.longRun,
-        minimumViableDurationMin: 20,
-      ).toProtocolMap();
+    test('removes adaptation keys when merging legacy partial upsert maps', () {
+      final map = {
+        'protocol_id': 'id',
+        'name': 'Name',
+        SessionAdaptationMetadataKeys.primarySessionIntent: 'long_run',
+        SessionAdaptationMetadataKeys.minimumViableDurationMin: 20,
+      };
 
       SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
 
       expect(map.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent), isFalse);
       expect(map.containsKey(SessionAdaptationMetadataKeys.minimumViableDurationMin), isFalse);
+    });
+
+    test('toProtocolMap includes adaptation keys for upsert after migration', () {
+      final draft = ProtocolDraft(
+        protocolId: 'sess-1',
+        name: 'Session',
+        steps: const [],
+        primarySessionIntent: SessionIntent.tempo,
+        minimumViableDurationMin: 25,
+      );
+
+      final map = draft.toProtocolMap();
+      expect(
+        map[SessionAdaptationMetadataKeys.primarySessionIntent],
+        'tempo',
+      );
+      expect(
+        map[SessionAdaptationMetadataKeys.minimumViableDurationMin],
+        25,
+      );
     });
   });
 }

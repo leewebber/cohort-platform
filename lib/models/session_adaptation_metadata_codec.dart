@@ -123,7 +123,7 @@ class SessionAdaptationMetadataCodec {
     );
   }
 
-  /// Removes adaptation columns until DB migration lands (keeps Supabase upsert safe).
+  /// Removes adaptation columns from a merged map (e.g. partial legacy upserts).
   static void stripPendingPersistenceColumns(Map<String, dynamic> map) {
     map.remove(SessionAdaptationMetadataKeys.primarySessionIntent);
     map.remove(SessionAdaptationMetadataKeys.secondarySessionIntents);

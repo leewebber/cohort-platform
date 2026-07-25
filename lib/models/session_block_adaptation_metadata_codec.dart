@@ -46,6 +46,7 @@ class SessionBlockAdaptationMetadataCodec {
     }
   }
 
+  /// Removes block adaptation columns from a merged map (e.g. partial legacy upserts).
   static void stripPendingPersistenceColumns(Map<String, dynamic> map) {
     map.remove(SessionBlockAdaptationMetadataKeys.blockPriority);
     map.remove(SessionBlockAdaptationMetadataKeys.adaptationPolicy);

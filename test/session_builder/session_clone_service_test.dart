@@ -1,3 +1,4 @@
+import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/session_builder/services/protocol_draft_block_resolver.dart';
 import 'package:cohort_platform/features/session_builder/models/cohort_protocol_copy_destination.dart';
 import 'package:cohort_platform/features/session_builder/services/session_clone_service.dart';
@@ -92,6 +93,26 @@ void main() {
       expect(clone.authoringScope, TrainingAuthoringScope.programmeOnly);
       expect(clone.published, isFalse);
       expect(clone.programmeVersionId, versionId);
+    });
+
+    test('copies session adaptation metadata from source', () {
+      final source = buildEligibleCohortProtocolDraft().copyWith(
+        primarySessionIntent: SessionIntent.threshold,
+        secondarySessionIntents: const [SessionIntent.aerobicBase],
+        minimumViableDurationMin: 35,
+      );
+
+      final clone = cloneService.cloneCohortProtocolToSession(
+        source: source,
+        newContentId: 'local-copy-session-adapt',
+        ownerId: 'dev-coach',
+        destination: CohortProtocolCopyDestination.programmeOnly,
+        programmeVersionId: '11111111-1111-1111-1111-111111111111',
+      );
+
+      expect(clone.primarySessionIntent, SessionIntent.threshold);
+      expect(clone.secondarySessionIntents, [SessionIntent.aerobicBase]);
+      expect(clone.minimumViableDurationMin, 35);
     });
   });
 }
