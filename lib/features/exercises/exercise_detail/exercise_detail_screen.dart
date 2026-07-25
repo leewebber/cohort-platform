@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/presentation/athlete_content_policy.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/attribute_grid.dart';
@@ -73,13 +74,14 @@ class ExerciseDetailScreen extends StatelessWidget {
                 ),
               ],
 
-              const SizedBox(height: CohortSpacing.xl),
-
-              ExerciseUsagePanel(
-                exerciseId: exercise.exerciseId,
-                loadUsage: (exerciseId) => _relationshipService
-                    .tryGetUsageForExercise(exerciseId),
-              ),
+              if (AthleteContentPolicy.showExerciseUsagePanel) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                ExerciseUsagePanel(
+                  exerciseId: exercise.exerciseId,
+                  loadUsage: (exerciseId) => _relationshipService
+                      .tryGetUsageForExercise(exerciseId),
+                ),
+              ],
 
               const SizedBox(height: CohortSpacing.xl),
 
@@ -151,34 +153,34 @@ class ExerciseDetailScreen extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(height: CohortSpacing.xl),
+              if (AthleteContentPolicy.showExerciseProgrammingSection) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                const SectionTitle('Programming'),
+                const SizedBox(height: CohortSpacing.md),
+                AttributeGrid(
+                  attributes: AthleteContentPolicy.visibleAttributes({
+                    'Best Used For': exercise.bestUsedFor,
+                    'Loading Options': exercise.loadingOptions,
+                    'Rep Range': exercise.repRangeGuidance,
+                    'Tempo': exercise.tempoGuidance,
+                    'Rest': exercise.restGuidance,
+                  }),
+                ),
+              ],
 
-              const SectionTitle('Programming'),
-
-              const SizedBox(height: CohortSpacing.md),
-
-              AttributeGrid(
-                attributes: {
-                  'Best Used For': exercise.bestUsedFor,
-                  'Loading Options': exercise.loadingOptions,
-                  'Rep Range': exercise.repRangeGuidance,
-                  'Tempo': exercise.tempoGuidance,
-                  'Rest': exercise.restGuidance,
-                },
-              ),
-
-              if (_hasText(exercise.regression) ||
-                  _hasText(exercise.progression) ||
-                  _hasText(exercise.scalingNotes)) ...[
+              if (AthleteContentPolicy.showExerciseScalingSection &&
+                  (_hasText(exercise.regression) ||
+                      _hasText(exercise.progression) ||
+                      _hasText(exercise.scalingNotes))) ...[
                 const SizedBox(height: CohortSpacing.xl),
                 const SectionTitle('Scaling'),
                 const SizedBox(height: CohortSpacing.md),
                 AttributeGrid(
-                  attributes: {
+                  attributes: AthleteContentPolicy.visibleAttributes({
                     'Regression': exercise.regression,
                     'Progression': exercise.progression,
                     'Scaling Notes': exercise.scalingNotes,
-                  },
+                  }),
                 ),
               ],
 

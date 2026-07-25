@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/access/app_role_access.dart';
 import '../../core/errors/user_facing_error_messages.dart';
 import '../../core/services/authenticated_identity.dart';
 import 'programmes/controllers/programme_catalogue_controller.dart';
@@ -17,6 +18,13 @@ class CoachStudioAccess {
   }
 
   static void open(BuildContext context) {
+    if (!AppRoleAccess.canAccessCoachOperations) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(UserFacingErrorMessages.coachAccessRequired())),
+      );
+      return;
+    }
+
     try {
       final navigationState = CoachStudioNavigationState.instance;
 

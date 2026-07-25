@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/coach_route_guard.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
@@ -111,7 +112,9 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
   Widget build(BuildContext context) {
     final lastSection = CoachStudioNavigationState.instance.lastSection;
 
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Coach Studio',
+      child: Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -196,6 +199,7 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

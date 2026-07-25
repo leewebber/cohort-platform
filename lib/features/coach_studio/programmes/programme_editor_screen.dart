@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../models/programme_day_draft.dart';
@@ -158,13 +159,16 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return CoachRouteGuard.wrap(
+      title: 'Programme editor',
+      child: PopScope(
       canPop: !_controller.hasUnsavedChanges,
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop) return;
         await _handleExit();
       },
       child: Scaffold(body: SafeArea(child: _buildBody())),
+    ),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/coach_route_guard.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/section_title.dart';
@@ -119,7 +120,9 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     final circuitPlan = circuitCompilation?.plan;
     final circuitPlanError = circuitCompilation?.error;
 
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Session preview',
+      child: Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -190,6 +193,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 

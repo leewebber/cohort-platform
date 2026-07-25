@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/access/app_role_access.dart';
 import '../../core/config/production_navigation_policy.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
@@ -64,12 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _openCoachHome(BuildContext context) {
+    if (!AppRoleAccess.canAccessCoachOperations) return;
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const CoachHomeDashboardScreen()));
   }
 
   void _openCoachStudio(BuildContext context) {
+    if (!AppRoleAccess.canAccessCoachOperations) return;
     CoachStudioAccess.open(context);
   }
 

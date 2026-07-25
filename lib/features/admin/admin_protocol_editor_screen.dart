@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/coach_route_guard.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
@@ -184,12 +185,15 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Protocol editor',
+      child: Scaffold(
       body: SafeArea(
         child: _selectedProtocol == null
             ? _buildProtocolList()
             : _buildEditor(),
       ),
+    ),
     );
   }
 

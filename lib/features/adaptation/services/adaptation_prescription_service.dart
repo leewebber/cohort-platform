@@ -1,5 +1,6 @@
 import '../../../data/repositories/programme_adaptation_event_store.dart';
 import '../../../data/repositories/programme_adaptation_event_supabase_store.dart';
+import '../../../data/repositories/programme_store_exception.dart';
 import '../models/programme_adaptation_event.dart';
 
 /// Resolves athlete-specific prescription overrides from adaptation events.
@@ -15,10 +16,15 @@ class AdaptationPrescriptionService {
     required String assignmentId,
     required String sessionSlotId,
   }) async {
-    final event = await _adaptationEventStore.getPrescriptionForSlot(
-      assignmentId: assignmentId,
-      sessionSlotId: sessionSlotId,
-    );
+    ProgrammeAdaptationEvent? event;
+    try {
+      event = await _adaptationEventStore.getPrescriptionForSlot(
+        assignmentId: assignmentId,
+        sessionSlotId: sessionSlotId,
+      );
+    } on ProgrammeStoreException {
+      return const {};
+    }
 
     if (event == null ||
         event.adaptationType != ProgrammeAdaptationType.loadProgression) {

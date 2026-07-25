@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/colors.dart';
+import '../../core/widgets/coach_route_guard.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
@@ -49,7 +50,9 @@ class _PublishedProtocolsScreenState extends State<PublishedProtocolsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Published protocols',
+      child: Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -164,6 +167,7 @@ class _PublishedProtocolsScreenState extends State<PublishedProtocolsScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }

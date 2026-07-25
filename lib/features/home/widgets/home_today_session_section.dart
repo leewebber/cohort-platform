@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -471,6 +472,10 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   }
 
   Widget _buildError(HomeTodaySessionError state) {
+    final message = AthleteSafeErrorPresenter.message(
+      state.error ?? state.message,
+      logTag: 'home_today',
+    );
     return CohortCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,7 +487,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             style: CohortTextStyles.h2,
           ),
           const SizedBox(height: CohortSpacing.sm),
-          Text(state.message, style: CohortTextStyles.body),
+          Text(message, style: CohortTextStyles.body),
           const SizedBox(height: CohortSpacing.sm),
           const Text(
             'Check your connection and try again.',

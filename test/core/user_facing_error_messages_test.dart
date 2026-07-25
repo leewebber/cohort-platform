@@ -1,6 +1,8 @@
 import 'package:cohort_platform/core/errors/user_facing_error_messages.dart';
+import 'package:cohort_platform/core/presentation/athlete_safe_error_presenter.dart';
 import 'package:cohort_platform/core/services/authenticated_identity.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   group('UserFacingErrorMessages', () {
@@ -12,6 +14,18 @@ void main() {
           ),
         ),
         'Coach access is required to open Coach Studio.',
+      );
+    });
+
+    test('maps PostgREST statement timeout to athlete-safe copy', () {
+      expect(
+        UserFacingErrorMessages.from(
+          PostgrestException(
+            message: 'canceling statement due to statement timeout',
+            code: '57014',
+          ),
+        ),
+        UserFacingErrorMessages.timeout,
       );
     });
 
@@ -34,16 +48,24 @@ void main() {
         UserFacingErrorMessages.sessionSaveFailure(
           Exception('PerformanceRecordStoreException: complete record failed'),
         ),
-        'Your session could not be saved. Your progress has not been advanced.',
+        UserFacingErrorMessages.saveFailure,
       );
+    });
+
+    test('AthleteSafeErrorPresenter returns safe message for PostgREST timeout', () {
+      final message = AthleteSafeErrorPresenter.message(
+        PostgrestException(message: 'timeout', code: '57014'),
+        logTag: 'test',
+      );
+      expect(message, UserFacingErrorMessages.timeout);
     });
 
     test('does not include raw uuid-like tokens in generic fallback', () {
       final message = UserFacingErrorMessages.from(
         Exception('unexpected server response'),
-        fallback: 'Something went wrong. Please try again.',
+        fallback: UserFacingErrorMessages.genericFailure,
       );
-      expect(message, 'Something went wrong. Please try again.');
+      expect(message, UserFacingErrorMessages.genericFailure);
       expect(message.contains('00000000'), isFalse);
     });
   });

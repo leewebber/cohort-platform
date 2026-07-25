@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/coach_route_guard.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
@@ -493,7 +494,9 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
           'Preview shows the athlete session without saving.',
     );
 
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Protocol builder',
+      child: Scaffold(
       body: SafeArea(
         child: FutureBuilder<List<Exercise>>(
           future: _bootstrapFuture,
@@ -718,6 +721,7 @@ class _ProtocolBuilderScreenState extends State<ProtocolBuilderScreen> {
           },
         ),
       ),
+    ),
     );
   }
 }

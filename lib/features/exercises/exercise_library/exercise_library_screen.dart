@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/exercise_card.dart';
@@ -60,7 +61,10 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
             if (snapshot.hasError) {
               return Center(
                 child: Text(
-                  snapshot.error.toString(),
+                  AthleteSafeErrorPresenter.message(
+                    snapshot.error!,
+                    logTag: 'exercise_library',
+                  ),
                   style: CohortTextStyles.body,
                 ),
               );

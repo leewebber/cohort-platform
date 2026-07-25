@@ -156,6 +156,24 @@ void main() {
       }
     });
 
+    testWidgets('founder build sees coach destinations on home', (tester) async {
+      InternalToolsPolicy.enableForTesting();
+
+      await _pumpHome(
+        tester,
+        profile: const UserProfile(
+          id: 'founder-1',
+          displayName: 'Founder',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
+
+      expect(find.text('Coach Studio'), findsOneWidget);
+      expect(find.text('My Athletes'), findsOneWidget);
+      expect(find.text('Internal tools'), findsOneWidget);
+    });
+
     testWidgets('internal tools entry appears only when explicitly enabled', (
       tester,
     ) async {

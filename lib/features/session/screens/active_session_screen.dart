@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/errors/user_facing_error_messages.dart';
+import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
@@ -69,7 +71,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
       if (!mounted) return;
       setState(() {
         _saveState = PerformanceSaveState.error;
-        _saveError = error.toString();
+        _saveError = AthleteSafeErrorPresenter.message(
+          error,
+          fallback: UserFacingErrorMessages.saveFailure,
+          logTag: 'session_draft_save',
+        );
       });
     }
   }

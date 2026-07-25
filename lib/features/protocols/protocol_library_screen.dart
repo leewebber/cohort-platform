@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
@@ -84,7 +85,10 @@ class _ProtocolLibraryScreenState extends State<ProtocolLibraryScreen> {
             if (snapshot.hasError) {
               return Center(
                 child: Text(
-                  snapshot.error.toString(),
+                  AthleteSafeErrorPresenter.message(
+                    snapshot.error!,
+                    logTag: 'protocol_library',
+                  ),
                   style: CohortTextStyles.body,
                 ),
               );

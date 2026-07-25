@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -177,7 +178,9 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Programmes',
+      child: Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -219,6 +222,7 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 

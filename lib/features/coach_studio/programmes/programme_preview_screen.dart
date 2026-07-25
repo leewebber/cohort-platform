@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -69,6 +70,13 @@ class _ProgrammeCataloguePreviewLoaderState
 
   @override
   Widget build(BuildContext context) {
+    return CoachRouteGuard.wrap(
+      title: 'Programme preview',
+      child: _buildLoadedPreview(context),
+    );
+  }
+
+  Widget _buildLoadedPreview(BuildContext context) {
     if (_loading) {
       return const Scaffold(
         body: SafeArea(child: Center(child: CircularProgressIndicator())),
@@ -120,7 +128,9 @@ class _ProgrammePreviewScreenState extends State<ProgrammePreviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Programme preview',
+      child: Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,6 +180,7 @@ class _ProgrammePreviewScreenState extends State<ProgrammePreviewScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }

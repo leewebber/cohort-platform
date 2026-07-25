@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
@@ -48,21 +49,37 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Training History'),
+      ),
       body: SafeArea(
+        top: false,
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: FutureBuilder<List<TrainingSessionRecord>>(
             future: _historyFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: Text('Loading history…'));
+                return ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(24),
+                  children: const [
+                    Center(child: Text('Loading history…')),
+                  ],
+                );
               }
               if (snapshot.hasError) {
+                final message = AthleteSafeErrorPresenter.message(
+                  snapshot.error!,
+                  logTag: 'training_history',
+                );
                 return ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(24),
                   children: [
                     Text('Could not load history', style: CohortTextStyles.h1),
-                    Text('${snapshot.error}', style: CohortTextStyles.body),
+                    const SizedBox(height: CohortSpacing.md),
+                    Text(message, style: CohortTextStyles.body),
                   ],
                 );
               }
@@ -70,6 +87,7 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
               final records = snapshot.data ?? const [];
               if (records.isEmpty) {
                 return ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(24),
                   children: const [
                     SectionTitle('Training History'),
@@ -85,12 +103,9 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
               }
 
               return ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(24),
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('← Back'),
-                  ),
                   const SectionTitle('Training History'),
                   const SizedBox(height: CohortSpacing.md),
                   for (final record in records) ...[

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -104,7 +105,9 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Personal training',
+      child: Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(CohortSpacing.lg),
@@ -129,6 +132,7 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
           ),
         ),
       ),
+    ),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../diagnostics/training_library_diagnostics.dart';
@@ -59,7 +60,9 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Training Library',
+      child: Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,6 +105,7 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
           ],
         ),
       ),
+    ),
     );
   }
 }

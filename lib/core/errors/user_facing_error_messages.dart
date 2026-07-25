@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../services/authenticated_identity.dart';
@@ -5,6 +6,15 @@ import '../services/authenticated_identity.dart';
 /// Maps technical failures to concise user-facing copy.
 class UserFacingErrorMessages {
   const UserFacingErrorMessages._();
+
+  static const String timeout =
+      'This is taking longer than expected. Please try again.';
+  static const String offline =
+      'You appear to be offline. Please check your connection.';
+  static const String saveFailure =
+      'We couldn\'t save that yet. Please try again.';
+  static const String genericFailure =
+      'Something went wrong. Please try again.';
 
   static String from(Object error, {String? fallback}) {
     if (error is AuthenticatedIdentityException) {
@@ -15,26 +25,34 @@ class UserFacingErrorMessages {
       return _authMessage(error.message);
     }
 
+    if (error is PostgrestException) {
+      return _postgrestMessage(error);
+    }
+
     final message = error.toString();
 
+    if (_looksLikeStatementTimeout(message, code: _extractCode(message))) {
+      return timeout;
+    }
+
     if (_looksLikeCoachStudioAccess(message)) {
-      return 'Coach access is required to open Coach Studio.';
+      return coachAccessRequired();
     }
 
     if (_looksLikeAthleteAccess(message)) {
-      return 'Athlete access is required to start training.';
+      return athleteAccessRequired();
     }
 
     if (_looksLikeProgrammeAccess(message)) {
-      return 'You do not have access to this programme.';
+      return programmeAccessDenied();
     }
 
     if (_looksLikeProgrammeEdit(message)) {
-      return 'You do not have permission to edit this programme.';
+      return programmeEditDenied();
     }
 
     if (_looksLikeProgrammeAssign(message)) {
-      return 'This programme can no longer be assigned.';
+      return programmeAssignDenied();
     }
 
     if (_looksLikePermissionDenied(message)) {
@@ -42,7 +60,7 @@ class UserFacingErrorMessages {
     }
 
     if (_looksLikeNetwork(message)) {
-      return 'Could not reach Cohort. Check your connection and try again.';
+      return offline;
     }
 
     if (_looksLikeInvite(message)) {
@@ -58,18 +76,61 @@ class UserFacingErrorMessages {
     }
 
     if (_looksLikeSessionSave(message)) {
-      return 'Your session could not be saved. Your progress has not been advanced.';
+      return saveFailure;
     }
 
-    return fallback ?? 'Something went wrong. Please try again.';
+    if (_looksLikeRawBackendException(message)) {
+      return fallback ?? genericFailure;
+    }
+
+    return fallback ?? genericFailure;
+  }
+
+  static String _postgrestMessage(PostgrestException error) {
+    debugPrint(
+      '[UserFacingErrorMessages] PostgrestException '
+      'code=${error.code} message=${error.message} details=${error.details}',
+    );
+
+    final code = error.code?.trim();
+    if (code == '57014' || _looksLikeStatementTimeout(error.message, code: code)) {
+      return timeout;
+    }
+
+    if (_looksLikePermissionDenied(error.message)) {
+      return 'You do not have permission to perform this action.';
+    }
+
+    if (_looksLikeNetwork(error.message)) {
+      return offline;
+    }
+
+    return genericFailure;
+  }
+
+  static String? _extractCode(String message) {
+    final match = RegExp(r'code:\s*(\w+)', caseSensitive: false).firstMatch(message);
+    return match?.group(1);
+  }
+
+  static bool _looksLikeStatementTimeout(String message, {String? code}) {
+    if (code == '57014') return true;
+    final lower = message.toLowerCase();
+    return lower.contains('57014') ||
+        lower.contains('statement timeout') ||
+        lower.contains('canceling statement due to statement timeout');
+  }
+
+  static bool _looksLikeRawBackendException(String message) {
+    final lower = message.toLowerCase();
+    return lower.contains('postgrestexception') ||
+        lower.contains('programmestoreexception') ||
+        lower.contains('clientexception') ||
+        lower.contains('authretryablefetchexception');
   }
 
   static String sessionSaveFailure(Object error) {
-    return from(
-      error,
-      fallback:
-          'Your session could not be saved. Your progress has not been advanced.',
-    );
+    return from(error, fallback: saveFailure);
   }
 
   static String sessionProgressionWarning() {

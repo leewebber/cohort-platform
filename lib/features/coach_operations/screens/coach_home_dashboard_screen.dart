@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -135,18 +136,20 @@ class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SectionTitle('Coach Home'),
+    return CoachRouteGuard(
+      title: 'My Athletes',
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                const SectionTitle('Coach Home'),
               const SizedBox(height: CohortSpacing.sm),
               Text('My Athletes', style: CohortTextStyles.h1),
               const SizedBox(height: CohortSpacing.sm),
@@ -173,6 +176,7 @@ class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 

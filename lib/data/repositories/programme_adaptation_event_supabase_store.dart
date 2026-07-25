@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+
 import '../../core/services/supabase_service.dart';
 import '../../core/utils/database_uuid.dart';
 import '../../features/adaptation/models/programme_adaptation_event.dart';
@@ -8,6 +12,15 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
   const ProgrammeAdaptationEventSupabaseStore();
 
   static const _tableName = 'programme_adaptation_events';
+
+  /// PostgREST `cs` filter value for JSONB array containment (`@>`).
+  ///
+  /// Must be JSON text — passing a Dart [List] to `.contains()` would emit
+  /// Postgres array syntax `{…}`, which is invalid for a JSONB column (22P02).
+  @visibleForTesting
+  static String jsonbArrayContainsFilter(List<String> values) {
+    return jsonEncode(values);
+  }
 
   @override
   Future<ProgrammeAdaptationEvent?> getByTriggerSession({
@@ -60,23 +73,62 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
     required String assignmentId,
     required String sessionSlotId,
   }) async {
+    final trimmedAssignmentId = assignmentId.trim();
+    final trimmedSlotId = sessionSlotId.trim();
+
+    if (!DatabaseUuid.isValidDatabaseUuid(trimmedAssignmentId) ||
+        trimmedSlotId.isEmpty) {
+      debugPrint(
+        '[ProgrammeAdaptationEvent] getPrescriptionForSlot skipped '
+        'assignment_id=$trimmedAssignmentId session_slot_id=$trimmedSlotId',
+      );
+      return null;
+    }
+
+    final jsonbSlotFilter = jsonbArrayContainsFilter([trimmedSlotId]);
+    debugPrint(
+      '[ProgrammeAdaptationEvent] getPrescriptionForSlot '
+      'assignment_id=$trimmedAssignmentId '
+      'session_slot_id=$trimmedSlotId '
+      'affected_slot_ids_cs=$jsonbSlotFilter',
+    );
+
     try {
       final response = await SupabaseService.client
           .from(_tableName)
           .select()
-          .eq('assignment_id', assignmentId.trim())
-          .contains('affected_slot_ids', [sessionSlotId.trim()])
+          .eq('assignment_id', trimmedAssignmentId)
+          .contains('affected_slot_ids', jsonbSlotFilter)
           .order('created_at', ascending: false)
           .limit(1)
           .maybeSingle();
 
       if (response == null) return null;
       return ProgrammeAdaptationEvent.fromMap(Map<String, dynamic>.from(response));
+    } on ProgrammeStoreException catch (error) {
+      if (error.code == '22P02') {
+        debugPrint(
+          '[ProgrammeAdaptationEvent] getPrescriptionForSlot invalid filter '
+          'assignment_id=$trimmedAssignmentId session_slot_id=$trimmedSlotId',
+        );
+        return null;
+      }
+      rethrow;
     } catch (error) {
-      throw ProgrammeStoreException.fromDynamic(
+      final wrapped = ProgrammeStoreException.fromDynamic(
         error,
         fallbackMessage: 'Failed to fetch slot prescription adaptation',
+        operation: 'getPrescriptionForSlot',
+        tableName: _tableName,
       );
+      if (wrapped.code == '22P02') {
+        debugPrint(
+          '[ProgrammeAdaptationEvent] getPrescriptionForSlot invalid filter '
+          'assignment_id=$trimmedAssignmentId session_slot_id=$trimmedSlotId',
+        );
+        return null;
+      }
+      throw wrapped;
     }
   }
 

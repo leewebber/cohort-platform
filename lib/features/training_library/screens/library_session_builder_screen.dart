@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/coach_route_guard.dart';
 import '../../../core/services/current_coach_identity.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
@@ -183,7 +184,9 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CoachRouteGuard.wrap(
+      title: 'Session builder',
+      child: Scaffold(
       body: SafeArea(
         child: FutureBuilder<List<Exercise>>(
           future: _exercisesFuture,
@@ -316,6 +319,7 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
           },
         ),
       ),
+    ),
     );
   }
 }
