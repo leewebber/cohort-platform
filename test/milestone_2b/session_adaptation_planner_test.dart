@@ -429,12 +429,19 @@ void main() {
 
     test('24 code vs builder equivalent plans', () {
       const protocolId = 'm2b-plan-equiv';
-      final codeDraft = buildTimedPlanningSession(protocolId: protocolId);
-      final codeInput = timedPlanningInputFromDraft(codeDraft);
       const constraints = AdaptationConstraintContext(availableDurationMin: 45);
-      final first = planner.plan(session: codeInput, constraints: constraints);
-      final second = planner.plan(session: codeInput, constraints: constraints);
-      expect(planEquivalent(first, second), isTrue);
+      final codeInput = timedPlanningInputFromDraft(
+        buildTimedPlanningSession(protocolId: protocolId),
+      );
+      final builderInput = timedPlanningInputFromDraft(
+        buildTimedPlanningSessionViaBuilder(protocolId: protocolId),
+      );
+      final codePlan = planner.plan(session: codeInput, constraints: constraints);
+      final builderPlan = planner.plan(
+        session: builderInput,
+        constraints: constraints,
+      );
+      expect(planEquivalent(codePlan, builderPlan), isTrue);
     });
 
     test('25 planner does not mutate session input', () {

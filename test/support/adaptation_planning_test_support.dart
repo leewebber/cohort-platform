@@ -1,5 +1,9 @@
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/programme_builder/authoring/programme_code_authoring.dart';
+import 'package:cohort_platform/features/session_builder/controllers/session_builder_editing_state.dart';
+import 'package:cohort_platform/features/session_builder/models/programme_session_authoring_context.dart';
+import 'package:cohort_platform/features/session_builder/models/session_builder_host_mode.dart';
+import 'package:cohort_platform/features/session_builder/services/programme_session_draft_factory.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_block_exercise_link.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
@@ -118,6 +122,95 @@ ProtocolDraft buildTimedPlanningSession({
       ),
     ],
   );
+}
+
+/// Builder-authored twin of [buildTimedPlanningSession] for equivalence tests.
+ProtocolDraft buildTimedPlanningSessionViaBuilder({
+  required String protocolId,
+  int plannedDurationMin = 60,
+  int minimumViableDurationMin = 35,
+}) {
+  final context = ProgrammeSessionAuthoringContext(
+    programmeVersionId: testProgrammeVersionId,
+    weekLocalId: testWeekLocalId,
+    dayLocalId: testDayLocalId,
+    slotLocalId: testSlotLocalId,
+    weekNumber: 2,
+    dayLabel: 'Tuesday',
+    slotDisplayLabel: 'Morning',
+    authoringIntent: ProgrammeSessionAuthoringIntent.createBlank,
+  );
+
+  final editing = SessionBuilderEditingState(
+    draft: ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(context)
+        .copyWith(
+      protocolId: protocolId,
+      name: 'Timed planning session',
+      sessionFormat: 'structured_strength',
+      programmeVersionId: testProgrammeVersionId,
+    ),
+  );
+  editing.setPrimarySessionIntent(SessionIntent.upperBodyStrength);
+  editing.setMinimumViableDurationMin(minimumViableDurationMin);
+  editing.durationMin = plannedDurationMin;
+
+  editing.blocks = [
+    block(
+      localId: 'block-warmup',
+      type: SessionBlockType.warmUp,
+      position: 1,
+      content: 'Prep',
+    ),
+    block(
+      localId: 'block-strength',
+      type: SessionBlockType.strength,
+      position: 2,
+      title: 'Main',
+      blockPriority: BlockPriority.essential,
+      adaptationPolicy: const BlockAdaptationPolicy(
+        canRemove: false,
+        canShorten: false,
+        canReduceVolume: true,
+        canReduceIntensity: true,
+        canIncreaseRest: true,
+        canSuperset: false,
+        canReplaceExercises: true,
+        canReplaceBlock: false,
+        minimumViablePrescription: MinimumViablePrescription(sets: 2),
+      ),
+      linkedExercises: [
+        SessionBlockExerciseLink(
+          localId: 'link-strength-1',
+          exerciseId: 'BP-001',
+          position: 1,
+          prescription: StrengthExercisePrescription(
+            sets: 4,
+            reps: StrengthRepPrescription.exact(8),
+            restSeconds: 120,
+          ),
+        ),
+      ],
+    ),
+    block(
+      localId: 'block-accessory',
+      type: SessionBlockType.accessory,
+      position: 3,
+      blockPriority: BlockPriority.secondary,
+      linkedExercises: [
+        SessionBlockExerciseLink(
+          localId: 'link-acc-1',
+          exerciseId: 'ACC-001',
+          position: 1,
+          prescription: StrengthExercisePrescription(
+            sets: 3,
+            reps: StrengthRepPrescription.exact(12),
+          ),
+        ),
+      ],
+    ),
+  ];
+
+  return editing.buildDraft();
 }
 
 PlannedSessionAdaptationInput timedPlanningInputFromDraft(ProtocolDraft draft) {
