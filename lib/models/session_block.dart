@@ -1,4 +1,6 @@
+import '../domain/adaptation/adaptation_domain.dart';
 import 'block_performance_capture_mode.dart';
+import 'session_block_adaptation_metadata_codec.dart';
 import 'session_block_exercise_link.dart';
 import 'session_block_type.dart';
 import 'timer_configuration.dart';
@@ -18,6 +20,8 @@ class SessionBlock {
     this.linkedExercises = const [],
     this.coachNotes,
     this.performanceCaptureMode = BlockPerformanceCaptureMode.automatic,
+    this.blockPriority,
+    this.adaptationPolicy,
   });
 
   final String localId;
@@ -32,7 +36,38 @@ class SessionBlock {
   final int position;
   final BlockPerformanceCaptureMode performanceCaptureMode;
 
+  /// Explicit authored block priority; null means use type default at read time.
+  final BlockPriority? blockPriority;
+
+  /// Explicit authored adaptation policy; null means use type default at read time.
+  final BlockAdaptationPolicy? adaptationPolicy;
+
+  BlockPriority get effectiveBlockPriority =>
+      blockPriority ??
+      SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
+
+  BlockAdaptationPolicy get effectiveAdaptationPolicy =>
+      adaptationPolicy ??
+      SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(blockType);
+
   String get stableId => persistedId ?? 'legacy-$position';
+
+  BlockAdaptationMetadata get explicitBlockAdaptationMetadata =>
+      BlockAdaptationMetadata(
+        blockTypeDbValue: blockType.dbValue,
+        priority: blockPriority,
+        adaptationPolicy: adaptationPolicy,
+      );
+
+  Map<String, dynamic> explicitAdaptationMetadataToMap() {
+    final map = <String, dynamic>{};
+    SessionBlockAdaptationMetadataCodec.writeExplicitToMap(
+      target: map,
+      blockPriority: blockPriority,
+      adaptationPolicy: adaptationPolicy,
+    );
+    return map;
+  }
 
   SessionBlock copyWith({
     String? localId,
@@ -46,8 +81,12 @@ class SessionBlock {
     String? coachNotes,
     int? position,
     BlockPerformanceCaptureMode? performanceCaptureMode,
+    BlockPriority? blockPriority,
+    BlockAdaptationPolicy? adaptationPolicy,
     bool clearTimerConfiguration = false,
     bool clearCoachNotes = false,
+    bool clearBlockPriority = false,
+    bool clearAdaptationPolicy = false,
   }) {
     return SessionBlock(
       localId: localId ?? this.localId,
@@ -64,6 +103,18 @@ class SessionBlock {
       position: position ?? this.position,
       performanceCaptureMode:
           performanceCaptureMode ?? this.performanceCaptureMode,
+      blockPriority:
+          clearBlockPriority ? null : (blockPriority ?? this.blockPriority),
+      adaptationPolicy: clearAdaptationPolicy
+          ? null
+          : (adaptationPolicy ?? this.adaptationPolicy),
+    );
+  }
+
+  SessionBlock withBlockAdaptationMetadata(BlockAdaptationMetadata metadata) {
+    return copyWith(
+      blockPriority: metadata.priority,
+      adaptationPolicy: metadata.adaptationPolicy,
     );
   }
 
@@ -110,6 +161,40 @@ class SessionBlock {
       performanceCaptureMode: BlockPerformanceCaptureModeDb.fromDb(
         row['performance_capture_mode']?.toString(),
       ),
+      blockPriority: SessionBlockAdaptationMetadataCodec.parseBlockPriority(
+        row[SessionBlockAdaptationMetadataKeys.blockPriority],
+      ),
+      adaptationPolicy: SessionBlockAdaptationMetadataCodec.parseAdaptationPolicy(
+        row[SessionBlockAdaptationMetadataKeys.adaptationPolicy],
+      ),
+    );
+  }
+
+  static SessionBlock mergeAdaptationFromRow({
+    required SessionBlock block,
+    required Map<String, dynamic> row,
+  }) {
+    final hasPriority = row.containsKey(
+      SessionBlockAdaptationMetadataKeys.blockPriority,
+    );
+    final hasPolicy = row.containsKey(
+      SessionBlockAdaptationMetadataKeys.adaptationPolicy,
+    );
+    if (!hasPriority && !hasPolicy) {
+      return block;
+    }
+
+    return block.copyWith(
+      blockPriority: hasPriority
+          ? SessionBlockAdaptationMetadataCodec.parseBlockPriority(
+              row[SessionBlockAdaptationMetadataKeys.blockPriority],
+            )
+          : block.blockPriority,
+      adaptationPolicy: hasPolicy
+          ? SessionBlockAdaptationMetadataCodec.parseAdaptationPolicy(
+              row[SessionBlockAdaptationMetadataKeys.adaptationPolicy],
+            )
+          : block.adaptationPolicy,
     );
   }
 
@@ -132,7 +217,7 @@ class SessionBlock {
   }
 
   SessionBlock deepClone({required int position, String? titleSuffix}) {
-      final clonedLinks = linkedExercises
+    final clonedLinks = linkedExercises
         .asMap()
         .entries
         .map(
@@ -160,6 +245,10 @@ class SessionBlock {
       coachNotes: coachNotes,
       position: position,
       performanceCaptureMode: performanceCaptureMode,
+      blockPriority: blockPriority,
+      adaptationPolicy: adaptationPolicy == null
+          ? null
+          : BlockAdaptationPolicy.fromJson(adaptationPolicy!.toJson()),
     );
   }
 
@@ -177,8 +266,81 @@ class SessionBlock {
     return false;
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is SessionBlock &&
+        other.localId == localId &&
+        other.persistedId == persistedId &&
+        other.blockType == blockType &&
+        other.title == title &&
+        other.content == content &&
+        other.workoutFormat == workoutFormat &&
+        other.timerConfiguration == timerConfiguration &&
+        _linkedExercisesEqual(other.linkedExercises, linkedExercises) &&
+        other.coachNotes == coachNotes &&
+        other.position == position &&
+        other.performanceCaptureMode == performanceCaptureMode &&
+        other.blockPriority == blockPriority &&
+        _adaptationPolicyEqual(other.adaptationPolicy, adaptationPolicy);
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        localId,
+        persistedId,
+        blockType,
+        title,
+        content,
+        workoutFormat,
+        timerConfiguration,
+        Object.hashAll(linkedExercises),
+        coachNotes,
+        position,
+        performanceCaptureMode,
+        blockPriority,
+        adaptationPolicy?.toJson().toString(),
+      );
+
   static String? _nullable(String? value) {
     final trimmed = value?.trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  static bool _linkedExercisesEqual(
+    List<SessionBlockExerciseLink> a,
+    List<SessionBlockExerciseLink> b,
+  ) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static bool _adaptationPolicyEqual(
+    BlockAdaptationPolicy? a,
+    BlockAdaptationPolicy? b,
+  ) {
+    if (identical(a, b)) return true;
+    if (a == null || b == null) return a == b;
+    return a.canRemove == b.canRemove &&
+        a.canShorten == b.canShorten &&
+        a.canReduceVolume == b.canReduceVolume &&
+        a.canReduceIntensity == b.canReduceIntensity &&
+        a.canIncreaseRest == b.canIncreaseRest &&
+        a.canSuperset == b.canSuperset &&
+        a.canReplaceExercises == b.canReplaceExercises &&
+        a.canReplaceBlock == b.canReplaceBlock &&
+        a.minimumViablePrescription == b.minimumViablePrescription &&
+        _stringListEqual(a.dependsOnBlockIds, b.dependsOnBlockIds);
+  }
+
+  static bool _stringListEqual(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 }
