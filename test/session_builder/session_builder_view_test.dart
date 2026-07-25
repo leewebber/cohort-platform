@@ -159,6 +159,7 @@ void main() {
       expect(find.text('protocol_id'), findsOneWidget);
       expect(find.text('PROTOCOL DETAILS'), findsOneWidget);
       expect(find.text('SESSION STEPS'), findsOneWidget);
+      expect(find.text('Adaptation metadata'), findsOneWidget);
     });
 
     testWidgets('editing session name emits updated draft', (tester) async {

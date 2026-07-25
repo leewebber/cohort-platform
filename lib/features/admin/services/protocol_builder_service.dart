@@ -11,6 +11,7 @@ import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
 import '../../../models/protocol_step_draft.dart';
+import '../../../models/session_adaptation_metadata_codec.dart';
 import '../../../models/session_block.dart';
 import '../../../models/session_revision_vocabulary.dart';
 import '../../../models/training_content_vocabulary.dart';
@@ -430,6 +431,15 @@ class ProtocolBuilderService {
       ),
     );
 
+    messages.addAll(
+      SessionAdaptationMetadataValidation.validate(
+        primarySessionIntent: draft.primarySessionIntent,
+        secondarySessionIntents: draft.secondarySessionIntents,
+        minimumViableDurationMin: draft.minimumViableDurationMin,
+        plannedDurationMin: draft.durationMin,
+      ),
+    );
+
     if (messages.isNotEmpty) {
       throw ProtocolBuilderException(messages.join(' '));
     }
@@ -453,6 +463,13 @@ class ProtocolBuilderService {
     required bool published,
   }) {
     final map = Map<String, dynamic>.from(draft.toProtocolMap());
+    SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
+    SessionAdaptationMetadataCodec.applyForProtocolUpsert(
+      target: map,
+      primarySessionIntent: draft.primarySessionIntent,
+      secondarySessionIntents: draft.secondarySessionIntents,
+      minimumViableDurationMin: draft.minimumViableDurationMin,
+    );
     map['published'] = published;
     _applySessionFormatFallback(map, draft.sessionFormat);
     return map;

@@ -87,6 +87,25 @@ class SessionAdaptationMetadataCodec {
     }
   }
 
+  /// Writes all adaptation columns for a full-row upsert (`performance_protocols`).
+  ///
+  /// Null values clear previously stored metadata when the coach removes a field.
+  static void applyForProtocolUpsert({
+    required Map<String, dynamic> target,
+    SessionIntent? primarySessionIntent,
+    required List<SessionIntent> secondarySessionIntents,
+    int? minimumViableDurationMin,
+  }) {
+    target[SessionAdaptationMetadataKeys.primarySessionIntent] =
+        primarySessionIntent?.dbValue;
+    target[SessionAdaptationMetadataKeys.secondarySessionIntents] =
+        secondarySessionIntents.isEmpty
+            ? null
+            : secondarySessionIntents.map((intent) => intent.dbValue).toList();
+    target[SessionAdaptationMetadataKeys.minimumViableDurationMin] =
+        normalizeMinimumViableDurationMin(minimumViableDurationMin);
+  }
+
   static void applyFromMap({
     required Map<String, dynamic> map,
     required void Function({

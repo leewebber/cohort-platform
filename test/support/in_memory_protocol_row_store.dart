@@ -10,6 +10,13 @@ class InMemoryProtocolRowStore {
 
   void upsertFromDraft(ProtocolDraft draft, {bool published = false}) {
     final map = Map<String, dynamic>.from(draft.toProtocolMap());
+    SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
+    SessionAdaptationMetadataCodec.applyForProtocolUpsert(
+      target: map,
+      primarySessionIntent: draft.primarySessionIntent,
+      secondarySessionIntents: draft.secondarySessionIntents,
+      minimumViableDurationMin: draft.minimumViableDurationMin,
+    );
     map['published'] = published;
     rowsByProtocolId[draft.protocolId] = map;
   }
@@ -40,6 +47,12 @@ class InMemoryProtocolRowStore {
       steps: const [],
       blocks: blocks,
       published: map['published'] == true,
+      primaryCapability: map['primary_capability']?.toString(),
+      secondaryCapability: map['secondary_capability']?.toString(),
+      sessionType: map['session_type']?.toString(),
+      durationMin: map['duration_min'] is int
+          ? map['duration_min'] as int
+          : int.tryParse(map['duration_min']?.toString() ?? ''),
     );
 
     return ProtocolDraft.mergeAdaptationFromRow(
@@ -54,6 +67,13 @@ class InMemoryProtocolRowStore {
   /// Mirrors [ProtocolBuilderService._buildProtocolUpsertMap] after migration.
   Map<String, dynamic> buildUpsertMap(ProtocolDraft draft, {required bool published}) {
     final map = Map<String, dynamic>.from(draft.toProtocolMap());
+    SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
+    SessionAdaptationMetadataCodec.applyForProtocolUpsert(
+      target: map,
+      primarySessionIntent: draft.primarySessionIntent,
+      secondarySessionIntents: draft.secondarySessionIntents,
+      minimumViableDurationMin: draft.minimumViableDurationMin,
+    );
     map['published'] = published;
     return map;
   }
