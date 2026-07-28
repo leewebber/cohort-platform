@@ -21,3 +21,8 @@ export 'planning/adaptation_plan_step.dart';
 export 'planning/adaptation_plan_validator.dart';
 export 'planning/prescription_reduction_proposal.dart';
 export 'planning/session_adaptation_planner.dart';
+export 'application/adaptation_plan_application_result.dart';
+export 'application/adaptation_plan_applier.dart';
+export 'application/adapted_session_execution_snapshot.dart';
+export 'application/adapted_session_execution_snapshot_validator.dart';
+export 'application/prescription_execution_snapshot.dart';
