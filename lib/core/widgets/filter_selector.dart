@@ -35,15 +35,9 @@ class FilterSelector extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: CohortTextStyles.eyebrow,
-                    ),
+                    Text(title, style: CohortTextStyles.eyebrow),
                     const SizedBox(height: CohortSpacing.sm),
-                    Text(
-                      value,
-                      style: CohortTextStyles.body,
-                    ),
+                    Text(value, style: CohortTextStyles.body),
                   ],
                 ),
               ),

@@ -13,8 +13,7 @@ class HomeDebugProgrammeRefreshPolicy {
       ProgrammeAssignmentOperationStatus.replaced ||
       ProgrammeAssignmentOperationStatus.partialSuccess =>
         result.assignment != null,
-      ProgrammeAssignmentOperationStatus.alreadyActiveConflict =>
-        false,
+      ProgrammeAssignmentOperationStatus.alreadyActiveConflict => false,
       _ => false,
     };
   }
@@ -33,8 +32,7 @@ class HomeDebugProgrammeRefreshPolicy {
   static bool shouldRefreshAfterProgression(ProgrammeProgressionResult result) {
     return switch (result.status) {
       ProgrammeProgressionStatus.completed ||
-      ProgrammeProgressionStatus.programmeComplete =>
-        true,
+      ProgrammeProgressionStatus.programmeComplete => true,
       ProgrammeProgressionStatus.partialSuccess =>
         result.updatedAssignment != null,
       _ => false,

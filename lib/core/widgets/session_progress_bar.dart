@@ -22,10 +22,7 @@ class SessionProgressBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Step $currentStep of $totalSteps',
-          style: CohortTextStyles.small,
-        ),
+        Text('Step $currentStep of $totalSteps', style: CohortTextStyles.small),
         const SizedBox(height: CohortSpacing.sm),
         ClipRRect(
           borderRadius: CohortRadius.largeRadius,
@@ -33,14 +30,10 @@ class SessionProgressBar extends StatelessWidget {
             height: 6,
             child: Stack(
               children: [
-                Container(
-                  color: CohortColors.border,
-                ),
+                Container(color: CohortColors.border),
                 FractionallySizedBox(
                   widthFactor: progress.clamp(0.0, 1.0),
-                  child: Container(
-                    color: CohortColors.olive,
-                  ),
+                  child: Container(color: CohortColors.olive),
                 ),
               ],
             ),

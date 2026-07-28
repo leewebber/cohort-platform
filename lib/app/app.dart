@@ -6,10 +6,7 @@ import 'configuration_error_screen.dart';
 import 'theme.dart';
 
 class CohortPlatformApp extends StatefulWidget {
-  const CohortPlatformApp({
-    super.key,
-    this.configurationError,
-  });
+  const CohortPlatformApp({super.key, this.configurationError});
 
   final String? configurationError;
 

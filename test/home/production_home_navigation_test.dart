@@ -62,9 +62,9 @@ void main() {
         ),
       );
 
-      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('EXECUTE TODAY'), findsOneWidget);
       expect(find.text('Training History'), findsOneWidget);
-      expect(find.text('Adjust Today’s Session'), findsOneWidget);
+      expect(find.text('Need to Adapt?'), findsOneWidget);
       expect(find.text('Protocol Library'), findsOneWidget);
       expect(find.text('Help & feedback'), findsOneWidget);
       expect(
@@ -108,7 +108,7 @@ void main() {
         );
 
         expect(find.text('Training History'), findsNothing);
-        expect(find.text('Adjust Today’s Session'), findsNothing);
+        expect(find.text('Need to Adapt?'), findsNothing);
         expect(find.text('Internal tools'), findsNothing);
 
         for (final label in _forbiddenProductionLabels) {
@@ -134,7 +134,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('EXECUTE TODAY'), findsOneWidget);
       expect(find.text('Training History'), findsOneWidget);
       expect(find.text('Coach Studio'), findsOneWidget);
       expect(find.text('My Athletes'), findsOneWidget);
@@ -156,7 +156,9 @@ void main() {
       }
     });
 
-    testWidgets('founder build sees coach destinations on home', (tester) async {
+    testWidgets('founder build sees coach destinations on home', (
+      tester,
+    ) async {
       InternalToolsPolicy.enableForTesting();
 
       await _pumpHome(

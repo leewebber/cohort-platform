@@ -3,22 +3,39 @@ import 'package:flutter/material.dart';
 class CohortColors {
   CohortColors._();
 
-  static const Color background = Color(0xFF090B0A);
-  static const Color surface = Color(0xFF111614);
-  static const Color surfaceRaised = Color(0xFF171C19);
+  static const Color background = Color(0xFF030403);
+  static const Color surface = Color(0xFF0A0D0B);
+  static const Color surfaceRaised = Color(0xFF101412);
+  static const Color surfacePremium = Color(0xFF121815);
 
-  static const Color border = Color(0xFF262C29);
-  static const Color borderStrong = Color(0xFF3A423E);
+  static const Color border = Color(0xFF1E2521);
+  static const Color borderStrong = Color(0xFF2A332D);
+  static const Color borderAccent = Color(0xFF354038);
 
-  static const Color textPrimary = Color(0xFFF4F4F2);
-  static const Color textSecondary = Color(0xFF8E9691);
-  static const Color textMuted = Color(0xFF5F6762);
+  /// Thin top-edge catch light (phosphor-tinted, not white).
+  static const Color edgeHighlight = Color(0xFF8A9678);
 
-  static const Color olive = Color(0xFF78885B);
-  static const Color oliveDark = Color(0xFF3A4430);
-  static const Color oliveSoft = Color(0xFF202719);
+  static const Color textPrimary = Color(0xFFECEEEA);
+  static const Color textSecondary = Color(0xFF939C94);
+  static const Color textMuted = Color(0xFF5A635C);
 
-  static const Color warning = Color(0xFFC18A3A);
-  static const Color danger = Color(0xFFB65A46);
-  static const Color success = Color(0xFF6F8F5F);
+  /// Labels, section caps, secondary accents — calm olive.
+  static const Color olive = Color(0xFF738864);
+
+  /// Premium phosphor green — primary emissive (luxury dashboard).
+  static const Color phosphor = Color(0xFF96A872);
+  static const Color phosphorHighlight = Color(0xFFA8B584);
+  static const Color phosphorDeep = Color(0xFF7A8B62);
+  static const Color phosphorMuted = Color(0xFF5E6D4F);
+
+  /// Back-compat aliases (same phosphor family, not lime).
+  static const Color accent = phosphor;
+  static const Color accentDeep = phosphorDeep;
+
+  static const Color oliveDark = Color(0xFF222A20);
+  static const Color oliveSoft = Color(0xFF141A16);
+
+  static const Color warning = Color(0xFFB8843A);
+  static const Color danger = Color(0xFFA85646);
+  static const Color success = Color(0xFF667A58);
 }

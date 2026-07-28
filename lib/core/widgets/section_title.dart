@@ -9,9 +9,6 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text.toUpperCase(),
-      style: CohortTextStyles.eyebrow,
-    );
+    return Text(text.toUpperCase(), style: CohortTextStyles.eyebrow);
   }
 }

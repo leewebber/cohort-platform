@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../core/access/app_role_access.dart';
 import '../../core/config/production_navigation_policy.dart';
+import '../../core/theme/cohort_lighting.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
+import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
 import '../../data/repositories/athlete_state_repository.dart';
@@ -38,6 +40,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
   final _todaySessionRefreshController = HomeTodaySessionRefreshController();
+  int _bottomNavIndex = 0;
 
   String get _athleteId => CurrentUserSession.requireInstance.athleteId;
 
@@ -132,27 +135,56 @@ class _HomeScreenState extends State<HomeScreen> {
     await showAdaptationDecisionBottomSheet(context, decision);
   }
 
+  String _greetingName(String displayName) {
+    final trimmed = displayName.trim();
+    if (trimmed.isEmpty) return 'ATHLETE';
+    return trimmed.split(' ').first.toUpperCase();
+  }
+
+  String _timeOfDayGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'GOOD MORNING';
+    if (hour < 17) return 'GOOD AFTERNOON';
+    return 'GOOD EVENING';
+  }
+
+  void _onBottomNavSelected(int index) {
+    setState(() => _bottomNavIndex = index);
+    switch (index) {
+      case 0:
+        return;
+      case 1:
+        _openProgramme(context);
+      case 2:
+        _openProtocolLibrary(context);
+      case 4:
+        if (widget.authController != null) {
+          _openAccount(context);
+        }
+      default:
+        return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final profile = CurrentUserSession.requireInstance.profile;
+    final showAthlete = ProductionNavigationPolicy.showAthleteTodayExperience();
     final bottomInset = MediaQuery.paddingOf(context).bottom;
+    final navBarHeight = showAthlete ? 72.0 + bottomInset : 0.0;
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(24, 24, 24, 24 + bottomInset),
+          padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + navBarHeight),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Expanded(child: SectionTitle('Cohort')),
-                  if (widget.authController != null)
-                    TextButton(
-                      onPressed: () => _openAccount(context),
-                      child: Text(profile.displayName),
-                    ),
-                ],
+              _HomeBrandHeader(
+                displayName: profile.displayName,
+                onProfileTap: widget.authController != null
+                    ? () => _openAccount(context)
+                    : null,
               ),
               if (ProductionNavigationPolicy.showCoachLandingMessage()) ...[
                 const SizedBox(height: CohortSpacing.lg),
@@ -163,12 +195,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: CohortTextStyles.body,
                 ),
               ],
-              if (ProductionNavigationPolicy.showAthleteTodayExperience()) ...[
+              if (showAthlete) ...[
                 const SizedBox(height: CohortSpacing.lg),
-                const Text('Today', style: CohortTextStyles.h1),
-                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  '${_timeOfDayGreeting()}, ${_greetingName(profile.displayName)}',
+                  style: CohortTextStyles.sectionLabel,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    const Text('EXECUTE TODAY', style: CohortTextStyles.hero),
+                    Text(
+                      '.',
+                      style: CohortTextStyles.hero.copyWith(
+                        color: CohortColors.phosphor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: CohortSpacing.sm),
                 const Text(
-                  'Know the plan. Execute with confidence.',
+                  'Discipline in the present. Results in the future.',
                   style: CohortTextStyles.body,
                 ),
                 const SizedBox(height: CohortSpacing.xl),
@@ -177,19 +226,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   refreshController: _todaySessionRefreshController,
                   athleteId: _athleteId,
                 ),
-                const SizedBox(height: CohortSpacing.sm),
-                Center(
-                  child: TextButton(
-                    onPressed: () => _openProgramme(context),
-                    style: TextButton.styleFrom(
-                      foregroundColor: CohortColors.textMuted,
-                      textStyle: CohortTextStyles.muted,
-                    ),
-                    child: const Text('Programme'),
-                  ),
-                ),
               ],
               if (ProductionNavigationPolicy.showTrainingHistory()) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                const Text('PROGRAMME', style: CohortTextStyles.sectionLabel),
                 const SizedBox(height: CohortSpacing.md),
                 CohortCard(
                   onTap: () {
@@ -201,16 +241,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   child: const _HomeActionRow(
+                    icon: Icons.fitness_center_outlined,
                     title: 'Training History',
                     subtitle:
                         'Review completed sessions and performance records.',
-                    status: 'OPEN',
+                    trailing: Icons.trending_up_rounded,
                   ),
                 ),
               ],
               if (ProductionNavigationPolicy.showAdaptationPrompt()) ...[
                 const SizedBox(height: CohortSpacing.xl),
-                const SectionTitle('Need to Adapt?'),
+                const Text(
+                  'OPTIMISE TODAY',
+                  style: CohortTextStyles.sectionLabel,
+                ),
                 const SizedBox(height: CohortSpacing.md),
                 CohortCard(
                   onTap: () => _openAdaptationSheet(context),
@@ -226,6 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const _HomeActionRow(
                     title: 'Protocol Library',
                     subtitle: 'Browse structured training sessions.',
+                    icon: Icons.menu_book_outlined,
                     status: 'OPEN',
                   ),
                 ),
@@ -235,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const _HomeActionRow(
                     title: 'Exercise Library',
                     subtitle: 'Browse movements, cues and coaching knowledge.',
+                    icon: Icons.sports_gymnastics_outlined,
                     status: 'OPEN',
                   ),
                 ),
@@ -249,6 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: 'My Athletes',
                     subtitle:
                         'Daily operations — who trained, who is due, who needs attention.',
+                    icon: Icons.groups_outlined,
                     status: 'COACH',
                   ),
                 ),
@@ -263,6 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: 'Coach Studio',
                     subtitle:
                         'Programmes, protocols, and coach authoring tools.',
+                    icon: Icons.dashboard_customize_outlined,
                     status: 'COACH',
                   ),
                 ),
@@ -281,6 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: 'Help & feedback',
                     subtitle:
                         'Report a problem or share beta feedback with the Cohort team.',
+                    icon: Icons.support_agent_outlined,
                     status: 'HELP',
                   ),
                 ),
@@ -295,6 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     title: 'Internal tools',
                     subtitle:
                         'Explicitly enabled engineering utilities. Not shown in production athlete builds.',
+                    icon: Icons.build_outlined,
                     status: 'DEV',
                   ),
                 ),
@@ -310,6 +360,71 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: showAthlete
+          ? CohortAthleteBottomNavBar(
+              selectedIndex: _bottomNavIndex,
+              onDestinationSelected: _onBottomNavSelected,
+            )
+          : null,
+    );
+  }
+}
+
+class _HomeBrandHeader extends StatelessWidget {
+  const _HomeBrandHeader({required this.displayName, this.onProfileTap});
+
+  final String displayName;
+  final VoidCallback? onProfileTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: CohortColors.oliveSoft,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: CohortColors.edgeHighlight.withValues(alpha: 0.28),
+            ),
+            boxShadow: CohortLighting.emissive(opacity: 0.06, blurRadius: 10),
+          ),
+          child: Icon(
+            Icons.hexagon_outlined,
+            color: CohortColors.phosphor,
+            size: 22,
+            shadows: [
+              Shadow(
+                color: CohortColors.phosphor.withValues(alpha: 0.4),
+                blurRadius: 5,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: CohortSpacing.md),
+        Text(
+          'COHORT',
+          style: CohortTextStyles.h2.copyWith(letterSpacing: 2, fontSize: 18),
+        ),
+        const Spacer(),
+        if (onProfileTap != null)
+          TextButton(
+            onPressed: onProfileTap,
+            style: TextButton.styleFrom(
+              foregroundColor: CohortColors.phosphor,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+            ),
+            child: Text(
+              displayName,
+              style: CohortTextStyles.statusActive.copyWith(
+                color: CohortColors.phosphor,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -321,11 +436,13 @@ class _AdaptationPromptRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        _HexIcon(icon: Icons.psychology_outlined),
+        const SizedBox(width: CohortSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Adjust Today’s Session', style: CohortTextStyles.cardTitle),
+              Text('Need to Adapt?', style: CohortTextStyles.cardTitle),
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 'Tell us what is affecting today’s session.',
@@ -334,8 +451,19 @@ class _AdaptationPromptRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: CohortSpacing.lg),
-        Text('OPEN', style: CohortTextStyles.eyebrow),
+        const SizedBox(width: CohortSpacing.md),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: CohortColors.oliveSoft,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: CohortColors.borderAccent),
+          ),
+          child: Text(
+            'SMART ADAPT',
+            style: CohortTextStyles.sectionLabel.copyWith(fontSize: 9),
+          ),
+        ),
       ],
     );
   }
@@ -345,17 +473,23 @@ class _HomeActionRow extends StatelessWidget {
   const _HomeActionRow({
     required this.title,
     required this.subtitle,
-    required this.status,
+    this.icon = Icons.arrow_forward_ios_rounded,
+    this.trailing,
+    this.status,
   });
 
+  final IconData icon;
   final String title;
   final String subtitle;
-  final String status;
+  final IconData? trailing;
+  final String? status;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        _HexIcon(icon: icon),
+        const SizedBox(width: CohortSpacing.md),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -366,9 +500,54 @@ class _HomeActionRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: CohortSpacing.lg),
-        Text(status, style: CohortTextStyles.eyebrow),
+        if (trailing != null)
+          Icon(
+            trailing,
+            color: CohortColors.phosphor,
+            size: 22,
+            shadows: [
+              Shadow(
+                color: CohortColors.phosphor.withValues(alpha: 0.3),
+                blurRadius: 4,
+              ),
+            ],
+          )
+        else if (status != null)
+          Text(status!, style: CohortTextStyles.eyebrow),
       ],
+    );
+  }
+}
+
+class _HexIcon extends StatelessWidget {
+  const _HexIcon({required this.icon});
+
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: BoxDecoration(
+        color: CohortColors.background.withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: CohortColors.edgeHighlight.withValues(alpha: 0.22),
+        ),
+        boxShadow: CohortLighting.emissive(opacity: 0.05, blurRadius: 8),
+      ),
+      child: Icon(
+        icon,
+        color: CohortColors.phosphor,
+        size: 22,
+        shadows: [
+          Shadow(
+            color: CohortColors.phosphor.withValues(alpha: 0.32),
+            blurRadius: 4,
+          ),
+        ],
+      ),
     );
   }
 }

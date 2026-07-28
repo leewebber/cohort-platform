@@ -6,11 +6,7 @@ import '../theme/text_styles.dart';
 import 'cohort_card.dart';
 
 class ProtocolCard extends StatelessWidget {
-  const ProtocolCard({
-    super.key,
-    required this.protocol,
-    this.onTap,
-  });
+  const ProtocolCard({super.key, required this.protocol, this.onTap});
 
   final Protocol protocol;
   final VoidCallback? onTap;
@@ -22,7 +18,10 @@ class ProtocolCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(protocol.goal ?? protocol.protocolId, style: CohortTextStyles.eyebrow),
+          Text(
+            protocol.goal ?? protocol.protocolId,
+            style: CohortTextStyles.eyebrow,
+          ),
           const SizedBox(height: 8),
           Text(protocol.name, style: CohortTextStyles.cardTitle),
           const SizedBox(height: 8),

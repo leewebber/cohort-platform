@@ -5,10 +5,7 @@ import '../theme/spacing.dart';
 import '../theme/text_styles.dart';
 
 class AttributeGrid extends StatelessWidget {
-  const AttributeGrid({
-    super.key,
-    required this.attributes,
-  });
+  const AttributeGrid({super.key, required this.attributes});
 
   final Map<String, String?> attributes;
 
@@ -25,15 +22,10 @@ class AttributeGrid extends StatelessWidget {
     return Column(
       children: entries.map((entry) {
         return Container(
-          padding: const EdgeInsets.symmetric(
-            vertical: CohortSpacing.md,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: CohortSpacing.md),
           decoration: const BoxDecoration(
             border: Border(
-              bottom: BorderSide(
-                color: CohortColors.border,
-                width: 0.5,
-              ),
+              bottom: BorderSide(color: CohortColors.border, width: 0.5),
             ),
           ),
           child: Row(
@@ -41,17 +33,11 @@ class AttributeGrid extends StatelessWidget {
             children: [
               Expanded(
                 flex: 4,
-                child: Text(
-                  entry.key,
-                  style: CohortTextStyles.eyebrow,
-                ),
+                child: Text(entry.key, style: CohortTextStyles.eyebrow),
               ),
               Expanded(
                 flex: 6,
-                child: Text(
-                  entry.value!,
-                  style: CohortTextStyles.body,
-                ),
+                child: Text(entry.value!, style: CohortTextStyles.body),
               ),
             ],
           ),

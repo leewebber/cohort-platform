@@ -7,10 +7,7 @@ import '../core/widgets/cohort_card.dart';
 import '../core/widgets/section_title.dart';
 
 class ConfigurationErrorScreen extends StatelessWidget {
-  const ConfigurationErrorScreen({
-    super.key,
-    required this.message,
-  });
+  const ConfigurationErrorScreen({super.key, required this.message});
 
   final String message;
 

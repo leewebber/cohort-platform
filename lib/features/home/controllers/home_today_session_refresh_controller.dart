@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-typedef HomeTodaySessionRefreshCallback = void Function({required String source});
+typedef HomeTodaySessionRefreshCallback =
+    void Function({required String source});
 
 /// Lightweight refresh trigger owned by [HomeScreen] and attached by
 /// [HomeTodaySessionSection].

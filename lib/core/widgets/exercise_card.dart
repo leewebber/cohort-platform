@@ -7,11 +7,7 @@ import '../theme/text_styles.dart';
 import 'cohort_card.dart';
 
 class ExerciseCard extends StatelessWidget {
-  const ExerciseCard({
-    super.key,
-    required this.exercise,
-    this.onTap,
-  });
+  const ExerciseCard({super.key, required this.exercise, this.onTap});
 
   final Exercise exercise;
   final VoidCallback? onTap;
@@ -31,20 +27,16 @@ class ExerciseCard extends StatelessWidget {
                   style: CohortTextStyles.eyebrow,
                 ),
                 const SizedBox(height: CohortSpacing.sm),
-                Text(
-                  exercise.name,
-                  style: CohortTextStyles.cardTitle,
-                ),
+                Text(exercise.name, style: CohortTextStyles.cardTitle),
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
                   [
-                    exercise.equipment,
-                    exercise.bodyRegion,
-                    exercise.technicalComplexity,
-                  ]
+                        exercise.equipment,
+                        exercise.bodyRegion,
+                        exercise.technicalComplexity,
+                      ]
                       .where(
-                        (value) =>
-                            value != null && value.trim().isNotEmpty,
+                        (value) => value != null && value.trim().isNotEmpty,
                       )
                       .join(' • '),
                   style: CohortTextStyles.small,
@@ -61,10 +53,7 @@ class ExerciseCard extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(
-            Icons.chevron_right,
-            color: CohortColors.textMuted,
-          ),
+          const Icon(Icons.chevron_right, color: CohortColors.textMuted),
         ],
       ),
     );

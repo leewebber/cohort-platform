@@ -39,10 +39,8 @@ class FilterSelectionSheet extends StatelessWidget {
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemCount: options.length,
-                  separatorBuilder: (_, __) => const Divider(
-                    color: CohortColors.border,
-                    height: 1,
-                  ),
+                  separatorBuilder: (_, __) =>
+                      const Divider(color: CohortColors.border, height: 1),
                   itemBuilder: (context, index) {
                     final option = options[index];
                     final label = option ?? 'Any';

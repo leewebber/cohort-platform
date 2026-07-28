@@ -7,11 +7,7 @@ import 'cohort_button.dart';
 import 'cohort_card.dart';
 
 class SessionStepCard extends StatelessWidget {
-  const SessionStepCard({
-    super.key,
-    required this.step,
-    this.onComplete,
-  });
+  const SessionStepCard({super.key, required this.step, this.onComplete});
 
   final SessionStep step;
   final VoidCallback? onComplete;
@@ -22,45 +18,27 @@ class SessionStepCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'STEP ${step.stepNumber}',
-            style: CohortTextStyles.eyebrow,
-          ),
+          Text('STEP ${step.stepNumber}', style: CohortTextStyles.eyebrow),
 
           const SizedBox(height: CohortSpacing.lg),
 
-          Text(
-            step.title,
-            style: CohortTextStyles.h2,
-          ),
+          Text(step.title, style: CohortTextStyles.h2),
 
           if (step.prescription != null) ...[
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              step.prescription!,
-              style: CohortTextStyles.body,
-            ),
+            Text(step.prescription!, style: CohortTextStyles.body),
           ],
 
           if (step.coachCue != null) ...[
             const SizedBox(height: CohortSpacing.xl),
-            Text(
-              'Coach Cue',
-              style: CohortTextStyles.eyebrow,
-            ),
+            Text('Coach Cue', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              step.coachCue!,
-              style: CohortTextStyles.body,
-            ),
+            Text(step.coachCue!, style: CohortTextStyles.body),
           ],
 
           const SizedBox(height: CohortSpacing.xl),
 
-          CohortButton(
-            label: 'Complete Step',
-            onPressed: onComplete ?? () {},
-          ),
+          CohortButton(label: 'Complete Step', onPressed: onComplete ?? () {}),
         ],
       ),
     );

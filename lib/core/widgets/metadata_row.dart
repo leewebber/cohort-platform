@@ -5,11 +5,7 @@ import '../theme/spacing.dart';
 import '../theme/text_styles.dart';
 
 class MetadataRow extends StatelessWidget {
-  const MetadataRow({
-    super.key,
-    required this.icon,
-    required this.text,
-  });
+  const MetadataRow({super.key, required this.icon, required this.text});
 
   final IconData icon;
   final String? text;
@@ -24,20 +20,11 @@ class MetadataRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: CohortSpacing.md),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 18,
-            color: CohortColors.olive,
-          ),
+          Icon(icon, size: 18, color: CohortColors.olive),
 
           const SizedBox(width: CohortSpacing.md),
 
-          Expanded(
-            child: Text(
-              text!,
-              style: CohortTextStyles.body,
-            ),
-          ),
+          Expanded(child: Text(text!, style: CohortTextStyles.body)),
         ],
       ),
     );

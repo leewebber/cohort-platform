@@ -120,20 +120,22 @@ class _ReasonStep extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Adjust Today\'s Session',
-          style: CohortTextStyles.h2,
-        ),
+        const Text('Adjust Today\'s Session', style: CohortTextStyles.h2),
         const SizedBox(height: CohortSpacing.sm),
         const Text(
           'What is affecting today’s session?',
           style: CohortTextStyles.body,
         ),
         const SizedBox(height: CohortSpacing.lg),
-        for (var index = 0; index < AdaptationOption.options.length; index++) ...[
+        for (
+          var index = 0;
+          index < AdaptationOption.options.length;
+          index++
+        ) ...[
           if (index > 0) const SizedBox(height: CohortSpacing.md),
           CohortCard(
-            onTap: () => onReasonSelected(AdaptationOption.options[index].reason),
+            onTap: () =>
+                onReasonSelected(AdaptationOption.options[index].reason),
             child: _AdaptationOptionRow(
               option: AdaptationOption.options[index],
             ),
@@ -145,10 +147,7 @@ class _ReasonStep extends StatelessWidget {
 }
 
 class _RecoveryStep extends StatelessWidget {
-  const _RecoveryStep({
-    required this.onBack,
-    required this.onSelected,
-  });
+  const _RecoveryStep({required this.onBack, required this.onSelected});
 
   final VoidCallback onBack;
   final ValueChanged<RecoveryState> onSelected;
@@ -167,7 +166,10 @@ class _RecoveryStep extends StatelessWidget {
             if (index > 0) const SizedBox(height: CohortSpacing.md),
             CohortCard(
               onTap: () => onSelected(_options[index]),
-              child: Text(_options[index].label, style: CohortTextStyles.cardTitle),
+              child: Text(
+                _options[index].label,
+                style: CohortTextStyles.cardTitle,
+              ),
             ),
           ],
         ],
@@ -177,10 +179,7 @@ class _RecoveryStep extends StatelessWidget {
 }
 
 class _EnvironmentStep extends StatelessWidget {
-  const _EnvironmentStep({
-    required this.onBack,
-    required this.onSelected,
-  });
+  const _EnvironmentStep({required this.onBack, required this.onSelected});
 
   final VoidCallback onBack;
   final ValueChanged<AdaptationSessionEnvironment> onSelected;
@@ -199,7 +198,10 @@ class _EnvironmentStep extends StatelessWidget {
             if (index > 0) const SizedBox(height: CohortSpacing.md),
             CohortCard(
               onTap: () => onSelected(_options[index]),
-              child: Text(_options[index].label, style: CohortTextStyles.cardTitle),
+              child: Text(
+                _options[index].label,
+                style: CohortTextStyles.cardTitle,
+              ),
             ),
           ],
         ],
@@ -234,14 +236,12 @@ class _EquipmentStep extends StatelessWidget {
             _EquipmentCheckbox(
               label: equipment,
               value: selectedEquipment.contains(equipment),
-              onChanged: (isSelected) => onToggleEquipment(equipment, isSelected),
+              onChanged: (isSelected) =>
+                  onToggleEquipment(equipment, isSelected),
             ),
           ],
           const SizedBox(height: CohortSpacing.lg),
-          CohortButton(
-            label: 'Continue',
-            onPressed: onContinue,
-          ),
+          CohortButton(label: 'Continue', onPressed: onContinue),
         ],
       ),
     );
@@ -249,10 +249,7 @@ class _EquipmentStep extends StatelessWidget {
 }
 
 class _TimeStep extends StatelessWidget {
-  const _TimeStep({
-    required this.onBack,
-    required this.onSelected,
-  });
+  const _TimeStep({required this.onBack, required this.onSelected});
 
   final VoidCallback onBack;
   final ValueChanged<int> onSelected;
@@ -276,7 +273,10 @@ class _TimeStep extends StatelessWidget {
             if (index > 0) const SizedBox(height: CohortSpacing.md),
             CohortCard(
               onTap: () => onSelected(_options[index].minutes),
-              child: Text(_options[index].label, style: CohortTextStyles.cardTitle),
+              child: Text(
+                _options[index].label,
+                style: CohortTextStyles.cardTitle,
+              ),
             ),
           ],
         ],
@@ -305,15 +305,9 @@ class _ConstraintStepLayout extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextButton(
-            onPressed: onBack,
-            child: const Text('← Back'),
-          ),
+          TextButton(onPressed: onBack, child: const Text('← Back')),
           const SizedBox(height: CohortSpacing.sm),
-          const Text(
-            'Adjust Today\'s Session',
-            style: CohortTextStyles.h2,
-          ),
+          const Text('Adjust Today\'s Session', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.sm),
           Text(title, style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.xs),
@@ -382,9 +376,7 @@ class _EquipmentCheckbox extends StatelessWidget {
                 }
               },
             ),
-            Expanded(
-              child: Text(label, style: CohortTextStyles.body),
-            ),
+            Expanded(child: Text(label, style: CohortTextStyles.body)),
           ],
         ),
       ),

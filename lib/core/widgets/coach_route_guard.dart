@@ -5,20 +5,13 @@ import '../errors/user_facing_error_messages.dart';
 
 /// Blocks coach-only screens when the signed-in user lacks coach access.
 class CoachRouteGuard extends StatelessWidget {
-  const CoachRouteGuard({
-    super.key,
-    required this.child,
-    this.title = 'Coach',
-  });
+  const CoachRouteGuard({super.key, required this.child, this.title = 'Coach'});
 
   final Widget child;
   final String title;
 
   /// Wraps [child] for coach-only screens (deep-link safe).
-  static Widget wrap({
-    required Widget child,
-    String title = 'Coach',
-  }) {
+  static Widget wrap({required Widget child, String title = 'Coach'}) {
     return CoachRouteGuard(title: title, child: child);
   }
 

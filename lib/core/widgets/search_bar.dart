@@ -23,10 +23,7 @@ class CohortSearchBar extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: CohortTextStyles.body,
-        prefixIcon: const Icon(
-          Icons.search,
-          color: CohortColors.textMuted,
-        ),
+        prefixIcon: const Icon(Icons.search, color: CohortColors.textMuted),
         filled: true,
         fillColor: CohortColors.surface,
         border: OutlineInputBorder(

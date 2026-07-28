@@ -16,10 +16,7 @@ class HomeTodaySessionLoading extends HomeTodaySessionState {
 }
 
 class HomeTodaySessionError extends HomeTodaySessionState {
-  const HomeTodaySessionError({
-    required this.error,
-    required this.message,
-  });
+  const HomeTodaySessionError({required this.error, required this.message});
 
   final Object error;
   final String message;

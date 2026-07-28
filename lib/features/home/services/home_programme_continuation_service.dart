@@ -14,9 +14,9 @@ class HomeProgrammeContinuationService {
     required ProgrammeAssignmentStore assignmentStore,
     required TodaySessionService todaySessionService,
     required AthleteStateSyncService athleteStateSyncService,
-  })  : _assignmentStore = assignmentStore,
-        _todaySessionService = todaySessionService,
-        _athleteStateSyncService = athleteStateSyncService;
+  }) : _assignmentStore = assignmentStore,
+       _todaySessionService = todaySessionService,
+       _athleteStateSyncService = athleteStateSyncService;
 
   final ProgrammeAssignmentStore _assignmentStore;
   final TodaySessionService _todaySessionService;
@@ -59,8 +59,9 @@ class HomeProgrammeContinuationService {
       ),
     );
 
-    final nextResolution =
-        await _todaySessionService.resolveForAthlete(athleteId);
+    final nextResolution = await _todaySessionService.resolveForAthlete(
+      athleteId,
+    );
 
     await _athleteStateSyncService.syncFromResolvedSession(
       athleteId: athleteId,

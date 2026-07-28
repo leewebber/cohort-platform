@@ -25,23 +25,16 @@ class RelatedSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title.toUpperCase(),
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text(title.toUpperCase(), style: CohortTextStyles.eyebrow),
 
         const SizedBox(height: CohortSpacing.md),
 
         ...items.map(
           (item) => Padding(
-            padding: const EdgeInsets.only(
-              bottom: CohortSpacing.sm,
-            ),
+            padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
-              onTap: onTap == null
-                  ? null
-                  : () => onTap!(item),
+              onTap: onTap == null ? null : () => onTap!(item),
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: CohortSpacing.md,
@@ -50,32 +43,17 @@ class RelatedSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: CohortColors.surfaceRaised,
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: CohortColors.border,
-                  ),
+                  border: Border.all(color: CohortColors.border),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
-                      Icons.link,
-                      size: 18,
-                    ),
+                    const Icon(Icons.link, size: 18),
 
-                    const SizedBox(
-                      width: CohortSpacing.md,
-                    ),
+                    const SizedBox(width: CohortSpacing.md),
 
-                    Expanded(
-                      child: Text(
-                        item,
-                        style: CohortTextStyles.body,
-                      ),
-                    ),
+                    Expanded(child: Text(item, style: CohortTextStyles.body)),
 
-                    const Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                    ),
+                    const Icon(Icons.chevron_right, size: 18),
                   ],
                 ),
               ),

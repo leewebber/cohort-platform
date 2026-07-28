@@ -26,10 +26,7 @@ class CircuitSessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'CIRCUIT',
-            style: CohortTextStyles.eyebrow,
-          ),
+          Text('CIRCUIT', style: CohortTextStyles.eyebrow),
 
           const SizedBox(height: CohortSpacing.lg),
 
@@ -47,29 +44,17 @@ class CircuitSessionCard extends StatelessWidget {
 
           if (isTimerRunning) ...[
             const SizedBox(height: CohortSpacing.xl),
-            Text(
-              'Elapsed',
-              style: CohortTextStyles.eyebrow,
-            ),
+            Text('Elapsed', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              '00:00',
-              style: CohortTextStyles.h2,
-            ),
+            Text('00:00', style: CohortTextStyles.h2),
           ],
 
           const SizedBox(height: CohortSpacing.xl),
 
           if (isTimerRunning)
-            CohortButton(
-              label: 'Finish Session',
-              onPressed: onFinishSession,
-            )
+            CohortButton(label: 'Finish Session', onPressed: onFinishSession)
           else
-            CohortButton(
-              label: 'Start Timer',
-              onPressed: onStartTimer,
-            ),
+            CohortButton(label: 'Start Timer', onPressed: onStartTimer),
         ],
       ),
     );
@@ -86,25 +71,16 @@ class _CircuitStepRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          step.stepNumber.toString(),
-          style: CohortTextStyles.cardTitle,
-        ),
+        Text(step.stepNumber.toString(), style: CohortTextStyles.cardTitle),
         const SizedBox(width: CohortSpacing.lg),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                step.title,
-                style: CohortTextStyles.cardTitle,
-              ),
+              Text(step.title, style: CohortTextStyles.cardTitle),
               if (step.prescription != null) ...[
                 const SizedBox(height: CohortSpacing.xs),
-                Text(
-                  step.prescription!,
-                  style: CohortTextStyles.small,
-                ),
+                Text(step.prescription!, style: CohortTextStyles.small),
               ],
             ],
           ),

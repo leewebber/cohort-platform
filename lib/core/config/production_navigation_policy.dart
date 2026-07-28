@@ -14,9 +14,11 @@ class ProductionNavigationPolicy {
 
   static bool showTrainingHistory() => AppRoleAccess.canAccessAthleteExperience;
 
-  static bool showAdaptationPrompt() => AppRoleAccess.canAccessAthleteExperience;
+  static bool showAdaptationPrompt() =>
+      AppRoleAccess.canAccessAthleteExperience;
 
-  static bool showAthleteKnowledge() => AppRoleAccess.canAccessAthleteExperience;
+  static bool showAthleteKnowledge() =>
+      AppRoleAccess.canAccessAthleteExperience;
 
   static bool showCoachHome() => AppRoleAccess.canAccessCoachOperations;
 

@@ -9,10 +9,7 @@ import 'cohort_card.dart';
 import 'section_title.dart';
 
 class AdaptationDecisionBottomSheet extends StatelessWidget {
-  const AdaptationDecisionBottomSheet({
-    super.key,
-    required this.decision,
-  });
+  const AdaptationDecisionBottomSheet({super.key, required this.decision});
 
   final AdaptationDecision decision;
 
@@ -30,16 +27,10 @@ class AdaptationDecisionBottomSheet extends StatelessWidget {
           children: [
             const SectionTitle('Session Decision'),
             const SizedBox(height: CohortSpacing.md),
-            Text(
-              decision.protocol.name,
-              style: CohortTextStyles.h2,
-            ),
+            Text(decision.protocol.name, style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.lg),
             CohortCard(
-              child: Text(
-                decision.message,
-                style: CohortTextStyles.body,
-              ),
+              child: Text(decision.message, style: CohortTextStyles.body),
             ),
             const SizedBox(height: CohortSpacing.xl),
             CohortButton(

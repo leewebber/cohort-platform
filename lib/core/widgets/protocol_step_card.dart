@@ -7,10 +7,7 @@ import '../theme/text_styles.dart';
 import 'cohort_card.dart';
 
 class ProtocolStepCard extends StatelessWidget {
-  const ProtocolStepCard({
-    super.key,
-    required this.step,
-  });
+  const ProtocolStepCard({super.key, required this.step});
 
   final ProtocolStep step;
 
@@ -40,10 +37,7 @@ class ProtocolStepCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  step.title,
-                  style: CohortTextStyles.cardTitle,
-                ),
+                Text(step.title, style: CohortTextStyles.cardTitle),
 
                 const SizedBox(height: CohortSpacing.xs),
 
@@ -51,33 +45,23 @@ class ProtocolStepCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    if (step.sets != null)
-                      _MetadataChip('${step.sets} sets'),
+                    if (step.sets != null) _MetadataChip('${step.sets} sets'),
 
-                    if (step.reps != null)
-                      _MetadataChip('${step.reps} reps'),
+                    if (step.reps != null) _MetadataChip('${step.reps} reps'),
 
-                    if (step.distance != null)
-                      _MetadataChip(step.distance!),
+                    if (step.distance != null) _MetadataChip(step.distance!),
 
-                    if (step.duration != null)
-                      _MetadataChip(step.duration!),
+                    if (step.duration != null) _MetadataChip(step.duration!),
 
-                    if (step.rest != null)
-                      _MetadataChip('Rest ${step.rest}'),
+                    if (step.rest != null) _MetadataChip('Rest ${step.rest}'),
 
-                    if (step.load != null)
-                      _MetadataChip(step.load!),
+                    if (step.load != null) _MetadataChip(step.load!),
                   ],
                 ),
 
-                if (step.notes != null &&
-                    step.notes!.trim().isNotEmpty) ...[
+                if (step.notes != null && step.notes!.trim().isNotEmpty) ...[
                   const SizedBox(height: CohortSpacing.sm),
-                  Text(
-                    step.notes!,
-                    style: CohortTextStyles.small,
-                  ),
+                  Text(step.notes!, style: CohortTextStyles.small),
                 ],
               ],
             ),
@@ -104,10 +88,7 @@ class _MetadataChip extends StatelessWidget {
         color: CohortColors.surfaceRaised,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        text,
-        style: CohortTextStyles.small,
-      ),
+      child: Text(text, style: CohortTextStyles.small),
     );
   }
 }

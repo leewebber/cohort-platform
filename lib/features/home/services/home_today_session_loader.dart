@@ -31,18 +31,19 @@ class HomeTodaySessionLoader {
     ProgrammeVersionStore? programmeVersionStore,
     ProgrammeSlotOutcomeStore? programmeSlotOutcomeStore,
     ProgrammeProgressSummaryService? progressSummaryService,
-  })  : _todaySessionService = todaySessionService,
-        _athleteStateSyncService = athleteStateSyncService,
-        _athleteStateRepository = athleteStateRepository,
-        _protocolRepository = protocolRepository,
-        _programmeRepository = programmeRepository,
-        _trainingSessionRepository = trainingSessionRepository,
-        _programmeVersionStore =
-            programmeVersionStore ?? const ProgrammeVersionSupabaseStore(),
-        _programmeSlotOutcomeStore =
-            programmeSlotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
-        _progressSummaryService =
-            progressSummaryService ?? const ProgrammeProgressSummaryService();
+  }) : _todaySessionService = todaySessionService,
+       _athleteStateSyncService = athleteStateSyncService,
+       _athleteStateRepository = athleteStateRepository,
+       _protocolRepository = protocolRepository,
+       _programmeRepository = programmeRepository,
+       _trainingSessionRepository = trainingSessionRepository,
+       _programmeVersionStore =
+           programmeVersionStore ?? const ProgrammeVersionSupabaseStore(),
+       _programmeSlotOutcomeStore =
+           programmeSlotOutcomeStore ??
+           const ProgrammeSlotOutcomeSupabaseStore(),
+       _progressSummaryService =
+           progressSummaryService ?? const ProgrammeProgressSummaryService();
 
   final TodaySessionService _todaySessionService;
   final AthleteStateSyncService _athleteStateSyncService;
@@ -56,16 +57,14 @@ class HomeTodaySessionLoader {
 
   Future<HomeTodaySessionState> load(String athleteId) async {
     try {
-      final resolution =
-          await _todaySessionService.resolveForAthlete(athleteId);
+      final resolution = await _todaySessionService.resolveForAthlete(
+        athleteId,
+      );
       await _syncProjectionQuietly(athleteId, resolution);
       return _mapResolution(athleteId, resolution);
     } on ProgrammeScheduleException catch (error) {
       debugPrint('[HomeTodaySession] ProgrammeScheduleException: $error');
-      return HomeTodaySessionError(
-        error: error,
-        message: error.message,
-      );
+      return HomeTodaySessionError(error: error, message: error.message);
     } catch (error, stackTrace) {
       debugPrint('[HomeTodaySession] resolve failed: $error');
       debugPrint('[HomeTodaySession] stackTrace: $stackTrace');
@@ -149,8 +148,9 @@ class HomeTodaySessionLoader {
 
     ProgrammeExecutionContext executionContext;
     try {
-      executionContext =
-          ProgrammeExecutionContext.fromResolvedSession(resolution);
+      executionContext = ProgrammeExecutionContext.fromResolvedSession(
+        resolution,
+      );
     } catch (error) {
       return HomeTodaySessionError(
         error: error,
@@ -158,11 +158,11 @@ class HomeTodaySessionLoader {
       );
     }
 
-    final latestTrainingSession =
-        await _trainingSessionRepository.getLatestSessionForAthleteAndProtocol(
-      athleteId: athleteId,
-      protocolId: protocolId,
-    );
+    final latestTrainingSession = await _trainingSessionRepository
+        .getLatestSessionForAthleteAndProtocol(
+          athleteId: athleteId,
+          protocolId: protocolId,
+        );
 
     return HomeTodaySessionProgrammeExecutable(
       resolution: resolution,
@@ -191,8 +191,9 @@ class HomeTodaySessionLoader {
       final tree = await _programmeVersionStore.loadTemplateTree(versionId);
       if (tree == null) return null;
 
-      final outcomes =
-          await _programmeSlotOutcomeStore.listForAssignment(assignmentId);
+      final outcomes = await _programmeSlotOutcomeStore.listForAssignment(
+        assignmentId,
+      );
 
       return _progressSummaryService.summarize(
         tree: tree,
@@ -207,8 +208,9 @@ class HomeTodaySessionLoader {
   }
 
   Future<HomeTodaySessionState> _loadManualFallback(String athleteId) async {
-    final athleteState =
-        await _athleteStateRepository.getAthleteState(athleteId);
+    final athleteState = await _athleteStateRepository.getAthleteState(
+      athleteId,
+    );
     if (athleteState == null) {
       return const HomeTodaySessionEmpty();
     }
@@ -224,16 +226,14 @@ class HomeTodaySessionLoader {
     }
 
     final programme = athleteState.programmeId != null
-        ? await _programmeRepository.getProgrammeById(
-            athleteState.programmeId!,
-          )
+        ? await _programmeRepository.getProgrammeById(athleteState.programmeId!)
         : null;
 
-    final latestTrainingSession =
-        await _trainingSessionRepository.getLatestSessionForAthleteAndProtocol(
-      athleteId: athleteId,
-      protocolId: protocolId,
-    );
+    final latestTrainingSession = await _trainingSessionRepository
+        .getLatestSessionForAthleteAndProtocol(
+          athleteId: athleteId,
+          protocolId: protocolId,
+        );
 
     return HomeTodaySessionManual(
       athleteState: athleteState,

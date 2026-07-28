@@ -20,7 +20,9 @@ class AthleteContentPolicy {
     return value.trim();
   }
 
-  static Map<String, String?> visibleAttributes(Map<String, String?> attributes) {
+  static Map<String, String?> visibleAttributes(
+    Map<String, String?> attributes,
+  ) {
     final visible = <String, String?>{};
     for (final entry in attributes.entries) {
       final sanitized = visibleMetadata(entry.value);

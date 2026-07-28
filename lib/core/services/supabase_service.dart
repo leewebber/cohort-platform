@@ -45,10 +45,7 @@ class SupabaseService {
       );
     }
 
-    await Supabase.initialize(
-      url: url,
-      anonKey: anonKey,
-    );
+    await Supabase.initialize(url: url, anonKey: anonKey);
 
     return const SupabaseInitializationResult.configured();
   }
@@ -63,8 +60,7 @@ class SupabaseInitializationResult {
   final bool isConfigured;
   final String? errorMessage;
 
-  const SupabaseInitializationResult.configured()
-      : this._(isConfigured: true);
+  const SupabaseInitializationResult.configured() : this._(isConfigured: true);
 
   factory SupabaseInitializationResult.missing(String message) {
     return SupabaseInitializationResult._(

@@ -5,11 +5,7 @@ import '../theme/text_styles.dart';
 import 'section_title.dart';
 
 class InfoTile extends StatelessWidget {
-  const InfoTile({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const InfoTile({super.key, required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -27,10 +23,7 @@ class InfoTile extends StatelessWidget {
         children: [
           SectionTitle(label),
           const SizedBox(height: CohortSpacing.sm),
-          Text(
-            value!,
-            style: CohortTextStyles.body,
-          ),
+          Text(value!, style: CohortTextStyles.body),
         ],
       ),
     );

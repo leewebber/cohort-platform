@@ -93,7 +93,8 @@ class UserFacingErrorMessages {
     );
 
     final code = error.code?.trim();
-    if (code == '57014' || _looksLikeStatementTimeout(error.message, code: code)) {
+    if (code == '57014' ||
+        _looksLikeStatementTimeout(error.message, code: code)) {
       return timeout;
     }
 
@@ -109,7 +110,10 @@ class UserFacingErrorMessages {
   }
 
   static String? _extractCode(String message) {
-    final match = RegExp(r'code:\s*(\w+)', caseSensitive: false).firstMatch(message);
+    final match = RegExp(
+      r'code:\s*(\w+)',
+      caseSensitive: false,
+    ).firstMatch(message);
     return match?.group(1);
   }
 
