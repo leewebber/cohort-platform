@@ -58,20 +58,24 @@ class _EmbeddedSessionBuilderScreenState
   CohortProtocolCopyDestination _copyDestination =
       CohortProtocolCopyDestination.programmeOnly;
 
-  bool get _isEdit => widget.authoringContext.authoringIntent ==
+  bool get _isEdit =>
+      widget.authoringContext.authoringIntent ==
       ProgrammeSessionAuthoringIntent.editCoachSession;
 
-  bool get _isCopy => widget.authoringContext.authoringIntent ==
+  bool get _isCopy =>
+      widget.authoringContext.authoringIntent ==
       ProgrammeSessionAuthoringIntent.copyCohortProtocol;
 
   @override
   void initState() {
     super.initState();
-    _draft = widget.initialDraft ??
+    _draft =
+        widget.initialDraft ??
         ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(
           widget.authoringContext,
         );
-    _exercisesFuture = widget.loadExercises?.call() ??
+    _exercisesFuture =
+        widget.loadExercises?.call() ??
         ExerciseCatalogueService().loadPublishedExercises();
 
     EmbeddedSessionBuilderDiagnostics.log(
@@ -106,12 +110,12 @@ class _EmbeddedSessionBuilderScreenState
       _coachMessage = null;
       _libraryAttachPending = false;
       _draft = _draft.copyWith(
-        authoringScope: destination ==
-                CohortProtocolCopyDestination.programmeOnly
+        authoringScope:
+            destination == CohortProtocolCopyDestination.programmeOnly
             ? TrainingAuthoringScope.programmeOnly
             : TrainingAuthoringScope.coachPrivate,
-        programmeVersionId: destination ==
-                CohortProtocolCopyDestination.programmeOnly
+        programmeVersionId:
+            destination == CohortProtocolCopyDestination.programmeOnly
             ? widget.authoringContext.programmeVersionId
             : null,
         published: destination == CohortProtocolCopyDestination.sessionLibrary,
@@ -217,8 +221,9 @@ class _EmbeddedSessionBuilderScreenState
       _feedbackMessages = result.warnings;
       _partialState = result.partialState;
       _libraryAttachPending =
-          result.status == CohortProtocolCustomisationStatus.savedAttachFailed &&
-              _copyDestination == CohortProtocolCopyDestination.sessionLibrary;
+          result.status ==
+              CohortProtocolCustomisationStatus.savedAttachFailed &&
+          _copyDestination == CohortProtocolCopyDestination.sessionLibrary;
       if (result.persistedDraft != null) {
         _draft = result.persistedDraft!;
       }
@@ -252,8 +257,7 @@ class _EmbeddedSessionBuilderScreenState
     });
 
     if (_libraryAttachPending && widget.customisationCoordinator != null) {
-      final result =
-          await widget.customisationCoordinator!.retryLibraryAttach(
+      final result = await widget.customisationCoordinator!.retryLibraryAttach(
         context: widget.authoringContext,
         savedContentId: partial.savedContentId,
         displayTitle: _draft.name.trim(),
@@ -338,10 +342,7 @@ class _EmbeddedSessionBuilderScreenState
                         const SizedBox(height: CohortSpacing.md),
                         const SectionTitle('Programme Builder'),
                         const SizedBox(height: CohortSpacing.md),
-                        Text(
-                          _displayContext.title,
-                          style: CohortTextStyles.h1,
-                        ),
+                        Text(_displayContext.title, style: CohortTextStyles.h1),
                         if (locationLabel != null) ...[
                           const SizedBox(height: CohortSpacing.xs),
                           Text(

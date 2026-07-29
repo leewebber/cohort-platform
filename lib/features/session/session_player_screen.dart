@@ -100,16 +100,17 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
   }
 
   Future<_SessionPlayerContent> _loadSessionContent() async {
-    final protocol = await _protocolRepository.getProtocolById(widget.protocolId);
-    final protocolSteps =
-        await _stepRepository.getProtocolSteps(widget.protocolId);
+    final protocol = await _protocolRepository.getProtocolById(
+      widget.protocolId,
+    );
+    final protocolSteps = await _stepRepository.getProtocolSteps(
+      widget.protocolId,
+    );
     final steps = await _sessionStepsFromProtocolSteps(protocolSteps);
     final athleteId = await _resolveAthleteId();
-    final resolvedProtocol = protocol ??
-        Protocol(
-          protocolId: widget.protocolId,
-          name: widget.sessionLabel,
-        );
+    final resolvedProtocol =
+        protocol ??
+        Protocol(protocolId: widget.protocolId, name: widget.sessionLabel);
     final mode = _executionRouter.determineExecutionMode(resolvedProtocol);
 
     IntervalSessionPlan? intervalPlan;
@@ -173,11 +174,12 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     _programmeStartMarked = true;
 
     try {
-      final result = await _programmeCoordinator.markSessionStartedIfProgrammeBacked(
-        athleteId: athleteId,
-        programmeContext: widget.programmeContext,
-        trainingSessionId: sessionId,
-      );
+      final result = await _programmeCoordinator
+          .markSessionStartedIfProgrammeBacked(
+            athleteId: athleteId,
+            programmeContext: widget.programmeContext,
+            trainingSessionId: sessionId,
+          );
       if (result != null) {
         debugPrint('[ProgrammeProgression] session started: $result');
       }
@@ -441,10 +443,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
     switch (mode) {
       case SessionExecutionMode.circuit:
         if (circuitPlanError != null) {
-          return Text(
-            circuitPlanError,
-            style: CohortTextStyles.body,
-          );
+          return Text(circuitPlanError, style: CohortTextStyles.body);
         }
 
         if (circuitPlan == null) {
@@ -478,10 +477,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
         );
       case SessionExecutionMode.intervals:
         if (intervalPlanError != null) {
-          return Text(
-            intervalPlanError,
-            style: CohortTextStyles.body,
-          );
+          return Text(intervalPlanError, style: CohortTextStyles.body);
         }
 
         if (intervalPlan == null) {
@@ -517,10 +513,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
           totalSteps: steps.length,
         ),
         const SizedBox(height: CohortSpacing.xl),
-        SessionStepCard(
-          step: steps.first,
-          onComplete: () {},
-        ),
+        SessionStepCard(step: steps.first, onComplete: () {}),
       ],
     );
   }
@@ -535,10 +528,7 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Padding(
                 padding: EdgeInsets.all(24),
-                child: Text(
-                  'Loading session...',
-                  style: CohortTextStyles.body,
-                ),
+                child: Text('Loading session...', style: CohortTextStyles.body),
               );
             }
 
@@ -557,14 +547,17 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
               _markProgrammeSessionStarted(athleteId);
             }
 
-            final interceptBack = widget.trainingSessionId != null &&
+            final interceptBack =
+                widget.trainingSessionId != null &&
                 (mode == SessionExecutionMode.structuredStrength ||
                     mode == SessionExecutionMode.intervals ||
                     mode == SessionExecutionMode.circuit);
 
-            final hasIntervalPlanError = mode == SessionExecutionMode.intervals &&
+            final hasIntervalPlanError =
+                mode == SessionExecutionMode.intervals &&
                 intervalPlanError != null;
-            final hasCircuitPlanError = mode == SessionExecutionMode.circuit &&
+            final hasCircuitPlanError =
+                mode == SessionExecutionMode.circuit &&
                 circuitPlanError != null;
 
             return PopScope(
@@ -591,23 +584,14 @@ class _SessionPlayerScreenState extends State<SessionPlayerScreen> {
 
                     const SizedBox(height: CohortSpacing.md),
 
-                    Text(
-                      widget.sessionLabel,
-                      style: CohortTextStyles.h1,
-                    ),
+                    Text(widget.sessionLabel, style: CohortTextStyles.h1),
 
                     const SizedBox(height: CohortSpacing.xl),
 
                     if (hasIntervalPlanError)
-                      Text(
-                        intervalPlanError,
-                        style: CohortTextStyles.body,
-                      )
+                      Text(intervalPlanError, style: CohortTextStyles.body)
                     else if (hasCircuitPlanError)
-                      Text(
-                        circuitPlanError,
-                        style: CohortTextStyles.body,
-                      )
+                      Text(circuitPlanError, style: CohortTextStyles.body)
                     else if (steps.isEmpty &&
                         mode != SessionExecutionMode.intervals &&
                         mode != SessionExecutionMode.circuit)

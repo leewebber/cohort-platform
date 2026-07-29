@@ -4,7 +4,8 @@ import 'package:cohort_platform/features/adaptation/models/programme_adaptation_
 import 'package:cohort_platform/features/adaptation/services/adaptation_prescription_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class _ThrowingAdaptationEventStore extends InMemoryProgrammeAdaptationEventStore {
+class _ThrowingAdaptationEventStore
+    extends InMemoryProgrammeAdaptationEventStore {
   _ThrowingAdaptationEventStore() : super([]);
 
   @override
@@ -26,11 +27,15 @@ void main() {
   group('ProgrammeAdaptationEventSupabaseStore', () {
     test('jsonb slot filter uses JSON array syntax not postgres array', () {
       expect(
-        ProgrammeAdaptationEventSupabaseStore.jsonbArrayContainsFilter([slotId]),
+        ProgrammeAdaptationEventSupabaseStore.jsonbArrayContainsFilter([
+          slotId,
+        ]),
         '["$slotId"]',
       );
       expect(
-        ProgrammeAdaptationEventSupabaseStore.jsonbArrayContainsFilter([slotId]),
+        ProgrammeAdaptationEventSupabaseStore.jsonbArrayContainsFilter([
+          slotId,
+        ]),
         isNot(contains('{')),
       );
     });
@@ -61,13 +66,12 @@ void main() {
           explanation: 'Progress load',
           athleteSummary: 'Heavier squat next time',
           affectedSlotIds: [slotId],
-          payload: {
-            'exerciseId': 'exercise-1',
-            'newLoadKg': 100,
-          },
+          payload: {'exerciseId': 'exercise-1', 'newLoadKg': 100},
         ),
       ]);
-      final service = AdaptationPrescriptionService(adaptationEventStore: store);
+      final service = AdaptationPrescriptionService(
+        adaptationEventStore: store,
+      );
 
       final overrides = await service.loadLoadOverrides(
         assignmentId: assignmentId,
@@ -77,17 +81,20 @@ void main() {
       expect(overrides, {'exercise-1': '100 kg'});
     });
 
-    test('returns empty overrides when store throws ProgrammeStoreException', () async {
-      final service = AdaptationPrescriptionService(
-        adaptationEventStore: _ThrowingAdaptationEventStore(),
-      );
+    test(
+      'returns empty overrides when store throws ProgrammeStoreException',
+      () async {
+        final service = AdaptationPrescriptionService(
+          adaptationEventStore: _ThrowingAdaptationEventStore(),
+        );
 
-      final overrides = await service.loadLoadOverrides(
-        assignmentId: assignmentId,
-        sessionSlotId: slotId,
-      );
+        final overrides = await service.loadLoadOverrides(
+          assignmentId: assignmentId,
+          sessionSlotId: slotId,
+        );
 
-      expect(overrides, isEmpty);
-    });
+        expect(overrides, isEmpty);
+      },
+    );
   });
 }

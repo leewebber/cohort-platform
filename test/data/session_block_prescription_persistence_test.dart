@@ -25,7 +25,10 @@ void main() {
           position: 1,
           prescription: const StrengthExercisePrescription(
             sets: 5,
-            reps: StrengthRepPrescription(type: StrengthRepType.exact, exactReps: 5),
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.exact,
+              exactReps: 5,
+            ),
             load: StrengthLoadPrescription(type: StrengthLoadType.rpe, rpe: 8),
             restSeconds: 180,
             tempo: '21X1',
@@ -50,7 +53,10 @@ void main() {
       ],
     );
 
-    await repository.replaceSessionBlocks(sessionId: sessionId, blocks: [block]);
+    await repository.replaceSessionBlocks(
+      sessionId: sessionId,
+      blocks: [block],
+    );
     final reloaded = await repository.getSessionBlocks(sessionId);
 
     expect(reloaded, hasLength(1));

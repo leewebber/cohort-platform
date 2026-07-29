@@ -57,9 +57,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: CoachRouteGuard(
-          child: const Text('SECRET COACH CONTENT'),
-        ),
+        home: CoachRouteGuard(child: const Text('SECRET COACH CONTENT')),
       ),
     );
     await tester.pumpAndSettle();
@@ -78,9 +76,7 @@ void main() {
       ),
     );
 
-    await tester.pumpWidget(
-      const MaterialApp(home: CoachStudioHomeScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: CoachStudioHomeScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Authoring tools'), findsNothing);
@@ -97,9 +93,7 @@ void main() {
       ),
     );
 
-    await tester.pumpWidget(
-      const MaterialApp(home: TrainingLibraryScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: TrainingLibraryScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Browse official Cohort Protocols'), findsNothing);
@@ -116,9 +110,7 @@ void main() {
       ),
     );
 
-    await tester.pumpWidget(
-      const MaterialApp(home: CoachStudioHomeScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: CoachStudioHomeScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Authoring tools'), findsOneWidget);
@@ -136,9 +128,7 @@ void main() {
       ),
     );
 
-    await tester.pumpWidget(
-      const MaterialApp(home: CoachStudioHomeScreen()),
-    );
+    await tester.pumpWidget(const MaterialApp(home: CoachStudioHomeScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text('Authoring tools'), findsOneWidget);

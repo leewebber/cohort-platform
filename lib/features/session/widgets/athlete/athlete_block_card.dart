@@ -49,8 +49,8 @@ class AthleteBlockCard extends StatelessWidget {
     final borderColor = isActive
         ? CohortColors.olive
         : isComplete
-            ? CohortColors.success.withValues(alpha: 0.5)
-            : CohortColors.border;
+        ? CohortColors.success.withValues(alpha: 0.5)
+        : CohortColors.border;
 
     return CohortCard(
       child: Container(
@@ -85,9 +85,11 @@ class AthleteBlockCard extends StatelessWidget {
                     isComplete
                         ? Icons.check_circle
                         : isExpanded
-                            ? Icons.expand_less
-                            : Icons.expand_more,
-                    color: isComplete ? CohortColors.success : CohortColors.textSecondary,
+                        ? Icons.expand_less
+                        : Icons.expand_more,
+                    color: isComplete
+                        ? CohortColors.success
+                        : CohortColors.textSecondary,
                   ),
                 ],
               ),
@@ -165,10 +167,7 @@ class AthleteBlockCard extends StatelessWidget {
                       child: const Text('< Previous'),
                     ),
                     const Spacer(),
-                    TextButton(
-                      onPressed: onNext,
-                      child: const Text('Next >'),
-                    ),
+                    TextButton(onPressed: onNext, child: const Text('Next >')),
                   ],
                 ),
               ],
@@ -187,7 +186,9 @@ class AthleteBlockCard extends StatelessWidget {
                       const SizedBox(width: CohortSpacing.sm),
                     Expanded(
                       child: CohortButton(
-                        label: isComplete ? 'Reopen block' : 'Mark block complete',
+                        label: isComplete
+                            ? 'Reopen block'
+                            : 'Mark block complete',
                         onPressed: isComplete ? onReopen : onMarkComplete,
                       ),
                     ),
@@ -203,10 +204,7 @@ class AthleteBlockCard extends StatelessWidget {
 }
 
 class SessionOverviewBlockSummary extends StatelessWidget {
-  const SessionOverviewBlockSummary({
-    super.key,
-    required this.block,
-  });
+  const SessionOverviewBlockSummary({super.key, required this.block});
 
   final SessionExecutionBlock block;
 
@@ -240,10 +238,7 @@ class SessionOverviewBlockSummary extends StatelessWidget {
                   ),
                 if (block.coachNotes?.trim().isNotEmpty == true) ...[
                   const SizedBox(height: CohortSpacing.xs),
-                  Text(
-                    block.coachNotes!.trim(),
-                    style: CohortTextStyles.small,
-                  ),
+                  Text(block.coachNotes!.trim(), style: CohortTextStyles.small),
                 ],
               ],
             ),
@@ -289,8 +284,10 @@ class SessionCompletionSummary extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('$completedCount of $totalCount blocks completed',
-                  style: CohortTextStyles.cardTitle),
+              Text(
+                '$completedCount of $totalCount blocks completed',
+                style: CohortTextStyles.cardTitle,
+              ),
               if (skippedCount > 0) ...[
                 const SizedBox(height: CohortSpacing.sm),
                 Text(

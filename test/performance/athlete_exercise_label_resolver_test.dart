@@ -82,22 +82,25 @@ void main() {
       );
     });
 
-    test('active execution uses live exercise name when snapshot stores ID', () {
-      expect(
-        AthleteExerciseLabelResolver.fromExecutionSummary(
-          SessionExecutionExerciseSummary(
-            exerciseId: 'SQ-001',
-            displayName: 'SQ-001',
-            exercise: const Exercise(
+    test(
+      'active execution uses live exercise name when snapshot stores ID',
+      () {
+        expect(
+          AthleteExerciseLabelResolver.fromExecutionSummary(
+            SessionExecutionExerciseSummary(
               exerciseId: 'SQ-001',
-              name: 'Back Squat',
-              published: true,
+              displayName: 'SQ-001',
+              exercise: const Exercise(
+                exerciseId: 'SQ-001',
+                name: 'Back Squat',
+                published: true,
+              ),
             ),
           ),
-        ),
-        'Back Squat',
-      );
-    });
+          'Back Squat',
+        );
+      },
+    );
 
     test('historical name remains stable if live exercise name changes', () {
       expect(
@@ -127,33 +130,35 @@ void main() {
       );
     });
 
-    test('performance draft resolves via execution summary during active capture',
-        () {
-      expect(
-        AthleteExerciseLabelResolver.fromExerciseDraft(
-          ExercisePerformanceDraft(
-            exerciseResultId: 'result-1',
-            sourceExerciseId: 'BP-001',
-            exerciseSnapshot: const ExercisePerformanceSnapshot(
+    test(
+      'performance draft resolves via execution summary during active capture',
+      () {
+        expect(
+          AthleteExerciseLabelResolver.fromExerciseDraft(
+            ExercisePerformanceDraft(
+              exerciseResultId: 'result-1',
               sourceExerciseId: 'BP-001',
-              displayName: 'BP-001',
+              exerciseSnapshot: const ExercisePerformanceSnapshot(
+                sourceExerciseId: 'BP-001',
+                displayName: 'BP-001',
+                position: 1,
+              ),
               position: 1,
             ),
-            position: 1,
-          ),
-          executionSummary: const SessionExecutionExerciseSummary(
-            exerciseId: 'BP-001',
-            displayName: 'BP-001',
-            exercise: Exercise(
+            executionSummary: const SessionExecutionExerciseSummary(
               exerciseId: 'BP-001',
-              name: 'Bench Press',
-              published: true,
+              displayName: 'BP-001',
+              exercise: Exercise(
+                exerciseId: 'BP-001',
+                name: 'Bench Press',
+                published: true,
+              ),
             ),
           ),
-        ),
-        'Bench Press',
-      );
-    });
+          'Bench Press',
+        );
+      },
+    );
 
     test('saved exercise result prefers snapshot for history detail', () {
       expect(
@@ -240,8 +245,9 @@ void main() {
       ),
     ];
 
-    testWidgets('strength editor headings use display names instead of IDs',
-        (tester) async {
+    testWidgets('strength editor headings use display names instead of IDs', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -266,7 +272,9 @@ void main() {
   });
 
   group('HistoricalBlockResultCard', () {
-    testWidgets('uses snapshot exercise names in history detail', (tester) async {
+    testWidgets('uses snapshot exercise names in history detail', (
+      tester,
+    ) async {
       final block = TrainingBlockResult(
         blockResultId: 'block-1',
         sessionRecordId: 'session-1',
@@ -300,9 +308,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: HistoricalBlockResultCard(block: block),
-          ),
+          home: Scaffold(body: HistoricalBlockResultCard(block: block)),
         ),
       );
 

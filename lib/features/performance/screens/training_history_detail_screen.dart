@@ -24,7 +24,8 @@ class TrainingHistoryDetailScreen extends StatefulWidget {
       _TrainingHistoryDetailScreenState();
 }
 
-class _TrainingHistoryDetailScreenState extends State<TrainingHistoryDetailScreen> {
+class _TrainingHistoryDetailScreenState
+    extends State<TrainingHistoryDetailScreen> {
   late final PerformanceRecordSaveCoordinator _coordinator =
       widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
 
@@ -55,14 +56,24 @@ class _TrainingHistoryDetailScreenState extends State<TrainingHistoryDetailScree
                     onPressed: () => Navigator.pop(context),
                     child: const Text('← Back'),
                   ),
-                  Text(record.sessionSnapshot.sessionTitle,
-                      style: CohortTextStyles.h1),
-                  Text(record.status.displayLabel, style: CohortTextStyles.body),
+                  Text(
+                    record.sessionSnapshot.sessionTitle,
+                    style: CohortTextStyles.h1,
+                  ),
+                  Text(
+                    record.status.displayLabel,
+                    style: CohortTextStyles.body,
+                  ),
                   if (record.sessionSnapshot.programmeContextLabel != null)
-                    Text(record.sessionSnapshot.programmeContextLabel!,
-                        style: CohortTextStyles.small),
+                    Text(
+                      record.sessionSnapshot.programmeContextLabel!,
+                      style: CohortTextStyles.small,
+                    ),
                   if (record.overallRpe != null)
-                    Text('RPE ${record.overallRpe}', style: CohortTextStyles.small),
+                    Text(
+                      'RPE ${record.overallRpe}',
+                      style: CohortTextStyles.small,
+                    ),
                   if (record.athleteNote?.isNotEmpty == true) ...[
                     const SizedBox(height: CohortSpacing.md),
                     Text(record.athleteNote!, style: CohortTextStyles.body),

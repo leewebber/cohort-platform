@@ -17,13 +17,14 @@ class SessionRevisionActionPolicyService {
     SessionLineageStore? lineageStore,
     SessionRevisionRelationshipService? relationshipService,
     ProtocolBuilderService? protocolBuilderService,
-  })  : _lineageStore = lineageStore ?? const SessionLineageSupabaseStore(),
-        _relationshipService = relationshipService ??
-            SessionRevisionRelationshipService(
-              lineageStore: lineageStore ?? const SessionLineageSupabaseStore(),
-            ),
-        _protocolBuilderService =
-            protocolBuilderService ?? ProtocolBuilderService();
+  }) : _lineageStore = lineageStore ?? const SessionLineageSupabaseStore(),
+       _relationshipService =
+           relationshipService ??
+           SessionRevisionRelationshipService(
+             lineageStore: lineageStore ?? const SessionLineageSupabaseStore(),
+           ),
+       _protocolBuilderService =
+           protocolBuilderService ?? ProtocolBuilderService();
 
   final SessionLineageStore _lineageStore;
   final SessionRevisionRelationshipService _relationshipService;
@@ -81,8 +82,9 @@ class SessionRevisionActionPolicyService {
       return _SessionRevisionPolicyContext.notFound(protocolId);
     }
 
-    final lifecycleStatus =
-        await _lineageStore.getRevisionLifecycleStatus(protocolId);
+    final lifecycleStatus = await _lineageStore.getRevisionLifecycleStatus(
+      protocolId,
+    );
 
     ProtocolDraft? draft;
     try {
@@ -122,7 +124,9 @@ class SessionRevisionActionPolicyService {
     }
   }
 
-  SessionRevisionActionDecision _evaluateEdit(_SessionRevisionPolicyContext context) {
+  SessionRevisionActionDecision _evaluateEdit(
+    _SessionRevisionPolicyContext context,
+  ) {
     if (context.revisionNotFound) {
       return _blockingDecision(
         action: SessionRevisionAction.edit,
@@ -165,8 +169,8 @@ class SessionRevisionActionPolicyService {
         ),
         recommendedAlternative:
             SessionRevisionActionMessageBuilder.createRevisionRecommendation(
-          nextRevision,
-        ),
+              nextRevision,
+            ),
       );
     }
 
@@ -185,8 +189,8 @@ class SessionRevisionActionPolicyService {
       ),
       recommendedAlternative:
           SessionRevisionActionMessageBuilder.createRevisionRecommendation(
-        nextRevision,
-      ),
+            nextRevision,
+          ),
     );
   }
 
@@ -317,8 +321,8 @@ class SessionRevisionActionPolicyService {
       userMessage: 'Archived revisions cannot be published.',
       recommendedAlternative:
           SessionRevisionActionMessageBuilder.createRevisionRecommendation(
-        context.identity!.revisionNumber + 1,
-      ),
+            context.identity!.revisionNumber + 1,
+          ),
     );
   }
 
@@ -368,7 +372,9 @@ class SessionRevisionActionPolicyService {
     ];
 
     if (usage?.hasDirectAuthoredUsage == true) {
-      reasons.add(SessionRevisionActionReasonCode.referencedByProgrammeVersions);
+      reasons.add(
+        SessionRevisionActionReasonCode.referencedByProgrammeVersions,
+      );
     }
     if (usage?.hasActiveOperationalUsage == true) {
       reasons.add(SessionRevisionActionReasonCode.usedByActiveAssignments);
@@ -383,7 +389,8 @@ class SessionRevisionActionPolicyService {
       severity: usage != null && !usage.isUnused
           ? SessionRevisionActionSeverity.warning
           : SessionRevisionActionSeverity.info,
-      primaryReasonCode: SessionRevisionActionReasonCode.archivePublishedRevision,
+      primaryReasonCode:
+          SessionRevisionActionReasonCode.archivePublishedRevision,
       reasons: reasons,
       userMessage: userMessage,
       usageSummary: usage,
@@ -398,10 +405,12 @@ class SessionRevisionActionPolicyService {
         action: SessionRevisionAction.delete,
         primaryReasonCode: SessionRevisionActionReasonCode.revisionNotFound,
         reasons: const [SessionRevisionActionReasonCode.revisionNotFound],
-        userMessage: SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
-          primaryReasonCode: SessionRevisionActionReasonCode.revisionNotFound,
-          usage: null,
-        ),
+        userMessage:
+            SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
+              primaryReasonCode:
+                  SessionRevisionActionReasonCode.revisionNotFound,
+              usage: null,
+            ),
       );
     }
 
@@ -414,11 +423,12 @@ class SessionRevisionActionPolicyService {
           SessionRevisionActionReasonCode.relationshipLookupFailed,
           SessionRevisionActionReasonCode.destructiveActionFailsClosed,
         ],
-        userMessage: SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
-          primaryReasonCode:
-              SessionRevisionActionReasonCode.relationshipLookupFailed,
-          usage: null,
-        ),
+        userMessage:
+            SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
+              primaryReasonCode:
+                  SessionRevisionActionReasonCode.relationshipLookupFailed,
+              usage: null,
+            ),
       );
     }
 
@@ -445,7 +455,9 @@ class SessionRevisionActionPolicyService {
     }
 
     if (usage?.hasDirectAuthoredUsage == true) {
-      blockers.add(SessionRevisionActionReasonCode.referencedByProgrammeVersions);
+      blockers.add(
+        SessionRevisionActionReasonCode.referencedByProgrammeVersions,
+      );
     }
 
     if (usage?.hasHistoricalUsage == true) {
@@ -471,10 +483,11 @@ class SessionRevisionActionPolicyService {
       severity: SessionRevisionActionSeverity.blocking,
       primaryReasonCode: primaryReasonCode,
       reasons: blockers,
-      userMessage: SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
-        primaryReasonCode: primaryReasonCode,
-        usage: usage,
-      ),
+      userMessage:
+          SessionRevisionActionMessageBuilder.primaryDeleteBlockMessage(
+            primaryReasonCode: primaryReasonCode,
+            usage: usage,
+          ),
       recommendedAlternative: _deleteRecommendedAlternative(
         primaryReasonCode: primaryReasonCode,
         draft: draft,

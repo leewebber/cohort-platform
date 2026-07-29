@@ -31,21 +31,13 @@ class _FakeExerciseCatalogueLoader implements ExerciseCatalogueLoader {
 
 void main() {
   const catalogue = [
-    Exercise(
-      exerciseId: 'PULL-001',
-      name: 'Weighted Pull-up',
-      published: true,
-    ),
+    Exercise(exerciseId: 'PULL-001', name: 'Weighted Pull-up', published: true),
     Exercise(
       exerciseId: 'BP-001',
       name: 'Dumbbell Bench Press',
       published: true,
     ),
-    Exercise(
-      exerciseId: 'LAT-001',
-      name: 'Lateral Raise',
-      published: true,
-    ),
+    Exercise(exerciseId: 'LAT-001', name: 'Lateral Raise', published: true),
   ];
 
   Future<void> pumpSheet(
@@ -79,8 +71,9 @@ void main() {
     await tester.pump();
   }
 
-  testWidgets('shows loading then exercises from canonical catalogue loader',
-      (tester) async {
+  testWidgets('shows loading then exercises from canonical catalogue loader', (
+    tester,
+  ) async {
     final loader = _FakeExerciseCatalogueLoader(
       catalogue,
       delay: const Duration(milliseconds: 100),

@@ -31,11 +31,7 @@ ProtocolDraft buildValidProgrammeSessionDraft({
     name: name,
     sessionFormat: 'structured_strength',
     steps: const [
-      ProtocolStepDraft(
-        localId: 'step-1',
-        stepOrder: 1,
-        title: 'Warm-up',
-      ),
+      ProtocolStepDraft(localId: 'step-1', stepOrder: 1, title: 'Warm-up'),
     ],
     published: false,
     contentKind: TrainingContentKind.session,
@@ -183,13 +179,16 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
   Future<ProtocolDraft> loadProtocol(String protocolId) async {
     final draft = libraryDrafts[protocolId] ?? drafts[protocolId];
     if (draft == null) {
-      throw ProtocolBuilderException('Protocol $protocolId could not be found.');
+      throw ProtocolBuilderException(
+        'Protocol $protocolId could not be found.',
+      );
     }
     return draft;
   }
 }
 
-class FakeProgrammeSessionAssignmentPort implements ProgrammeSessionAssignmentPort {
+class FakeProgrammeSessionAssignmentPort
+    implements ProgrammeSessionAssignmentPort {
   FakeProgrammeSessionAssignmentPort({
     required ProgrammeBuilderDocument document,
     this.isEditable = true,
@@ -204,7 +203,8 @@ class FakeProgrammeSessionAssignmentPort implements ProgrammeSessionAssignmentPo
     required String weekLocalId,
     required String dayLocalId,
     required String slotLocalId,
-  })? slotExistsOverride;
+  })?
+  slotExistsOverride;
 
   int assignCallCount = 0;
   String? lastAssignedContentId;

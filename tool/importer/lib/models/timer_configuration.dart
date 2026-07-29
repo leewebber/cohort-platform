@@ -69,8 +69,7 @@ class TimerConfiguration {
       if (totalDurationSeconds != null)
         'totalDurationSeconds': totalDurationSeconds,
       if (intervalSeconds != null) 'intervalSeconds': intervalSeconds,
-      if (preparationSeconds != null)
-        'preparationSeconds': preparationSeconds,
+      if (preparationSeconds != null) 'preparationSeconds': preparationSeconds,
       if (timeCapSeconds != null) 'timeCapSeconds': timeCapSeconds,
       'stopwatchEnabled': stopwatchEnabled,
       if (workSeconds != null) 'workSeconds': workSeconds,
@@ -124,42 +123,42 @@ class TimerConfiguration {
 
     return switch (format) {
       WorkoutFormat.amrap => TimerConfiguration(
-          durationSeconds: base.durationSeconds,
-          timerNotes: base.timerNotes,
-        ),
+        durationSeconds: base.durationSeconds,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.emom => TimerConfiguration(
-          totalDurationSeconds: base.totalDurationSeconds,
-          intervalSeconds: base.intervalSeconds,
-          preparationSeconds: base.preparationSeconds,
-          timerNotes: base.timerNotes,
-        ),
+        totalDurationSeconds: base.totalDurationSeconds,
+        intervalSeconds: base.intervalSeconds,
+        preparationSeconds: base.preparationSeconds,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.forTime => TimerConfiguration(
-          timeCapSeconds: base.timeCapSeconds,
-          stopwatchEnabled: true,
-          timerNotes: base.timerNotes,
-        ),
+        timeCapSeconds: base.timeCapSeconds,
+        stopwatchEnabled: true,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.intervals => TimerConfiguration(
-          workSeconds: base.workSeconds,
-          restSeconds: base.restSeconds,
-          rounds: base.rounds,
-          preparationSeconds: base.preparationSeconds,
-          timerNotes: base.timerNotes,
-        ),
+        workSeconds: base.workSeconds,
+        restSeconds: base.restSeconds,
+        rounds: base.rounds,
+        preparationSeconds: base.preparationSeconds,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.tabata => TimerConfiguration(
-          workSeconds: base.workSeconds ?? 20,
-          restSeconds: base.restSeconds ?? 10,
-          rounds: base.rounds ?? 8,
-          timerNotes: base.timerNotes,
-        ),
+        workSeconds: base.workSeconds ?? 20,
+        restSeconds: base.restSeconds ?? 10,
+        rounds: base.rounds ?? 8,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.rounds => TimerConfiguration(
-          targetRounds: base.targetRounds,
-          restBetweenRoundsSeconds: base.restBetweenRoundsSeconds,
-          timerNotes: base.timerNotes,
-        ),
+        targetRounds: base.targetRounds,
+        restBetweenRoundsSeconds: base.restBetweenRoundsSeconds,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.other => TimerConfiguration(
-          durationSeconds: base.durationSeconds,
-          timerNotes: base.timerNotes,
-        ),
+        durationSeconds: base.durationSeconds,
+        timerNotes: base.timerNotes,
+      ),
       WorkoutFormat.none => const TimerConfiguration(),
     };
   }
@@ -211,24 +210,24 @@ class TimerConfiguration {
   String summaryForFormat(WorkoutFormat format) {
     return switch (format) {
       WorkoutFormat.none => 'No timer',
-      WorkoutFormat.amrap => durationSeconds != null
-          ? '${durationSeconds! ~/ 60} min AMRAP'
-          : 'AMRAP',
+      WorkoutFormat.amrap =>
+        durationSeconds != null
+            ? '${durationSeconds! ~/ 60} min AMRAP'
+            : 'AMRAP',
       WorkoutFormat.emom =>
         '${totalDurationSeconds != null ? '${totalDurationSeconds! ~/ 60} min' : 'EMOM'} · ${intervalSeconds ?? '?'}s intervals',
-      WorkoutFormat.forTime => timeCapSeconds != null
-          ? 'For Time · ${timeCapSeconds! ~/ 60} min cap'
-          : 'For Time · Stopwatch',
+      WorkoutFormat.forTime =>
+        timeCapSeconds != null
+            ? 'For Time · ${timeCapSeconds! ~/ 60} min cap'
+            : 'For Time · Stopwatch',
       WorkoutFormat.intervals =>
         '${rounds ?? '?'} rounds · ${workSeconds ?? '?'}s work / ${restSeconds ?? '?'}s rest',
       WorkoutFormat.tabata =>
         '${rounds ?? 8} rounds · ${workSeconds ?? 20}s / ${restSeconds ?? 10}s',
-      WorkoutFormat.rounds => targetRounds != null
-          ? '$targetRounds rounds'
-          : 'Rounds',
-      WorkoutFormat.other => durationSeconds != null
-          ? '${durationSeconds! ~/ 60} min'
-          : 'Timer',
+      WorkoutFormat.rounds =>
+        targetRounds != null ? '$targetRounds rounds' : 'Rounds',
+      WorkoutFormat.other =>
+        durationSeconds != null ? '${durationSeconds! ~/ 60} min' : 'Timer',
     };
   }
 }

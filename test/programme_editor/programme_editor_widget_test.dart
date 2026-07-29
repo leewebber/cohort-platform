@@ -54,10 +54,7 @@ void main() {
           ),
         ],
       ),
-    ).copyWith(
-      isDirty: dirty,
-      hasUnsavedChanges: dirty,
-    );
+    ).copyWith(isDirty: dirty, hasUnsavedChanges: dirty);
 
     final controller = ProgrammeEditorController(
       builderService: _NoopBuilderService(document),
@@ -202,8 +199,9 @@ class _NoopBuilderService implements ProgrammeBuilderService {
   final ProgrammeBuilderDocument document;
 
   @override
-  Future<ProgrammeBuilderDocument> loadDocument({required String versionId}) async =>
-      document;
+  Future<ProgrammeBuilderDocument> loadDocument({
+    required String versionId,
+  }) async => document;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -223,7 +221,8 @@ class _NoopPublishCoordinator implements ProgrammeBuilderPublishCoordinator {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerService {
+class _FakeProtocolPickerService
+    implements ProgrammeBuilderProtocolPickerService {
   @override
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId) async {
     return ProgrammeBuilderProtocolOption(
@@ -261,7 +260,8 @@ class _FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerServic
   }
 }
 
-class _FakeProtocolNameResolver implements ProgrammeBuilderProtocolNameResolver {
+class _FakeProtocolNameResolver
+    implements ProgrammeBuilderProtocolNameResolver {
   @override
   Future<Map<String, String>> resolveNames(Set<String> protocolIds) async {
     return {for (final id in protocolIds) id: 'Protocol $id'};

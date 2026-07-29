@@ -59,7 +59,9 @@ class ComparisonSummaryTile extends StatelessWidget {
             padding: const EdgeInsets.only(top: CohortSpacing.sm),
             child: Text(
               'Comparison is partial.',
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ),
       ],

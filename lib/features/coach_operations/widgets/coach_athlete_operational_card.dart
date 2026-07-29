@@ -112,21 +112,35 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (background, foreground) = switch (status) {
-      CoachAthleteTodayStatus.trainingToday =>
-        (CohortColors.oliveSoft, CohortColors.olive),
+      CoachAthleteTodayStatus.trainingToday => (
+        CohortColors.oliveSoft,
+        CohortColors.olive,
+      ),
       CoachAthleteTodayStatus.completedToday ||
-      CoachAthleteTodayStatus.dayComplete =>
-        (CohortColors.oliveSoft, CohortColors.success),
-      CoachAthleteTodayStatus.restDay =>
-        (CohortColors.surfaceRaised, CohortColors.textSecondary),
-      CoachAthleteTodayStatus.behindSchedule =>
-        (const Color(0xFF2A2118), CohortColors.warning),
-      CoachAthleteTodayStatus.noActiveProgramme =>
-        (const Color(0xFF2A1C18), CohortColors.danger),
-      CoachAthleteTodayStatus.paused =>
-        (const Color(0xFF2A2118), CohortColors.warning),
-      CoachAthleteTodayStatus.programmeComplete =>
-        (CohortColors.oliveSoft, CohortColors.success),
+      CoachAthleteTodayStatus.dayComplete => (
+        CohortColors.oliveSoft,
+        CohortColors.success,
+      ),
+      CoachAthleteTodayStatus.restDay => (
+        CohortColors.surfaceRaised,
+        CohortColors.textSecondary,
+      ),
+      CoachAthleteTodayStatus.behindSchedule => (
+        const Color(0xFF2A2118),
+        CohortColors.warning,
+      ),
+      CoachAthleteTodayStatus.noActiveProgramme => (
+        const Color(0xFF2A1C18),
+        CohortColors.danger,
+      ),
+      CoachAthleteTodayStatus.paused => (
+        const Color(0xFF2A2118),
+        CohortColors.warning,
+      ),
+      CoachAthleteTodayStatus.programmeComplete => (
+        CohortColors.oliveSoft,
+        CohortColors.success,
+      ),
     };
 
     return Container(
@@ -165,15 +179,15 @@ class _InfoLine extends StatelessWidget {
       children: [
         Text(
           label,
-          style: CohortTextStyles.small.copyWith(
-            color: CohortColors.textMuted,
-          ),
+          style: CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
         ),
         const SizedBox(height: 2),
         Text(
           value,
           style: CohortTextStyles.small.copyWith(
-            color: highlight ? CohortColors.warning : CohortColors.textSecondary,
+            color: highlight
+                ? CohortColors.warning
+                : CohortColors.textSecondary,
           ),
         ),
       ],

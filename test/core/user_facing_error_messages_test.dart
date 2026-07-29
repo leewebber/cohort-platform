@@ -31,7 +31,9 @@ void main() {
 
     test('maps permission denied', () {
       expect(
-        UserFacingErrorMessages.from(Exception('permission denied for table x')),
+        UserFacingErrorMessages.from(
+          Exception('permission denied for table x'),
+        ),
         'You do not have permission to perform this action.',
       );
     });
@@ -52,13 +54,16 @@ void main() {
       );
     });
 
-    test('AthleteSafeErrorPresenter returns safe message for PostgREST timeout', () {
-      final message = AthleteSafeErrorPresenter.message(
-        PostgrestException(message: 'timeout', code: '57014'),
-        logTag: 'test',
-      );
-      expect(message, UserFacingErrorMessages.timeout);
-    });
+    test(
+      'AthleteSafeErrorPresenter returns safe message for PostgREST timeout',
+      () {
+        final message = AthleteSafeErrorPresenter.message(
+          PostgrestException(message: 'timeout', code: '57014'),
+          logTag: 'test',
+        );
+        expect(message, UserFacingErrorMessages.timeout);
+      },
+    );
 
     test('does not include raw uuid-like tokens in generic fallback', () {
       final message = UserFacingErrorMessages.from(

@@ -47,7 +47,8 @@ class AdaptationPlanApplier {
 
     final resolvedConstraints =
         constraints ?? AdaptationConstraintContext.empty();
-    final resolvedEvaluation = evaluation ??
+    final resolvedEvaluation =
+        evaluation ??
         evaluator.evaluate(
           session: source,
           constraints: resolvedConstraints.validated(),
@@ -91,15 +92,13 @@ class AdaptationPlanApplier {
       ..sort((a, b) => a.sequence.compareTo(b.sequence));
 
     for (final step in sortedSteps) {
-      final stepResult = _applyStep(
-        source: source,
-        state: state,
-        step: step,
-      );
+      final stepResult = _applyStep(source: source, state: state, step: step);
       if (stepResult != null) {
         issues.add(stepResult);
         return AdaptationPlanApplicationResult(
-          status: stepResult.code == AdaptationPlanApplicationIssueCode.unsupportedActionType
+          status:
+              stepResult.code ==
+                  AdaptationPlanApplicationIssueCode.unsupportedActionType
               ? AdaptationPlanApplicationStatus.unsupportedPlanStep
               : AdaptationPlanApplicationStatus.applicationFailed,
           issues: issues,
@@ -131,7 +130,8 @@ class AdaptationPlanApplier {
         issues: validation.issues
             .map(
               (issue) => AdaptationPlanApplicationIssue(
-                code: AdaptationPlanApplicationIssueCode.snapshotValidationFailed,
+                code:
+                    AdaptationPlanApplicationIssueCode.snapshotValidationFailed,
                 detail: issue.code.name,
               ),
             )
@@ -143,10 +143,7 @@ class AdaptationPlanApplier {
         ? AdaptationPlanApplicationStatus.noAdaptationRequired
         : AdaptationPlanApplicationStatus.applied;
 
-    return AdaptationPlanApplicationResult(
-      status: status,
-      snapshot: snapshot,
-    );
+    return AdaptationPlanApplicationResult(status: status, snapshot: snapshot);
   }
 
   AdaptationPlanApplicationIssue? _applyStep({
@@ -155,12 +152,20 @@ class AdaptationPlanApplier {
     required AdaptationPlanStep step,
   }) {
     return switch (step.actionType) {
-      AdaptationActionType.reduceVolume => _applyReduceVolume(source, state, step),
-      AdaptationActionType.removeBlock => _applyRemoveBlock(source, state, step),
+      AdaptationActionType.reduceVolume => _applyReduceVolume(
+        source,
+        state,
+        step,
+      ),
+      AdaptationActionType.removeBlock => _applyRemoveBlock(
+        source,
+        state,
+        step,
+      ),
       _ => AdaptationPlanApplicationIssue(
-          code: AdaptationPlanApplicationIssueCode.unsupportedActionType,
-          planStepSequence: step.sequence,
-        ),
+        code: AdaptationPlanApplicationIssueCode.unsupportedActionType,
+        planStepSequence: step.sequence,
+      ),
     };
   }
 
@@ -229,7 +234,8 @@ class AdaptationPlanApplier {
       );
     }
 
-    final minSets = blockState.input.policyMinimumViablePrescription?.sets ??
+    final minSets =
+        blockState.input.policyMinimumViablePrescription?.sets ??
         resolved.effectivePolicy.minimumViablePrescription?.sets ??
         1;
     if (reduction.proposedValue < minSets) {
@@ -384,10 +390,12 @@ class AdaptationPlanApplier {
             sourceBlockLocalId: block.input.localId,
             sourcePosition: block.input.position,
             blockTypeDbValue: block.input.blockTypeDbValue,
-            effectivePriority: SessionAdaptationPlanner.resolveBlock(block.input)
-                .effectivePriority,
-            effectivePolicy: SessionAdaptationPlanner.resolveBlock(block.input)
-                .effectivePolicy,
+            effectivePriority: SessionAdaptationPlanner.resolveBlock(
+              block.input,
+            ).effectivePriority,
+            effectivePolicy: SessionAdaptationPlanner.resolveBlock(
+              block.input,
+            ).effectivePolicy,
             policySource: block.policySource,
             exercises: block.exercises.values
                 .map(
@@ -397,7 +405,9 @@ class AdaptationPlanApplier {
                     originalPrescription: e.original,
                     executionPrescription: e.execution,
                     adapted: e.adapted,
-                    appliedPlanStepSequences: List.unmodifiable(e.stepSequences),
+                    appliedPlanStepSequences: List.unmodifiable(
+                      e.stepSequences,
+                    ),
                   ),
                 )
                 .toList(growable: false),
@@ -426,8 +436,8 @@ class AdaptationPlanApplier {
       evaluationOutcome: plan.evaluationOutcome,
       planStatus: plan.status,
       unresolvedConstraints: plan.unresolvedConstraints,
-      exactDurationFeasibilityConfirmed: plan.exactDurationFeasibilityConfirmed &&
-          duration.reliable,
+      exactDurationFeasibilityConfirmed:
+          plan.exactDurationFeasibilityConfirmed && duration.reliable,
       unresolvedDurationDeficitMinutes: plan.unresolvedDurationDeficitMinutes,
       planFindings: plan.planFindings,
     );

@@ -1,11 +1,7 @@
 import 'programme_builder_path.dart';
 
 /// Validation issue severity.
-enum ProgrammeValidationSeverity {
-  error,
-  warning,
-  info,
-}
+enum ProgrammeValidationSeverity { error, warning, info }
 
 /// Stable validation codes for programme builder rules.
 enum ProgrammeValidationCode {
@@ -49,9 +45,7 @@ class ProgrammeValidationIssue {
 
 /// Aggregate validation output.
 class ProgrammeValidationResult {
-  const ProgrammeValidationResult({
-    required this.issues,
-  });
+  const ProgrammeValidationResult({required this.issues});
 
   final List<ProgrammeValidationIssue> issues;
 

@@ -41,14 +41,13 @@ class ProgrammeSessionAuthoringContext {
     required ProgrammeWeekDraft week,
     required ProgrammeDayDraft day,
     required ProgrammeSessionSlotDraft slot,
-    required     ProgrammeSessionAuthoringIntent authoringIntent,
+    required ProgrammeSessionAuthoringIntent authoringIntent,
     String? existingContentId,
     String? sourceProtocolId,
   }) {
     final dayLabel = _resolveDayLabel(day);
     final slotLabel = _resolveSlotLabel(slot, dayLabel);
-    final locationLabel =
-        'Week ${week.weekNumber} · $dayLabel · $slotLabel';
+    final locationLabel = 'Week ${week.weekNumber} · $dayLabel · $slotLabel';
 
     return ProgrammeSessionAuthoringContext(
       programmeVersionId: programmeVersionId,

@@ -41,7 +41,8 @@ class AdaptationAction {
 
   factory AdaptationAction.fromJson(Map<String, dynamic> json) {
     return AdaptationAction(
-      actionType: AdaptationActionTypeDb.fromDb(json['action_type']?.toString()) ??
+      actionType:
+          AdaptationActionTypeDb.fromDb(json['action_type']?.toString()) ??
           AdaptationActionType.adjustPrescription,
       targetScope: json['target_scope']?.toString() ?? '',
       targetId: json['target_id']?.toString() ?? '',
@@ -85,11 +86,14 @@ class AdaptationFidelityAssessment {
 
   factory AdaptationFidelityAssessment.fromJson(Map<String, dynamic> json) {
     return AdaptationFidelityAssessment(
-      fidelity: AdaptationFidelityDb.fromDb(json['fidelity']?.toString()) ??
+      fidelity:
+          AdaptationFidelityDb.fromDb(json['fidelity']?.toString()) ??
           AdaptationFidelity.compromised,
       primaryIntentRetained: json['primary_intent_retained'] == true,
       secondaryIntentRetained: json['secondary_intent_retained'] == true,
-      compromisedCharacteristics: _stringList(json['compromised_characteristics']),
+      compromisedCharacteristics: _stringList(
+        json['compromised_characteristics'],
+      ),
       explanationData: _stringMap(json['explanation_data']),
     );
   }
@@ -115,8 +119,7 @@ class AdaptationFidelityAssessment {
       secondaryIntentRetained: secondaryRetained,
       compromisedCharacteristics: compromised,
       explanationData: {
-        if (primaryIntent != null)
-          'primary_intent': primaryIntent.dbValue,
+        if (primaryIntent != null) 'primary_intent': primaryIntent.dbValue,
         if (secondaryIntent != null)
           'secondary_intent': secondaryIntent.dbValue,
       },

@@ -27,7 +27,8 @@ Future<void> showImpactDetailSheet({
             else
               for (final assignment in summary.activeAssignments)
                 GovernanceCountRow(
-                  label: assignment.progressSummary ??
+                  label:
+                      assignment.progressSummary ??
                       'Active assignment on this version',
                 ),
             const SizedBox(height: CohortSpacing.lg),
@@ -35,7 +36,8 @@ Future<void> showImpactDetailSheet({
             const SizedBox(height: CohortSpacing.xs),
             for (final reference in summary.sessionReferences.take(20))
               GovernanceCountRow(
-                label: 'Week ${reference.weekNumber} · ${reference.dayKey} · '
+                label:
+                    'Week ${reference.weekNumber} · ${reference.dayKey} · '
                     '${reference.sessionName} (Rev ${reference.sessionRevisionNumber})',
               ),
             const SizedBox(height: CohortSpacing.lg),

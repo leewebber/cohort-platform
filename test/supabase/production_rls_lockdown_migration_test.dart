@@ -18,7 +18,9 @@ void main() {
       expect(migrationFile.existsSync(), isTrue);
       expect(
         migrationSql,
-        contains('Applies after 20260722120000_add_dual_role_self_assignment_policies.sql'),
+        contains(
+          'Applies after 20260722120000_add_dual_role_self_assignment_policies.sql',
+        ),
       );
     });
 
@@ -46,7 +48,10 @@ void main() {
 
     test('removes anon identity fallbacks from helper functions', () {
       expect(migrationSql, isNot(contains("ELSE ARRAY['lee']")));
-      expect(migrationSql, isNot(contains("COALESCE(auth.uid()::TEXT, 'dev-coach')")));
+      expect(
+        migrationSql,
+        isNot(contains("COALESCE(auth.uid()::TEXT, 'dev-coach')")),
+      );
       expect(migrationSql, contains('cohort_auth_is_coach()'));
       expect(migrationSql, contains('cohort_auth_is_athlete()'));
     });
@@ -72,15 +77,25 @@ void main() {
     });
 
     test('retains dual-role self-assignment policy from prior migration', () {
-      expect(migrationSql, contains('programme_assignments_dual_role_self_insert'));
       expect(
         migrationSql,
-        isNot(contains('DROP POLICY IF EXISTS programme_assignments_dual_role_self_insert')),
+        contains('programme_assignments_dual_role_self_insert'),
+      );
+      expect(
+        migrationSql,
+        isNot(
+          contains(
+            'DROP POLICY IF EXISTS programme_assignments_dual_role_self_insert',
+          ),
+        ),
       );
     });
 
     test('uses authenticated role only for coach authoring policies', () {
-      expect(migrationSql, contains('CREATE POLICY programme_lineages_insert_coach'));
+      expect(
+        migrationSql,
+        contains('CREATE POLICY programme_lineages_insert_coach'),
+      );
       expect(
         migrationSql,
         contains(

@@ -195,11 +195,7 @@ class ProgrammeSeedTemplateBuilder {
   }
 
   ProgrammeWeekDraft _week1({required List<ProgrammeDayDraft> days}) {
-    return ProgrammeWeekDraft(
-      localId: 'week-1',
-      weekNumber: 1,
-      days: days,
-    );
+    return ProgrammeWeekDraft(localId: 'week-1', weekNumber: 1, days: days);
   }
 
   ProgrammeDayDraft _trainingDay({
@@ -218,10 +214,7 @@ class ProgrammeSeedTemplateBuilder {
     );
   }
 
-  ProgrammeDayDraft _restDay({
-    required String dayKey,
-    required int dayOrder,
-  }) {
+  ProgrammeDayDraft _restDay({required String dayKey, required int dayOrder}) {
     return ProgrammeDayDraft(
       localId: 'day-$dayOrder',
       dayKey: dayKey,

@@ -23,9 +23,7 @@ abstract class PerformanceRecordStore {
 
   Future<TrainingSessionRecord> saveDraft(ActivePerformanceDraft draft);
 
-  Future<TrainingSessionRecord> completeRecord(
-    ActivePerformanceDraft draft,
-  );
+  Future<TrainingSessionRecord> completeRecord(ActivePerformanceDraft draft);
 
   Future<List<TrainingSessionRecord>> listHistory({
     required String athleteId,

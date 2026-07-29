@@ -35,11 +35,11 @@ class FounderAcceptanceRuntimeResetService {
     PerformanceRecordStore? performanceRecordStore,
     TrainingSessionRepository? trainingSessionRepository,
     AthleteSessionMemoryStore? memoryStore,
-  })  : _performanceRecordStore =
-            performanceRecordStore ?? SupabasePerformanceRecordStore(),
-        _trainingSessionRepository =
-            trainingSessionRepository ?? const TrainingSessionRepository(),
-        _memoryStore = memoryStore ?? AthleteSessionMemoryStore.instance;
+  }) : _performanceRecordStore =
+           performanceRecordStore ?? SupabasePerformanceRecordStore(),
+       _trainingSessionRepository =
+           trainingSessionRepository ?? const TrainingSessionRepository(),
+       _memoryStore = memoryStore ?? AthleteSessionMemoryStore.instance;
 
   final PerformanceRecordStore _performanceRecordStore;
   final TrainingSessionRepository _trainingSessionRepository;
@@ -61,18 +61,18 @@ class FounderAcceptanceRuntimeResetService {
       'athlete=$athleteId protocol=$protocolId assignment=$assignmentId',
     );
 
-    final deletedPerformanceRecords =
-        await _performanceRecordStore.deleteFounderScopedRecords(
-      athleteId: athleteId,
-      sourceProtocolId: protocolId,
-      assignmentId: assignmentId,
-    );
+    final deletedPerformanceRecords = await _performanceRecordStore
+        .deleteFounderScopedRecords(
+          athleteId: athleteId,
+          sourceProtocolId: protocolId,
+          assignmentId: assignmentId,
+        );
 
-    final deletedTrainingSessions =
-        await _trainingSessionRepository.deleteForAthleteAndProtocol(
-      athleteId: athleteId,
-      protocolId: protocolId,
-    );
+    final deletedTrainingSessions = await _trainingSessionRepository
+        .deleteForAthleteAndProtocol(
+          athleteId: athleteId,
+          protocolId: protocolId,
+        );
 
     final clearedMemoryKeys = _memoryStore.clearForProtocol(protocolId);
 

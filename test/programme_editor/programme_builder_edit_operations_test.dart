@@ -164,10 +164,7 @@ void main() {
         'BW-001',
       );
 
-      final cleared = operations.clearProtocol(
-        assigned,
-        slotLocalId: slotId,
-      );
+      final cleared = operations.clearProtocol(assigned, slotLocalId: slotId);
       expect(
         cleared.template.allWeeks.single.days.single.slots.single.protocolId,
         '',

@@ -199,10 +199,14 @@ class TrainingBlockResult {
               position: map['position'] ?? 0,
             ),
       status: TrainingBlockResultStatusDb.fromDb(map['status']?.toString()),
-      resultType: PerformanceResultTypeDb.fromDb(map['result_type']?.toString()),
+      resultType: PerformanceResultTypeDb.fromDb(
+        map['result_type']?.toString(),
+      ),
       position: map['position'] ?? 0,
       resultData: resultJson is Map
-          ? PerformanceResultData.fromJson(Map<String, dynamic>.from(resultJson))
+          ? PerformanceResultData.fromJson(
+              Map<String, dynamic>.from(resultJson),
+            )
           : null,
       athleteNote: _trim(map['athlete_note']),
       startedAt: _parseDateTime(map['started_at']),
@@ -319,7 +323,8 @@ class TrainingSessionRecord {
       if (sourceProtocolId != null) 'source_protocol_id': sourceProtocolId,
       if (programmeId != null) 'programme_id': programmeId,
       if (assignmentId != null) 'assignment_id': assignmentId,
-      if (programmeSessionId != null) 'programme_session_id': programmeSessionId,
+      if (programmeSessionId != null)
+        'programme_session_id': programmeSessionId,
       'status': status.dbValue,
       'session_snapshot': sessionSnapshot.toJson(),
       if (activeBlockId != null) 'active_block_id': activeBlockId,

@@ -6,10 +6,7 @@ import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/widgets/cohort_card.dart';
 
-enum ProgressResultCardVariant {
-  container,
-  card,
-}
+enum ProgressResultCardVariant { container, card }
 
 /// Shared visual shell for in-session progress comparison cards.
 class ProgressResultCard extends StatelessWidget {
@@ -57,18 +54,12 @@ class ProgressResultCard extends StatelessWidget {
                 ? CohortSpacing.xs
                 : CohortSpacing.xs,
           ),
-          Text(
-            message,
-            style: CohortTextStyles.small,
-          ),
+          Text(message, style: CohortTextStyles.small),
         ],
         for (final reason in reasons)
           Padding(
             padding: const EdgeInsets.only(top: CohortSpacing.xs),
-            child: Text(
-              '• $reason',
-              style: CohortTextStyles.small,
-            ),
+            child: Text('• $reason', style: CohortTextStyles.small),
           ),
       ],
     );
@@ -76,15 +67,15 @@ class ProgressResultCard extends StatelessWidget {
     return switch (variant) {
       ProgressResultCardVariant.card => CohortCard(child: body),
       ProgressResultCardVariant.container => Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(CohortSpacing.md),
-          decoration: BoxDecoration(
-            color: CohortColors.surfaceRaised,
-            borderRadius: CohortRadius.smallRadius,
-            border: Border.all(color: accentColor.withValues(alpha: 0.35)),
-          ),
-          child: body,
+        width: double.infinity,
+        padding: const EdgeInsets.all(CohortSpacing.md),
+        decoration: BoxDecoration(
+          color: CohortColors.surfaceRaised,
+          borderRadius: CohortRadius.smallRadius,
+          border: Border.all(color: accentColor.withValues(alpha: 0.35)),
         ),
+        child: body,
+      ),
     };
   }
 }

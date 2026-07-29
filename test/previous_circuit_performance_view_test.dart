@@ -11,10 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Future<void> pumpView(
-    WidgetTester tester,
-    CircuitSessionView child,
-  ) async {
+  Future<void> pumpView(WidgetTester tester, CircuitSessionView child) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -24,9 +21,7 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: SingleChildScrollView(child: child),
-        ),
+        home: Scaffold(body: SingleChildScrollView(child: child)),
       ),
     );
     await tester.pump();
@@ -34,7 +29,9 @@ void main() {
   }
 
   group('CircuitSessionView previous performance', () {
-    testWidgets('shows first performance message when no history', (tester) async {
+    testWidgets('shows first performance message when no history', (
+      tester,
+    ) async {
       await pumpView(
         tester,
         CircuitSessionView(

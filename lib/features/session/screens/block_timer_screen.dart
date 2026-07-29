@@ -87,10 +87,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
               ),
               const SizedBox(height: CohortSpacing.md),
               Text(widget.blockTitle, style: CohortTextStyles.h2),
-              Text(
-                widget.format.displayLabel,
-                style: CohortTextStyles.eyebrow,
-              ),
+              Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
               const Spacer(),
               if (state != null) ...[
                 Text(state.phaseLabel, style: CohortTextStyles.body),

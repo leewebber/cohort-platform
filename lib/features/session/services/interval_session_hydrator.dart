@@ -34,19 +34,17 @@ class IntervalSessionHydrator {
         return entry;
       }
 
-      final row = performanceByKey[_key(
-        blockIndex: entry.blockIndex,
-        repNumber: entry.repNumber,
-        phaseType: entry.phaseType.dbValue,
-      )];
+      final row =
+          performanceByKey[_key(
+            blockIndex: entry.blockIndex,
+            repNumber: entry.repNumber,
+            phaseType: entry.phaseType.dbValue,
+          )];
       if (row == null) {
         return entry;
       }
 
-      return _entryFromPerformance(
-        baseEntry: entry,
-        performance: row,
-      );
+      return _entryFromPerformance(baseEntry: entry, performance: row);
     }).toList();
 
     final activeLocalId = _resolveActiveLocalId(entries);

@@ -1,11 +1,5 @@
 /// Relative importance of a block within a session when adapting under constraints.
-enum BlockPriority {
-  essential,
-  primary,
-  secondary,
-  optional,
-  disposable,
-}
+enum BlockPriority { essential, primary, secondary, optional, disposable }
 
 extension BlockPriorityDb on BlockPriority {
   String get dbValue => name;

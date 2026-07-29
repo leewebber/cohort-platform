@@ -29,8 +29,9 @@ class AdaptationValidationResult {
       if (retainedSecondaryIntent != null)
         'retained_secondary_intent': retainedSecondaryIntent!.dbValue,
       if (unresolvedConstraints.isNotEmpty)
-        'unresolved_constraints':
-            unresolvedConstraints.map((c) => c.toJson()).toList(),
+        'unresolved_constraints': unresolvedConstraints
+            .map((c) => c.toJson())
+            .toList(),
     };
   }
 

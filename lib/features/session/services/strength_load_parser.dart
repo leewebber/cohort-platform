@@ -44,7 +44,9 @@ class StrengthLoadParser {
     ).firstMatch(trimmed);
 
     if (match == null) {
-      final numericOnly = double.tryParse(trimmed.replaceAll(RegExp(r'[^0-9.]'), ''));
+      final numericOnly = double.tryParse(
+        trimmed.replaceAll(RegExp(r'[^0-9.]'), ''),
+      );
       return ParsedLoad(
         value: numericOnly,
         unit: numericOnly == null ? 'unknown' : null,
@@ -53,17 +55,16 @@ class StrengthLoadParser {
 
     final value = double.tryParse(match.group(1) ?? '');
     final unitToken = match.group(2)?.toLowerCase();
-    final unit = unitToken == null ? null : _unitAliases[unitToken] ?? 'unknown';
+    final unit = unitToken == null
+        ? null
+        : _unitAliases[unitToken] ?? 'unknown';
 
     return ParsedLoad(value: value, unit: unit);
   }
 }
 
 class ParsedLoad {
-  const ParsedLoad({
-    this.value,
-    this.unit,
-  });
+  const ParsedLoad({this.value, this.unit});
 
   final double? value;
   final String? unit;

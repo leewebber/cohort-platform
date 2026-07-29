@@ -6,9 +6,8 @@ import 'package:cohort_platform/models/session_revision_vocabulary.dart';
 
 /// In-memory [ProtocolBuilderService] stand-in for session revision tests.
 class FakeProtocolBuilderService extends ProtocolBuilderService {
-  FakeProtocolBuilderService({
-    ProtocolDraftBlockResolver? blockResolver,
-  }) : super(blockResolver: blockResolver);
+  FakeProtocolBuilderService({ProtocolDraftBlockResolver? blockResolver})
+    : super(blockResolver: blockResolver);
 
   final Map<String, ProtocolDraft> draftsById = <String, ProtocolDraft>{};
   final List<ProtocolDraft> saveDraftCalls = <ProtocolDraft>[];

@@ -64,8 +64,7 @@ class ProgrammeDraft {
   /// Flat week list when programme has no phases.
   final List<ProgrammeWeekDraft> weeks;
 
-  bool get isPublished =>
-      lifecycleStatus == ProgrammeLifecycleStatus.published;
+  bool get isPublished => lifecycleStatus == ProgrammeLifecycleStatus.published;
 
   bool get isDraft => lifecycleStatus == ProgrammeLifecycleStatus.draft;
 
@@ -117,10 +116,12 @@ class ProgrammeDraft {
       ownerType: ownerType ?? this.ownerType,
       ownerId: clearOwnerId ? null : (ownerId ?? this.ownerId),
       description: clearDescription ? null : (description ?? this.description),
-      durationWeeks:
-          clearDurationWeeks ? null : (durationWeeks ?? this.durationWeeks),
-      targetAthlete:
-          clearTargetAthlete ? null : (targetAthlete ?? this.targetAthlete),
+      durationWeeks: clearDurationWeeks
+          ? null
+          : (durationWeeks ?? this.durationWeeks),
+      targetAthlete: clearTargetAthlete
+          ? null
+          : (targetAthlete ?? this.targetAthlete),
       difficulty: clearDifficulty ? null : (difficulty ?? this.difficulty),
       primaryGoal: clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
       equipmentRequirements: clearEquipmentRequirements

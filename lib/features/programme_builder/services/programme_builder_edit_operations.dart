@@ -144,8 +144,7 @@ class ProgrammeBuilderEditOperations {
   }) {
     _assertEditable(document);
     final weeks = document.template.weeks.map((week) {
-      var days =
-          week.days.where((day) => day.localId != dayLocalId).toList();
+      var days = week.days.where((day) => day.localId != dayLocalId).toList();
 
       if (days.isEmpty) {
         days = [
@@ -202,10 +201,7 @@ class ProgrammeBuilderEditOperations {
         if (day.localId != dayLocalId) return day;
 
         if (dayType == ProgrammeDayType.rest && clearSlotsOnRest) {
-          return day.copyWith(
-            dayType: ProgrammeDayType.rest,
-            slots: const [],
-          );
+          return day.copyWith(dayType: ProgrammeDayType.rest, slots: const []);
         }
 
         var slots = day.slots;
@@ -243,7 +239,7 @@ class ProgrammeBuilderEditOperations {
         final nextOrder = slots.isEmpty
             ? 1
             : slots.map((s) => s.sessionOrder).reduce((a, b) => a > b ? a : b) +
-                1;
+                  1;
 
         slots.add(
           ProgrammeSessionSlotDraft(
@@ -271,8 +267,9 @@ class ProgrammeBuilderEditOperations {
     _assertEditable(document);
     final weeks = document.template.weeks.map((week) {
       final days = week.days.map((day) {
-        final slots =
-            day.slots.where((slot) => slot.localId != slotLocalId).toList();
+        final slots = day.slots
+            .where((slot) => slot.localId != slotLocalId)
+            .toList();
         if (slots.length == day.slots.length) return day;
         return day.copyWith(slots: _renumberSlots(slots));
       }).toList();
@@ -338,7 +335,8 @@ class ProgrammeBuilderEditOperations {
           if (slot.localId != slotLocalId) return slot;
 
           final optional = isOptional ?? slot.isOptional;
-          final expectation = completionExpectation ??
+          final expectation =
+              completionExpectation ??
               (optional
                   ? ProgrammeSessionCompletionExpectation.optional
                   : slot.completionExpectation);
@@ -441,10 +439,7 @@ class ProgrammeBuilderEditOperations {
 
     return [
       for (var i = 0; i < sorted.length; i++)
-        sorted[i].copyWith(
-          dayOrder: i + 1,
-          dayKey: 'day_${i + 1}',
-        ),
+        sorted[i].copyWith(dayOrder: i + 1, dayKey: 'day_${i + 1}'),
     ];
   }
 

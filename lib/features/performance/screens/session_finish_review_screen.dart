@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../application/athlete_workout/athlete_workout_completion_application_service.dart';
+import '../../../application/athlete_workout/home_workout_execution_context.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -7,6 +9,7 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/performance_capture_controller.dart';
+import '../mappers/workout_execution_outcome_mapper.dart';
 import '../models/training_session_record_status.dart';
 import '../services/performance_record_save_coordinator.dart';
 import '../widgets/performance_capture_widgets.dart';
@@ -23,6 +26,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
     this.programmeContext,
     this.programmeProgress,
     this.saveCoordinator,
+    this.homeWorkoutExecution,
   });
 
   final PerformanceCaptureController performanceController;
@@ -32,6 +36,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
   final ProgrammeExecutionContext? programmeContext;
   final ProgrammeProgressSummary? programmeProgress;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
+  final HomeWorkoutExecutionContext? homeWorkoutExecution;
 
   @override
   State<SessionFinishReviewScreen> createState() =>
@@ -47,6 +52,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
 
   late final PerformanceRecordSaveCoordinator _saveCoordinator =
       widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
+
+  static const _domainCompletionService =
+      AthleteWorkoutCompletionApplicationService();
 
   @override
   void initState() {
@@ -72,6 +80,40 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
 
     try {
       final status = _performanceController.resolveCompletionStatus();
+      final finishedAt = DateTime.now();
+      var usedDomainCompletion = false;
+
+      final launchContext = widget.executionController.workoutLaunchContext;
+      final homeExecution =
+          widget.homeWorkoutExecution ?? launchContext?.homeWorkoutExecution;
+      final workoutPlayer = widget.executionController.workoutPlayer;
+
+      if (homeExecution != null &&
+          launchContext != null &&
+          workoutPlayer != null) {
+        final outcomes = WorkoutExecutionOutcomeMapper.fromDraft(
+          draft: _performanceController.draft,
+          snapshot: launchContext.executionSnapshot,
+          sessionStatus: status,
+        );
+
+        final domainCompletion = _domainCompletionService.complete(
+          executionContext: homeExecution,
+          athleteId: widget.athleteId,
+          workoutPlayer: workoutPlayer,
+          exerciseOutcomes: outcomes,
+          finishedAt: finishedAt,
+        );
+
+        if (!domainCompletion.succeeded) {
+          throw StateError(
+            domainCompletion.domainResult.completionDetail ??
+                'workout_completion_failed',
+          );
+        }
+        usedDomainCompletion = true;
+      }
+
       final result = await _saveCoordinator.completeSession(
         controller: _performanceController,
         trainingSessionId: widget.trainingSessionId,
@@ -80,9 +122,15 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         forcedStatus: status,
       );
 
-      widget.executionController.completeSession(
-        allowIncomplete: status != TrainingSessionRecordStatus.completed,
-      );
+      if (usedDomainCompletion) {
+        widget.executionController.applyDomainCompletionProjection(
+          finishedAt: finishedAt,
+        );
+      } else {
+        widget.executionController.completeSession(
+          allowIncomplete: status != TrainingSessionRecordStatus.completed,
+        );
+      }
 
       if (!mounted) return;
 

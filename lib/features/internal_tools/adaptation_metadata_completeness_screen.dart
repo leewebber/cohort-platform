@@ -13,10 +13,7 @@ import '../session_builder/models/adaptation_metadata_builder_vocabulary.dart';
 
 /// Founder-only adaptation metadata backlog review (internal tools build).
 class AdaptationMetadataCompletenessScreen extends StatefulWidget {
-  const AdaptationMetadataCompletenessScreen({
-    super.key,
-    this.loader,
-  });
+  const AdaptationMetadataCompletenessScreen({super.key, this.loader});
 
   final AdaptationMetadataCompletenessLoader? loader;
 
@@ -119,7 +116,9 @@ class _AdaptationMetadataCompletenessScreenState
               ),
               const SizedBox(height: CohortSpacing.md),
               if (_loading)
-                const Expanded(child: Center(child: CircularProgressIndicator()))
+                const Expanded(
+                  child: Center(child: CircularProgressIndicator()),
+                )
               else if (_errorMessage != null)
                 Expanded(
                   child: Text(_errorMessage!, style: CohortTextStyles.body),
@@ -147,7 +146,8 @@ class _AdaptationMetadataCompletenessScreenState
                       final item = visible[index];
                       return _CompletenessTile(
                         item: item,
-                        onOpenBuilder: () => _openInProtocolBuilder(item.protocolId),
+                        onOpenBuilder: () =>
+                            _openInProtocolBuilder(item.protocolId),
                       );
                     },
                   ),
@@ -179,12 +179,12 @@ class _SummaryGrid extends StatelessWidget {
           label: 'Blocks on defaults',
           value: summary.blocksDerivedDefaults,
         ),
-        _StatChip(
-          label: 'Blocks unresolved',
-          value: summary.blocksUnresolved,
-        ),
+        _StatChip(label: 'Blocks unresolved', value: summary.blocksUnresolved),
         _StatChip(label: 'Protocols tagged', value: summary.protocolsTagged),
-        _StatChip(label: 'Protocols untagged', value: summary.protocolsUntagged),
+        _StatChip(
+          label: 'Protocols untagged',
+          value: summary.protocolsUntagged,
+        ),
       ],
     );
   }
@@ -260,10 +260,7 @@ class _FilterBar extends StatelessWidget {
               child: Text('All session types'),
             ),
             for (final type in report.sessionTypeOptions)
-              DropdownMenuItem<String?>(
-                value: type,
-                child: Text(type),
-              ),
+              DropdownMenuItem<String?>(value: type, child: Text(type)),
           ],
           onChanged: (value) => onChanged(
             AdaptationMetadataCompletenessFilters(
@@ -350,10 +347,7 @@ class _FilterBar extends StatelessWidget {
 }
 
 class _CompletenessTile extends StatelessWidget {
-  const _CompletenessTile({
-    required this.item,
-    required this.onOpenBuilder,
-  });
+  const _CompletenessTile({required this.item, required this.onOpenBuilder});
 
   final AdaptationMetadataCompletenessItem item;
   final VoidCallback onOpenBuilder;
@@ -371,8 +365,7 @@ class _CompletenessTile extends StatelessWidget {
           Text(item.name, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.xs),
           Text(
-            item.slotLocationLabel ??
-                '${item.scope.name} · ${item.protocolId}',
+            item.slotLocationLabel ?? '${item.scope.name} · ${item.protocolId}',
             style: CohortTextStyles.small,
           ),
           if (item.programmeName != null) ...[
@@ -399,7 +392,9 @@ class _CompletenessTile extends StatelessWidget {
             Text(
               'Confirmed intent: '
               '${AdaptationMetadataBuilderVocabulary.sessionIntentDisplayLabel(confirmed)}',
-              style: CohortTextStyles.small.copyWith(color: CohortColors.success),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.success,
+              ),
             )
           else if (suggestion != null)
             Text(

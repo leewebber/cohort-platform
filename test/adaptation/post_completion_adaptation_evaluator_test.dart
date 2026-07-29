@@ -148,10 +148,7 @@ void main() {
 
       expect(evaluation, isNotNull);
       expect(evaluation!.type, AdaptationEvaluationType.loadProgression);
-      expect(
-        evaluation.explanation,
-        contains('two consecutive sessions'),
-      );
+      expect(evaluation.explanation, contains('two consecutive sessions'));
       expect(evaluation.newLoadKg, 62.5);
     });
 

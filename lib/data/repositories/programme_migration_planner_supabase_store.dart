@@ -28,9 +28,8 @@ class ProgrammeMigrationPlannerSupabaseStore
 
         return response
             .map(
-              (row) => ProgrammeAssignment.fromMap(
-                Map<String, dynamic>.from(row),
-              ),
+              (row) =>
+                  ProgrammeAssignment.fromMap(Map<String, dynamic>.from(row)),
             )
             .toList()
           ..sort((a, b) => a.id.compareTo(b.id));
@@ -45,9 +44,8 @@ class ProgrammeMigrationPlannerSupabaseStore
 
       return response
           .map(
-            (row) => ProgrammeAssignment.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProgrammeAssignment.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } catch (error) {

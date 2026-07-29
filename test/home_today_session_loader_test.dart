@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/athlete_workout/athlete_today_workout_resolution_service.dart';
 import 'package:cohort_platform/data/repositories/athlete_state_repository.dart';
 import 'package:cohort_platform/data/repositories/programme_repository.dart';
 import 'package:cohort_platform/data/repositories/protocol_repository.dart';
@@ -55,24 +56,21 @@ class _StubTrainingSessionRepository extends TrainingSessionRepository {
   Future<TrainingSession?> getLatestSessionForAthleteAndProtocol({
     required String athleteId,
     required String protocolId,
-  }) async =>
-      null;
+  }) async => null;
 }
 
 class _ThrowingTodaySessionService extends TodaySessionServiceImpl {
   _ThrowingTodaySessionService()
-      : super(
-          assignmentStore: InMemoryProgrammeAssignmentStore(
-            InMemoryProgrammeTables(),
-          ),
-          versionStore: InMemoryProgrammeVersionStore(
-            InMemoryProgrammeTables(),
-          ),
-          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(
-            InMemoryProgrammeTables(),
-          ),
-          scheduleResolver: const ProgrammeScheduleResolverImpl(),
-        );
+    : super(
+        assignmentStore: InMemoryProgrammeAssignmentStore(
+          InMemoryProgrammeTables(),
+        ),
+        versionStore: InMemoryProgrammeVersionStore(InMemoryProgrammeTables()),
+        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(
+          InMemoryProgrammeTables(),
+        ),
+        scheduleResolver: const ProgrammeScheduleResolverImpl(),
+      );
 
   @override
   Future<ResolvedTodaySession> resolveForAthlete(String athleteId) {
@@ -99,14 +97,18 @@ void main() {
   }) {
     final versionStore = InMemoryProgrammeVersionStore(tables);
     final slotOutcomeStore = InMemoryProgrammeSlotOutcomeStore(tables);
+    final todayService =
+        todaySessionService ??
+        TodaySessionServiceImpl(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: versionStore,
+          slotOutcomeStore: slotOutcomeStore,
+          scheduleResolver: const ProgrammeScheduleResolverImpl(),
+        );
     return HomeTodaySessionLoader(
-      todaySessionService: todaySessionService ??
-          TodaySessionServiceImpl(
-            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-            versionStore: versionStore,
-            slotOutcomeStore: slotOutcomeStore,
-            scheduleResolver: const ProgrammeScheduleResolverImpl(),
-          ),
+      todayWorkoutResolutionService: AthleteTodayWorkoutResolutionService(
+        todaySessionService: todayService,
+      ),
       athleteStateSyncService: AthleteStateSyncServiceImpl(
         athleteStateStore: InMemoryAthleteStateStore(tables),
       ),
@@ -162,13 +164,12 @@ void main() {
     test('rest day state', () async {
       final tables = InMemoryProgrammeTables();
       await seedFoundationAssignment(tables);
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_3',
-      ).copyWith(
-        id: devAssignmentId,
-        programmeVersionId: ProgrammeDevFixtures.foundationTestVersionId,
-        lineageCode: ProgrammeDevFixtures.foundationTestLineageCode,
-      );
+      tables.assignments[0] =
+          ProgrammeScheduleTestFixtures.assignment(dayKey: 'day_3').copyWith(
+            id: devAssignmentId,
+            programmeVersionId: ProgrammeDevFixtures.foundationTestVersionId,
+            lineageCode: ProgrammeDevFixtures.foundationTestLineageCode,
+          );
 
       final state = await buildLoader(tables: tables).load(athleteId);
 
@@ -182,7 +183,9 @@ void main() {
       final tables = InMemoryProgrammeTables();
       final versionId = ProgrammeDevFixtures.foundationTestVersionId;
       await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
-        version: ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
+        version: ProgrammeScheduleTestFixtures.version().copyWith(
+          id: versionId,
+        ),
         tree: ProgrammeScheduleTestFixtures.singleWeekTree(
           programmeVersionId: versionId,
           days: [
@@ -254,7 +257,9 @@ void main() {
 
       expect(state, isA<HomeTodaySessionDayComplete>());
       expect(
-        (state as HomeTodaySessionDayComplete).resolution.suggestedNextCursor
+        (state as HomeTodaySessionDayComplete)
+            .resolution
+            .suggestedNextCursor
             ?.dayKey,
         'day_2',
       );
@@ -268,7 +273,10 @@ void main() {
 
       final executable = state as HomeTodaySessionProgrammeExecutable;
       expect(executable.executionContext.assignmentId, devAssignmentId);
-      expect(executable.executionContext.sessionSlotId, ProgrammeScheduleTestFixtures.slot1Id);
+      expect(
+        executable.executionContext.sessionSlotId,
+        ProgrammeScheduleTestFixtures.slot1Id,
+      );
       expect(executable.executionContext.isProgrammeBacked, isTrue);
     });
 
@@ -278,8 +286,9 @@ void main() {
         final tables = InMemoryProgrammeTables();
         final versionId = ProgrammeDevFixtures.foundationTestVersionId;
         await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
-          version:
-              ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
+          version: ProgrammeScheduleTestFixtures.version().copyWith(
+            id: versionId,
+          ),
           tree: ProgrammeScheduleTestFixtures.singleWeekTree(
             programmeVersionId: versionId,
             days: [
@@ -310,26 +319,27 @@ void main() {
         );
 
         final protocolsWithCanonicalName = {
-          'BW-001': Protocol(
-            protocolId: 'BW-001',
-            name: 'Bodyweight Grinder',
-          ),
+          'BW-001': Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder'),
           'RN-006': Protocol(protocolId: 'RN-006', name: 'Run Intervals'),
         };
 
+        final todayService = TodaySessionServiceImpl(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: InMemoryProgrammeVersionStore(tables),
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+          scheduleResolver: const ProgrammeScheduleResolverImpl(),
+        );
         final loader = HomeTodaySessionLoader(
-          todaySessionService: TodaySessionServiceImpl(
-            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-            versionStore: InMemoryProgrammeVersionStore(tables),
-            slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
-            scheduleResolver: const ProgrammeScheduleResolverImpl(),
+          todayWorkoutResolutionService: AthleteTodayWorkoutResolutionService(
+            todaySessionService: todayService,
           ),
           athleteStateSyncService: AthleteStateSyncServiceImpl(
             athleteStateStore: InMemoryAthleteStateStore(tables),
           ),
           athleteStateRepository: _StubAthleteStateRepository(null),
-          protocolRepository:
-              _StubProtocolRepository(protocolsWithCanonicalName),
+          protocolRepository: _StubProtocolRepository(
+            protocolsWithCanonicalName,
+          ),
           programmeRepository: _StubProgrammeRepository(const {}),
           trainingSessionRepository: _StubTrainingSessionRepository(),
         );
@@ -384,15 +394,14 @@ void main() {
     test('resolver error shows error not stale manual session', () async {
       final tables = InMemoryProgrammeTables();
       final loader = HomeTodaySessionLoader(
-        todaySessionService: _ThrowingTodaySessionService(),
+        todayWorkoutResolutionService: AthleteTodayWorkoutResolutionService(
+          todaySessionService: _ThrowingTodaySessionService(),
+        ),
         athleteStateSyncService: AthleteStateSyncServiceImpl(
           athleteStateStore: InMemoryAthleteStateStore(tables),
         ),
         athleteStateRepository: _StubAthleteStateRepository(
-          const AthleteState(
-            athleteId: athleteId,
-            currentProtocolId: 'RN-006',
-          ),
+          const AthleteState(athleteId: athleteId, currentProtocolId: 'RN-006'),
         ),
         protocolRepository: _StubProtocolRepository(protocols),
         programmeRepository: _StubProgrammeRepository(const {}),

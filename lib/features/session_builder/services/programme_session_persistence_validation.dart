@@ -40,7 +40,9 @@ class ProgrammeSessionPersistenceValidation {
     );
 
     if (draft.contentKind == TrainingContentKind.cohortProtocol) {
-      messages.add('Official Cohort Protocol content cannot be saved as a programme Session.');
+      messages.add(
+        'Official Cohort Protocol content cannot be saved as a programme Session.',
+      );
     }
 
     return messages;

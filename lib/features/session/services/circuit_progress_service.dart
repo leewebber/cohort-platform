@@ -24,9 +24,7 @@ class CircuitProgressService {
 
     if (previousPerformance.scoreType != plan.scoreType) {
       return _insufficientData(
-        reasons: const [
-          'Previous and today use different scoring methods.',
-        ],
+        reasons: const ['Previous and today use different scoring methods.'],
       );
     }
 
@@ -151,9 +149,7 @@ class CircuitProgressService {
     );
   }
 
-  CircuitProgressResult _insufficientData({
-    required List<String> reasons,
-  }) {
+  CircuitProgressResult _insufficientData({required List<String> reasons}) {
     return CircuitProgressResult(
       progressType: CircuitProgressType.insufficientData,
       title: 'Logged successfully',
@@ -189,13 +185,10 @@ class CircuitProgressService {
       CircuitScoreType.roundsAndReps => _compareRoundsAndReps(previous, today),
       CircuitScoreType.elapsedTime => _compareElapsedTime(previous, today),
       CircuitScoreType.totalReps => _compareTotalReps(previous, today),
-      CircuitScoreType.roundsCompleted =>
-        _compareIntervals(previous, today),
-      CircuitScoreType.movementsCompleted =>
-        _compareMovements(previous, today),
+      CircuitScoreType.roundsCompleted => _compareIntervals(previous, today),
+      CircuitScoreType.movementsCompleted => _compareMovements(previous, today),
       CircuitScoreType.benchmarkScore =>
-        _compareElapsedTime(previous, today) ==
-                _ComparisonOutcome.incompatible
+        _compareElapsedTime(previous, today) == _ComparisonOutcome.incompatible
             ? _compareRoundsAndReps(previous, today)
             : _compareElapsedTime(previous, today),
     };
@@ -403,12 +396,10 @@ class CircuitProgressService {
 
   CircuitProgressType _improvedTypeForScore(CircuitScoreType scoreType) {
     return switch (scoreType) {
-      CircuitScoreType.roundsAndReps =>
-        CircuitProgressType.moreRoundsOrReps,
+      CircuitScoreType.roundsAndReps => CircuitProgressType.moreRoundsOrReps,
       CircuitScoreType.elapsedTime => CircuitProgressType.fasterCompletion,
       CircuitScoreType.totalReps => CircuitProgressType.moreWorkCompleted,
-      CircuitScoreType.roundsCompleted =>
-        CircuitProgressType.moreWorkCompleted,
+      CircuitScoreType.roundsCompleted => CircuitProgressType.moreWorkCompleted,
       CircuitScoreType.movementsCompleted =>
         CircuitProgressType.moreWorkCompleted,
       CircuitScoreType.benchmarkScore => CircuitProgressType.fasterCompletion,
@@ -448,9 +439,7 @@ class CircuitProgressService {
     required CircuitPerformanceEntry today,
     required CircuitScoreType scoreType,
   }) {
-    final reasons = <String>[
-      'Previous: ${previous.displaySummary}.',
-    ];
+    final reasons = <String>['Previous: ${previous.displaySummary}.'];
 
     final todaySummary = today.displayScoreSummary;
     if (todaySummary != null) {
@@ -485,9 +474,4 @@ class CircuitProgressService {
   }
 }
 
-enum _ComparisonOutcome {
-  improved,
-  declined,
-  matched,
-  incompatible,
-}
+enum _ComparisonOutcome { improved, declined, matched, incompatible }

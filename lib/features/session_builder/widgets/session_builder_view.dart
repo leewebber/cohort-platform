@@ -54,8 +54,7 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
   void initState() {
     super.initState();
     _editing = SessionBuilderEditingState(draft: widget.draft);
-    _protocolIdController =
-        TextEditingController(text: _editing.protocolId);
+    _protocolIdController = TextEditingController(text: _editing.protocolId);
     _nameController = TextEditingController(text: _editing.name);
     _durationMinController = TextEditingController(
       text: _editing.durationMin?.toString() ?? '',
@@ -79,7 +78,8 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
   void didUpdateWidget(covariant SessionBuilderView oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.draft.protocolId != widget.draft.protocolId ||
-        oldWidget.draft.primarySessionIntent != widget.draft.primarySessionIntent ||
+        oldWidget.draft.primarySessionIntent !=
+            widget.draft.primarySessionIntent ||
         oldWidget.draft.minimumViableDurationMin !=
             widget.draft.minimumViableDurationMin) {
       _editing.applyDraft(widget.draft);
@@ -94,8 +94,7 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
   void _syncTextFieldsToDraft() {
     _editing.protocolId = _protocolIdController.text;
     _editing.name = _nameController.text;
-    _editing.durationMin =
-        int.tryParse(_durationMinController.text.trim());
+    _editing.durationMin = int.tryParse(_durationMinController.text.trim());
     _emitDraft();
   }
 
@@ -150,7 +149,8 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                         ? 'Session code'
                         : 'protocol_id',
                     controller: _protocolIdController,
-                    readOnly: !capabilities.allowProtocolIdEdit ||
+                    readOnly:
+                        !capabilities.allowProtocolIdEdit ||
                         widget.protocolIdLocked,
                   ),
                 ],
@@ -162,9 +162,8 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   label: display.sessionFormatFieldLabel,
                   value: _editing.sessionFormat,
                   options: SessionBuilderConstants.sessionFormats,
-                  onChanged: (value) => _setStateAndEmit(
-                    () => _editing.sessionFormat = value,
-                  ),
+                  onChanged: (value) =>
+                      _setStateAndEmit(() => _editing.sessionFormat = value),
                 ),
                 if (capabilities.showCohortMetadataFields) ...[
                   SessionBuilderDropdown(
@@ -174,9 +173,8 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       _editing.sessionType,
                       ProtocolMetadataVocabulary.sessionTypes,
                     ),
-                    onChanged: (value) => _setStateAndEmit(
-                      () => _editing.sessionType = value,
-                    ),
+                    onChanged: (value) =>
+                        _setStateAndEmit(() => _editing.sessionType = value),
                   ),
                   SessionBuilderDropdown(
                     label: 'primary_capability',
@@ -192,10 +190,10 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   SessionBuilderDropdown(
                     label: 'secondary_capability',
                     value: _editing.secondaryCapability,
-                    options: ProtocolMetadataVocabulary
-                        .secondaryCapabilityOptionsWithCurrent(
-                      _editing.secondaryCapability,
-                    ),
+                    options:
+                        ProtocolMetadataVocabulary.secondaryCapabilityOptionsWithCurrent(
+                          _editing.secondaryCapability,
+                        ),
                     onChanged: (value) => _setStateAndEmit(
                       () => _editing.secondaryCapability = value,
                     ),
@@ -234,9 +232,8 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       _editing.recoveryCost,
                       ProtocolMetadataVocabulary.recoveryCosts,
                     ),
-                    onChanged: (value) => _setStateAndEmit(
-                      () => _editing.recoveryCost = value,
-                    ),
+                    onChanged: (value) =>
+                        _setStateAndEmit(() => _editing.recoveryCost = value),
                   ),
                   SessionBuilderDropdown(
                     label: 'technical_complexity',
@@ -256,20 +253,19 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       _editing.environment,
                       ProtocolMetadataVocabulary.environments,
                     ),
-                    onChanged: (value) => _setStateAndEmit(
-                      () => _editing.environment = value,
-                    ),
+                    onChanged: (value) =>
+                        _setStateAndEmit(() => _editing.environment = value),
                   ),
                   SessionBuilderChecklist(
                     label: 'required_equipment',
                     selected: _editing.selectedRequiredEquipment,
-                    options: ProtocolMetadataVocabulary
-                        .requiredEquipmentOptionsWithCurrent(
-                      ProtocolMetadataVocabulary.formatCommaSeparated(
-                        _editing.selectedRequiredEquipment,
-                        ProtocolMetadataVocabulary.equipment,
-                      ),
-                    ),
+                    options:
+                        ProtocolMetadataVocabulary.requiredEquipmentOptionsWithCurrent(
+                          ProtocolMetadataVocabulary.formatCommaSeparated(
+                            _editing.selectedRequiredEquipment,
+                            ProtocolMetadataVocabulary.equipment,
+                          ),
+                        ),
                     onChanged: (value, isSelected) => _setStateAndEmit(() {
                       if (isSelected) {
                         _editing.selectedRequiredEquipment.add(value);
@@ -281,13 +277,13 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   SessionBuilderChecklist(
                     label: 'optional_equipment',
                     selected: _editing.selectedOptionalEquipment,
-                    options: ProtocolMetadataVocabulary
-                        .optionalEquipmentOptionsWithCurrent(
-                      ProtocolMetadataVocabulary.formatCommaSeparated(
-                        _editing.selectedOptionalEquipment,
-                        ProtocolMetadataVocabulary.equipment,
-                      ),
-                    ),
+                    options:
+                        ProtocolMetadataVocabulary.optionalEquipmentOptionsWithCurrent(
+                          ProtocolMetadataVocabulary.formatCommaSeparated(
+                            _editing.selectedOptionalEquipment,
+                            ProtocolMetadataVocabulary.equipment,
+                          ),
+                        ),
                     onChanged: (value, isSelected) => _setStateAndEmit(() {
                       if (isSelected) {
                         _editing.selectedOptionalEquipment.add(value);
@@ -299,13 +295,13 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   SessionBuilderChecklist(
                     label: 'suitable_for',
                     selected: _editing.selectedSuitableFor,
-                    options: ProtocolMetadataVocabulary
-                        .suitableForOptionsWithCurrent(
-                      ProtocolMetadataVocabulary.formatCommaSeparated(
-                        _editing.selectedSuitableFor,
-                        ProtocolMetadataVocabulary.suitableFor,
-                      ),
-                    ),
+                    options:
+                        ProtocolMetadataVocabulary.suitableForOptionsWithCurrent(
+                          ProtocolMetadataVocabulary.formatCommaSeparated(
+                            _editing.selectedSuitableFor,
+                            ProtocolMetadataVocabulary.suitableFor,
+                          ),
+                        ),
                     onChanged: (value, isSelected) => _setStateAndEmit(() {
                       if (isSelected) {
                         _editing.selectedSuitableFor.add(value);
@@ -341,17 +337,18 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                   useCoachLabels: display.useCoachFacingTerminology,
                   canMoveUp: index > 0,
                   canMoveDown: index < _editing.blocks.length - 1,
-                  onChanged: (updated) => _setStateAndEmit(
-                    () => _editing.updateBlock(updated),
-                  ),
+                  onChanged: (updated) =>
+                      _setStateAndEmit(() => _editing.updateBlock(updated)),
                   onMoveUp: () => _setStateAndEmit(
-                    () => _editing.moveBlock(_editing.blocks[index].localId, -1),
+                    () =>
+                        _editing.moveBlock(_editing.blocks[index].localId, -1),
                   ),
                   onMoveDown: () => _setStateAndEmit(
                     () => _editing.moveBlock(_editing.blocks[index].localId, 1),
                   ),
                   onDuplicate: () => _setStateAndEmit(
-                    () => _editing.duplicateBlock(_editing.blocks[index].localId),
+                    () =>
+                        _editing.duplicateBlock(_editing.blocks[index].localId),
                   ),
                   onDelete: () => _setStateAndEmit(
                     () => _editing.deleteBlock(_editing.blocks[index].localId),
@@ -362,12 +359,13 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       format,
                     ),
                   ),
-                  onTimerConfigurationChanged: (configuration) => _setStateAndEmit(
-                    () => _editing.updateTimerConfiguration(
-                      _editing.blocks[index].localId,
-                      configuration,
-                    ),
-                  ),
+                  onTimerConfigurationChanged: (configuration) =>
+                      _setStateAndEmit(
+                        () => _editing.updateTimerConfiguration(
+                          _editing.blocks[index].localId,
+                          configuration,
+                        ),
+                      ),
                   onAddExercise: (exercise) => _setStateAndEmit(
                     () => _editing.addExerciseLink(
                       _editing.blocks[index].localId,
@@ -394,26 +392,27 @@ class _SessionBuilderViewState extends State<SessionBuilderView> {
                       1,
                     ),
                   ),
-                  onExerciseLabelChanged: (linkLocalId, label) => _setStateAndEmit(
-                    () => _editing.updateExerciseLinkLabel(
-                      _editing.blocks[index].localId,
-                      linkLocalId,
-                      label,
-                    ),
-                  ),
-                  onUpsertStrengthExercise: ({
-                    required exercise,
-                    required prescription,
-                    linkLocalId,
-                  }) =>
+                  onExerciseLabelChanged: (linkLocalId, label) =>
                       _setStateAndEmit(
-                    () => _editing.upsertStrengthExercisePrescription(
-                      blockLocalId: _editing.blocks[index].localId,
-                      exercise: exercise,
-                      prescription: prescription,
-                      linkLocalId: linkLocalId,
-                    ),
-                  ),
+                        () => _editing.updateExerciseLinkLabel(
+                          _editing.blocks[index].localId,
+                          linkLocalId,
+                          label,
+                        ),
+                      ),
+                  onUpsertStrengthExercise:
+                      ({
+                        required exercise,
+                        required prescription,
+                        linkLocalId,
+                      }) => _setStateAndEmit(
+                        () => _editing.upsertStrengthExercisePrescription(
+                          blockLocalId: _editing.blocks[index].localId,
+                          exercise: exercise,
+                          prescription: prescription,
+                          linkLocalId: linkLocalId,
+                        ),
+                      ),
                   onDuplicateExercise: (linkLocalId) => _setStateAndEmit(
                     () => _editing.duplicateExerciseLink(
                       _editing.blocks[index].localId,

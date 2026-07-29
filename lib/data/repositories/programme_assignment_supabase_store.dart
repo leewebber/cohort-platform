@@ -79,11 +79,10 @@ class ProgrammeAssignmentSupabaseStore implements ProgrammeAssignmentStore {
           .select()
           .single();
 
-      final inserted =
-          ProgrammeAssignment.fromMap(Map<String, dynamic>.from(response));
-      debugPrint(
-        '[ProgrammeAssignment] inserted assignmentId=${inserted.id}',
+      final inserted = ProgrammeAssignment.fromMap(
+        Map<String, dynamic>.from(response),
       );
+      debugPrint('[ProgrammeAssignment] inserted assignmentId=${inserted.id}');
 
       return inserted;
     } catch (error) {
@@ -136,9 +135,8 @@ class ProgrammeAssignmentSupabaseStore implements ProgrammeAssignmentStore {
 
       return response
           .map(
-            (row) => ProgrammeAssignment.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProgrammeAssignment.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } catch (error) {

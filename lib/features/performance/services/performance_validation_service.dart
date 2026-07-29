@@ -17,7 +17,9 @@ class PerformanceValidationResult {
 class PerformanceValidationService {
   const PerformanceValidationService();
 
-  PerformanceValidationResult validateForCompletion(ActivePerformanceDraft draft) {
+  PerformanceValidationResult validateForCompletion(
+    ActivePerformanceDraft draft,
+  ) {
     final errors = <String, String>{};
 
     if (draft.overallRpe != null &&
@@ -39,8 +41,12 @@ class PerformanceValidationService {
     );
   }
 
-  TrainingSessionRecordStatus resolveCompletionStatus(ActivePerformanceDraft draft) {
-    final meaningfulBlocks = draft.blockDrafts.where(_blockCountsTowardCompletion);
+  TrainingSessionRecordStatus resolveCompletionStatus(
+    ActivePerformanceDraft draft,
+  ) {
+    final meaningfulBlocks = draft.blockDrafts.where(
+      _blockCountsTowardCompletion,
+    );
     if (meaningfulBlocks.isEmpty ||
         meaningfulBlocks.every(
           (block) => block.status == TrainingBlockResultStatus.skipped,

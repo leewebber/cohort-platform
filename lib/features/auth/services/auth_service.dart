@@ -5,7 +5,7 @@ import 'auth_session_port.dart';
 
 class AuthService implements AuthSessionPort {
   AuthService({SupabaseClient? client})
-      : _client = client ?? SupabaseService.client;
+    : _client = client ?? SupabaseService.client;
 
   final SupabaseClient _client;
 
@@ -50,10 +50,7 @@ class AuthService implements AuthSessionPort {
 
   @override
   Future<void> resendSignupVerification({required String email}) {
-    return _client.auth.resend(
-      type: OtpType.signup,
-      email: email.trim(),
-    );
+    return _client.auth.resend(type: OtpType.signup, email: email.trim());
   }
 
   @override

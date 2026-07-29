@@ -38,6 +38,8 @@ enum AdaptationEvaluationFindingCode {
   timeFeasibleWithoutShortening,
   derivedPolicyInUse,
   explicitPolicyInUse,
+  recoveryConflict,
+  recoveryCompatible,
 }
 
 /// Structured signals explaining [AdaptationConfidence] assignment.
@@ -57,10 +59,7 @@ enum AdaptationConfidenceFindingCode {
   multipleMaterialUnknowns,
 }
 
-enum AdaptationPolicySource {
-  explicit,
-  derived,
-}
+enum AdaptationPolicySource { explicit, derived }
 
 /// Smallest likely adaptation scope required to satisfy constraints.
 enum AdaptationMinimumScope {
@@ -161,6 +160,7 @@ class PlannedSessionAdaptationInput {
     this.hotelFriendly,
     this.indoorFriendly,
     this.physiologicalDemandLabel,
+    this.recoveryCostLabel,
     this.sessionImpact,
     this.exerciseMetadataById = const {},
   });
@@ -175,10 +175,11 @@ class PlannedSessionAdaptationInput {
   final bool? hotelFriendly;
   final bool? indoorFriendly;
   final String? physiologicalDemandLabel;
+  final String? recoveryCostLabel;
   final ImpactLevel? sessionImpact;
   final List<PlannedBlockAdaptationInput> blocks;
   final Map<String, ExerciseAdaptationMetadataForEvaluation>
-      exerciseMetadataById;
+  exerciseMetadataById;
 }
 
 class PlannedBlockAdaptationInput {

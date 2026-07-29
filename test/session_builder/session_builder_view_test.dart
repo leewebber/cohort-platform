@@ -34,7 +34,9 @@ void main() {
       );
 
       final draft =
-          ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(context);
+          ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(
+            context,
+          );
 
       expect(draft.contentKind, TrainingContentKind.session);
       expect(draft.authoringScope, TrainingAuthoringScope.programmeOnly);
@@ -115,8 +117,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1 · Tuesday · Morning',
-                ),
+                      programmeLocationLabel: 'Week 1 · Tuesday · Morning',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (draft) => latest = draft,
               ),
@@ -178,8 +180,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1 · Day 1 · Morning',
-                ),
+                      programmeLocationLabel: 'Week 1 · Day 1 · Morning',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (draft) => latest = draft,
               ),
@@ -211,8 +213,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1 · Day 1',
-                ),
+                      programmeLocationLabel: 'Week 1 · Day 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (draft) => latest = draft,
               ),

@@ -62,7 +62,8 @@ class SessionBlockEditorCard extends StatefulWidget {
     required Exercise exercise,
     required StrengthExercisePrescription prescription,
     String? linkLocalId,
-  })? onUpsertStrengthExercise;
+  })?
+  onUpsertStrengthExercise;
   final ValueChanged<String>? onDuplicateExercise;
   final bool initiallyExpanded;
   final bool useCoachLabels;
@@ -84,8 +85,9 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
     _expanded = widget.initiallyExpanded;
     _titleController = TextEditingController(text: widget.block.title);
     _contentController = TextEditingController(text: widget.block.content);
-    _coachNotesController =
-        TextEditingController(text: widget.block.coachNotes ?? '');
+    _coachNotesController = TextEditingController(
+      text: widget.block.coachNotes ?? '',
+    );
   }
 
   @override
@@ -148,7 +150,9 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
     return null;
   }
 
-  Future<void> _openStrengthExerciseSheet({SessionBlockExerciseLink? link}) async {
+  Future<void> _openStrengthExerciseSheet({
+    SessionBlockExerciseLink? link,
+  }) async {
     if (widget.onUpsertStrengthExercise == null) return;
 
     final result = await showStrengthExercisePrescriptionSheet(
@@ -331,7 +335,11 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
             if (_usesStructuredStrength) ...[
               Text('Exercises', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
-              for (var index = 0; index < block.linkedExercises.length; index++) ...[
+              for (
+                var index = 0;
+                index < block.linkedExercises.length;
+                index++
+              ) ...[
                 StrengthExercisePrescriptionCard(
                   exerciseName: _exerciseName(block.linkedExercises[index]),
                   prescription: block.linkedExercises[index].prescription,
@@ -367,16 +375,22 @@ class _SessionBlockEditorCardState extends State<SessionBlockEditorCard> {
             ] else ...[
               Text('Exercises used', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
-              for (var index = 0; index < block.linkedExercises.length; index++) ...[
+              for (
+                var index = 0;
+                index < block.linkedExercises.length;
+                index++
+              ) ...[
                 _ExerciseLinkRow(
                   link: block.linkedExercises[index],
                   exercises: widget.exercises,
                   canMoveUp: index > 0,
                   canMoveDown: index < block.linkedExercises.length - 1,
-                  onRemove: () =>
-                      widget.onRemoveExercise(block.linkedExercises[index].localId),
-                  onMoveUp: () =>
-                      widget.onMoveExerciseUp(block.linkedExercises[index].localId),
+                  onRemove: () => widget.onRemoveExercise(
+                    block.linkedExercises[index].localId,
+                  ),
+                  onMoveUp: () => widget.onMoveExerciseUp(
+                    block.linkedExercises[index].localId,
+                  ),
                   onMoveDown: () => widget.onMoveExerciseDown(
                     block.linkedExercises[index].localId,
                   ),
@@ -461,102 +475,103 @@ class _TimerFields extends StatelessWidget {
       children: [
         switch (workoutFormat) {
           WorkoutFormat.amrap => field(
-              'Duration (seconds)',
-              configuration.durationSeconds,
-              (value) => onChanged(configuration.copyWith(durationSeconds: value)),
-            ),
+            'Duration (seconds)',
+            configuration.durationSeconds,
+            (value) =>
+                onChanged(configuration.copyWith(durationSeconds: value)),
+          ),
           WorkoutFormat.emom => Column(
-              children: [
-                field(
-                  'Total duration (seconds)',
-                  configuration.totalDurationSeconds,
-                  (value) => onChanged(
-                    configuration.copyWith(totalDurationSeconds: value),
-                  ),
-                ),
-                field(
-                  'Interval (seconds)',
-                  configuration.intervalSeconds,
-                  (value) =>
-                      onChanged(configuration.copyWith(intervalSeconds: value)),
-                ),
-              ],
-            ),
-          WorkoutFormat.forTime => field(
-              'Time cap (seconds, optional)',
-              configuration.timeCapSeconds,
-              (value) => onChanged(
-                configuration.copyWith(
-                  timeCapSeconds: value,
-                  stopwatchEnabled: true,
+            children: [
+              field(
+                'Total duration (seconds)',
+                configuration.totalDurationSeconds,
+                (value) => onChanged(
+                  configuration.copyWith(totalDurationSeconds: value),
                 ),
               ),
+              field(
+                'Interval (seconds)',
+                configuration.intervalSeconds,
+                (value) =>
+                    onChanged(configuration.copyWith(intervalSeconds: value)),
+              ),
+            ],
+          ),
+          WorkoutFormat.forTime => field(
+            'Time cap (seconds, optional)',
+            configuration.timeCapSeconds,
+            (value) => onChanged(
+              configuration.copyWith(
+                timeCapSeconds: value,
+                stopwatchEnabled: true,
+              ),
             ),
+          ),
           WorkoutFormat.intervals => Column(
-              children: [
-                field(
-                  'Work (seconds)',
-                  configuration.workSeconds,
-                  (value) =>
-                      onChanged(configuration.copyWith(workSeconds: value)),
-                ),
-                field(
-                  'Rest (seconds)',
-                  configuration.restSeconds,
-                  (value) =>
-                      onChanged(configuration.copyWith(restSeconds: value)),
-                ),
-                field(
-                  'Rounds',
-                  configuration.rounds,
-                  (value) => onChanged(configuration.copyWith(rounds: value)),
-                ),
-              ],
-            ),
+            children: [
+              field(
+                'Work (seconds)',
+                configuration.workSeconds,
+                (value) =>
+                    onChanged(configuration.copyWith(workSeconds: value)),
+              ),
+              field(
+                'Rest (seconds)',
+                configuration.restSeconds,
+                (value) =>
+                    onChanged(configuration.copyWith(restSeconds: value)),
+              ),
+              field(
+                'Rounds',
+                configuration.rounds,
+                (value) => onChanged(configuration.copyWith(rounds: value)),
+              ),
+            ],
+          ),
           WorkoutFormat.tabata => Column(
-              children: [
-                field(
-                  'Work (seconds)',
-                  configuration.workSeconds,
-                  (value) =>
-                      onChanged(configuration.copyWith(workSeconds: value)),
-                ),
-                field(
-                  'Rest (seconds)',
-                  configuration.restSeconds,
-                  (value) =>
-                      onChanged(configuration.copyWith(restSeconds: value)),
-                ),
-                field(
-                  'Rounds',
-                  configuration.rounds,
-                  (value) => onChanged(configuration.copyWith(rounds: value)),
-                ),
-              ],
-            ),
+            children: [
+              field(
+                'Work (seconds)',
+                configuration.workSeconds,
+                (value) =>
+                    onChanged(configuration.copyWith(workSeconds: value)),
+              ),
+              field(
+                'Rest (seconds)',
+                configuration.restSeconds,
+                (value) =>
+                    onChanged(configuration.copyWith(restSeconds: value)),
+              ),
+              field(
+                'Rounds',
+                configuration.rounds,
+                (value) => onChanged(configuration.copyWith(rounds: value)),
+              ),
+            ],
+          ),
           WorkoutFormat.rounds => Column(
-              children: [
-                field(
-                  'Target rounds',
-                  configuration.targetRounds,
-                  (value) =>
-                      onChanged(configuration.copyWith(targetRounds: value)),
+            children: [
+              field(
+                'Target rounds',
+                configuration.targetRounds,
+                (value) =>
+                    onChanged(configuration.copyWith(targetRounds: value)),
+              ),
+              field(
+                'Rest between rounds (seconds)',
+                configuration.restBetweenRoundsSeconds,
+                (value) => onChanged(
+                  configuration.copyWith(restBetweenRoundsSeconds: value),
                 ),
-                field(
-                  'Rest between rounds (seconds)',
-                  configuration.restBetweenRoundsSeconds,
-                  (value) => onChanged(
-                    configuration.copyWith(restBetweenRoundsSeconds: value),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
+          ),
           WorkoutFormat.other => field(
-              'Duration (seconds, optional)',
-              configuration.durationSeconds,
-              (value) =>
-                  onChanged(configuration.copyWith(durationSeconds: value)),
-            ),
+            'Duration (seconds, optional)',
+            configuration.durationSeconds,
+            (value) =>
+                onChanged(configuration.copyWith(durationSeconds: value)),
+          ),
           WorkoutFormat.none => const SizedBox.shrink(),
         },
       ],
@@ -595,8 +610,9 @@ class _ExerciseLinkRowState extends State<_ExerciseLinkRow> {
   @override
   void initState() {
     super.initState();
-    _labelController =
-        TextEditingController(text: widget.link.displayLabelOverride ?? '');
+    _labelController = TextEditingController(
+      text: widget.link.displayLabelOverride ?? '',
+    );
   }
 
   @override

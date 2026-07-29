@@ -75,10 +75,10 @@ class StrengthExercisePrescription {
       load: loadRaw == null
           ? null
           : loadRaw is Map<String, dynamic>
-              ? StrengthLoadPrescription.fromJson(loadRaw)
-              : StrengthLoadPrescription.fromJson(
-                  Map<String, dynamic>.from(loadRaw as Map),
-                ),
+          ? StrengthLoadPrescription.fromJson(loadRaw)
+          : StrengthLoadPrescription.fromJson(
+              Map<String, dynamic>.from(loadRaw as Map),
+            ),
       restSeconds: _parseInt(json['rest_seconds']),
       tempo: json['tempo']?.toString(),
       coachCue: json['coach_cue']?.toString(),
@@ -112,14 +112,7 @@ class StrengthExercisePrescription {
   }
 }
 
-enum StrengthRepType {
-  exact,
-  range,
-  duration,
-  distance,
-  maxEffort,
-  freeText,
-}
+enum StrengthRepType { exact, range, duration, distance, maxEffort, freeText }
 
 class StrengthRepPrescription {
   const StrengthRepPrescription({
@@ -137,15 +130,17 @@ class StrengthRepPrescription {
   final String? text;
 
   bool get hasValue => switch (type) {
-        StrengthRepType.exact => exactReps != null && exactReps! > 0,
-        StrengthRepType.range =>
-          minReps != null && maxReps != null && minReps! > 0 && maxReps! >= minReps!,
-        StrengthRepType.duration ||
-        StrengthRepType.distance ||
-        StrengthRepType.maxEffort ||
-        StrengthRepType.freeText =>
-          text?.trim().isNotEmpty == true,
-      };
+    StrengthRepType.exact => exactReps != null && exactReps! > 0,
+    StrengthRepType.range =>
+      minReps != null &&
+          maxReps != null &&
+          minReps! > 0 &&
+          maxReps! >= minReps!,
+    StrengthRepType.duration ||
+    StrengthRepType.distance ||
+    StrengthRepType.maxEffort ||
+    StrengthRepType.freeText => text?.trim().isNotEmpty == true,
+  };
 
   StrengthRepPrescription copyWith({
     StrengthRepType? type,
@@ -204,18 +199,21 @@ class StrengthRepPrescription {
       return const ['reps are required.'];
     }
     return switch (type) {
-      StrengthRepType.exact when exactReps == null || exactReps! <= 0 =>
-        const ['exact reps must be at least 1.'],
-      StrengthRepType.range when minReps == null ||
-          maxReps == null ||
-          minReps! <= 0 ||
-          maxReps! < minReps! =>
+      StrengthRepType.exact when exactReps == null || exactReps! <= 0 => const [
+        'exact reps must be at least 1.',
+      ],
+      StrengthRepType.range
+          when minReps == null ||
+              maxReps == null ||
+              minReps! <= 0 ||
+              maxReps! < minReps! =>
         const ['rep range must have a valid min and max.'],
       StrengthRepType.duration ||
       StrengthRepType.distance ||
       StrengthRepType.maxEffort ||
-      StrengthRepType.freeText when text?.trim().isEmpty != false =>
-        const ['reps description is required.'],
+      StrengthRepType.freeText when text?.trim().isEmpty != false => const [
+        'reps description is required.',
+      ],
       _ => const [],
     };
   }
@@ -227,8 +225,7 @@ class StrengthRepPrescription {
       StrengthRepType.duration ||
       StrengthRepType.distance ||
       StrengthRepType.maxEffort ||
-      StrengthRepType.freeText =>
-        text?.trim() ?? '',
+      StrengthRepType.freeText => text?.trim() ?? '',
     };
   }
 }
@@ -261,14 +258,14 @@ class StrengthLoadPrescription {
   final String? text;
 
   bool get hasValue => switch (type) {
-        StrengthLoadType.bodyweight => true,
-        StrengthLoadType.fixedKg => kg != null && kg! > 0,
-        StrengthLoadType.percent1rm => percent1rm != null && percent1rm! > 0,
-        StrengthLoadType.rpe => rpe != null && rpe! > 0,
-        StrengthLoadType.rir => rir != null && rir! >= 0,
-        StrengthLoadType.athleteSelected => true,
-        StrengthLoadType.freeText => text?.trim().isNotEmpty == true,
-      };
+    StrengthLoadType.bodyweight => true,
+    StrengthLoadType.fixedKg => kg != null && kg! > 0,
+    StrengthLoadType.percent1rm => percent1rm != null && percent1rm! > 0,
+    StrengthLoadType.rpe => rpe != null && rpe! > 0,
+    StrengthLoadType.rir => rir != null && rir! >= 0,
+    StrengthLoadType.athleteSelected => true,
+    StrengthLoadType.freeText => text?.trim().isNotEmpty == true,
+  };
 
   StrengthLoadPrescription copyWith({
     StrengthLoadType? type,
@@ -312,16 +309,20 @@ class StrengthLoadPrescription {
 
   List<String> validate() {
     return switch (type) {
-      StrengthLoadType.fixedKg when kg == null || kg! <= 0 =>
-        const ['load in kg must be greater than 0.'],
+      StrengthLoadType.fixedKg when kg == null || kg! <= 0 => const [
+        'load in kg must be greater than 0.',
+      ],
       StrengthLoadType.percent1rm when percent1rm == null || percent1rm! <= 0 =>
         const ['1RM percentage must be greater than 0.'],
-      StrengthLoadType.rpe when rpe == null || rpe! <= 0 =>
-        const ['RPE must be greater than 0.'],
-      StrengthLoadType.rir when rir == null || rir! < 0 =>
-        const ['RIR must be zero or greater.'],
-      StrengthLoadType.freeText when text?.trim().isEmpty != false =>
-        const ['load description is required.'],
+      StrengthLoadType.rpe when rpe == null || rpe! <= 0 => const [
+        'RPE must be greater than 0.',
+      ],
+      StrengthLoadType.rir when rir == null || rir! < 0 => const [
+        'RIR must be zero or greater.',
+      ],
+      StrengthLoadType.freeText when text?.trim().isEmpty != false => const [
+        'load description is required.',
+      ],
       _ => const [],
     };
   }

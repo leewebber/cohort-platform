@@ -50,7 +50,8 @@ class StrengthRestTimerState {
     );
   }
 
-  static String exerciseLocalIdForStep(int stepNumber) => 'exercise-$stepNumber';
+  static String exerciseLocalIdForStep(int stepNumber) =>
+      'exercise-$stepNumber';
 
   static String _formatDuration(int totalSeconds) {
     final minutes = totalSeconds ~/ 60;
@@ -102,9 +103,7 @@ class StrengthRestParser {
       return null;
     }
 
-    final normalized = trimmed
-        .toLowerCase()
-        .replaceAll(RegExp(r'\s+'), ' ');
+    final normalized = trimmed.toLowerCase().replaceAll(RegExp(r'\s+'), ' ');
 
     final rangeMatch = _rangeMinutesPattern.firstMatch(normalized);
     if (rangeMatch != null) {
@@ -139,10 +138,7 @@ class StrengthRestParser {
         return null;
       }
 
-      return ParsedPrescribedRest(
-        totalSeconds: seconds,
-        displayLabel: trimmed,
-      );
+      return ParsedPrescribedRest(totalSeconds: seconds, displayLabel: trimmed);
     }
 
     return null;

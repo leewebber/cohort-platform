@@ -26,17 +26,10 @@ enum AdaptationMetadataOwnershipFilter {
   cohortGlobalProgramme,
 }
 
-enum BlockAdaptationMetadataMode {
-  explicit,
-  derivedDefaults,
-  unresolved,
-}
+enum BlockAdaptationMetadataMode { explicit, derivedDefaults, unresolved }
 
 class SessionIntentSuggestion {
-  const SessionIntentSuggestion({
-    required this.intent,
-    required this.reason,
-  });
+  const SessionIntentSuggestion({required this.intent, required this.reason});
 
   final SessionIntent intent;
   final String reason;
@@ -196,25 +189,27 @@ class AdaptationMetadataCompletenessReport {
   List<AdaptationMetadataCompletenessItem> filtered(
     AdaptationMetadataCompletenessFilters filters,
   ) {
-    return items.where((item) {
-      if (filters.programmeVersionId != null &&
-          item.programmeVersionId != filters.programmeVersionId) {
-        return false;
-      }
-      if (filters.sessionType != null &&
-          item.sessionTypeLabel.toLowerCase() !=
-              filters.sessionType!.toLowerCase()) {
-        return false;
-      }
-      if (filters.missingCategory != null &&
-          !item.missingCategories.contains(filters.missingCategory)) {
-        return false;
-      }
-      if (!_matchesOwnership(item, filters.ownership)) {
-        return false;
-      }
-      return true;
-    }).toList(growable: false);
+    return items
+        .where((item) {
+          if (filters.programmeVersionId != null &&
+              item.programmeVersionId != filters.programmeVersionId) {
+            return false;
+          }
+          if (filters.sessionType != null &&
+              item.sessionTypeLabel.toLowerCase() !=
+                  filters.sessionType!.toLowerCase()) {
+            return false;
+          }
+          if (filters.missingCategory != null &&
+              !item.missingCategories.contains(filters.missingCategory)) {
+            return false;
+          }
+          if (!_matchesOwnership(item, filters.ownership)) {
+            return false;
+          }
+          return true;
+        })
+        .toList(growable: false);
   }
 
   static bool _matchesOwnership(
@@ -237,10 +232,7 @@ class AdaptationMetadataCompletenessReport {
 }
 
 class ProgrammeFilterOption {
-  const ProgrammeFilterOption({
-    required this.versionId,
-    required this.label,
-  });
+  const ProgrammeFilterOption({required this.versionId, required this.label});
 
   final String versionId;
   final String label;

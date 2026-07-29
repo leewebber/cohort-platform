@@ -1,9 +1,5 @@
 /// Local timer display state for circuit execution (v0.1 — in-memory only).
-enum CircuitTimerMode {
-  countUp,
-  countDown,
-  intervalPhase,
-}
+enum CircuitTimerMode { countUp, countDown, intervalPhase }
 
 class CircuitTimerState {
   const CircuitTimerState({
@@ -58,8 +54,9 @@ class CircuitTimerState {
       primarySeconds: primarySeconds ?? this.primarySeconds,
       elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
       currentInterval: currentInterval ?? this.currentInterval,
-      totalIntervals:
-          clearTotalIntervals ? null : (totalIntervals ?? this.totalIntervals),
+      totalIntervals: clearTotalIntervals
+          ? null
+          : (totalIntervals ?? this.totalIntervals),
       timeCapped: timeCapped ?? this.timeCapped,
     );
   }

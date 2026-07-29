@@ -70,10 +70,7 @@ class ProgrammeEditorDayCard extends StatelessWidget {
             ),
             if (day.intent != null) ...[
               const SizedBox(height: CohortSpacing.xs),
-              Text(
-                day.intent!.name,
-                style: CohortTextStyles.small,
-              ),
+              Text(day.intent!.name, style: CohortTextStyles.small),
             ],
             const SizedBox(height: CohortSpacing.sm),
             if (day.isRestDay)
@@ -86,14 +83,15 @@ class ProgrammeEditorDayCard extends StatelessWidget {
                   slotLocalId: slot.localId,
                 );
                 final slotIssues = controller.issuesForPath(slotPath);
-                final hasSlotError =
-                    slotIssues.any((issue) => issue.isBlocking);
+                final hasSlotError = slotIssues.any(
+                  (issue) => issue.isBlocking,
+                );
                 final protocolLabel =
                     ProgrammeBuilderConstants.isUnassignedProtocolId(
                       slot.protocolId,
                     )
-                        ? 'No protocol'
-                        : slot.protocolId;
+                    ? 'No protocol'
+                    : slot.protocolId;
 
                 return ListTile(
                   contentPadding: EdgeInsets.zero,

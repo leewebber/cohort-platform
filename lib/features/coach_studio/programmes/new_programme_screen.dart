@@ -15,10 +15,7 @@ import 'programme_editor_screen.dart';
 import 'utils/programme_lineage_code_suggester.dart';
 
 class NewProgrammeScreen extends StatefulWidget {
-  const NewProgrammeScreen({
-    super.key,
-    required this.controller,
-  });
+  const NewProgrammeScreen({super.key, required this.controller});
 
   final ProgrammeCatalogueController controller;
 
@@ -124,9 +121,7 @@ class _NewProgrammeScreenState extends State<NewProgrammeScreen> {
 
     await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (_) => ProgrammeEditorScreen(
-          versionId: result.versionId!,
-        ),
+        builder: (_) => ProgrammeEditorScreen(versionId: result.versionId!),
       ),
     );
   }
@@ -189,110 +184,122 @@ class _NewProgrammeScreenState extends State<NewProgrammeScreen> {
     return CoachRouteGuard.wrap(
       title: 'New programme',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: _submitting ? null : () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const SectionTitle('Coach Studio'),
-              const SizedBox(height: CohortSpacing.md),
-              const Text('New Programme', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.xl),
-              Expanded(
-                child: ListView(
-                  children: [
-                    _field('Programme name', _nameController, onChanged: _onNameChanged),
-                    const SizedBox(height: CohortSpacing.md),
-                    _field('Lineage code', _lineageController),
-                    const SizedBox(height: CohortSpacing.md),
-                    _field('Description (optional)', _descriptionController, maxLines: 3),
-                    const SizedBox(height: CohortSpacing.md),
-                    DropdownButtonFormField<ProgrammeLibraryScope>(
-                      value: _libraryScope,
-                      decoration: const InputDecoration(labelText: 'Library scope'),
-                      items: ProgrammeLibraryScope.values
-                          .map(
-                            (scope) => DropdownMenuItem(
-                              value: scope,
-                              child: Text(scope.displayLabel),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: _submitting
-                          ? null
-                          : (value) {
-                              if (value == null) return;
-                              setState(() => _libraryScope = value);
-                            },
-                    ),
-                    const SizedBox(height: CohortSpacing.md),
-                    _field('Duration weeks (optional)', _durationController),
-                    const SizedBox(height: CohortSpacing.md),
-                    _field('Primary goal (optional)', _goalController),
-                    const SizedBox(height: CohortSpacing.lg),
-                    Text('Starting template', style: CohortTextStyles.body),
-                    const SizedBox(height: CohortSpacing.sm),
-                    ...ProgrammeSeedTemplate.values.map((template) {
-                      return RadioListTile<ProgrammeSeedTemplate>(
-                        value: template,
-                        groupValue: _seedTemplate,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: _submitting ? null : () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                const SectionTitle('Coach Studio'),
+                const SizedBox(height: CohortSpacing.md),
+                const Text('New Programme', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.xl),
+                Expanded(
+                  child: ListView(
+                    children: [
+                      _field(
+                        'Programme name',
+                        _nameController,
+                        onChanged: _onNameChanged,
+                      ),
+                      const SizedBox(height: CohortSpacing.md),
+                      _field('Lineage code', _lineageController),
+                      const SizedBox(height: CohortSpacing.md),
+                      _field(
+                        'Description (optional)',
+                        _descriptionController,
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: CohortSpacing.md),
+                      DropdownButtonFormField<ProgrammeLibraryScope>(
+                        value: _libraryScope,
+                        decoration: const InputDecoration(
+                          labelText: 'Library scope',
+                        ),
+                        items: ProgrammeLibraryScope.values
+                            .map(
+                              (scope) => DropdownMenuItem(
+                                value: scope,
+                                child: Text(scope.displayLabel),
+                              ),
+                            )
+                            .toList(),
                         onChanged: _submitting
                             ? null
                             : (value) {
                                 if (value == null) return;
-                                setState(() => _seedTemplate = value);
+                                setState(() => _libraryScope = value);
                               },
-                        title: Text(template.label),
-                        subtitle: Text(template.description),
-                      );
-                    }),
-                    if (_errorMessage != null) ...[
-                      const SizedBox(height: CohortSpacing.md),
-                      Text(
-                        _errorMessage!,
-                        style: CohortTextStyles.body.copyWith(color: CohortColors.danger),
                       ),
-                      if (kDebugMode && _debugDetail != null) ...[
-                        const SizedBox(height: CohortSpacing.sm),
-                        ExpansionTile(
-                          title: Text(
-                            'Debug error detail',
-                            style: CohortTextStyles.small,
+                      const SizedBox(height: CohortSpacing.md),
+                      _field('Duration weeks (optional)', _durationController),
+                      const SizedBox(height: CohortSpacing.md),
+                      _field('Primary goal (optional)', _goalController),
+                      const SizedBox(height: CohortSpacing.lg),
+                      Text('Starting template', style: CohortTextStyles.body),
+                      const SizedBox(height: CohortSpacing.sm),
+                      ...ProgrammeSeedTemplate.values.map((template) {
+                        return RadioListTile<ProgrammeSeedTemplate>(
+                          value: template,
+                          groupValue: _seedTemplate,
+                          onChanged: _submitting
+                              ? null
+                              : (value) {
+                                  if (value == null) return;
+                                  setState(() => _seedTemplate = value);
+                                },
+                          title: Text(template.label),
+                          subtitle: Text(template.description),
+                        );
+                      }),
+                      if (_errorMessage != null) ...[
+                        const SizedBox(height: CohortSpacing.md),
+                        Text(
+                          _errorMessage!,
+                          style: CohortTextStyles.body.copyWith(
+                            color: CohortColors.danger,
                           ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(CohortSpacing.sm),
-                              child: SelectableText(
-                                _debugDetail!,
-                                style: CohortTextStyles.small,
-                              ),
-                            ),
-                          ],
                         ),
+                        if (kDebugMode && _debugDetail != null) ...[
+                          const SizedBox(height: CohortSpacing.sm),
+                          ExpansionTile(
+                            title: Text(
+                              'Debug error detail',
+                              style: CohortTextStyles.small,
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(CohortSpacing.sm),
+                                child: SelectableText(
+                                  _debugDetail!,
+                                  style: CohortTextStyles.small,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: _submitting ? null : _submit,
-                  child: Text(_submitting ? 'Creating…' : 'Create programme'),
+                const SizedBox(height: CohortSpacing.md),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: _submitting ? null : _submit,
+                    child: Text(_submitting ? 'Creating…' : 'Create programme'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 

@@ -29,11 +29,10 @@ enum IntervalDataSource {
   }
 
   bool get isImported => switch (this) {
-        IntervalDataSource.manual => false,
-        IntervalDataSource.other => false,
-        IntervalDataSource.importedGarmin ||
-        IntervalDataSource.importedStrava ||
-        IntervalDataSource.importedAppleHealth =>
-          true,
-      };
+    IntervalDataSource.manual => false,
+    IntervalDataSource.other => false,
+    IntervalDataSource.importedGarmin ||
+    IntervalDataSource.importedStrava ||
+    IntervalDataSource.importedAppleHealth => true,
+  };
 }

@@ -35,15 +35,14 @@ class CoachHomeDashboardScreen extends StatefulWidget {
 class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
   late final CoachHomeDashboardController _controller =
       widget.controller ??
-          CoachHomeDashboardController(
-            dailyStatusService:
-                widget.dailyStatusService ??
-                    CoachOperationsServices.createDailyStatusService(),
-          );
+      CoachHomeDashboardController(
+        dailyStatusService:
+            widget.dailyStatusService ??
+            CoachOperationsServices.createDailyStatusService(),
+      );
 
-  late final AthleteRosterController _rosterController = AthleteRosterController(
-    service: CoachAthleteServices.createService(),
-  );
+  late final AthleteRosterController _rosterController =
+      AthleteRosterController(service: CoachAthleteServices.createService());
 
   @override
   void initState() {
@@ -112,26 +111,30 @@ class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
   }
 
   void _openAthlete(CoachAthleteDailySnapshot snapshot) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AthleteDetailScreen(athlete: snapshot.rosterEntry),
-      ),
-    ).then((_) {
-      if (mounted) _controller.load();
-    });
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (_) => AthleteDetailScreen(athlete: snapshot.rosterEntry),
+          ),
+        )
+        .then((_) {
+          if (mounted) _controller.load();
+        });
   }
 
   void _openAssign(CoachAthleteDailySnapshot snapshot) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => AthleteDetailScreen(
-          athlete: snapshot.rosterEntry,
-          openAssignOnLoad: true,
-        ),
-      ),
-    ).then((_) {
-      if (mounted) _controller.load();
-    });
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute(
+            builder: (_) => AthleteDetailScreen(
+              athlete: snapshot.rosterEntry,
+              openAssignOnLoad: true,
+            ),
+          ),
+        )
+        .then((_) {
+          if (mounted) _controller.load();
+        });
   }
 
   @override
@@ -150,57 +153,57 @@ class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
                   child: const Text('← Back'),
                 ),
                 const SectionTitle('Coach Home'),
-              const SizedBox(height: CohortSpacing.sm),
-              Text('My Athletes', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.sm),
-              Text(
-                'See who trained, who is due today, and who needs attention.',
-                style: CohortTextStyles.body,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              CohortButton(
-                label: _rosterController.isCreatingInvite
-                    ? 'Creating invite…'
-                    : 'Invite athlete',
-                onPressed:
-                    _rosterController.isCreatingInvite ? () {} : _showInviteSheet,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              _FilterBar(
-                activeFilter: _controller.activeFilter,
-                onFilterSelected: _controller.setFilter,
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              Expanded(child: _buildBody()),
-            ],
+                const SizedBox(height: CohortSpacing.sm),
+                Text('My Athletes', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  'See who trained, who is due today, and who needs attention.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                CohortButton(
+                  label: _rosterController.isCreatingInvite
+                      ? 'Creating invite…'
+                      : 'Invite athlete',
+                  onPressed: _rosterController.isCreatingInvite
+                      ? () {}
+                      : _showInviteSheet,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                _FilterBar(
+                  activeFilter: _controller.activeFilter,
+                  onFilterSelected: _controller.setFilter,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                Expanded(child: _buildBody()),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
   Widget _buildBody() {
     return switch (_controller.status) {
       CoachHomeDashboardStatus.loading => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: CircularProgressIndicator(),
+      ),
       CoachHomeDashboardStatus.coachRoleRequired => _MessageCard(
-          message: 'A coach profile is required to view athlete operations.',
-        ),
+        message: 'A coach profile is required to view athlete operations.',
+      ),
       CoachHomeDashboardStatus.error => _MessageCard(
-          message: _controller.errorMessage ?? 'Unable to load coach dashboard.',
-          actionLabel: 'Retry',
-          onAction: _controller.load,
-        ),
+        message: _controller.errorMessage ?? 'Unable to load coach dashboard.',
+        actionLabel: 'Retry',
+        onAction: _controller.load,
+      ),
       CoachHomeDashboardStatus.empty => _MessageCard(
-          message:
-              'No athletes linked yet. Invite an athlete to start coaching.',
-        ),
+        message: 'No athletes linked yet. Invite an athlete to start coaching.',
+      ),
       CoachHomeDashboardStatus.ready => RefreshIndicator(
-          onRefresh: _controller.load,
-          child: _buildSnapshotList(),
-        ),
+        onRefresh: _controller.load,
+        child: _buildSnapshotList(),
+      ),
     };
   }
 
@@ -212,8 +215,7 @@ class _CoachHomeDashboardScreenState extends State<CoachHomeDashboardScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           _MessageCard(
-            message:
-                'No athletes match "${_controller.activeFilter.label}".',
+            message: 'No athletes match "${_controller.activeFilter.label}".',
           ),
         ],
       );
@@ -291,11 +293,7 @@ class _InviteCodeDisplay extends StatelessWidget {
 }
 
 class _MessageCard extends StatelessWidget {
-  const _MessageCard({
-    required this.message,
-    this.actionLabel,
-    this.onAction,
-  });
+  const _MessageCard({required this.message, this.actionLabel, this.onAction});
 
   final String message;
   final String? actionLabel;

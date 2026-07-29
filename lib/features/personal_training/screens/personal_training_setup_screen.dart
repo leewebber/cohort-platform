@@ -23,7 +23,8 @@ class PersonalTrainingSetupScreen extends StatefulWidget {
       _PersonalTrainingSetupScreenState();
 }
 
-class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScreen> {
+class _PersonalTrainingSetupScreenState
+    extends State<PersonalTrainingSetupScreen> {
   late final PersonalTrainingSetupController _controller =
       widget._controller ??
       PersonalTrainingSetupController(
@@ -108,31 +109,31 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
     return CoachRouteGuard.wrap(
       title: 'Personal training',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              Text('Choose programme', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.sm),
-              Text(
-                'Select a published programme and start date for your training.',
-                style: CohortTextStyles.body.copyWith(
-                  color: CohortColors.textSecondary,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
                 ),
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              Expanded(child: _buildBody()),
-            ],
+                Text('Choose programme', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  'Select a published programme and start date for your training.',
+                  style: CohortTextStyles.body.copyWith(
+                    color: CohortColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                Expanded(child: _buildBody()),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -146,7 +147,8 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
       case PersonalTrainingSetupStatus.error:
         return _buildMessageCard(
           title: 'Could not load programmes',
-          message: _controller.errorMessage ??
+          message:
+              _controller.errorMessage ??
               'Check your connection and try again.',
         );
       case PersonalTrainingSetupStatus.empty:
@@ -160,10 +162,7 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
     }
   }
 
-  Widget _buildMessageCard({
-    required String title,
-    required String message,
-  }) {
+  Widget _buildMessageCard({required String title, required String message}) {
     return CohortCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +270,9 @@ class _PersonalTrainingSetupScreenState extends State<PersonalTrainingSetupScree
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 _controller.errorMessage!,
-                style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
             ],
             const SizedBox(height: CohortSpacing.lg),

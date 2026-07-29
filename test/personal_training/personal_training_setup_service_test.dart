@@ -89,10 +89,7 @@ void main() {
 
   Future<void> seedPublishedProgramme() async {
     programmeTables.lineages.add(
-      const ProgrammeLineage(
-        id: 'lineage-1',
-        code: 'COHORT-FOUNDATION-TEST',
-      ),
+      const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
     );
     await versionStore.saveTemplateTree(
       version: ProgrammeScheduleTestFixtures.version().copyWith(
@@ -113,7 +110,9 @@ void main() {
     outcomeStore = InMemoryProgrammeSlotOutcomeStore(programmeTables);
     athleteStateStore = InMemoryAthleteStateStore(programmeTables);
     coachTables = InMemoryCoachAthleteTables();
-    relationshipRepository = InMemoryCoachAthleteRelationshipRepository(coachTables);
+    relationshipRepository = InMemoryCoachAthleteRelationshipRepository(
+      coachTables,
+    );
     profileRepository = InMemoryProfileRepository();
 
     profileRepository.profiles[dualRoleUserId] = const UserProfile(
@@ -223,7 +222,10 @@ void main() {
         timezone: 'UTC',
       );
 
-      expect(result.status, PersonalTrainingOperationStatus.inaccessibleProgramme);
+      expect(
+        result.status,
+        PersonalTrainingOperationStatus.inaccessibleProgramme,
+      );
     });
 
     test('active replacement follows existing assignment rules', () async {

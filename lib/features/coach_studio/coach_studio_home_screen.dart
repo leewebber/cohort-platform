@@ -84,16 +84,14 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
 
     final route = switch (section) {
       CoachStudioSection.programmes => MaterialPageRoute(
-          builder: (_) => ProgrammeCatalogueScreen(
-            controller: controller!,
-          ),
-        ),
+        builder: (_) => ProgrammeCatalogueScreen(controller: controller!),
+      ),
       CoachStudioSection.trainingLibrary => MaterialPageRoute(
-          builder: (_) => const TrainingLibraryScreen(),
-        ),
+        builder: (_) => const TrainingLibraryScreen(),
+      ),
       CoachStudioSection.athletes => MaterialPageRoute(
-          builder: (_) => const CoachHomeDashboardScreen(),
-        ),
+        builder: (_) => const CoachHomeDashboardScreen(),
+      ),
       _ => null,
     };
 
@@ -115,91 +113,88 @@ class _CoachStudioHomeScreenState extends State<CoachStudioHomeScreen> {
     return CoachRouteGuard.wrap(
       title: 'Coach Studio',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const SectionTitle('Coach Studio'),
-              const SizedBox(height: CohortSpacing.md),
-              const Text('Authoring tools', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'Build programmes and manage training content.',
-                style: CohortTextStyles.body,
-              ),
-              if (_accessErrorMessage != null) ...[
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
                 const SizedBox(height: CohortSpacing.md),
-                Text(
-                  _accessErrorMessage!,
+                const SectionTitle('Coach Studio'),
+                const SizedBox(height: CohortSpacing.md),
+                const Text('Authoring tools', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                const Text(
+                  'Build programmes and manage training content.',
                   style: CohortTextStyles.body,
                 ),
-              ],
-              const SizedBox(height: CohortSpacing.xl),
-              Expanded(
-                child: ListView.separated(
-                  itemCount: CoachStudioSection.values.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: CohortSpacing.md),
-                  itemBuilder: (context, index) {
-                    final section = CoachStudioSection.values[index];
-                    final isLastOpened = lastSection == section;
-                    final available = section.isAvailableInV01;
+                if (_accessErrorMessage != null) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  Text(_accessErrorMessage!, style: CohortTextStyles.body),
+                ],
+                const SizedBox(height: CohortSpacing.xl),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: CoachStudioSection.values.length,
+                    separatorBuilder: (_, _) =>
+                        const SizedBox(height: CohortSpacing.md),
+                    itemBuilder: (context, index) {
+                      final section = CoachStudioSection.values[index];
+                      final isLastOpened = lastSection == section;
+                      final available = section.isAvailableInV01;
 
-                    return CohortCard(
-                      onTap: available ? () => _openSection(section) : null,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  section.title,
-                                  style: CohortTextStyles.cardTitle.copyWith(
-                                    color: available
-                                        ? null
-                                        : CohortTextStyles.body.color,
-                                  ),
-                                ),
-                                const SizedBox(height: CohortSpacing.xs),
-                                Text(
-                                  section.subtitle,
-                                  style: CohortTextStyles.body,
-                                ),
-                                if (isLastOpened && available) ...[
-                                  const SizedBox(height: CohortSpacing.xs),
+                      return CohortCard(
+                        onTap: available ? () => _openSection(section) : null,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Text(
-                                    'Last opened',
-                                    style: CohortTextStyles.body.copyWith(
-                                      color: CohortTextStyles.body.color,
+                                    section.title,
+                                    style: CohortTextStyles.cardTitle.copyWith(
+                                      color: available
+                                          ? null
+                                          : CohortTextStyles.body.color,
                                     ),
                                   ),
+                                  const SizedBox(height: CohortSpacing.xs),
+                                  Text(
+                                    section.subtitle,
+                                    style: CohortTextStyles.body,
+                                  ),
+                                  if (isLastOpened && available) ...[
+                                    const SizedBox(height: CohortSpacing.xs),
+                                    Text(
+                                      'Last opened',
+                                      style: CohortTextStyles.body.copyWith(
+                                        color: CohortTextStyles.body.color,
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
+                              ),
                             ),
-                          ),
-                          Text(
-                            available ? 'OPEN' : 'SOON',
-                            style: CohortTextStyles.body,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                            Text(
+                              available ? 'OPEN' : 'SOON',
+                              style: CohortTextStyles.body,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

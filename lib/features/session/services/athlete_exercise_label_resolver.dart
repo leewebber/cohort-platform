@@ -27,10 +27,7 @@ class AthleteExerciseLabelResolver {
       labelOverride,
       snapshotDisplayName,
       explicitDisplayName,
-      if (!historical) ...[
-        exerciseName,
-        liveExerciseName,
-      ],
+      if (!historical) ...[exerciseName, liveExerciseName],
     ];
 
     for (final candidate in candidates) {
@@ -101,10 +98,7 @@ class AthleteExerciseLabelResolver {
     TrainingExerciseResult exercise, {
     bool historical = true,
   }) {
-    return fromSnapshot(
-      exercise.exerciseSnapshot,
-      historical: historical,
-    );
+    return fromSnapshot(exercise.exerciseSnapshot, historical: historical);
   }
 
   static bool _isUsableLabel(String? value, String sourceExerciseId) {

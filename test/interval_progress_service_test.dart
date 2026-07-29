@@ -180,11 +180,7 @@ List<IntervalRepEntry> _todayWork({
 }) {
   return [
     for (var index = 0; index < paces.length; index++)
-      _workEntry(
-        pace: paces[index],
-        rpe: rpes[index],
-        repNumber: index + 1,
-      ),
+      _workEntry(pace: paces[index], rpe: rpes[index], repNumber: index + 1),
   ];
 }
 

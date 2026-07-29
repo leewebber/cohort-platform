@@ -52,10 +52,7 @@ void main() {
         constraints: AdaptationConstraintContext(availableDurationMin: 55),
       );
       expect(plan.steps, isNotEmpty);
-      expect(
-        plan.steps.first.actionType,
-        AdaptationActionType.reduceVolume,
-      );
+      expect(plan.steps.first.actionType, AdaptationActionType.reduceVolume);
       expect(plan.status, AdaptationPlanStatus.planGenerated);
     });
 
@@ -183,11 +180,11 @@ void main() {
         constraints: AdaptationConstraintContext(availableDurationMin: 36),
       );
       final strengthStep = plan.steps.cast<AdaptationPlanStep?>().firstWhere(
-            (s) =>
-                s?.blockLocalId == 'block-strength' &&
-                s?.actionType == AdaptationActionType.reduceVolume,
-            orElse: () => null,
-          );
+        (s) =>
+            s?.blockLocalId == 'block-strength' &&
+            s?.actionType == AdaptationActionType.reduceVolume,
+        orElse: () => null,
+      );
       expect(strengthStep, isNotNull);
       expect(strengthStep!.policySource, AdaptationPolicySource.explicit);
       expect(
@@ -202,9 +199,9 @@ void main() {
         constraints: AdaptationConstraintContext(availableDurationMin: 45),
       );
       final warmStep = plan.steps.cast<AdaptationPlanStep?>().firstWhere(
-            (s) => s?.blockLocalId == 'block-warmup',
-            orElse: () => null,
-          );
+        (s) => s?.blockLocalId == 'block-warmup',
+        orElse: () => null,
+      );
       if (warmStep != null) {
         expect(warmStep.policySource, AdaptationPolicySource.derived);
       }
@@ -362,7 +359,8 @@ void main() {
       expect(
         validation.issues.where(
           (i) =>
-              i.code == AdaptationPlanValidationIssueCode.contradictoryTargetActions,
+              i.code ==
+              AdaptationPlanValidationIssueCode.contradictoryTargetActions,
         ),
         isEmpty,
       );
@@ -378,11 +376,9 @@ void main() {
         constraints: AdaptationConstraintContext(availableDurationMin: 55),
       );
       expect(
-        planValidator.validate(
-          session: timedInput,
-          evaluation: evaluation,
-          plan: plan,
-        ).isValid,
+        planValidator
+            .validate(session: timedInput, evaluation: evaluation, plan: plan)
+            .isValid,
         isTrue,
       );
     });
@@ -406,23 +402,28 @@ void main() {
             targetScope: AdaptationConstraintScope.block,
             targetId: 'block-strength',
             blockLocalId: 'block-strength',
-            rationaleCode: AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
+            rationaleCode:
+                AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
             requiredStep: true,
             policySource: AdaptationPolicySource.explicit,
           ),
         ],
         protectedElements: const [],
         unresolvedConstraints: const [],
-        planFindings: const [AdaptationPlanRationaleCode.durationReductionRequired],
+        planFindings: const [
+          AdaptationPlanRationaleCode.durationReductionRequired,
+        ],
         isApplicable: true,
         requiresConfirmationLater: true,
       );
       expect(
-        planValidator.validate(
-          session: timedInput,
-          evaluation: evaluation,
-          plan: illegalPlan,
-        ).isValid,
+        planValidator
+            .validate(
+              session: timedInput,
+              evaluation: evaluation,
+              plan: illegalPlan,
+            )
+            .isValid,
         isFalse,
       );
     });
@@ -436,7 +437,10 @@ void main() {
       final builderInput = timedPlanningInputFromDraft(
         buildTimedPlanningSessionViaBuilder(protocolId: protocolId),
       );
-      final codePlan = planner.plan(session: codeInput, constraints: constraints);
+      final codePlan = planner.plan(
+        session: codeInput,
+        constraints: constraints,
+      );
       final builderPlan = planner.plan(
         session: builderInput,
         constraints: constraints,
@@ -446,19 +450,26 @@ void main() {
 
     test('25 planner does not mutate session input', () {
       final input = timedPlanningInputFromDraft(timedDraft);
-      final before = input.blocks.map((b) => b.exercisePrescriptions.length).toList();
+      final before = input.blocks
+          .map((b) => b.exercisePrescriptions.length)
+          .toList();
       planner.plan(
         session: input,
         constraints: AdaptationConstraintContext(availableDurationMin: 45),
       );
-      final after = input.blocks.map((b) => b.exercisePrescriptions.length).toList();
+      final after = input.blocks
+          .map((b) => b.exercisePrescriptions.length)
+          .toList();
       expect(after, before);
     });
 
     test('26 same input returns identical plan', () {
       const constraints = AdaptationConstraintContext(availableDurationMin: 45);
       final first = planner.plan(session: timedInput, constraints: constraints);
-      final second = planner.plan(session: timedInput, constraints: constraints);
+      final second = planner.plan(
+        session: timedInput,
+        constraints: constraints,
+      );
       expect(planEquivalent(first, second), isTrue);
     });
 

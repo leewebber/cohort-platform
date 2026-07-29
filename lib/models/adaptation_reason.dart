@@ -1,6 +1,1 @@
-enum AdaptationReason {
-  recovery,
-  environment,
-  equipment,
-  time,
-}
+enum AdaptationReason { recovery, environment, equipment, time }

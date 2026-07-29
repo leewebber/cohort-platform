@@ -4,11 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const exercises = [
-    Exercise(
-      exerciseId: 'PULL-001',
-      name: 'Weighted Pull-up',
-      published: true,
-    ),
+    Exercise(exerciseId: 'PULL-001', name: 'Weighted Pull-up', published: true),
     Exercise(
       exerciseId: 'BP-001',
       name: 'Dumbbell Bench Press',
@@ -29,10 +25,7 @@ void main() {
     });
 
     test('empty search returns full catalogue order', () {
-      expect(
-        ExerciseCatalogueService.filter(exercises, ''),
-        exercises,
-      );
+      expect(ExerciseCatalogueService.filter(exercises, ''), exercises);
     });
 
     test('findById resolves canonical exercise reference', () {

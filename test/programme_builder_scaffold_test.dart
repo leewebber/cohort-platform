@@ -79,9 +79,10 @@ void main() {
 
     test('successful save-state copy clears dirty and sets lastSavedAt', () {
       final savedAt = DateTime.utc(2026, 7, 16, 12);
-      final saved = sampleDocument()
-          .markDirty()
-          .markSaved(savedAt: savedAt, saveGeneration: 3);
+      final saved = sampleDocument().markDirty().markSaved(
+        savedAt: savedAt,
+        saveGeneration: 3,
+      );
 
       expect(saved.isDirty, isFalse);
       expect(saved.hasUnsavedChanges, isFalse);
@@ -104,9 +105,9 @@ void main() {
     test('undo restores previous document', () {
       final history = ProgrammeBuilderHistory();
       final original = sampleDocument(name: 'Original');
-      final edited = original.copyWith(
-        metadata: metadata(name: 'Edited'),
-      ).markDirty();
+      final edited = original
+          .copyWith(metadata: metadata(name: 'Edited'))
+          .markDirty();
 
       history.recordBeforeEdit(original);
       final result = history.undo(edited);
@@ -120,9 +121,9 @@ void main() {
     test('redo restores reverted document', () {
       final history = ProgrammeBuilderHistory();
       final original = sampleDocument(name: 'Original');
-      final edited = original.copyWith(
-        metadata: metadata(name: 'Edited'),
-      ).markDirty();
+      final edited = original
+          .copyWith(metadata: metadata(name: 'Edited'))
+          .markDirty();
 
       history.recordBeforeEdit(original);
       history.undo(edited);
@@ -191,7 +192,9 @@ void main() {
       expect(readiness.isReady, isFalse);
       expect(readiness.blockingIssueCount, greaterThan(0));
       expect(
-        readiness.checks.any((check) => check.id == 'name_present' && !check.passed),
+        readiness.checks.any(
+          (check) => check.id == 'name_present' && !check.passed,
+        ),
         isTrue,
       );
     });
@@ -236,25 +239,28 @@ void main() {
       expect(tree.weekNodes.first.days.first.slots, isEmpty);
     });
 
-    test('round-trip compile/hydrate preserves order and protocol references', () {
-      final source = sampleDocument(protocolId: 'RN-006');
-      final tree = compiler.toTemplateTree(source);
-      final hydrated = compiler.fromTemplateTree(
-        tree: tree,
-        metadata: source.metadata,
-      );
+    test(
+      'round-trip compile/hydrate preserves order and protocol references',
+      () {
+        final source = sampleDocument(protocolId: 'RN-006');
+        final tree = compiler.toTemplateTree(source);
+        final hydrated = compiler.fromTemplateTree(
+          tree: tree,
+          metadata: source.metadata,
+        );
 
-      final week = hydrated.template.allWeeks.single;
-      final day = week.days.single;
-      final slot = day.slots.single;
+        final week = hydrated.template.allWeeks.single;
+        final day = week.days.single;
+        final slot = day.slots.single;
 
-      expect(week.weekNumber, 1);
-      expect(day.dayKey, 'day_1');
-      expect(day.dayOrder, 1);
-      expect(slot.sessionOrder, 1);
-      expect(slot.protocolId, 'RN-006');
-      expect(hydrated.isDirty, isFalse);
-    });
+        expect(week.weekNumber, 1);
+        expect(day.dayKey, 'day_1');
+        expect(day.dayOrder, 1);
+        expect(slot.sessionOrder, 1);
+        expect(slot.protocolId, 'RN-006');
+        expect(hydrated.isDirty, isFalse);
+      },
+    );
   });
 
   group('Copy workflow contracts', () {
@@ -283,7 +289,10 @@ void main() {
 
       expect(duplicatedMetadata.lineageCode, isNot(sourceLineageCode));
       expect(duplicatedMetadata.versionNumber, 1);
-      expect(compiler.isValidLineageCode(duplicatedMetadata.lineageCode), isTrue);
+      expect(
+        compiler.isValidLineageCode(duplicatedMetadata.lineageCode),
+        isTrue,
+      );
     });
   });
 }

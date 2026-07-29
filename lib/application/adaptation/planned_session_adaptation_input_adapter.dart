@@ -1,15 +1,14 @@
-import '../../../models/protocol_draft.dart';
-import '../../../models/protocol_metadata_vocabulary.dart';
-import '../../../models/session_block.dart';
-import '../../../models/session_block_type.dart';
-import '../contracts/adaptation_metadata_contracts.dart';
-import '../planning/planned_block_duration_estimator.dart';
-import '../vocabulary/impact_level.dart';
-import 'adaptation_evaluation_result.dart';
+import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
+import 'package:cohort_platform/models/protocol_draft.dart';
+import 'package:cohort_platform/models/protocol_metadata_vocabulary.dart';
+import 'package:cohort_platform/models/session_block.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
 
-/// Maps runtime [ProtocolDraft] / [SessionBlock] rows into evaluation snapshots.
-class PlannedSessionAdaptationInputFactory {
-  const PlannedSessionAdaptationInputFactory._();
+import 'planned_block_duration_adapter.dart';
+
+/// Maps runtime [ProtocolDraft] / [SessionBlock] rows into domain evaluation input.
+class PlannedSessionAdaptationInputAdapter {
+  const PlannedSessionAdaptationInputAdapter._();
 
   static PlannedSessionAdaptationInput fromProtocolDraft(
     ProtocolDraft draft, {
@@ -43,12 +42,14 @@ class PlannedSessionAdaptationInputFactory {
                   .map((link) => link.exerciseId)
                   .toList(growable: false),
               estimatedDurationMinutes:
-                  PlannedBlockDurationEstimator.estimatedMinutesFromBlock(block),
+                  PlannedBlockDurationAdapter.estimatedMinutesFromBlock(block),
               estimatedDurationUnknown:
-                  PlannedBlockDurationEstimator.estimatedMinutesFromBlock(block) ==
-                      null,
+                  PlannedBlockDurationAdapter.estimatedMinutesFromBlock(
+                    block,
+                  ) ==
+                  null,
               exercisePrescriptions:
-                  PlannedBlockDurationEstimator.prescriptionsFromBlock(block),
+                  PlannedBlockDurationAdapter.prescriptionsFromBlock(block),
               policyMinimumViablePrescription:
                   block.adaptationPolicy?.minimumViablePrescription,
             ),
@@ -79,10 +80,13 @@ class PlannedSessionAdaptationInputFactory {
       return ImpactLevel.moderate;
     }
     if (lower.contains('very low')) return ImpactLevel.veryLow;
-    if (lower.contains('low') || lower.contains('light')) return ImpactLevel.low;
+    if (lower.contains('low') || lower.contains('light')) {
+      return ImpactLevel.low;
+    }
     return null;
   }
 
+  /// Parses [PlannedBlockAdaptationInput.blockTypeDbValue] from authoring.
   static SessionBlockType blockTypeFromDb(String dbValue) {
     return SessionBlockType.values.firstWhere(
       (type) => type.name == dbValue,
@@ -90,3 +94,7 @@ class PlannedSessionAdaptationInputFactory {
     );
   }
 }
+
+/// Back-compat alias for tests and callers migrating from domain factory.
+typedef PlannedSessionAdaptationInputFactory =
+    PlannedSessionAdaptationInputAdapter;

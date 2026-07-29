@@ -32,9 +32,7 @@ class SessionBuilderDisplayContext {
   final bool showCohortMetadataFields;
   final bool useCoachFacingTerminology;
 
-  factory SessionBuilderDisplayContext.cohortProtocolAdmin({
-    String? subtitle,
-  }) {
+  factory SessionBuilderDisplayContext.cohortProtocolAdmin({String? subtitle}) {
     return SessionBuilderDisplayContext(
       mode: SessionBuilderHostMode.cohortProtocolAdmin,
       title: 'Protocol Builder',

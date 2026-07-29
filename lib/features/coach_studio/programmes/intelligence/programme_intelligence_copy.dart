@@ -16,7 +16,9 @@ class ProgrammeIntelligenceCopy {
     };
   }
 
-  static String migrationClassificationLabel(MigrationClassification classification) {
+  static String migrationClassificationLabel(
+    MigrationClassification classification,
+  ) {
     return switch (classification) {
       MigrationClassification.alreadyCompleted => 'Completed',
       MigrationClassification.safeImmediate => 'Safe now',
@@ -39,7 +41,8 @@ class ProgrammeIntelligenceCopy {
     };
   }
 
-  static String impactUnavailableMessage = 'Impact information could not be loaded.';
+  static String impactUnavailableMessage =
+      'Impact information could not be loaded.';
   static String comparisonUnavailableMessage =
       'Comparison could not be loaded for the selected version.';
   static String migrationUnavailableMessage =

@@ -24,7 +24,8 @@ class StubSessionAdaptationCoachDecisionHandler extends CoachDecisionHandler {
   }
 }
 
-class StubExerciseSubstitutionCoachDecisionHandler extends CoachDecisionHandler {
+class StubExerciseSubstitutionCoachDecisionHandler
+    extends CoachDecisionHandler {
   const StubExerciseSubstitutionCoachDecisionHandler();
 
   @override

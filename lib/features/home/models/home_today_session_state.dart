@@ -5,6 +5,7 @@ import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
+import '../../../application/athlete_workout/home_workout_execution_context.dart';
 
 /// Resolved Home view state for the Today section.
 sealed class HomeTodaySessionState {
@@ -34,6 +35,7 @@ class HomeTodaySessionProgrammeExecutable extends HomeTodaySessionState {
     required this.executionContext,
     this.latestTrainingSession,
     this.progressSummary,
+    this.workoutExecution,
   });
 
   final ResolvedTodaySession resolution;
@@ -41,6 +43,7 @@ class HomeTodaySessionProgrammeExecutable extends HomeTodaySessionState {
   final ProgrammeExecutionContext executionContext;
   final TrainingSession? latestTrainingSession;
   final ProgrammeProgressSummary? progressSummary;
+  final HomeWorkoutExecutionContext? workoutExecution;
 }
 
 class HomeTodaySessionRestDay extends HomeTodaySessionState {

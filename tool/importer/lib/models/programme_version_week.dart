@@ -44,7 +44,8 @@ class ProgrammeVersionWeek {
   Map<String, dynamic> toInsertMap() {
     return DatabaseUuid.includeUuidIdIfValid({
       'version_id': versionId,
-      if (DatabaseUuid.isValidDatabaseUuid(phaseId)) 'phase_id': phaseId!.trim(),
+      if (DatabaseUuid.isValidDatabaseUuid(phaseId))
+        'phase_id': phaseId!.trim(),
       'week_number': weekNumber,
       if (title != null) 'title': title,
       if (intent != null) 'intent': intent!.dbValue,

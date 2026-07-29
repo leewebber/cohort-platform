@@ -46,6 +46,5 @@ extension TrainingSessionRecordStatusDb on TrainingSessionRecordStatus {
     }
   }
 
-  bool get isTerminal =>
-      this != TrainingSessionRecordStatus.inProgress;
+  bool get isTerminal => this != TrainingSessionRecordStatus.inProgress;
 }

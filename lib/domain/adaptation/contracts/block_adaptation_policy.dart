@@ -39,7 +39,8 @@ class BlockAdaptationPolicy {
       if (minimumViablePrescription != null &&
           !minimumViablePrescription!.isEmpty)
         'minimum_viable_prescription': minimumViablePrescription!.toJson(),
-      if (dependsOnBlockIds.isNotEmpty) 'depends_on_block_ids': dependsOnBlockIds,
+      if (dependsOnBlockIds.isNotEmpty)
+        'depends_on_block_ids': dependsOnBlockIds,
     };
   }
 
@@ -49,7 +50,9 @@ class BlockAdaptationPolicy {
     if (mvpRaw is Map<String, dynamic>) {
       mvp = MinimumViablePrescription.fromJson(mvpRaw);
     } else if (mvpRaw is Map) {
-      mvp = MinimumViablePrescription.fromJson(Map<String, dynamic>.from(mvpRaw));
+      mvp = MinimumViablePrescription.fromJson(
+        Map<String, dynamic>.from(mvpRaw),
+      );
     }
 
     return BlockAdaptationPolicy(

@@ -111,8 +111,9 @@ class ProgrammeAssignment {
       pausedAt: _parseDateTime(map['paused_at']),
       timezone: _trimString(map['timezone']),
       supersededByAssignmentId: _trimString(map['superseded_by_assignment_id']),
-      lastProgressedTrainingSessionId:
-          _nullableInt(map['last_progressed_training_session_id']),
+      lastProgressedTrainingSessionId: _nullableInt(
+        map['last_progressed_training_session_id'],
+      ),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
     );
@@ -186,7 +187,7 @@ class ProgrammeAssignment {
       lastProgressedTrainingSessionId: clearLastProgressedTrainingSessionId
           ? null
           : (lastProgressedTrainingSessionId ??
-              this.lastProgressedTrainingSessionId),
+                this.lastProgressedTrainingSessionId),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

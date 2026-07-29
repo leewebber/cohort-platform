@@ -14,12 +14,12 @@ class PreviousPerformedSet {
   final String displayLine;
   final double? rpe;
 
-  factory PreviousPerformedSet.fromPerformance(StrengthSetPerformance performance) {
-    final loadLabel = _formatLoad(
-      performance.loadValue,
-      performance.loadUnit,
-    );
-    final reps = _nullableString(performance.actualReps) ??
+  factory PreviousPerformedSet.fromPerformance(
+    StrengthSetPerformance performance,
+  ) {
+    final loadLabel = _formatLoad(performance.loadValue, performance.loadUnit);
+    final reps =
+        _nullableString(performance.actualReps) ??
         _nullableString(performance.targetReps);
 
     return PreviousPerformedSet(

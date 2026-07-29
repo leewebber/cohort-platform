@@ -21,12 +21,12 @@ class CohortProtocolCustomisationCoordinator {
     required SessionCloneService sessionCloneService,
     required CurrentCoachIdentity coachIdentity,
     ProgrammeSessionAssignmentPort? assignmentPort,
-  })  : _protocolBuilderService = protocolBuilderService,
-        _programmeSessionCoordinator = programmeSessionCoordinator,
-        _librarySessionCoordinator = librarySessionCoordinator,
-        _sessionCloneService = sessionCloneService,
-        _coachIdentity = coachIdentity,
-        _assignmentPort = assignmentPort;
+  }) : _protocolBuilderService = protocolBuilderService,
+       _programmeSessionCoordinator = programmeSessionCoordinator,
+       _librarySessionCoordinator = librarySessionCoordinator,
+       _sessionCloneService = sessionCloneService,
+       _coachIdentity = coachIdentity,
+       _assignmentPort = assignmentPort;
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeSessionAuthoringCoordinator _programmeSessionCoordinator;
@@ -52,8 +52,9 @@ class CohortProtocolCustomisationCoordinator {
 
     ProtocolDraft source;
     try {
-      source =
-          await _protocolBuilderService.loadCohortProtocolForCopy(trimmedSourceId);
+      source = await _protocolBuilderService.loadCohortProtocolForCopy(
+        trimmedSourceId,
+      );
     } on ProtocolBuilderException catch (error) {
       final message = error.message.toLowerCase();
       if (message.contains('could not be found') ||
@@ -67,8 +68,7 @@ class CohortProtocolCustomisationCoordinator {
 
       return CohortProtocolCustomisationResult(
         status: CohortProtocolCustomisationStatus.sourceNotEligible,
-        coachMessage:
-            'Only published official Cohort Protocols can be copied.',
+        coachMessage: 'Only published official Cohort Protocols can be copied.',
         error: error,
       );
     } catch (error) {
@@ -149,14 +149,18 @@ class CohortProtocolCustomisationCoordinator {
       if (slotConflict != null) return slotConflict;
     }
 
-    final libraryResult =
-        await _librarySessionCoordinator.createSession(draft: draft);
+    final libraryResult = await _librarySessionCoordinator.createSession(
+      draft: draft,
+    );
 
     if (!libraryResult.isSuccess) {
-      CohortProtocolCustomisationDiagnostics.log('saveFailed destination=library');
+      CohortProtocolCustomisationDiagnostics.log(
+        'saveFailed destination=library',
+      );
       return CohortProtocolCustomisationResult(
         status: CohortProtocolCustomisationStatus.saveFailed,
-        coachMessage: libraryResult.coachMessage ?? 'Session could not be saved.',
+        coachMessage:
+            libraryResult.coachMessage ?? 'Session could not be saved.',
         error: libraryResult.error,
         warnings: libraryResult.warnings,
       );
@@ -165,7 +169,9 @@ class CohortProtocolCustomisationCoordinator {
     final persisted = libraryResult.persistedDraft!;
     final contentId = libraryResult.contentId!;
 
-    CohortProtocolCustomisationDiagnostics.log('saveSucceeded destination=library');
+    CohortProtocolCustomisationDiagnostics.log(
+      'saveSucceeded destination=library',
+    );
 
     if (context == null) {
       return CohortProtocolCustomisationResult(
@@ -176,11 +182,12 @@ class CohortProtocolCustomisationCoordinator {
       );
     }
 
-    final attachResult = await _programmeSessionCoordinator.attachExistingSession(
-      context: context,
-      contentId: contentId,
-      displayTitle: persisted.name.trim(),
-    );
+    final attachResult = await _programmeSessionCoordinator
+        .attachExistingSession(
+          context: context,
+          contentId: contentId,
+          displayTitle: persisted.name.trim(),
+        );
 
     if (attachResult.isAttached) {
       CohortProtocolCustomisationDiagnostics.log('attachSucceeded');
@@ -214,11 +221,12 @@ class CohortProtocolCustomisationCoordinator {
     final slotConflict = _checkSlotSourceConflict(context);
     if (slotConflict != null) return slotConflict;
 
-    final attachResult = await _programmeSessionCoordinator.attachExistingSession(
-      context: context,
-      contentId: savedContentId,
-      displayTitle: displayTitle,
-    );
+    final attachResult = await _programmeSessionCoordinator
+        .attachExistingSession(
+          context: context,
+          contentId: savedContentId,
+          displayTitle: displayTitle,
+        );
 
     if (attachResult.isAttached) {
       CohortProtocolCustomisationDiagnostics.log('attachSucceeded');
@@ -277,7 +285,9 @@ class CohortProtocolCustomisationCoordinator {
     }
 
     if (result.status == ProgrammeSessionAuthoringStatus.sessionSaveFailed) {
-      CohortProtocolCustomisationDiagnostics.log('saveFailed destination=programmeOnly');
+      CohortProtocolCustomisationDiagnostics.log(
+        'saveFailed destination=programmeOnly',
+      );
       return CohortProtocolCustomisationResult(
         status: CohortProtocolCustomisationStatus.saveFailed,
         coachMessage: result.coachMessage ?? 'Session could not be saved.',
@@ -294,7 +304,9 @@ class CohortProtocolCustomisationCoordinator {
     );
   }
 
-  CohortProtocolCustomisationResult? _assertCloneDraftSafe(ProtocolDraft draft) {
+  CohortProtocolCustomisationResult? _assertCloneDraftSafe(
+    ProtocolDraft draft,
+  ) {
     if (draft.contentKind == TrainingContentKind.cohortProtocol) {
       return const CohortProtocolCustomisationResult(
         status: CohortProtocolCustomisationStatus.validationFailed,
@@ -318,9 +330,7 @@ class CohortProtocolCustomisationCoordinator {
 
     final contentId = draft.protocolId.trim();
     final sourceId = draft.sourceContentId?.trim();
-    if (sourceId != null &&
-        sourceId.isNotEmpty &&
-        contentId == sourceId) {
+    if (sourceId != null && sourceId.isNotEmpty && contentId == sourceId) {
       return const CohortProtocolCustomisationResult(
         status: CohortProtocolCustomisationStatus.validationFailed,
         coachMessage: 'Copied Sessions must use a new content identity.',

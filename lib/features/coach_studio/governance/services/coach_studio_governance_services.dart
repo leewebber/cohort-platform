@@ -22,8 +22,10 @@ class CoachStudioGovernanceServices {
         lineageStore ?? const SessionLineageSupabaseStore();
     return SessionRevisionActionPolicyService(
       lineageStore: resolvedLineageStore,
-      protocolBuilderService: protocolBuilderService ?? ProtocolBuilderService(),
-      relationshipService: relationshipService ??
+      protocolBuilderService:
+          protocolBuilderService ?? ProtocolBuilderService(),
+      relationshipService:
+          relationshipService ??
           SessionRevisionRelationshipService(
             lineageStore: resolvedLineageStore,
           ),
@@ -48,12 +50,12 @@ class CoachStudioGovernanceServices {
   }) {
     final resolvedLineageStore =
         lineageStore ?? const SessionLineageSupabaseStore();
-    final resolvedBuilder =
-        protocolBuilderService ?? ProtocolBuilderService();
+    final resolvedBuilder = protocolBuilderService ?? ProtocolBuilderService();
     return SessionRevisionService(
       lineageStore: resolvedLineageStore,
       protocolBuilderService: resolvedBuilder,
-      actionPolicyService: actionPolicyService ??
+      actionPolicyService:
+          actionPolicyService ??
           createActionPolicyService(
             lineageStore: resolvedLineageStore,
             protocolBuilderService: resolvedBuilder,
@@ -76,16 +78,17 @@ class CoachStudioGovernanceServices {
   }) {
     final resolvedLineageStore =
         lineageStore ?? const SessionLineageSupabaseStore();
-    final resolvedBuilder =
-        protocolBuilderService ?? ProtocolBuilderService();
-    final resolvedRelationshipService = relationshipService ??
+    final resolvedBuilder = protocolBuilderService ?? ProtocolBuilderService();
+    final resolvedRelationshipService =
+        relationshipService ??
         createRelationshipService(lineageStore: resolvedLineageStore);
     return SessionGovernanceController(
       protocolId: protocolId,
       sessionDisplayName: sessionDisplayName,
       lineageStore: resolvedLineageStore,
       protocolBuilderService: resolvedBuilder,
-      actionPolicyService: actionPolicyService ??
+      actionPolicyService:
+          actionPolicyService ??
           createActionPolicyService(
             lineageStore: resolvedLineageStore,
             protocolBuilderService: resolvedBuilder,

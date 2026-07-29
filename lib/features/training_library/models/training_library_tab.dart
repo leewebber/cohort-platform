@@ -1,8 +1,5 @@
 /// Top-level destinations inside Training Library.
-enum TrainingLibraryTab {
-  cohortProtocols,
-  sessionLibrary,
-}
+enum TrainingLibraryTab { cohortProtocols, sessionLibrary }
 
 extension TrainingLibraryTabLabels on TrainingLibraryTab {
   String get title {

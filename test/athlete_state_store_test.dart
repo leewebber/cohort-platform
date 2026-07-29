@@ -35,29 +35,32 @@ void main() {
       expect(tables.athleteStates.first.currentProtocolId, 'BW-001');
     });
 
-    test('updates existing athlete projection instead of inserting duplicate', () async {
-      tables.athleteStates.add(
-        const AthleteState(
-          athleteId: 'lee',
-          programmeId: 'OLD',
-          currentProtocolId: 'BW-001',
-        ),
-      );
+    test(
+      'updates existing athlete projection instead of inserting duplicate',
+      () async {
+        tables.athleteStates.add(
+          const AthleteState(
+            athleteId: 'lee',
+            programmeId: 'OLD',
+            currentProtocolId: 'BW-001',
+          ),
+        );
 
-      await store.upsertProjection(
-        const AthleteState(
-          athleteId: 'lee',
-          programmeId: 'COHORT-FOUNDATION-TEST',
-          currentWeek: 1,
-          currentDay: 'day_2',
-          currentProtocolId: 'RN-006',
-        ),
-      );
+        await store.upsertProjection(
+          const AthleteState(
+            athleteId: 'lee',
+            programmeId: 'COHORT-FOUNDATION-TEST',
+            currentWeek: 1,
+            currentDay: 'day_2',
+            currentProtocolId: 'RN-006',
+          ),
+        );
 
-      expect(tables.athleteStates, hasLength(1));
-      expect(tables.athleteStates.first.currentDay, 'day_2');
-      expect(tables.athleteStates.first.currentProtocolId, 'RN-006');
-    });
+        expect(tables.athleteStates, hasLength(1));
+        expect(tables.athleteStates.first.currentDay, 'day_2');
+        expect(tables.athleteStates.first.currentProtocolId, 'RN-006');
+      },
+    );
 
     test('repeated sync is idempotent', () async {
       final syncService = AthleteStateSyncServiceImpl(athleteStateStore: store);
@@ -81,32 +84,35 @@ void main() {
       expect(tables.athleteStates, hasLength(1));
     });
 
-    test('duplicate athlete rows produce a clear migration/data error', () async {
-      tables.athleteStates.addAll([
-        const AthleteState(athleteId: 'lee', currentProtocolId: 'BW-001'),
-        const AthleteState(athleteId: 'lee', currentProtocolId: 'RN-006'),
-      ]);
+    test(
+      'duplicate athlete rows produce a clear migration/data error',
+      () async {
+        tables.athleteStates.addAll([
+          const AthleteState(athleteId: 'lee', currentProtocolId: 'BW-001'),
+          const AthleteState(athleteId: 'lee', currentProtocolId: 'RN-006'),
+        ]);
 
-      expect(
-        () => store.upsertProjection(
-          const AthleteState(athleteId: 'lee', currentProtocolId: 'FG-009'),
-        ),
-        throwsA(
-          isA<ProgrammeStoreException>()
-              .having((error) => error.code, 'code', '23505')
-              .having(
-                (error) => error.operation,
-                'operation',
-                'upsertProjection',
-              )
-              .having(
-                (error) => error.conflictTarget,
-                'conflictTarget',
-                'athlete_id',
-              ),
-        ),
-      );
-    });
+        expect(
+          () => store.upsertProjection(
+            const AthleteState(athleteId: 'lee', currentProtocolId: 'FG-009'),
+          ),
+          throwsA(
+            isA<ProgrammeStoreException>()
+                .having((error) => error.code, 'code', '23505')
+                .having(
+                  (error) => error.operation,
+                  'operation',
+                  'upsertProjection',
+                )
+                .having(
+                  (error) => error.conflictTarget,
+                  'conflictTarget',
+                  'athlete_id',
+                ),
+          ),
+        );
+      },
+    );
   });
 
   group('reset flow', () {
@@ -165,11 +171,9 @@ void main() {
       );
       final resolution = await todayService.resolveForAthlete('lee');
 
-      await AthleteStateSyncServiceImpl(athleteStateStore: athleteStore)
-          .syncFromResolvedSession(
-        athleteId: 'lee',
-        resolution: resolution,
-      );
+      await AthleteStateSyncServiceImpl(
+        athleteStateStore: athleteStore,
+      ).syncFromResolvedSession(athleteId: 'lee', resolution: resolution);
 
       expect(tables.outcomes, isEmpty);
       expect(tables.assignments.first.currentDayKey, 'day_1');

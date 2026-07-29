@@ -21,10 +21,7 @@ class UserProfile {
   }
 
   Set<UserRole> get roles {
-    return {
-      if (isCoach) UserRole.coach,
-      if (isAthlete) UserRole.athlete,
-    };
+    return {if (isCoach) UserRole.coach, if (isAthlete) UserRole.athlete};
   }
 
   factory UserProfile.fromMap(Map<String, dynamic> map) {

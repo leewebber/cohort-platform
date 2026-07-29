@@ -98,7 +98,10 @@ void main() {
         destination: CohortProtocolCopyDestination.programmeOnly,
       );
 
-      expect(result.status, CohortProtocolCustomisationStatus.sourceNotEligible);
+      expect(
+        result.status,
+        CohortProtocolCustomisationStatus.sourceNotEligible,
+      );
     });
 
     test('saveProgrammeCopy persists clone without mutating source', () async {
@@ -121,66 +124,80 @@ void main() {
         programmeContext: buildContext(),
       );
 
-      final edited = prepared.copiedDraft!.copyWith(
-        name: 'Custom Threshold',
-      );
+      final edited = prepared.copiedDraft!.copyWith(name: 'Custom Threshold');
 
       final saved = await coordinator.saveProgrammeCopy(
         context: buildContext(),
         draft: edited,
       );
 
-      expect(saved.status, CohortProtocolCustomisationStatus.savedProgrammeOnly);
+      expect(
+        saved.status,
+        CohortProtocolCustomisationStatus.savedProgrammeOnly,
+      );
       expect(protocolService.saveCallCount, 1);
-      expect(protocolService.drafts[testCohortProtocolId]!.name,
-          'Threshold Intervals');
-      expect(protocolService.drafts[testDurableSessionId]!.sourceContentId,
-          testCohortProtocolId);
+      expect(
+        protocolService.drafts[testCohortProtocolId]!.name,
+        'Threshold Intervals',
+      );
+      expect(
+        protocolService.drafts[testDurableSessionId]!.sourceContentId,
+        testCohortProtocolId,
+      );
       expect(assignmentPort.lastAssignedContentId, testDurableSessionId);
     });
 
-    test('saveLibraryCopy with attach partial failure retains library session',
-        () async {
-      final protocolService = FakeProtocolBuilderService();
-      protocolService.drafts[testCohortProtocolId] =
-          buildEligibleCohortProtocolDraft();
+    test(
+      'saveLibraryCopy with attach partial failure retains library session',
+      () async {
+        final protocolService = FakeProtocolBuilderService();
+        protocolService.drafts[testCohortProtocolId] =
+            buildEligibleCohortProtocolDraft();
 
-      final assignmentPort = FakeProgrammeSessionAssignmentPort(
-        document: buildProgrammeDocumentWithSlot(),
-        failAttach: true,
-      );
-      final coordinator = buildCoordinator(
-        protocolService: protocolService,
-        assignmentPort: assignmentPort,
-      );
+        final assignmentPort = FakeProgrammeSessionAssignmentPort(
+          document: buildProgrammeDocumentWithSlot(),
+          failAttach: true,
+        );
+        final coordinator = buildCoordinator(
+          protocolService: protocolService,
+          assignmentPort: assignmentPort,
+        );
 
-      final prepared = await coordinator.prepareCopy(
-        sourceProtocolId: testCohortProtocolId,
-        destination: CohortProtocolCopyDestination.sessionLibrary,
-        programmeContext: buildContext(),
-      );
+        final prepared = await coordinator.prepareCopy(
+          sourceProtocolId: testCohortProtocolId,
+          destination: CohortProtocolCopyDestination.sessionLibrary,
+          programmeContext: buildContext(),
+        );
 
-      final saved = await coordinator.saveLibraryCopy(
-        context: buildContext(),
-        draft: prepared.copiedDraft!,
-      );
+        final saved = await coordinator.saveLibraryCopy(
+          context: buildContext(),
+          draft: prepared.copiedDraft!,
+        );
 
-      expect(saved.status, CohortProtocolCustomisationStatus.savedAttachFailed);
-      expect(protocolService.librarySaveCallCount, 1);
-      expect(protocolService.libraryDrafts.containsKey(testDurableSessionId),
-          isTrue);
+        expect(
+          saved.status,
+          CohortProtocolCustomisationStatus.savedAttachFailed,
+        );
+        expect(protocolService.librarySaveCallCount, 1);
+        expect(
+          protocolService.libraryDrafts.containsKey(testDurableSessionId),
+          isTrue,
+        );
 
-      assignmentPort.failAttach = false;
-      final retried = await coordinator.retryLibraryAttach(
-        context: buildContext(),
-        savedContentId: testDurableSessionId,
-        displayTitle: prepared.copiedDraft!.name,
-      );
+        assignmentPort.failAttach = false;
+        final retried = await coordinator.retryLibraryAttach(
+          context: buildContext(),
+          savedContentId: testDurableSessionId,
+          displayTitle: prepared.copiedDraft!.name,
+        );
 
-      expect(retried.status,
-          CohortProtocolCustomisationStatus.savedToLibraryAttached);
-      expect(protocolService.librarySaveCallCount, 1);
-    });
+        expect(
+          retried.status,
+          CohortProtocolCustomisationStatus.savedToLibraryAttached,
+        );
+        expect(protocolService.librarySaveCallCount, 1);
+      },
+    );
 
     test('save rejects draft that reuses source content id', () async {
       final source = buildEligibleCohortProtocolDraft();
@@ -196,9 +213,7 @@ void main() {
 
       final invalidDraft = buildValidProgrammeSessionDraft(
         protocolId: testCohortProtocolId,
-      ).copyWith(
-        sourceContentId: testCohortProtocolId,
-      );
+      ).copyWith(sourceContentId: testCohortProtocolId);
 
       final saved = await coordinator.saveProgrammeCopy(
         context: buildContext(),

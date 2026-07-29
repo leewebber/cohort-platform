@@ -335,9 +335,9 @@ flowchart LR
 | **Substitutions preserve intent** | A `build` day cannot become unrelated random work |
 | **Recovery decisions** | May reduce volume, swap to recovery protocol, or recommend rest within intent |
 
-Programme Engine outputs `programme_default` prescription. Decision Engine may output `adapted` prescription with reason. Execution Engine receives final `protocol_id` only.
+> **Historical (superseded):** References to `AdaptationDecisionService` described the pre–Sprint 6B day-of evaluate path. Day-of decisions now run through Coach Brain; programme slot changes after completion remain the Decision/Execution bridge below.
 
-Existing `AdaptationDecisionService` (protocol-level) will gain programme context constraints in a later milestone.
+Programme Engine outputs `programme_default` prescription. Decision Engine may output `adapted` prescription with reason. Execution Engine receives final `protocol_id` only.
 
 ---
 

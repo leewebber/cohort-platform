@@ -18,8 +18,9 @@ import 'package:supabase/supabase.dart';
 
 Future<void> main(List<String> args) async {
   final dryRun = args.contains('--dry-run');
-  final positional =
-      args.where((arg) => arg != '--dry-run').toList(growable: false);
+  final positional = args
+      .where((arg) => arg != '--dry-run')
+      .toList(growable: false);
 
   if (positional.length != 1) {
     _printUsage();
@@ -107,10 +108,7 @@ Future<void> main(List<String> args) async {
   }
 }
 
-Future<void> _runImport({
-  required File file,
-  required String coachId,
-}) async {
+Future<void> _runImport({required File file, required String coachId}) async {
   final exercises = await ExerciseRepository().getExercises();
   final exerciseResolver = FounderProgrammeExerciseResolver.fromCatalogue(
     exercises,

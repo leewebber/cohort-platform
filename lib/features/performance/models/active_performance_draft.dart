@@ -205,20 +205,22 @@ class ActivePerformanceDraft {
   final int? durationSeconds;
   final List<BlockPerformanceDraft> blockDrafts;
 
-  int get completedBlockCount =>
-      blockDrafts.where((b) => b.status == TrainingBlockResultStatus.completed).length;
+  int get completedBlockCount => blockDrafts
+      .where((b) => b.status == TrainingBlockResultStatus.completed)
+      .length;
 
-  int get skippedBlockCount =>
-      blockDrafts.where((b) => b.status == TrainingBlockResultStatus.skipped).length;
+  int get skippedBlockCount => blockDrafts
+      .where((b) => b.status == TrainingBlockResultStatus.skipped)
+      .length;
 
   int get incompleteBlockCount => blockDrafts.where((block) {
-        if (!block.blockSnapshot.content.trim().isNotEmpty &&
-            block.blockSnapshot.exercises.isEmpty) {
-          return false;
-        }
-        return block.status != TrainingBlockResultStatus.completed &&
-            block.status != TrainingBlockResultStatus.skipped;
-      }).length;
+    if (!block.blockSnapshot.content.trim().isNotEmpty &&
+        block.blockSnapshot.exercises.isEmpty) {
+      return false;
+    }
+    return block.status != TrainingBlockResultStatus.completed &&
+        block.status != TrainingBlockResultStatus.skipped;
+  }).length;
 
   BlockPerformanceDraft? blockDraftFor(String sourceBlockId) {
     for (final draft in blockDrafts) {

@@ -11,7 +11,10 @@ void main() {
 
     final sql = migration.readAsStringSync();
     expect(sql, contains('idx_training_session_records_assignment_terminal'));
-    expect(sql, contains('idx_training_session_records_programme_session_terminal'));
+    expect(
+      sql,
+      contains('idx_training_session_records_programme_session_terminal'),
+    );
     expect(sql, contains('idx_programme_assignments_version_active'));
     expect(sql, contains('idx_programme_version_weeks_version'));
     expect(sql, isNot(contains('DROP TABLE')));

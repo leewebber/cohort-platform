@@ -8,8 +8,7 @@ class ProgrammeDevFixtures {
   static const foundationTestLineageCode = 'COHORT-FOUNDATION-TEST';
 
   /// Fixed UUID from `supabase/seed/cohort_foundation_test_programme.sql`.
-  static const foundationTestVersionId =
-      'aaaaaaaa-bbbb-cccc-dddd-000000000002';
+  static const foundationTestVersionId = 'aaaaaaaa-bbbb-cccc-dddd-000000000002';
 
   static const founderAcceptanceLineageCode =
       FounderAcceptanceContent.programmeLineageCode;

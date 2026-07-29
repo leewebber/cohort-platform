@@ -22,13 +22,14 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
   final SessionBlock block;
   final ValueChanged<SessionBlock> onChanged;
 
-  BlockAdaptationPolicyMode get _policyMode =>
-      block.adaptationPolicy == null
-          ? BlockAdaptationPolicyMode.recommended
-          : BlockAdaptationPolicyMode.custom;
+  BlockAdaptationPolicyMode get _policyMode => block.adaptationPolicy == null
+      ? BlockAdaptationPolicyMode.recommended
+      : BlockAdaptationPolicyMode.custom;
 
   BlockAdaptationPolicy get _recommendedPolicy =>
-      SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(block.blockType);
+      SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(
+        AdaptationBlockTypePlanning.fromPlanningDbValue(block.blockType.name),
+      );
 
   BlockAdaptationPolicy get _editablePolicy =>
       block.adaptationPolicy ?? _recommendedPolicy;
@@ -37,8 +38,8 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final recommendedPriority =
         AdaptationMetadataBuilderVocabulary.recommendedBlockPriorityLabel(
-      block.blockType,
-    );
+          block.blockType,
+        );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,9 +53,9 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
           label: 'Block priority',
           value: block.blockPriority,
           options: BlockPriority.values,
-          displayLabel: AdaptationMetadataBuilderVocabulary.blockPriorityDisplayLabel,
-          nullOptionLabel:
-              '$useRecommendedPrefix$recommendedPriority',
+          displayLabel:
+              AdaptationMetadataBuilderVocabulary.blockPriorityDisplayLabel,
+          nullOptionLabel: '$useRecommendedPrefix$recommendedPriority',
           onChanged: (value) {
             onChanged(
               block.copyWith(
@@ -81,9 +82,7 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
           onSelectionChanged: (selection) {
             final mode = selection.first;
             if (mode == BlockAdaptationPolicyMode.recommended) {
-              onChanged(
-                block.copyWith(clearAdaptationPolicy: true),
-              );
+              onChanged(block.copyWith(clearAdaptationPolicy: true));
               return;
             }
             onChanged(
@@ -101,9 +100,8 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
         else
           _PolicyEditor(
             policy: _editablePolicy,
-            onChanged: (policy) => onChanged(
-              block.copyWith(adaptationPolicy: policy),
-            ),
+            onChanged: (policy) =>
+                onChanged(block.copyWith(adaptationPolicy: policy)),
           ),
       ],
     );
@@ -113,10 +111,7 @@ class SessionBlockAdaptationMetadataSection extends StatelessWidget {
 }
 
 class _PolicySummary extends StatelessWidget {
-  const _PolicySummary({
-    required this.policy,
-    required this.readOnly,
-  });
+  const _PolicySummary({required this.policy, required this.readOnly});
 
   final BlockAdaptationPolicy policy;
   final bool readOnly;
@@ -143,7 +138,9 @@ class _PolicySummary extends StatelessWidget {
     );
   }
 
-  static List<MapEntry<String, bool>> _policyFlags(BlockAdaptationPolicy policy) {
+  static List<MapEntry<String, bool>> _policyFlags(
+    BlockAdaptationPolicy policy,
+  ) {
     return [
       MapEntry('canRemove', policy.canRemove),
       MapEntry('canShorten', policy.canShorten),
@@ -158,10 +155,7 @@ class _PolicySummary extends StatelessWidget {
 }
 
 class _PolicyEditor extends StatelessWidget {
-  const _PolicyEditor({
-    required this.policy,
-    required this.onChanged,
-  });
+  const _PolicyEditor({required this.policy, required this.onChanged});
 
   final BlockAdaptationPolicy policy;
   final ValueChanged<BlockAdaptationPolicy> onChanged;
@@ -172,7 +166,9 @@ class _PolicyEditor extends StatelessWidget {
       children: [
         for (final entry in _PolicySummary._policyFlags(policy))
           SessionBuilderCheckbox(
-            label: AdaptationMetadataBuilderVocabulary.policyFlagLabel(entry.key),
+            label: AdaptationMetadataBuilderVocabulary.policyFlagLabel(
+              entry.key,
+            ),
             value: entry.value,
             onChanged: (selected) {
               onChanged(_copyPolicy(policy, entry.key, selected));
@@ -190,14 +186,22 @@ class _PolicyEditor extends StatelessWidget {
     return BlockAdaptationPolicy(
       canRemove: key == 'canRemove' ? value : source.canRemove,
       canShorten: key == 'canShorten' ? value : source.canShorten,
-      canReduceVolume: key == 'canReduceVolume' ? value : source.canReduceVolume,
-      canReduceIntensity:
-          key == 'canReduceIntensity' ? value : source.canReduceIntensity,
-      canIncreaseRest: key == 'canIncreaseRest' ? value : source.canIncreaseRest,
+      canReduceVolume: key == 'canReduceVolume'
+          ? value
+          : source.canReduceVolume,
+      canReduceIntensity: key == 'canReduceIntensity'
+          ? value
+          : source.canReduceIntensity,
+      canIncreaseRest: key == 'canIncreaseRest'
+          ? value
+          : source.canIncreaseRest,
       canSuperset: key == 'canSuperset' ? value : source.canSuperset,
-      canReplaceExercises:
-          key == 'canReplaceExercises' ? value : source.canReplaceExercises,
-      canReplaceBlock: key == 'canReplaceBlock' ? value : source.canReplaceBlock,
+      canReplaceExercises: key == 'canReplaceExercises'
+          ? value
+          : source.canReplaceExercises,
+      canReplaceBlock: key == 'canReplaceBlock'
+          ? value
+          : source.canReplaceBlock,
       minimumViablePrescription: source.minimumViablePrescription,
       dependsOnBlockIds: source.dependsOnBlockIds,
     );

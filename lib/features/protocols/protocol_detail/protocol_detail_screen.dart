@@ -100,10 +100,7 @@ class ProtocolDetailScreen extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.md),
               ],
 
-              CohortButton(
-                label: 'Start Session',
-                onPressed: () {},
-              ),
+              CohortButton(label: 'Start Session', onPressed: () {}),
 
               const SizedBox(height: CohortSpacing.xxl),
             ],
@@ -131,10 +128,7 @@ class _ProtocolStepsSection extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const _SectionCard(
             title: 'Session',
-            child: Text(
-              'Loading session...',
-              style: CohortTextStyles.body,
-            ),
+            child: Text('Loading session...', style: CohortTextStyles.body),
           );
         }
 
@@ -163,10 +157,7 @@ class _ProtocolStepsSection extends StatelessWidget {
             protocol.mainSession!.trim().isNotEmpty) {
           return _SectionCard(
             title: 'Session',
-            child: Text(
-              protocol.mainSession!,
-              style: CohortTextStyles.body,
-            ),
+            child: Text(protocol.mainSession!, style: CohortTextStyles.body),
           );
         }
 
@@ -177,10 +168,7 @@ class _ProtocolStepsSection extends StatelessWidget {
 }
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.child,
-  });
+  const _SectionCard({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -194,9 +182,7 @@ class _SectionCard extends StatelessWidget {
         children: [
           SectionTitle(title),
           const SizedBox(height: CohortSpacing.md),
-          CohortCard(
-            child: child,
-          ),
+          CohortCard(child: child),
         ],
       ),
     );

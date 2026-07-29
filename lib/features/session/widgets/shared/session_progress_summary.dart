@@ -36,17 +36,14 @@ class SessionProgressSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final barStep = progressBarCurrentStep ??
-        (completedCount == 0 ? 1 : completedCount);
+    final barStep =
+        progressBarCurrentStep ?? (completedCount == 0 ? 1 : completedCount);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (showProgressBar) ...[
-          Text(
-            'Step $barStep of $totalCount',
-            style: CohortTextStyles.small,
-          ),
+          Text('Step $barStep of $totalCount', style: CohortTextStyles.small),
           const SizedBox(height: CohortSpacing.sm),
           ClipRRect(
             borderRadius: CohortRadius.largeRadius,
@@ -54,14 +51,10 @@ class SessionProgressSummary extends StatelessWidget {
               height: 6,
               child: Stack(
                 children: [
-                  Container(
-                    color: CohortColors.border,
-                  ),
+                  Container(color: CohortColors.border),
                   FractionallySizedBox(
                     widthFactor: (barStep / totalCount).clamp(0.0, 1.0),
-                    child: Container(
-                      color: CohortColors.olive,
-                    ),
+                    child: Container(color: CohortColors.olive),
                   ),
                 ],
               ),
@@ -69,10 +62,7 @@ class SessionProgressSummary extends StatelessWidget {
           ),
           const SizedBox(height: CohortSpacing.sm),
         ],
-        Text(
-          summaryLabel,
-          style: summaryTextStyle ?? CohortTextStyles.small,
-        ),
+        Text(summaryLabel, style: summaryTextStyle ?? CohortTextStyles.small),
       ],
     );
   }

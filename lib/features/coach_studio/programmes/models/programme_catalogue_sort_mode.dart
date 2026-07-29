@@ -1,9 +1,5 @@
 /// Client-side sort modes for Programme Catalogue lists.
-enum ProgrammeCatalogueSortMode {
-  lastEdited,
-  nameAZ,
-  versionNewest,
-}
+enum ProgrammeCatalogueSortMode { lastEdited, nameAZ, versionNewest }
 
 extension ProgrammeCatalogueSortModeLabels on ProgrammeCatalogueSortMode {
   String get label {

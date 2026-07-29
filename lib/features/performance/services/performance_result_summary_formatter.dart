@@ -65,7 +65,9 @@ class PerformanceResultSummaryFormatter {
       final parts = <String>[];
       if (set.reps != null) parts.add('${set.reps} reps');
       if (set.load != null) {
-        parts.add('${set.load}${set.loadUnit == null ? '' : ' ${set.loadUnit}'}');
+        parts.add(
+          '${set.load}${set.loadUnit == null ? '' : ' ${set.loadUnit}'}',
+        );
       }
       if (parts.isNotEmpty) summaries.add(parts.join(' · '));
     }
@@ -74,7 +76,8 @@ class PerformanceResultSummaryFormatter {
       return '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} logged';
     }
 
-    final prefix = '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} logged';
+    final prefix =
+        '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} logged';
     if (summaries.length == 1) return '$prefix · ${summaries.first}';
     return '$prefix · ${summaries.take(2).join('; ')}';
   }
@@ -90,8 +93,9 @@ class PerformanceResultSummaryFormatter {
     if (result.elapsedSeconds == null) {
       return result.timeCapped ? 'Time capped' : 'Performance recorded';
     }
-    final elapsed =
-        EnduranceMetricsCalculator.formatDuration(result.elapsedSeconds);
+    final elapsed = EnduranceMetricsCalculator.formatDuration(
+      result.elapsedSeconds,
+    );
     if (result.timeCapped) return 'Time capped at $elapsed';
     return 'Completed in $elapsed';
   }
@@ -117,8 +121,9 @@ class PerformanceResultSummaryFormatter {
   }
 
   static String _formatDuration(DurationResultData result) {
-    final duration =
-        EnduranceMetricsCalculator.formatDuration(result.durationSeconds);
+    final duration = EnduranceMetricsCalculator.formatDuration(
+      result.durationSeconds,
+    );
     if (duration.isEmpty) return 'Performance recorded';
     return duration;
   }
@@ -128,8 +133,9 @@ class PerformanceResultSummaryFormatter {
     if (result.distance != null) {
       parts.add('${result.distance} ${result.distanceUnit}');
     }
-    final duration =
-        EnduranceMetricsCalculator.formatDuration(result.durationSeconds);
+    final duration = EnduranceMetricsCalculator.formatDuration(
+      result.durationSeconds,
+    );
     if (duration.isNotEmpty) {
       parts.add('in $duration');
     }

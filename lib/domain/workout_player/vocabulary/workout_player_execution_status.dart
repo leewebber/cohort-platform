@@ -10,8 +10,7 @@ extension WorkoutPlayerExecutionStatusX on WorkoutPlayerExecutionStatus {
   bool get isTerminal {
     return switch (this) {
       WorkoutPlayerExecutionStatus.completed ||
-      WorkoutPlayerExecutionStatus.abandoned =>
-        true,
+      WorkoutPlayerExecutionStatus.abandoned => true,
       _ => false,
     };
   }

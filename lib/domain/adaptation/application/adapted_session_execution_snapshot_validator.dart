@@ -52,7 +52,8 @@ class AdaptedSessionExecutionSnapshotValidator {
     if (snapshot.sourceProtocolId.trim().isEmpty) {
       issues.add(
         const AdaptedSessionExecutionSnapshotIssue(
-          code: AdaptedSessionExecutionSnapshotIssueCode.missingSourceProtocolId,
+          code:
+              AdaptedSessionExecutionSnapshotIssueCode.missingSourceProtocolId,
         ),
       );
     }
@@ -60,7 +61,8 @@ class AdaptedSessionExecutionSnapshotValidator {
     if (snapshot.sourceProtocolId != source.protocolId) {
       issues.add(
         const AdaptedSessionExecutionSnapshotIssue(
-          code: AdaptedSessionExecutionSnapshotIssueCode.missingSourceProtocolId,
+          code:
+              AdaptedSessionExecutionSnapshotIssueCode.missingSourceProtocolId,
         ),
       );
     }
@@ -71,7 +73,8 @@ class AdaptedSessionExecutionSnapshotValidator {
       if (!retainedIds.add(block.sourceBlockLocalId)) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(
-            code: AdaptedSessionExecutionSnapshotIssueCode.duplicateRetainedBlockId,
+            code: AdaptedSessionExecutionSnapshotIssueCode
+                .duplicateRetainedBlockId,
           ),
         );
       }
@@ -89,7 +92,8 @@ class AdaptedSessionExecutionSnapshotValidator {
       if (!omittedIds.add(omitted.sourceBlockLocalId)) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(
-            code: AdaptedSessionExecutionSnapshotIssueCode.duplicateOmittedBlockId,
+            code: AdaptedSessionExecutionSnapshotIssueCode
+                .duplicateOmittedBlockId,
           ),
         );
       }
@@ -103,7 +107,8 @@ class AdaptedSessionExecutionSnapshotValidator {
       if (retainedIds.contains(omitted.sourceBlockLocalId)) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(
-            code: AdaptedSessionExecutionSnapshotIssueCode.blockBothRetainedAndOmitted,
+            code: AdaptedSessionExecutionSnapshotIssueCode
+                .blockBothRetainedAndOmitted,
           ),
         );
       }
@@ -115,7 +120,8 @@ class AdaptedSessionExecutionSnapshotValidator {
       if (!retainedIds.contains(sourceBlock.localId)) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(
-            code: AdaptedSessionExecutionSnapshotIssueCode.essentialBlockMissing,
+            code:
+                AdaptedSessionExecutionSnapshotIssueCode.essentialBlockMissing,
           ),
         );
       }
@@ -145,7 +151,8 @@ class AdaptedSessionExecutionSnapshotValidator {
                 exercise.originalPrescription.sets) {
           issues.add(
             const AdaptedSessionExecutionSnapshotIssue(
-              code: AdaptedSessionExecutionSnapshotIssueCode.unplannedAdaptation,
+              code:
+                  AdaptedSessionExecutionSnapshotIssueCode.unplannedAdaptation,
             ),
           );
         }
@@ -168,7 +175,8 @@ class AdaptedSessionExecutionSnapshotValidator {
           entry.actionType == AdaptationActionType.replaceSession) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(
-            code: AdaptedSessionExecutionSnapshotIssueCode.unsupportedActionInAudit,
+            code: AdaptedSessionExecutionSnapshotIssueCode
+                .unsupportedActionInAudit,
           ),
         );
       }
@@ -178,8 +186,8 @@ class AdaptedSessionExecutionSnapshotValidator {
         !snapshot.durationEstimateReliable) {
       issues.add(
         const AdaptedSessionExecutionSnapshotIssue(
-          code:
-              AdaptedSessionExecutionSnapshotIssueCode.exactDurationClaimWithoutEvidence,
+          code: AdaptedSessionExecutionSnapshotIssueCode
+              .exactDurationClaimWithoutEvidence,
         ),
       );
     }

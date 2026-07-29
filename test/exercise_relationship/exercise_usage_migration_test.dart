@@ -11,7 +11,10 @@ void main() {
 
     final sql = migration.readAsStringSync();
     expect(sql, contains('idx_session_block_exercises_exercise_id'));
-    expect(sql, contains('idx_training_exercise_results_source_exercise_terminal'));
+    expect(
+      sql,
+      contains('idx_training_exercise_results_source_exercise_terminal'),
+    );
     expect(sql, isNot(contains('CREATE TABLE')));
   });
 }

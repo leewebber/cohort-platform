@@ -14,9 +14,7 @@ abstract class SessionRevisionRelationshipStore {
   );
 
   Future<List<SessionRevisionAssignmentReference>>
-      listActiveAssignmentReferences(
-    String protocolId,
-  );
+  listActiveAssignmentReferences(String protocolId);
 
   Future<SessionRevisionHistoricalUsage> getHistoricalUsage(String protocolId);
 }
@@ -41,8 +39,9 @@ List<SessionRevisionAssignmentReference> buildActiveAssignmentReferences({
 
   final sortedAssignments = assignments.toList()
     ..sort((a, b) {
-      final versionCompare =
-          a.programmeVersionId.compareTo(b.programmeVersionId);
+      final versionCompare = a.programmeVersionId.compareTo(
+        b.programmeVersionId,
+      );
       if (versionCompare != 0) return versionCompare;
       return a.id.compareTo(b.id);
     });
@@ -97,7 +96,10 @@ SessionRevisionHistoricalUsage buildHistoricalUsage({
 int countDistinctProgrammeVersions(
   Iterable<SessionRevisionProgrammeReference> references,
 ) {
-  return references.map((reference) => reference.programmeVersionId).toSet().length;
+  return references
+      .map((reference) => reference.programmeVersionId)
+      .toSet()
+      .length;
 }
 
 List<ContentUsageClassification> buildUsageClassifications({

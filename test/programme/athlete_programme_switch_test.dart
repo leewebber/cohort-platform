@@ -33,22 +33,17 @@ class _FakeCatalogService implements ProgrammeCatalogService {
   Future<ProgrammeCatalogEntry?> getEntry({
     required String lineageCode,
     required int versionNumber,
-  }) async =>
-      null;
+  }) async => null;
 
   @override
   Future<List<ProgrammeCatalogEntry>> listCatalogue({
     required ProgrammeCatalogueQuery query,
     ProgrammeLifecycleStatus? lifecycleStatus,
-  }) async =>
-      entries;
+  }) async => entries;
 }
 
 class _FakeAssignmentService implements ProgrammeAssignmentService {
-  _FakeAssignmentService({
-    this.current,
-    this.switchResult,
-  });
+  _FakeAssignmentService({this.current, this.switchResult});
 
   ProgrammeAssignment? current;
   ProgrammeAssignmentOperationResult? switchResult;
@@ -64,8 +59,7 @@ class _FakeAssignmentService implements ProgrammeAssignmentService {
     required String timezone,
     bool replaceExistingActive = false,
     bool allowUnpublishedVersion = false,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<ProgrammeAssignmentOperationResult> assignProgramme({
@@ -97,27 +91,23 @@ class _FakeAssignmentService implements ProgrammeAssignmentService {
   @override
   Future<ProgrammeAssignmentOperationResult> completeAssignment({
     required String assignmentId,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<ProgrammeAssignment?> getCurrentAssignment({
     required String athleteId,
-  }) async =>
-      current;
+  }) async => current;
 
   @override
   Future<ProgrammeAssignmentOperationResult> pauseAssignment({
     required String assignmentId,
     String? reason,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<ProgrammeAssignmentOperationResult> resumeAssignment({
     required String assignmentId,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 }
 
 class _NoOpAthleteStateSyncService implements AthleteStateSyncService {
@@ -164,10 +154,7 @@ void main() {
         catalogService: _FakeCatalogService([
           _entry(id: 'pub-1'),
           _entry(id: 'draft-1', status: ProgrammeLifecycleStatus.draft),
-          _entry(
-            id: 'archived-1',
-            archivedAt: DateTime.utc(2026, 1, 1),
-          ),
+          _entry(id: 'archived-1', archivedAt: DateTime.utc(2026, 1, 1)),
           _entry(id: 'blocked-1', blocking: true),
         ]),
       );
@@ -201,37 +188,40 @@ void main() {
       expect(assignmentService.assignCalls, 0);
     });
 
-    test('confirming switch delegates to cancelOrReplaceActiveAssignment', () async {
-      final newAssignment = ProgrammeScheduleTestFixtures.assignment(
-        id: 'assignment-2',
-        programmeVersionId: 'version-2',
-      );
-      final assignmentService = _FakeAssignmentService(
-        current: ProgrammeScheduleTestFixtures.assignment(
-          id: 'assignment-1',
-          programmeVersionId: 'version-1',
-        ),
-        switchResult: ProgrammeAssignmentOperationResult(
-          status: ProgrammeAssignmentOperationStatus.replaced,
-          assignment: newAssignment,
-          replacedAssignmentId: 'assignment-1',
-        ),
-      );
-      final coordinator = AthleteProgrammeSwitchCoordinator(
-        assignmentService: assignmentService,
-      );
+    test(
+      'confirming switch delegates to cancelOrReplaceActiveAssignment',
+      () async {
+        final newAssignment = ProgrammeScheduleTestFixtures.assignment(
+          id: 'assignment-2',
+          programmeVersionId: 'version-2',
+        );
+        final assignmentService = _FakeAssignmentService(
+          current: ProgrammeScheduleTestFixtures.assignment(
+            id: 'assignment-1',
+            programmeVersionId: 'version-1',
+          ),
+          switchResult: ProgrammeAssignmentOperationResult(
+            status: ProgrammeAssignmentOperationStatus.replaced,
+            assignment: newAssignment,
+            replacedAssignmentId: 'assignment-1',
+          ),
+        );
+        final coordinator = AthleteProgrammeSwitchCoordinator(
+          assignmentService: assignmentService,
+        );
 
-      final result = await coordinator.switchToProgramme(
-        athleteId: athleteId,
-        programmeVersionId: 'version-2',
-        startedAt: DateTime.utc(2026, 7, 16),
-        timezone: 'UTC',
-      );
+        final result = await coordinator.switchToProgramme(
+          athleteId: athleteId,
+          programmeVersionId: 'version-2',
+          startedAt: DateTime.utc(2026, 7, 16),
+          timezone: 'UTC',
+        );
 
-      expect(result.isSuccess, isTrue);
-      expect(result.previousAssignmentId, 'assignment-1');
-      expect(assignmentService.switchCalls, 1);
-    });
+        expect(result.isSuccess, isTrue);
+        expect(result.previousAssignmentId, 'assignment-1');
+        expect(assignmentService.switchCalls, 1);
+      },
+    );
 
     test('assigns when no active programme exists', () async {
       final assignmentService = _FakeAssignmentService(
@@ -270,12 +260,11 @@ void main() {
       );
     }
 
-    Future<void> seedFlatPublishedProgramme({String versionId = 'version-1'}) async {
+    Future<void> seedFlatPublishedProgramme({
+      String versionId = 'version-1',
+    }) async {
       tables.lineages.add(
-        const ProgrammeLineage(
-          id: 'lineage-1',
-          code: 'COHORT-FOUNDATION-TEST',
-        ),
+        const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
       );
 
       await versionStore.saveTemplateTree(
@@ -350,7 +339,10 @@ void main() {
 
       expect(result.isSuccess, isTrue);
       expect(tables.assignments, hasLength(2));
-      expect(tables.assignments.first.status, ProgrammeAssignmentStatus.reassigned);
+      expect(
+        tables.assignments.first.status,
+        ProgrammeAssignmentStatus.reassigned,
+      );
       expect(tables.assignments.last.isActive, isTrue);
       expect(tables.outcomes, hasLength(1));
       expect(tables.assignments.where((a) => a.isActive), hasLength(1));
@@ -384,50 +376,56 @@ void main() {
       await controller.load();
 
       expect(controller.activeVersionId, 'version-1');
-      expect(controller.isCurrentProgramme(controller.programmes.first), isTrue);
+      expect(
+        controller.isCurrentProgramme(controller.programmes.first),
+        isTrue,
+      );
     });
   });
 
   group('AthleteProgrammeScreen widget', () {
-    testWidgets('Start New Programme visible when athlete has active programme', (
-      tester,
-    ) async {
-      final tables = InMemoryProgrammeTables()
-        ..assignments.add(ProgrammeScheduleTestFixtures.assignment())
-        ..versions.add(
-          ProgrammeScheduleTestFixtures.version().copyWith(
-            lifecycleStatus: ProgrammeLifecycleStatus.published,
-            name: 'Foundation',
+    testWidgets(
+      'Start New Programme visible when athlete has active programme',
+      (tester) async {
+        final tables = InMemoryProgrammeTables()
+          ..assignments.add(ProgrammeScheduleTestFixtures.assignment())
+          ..versions.add(
+            ProgrammeScheduleTestFixtures.version().copyWith(
+              lifecycleStatus: ProgrammeLifecycleStatus.published,
+              name: 'Foundation',
+            ),
+          );
+
+        final controller = AthleteProgrammeScreenController(
+          athleteId: athleteId,
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        );
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AthleteProgrammeScreen(
+              athleteId: athleteId,
+              controller: controller,
+            ),
           ),
         );
 
-      final controller = AthleteProgrammeScreenController(
-        athleteId: athleteId,
-        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-        versionStore: InMemoryProgrammeVersionStore(tables),
-      );
+        await tester.pumpAndSettle();
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: AthleteProgrammeScreen(
-            athleteId: athleteId,
-            controller: controller,
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      expect(find.text('Start New Programme'), findsOneWidget);
-      expect(find.text('Foundation'), findsOneWidget);
-    });
+        expect(find.text('Start New Programme'), findsOneWidget);
+        expect(find.text('Foundation'), findsOneWidget);
+      },
+    );
 
     testWidgets('Start New Programme available without active programme', (
       tester,
     ) async {
       final controller = AthleteProgrammeScreenController(
         athleteId: athleteId,
-        assignmentStore: InMemoryProgrammeAssignmentStore(InMemoryProgrammeTables()),
+        assignmentStore: InMemoryProgrammeAssignmentStore(
+          InMemoryProgrammeTables(),
+        ),
         versionStore: InMemoryProgrammeVersionStore(InMemoryProgrammeTables()),
       );
 

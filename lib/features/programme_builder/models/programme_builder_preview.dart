@@ -35,8 +35,7 @@ class ProgrammeBuilderPreviewSlot {
     this.protocolName,
     this.displayTitle,
     this.isOptional = false,
-    this.completionExpectation =
-        ProgrammeSessionCompletionExpectation.required,
+    this.completionExpectation = ProgrammeSessionCompletionExpectation.required,
     this.athletePreview,
   });
 

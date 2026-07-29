@@ -197,7 +197,9 @@ void main() {
           comparisonService: ProgrammeVersionComparisonService(
             comparisonStore: comparisonStore,
           ),
-          impactService: ProgrammeVersionImpactService(impactStore: impactStore),
+          impactService: ProgrammeVersionImpactService(
+            impactStore: impactStore,
+          ),
           plannerStore: InMemoryProgrammeMigrationPlannerStore(programmeTables),
           comparisonStore: comparisonStore,
         ),
@@ -229,7 +231,10 @@ void main() {
     testWidgets('comparison idle until version selected', (tester) async {
       await pumpSection(tester);
       await tester.pumpAndSettle();
-      expect(find.text(ProgrammeIntelligenceCopy.selectComparisonPrompt), findsWidgets);
+      expect(
+        find.text(ProgrammeIntelligenceCopy.selectComparisonPrompt),
+        findsWidgets,
+      );
     });
 
     testWidgets('selecting comparison target loads summary', (tester) async {
@@ -248,7 +253,9 @@ void main() {
   });
 
   group('migration planner', () {
-    testWidgets('migration summary appears after comparison selected', (tester) async {
+    testWidgets('migration summary appears after comparison selected', (
+      tester,
+    ) async {
       await pumpSection(tester);
       await tester.pumpAndSettle();
 
@@ -267,7 +274,9 @@ void main() {
       await controller.selectComparisonTarget(versionV3Id);
       await tester.pumpAndSettle();
 
-      final text = tester.widgetList<Text>(find.byType(Text)).map((w) => w.data ?? '');
+      final text = tester
+          .widgetList<Text>(find.byType(Text))
+          .map((w) => w.data ?? '');
       final combined = text.join(' ');
       expect(ProgrammeIntelligenceCopy.containsRawUuid(combined), isFalse);
       expect(combined.contains('assignment-intel-1'), isFalse);
@@ -275,7 +284,9 @@ void main() {
   });
 
   group('unit widgets', () {
-    testWidgets('migration assignment tile hides assignment id', (tester) async {
+    testWidgets('migration assignment tile hides assignment id', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

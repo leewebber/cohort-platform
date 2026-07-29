@@ -29,9 +29,11 @@ class ProgrammeVersionComparisonEngine {
       targetSlots: target.slots,
       sameVersion: source.versionId == target.versionId,
     );
-    final sessionRevisionChanges =
-        deriveSessionRevisionChanges(slotChanges);
-    final exerciseChanges = compareExercises(source.exercises, target.exercises);
+    final sessionRevisionChanges = deriveSessionRevisionChanges(slotChanges);
+    final exerciseChanges = compareExercises(
+      source.exercises,
+      target.exercises,
+    );
     final exerciseSetChange = buildExerciseSetChange(
       source.exercises,
       target.exercises,
@@ -78,31 +80,45 @@ class ProgrammeVersionComparisonEngine {
       exerciseSetChange: exerciseSetChange,
     );
 
-    final hasStructuralChanges = weekChanges.any((c) => c.changeType != ProgrammeChangeType.unchanged) ||
+    final hasStructuralChanges =
+        weekChanges.any((c) => c.changeType != ProgrammeChangeType.unchanged) ||
         dayChanges.any((c) => c.changeType != ProgrammeChangeType.unchanged);
-    final hasSessionChanges = slotChanges.any(
-      (change) =>
-          change.changeType != ProgrammeChangeType.unchanged &&
-          change.changeType != ProgrammeChangeType.added &&
-          change.changeType != ProgrammeChangeType.removed,
-    ) ||
+    final hasSessionChanges =
+        slotChanges.any(
+          (change) =>
+              change.changeType != ProgrammeChangeType.unchanged &&
+              change.changeType != ProgrammeChangeType.added &&
+              change.changeType != ProgrammeChangeType.removed,
+        ) ||
         slotChanges.any((c) => c.changeType == ProgrammeChangeType.added) ||
         slotChanges.any((c) => c.changeType == ProgrammeChangeType.removed) ||
         sessionRevisionChanges.isNotEmpty;
-    final hasExerciseChanges = exerciseSetChange.addedExercises.isNotEmpty ||
+    final hasExerciseChanges =
+        exerciseSetChange.addedExercises.isNotEmpty ||
         exerciseSetChange.removedExercises.isNotEmpty ||
-        exerciseChanges.any((c) => c.changeType == ProgrammeChangeType.modified);
+        exerciseChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.modified,
+        );
 
-    final isIdentical = metadataChanges.isEmpty &&
-        weekChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged) &&
-        dayChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged) &&
-        slotChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged) &&
+    final isIdentical =
+        metadataChanges.isEmpty &&
+        weekChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ) &&
+        dayChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ) &&
+        slotChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ) &&
         sessionRevisionChanges.isEmpty &&
         (!source.exerciseEnrichmentAuthoritative ||
             !target.exerciseEnrichmentAuthoritative ||
             (exerciseSetChange.addedExercises.isEmpty &&
                 exerciseSetChange.removedExercises.isEmpty &&
-                exerciseChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged)));
+                exerciseChanges.every(
+                  (c) => c.changeType == ProgrammeChangeType.unchanged,
+                )));
 
     final classifications = buildClassifications(
       metadataChanges: metadataChanges,
@@ -157,8 +173,8 @@ class ProgrammeVersionComparisonEngine {
           changeType: sourceValue == null
               ? ProgrammeChangeType.added
               : targetValue == null
-                  ? ProgrammeChangeType.removed
-                  : ProgrammeChangeType.modified,
+              ? ProgrammeChangeType.removed
+              : ProgrammeChangeType.modified,
         ),
       );
     }
@@ -203,12 +219,8 @@ class ProgrammeVersionComparisonEngine {
       }
 
       final changedFields = _changedFields(
-        {
-          'title': sourceWeek.title,
-        },
-        {
-          'title': targetWeek.title,
-        },
+        {'title': sourceWeek.title},
+        {'title': targetWeek.title},
       );
 
       changes.add(
@@ -271,14 +283,8 @@ class ProgrammeVersionComparisonEngine {
       }
 
       final changedFields = _changedFields(
-        {
-          'title': sourceDay.title,
-          'dayIndex': sourceDay.dayIndex.toString(),
-        },
-        {
-          'title': targetDay.title,
-          'dayIndex': targetDay.dayIndex.toString(),
-        },
+        {'title': sourceDay.title, 'dayIndex': sourceDay.dayIndex.toString()},
+        {'title': targetDay.title, 'dayIndex': targetDay.dayIndex.toString()},
       );
 
       changes.add(
@@ -323,7 +329,9 @@ class ProgrammeVersionComparisonEngine {
       }
     } else {
       final targetById = {for (final slot in targetSlots) slot.slotId: slot};
-      for (final sourceSlot in List<ProgrammeSlotSnapshot>.from(unmatchedSource)) {
+      for (final sourceSlot in List<ProgrammeSlotSnapshot>.from(
+        unmatchedSource,
+      )) {
         final targetSlot = targetById[sourceSlot.slotId];
         if (targetSlot == null) continue;
         unmatchedSource.remove(sourceSlot);
@@ -342,7 +350,9 @@ class ProgrammeVersionComparisonEngine {
       for (final slot in unmatchedTarget) _structuralSlotKey(slot): slot,
     };
 
-    for (final sourceSlot in List<ProgrammeSlotSnapshot>.from(unmatchedSource)) {
+    for (final sourceSlot in List<ProgrammeSlotSnapshot>.from(
+      unmatchedSource,
+    )) {
       final key = _structuralSlotKey(sourceSlot);
       final targetSlot = targetByStructure[key];
       if (targetSlot == null) continue;
@@ -515,7 +525,10 @@ class ProgrammeVersionComparisonEngine {
     }
 
     final results = byLineage.values.toList()
-      ..sort((a, b) => (a.sourceSessionName ?? '').compareTo(b.sourceSessionName ?? ''));
+      ..sort(
+        (a, b) =>
+            (a.sourceSessionName ?? '').compareTo(b.sourceSessionName ?? ''),
+      );
     return results;
   }
 
@@ -555,7 +568,8 @@ class ProgrammeVersionComparisonEngine {
         );
       }
 
-      final changed = sourceExercise.sourceBlockLinkCount !=
+      final changed =
+          sourceExercise.sourceBlockLinkCount !=
               targetExercise.targetBlockLinkCount ||
           !_setEquals(
             sourceExercise.sourceSessionRevisionIds.toSet(),
@@ -565,8 +579,9 @@ class ProgrammeVersionComparisonEngine {
       return ExerciseReferenceChange(
         exerciseId: exerciseId,
         exerciseName: targetExercise.exerciseName,
-        changeType:
-            changed ? ProgrammeChangeType.modified : ProgrammeChangeType.unchanged,
+        changeType: changed
+            ? ProgrammeChangeType.modified
+            : ProgrammeChangeType.unchanged,
         sourceSessionRevisionIds: sourceExercise.sourceSessionRevisionIds,
         targetSessionRevisionIds: targetExercise.targetSessionRevisionIds,
         sourceBlockLinkCount: sourceExercise.sourceBlockLinkCount,
@@ -614,10 +629,12 @@ class ProgrammeVersionComparisonEngine {
     required ProgrammeVersionComparisonSnapshot target,
     required ExerciseSetChange exerciseSetChange,
   }) {
-    final sourceTrainingDays =
-        source.days.where((day) => day.dayKey.isNotEmpty).length;
-    final targetTrainingDays =
-        target.days.where((day) => day.dayKey.isNotEmpty).length;
+    final sourceTrainingDays = source.days
+        .where((day) => day.dayKey.isNotEmpty)
+        .length;
+    final targetTrainingDays = target.days
+        .where((day) => day.dayKey.isNotEmpty)
+        .length;
 
     return ProgrammeStructureMetrics(
       sourceWeekCount: source.weeks.length,
@@ -637,10 +654,8 @@ class ProgrammeVersionComparisonEngine {
           .map((slot) => slot.protocolId)
           .toSet()
           .length,
-      sessionRevisionCountDelta: target.slots
-              .map((slot) => slot.protocolId)
-              .toSet()
-              .length -
+      sessionRevisionCountDelta:
+          target.slots.map((slot) => slot.protocolId).toSet().length -
           source.slots.map((slot) => slot.protocolId).toSet().length,
       sourceDistinctExerciseCount: exerciseSetChange.sourceExerciseCount,
       targetDistinctExerciseCount: exerciseSetChange.targetExerciseCount,
@@ -768,8 +783,11 @@ class ProgrammeVersionComparisonEngine {
     );
   }
 
-  static StructuralSlotKey _structuralSlotKey(ProgrammeSlotSnapshot slot) =>
-      (weekIndex: slot.weekIndex, dayKey: slot.dayKey, slotIndex: slot.slotIndex);
+  static StructuralSlotKey _structuralSlotKey(ProgrammeSlotSnapshot slot) => (
+    weekIndex: slot.weekIndex,
+    dayKey: slot.dayKey,
+    slotIndex: slot.slotIndex,
+  );
 
   static String _positionLabel(ProgrammeSlotSnapshot slot) =>
       'Week ${slot.weekIndex} · ${slot.dayKey} · Slot ${slot.slotIndex}';

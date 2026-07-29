@@ -48,22 +48,26 @@ void main() {
 
     test('returns null when template has no required sessions', () {
       final tree = ProgrammeTemplateTree(
-        template: ProgrammeScheduleTestFixtures.singleWeekTree(days: [
-          ProgrammeScheduleTestFixtures.restDay(
-            id: 'day-1',
-            weekId: 'week-1',
-            dayKey: 'day_1',
-            dayOrder: 1,
-          ),
-        ]).template,
-        weekNodes: ProgrammeScheduleTestFixtures.singleWeekTree(days: [
-          ProgrammeScheduleTestFixtures.restDay(
-            id: 'day-1',
-            weekId: 'week-1',
-            dayKey: 'day_1',
-            dayOrder: 1,
-          ),
-        ]).weekNodes,
+        template: ProgrammeScheduleTestFixtures.singleWeekTree(
+          days: [
+            ProgrammeScheduleTestFixtures.restDay(
+              id: 'day-1',
+              weekId: 'week-1',
+              dayKey: 'day_1',
+              dayOrder: 1,
+            ),
+          ],
+        ).template,
+        weekNodes: ProgrammeScheduleTestFixtures.singleWeekTree(
+          days: [
+            ProgrammeScheduleTestFixtures.restDay(
+              id: 'day-1',
+              weekId: 'week-1',
+              dayKey: 'day_1',
+              dayOrder: 1,
+            ),
+          ],
+        ).weekNodes,
       );
 
       final summary = service.summarize(

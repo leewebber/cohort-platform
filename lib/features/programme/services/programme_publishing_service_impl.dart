@@ -6,9 +6,8 @@ import 'programme_publishing_service.dart';
 
 /// Draft → published lifecycle backed by [ProgrammeVersionStore].
 class ProgrammePublishingServiceImpl implements ProgrammePublishingService {
-  ProgrammePublishingServiceImpl({
-    required ProgrammeVersionStore versionStore,
-  }) : _versionStore = versionStore;
+  ProgrammePublishingServiceImpl({required ProgrammeVersionStore versionStore})
+    : _versionStore = versionStore;
 
   final ProgrammeVersionStore _versionStore;
 

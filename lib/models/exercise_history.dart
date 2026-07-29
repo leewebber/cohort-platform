@@ -36,10 +36,7 @@ class ExerciseHistorySession {
 
 /// Complete exercise history for one athlete and movement.
 class ExerciseHistory {
-  const ExerciseHistory({
-    required this.exerciseId,
-    required this.sessions,
-  });
+  const ExerciseHistory({required this.exerciseId, required this.sessions});
 
   final String exerciseId;
   final List<ExerciseHistorySession> sessions;

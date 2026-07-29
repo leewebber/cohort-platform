@@ -22,10 +22,7 @@ import '../models/programme_editor_view_state.dart';
 
 /// Result of an editor save attempt.
 class ProgrammeEditorSaveResult {
-  const ProgrammeEditorSaveResult({
-    required this.success,
-    this.message,
-  });
+  const ProgrammeEditorSaveResult({required this.success, this.message});
 
   final bool success;
   final String? message;
@@ -59,15 +56,15 @@ class ProgrammeEditorController {
     required String coachId,
     required String versionId,
     ProgrammeBuilderHistory? history,
-  })  : _builderService = builderService,
-        _validationService = validationService,
-        _publishCoordinator = publishCoordinator,
-        _previewService = previewService,
-        _protocolPickerService = protocolPickerService,
-        _protocolNameResolver = protocolNameResolver,
-        _coachId = coachId,
-        _versionId = versionId,
-        history = history ?? ProgrammeBuilderHistory();
+  }) : _builderService = builderService,
+       _validationService = validationService,
+       _publishCoordinator = publishCoordinator,
+       _previewService = previewService,
+       _protocolPickerService = protocolPickerService,
+       _protocolNameResolver = protocolNameResolver,
+       _coachId = coachId,
+       _versionId = versionId,
+       history = history ?? ProgrammeBuilderHistory();
 
   final ProgrammeBuilderService _builderService;
   final ProgrammeBuilderValidationService _validationService;
@@ -104,9 +101,7 @@ class ProgrammeEditorController {
   String get versionId => _versionId;
 
   bool get canPublish =>
-      !isReadOnly &&
-      !isSaving &&
-      (publishReadiness?.isReady ?? false);
+      !isReadOnly && !isSaving && (publishReadiness?.isReady ?? false);
 
   ProgrammeEditorSelection get selectionState => selection;
 
@@ -194,10 +189,7 @@ class ProgrammeEditorController {
         : ProgrammeEditorViewState.readOnly;
     errorMessage = 'Save failed. Your local changes are preserved.';
     _notify();
-    return ProgrammeEditorSaveResult(
-      success: false,
-      message: errorMessage,
-    );
+    return ProgrammeEditorSaveResult(success: false, message: errorMessage);
   }
 
   Future<void> validate() async {
@@ -257,10 +249,7 @@ class ProgrammeEditorController {
         : ProgrammeEditorViewState.readOnly;
     errorMessage = _publishErrorMessage(result);
     _notify();
-    return ProgrammeEditorPublishResult(
-      success: false,
-      message: errorMessage,
-    );
+    return ProgrammeEditorPublishResult(success: false, message: errorMessage);
   }
 
   String _publishErrorMessage(ProgrammeBuilderOperationResult result) {
@@ -283,58 +272,42 @@ class ProgrammeEditorController {
       _assignedProtocolIds(current),
     );
 
-    return _previewService.buildPreview(
-      current,
-      protocolNamesById: names,
-    );
+    return _previewService.buildPreview(current, protocolNamesById: names);
   }
 
-  Future<void> addWeek() => _applyEdit(
-        () => _builderService.addWeek(document!),
-      );
+  Future<void> addWeek() =>
+      _applyEdit(() => _builderService.addWeek(document!));
 
   Future<void> duplicateWeek(String weekLocalId) => _applyEdit(
-        () => _builderService.duplicateWeek(
-          document!,
-          weekLocalId: weekLocalId,
-        ),
-      );
+    () => _builderService.duplicateWeek(document!, weekLocalId: weekLocalId),
+  );
 
   Future<void> removeWeek(String weekLocalId) => _applyEdit(
-        () => _builderService.removeWeek(
-          document!,
-          weekLocalId: weekLocalId,
-        ),
-        onApplied: () {
-          final weeks = document!.template.allWeeks;
-          if (weeks.isEmpty) {
-            selection = const ProgrammeEditorSelection();
-            return;
-          }
-          if (!weeks.any((week) => week.localId == selection.weekLocalId)) {
-            selection = ProgrammeEditorSelection(weekLocalId: weeks.first.localId);
-          }
-        },
-      );
+    () => _builderService.removeWeek(document!, weekLocalId: weekLocalId),
+    onApplied: () {
+      final weeks = document!.template.allWeeks;
+      if (weeks.isEmpty) {
+        selection = const ProgrammeEditorSelection();
+        return;
+      }
+      if (!weeks.any((week) => week.localId == selection.weekLocalId)) {
+        selection = ProgrammeEditorSelection(weekLocalId: weeks.first.localId);
+      }
+    },
+  );
 
   Future<void> addDay(String weekLocalId) => _applyEdit(
-        () => _builderService.addDay(
-          document!,
-          weekLocalId: weekLocalId,
-        ),
-      );
+    () => _builderService.addDay(document!, weekLocalId: weekLocalId),
+  );
 
   Future<void> removeDay(String dayLocalId) => _applyEdit(
-        () => _builderService.removeDay(
-          document!,
-          dayLocalId: dayLocalId,
-        ),
-        onApplied: () {
-          if (selection.dayLocalId == dayLocalId) {
-            selection = selection.copyWith(clearDay: true, clearSlot: true);
-          }
-        },
-      );
+    () => _builderService.removeDay(document!, dayLocalId: dayLocalId),
+    onApplied: () {
+      if (selection.dayLocalId == dayLocalId) {
+        selection = selection.copyWith(clearDay: true, clearSlot: true);
+      }
+    },
+  );
 
   Future<void> updateDayMetadata({
     required String dayLocalId,
@@ -342,75 +315,63 @@ class ProgrammeEditorController {
     ProgrammeIntent? intent,
     bool clearTitle = false,
     bool clearIntent = false,
-  }) =>
-      _applyEdit(
-        () => _builderService.updateDayMetadata(
-          document!,
-          dayLocalId: dayLocalId,
-          title: title,
-          intent: intent,
-          clearTitle: clearTitle,
-          clearIntent: clearIntent,
-        ),
-      );
+  }) => _applyEdit(
+    () => _builderService.updateDayMetadata(
+      document!,
+      dayLocalId: dayLocalId,
+      title: title,
+      intent: intent,
+      clearTitle: clearTitle,
+      clearIntent: clearIntent,
+    ),
+  );
 
   Future<void> setDayType({
     required String dayLocalId,
     required ProgrammeDayType dayType,
-  }) =>
-      _applyEdit(
-        () => _builderService.setDayType(
-          document!,
-          dayLocalId: dayLocalId,
-          dayType: dayType,
-        ),
-        onApplied: () {
-          if (dayType == ProgrammeDayType.rest &&
-              selection.dayLocalId == dayLocalId) {
-            selection = selection.copyWith(clearSlot: true);
-          }
-        },
-      );
+  }) => _applyEdit(
+    () => _builderService.setDayType(
+      document!,
+      dayLocalId: dayLocalId,
+      dayType: dayType,
+    ),
+    onApplied: () {
+      if (dayType == ProgrammeDayType.rest &&
+          selection.dayLocalId == dayLocalId) {
+        selection = selection.copyWith(clearSlot: true);
+      }
+    },
+  );
 
   Future<void> addSlot(String dayLocalId) => _applyEdit(
-        () => _builderService.addSlot(
-          document!,
-          dayLocalId: dayLocalId,
-        ),
-      );
+    () => _builderService.addSlot(document!, dayLocalId: dayLocalId),
+  );
 
   Future<void> removeSlot(String slotLocalId) => _applyEdit(
-        () => _builderService.removeSlot(
-          document!,
-          slotLocalId: slotLocalId,
-        ),
-        onApplied: () {
-          if (selection.slotLocalId == slotLocalId) {
-            selection = selection.copyWith(clearSlot: true);
-          }
-        },
-      );
+    () => _builderService.removeSlot(document!, slotLocalId: slotLocalId),
+    onApplied: () {
+      if (selection.slotLocalId == slotLocalId) {
+        selection = selection.copyWith(clearSlot: true);
+      }
+    },
+  );
 
   Future<void> assignProtocol({
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
-  }) =>
-      _applyEdit(
-        () => _builderService.assignProtocol(
-          document!,
-          slotLocalId: slotLocalId,
-          protocolId: protocolId,
-          displayTitle: displayTitle,
-        ),
-      );
+  }) => _applyEdit(
+    () => _builderService.assignProtocol(
+      document!,
+      slotLocalId: slotLocalId,
+      protocolId: protocolId,
+      displayTitle: displayTitle,
+    ),
+  );
 
   Future<void> clearProtocol(String slotLocalId) => _applyEdit(
-        () => _builderService.clearProtocol(
-          document!,
-          slotLocalId: slotLocalId,
-        ),
-      );
+    () => _builderService.clearProtocol(document!, slotLocalId: slotLocalId),
+  );
 
   Future<void> updateSlotMetadata({
     required String slotLocalId,
@@ -423,27 +384,24 @@ class ProgrammeEditorController {
     bool clearDisplayTitle = false,
     bool clearCoachNote = false,
     bool clearAthleteNote = false,
-  }) =>
-      _applyEdit(
-        () => _builderService.updateSlotMetadata(
-          document!,
-          slotLocalId: slotLocalId,
-          displayTitle: displayTitle,
-          timeOfDay: timeOfDay,
-          isOptional: isOptional,
-          completionExpectation: completionExpectation,
-          coachNote: coachNote,
-          athleteNote: athleteNote,
-          clearDisplayTitle: clearDisplayTitle,
-          clearCoachNote: clearCoachNote,
-          clearAthleteNote: clearAthleteNote,
-        ),
-      );
+  }) => _applyEdit(
+    () => _builderService.updateSlotMetadata(
+      document!,
+      slotLocalId: slotLocalId,
+      displayTitle: displayTitle,
+      timeOfDay: timeOfDay,
+      isOptional: isOptional,
+      completionExpectation: completionExpectation,
+      coachNote: coachNote,
+      athleteNote: athleteNote,
+      clearDisplayTitle: clearDisplayTitle,
+      clearCoachNote: clearCoachNote,
+      clearAthleteNote: clearAthleteNote,
+    ),
+  );
 
   Future<void> updateMetadata(ProgrammeVersionDraftMetadata metadata) =>
-      _applyEdit(
-        () => _builderService.updateMetadata(document!, metadata),
-      );
+      _applyEdit(() => _builderService.updateMetadata(document!, metadata));
 
   void undo() {
     final current = document;
@@ -476,10 +434,7 @@ class ProgrammeEditorController {
     _notify();
   }
 
-  void selectDay({
-    required String weekLocalId,
-    required String dayLocalId,
-  }) {
+  void selectDay({required String weekLocalId, required String dayLocalId}) {
     selection = ProgrammeEditorSelection(
       weekLocalId: weekLocalId,
       dayLocalId: dayLocalId,
@@ -509,10 +464,10 @@ class ProgrammeEditorController {
       case ProgrammeBuilderDayPath(:final weekLocalId, :final dayLocalId):
         selectDay(weekLocalId: weekLocalId, dayLocalId: dayLocalId);
       case ProgrammeBuilderSlotPath(
-          :final weekLocalId,
-          :final dayLocalId,
-          :final slotLocalId,
-        ):
+        :final weekLocalId,
+        :final dayLocalId,
+        :final slotLocalId,
+      ):
         selectSlot(
           weekLocalId: weekLocalId,
           dayLocalId: dayLocalId,
@@ -575,7 +530,8 @@ class ProgrammeEditorController {
     history.recordBeforeEdit(current);
     final result = await editFn();
     document = result.document;
-    validation = result.validation ?? _validationService.validate(result.document);
+    validation =
+        result.validation ?? _validationService.validate(result.document);
     publishReadiness = null;
     onApplied?.call();
     _notify();

@@ -14,10 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../support/programme_code_authoring_fixtures.dart';
 import '../support/programme_session_authoring_test_support.dart';
 
-Future<void> scrollSessionBuilderTo(
-  WidgetTester tester,
-  Finder target,
-) async {
+Future<void> scrollSessionBuilderTo(WidgetTester tester, Finder target) async {
   await tester.scrollUntilVisible(
     target,
     500,
@@ -67,11 +64,7 @@ void main() {
 
     test('selecting primary intent updates built draft', () {
       final state = SessionBuilderEditingState(
-        draft: ProtocolDraft(
-          protocolId: 'sess',
-          name: 'Session',
-          steps: [],
-        ),
+        draft: ProtocolDraft(protocolId: 'sess', name: 'Session', steps: []),
       );
 
       state.setPrimarySessionIntent(SessionIntent.threshold);
@@ -95,7 +88,9 @@ void main() {
         SessionIntent.threshold,
       ]);
 
-      expect(state.buildDraft().secondarySessionIntents, [SessionIntent.mobility]);
+      expect(state.buildDraft().secondarySessionIntents, [
+        SessionIntent.mobility,
+      ]);
     });
 
     test('build draft preserves explicit block metadata without defaults', () {
@@ -112,24 +107,27 @@ void main() {
       expect(built.blocks[0].adaptationPolicy, isNull);
     });
 
-    test('returning block to recommended clears explicit policy in built draft', () {
-      final authoredBlock = block(
-        type: SessionBlockType.strength,
-        adaptationPolicy: const BlockAdaptationPolicy(
-          canRemove: true,
-          canShorten: true,
-          canReduceVolume: true,
-          canReduceIntensity: true,
-          canIncreaseRest: true,
-          canSuperset: true,
-          canReplaceExercises: true,
-          canReplaceBlock: true,
-        ),
-      );
-      final cleared = authoredBlock.copyWith(clearAdaptationPolicy: true);
-      expect(cleared.adaptationPolicy, isNull);
-      expect(cleared.effectiveAdaptationPolicy.canRemove, isFalse);
-    });
+    test(
+      'returning block to recommended clears explicit policy in built draft',
+      () {
+        final authoredBlock = block(
+          type: SessionBlockType.strength,
+          adaptationPolicy: const BlockAdaptationPolicy(
+            canRemove: true,
+            canShorten: true,
+            canReduceVolume: true,
+            canReduceIntensity: true,
+            canIncreaseRest: true,
+            canSuperset: true,
+            canReplaceExercises: true,
+            canReplaceBlock: true,
+          ),
+        );
+        final cleared = authoredBlock.copyWith(clearAdaptationPolicy: true);
+        expect(cleared.adaptationPolicy, isNull);
+        expect(cleared.effectiveAdaptationPolicy.canRemove, isFalse);
+      },
+    );
 
     test('minimum viable duration validation when planned duration set', () {
       final state = SessionBuilderEditingState(
@@ -153,8 +151,9 @@ void main() {
   });
 
   group('SessionBuilderView adaptation controls', () {
-    testWidgets('shows adaptation section for embedded coach session',
-        (tester) async {
+    testWidgets('shows adaptation section for embedded coach session', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -169,8 +168,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1 · Day 1',
-                ),
+                      programmeLocationLabel: 'Week 1 · Day 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (_) {},
               ),
@@ -184,7 +183,9 @@ void main() {
       expect(find.textContaining('Shortest duration'), findsOneWidget);
     });
 
-    testWidgets('code-created session displays authored intents', (tester) async {
+    testWidgets('code-created session displays authored intents', (
+      tester,
+    ) async {
       final codeDraft = fullyTaggedUpperBodyStrengthSession(
         protocolId: 'code-ui-1',
         programmeVersionId: testProgrammeVersionId,
@@ -199,8 +200,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (_) {},
               ),
@@ -232,8 +233,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (value) => latest = value,
               ),
@@ -246,7 +247,9 @@ void main() {
       expect(thresholdChips, findsNothing);
     });
 
-    testWidgets('secondary intent chip selection updates draft', (tester) async {
+    testWidgets('secondary intent chip selection updates draft', (
+      tester,
+    ) async {
       ProtocolDraft? latest;
       await tester.pumpWidget(
         MaterialApp(
@@ -262,8 +265,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (value) => latest = value,
               ),
@@ -279,8 +282,9 @@ void main() {
       expect(latest?.secondarySessionIntents, [SessionIntent.mobility]);
     });
 
-    testWidgets('save and reopen restores adaptation fields via applyDraft',
-        (tester) async {
+    testWidgets('save and reopen restores adaptation fields via applyDraft', (
+      tester,
+    ) async {
       final saved = ProtocolDraft(
         protocolId: 'local-1',
         name: 'Session',
@@ -301,8 +305,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (_) {},
               ),
@@ -320,8 +324,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (_) {},
               ),
@@ -335,8 +339,9 @@ void main() {
       expect(find.text('30'), findsWidgets);
     });
 
-    testWidgets('block shows recommended adaptation policy by default',
-        (tester) async {
+    testWidgets('block shows recommended adaptation policy by default', (
+      tester,
+    ) async {
       ProtocolDraft? latest;
       await tester.pumpWidget(
         MaterialApp(
@@ -360,8 +365,8 @@ void main() {
                 exercises: exercises,
                 displayContext:
                     SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
-                ),
+                      programmeLocationLabel: 'Week 1',
+                    ),
                 capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
                 onDraftChanged: (value) => latest = value,
               ),
@@ -374,53 +379,56 @@ void main() {
       expect(latest?.blocks.first.adaptationPolicy, isNull);
     });
 
-    testWidgets('switching adaptation policy custom then recommended clears override',
-        (tester) async {
-      ProtocolDraft? latest;
-      final initial = ProtocolDraft(
-        protocolId: 'local-1',
-        name: 'Session',
-        sessionFormat: 'structured_strength',
-        steps: [],
-        blocks: [
-          block(
-            type: SessionBlockType.strength,
-            title: 'Main',
-            content: 'Lift',
-          ),
-        ],
-      );
+    testWidgets(
+      'switching adaptation policy custom then recommended clears override',
+      (tester) async {
+        ProtocolDraft? latest;
+        final initial = ProtocolDraft(
+          protocolId: 'local-1',
+          name: 'Session',
+          sessionFormat: 'structured_strength',
+          steps: [],
+          blocks: [
+            block(
+              type: SessionBlockType.strength,
+              title: 'Main',
+              content: 'Lift',
+            ),
+          ],
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SingleChildScrollView(
-              child: SessionBuilderView(
-                draft: initial,
-                exercises: exercises,
-                displayContext:
-                    SessionBuilderDisplayContext.embeddedProgrammeSession(
-                  programmeLocationLabel: 'Week 1',
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: SessionBuilderView(
+                  draft: initial,
+                  exercises: exercises,
+                  displayContext:
+                      SessionBuilderDisplayContext.embeddedProgrammeSession(
+                        programmeLocationLabel: 'Week 1',
+                      ),
+                  capabilities:
+                      SessionBuilderCapabilities.embeddedCoachSession(),
+                  onDraftChanged: (value) => latest = value,
                 ),
-                capabilities: SessionBuilderCapabilities.embeddedCoachSession(),
-                onDraftChanged: (value) => latest = value,
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      final customSegment = find.text('Custom').first;
-      await scrollSessionBuilderTo(tester, customSegment);
-      await tester.tap(customSegment);
-      await tester.pumpAndSettle();
-      expect(latest?.blocks.first.adaptationPolicy, isNotNull);
+        final customSegment = find.text('Custom').first;
+        await scrollSessionBuilderTo(tester, customSegment);
+        await tester.tap(customSegment);
+        await tester.pumpAndSettle();
+        expect(latest?.blocks.first.adaptationPolicy, isNotNull);
 
-      final recommendedSegment = find.text('Recommended').first;
-      await scrollSessionBuilderTo(tester, recommendedSegment);
-      await tester.tap(recommendedSegment);
-      await tester.pumpAndSettle();
-      expect(latest?.blocks.first.adaptationPolicy, isNull);
-    });
+        final recommendedSegment = find.text('Recommended').first;
+        await scrollSessionBuilderTo(tester, recommendedSegment);
+        await tester.tap(recommendedSegment);
+        await tester.pumpAndSettle();
+        expect(latest?.blocks.first.adaptationPolicy, isNull);
+      },
+    );
   });
 }

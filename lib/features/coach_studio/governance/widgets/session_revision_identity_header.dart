@@ -23,10 +23,7 @@ class SessionRevisionIdentityHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          sessionDisplayName,
-          style: CohortTextStyles.h2,
-        ),
+        Text(sessionDisplayName, style: CohortTextStyles.h2),
         const SizedBox(height: CohortSpacing.xs),
         Wrap(
           spacing: CohortSpacing.sm,

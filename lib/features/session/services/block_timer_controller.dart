@@ -3,13 +3,7 @@ import 'dart:async';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 
-enum BlockTimerPhase {
-  preparation,
-  work,
-  rest,
-  countdown,
-  stopwatch,
-}
+enum BlockTimerPhase { preparation, work, rest, countdown, stopwatch }
 
 class BlockTimerState {
   const BlockTimerState({
@@ -89,79 +83,81 @@ class BlockTimerController {
 
     _state = switch (format) {
       WorkoutFormat.amrap => BlockTimerState(
-          format: format,
-          phase: BlockTimerPhase.countdown,
-          isRunning: true,
-          isPaused: false,
-          isFinished: false,
-          primarySeconds: configuration.durationSeconds ?? 0,
-          phaseLabel: 'AMRAP',
-        ),
+        format: format,
+        phase: BlockTimerPhase.countdown,
+        isRunning: true,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds: configuration.durationSeconds ?? 0,
+        phaseLabel: 'AMRAP',
+      ),
       WorkoutFormat.emom => BlockTimerState(
-          format: format,
-          phase: configuration.preparationSeconds != null
-              ? BlockTimerPhase.preparation
-              : BlockTimerPhase.countdown,
-          isRunning: true,
-          isPaused: false,
-          isFinished: false,
-          primarySeconds: configuration.preparationSeconds ??
-              configuration.intervalSeconds ??
-              60,
-          secondarySeconds: configuration.totalDurationSeconds,
-          totalRounds: _emomIntervals(),
-          phaseLabel: configuration.preparationSeconds != null
-              ? 'Prepare'
-              : 'EMOM',
-        ),
+        format: format,
+        phase: configuration.preparationSeconds != null
+            ? BlockTimerPhase.preparation
+            : BlockTimerPhase.countdown,
+        isRunning: true,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds:
+            configuration.preparationSeconds ??
+            configuration.intervalSeconds ??
+            60,
+        secondarySeconds: configuration.totalDurationSeconds,
+        totalRounds: _emomIntervals(),
+        phaseLabel: configuration.preparationSeconds != null
+            ? 'Prepare'
+            : 'EMOM',
+      ),
       WorkoutFormat.forTime => BlockTimerState(
-          format: format,
-          phase: BlockTimerPhase.stopwatch,
-          isRunning: true,
-          isPaused: false,
-          isFinished: false,
-          primarySeconds: 0,
-          secondarySeconds: configuration.timeCapSeconds,
-          phaseLabel: 'For Time',
-        ),
+        format: format,
+        phase: BlockTimerPhase.stopwatch,
+        isRunning: true,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds: 0,
+        secondarySeconds: configuration.timeCapSeconds,
+        phaseLabel: 'For Time',
+      ),
       WorkoutFormat.intervals || WorkoutFormat.tabata => BlockTimerState(
-          format: format,
-          phase: configuration.preparationSeconds != null
-              ? BlockTimerPhase.preparation
-              : BlockTimerPhase.work,
-          isRunning: true,
-          isPaused: false,
-          isFinished: false,
-          primarySeconds: configuration.preparationSeconds ??
-              configuration.workSeconds ??
-              (format == WorkoutFormat.tabata ? 20 : 30),
-          currentRound: 1,
-          totalRounds: configuration.rounds ??
-              (format == WorkoutFormat.tabata ? 8 : 1),
-          phaseLabel: configuration.preparationSeconds != null
-              ? 'Prepare'
-              : 'Work',
-        ),
+        format: format,
+        phase: configuration.preparationSeconds != null
+            ? BlockTimerPhase.preparation
+            : BlockTimerPhase.work,
+        isRunning: true,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds:
+            configuration.preparationSeconds ??
+            configuration.workSeconds ??
+            (format == WorkoutFormat.tabata ? 20 : 30),
+        currentRound: 1,
+        totalRounds:
+            configuration.rounds ?? (format == WorkoutFormat.tabata ? 8 : 1),
+        phaseLabel: configuration.preparationSeconds != null
+            ? 'Prepare'
+            : 'Work',
+      ),
       WorkoutFormat.rounds => BlockTimerState(
-          format: format,
-          phase: BlockTimerPhase.countdown,
-          isRunning: false,
-          isPaused: false,
-          isFinished: false,
-          primarySeconds: configuration.restBetweenRoundsSeconds ?? 0,
-          currentRound: 1,
-          totalRounds: configuration.targetRounds ?? 1,
-          phaseLabel: 'Round 1',
-        ),
+        format: format,
+        phase: BlockTimerPhase.countdown,
+        isRunning: false,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds: configuration.restBetweenRoundsSeconds ?? 0,
+        currentRound: 1,
+        totalRounds: configuration.targetRounds ?? 1,
+        phaseLabel: 'Round 1',
+      ),
       WorkoutFormat.other => BlockTimerState(
-          format: format,
-          phase: BlockTimerPhase.countdown,
-          isRunning: configuration.durationSeconds != null,
-          isPaused: false,
-          isFinished: configuration.durationSeconds == null,
-          primarySeconds: configuration.durationSeconds ?? 0,
-          phaseLabel: 'Timer',
-        ),
+        format: format,
+        phase: BlockTimerPhase.countdown,
+        isRunning: configuration.durationSeconds != null,
+        isPaused: false,
+        isFinished: configuration.durationSeconds == null,
+        primarySeconds: configuration.durationSeconds ?? 0,
+        phaseLabel: 'Timer',
+      ),
       WorkoutFormat.none => null,
     };
 
@@ -258,7 +254,8 @@ class BlockTimerController {
       if (current.phase == BlockTimerPhase.preparation) {
         _state = current.copyWith(
           phase: BlockTimerPhase.work,
-          primarySeconds: configuration.workSeconds ??
+          primarySeconds:
+              configuration.workSeconds ??
               (format == WorkoutFormat.tabata ? 20 : 30),
           phaseLabel: 'Work',
         );
@@ -267,7 +264,8 @@ class BlockTimerController {
       if (current.phase == BlockTimerPhase.work) {
         _state = current.copyWith(
           phase: BlockTimerPhase.rest,
-          primarySeconds: configuration.restSeconds ??
+          primarySeconds:
+              configuration.restSeconds ??
               (format == WorkoutFormat.tabata ? 10 : 15),
           phaseLabel: 'Rest',
         );
@@ -281,7 +279,8 @@ class BlockTimerController {
       _state = current.copyWith(
         currentRound: nextRound,
         phase: BlockTimerPhase.work,
-        primarySeconds: configuration.workSeconds ??
+        primarySeconds:
+            configuration.workSeconds ??
             (format == WorkoutFormat.tabata ? 20 : 30),
         phaseLabel: 'Work · Round $nextRound',
       );

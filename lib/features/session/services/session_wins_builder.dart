@@ -133,16 +133,18 @@ class SessionWinsBuilder {
           type: SessionWinType.completedAsPlanned,
           title: result.headline,
           message: result.message,
-          supportingDetail:
-              result.reasons.isNotEmpty ? result.reasons.first : null,
+          supportingDetail: result.reasons.isNotEmpty
+              ? result.reasons.first
+              : null,
         );
       case CircuitProgressType.mixedResult:
         return SessionWin(
           type: SessionWinType.completedAsPlanned,
           title: result.headline,
           message: result.message,
-          supportingDetail:
-              result.reasons.isNotEmpty ? result.reasons.first : null,
+          supportingDetail: result.reasons.isNotEmpty
+              ? result.reasons.first
+              : null,
         );
       case CircuitProgressType.moreRoundsOrReps:
         return _circuitWin(
@@ -209,16 +211,18 @@ class SessionWinsBuilder {
           type: SessionWinType.completedAsPlanned,
           title: result.headline,
           message: result.message,
-          supportingDetail:
-              result.reasons.isNotEmpty ? result.reasons.first : null,
+          supportingDetail: result.reasons.isNotEmpty
+              ? result.reasons.first
+              : null,
         );
       case IntervalProgressType.mixedResult:
         return SessionWin(
           type: SessionWinType.completedAsPlanned,
           title: result.headline,
           message: result.message,
-          supportingDetail:
-              result.reasons.isNotEmpty ? result.reasons.first : null,
+          supportingDetail: result.reasons.isNotEmpty
+              ? result.reasons.first
+              : null,
         );
       case IntervalProgressType.averagePaceImproved:
         return _intervalWin(
@@ -316,8 +320,9 @@ class SessionWinsBuilder {
           result: result,
         );
       case ExerciseProgressType.matchedPerformance:
-        final improvedEfficiency =
-            result.message.toLowerCase().contains('improved efficiency');
+        final improvedEfficiency = result.message.toLowerCase().contains(
+          'improved efficiency',
+        );
 
         return _exerciseWin(
           exerciseName: exerciseName,

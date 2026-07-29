@@ -31,13 +31,13 @@ class CircuitFinishValidator {
       CircuitScoreType.roundsAndReps =>
         performance.completedRounds != null &&
             performance.completedRounds! >= 0,
-      CircuitScoreType.elapsedTime => performance.elapsedDuration != null &&
-          performance.elapsedDuration!.inSeconds > 0,
+      CircuitScoreType.elapsedTime =>
+        performance.elapsedDuration != null &&
+            performance.elapsedDuration!.inSeconds > 0,
       CircuitScoreType.totalReps =>
         performance.totalReps != null && performance.totalReps! > 0,
       CircuitScoreType.roundsCompleted =>
-        performance.completedRounds != null &&
-            performance.completedRounds! > 0,
+        performance.completedRounds != null && performance.completedRounds! > 0,
       CircuitScoreType.movementsCompleted =>
         performance.completedMovements != null &&
             performance.completedMovements! > 0,
@@ -53,7 +53,8 @@ class CircuitFinishValidator {
     final performance = state.performance;
 
     if (plan.scoreType == CircuitScoreType.roundsCompleted) {
-      final completed = performance.completedRounds ??
+      final completed =
+          performance.completedRounds ??
           (timerState != null && timerState.isStarted
               ? (timerState.currentInterval - 1).clamp(0, 999)
               : 0);

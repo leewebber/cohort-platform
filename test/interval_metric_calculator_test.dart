@@ -13,10 +13,7 @@ void main() {
       );
 
       expect(pace, 240);
-      expect(
-        calculator.formatPaceSecondsPerKm(pace),
-        '4:00/km',
-      );
+      expect(calculator.formatPaceSecondsPerKm(pace), '4:00/km');
     });
 
     test('20:00 + 4:00/km derives 5000m distance', () {

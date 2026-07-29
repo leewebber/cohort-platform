@@ -73,37 +73,40 @@ void main() {
   }
 
   group('ProgrammeEditorSlotInspector M3 actions', () {
-    testWidgets('empty slot shows Use Cohort Protocol, Use Session Library and Build New Session',
-        (tester) async {
-      const slot = ProgrammeSessionSlotDraft(
-        localId: testSlotLocalId,
-        sessionOrder: 1,
-        protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
-      );
+    testWidgets(
+      'empty slot shows Use Cohort Protocol, Use Session Library and Build New Session',
+      (tester) async {
+        const slot = ProgrammeSessionSlotDraft(
+          localId: testSlotLocalId,
+          sessionOrder: 1,
+          protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
+        );
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: ProgrammeEditorSlotInspector(
-              controller: buildController(slot: slot),
-              weekLocalId: testWeekLocalId,
-              dayLocalId: testDayLocalId,
-              slot: slot,
-              slotContentClassifier: _FixedClassifier(
-                ProgrammeSlotContentKind.empty,
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: ProgrammeEditorSlotInspector(
+                controller: buildController(slot: slot),
+                weekLocalId: testWeekLocalId,
+                dayLocalId: testDayLocalId,
+                slot: slot,
+                slotContentClassifier: _FixedClassifier(
+                  ProgrammeSlotContentKind.empty,
+                ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Use Cohort Protocol'), findsOneWidget);
-      expect(find.text('Use Session Library'), findsOneWidget);
-      expect(find.text('Build New Session'), findsOneWidget);
-    });
+        expect(find.text('Use Cohort Protocol'), findsOneWidget);
+        expect(find.text('Use Session Library'), findsOneWidget);
+        expect(find.text('Build New Session'), findsOneWidget);
+      },
+    );
 
-    testWidgets('cohort protocol slot shows code and hides Edit Session',
-        (tester) async {
+    testWidgets('cohort protocol slot shows code and hides Edit Session', (
+      tester,
+    ) async {
       const slot = ProgrammeSessionSlotDraft(
         localId: 'slot-1',
         sessionOrder: 1,
@@ -137,8 +140,9 @@ void main() {
       expect(find.text('Edit Session'), findsNothing);
     });
 
-    testWidgets('programme session slot shows title and Edit Session',
-        (tester) async {
+    testWidgets('programme session slot shows title and Edit Session', (
+      tester,
+    ) async {
       const slot = ProgrammeSessionSlotDraft(
         localId: 'slot-1',
         sessionOrder: 1,
@@ -169,76 +173,88 @@ void main() {
       expect(find.text(testDurableSessionId), findsNothing);
     });
 
-    test('assignProtocol marks document dirty for attached programme session',
-        () async {
-      const slot = ProgrammeSessionSlotDraft(
-        localId: testSlotLocalId,
-        sessionOrder: 1,
-        protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
-      );
+    test(
+      'assignProtocol marks document dirty for attached programme session',
+      () async {
+        const slot = ProgrammeSessionSlotDraft(
+          localId: testSlotLocalId,
+          sessionOrder: 1,
+          protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
+        );
 
-      final document = buildProgrammeDocumentWithSlot();
-      final builderService = _RecordingBuilderService(document);
-      final controller = buildController(
-        slot: slot,
-        builderService: builderService,
-      );
+        final document = buildProgrammeDocumentWithSlot();
+        final builderService = _RecordingBuilderService(document);
+        final controller = buildController(
+          slot: slot,
+          builderService: builderService,
+        );
 
-      await controller.assignProtocol(
-        slotLocalId: testSlotLocalId,
-        protocolId: testDurableSessionId,
-        displayTitle: 'Morning Strength',
-      );
+        await controller.assignProtocol(
+          slotLocalId: testSlotLocalId,
+          protocolId: testDurableSessionId,
+          displayTitle: 'Morning Strength',
+        );
 
-      expect(builderService.assignCalled, isTrue);
-      expect(controller.document?.hasUnsavedChanges, isTrue);
-      expect(
-        controller.document?.template.weeks.first.days.first.slots.first
-            .protocolId,
-        testDurableSessionId,
-      );
-    });
+        expect(builderService.assignCalled, isTrue);
+        expect(controller.document?.hasUnsavedChanges, isTrue);
+        expect(
+          controller
+              .document
+              ?.template
+              .weeks
+              .first
+              .days
+              .first
+              .slots
+              .first
+              .protocolId,
+          testDurableSessionId,
+        );
+      },
+    );
 
-    test('build new session creates valid authoring context from editor nodes',
-        () {
-      const slot = ProgrammeSessionSlotDraft(
-        localId: testSlotLocalId,
-        sessionOrder: 1,
-        protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
-      );
+    test(
+      'build new session creates valid authoring context from editor nodes',
+      () {
+        const slot = ProgrammeSessionSlotDraft(
+          localId: testSlotLocalId,
+          sessionOrder: 1,
+          protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
+        );
 
-      final week = ProgrammeWeekDraft(
-        localId: testWeekLocalId,
-        weekNumber: 2,
-        days: [
-          ProgrammeDayDraft(
-            localId: testDayLocalId,
-            dayKey: 'day_1',
-            dayOrder: 1,
-            title: 'Tuesday',
-            slots: [slot],
-          ),
-        ],
-      );
+        final week = ProgrammeWeekDraft(
+          localId: testWeekLocalId,
+          weekNumber: 2,
+          days: [
+            ProgrammeDayDraft(
+              localId: testDayLocalId,
+              dayKey: 'day_1',
+              dayOrder: 1,
+              title: 'Tuesday',
+              slots: [slot],
+            ),
+          ],
+        );
 
-      final context = ProgrammeSessionAuthoringContext.fromEditorNodes(
-        programmeVersionId: testProgrammeVersionId,
-        week: week,
-        day: week.days.first,
-        slot: slot,
-        authoringIntent: ProgrammeSessionAuthoringIntent.createBlank,
-      );
+        final context = ProgrammeSessionAuthoringContext.fromEditorNodes(
+          programmeVersionId: testProgrammeVersionId,
+          week: week,
+          day: week.days.first,
+          slot: slot,
+          authoringIntent: ProgrammeSessionAuthoringIntent.createBlank,
+        );
 
-      expect(context.programmeVersionId, testProgrammeVersionId);
-      expect(context.slotLocalId, testSlotLocalId);
-      expect(context.programmeLocationLabel, contains('Week 2'));
-    });
+        expect(context.programmeVersionId, testProgrammeVersionId);
+        expect(context.slotLocalId, testSlotLocalId);
+        expect(context.programmeLocationLabel, contains('Week 2'));
+      },
+    );
   });
 }
 
 class _FixedClassifier extends ProgrammeSessionSlotContentClassifier {
   _FixedClassifier(this.kind)
-      : super(protocolBuilderService: ProtocolBuilderService());
+    : super(protocolBuilderService: ProtocolBuilderService());
 
   final ProgrammeSlotContentKind kind;
 
@@ -266,24 +282,24 @@ class _RecordingBuilderService implements ProgrammeBuilderService {
   }) async {
     assignCalled = true;
     this.document = document.markDirty().copyWith(
-          template: document.template.copyWith(
-            weeks: document.template.weeks.map((week) {
-              return week.copyWith(
-                days: week.days.map((day) {
-                  return day.copyWith(
-                    slots: day.slots.map((slot) {
-                      if (slot.localId != slotLocalId) return slot;
-                      return slot.copyWith(
-                        protocolId: protocolId,
-                        displayTitle: displayTitle,
-                      );
-                    }).toList(),
+      template: document.template.copyWith(
+        weeks: document.template.weeks.map((week) {
+          return week.copyWith(
+            days: week.days.map((day) {
+              return day.copyWith(
+                slots: day.slots.map((slot) {
+                  if (slot.localId != slotLocalId) return slot;
+                  return slot.copyWith(
+                    protocolId: protocolId,
+                    displayTitle: displayTitle,
                   );
                 }).toList(),
               );
             }).toList(),
-          ),
-        );
+          );
+        }).toList(),
+      ),
+    );
     return ProgrammeBuilderEditResult(document: this.document);
   }
 
@@ -297,8 +313,9 @@ class _NoopBuilderService implements ProgrammeBuilderService {
   final ProgrammeBuilderDocument document;
 
   @override
-  Future<ProgrammeBuilderDocument> loadDocument({required String versionId}) async =>
-      document;
+  Future<ProgrammeBuilderDocument> loadDocument({
+    required String versionId,
+  }) async => document;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -318,7 +335,8 @@ class _NoopPublishCoordinator implements ProgrammeBuilderPublishCoordinator {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerService {
+class _FakeProtocolPickerService
+    implements ProgrammeBuilderProtocolPickerService {
   @override
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId) async {
     return ProgrammeBuilderProtocolOption(
@@ -341,7 +359,8 @@ class _FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerServic
   }
 }
 
-class _FakeProtocolNameResolver implements ProgrammeBuilderProtocolNameResolver {
+class _FakeProtocolNameResolver
+    implements ProgrammeBuilderProtocolNameResolver {
   @override
   Future<Map<String, String>> resolveNames(Set<String> protocolIds) async {
     return {for (final id in protocolIds) id: 'Protocol $id'};

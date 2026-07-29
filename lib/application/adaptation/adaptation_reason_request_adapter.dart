@@ -1,13 +1,10 @@
-import '../../../models/adaptation_reason.dart';
-import '../../../models/adaptation_request.dart';
-import '../../../models/adaptation_scoring_reason.dart';
-import '../../../models/recovery_state.dart';
-import '../contracts/adaptation_constraint.dart';
-import '../contracts/adaptation_constraint_kind.dart';
-import '../vocabulary/adaptation_audit_event_type.dart';
-import '../vocabulary/adaptation_constraint_scope.dart';
-import '../vocabulary/adaptation_constraint_severity.dart';
-import '../vocabulary/training_environment.dart';
+import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
+import 'package:cohort_platform/models/adaptation_reason.dart';
+import 'package:cohort_platform/models/adaptation_request.dart';
+import 'package:cohort_platform/models/adaptation_scoring_reason.dart';
+import 'package:cohort_platform/models/recovery_state.dart';
+
+import 'adaptation_training_environment_adapter.dart';
 
 /// Translates legacy athlete/engine vocabulary into canonical domain constraints
 /// and scoring inputs without conflating audit outputs.
@@ -39,8 +36,9 @@ class AdaptationReasonMapping {
             isHard: true,
             trainingEnvironment: env == null
                 ? null
-                : mapAdaptationSessionEnvironmentToTrainingEnvironment(env)
-                    .dbValue,
+                : mapAdaptationSessionEnvironmentToTrainingEnvironment(
+                    env,
+                  ).dbValue,
           ),
         ];
       case AdaptationReason.equipment:

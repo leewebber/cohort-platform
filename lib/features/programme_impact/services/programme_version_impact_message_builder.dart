@@ -4,7 +4,9 @@ import '../../../features/programme_impact/models/programme_version_impact_model
 class ProgrammeVersionImpactMessageBuilder {
   const ProgrammeVersionImpactMessageBuilder._();
 
-  static List<String> buildSummaryMessages(ProgrammeVersionImpactSummary summary) {
+  static List<String> buildSummaryMessages(
+    ProgrammeVersionImpactSummary summary,
+  ) {
     final messages = <String>[];
 
     if (summary.hasActiveOperationalImpact && summary.hasHistoricalImpact) {

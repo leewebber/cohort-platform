@@ -14,9 +14,9 @@ BlockAdaptationEvaluation? blockEvalForType(
   SessionBlockType type,
 ) {
   final block = draft.blocks.cast<SessionBlock?>().firstWhere(
-        (b) => b!.blockType == type,
-        orElse: () => null,
-      );
+    (b) => b!.blockType == type,
+    orElse: () => null,
+  );
   if (block == null) return null;
   for (final eval in result.blockResults) {
     if (eval.blockLocalId == block.localId) return eval;
@@ -122,46 +122,56 @@ void main() {
         draft,
         constraints: AdaptationConstraintContext(availableDurationMin: 40),
       );
-      expect(result.outcome, AdaptationEvaluationOutcome.insufficientInformation);
+      expect(
+        result.outcome,
+        AdaptationEvaluationOutcome.insufficientInformation,
+      );
       expect(
         result.missingMetadata,
         contains(AdaptationEvaluationFindingCode.missingMinimumViableDuration),
       );
     });
 
-    test('8 optional removable block available (warm-up derived disposable)', () {
-      final result = evaluateDraft(
-        taggedSession,
-        constraints: AdaptationConstraintContext(availableDurationMin: 45),
-      );
-      final warmUp = blockEvalForType(
-        taggedSession,
-        result,
-        SessionBlockType.warmUp,
-      );
-      expect(warmUp, isNotNull);
-      expect(warmUp!.removalPermittedByPolicy, isTrue);
-      expect(warmUp.removalBlockedByEssentialPriority, isFalse);
-    });
+    test(
+      '8 optional removable block available (warm-up derived disposable)',
+      () {
+        final result = evaluateDraft(
+          taggedSession,
+          constraints: AdaptationConstraintContext(availableDurationMin: 45),
+        );
+        final warmUp = blockEvalForType(
+          taggedSession,
+          result,
+          SessionBlockType.warmUp,
+        );
+        expect(warmUp, isNotNull);
+        expect(warmUp!.removalPermittedByPolicy, isTrue);
+        expect(warmUp.removalBlockedByEssentialPriority, isFalse);
+      },
+    );
 
-    test('9 essential block cannot be assumed removable under time pressure', () {
-      final result = evaluateDraft(
-        taggedSession,
-        constraints: AdaptationConstraintContext(availableDurationMin: 45),
-      );
-      final strength = blockEvalForType(
-        taggedSession,
-        result,
-        SessionBlockType.strength,
-      );
-      expect(strength!.removalBlockedByEssentialPriority, isTrue);
-      expect(
-        strength.findings.any(
-          (f) => f.code == AdaptationEvaluationFindingCode.essentialBlockAtRisk,
-        ),
-        isTrue,
-      );
-    });
+    test(
+      '9 essential block cannot be assumed removable under time pressure',
+      () {
+        final result = evaluateDraft(
+          taggedSession,
+          constraints: AdaptationConstraintContext(availableDurationMin: 45),
+        );
+        final strength = blockEvalForType(
+          taggedSession,
+          result,
+          SessionBlockType.strength,
+        );
+        expect(strength!.removalBlockedByEssentialPriority, isTrue);
+        expect(
+          strength.findings.any(
+            (f) =>
+                f.code == AdaptationEvaluationFindingCode.essentialBlockAtRisk,
+          ),
+          isTrue,
+        );
+      },
+    );
 
     test('10 explicit policy overrides derived default on strength block', () {
       final result = evaluateDraft(
@@ -259,7 +269,8 @@ void main() {
       expect(
         result.findings.any(
           (f) =>
-              f.code == AdaptationEvaluationFindingCode.movementRestrictionConflict,
+              f.code ==
+              AdaptationEvaluationFindingCode.movementRestrictionConflict,
         ),
         isTrue,
       );
@@ -313,7 +324,10 @@ void main() {
         draft,
         constraints: AdaptationConstraintContext.empty(),
       );
-      expect(result.outcome, AdaptationEvaluationOutcome.insufficientInformation);
+      expect(
+        result.outcome,
+        AdaptationEvaluationOutcome.insufficientInformation,
+      );
       expect(result.primaryIntentKnown, isFalse);
     });
 
@@ -366,15 +380,17 @@ void main() {
         protocolId: 'm2b-immutable',
         programmeVersionId: testProgrammeVersionId,
       );
-      final beforeBlocks =
-          draft.blocks.map((b) => b.toRowMap(sessionId: draft.protocolId)).toList();
+      final beforeBlocks = draft.blocks
+          .map((b) => b.toRowMap(sessionId: draft.protocolId))
+          .toList();
       final beforeIntent = draft.primarySessionIntent;
       evaluateDraft(
         draft,
         constraints: AdaptationConstraintContext(availableDurationMin: 30),
       );
-      final afterBlocks =
-          draft.blocks.map((b) => b.toRowMap(sessionId: draft.protocolId)).toList();
+      final afterBlocks = draft.blocks
+          .map((b) => b.toRowMap(sessionId: draft.protocolId))
+          .toList();
       expect(draft.primarySessionIntent, beforeIntent);
       expect(afterBlocks, beforeBlocks);
     });
@@ -382,8 +398,14 @@ void main() {
     test('22 deterministic output for identical input', () {
       final input = plannedInputFromDraft(taggedSession);
       const constraints = AdaptationConstraintContext(availableDurationMin: 45);
-      final first = evaluator.evaluate(session: input, constraints: constraints);
-      final second = evaluator.evaluate(session: input, constraints: constraints);
+      final first = evaluator.evaluate(
+        session: input,
+        constraints: constraints,
+      );
+      final second = evaluator.evaluate(
+        session: input,
+        constraints: constraints,
+      );
       expect(first.outcome, second.outcome);
       expect(first.minimumScope, second.minimumScope);
       expect(first.expectedFidelity, second.expectedFidelity);
@@ -430,47 +452,53 @@ void main() {
       );
     });
 
-    test('2 confirmed time conflict below minimum viable → high confidence', () {
-      final result = evaluateDraft(
-        taggedSession,
-        constraints: AdaptationConstraintContext(availableDurationMin: 20),
-      );
-      expect(result.outcome, AdaptationEvaluationOutcome.notAdaptable);
-      expect(result.adaptationConfidence, AdaptationConfidence.high);
-      expect(
-        result.confidenceFindings,
-        contains(
-          AdaptationConfidenceFindingCode
-              .minimumViableDurationPresentForTimeDecision,
-        ),
-      );
-    });
+    test(
+      '2 confirmed time conflict below minimum viable → high confidence',
+      () {
+        final result = evaluateDraft(
+          taggedSession,
+          constraints: AdaptationConstraintContext(availableDurationMin: 20),
+        );
+        expect(result.outcome, AdaptationEvaluationOutcome.notAdaptable);
+        expect(result.adaptationConfidence, AdaptationConfidence.high);
+        expect(
+          result.confidenceFindings,
+          contains(
+            AdaptationConfidenceFindingCode
+                .minimumViableDurationPresentForTimeDecision,
+          ),
+        );
+      },
+    );
 
-    test('3 missing minimum viable during time constraint → low confidence', () {
-      final draft = programmeSession(
-        protocolId: 'm2b-conf-min',
-        name: 'No min',
-        programmeVersionId: testProgrammeVersionId,
-        ownerId: 'dev-coach',
-        durationMin: 60,
-        primarySessionIntent: SessionIntent.upperBodyStrength,
-        minimumViableDurationMin: null,
-        validateAdaptationMetadata: false,
-        blocks: taggedSession.blocks,
-      );
-      final result = evaluateDraft(
-        draft,
-        constraints: AdaptationConstraintContext(availableDurationMin: 40),
-      );
-      expect(result.adaptationConfidence, AdaptationConfidence.low);
-      expect(
-        result.confidenceFindings,
-        contains(
-          AdaptationConfidenceFindingCode
-              .minimumViableDurationMissingForTimeDecision,
-        ),
-      );
-    });
+    test(
+      '3 missing minimum viable during time constraint → low confidence',
+      () {
+        final draft = programmeSession(
+          protocolId: 'm2b-conf-min',
+          name: 'No min',
+          programmeVersionId: testProgrammeVersionId,
+          ownerId: 'dev-coach',
+          durationMin: 60,
+          primarySessionIntent: SessionIntent.upperBodyStrength,
+          minimumViableDurationMin: null,
+          validateAdaptationMetadata: false,
+          blocks: taggedSession.blocks,
+        );
+        final result = evaluateDraft(
+          draft,
+          constraints: AdaptationConstraintContext(availableDurationMin: 40),
+        );
+        expect(result.adaptationConfidence, AdaptationConfidence.low);
+        expect(
+          result.confidenceFindings,
+          contains(
+            AdaptationConfidenceFindingCode
+                .minimumViableDurationMissingForTimeDecision,
+          ),
+        );
+      },
+    );
 
     test('4 missing primary intent → low confidence', () {
       final draft = programmeSession(
@@ -528,7 +556,8 @@ void main() {
         result.confidenceFindings,
         isNot(
           contains(
-            AdaptationConfidenceFindingCode.explicitBlockAdaptationMetadataInUse,
+            AdaptationConfidenceFindingCode
+                .explicitBlockAdaptationMetadataInUse,
           ),
         ),
       );
@@ -574,8 +603,14 @@ void main() {
     test('9 same input returns same confidence', () {
       final input = plannedInputFromDraft(taggedSession);
       const constraints = AdaptationConstraintContext(availableDurationMin: 45);
-      final first = evaluator.evaluate(session: input, constraints: constraints);
-      final second = evaluator.evaluate(session: input, constraints: constraints);
+      final first = evaluator.evaluate(
+        session: input,
+        constraints: constraints,
+      );
+      final second = evaluator.evaluate(
+        session: input,
+        constraints: constraints,
+      );
       expect(first.adaptationConfidence, second.adaptationConfidence);
       expect(first.confidenceFindings, second.confidenceFindings);
     });
@@ -593,7 +628,10 @@ void main() {
       final constraints = AdaptationConstraintContext(availableDurationMin: 45);
       final codeResult = evaluateDraft(code, constraints: constraints);
       final visualResult = evaluateDraft(visual, constraints: constraints);
-      expect(codeResult.adaptationConfidence, visualResult.adaptationConfidence);
+      expect(
+        codeResult.adaptationConfidence,
+        visualResult.adaptationConfidence,
+      );
       expect(
         codeResult.confidenceFindings.toSet(),
         visualResult.confidenceFindings.toSet(),

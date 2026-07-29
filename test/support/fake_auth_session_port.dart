@@ -8,10 +8,7 @@ class FakeAuthSessionPort implements AuthSessionPort {
   User? user;
   final _controller = StreamController<AuthState>.broadcast();
 
-  void setAuthenticated({
-    required String userId,
-    required String email,
-  }) {
+  void setAuthenticated({required String userId, required String email}) {
     user = User(
       id: userId,
       appMetadata: const {},

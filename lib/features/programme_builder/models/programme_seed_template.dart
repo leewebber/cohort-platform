@@ -29,12 +29,9 @@ extension ProgrammeSeedTemplateLabels on ProgrammeSeedTemplate {
     return switch (this) {
       ProgrammeSeedTemplate.empty =>
         'Week 1 with one training day and an empty required slot.',
-      ProgrammeSeedTemplate.strength =>
-        'Week 1 strength day plus a rest day.',
-      ProgrammeSeedTemplate.running =>
-        'Week 1 running day plus a rest day.',
-      ProgrammeSeedTemplate.circuit =>
-        'Week 1 circuit day plus a rest day.',
+      ProgrammeSeedTemplate.strength => 'Week 1 strength day plus a rest day.',
+      ProgrammeSeedTemplate.running => 'Week 1 running day plus a rest day.',
+      ProgrammeSeedTemplate.circuit => 'Week 1 circuit day plus a rest day.',
       ProgrammeSeedTemplate.recovery =>
         'Week 1 recovery-oriented day with an optional slot.',
       ProgrammeSeedTemplate.assessment =>

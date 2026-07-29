@@ -16,10 +16,7 @@ class FakeAuthSessionPort implements AuthSessionPort {
   User? user;
   final _controller = StreamController<AuthState>.broadcast();
 
-  void setAuthenticated({
-    required String userId,
-    required String email,
-  }) {
+  void setAuthenticated({required String userId, required String email}) {
     user = User(
       id: userId,
       appMetadata: const {},
@@ -112,8 +109,7 @@ class ThrowingSignUpAuthPort implements AuthSessionPort {
   Future<AuthResponse> signIn({
     required String email,
     required String password,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Future<AuthResponse> signUp({
@@ -191,29 +187,38 @@ void main() {
       expect(CurrentUserSession.maybeInstance, isNull);
     });
 
-    test('initialize with session and profile binds CurrentUserSession', () async {
-      authService.setAuthenticated(userId: 'user-123', email: 'lee@example.com');
-      profileRepository.profiles['user-123'] = const UserProfile(
-        id: 'user-123',
-        displayName: 'Lee',
-        isCoach: true,
-        isAthlete: true,
-      );
+    test(
+      'initialize with session and profile binds CurrentUserSession',
+      () async {
+        authService.setAuthenticated(
+          userId: 'user-123',
+          email: 'lee@example.com',
+        );
+        profileRepository.profiles['user-123'] = const UserProfile(
+          id: 'user-123',
+          displayName: 'Lee',
+          isCoach: true,
+          isAthlete: true,
+        );
 
-      final controller = AuthController(
-        authService: authService,
-        profileProvisioningService: profileService,
-      );
+        final controller = AuthController(
+          authService: authService,
+          profileProvisioningService: profileService,
+        );
 
-      await controller.initialize();
+        await controller.initialize();
 
-      expect(controller.state.status.name, 'authenticated');
-      expect(CurrentUserSession.requireInstance.athleteId, 'user-123');
-      expect(CurrentUserSession.requireInstance.coachId, 'user-123');
-    });
+        expect(controller.state.status.name, 'authenticated');
+        expect(CurrentUserSession.requireInstance.athleteId, 'user-123');
+        expect(CurrentUserSession.requireInstance.coachId, 'user-123');
+      },
+    );
 
     test('session without profile requires profile setup', () async {
-      authService.setAuthenticated(userId: 'user-123', email: 'lee@example.com');
+      authService.setAuthenticated(
+        userId: 'user-123',
+        email: 'lee@example.com',
+      );
 
       final controller = AuthController(
         authService: authService,
@@ -237,25 +242,28 @@ void main() {
       expect(controller.state.errorMessage, 'Email or password is incorrect.');
     });
 
-    test('signUp with unconfirmed email enters awaiting confirmation state', () async {
-      final controller = AuthController(
-        authService: authService,
-        profileProvisioningService: profileService,
-      );
+    test(
+      'signUp with unconfirmed email enters awaiting confirmation state',
+      () async {
+        final controller = AuthController(
+          authService: authService,
+          profileProvisioningService: profileService,
+        );
 
-      await controller.signUp(
-        email: 'alex@example.com',
-        password: 'secret123',
-        displayName: 'Alex',
-        roles: {UserRole.athlete},
-      );
+        await controller.signUp(
+          email: 'alex@example.com',
+          password: 'secret123',
+          displayName: 'Alex',
+          roles: {UserRole.athlete},
+        );
 
-      expect(controller.state.status.name, 'awaitingEmailConfirmation');
-      expect(controller.state.pendingEmail, 'alex@example.com');
-      expect(controller.state.pendingDisplayName, 'Alex');
-      expect(controller.state.pendingRoles, {UserRole.athlete});
-      expect(CurrentUserSession.maybeInstance, isNull);
-    });
+        expect(controller.state.status.name, 'awaitingEmailConfirmation');
+        expect(controller.state.pendingEmail, 'alex@example.com');
+        expect(controller.state.pendingDisplayName, 'Alex');
+        expect(controller.state.pendingRoles, {UserRole.athlete});
+        expect(CurrentUserSession.maybeInstance, isNull);
+      },
+    );
 
     test('signUp failure clears loading and surfaces error', () async {
       final controller = AuthController(
@@ -275,7 +283,10 @@ void main() {
     });
 
     test('profileRequired prefills pending signup metadata', () async {
-      authService.setAuthenticated(userId: 'user-new', email: 'alex@example.com');
+      authService.setAuthenticated(
+        userId: 'user-new',
+        email: 'alex@example.com',
+      );
       authService.user = User(
         id: 'user-new',
         appMetadata: const {},
@@ -301,7 +312,10 @@ void main() {
     });
 
     test('signOut clears session', () async {
-      authService.setAuthenticated(userId: 'user-123', email: 'lee@example.com');
+      authService.setAuthenticated(
+        userId: 'user-123',
+        email: 'lee@example.com',
+      );
       profileRepository.profiles['user-123'] = const UserProfile(
         id: 'user-123',
         displayName: 'Lee',

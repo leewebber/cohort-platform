@@ -1,8 +1,8 @@
-import '../vocabulary/training_exercise_execution_outcome.dart';
+import '../vocabulary/workout_exercise_execution_outcome.dart';
 
 /// Historical outcome for one exercise slot in the execution snapshot.
-class TrainingExerciseExecutionEntry {
-  const TrainingExerciseExecutionEntry({
+class WorkoutExerciseExecutionEntry {
+  const WorkoutExerciseExecutionEntry({
     required this.sourceBlockLocalId,
     required this.exerciseLinkLocalId,
     required this.exerciseId,
@@ -15,12 +15,12 @@ class TrainingExerciseExecutionEntry {
   final String exerciseLinkLocalId;
   final String exerciseId;
   final int stepIndex;
-  final TrainingExerciseExecutionOutcome outcome;
+  final WorkoutExerciseExecutionOutcome outcome;
   final String? note;
 
   @override
   bool operator ==(Object other) {
-    return other is TrainingExerciseExecutionEntry &&
+    return other is WorkoutExerciseExecutionEntry &&
         other.sourceBlockLocalId == sourceBlockLocalId &&
         other.exerciseLinkLocalId == exerciseLinkLocalId &&
         other.exerciseId == exerciseId &&
@@ -31,11 +31,11 @@ class TrainingExerciseExecutionEntry {
 
   @override
   int get hashCode => Object.hash(
-        sourceBlockLocalId,
-        exerciseLinkLocalId,
-        exerciseId,
-        stepIndex,
-        outcome,
-        note,
-      );
+    sourceBlockLocalId,
+    exerciseLinkLocalId,
+    exerciseId,
+    stepIndex,
+    outcome,
+    note,
+  );
 }

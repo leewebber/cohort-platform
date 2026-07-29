@@ -6,10 +6,7 @@ import '../../../../models/session_revision_vocabulary.dart';
 import '../governance_copy.dart';
 
 class GovernanceStatusBadge extends StatelessWidget {
-  const GovernanceStatusBadge({
-    super.key,
-    required this.lifecycleStatus,
-  });
+  const GovernanceStatusBadge({super.key, required this.lifecycleStatus});
 
   final SessionRevisionLifecycleStatus lifecycleStatus;
 
@@ -38,20 +35,20 @@ class GovernanceStatusBadge extends StatelessWidget {
   _BadgeColors _colorsFor(SessionRevisionLifecycleStatus status) {
     return switch (status) {
       SessionRevisionLifecycleStatus.draft => const _BadgeColors(
-          background: CohortColors.oliveSoft,
-          border: CohortColors.olive,
-          text: CohortColors.olive,
-        ),
+        background: CohortColors.oliveSoft,
+        border: CohortColors.olive,
+        text: CohortColors.olive,
+      ),
       SessionRevisionLifecycleStatus.published => const _BadgeColors(
-          background: CohortColors.surfaceRaised,
-          border: CohortColors.border,
-          text: CohortColors.textPrimary,
-        ),
+        background: CohortColors.surfaceRaised,
+        border: CohortColors.border,
+        text: CohortColors.textPrimary,
+      ),
       SessionRevisionLifecycleStatus.archived => const _BadgeColors(
-          background: CohortColors.surfaceRaised,
-          border: CohortColors.border,
-          text: CohortColors.textSecondary,
-        ),
+        background: CohortColors.surfaceRaised,
+        border: CohortColors.border,
+        text: CohortColors.textSecondary,
+      ),
     };
   }
 }

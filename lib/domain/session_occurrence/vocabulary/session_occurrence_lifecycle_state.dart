@@ -12,8 +12,7 @@ extension SessionOccurrenceLifecycleStateX on SessionOccurrenceLifecycleState {
     return switch (this) {
       SessionOccurrenceLifecycleState.completed ||
       SessionOccurrenceLifecycleState.skipped ||
-      SessionOccurrenceLifecycleState.cancelled =>
-        true,
+      SessionOccurrenceLifecycleState.cancelled => true,
       _ => false,
     };
   }
@@ -21,8 +20,7 @@ extension SessionOccurrenceLifecycleStateX on SessionOccurrenceLifecycleState {
   bool get allowsExecutionSnapshotAttachment {
     return switch (this) {
       SessionOccurrenceLifecycleState.scheduled ||
-      SessionOccurrenceLifecycleState.adapted =>
-        true,
+      SessionOccurrenceLifecycleState.adapted => true,
       _ => false,
     };
   }

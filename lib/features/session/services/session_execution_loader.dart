@@ -21,13 +21,14 @@ class SessionExecutionLoader {
     SessionBlockRepository? sessionBlockRepository,
     ExerciseRepository? exerciseRepository,
     ProtocolStepToBlockConverter? legacyConverter,
-  })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
-        _protocolStepRepository =
-            protocolStepRepository ?? const ProtocolStepRepository(),
-        _sessionBlockRepository =
-            sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
-        _exerciseRepository = exerciseRepository ?? ExerciseRepository(),
-        _legacyConverter = legacyConverter ?? const ProtocolStepToBlockConverter();
+  }) : _protocolRepository = protocolRepository ?? ProtocolRepository(),
+       _protocolStepRepository =
+           protocolStepRepository ?? const ProtocolStepRepository(),
+       _sessionBlockRepository =
+           sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
+       _exerciseRepository = exerciseRepository ?? ExerciseRepository(),
+       _legacyConverter =
+           legacyConverter ?? const ProtocolStepToBlockConverter();
 
   final ProtocolRepository _protocolRepository;
   final ProtocolStepRepository _protocolStepRepository;
@@ -80,7 +81,9 @@ class SessionExecutionLoader {
     );
   }
 
-  Future<Map<String, Exercise>> _loadExercises(List<SessionBlock> blocks) async {
+  Future<Map<String, Exercise>> _loadExercises(
+    List<SessionBlock> blocks,
+  ) async {
     final ids = <String>{};
     for (final block in blocks) {
       for (final link in block.linkedExercises) {

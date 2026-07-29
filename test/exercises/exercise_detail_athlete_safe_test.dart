@@ -19,10 +19,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: ExerciseDetailScreen(
-          exercise: exercise,
-          athleteId: 'athlete-1',
-        ),
+        home: ExerciseDetailScreen(exercise: exercise, athleteId: 'athlete-1'),
       ),
     );
     await tester.pumpAndSettle();

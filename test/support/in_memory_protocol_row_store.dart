@@ -56,16 +56,16 @@ class InMemoryProtocolRowStore {
     );
 
     return ProtocolDraft.mergeAdaptationFromRow(
-      draft: ProtocolDraft.applyTrainingContentMetadata(
-        draft: base,
-        row: map,
-      ),
+      draft: ProtocolDraft.applyTrainingContentMetadata(draft: base, row: map),
       row: map,
     );
   }
 
   /// Mirrors [ProtocolBuilderService._buildProtocolUpsertMap] after migration.
-  Map<String, dynamic> buildUpsertMap(ProtocolDraft draft, {required bool published}) {
+  Map<String, dynamic> buildUpsertMap(
+    ProtocolDraft draft, {
+    required bool published,
+  }) {
     final map = Map<String, dynamic>.from(draft.toProtocolMap());
     SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
     SessionAdaptationMetadataCodec.applyForProtocolUpsert(

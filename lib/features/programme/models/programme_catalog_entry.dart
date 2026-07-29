@@ -38,8 +38,9 @@ class ProgrammeCatalogueQuery {
     bool clearPrimaryGoal = false,
   }) {
     return ProgrammeCatalogueQuery(
-      libraryScope:
-          clearLibraryScope ? null : (libraryScope ?? this.libraryScope),
+      libraryScope: clearLibraryScope
+          ? null
+          : (libraryScope ?? this.libraryScope),
       ownerType: clearOwnerType ? null : (ownerType ?? this.ownerType),
       ownerId: clearOwnerId ? null : (ownerId ?? this.ownerId),
       includeGlobalApprovedOnly:
@@ -48,8 +49,7 @@ class ProgrammeCatalogueQuery {
       lifecycleStatus: clearLifecycleStatus
           ? null
           : (lifecycleStatus ?? this.lifecycleStatus),
-      primaryGoal:
-          clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
+      primaryGoal: clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
     );
   }
 }

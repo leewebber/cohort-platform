@@ -20,12 +20,12 @@ class PreviousIntervalPerformanceService {
     required String protocolId,
     int? excludeTrainingSessionId,
   }) async {
-    final sessionData =
-        await intervalRepository.getLatestCompletedComparableSession(
-      athleteId: athleteId,
-      protocolId: protocolId,
-      excludeTrainingSessionId: excludeTrainingSessionId,
-    );
+    final sessionData = await intervalRepository
+        .getLatestCompletedComparableSession(
+          athleteId: athleteId,
+          protocolId: protocolId,
+          excludeTrainingSessionId: excludeTrainingSessionId,
+        );
 
     if (sessionData == null) {
       return null;
@@ -41,21 +41,20 @@ class PreviousIntervalPerformanceService {
     required TrainingSession session,
     required List<IntervalPerformance> intervals,
   }) {
-    final workPhases = intervals
-        .where(
-          (row) =>
-              row.phaseType == IntervalPhaseType.work &&
-              row.completed,
-        )
-        .toList()
-      ..sort((a, b) {
-        final blockCompare = a.blockIndex.compareTo(b.blockIndex);
-        if (blockCompare != 0) {
-          return blockCompare;
-        }
+    final workPhases =
+        intervals
+            .where(
+              (row) => row.phaseType == IntervalPhaseType.work && row.completed,
+            )
+            .toList()
+          ..sort((a, b) {
+            final blockCompare = a.blockIndex.compareTo(b.blockIndex);
+            if (blockCompare != 0) {
+              return blockCompare;
+            }
 
-        return a.repNumber.compareTo(b.repNumber);
-      });
+            return a.repNumber.compareTo(b.repNumber);
+          });
 
     if (workPhases.isEmpty) {
       return null;
@@ -85,13 +84,11 @@ class PreviousIntervalPerformanceService {
       trainingSessionId: session.id,
       protocolId: session.protocolId,
       completedAt: session.completedAt,
-      modality: measurableReps.firstOrNull?.modality ??
-          workPhases.first.modality,
+      modality:
+          measurableReps.firstOrNull?.modality ?? workPhases.first.modality,
       reps: reps,
       averageDurationSeconds: _averageInt(
-        measurableReps
-            .map((row) => row.actualDurationSeconds)
-            .whereType<int>(),
+        measurableReps.map((row) => row.actualDurationSeconds).whereType<int>(),
       ),
       averagePaceSecondsPerKm: _averageDouble(
         measurableReps
@@ -104,17 +101,16 @@ class PreviousIntervalPerformanceService {
             .whereType<double>(),
       ),
       averageRpe: _averageDouble(
-        measurableReps.map((row) => row.rpe).whereType<int>().map(
-              (value) => value.toDouble(),
-            ),
+        measurableReps
+            .map((row) => row.rpe)
+            .whereType<int>()
+            .map((value) => value.toDouble()),
       ),
       completedRepCount: measurableReps.length,
     );
   }
 
-  String _displayLineForRep({
-    required IntervalPerformance row,
-  }) {
+  String _displayLineForRep({required IntervalPerformance row}) {
     if (row.skipped) {
       return 'Skipped';
     }
@@ -130,8 +126,9 @@ class PreviousIntervalPerformanceService {
       }
     }
 
-    final durationLabel =
-        metricCalculator.formatDurationSeconds(row.actualDurationSeconds);
+    final durationLabel = metricCalculator.formatDurationSeconds(
+      row.actualDurationSeconds,
+    );
     if (durationLabel != null) {
       parts.add(durationLabel);
     }

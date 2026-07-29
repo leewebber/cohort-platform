@@ -160,9 +160,7 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
           )
           .toList(),
       slots: tables.slots
-          .where(
-            (row) => tables.days.any((day) => day.id == row.dayId),
-          )
+          .where((row) => tables.days.any((day) => day.id == row.dayId))
           .toList(),
     );
   }
@@ -243,9 +241,9 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
       final phaseId = weekNode.week.phaseId == null
           ? null
           : phaseIdsByLocalId[weekNode.week.phaseId!] ??
-              (DatabaseUuid.isValidDatabaseUuid(weekNode.week.phaseId)
-                  ? weekNode.week.phaseId!.trim()
-                  : null);
+                (DatabaseUuid.isValidDatabaseUuid(weekNode.week.phaseId)
+                    ? weekNode.week.phaseId!.trim()
+                    : null);
 
       tables.weeks.add(
         ProgrammeVersionWeek(
@@ -493,8 +491,9 @@ class InMemoryProgrammeAssignmentStore implements ProgrammeAssignmentStore {
       }
     }
 
-    final index =
-        tables.assignments.indexWhere((row) => row.id == assignment.id);
+    final index = tables.assignments.indexWhere(
+      (row) => row.id == assignment.id,
+    );
     if (index == -1) {
       throw ProgrammeStoreException('Assignment not found');
     }
@@ -718,8 +717,9 @@ class InMemoryAthleteStateStore implements AthleteStateStore {
       );
     }
 
-    final index = tables.athleteStates
-        .indexWhere((row) => row.athleteId == projection.athleteId);
+    final index = tables.athleteStates.indexWhere(
+      (row) => row.athleteId == projection.athleteId,
+    );
     if (index == -1) {
       tables.athleteStates.add(projection);
       return;
@@ -732,8 +732,9 @@ class InMemoryAthleteStateStore implements AthleteStateStore {
   Future<void> clearProgrammeProjection(String athleteId) async {
     _guardWrite();
 
-    final index =
-        tables.athleteStates.indexWhere((row) => row.athleteId == athleteId);
+    final index = tables.athleteStates.indexWhere(
+      (row) => row.athleteId == athleteId,
+    );
     if (index == -1) return;
 
     tables.athleteStates[index] = tables.athleteStates[index].copyWith(

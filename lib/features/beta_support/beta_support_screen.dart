@@ -12,9 +12,7 @@ class BetaSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final summary = BetaDiagnosticSummary.build(
-      screenContext: 'Beta support',
-    );
+    final summary = BetaDiagnosticSummary.build(screenContext: 'Beta support');
 
     return Scaffold(
       body: SafeArea(

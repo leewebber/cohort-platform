@@ -2,19 +2,13 @@ import '../models/session_execution_plan.dart';
 import 'session_execution_status.dart';
 
 class BlockExecutionState {
-  const BlockExecutionState({
-    required this.blockId,
-    required this.status,
-  });
+  const BlockExecutionState({required this.blockId, required this.status});
 
   final String blockId;
   final BlockExecutionStatus status;
 
   BlockExecutionState copyWith({BlockExecutionStatus? status}) {
-    return BlockExecutionState(
-      blockId: blockId,
-      status: status ?? this.status,
-    );
+    return BlockExecutionState(blockId: blockId, status: status ?? this.status);
   }
 }
 
@@ -59,7 +53,8 @@ class ActiveSessionState {
   BlockExecutionStatus statusFor(String blockId) {
     final index = plan.blocks.indexWhere((block) => block.blockId == blockId);
     if (index == activeBlockIndex) return BlockExecutionStatus.active;
-    if (completedBlockIds.contains(blockId)) return BlockExecutionStatus.complete;
+    if (completedBlockIds.contains(blockId))
+      return BlockExecutionStatus.complete;
     return BlockExecutionStatus.notStarted;
   }
 

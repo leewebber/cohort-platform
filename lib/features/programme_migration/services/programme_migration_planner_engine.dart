@@ -41,7 +41,10 @@ class ProgrammeMigrationPlannerEngine {
         assignmentId: assignment.id,
         isAuthoritative: false,
         hasStarted: _hasTerminalRequiredOutcomes(requiredSlots, outcomes),
-        completedRequiredSlotCount: _countCompletedRequired(requiredSlots, outcomes),
+        completedRequiredSlotCount: _countCompletedRequired(
+          requiredSlots,
+          outcomes,
+        ),
         totalRequiredSlotCount: requiredSlots.length,
         completionPercent: null,
         currentPosition: null,
@@ -50,16 +53,19 @@ class ProgrammeMigrationPlannerEngine {
       );
     }
 
-    final completedRequired =
-        _countCompletedRequired(requiredSlots, outcomes);
+    final completedRequired = _countCompletedRequired(requiredSlots, outcomes);
     final totalRequired = requiredSlots.length;
     final initialSlot = requiredSlots.first;
-    final atInitialCursor = assignment.currentWeek == initialSlot.weekIndex &&
+    final atInitialCursor =
+        assignment.currentWeek == initialSlot.weekIndex &&
         assignment.currentDayKey == initialSlot.dayKey &&
         assignment.currentSessionOrder == initialSlot.slotIndex;
-    final hasTerminalOutcomes =
-        _hasTerminalRequiredOutcomes(requiredSlots, outcomes);
-    final hasStarted = hasTerminalOutcomes ||
+    final hasTerminalOutcomes = _hasTerminalRequiredOutcomes(
+      requiredSlots,
+      outcomes,
+    );
+    final hasStarted =
+        hasTerminalOutcomes ||
         !atInitialCursor ||
         assignment.status == ProgrammeAssignmentStatus.completed;
 
@@ -194,11 +200,13 @@ class ProgrammeMigrationPlannerEngine {
       affectsFutureOnly = false;
 
       final sourceWeek = change.sourceWeek;
-      if (sourceWeek != null && sourceWeek.weekIndex <= currentPosition.weekIndex) {
+      if (sourceWeek != null &&
+          sourceWeek.weekIndex <= currentPosition.weekIndex) {
         affectsPastOrCurrentPosition = true;
         affectsFutureWeeksOnly = false;
       }
-      if (sourceWeek != null && sourceWeek.weekIndex == currentPosition.weekIndex) {
+      if (sourceWeek != null &&
+          sourceWeek.weekIndex == currentPosition.weekIndex) {
         affectsCurrentWeek = true;
       }
     }
@@ -275,7 +283,8 @@ class ProgrammeMigrationPlannerEngine {
           changeScope.currentSessionRevisionOnly) {
         return MigrationClassification.safeAfterCurrentSession;
       }
-      if (changeScope.affectsCurrentWeek && !changeScope.affectsCurrentSession) {
+      if (changeScope.affectsCurrentWeek &&
+          !changeScope.affectsCurrentSession) {
         return MigrationClassification.safeAfterCurrentWeek;
       }
       return MigrationClassification.manualReview;
@@ -384,7 +393,10 @@ class ProgrammeMigrationPlannerEngine {
     return slot.completionExpectation != 'optional';
   }
 
-  static int _compareSlotSnapshots(ProgrammeSlotSnapshot a, ProgrammeSlotSnapshot b) {
+  static int _compareSlotSnapshots(
+    ProgrammeSlotSnapshot a,
+    ProgrammeSlotSnapshot b,
+  ) {
     final weekCompare = a.weekIndex.compareTo(b.weekIndex);
     if (weekCompare != 0) return weekCompare;
 

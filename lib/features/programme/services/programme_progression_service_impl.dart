@@ -25,13 +25,13 @@ class ProgrammeProgressionServiceImpl implements ProgrammeProgressionService {
     required ProgrammeScheduleResolver scheduleResolver,
     required TodaySessionService todaySessionService,
     required AthleteStateSyncService athleteStateSyncService,
-  })  : _assignmentStore = assignmentStore,
-        _slotOutcomeStore = slotOutcomeStore,
-        _versionStore = versionStore,
-        _slotOutcomeService = slotOutcomeService,
-        _scheduleResolver = scheduleResolver,
-        _todaySessionService = todaySessionService,
-        _athleteStateSyncService = athleteStateSyncService;
+  }) : _assignmentStore = assignmentStore,
+       _slotOutcomeStore = slotOutcomeStore,
+       _versionStore = versionStore,
+       _slotOutcomeService = slotOutcomeService,
+       _scheduleResolver = scheduleResolver,
+       _todaySessionService = todaySessionService,
+       _athleteStateSyncService = athleteStateSyncService;
 
   final ProgrammeAssignmentStore _assignmentStore;
   final ProgrammeSlotOutcomeStore _slotOutcomeStore;
@@ -147,7 +147,8 @@ class ProgrammeProgressionServiceImpl implements ProgrammeProgressionService {
 
     if (outcomeStatus == ProgrammeSlotOutcomeStatus.rescheduled) {
       return ProgrammeProgressionResult.staleResolution(
-        message: 'Rescheduled slots remain unresolved until destination completes',
+        message:
+            'Rescheduled slots remain unresolved until destination completes',
       );
     }
 
@@ -163,7 +164,9 @@ class ProgrammeProgressionServiceImpl implements ProgrammeProgressionService {
       trainingSessionId: trainingSessionId,
       advanceCursor: advanceCursor,
     )) {
-      final nextSession = await _todaySessionService.resolveForAthlete(athleteId);
+      final nextSession = await _todaySessionService.resolveForAthlete(
+        athleteId,
+      );
       return ProgrammeProgressionResult.completed(
         outcome: existingOutcome!,
         updatedAssignment: assignment,
@@ -209,20 +212,23 @@ class ProgrammeProgressionServiceImpl implements ProgrammeProgressionService {
           ],
         );
       }
-    } else if (!advanceCursor && outcomeStatus == ProgrammeSlotOutcomeStatus.replaced) {
+    } else if (!advanceCursor &&
+        outcomeStatus == ProgrammeSlotOutcomeStatus.replaced) {
       updatedAssignment = assignment;
     } else {
       updatedAssignment = await _reloadAssignment(updatedAssignment);
     }
 
     ResolvedTodaySession nextSession;
-    if (!advanceCursor && outcomeStatus == ProgrammeSlotOutcomeStatus.replaced) {
+    if (!advanceCursor &&
+        outcomeStatus == ProgrammeSlotOutcomeStatus.replaced) {
       nextSession = _resolutionWithReplacement(
         resolution: resolution,
         replacementProtocolId: replacementProtocolId!,
         outcome: outcome,
       );
-    } else if (updatedAssignment.status == ProgrammeAssignmentStatus.completed) {
+    } else if (updatedAssignment.status ==
+        ProgrammeAssignmentStatus.completed) {
       final tree = await _versionStore.loadTemplateTree(
         updatedAssignment.programmeVersionId,
       );
@@ -433,7 +439,8 @@ class ProgrammeProgressionServiceImpl implements ProgrammeProgressionService {
 
     if (!advanceCursor &&
         outcomeStatus == ProgrammeSlotOutcomeStatus.inProgress &&
-        existingOutcome.outcomeStatus == ProgrammeSlotOutcomeStatus.inProgress) {
+        existingOutcome.outcomeStatus ==
+            ProgrammeSlotOutcomeStatus.inProgress) {
       return trainingSessionId == null ||
           existingOutcome.trainingSessionId == trainingSessionId;
     }

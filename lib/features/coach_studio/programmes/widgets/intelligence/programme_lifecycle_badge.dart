@@ -6,10 +6,7 @@ import '../../../../../models/programme_vocabulary.dart';
 import '../../intelligence/programme_intelligence_copy.dart';
 
 class ProgrammeLifecycleBadge extends StatelessWidget {
-  const ProgrammeLifecycleBadge({
-    super.key,
-    required this.lifecycleStatus,
-  });
+  const ProgrammeLifecycleBadge({super.key, required this.lifecycleStatus});
 
   final ProgrammeLifecycleStatus lifecycleStatus;
 
@@ -37,20 +34,20 @@ class ProgrammeLifecycleBadge extends StatelessWidget {
   _BadgeColors _colorsFor(ProgrammeLifecycleStatus status) {
     return switch (status) {
       ProgrammeLifecycleStatus.draft => const _BadgeColors(
-          background: CohortColors.oliveSoft,
-          border: CohortColors.olive,
-          text: CohortColors.olive,
-        ),
+        background: CohortColors.oliveSoft,
+        border: CohortColors.olive,
+        text: CohortColors.olive,
+      ),
       ProgrammeLifecycleStatus.published => const _BadgeColors(
-          background: CohortColors.surfaceRaised,
-          border: CohortColors.border,
-          text: CohortColors.textPrimary,
-        ),
+        background: CohortColors.surfaceRaised,
+        border: CohortColors.border,
+        text: CohortColors.textPrimary,
+      ),
       ProgrammeLifecycleStatus.archived => const _BadgeColors(
-          background: CohortColors.surfaceRaised,
-          border: CohortColors.border,
-          text: CohortColors.textSecondary,
-        ),
+        background: CohortColors.surfaceRaised,
+        border: CohortColors.border,
+        text: CohortColors.textSecondary,
+      ),
     };
   }
 }

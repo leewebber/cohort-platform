@@ -10,10 +10,7 @@ import '../../intelligence/programme_intelligence_copy.dart';
 import 'programme_lifecycle_badge.dart';
 
 class VersionOverviewCard extends StatelessWidget {
-  const VersionOverviewCard({
-    super.key,
-    required this.summary,
-  });
+  const VersionOverviewCard({super.key, required this.summary});
 
   final ProgrammeVersionImpactSummary summary;
 
@@ -30,7 +27,10 @@ class VersionOverviewCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(summary.programmeName, style: CohortTextStyles.cardTitle),
+                child: Text(
+                  summary.programmeName,
+                  style: CohortTextStyles.cardTitle,
+                ),
               ),
               ProgrammeLifecycleBadge(lifecycleStatus: summary.lifecycleStatus),
             ],

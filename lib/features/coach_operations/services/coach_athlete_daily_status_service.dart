@@ -26,16 +26,16 @@ class CoachAthleteDailyStatusService {
     PerformanceRecordStore? performanceRecordStore,
     ProgrammeProgressSummaryService? progressSummaryService,
     CoachComplianceSummaryService? complianceSummaryService,
-  })  : _coachAthleteService = coachAthleteService,
-        _assignmentStore = assignmentStore,
-        _versionStore = versionStore,
-        _slotOutcomeStore = slotOutcomeStore,
-        _scheduleResolver = scheduleResolver,
-        _performanceRecordStore = performanceRecordStore,
-        _progressSummaryService =
-            progressSummaryService ?? const ProgrammeProgressSummaryService(),
-        _complianceSummaryService =
-            complianceSummaryService ?? const CoachComplianceSummaryService();
+  }) : _coachAthleteService = coachAthleteService,
+       _assignmentStore = assignmentStore,
+       _versionStore = versionStore,
+       _slotOutcomeStore = slotOutcomeStore,
+       _scheduleResolver = scheduleResolver,
+       _performanceRecordStore = performanceRecordStore,
+       _progressSummaryService =
+           progressSummaryService ?? const ProgrammeProgressSummaryService(),
+       _complianceSummaryService =
+           complianceSummaryService ?? const CoachComplianceSummaryService();
 
   final CoachAthleteService _coachAthleteService;
   final ProgrammeAssignmentStore _assignmentStore;
@@ -51,7 +51,8 @@ class CoachAthleteDailyStatusService {
     if (!rosterResult.isSuccess) {
       throw CoachAthleteDailyStatusException(
         rosterResult.message ?? 'Unable to load athlete roster.',
-        coachRoleRequired: rosterResult.status ==
+        coachRoleRequired:
+            rosterResult.status ==
             CoachAthleteOperationStatus.coachRoleRequired,
       );
     }
@@ -73,7 +74,8 @@ class CoachAthleteDailyStatusService {
     if (!rosterResult.isSuccess) {
       throw CoachAthleteDailyStatusException(
         rosterResult.message ?? 'Unable to load athlete roster.',
-        coachRoleRequired: rosterResult.status ==
+        coachRoleRequired:
+            rosterResult.status ==
             CoachAthleteOperationStatus.coachRoleRequired,
       );
     }
@@ -91,8 +93,9 @@ class CoachAthleteDailyStatusService {
   Future<CoachAthleteDailySnapshot> _loadSnapshot(
     CoachAthleteRosterEntry entry,
   ) async {
-    final assignment =
-        await _assignmentStore.getActiveAssignment(entry.athleteId);
+    final assignment = await _assignmentStore.getActiveAssignment(
+      entry.athleteId,
+    );
 
     if (assignment == null) {
       return CoachAthleteDailySnapshot(
@@ -149,7 +152,8 @@ class CoachAthleteDailyStatusService {
           ? null
           : HomeTodaySessionLabels.progressLabel(progress),
       lastActivityLabel: lastActivity,
-      programmeName: resolution.programmeName ??
+      programmeName:
+          resolution.programmeName ??
           entry.activeProgrammeName ??
           assignment.lineageCode,
     );

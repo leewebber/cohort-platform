@@ -1,9 +1,4 @@
-enum TrainingBlockResultStatus {
-  notStarted,
-  inProgress,
-  completed,
-  skipped,
-}
+enum TrainingBlockResultStatus { notStarted, inProgress, completed, skipped }
 
 extension TrainingBlockResultStatusDb on TrainingBlockResultStatus {
   String get dbValue {

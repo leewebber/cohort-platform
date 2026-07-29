@@ -5,6 +5,8 @@ export 'athlete_daily/athlete_daily_session_resolution_result.dart';
 export 'athlete_daily/athlete_daily_session_resolver.dart';
 export 'athlete_daily/athlete_session_day_key.dart';
 export 'athlete_daily/athlete_session_occurrence_index.dart';
+export 'ports/programme_session_occurrence_registry.dart';
+export 'ports/session_occurrence_repository.dart';
 export 'programme_mapping/programme_scheduled_slot_input.dart';
 export 'programme_mapping/programme_session_occurrence_creation_result.dart';
 export 'programme_mapping/programme_session_occurrence_factory.dart';

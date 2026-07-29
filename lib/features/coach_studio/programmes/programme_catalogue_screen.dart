@@ -19,10 +19,7 @@ import 'widgets/programme_catalogue_empty_state.dart';
 import 'widgets/programme_catalogue_skeleton.dart';
 
 class ProgrammeCatalogueScreen extends StatefulWidget {
-  const ProgrammeCatalogueScreen({
-    super.key,
-    required this.controller,
-  });
+  const ProgrammeCatalogueScreen({super.key, required this.controller});
 
   final ProgrammeCatalogueController controller;
 
@@ -85,29 +82,27 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
     if (!mounted) return;
 
     if (result.message != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(result.message!)));
     }
 
     if (result.navigateToEditor && result.versionId != null) {
       await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => ProgrammeEditorScreen(
-            versionId: result.versionId!,
-          ),
+          builder: (_) => ProgrammeEditorScreen(versionId: result.versionId!),
         ),
       );
       await _controller.refreshCurrentTab();
       return;
     }
 
-    if (action == ProgrammeCatalogueAction.preview && result.versionId != null) {
+    if (action == ProgrammeCatalogueAction.preview &&
+        result.versionId != null) {
       await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => ProgrammeCataloguePreviewLoader(
-            versionId: result.versionId!,
-          ),
+          builder: (_) =>
+              ProgrammeCataloguePreviewLoader(versionId: result.versionId!),
         ),
       );
     }
@@ -133,7 +128,9 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
               ),
               TextField(
                 controller: lineageController,
-                decoration: const InputDecoration(labelText: 'New lineage code'),
+                decoration: const InputDecoration(
+                  labelText: 'New lineage code',
+                ),
               ),
             ],
           ),
@@ -168,9 +165,7 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
     if (result.navigateToEditor && result.versionId != null) {
       await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => ProgrammeEditorScreen(
-            versionId: result.versionId!,
-          ),
+          builder: (_) => ProgrammeEditorScreen(versionId: result.versionId!),
         ),
       );
     }
@@ -181,48 +176,49 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
     return CoachRouteGuard.wrap(
       title: 'Programmes',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Coach Studio'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              Row(
-                children: [
-                  const Expanded(
-                    child: Text('Programmes', style: CohortTextStyles.h1),
-                  ),
-                  TextButton(
-                    onPressed:
-                        _controller.isActionInProgress ? null : _openNewProgramme,
-                    child: const Text('New'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              TextField(
-                controller: _searchController,
-                decoration: const InputDecoration(
-                  hintText: 'Search name or lineage code',
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Coach Studio'),
                 ),
-                onChanged: _controller.setSearchTerm,
-              ),
-              const SizedBox(height: CohortSpacing.sm),
-              _filtersRow(),
-              const SizedBox(height: CohortSpacing.md),
-              _tabBar(),
-              const SizedBox(height: CohortSpacing.md),
-              Expanded(child: _body()),
-            ],
+                const SizedBox(height: CohortSpacing.md),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: Text('Programmes', style: CohortTextStyles.h1),
+                    ),
+                    TextButton(
+                      onPressed: _controller.isActionInProgress
+                          ? null
+                          : _openNewProgramme,
+                      child: const Text('New'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                TextField(
+                  controller: _searchController,
+                  decoration: const InputDecoration(
+                    hintText: 'Search name or lineage code',
+                  ),
+                  onChanged: _controller.setSearchTerm,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                _filtersRow(),
+                const SizedBox(height: CohortSpacing.md),
+                _tabBar(),
+                const SizedBox(height: CohortSpacing.md),
+                Expanded(child: _body()),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -259,18 +255,17 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
           ),
         DropdownButton<ProgrammeCatalogueSortMode>(
           value: _controller.sortMode,
-          items: [
-            ProgrammeCatalogueSortMode.lastEdited,
-            ProgrammeCatalogueSortMode.nameAZ,
-            ProgrammeCatalogueSortMode.versionNewest,
-          ]
-              .map(
-                (mode) => DropdownMenuItem(
-                  value: mode,
-                  child: Text(mode.label),
-                ),
-              )
-              .toList(),
+          items:
+              [
+                    ProgrammeCatalogueSortMode.lastEdited,
+                    ProgrammeCatalogueSortMode.nameAZ,
+                    ProgrammeCatalogueSortMode.versionNewest,
+                  ]
+                  .map(
+                    (mode) =>
+                        DropdownMenuItem(value: mode, child: Text(mode.label)),
+                  )
+                  .toList(),
           onChanged: (value) {
             if (value != null) _controller.setSortMode(value);
           },
@@ -302,36 +297,36 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
     return switch (_controller.viewState) {
       ProgrammeCatalogueViewState.loading => const ProgrammeCatalogueSkeleton(),
       ProgrammeCatalogueViewState.empty => ProgrammeCatalogueEmptyState(
-          tab: _controller.activeTab,
-          onCreate: _openNewProgramme,
-        ),
+        tab: _controller.activeTab,
+        onCreate: _openNewProgramme,
+      ),
       ProgrammeCatalogueViewState.permissionDenied => _errorBody(
-          'You do not have access to these programmes.',
-        ),
+        'You do not have access to these programmes.',
+      ),
       ProgrammeCatalogueViewState.error => _errorBody(
-          _controller.errorMessage ?? 'We could not load programmes right now.',
-          showRetry: true,
-        ),
+        _controller.errorMessage ?? 'We could not load programmes right now.',
+        showRetry: true,
+      ),
       ProgrammeCatalogueViewState.ready => RefreshIndicator(
-          onRefresh: _controller.refreshCurrentTab,
-          child: ListView.separated(
-            itemCount: _controller.displayedEntries.length,
-            separatorBuilder: (_, _) => const SizedBox(height: CohortSpacing.md),
-            itemBuilder: (context, index) {
-              final entry = _controller.displayedEntries[index];
-              final disabled =
-                  _controller.actionInProgressVersionId == entry.versionId;
+        onRefresh: _controller.refreshCurrentTab,
+        child: ListView.separated(
+          itemCount: _controller.displayedEntries.length,
+          separatorBuilder: (_, _) => const SizedBox(height: CohortSpacing.md),
+          itemBuilder: (context, index) {
+            final entry = _controller.displayedEntries[index];
+            final disabled =
+                _controller.actionInProgressVersionId == entry.versionId;
 
-              return ProgrammeCatalogueCard(
-                entry: entry,
-                tab: _controller.activeTab,
-                disabled: disabled,
-                onTap: () => _handleCardTap(entry),
-                onAction: (action) => _runAction(action: action, entry: entry),
-              );
-            },
-          ),
+            return ProgrammeCatalogueCard(
+              entry: entry,
+              tab: _controller.activeTab,
+              disabled: disabled,
+              onTap: () => _handleCardTap(entry),
+              onAction: (action) => _runAction(action: action, entry: entry),
+            );
+          },
         ),
+      ),
     };
   }
 
@@ -340,14 +335,20 @@ class _ProgrammeCatalogueScreenState extends State<ProgrammeCatalogueScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(message, style: CohortTextStyles.body, textAlign: TextAlign.center),
+          Text(
+            message,
+            style: CohortTextStyles.body,
+            textAlign: TextAlign.center,
+          ),
           if (showRetry) ...[
             const SizedBox(height: CohortSpacing.md),
             TextButton(
               onPressed: _controller.refreshCurrentTab,
               child: Text(
                 'Retry',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
               ),
             ),
           ],

@@ -68,7 +68,9 @@ class CohortButton extends StatelessWidget {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: CohortColors.phosphorDeep.withValues(alpha: 0.45),
+                        color: CohortColors.phosphorDeep.withValues(
+                          alpha: 0.45,
+                        ),
                         borderRadius: CohortRadius.smallRadius,
                         border: Border.all(
                           color: CohortColors.edgeHighlight.withValues(

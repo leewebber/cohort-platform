@@ -70,7 +70,8 @@ class _ProgrammeEditorSlotInspectorState
     super.initState();
     _protocolBuilderService =
         widget.protocolBuilderService ?? ProtocolBuilderService();
-    _classifier = widget.slotContentClassifier ??
+    _classifier =
+        widget.slotContentClassifier ??
         ProgrammeSessionSlotContentClassifier(
           protocolBuilderService: _protocolBuilderService,
         );
@@ -138,7 +139,8 @@ class _ProgrammeEditorSlotInspectorState
           FutureBuilder<ProgrammeSlotContentKind>(
             future: _contentKindFuture,
             builder: (context, snapshot) {
-              final kind = snapshot.data ??
+              final kind =
+                  snapshot.data ??
                   (_hasAssignedProtocol
                       ? ProgrammeSlotContentKind.unknown
                       : ProgrammeSlotContentKind.empty);
@@ -146,10 +148,7 @@ class _ProgrammeEditorSlotInspectorState
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _AssignedContentHeader(
-                    slot: widget.slot,
-                    contentKind: kind,
-                  ),
+                  _AssignedContentHeader(slot: widget.slot, contentKind: kind),
                   if (!widget.readOnly) ...[
                     const SizedBox(height: CohortSpacing.sm),
                     _SlotActions(
@@ -181,10 +180,8 @@ class _ProgrammeEditorSlotInspectorState
             decoration: const InputDecoration(labelText: 'Time of day'),
             items: ProgrammeSessionTimeOfDay.values
                 .map(
-                  (value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(value.name),
-                  ),
+                  (value) =>
+                      DropdownMenuItem(value: value, child: Text(value.name)),
                 )
                 .toList(),
             onChanged: widget.readOnly
@@ -225,7 +222,8 @@ class _ProgrammeEditorSlotInspectorState
           if (!widget.readOnly) ...[
             const SizedBox(height: CohortSpacing.lg),
             TextButton(
-              onPressed: () => widget.controller.removeSlot(widget.slot.localId),
+              onPressed: () =>
+                  widget.controller.removeSlot(widget.slot.localId),
               child: const Text('Remove slot'),
             ),
           ],
@@ -301,28 +299,26 @@ class _ProgrammeEditorSlotInspectorState
     if (result.isAttached) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            result.coachMessage ?? 'Session added to programme',
-          ),
+          content: Text(result.coachMessage ?? 'Session added to programme'),
         ),
       );
       setState(_reloadContentKind);
     } else if (result.coachMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.coachMessage!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(result.coachMessage!)));
     }
   }
 
   Future<void> _pickProtocol() async {
     final selected =
         await showModalBottomSheet<CohortProtocolProgrammeSelection>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => ProgrammeProtocolPickerSheet(
-        listProtocols: widget.controller.listProtocols,
-      ),
-    );
+          context: context,
+          isScrollControlled: true,
+          builder: (context) => ProgrammeProtocolPickerSheet(
+            listProtocols: widget.controller.listProtocols,
+          ),
+        );
 
     if (selected == null) return;
 
@@ -392,9 +388,9 @@ class _ProgrammeEditorSlotInspectorState
 
     final customisationCoordinator =
         CohortProtocolCustomisationServices.forProgrammeEditor(
-      controller: widget.controller,
-      protocolBuilderService: _protocolBuilderService,
-    );
+          controller: widget.controller,
+          protocolBuilderService: _protocolBuilderService,
+        );
 
     final prepared = await customisationCoordinator.prepareCopy(
       sourceProtocolId: sourceProtocolId,
@@ -442,8 +438,9 @@ class _ProgrammeEditorSlotInspectorState
 
     ProtocolDraft initialDraft;
     try {
-      initialDraft =
-          await _protocolBuilderService.loadProtocol(widget.slot.protocolId);
+      initialDraft = await _protocolBuilderService.loadProtocol(
+        widget.slot.protocolId,
+      );
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -470,25 +467,24 @@ class _ProgrammeEditorSlotInspectorState
       protocolBuilderService: _protocolBuilderService,
     );
 
-    final result = await Navigator.of(context).push<ProgrammeSessionAuthoringResult>(
-      MaterialPageRoute<ProgrammeSessionAuthoringResult>(
-        builder: (_) => EmbeddedSessionBuilderScreen(
-          authoringContext: authoringContext,
-          coordinator: coordinator,
-          customisationCoordinator: customisationCoordinator,
-          initialDraft: initialDraft,
-        ),
-      ),
-    );
+    final result = await Navigator.of(context)
+        .push<ProgrammeSessionAuthoringResult>(
+          MaterialPageRoute<ProgrammeSessionAuthoringResult>(
+            builder: (_) => EmbeddedSessionBuilderScreen(
+              authoringContext: authoringContext,
+              coordinator: coordinator,
+              customisationCoordinator: customisationCoordinator,
+              initialDraft: initialDraft,
+            ),
+          ),
+        );
 
     if (!mounted || result == null) return;
 
     if (result.isAttached) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            result.coachMessage ?? 'Session added to programme',
-          ),
+          content: Text(result.coachMessage ?? 'Session added to programme'),
         ),
       );
       setState(_reloadContentKind);
@@ -516,10 +512,7 @@ class _ProgrammeEditorSlotInspectorState
 }
 
 class _AssignedContentHeader extends StatelessWidget {
-  const _AssignedContentHeader({
-    required this.slot,
-    required this.contentKind,
-  });
+  const _AssignedContentHeader({required this.slot, required this.contentKind});
 
   final ProgrammeSessionSlotDraft slot;
   final ProgrammeSlotContentKind contentKind;
@@ -653,14 +646,8 @@ class _SlotActions extends StatelessWidget {
               onPressed: onCopyAndCustomise,
               child: const Text('Copy and customise'),
             ),
-            TextButton(
-              onPressed: onPickProtocol,
-              child: const Text('Change'),
-            ),
-            TextButton(
-              onPressed: onRemove,
-              child: const Text('Remove'),
-            ),
+            TextButton(onPressed: onPickProtocol, child: const Text('Change')),
+            TextButton(onPressed: onRemove, child: const Text('Remove')),
           ],
         );
       case ProgrammeSlotContentKind.programmeSession:
@@ -670,10 +657,7 @@ class _SlotActions extends StatelessWidget {
               onPressed: onEditSession,
               child: const Text('Edit Session'),
             ),
-            TextButton(
-              onPressed: onRemove,
-              child: const Text('Remove'),
-            ),
+            TextButton(onPressed: onRemove, child: const Text('Remove')),
           ],
         );
       case ProgrammeSlotContentKind.reusableCoachSession:
@@ -683,23 +667,14 @@ class _SlotActions extends StatelessWidget {
               onPressed: onUseSessionLibrary,
               child: const Text('Change Session'),
             ),
-            TextButton(
-              onPressed: onRemove,
-              child: const Text('Remove'),
-            ),
+            TextButton(onPressed: onRemove, child: const Text('Remove')),
           ],
         );
       case ProgrammeSlotContentKind.unknown:
         return Row(
           children: [
-            TextButton(
-              onPressed: onPickProtocol,
-              child: const Text('Replace'),
-            ),
-            TextButton(
-              onPressed: onRemove,
-              child: const Text('Remove'),
-            ),
+            TextButton(onPressed: onPickProtocol, child: const Text('Replace')),
+            TextButton(onPressed: onRemove, child: const Text('Remove')),
           ],
         );
     }

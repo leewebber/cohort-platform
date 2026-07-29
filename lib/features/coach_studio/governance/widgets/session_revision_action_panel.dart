@@ -8,10 +8,11 @@ import '../../../../core/widgets/section_title.dart';
 import '../../../session_revision/models/session_revision_action_decision.dart';
 import '../../../session_revision/models/session_revision_action_vocabulary.dart';
 
-typedef SessionRevisionActionHandler = Future<void> Function(
-  SessionRevisionAction action,
-  SessionRevisionActionDecision decision,
-);
+typedef SessionRevisionActionHandler =
+    Future<void> Function(
+      SessionRevisionAction action,
+      SessionRevisionActionDecision decision,
+    );
 
 class SessionRevisionActionPanel extends StatelessWidget {
   const SessionRevisionActionPanel({
@@ -75,7 +76,8 @@ class _ActionRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = decision.allowed && !isExecuting;
     final isWarning =
-        decision.allowed && decision.severity == SessionRevisionActionSeverity.warning;
+        decision.allowed &&
+        decision.severity == SessionRevisionActionSeverity.warning;
 
     final buttonStyle = isWarning
         ? OutlinedButton.styleFrom(
@@ -96,10 +98,7 @@ class _ActionRow extends StatelessWidget {
         Row(
           children: [
             if (!decision.allowed)
-              Tooltip(
-                message: _tooltipMessage(decision),
-                child: actionButton,
-              )
+              Tooltip(message: _tooltipMessage(decision), child: actionButton)
             else
               actionButton,
           ],

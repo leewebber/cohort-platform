@@ -41,15 +41,14 @@ class CoachAthleteOperationResult<T> {
     required CoachAthleteOperationStatus status,
     String? message,
   }) {
-    return CoachAthleteOperationResult._(
-      status: status,
-      message: message,
-    );
+    return CoachAthleteOperationResult._(status: status, message: message);
   }
 }
 
 typedef InviteResult = CoachAthleteOperationResult<CoachAthleteInvite>;
 typedef AcceptInviteResult =
     CoachAthleteOperationResult<CoachAthleteAcceptInviteResult>;
-typedef RosterResult = CoachAthleteOperationResult<List<CoachAthleteRosterEntry>>;
-typedef RelationshipResult = CoachAthleteOperationResult<CoachAthleteRelationship?>;
+typedef RosterResult =
+    CoachAthleteOperationResult<List<CoachAthleteRosterEntry>>;
+typedef RelationshipResult =
+    CoachAthleteOperationResult<CoachAthleteRelationship?>;

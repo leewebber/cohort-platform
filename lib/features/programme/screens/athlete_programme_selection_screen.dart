@@ -107,9 +107,9 @@ class _AthleteProgrammeSelectionScreenState
     }
 
     if (result.message != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message!)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(result.message!)));
     }
   }
 
@@ -133,10 +133,7 @@ class _AthleteProgrammeSelectionScreenState
 
     if (_controller.errorMessage != null) {
       return CohortCard(
-        child: Text(
-          _controller.errorMessage!,
-          style: CohortTextStyles.body,
-        ),
+        child: Text(_controller.errorMessage!, style: CohortTextStyles.body),
       );
     }
 

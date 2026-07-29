@@ -42,21 +42,18 @@ class CoachStudioAccess {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => CoachStudioHomeScreen(
-            openProgrammesDirectly: navigationState.shouldOpenProgrammesDirectly,
+            openProgrammesDirectly:
+                navigationState.shouldOpenProgrammesDirectly,
           ),
         ),
       );
     } on AuthenticatedIdentityException catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.userMessage)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.userMessage)));
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            UserFacingErrorMessages.from(error),
-          ),
-        ),
+        SnackBar(content: Text(UserFacingErrorMessages.from(error))),
       );
     }
   }

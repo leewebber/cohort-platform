@@ -111,8 +111,9 @@ class ProgrammeSlotOutcome {
       replacementProtocolId: clearReplacementProtocolId
           ? null
           : (replacementProtocolId ?? this.replacementProtocolId),
-      resolutionNote:
-          clearResolutionNote ? null : (resolutionNote ?? this.resolutionNote),
+      resolutionNote: clearResolutionNote
+          ? null
+          : (resolutionNote ?? this.resolutionNote),
       resolvedAt: clearResolvedAt ? null : (resolvedAt ?? this.resolvedAt),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

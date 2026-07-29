@@ -69,15 +69,15 @@ class AthleteState {
     return AthleteState(
       athleteId: athleteId ?? this.athleteId,
       currentGoal: clearCurrentGoal ? null : (currentGoal ?? this.currentGoal),
-      programmeId:
-          clearProgrammeId ? null : (programmeId ?? this.programmeId),
+      programmeId: clearProgrammeId ? null : (programmeId ?? this.programmeId),
       currentWeek: clearCurrentWeek ? null : (currentWeek ?? this.currentWeek),
       currentDay: clearCurrentDay ? null : (currentDay ?? this.currentDay),
       currentProtocolId: clearCurrentProtocolId
           ? null
           : (currentProtocolId ?? this.currentProtocolId),
-      sessionStatus:
-          clearSessionStatus ? null : (sessionStatus ?? this.sessionStatus),
+      sessionStatus: clearSessionStatus
+          ? null
+          : (sessionStatus ?? this.sessionStatus),
     );
   }
 

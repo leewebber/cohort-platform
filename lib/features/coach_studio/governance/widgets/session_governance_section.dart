@@ -89,7 +89,9 @@ class _SessionGovernanceSectionState extends State<SessionGovernanceSection> {
     }
   }
 
-  Future<void> _createNewRevision(SessionRevisionActionDecision decision) async {
+  Future<void> _createNewRevision(
+    SessionRevisionActionDecision decision,
+  ) async {
     final priorRevisionNumber = widget.controller.state.revisionNumber;
     setState(() => _isExecuting = true);
     try {
@@ -105,7 +107,8 @@ class _SessionGovernanceSectionState extends State<SessionGovernanceSection> {
           content: Text(
             GovernanceCopy.createRevisionSuccessMessage(
               newRevisionNumber: result.revisionNumber,
-              priorRevisionNumber: priorRevisionNumber ?? result.revisionNumber - 1,
+              priorRevisionNumber:
+                  priorRevisionNumber ?? result.revisionNumber - 1,
             ),
           ),
         ),
@@ -136,8 +139,9 @@ class _SessionGovernanceSectionState extends State<SessionGovernanceSection> {
 
     setState(() => _isExecuting = true);
     try {
-      final published =
-          await widget.revisionService.publishRevision(widget.draft);
+      final published = await widget.revisionService.publishRevision(
+        widget.draft,
+      );
       if (!mounted) return;
       widget.onDraftChanged(published);
       await widget.controller.refresh();
@@ -235,9 +239,9 @@ class _SessionGovernanceSectionState extends State<SessionGovernanceSection> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -269,7 +273,9 @@ class _SessionGovernanceSectionState extends State<SessionGovernanceSection> {
           children: [
             Text(
               'Governance information could not be loaded.',
-              style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.body.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
             const SizedBox(height: CohortSpacing.sm),
             TextButton(

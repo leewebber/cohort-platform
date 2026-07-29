@@ -15,9 +15,7 @@ abstract class ProgrammeBuilderService {
     ProgrammeSeedTemplate seedTemplate = ProgrammeSeedTemplate.empty,
   });
 
-  Future<ProgrammeBuilderDocument> loadDocument({
-    required String versionId,
-  });
+  Future<ProgrammeBuilderDocument> loadDocument({required String versionId});
 
   Future<ProgrammeBuilderOperationResult> saveDocument(
     ProgrammeBuilderDocument document,

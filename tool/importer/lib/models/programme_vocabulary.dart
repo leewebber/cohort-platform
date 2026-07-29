@@ -28,14 +28,7 @@ enum ProgrammeLifecycleStatus {
 }
 
 /// Macro intent for a phase, week, or day.
-enum ProgrammeIntent {
-  build,
-  maintain,
-  deload,
-  test,
-  recover,
-  technique,
-}
+enum ProgrammeIntent { build, maintain, deload, test, recover, technique }
 
 /// Athlete enrolment lifecycle on a published programme version.
 enum ProgrammeAssignmentStatus {
@@ -65,12 +58,7 @@ enum ProgrammeDayType {
 }
 
 /// Informational time-of-day hint for a session slot.
-enum ProgrammeSessionTimeOfDay {
-  morning,
-  afternoon,
-  evening,
-  any,
-}
+enum ProgrammeSessionTimeOfDay { morning, afternoon, evening, any }
 
 /// How strongly completion is expected for progression.
 enum ProgrammeSessionCompletionExpectation {
@@ -85,11 +73,7 @@ enum ProgrammeSessionCompletionExpectation {
 }
 
 /// Owner identity for a programme template.
-enum ProgrammeOwnerType {
-  global,
-  coach,
-  organisation,
-}
+enum ProgrammeOwnerType { global, coach, organisation }
 
 /// Per-assignment resolution of a programme session slot.
 ///

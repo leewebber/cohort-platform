@@ -9,20 +9,14 @@ import '../../session/models/session_execution_plan.dart';
 import '../../session/widgets/strength_prescription_display.dart';
 
 class SessionBlockPreviewList extends StatelessWidget {
-  const SessionBlockPreviewList({
-    super.key,
-    required this.plan,
-  });
+  const SessionBlockPreviewList({super.key, required this.plan});
 
   final SessionExecutionPlan plan;
 
   @override
   Widget build(BuildContext context) {
     if (plan.blocks.isEmpty) {
-      return const Text(
-        'No blocks to preview.',
-        style: CohortTextStyles.body,
-      );
+      return const Text('No blocks to preview.', style: CohortTextStyles.body);
     }
 
     return Column(

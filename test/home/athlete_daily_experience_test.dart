@@ -75,7 +75,9 @@ void main() {
   }
 
   group('TodaySessionCard', () {
-    testWidgets('shows programme context and START SESSION CTA', (tester) async {
+    testWidgets('shows programme context and START SESSION CTA', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -192,7 +194,9 @@ void main() {
       expect(find.textContaining('5 / 32 sessions completed'), findsOneWidget);
     });
 
-    testWidgets('programme complete card celebrates completion', (tester) async {
+    testWidgets('programme complete card celebrates completion', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeTodaySessionSection(
@@ -217,7 +221,9 @@ void main() {
   });
 
   group('SessionCompleteScreen', () {
-    testWidgets('shows saved, progress, adaptation, and next session', (tester) async {
+    testWidgets('shows saved, progress, adaptation, and next session', (
+      tester,
+    ) async {
       final plan = SessionExecutionPlan(
         sessionId: 'BW-001',
         sessionTitle: 'Bodyweight Grinder',
@@ -235,7 +241,8 @@ void main() {
           home: SessionCompleteScreen(
             state: state,
             savedRecord: null,
-            adaptationMessage: 'Load increased by 2.5 kg on your next squat slot.',
+            adaptationMessage:
+                'Load increased by 2.5 kg on your next squat slot.',
             programmeProgress: const ProgrammeProgressSummary(
               currentWeek: 3,
               totalWeeks: 8,
@@ -286,7 +293,9 @@ void main() {
       expect(find.textContaining('Conditioning'), findsOneWidget);
     });
 
-    testWidgets('defaults adaptation copy when no change applied', (tester) async {
+    testWidgets('defaults adaptation copy when no change applied', (
+      tester,
+    ) async {
       final plan = SessionExecutionPlan(
         sessionId: 'BW-001',
         sessionTitle: 'Bodyweight Grinder',
@@ -304,10 +313,7 @@ void main() {
         ),
       );
 
-      expect(
-        find.text('Programme continues as planned.'),
-        findsOneWidget,
-      );
+      expect(find.text('Programme continues as planned.'), findsOneWidget);
     });
   });
 }

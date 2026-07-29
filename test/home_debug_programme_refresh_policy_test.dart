@@ -100,7 +100,9 @@ void main() {
     test('failed reset does not request refresh', () {
       expect(
         HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(
-          ProgrammeAssignmentOperationResult.failed(message: 'DELETE removed 0 rows'),
+          ProgrammeAssignmentOperationResult.failed(
+            message: 'DELETE removed 0 rows',
+          ),
         ),
         isFalse,
       );
@@ -111,7 +113,9 @@ void main() {
         HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterProgression(
           ProgrammeProgressionResult(
             status: ProgrammeProgressionStatus.completed,
-            updatedAssignment: activeAssignment().copyWith(currentDayKey: 'day_2'),
+            updatedAssignment: activeAssignment().copyWith(
+              currentDayKey: 'day_2',
+            ),
           ),
         ),
         isTrue,

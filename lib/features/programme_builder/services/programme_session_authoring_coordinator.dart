@@ -20,10 +20,10 @@ class ProgrammeSessionAuthoringCoordinator {
     required ProgrammeSessionAssignmentPort assignmentPort,
     required TrainingContentIdGenerator idGenerator,
     required CurrentCoachIdentity coachIdentity,
-  })  : _protocolBuilderService = protocolBuilderService,
-        _assignmentPort = assignmentPort,
-        _idGenerator = idGenerator,
-        _coachIdentity = coachIdentity;
+  }) : _protocolBuilderService = protocolBuilderService,
+       _assignmentPort = assignmentPort,
+       _idGenerator = idGenerator,
+       _coachIdentity = coachIdentity;
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeSessionAssignmentPort _assignmentPort;
@@ -34,7 +34,8 @@ class ProgrammeSessionAuthoringCoordinator {
     required ProgrammeSessionAuthoringContext context,
     required ProtocolDraft draft,
   }) async {
-    final isEdit = context.authoringIntent ==
+    final isEdit =
+        context.authoringIntent ==
         ProgrammeSessionAuthoringIntent.editCoachSession;
 
     ProgrammeSessionAuthoringDiagnostics.log(
@@ -80,8 +81,7 @@ class ProgrammeSessionAuthoringCoordinator {
 
     ProtocolDraft persistedDraft;
     try {
-      final saveResult =
-          await _protocolBuilderService.saveDraft(draftToSave);
+      final saveResult = await _protocolBuilderService.saveDraft(draftToSave);
       ProgrammeSessionAuthoringDiagnostics.log('sessionSaved');
       persistedDraft = draftToSave.copyWith(
         protocolId: saveResult.protocolId,
@@ -131,9 +131,7 @@ class ProgrammeSessionAuthoringCoordinator {
     try {
       persistedDraft = await _protocolBuilderService.loadProtocol(trimmedId);
     } catch (error) {
-      ProgrammeSessionAuthoringDiagnostics.log(
-        'retryAttach result=loadFailed',
-      );
+      ProgrammeSessionAuthoringDiagnostics.log('retryAttach result=loadFailed');
       return ProgrammeSessionAuthoringResult.validationFailed(
         coachMessage: 'Session could not be added to the programme.',
         warnings: const ['Saved session content is no longer available.'],
@@ -188,14 +186,16 @@ class ProgrammeSessionAuthoringCoordinator {
     if (loaded.contentKind != TrainingContentKind.session ||
         loaded.authoringScope != TrainingAuthoringScope.coachPrivate) {
       return ProgrammeSessionAuthoringResult.validationFailed(
-        coachMessage: 'Only reusable Sessions can be added from Session Library.',
+        coachMessage:
+            'Only reusable Sessions can be added from Session Library.',
       );
     }
 
     if (loaded.programmeVersionId != null &&
         loaded.programmeVersionId!.trim().isNotEmpty) {
       return ProgrammeSessionAuthoringResult.validationFailed(
-        coachMessage: 'Programme sessions must be edited from Programme Builder.',
+        coachMessage:
+            'Programme sessions must be edited from Programme Builder.',
       );
     }
 
@@ -297,9 +297,10 @@ class ProgrammeSessionAuthoringCoordinator {
       warnings.add('Normalized content classification to programme Session.');
     }
 
-    final isBlankCreate = context.authoringIntent ==
-        ProgrammeSessionAuthoringIntent.createBlank;
-    final isCopy = context.authoringIntent ==
+    final isBlankCreate =
+        context.authoringIntent == ProgrammeSessionAuthoringIntent.createBlank;
+    final isCopy =
+        context.authoringIntent ==
         ProgrammeSessionAuthoringIntent.copyCohortProtocol;
 
     return draft.copyWith(
@@ -309,12 +310,15 @@ class ProgrammeSessionAuthoringCoordinator {
       programmeVersionId: context.programmeVersionId,
       published: false,
       ownerId: _coachIdentity.coachId ?? draft.ownerId,
-      sourceContentId:
-          (isBlankCreate && !isCopy) ? null : draft.sourceContentId,
-      sourceContentKind:
-          (isBlankCreate && !isCopy) ? null : draft.sourceContentKind,
-      sourceVersionId:
-          (isBlankCreate && !isCopy) ? null : draft.sourceVersionId,
+      sourceContentId: (isBlankCreate && !isCopy)
+          ? null
+          : draft.sourceContentId,
+      sourceContentKind: (isBlankCreate && !isCopy)
+          ? null
+          : draft.sourceContentKind,
+      sourceVersionId: (isBlankCreate && !isCopy)
+          ? null
+          : draft.sourceVersionId,
     );
   }
 

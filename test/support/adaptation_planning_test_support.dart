@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/adaptation/adaptation_application.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/programme_builder/authoring/programme_code_authoring.dart';
 import 'package:cohort_platform/features/session_builder/controllers/session_builder_editing_state.dart';
@@ -41,12 +42,13 @@ PlannedSessionAdaptationInput patchBlockPlanningMetadata(
             linkedExerciseIds: block.linkedExerciseIds,
             estimatedDurationMinutes:
                 durationMinutesByBlockLocalId?[block.localId] ??
-                    block.estimatedDurationMinutes,
+                block.estimatedDurationMinutes,
             estimatedDurationUnknown:
                 durationUnknownByBlockLocalId?[block.localId] ??
-                    block.estimatedDurationUnknown,
+                block.estimatedDurationUnknown,
             exercisePrescriptions: block.exercisePrescriptions,
-            policyMinimumViablePrescription: block.policyMinimumViablePrescription,
+            policyMinimumViablePrescription:
+                block.policyMinimumViablePrescription,
           ),
         )
         .toList(growable: false),
@@ -142,13 +144,15 @@ ProtocolDraft buildTimedPlanningSessionViaBuilder({
   );
 
   final editing = SessionBuilderEditingState(
-    draft: ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(context)
-        .copyWith(
-      protocolId: protocolId,
-      name: 'Timed planning session',
-      sessionFormat: 'structured_strength',
-      programmeVersionId: testProgrammeVersionId,
-    ),
+    draft:
+        ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(
+          context,
+        ).copyWith(
+          protocolId: protocolId,
+          name: 'Timed planning session',
+          sessionFormat: 'structured_strength',
+          programmeVersionId: testProgrammeVersionId,
+        ),
   );
   editing.setPrimarySessionIntent(SessionIntent.upperBodyStrength);
   editing.setMinimumViableDurationMin(minimumViableDurationMin);

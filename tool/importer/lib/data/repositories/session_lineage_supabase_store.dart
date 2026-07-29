@@ -16,9 +16,7 @@ class SessionLineageSupabaseStore extends SessionLineageStore {
     required String displayName,
     String? id,
   }) async {
-    final payload = <String, dynamic>{
-      'display_name': displayName.trim(),
-    };
+    final payload = <String, dynamic>{'display_name': displayName.trim()};
     if (id != null && id.isNotEmpty) {
       payload['id'] = id;
     }
@@ -86,7 +84,9 @@ class SessionLineageSupabaseStore extends SessionLineageStore {
   }
 
   @override
-  Future<SessionRevisionIdentity?> getRevisionIdentity(String protocolId) async {
+  Future<SessionRevisionIdentity?> getRevisionIdentity(
+    String protocolId,
+  ) async {
     final response = await SupabaseClientHolder.client
         .from(_protocolsTable)
         .select('protocol_id, session_lineage_id, revision_number')
@@ -140,13 +140,18 @@ class SessionLineageSupabaseStore extends SessionLineageStore {
     required SessionRevisionLifecycleStatus lifecycleStatus,
     DateTime? publishedAt,
   }) async {
-    await SupabaseClientHolder.client.from(_protocolsTable).update({
-      'session_lineage_id': sessionLineageId,
-      'revision_number': revisionNumber,
-      'lifecycle_status': lifecycleStatus.dbValue,
-      'published': lifecycleStatus == SessionRevisionLifecycleStatus.published,
-      if (publishedAt != null) 'published_at': publishedAt.toIso8601String(),
-    }).eq('protocol_id', protocolId.trim());
+    await SupabaseClientHolder.client
+        .from(_protocolsTable)
+        .update({
+          'session_lineage_id': sessionLineageId,
+          'revision_number': revisionNumber,
+          'lifecycle_status': lifecycleStatus.dbValue,
+          'published':
+              lifecycleStatus == SessionRevisionLifecycleStatus.published,
+          if (publishedAt != null)
+            'published_at': publishedAt.toIso8601String(),
+        })
+        .eq('protocol_id', protocolId.trim());
   }
 }
 

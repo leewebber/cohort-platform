@@ -72,11 +72,7 @@ enum DominantStimulus {
 }
 
 /// How tightly the session depends on specific equipment.
-enum EquipmentDependency {
-  low,
-  moderate,
-  high,
-}
+enum EquipmentDependency { low, moderate, high }
 
 /// Dominant movement emphasis from step distribution.
 enum MovementBias {
@@ -90,15 +86,7 @@ enum MovementBias {
 }
 
 /// How frequently the athlete changes task or modality.
-enum TransitionDensity {
-  low,
-  moderate,
-  high,
-}
+enum TransitionDensity { low, moderate, high }
 
 /// How resistant the session is to movement swaps.
-enum SubstitutionDifficulty {
-  low,
-  moderate,
-  high,
-}
+enum SubstitutionDifficulty { low, moderate, high }

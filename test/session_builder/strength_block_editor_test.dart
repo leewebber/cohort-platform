@@ -40,11 +40,8 @@ void main() {
               onMoveExerciseUp: (_) {},
               onMoveExerciseDown: (_) {},
               onExerciseLabelChanged: (_, __) {},
-              onUpsertStrengthExercise: ({
-                required exercise,
-                required prescription,
-                linkLocalId,
-              }) {},
+              onUpsertStrengthExercise:
+                  ({required exercise, required prescription, linkLocalId}) {},
             ),
           ),
         ),
@@ -56,7 +53,9 @@ void main() {
     expect(find.text('Workout content'), findsNothing);
   });
 
-  testWidgets('warm-up block does not show strength exercise editor', (tester) async {
+  testWidgets('warm-up block does not show strength exercise editor', (
+    tester,
+  ) async {
     final block = SessionBlock.create(
       blockType: SessionBlockType.warmUp,
       position: 1,

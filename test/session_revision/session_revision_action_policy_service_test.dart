@@ -92,34 +92,50 @@ void main() {
 
   group('edit policy', () {
     test('draft editable', () async {
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.edit);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.edit,
+      );
 
       expect(decision.allowed, isTrue);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.allowedDraftEdit);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.allowedDraftEdit,
+      );
     });
 
-    test('published edit blocked with create revision recommendation', () async {
+    test(
+      'published edit blocked with create revision recommendation',
+      () async {
+        final decision = await policyService.evaluate(
+          publishedProtocolId,
+          SessionRevisionAction.edit,
+        );
+
+        expect(decision.allowed, isFalse);
+        expect(
+          decision.primaryReasonCode,
+          SessionRevisionActionReasonCode.publishedRevisionImmutable,
+        );
+        expect(decision.recommendedAlternative, contains('revision 2'));
+        expect(
+          decision.userMessage,
+          contains('Published revisions cannot be edited'),
+        );
+      },
+    );
+
+    test('archived edit blocked', () async {
       final decision = await policyService.evaluate(
-        publishedProtocolId,
+        archivedProtocolId,
         SessionRevisionAction.edit,
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.publishedRevisionImmutable);
-      expect(decision.recommendedAlternative, contains('revision 2'));
-      expect(decision.userMessage, contains('Published revisions cannot be edited'));
-    });
-
-    test('archived edit blocked', () async {
-      final decision =
-          await policyService.evaluate(archivedProtocolId, SessionRevisionAction.edit);
-
-      expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.archivedRevisionImmutable);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.archivedRevisionImmutable,
+      );
     });
 
     test('protected cohort protocol published edit remains blocked', () async {
@@ -134,12 +150,16 @@ void main() {
         endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
       );
 
-      final decision =
-          await policyService.evaluate(cohortProtocolId, SessionRevisionAction.edit);
+      final decision = await policyService.evaluate(
+        cohortProtocolId,
+        SessionRevisionAction.edit,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.publishedRevisionImmutable);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.publishedRevisionImmutable,
+      );
     });
   });
 
@@ -151,8 +171,10 @@ void main() {
       );
 
       expect(decision.allowed, isTrue);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.createRevisionFromPublished);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.createRevisionFromPublished,
+      );
     });
 
     test('archived allowed', () async {
@@ -162,8 +184,10 @@ void main() {
       );
 
       expect(decision.allowed, isTrue);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.createRevisionFromArchived);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.createRevisionFromArchived,
+      );
     });
 
     test('draft blocked', () async {
@@ -173,8 +197,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.draftContinueEditing);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.draftContinueEditing,
+      );
     });
 
     test('official canonical content blocked with copy alternative', () async {
@@ -195,8 +221,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.canonicalContentProtected);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.canonicalContentProtected,
+      );
       expect(decision.recommendedAlternative, contains('Copy and customise'));
     });
   });
@@ -209,8 +237,10 @@ void main() {
       );
 
       expect(decision.allowed, isTrue);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.publishAllowedSubjectToValidation);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.publishAllowedSubjectToValidation,
+      );
     });
 
     test('published blocked', () async {
@@ -220,8 +250,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.revisionAlreadyPublished);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.revisionAlreadyPublished,
+      );
     });
 
     test('archived blocked', () async {
@@ -231,8 +263,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.archivedRevisionCannotPublish);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.archivedRevisionCannotPublish,
+      );
     });
 
     test('missing revision fails safely', () async {
@@ -242,8 +276,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.revisionNotFound);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.revisionNotFound,
+      );
     });
   });
 
@@ -271,8 +307,10 @@ void main() {
 
       expect(decision.allowed, isTrue);
       expect(decision.severity, SessionRevisionActionSeverity.warning);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions),
+      );
     });
 
     test('published with active assignments allowed with warning', () async {
@@ -293,8 +331,10 @@ void main() {
       );
 
       expect(decision.allowed, isTrue);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.usedByActiveAssignments));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.usedByActiveAssignments),
+      );
     });
 
     test('published with history allowed with warning', () async {
@@ -313,8 +353,10 @@ void main() {
       );
 
       expect(decision.allowed, isTrue);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.hasHistoricalPerformances));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.hasHistoricalPerformances),
+      );
     });
 
     test('already archived handled idempotently', () async {
@@ -324,28 +366,38 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.alreadyArchived);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.alreadyArchived,
+      );
     });
 
     test('draft blocked', () async {
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.archive);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.archive,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.draftRevisionCannotArchive);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.draftRevisionCannotArchive,
+      );
     });
   });
 
   group('delete policy', () {
     test('unused draft allowed', () async {
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isTrue);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.unusedDraft);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.unusedDraft,
+      );
     });
 
     test('draft used by programme version blocked', () async {
@@ -354,12 +406,16 @@ void main() {
         protocolId: draftProtocolId,
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions),
+      );
       expect(decision.userMessage, contains('programme version'));
     });
 
@@ -375,12 +431,16 @@ void main() {
         lineage: programmeTables.lineages.first,
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.usedByActiveAssignments));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.usedByActiveAssignments),
+      );
     });
 
     test('historical-only usage blocked', () async {
@@ -393,12 +453,16 @@ void main() {
         ),
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.hasHistoricalPerformances));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.hasHistoricalPerformances),
+      );
       expect(decision.recommendedAlternative, contains('Archive'));
     });
 
@@ -409,8 +473,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.publishedRevisionImmutable);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.publishedRevisionImmutable,
+      );
     });
 
     test('archived unused blocked', () async {
@@ -420,8 +486,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.archivedRevisionImmutable);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.archivedRevisionImmutable,
+      );
     });
 
     test('multiple blockers all represented', () async {
@@ -444,15 +512,20 @@ void main() {
         ),
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons, containsAll([
-        SessionRevisionActionReasonCode.usedByActiveAssignments,
-        SessionRevisionActionReasonCode.referencedByProgrammeVersions,
-        SessionRevisionActionReasonCode.hasHistoricalPerformances,
-      ]));
+      expect(
+        decision.reasons,
+        containsAll([
+          SessionRevisionActionReasonCode.usedByActiveAssignments,
+          SessionRevisionActionReasonCode.referencedByProgrammeVersions,
+          SessionRevisionActionReasonCode.hasHistoricalPerformances,
+        ]),
+      );
     });
 
     test('relationship lookup failure blocks delete', () async {
@@ -469,8 +542,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.relationshipLookupFailed);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.relationshipLookupFailed,
+      );
     });
 
     test('missing revision blocks delete', () async {
@@ -480,8 +555,10 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.revisionNotFound);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.revisionNotFound,
+      );
     });
 
     test('protected founder revision blocked', () async {
@@ -498,12 +575,16 @@ void main() {
       );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.canonicalContentProtected));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.canonicalContentProtected),
+      );
     });
 
     test('archived programme version reference still blocks delete', () async {
-      final lineage = SessionRevisionUsageTestFixtures.seedLineage(programmeTables);
+      final lineage = SessionRevisionUsageTestFixtures.seedLineage(
+        programmeTables,
+      );
       final version = SessionRevisionUsageTestFixtures.seedVersion(
         programmeTables,
         lineage: lineage,
@@ -523,38 +604,49 @@ void main() {
         protocolId: draftProtocolId,
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.allowed, isFalse);
-      expect(decision.reasons,
-          contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions));
+      expect(
+        decision.reasons,
+        contains(SessionRevisionActionReasonCode.referencedByProgrammeVersions),
+      );
     });
 
-    test('different revision in same lineage does not block exact delete', () async {
-      const siblingProtocolId = 'coach-session-published-rev-2';
-      _seedRevision(
-        lineageStore: lineageStore,
-        builder: builder,
-        protocolId: siblingProtocolId,
-        lifecycle: SessionRevisionLifecycleStatus.published,
-        revisionNumber: 2,
-      );
-      _attachProtocolToProgramme(
-        programmeTables: programmeTables,
-        protocolId: siblingProtocolId,
-      );
+    test(
+      'different revision in same lineage does not block exact delete',
+      () async {
+        const siblingProtocolId = 'coach-session-published-rev-2';
+        _seedRevision(
+          lineageStore: lineageStore,
+          builder: builder,
+          protocolId: siblingProtocolId,
+          lifecycle: SessionRevisionLifecycleStatus.published,
+          revisionNumber: 2,
+        );
+        _attachProtocolToProgramme(
+          programmeTables: programmeTables,
+          protocolId: siblingProtocolId,
+        );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+        final decision = await policyService.evaluate(
+          draftProtocolId,
+          SessionRevisionAction.delete,
+        );
 
-      expect(decision.allowed, isTrue);
-    });
+        expect(decision.allowed, isTrue);
+      },
+    );
   });
 
   group('messages and summary', () {
     test('counts pluralise correctly and omit raw UUIDs', () async {
-      final lineage = SessionRevisionUsageTestFixtures.seedLineage(programmeTables);
+      final lineage = SessionRevisionUsageTestFixtures.seedLineage(
+        programmeTables,
+      );
       final versionOne = SessionRevisionUsageTestFixtures.seedVersion(
         programmeTables,
         lineage: lineage,
@@ -600,8 +692,10 @@ void main() {
         );
       }
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
       expect(decision.userMessage, contains('2 programme versions'));
       expect(decision.userMessage, contains('4 slots'));
@@ -628,11 +722,15 @@ void main() {
         ),
       );
 
-      final decision =
-          await policyService.evaluate(draftProtocolId, SessionRevisionAction.delete);
+      final decision = await policyService.evaluate(
+        draftProtocolId,
+        SessionRevisionAction.delete,
+      );
 
-      expect(decision.primaryReasonCode,
-          SessionRevisionActionReasonCode.usedByActiveAssignments);
+      expect(
+        decision.primaryReasonCode,
+        SessionRevisionActionReasonCode.usedByActiveAssignments,
+      );
     });
 
     test('evaluateAll returns one decision per action', () async {
@@ -666,46 +764,60 @@ void main() {
       expect(deleteStore.deletedProtocolIds, [draftProtocolId]);
     });
 
-    test('archive preserves referenced content and only updates lifecycle', () async {
-      _attachProtocolToProgramme(
-        programmeTables: programmeTables,
-        protocolId: publishedProtocolId,
-      );
+    test(
+      'archive preserves referenced content and only updates lifecycle',
+      () async {
+        _attachProtocolToProgramme(
+          programmeTables: programmeTables,
+          protocolId: publishedProtocolId,
+        );
 
-      final archived = await revisionService.archiveRevision(publishedProtocolId);
+        final archived = await revisionService.archiveRevision(
+          publishedProtocolId,
+        );
 
-      expect(archived.lifecycleStatus, SessionRevisionLifecycleStatus.archived);
-      expect(programmeTables.slots.first.protocolId, publishedProtocolId);
-    });
+        expect(
+          archived.lifecycleStatus,
+          SessionRevisionLifecycleStatus.archived,
+        );
+        expect(programmeTables.slots.first.protocolId, publishedProtocolId);
+      },
+    );
 
-    test('published revision still cannot be saved in place via builder guard',
-        () async {
-      final published = builder.draftsById[publishedProtocolId]!;
-      builder.saveDraftCalls.clear();
+    test(
+      'published revision still cannot be saved in place via builder guard',
+      () async {
+        final published = builder.draftsById[publishedProtocolId]!;
+        builder.saveDraftCalls.clear();
 
-      expect(
-        () => builder.saveDraft(
-          published.copyWith(name: 'Changed name'),
-        ),
-        throwsA(isA<ProtocolBuilderException>()),
-      );
-    });
+        expect(
+          () => builder.saveDraft(published.copyWith(name: 'Changed name')),
+          throwsA(isA<ProtocolBuilderException>()),
+        );
+      },
+    );
 
-    test('create new revision remains valid edit path for published revision',
-        () async {
-      final result = await revisionService.createNewSessionRevision(
-        sourceProtocolId: publishedProtocolId,
-      );
+    test(
+      'create new revision remains valid edit path for published revision',
+      () async {
+        final result = await revisionService.createNewSessionRevision(
+          sourceProtocolId: publishedProtocolId,
+        );
 
-      expect(result.revisionNumber, 2);
-      expect(result.draft.lifecycleStatus, SessionRevisionLifecycleStatus.draft);
-    });
+        expect(result.revisionNumber, 2);
+        expect(
+          result.draft.lifecycleStatus,
+          SessionRevisionLifecycleStatus.draft,
+        );
+      },
+    );
   });
 }
 
-class _ThrowingRelationshipStore extends InMemorySessionRevisionRelationshipStore {
+class _ThrowingRelationshipStore
+    extends InMemorySessionRevisionRelationshipStore {
   _ThrowingRelationshipStore(InMemoryProgrammeTables tables)
-      : super(programmeTables: tables);
+    : super(programmeTables: tables);
 
   @override
   Future<List<SessionRevisionProgrammeReference>> listProgrammeSlotReferences(

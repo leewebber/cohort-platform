@@ -28,15 +28,10 @@ class PreviewModeBanner extends StatelessWidget {
         children: [
           Text(
             'PREVIEW MODE',
-            style: CohortTextStyles.eyebrow.copyWith(
-              color: CohortColors.olive,
-            ),
+            style: CohortTextStyles.eyebrow.copyWith(color: CohortColors.olive),
           ),
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            message,
-            style: CohortTextStyles.small,
-          ),
+          Text(message, style: CohortTextStyles.small),
         ],
       ),
     );

@@ -78,16 +78,20 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
       _hotelFriendly = protocol.hotelFriendly;
       _indoorFriendly = protocol.indoorFriendly;
       _noiseFriendly = protocol.noiseFriendly;
-      _selectedEquipment =
-          ProtocolMetadataVocabulary.parseCommaSeparated(protocol.equipment);
-      _selectedRequiredEquipment = ProtocolMetadataVocabulary.parseCommaSeparated(
-        protocol.requiredEquipment,
+      _selectedEquipment = ProtocolMetadataVocabulary.parseCommaSeparated(
+        protocol.equipment,
       );
-      _selectedOptionalEquipment = ProtocolMetadataVocabulary.parseCommaSeparated(
-        protocol.optionalEquipment,
+      _selectedRequiredEquipment =
+          ProtocolMetadataVocabulary.parseCommaSeparated(
+            protocol.requiredEquipment,
+          );
+      _selectedOptionalEquipment =
+          ProtocolMetadataVocabulary.parseCommaSeparated(
+            protocol.optionalEquipment,
+          );
+      _selectedSuitableFor = ProtocolMetadataVocabulary.parseCommaSeparated(
+        protocol.suitableFor,
       );
-      _selectedSuitableFor =
-          ProtocolMetadataVocabulary.parseCommaSeparated(protocol.suitableFor);
       _durationMinController.text = protocol.durationMin?.toString() ?? '';
     });
   }
@@ -154,12 +158,12 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
         );
         _selectedRequiredEquipment =
             ProtocolMetadataVocabulary.parseCommaSeparated(
-          updatedProtocol.requiredEquipment,
-        );
+              updatedProtocol.requiredEquipment,
+            );
         _selectedOptionalEquipment =
             ProtocolMetadataVocabulary.parseCommaSeparated(
-          updatedProtocol.optionalEquipment,
-        );
+              updatedProtocol.optionalEquipment,
+            );
         _secondaryCapability = updatedProtocol.secondaryCapability;
         _adaptability = updatedProtocol.adaptability;
         _runningRequired = updatedProtocol.runningRequired;
@@ -188,12 +192,12 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
     return CoachRouteGuard.wrap(
       title: 'Protocol editor',
       child: Scaffold(
-      body: SafeArea(
-        child: _selectedProtocol == null
-            ? _buildProtocolList()
-            : _buildEditor(),
+        body: SafeArea(
+          child: _selectedProtocol == null
+              ? _buildProtocolList()
+              : _buildEditor(),
+        ),
       ),
-    ),
     );
   }
 
@@ -204,10 +208,7 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.all(24),
-            child: Text(
-              'Loading protocols...',
-              style: CohortTextStyles.body,
-            ),
+            child: Text('Loading protocols...', style: CohortTextStyles.body),
           );
         }
 
@@ -225,10 +226,7 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
               const SizedBox(height: CohortSpacing.md),
               const SectionTitle('Admin'),
               const SizedBox(height: CohortSpacing.md),
-              const Text(
-                'Protocol Editor',
-                style: CohortTextStyles.h1,
-              ),
+              const Text('Protocol Editor', style: CohortTextStyles.h1),
               const SizedBox(height: CohortSpacing.lg),
               const Text(
                 'Select a protocol to edit adaptation metadata.',
@@ -281,8 +279,7 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
               setState(() => _primaryCapability = value),
           onSecondaryCapabilityChanged: (value) =>
               setState(() => _secondaryCapability = value),
-          onSessionTypeChanged: (value) =>
-              setState(() => _sessionType = value),
+          onSessionTypeChanged: (value) => setState(() => _sessionType = value),
           onEnvironmentChanged: (value) => setState(() => _environment = value),
           onPhysiologicalDemandChanged: (value) =>
               setState(() => _physiologicalDemand = value),
@@ -354,10 +351,7 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
                 child: const Text('← Protocols'),
               ),
               const SizedBox(height: CohortSpacing.sm),
-              Text(
-                protocol.protocolId,
-                style: CohortTextStyles.small,
-              ),
+              Text(protocol.protocolId, style: CohortTextStyles.small),
               const SizedBox(height: CohortSpacing.lg),
               _WorkoutSummarySection(protocol: protocol),
               if (useSideBySide)
@@ -387,10 +381,7 @@ class _AdminProtocolEditorScreenState extends State<AdminProtocolEditorScreen> {
 }
 
 class _EditorSection extends StatelessWidget {
-  const _EditorSection({
-    required this.title,
-    required this.child,
-  });
+  const _EditorSection({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -559,8 +550,8 @@ class _MetadataEditorSection extends StatelessWidget {
               value: secondaryCapability,
               options:
                   ProtocolMetadataVocabulary.secondaryCapabilityOptionsWithCurrent(
-                secondaryCapability,
-              ),
+                    secondaryCapability,
+                  ),
               onChanged: onSecondaryCapabilityChanged,
               compact: true,
             ),
@@ -588,8 +579,8 @@ class _MetadataEditorSection extends StatelessWidget {
               selected: selectedRequiredEquipment,
               options:
                   ProtocolMetadataVocabulary.requiredEquipmentOptionsWithCurrent(
-                protocol.requiredEquipment,
-              ),
+                    protocol.requiredEquipment,
+                  ),
               onChanged: onRequiredEquipmentChanged,
               compact: true,
             ),
@@ -598,8 +589,8 @@ class _MetadataEditorSection extends StatelessWidget {
               selected: selectedOptionalEquipment,
               options:
                   ProtocolMetadataVocabulary.optionalEquipmentOptionsWithCurrent(
-                protocol.optionalEquipment,
-              ),
+                    protocol.optionalEquipment,
+                  ),
               onChanged: onOptionalEquipmentChanged,
               compact: true,
             ),
@@ -662,9 +653,10 @@ class _MetadataEditorSection extends StatelessWidget {
             _MetadataIntDropdown(
               label: 'adaptability',
               value: adaptability,
-              options: ProtocolMetadataVocabulary.adaptabilityOptionsWithCurrent(
-                adaptability,
-              ),
+              options:
+                  ProtocolMetadataVocabulary.adaptabilityOptionsWithCurrent(
+                    adaptability,
+                  ),
               onChanged: onAdaptabilityChanged,
               compact: true,
             ),
@@ -777,10 +769,7 @@ class _MetadataQuickReferenceSection extends StatelessWidget {
 }
 
 class _ReferenceGroup extends StatelessWidget {
-  const _ReferenceGroup({
-    required this.title,
-    required this.rows,
-  });
+  const _ReferenceGroup({required this.title, required this.rows});
 
   final String title;
   final List<_ReferenceRow> rows;
@@ -802,10 +791,7 @@ class _ReferenceGroup extends StatelessWidget {
 }
 
 class _ReferenceRow extends StatelessWidget {
-  const _ReferenceRow({
-    this.range,
-    required this.label,
-  });
+  const _ReferenceRow({this.range, required this.label});
 
   final String? range;
   final String label;
@@ -818,23 +804,15 @@ class _ReferenceRow extends StatelessWidget {
 
     return Row(
       children: [
-        SizedBox(
-          width: 52,
-          child: Text(range!, style: CohortTextStyles.muted),
-        ),
-        Expanded(
-          child: Text(label, style: CohortTextStyles.small),
-        ),
+        SizedBox(width: 52, child: Text(range!, style: CohortTextStyles.muted)),
+        Expanded(child: Text(label, style: CohortTextStyles.small)),
       ],
     );
   }
 }
 
 class _ContextFieldData {
-  const _ContextFieldData({
-    required this.label,
-    required this.value,
-  });
+  const _ContextFieldData({required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -922,9 +900,7 @@ class _MetadataCheckbox extends StatelessWidget {
     return InkWell(
       onTap: () => onChanged(!value),
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          vertical: compact ? 0 : CohortSpacing.xs,
-        ),
+        padding: EdgeInsets.symmetric(vertical: compact ? 0 : CohortSpacing.xs),
         child: Row(
           children: [
             SizedBox(
@@ -935,8 +911,9 @@ class _MetadataCheckbox extends StatelessWidget {
                 materialTapTargetSize: compact
                     ? MaterialTapTargetSize.shrinkWrap
                     : MaterialTapTargetSize.padded,
-                visualDensity:
-                    compact ? VisualDensity.compact : VisualDensity.standard,
+                visualDensity: compact
+                    ? VisualDensity.compact
+                    : VisualDensity.standard,
                 activeColor: CohortColors.olive,
                 checkColor: CohortColors.textPrimary,
                 side: const BorderSide(color: CohortColors.borderStrong),
@@ -1167,9 +1144,7 @@ class _MetadataField extends StatelessWidget {
             controller: controller,
             keyboardType: keyboardType,
             style: compact ? CohortTextStyles.small : CohortTextStyles.body,
-            decoration: const InputDecoration(
-              isDense: true,
-            ),
+            decoration: const InputDecoration(isDense: true),
           ),
         ],
       ),

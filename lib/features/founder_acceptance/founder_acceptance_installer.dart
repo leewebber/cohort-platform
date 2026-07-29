@@ -25,9 +25,9 @@ class FounderAcceptanceInstaller {
   FounderAcceptanceInstaller({
     ProtocolBuilderService? protocolBuilderService,
     ProgrammeVersionStore? versionStore,
-  })  : _protocolBuilderService =
-            protocolBuilderService ?? ProtocolBuilderService(),
-        _versionStore = versionStore ?? const ProgrammeVersionSupabaseStore();
+  }) : _protocolBuilderService =
+           protocolBuilderService ?? ProtocolBuilderService(),
+       _versionStore = versionStore ?? const ProgrammeVersionSupabaseStore();
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeVersionStore _versionStore;
@@ -83,7 +83,9 @@ class FounderAcceptanceInstaller {
 
   Future<bool> _protocolExists() async {
     try {
-      await _protocolBuilderService.loadProtocol(FounderAcceptanceContent.protocolId);
+      await _protocolBuilderService.loadProtocol(
+        FounderAcceptanceContent.protocolId,
+      );
       return true;
     } on ProtocolBuilderException {
       return false;
@@ -158,18 +160,13 @@ class FounderAcceptanceInstaller {
 
   Future<void> _tryUpsertLineageRecord() async {
     try {
-      await SupabaseService.client.from('programme_lineages').upsert(
-        {
-          'id': FounderAcceptanceDevFixtures.lineageId,
-          'code': FounderAcceptanceContent.programmeLineageCode,
-          'created_by': _authoringCoachId,
-        },
-        onConflict: 'code',
-      );
+      await SupabaseService.client.from('programme_lineages').upsert({
+        'id': FounderAcceptanceDevFixtures.lineageId,
+        'code': FounderAcceptanceContent.programmeLineageCode,
+        'created_by': _authoringCoachId,
+      }, onConflict: 'code');
     } catch (error) {
-      debugPrint(
-        '[FounderAcceptanceInstall] lineage upsert skipped: $error',
-      );
+      debugPrint('[FounderAcceptanceInstall] lineage upsert skipped: $error');
     }
   }
 
@@ -189,14 +186,14 @@ class FounderAcceptanceInstaller {
         createdBy: _authoringCoachId,
       );
 
-      await SupabaseService.client.from('programme_versions').upsert(
-        version.toInsertMap(),
-        onConflict: 'lineage_id,version_number',
-      );
+      await SupabaseService.client
+          .from('programme_versions')
+          .upsert(
+            version.toInsertMap(),
+            onConflict: 'lineage_id,version_number',
+          );
     } catch (error) {
-      debugPrint(
-        '[FounderAcceptanceInstall] version upsert skipped: $error',
-      );
+      debugPrint('[FounderAcceptanceInstall] version upsert skipped: $error');
     }
   }
 
@@ -250,8 +247,8 @@ class FounderAcceptanceInstaller {
     final sessionAction = sessionCreated
         ? 'created'
         : sessionUpdated
-            ? 'updated'
-            : 'verified';
+        ? 'updated'
+        : 'verified';
     return 'Programme $programmeAction · Session $sessionAction · '
         '$blockCount blocks installed · Ready for assignment';
   }

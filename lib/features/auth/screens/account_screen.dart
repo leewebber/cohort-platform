@@ -8,10 +8,7 @@ import '../controllers/auth_controller.dart';
 import '../services/current_user_session.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({
-    super.key,
-    required this.controller,
-  });
+  const AccountScreen({super.key, required this.controller});
 
   final AuthController controller;
 

@@ -47,10 +47,10 @@ class ProgrammeCatalogueCard extends StatelessWidget {
                 Text(
                   tab.eyebrowLabel,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: _eyebrowColor(),
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: _eyebrowColor(),
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const Spacer(),
                 PopupMenuButton<ProgrammeCatalogueAction>(
@@ -64,23 +64,20 @@ class ProgrammeCatalogueCard extends StatelessWidget {
             const SizedBox(height: CohortSpacing.sm),
             Text(
               entry.name,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (metadata.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.xs),
-              Text(
-                metadata,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+              Text(metadata, style: Theme.of(context).textTheme.bodySmall),
             ],
             const SizedBox(height: CohortSpacing.xs),
             Text(
               entry.lineageCode,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: CohortColors.textMuted,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: CohortColors.textMuted),
             ),
             const SizedBox(height: CohortSpacing.xs),
             Text(
@@ -88,18 +85,18 @@ class ProgrammeCatalogueCard extends StatelessWidget {
                 entry.ownerDisplayLabel ?? entry.libraryScope.displayLabel,
                 if (dateLabel != null) dateLabel,
               ].join(' · '),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: CohortColors.textMuted,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: CohortColors.textMuted),
             ),
             if (entry.hasBlockingValidationErrors &&
                 tab == ProgrammeCatalogueTab.drafts) ...[
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 'Needs validation',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: CohortColors.warning,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: CohortColors.warning),
               ),
             ],
           ],
@@ -111,61 +108,61 @@ class ProgrammeCatalogueCard extends StatelessWidget {
   List<PopupMenuEntry<ProgrammeCatalogueAction>> _menuItems() {
     return switch (tab) {
       ProgrammeCatalogueTab.drafts => const [
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.validate,
-            child: Text('Validate'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.publish,
-            child: Text('Publish'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.duplicateProgramme,
-            child: Text('Duplicate Programme'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.deleteDraft,
-            child: Text('Delete Draft'),
-          ),
-        ],
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.validate,
+          child: Text('Validate'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.publish,
+          child: Text('Publish'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.duplicateProgramme,
+          child: Text('Duplicate Programme'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.deleteDraft,
+          child: Text('Delete Draft'),
+        ),
+      ],
       ProgrammeCatalogueTab.published => const [
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.preview,
-            child: Text('Preview'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.cloneVersion,
-            child: Text('Clone to New Version'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.duplicateProgramme,
-            child: Text('Duplicate Programme'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.archive,
-            child: Text('Archive'),
-          ),
-        ],
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.preview,
+          child: Text('Preview'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.cloneVersion,
+          child: Text('Clone to New Version'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.duplicateProgramme,
+          child: Text('Duplicate Programme'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.archive,
+          child: Text('Archive'),
+        ),
+      ],
       ProgrammeCatalogueTab.cohortGlobal => const [
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.preview,
-            child: Text('Preview'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.duplicateProgramme,
-            child: Text('Duplicate Programme'),
-          ),
-        ],
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.preview,
+          child: Text('Preview'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.duplicateProgramme,
+          child: Text('Duplicate Programme'),
+        ),
+      ],
       ProgrammeCatalogueTab.archived => const [
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.preview,
-            child: Text('Preview'),
-          ),
-          PopupMenuItem(
-            value: ProgrammeCatalogueAction.cloneVersion,
-            child: Text('Clone'),
-          ),
-        ],
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.preview,
+          child: Text('Preview'),
+        ),
+        PopupMenuItem(
+          value: ProgrammeCatalogueAction.cloneVersion,
+          child: Text('Clone'),
+        ),
+      ],
     };
   }
 
@@ -185,8 +182,8 @@ class ProgrammeCatalogueCard extends StatelessWidget {
     final label = tab == ProgrammeCatalogueTab.published
         ? 'Published'
         : tab == ProgrammeCatalogueTab.archived
-            ? 'Archived'
-            : 'Updated';
+        ? 'Archived'
+        : 'Updated';
 
     return '$label ${_formatDate(stamp)}';
   }

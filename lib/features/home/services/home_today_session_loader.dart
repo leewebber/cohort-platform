@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../application/athlete_workout/athlete_today_workout_resolution.dart';
+import '../../../application/athlete_workout/athlete_today_workout_resolution_service.dart';
+import '../../../application/athlete_workout/home_workout_execution_context.dart';
 import '../../../data/repositories/athlete_state_repository.dart';
 import '../../../data/repositories/programme_repository.dart';
 import '../../../data/repositories/programme_slot_outcome_store.dart';
@@ -16,13 +19,12 @@ import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
 import '../../programme/services/athlete_state_sync_service.dart';
 import '../../programme/services/programme_progress_summary_service.dart';
-import '../../programme/services/today_session_service.dart';
 import '../models/home_today_session_state.dart';
 
 /// Loads the athlete Home Today section from programme resolution first.
 class HomeTodaySessionLoader {
   const HomeTodaySessionLoader({
-    required TodaySessionService todaySessionService,
+    required AthleteTodayWorkoutResolutionService todayWorkoutResolutionService,
     required AthleteStateSyncService athleteStateSyncService,
     required AthleteStateRepository athleteStateRepository,
     required ProtocolRepository protocolRepository,
@@ -31,7 +33,7 @@ class HomeTodaySessionLoader {
     ProgrammeVersionStore? programmeVersionStore,
     ProgrammeSlotOutcomeStore? programmeSlotOutcomeStore,
     ProgrammeProgressSummaryService? progressSummaryService,
-  }) : _todaySessionService = todaySessionService,
+  }) : _todayWorkoutResolutionService = todayWorkoutResolutionService,
        _athleteStateSyncService = athleteStateSyncService,
        _athleteStateRepository = athleteStateRepository,
        _protocolRepository = protocolRepository,
@@ -45,7 +47,7 @@ class HomeTodaySessionLoader {
        _progressSummaryService =
            progressSummaryService ?? const ProgrammeProgressSummaryService();
 
-  final TodaySessionService _todaySessionService;
+  final AthleteTodayWorkoutResolutionService _todayWorkoutResolutionService;
   final AthleteStateSyncService _athleteStateSyncService;
   final AthleteStateRepository _athleteStateRepository;
   final ProtocolRepository _protocolRepository;
@@ -57,11 +59,12 @@ class HomeTodaySessionLoader {
 
   Future<HomeTodaySessionState> load(String athleteId) async {
     try {
-      final resolution = await _todaySessionService.resolveForAthlete(
-        athleteId,
+      final bridge = await _todayWorkoutResolutionService.resolve(
+        athleteId: athleteId,
       );
+      final resolution = bridge.programmeSession;
       await _syncProjectionQuietly(athleteId, resolution);
-      return _mapResolution(athleteId, resolution);
+      return _mapResolution(athleteId, resolution, bridge: bridge);
     } on ProgrammeScheduleException catch (error) {
       debugPrint('[HomeTodaySession] ProgrammeScheduleException: $error');
       return HomeTodaySessionError(error: error, message: error.message);
@@ -96,13 +99,14 @@ class HomeTodaySessionLoader {
 
   Future<HomeTodaySessionState> _mapResolution(
     String athleteId,
-    ResolvedTodaySession resolution,
-  ) async {
+    ResolvedTodaySession resolution, {
+    AthleteTodayWorkoutResolution? bridge,
+  }) async {
     switch (resolution.kind) {
       case ResolvedTodaySessionKind.noActiveProgramme:
         return _loadManualFallback(athleteId);
       case ResolvedTodaySessionKind.executable:
-        return _loadProgrammeExecutable(athleteId, resolution);
+        return _loadProgrammeExecutable(athleteId, resolution, bridge: bridge);
       case ResolvedTodaySessionKind.restDay:
         return HomeTodaySessionRestDay(
           resolution: resolution,
@@ -128,8 +132,9 @@ class HomeTodaySessionLoader {
 
   Future<HomeTodaySessionState> _loadProgrammeExecutable(
     String athleteId,
-    ResolvedTodaySession resolution,
-  ) async {
+    ResolvedTodaySession resolution, {
+    AthleteTodayWorkoutResolution? bridge,
+  }) async {
     final protocolId = resolution.effectiveProtocolId?.trim();
     if (protocolId == null || protocolId.isEmpty) {
       return HomeTodaySessionError(
@@ -164,12 +169,24 @@ class HomeTodaySessionLoader {
           protocolId: protocolId,
         );
 
+    HomeWorkoutExecutionContext? workoutExecution;
+    final workout = bridge?.workout;
+    final repository = bridge?.occurrenceRepository;
+    if (workout != null && repository != null) {
+      workoutExecution = HomeWorkoutExecutionContext(
+        occurrenceDate: workout.date,
+        occurrenceRepository: repository,
+        workout: workout,
+      );
+    }
+
     return HomeTodaySessionProgrammeExecutable(
       resolution: resolution,
       protocol: protocol,
       executionContext: executionContext,
       latestTrainingSession: latestTrainingSession,
       progressSummary: await _loadProgressSummary(resolution),
+      workoutExecution: workoutExecution,
     );
   }
 

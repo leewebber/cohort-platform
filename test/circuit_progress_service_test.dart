@@ -194,22 +194,25 @@ void main() {
       expect(result.progressType, CircuitProgressType.mixedResult);
     });
 
-    test('returns insufficient data for incompatible time-capped comparison', () {
-      final result = service.evaluate(
-        previousPerformance: _previous(
-          scoreType: CircuitScoreType.elapsedTime,
-          elapsedDuration: const Duration(minutes: 18, seconds: 42),
-          timeCapped: true,
-        ),
-        todayPerformance: const CircuitPerformanceEntry(
-          localId: 'today',
-          elapsedDuration: Duration(minutes: 17, seconds: 30),
-        ),
-        plan: _forTimePlan(),
-      );
+    test(
+      'returns insufficient data for incompatible time-capped comparison',
+      () {
+        final result = service.evaluate(
+          previousPerformance: _previous(
+            scoreType: CircuitScoreType.elapsedTime,
+            elapsedDuration: const Duration(minutes: 18, seconds: 42),
+            timeCapped: true,
+          ),
+          todayPerformance: const CircuitPerformanceEntry(
+            localId: 'today',
+            elapsedDuration: Duration(minutes: 17, seconds: 30),
+          ),
+          plan: _forTimePlan(),
+        );
 
-      expect(result.progressType, CircuitProgressType.insufficientData);
-    });
+        expect(result.progressType, CircuitProgressType.insufficientData);
+      },
+    );
 
     test('returns insufficient data for incompatible score types', () {
       final result = service.evaluate(

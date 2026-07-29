@@ -75,7 +75,8 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
               );
             }
 
-            final history = snapshot.data ??
+            final history =
+                snapshot.data ??
                 ExerciseHistory(
                   exerciseId: widget.exercise.exerciseId,
                   sessions: const [],
@@ -91,15 +92,9 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
                     child: const Text('← Back'),
                   ),
                   const SizedBox(height: CohortSpacing.md),
-                  Text(
-                    'EXERCISE HISTORY',
-                    style: CohortTextStyles.eyebrow,
-                  ),
+                  Text('EXERCISE HISTORY', style: CohortTextStyles.eyebrow),
                   const SizedBox(height: CohortSpacing.sm),
-                  Text(
-                    widget.exercise.name,
-                    style: CohortTextStyles.h1,
-                  ),
+                  Text(widget.exercise.name, style: CohortTextStyles.h1),
                   if (widget.exercise.equipment?.trim().isNotEmpty == true) ...[
                     const SizedBox(height: CohortSpacing.xs),
                     Text(
@@ -111,7 +106,7 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
                   Text(
                     history.hasHistory
                         ? '${history.sessionCount} session'
-                            '${history.sessionCount == 1 ? '' : 's'} recorded'
+                              '${history.sessionCount == 1 ? '' : 's'} recorded'
                         : 'No sessions recorded yet',
                     style: CohortTextStyles.body,
                   ),
@@ -122,7 +117,11 @@ class _ExerciseHistoryScreenState extends State<ExerciseHistoryScreen> {
                       style: CohortTextStyles.body,
                     )
                   else
-                    for (var index = 0; index < history.sessions.length; index++) ...[
+                    for (
+                      var index = 0;
+                      index < history.sessions.length;
+                      index++
+                    ) ...[
                       if (index > 0) const SizedBox(height: CohortSpacing.md),
                       ExerciseHistorySessionCard(
                         session: history.sessions[index],

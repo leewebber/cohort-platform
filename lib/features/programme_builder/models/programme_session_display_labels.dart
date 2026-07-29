@@ -5,9 +5,7 @@
 class ProgrammeSessionDisplayLabels {
   const ProgrammeSessionDisplayLabels._();
 
-  static String canonicalSessionTitle({
-    required String protocolName,
-  }) {
+  static String canonicalSessionTitle({required String protocolName}) {
     return protocolName;
   }
 
@@ -49,10 +47,7 @@ class ProgrammeSessionDisplayLabels {
     return parts.join(' • ');
   }
 
-  static String dayLabel({
-    String? dayTitle,
-    required String dayKey,
-  }) {
+  static String dayLabel({String? dayTitle, required String dayKey}) {
     final title = dayTitle?.trim();
     if (title != null && title.isNotEmpty) {
       return title;

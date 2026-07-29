@@ -12,7 +12,7 @@ import '../../exercises/widgets/exercise_picker_field.dart';
 import 'session_builder_form_widgets.dart';
 
 Future<({Exercise exercise, StrengthExercisePrescription prescription})?>
-    showStrengthExercisePrescriptionSheet({
+showStrengthExercisePrescriptionSheet({
   required BuildContext context,
   ExerciseCatalogueLoader? catalogueLoader,
   Exercise? initialExercise,
@@ -20,7 +20,9 @@ Future<({Exercise exercise, StrengthExercisePrescription prescription})?>
   StrengthExercisePrescription? initialPrescription,
   String title = 'Exercise prescription',
 }) async {
-  return showModalBottomSheet<({Exercise exercise, StrengthExercisePrescription prescription})>(
+  return showModalBottomSheet<
+    ({Exercise exercise, StrengthExercisePrescription prescription})
+  >(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
@@ -141,54 +143,56 @@ class _StrengthExercisePrescriptionSheetState
   StrengthRepPrescription _buildReps() {
     return switch (_repType) {
       StrengthRepType.exact => StrengthRepPrescription.exact(
-          int.tryParse(_exactRepsController.text.trim()) ?? 0,
-        ),
+        int.tryParse(_exactRepsController.text.trim()) ?? 0,
+      ),
       StrengthRepType.range => StrengthRepPrescription.range(
-          min: int.tryParse(_minRepsController.text.trim()) ?? 0,
-          max: int.tryParse(_maxRepsController.text.trim()) ?? 0,
-        ),
+        min: int.tryParse(_minRepsController.text.trim()) ?? 0,
+        max: int.tryParse(_maxRepsController.text.trim()) ?? 0,
+      ),
       StrengthRepType.duration ||
       StrengthRepType.distance ||
       StrengthRepType.maxEffort ||
-      StrengthRepType.freeText =>
-        StrengthRepPrescription(
-          type: _repType,
-          text: _repTextController.text.trim(),
-        ),
+      StrengthRepType.freeText => StrengthRepPrescription(
+        type: _repType,
+        text: _repTextController.text.trim(),
+      ),
     };
   }
 
   StrengthLoadPrescription? _buildLoad() {
     return switch (_loadType) {
-      StrengthLoadType.bodyweight =>
-        const StrengthLoadPrescription(type: StrengthLoadType.bodyweight),
+      StrengthLoadType.bodyweight => const StrengthLoadPrescription(
+        type: StrengthLoadType.bodyweight,
+      ),
       StrengthLoadType.fixedKg => StrengthLoadPrescription(
-          type: StrengthLoadType.fixedKg,
-          kg: double.tryParse(_kgController.text.trim()),
-        ),
+        type: StrengthLoadType.fixedKg,
+        kg: double.tryParse(_kgController.text.trim()),
+      ),
       StrengthLoadType.percent1rm => StrengthLoadPrescription(
-          type: StrengthLoadType.percent1rm,
-          percent1rm: double.tryParse(_percentController.text.trim()),
-        ),
+        type: StrengthLoadType.percent1rm,
+        percent1rm: double.tryParse(_percentController.text.trim()),
+      ),
       StrengthLoadType.rpe => StrengthLoadPrescription(
-          type: StrengthLoadType.rpe,
-          rpe: int.tryParse(_rpeController.text.trim()),
-        ),
+        type: StrengthLoadType.rpe,
+        rpe: int.tryParse(_rpeController.text.trim()),
+      ),
       StrengthLoadType.rir => StrengthLoadPrescription(
-          type: StrengthLoadType.rir,
-          rir: int.tryParse(_rirController.text.trim()),
-        ),
-      StrengthLoadType.athleteSelected =>
-        const StrengthLoadPrescription(type: StrengthLoadType.athleteSelected),
+        type: StrengthLoadType.rir,
+        rir: int.tryParse(_rirController.text.trim()),
+      ),
+      StrengthLoadType.athleteSelected => const StrengthLoadPrescription(
+        type: StrengthLoadType.athleteSelected,
+      ),
       StrengthLoadType.freeText => StrengthLoadPrescription(
-          type: StrengthLoadType.freeText,
-          text: _loadTextController.text.trim(),
-        ),
+        type: StrengthLoadType.freeText,
+        text: _loadTextController.text.trim(),
+      ),
     };
   }
 
   void _save() {
-    final selected = _selectedExercise ?? _pickerKey.currentState?.selectedExercise;
+    final selected =
+        _selectedExercise ?? _pickerKey.currentState?.selectedExercise;
     if (selected == null) {
       _pickerKey.currentState?.showSelectionRequiredError();
       setState(() => _errorMessage = 'Select an exercise from the library.');
@@ -210,10 +214,7 @@ class _StrengthExercisePrescriptionSheetState
       return;
     }
 
-    Navigator.of(context).pop((
-      exercise: selected,
-      prescription: prescription,
-    ));
+    Navigator.of(context).pop((exercise: selected, prescription: prescription));
   }
 
   @override
@@ -330,13 +331,17 @@ class _StrengthExercisePrescriptionSheetState
               SessionBuilderTextField(
                 label: 'Load (kg)',
                 controller: _kgController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
               ),
             if (_loadType == StrengthLoadType.percent1rm)
               SessionBuilderTextField(
                 label: 'Percentage of 1RM',
                 controller: _percentController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
               ),
             if (_loadType == StrengthLoadType.rpe)
               SessionBuilderTextField(
@@ -372,7 +377,9 @@ class _StrengthExercisePrescriptionSheetState
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 _errorMessage!,
-                style: CohortTextStyles.small.copyWith(color: CohortColors.danger),
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.danger,
+                ),
               ),
             ],
             const SizedBox(height: CohortSpacing.lg),
@@ -466,7 +473,10 @@ class StrengthExercisePrescriptionCard extends StatelessWidget {
             runSpacing: CohortSpacing.xs,
             children: [
               TextButton(onPressed: onEdit, child: const Text('Edit')),
-              TextButton(onPressed: onDuplicate, child: const Text('Duplicate')),
+              TextButton(
+                onPressed: onDuplicate,
+                child: const Text('Duplicate'),
+              ),
               TextButton(onPressed: onRemove, child: const Text('Remove')),
               IconButton(
                 onPressed: canMoveUp ? onMoveUp : null,

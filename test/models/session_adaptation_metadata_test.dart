@@ -33,10 +33,10 @@ void main() {
       );
 
       final map = draft.toProtocolMap();
-      expect(
-        map[SessionAdaptationMetadataKeys.secondarySessionIntents],
-        ['prehabilitation', 'mobility'],
-      );
+      expect(map[SessionAdaptationMetadataKeys.secondarySessionIntents], [
+        'prehabilitation',
+        'mobility',
+      ]);
     });
 
     test('defaults secondary intents to empty immutable list', () {
@@ -47,7 +47,10 @@ void main() {
       );
 
       expect(draft.secondarySessionIntents, isEmpty);
-      expect(draft.toProtocolMap(), isNot(contains(SessionAdaptationMetadataKeys.secondarySessionIntents)));
+      expect(
+        draft.toProtocolMap(),
+        isNot(contains(SessionAdaptationMetadataKeys.secondarySessionIntents)),
+      );
     });
 
     test('canonicalizes duplicate secondary intents on construction', () {
@@ -118,7 +121,9 @@ void main() {
       });
 
       expect(protocol.primarySessionIntent, isNull);
-      expect(protocol.secondarySessionIntents, [SessionIntent.lowerBodyStrength]);
+      expect(protocol.secondarySessionIntents, [
+        SessionIntent.lowerBodyStrength,
+      ]);
     });
 
     test('mergeAdaptationFromRow round-trips through toProtocolMap', () {
@@ -131,13 +136,14 @@ void main() {
 
       final row = {
         SessionAdaptationMetadataKeys.primarySessionIntent: 'threshold',
-        SessionAdaptationMetadataKeys.secondarySessionIntents: [
-          'aerobic_base',
-        ],
+        SessionAdaptationMetadataKeys.secondarySessionIntents: ['aerobic_base'],
         SessionAdaptationMetadataKeys.minimumViableDurationMin: 30,
       };
 
-      final merged = ProtocolDraft.mergeAdaptationFromRow(draft: base, row: row);
+      final merged = ProtocolDraft.mergeAdaptationFromRow(
+        draft: base,
+        row: row,
+      );
       expect(merged.primarySessionIntent, SessionIntent.threshold);
       expect(merged.secondarySessionIntents, [SessionIntent.aerobicBase]);
       expect(merged.minimumViableDurationMin, 30);
@@ -201,28 +207,34 @@ void main() {
 
       SessionAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
 
-      expect(map.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent), isFalse);
-      expect(map.containsKey(SessionAdaptationMetadataKeys.minimumViableDurationMin), isFalse);
-    });
-
-    test('toProtocolMap includes adaptation keys for upsert after migration', () {
-      final draft = ProtocolDraft(
-        protocolId: 'sess-1',
-        name: 'Session',
-        steps: const [],
-        primarySessionIntent: SessionIntent.tempo,
-        minimumViableDurationMin: 25,
-      );
-
-      final map = draft.toProtocolMap();
       expect(
-        map[SessionAdaptationMetadataKeys.primarySessionIntent],
-        'tempo',
+        map.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent),
+        isFalse,
       );
       expect(
-        map[SessionAdaptationMetadataKeys.minimumViableDurationMin],
-        25,
+        map.containsKey(SessionAdaptationMetadataKeys.minimumViableDurationMin),
+        isFalse,
       );
     });
+
+    test(
+      'toProtocolMap includes adaptation keys for upsert after migration',
+      () {
+        final draft = ProtocolDraft(
+          protocolId: 'sess-1',
+          name: 'Session',
+          steps: const [],
+          primarySessionIntent: SessionIntent.tempo,
+          minimumViableDurationMin: 25,
+        );
+
+        final map = draft.toProtocolMap();
+        expect(
+          map[SessionAdaptationMetadataKeys.primarySessionIntent],
+          'tempo',
+        );
+        expect(map[SessionAdaptationMetadataKeys.minimumViableDurationMin], 25);
+      },
+    );
   });
 }

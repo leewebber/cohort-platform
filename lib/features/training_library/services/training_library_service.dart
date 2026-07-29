@@ -6,16 +6,17 @@ import '../models/training_library_item_summary.dart';
 
 /// Loads Training Library catalogue data without widget-level Supabase access.
 class TrainingLibraryService {
-  TrainingLibraryService({
-    ProtocolRepository? protocolRepository,
-  }) : _protocolRepository = protocolRepository ?? ProtocolRepository();
+  TrainingLibraryService({ProtocolRepository? protocolRepository})
+    : _protocolRepository = protocolRepository ?? ProtocolRepository();
 
   final ProtocolRepository _protocolRepository;
 
   Future<List<TrainingLibraryItemSummary>> loadCohortProtocolSummaries({
     int limit = 100,
   }) async {
-    final protocols = await _protocolRepository.listCohortProtocols(limit: limit);
+    final protocols = await _protocolRepository.listCohortProtocols(
+      limit: limit,
+    );
     TrainingLibraryDiagnostics.log('cohortLoaded count=${protocols.length}');
     return protocols.map(_cohortSummaryFromProtocol).toList();
   }

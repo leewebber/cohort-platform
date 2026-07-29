@@ -93,7 +93,8 @@ class SupabaseCoachAthleteRelationshipRepository
   }
 }
 
-class SupabaseCoachAthleteInviteRepository implements CoachAthleteInviteRepository {
+class SupabaseCoachAthleteInviteRepository
+    implements CoachAthleteInviteRepository {
   const SupabaseCoachAthleteInviteRepository();
 
   static const _tableName = 'coach_athlete_invites';

@@ -10,7 +10,8 @@ class ProgrammeVersionComparisonSupabaseStore
     extends ProgrammeVersionComparisonStore {
   const ProgrammeVersionComparisonSupabaseStore({
     ProgrammeVersionImpactStore? impactStore,
-  }) : _impactStore = impactStore ?? const ProgrammeVersionImpactSupabaseStore();
+  }) : _impactStore =
+           impactStore ?? const ProgrammeVersionImpactSupabaseStore();
 
   final ProgrammeVersionImpactStore _impactStore;
 
@@ -61,10 +62,11 @@ class ProgrammeVersionComparisonSupabaseStore
         ? <Map<String, dynamic>>[]
         : List<Map<String, dynamic>>.from(
             await SupabaseService.client
-                .from(_daysTable)
-                .select('id, week_id, day_key, day_order, title')
-                .inFilter('week_id', weekIds)
-                .order('day_order') as List,
+                    .from(_daysTable)
+                    .select('id, week_id, day_key, day_order, title')
+                    .inFilter('week_id', weekIds)
+                    .order('day_order')
+                as List,
           );
 
     final dayRefs = <ProgrammeDayReference>[];
@@ -94,12 +96,13 @@ class ProgrammeVersionComparisonSupabaseStore
         ? <Map<String, dynamic>>[]
         : List<Map<String, dynamic>>.from(
             await SupabaseService.client
-                .from(_slotsTable)
-                .select(
-                  'id, day_id, session_order, display_title, protocol_id, time_of_day, is_optional, completion_expectation, coach_note, athlete_note',
-                )
-                .inFilter('day_id', dayIds)
-                .order('session_order') as List,
+                    .from(_slotsTable)
+                    .select(
+                      'id, day_id, session_order, display_title, protocol_id, time_of_day, is_optional, completion_expectation, coach_note, athlete_note',
+                    )
+                    .inFilter('day_id', dayIds)
+                    .order('session_order')
+                as List,
           );
 
     final dayById = {for (final row in dayRows) row['id']?.toString(): row};
@@ -132,13 +135,13 @@ class ProgrammeVersionComparisonSupabaseStore
           sessionLineageId: metadata?.sessionLineageId ?? 'unknown-lineage',
           sessionRevisionNumber: metadata?.revisionNumber ?? 1,
           sessionName: metadata?.sessionName ?? 'Session',
-          sessionLifecycleStatus: metadata?.lifecycleStatus ??
+          sessionLifecycleStatus:
+              metadata?.lifecycleStatus ??
               SessionRevisionLifecycleStatus.published,
           slotLabel: slotRow['display_title']?.toString(),
           timeOfDay: slotRow['time_of_day']?.toString(),
           isOptional: slotRow['is_optional'] == true,
-          completionExpectation:
-              slotRow['completion_expectation']?.toString(),
+          completionExpectation: slotRow['completion_expectation']?.toString(),
           coachNote: slotRow['coach_note']?.toString(),
           athleteNote: slotRow['athlete_note']?.toString(),
         ),

@@ -36,10 +36,7 @@ class PersonalTrainingOperationResult<T> {
     required PersonalTrainingOperationStatus status,
     String? message,
   }) {
-    return PersonalTrainingOperationResult._(
-      status: status,
-      message: message,
-    );
+    return PersonalTrainingOperationResult._(status: status, message: message);
   }
 }
 

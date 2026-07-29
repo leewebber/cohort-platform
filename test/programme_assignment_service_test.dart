@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/athlete_workout/athlete_today_workout_resolution_service.dart';
 import 'package:cohort_platform/data/repositories/athlete_state_repository.dart';
 import 'package:cohort_platform/data/repositories/programme_repository.dart';
 import 'package:cohort_platform/data/repositories/protocol_repository.dart';
@@ -71,8 +72,7 @@ class _StubTrainingSessionRepository extends TrainingSessionRepository {
   Future<TrainingSession?> getLatestSessionForAthleteAndProtocol({
     required String athleteId,
     required String protocolId,
-  }) async =>
-      null;
+  }) async => null;
 }
 
 void main() {
@@ -98,17 +98,16 @@ void main() {
     ProgrammeTemplateTree? tree,
   }) async {
     tables.lineages.add(
-      const ProgrammeLineage(
-        id: 'lineage-1',
-        code: 'COHORT-FOUNDATION-TEST',
-      ),
+      const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
     );
 
     await versionStore.saveTemplateTree(
       version: publishedVersion(id: versionId),
-      tree: tree ?? ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-        programmeVersionId: versionId,
-      ),
+      tree:
+          tree ??
+          ProgrammeScheduleTestFixtures.foundationWeekOneTree(
+            programmeVersionId: versionId,
+          ),
     );
   }
 
@@ -180,7 +179,10 @@ void main() {
 
       expect(result.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(result.assignment?.programmeVersionId, 'version-1');
-      expect(result.resolvedTodaySession?.kind, ResolvedTodaySessionKind.executable);
+      expect(
+        result.resolvedTodaySession?.kind,
+        ResolvedTodaySessionKind.executable,
+      );
       expect(result.resolvedTodaySession?.effectiveProtocolId, 'BW-001');
       expect(result.athleteStateSynced, isTrue);
       expect(tables.assignments, hasLength(1));
@@ -223,7 +225,10 @@ void main() {
 
       expect(result.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(result.assignment?.currentDayKey, 'day_1');
-      expect(result.resolvedTodaySession?.kind, ResolvedTodaySessionKind.restDay);
+      expect(
+        result.resolvedTodaySession?.kind,
+        ResolvedTodaySessionKind.restDay,
+      );
     });
 
     test('initial cursor finds first valid required slot', () async {
@@ -239,7 +244,10 @@ void main() {
       );
 
       expect(result.assignment?.currentSessionOrder, 1);
-      expect(result.resolvedTodaySession?.slotId, ProgrammeScheduleTestFixtures.slot1Id);
+      expect(
+        result.resolvedTodaySession?.slotId,
+        ProgrammeScheduleTestFixtures.slot1Id,
+      );
     });
 
     test('initial cursor does not assume week 1 day_1 slot 1', () async {
@@ -270,7 +278,9 @@ void main() {
             version: publishedVersion(),
             weeks: [weekTwo],
           ),
-          weekNodes: [ProgrammeTemplateWeekNode(week: weekTwo, days: [day])],
+          weekNodes: [
+            ProgrammeTemplateWeekNode(week: weekTwo, days: [day]),
+          ],
         ),
       );
 
@@ -296,40 +306,54 @@ void main() {
         timezone: 'UTC',
       );
 
-      expect(result.status, ProgrammeAssignmentOperationStatus.alreadyActiveConflict);
+      expect(
+        result.status,
+        ProgrammeAssignmentOperationStatus.alreadyActiveConflict,
+      );
       expect(tables.assignments, hasLength(1));
     });
 
-    test('explicit replacement marks old reassigned and creates new active', () async {
-      await seedFlatPublishedProgramme();
-      tables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
+    test(
+      'explicit replacement marks old reassigned and creates new active',
+      () async {
+        await seedFlatPublishedProgramme();
+        tables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
 
-      final newVersionId = 'version-2';
-      tables.weeks.clear();
-      tables.days.clear();
-      tables.slots.clear();
-      await versionStore.saveTemplateTree(
-        version: publishedVersion(id: newVersionId).copyWith(versionNumber: 2),
-        tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-          programmeVersionId: newVersionId,
-        ),
-      );
+        final newVersionId = 'version-2';
+        tables.weeks.clear();
+        tables.days.clear();
+        tables.slots.clear();
+        await versionStore.saveTemplateTree(
+          version: publishedVersion(
+            id: newVersionId,
+          ).copyWith(versionNumber: 2),
+          tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
+            programmeVersionId: newVersionId,
+          ),
+        );
 
-      final result = await service.cancelOrReplaceActiveAssignment(
-        athleteId: athleteId,
-        newProgrammeVersionId: newVersionId,
-        startedAt: DateTime.utc(2026, 7, 16),
-        timezone: 'UTC',
-      );
+        final result = await service.cancelOrReplaceActiveAssignment(
+          athleteId: athleteId,
+          newProgrammeVersionId: newVersionId,
+          startedAt: DateTime.utc(2026, 7, 16),
+          timezone: 'UTC',
+        );
 
-      expect(result.status, ProgrammeAssignmentOperationStatus.replaced);
-      expect(result.replacedAssignmentId, 'assignment-1');
-      expect(result.assignment?.programmeVersionId, newVersionId);
-      expect(tables.assignments.first.status, ProgrammeAssignmentStatus.reassigned);
-      expect(tables.assignments.first.supersededByAssignmentId, result.assignment?.id);
-      expect(tables.assignments.last.isActive, isTrue);
-      expect(tables.outcomes, isEmpty);
-    });
+        expect(result.status, ProgrammeAssignmentOperationStatus.replaced);
+        expect(result.replacedAssignmentId, 'assignment-1');
+        expect(result.assignment?.programmeVersionId, newVersionId);
+        expect(
+          tables.assignments.first.status,
+          ProgrammeAssignmentStatus.reassigned,
+        );
+        expect(
+          tables.assignments.first.supersededByAssignmentId,
+          result.assignment?.id,
+        );
+        expect(tables.assignments.last.isActive, isTrue);
+        expect(tables.outcomes, isEmpty);
+      },
+    );
 
     test('new assignment pins programme version', () async {
       await seedFlatPublishedProgramme();
@@ -363,7 +387,10 @@ void main() {
         timezone: 'UTC',
       );
 
-      expect(result.status, ProgrammeAssignmentOperationStatus.invalidProgrammeVersion);
+      expect(
+        result.status,
+        ProgrammeAssignmentOperationStatus.invalidProgrammeVersion,
+      );
     });
 
     test('unpublished version rejected normally', () async {
@@ -382,34 +409,43 @@ void main() {
         timezone: 'UTC',
       );
 
-      expect(result.status, ProgrammeAssignmentOperationStatus.invalidProgrammeVersion);
+      expect(
+        result.status,
+        ProgrammeAssignmentOperationStatus.invalidProgrammeVersion,
+      );
     });
 
-    test('unpublished version allowed only with development override', () async {
-      await versionStore.saveTemplateTree(
-        version: ProgrammeScheduleTestFixtures.version(),
-        tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
-      );
-      tables.lineages.add(
-        const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
-      );
+    test(
+      'unpublished version allowed only with development override',
+      () async {
+        await versionStore.saveTemplateTree(
+          version: ProgrammeScheduleTestFixtures.version(),
+          tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+        );
+        tables.lineages.add(
+          const ProgrammeLineage(
+            id: 'lineage-1',
+            code: 'COHORT-FOUNDATION-TEST',
+          ),
+        );
 
-      final result = await service.assignProgramme(
-        athleteId: athleteId,
-        programmeVersionId: 'version-1',
-        startedAt: DateTime.utc(2026, 7, 15),
-        timezone: 'UTC',
-        allowUnpublishedVersion: true,
-      );
+        final result = await service.assignProgramme(
+          athleteId: athleteId,
+          programmeVersionId: 'version-1',
+          startedAt: DateTime.utc(2026, 7, 15),
+          timezone: 'UTC',
+          allowUnpublishedVersion: true,
+        );
 
-      expect(result.status, ProgrammeAssignmentOperationStatus.assigned);
-    });
+        expect(result.status, ProgrammeAssignmentOperationStatus.assigned);
+      },
+    );
 
     test('pause preserves cursor and outcomes', () async {
       await seedFlatPublishedProgramme();
-      tables.assignments.add(ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_2',
-      ));
+      tables.assignments.add(
+        ProgrammeScheduleTestFixtures.assignment(dayKey: 'day_2'),
+      );
       tables.outcomes.add(
         ProgrammeScheduleTestFixtures.outcome(
           slotId: 'slot-1',
@@ -417,15 +453,14 @@ void main() {
         ),
       );
 
-      final result = await service.pauseAssignment(assignmentId: 'assignment-1');
+      final result = await service.pauseAssignment(
+        assignmentId: 'assignment-1',
+      );
 
       expect(result.status, ProgrammeAssignmentOperationStatus.paused);
       expect(result.assignment?.currentDayKey, 'day_2');
       expect(tables.outcomes, hasLength(1));
-      expect(
-        tables.athleteStates.single.currentProtocolId,
-        isNull,
-      );
+      expect(tables.athleteStates.single.currentProtocolId, isNull);
     });
 
     test('resume re-resolves same cursor', () async {
@@ -437,7 +472,9 @@ void main() {
         ),
       );
 
-      final result = await service.resumeAssignment(assignmentId: 'assignment-1');
+      final result = await service.resumeAssignment(
+        assignmentId: 'assignment-1',
+      );
 
       expect(result.status, ProgrammeAssignmentOperationStatus.resumed);
       expect(result.assignment?.currentDayKey, 'day_1');
@@ -455,7 +492,9 @@ void main() {
         ),
       );
 
-      final result = await service.completeAssignment(assignmentId: 'assignment-1');
+      final result = await service.completeAssignment(
+        assignmentId: 'assignment-1',
+      );
 
       expect(result.status, ProgrammeAssignmentOperationStatus.completed);
       expect(tables.athleteStates.single.currentProtocolId, isNull);
@@ -490,27 +529,36 @@ void main() {
       expect(result.warnings, isNotEmpty);
     });
 
-    test('idempotent retry does not create duplicate active assignment', () async {
-      await seedFlatPublishedProgramme();
-      tables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
+    test(
+      'idempotent retry does not create duplicate active assignment',
+      () async {
+        await seedFlatPublishedProgramme();
+        tables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
 
-      final first = await service.assignProgramme(
-        athleteId: athleteId,
-        programmeVersionId: 'version-1',
-        startedAt: DateTime.utc(2026, 7, 15),
-        timezone: 'UTC',
-      );
-      final second = await service.assignProgramme(
-        athleteId: athleteId,
-        programmeVersionId: 'version-1',
-        startedAt: DateTime.utc(2026, 7, 15),
-        timezone: 'UTC',
-      );
+        final first = await service.assignProgramme(
+          athleteId: athleteId,
+          programmeVersionId: 'version-1',
+          startedAt: DateTime.utc(2026, 7, 15),
+          timezone: 'UTC',
+        );
+        final second = await service.assignProgramme(
+          athleteId: athleteId,
+          programmeVersionId: 'version-1',
+          startedAt: DateTime.utc(2026, 7, 15),
+          timezone: 'UTC',
+        );
 
-      expect(first.status, ProgrammeAssignmentOperationStatus.alreadyActiveConflict);
-      expect(second.status, ProgrammeAssignmentOperationStatus.alreadyActiveConflict);
-      expect(tables.assignments.where((row) => row.isActive), hasLength(1));
-    });
+        expect(
+          first.status,
+          ProgrammeAssignmentOperationStatus.alreadyActiveConflict,
+        );
+        expect(
+          second.status,
+          ProgrammeAssignmentOperationStatus.alreadyActiveConflict,
+        );
+        expect(tables.assignments.where((row) => row.isActive), hasLength(1));
+      },
+    );
 
     test('store failure is surfaced clearly', () async {
       await seedFlatPublishedProgramme();
@@ -585,7 +633,9 @@ void main() {
 
     test('development reset re-resolves and syncs projection', () async {
       await seedActiveAssignment();
-      tables.assignments[0] = tables.assignments.first.copyWith(currentDayKey: 'day_2');
+      tables.assignments[0] = tables.assignments.first.copyWith(
+        currentDayKey: 'day_2',
+      );
 
       final result = await developmentService.resetAssignment(
         assignmentId: 'assignment-dev',
@@ -625,21 +675,21 @@ void main() {
         const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
       );
 
+      final todayService = TodaySessionServiceImpl(
+        assignmentStore: InMemoryProgrammeAssignmentStore(homeTables),
+        versionStore: InMemoryProgrammeVersionStore(homeTables),
+        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(homeTables),
+        scheduleResolver: const ProgrammeScheduleResolverImpl(),
+      );
       final loader = HomeTodaySessionLoader(
-        todaySessionService: TodaySessionServiceImpl(
-          assignmentStore: InMemoryProgrammeAssignmentStore(homeTables),
-          versionStore: InMemoryProgrammeVersionStore(homeTables),
-          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(homeTables),
-          scheduleResolver: const ProgrammeScheduleResolverImpl(),
+        todayWorkoutResolutionService: AthleteTodayWorkoutResolutionService(
+          todaySessionService: todayService,
         ),
         athleteStateSyncService: AthleteStateSyncServiceImpl(
           athleteStateStore: InMemoryAthleteStateStore(homeTables),
         ),
         athleteStateRepository: _StubAthleteStateRepository(
-          const AthleteState(
-            athleteId: athleteId,
-            currentProtocolId: 'BD-001',
-          ),
+          const AthleteState(athleteId: athleteId, currentProtocolId: 'BD-001'),
         ),
         protocolRepository: _StubProtocolRepository({
           'BD-001': Protocol(protocolId: 'BD-001', name: 'Base Day'),

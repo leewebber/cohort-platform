@@ -14,10 +14,7 @@ enum WorkoutPlayerTransitionIssueCode {
 }
 
 class WorkoutPlayerTransitionIssue {
-  const WorkoutPlayerTransitionIssue({
-    required this.code,
-    this.detail,
-  });
+  const WorkoutPlayerTransitionIssue({required this.code, this.detail});
 
   final WorkoutPlayerTransitionIssueCode code;
   final String? detail;
@@ -35,10 +32,7 @@ class WorkoutPlayerTransitionResult {
   final List<WorkoutPlayerTransitionIssue> issues;
 
   factory WorkoutPlayerTransitionResult.success(WorkoutPlayer player) {
-    return WorkoutPlayerTransitionResult._(
-      isSuccess: true,
-      player: player,
-    );
+    return WorkoutPlayerTransitionResult._(isSuccess: true, player: player);
   }
 
   factory WorkoutPlayerTransitionResult.failure(

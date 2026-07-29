@@ -8,35 +8,37 @@ import 'package:cohort_platform/features/session/models/session_execution_status
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('UserSessionCache.clearAll clears debug resolution and session memory',
-      () {
-    ProgrammeDebugResolutionCache.store(
-      const ResolvedTodaySession(
-        kind: ResolvedTodaySessionKind.executable,
-        weekNumber: 1,
-        dayKey: 'day_1',
-      ),
-    );
-
-    AthleteSessionMemoryStore.instance.write(
-      ActiveSessionState(
-        sessionKey: '1:BW-001',
-        plan: SessionExecutionPlan(
-          sessionId: 'BW-001',
-          sessionTitle: 'Test',
-          blocks: const [],
+  test(
+    'UserSessionCache.clearAll clears debug resolution and session memory',
+    () {
+      ProgrammeDebugResolutionCache.store(
+        const ResolvedTodaySession(
+          kind: ResolvedTodaySessionKind.executable,
+          weekNumber: 1,
+          dayKey: 'day_1',
         ),
-        blockStates: const [],
-        activeBlockIndex: 0,
-        completedBlockIds: const {},
-        expandedBlockIds: const {},
-        sessionStatus: SessionExecutionStatus.inProgress,
-      ),
-    );
+      );
 
-    UserSessionCache.clearAll();
+      AthleteSessionMemoryStore.instance.write(
+        ActiveSessionState(
+          sessionKey: '1:BW-001',
+          plan: SessionExecutionPlan(
+            sessionId: 'BW-001',
+            sessionTitle: 'Test',
+            blocks: const [],
+          ),
+          blockStates: const [],
+          activeBlockIndex: 0,
+          completedBlockIds: const {},
+          expandedBlockIds: const {},
+          sessionStatus: SessionExecutionStatus.inProgress,
+        ),
+      );
 
-    expect(ProgrammeDebugResolutionCache.lastResolution, isNull);
-    expect(AthleteSessionMemoryStore.instance.read('1:BW-001'), isNull);
-  });
+      UserSessionCache.clearAll();
+
+      expect(ProgrammeDebugResolutionCache.lastResolution, isNull);
+      expect(AthleteSessionMemoryStore.instance.read('1:BW-001'), isNull);
+    },
+  );
 }

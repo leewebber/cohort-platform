@@ -42,10 +42,10 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       widget.libraryService ?? TrainingLibraryService();
   late final SessionLibraryAuthoringCoordinator _coordinator =
       widget.coordinator ??
-          SessionLibraryAuthoringServices.createCoordinator(
-            protocolBuilderService: widget.protocolBuilderService,
-            coachIdentity: widget.coachIdentity,
-          );
+      SessionLibraryAuthoringServices.createCoordinator(
+        protocolBuilderService: widget.protocolBuilderService,
+        coachIdentity: widget.coachIdentity,
+      );
   late final CurrentCoachIdentity _coachIdentity =
       widget.coachIdentity ?? const AuthenticatedCoachIdentity();
 
@@ -101,14 +101,15 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
   }
 
   Future<void> _createSession() async {
-    final result = await Navigator.of(context).push<SessionLibraryAuthoringResult>(
-      MaterialPageRoute<SessionLibraryAuthoringResult>(
-        builder: (_) => LibrarySessionBuilderScreen(
-          coordinator: _coordinator,
-          coachIdentity: _coachIdentity,
-        ),
-      ),
-    );
+    final result = await Navigator.of(context)
+        .push<SessionLibraryAuthoringResult>(
+          MaterialPageRoute<SessionLibraryAuthoringResult>(
+            builder: (_) => LibrarySessionBuilderScreen(
+              coordinator: _coordinator,
+              coachIdentity: _coachIdentity,
+            ),
+          ),
+        );
 
     if (!mounted) return;
     if (result?.isSuccess == true) {
@@ -132,16 +133,17 @@ class _SessionLibraryTabState extends State<SessionLibraryTab> {
       return;
     }
 
-    final result = await Navigator.of(context).push<SessionLibraryAuthoringResult>(
-      MaterialPageRoute<SessionLibraryAuthoringResult>(
-        builder: (_) => LibrarySessionBuilderScreen(
-          coordinator: _coordinator,
-          coachIdentity: _coachIdentity,
-          initialDraft: initialDraft,
-          isEdit: true,
-        ),
-      ),
-    );
+    final result = await Navigator.of(context)
+        .push<SessionLibraryAuthoringResult>(
+          MaterialPageRoute<SessionLibraryAuthoringResult>(
+            builder: (_) => LibrarySessionBuilderScreen(
+              coordinator: _coordinator,
+              coachIdentity: _coachIdentity,
+              initialDraft: initialDraft,
+              isEdit: true,
+            ),
+          ),
+        );
 
     if (!mounted) return;
     if (result?.isSuccess == true) {

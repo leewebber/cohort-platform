@@ -14,6 +14,7 @@ import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
+import '../models/workout_session_launch_context.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 import '../widgets/athlete/athlete_session_components.dart';
 import 'block_timer_screen.dart';
@@ -28,6 +29,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.programmeProgress,
     this.athleteId,
     this.saveCoordinator,
+    this.workoutLaunchContext,
   });
 
   final SessionExecutionController controller;
@@ -37,6 +39,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final ProgrammeProgressSummary? programmeProgress;
   final String? athleteId;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
+  final WorkoutSessionLaunchContext? workoutLaunchContext;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -46,8 +49,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   late SessionExecutionController _controller = widget.controller;
   late PerformanceCaptureController _performanceController =
       widget.performanceController;
-  final _saveCoordinator =
-      PerformanceRecordSaveCoordinator();
+  final _saveCoordinator = PerformanceRecordSaveCoordinator();
   PerformanceSaveState _saveState = PerformanceSaveState.idle;
   String? _saveError;
 
@@ -101,7 +103,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     if (!block.hasTimer || block.timerConfiguration == null) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Timer is not configured for this block.')),
+        const SnackBar(
+          content: Text('Timer is not configured for this block.'),
+        ),
       );
       return;
     }
@@ -168,6 +172,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           programmeContext: widget.programmeContext,
           programmeProgress: widget.programmeProgress,
           saveCoordinator: widget.saveCoordinator ?? _saveCoordinator,
+          homeWorkoutExecution:
+              widget.workoutLaunchContext?.homeWorkoutExecution,
         ),
       ),
     );
@@ -219,7 +225,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                 completed: state.completedCount,
               ),
               const SizedBox(height: CohortSpacing.lg),
-              for (var index = 0; index < state.plan.blocks.length; index++) ...[
+              for (
+                var index = 0;
+                index < state.plan.blocks.length;
+                index++
+              ) ...[
                 if (index > 0) const SizedBox(height: CohortSpacing.md),
                 Builder(
                   builder: (context) {
@@ -227,8 +237,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                     final isActive = index == activeIndex;
                     final isExpanded =
                         isActive || state.isBlockExpanded(block.blockId);
-                    final blockDraft =
-                        isActive ? _blockDraft(block.blockId) : null;
+                    final blockDraft = isActive
+                        ? _blockDraft(block.blockId)
+                        : null;
 
                     return AthleteBlockCard(
                       block: block,
@@ -258,8 +269,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                               _refresh();
                             }
                           : null,
-                      onNext: !isSingleBlock &&
-                              activeIndex < state.totalBlocks - 1
+                      onNext:
+                          !isSingleBlock && activeIndex < state.totalBlocks - 1
                           ? () {
                               _controller.goToNextBlock();
                               _performanceController.setActiveBlock(
@@ -269,7 +280,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                               _refresh();
                             }
                           : null,
-                      performanceSection: blockDraft == null ||
+                      performanceSection:
+                          blockDraft == null ||
                               !BlockResultEditor.showsCaptureFields(blockDraft)
                           ? null
                           : BlockResultEditor(

@@ -204,9 +204,7 @@ class SessionBuilderCheckbox extends StatelessWidget {
               },
             ),
           ),
-          Expanded(
-            child: Text(label, style: CohortTextStyles.small),
-          ),
+          Expanded(child: Text(label, style: CohortTextStyles.small)),
         ],
       ),
     );

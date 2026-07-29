@@ -5,10 +5,7 @@ import '../../../models/recovery_state.dart';
 
 /// Result of evaluating whether a protocol satisfies a coaching constraint.
 class ConstraintEvaluation {
-  const ConstraintEvaluation({
-    required this.satisfied,
-    this.reason,
-  });
+  const ConstraintEvaluation({required this.satisfied, this.reason});
 
   final bool satisfied;
   final String? reason;
@@ -69,9 +66,7 @@ class ConstraintEvaluator {
       );
     }
 
-    final available = availableEquipment
-        .map(_normalizeEquipmentToken)
-        .toSet();
+    final available = availableEquipment.map(_normalizeEquipmentToken).toSet();
 
     for (final required in requiredEquipment) {
       final normalizedRequired = _normalizeEquipmentToken(required);
@@ -86,10 +81,7 @@ class ConstraintEvaluator {
     return ConstraintEvaluation.satisfiedResult;
   }
 
-  ConstraintEvaluation timeSatisfied(
-    Protocol protocol,
-    int? availableMinutes,
-  ) {
+  ConstraintEvaluation timeSatisfied(Protocol protocol, int? availableMinutes) {
     if (availableMinutes == null) {
       return const ConstraintEvaluation(
         satisfied: false,
@@ -162,15 +154,18 @@ class ConstraintEvaluator {
         return protocol.hotelFriendly == true ||
             _protocolEnvironmentIsOneOf(protocol, ['hotel gym']);
       case AdaptationSessionEnvironment.commercialGym:
-        return _protocolEnvironmentIsOneOf(
-          protocol,
-          ['gym', 'full gym', 'anywhere'],
-        );
+        return _protocolEnvironmentIsOneOf(protocol, [
+          'gym',
+          'full gym',
+          'anywhere',
+        ]);
       case AdaptationSessionEnvironment.outdoors:
-        return _protocolEnvironmentIsOneOf(
-          protocol,
-          ['outdoor', 'track', 'trail', 'anywhere'],
-        );
+        return _protocolEnvironmentIsOneOf(protocol, [
+          'outdoor',
+          'track',
+          'trail',
+          'anywhere',
+        ]);
     }
   }
 
@@ -193,8 +188,7 @@ class ConstraintEvaluator {
       if (incompatible != null) {
         return ConstraintEvaluation(
           satisfied: false,
-          reason:
-              'Requires equipment not suitable for Hotel Room: $required',
+          reason: 'Requires equipment not suitable for Hotel Room: $required',
         );
       }
     }

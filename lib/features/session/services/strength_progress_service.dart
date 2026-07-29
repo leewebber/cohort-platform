@@ -13,7 +13,9 @@ class StrengthProgressService {
     required PreviousExercisePerformance? previousPerformance,
     required List<StrengthSetEntry> todayCompletedSets,
   }) {
-    final completedToday = todayCompletedSets.where((set) => set.completed).toList();
+    final completedToday = todayCompletedSets
+        .where((set) => set.completed)
+        .toList();
 
     if (previousPerformance == null || !previousPerformance.hasHistory) {
       return _firstPerformance(completedToday);
@@ -68,12 +70,14 @@ class StrengthProgressService {
       reasons: reasons,
     );
 
-    final loadProgress = loadComparison > 0 &&
+    final loadProgress =
+        loadComparison > 0 &&
         (repComparison >= 0) &&
         previousMetrics.topLoad != null &&
         todayMetrics.topLoad != null;
 
-    final repProgress = loadComparison == 0 &&
+    final repProgress =
+        loadComparison == 0 &&
         repComparison > 0 &&
         previousMetrics.topLoad != null &&
         todayMetrics.topLoad != null;
@@ -88,12 +92,14 @@ class StrengthProgressService {
       volumeComparison: volumeComparison,
     );
 
-    final matchedPerformance = loadComparison == 0 &&
+    final matchedPerformance =
+        loadComparison == 0 &&
         repComparison == 0 &&
         previousMetrics.topLoad != null &&
         todayMetrics.topLoad != null;
 
-    final matchedWithImprovedEfficiency = matchedPerformance &&
+    final matchedWithImprovedEfficiency =
+        matchedPerformance &&
         previousMetrics.averageRpe != null &&
         todayMetrics.averageRpe != null &&
         todayMetrics.averageRpe! < previousMetrics.averageRpe!;
@@ -115,7 +121,8 @@ class StrengthProgressService {
       return ExerciseProgressResult(
         progressType: ExerciseProgressType.loadProgress,
         title: 'Progress achieved',
-        message: 'You moved more load while matching or exceeding your previous total reps.',
+        message:
+            'You moved more load while matching or exceeding your previous total reps.',
         reasons: reasons,
       );
     }
@@ -169,7 +176,8 @@ class StrengthProgressService {
       return ExerciseProgressResult(
         progressType: ExerciseProgressType.mixedResult,
         title: 'Mixed result',
-        message: 'Some metrics improved and others shifted from your last session.',
+        message:
+            'Some metrics improved and others shifted from your last session.',
         reasons: reasons,
       );
     }
@@ -187,7 +195,8 @@ class StrengthProgressService {
       return ExerciseProgressResult(
         progressType: ExerciseProgressType.mixedResult,
         title: 'Mixed result',
-        message: 'Today differed from your last session across load, reps, or volume.',
+        message:
+            'Today differed from your last session across load, reps, or volume.',
         reasons: reasons,
       );
     }
@@ -195,15 +204,21 @@ class StrengthProgressService {
     return _insufficientData(reasons: reasons);
   }
 
-  ExerciseProgressResult _firstPerformance(List<StrengthSetEntry> completedToday) {
+  ExerciseProgressResult _firstPerformance(
+    List<StrengthSetEntry> completedToday,
+  ) {
     final reasons = <String>[];
     final todayMetrics = _metricsFromToday(completedToday);
     _appendExtraSetReason(todayMetrics, reasons);
 
     if (completedToday.isNotEmpty) {
-      reasons.add('${todayMetrics.prescribedCompletedCount} prescribed sets completed.');
+      reasons.add(
+        '${todayMetrics.prescribedCompletedCount} prescribed sets completed.',
+      );
       if (todayMetrics.extraCompletedCount > 0) {
-        reasons.add('${todayMetrics.extraCompletedCount} extra sets completed.');
+        reasons.add(
+          '${todayMetrics.extraCompletedCount} extra sets completed.',
+        );
       }
     }
 
@@ -215,9 +230,7 @@ class StrengthProgressService {
     );
   }
 
-  ExerciseProgressResult _insufficientData({
-    required List<String> reasons,
-  }) {
+  ExerciseProgressResult _insufficientData({required List<String> reasons}) {
     return ExerciseProgressResult(
       progressType: ExerciseProgressType.insufficientData,
       title: 'Logged successfully',
@@ -319,8 +332,9 @@ class StrengthProgressService {
       }
     }
 
-    final prescribedCompletedCount =
-        sets.where((set) => !set.isExtraSet).length;
+    final prescribedCompletedCount = sets
+        .where((set) => !set.isExtraSet)
+        .length;
     final extraCompletedCount = sets.where((set) => set.isExtraSet).length;
 
     return _SessionMetrics(
@@ -337,7 +351,10 @@ class StrengthProgressService {
     );
   }
 
-  void _appendExtraSetReason(_SessionMetrics todayMetrics, List<String> reasons) {
+  void _appendExtraSetReason(
+    _SessionMetrics todayMetrics,
+    List<String> reasons,
+  ) {
     if (todayMetrics.extraCompletedCount > 0) {
       reasons.add(
         '${todayMetrics.extraCompletedCount} extra set'
@@ -367,7 +384,8 @@ class StrengthProgressService {
       );
     }
 
-    if (previousMetrics.totalVolume != null && todayMetrics.totalVolume != null) {
+    if (previousMetrics.totalVolume != null &&
+        todayMetrics.totalVolume != null) {
       reasons.add(
         'Total volume: ${_trimTrailingZero(previousMetrics.totalVolume!)}'
         ' → ${_trimTrailingZero(todayMetrics.totalVolume!)}.',

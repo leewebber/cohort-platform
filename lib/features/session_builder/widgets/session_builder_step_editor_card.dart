@@ -32,7 +32,8 @@ class SessionBuilderStepEditorCard extends StatefulWidget {
   final bool canMoveDown;
   final ValueChanged<ProtocolStepDraft> onChanged;
   final VoidCallback onTitleCustomised;
-  final void Function(Exercise? exercise, String currentTitle) onExerciseSelected;
+  final void Function(Exercise? exercise, String currentTitle)
+  onExerciseSelected;
   final VoidCallback onMoveUp;
   final VoidCallback onMoveDown;
   final VoidCallback onDelete;

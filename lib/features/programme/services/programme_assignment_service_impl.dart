@@ -22,11 +22,11 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     required ProgrammeScheduleResolver scheduleResolver,
     required TodaySessionService todaySessionService,
     required AthleteStateSyncService athleteStateSyncService,
-  })  : _assignmentStore = assignmentStore,
-        _versionStore = versionStore,
-        _scheduleResolver = scheduleResolver,
-        _todaySessionService = todaySessionService,
-        _athleteStateSyncService = athleteStateSyncService;
+  }) : _assignmentStore = assignmentStore,
+       _versionStore = versionStore,
+       _scheduleResolver = scheduleResolver,
+       _todaySessionService = todaySessionService,
+       _athleteStateSyncService = athleteStateSyncService;
 
   final ProgrammeAssignmentStore _assignmentStore;
   final ProgrammeVersionStore _versionStore;
@@ -59,8 +59,9 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     );
 
     try {
-      final existingActive =
-          await _assignmentStore.getActiveAssignment(trimmedAthleteId);
+      final existingActive = await _assignmentStore.getActiveAssignment(
+        trimmedAthleteId,
+      );
       _log('existingActive=${existingActive?.id ?? 'none'}');
 
       if (existingActive != null && !replaceExistingActive) {
@@ -138,7 +139,8 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
 
       if (version == null) {
         final result = ProgrammeAssignmentOperationResult.invalidVersion(
-          message: 'Programme version not found for '
+          message:
+              'Programme version not found for '
               '$trimmedLineageCode v$versionNumber',
         );
         _logResult(result);
@@ -348,8 +350,9 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     );
 
     try {
-      final existingActive =
-          await _assignmentStore.getActiveAssignment(trimmedAthleteId);
+      final existingActive = await _assignmentStore.getActiveAssignment(
+        trimmedAthleteId,
+      );
       _log('existingActive=${existingActive?.id ?? 'none'}');
 
       if (existingActive == null) {
@@ -373,9 +376,7 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
       }
 
       await _assignmentStore.update(
-        existingActive.copyWith(
-          status: ProgrammeAssignmentStatus.reassigned,
-        ),
+        existingActive.copyWith(status: ProgrammeAssignmentStatus.reassigned),
       );
 
       final createResult = await _createAssignment(
@@ -421,7 +422,9 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
       );
 
       final result = ProgrammeAssignmentOperationResult(
-        status: createResult.status == ProgrammeAssignmentOperationStatus.partialSuccess
+        status:
+            createResult.status ==
+                ProgrammeAssignmentOperationStatus.partialSuccess
             ? ProgrammeAssignmentOperationStatus.partialSuccess
             : ProgrammeAssignmentOperationStatus.replaced,
         assignment: newAssignment,
@@ -456,7 +459,8 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     final lineage = await _versionStore.getLineageById(version.lineageId);
     if (lineage == null) {
       final result = ProgrammeAssignmentOperationResult.invalidVersion(
-        message: 'Lineage ${version.lineageId} not found for version ${version.id}',
+        message:
+            'Lineage ${version.lineageId} not found for version ${version.id}',
       );
       _logResult(result);
       return result;
@@ -465,7 +469,8 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     final tree = await _versionStore.loadTemplateTree(version.id);
     if (tree == null) {
       final result = ProgrammeAssignmentOperationResult.invalidVersion(
-        message: 'Programme template tree could not be loaded for ${version.id}',
+        message:
+            'Programme template tree could not be loaded for ${version.id}',
       );
       _logResult(result);
       return result;
@@ -515,7 +520,9 @@ class ProgrammeAssignmentServiceImpl implements ProgrammeAssignmentService {
     }
 
     final result = ProgrammeAssignmentOperationResult(
-      status: synced ? successStatus : ProgrammeAssignmentOperationStatus.partialSuccess,
+      status: synced
+          ? successStatus
+          : ProgrammeAssignmentOperationStatus.partialSuccess,
       assignment: assignment,
       resolvedTodaySession: resolution,
       athleteStateSynced: synced,

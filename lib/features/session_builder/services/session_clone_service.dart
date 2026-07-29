@@ -7,9 +7,8 @@ import 'protocol_draft_block_resolver.dart';
 
 /// Deep-clones Cohort Protocol content into independent coach Session drafts.
 class SessionCloneService {
-  const SessionCloneService({
-    ProtocolDraftBlockResolver? blockResolver,
-  }) : _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver();
+  const SessionCloneService({ProtocolDraftBlockResolver? blockResolver})
+    : _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver();
 
   final ProtocolDraftBlockResolver _blockResolver;
 
@@ -31,8 +30,8 @@ class SessionCloneService {
     required CohortProtocolCopyDestination destination,
     String? programmeVersionId,
   }) {
-    final destinationScope = destination ==
-            CohortProtocolCopyDestination.programmeOnly
+    final destinationScope =
+        destination == CohortProtocolCopyDestination.programmeOnly
         ? TrainingAuthoringScope.programmeOnly
         : TrainingAuthoringScope.coachPrivate;
 
@@ -41,20 +40,13 @@ class SessionCloneService {
     final clonedBlocks = sourceBlocks
         .asMap()
         .entries
-        .map(
-          (entry) => entry.value.deepClone(position: entry.key + 1),
-        )
+        .map((entry) => entry.value.deepClone(position: entry.key + 1))
         .toList(growable: false);
 
     final clonedSteps = source.steps
         .asMap()
         .entries
-        .map(
-          (entry) => _cloneStep(
-            entry.value,
-            index: entry.key,
-          ),
-        )
+        .map((entry) => _cloneStep(entry.value, index: entry.key))
         .toList(growable: false);
 
     return ProtocolDraft(
@@ -68,7 +60,8 @@ class SessionCloneService {
       endorsementStatus: TrainingEndorsementStatus.coachAuthored,
       ownerId: ownerId,
       organisationId: null,
-      programmeVersionId: destination == CohortProtocolCopyDestination.programmeOnly
+      programmeVersionId:
+          destination == CohortProtocolCopyDestination.programmeOnly
           ? programmeVersionId
           : null,
       sourceContentId: source.protocolId,
@@ -103,8 +96,7 @@ class SessionCloneService {
 
   ProtocolStepDraft _cloneStep(ProtocolStepDraft source, {required int index}) {
     return ProtocolStepDraft(
-      localId:
-          'step-clone-${DateTime.now().microsecondsSinceEpoch}-$index',
+      localId: 'step-clone-${DateTime.now().microsecondsSinceEpoch}-$index',
       stepOrder: source.stepOrder,
       title: source.title,
       persistedId: null,

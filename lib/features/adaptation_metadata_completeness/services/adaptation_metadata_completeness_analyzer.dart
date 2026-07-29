@@ -18,7 +18,8 @@ class SessionIntentSuggestionService {
     if (capabilityMatch != null) {
       return SessionIntentSuggestion(
         intent: capabilityMatch,
-        reason: 'Matched legacy primary_capability text (not saved automatically).',
+        reason:
+            'Matched legacy primary_capability text (not saved automatically).',
       );
     }
 
@@ -51,9 +52,8 @@ class SessionIntentSuggestionService {
       if (normalized == db || normalized == _normalize(db)) {
         return intent;
       }
-      final label = AdaptationMetadataBuilderVocabulary.sessionIntentDisplayLabel(
-        intent,
-      );
+      final label =
+          AdaptationMetadataBuilderVocabulary.sessionIntentDisplayLabel(intent);
       if (normalized == _normalize(label)) {
         return intent;
       }
@@ -96,7 +96,8 @@ class SessionIntentSuggestionService {
 class AdaptationMetadataCompletenessAnalyzer {
   const AdaptationMetadataCompletenessAnalyzer({
     SessionIntentSuggestionService? suggestionService,
-  }) : _suggestionService = suggestionService ?? const SessionIntentSuggestionService();
+  }) : _suggestionService =
+           suggestionService ?? const SessionIntentSuggestionService();
 
   final SessionIntentSuggestionService _suggestionService;
 
@@ -135,7 +136,9 @@ class AdaptationMetadataCompletenessAnalyzer {
   AdaptationMetadataCompletenessItem analyzeInput(
     AdaptationMetadataCompletenessInput input,
   ) {
-    final blockDetails = input.blocks.map(classifyBlock).toList(growable: false);
+    final blockDetails = input.blocks
+        .map(classifyBlock)
+        .toList(growable: false);
     final missing = <MissingMetadataCategory>{};
 
     if (input.primarySessionIntent == null) {
@@ -145,18 +148,26 @@ class AdaptationMetadataCompletenessAnalyzer {
       missing.add(MissingMetadataCategory.missingMinimumViableDuration);
     }
 
-    if (blockDetails.any((b) => b.mode == BlockAdaptationMetadataMode.derivedDefaults)) {
+    if (blockDetails.any(
+      (b) => b.mode == BlockAdaptationMetadataMode.derivedDefaults,
+    )) {
       missing.add(MissingMetadataCategory.missingExplicitBlockMetadata);
     }
-    if (blockDetails.any((b) => b.mode == BlockAdaptationMetadataMode.unresolved)) {
+    if (blockDetails.any(
+      (b) => b.mode == BlockAdaptationMetadataMode.unresolved,
+    )) {
       missing.add(MissingMetadataCategory.unresolvedBlockMetadata);
     }
 
-    final isSessionTagged = input.primarySessionIntent != null &&
+    final isSessionTagged =
+        input.primarySessionIntent != null &&
         input.minimumViableDurationMin != null &&
-        blockDetails.every((b) => b.mode == BlockAdaptationMetadataMode.explicit);
+        blockDetails.every(
+          (b) => b.mode == BlockAdaptationMetadataMode.explicit,
+        );
 
-    final isProtocolTagged = input.contentKind == TrainingContentKind.cohortProtocol &&
+    final isProtocolTagged =
+        input.contentKind == TrainingContentKind.cohortProtocol &&
         input.primarySessionIntent != null;
 
     final suggestion = input.primarySessionIntent == null

@@ -49,13 +49,15 @@ class AuthViewState {
       status: status ?? this.status,
       profile: clearProfile ? null : (profile ?? this.profile),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      pendingEmail:
-          clearPendingEmail ? null : (pendingEmail ?? this.pendingEmail),
+      pendingEmail: clearPendingEmail
+          ? null
+          : (pendingEmail ?? this.pendingEmail),
       pendingDisplayName: clearPendingDisplayName
           ? null
           : (pendingDisplayName ?? this.pendingDisplayName),
-      pendingRoles:
-          clearPendingRoles ? null : (pendingRoles ?? this.pendingRoles),
+      pendingRoles: clearPendingRoles
+          ? null
+          : (pendingRoles ?? this.pendingRoles),
     );
   }
 }

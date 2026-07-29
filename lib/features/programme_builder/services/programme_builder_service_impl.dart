@@ -28,12 +28,12 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
         const ProgrammeSeedTemplateBuilder(),
     ProgrammeBuilderEditOperations editOperations =
         const ProgrammeBuilderEditOperations(),
-  })  : _versionStore = versionStore,
-        _assignmentStore = assignmentStore,
-        _validationService = validationService,
-        _compiler = compiler,
-        _seedTemplateBuilder = seedTemplateBuilder,
-        _editOperations = editOperations;
+  }) : _versionStore = versionStore,
+       _assignmentStore = assignmentStore,
+       _validationService = validationService,
+       _compiler = compiler,
+       _seedTemplateBuilder = seedTemplateBuilder,
+       _editOperations = editOperations;
 
   final ProgrammeVersionStore _versionStore;
   final ProgrammeAssignmentStore _assignmentStore;
@@ -54,7 +54,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
     ProgrammeCreateDiagnostics.log('seedTemplate=${seedTemplate.name}');
 
     if (!_compiler.isValidLineageCode(seedMetadata.lineageCode)) {
-      ProgrammeCreateDiagnostics.log('result status=validationFailed (lineage code)');
+      ProgrammeCreateDiagnostics.log(
+        'result status=validationFailed (lineage code)',
+      );
       return ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.validationFailed,
         validation: _validationService.validate(
@@ -66,10 +68,13 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       );
     }
 
-    final existingLineage =
-        await _versionStore.getLineageByCode(seedMetadata.lineageCode);
+    final existingLineage = await _versionStore.getLineageByCode(
+      seedMetadata.lineageCode,
+    );
     if (existingLineage != null) {
-      ProgrammeCreateDiagnostics.log('result status=storeFailed (duplicate lineage)');
+      ProgrammeCreateDiagnostics.log(
+        'result status=storeFailed (duplicate lineage)',
+      );
       return const ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.storeFailed,
         warnings: ['Lineage code already exists. Choose a unique code.'],
@@ -105,7 +110,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       ProgrammeCreateDiagnostics.log('insert version start');
       final savedVersion = await _versionStore.saveDraftVersion(versionRow);
       createdVersionId = savedVersion.id;
-      ProgrammeCreateDiagnostics.log('insert version success id=${savedVersion.id}');
+      ProgrammeCreateDiagnostics.log(
+        'insert version success id=${savedVersion.id}',
+      );
 
       final template = _compiler.assignLocalIds(
         _seedTemplateBuilder.build(seedTemplate),
@@ -126,10 +133,7 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       final tree = _compiler.toTemplateTree(document);
       ProgrammeCreateDiagnostics.log('save template tree start');
       try {
-        await _versionStore.saveTemplateTree(
-          version: savedVersion,
-          tree: tree,
-        );
+        await _versionStore.saveTemplateTree(version: savedVersion, tree: tree);
       } on ProgrammeStoreException catch (error, stackTrace) {
         ProgrammeCreateDiagnostics.logException(
           error,
@@ -166,7 +170,8 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
         stackTrace: stackTrace,
         stage: 'createDraftProgramme',
       );
-      final partialCreation = (createdLineageId != null || createdVersionId != null)
+      final partialCreation =
+          (createdLineageId != null || createdVersionId != null)
           ? ProgrammePartialCreationState(
               lineageId: createdLineageId,
               versionId: createdVersionId,
@@ -252,10 +257,7 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       final version = _compiler.toVersionRow(document.metadata);
       final savedVersion = await _versionStore.saveDraftVersion(version);
       final tree = _compiler.toTemplateTree(document);
-      await _versionStore.saveTemplateTree(
-        version: savedVersion,
-        tree: tree,
-      );
+      await _versionStore.saveTemplateTree(version: savedVersion, tree: tree);
 
       return ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.saved,
@@ -321,7 +323,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       );
     }
 
-    final existingLineage = await _versionStore.getLineageByCode(newLineageCode);
+    final existingLineage = await _versionStore.getLineageByCode(
+      newLineageCode,
+    );
     if (existingLineage != null) {
       return const ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.storeFailed,
@@ -406,8 +410,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       );
     }
 
-    final assignmentCount =
-        await _assignmentStore.countAssignmentsForVersion(versionId);
+    final assignmentCount = await _assignmentStore.countAssignmentsForVersion(
+      versionId,
+    );
     if (assignmentCount > 0) {
       return const ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.notEditable,
@@ -429,7 +434,9 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
   }
 
   @override
-  Future<ProgrammeBuilderEditResult> addWeek(ProgrammeBuilderDocument document) {
+  Future<ProgrammeBuilderEditResult> addWeek(
+    ProgrammeBuilderDocument document,
+  ) {
     return _edit(document, _editOperations.addWeek(document));
   }
 

@@ -2,19 +2,21 @@ import '../adaptation/application/adapted_session_execution_snapshot.dart';
 import '../workout_player/vocabulary/workout_player_execution_status.dart';
 import '../workout_player/workout_player.dart';
 import '../workout_player/workout_player_navigation.dart';
-import 'value_objects/training_exercise_execution_entry.dart';
-import 'vocabulary/training_exercise_execution_outcome.dart';
-import 'vocabulary/training_session_record_lifecycle_status.dart';
-import 'training_session_record_lifecycle.dart';
-import 'training_session_record_transition_result.dart';
+import 'value_objects/workout_exercise_execution_entry.dart';
+import 'vocabulary/workout_exercise_execution_outcome.dart';
+import 'vocabulary/workout_execution_record_lifecycle_status.dart';
+import 'workout_execution_record_lifecycle.dart';
+import 'workout_execution_record_transition_result.dart';
 
-/// Immutable historical record of a performed workout (domain M7).
+/// Immutable historical record of a performed workout (domain execution pipeline).
 ///
 /// Prescription structure lives on [executionSnapshot]; this aggregate records
-/// what the athlete did. Distinct from the M8 performance capture model in
-/// `lib/features/performance/models/training_session_record.dart`.
-class TrainingSessionRecord {
-  const TrainingSessionRecord({
+/// what the athlete did (completed / skipped / modified per exercise).
+/// Distinct from M8 `TrainingSessionRecord` in
+/// `lib/features/performance/models/training_session_record.dart` (Supabase
+/// performance tree with block/set results).
+class WorkoutExecutionRecord {
+  const WorkoutExecutionRecord({
     required this.recordId,
     required this.occurrenceId,
     required this.executionSnapshot,
@@ -32,32 +34,25 @@ class TrainingSessionRecord {
   final AdaptedSessionExecutionSnapshot executionSnapshot;
   final DateTime startedAt;
   final DateTime? finishedAt;
-  final TrainingSessionRecordLifecycleStatus lifecycleStatus;
+  final WorkoutExecutionRecordLifecycleStatus lifecycleStatus;
   final String? athleteNotes;
-  final List<TrainingExerciseExecutionEntry> exerciseEntries;
+  final List<WorkoutExerciseExecutionEntry> exerciseEntries;
 
   bool get isTerminal => lifecycleStatus.isTerminal;
 
-  List<TrainingExerciseExecutionEntry> get completedExercises =>
-      exerciseEntries
-          .where(
-            (e) => e.outcome == TrainingExerciseExecutionOutcome.completed,
-          )
-          .toList(growable: false);
+  List<WorkoutExerciseExecutionEntry> get completedExercises => exerciseEntries
+      .where((e) => e.outcome == WorkoutExerciseExecutionOutcome.completed)
+      .toList(growable: false);
 
-  List<TrainingExerciseExecutionEntry> get skippedExercises =>
-      exerciseEntries
-          .where((e) => e.outcome == TrainingExerciseExecutionOutcome.skipped)
-          .toList(growable: false);
+  List<WorkoutExerciseExecutionEntry> get skippedExercises => exerciseEntries
+      .where((e) => e.outcome == WorkoutExerciseExecutionOutcome.skipped)
+      .toList(growable: false);
 
-  List<TrainingExerciseExecutionEntry> get modifiedExercises =>
-      exerciseEntries
-          .where(
-            (e) => e.outcome == TrainingExerciseExecutionOutcome.modified,
-          )
-          .toList(growable: false);
+  List<WorkoutExerciseExecutionEntry> get modifiedExercises => exerciseEntries
+      .where((e) => e.outcome == WorkoutExerciseExecutionOutcome.modified)
+      .toList(growable: false);
 
-  static TrainingSessionRecordTransitionResult beginRecording({
+  static WorkoutExecutionRecordTransitionResult beginRecording({
     required String recordId,
     required String occurrenceId,
     required AdaptedSessionExecutionSnapshot executionSnapshot,
@@ -65,43 +60,43 @@ class TrainingSessionRecord {
     String? playerId,
   }) {
     if (recordId.trim().isEmpty) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.invalidRecordId,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.invalidRecordId,
       );
     }
     if (occurrenceId.trim().isEmpty) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.invalidOccurrenceId,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.invalidOccurrenceId,
       );
     }
 
-    return TrainingSessionRecordTransitionResult.success(
-      TrainingSessionRecord(
+    return WorkoutExecutionRecordTransitionResult.success(
+      WorkoutExecutionRecord(
         recordId: recordId.trim(),
         occurrenceId: occurrenceId.trim(),
         playerId: playerId?.trim().isEmpty ?? true ? null : playerId!.trim(),
         executionSnapshot: executionSnapshot,
         startedAt: startedAt,
-        lifecycleStatus: TrainingSessionRecordLifecycleStatus.recording,
+        lifecycleStatus: WorkoutExecutionRecordLifecycleStatus.recording,
       ),
     );
   }
 
   /// Starts a recording session from a terminal [WorkoutPlayer] (no exercise outcomes yet).
-  static TrainingSessionRecordTransitionResult beginFromWorkoutPlayer({
+  static WorkoutExecutionRecordTransitionResult beginFromWorkoutPlayer({
     required WorkoutPlayer player,
     required String recordId,
   }) {
     if (!player.isTerminal) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.playerNotTerminal,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.playerNotTerminal,
         detail: player.executionStatus.name,
       );
     }
     final startedAt = player.startedAt;
     if (startedAt == null) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.playerMissingStartedAt,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.playerMissingStartedAt,
       );
     }
 
@@ -114,20 +109,20 @@ class TrainingSessionRecord {
     );
   }
 
-  TrainingSessionRecordTransitionResult recordExerciseOutcome({
+  WorkoutExecutionRecordTransitionResult recordExerciseOutcome({
     required String sourceBlockLocalId,
     required String exerciseLinkLocalId,
-    required TrainingExerciseExecutionOutcome outcome,
+    required WorkoutExerciseExecutionOutcome outcome,
     String? note,
   }) {
     if (isTerminal) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.terminalState,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.terminalState,
       );
     }
     if (!lifecycleStatus.allowsExerciseUpdates) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.invalidLifecycleStatus,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.invalidLifecycleStatus,
         detail: lifecycleStatus.name,
       );
     }
@@ -137,8 +132,8 @@ class TrainingSessionRecord {
       exerciseLinkLocalId: exerciseLinkLocalId,
     );
     if (step == null) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.unknownExercise,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.unknownExercise,
         detail: '$sourceBlockLocalId/$exerciseLinkLocalId',
       );
     }
@@ -148,7 +143,7 @@ class TrainingSessionRecord {
       (e) => _exerciseKey(e.sourceBlockLocalId, e.exerciseLinkLocalId) == key,
     );
 
-    final entry = TrainingExerciseExecutionEntry(
+    final entry = WorkoutExerciseExecutionEntry(
       sourceBlockLocalId: sourceBlockLocalId,
       exerciseLinkLocalId: exerciseLinkLocalId,
       exerciseId: step.exerciseId,
@@ -165,38 +160,38 @@ class TrainingSessionRecord {
     }
     nextEntries.sort((a, b) => a.stepIndex.compareTo(b.stepIndex));
 
-    return TrainingSessionRecordTransitionResult.success(
+    return WorkoutExecutionRecordTransitionResult.success(
       _copyWith(exerciseEntries: List.unmodifiable(nextEntries)),
     );
   }
 
-  TrainingSessionRecordTransitionResult completeRecording({
+  WorkoutExecutionRecordTransitionResult completeRecording({
     required DateTime finishedAt,
     String? athleteNotes,
   }) {
     return _finalize(
-      target: TrainingSessionRecordLifecycleStatus.completed,
+      target: WorkoutExecutionRecordLifecycleStatus.completed,
       finishedAt: finishedAt,
       athleteNotes: athleteNotes,
     );
   }
 
-  TrainingSessionRecordTransitionResult abandonRecording({
+  WorkoutExecutionRecordTransitionResult abandonRecording({
     required DateTime finishedAt,
     String? athleteNotes,
   }) {
     return _finalize(
-      target: TrainingSessionRecordLifecycleStatus.abandoned,
+      target: WorkoutExecutionRecordLifecycleStatus.abandoned,
       finishedAt: finishedAt,
       athleteNotes: athleteNotes,
     );
   }
 
   /// Applies outcomes then finalizes lifecycle to match the player's terminal status.
-  static TrainingSessionRecordTransitionResult finalizeFromWorkoutPlayer({
+  static WorkoutExecutionRecordTransitionResult finalizeFromWorkoutPlayer({
     required WorkoutPlayer player,
     required String recordId,
-    required List<TrainingExerciseExecutionEntry> exerciseOutcomes,
+    required List<WorkoutExerciseExecutionEntry> exerciseOutcomes,
     String? athleteNotes,
   }) {
     final opened = beginFromWorkoutPlayer(player: player, recordId: recordId);
@@ -209,15 +204,15 @@ class TrainingSessionRecord {
         exerciseLinkLocalId: outcome.exerciseLinkLocalId,
       );
       if (step == null) {
-        return TrainingSessionRecordTransitionResult.singleFailure(
-          TrainingSessionRecordTransitionIssueCode.unknownExercise,
+        return WorkoutExecutionRecordTransitionResult.singleFailure(
+          WorkoutExecutionRecordTransitionIssueCode.unknownExercise,
           detail:
               '${outcome.sourceBlockLocalId}/${outcome.exerciseLinkLocalId}',
         );
       }
       if (step.exerciseId != outcome.exerciseId) {
-        return TrainingSessionRecordTransitionResult.singleFailure(
-          TrainingSessionRecordTransitionIssueCode.snapshotPlayerMismatch,
+        return WorkoutExecutionRecordTransitionResult.singleFailure(
+          WorkoutExecutionRecordTransitionIssueCode.snapshotPlayerMismatch,
           detail: outcome.exerciseLinkLocalId,
         );
       }
@@ -235,44 +230,44 @@ class TrainingSessionRecord {
     final finishedAt = player.finishedAt ?? player.startedAt!;
     return switch (player.executionStatus) {
       WorkoutPlayerExecutionStatus.completed => record.completeRecording(
-          finishedAt: finishedAt,
-          athleteNotes: athleteNotes,
-        ),
+        finishedAt: finishedAt,
+        athleteNotes: athleteNotes,
+      ),
       WorkoutPlayerExecutionStatus.abandoned => record.abandonRecording(
-          finishedAt: finishedAt,
-          athleteNotes: athleteNotes,
-        ),
-      _ => TrainingSessionRecordTransitionResult.singleFailure(
-          TrainingSessionRecordTransitionIssueCode.playerNotTerminal,
-          detail: player.executionStatus.name,
-        ),
+        finishedAt: finishedAt,
+        athleteNotes: athleteNotes,
+      ),
+      _ => WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.playerNotTerminal,
+        detail: player.executionStatus.name,
+      ),
     };
   }
 
-  TrainingSessionRecordTransitionResult _finalize({
-    required TrainingSessionRecordLifecycleStatus target,
+  WorkoutExecutionRecordTransitionResult _finalize({
+    required WorkoutExecutionRecordLifecycleStatus target,
     required DateTime finishedAt,
     String? athleteNotes,
   }) {
     if (isTerminal) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.terminalState,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.terminalState,
       );
     }
     if (finishedAt.isBefore(startedAt)) {
-      return TrainingSessionRecordTransitionResult.singleFailure(
-        TrainingSessionRecordTransitionIssueCode.invalidTimestamp,
+      return WorkoutExecutionRecordTransitionResult.singleFailure(
+        WorkoutExecutionRecordTransitionIssueCode.invalidTimestamp,
         detail: 'finished_before_start',
       );
     }
 
-    final check = TrainingSessionRecordLifecycle.requireTransition(
+    final check = WorkoutExecutionRecordLifecycle.requireTransition(
       record: this,
       target: target,
     );
     if (!check.isSuccess) return check;
 
-    return TrainingSessionRecordTransitionResult.success(
+    return WorkoutExecutionRecordTransitionResult.success(
       _copyWith(
         lifecycleStatus: target,
         finishedAt: finishedAt,
@@ -312,13 +307,13 @@ class TrainingSessionRecord {
     return '$blockLocalId::$exerciseLinkLocalId';
   }
 
-  TrainingSessionRecord _copyWith({
-    TrainingSessionRecordLifecycleStatus? lifecycleStatus,
+  WorkoutExecutionRecord _copyWith({
+    WorkoutExecutionRecordLifecycleStatus? lifecycleStatus,
     DateTime? finishedAt,
     String? athleteNotes,
-    List<TrainingExerciseExecutionEntry>? exerciseEntries,
+    List<WorkoutExerciseExecutionEntry>? exerciseEntries,
   }) {
-    return TrainingSessionRecord(
+    return WorkoutExecutionRecord(
       recordId: recordId,
       occurrenceId: occurrenceId,
       playerId: playerId,
@@ -333,7 +328,7 @@ class TrainingSessionRecord {
 
   @override
   bool operator ==(Object other) {
-    return other is TrainingSessionRecord &&
+    return other is WorkoutExecutionRecord &&
         other.recordId == recordId &&
         other.occurrenceId == occurrenceId &&
         other.playerId == playerId &&
@@ -347,16 +342,16 @@ class TrainingSessionRecord {
 
   @override
   int get hashCode => Object.hash(
-        recordId,
-        occurrenceId,
-        playerId,
-        executionSnapshot,
-        startedAt,
-        finishedAt,
-        lifecycleStatus,
-        athleteNotes,
-        Object.hashAll(exerciseEntries),
-      );
+    recordId,
+    occurrenceId,
+    playerId,
+    executionSnapshot,
+    startedAt,
+    finishedAt,
+    lifecycleStatus,
+    athleteNotes,
+    Object.hashAll(exerciseEntries),
+  );
 
   static bool _listEquals<T>(List<T> a, List<T> b) {
     if (a.length != b.length) return false;

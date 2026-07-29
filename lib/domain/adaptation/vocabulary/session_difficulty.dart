@@ -1,10 +1,5 @@
 /// Coarse session difficulty for catalogue and adaptation down-ranking.
-enum SessionDifficulty {
-  beginner,
-  intermediate,
-  advanced,
-  elite,
-}
+enum SessionDifficulty { beginner, intermediate, advanced, elite }
 
 extension SessionDifficultyDb on SessionDifficulty {
   String get dbValue => name;

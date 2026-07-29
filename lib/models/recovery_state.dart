@@ -1,9 +1,4 @@
-enum RecoveryState {
-  slightlyTired,
-  poorSleep,
-  veryFatigued,
-  feelingIll,
-}
+enum RecoveryState { slightlyTired, poorSleep, veryFatigued, feelingIll }
 
 extension RecoveryStateLabel on RecoveryState {
   String get label {

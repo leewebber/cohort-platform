@@ -19,7 +19,7 @@ class AthleteStateSyncServiceImpl implements AthleteStateSyncService {
   }) async {
     final existing =
         await _athleteStateStore.getByAthleteId(athleteId) ??
-            AthleteState(athleteId: athleteId);
+        AthleteState(athleteId: athleteId);
 
     final projection = _buildProjection(
       existing: existing,

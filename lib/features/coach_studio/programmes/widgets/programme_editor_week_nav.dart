@@ -68,13 +68,19 @@ class ProgrammeEditorWeekNav extends StatelessWidget {
     );
   }
 
-  bool _hasWeekIssues(ProgrammeEditorController controller, String weekLocalId) {
+  bool _hasWeekIssues(
+    ProgrammeEditorController controller,
+    String weekLocalId,
+  ) {
     return controller
         .issuesForPath(ProgrammeBuilderWeekPath(weekLocalId: weekLocalId))
         .any((issue) => issue.isBlocking);
   }
 
-  Future<void> _confirmRemoveWeek(BuildContext context, String weekLocalId) async {
+  Future<void> _confirmRemoveWeek(
+    BuildContext context,
+    String weekLocalId,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -165,14 +171,20 @@ class _WeekTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       selected: selected,
-      title: Text(title == null || title!.isEmpty
-          ? 'Week $weekNumber'
-          : 'Week $weekNumber — $title'),
+      title: Text(
+        title == null || title!.isEmpty
+            ? 'Week $weekNumber'
+            : 'Week $weekNumber — $title',
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (hasIssues)
-            const Icon(Icons.error_outline, color: CohortColors.danger, size: 16),
+            const Icon(
+              Icons.error_outline,
+              color: CohortColors.danger,
+              size: 16,
+            ),
           if (onDuplicate != null || onDelete != null)
             PopupMenuButton<String>(
               onSelected: (value) {

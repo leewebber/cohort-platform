@@ -9,8 +9,8 @@ class ProtocolDraftBlockResolver {
   const ProtocolDraftBlockResolver({
     LegacyStepToBlockConverter? legacyConverter,
     BlockToLegacyStepProjector? stepProjector,
-  })  : _legacyConverter = legacyConverter ?? const LegacyStepToBlockConverter(),
-        _stepProjector = stepProjector ?? const BlockToLegacyStepProjector();
+  }) : _legacyConverter = legacyConverter ?? const LegacyStepToBlockConverter(),
+       _stepProjector = stepProjector ?? const BlockToLegacyStepProjector();
 
   final LegacyStepToBlockConverter _legacyConverter;
   final BlockToLegacyStepProjector _stepProjector;

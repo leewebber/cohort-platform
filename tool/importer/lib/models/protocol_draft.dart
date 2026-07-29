@@ -54,6 +54,7 @@ class ProtocolDraft {
   final String protocolId;
   final String name;
   final List<ProtocolStepDraft> steps;
+
   /// Modular Session blocks (M6). Authoring source of truth when non-empty.
   final List<SessionBlock> blocks;
   final bool published;
@@ -163,8 +164,7 @@ class ProtocolDraft {
       sessionLineageId: sessionLineageId ?? this.sessionLineageId,
       revisionNumber: revisionNumber ?? this.revisionNumber,
       lifecycleStatus: lifecycleStatus ?? this.lifecycleStatus,
-      publishedAt:
-          clearPublishedAt ? null : (publishedAt ?? this.publishedAt),
+      publishedAt: clearPublishedAt ? null : (publishedAt ?? this.publishedAt),
       archivedAt: clearArchivedAt ? null : (archivedAt ?? this.archivedAt),
       primaryCapability: primaryCapability ?? this.primaryCapability,
       secondaryCapability: secondaryCapability ?? this.secondaryCapability,
@@ -238,9 +238,12 @@ class ProtocolDraft {
     required Map<String, dynamic> row,
   }) {
     return draft.copyWith(
-      contentKind: TrainingContentKindDb.fromDb(row['content_kind']?.toString()),
-      authoringScope:
-          TrainingAuthoringScopeDb.fromDb(row['authoring_scope']?.toString()),
+      contentKind: TrainingContentKindDb.fromDb(
+        row['content_kind']?.toString(),
+      ),
+      authoringScope: TrainingAuthoringScopeDb.fromDb(
+        row['authoring_scope']?.toString(),
+      ),
       endorsementStatus: TrainingEndorsementStatusDb.fromDb(
         row['endorsement_status']?.toString(),
       ),

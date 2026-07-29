@@ -37,7 +37,9 @@ void main() {
   ProgrammeVersionComparisonService buildService({
     InMemoryProgrammeVersionComparisonStore? store,
   }) {
-    return ProgrammeVersionComparisonService(comparisonStore: store ?? comparisonStore);
+    return ProgrammeVersionComparisonService(
+      comparisonStore: store ?? comparisonStore,
+    );
   }
 
   setUp(() {
@@ -205,7 +207,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionOtherId,
       );
-      expect(lookup.status, ProgrammeVersionComparisonStatus.incompatibleLineage);
+      expect(
+        lookup.status,
+        ProgrammeVersionComparisonStatus.incompatibleLineage,
+      );
     });
 
     test('5 comparison direction preserved', () async {
@@ -218,8 +223,18 @@ void main() {
         targetProgrammeVersionId: versionV2Id,
       );
 
-      expect(forward.slotChanges.any((c) => c.changeType == ProgrammeChangeType.removed), isTrue);
-      expect(reverse.slotChanges.any((c) => c.changeType == ProgrammeChangeType.added), isTrue);
+      expect(
+        forward.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.removed,
+        ),
+        isTrue,
+      );
+      expect(
+        reverse.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.added,
+        ),
+        isTrue,
+      );
     });
 
     test('6 archived versions remain comparable', () async {
@@ -227,7 +242,10 @@ void main() {
         sourceProgrammeVersionId: versionV1Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.identity.sourceLifecycleStatus, ProgrammeLifecycleStatus.archived);
+      expect(
+        summary.identity.sourceLifecycleStatus,
+        ProgrammeLifecycleStatus.archived,
+      );
     });
 
     test('7 draft and published versions remain comparable', () async {
@@ -235,8 +253,14 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.identity.sourceLifecycleStatus, ProgrammeLifecycleStatus.published);
-      expect(summary.identity.targetLifecycleStatus, ProgrammeLifecycleStatus.draft);
+      expect(
+        summary.identity.sourceLifecycleStatus,
+        ProgrammeLifecycleStatus.published,
+      );
+      expect(
+        summary.identity.targetLifecycleStatus,
+        ProgrammeLifecycleStatus.draft,
+      );
     });
 
     test('8 raw IDs absent from user-facing messages', () async {
@@ -260,7 +284,10 @@ void main() {
         targetProgrammeVersionId: versionV2Id,
       );
       expect(summary.isIdentical, isTrue);
-      expect(summary.classifications, contains(ProgrammeComparisonClassification.identical));
+      expect(
+        summary.classifications,
+        contains(ProgrammeComparisonClassification.identical),
+      );
     });
 
     test('10 structurally equivalent versions return no changes', () async {
@@ -310,7 +337,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: equivalent.id,
       );
-      expect(summary.slotChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged), isTrue);
+      expect(
+        summary.slotChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ),
+        isTrue,
+      );
     });
 
     test('11 stable ordering does not create false changes', () async {
@@ -318,7 +350,9 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.slotChanges.map((c) => c.changeType).toSet(), {ProgrammeChangeType.unchanged});
+      expect(summary.slotChanges.map((c) => c.changeType).toSet(), {
+        ProgrammeChangeType.unchanged,
+      });
     });
 
     test('12 collection normalisation follows semantic rules', () async {
@@ -336,10 +370,7 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(
-        summary.metadataChanges.any((c) => c.field == 'name'),
-        isTrue,
-      );
+      expect(summary.metadataChanges.any((c) => c.field == 'name'), isTrue);
     });
 
     test('14 description change', () async {
@@ -347,7 +378,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.metadataChanges.any((c) => c.field == 'description'), isTrue);
+      expect(
+        summary.metadataChanges.any((c) => c.field == 'description'),
+        isTrue,
+      );
     });
 
     test('15 tag addition/removal', () async {
@@ -365,20 +399,29 @@ void main() {
       expect(summary.metadataChanges, isNotEmpty);
     });
 
-    test('16 lifecycle difference not misreported as authored metadata', () async {
-      final summary = await service.compareVersions(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-      );
-      expect(summary.metadataChanges.any((c) => c.field == 'lifecycleStatus'), isFalse);
-    });
+    test(
+      '16 lifecycle difference not misreported as authored metadata',
+      () async {
+        final summary = await service.compareVersions(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionV3Id,
+        );
+        expect(
+          summary.metadataChanges.any((c) => c.field == 'lifecycleStatus'),
+          isFalse,
+        );
+      },
+    );
 
     test('17 audit timestamps ignored', () async {
       final summary = await service.compareVersions(
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.metadataChanges.any((c) => c.field.contains('At')), isFalse);
+      expect(
+        summary.metadataChanges.any((c) => c.field.contains('At')),
+        isFalse,
+      );
     });
   });
 
@@ -408,7 +451,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: extended.id,
       );
-      expect(summary.weekChanges.any((c) => c.changeType == ProgrammeChangeType.added), isTrue);
+      expect(
+        summary.weekChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.added,
+        ),
+        isTrue,
+      );
     });
 
     test('19 week removed', () async {
@@ -416,7 +464,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.weekChanges.any((c) => c.changeType == ProgrammeChangeType.removed), isFalse);
+      expect(
+        summary.weekChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.removed,
+        ),
+        isFalse,
+      );
     });
 
     test('20 week metadata modified', () async {
@@ -450,7 +503,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: renamedWeek.id,
       );
-      expect(summary.weekChanges.any((c) => c.changeType == ProgrammeChangeType.modified), isTrue);
+      expect(
+        summary.weekChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.modified,
+        ),
+        isTrue,
+      );
     });
 
     test('21 training day added', () async {
@@ -484,7 +542,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: extraDayVersion.id,
       );
-      expect(summary.dayChanges.any((c) => c.changeType == ProgrammeChangeType.added), isTrue);
+      expect(
+        summary.dayChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.added,
+        ),
+        isTrue,
+      );
     });
 
     test('22 training day removed', () async {
@@ -492,7 +555,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.dayChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged), isTrue);
+      expect(
+        summary.dayChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ),
+        isTrue,
+      );
     });
 
     test('23 day moved when identity reliable', () async {
@@ -519,68 +587,91 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: movedDayVersion.id,
       );
-      expect(summary.dayChanges.any((c) => c.changeType == ProgrammeChangeType.unchanged), isTrue);
+      expect(
+        summary.dayChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ),
+        isTrue,
+      );
     });
 
-    test('24 position change treated conservatively when identity unavailable', () async {
-      final sourceMinimal = _version(
-        id: 'version-minimal-source',
-        lineageId: lineageId,
-        versionNumber: 30,
-        name: 'Minimal source',
-      );
-      final shifted = _version(
-        id: 'version-shifted-slot',
-        lineageId: lineageId,
-        versionNumber: 10,
-        name: 'Shifted',
-      );
-      programmeTables.versions.addAll([sourceMinimal, shifted]);
+    test(
+      '24 position change treated conservatively when identity unavailable',
+      () async {
+        final sourceMinimal = _version(
+          id: 'version-minimal-source',
+          lineageId: lineageId,
+          versionNumber: 30,
+          name: 'Minimal source',
+        );
+        final shifted = _version(
+          id: 'version-shifted-slot',
+          lineageId: lineageId,
+          versionNumber: 10,
+          name: 'Shifted',
+        );
+        programmeTables.versions.addAll([sourceMinimal, shifted]);
 
-      final sourceWeek = SessionRevisionUsageTestFixtures.seedWeek(
-        programmeTables,
-        version: sourceMinimal,
-        id: 'week-minimal-source',
-      );
-      final sourceDay = SessionRevisionUsageTestFixtures.seedDay(
-        programmeTables,
-        week: sourceWeek,
-        id: 'day-minimal-source',
-      );
-      SessionRevisionUsageTestFixtures.seedSlot(
-        programmeTables,
-        day: sourceDay,
-        protocolId: protocolA,
-        id: 'slot-minimal-source',
-        sessionOrder: 1,
-      );
+        final sourceWeek = SessionRevisionUsageTestFixtures.seedWeek(
+          programmeTables,
+          version: sourceMinimal,
+          id: 'week-minimal-source',
+        );
+        final sourceDay = SessionRevisionUsageTestFixtures.seedDay(
+          programmeTables,
+          week: sourceWeek,
+          id: 'day-minimal-source',
+        );
+        SessionRevisionUsageTestFixtures.seedSlot(
+          programmeTables,
+          day: sourceDay,
+          protocolId: protocolA,
+          id: 'slot-minimal-source',
+          sessionOrder: 1,
+        );
 
-      final targetWeek = SessionRevisionUsageTestFixtures.seedWeek(
-        programmeTables,
-        version: shifted,
-        id: 'week-shifted',
-      );
-      final targetDay = SessionRevisionUsageTestFixtures.seedDay(
-        programmeTables,
-        week: targetWeek,
-        id: 'day-shifted',
-      );
-      SessionRevisionUsageTestFixtures.seedSlot(
-        programmeTables,
-        day: targetDay,
-        protocolId: protocolA,
-        id: 'slot-shifted',
-        sessionOrder: 2,
-      );
+        final targetWeek = SessionRevisionUsageTestFixtures.seedWeek(
+          programmeTables,
+          version: shifted,
+          id: 'week-shifted',
+        );
+        final targetDay = SessionRevisionUsageTestFixtures.seedDay(
+          programmeTables,
+          week: targetWeek,
+          id: 'day-shifted',
+        );
+        SessionRevisionUsageTestFixtures.seedSlot(
+          programmeTables,
+          day: targetDay,
+          protocolId: protocolA,
+          id: 'slot-shifted',
+          sessionOrder: 2,
+        );
 
-      final summary = await service.compareVersions(
-        sourceProgrammeVersionId: sourceMinimal.id,
-        targetProgrammeVersionId: shifted.id,
-      );
-      expect(summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.added), isTrue);
-      expect(summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.removed), isTrue);
-      expect(summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.moved), isFalse);
-    });
+        final summary = await service.compareVersions(
+          sourceProgrammeVersionId: sourceMinimal.id,
+          targetProgrammeVersionId: shifted.id,
+        );
+        expect(
+          summary.slotChanges.any(
+            (c) => c.changeType == ProgrammeChangeType.added,
+          ),
+          isTrue,
+        );
+        expect(
+          summary.slotChanges.any(
+            (c) => c.changeType == ProgrammeChangeType.removed,
+          ),
+          isTrue,
+        );
+        expect(
+          summary.slotChanges.any(
+            (c) => c.changeType == ProgrammeChangeType.moved,
+          ),
+          isFalse,
+        );
+      },
+    );
 
     test('25 empty week/day handled', () async {
       final empty = _version(
@@ -605,7 +696,12 @@ void main() {
         sourceProgrammeVersionId: versionV3Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.slotChanges.where((c) => c.changeType == ProgrammeChangeType.added).length, 2);
+      expect(
+        summary.slotChanges
+            .where((c) => c.changeType == ProgrammeChangeType.added)
+            .length,
+        2,
+      );
     });
 
     test('27 slot removed', () async {
@@ -613,7 +709,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.slotChanges.where((c) => c.changeType == ProgrammeChangeType.removed).length, 2);
+      expect(
+        summary.slotChanges
+            .where((c) => c.changeType == ProgrammeChangeType.removed)
+            .length,
+        2,
+      );
     });
 
     test('28 exact same slot unchanged', () async {
@@ -622,7 +723,9 @@ void main() {
         targetProgrammeVersionId: versionV2Id,
       );
       expect(
-        summary.slotChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged),
+        summary.slotChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ),
         isTrue,
       );
       expect(summary.slotChanges.length, 3);
@@ -662,7 +765,9 @@ void main() {
         targetProgrammeVersionId: movedSlotVersion.id,
       );
       expect(
-        summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.moved),
+        summary.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.moved,
+        ),
         isTrue,
       );
     });
@@ -728,7 +833,10 @@ void main() {
         targetProgrammeVersionId: versionV3Id,
       );
       expect(summary.sessionRevisionChanges, isNotEmpty);
-      expect(summary.sessionRevisionChanges.first.changeType, ProgrammeChangeType.modified);
+      expect(
+        summary.sessionRevisionChanges.first.changeType,
+        ProgrammeChangeType.modified,
+      );
       expect(summary.sessionRevisionChanges.first.sourceRevisionNumber, 1);
       expect(summary.sessionRevisionChanges.first.targetRevisionNumber, 2);
     });
@@ -764,7 +872,9 @@ void main() {
         targetProgrammeVersionId: replaced.id,
       );
       expect(
-        summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.replaced),
+        summary.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.replaced,
+        ),
         isTrue,
       );
     });
@@ -778,46 +888,59 @@ void main() {
       expect(summary.structureMetrics.sourceSlotCount, 3);
     });
 
-    test('34 one repeated slot removed without removing all occurrences', () async {
-      final oneRemoved = _version(
-        id: 'version-one-removed',
-        lineageId: lineageId,
-        versionNumber: 14,
-        name: 'One removed',
-      );
-      programmeTables.versions.add(oneRemoved);
-      final week = SessionRevisionUsageTestFixtures.seedWeek(
-        programmeTables,
-        version: oneRemoved,
-        id: 'week-one-removed',
-      );
-      final day = SessionRevisionUsageTestFixtures.seedDay(
-        programmeTables,
-        week: week,
-        id: 'day-one-removed',
-      );
-      SessionRevisionUsageTestFixtures.seedSlot(
-        programmeTables,
-        day: day,
-        protocolId: protocolA,
-        id: 'slot-one-1',
-        sessionOrder: 1,
-      );
-      SessionRevisionUsageTestFixtures.seedSlot(
-        programmeTables,
-        day: day,
-        protocolId: protocolB,
-        id: 'slot-one-3',
-        sessionOrder: 3,
-      );
+    test(
+      '34 one repeated slot removed without removing all occurrences',
+      () async {
+        final oneRemoved = _version(
+          id: 'version-one-removed',
+          lineageId: lineageId,
+          versionNumber: 14,
+          name: 'One removed',
+        );
+        programmeTables.versions.add(oneRemoved);
+        final week = SessionRevisionUsageTestFixtures.seedWeek(
+          programmeTables,
+          version: oneRemoved,
+          id: 'week-one-removed',
+        );
+        final day = SessionRevisionUsageTestFixtures.seedDay(
+          programmeTables,
+          week: week,
+          id: 'day-one-removed',
+        );
+        SessionRevisionUsageTestFixtures.seedSlot(
+          programmeTables,
+          day: day,
+          protocolId: protocolA,
+          id: 'slot-one-1',
+          sessionOrder: 1,
+        );
+        SessionRevisionUsageTestFixtures.seedSlot(
+          programmeTables,
+          day: day,
+          protocolId: protocolB,
+          id: 'slot-one-3',
+          sessionOrder: 3,
+        );
 
-      final summary = await service.compareVersions(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: oneRemoved.id,
-      );
-      expect(summary.slotChanges.where((c) => c.changeType == ProgrammeChangeType.removed).length, 1);
-      expect(summary.slotChanges.where((c) => c.changeType == ProgrammeChangeType.unchanged).length, 2);
-    });
+        final summary = await service.compareVersions(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: oneRemoved.id,
+        );
+        expect(
+          summary.slotChanges
+              .where((c) => c.changeType == ProgrammeChangeType.removed)
+              .length,
+          1,
+        );
+        expect(
+          summary.slotChanges
+              .where((c) => c.changeType == ProgrammeChangeType.unchanged)
+              .length,
+          2,
+        );
+      },
+    );
 
     test('35 ambiguous slot match becomes removed plus added', () async {
       final ambiguous = _version(
@@ -849,8 +972,18 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: ambiguous.id,
       );
-      expect(summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.added), isTrue);
-      expect(summary.slotChanges.any((c) => c.changeType == ProgrammeChangeType.removed), isTrue);
+      expect(
+        summary.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.added,
+        ),
+        isTrue,
+      );
+      expect(
+        summary.slotChanges.any(
+          (c) => c.changeType == ProgrammeChangeType.removed,
+        ),
+        isTrue,
+      );
     });
 
     test('36 stable slot ID preferred over coordinates', () async {
@@ -903,7 +1036,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(first.slotChanges.map((c) => c.changeType), second.slotChanges.map((c) => c.changeType));
+      expect(
+        first.slotChanges.map((c) => c.changeType),
+        second.slotChanges.map((c) => c.changeType),
+      );
     });
   });
 
@@ -1020,7 +1156,11 @@ void main() {
 
   group('exercises', () {
     setUp(() {
-      _seedBlockLink(exerciseTables: exerciseTables, exerciseId: 'SQ-001', protocolId: protocolA);
+      _seedBlockLink(
+        exerciseTables: exerciseTables,
+        exerciseId: 'SQ-001',
+        protocolId: protocolA,
+      );
       _seedBlockLink(
         exerciseTables: exerciseTables,
         exerciseId: 'DL-001',
@@ -1078,7 +1218,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.exerciseChanges.map((e) => e.exerciseId), containsAll(['SQ-001', 'DL-001']));
+      expect(
+        summary.exerciseChanges.map((e) => e.exerciseId),
+        containsAll(['SQ-001', 'DL-001']),
+      );
     });
 
     test('48 block-link count change', () async {
@@ -1092,7 +1235,9 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      final squat = summary.exerciseChanges.firstWhere((e) => e.exerciseId == 'SQ-001');
+      final squat = summary.exerciseChanges.firstWhere(
+        (e) => e.exerciseId == 'SQ-001',
+      );
       expect(squat.changeType, ProgrammeChangeType.modified);
     });
 
@@ -1114,7 +1259,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.exerciseChanges.any((e) => e.exerciseId == 'SQ-002'), isFalse);
+      expect(
+        summary.exerciseChanges.any((e) => e.exerciseId == 'SQ-002'),
+        isFalse,
+      );
     });
 
     test('50 free-text-only movement excluded', () async {
@@ -1122,7 +1270,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      expect(summary.exerciseChanges.every((e) => e.exerciseId.isNotEmpty), isTrue);
+      expect(
+        summary.exerciseChanges.every((e) => e.exerciseId.isNotEmpty),
+        isTrue,
+      );
     });
 
     test('51 exercise enrichment failure returns partial result', () async {
@@ -1201,7 +1352,12 @@ void main() {
         targetProgrammeVersionId: renamed.id,
       );
       expect(summary.metadataChanges, isNotEmpty);
-      expect(summary.slotChanges.every((c) => c.changeType == ProgrammeChangeType.unchanged), isTrue);
+      expect(
+        summary.slotChanges.every(
+          (c) => c.changeType == ProgrammeChangeType.unchanged,
+        ),
+        isTrue,
+      );
     });
 
     test('54 structure-only comparison', () async {
@@ -1235,7 +1391,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: extraDayVersion.id,
       );
-      expect(summary.classifications, contains(ProgrammeComparisonClassification.structureChanged));
+      expect(
+        summary.classifications,
+        contains(ProgrammeComparisonClassification.structureChanged),
+      );
     });
 
     test('55 session-only comparison', () async {
@@ -1247,7 +1406,11 @@ void main() {
     });
 
     test('56 exercise-only comparison', () async {
-      _seedBlockLink(exerciseTables: exerciseTables, exerciseId: 'SQ-001', protocolId: protocolA);
+      _seedBlockLink(
+        exerciseTables: exerciseTables,
+        exerciseId: 'SQ-001',
+        protocolId: protocolA,
+      );
       _seedBlockLink(
         exerciseTables: exerciseTables,
         exerciseId: 'SQ-002',
@@ -1262,7 +1425,11 @@ void main() {
     });
 
     test('57 mixed comparison', () async {
-      _seedBlockLink(exerciseTables: exerciseTables, exerciseId: 'SQ-001', protocolId: protocolA);
+      _seedBlockLink(
+        exerciseTables: exerciseTables,
+        exerciseId: 'SQ-001',
+        protocolId: protocolA,
+      );
       final summary = await service.compareVersions(
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
@@ -1276,7 +1443,10 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV2Id,
       );
-      expect(summary.classifications, contains(ProgrammeComparisonClassification.identical));
+      expect(
+        summary.classifications,
+        contains(ProgrammeComparisonClassification.identical),
+      );
     });
 
     test('59 partial classification', () async {
@@ -1337,7 +1507,8 @@ void main() {
         targetProgrammeVersionId: versionV3Id,
       );
       final slotKeys = summary.slotChanges.map(
-        (change) => '${change.changeType}:${change.sourceSlot?.slotId}:${change.targetSlot?.slotId}',
+        (change) =>
+            '${change.changeType}:${change.sourceSlot?.slotId}:${change.targetSlot?.slotId}',
       );
       expect(slotKeys.toSet().length, slotKeys.length);
     });
@@ -1347,8 +1518,12 @@ void main() {
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
       );
-      final metadataFields = summary.metadataChanges.map((c) => c.field).toList();
-      final exerciseIds = summary.exerciseChanges.map((c) => c.exerciseId).toList();
+      final metadataFields = summary.metadataChanges
+          .map((c) => c.field)
+          .toList();
+      final exerciseIds = summary.exerciseChanges
+          .map((c) => c.exerciseId)
+          .toList();
       expect(metadataFields, equals(metadataFields.toList()..sort()));
       expect(exerciseIds, equals(exerciseIds.toList()..sort()));
     });

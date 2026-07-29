@@ -52,7 +52,8 @@ class BlockToLegacyStepProjector {
         ProtocolStepDraft(
           localId: 'step-proj-${block.localId}-instructions',
           stepOrder: stepOrder,
-          title: '${block.title.trim().isEmpty ? block.blockType.defaultTitle : block.title.trim()} — Instructions',
+          title:
+              '${block.title.trim().isEmpty ? block.blockType.defaultTitle : block.title.trim()} — Instructions',
           section: block.blockType.displayLabel,
           stepType: 'Instruction',
           displayStyle: 'instruction',
@@ -139,7 +140,9 @@ class BlockToLegacyStepProjector {
     return ProtocolStepDraft(
       localId: 'step-proj-${block.localId}',
       stepOrder: stepOrder,
-      title: block.title.trim().isEmpty ? 'Block $stepOrder' : block.title.trim(),
+      title: block.title.trim().isEmpty
+          ? 'Block $stepOrder'
+          : block.title.trim(),
       section: block.blockType.displayLabel,
       stepType: 'Block',
       displayStyle: 'exercise',

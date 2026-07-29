@@ -1,9 +1,6 @@
 import 'dart:convert';
 
-enum ProgrammeAdaptationType {
-  loadProgression,
-  protocolSubstitution,
-}
+enum ProgrammeAdaptationType { loadProgression, protocolSubstitution }
 
 /// Audit record for a deterministic post-completion adaptation.
 class ProgrammeAdaptationEvent {

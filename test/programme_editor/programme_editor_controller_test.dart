@@ -86,7 +86,9 @@ void main() {
   }
 
   void seedPersistedDraft() {
-    tables.lineages.add(const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-TEST'));
+    tables.lineages.add(
+      const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-TEST'),
+    );
     tables.versions.add(
       ProgrammeVersion(
         id: versionId,
@@ -129,10 +131,9 @@ void main() {
     ProgrammeBuilderService? serviceOverride,
     bool failSave = false,
   }) {
-    final service = serviceOverride ??
-        (failSave
-            ? FailingSaveBuilderService(builderService)
-            : builderService);
+    final service =
+        serviceOverride ??
+        (failSave ? FailingSaveBuilderService(builderService) : builderService);
 
     return ProgrammeEditorController(
       builderService: service,
@@ -220,8 +221,9 @@ void main() {
     await controller.load();
     await controller.addWeek();
 
-    final weekNumbers =
-        controller.document!.template.allWeeks.map((w) => w.weekNumber);
+    final weekNumbers = controller.document!.template.allWeeks.map(
+      (w) => w.weekNumber,
+    );
     expect(weekNumbers, [1, 2]);
   });
 
@@ -242,20 +244,41 @@ void main() {
   test('protocol assign replace and clear', () async {
     await controller.load();
     final slotId = controller
-        .document!.template.allWeeks.single.days.single.slots.single.localId;
-    await controller.assignProtocol(
-      slotLocalId: slotId,
-      protocolId: 'BW-002',
-    );
+        .document!
+        .template
+        .allWeeks
+        .single
+        .days
+        .single
+        .slots
+        .single
+        .localId;
+    await controller.assignProtocol(slotLocalId: slotId, protocolId: 'BW-002');
     expect(
-      controller.document!.template.allWeeks.single.days.single.slots.single
+      controller
+          .document!
+          .template
+          .allWeeks
+          .single
+          .days
+          .single
+          .slots
+          .single
           .protocolId,
       'BW-002',
     );
 
     await controller.clearProtocol(slotId);
     expect(
-      controller.document!.template.allWeeks.single.days.single.slots.single
+      controller
+          .document!
+          .template
+          .allWeeks
+          .single
+          .days
+          .single
+          .slots
+          .single
           .protocolId,
       '',
     );
@@ -266,8 +289,16 @@ void main() {
     final weekId = controller.document!.template.allWeeks.single.localId;
     final dayId =
         controller.document!.template.allWeeks.single.days.single.localId;
-    final slotId = controller.document!.template.allWeeks.single.days.single
-        .slots.single.localId;
+    final slotId = controller
+        .document!
+        .template
+        .allWeeks
+        .single
+        .days
+        .single
+        .slots
+        .single
+        .localId;
 
     controller.selectPath(
       ProgrammeBuilderSlotPath(
@@ -342,7 +373,13 @@ void main() {
   test('round-trip save and reload preserves slot protocol', () async {
     await controller.load();
     await controller.assignProtocol(
-      slotLocalId: controller.document!.template.allWeeks.single.days.single
+      slotLocalId: controller
+          .document!
+          .template
+          .allWeeks
+          .single
+          .days
+          .single
           .slots
           .single
           .localId,
@@ -353,8 +390,8 @@ void main() {
     final reloaded = createController();
     await reloaded.load();
 
-    final slot = reloaded.document!.template.allWeeks.single.days.single.slots
-        .single;
+    final slot =
+        reloaded.document!.template.allWeeks.single.days.single.slots.single;
     expect(slot.protocolId, 'BW-009');
   });
 
@@ -367,7 +404,8 @@ void main() {
   });
 }
 
-class FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerService {
+class FakeProtocolPickerService
+    implements ProgrammeBuilderProtocolPickerService {
   @override
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId) async {
     return ProgrammeBuilderProtocolOption(
@@ -412,9 +450,7 @@ class FakeProtocolPickerService implements ProgrammeBuilderProtocolPickerService
 class FakeProtocolNameResolver implements ProgrammeBuilderProtocolNameResolver {
   @override
   Future<Map<String, String>> resolveNames(Set<String> protocolIds) async {
-    return {
-      for (final id in protocolIds) id: 'Protocol $id',
-    };
+    return {for (final id in protocolIds) id: 'Protocol $id'};
   }
 }
 
@@ -442,19 +478,18 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
   Future<ProgrammeBuilderEditResult> addDay(
     ProgrammeBuilderDocument document, {
     required String weekLocalId,
-  }) =>
-      _delegate.addDay(document, weekLocalId: weekLocalId);
+  }) => _delegate.addDay(document, weekLocalId: weekLocalId);
 
   @override
   Future<ProgrammeBuilderEditResult> addSlot(
     ProgrammeBuilderDocument document, {
     required String dayLocalId,
-  }) =>
-      _delegate.addSlot(document, dayLocalId: dayLocalId);
+  }) => _delegate.addSlot(document, dayLocalId: dayLocalId);
 
   @override
-  Future<ProgrammeBuilderEditResult> addWeek(ProgrammeBuilderDocument document) =>
-      _delegate.addWeek(document);
+  Future<ProgrammeBuilderEditResult> addWeek(
+    ProgrammeBuilderDocument document,
+  ) => _delegate.addWeek(document);
 
   @override
   Future<ProgrammeBuilderEditResult> assignProtocol(
@@ -462,46 +497,41 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
-  }) =>
-      _delegate.assignProtocol(
-        document,
-        slotLocalId: slotLocalId,
-        protocolId: protocolId,
-        displayTitle: displayTitle,
-      );
+  }) => _delegate.assignProtocol(
+    document,
+    slotLocalId: slotLocalId,
+    protocolId: protocolId,
+    displayTitle: displayTitle,
+  );
 
   @override
   Future<ProgrammeBuilderEditResult> clearProtocol(
     ProgrammeBuilderDocument document, {
     required String slotLocalId,
-  }) =>
-      _delegate.clearProtocol(document, slotLocalId: slotLocalId);
+  }) => _delegate.clearProtocol(document, slotLocalId: slotLocalId);
 
   @override
   Future<ProgrammeBuilderOperationResult> createDraftProgramme({
     required String coachId,
     required ProgrammeVersionDraftMetadata seedMetadata,
     seedTemplate = ProgrammeSeedTemplate.empty,
-  }) =>
-      _delegate.createDraftProgramme(
-        coachId: coachId,
-        seedMetadata: seedMetadata,
-        seedTemplate: seedTemplate,
-      );
+  }) => _delegate.createDraftProgramme(
+    coachId: coachId,
+    seedMetadata: seedMetadata,
+    seedTemplate: seedTemplate,
+  );
 
   @override
   Future<ProgrammeBuilderOperationResult> deleteDraft({
     required String versionId,
     required String coachId,
-  }) =>
-      _delegate.deleteDraft(versionId: versionId, coachId: coachId);
+  }) => _delegate.deleteDraft(versionId: versionId, coachId: coachId);
 
   @override
   Future<ProgrammeBuilderEditResult> duplicateWeek(
     ProgrammeBuilderDocument document, {
     required String weekLocalId,
-  }) =>
-      _delegate.duplicateWeek(document, weekLocalId: weekLocalId);
+  }) => _delegate.duplicateWeek(document, weekLocalId: weekLocalId);
 
   @override
   Future<ProgrammeBuilderOperationResult> duplicateProgramme({
@@ -509,42 +539,39 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     required String coachId,
     required String newLineageCode,
     required String newProgrammeName,
-  }) =>
-      _delegate.duplicateProgramme(
-        sourceVersionId: sourceVersionId,
-        coachId: coachId,
-        newLineageCode: newLineageCode,
-        newProgrammeName: newProgrammeName,
-      );
+  }) => _delegate.duplicateProgramme(
+    sourceVersionId: sourceVersionId,
+    coachId: coachId,
+    newLineageCode: newLineageCode,
+    newProgrammeName: newProgrammeName,
+  );
 
   @override
   Future<ProgrammeBuilderDocument> loadDocument({required String versionId}) =>
       _delegate.loadDocument(versionId: versionId);
 
   @override
-  Future<List<ProgrammeCatalogEntry>> listCoachDrafts({required String coachId}) =>
-      _delegate.listCoachDrafts(coachId: coachId);
+  Future<List<ProgrammeCatalogEntry>> listCoachDrafts({
+    required String coachId,
+  }) => _delegate.listCoachDrafts(coachId: coachId);
 
   @override
   Future<ProgrammeBuilderEditResult> removeDay(
     ProgrammeBuilderDocument document, {
     required String dayLocalId,
-  }) =>
-      _delegate.removeDay(document, dayLocalId: dayLocalId);
+  }) => _delegate.removeDay(document, dayLocalId: dayLocalId);
 
   @override
   Future<ProgrammeBuilderEditResult> removeSlot(
     ProgrammeBuilderDocument document, {
     required String slotLocalId,
-  }) =>
-      _delegate.removeSlot(document, slotLocalId: slotLocalId);
+  }) => _delegate.removeSlot(document, slotLocalId: slotLocalId);
 
   @override
   Future<ProgrammeBuilderEditResult> removeWeek(
     ProgrammeBuilderDocument document, {
     required String weekLocalId,
-  }) =>
-      _delegate.removeWeek(document, weekLocalId: weekLocalId);
+  }) => _delegate.removeWeek(document, weekLocalId: weekLocalId);
 
   @override
   ProgrammeBuilderEditResult? redo(ProgrammeBuilderDocument document) =>
@@ -566,11 +593,7 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     required String dayLocalId,
     required ProgrammeDayType dayType,
   }) =>
-      _delegate.setDayType(
-        document,
-        dayLocalId: dayLocalId,
-        dayType: dayType,
-      );
+      _delegate.setDayType(document, dayLocalId: dayLocalId, dayType: dayType);
 
   @override
   ProgrammeBuilderEditResult? undo(ProgrammeBuilderDocument document) =>
@@ -584,22 +607,20 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     ProgrammeIntent? intent,
     bool clearTitle = false,
     bool clearIntent = false,
-  }) =>
-      _delegate.updateDayMetadata(
-        document,
-        dayLocalId: dayLocalId,
-        title: title,
-        intent: intent,
-        clearTitle: clearTitle,
-        clearIntent: clearIntent,
-      );
+  }) => _delegate.updateDayMetadata(
+    document,
+    dayLocalId: dayLocalId,
+    title: title,
+    intent: intent,
+    clearTitle: clearTitle,
+    clearIntent: clearIntent,
+  );
 
   @override
   Future<ProgrammeBuilderEditResult> updateMetadata(
     ProgrammeBuilderDocument document,
     ProgrammeVersionDraftMetadata metadata,
-  ) =>
-      _delegate.updateMetadata(document, metadata);
+  ) => _delegate.updateMetadata(document, metadata);
 
   @override
   Future<ProgrammeBuilderEditResult> updateSlotMetadata(
@@ -614,18 +635,17 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     bool clearDisplayTitle = false,
     bool clearCoachNote = false,
     bool clearAthleteNote = false,
-  }) =>
-      _delegate.updateSlotMetadata(
-        document,
-        slotLocalId: slotLocalId,
-        displayTitle: displayTitle,
-        timeOfDay: timeOfDay,
-        isOptional: isOptional,
-        completionExpectation: completionExpectation,
-        coachNote: coachNote,
-        athleteNote: athleteNote,
-        clearDisplayTitle: clearDisplayTitle,
-        clearCoachNote: clearCoachNote,
-        clearAthleteNote: clearAthleteNote,
-      );
+  }) => _delegate.updateSlotMetadata(
+    document,
+    slotLocalId: slotLocalId,
+    displayTitle: displayTitle,
+    timeOfDay: timeOfDay,
+    isOptional: isOptional,
+    completionExpectation: completionExpectation,
+    coachNote: coachNote,
+    athleteNote: athleteNote,
+    clearDisplayTitle: clearDisplayTitle,
+    clearCoachNote: clearCoachNote,
+    clearAthleteNote: clearAthleteNote,
+  );
 }

@@ -106,39 +106,44 @@ void main() {
   });
 
   group('InMemoryProgrammeVersionStore', () {
-    test('loads one requested version tree without catalogue fan-out', () async {
-      final tables = InMemoryProgrammeTables();
-      final store = InMemoryProgrammeVersionStore(tables);
+    test(
+      'loads one requested version tree without catalogue fan-out',
+      () async {
+        final tables = InMemoryProgrammeTables();
+        final store = InMemoryProgrammeVersionStore(tables);
 
-      final version = _version(id: 'version-1');
-      final otherVersion = _version(id: 'version-2', name: 'Other');
-      final week = _week(id: 'week-1', versionId: version.id, weekNumber: 1);
-      final day = _day(
-        id: 'day-1',
-        weekId: week.id,
-        dayKey: 'day_1',
-        dayOrder: 1,
-      );
-      final slot = _slot(
-        id: 'slot-1',
-        dayId: day.id,
-        sessionOrder: 1,
-        protocolId: 'BW-001',
-      );
+        final version = _version(id: 'version-1');
+        final otherVersion = _version(id: 'version-2', name: 'Other');
+        final week = _week(id: 'week-1', versionId: version.id, weekNumber: 1);
+        final day = _day(
+          id: 'day-1',
+          weekId: week.id,
+          dayKey: 'day_1',
+          dayOrder: 1,
+        );
+        final slot = _slot(
+          id: 'slot-1',
+          dayId: day.id,
+          sessionOrder: 1,
+          protocolId: 'BW-001',
+        );
 
-      tables.versions.addAll([version, otherVersion]);
-      tables.weeks.add(week);
-      tables.days.add(day);
-      tables.slots.add(slot);
+        tables.versions.addAll([version, otherVersion]);
+        tables.weeks.add(week);
+        tables.days.add(day);
+        tables.slots.add(slot);
 
-      final tree = await store.loadTemplateTree(version.id);
+        final tree = await store.loadTemplateTree(version.id);
 
-      expect(tree, isNotNull);
-      expect(tree!.template.version.id, version.id);
-      expect(tree.weekNodes, hasLength(1));
-      expect(await store.listCatalogueVersions(const ProgrammeCatalogueQuery()),
-          hasLength(2));
-    });
+        expect(tree, isNotNull);
+        expect(tree!.template.version.id, version.id);
+        expect(tree.weekNodes, hasLength(1));
+        expect(
+          await store.listCatalogueVersions(const ProgrammeCatalogueQuery()),
+          hasLength(2),
+        );
+      },
+    );
 
     test('surfaces access denied instead of swallowing RLS failures', () async {
       final tables = InMemoryProgrammeTables()..denyReads = true;
@@ -163,8 +168,16 @@ void main() {
       final store = InMemoryProgrammeAssignmentStore(tables);
 
       tables.assignments.addAll([
-        _assignment(id: 'a-1', athleteId: 'lee', status: ProgrammeAssignmentStatus.completed),
-        _assignment(id: 'a-2', athleteId: 'lee', status: ProgrammeAssignmentStatus.active),
+        _assignment(
+          id: 'a-1',
+          athleteId: 'lee',
+          status: ProgrammeAssignmentStatus.completed,
+        ),
+        _assignment(
+          id: 'a-2',
+          athleteId: 'lee',
+          status: ProgrammeAssignmentStatus.active,
+        ),
       ]);
 
       final active = await store.getActiveAssignment('lee');
@@ -196,12 +209,20 @@ void main() {
       final store = InMemoryProgrammeAssignmentStore(tables);
 
       tables.assignments.add(
-        _assignment(id: 'a-1', athleteId: 'lee', status: ProgrammeAssignmentStatus.active),
+        _assignment(
+          id: 'a-1',
+          athleteId: 'lee',
+          status: ProgrammeAssignmentStatus.active,
+        ),
       );
 
       expect(
         () => store.insert(
-          _assignment(id: 'a-2', athleteId: 'lee', status: ProgrammeAssignmentStatus.active),
+          _assignment(
+            id: 'a-2',
+            athleteId: 'lee',
+            status: ProgrammeAssignmentStatus.active,
+          ),
         ),
         throwsA(
           isA<ProgrammeStoreException>().having(
@@ -265,15 +286,15 @@ void main() {
 
       final outcomes = await store.listForAssignment('a-1');
 
-      expect(
-        outcomes.map((outcome) => outcome.outcomeStatus).toSet(),
-        {
-          ProgrammeSlotOutcomeStatus.completedPartial,
-          ProgrammeSlotOutcomeStatus.completed,
-        },
-      );
+      expect(outcomes.map((outcome) => outcome.outcomeStatus).toSet(), {
+        ProgrammeSlotOutcomeStatus.completedPartial,
+        ProgrammeSlotOutcomeStatus.completed,
+      });
       expect(partial.outcomeStatus.isTerminal, isTrue);
-      expect(partial.outcomeStatus, isNot(ProgrammeSlotOutcomeStatus.completed));
+      expect(
+        partial.outcomeStatus,
+        isNot(ProgrammeSlotOutcomeStatus.completed),
+      );
     });
 
     test('lists outcomes for a specific assignment day', () async {

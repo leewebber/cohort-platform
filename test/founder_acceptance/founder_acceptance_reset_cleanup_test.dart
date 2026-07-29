@@ -62,16 +62,16 @@ void main() {
           TrainingSessionRecordStatus.inProgress,
       bool completeStrengthBlock = false,
     }) async {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: plan,
-        athleteId: athleteId,
-        trainingSessionId: trainingSessionId,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: plan,
+            athleteId: athleteId,
+            trainingSessionId: trainingSessionId,
+          );
 
       if (completeStrengthBlock) {
         final strengthBlockId = 'block-strength';
-        final squatId = controller
-            .draft
+        final squatId = controller.draft
             .blockDraftFor(strengthBlockId)!
             .exerciseResults
             .first
@@ -81,8 +81,7 @@ void main() {
           ..updateSet(
             strengthBlockId,
             squatId,
-            controller
-                .draft
+            controller.draft
                 .blockDraftFor(strengthBlockId)!
                 .exerciseResults
                 .first
@@ -125,11 +124,12 @@ void main() {
         return coordinator.restoreControllerFromRecord(existing);
       }
 
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: plan,
-        athleteId: athleteId,
-        trainingSessionId: trainingSessionId,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: plan,
+            athleteId: athleteId,
+            trainingSessionId: trainingSessionId,
+          );
       await coordinator.createOrResumeInProgress(controller: controller);
       return controller;
     }
@@ -145,148 +145,162 @@ void main() {
       expect(result.clearedMemoryKeys, 0);
     });
 
-    test('reset with in-progress founder session clears performance records',
-        () async {
-      final session = trainingSessionRepository.seed(
-        athleteId: athleteId,
-        protocolId: founderProtocolId,
-        status: TrainingSessionStatus.inProgress,
-        startedAt: DateTime.now().toUtc(),
-      );
-      await seedFounderPerformanceSession(
-        trainingSessionId: session.id,
-        completeStrengthBlock: true,
-      );
-
-      final result = await resetService.clearFounderRuntimeState(
-        athleteId: athleteId,
-        assignmentId: founderAssignmentId,
-      );
-
-      expect(result.deletedPerformanceRecords, 1);
-      expect(result.deletedTrainingSessions, 1);
-      expect(
-        await performanceStore.getInProgressForTrainingSession(
+    test(
+      'reset with in-progress founder session clears performance records',
+      () async {
+        final session = trainingSessionRepository.seed(
           athleteId: athleteId,
+          protocolId: founderProtocolId,
+          status: TrainingSessionStatus.inProgress,
+          startedAt: DateTime.now().toUtc(),
+        );
+        await seedFounderPerformanceSession(
           trainingSessionId: session.id,
-        ),
-        isNull,
-      );
-    });
+          completeStrengthBlock: true,
+        );
 
-    test('reset with completed founder session clears terminal records',
-        () async {
-      final session = trainingSessionRepository.seed(
-        athleteId: athleteId,
-        protocolId: founderProtocolId,
-        status: TrainingSessionStatus.completed,
-        startedAt: DateTime.now().toUtc(),
-        completedAt: DateTime.now().toUtc(),
-      );
-      await seedFounderPerformanceSession(
-        trainingSessionId: session.id,
-        status: TrainingSessionRecordStatus.completed,
-        completeStrengthBlock: true,
-      );
-
-      final result = await resetService.clearFounderRuntimeState(
-        athleteId: athleteId,
-        assignmentId: founderAssignmentId,
-      );
-
-      expect(result.deletedPerformanceRecords, 1);
-      expect(
-        await performanceStore.getTerminalForTrainingSession(
+        final result = await resetService.clearFounderRuntimeState(
           athleteId: athleteId,
+          assignmentId: founderAssignmentId,
+        );
+
+        expect(result.deletedPerformanceRecords, 1);
+        expect(result.deletedTrainingSessions, 1);
+        expect(
+          await performanceStore.getInProgressForTrainingSession(
+            athleteId: athleteId,
+            trainingSessionId: session.id,
+          ),
+          isNull,
+        );
+      },
+    );
+
+    test(
+      'reset with completed founder session clears terminal records',
+      () async {
+        final session = trainingSessionRepository.seed(
+          athleteId: athleteId,
+          protocolId: founderProtocolId,
+          status: TrainingSessionStatus.completed,
+          startedAt: DateTime.now().toUtc(),
+          completedAt: DateTime.now().toUtc(),
+        );
+        await seedFounderPerformanceSession(
           trainingSessionId: session.id,
-        ),
-        isNull,
-      );
-    });
-
-    test('founder performance records cleared while unrelated records remain',
-        () async {
-      final founderSession = trainingSessionRepository.seed(
-        athleteId: athleteId,
-        protocolId: founderProtocolId,
-        status: TrainingSessionStatus.completed,
-      );
-      final otherSession = trainingSessionRepository.seed(
-        athleteId: athleteId,
-        protocolId: unrelatedProtocolId,
-        status: TrainingSessionStatus.completed,
-      );
-
-      await seedFounderPerformanceSession(
-        trainingSessionId: founderSession.id,
-        status: TrainingSessionRecordStatus.completed,
-      );
-
-      final otherController =
-          PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: SessionExecutionPlan(
-          sessionId: unrelatedProtocolId,
-          sessionTitle: 'Foundation Session',
-          blocks: plan.blocks,
-        ),
-        athleteId: athleteId,
-        trainingSessionId: otherSession.id,
-      );
-      otherController.markBlockComplete(
-        otherController.draft.blockDrafts.first.sourceBlockId,
-      );
-      await performanceStore.completeRecord(
-        otherController.buildPersistableDraft(
           status: TrainingSessionRecordStatus.completed,
-        ),
-      );
+          completeStrengthBlock: true,
+        );
 
-      await resetService.clearFounderRuntimeState(
-        athleteId: athleteId,
-        assignmentId: founderAssignmentId,
-      );
-
-      expect(
-        await performanceStore.getTerminalForTrainingSession(
+        final result = await resetService.clearFounderRuntimeState(
           athleteId: athleteId,
+          assignmentId: founderAssignmentId,
+        );
+
+        expect(result.deletedPerformanceRecords, 1);
+        expect(
+          await performanceStore.getTerminalForTrainingSession(
+            athleteId: athleteId,
+            trainingSessionId: session.id,
+          ),
+          isNull,
+        );
+      },
+    );
+
+    test(
+      'founder performance records cleared while unrelated records remain',
+      () async {
+        final founderSession = trainingSessionRepository.seed(
+          athleteId: athleteId,
+          protocolId: founderProtocolId,
+          status: TrainingSessionStatus.completed,
+        );
+        final otherSession = trainingSessionRepository.seed(
+          athleteId: athleteId,
+          protocolId: unrelatedProtocolId,
+          status: TrainingSessionStatus.completed,
+        );
+
+        await seedFounderPerformanceSession(
           trainingSessionId: founderSession.id,
-        ),
-        isNull,
-      );
-      expect(
-        await performanceStore.getTerminalForTrainingSession(
+          status: TrainingSessionRecordStatus.completed,
+        );
+
+        final otherController =
+            PerformanceCaptureController.initializeFromExecutionPlan(
+              plan: SessionExecutionPlan(
+                sessionId: unrelatedProtocolId,
+                sessionTitle: 'Foundation Session',
+                blocks: plan.blocks,
+              ),
+              athleteId: athleteId,
+              trainingSessionId: otherSession.id,
+            );
+        otherController.markBlockComplete(
+          otherController.draft.blockDrafts.first.sourceBlockId,
+        );
+        await performanceStore.completeRecord(
+          otherController.buildPersistableDraft(
+            status: TrainingSessionRecordStatus.completed,
+          ),
+        );
+
+        await resetService.clearFounderRuntimeState(
           athleteId: athleteId,
-          trainingSessionId: otherSession.id,
-        ),
-        isNotNull,
-      );
-      expect(trainingSessionRepository.sessions, hasLength(1));
-      expect(trainingSessionRepository.sessions.single.protocolId,
-          unrelatedProtocolId);
-    });
+          assignmentId: founderAssignmentId,
+        );
 
-    test('clears in-memory session execution state for founder protocol', () async {
-      const trainingSessionId = 8801;
-      final sessionKey = AthleteSessionMemoryStore.sessionKey(
-        protocolId: founderProtocolId,
-        trainingSessionId: trainingSessionId,
-      );
-      AthleteSessionMemoryStore.instance.write(
-        ActiveSessionState.initial(sessionKey: sessionKey, plan: plan).copyWith(
-          sessionStatus: SessionExecutionStatus.inProgress,
-          completedBlockIds: {'block-warmup', 'block-strength'},
-          activeBlockIndex: 2,
-        ),
-      );
+        expect(
+          await performanceStore.getTerminalForTrainingSession(
+            athleteId: athleteId,
+            trainingSessionId: founderSession.id,
+          ),
+          isNull,
+        );
+        expect(
+          await performanceStore.getTerminalForTrainingSession(
+            athleteId: athleteId,
+            trainingSessionId: otherSession.id,
+          ),
+          isNotNull,
+        );
+        expect(trainingSessionRepository.sessions, hasLength(1));
+        expect(
+          trainingSessionRepository.sessions.single.protocolId,
+          unrelatedProtocolId,
+        );
+      },
+    );
 
-      final result = await resetService.clearFounderRuntimeState(
-        athleteId: athleteId,
-        assignmentId: founderAssignmentId,
-      );
+    test(
+      'clears in-memory session execution state for founder protocol',
+      () async {
+        const trainingSessionId = 8801;
+        final sessionKey = AthleteSessionMemoryStore.sessionKey(
+          protocolId: founderProtocolId,
+          trainingSessionId: trainingSessionId,
+        );
+        AthleteSessionMemoryStore.instance.write(
+          ActiveSessionState.initial(
+            sessionKey: sessionKey,
+            plan: plan,
+          ).copyWith(
+            sessionStatus: SessionExecutionStatus.inProgress,
+            completedBlockIds: {'block-warmup', 'block-strength'},
+            activeBlockIndex: 2,
+          ),
+        );
 
-      expect(result.clearedMemoryKeys, 1);
-      expect(AthleteSessionMemoryStore.instance.read(sessionKey), isNull);
-    });
+        final result = await resetService.clearFounderRuntimeState(
+          athleteId: athleteId,
+          assignmentId: founderAssignmentId,
+        );
+
+        expect(result.clearedMemoryKeys, 1);
+        expect(AthleteSessionMemoryStore.instance.read(sessionKey), isNull);
+      },
+    );
 
     test('repeated reset remains safe', () async {
       final session = trainingSessionRepository.seed(
@@ -311,37 +325,41 @@ void main() {
       expect(second.clearedMemoryKeys, 0);
     });
 
-    test('post-reset execution shows empty strength editors via restore path',
-        () async {
-      final session = trainingSessionRepository.seed(
-        athleteId: athleteId,
-        protocolId: founderProtocolId,
-        status: TrainingSessionStatus.inProgress,
-      );
-      await seedFounderPerformanceSession(
-        trainingSessionId: session.id,
-        completeStrengthBlock: true,
-      );
+    test(
+      'post-reset execution shows empty strength editors via restore path',
+      () async {
+        final session = trainingSessionRepository.seed(
+          athleteId: athleteId,
+          protocolId: founderProtocolId,
+          status: TrainingSessionStatus.inProgress,
+        );
+        await seedFounderPerformanceSession(
+          trainingSessionId: session.id,
+          completeStrengthBlock: true,
+        );
 
-      await resetService.clearFounderRuntimeState(
-        athleteId: athleteId,
-        assignmentId: founderAssignmentId,
-      );
+        await resetService.clearFounderRuntimeState(
+          athleteId: athleteId,
+          assignmentId: founderAssignmentId,
+        );
 
-      final controller = await simulateSessionStart(
-        trainingSessionId: session.id,
-      );
-      final strengthDraft = controller.draft.blockDraftFor('block-strength');
+        final controller = await simulateSessionStart(
+          trainingSessionId: session.id,
+        );
+        final strengthDraft = controller.draft.blockDraftFor('block-strength');
 
-      expect(strengthDraft, isNotNull);
-      expect(strengthDraft!.status, TrainingBlockResultStatus.notStarted);
-      expect(strengthDraft.exerciseResults, hasLength(2));
-      expect(
-        strengthDraft.exerciseResults.every((exercise) => exercise.sets.isEmpty),
-        isTrue,
-      );
-      expect(BlockResultEditor.showsCaptureFields(strengthDraft), isTrue);
-    });
+        expect(strengthDraft, isNotNull);
+        expect(strengthDraft!.status, TrainingBlockResultStatus.notStarted);
+        expect(strengthDraft.exerciseResults, hasLength(2));
+        expect(
+          strengthDraft.exerciseResults.every(
+            (exercise) => exercise.sets.isEmpty,
+          ),
+          isTrue,
+        );
+        expect(BlockResultEditor.showsCaptureFields(strengthDraft), isTrue);
+      },
+    );
   });
 
   group('ProgrammeDebugActions founder reset integration', () {
@@ -415,54 +433,68 @@ void main() {
       );
     });
 
-    test('founder outcome rows cleared and athlete_state reprojects unstarted',
-        () async {
-      final assignment = tables.assignments.singleWhere(
-        (entry) => entry.lineageCode == ProgrammeDevFixtures.founderAcceptanceLineageCode,
-      );
-      tables.outcomes.add(
-        ProgrammeSlotOutcome(
-          id: 'founder-outcome-1',
-          assignmentId: assignment.id,
-          sessionSlotId: FounderAcceptanceDevFixtures.slotId,
-          weekNumber: 1,
-          dayKey: 'day_1',
-          sessionOrder: 1,
-          outcomeStatus: ProgrammeSlotOutcomeStatus.completed,
-        ),
-      );
+    test(
+      'founder outcome rows cleared and athlete_state reprojects unstarted',
+      () async {
+        final assignment = tables.assignments.singleWhere(
+          (entry) =>
+              entry.lineageCode ==
+              ProgrammeDevFixtures.founderAcceptanceLineageCode,
+        );
+        tables.outcomes.add(
+          ProgrammeSlotOutcome(
+            id: 'founder-outcome-1',
+            assignmentId: assignment.id,
+            sessionSlotId: FounderAcceptanceDevFixtures.slotId,
+            weekNumber: 1,
+            dayKey: 'day_1',
+            sessionOrder: 1,
+            outcomeStatus: ProgrammeSlotOutcomeStatus.completed,
+          ),
+        );
 
-      final resetResult =
-          await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment(
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        developmentService: developmentService(),
-        runtimeResetService: FounderAcceptanceRuntimeResetService(
-          performanceRecordStore: performanceStore,
-          trainingSessionRepository: trainingSessionRepository,
-        ),
-      );
+        final resetResult =
+            await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment(
+              assignmentStore: assignmentStore,
+              slotOutcomeStore: outcomeStore,
+              versionStore: versionStore,
+              developmentService: developmentService(),
+              runtimeResetService: FounderAcceptanceRuntimeResetService(
+                performanceRecordStore: performanceStore,
+                trainingSessionRepository: trainingSessionRepository,
+              ),
+            );
 
-      expect(resetResult.status, isNot(ProgrammeAssignmentOperationStatus.failed));
-      expect(resetResult.assignment?.currentWeek, 1);
-      expect(resetResult.assignment?.currentDayKey, 'day_1');
-      expect(resetResult.assignment?.currentSessionOrder, 1);
-      expect(tables.outcomes, isEmpty);
-      expect(
-        resetResult.resolvedTodaySession?.kind,
-        ResolvedTodaySessionKind.executable,
-      );
-      expect(
-        resetResult.resolvedTodaySession?.outcomeStatus,
-        ProgrammeSlotOutcomeStatus.scheduled,
-      );
+        expect(
+          resetResult.status,
+          isNot(ProgrammeAssignmentOperationStatus.failed),
+        );
+        expect(resetResult.assignment?.currentWeek, 1);
+        expect(resetResult.assignment?.currentDayKey, 'day_1');
+        expect(resetResult.assignment?.currentSessionOrder, 1);
+        expect(tables.outcomes, isEmpty);
+        expect(
+          resetResult.resolvedTodaySession?.kind,
+          ResolvedTodaySessionKind.executable,
+        );
+        expect(
+          resetResult.resolvedTodaySession?.outcomeStatus,
+          ProgrammeSlotOutcomeStatus.scheduled,
+        );
 
-      final athleteState =
-          await athleteStore.getByAthleteId(ProgrammeDebugActions.devAthleteId);
-      expect(athleteState?.currentProtocolId, FounderAcceptanceContent.protocolId);
-      expect(athleteState?.sessionStatus, ProgrammeSlotOutcomeStatus.scheduled.dbValue);
-    });
+        final athleteState = await athleteStore.getByAthleteId(
+          ProgrammeDebugActions.devAthleteId,
+        );
+        expect(
+          athleteState?.currentProtocolId,
+          FounderAcceptanceContent.protocolId,
+        );
+        expect(
+          athleteState?.sessionStatus,
+          ProgrammeSlotOutcomeStatus.scheduled.dbValue,
+        );
+      },
+    );
 
     test('unrelated programme history remains untouched', () async {
       await seedFoundationActiveAssignment(
@@ -473,15 +505,15 @@ void main() {
 
       final resetResult =
           await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment(
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        developmentService: developmentService(),
-        runtimeResetService: FounderAcceptanceRuntimeResetService(
-          performanceRecordStore: performanceStore,
-          trainingSessionRepository: trainingSessionRepository,
-        ),
-      );
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+            developmentService: developmentService(),
+            runtimeResetService: FounderAcceptanceRuntimeResetService(
+              performanceRecordStore: performanceStore,
+              trainingSessionRepository: trainingSessionRepository,
+            ),
+          );
 
       expect(resetResult.isSuccess, isTrue);
       expect(tables.outcomes.length, foundationOutcomeCount);
@@ -512,9 +544,7 @@ Future<void> seedFoundationActiveAssignment({
     ),
   );
   await versionStore.saveTemplateTree(
-    version: ProgrammeScheduleTestFixtures.version().copyWith(
-      id: versionId,
-    ),
+    version: ProgrammeScheduleTestFixtures.version().copyWith(id: versionId),
     tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
       programmeVersionId: versionId,
     ),

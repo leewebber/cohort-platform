@@ -1,5 +1,3 @@
-import '../../../models/adaptation_session_environment.dart';
-
 /// Where training can occur — superset of athlete questionnaire + protocol metadata.
 enum TrainingEnvironment {
   home,
@@ -36,18 +34,4 @@ extension TrainingEnvironmentDb on TrainingEnvironment {
     }
     return null;
   }
-}
-
-/// Maps athlete questionnaire environments into canonical [TrainingEnvironment].
-TrainingEnvironment mapAdaptationSessionEnvironmentToTrainingEnvironment(
-  AdaptationSessionEnvironment environment,
-) {
-  return switch (environment) {
-    AdaptationSessionEnvironment.home => TrainingEnvironment.home,
-    AdaptationSessionEnvironment.hotelRoom => TrainingEnvironment.hotelRoom,
-    AdaptationSessionEnvironment.hotelGym => TrainingEnvironment.hotelGym,
-    AdaptationSessionEnvironment.commercialGym =>
-      TrainingEnvironment.commercialGym,
-    AdaptationSessionEnvironment.outdoors => TrainingEnvironment.outdoors,
-  };
 }

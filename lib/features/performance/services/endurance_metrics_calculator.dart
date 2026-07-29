@@ -1,18 +1,15 @@
 /// Derived endurance metrics and athlete-friendly duration formatting.
 class EnduranceDurationParseResult {
-  const EnduranceDurationParseResult._({
-    this.seconds,
-    required this.state,
-  });
+  const EnduranceDurationParseResult._({this.seconds, required this.state});
 
   const EnduranceDurationParseResult.valid(int? seconds)
-      : this._(seconds: seconds, state: EnduranceDurationParseState.valid);
+    : this._(seconds: seconds, state: EnduranceDurationParseState.valid);
 
   const EnduranceDurationParseResult.partial()
-      : this._(seconds: null, state: EnduranceDurationParseState.partial);
+    : this._(seconds: null, state: EnduranceDurationParseState.partial);
 
   const EnduranceDurationParseResult.invalid()
-      : this._(seconds: null, state: EnduranceDurationParseState.invalid);
+    : this._(seconds: null, state: EnduranceDurationParseState.invalid);
 
   final int? seconds;
   final EnduranceDurationParseState state;
@@ -25,10 +22,7 @@ class EnduranceDurationParseResult {
 enum EnduranceDurationParseState { valid, partial, invalid }
 
 class EnduranceLiveMetric {
-  const EnduranceLiveMetric({
-    required this.label,
-    required this.value,
-  });
+  const EnduranceLiveMetric({required this.label, required this.value});
 
   final String label;
   final String value;

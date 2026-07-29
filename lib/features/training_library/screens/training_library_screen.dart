@@ -38,9 +38,7 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
       initialIndex: widget.initialTab.index,
     );
     _tabController.addListener(_onTabChanged);
-    TrainingLibraryDiagnostics.log(
-      'opened tab=${widget.initialTab.name}',
-    );
+    TrainingLibraryDiagnostics.log('opened tab=${widget.initialTab.name}');
   }
 
   void _onTabChanged() {
@@ -63,49 +61,49 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
     return CoachRouteGuard.wrap(
       title: 'Training Library',
       child: Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('← Coach Studio'),
-                  ),
-                  const SizedBox(height: CohortSpacing.md),
-                  const Text('Training Library', style: CohortTextStyles.h1),
-                  const SizedBox(height: CohortSpacing.sm),
-                  const Text(
-                    'Browse official Cohort Protocols and manage reusable Sessions.',
-                    style: CohortTextStyles.body,
-                  ),
-                  const SizedBox(height: CohortSpacing.lg),
-                  TabBar(
-                    controller: _tabController,
-                    tabs: TrainingLibraryTab.values
-                        .map((tab) => Tab(text: tab.title))
-                        .toList(),
-                  ),
-                ],
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('← Coach Studio'),
+                    ),
+                    const SizedBox(height: CohortSpacing.md),
+                    const Text('Training Library', style: CohortTextStyles.h1),
+                    const SizedBox(height: CohortSpacing.sm),
+                    const Text(
+                      'Browse official Cohort Protocols and manage reusable Sessions.',
+                      style: CohortTextStyles.body,
+                    ),
+                    const SizedBox(height: CohortSpacing.lg),
+                    TabBar(
+                      controller: _tabController,
+                      tabs: TrainingLibraryTab.values
+                          .map((tab) => Tab(text: tab.title))
+                          .toList(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  widget.cohortTab ?? const CohortProtocolsTab(),
-                  widget.sessionTab ?? const SessionLibraryTab(),
-                ],
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    widget.cohortTab ?? const CohortProtocolsTab(),
+                    widget.sessionTab ?? const SessionLibraryTab(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

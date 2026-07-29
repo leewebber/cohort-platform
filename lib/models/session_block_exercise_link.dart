@@ -41,7 +41,9 @@ class SessionBlockExerciseLink {
       displayLabelOverride: clearDisplayLabelOverride
           ? null
           : (displayLabelOverride ?? this.displayLabelOverride),
-      prescription: clearPrescription ? null : (prescription ?? this.prescription),
+      prescription: clearPrescription
+          ? null
+          : (prescription ?? this.prescription),
     );
   }
 

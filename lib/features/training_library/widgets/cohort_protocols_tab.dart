@@ -136,7 +136,8 @@ class _CohortProtocolsTabState extends State<CohortProtocolsTab> {
       return;
     }
 
-    final libraryCoordinator = SessionLibraryAuthoringServices.createCoordinator();
+    final libraryCoordinator =
+        SessionLibraryAuthoringServices.createCoordinator();
 
     await Navigator.of(context).push(
       MaterialPageRoute<void>(

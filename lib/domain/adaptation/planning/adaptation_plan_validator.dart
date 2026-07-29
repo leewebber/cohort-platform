@@ -35,7 +35,8 @@ class AdaptationPlanValidator {
       );
     }
 
-    if (plan.adaptationConfidence.index < evaluation.adaptationConfidence.index) {
+    if (plan.adaptationConfidence.index <
+        evaluation.adaptationConfidence.index) {
       issues.add(
         const AdaptationPlanValidationIssue(
           code: AdaptationPlanValidationIssueCode.confidenceExceedsEvaluation,
@@ -76,7 +77,8 @@ class AdaptationPlanValidator {
         );
       }
 
-      final targetKey = '${step.targetScope.dbValue}:${step.targetId}:${step.actionType.name}';
+      final targetKey =
+          '${step.targetScope.dbValue}:${step.targetId}:${step.actionType.name}';
       if (targetsByKey.containsKey(targetKey)) {
         issues.add(
           AdaptationPlanValidationIssue(
@@ -102,7 +104,8 @@ class AdaptationPlanValidator {
           if (!resolved.effectivePolicy.canRemove) {
             issues.add(
               AdaptationPlanValidationIssue(
-                code: AdaptationPlanValidationIssueCode.removalNotPermittedByPolicy,
+                code: AdaptationPlanValidationIssueCode
+                    .removalNotPermittedByPolicy,
                 stepSequence: step.sequence,
               ),
             );
@@ -123,7 +126,8 @@ class AdaptationPlanValidator {
         if (reduction.proposedValue >= reduction.originalValue) {
           issues.add(
             AdaptationPlanValidationIssue(
-              code: AdaptationPlanValidationIssueCode.prescriptionVolumeIncreased,
+              code:
+                  AdaptationPlanValidationIssueCode.prescriptionVolumeIncreased,
               stepSequence: step.sequence,
             ),
           );
@@ -173,10 +177,7 @@ enum AdaptationPlanValidationIssueCode {
 }
 
 class AdaptationPlanValidationIssue {
-  const AdaptationPlanValidationIssue({
-    required this.code,
-    this.stepSequence,
-  });
+  const AdaptationPlanValidationIssue({required this.code, this.stepSequence});
 
   final AdaptationPlanValidationIssueCode code;
   final int? stepSequence;

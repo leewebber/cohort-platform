@@ -56,17 +56,9 @@ class ProtocolMetadataVocabulary {
     'Very High',
   ];
 
-  static const durationCategories = [
-    'Short',
-    'Medium',
-    'Long',
-  ];
+  static const durationCategories = ['Short', 'Medium', 'Long'];
 
-  static const technicalComplexities = [
-    'Beginner',
-    'Intermediate',
-    'Advanced',
-  ];
+  static const technicalComplexities = ['Beginner', 'Intermediate', 'Advanced'];
 
   static const equipment = [
     'Bodyweight',
@@ -166,16 +158,13 @@ class ProtocolMetadataVocabulary {
     }
 
     final ordered = vocabulary.where(values.contains).toList();
-    final legacy =
-        values.where((value) => !vocabulary.contains(value)).toList()..sort();
+    final legacy = values.where((value) => !vocabulary.contains(value)).toList()
+      ..sort();
 
     return [...ordered, ...legacy].join(', ');
   }
 
-  static List<String> optionsWithCurrent(
-    String? current,
-    List<String> locked,
-  ) {
+  static List<String> optionsWithCurrent(String? current, List<String> locked) {
     if (current == null || current.trim().isEmpty) {
       return locked;
     }

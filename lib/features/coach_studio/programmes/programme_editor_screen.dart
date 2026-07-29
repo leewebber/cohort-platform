@@ -162,13 +162,13 @@ class _ProgrammeEditorScreenState extends State<ProgrammeEditorScreen> {
     return CoachRouteGuard.wrap(
       title: 'Programme editor',
       child: PopScope(
-      canPop: !_controller.hasUnsavedChanges,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        await _handleExit();
-      },
-      child: Scaffold(body: SafeArea(child: _buildBody())),
-    ),
+        canPop: !_controller.hasUnsavedChanges,
+        onPopInvokedWithResult: (didPop, result) async {
+          if (didPop) return;
+          await _handleExit();
+        },
+        child: Scaffold(body: SafeArea(child: _buildBody())),
+      ),
     );
   }
 

@@ -26,8 +26,9 @@ class SessionExecutionPlanBuilder {
 
     return SessionExecutionPlan(
       sessionId: sessionId,
-      sessionTitle:
-          sessionTitle.trim().isEmpty ? 'Session' : sessionTitle.trim(),
+      sessionTitle: sessionTitle.trim().isEmpty
+          ? 'Session'
+          : sessionTitle.trim(),
       blocks: ordered
           .map(
             (block) => SessionExecutionBlock.fromSessionBlock(

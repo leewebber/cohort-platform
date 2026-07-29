@@ -4,13 +4,7 @@ import '../../programme/models/programme_catalog_entry.dart';
 import '../../../models/programme_assignment.dart';
 import '../services/personal_training_setup_service.dart';
 
-enum PersonalTrainingSetupStatus {
-  loading,
-  ready,
-  empty,
-  error,
-  assigning,
-}
+enum PersonalTrainingSetupStatus { loading, ready, empty, error, assigning }
 
 class PersonalTrainingSetupController extends ChangeNotifier {
   PersonalTrainingSetupController({

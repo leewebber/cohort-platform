@@ -19,14 +19,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _FakeCatalogueController extends ProgrammeCatalogueController {
   _FakeCatalogueController()
-      : super(
-          builderService: _NoopBuilderService(),
-          catalogService: _NoopCatalogService(),
-          publishCoordinator: _NoopPublishCoordinator(),
-          publishingService: _NoopPublishingService(),
-          validationService: _NoopValidationService(),
-          coachId: 'dev-coach',
-        ) {
+    : super(
+        builderService: _NoopBuilderService(),
+        catalogService: _NoopCatalogService(),
+        publishCoordinator: _NoopPublishCoordinator(),
+        publishingService: _NoopPublishingService(),
+        validationService: _NoopValidationService(),
+        coachId: 'dev-coach',
+      ) {
     viewState = ProgrammeCatalogueViewState.ready;
     loadedEntries = [
       ProgrammeCatalogEntry(
@@ -84,7 +84,9 @@ class _NoopValidationService implements ProgrammeBuilderValidationService {
 }
 
 void main() {
-  testWidgets('Coach Studio landing shows sections and availability labels', (tester) async {
+  testWidgets('Coach Studio landing shows sections and availability labels', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: CoachStudioHomeScreen(
@@ -120,9 +122,7 @@ void main() {
   testWidgets('catalogue renders four tabs and card metadata', (tester) async {
     await tester.pumpWidget(
       MaterialApp(
-        home: ProgrammeCatalogueScreen(
-          controller: _FakeCatalogueController(),
-        ),
+        home: ProgrammeCatalogueScreen(controller: _FakeCatalogueController()),
       ),
     );
 
@@ -139,35 +139,36 @@ void main() {
     controller.loadedEntries = [];
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: ProgrammeCatalogueScreen(controller: controller),
-      ),
+      MaterialApp(home: ProgrammeCatalogueScreen(controller: controller)),
     );
 
     expect(find.text('No drafts yet.'), findsOneWidget);
     expect(find.text('Create programme'), findsOneWidget);
   });
 
-  test('architecture: coach studio screens/widgets do not import supabase stores', () {
-    final coachStudioDir = Directory('lib/features/coach_studio');
+  test(
+    'architecture: coach studio screens/widgets do not import supabase stores',
+    () {
+      final coachStudioDir = Directory('lib/features/coach_studio');
 
-    for (final entity in coachStudioDir.listSync(recursive: true)) {
-      if (entity is! File || !entity.path.endsWith('.dart')) continue;
-      if (entity.path.contains('/services/')) continue;
+      for (final entity in coachStudioDir.listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        if (entity.path.contains('/services/')) continue;
 
-      final content = entity.readAsStringSync();
-      expect(
-        content.contains('programme_version_supabase_store'),
-        isFalse,
-        reason: '${entity.path} must not import Supabase stores',
-      );
-      expect(
-        content.contains('SupabaseService'),
-        isFalse,
-        reason: '${entity.path} must not call Supabase directly',
-      );
-    }
-  });
+        final content = entity.readAsStringSync();
+        expect(
+          content.contains('programme_version_supabase_store'),
+          isFalse,
+          reason: '${entity.path} must not import Supabase stores',
+        );
+        expect(
+          content.contains('SupabaseService'),
+          isFalse,
+          reason: '${entity.path} must not call Supabase directly',
+        );
+      }
+    },
+  );
 
   test('navigation state remembers programmes in session', () {
     final state = CoachStudioNavigationState.instance;

@@ -23,22 +23,31 @@ Future<void> showComparisonDetailSheet({
             _ChangeGroup(
               title: 'Metadata',
               items: summary.metadataChanges
-                  .map((change) => '${change.field}: '
-                      '${change.sourceValue ?? '—'} → ${change.targetValue ?? '—'}')
+                  .map(
+                    (change) =>
+                        '${change.field}: '
+                        '${change.sourceValue ?? '—'} → ${change.targetValue ?? '—'}',
+                  )
                   .toList(),
             ),
             _ChangeGroup(
               title: 'Weeks',
               items: summary.weekChanges
                   .where((c) => c.changeType != ProgrammeChangeType.unchanged)
-                  .map((c) => ProgrammeIntelligenceCopy.changeTypeLabel(c.changeType))
+                  .map(
+                    (c) =>
+                        ProgrammeIntelligenceCopy.changeTypeLabel(c.changeType),
+                  )
                   .toList(),
             ),
             _ChangeGroup(
               title: 'Training days',
               items: summary.dayChanges
                   .where((c) => c.changeType != ProgrammeChangeType.unchanged)
-                  .map((c) => ProgrammeIntelligenceCopy.changeTypeLabel(c.changeType))
+                  .map(
+                    (c) =>
+                        ProgrammeIntelligenceCopy.changeTypeLabel(c.changeType),
+                  )
                   .toList(),
             ),
             _ChangeGroup(
@@ -86,10 +95,7 @@ Future<void> showComparisonDetailSheet({
 }
 
 class _ChangeGroup extends StatelessWidget {
-  const _ChangeGroup({
-    required this.title,
-    required this.items,
-  });
+  const _ChangeGroup({required this.title, required this.items});
 
   final String title;
   final List<String> items;

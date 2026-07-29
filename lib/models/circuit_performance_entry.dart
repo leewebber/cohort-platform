@@ -138,8 +138,9 @@ class CircuitPerformanceEntry {
       completedMovements: clearCompletedMovements
           ? null
           : (completedMovements ?? this.completedMovements),
-      prescribedLoad:
-          clearPrescribedLoad ? null : (prescribedLoad ?? this.prescribedLoad),
+      prescribedLoad: clearPrescribedLoad
+          ? null
+          : (prescribedLoad ?? this.prescribedLoad),
       actualLoad: clearActualLoad ? null : (actualLoad ?? this.actualLoad),
       rpe: clearRpe ? null : (rpe ?? this.rpe),
       completed: completed ?? this.completed,

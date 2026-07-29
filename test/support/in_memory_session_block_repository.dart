@@ -24,9 +24,8 @@ class InMemorySessionBlockRepository extends SessionBlockRepository {
             linkedExercises: block.linkedExercises
                 .map(
                   (link) => SessionBlockExerciseLink.fromRow(
-                    link.toRowMap(
-                      blockId: block.persistedId ?? block.localId,
-                    )..['id'] = link.persistedId ?? link.localId,
+                    link.toRowMap(blockId: block.persistedId ?? block.localId)
+                      ..['id'] = link.persistedId ?? link.localId,
                   ),
                 )
                 .toList(growable: false),
@@ -52,23 +51,19 @@ class InMemorySessionBlockRepository extends SessionBlockRepository {
 
     final persistedBlocks = <SessionBlock>[];
     for (final block in ordered) {
-      final blockId = block.persistedId ?? 'block-${persistedBlocks.length + 1}';
+      final blockId =
+          block.persistedId ?? 'block-${persistedBlocks.length + 1}';
       final persistedLinks = <SessionBlockExerciseLink>[];
 
       for (final link in block.linkedExercises) {
         final linkId = link.persistedId ?? 'link-${persistedLinks.length + 1}';
         final row = link.toRowMap(blockId: blockId)..['id'] = linkId;
         persistedExerciseRows.add(Map<String, dynamic>.from(row));
-        persistedLinks.add(
-          SessionBlockExerciseLink.fromRow(row),
-        );
+        persistedLinks.add(SessionBlockExerciseLink.fromRow(row));
       }
 
       persistedBlocks.add(
-        block.copyWith(
-          persistedId: blockId,
-          linkedExercises: persistedLinks,
-        ),
+        block.copyWith(persistedId: blockId, linkedExercises: persistedLinks),
       );
     }
 

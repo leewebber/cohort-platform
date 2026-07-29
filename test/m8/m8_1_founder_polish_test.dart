@@ -289,24 +289,27 @@ void main() {
       expect(find.text('Finish Session'), findsOneWidget);
     });
 
-    testWidgets('multi-block session shows each block once with inline navigation',
-        (tester) async {
-      await mountActiveSession(
-        tester,
-        M8ModernCaptureTestFixtures.fullCapturePlan(),
-        sessionKeySuffix: 'full',
-      );
+    testWidgets(
+      'multi-block session shows each block once with inline navigation',
+      (tester) async {
+        await mountActiveSession(
+          tester,
+          M8ModernCaptureTestFixtures.fullCapturePlan(),
+          sessionKeySuffix: 'full',
+        );
 
-      expect(find.text('ALL BLOCKS'), findsNothing);
-      expect(find.text('CURRENT BLOCK'), findsNothing);
-      expect(find.byType(AthleteBlockCard), findsNWidgets(5));
-      expect(find.text('< Previous'), findsOneWidget);
-      expect(find.text('Next >'), findsOneWidget);
-      expect(find.text('Finish Session'), findsOneWidget);
-    });
+        expect(find.text('ALL BLOCKS'), findsNothing);
+        expect(find.text('CURRENT BLOCK'), findsNothing);
+        expect(find.byType(AthleteBlockCard), findsNWidgets(5));
+        expect(find.text('< Previous'), findsOneWidget);
+        expect(find.text('Next >'), findsOneWidget);
+        expect(find.text('Finish Session'), findsOneWidget);
+      },
+    );
 
-    testWidgets('navigation moves between blocks without duplicating content',
-        (tester) async {
+    testWidgets('navigation moves between blocks without duplicating content', (
+      tester,
+    ) async {
       await mountActiveSession(
         tester,
         M8ModernCaptureTestFixtures.fullCapturePlan(),
@@ -322,8 +325,9 @@ void main() {
       expect(find.text('Back squat and bench press'), findsOneWidget);
     });
 
-    testWidgets('completed blocks collapse and future blocks stay collapsed',
-        (tester) async {
+    testWidgets('completed blocks collapse and future blocks stay collapsed', (
+      tester,
+    ) async {
       await mountActiveSession(
         tester,
         M8ModernCaptureTestFixtures.fullCapturePlan(),
@@ -359,8 +363,9 @@ void main() {
   });
 
   group('Completion capture controls', () {
-    testWidgets('completion editor does not show duplicate Completed toggle',
-        (tester) async {
+    testWidgets('completion editor does not show duplicate Completed toggle', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -403,10 +408,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: SessionRpeSelector(
-              value: null,
-              onChanged: (_) {},
-            ),
+            body: SessionRpeSelector(value: null, onChanged: (_) {}),
           ),
         ),
       );
@@ -419,8 +421,9 @@ void main() {
       );
     });
 
-    testWidgets('session complete omits status suffix from saved message',
-        (tester) async {
+    testWidgets('session complete omits status suffix from saved message', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: SessionCompleteScreen(

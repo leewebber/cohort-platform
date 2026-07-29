@@ -5,11 +5,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/services/programme_builder_protocol_picker_service.dart';
 
 /// Coach action when selecting a Cohort Protocol for a programme slot.
-enum CohortProtocolProgrammeAction {
-  addUnchanged,
-  copyAndCustomise,
-  preview,
-}
+enum CohortProtocolProgrammeAction { addUnchanged, copyAndCustomise, preview }
 
 class CohortProtocolProgrammeSelection {
   const CohortProtocolProgrammeSelection({

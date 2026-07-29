@@ -9,10 +9,7 @@ import '../models/auth_view_state.dart';
 import '../widgets/auth_scaffold.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
-  const EmailVerificationScreen({
-    super.key,
-    required this.controller,
-  });
+  const EmailVerificationScreen({super.key, required this.controller});
 
   final AuthController controller;
 
@@ -27,23 +24,15 @@ class EmailVerificationScreen extends StatelessWidget {
       subtitle:
           'Verify your email, then return to Cohort to finish setting up your account.',
       footer: TextButton(
-        onPressed: isLoading
-            ? null
-            : controller.returnToSignIn,
+        onPressed: isLoading ? null : controller.returnToSignIn,
         child: const Text('Back to sign in'),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'We sent a verification link to',
-            style: CohortTextStyles.body,
-          ),
+          Text('We sent a verification link to', style: CohortTextStyles.body),
           const SizedBox(height: CohortSpacing.sm),
-          Text(
-            email,
-            style: CohortTextStyles.cardTitle,
-          ),
+          Text(email, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.lg),
           Text(
             'Open the link in your email, then sign in to continue.',
@@ -55,7 +44,9 @@ class EmailVerificationScreen extends StatelessWidget {
             const SizedBox(height: CohortSpacing.md),
             Text(
               state.errorMessage!,
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ],
           const SizedBox(height: CohortSpacing.lg),

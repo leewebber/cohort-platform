@@ -18,7 +18,7 @@ class ProgrammeScheduledSlotInput {
   final SessionOccurrenceDate plannedDate;
 
   ProgrammeSessionOccurrenceKey get slotKey => ProgrammeSessionOccurrenceKey(
-        programmeAssignmentId: programmeAssignmentId,
-        programmeSessionSlotId: programmeSessionSlotId,
-      );
+    programmeAssignmentId: programmeAssignmentId,
+    programmeSessionSlotId: programmeSessionSlotId,
+  );
 }

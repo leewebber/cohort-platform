@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const factory = ProgrammeSessionOccurrenceFactory();
-  final plannedDate = SessionOccurrenceDate.fromDateTime(DateTime.utc(2026, 8, 1));
+  final plannedDate = SessionOccurrenceDate.fromDateTime(
+    DateTime.utc(2026, 8, 1),
+  );
   final t0 = DateTime.utc(2026, 7, 28, 12);
 
   ProgrammeScheduledSlotInput input({
@@ -22,35 +24,41 @@ void main() {
   }
 
   group('ProgrammeSessionOccurrenceFactory', () {
-    test('creates occurrence with programme references and deterministic id', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
-      final result = factory.createFromScheduledSlot(
-        input: input(),
-        recordedAt: t0,
-        registry: registry,
-      );
+    test(
+      'creates occurrence with programme references and deterministic id',
+      () {
+        final registry = InMemoryProgrammeSessionOccurrenceRegistry();
+        final result = factory.createFromScheduledSlot(
+          input: input(),
+          recordedAt: t0,
+          registry: registry,
+        );
 
-      expect(result.isSuccess, isTrue);
-      final occurrence = result.occurrence!;
-      expect(
-        occurrence.occurrenceId,
-        SessionOccurrenceId.forProgrammeSlot(
-          ProgrammeSessionOccurrenceKey(
-            programmeAssignmentId: 'asgn-1',
-            programmeSessionSlotId: 'slot-1',
+        expect(result.isSuccess, isTrue);
+        final occurrence = result.occurrence!;
+        expect(
+          occurrence.occurrenceId,
+          SessionOccurrenceId.forProgrammeSlot(
+            ProgrammeSessionOccurrenceKey(
+              programmeAssignmentId: 'asgn-1',
+              programmeSessionSlotId: 'slot-1',
+            ),
           ),
-        ),
-      );
-      expect(occurrence.programmeAssignmentId, 'asgn-1');
-      expect(occurrence.programmeSessionSlotId, 'slot-1');
-      expect(occurrence.sourceSessionId, 'proto-1');
-      expect(occurrence.originalPlannedDate, plannedDate);
-      expect(occurrence.plannedDate, plannedDate);
-      expect(occurrence.lifecycleState, SessionOccurrenceLifecycleState.scheduled);
-    });
+        );
+        expect(occurrence.programmeAssignmentId, 'asgn-1');
+        expect(occurrence.programmeSessionSlotId, 'slot-1');
+        expect(occurrence.sourceSessionId, 'proto-1');
+        expect(occurrence.originalPlannedDate, plannedDate);
+        expect(occurrence.plannedDate, plannedDate);
+        expect(
+          occurrence.lifecycleState,
+          SessionOccurrenceLifecycleState.scheduled,
+        );
+      },
+    );
 
     test('registers occurrence for duplicate prevention', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       factory.createFromScheduledSlot(
         input: input(),
         recordedAt: t0,
@@ -60,7 +68,7 @@ void main() {
     });
 
     test('rejects duplicate slot occurrence', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       factory.createFromScheduledSlot(
         input: input(),
         recordedAt: t0,
@@ -79,7 +87,7 @@ void main() {
     });
 
     test('rejects source session conflict on same slot key', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       factory.createFromScheduledSlot(
         input: input(protocolId: 'proto-a'),
         recordedAt: t0,
@@ -97,7 +105,7 @@ void main() {
     });
 
     test('ensure is idempotent for same slot', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       final first = factory.ensureFromScheduledSlot(
         input: input(),
         recordedAt: t0,
@@ -116,7 +124,7 @@ void main() {
       final result = factory.createFromScheduledSlot(
         input: input(assignmentId: '  '),
         recordedAt: t0,
-        registry: ProgrammeSessionOccurrenceRegistry(),
+        registry: InMemoryProgrammeSessionOccurrenceRegistry(),
       );
       expect(
         result.issues.first.code,
@@ -128,7 +136,7 @@ void main() {
       final result = factory.createFromScheduledSlot(
         input: input(protocolId: ''),
         recordedAt: t0,
-        registry: ProgrammeSessionOccurrenceRegistry(),
+        registry: InMemoryProgrammeSessionOccurrenceRegistry(),
       );
       expect(
         result.issues.first.code,
@@ -137,7 +145,7 @@ void main() {
     });
 
     test('created occurrence satisfies aggregate invariants', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       final occurrence = factory
           .createFromScheduledSlot(
             input: input(),
@@ -150,7 +158,7 @@ void main() {
     });
 
     test('factory does not mutate registry on failure', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       factory.createFromScheduledSlot(
         input: input(),
         recordedAt: t0,
@@ -165,7 +173,7 @@ void main() {
     });
 
     test('transitions return new immutable instances', () {
-      final registry = ProgrammeSessionOccurrenceRegistry();
+      final registry = InMemoryProgrammeSessionOccurrenceRegistry();
       final original = factory
           .createFromScheduledSlot(
             input: input(),

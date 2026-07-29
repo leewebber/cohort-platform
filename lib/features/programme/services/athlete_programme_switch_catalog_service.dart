@@ -12,7 +12,8 @@ class AthleteProgrammeSwitchCatalogService {
 
   final ProgrammeCatalogService _catalogService;
 
-  Future<List<ProgrammeCatalogEntry>> listPublishedAssignableProgrammes() async {
+  Future<List<ProgrammeCatalogEntry>>
+  listPublishedAssignableProgrammes() async {
     final entries = await _catalogService.listCatalogue(
       query: const ProgrammeCatalogueQuery(
         lifecycleStatus: ProgrammeLifecycleStatus.published,

@@ -38,7 +38,8 @@ class WorkoutContentEditor extends StatelessWidget {
             decoration: const InputDecoration(
               isDense: true,
               alignLabelWithHint: true,
-              hintText: 'Write the workout naturally — sets, reps, and pacing stay in your words.',
+              hintText:
+                  'Write the workout naturally — sets, reps, and pacing stay in your words.',
             ),
           ),
         ],

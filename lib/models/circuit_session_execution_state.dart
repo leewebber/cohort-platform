@@ -2,10 +2,7 @@ import 'circuit_performance_entry.dart';
 import 'circuit_session_plan.dart';
 
 /// Whether the athlete is executing live or entering a score after the fact.
-enum CircuitEntryMode {
-  live,
-  postSession,
-}
+enum CircuitEntryMode { live, postSession }
 
 /// Mutable in-session execution state for the circuit engine.
 ///

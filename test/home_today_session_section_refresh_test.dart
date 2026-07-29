@@ -62,13 +62,16 @@ void main() {
     return HomeTodaySessionProgrammeExecutable(
       resolution: resolution,
       protocol: Protocol(protocolId: protocolId, name: protocolName),
-      executionContext: ProgrammeExecutionContext.fromResolvedSession(resolution),
+      executionContext: ProgrammeExecutionContext.fromResolvedSession(
+        resolution,
+      ),
     );
   }
 
   group('HomeTodaySessionSection refresh', () {
-    testWidgets('successful reset refresh shows day_1 without route restart',
-        (tester) async {
+    testWidgets('successful reset refresh shows day_1 without route restart', (
+      tester,
+    ) async {
       final controller = HomeTodaySessionRefreshController();
       var loadCount = 0;
 
@@ -158,47 +161,50 @@ void main() {
       expect(loadCount, 2);
     });
 
-    testWidgets('failed reset policy leaves card unchanged when not refreshed',
-        (tester) async {
-      final controller = HomeTodaySessionRefreshController();
-      var loadCount = 0;
+    testWidgets(
+      'failed reset policy leaves card unchanged when not refreshed',
+      (tester) async {
+        final controller = HomeTodaySessionRefreshController();
+        var loadCount = 0;
 
-      Future<HomeTodaySessionState> loadOverride(String athleteId) async {
-        loadCount++;
-        return executableState(
-          dayKey: 'day_2',
-          protocolId: 'RN-006',
-          protocolName: 'Classic Threshold Intervals',
-        );
-      }
+        Future<HomeTodaySessionState> loadOverride(String athleteId) async {
+          loadCount++;
+          return executableState(
+            dayKey: 'day_2',
+            protocolId: 'RN-006',
+            protocolName: 'Classic Threshold Intervals',
+          );
+        }
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: HomeTodaySessionSection(
-              refreshController: controller,
-              loadOverride: loadOverride,
-              athleteId: 'lee',
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: HomeTodaySessionSection(
+                refreshController: controller,
+                loadOverride: loadOverride,
+                athleteId: 'lee',
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      final failedReset = ProgrammeAssignmentOperationResult.failed(
-        message: 'DELETE removed 0 rows',
-      );
-      expect(
-        HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(failedReset),
-        isFalse,
-      );
+        final failedReset = ProgrammeAssignmentOperationResult.failed(
+          message: 'DELETE removed 0 rows',
+        );
+        expect(
+          HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(failedReset),
+          isFalse,
+        );
 
-      expect(find.text('Classic Threshold Intervals'), findsOneWidget);
-      expect(loadCount, 1);
-    });
+        expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+        expect(loadCount, 1);
+      },
+    );
 
-    testWidgets('read-only resolve does not auto-refresh Today section',
-        (tester) async {
+    testWidgets('read-only resolve does not auto-refresh Today section', (
+      tester,
+    ) async {
       final controller = HomeTodaySessionRefreshController();
       var loadCount = 0;
 
@@ -229,8 +235,9 @@ void main() {
       expect(find.byType(TodaySessionCard), findsOneWidget);
     });
 
-    testWidgets('GlobalKey currentState refresh matches HomeScreen wiring',
-        (tester) async {
+    testWidgets('GlobalKey currentState refresh matches HomeScreen wiring', (
+      tester,
+    ) async {
       final sectionKey = GlobalKey<HomeTodaySessionSectionState>();
       var loadCount = 0;
 

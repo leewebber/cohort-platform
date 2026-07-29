@@ -29,12 +29,11 @@ enum CircuitDataSource {
   }
 
   bool get isImported => switch (this) {
-        CircuitDataSource.manual => false,
-        CircuitDataSource.other => false,
-        CircuitDataSource.importedGarmin ||
-        CircuitDataSource.importedStrava ||
-        CircuitDataSource.importedAppleHealth ||
-        CircuitDataSource.importedCompetition =>
-          true,
-      };
+    CircuitDataSource.manual => false,
+    CircuitDataSource.other => false,
+    CircuitDataSource.importedGarmin ||
+    CircuitDataSource.importedStrava ||
+    CircuitDataSource.importedAppleHealth ||
+    CircuitDataSource.importedCompetition => true,
+  };
 }

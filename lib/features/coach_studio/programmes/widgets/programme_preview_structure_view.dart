@@ -5,10 +5,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/models/programme_builder_preview.dart';
 
 class ProgrammePreviewStructureView extends StatelessWidget {
-  const ProgrammePreviewStructureView({
-    super.key,
-    required this.preview,
-  });
+  const ProgrammePreviewStructureView({super.key, required this.preview});
 
   final ProgrammeBuilderPreview preview;
 

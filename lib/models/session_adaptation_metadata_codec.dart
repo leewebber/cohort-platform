@@ -79,8 +79,9 @@ class SessionAdaptationMetadataCodec {
       target[SessionAdaptationMetadataKeys.secondarySessionIntents] =
           secondarySessionIntents.map((intent) => intent.dbValue).toList();
     }
-    final minDuration =
-        normalizeMinimumViableDurationMin(minimumViableDurationMin);
+    final minDuration = normalizeMinimumViableDurationMin(
+      minimumViableDurationMin,
+    );
     if (minDuration != null) {
       target[SessionAdaptationMetadataKeys.minimumViableDurationMin] =
           minDuration;
@@ -100,8 +101,8 @@ class SessionAdaptationMetadataCodec {
         primarySessionIntent?.dbValue;
     target[SessionAdaptationMetadataKeys.secondarySessionIntents] =
         secondarySessionIntents.isEmpty
-            ? null
-            : secondarySessionIntents.map((intent) => intent.dbValue).toList();
+        ? null
+        : secondarySessionIntents.map((intent) => intent.dbValue).toList();
     target[SessionAdaptationMetadataKeys.minimumViableDurationMin] =
         normalizeMinimumViableDurationMin(minimumViableDurationMin);
   }
@@ -112,10 +113,13 @@ class SessionAdaptationMetadataCodec {
       SessionIntent? primarySessionIntent,
       List<SessionIntent> secondarySessionIntents,
       int? minimumViableDurationMin,
-    }) apply,
+    })
+    apply,
   }) {
     if (!map.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent) &&
-        !map.containsKey(SessionAdaptationMetadataKeys.secondarySessionIntents) &&
+        !map.containsKey(
+          SessionAdaptationMetadataKeys.secondarySessionIntents,
+        ) &&
         !map.containsKey(
           SessionAdaptationMetadataKeys.minimumViableDurationMin,
         )) {
@@ -162,9 +166,10 @@ class SessionAdaptationMetadataValidation {
   }) {
     final messages = <String>[];
 
-    final normalizedMin = SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
-      minimumViableDurationMin,
-    );
+    final normalizedMin =
+        SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
+          minimumViableDurationMin,
+        );
     if (minimumViableDurationMin != null &&
         minimumViableDurationMin <= 0 &&
         normalizedMin == null) {
@@ -173,9 +178,9 @@ class SessionAdaptationMetadataValidation {
 
     final canonicalSecondaries =
         SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-      primary: primarySessionIntent,
-      secondary: secondarySessionIntents,
-    );
+          primary: primarySessionIntent,
+          secondary: secondarySessionIntents,
+        );
     if (canonicalSecondaries.length != secondarySessionIntents.length) {
       messages.add(
         'Secondary session intents must be unique and must not repeat the primary intent.',

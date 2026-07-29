@@ -11,18 +11,11 @@ class ExerciseRepository extends BaseRepository<Exercise> {
   }
 
   Future<List<Exercise>> getExercises() {
-    return getWhere(
-      column: 'published',
-      value: true,
-      orderBy: 'name',
-    );
+    return getWhere(column: 'published', value: true, orderBy: 'name');
   }
 
   Future<Exercise?> getExerciseById(String exerciseId) async {
-    final results = await getWhere(
-      column: 'exercise_id',
-      value: exerciseId,
-    );
+    final results = await getWhere(column: 'exercise_id', value: exerciseId);
 
     if (results.isEmpty) return null;
 
@@ -33,10 +26,7 @@ class ExerciseRepository extends BaseRepository<Exercise> {
     final trimmed = slug.trim();
     if (trimmed.isEmpty) return null;
 
-    final results = await getWhere(
-      column: 'slug',
-      value: trimmed,
-    );
+    final results = await getWhere(column: 'slug', value: trimmed);
 
     if (results.isEmpty) return null;
 
@@ -47,10 +37,7 @@ class ExerciseRepository extends BaseRepository<Exercise> {
     final trimmed = name.trim();
     if (trimmed.isEmpty) return null;
 
-    final results = await getWhere(
-      column: 'name',
-      value: trimmed,
-    );
+    final results = await getWhere(column: 'name', value: trimmed);
 
     if (results.isEmpty) return null;
     if (results.length > 1) return null;

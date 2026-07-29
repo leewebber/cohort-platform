@@ -57,10 +57,9 @@ void main() {
         upsertMap[SessionAdaptationMetadataKeys.primarySessionIntent],
         'lower_body_strength',
       );
-      expect(
-        upsertMap[SessionAdaptationMetadataKeys.secondarySessionIntents],
-        ['prehabilitation'],
-      );
+      expect(upsertMap[SessionAdaptationMetadataKeys.secondarySessionIntents], [
+        'prehabilitation',
+      ]);
       expect(
         upsertMap[SessionAdaptationMetadataKeys.minimumViableDurationMin],
         25,
@@ -109,7 +108,10 @@ void main() {
       final read = await repository.getSessionBlocks(sessionId);
       expect(read, hasLength(1));
       expect(read.first.blockPriority, BlockPriority.essential);
-      expect(read.first.adaptationPolicy?.toJson(), explicitBlockPolicy.toJson());
+      expect(
+        read.first.adaptationPolicy?.toJson(),
+        explicitBlockPolicy.toJson(),
+      );
       expect(read.first.effectiveBlockPriority, BlockPriority.essential);
 
       final defaultOnly = SessionBlock.create(
@@ -161,101 +163,110 @@ void main() {
   });
 
   group('C. Programme duplication preserves referenced session metadata', () {
-    test('duplicate programme keeps protocol_id; metadata resolves from store',
-        () async {
-      const sourceVersionId = '44444444-4444-4444-4444-444444444444';
-      const protocolId = testCohortProtocolId;
-      const coachId = 'dev-coach';
+    test(
+      'duplicate programme keeps protocol_id; metadata resolves from store',
+      () async {
+        const sourceVersionId = '44444444-4444-4444-4444-444444444444';
+        const protocolId = testCohortProtocolId;
+        const coachId = 'dev-coach';
 
-      final protocolStore = InMemoryProtocolRowStore()
-        ..upsertFromDraft(
-          cohortProtocolWithAdaptationMetadata(protocolId: protocolId),
-          published: true,
+        final protocolStore = InMemoryProtocolRowStore()
+          ..upsertFromDraft(
+            cohortProtocolWithAdaptationMetadata(protocolId: protocolId),
+            published: true,
+          );
+
+        final tables = InMemoryProgrammeTables();
+        final versionStore = InMemoryProgrammeVersionStore(tables);
+        final assignmentStore = InMemoryProgrammeAssignmentStore(tables);
+        final service = ProgrammeBuilderServiceImpl(
+          versionStore: versionStore,
+          assignmentStore: assignmentStore,
+          validationService: ProgrammeBuilderValidationServiceImpl(),
+          compiler: const ProgrammeBuilderCompiler(),
         );
 
-      final tables = InMemoryProgrammeTables();
-      final versionStore = InMemoryProgrammeVersionStore(tables);
-      final assignmentStore = InMemoryProgrammeAssignmentStore(tables);
-      final service = ProgrammeBuilderServiceImpl(
-        versionStore: versionStore,
-        assignmentStore: assignmentStore,
-        validationService: ProgrammeBuilderValidationServiceImpl(),
-        compiler: const ProgrammeBuilderCompiler(),
-      );
+        tables.lineages.add(
+          ProgrammeLineage(id: 'lineage-src', code: 'COHORT-DUP-SRC'),
+        );
+        tables.versions.add(
+          ProgrammeVersion(
+            id: sourceVersionId,
+            lineageId: 'lineage-src',
+            versionNumber: 1,
+            lifecycleStatus: ProgrammeLifecycleStatus.published,
+            libraryScope: ProgrammeLibraryScope.coachPrivate,
+            ownerType: ProgrammeOwnerType.coach,
+            ownerId: coachId,
+            name: 'Source',
+          ),
+        );
 
-      tables.lineages.add(
-        ProgrammeLineage(id: 'lineage-src', code: 'COHORT-DUP-SRC'),
-      );
-      tables.versions.add(
-        ProgrammeVersion(
-          id: sourceVersionId,
-          lineageId: 'lineage-src',
-          versionNumber: 1,
-          lifecycleStatus: ProgrammeLifecycleStatus.published,
-          libraryScope: ProgrammeLibraryScope.coachPrivate,
-          ownerType: ProgrammeOwnerType.coach,
-          ownerId: coachId,
-          name: 'Source',
-        ),
-      );
+        final sourceDocument = ProgrammeBuilderDocument.clean(
+          metadata: ProgrammeVersionDraftMetadata(
+            versionId: sourceVersionId,
+            lineageId: 'lineage-src',
+            lineageCode: 'COHORT-DUP-SRC',
+            versionNumber: 1,
+            name: 'Source Programme',
+          ),
+          template: ProgrammeTemplateDraft(
+            weeks: [
+              ProgrammeWeekDraft(
+                localId: 'week-1',
+                weekNumber: 1,
+                days: [
+                  ProgrammeDayDraft(
+                    localId: 'day-1',
+                    dayKey: 'day_1',
+                    dayOrder: 1,
+                    slots: [
+                      ProgrammeSessionSlotDraft(
+                        localId: 'slot-1',
+                        sessionOrder: 1,
+                        protocolId: protocolId,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
 
-      final sourceDocument = ProgrammeBuilderDocument.clean(
-        metadata: ProgrammeVersionDraftMetadata(
-          versionId: sourceVersionId,
-          lineageId: 'lineage-src',
-          lineageCode: 'COHORT-DUP-SRC',
-          versionNumber: 1,
-          name: 'Source Programme',
-        ),
-        template: ProgrammeTemplateDraft(
-          weeks: [
-            ProgrammeWeekDraft(
-              localId: 'week-1',
-              weekNumber: 1,
-              days: [
-                ProgrammeDayDraft(
-                  localId: 'day-1',
-                  dayKey: 'day_1',
-                  dayOrder: 1,
-                  slots: [
-                    ProgrammeSessionSlotDraft(
-                      localId: 'slot-1',
-                      sessionOrder: 1,
-                      protocolId: protocolId,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+        await versionStore.saveTemplateTree(
+          version: tables.versions.first,
+          tree: const ProgrammeBuilderCompiler().toTemplateTree(sourceDocument),
+        );
 
-      await versionStore.saveTemplateTree(
-        version: tables.versions.first,
-        tree: const ProgrammeBuilderCompiler().toTemplateTree(sourceDocument),
-      );
+        final duplicateResult = await service.duplicateProgramme(
+          sourceVersionId: sourceVersionId,
+          coachId: coachId,
+          newLineageCode: 'COHORT-DUP-TARGET',
+          newProgrammeName: 'Duplicate Target',
+        );
 
-      final duplicateResult = await service.duplicateProgramme(
-        sourceVersionId: sourceVersionId,
-        coachId: coachId,
-        newLineageCode: 'COHORT-DUP-TARGET',
-        newProgrammeName: 'Duplicate Target',
-      );
+        expect(
+          duplicateResult.status,
+          ProgrammeBuilderOperationStatus.duplicated,
+        );
+        final dupDocument = duplicateResult.document!;
+        final dupProtocolId = dupDocument
+            .template
+            .allWeeks
+            .first
+            .days
+            .first
+            .slots
+            .first
+            .protocolId;
+        expect(dupProtocolId, protocolId);
 
-      expect(
-        duplicateResult.status,
-        ProgrammeBuilderOperationStatus.duplicated,
-      );
-      final dupDocument = duplicateResult.document!;
-      final dupProtocolId = dupDocument.template.allWeeks.first.days.first.slots
-          .first.protocolId;
-      expect(dupProtocolId, protocolId);
-
-      final resolved = protocolStore.loadProtocol(protocolId);
-      expect(resolved.primarySessionIntent, SessionIntent.threshold);
-      expect(resolved.minimumViableDurationMin, 30);
-    });
+        final resolved = protocolStore.loadProtocol(protocolId);
+        expect(resolved.primarySessionIntent, SessionIntent.threshold);
+        expect(resolved.minimumViableDurationMin, 30);
+      },
+    );
   });
 
   group('D. Session and template duplication preserves metadata', () {
@@ -320,27 +331,32 @@ void main() {
   });
 
   group('E. Protocol copy preserves canonical session metadata', () {
-    test('clone maps dbValue strings suitable for performance_protocols row', () {
-      final source = cohortProtocolWithAdaptationMetadata(
-        protocolId: testCohortProtocolId,
-      );
-      const cloneService = SessionCloneService();
-      final copied = cloneService.cloneCohortProtocolToSession(
-        source: source,
-        newContentId: 'local-copy-session-meta',
-        ownerId: 'dev-coach',
-        destination: CohortProtocolCopyDestination.programmeOnly,
-        programmeVersionId: testProgrammeVersionId,
-      );
+    test(
+      'clone maps dbValue strings suitable for performance_protocols row',
+      () {
+        final source = cohortProtocolWithAdaptationMetadata(
+          protocolId: testCohortProtocolId,
+        );
+        const cloneService = SessionCloneService();
+        final copied = cloneService.cloneCohortProtocolToSession(
+          source: source,
+          newContentId: 'local-copy-session-meta',
+          ownerId: 'dev-coach',
+          destination: CohortProtocolCopyDestination.programmeOnly,
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      final row = copied.toProtocolMap();
-      expect(row[SessionAdaptationMetadataKeys.primarySessionIntent], 'threshold');
-      expect(
-        row[SessionAdaptationMetadataKeys.secondarySessionIntents],
-        ['aerobic_base'],
-      );
-      expect(row[SessionAdaptationMetadataKeys.minimumViableDurationMin], 30);
-    });
+        final row = copied.toProtocolMap();
+        expect(
+          row[SessionAdaptationMetadataKeys.primarySessionIntent],
+          'threshold',
+        );
+        expect(row[SessionAdaptationMetadataKeys.secondarySessionIntents], [
+          'aerobic_base',
+        ]);
+        expect(row[SessionAdaptationMetadataKeys.minimumViableDurationMin], 30);
+      },
+    );
   });
 
   group('F. Legacy records without metadata still load', () {
@@ -396,10 +412,10 @@ void main() {
         ],
       };
 
-      final protocols = loadProgrammeProtocolsSafely(
-        store,
-        const ['bad-proto', 'good-proto'],
-      );
+      final protocols = loadProgrammeProtocolsSafely(store, const [
+        'bad-proto',
+        'good-proto',
+      ]);
 
       expect(protocols, hasLength(2));
       final bad = protocols.firstWhere((p) => p.protocolId == 'bad-proto');

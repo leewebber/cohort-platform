@@ -205,12 +205,14 @@ void main() {
       expect(references[1].slotOrder, lessThan(references[2].slotOrder));
     });
 
-    test('same Session Revision in multiple slots preserves slots but deduplicates revision count',
-        () async {
-      final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.totalSessionSlotCount, 3);
-      expect(summary.distinctSessionRevisionCount, 2);
-    });
+    test(
+      'same Session Revision in multiple slots preserves slots but deduplicates revision count',
+      () async {
+        final summary = await service.getImpactForVersion(versionV2Id);
+        expect(summary.totalSessionSlotCount, 3);
+        expect(summary.distinctSessionRevisionCount, 2);
+      },
+    );
 
     test('different Programme Version excluded', () async {
       final summary = await service.getImpactForVersion(versionV2Id);
@@ -231,7 +233,10 @@ void main() {
     });
 
     test('raw identifiers not included in derived user-facing copy', () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-1');
+      _seedActiveAssignment(
+        versionId: versionV2Id,
+        assignmentId: 'assignment-1',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
       final combined = summary.summaryMessages.join(' ');
       expect(combined.contains(versionV2Id), isFalse);
@@ -249,7 +254,8 @@ void main() {
       final summary = await service.getImpactForVersion(versionV2Id);
       expect(
         summary.sessionReferences.every(
-          (ref) => ref.sessionLifecycleStatus ==
+          (ref) =>
+              ref.sessionLifecycleStatus ==
               SessionRevisionLifecycleStatus.published,
         ),
         isTrue,
@@ -263,8 +269,9 @@ void main() {
 
     test('shared lineage revisions remain distinct', () async {
       final summary = await service.getImpactForVersion(versionV2Id);
-      final protocolIds =
-          summary.sessionReferences.map((ref) => ref.protocolId).toSet();
+      final protocolIds = summary.sessionReferences
+          .map((ref) => ref.protocolId)
+          .toSet();
       expect(protocolIds, containsAll([protocolA, protocolB]));
     });
 
@@ -357,7 +364,9 @@ void main() {
     test('free-text-only movement not inferred', () async {
       final summary = await service.getImpactForVersion(versionV2Id);
       expect(
-        summary.exerciseReferences.any((ref) => ref.exerciseName.contains('text')),
+        summary.exerciseReferences.any(
+          (ref) => ref.exerciseName.contains('text'),
+        ),
         isFalse,
       );
     });
@@ -365,19 +374,28 @@ void main() {
 
   group('assignments', () {
     test('active assignment to exact version counted', () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-a');
+      _seedActiveAssignment(
+        versionId: versionV2Id,
+        assignmentId: 'assignment-a',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
       expect(summary.activeAssignmentCount, 1);
     });
 
     test('assignment to newer version excluded', () async {
-      _seedActiveAssignment(versionId: versionV3Id, assignmentId: 'assignment-new');
+      _seedActiveAssignment(
+        versionId: versionV3Id,
+        assignmentId: 'assignment-new',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
       expect(summary.activeAssignmentCount, 0);
     });
 
     test('assignment to older version excluded', () async {
-      _seedActiveAssignment(versionId: versionV1Id, assignmentId: 'assignment-old');
+      _seedActiveAssignment(
+        versionId: versionV1Id,
+        assignmentId: 'assignment-old',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
       expect(summary.activeAssignmentCount, 0);
     });
@@ -393,23 +411,36 @@ void main() {
     });
 
     test('multiple assignments deduplicated', () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-a');
+      _seedActiveAssignment(
+        versionId: versionV2Id,
+        assignmentId: 'assignment-a',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.activeAssignments.map((a) => a.assignmentId).toSet(),
-          hasLength(summary.activeAssignmentCount));
+      expect(
+        summary.activeAssignments.map((a) => a.assignmentId).toSet(),
+        hasLength(summary.activeAssignmentCount),
+      );
     });
 
-    test('shared Session content does not merge assignments across versions',
-        () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-v2');
-      _seedActiveAssignment(versionId: versionV3Id, assignmentId: 'assignment-v3');
+    test(
+      'shared Session content does not merge assignments across versions',
+      () async {
+        _seedActiveAssignment(
+          versionId: versionV2Id,
+          assignmentId: 'assignment-v2',
+        );
+        _seedActiveAssignment(
+          versionId: versionV3Id,
+          assignmentId: 'assignment-v3',
+        );
 
-      final v2 = await service.getImpactForVersion(versionV2Id);
-      final v3 = await service.getImpactForVersion(versionV3Id);
+        final v2 = await service.getImpactForVersion(versionV2Id);
+        final v3 = await service.getImpactForVersion(versionV3Id);
 
-      expect(v2.activeAssignmentCount, 1);
-      expect(v3.activeAssignmentCount, 1);
-    });
+        expect(v2.activeAssignmentCount, 1);
+        expect(v3.activeAssignmentCount, 1);
+      },
+    );
   });
 
   group('history', () {
@@ -464,24 +495,26 @@ void main() {
       expect(summary.historicalImpact.terminalRecordCount, 0);
     });
 
-    test('shared Session Revision does not cause false historical attribution',
-        () async {
-      final assignmentV3 = _seedActiveAssignment(
-        versionId: versionV3Id,
-        assignmentId: 'assignment-shared',
-      );
-      impactStore.performanceRecords.add(
-        _terminalRecord(
-          recordId: 'record-shared',
-          assignmentId: assignmentV3.id,
-          sourceProtocolId: protocolA,
-          programmeSessionId: slotV2A,
-        ),
-      );
+    test(
+      'shared Session Revision does not cause false historical attribution',
+      () async {
+        final assignmentV3 = _seedActiveAssignment(
+          versionId: versionV3Id,
+          assignmentId: 'assignment-shared',
+        );
+        impactStore.performanceRecords.add(
+          _terminalRecord(
+            recordId: 'record-shared',
+            assignmentId: assignmentV3.id,
+            sourceProtocolId: protocolA,
+            programmeSessionId: slotV2A,
+          ),
+        );
 
-      final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.historicalImpact.terminalRecordCount, 0);
-    });
+        final summary = await service.getImpactForVersion(versionV2Id);
+        expect(summary.historicalImpact.terminalRecordCount, 0);
+      },
+    );
 
     test('earliest/latest timestamps correct', () async {
       final assignment = _seedActiveAssignment(
@@ -502,9 +535,14 @@ void main() {
       ]);
 
       final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.historicalImpact.earliestPerformedAt,
-          DateTime.utc(2026, 1, 1));
-      expect(summary.historicalImpact.latestPerformedAt, DateTime.utc(2026, 2, 1));
+      expect(
+        summary.historicalImpact.earliestPerformedAt,
+        DateTime.utc(2026, 1, 1),
+      );
+      expect(
+        summary.historicalImpact.latestPerformedAt,
+        DateTime.utc(2026, 2, 1),
+      );
     });
 
     test('historical-only Programme Version represented', () async {
@@ -616,16 +654,23 @@ void main() {
   group('combined summary', () {
     test('authored-only classification', () async {
       final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.classifications,
-          contains(ContentUsageClassification.directAuthored));
+      expect(
+        summary.classifications,
+        contains(ContentUsageClassification.directAuthored),
+      );
       expect(summary.hasAuthoredContent, isTrue);
     });
 
     test('active operational classification', () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-op');
+      _seedActiveAssignment(
+        versionId: versionV2Id,
+        assignmentId: 'assignment-op',
+      );
       final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.classifications,
-          contains(ContentUsageClassification.activeOperational));
+      expect(
+        summary.classifications,
+        contains(ContentUsageClassification.activeOperational),
+      );
     });
 
     test('historical classification', () async {
@@ -639,8 +684,10 @@ void main() {
       );
 
       final summary = await service.getImpactForVersion(versionV2Id);
-      expect(summary.classifications,
-          contains(ContentUsageClassification.historicalPerformance));
+      expect(
+        summary.classifications,
+        contains(ContentUsageClassification.historicalPerformance),
+      );
     });
 
     test('mixed impact classification', () async {
@@ -678,7 +725,10 @@ void main() {
     });
 
     test('aggregate counts correct', () async {
-      _seedActiveAssignment(versionId: versionV2Id, assignmentId: 'assignment-count');
+      _seedActiveAssignment(
+        versionId: versionV2Id,
+        assignmentId: 'assignment-count',
+      );
       final assignment = programmeTables.assignments.last;
       impactStore.performanceRecords.add(
         _terminalRecord(recordId: 'record-count', assignmentId: assignment.id),
@@ -716,8 +766,9 @@ void main() {
 
     test('no duplicate entities', () async {
       final summary = await service.getImpactForVersion(versionV2Id);
-      final slotIds =
-          summary.sessionReferences.map((ref) => ref.slotId).toList();
+      final slotIds = summary.sessionReferences
+          .map((ref) => ref.slotId)
+          .toList();
       expect(slotIds.toSet().length, slotIds.length);
     });
   });

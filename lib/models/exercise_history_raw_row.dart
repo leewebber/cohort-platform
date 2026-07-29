@@ -23,8 +23,9 @@ class ExerciseHistoryRawRow {
 
   factory ExerciseHistoryRawRow.fromMap(Map<String, dynamic> map) {
     final session = map['training_sessions'];
-    final sessionMap =
-        session is Map ? Map<String, dynamic>.from(session) : <String, dynamic>{};
+    final sessionMap = session is Map
+        ? Map<String, dynamic>.from(session)
+        : <String, dynamic>{};
 
     return ExerciseHistoryRawRow(
       performance: StrengthSetPerformance.fromMap(

@@ -8,9 +8,8 @@ import 'programme_version_impact_message_builder.dart';
 /// Answers what depends on one exact Programme Version without making policy
 /// decisions or migration recommendations.
 class ProgrammeVersionImpactService {
-  ProgrammeVersionImpactService({
-    ProgrammeVersionImpactStore? impactStore,
-  }) : _impactStore = impactStore ?? const ProgrammeVersionImpactSupabaseStore();
+  ProgrammeVersionImpactService({ProgrammeVersionImpactStore? impactStore})
+    : _impactStore = impactStore ?? const ProgrammeVersionImpactSupabaseStore();
 
   final ProgrammeVersionImpactStore _impactStore;
 
@@ -46,18 +45,18 @@ class ProgrammeVersionImpactService {
         return const ProgrammeVersionImpactLookupResult.versionNotFound();
       }
 
-      final sessionReferences =
-          await getSessionReferences(normalizedVersionId);
+      final sessionReferences = await getSessionReferences(normalizedVersionId);
       final exerciseReferences = await getExerciseReferences(
         normalizedVersionId,
         sessionReferences.map((reference) => reference.protocolId).toSet(),
       );
-      final activeAssignments =
-          await getAssignmentImpact(normalizedVersionId);
-      final historicalResult =
-          await _impactStore.getHistoricalImpact(normalizedVersionId);
-      final lineageVersions =
-          await _impactStore.listVersionsForLineage(version.lineageId);
+      final activeAssignments = await getAssignmentImpact(normalizedVersionId);
+      final historicalResult = await _impactStore.getHistoricalImpact(
+        normalizedVersionId,
+      );
+      final lineageVersions = await _impactStore.listVersionsForLineage(
+        version.lineageId,
+      );
       final lineageContext = buildProgrammeVersionLineageContext(
         queriedVersion: version,
         lineageVersions: lineageVersions,
@@ -87,10 +86,12 @@ class ProgrammeVersionImpactService {
         versionNumber: version.versionNumber,
         lifecycleStatus: version.lifecycleStatus,
         sessionReferences: sessionReferences,
-        distinctSessionRevisionCount:
-            countDistinctSessionRevisions(sessionReferences),
-        distinctSessionLineageCount:
-            countDistinctSessionLineages(sessionReferences),
+        distinctSessionRevisionCount: countDistinctSessionRevisions(
+          sessionReferences,
+        ),
+        distinctSessionLineageCount: countDistinctSessionLineages(
+          sessionReferences,
+        ),
         totalSessionSlotCount: sessionReferences.length,
         exerciseReferences: exerciseReferences,
         distinctExerciseCount: exerciseReferences.length,
@@ -135,7 +136,9 @@ class ProgrammeVersionImpactService {
           isUnused: summary.isUnused,
           warnings: summary.warnings,
           summaryMessages:
-              ProgrammeVersionImpactMessageBuilder.buildSummaryMessages(summary),
+              ProgrammeVersionImpactMessageBuilder.buildSummaryMessages(
+                summary,
+              ),
         ),
       );
     } catch (error) {
@@ -168,23 +171,27 @@ class ProgrammeVersionImpactService {
   Future<ProgrammeVersionHistoricalImpact> getHistoricalImpact(
     String programmeVersionId,
   ) async {
-    final result =
-        await _impactStore.getHistoricalImpact(programmeVersionId.trim());
+    final result = await _impactStore.getHistoricalImpact(
+      programmeVersionId.trim(),
+    );
     return result.impact;
   }
 
   Future<ProgrammeVersionLineageContext> getLineageContext(
     String programmeVersionId,
   ) async {
-    final version = await _impactStore.getVersionById(programmeVersionId.trim());
+    final version = await _impactStore.getVersionById(
+      programmeVersionId.trim(),
+    );
     if (version == null) {
       throw ProgrammeVersionImpactStoreException(
         'Programme version ${programmeVersionId.trim()} was not found.',
       );
     }
 
-    final lineageVersions =
-        await _impactStore.listVersionsForLineage(version.lineageId);
+    final lineageVersions = await _impactStore.listVersionsForLineage(
+      version.lineageId,
+    );
     return buildProgrammeVersionLineageContext(
       queriedVersion: version,
       lineageVersions: lineageVersions,

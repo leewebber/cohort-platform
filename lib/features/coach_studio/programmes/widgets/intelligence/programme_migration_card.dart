@@ -35,7 +35,9 @@ class ProgrammeMigrationCard extends StatelessWidget {
         if (!hasComparisonTarget)
           Text(
             ProgrammeIntelligenceCopy.selectComparisonPrompt,
-            style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+            style: CohortTextStyles.body.copyWith(
+              color: CohortColors.textSecondary,
+            ),
           )
         else if (status == ProgrammeIntelligenceCardStatus.loading)
           const Center(child: CircularProgressIndicator())
@@ -44,8 +46,11 @@ class ProgrammeMigrationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                errorMessage ?? ProgrammeIntelligenceCopy.migrationUnavailableMessage,
-                style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                errorMessage ??
+                    ProgrammeIntelligenceCopy.migrationUnavailableMessage,
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
               TextButton(onPressed: onRetry, child: const Text('Retry')),
             ],
@@ -53,7 +58,9 @@ class ProgrammeMigrationCard extends StatelessWidget {
         else if (plan == null)
           Text(
             ProgrammeIntelligenceCopy.migrationUnavailableMessage,
-            style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+            style: CohortTextStyles.body.copyWith(
+              color: CohortColors.textSecondary,
+            ),
           )
         else
           _MigrationBody(plan: plan!, isPartial: isPartial),
@@ -63,10 +70,7 @@ class ProgrammeMigrationCard extends StatelessWidget {
 }
 
 class _MigrationBody extends StatefulWidget {
-  const _MigrationBody({
-    required this.plan,
-    required this.isPartial,
-  });
+  const _MigrationBody({required this.plan, required this.isPartial});
 
   final ProgrammeMigrationPlan plan;
   final bool isPartial;
@@ -115,7 +119,9 @@ class _MigrationBodyState extends State<_MigrationBody> {
             padding: const EdgeInsets.only(top: CohortSpacing.sm),
             child: Text(
               'Migration plan is partial.',
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ),
         if (widget.plan.assignmentPlans.isNotEmpty) ...[

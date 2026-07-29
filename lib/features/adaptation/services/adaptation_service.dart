@@ -30,18 +30,16 @@ class AdaptationService {
 
     final candidates = protocols
         .where((protocol) => protocol.protocolId != currentProtocol.protocolId)
-        .where((protocol) => _matchesCapability(protocol, currentProtocol, reason))
+        .where(
+          (protocol) => _matchesCapability(protocol, currentProtocol, reason),
+        )
         .toList();
 
     final scored = candidates
         .map(
           (protocol) => (
             protocol: protocol,
-            score: _scoreProtocol(
-              protocol,
-              currentProtocol,
-              reason,
-            ),
+            score: _scoreProtocol(protocol, currentProtocol, reason),
           ),
         )
         .toList();
@@ -53,8 +51,10 @@ class AdaptationService {
       return a.protocol.name.compareTo(b.protocol.name);
     });
 
-    final positiveScores =
-        scored.where((entry) => entry.score > 0).take(3).toList();
+    final positiveScores = scored
+        .where((entry) => entry.score > 0)
+        .take(3)
+        .toList();
 
     return positiveScores
         .map(
@@ -97,7 +97,8 @@ class AdaptationService {
       return true;
     }
 
-    return candidateCapability == 'recovery' || candidateCapability == 'mobility';
+    return candidateCapability == 'recovery' ||
+        candidateCapability == 'mobility';
   }
 
   int _scoreProtocol(
@@ -241,16 +242,16 @@ class AdaptationService {
     var penalty = 0;
 
     if (_isVeryHigh(candidate.demand)) {
-      final shouldPenalize = !unlessCurrentAlsoVeryHigh ||
-          !_isVeryHigh(currentProtocol?.demand);
+      final shouldPenalize =
+          !unlessCurrentAlsoVeryHigh || !_isVeryHigh(currentProtocol?.demand);
       if (shouldPenalize) {
         penalty -= 20;
       }
     }
 
     if (_isVeryHigh(candidate.recovery)) {
-      final shouldPenalize = !unlessCurrentAlsoVeryHigh ||
-          !_isVeryHigh(currentProtocol?.recovery);
+      final shouldPenalize =
+          !unlessCurrentAlsoVeryHigh || !_isVeryHigh(currentProtocol?.recovery);
       if (shouldPenalize) {
         penalty -= 20;
       }

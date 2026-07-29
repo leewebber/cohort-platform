@@ -7,10 +7,7 @@ import '../../auth/services/current_user_session.dart';
 import '../screens/join_coach_screen.dart';
 
 class JoinCoachCard extends StatelessWidget {
-  const JoinCoachCard({
-    super.key,
-    required this.onJoined,
-  });
+  const JoinCoachCard({super.key, required this.onJoined});
 
   final VoidCallback onJoined;
 

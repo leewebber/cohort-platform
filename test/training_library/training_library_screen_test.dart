@@ -14,14 +14,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _TestCatalogueController extends ProgrammeCatalogueController {
   _TestCatalogueController()
-      : super(
-          builderService: _NoopBuilderServiceForStudio(),
-          catalogService: _NoopCatalogServiceForStudio(),
-          publishCoordinator: _NoopPublishCoordinatorForStudio(),
-          publishingService: _NoopPublishingServiceForStudio(),
-          validationService: _NoopValidationServiceForStudio(),
-          coachId: 'dev-coach',
-        ) {
+    : super(
+        builderService: _NoopBuilderServiceForStudio(),
+        catalogService: _NoopCatalogServiceForStudio(),
+        publishCoordinator: _NoopPublishCoordinatorForStudio(),
+        publishingService: _NoopPublishingServiceForStudio(),
+        validationService: _NoopValidationServiceForStudio(),
+        coachId: 'dev-coach',
+      ) {
     viewState = ProgrammeCatalogueViewState.ready;
   }
 }
@@ -36,7 +36,8 @@ class _NoopCatalogServiceForStudio implements ProgrammeCatalogService {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _NoopPublishCoordinatorForStudio implements ProgrammeBuilderPublishCoordinator {
+class _NoopPublishCoordinatorForStudio
+    implements ProgrammeBuilderPublishCoordinator {
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
@@ -46,14 +47,17 @@ class _NoopPublishingServiceForStudio implements ProgrammePublishingService {
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class _NoopValidationServiceForStudio implements ProgrammeBuilderValidationService {
+class _NoopValidationServiceForStudio
+    implements ProgrammeBuilderValidationService {
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
   group('TrainingLibraryScreen', () {
-    testWidgets('shows Cohort Protocols and Session Library tabs', (tester) async {
+    testWidgets('shows Cohort Protocols and Session Library tabs', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: TrainingLibraryScreen(
@@ -86,7 +90,9 @@ void main() {
       expect(find.text('Cohort tab content'), findsNothing);
     });
 
-    testWidgets('Coach Studio opens Training Library destination', (tester) async {
+    testWidgets('Coach Studio opens Training Library destination', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: CoachStudioHomeScreen(
@@ -98,9 +104,7 @@ void main() {
       final trainingLibraryCard = find.text('Training Library');
       expect(trainingLibraryCard, findsOneWidget);
       await tester.tap(trainingLibraryCard);
-      await tester.pump(
-        const Duration(milliseconds: 100),
-      );
+      await tester.pump(const Duration(milliseconds: 100));
 
       // Navigation pushes TrainingLibraryScreen — verify route started.
       expect(find.text('Training Library'), findsWidgets);

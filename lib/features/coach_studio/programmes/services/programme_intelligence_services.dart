@@ -20,7 +20,8 @@ class ProgrammeIntelligenceServices {
 
     return ProgrammeIntelligenceController(
       versionId: versionId,
-      impactService: impactService ?? ProgrammeVersionImpactService(impactStore: store),
+      impactService:
+          impactService ?? ProgrammeVersionImpactService(impactStore: store),
       comparisonService:
           comparisonService ?? ProgrammeVersionComparisonService(),
       migrationPlannerService:

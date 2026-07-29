@@ -15,12 +15,12 @@ class ExercisePerformanceSnapshot {
   final String? labelOverride;
 
   Map<String, dynamic> toJson() => {
-        'schemaVersion': 1,
-        'sourceExerciseId': sourceExerciseId,
-        'displayName': displayName,
-        'position': position,
-        if (labelOverride != null) 'labelOverride': labelOverride,
-      };
+    'schemaVersion': 1,
+    'sourceExerciseId': sourceExerciseId,
+    'displayName': displayName,
+    'position': position,
+    if (labelOverride != null) 'labelOverride': labelOverride,
+  };
 
   factory ExercisePerformanceSnapshot.fromJson(Map<String, dynamic> json) {
     return ExercisePerformanceSnapshot(
@@ -65,19 +65,19 @@ class BlockPerformanceSnapshot {
   final String? performanceCaptureMode;
 
   Map<String, dynamic> toJson() => {
-        'schemaVersion': 1,
-        'sourceBlockId': sourceBlockId,
-        'title': title,
-        'blockType': blockType.dbValue,
-        'content': content,
-        'workoutFormat': workoutFormat.dbValue,
-        'position': position,
-        if (timerSummary != null) 'timerSummary': timerSummary,
-        if (coachNotes != null) 'coachNotes': coachNotes,
-        if (performanceCaptureMode != null)
-          'performanceCaptureMode': performanceCaptureMode,
-        'exercises': exercises.map((e) => e.toJson()).toList(),
-      };
+    'schemaVersion': 1,
+    'sourceBlockId': sourceBlockId,
+    'title': title,
+    'blockType': blockType.dbValue,
+    'content': content,
+    'workoutFormat': workoutFormat.dbValue,
+    'position': position,
+    if (timerSummary != null) 'timerSummary': timerSummary,
+    if (coachNotes != null) 'coachNotes': coachNotes,
+    if (performanceCaptureMode != null)
+      'performanceCaptureMode': performanceCaptureMode,
+    'exercises': exercises.map((e) => e.toJson()).toList(),
+  };
 
   factory BlockPerformanceSnapshot.fromJson(Map<String, dynamic> json) {
     final exercisesJson = json['exercises'];
@@ -95,13 +95,13 @@ class BlockPerformanceSnapshot {
       performanceCaptureMode: _trim(json['performanceCaptureMode']),
       exercises: exercisesJson is List
           ? exercisesJson
-              .whereType<Map>()
-              .map(
-                (item) => ExercisePerformanceSnapshot.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
-              )
-              .toList(growable: false)
+                .whereType<Map>()
+                .map(
+                  (item) => ExercisePerformanceSnapshot.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .toList(growable: false)
           : const [],
     );
   }
@@ -140,20 +140,20 @@ class SessionPerformanceSnapshot {
   final List<BlockPerformanceSnapshot> blocks;
 
   Map<String, dynamic> toJson() => {
-        'schemaVersion': 1,
-        'sourceProtocolId': sourceProtocolId,
-        'sessionTitle': sessionTitle,
-        if (sessionDescription != null) 'sessionDescription': sessionDescription,
-        if (programmeTitle != null) 'programmeTitle': programmeTitle,
-        if (programmeContextLabel != null)
-          'programmeContextLabel': programmeContextLabel,
-        if (coachDisplayName != null) 'coachDisplayName': coachDisplayName,
-        if (assignmentId != null) 'assignmentId': assignmentId,
-        if (programmeId != null) 'programmeId': programmeId,
-        if (programmeSessionId != null) 'programmeSessionId': programmeSessionId,
-        if (lineageCode != null) 'lineageCode': lineageCode,
-        'blocks': blocks.map((b) => b.toJson()).toList(),
-      };
+    'schemaVersion': 1,
+    'sourceProtocolId': sourceProtocolId,
+    'sessionTitle': sessionTitle,
+    if (sessionDescription != null) 'sessionDescription': sessionDescription,
+    if (programmeTitle != null) 'programmeTitle': programmeTitle,
+    if (programmeContextLabel != null)
+      'programmeContextLabel': programmeContextLabel,
+    if (coachDisplayName != null) 'coachDisplayName': coachDisplayName,
+    if (assignmentId != null) 'assignmentId': assignmentId,
+    if (programmeId != null) 'programmeId': programmeId,
+    if (programmeSessionId != null) 'programmeSessionId': programmeSessionId,
+    if (lineageCode != null) 'lineageCode': lineageCode,
+    'blocks': blocks.map((b) => b.toJson()).toList(),
+  };
 
   factory SessionPerformanceSnapshot.fromJson(Map<String, dynamic> json) {
     final blocksJson = json['blocks'];
@@ -170,13 +170,13 @@ class SessionPerformanceSnapshot {
       lineageCode: _trim(json['lineageCode']),
       blocks: blocksJson is List
           ? blocksJson
-              .whereType<Map>()
-              .map(
-                (item) => BlockPerformanceSnapshot.fromJson(
-                  Map<String, dynamic>.from(item),
-                ),
-              )
-              .toList(growable: false)
+                .whereType<Map>()
+                .map(
+                  (item) => BlockPerformanceSnapshot.fromJson(
+                    Map<String, dynamic>.from(item),
+                  ),
+                )
+                .toList(growable: false)
           : const [],
     );
   }

@@ -23,8 +23,8 @@ class SessionLibraryPickerSelection {
   final String displayTitle;
 }
 
-typedef SessionLibraryListLoader = Future<List<TrainingLibraryItemSummary>>
-    Function({String? searchTerm});
+typedef SessionLibraryListLoader =
+    Future<List<TrainingLibraryItemSummary>> Function({String? searchTerm});
 
 class SessionLibraryPickerSheet extends StatefulWidget {
   const SessionLibraryPickerSheet({
@@ -50,9 +50,9 @@ class _SessionLibraryPickerSheetState extends State<SessionLibraryPickerSheet> {
       widget.libraryService ?? TrainingLibraryService();
   late final SessionLibraryAuthoringCoordinator _coordinator =
       widget.coordinator ??
-          SessionLibraryAuthoringServices.createCoordinator(
-            coachIdentity: widget.coachIdentity,
-          );
+      SessionLibraryAuthoringServices.createCoordinator(
+        coachIdentity: widget.coachIdentity,
+      );
   late final CurrentCoachIdentity _coachIdentity =
       widget.coachIdentity ?? const AuthenticatedCoachIdentity();
 
@@ -155,9 +155,7 @@ class _SessionLibraryPickerSheetState extends State<SessionLibraryPickerSheet> {
           const SizedBox(height: CohortSpacing.md),
           TextField(
             controller: _searchController,
-            decoration: const InputDecoration(
-              labelText: 'Search Sessions',
-            ),
+            decoration: const InputDecoration(labelText: 'Search Sessions'),
           ),
           const SizedBox(height: CohortSpacing.md),
           if (_loading)

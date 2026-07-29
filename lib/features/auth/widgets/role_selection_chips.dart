@@ -34,7 +34,9 @@ class RoleSelectionChips extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
           child: Material(
-            color: selected ? CohortColors.olive.withValues(alpha: 0.12) : CohortColors.surface,
+            color: selected
+                ? CohortColors.olive.withValues(alpha: 0.12)
+                : CohortColors.surface,
             borderRadius: BorderRadius.circular(12),
             child: InkWell(
               onTap: () => _toggle(role),
@@ -52,7 +54,9 @@ class RoleSelectionChips extends StatelessWidget {
                   children: [
                     Icon(
                       selected ? Icons.check_circle : Icons.circle_outlined,
-                      color: selected ? CohortColors.olive : CohortColors.textSecondary,
+                      color: selected
+                          ? CohortColors.olive
+                          : CohortColors.textSecondary,
                     ),
                     const SizedBox(width: CohortSpacing.sm),
                     Expanded(

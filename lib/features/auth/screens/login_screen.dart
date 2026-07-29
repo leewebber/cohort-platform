@@ -11,10 +11,7 @@ import '../widgets/auth_scaffold.dart';
 import 'sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({
-    super.key,
-    required this.controller,
-  });
+  const LoginScreen({super.key, required this.controller});
 
   final AuthController controller;
 
@@ -64,9 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _resetPassword() async {
     final email = _emailController.text.trim();
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter your email first.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Enter your email first.')));
       return;
     }
 
@@ -123,14 +120,18 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: CohortSpacing.sm),
             Text(
               'Check your email to confirm your account, then sign in.',
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ],
           if (state.errorMessage != null) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(
               state.errorMessage!,
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ],
           const SizedBox(height: CohortSpacing.lg),

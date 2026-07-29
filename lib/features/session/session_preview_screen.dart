@@ -30,10 +30,7 @@ import 'widgets/strength_session_view.dart';
 /// Renders a [ProtocolDraft] through the same execution router and views used
 /// by [SessionPlayerScreen], without saving, publishing, or training sessions.
 class SessionPreviewScreen extends StatefulWidget {
-  const SessionPreviewScreen({
-    super.key,
-    required this.draft,
-  });
+  const SessionPreviewScreen({super.key, required this.draft});
 
   final ProtocolDraft draft;
 
@@ -68,7 +65,9 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
   List<SessionStep> get _steps => _stepsFromDraft(widget.draft);
 
   SessionExecutionMode get _executionMode {
-    return _executionRouter.determineExecutionMode(_protocolFromDraft(widget.draft));
+    return _executionRouter.determineExecutionMode(
+      _protocolFromDraft(widget.draft),
+    );
   }
 
   _CompiledIntervalPlan? get _compiledIntervalPlan {
@@ -123,77 +122,68 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
     return CoachRouteGuard.wrap(
       title: 'Session preview',
       child: Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: _exitPreview,
-                child: const Text('← Back to Builder'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const PreviewModeBanner(),
-              const SizedBox(height: CohortSpacing.xl),
-              const SectionTitle('Session'),
-              const SizedBox(height: CohortSpacing.md),
-              Text(
-                _sessionTitle,
-                style: CohortTextStyles.h1,
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              SessionBlockPreviewList(
-                plan: _executionPlanBuilder.build(
-                  sessionId: widget.draft.protocolId,
-                  sessionTitle: _sessionTitle,
-                  blocks: _blockResolver.resolveBlocks(widget.draft),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: _exitPreview,
+                  child: const Text('← Back to Builder'),
                 ),
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              const SectionTitle('Execution preview'),
-              const SizedBox(height: CohortSpacing.md),
-              if (intervalPlanError != null)
-                Text(
-                  intervalPlanError,
-                  style: CohortTextStyles.body,
-                )
-              else if (circuitPlanError != null)
-                Text(
-                  circuitPlanError,
-                  style: CohortTextStyles.body,
-                )
-              else if (steps.isEmpty &&
-                  mode != SessionExecutionMode.intervals &&
-                  mode != SessionExecutionMode.circuit)
-                const Text(
-                  'No session steps available.',
-                  style: CohortTextStyles.body,
-                )
-              else if (mode == SessionExecutionMode.intervals &&
-                  intervalPlan == null)
-                const Text(
-                  'Unable to compile interval session plan.',
-                  style: CohortTextStyles.body,
-                )
-              else if (mode == SessionExecutionMode.circuit &&
-                  circuitPlan == null)
-                const Text(
-                  'Unable to compile circuit session plan.',
-                  style: CohortTextStyles.body,
-                )
-              else
-                _buildExecutionView(
-                  mode: mode,
-                  steps: steps,
-                  intervalPlan: intervalPlan,
-                  circuitPlan: circuitPlan,
+                const SizedBox(height: CohortSpacing.md),
+                const PreviewModeBanner(),
+                const SizedBox(height: CohortSpacing.xl),
+                const SectionTitle('Session'),
+                const SizedBox(height: CohortSpacing.md),
+                Text(_sessionTitle, style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.xl),
+                SessionBlockPreviewList(
+                  plan: _executionPlanBuilder.build(
+                    sessionId: widget.draft.protocolId,
+                    sessionTitle: _sessionTitle,
+                    blocks: _blockResolver.resolveBlocks(widget.draft),
+                  ),
                 ),
-            ],
+                const SizedBox(height: CohortSpacing.xl),
+                const SectionTitle('Execution preview'),
+                const SizedBox(height: CohortSpacing.md),
+                if (intervalPlanError != null)
+                  Text(intervalPlanError, style: CohortTextStyles.body)
+                else if (circuitPlanError != null)
+                  Text(circuitPlanError, style: CohortTextStyles.body)
+                else if (steps.isEmpty &&
+                    mode != SessionExecutionMode.intervals &&
+                    mode != SessionExecutionMode.circuit)
+                  const Text(
+                    'No session steps available.',
+                    style: CohortTextStyles.body,
+                  )
+                else if (mode == SessionExecutionMode.intervals &&
+                    intervalPlan == null)
+                  const Text(
+                    'Unable to compile interval session plan.',
+                    style: CohortTextStyles.body,
+                  )
+                else if (mode == SessionExecutionMode.circuit &&
+                    circuitPlan == null)
+                  const Text(
+                    'Unable to compile circuit session plan.',
+                    style: CohortTextStyles.body,
+                  )
+                else
+                  _buildExecutionView(
+                    mode: mode,
+                    steps: steps,
+                    intervalPlan: intervalPlan,
+                    circuitPlan: circuitPlan,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -252,10 +242,7 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
           totalSteps: steps.length,
         ),
         const SizedBox(height: CohortSpacing.xl),
-        SessionStepCard(
-          step: steps.first,
-          onComplete: () {},
-        ),
+        SessionStepCard(step: steps.first, onComplete: () {}),
       ],
     );
   }
@@ -337,20 +324,14 @@ class _SessionPreviewScreenState extends State<SessionPreviewScreen> {
 }
 
 class _CompiledIntervalPlan {
-  const _CompiledIntervalPlan({
-    this.plan,
-    this.error,
-  });
+  const _CompiledIntervalPlan({this.plan, this.error});
 
   final IntervalSessionPlan? plan;
   final String? error;
 }
 
 class _CompiledCircuitPlan {
-  const _CompiledCircuitPlan({
-    this.plan,
-    this.error,
-  });
+  const _CompiledCircuitPlan({this.plan, this.error});
 
   final CircuitSessionPlan? plan;
   final String? error;

@@ -44,8 +44,9 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
     final normalizedExerciseId = exerciseId.trim();
     if (normalizedExerciseId.isEmpty) return const [];
 
-    final blockLinkReferences =
-        await _listBlockLinkSessionReferences(normalizedExerciseId);
+    final blockLinkReferences = await _listBlockLinkSessionReferences(
+      normalizedExerciseId,
+    );
     final protocolsWithBlockLinks = blockLinkReferences
         .map((reference) => reference.protocolId)
         .toSet();
@@ -128,7 +129,7 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
           sessionRevisionNumber: protocol['revision_number'] is int
               ? protocol['revision_number'] as int
               : int.tryParse(protocol['revision_number']?.toString() ?? '') ??
-                  1,
+                    1,
           sessionName: protocol['name']?.toString() ?? '',
           sessionLifecycleStatus: SessionRevisionLifecycleStatusDb.fromDb(
             protocol['lifecycle_status']?.toString(),
@@ -163,8 +164,7 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
 
     final steps = List<Map<String, dynamic>>.from(stepRows as List)
         .where(
-          (row) =>
-              !excludeProtocolIds.contains(row['protocol_id']?.toString()),
+          (row) => !excludeProtocolIds.contains(row['protocol_id']?.toString()),
         )
         .toList();
 
@@ -204,7 +204,7 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
           sessionRevisionNumber: protocol['revision_number'] is int
               ? protocol['revision_number'] as int
               : int.tryParse(protocol['revision_number']?.toString() ?? '') ??
-                  1,
+                    1,
           sessionName: protocol['name']?.toString() ?? '',
           sessionLifecycleStatus: SessionRevisionLifecycleStatusDb.fromDb(
             protocol['lifecycle_status']?.toString(),
@@ -306,9 +306,10 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
         ? <Map<String, dynamic>>[]
         : List<Map<String, dynamic>>.from(
             await SupabaseService.client
-                .from(_lineagesTable)
-                .select('id, code')
-                .inFilter('id', lineageIds) as List,
+                    .from(_lineagesTable)
+                    .select('id, code')
+                    .inFilter('id', lineageIds)
+                as List,
           );
 
     final lineages = {
@@ -406,8 +407,9 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
         .select('exercise_result_id, source_exercise_id, block_result_id')
         .eq('source_exercise_id', normalizedExerciseId);
 
-    final exerciseResults =
-        List<Map<String, dynamic>>.from(exerciseResultRows as List);
+    final exerciseResults = List<Map<String, dynamic>>.from(
+      exerciseResultRows as List,
+    );
     if (exerciseResults.isEmpty) {
       return const ExerciseHistoricalUsage(
         recordCount: 0,
@@ -432,7 +434,8 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
 
     final blockToRecord = {
       for (final row in List<Map<String, dynamic>>.from(blockRows as List))
-        row['block_result_id']?.toString(): row['session_record_id']?.toString(),
+        row['block_result_id']?.toString(): row['session_record_id']
+            ?.toString(),
     };
 
     final recordIds = blockToRecord.values
@@ -485,7 +488,8 @@ class ExerciseRelationshipSupabaseStore extends ExerciseRelationshipStore {
         matchedProtocolIds.add(protocolId);
       }
 
-      final performedAt = _parseDateTime(record['completed_at']) ??
+      final performedAt =
+          _parseDateTime(record['completed_at']) ??
           _parseDateTime(record['started_at']);
       if (performedAt == null) continue;
 

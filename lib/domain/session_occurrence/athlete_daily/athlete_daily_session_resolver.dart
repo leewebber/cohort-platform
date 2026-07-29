@@ -1,7 +1,7 @@
+import '../ports/session_occurrence_repository.dart';
 import '../value_objects/session_occurrence_date.dart';
 import '../vocabulary/session_occurrence_lifecycle_state.dart';
 import 'athlete_daily_session_resolution_result.dart';
-import 'athlete_session_occurrence_index.dart';
 
 /// Resolves an athlete's workout for a calendar day (read-only).
 class AthleteDailySessionResolver {
@@ -10,7 +10,7 @@ class AthleteDailySessionResolver {
   AthleteDailySessionResolutionResult resolve({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex index,
+    required SessionOccurrenceRepository occurrenceRepository,
   }) {
     final trimmedAthlete = athleteId.trim();
     if (trimmedAthlete.isEmpty || !_isValidDate(date)) {
@@ -21,7 +21,7 @@ class AthleteDailySessionResolver {
       );
     }
 
-    final matches = index.occurrencesOnDay(
+    final matches = occurrenceRepository.occurrencesOnDay(
       athleteId: trimmedAthlete,
       calendarDate: date,
     );

@@ -56,9 +56,13 @@ class IntervalSessionPlanBuilder {
   /// Temporary diagnostics helper for debug hooks and manual verification.
   static void debugPrintPlan(IntervalSessionPlan plan) {
     debugPrint('[IntervalSessionPlanBuilder] protocolId: ${plan.protocolId}');
-    debugPrint('[IntervalSessionPlanBuilder] sessionTitle: ${plan.sessionTitle}');
+    debugPrint(
+      '[IntervalSessionPlanBuilder] sessionTitle: ${plan.sessionTitle}',
+    );
     debugPrint('[IntervalSessionPlanBuilder] modality: ${plan.modality.name}');
-    debugPrint('[IntervalSessionPlanBuilder] blockCount: ${plan.blocks.length}');
+    debugPrint(
+      '[IntervalSessionPlanBuilder] blockCount: ${plan.blocks.length}',
+    );
     debugPrint('[IntervalSessionPlanBuilder] phaseCount: ${plan.totalPhases}');
     debugPrint(
       '[IntervalSessionPlanBuilder] workPhaseCount: ${plan.totalWorkPhases}',
@@ -287,11 +291,11 @@ class IntervalSessionPlanBuilder {
         current.blockType == IntervalBlockType.instruction,
       IntervalPhaseType.recovery =>
         current.blockType == IntervalBlockType.repeated ||
-        current.blockType == IntervalBlockType.single,
+            current.blockType == IntervalBlockType.single,
       IntervalPhaseType.work =>
         current.blockType == IntervalBlockType.repeated ||
-        current.blockType == IntervalBlockType.single &&
-            _sectionsMatch(current.section, step.section),
+            current.blockType == IntervalBlockType.single &&
+                _sectionsMatch(current.section, step.section),
     };
   }
 

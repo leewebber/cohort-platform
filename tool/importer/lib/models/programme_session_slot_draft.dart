@@ -12,8 +12,7 @@ class ProgrammeSessionSlotDraft {
     this.displayTitle,
     this.timeOfDay = ProgrammeSessionTimeOfDay.any,
     this.isOptional = false,
-    this.completionExpectation =
-        ProgrammeSessionCompletionExpectation.required,
+    this.completionExpectation = ProgrammeSessionCompletionExpectation.required,
     this.coachNote,
     this.athleteNote,
   });
@@ -54,8 +53,9 @@ class ProgrammeSessionSlotDraft {
       localId: localId ?? this.localId,
       sessionOrder: sessionOrder ?? this.sessionOrder,
       protocolId: protocolId ?? this.protocolId,
-      displayTitle:
-          clearDisplayTitle ? null : (displayTitle ?? this.displayTitle),
+      displayTitle: clearDisplayTitle
+          ? null
+          : (displayTitle ?? this.displayTitle),
       timeOfDay: timeOfDay ?? this.timeOfDay,
       isOptional: isOptional ?? this.isOptional,
       completionExpectation:

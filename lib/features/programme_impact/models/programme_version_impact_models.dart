@@ -191,16 +191,19 @@ class ProgrammeVersionImpactLookupResult {
 
   const ProgrammeVersionImpactLookupResult.success(
     ProgrammeVersionImpactSummary summary,
-  ) : this._(status: ProgrammeVersionImpactLookupStatus.success, summary: summary);
+  ) : this._(
+        status: ProgrammeVersionImpactLookupStatus.success,
+        summary: summary,
+      );
 
   const ProgrammeVersionImpactLookupResult.versionNotFound()
-      : this._(status: ProgrammeVersionImpactLookupStatus.versionNotFound);
+    : this._(status: ProgrammeVersionImpactLookupStatus.versionNotFound);
 
   const ProgrammeVersionImpactLookupResult.lookupFailed(String message)
-      : this._(
-          status: ProgrammeVersionImpactLookupStatus.lookupFailed,
-          message: message,
-        );
+    : this._(
+        status: ProgrammeVersionImpactLookupStatus.lookupFailed,
+        message: message,
+      );
 
   final ProgrammeVersionImpactLookupStatus status;
   final ProgrammeVersionImpactSummary? summary;

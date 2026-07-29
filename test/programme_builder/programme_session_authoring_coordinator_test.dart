@@ -27,48 +27,53 @@ void main() {
   }
 
   group('ProgrammeSessionAuthoringCoordinator', () {
-    test('saveAndAttach persists local draft with durable ID and attaches once',
-        () async {
-      final document = buildProgrammeDocumentWithSlot();
-      final protocolService = FakeProtocolBuilderService();
-      final assignmentPort = FakeProgrammeSessionAssignmentPort(
-        document: document,
-      );
-      final coordinator = ProgrammeSessionAuthoringCoordinator(
-        protocolBuilderService: protocolService,
-        assignmentPort: assignmentPort,
-        idGenerator: FixedSessionIdGenerator(testDurableSessionId),
-        coachIdentity: const FixedCoachIdentity('dev-coach'),
-      );
+    test(
+      'saveAndAttach persists local draft with durable ID and attaches once',
+      () async {
+        final document = buildProgrammeDocumentWithSlot();
+        final protocolService = FakeProtocolBuilderService();
+        final assignmentPort = FakeProgrammeSessionAssignmentPort(
+          document: document,
+        );
+        final coordinator = ProgrammeSessionAuthoringCoordinator(
+          protocolBuilderService: protocolService,
+          assignmentPort: assignmentPort,
+          idGenerator: FixedSessionIdGenerator(testDurableSessionId),
+          coachIdentity: const FixedCoachIdentity('dev-coach'),
+        );
 
-      final draft = buildValidProgrammeSessionDraft();
-      final result = await coordinator.saveAndAttach(
-        context: buildContext(),
-        draft: draft,
-      );
+        final draft = buildValidProgrammeSessionDraft();
+        final result = await coordinator.saveAndAttach(
+          context: buildContext(),
+          draft: draft,
+        );
 
-      expect(result.isAttached, isTrue);
-      expect(result.contentId, testDurableSessionId);
-      expect(protocolService.saveCallCount, 1);
-      expect(assignmentPort.assignCallCount, 1);
-      expect(assignmentPort.lastAssignedContentId, testDurableSessionId);
-      expect(assignmentPort.lastAssignedDisplayTitle, 'Morning Strength');
+        expect(result.isAttached, isTrue);
+        expect(result.contentId, testDurableSessionId);
+        expect(protocolService.saveCallCount, 1);
+        expect(assignmentPort.assignCallCount, 1);
+        expect(assignmentPort.lastAssignedContentId, testDurableSessionId);
+        expect(assignmentPort.lastAssignedDisplayTitle, 'Morning Strength');
 
-      final saved = protocolService.drafts[testDurableSessionId];
-      expect(saved, isNotNull);
-      expect(saved!.contentKind, TrainingContentKind.session);
-      expect(saved.authoringScope, TrainingAuthoringScope.programmeOnly);
-      expect(saved.endorsementStatus, TrainingEndorsementStatus.coachAuthored);
-      expect(saved.published, isFalse);
-      expect(saved.programmeVersionId, testProgrammeVersionId);
-      expect(saved.ownerId, 'dev-coach');
+        final saved = protocolService.drafts[testDurableSessionId];
+        expect(saved, isNotNull);
+        expect(saved!.contentKind, TrainingContentKind.session);
+        expect(saved.authoringScope, TrainingAuthoringScope.programmeOnly);
+        expect(
+          saved.endorsementStatus,
+          TrainingEndorsementStatus.coachAuthored,
+        );
+        expect(saved.published, isFalse);
+        expect(saved.programmeVersionId, testProgrammeVersionId);
+        expect(saved.ownerId, 'dev-coach');
 
-      final updatedSlot = result.updatedDocument!.template.weeks.first.days
-          .first.slots.first;
-      expect(updatedSlot.protocolId, testDurableSessionId);
-      expect(updatedSlot.displayTitle, 'Morning Strength');
-      expect(result.updatedDocument!.hasUnsavedChanges, isTrue);
-    });
+        final updatedSlot =
+            result.updatedDocument!.template.weeks.first.days.first.slots.first;
+        expect(updatedSlot.protocolId, testDurableSessionId);
+        expect(updatedSlot.displayTitle, 'Morning Strength');
+        expect(result.updatedDocument!.hasUnsavedChanges, isTrue);
+      },
+    );
 
     test('validation rejects blank title', () async {
       final coordinator = ProgrammeSessionAuthoringCoordinator(
@@ -133,8 +138,12 @@ void main() {
         protocolBuilderService: FakeProtocolBuilderService(),
         assignmentPort: FakeProgrammeSessionAssignmentPort(
           document: buildProgrammeDocumentWithSlot(),
-          slotExistsOverride: ({required weekLocalId, required dayLocalId, required slotLocalId}) =>
-              false,
+          slotExistsOverride:
+              ({
+                required weekLocalId,
+                required dayLocalId,
+                required slotLocalId,
+              }) => false,
         ),
         idGenerator: FixedSessionIdGenerator(testDurableSessionId),
         coachIdentity: const FixedCoachIdentity('dev-coach'),
@@ -188,8 +197,10 @@ void main() {
         draft: buildValidProgrammeSessionDraft(),
       );
 
-      expect(result.status,
-          ProgrammeSessionAuthoringStatus.sessionSavedAttachFailed);
+      expect(
+        result.status,
+        ProgrammeSessionAuthoringStatus.sessionSavedAttachFailed,
+      );
       expect(result.partialState?.savedContentId, testDurableSessionId);
       expect(protocolService.saveCallCount, 1);
       expect(assignmentPort.assignCallCount, 1);
@@ -198,9 +209,7 @@ void main() {
     test('retry attach does not call save again', () async {
       final protocolService = FakeProtocolBuilderService();
       protocolService.drafts[testDurableSessionId] =
-          buildValidProgrammeSessionDraft(
-        protocolId: testDurableSessionId,
-      );
+          buildValidProgrammeSessionDraft(protocolId: testDurableSessionId);
 
       final assignmentPort = FakeProgrammeSessionAssignmentPort(
         document: buildProgrammeDocumentWithSlot(),
@@ -227,9 +236,9 @@ void main() {
       final protocolService = FakeProtocolBuilderService();
       protocolService.libraryDrafts[testDurableSessionId] =
           buildValidLibrarySessionDraft(
-        protocolId: testDurableSessionId,
-        name: 'Library Session',
-      );
+            protocolId: testDurableSessionId,
+            name: 'Library Session',
+          );
 
       final assignmentPort = FakeProgrammeSessionAssignmentPort(
         document: buildProgrammeDocumentWithSlot(),
@@ -258,9 +267,9 @@ void main() {
       final protocolService = FakeProtocolBuilderService();
       protocolService.drafts[testDurableSessionId] =
           buildValidProgrammeSessionDraft(
-        protocolId: testDurableSessionId,
-        name: 'Original',
-      );
+            protocolId: testDurableSessionId,
+            name: 'Original',
+          );
 
       final assignmentPort = FakeProgrammeSessionAssignmentPort(
         document: buildProgrammeDocumentWithSlot(),
@@ -287,17 +296,17 @@ void main() {
       expect(result.isAttached, isTrue);
       expect(protocolService.saveCallCount, 1);
       expect(protocolService.drafts.length, 1);
-      expect(protocolService.drafts[testDurableSessionId]!.name,
-          'Updated Session');
+      expect(
+        protocolService.drafts[testDurableSessionId]!.name,
+        'Updated Session',
+      );
       expect(assignmentPort.lastAssignedDisplayTitle, 'Updated Session');
     });
   });
 }
 
 extension on ProgrammeSessionAuthoringContext {
-  ProgrammeSessionAuthoringContext copyWith({
-    String? programmeVersionId,
-  }) {
+  ProgrammeSessionAuthoringContext copyWith({String? programmeVersionId}) {
     return ProgrammeSessionAuthoringContext(
       programmeVersionId: programmeVersionId ?? this.programmeVersionId,
       weekLocalId: weekLocalId,

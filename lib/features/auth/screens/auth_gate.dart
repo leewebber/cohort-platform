@@ -10,10 +10,7 @@ import 'login_screen.dart';
 import 'profile_setup_screen.dart';
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({
-    super.key,
-    required this.controller,
-  });
+  const AuthGate({super.key, required this.controller});
 
   final AuthController controller;
 
@@ -53,18 +50,15 @@ class _AuthGateState extends State<AuthGate> {
 
     return switch (state.status) {
       AuthStatus.initial || AuthStatus.loading => const _AuthLoadingScreen(),
-      AuthStatus.authenticated => HomeScreen(
-          authController: widget.controller,
-        ),
+      AuthStatus.authenticated => HomeScreen(authController: widget.controller),
       AuthStatus.profileRequired => ProfileSetupScreen(
-          controller: widget.controller,
-        ),
-      AuthStatus.unauthenticated || AuthStatus.error => LoginScreen(
-          controller: widget.controller,
-        ),
+        controller: widget.controller,
+      ),
+      AuthStatus.unauthenticated ||
+      AuthStatus.error => LoginScreen(controller: widget.controller),
       AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
-          controller: widget.controller,
-        ),
+        controller: widget.controller,
+      ),
     };
   }
 }

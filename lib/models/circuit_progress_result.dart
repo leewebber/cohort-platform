@@ -19,7 +19,8 @@ class CircuitProgressResult {
       CircuitProgressType.moreRoundsOrReps => 'More rounds or reps completed.',
       CircuitProgressType.fasterCompletion => 'Faster completion.',
       CircuitProgressType.moreWorkCompleted => 'More work completed.',
-      CircuitProgressType.heavierLoad => 'Heavier load at equal or better score.',
+      CircuitProgressType.heavierLoad =>
+        'Heavier load at equal or better score.',
       CircuitProgressType.effortImproved => 'Same work at lower effort.',
       CircuitProgressType.matchedPerformance =>
         'Performance matched — strong consistency.',

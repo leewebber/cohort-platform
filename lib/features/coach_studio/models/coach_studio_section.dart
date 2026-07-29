@@ -24,8 +24,10 @@ extension CoachStudioSectionLabels on CoachStudioSection {
         'Multi-week curricula, drafts, and publishing.',
       CoachStudioSection.trainingLibrary =>
         'Cohort Protocols, Session Library, and reusable workouts.',
-      CoachStudioSection.exercises => 'Movement library and coaching knowledge.',
-      CoachStudioSection.athletes => 'Roster, assignments, and athlete context.',
+      CoachStudioSection.exercises =>
+        'Movement library and coaching knowledge.',
+      CoachStudioSection.athletes =>
+        'Roster, assignments, and athlete context.',
       CoachStudioSection.settings => 'Studio preferences and administration.',
     };
   }

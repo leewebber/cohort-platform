@@ -126,7 +126,8 @@ class BlockResultEditor extends StatelessWidget {
     String exerciseId,
     String setResultId,
     SetPerformanceDraft Function(SetPerformanceDraft) update,
-  ) onUpdateSet;
+  )
+  onUpdateSet;
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
@@ -200,7 +201,8 @@ class _ResultEditorBody extends StatelessWidget {
     String exerciseId,
     String setResultId,
     SetPerformanceDraft Function(SetPerformanceDraft) update,
-  ) onUpdateSet;
+  )
+  onUpdateSet;
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
@@ -220,37 +222,44 @@ class _ResultEditorBody extends StatelessWidget {
         );
       case BlockCaptureMode.amrap:
         return _AmrapEditor(
-          result: blockDraft.resultData as AmrapResultData? ?? const AmrapResultData(),
+          result:
+              blockDraft.resultData as AmrapResultData? ??
+              const AmrapResultData(),
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.forTime:
         return _ForTimeEditor(
-          result: blockDraft.resultData as ForTimeResultData? ??
+          result:
+              blockDraft.resultData as ForTimeResultData? ??
               const ForTimeResultData(),
           onChanged: onResultChanged,
           onApplyElapsedSeconds: onApplyElapsedSeconds,
         );
       case BlockCaptureMode.interval:
         return _IntervalEditor(
-          result: blockDraft.resultData as IntervalResultData? ??
+          result:
+              blockDraft.resultData as IntervalResultData? ??
               const IntervalResultData(),
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.endurance:
         return _EnduranceEditor(
-          result: blockDraft.resultData as EnduranceResultData? ??
+          result:
+              blockDraft.resultData as EnduranceResultData? ??
               const EnduranceResultData(),
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.rounds:
         return _RoundsEditor(
-          result: blockDraft.resultData as RoundsResultData? ??
+          result:
+              blockDraft.resultData as RoundsResultData? ??
               const RoundsResultData(),
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.customMetric:
         return _CustomMetricEditor(
-          result: blockDraft.resultData as CustomMetricResultData? ??
+          result:
+              blockDraft.resultData as CustomMetricResultData? ??
               const CustomMetricResultData(),
           onChanged: onResultChanged,
         );
@@ -288,9 +297,8 @@ class _AmrapEditor extends StatelessWidget {
           key: const ValueKey('amrap-extra-reps'),
           label: 'Extra reps',
           value: '${result.extraReps}',
-          onChanged: (value) => onChanged(
-            result.copyWith(extraReps: int.tryParse(value) ?? 0),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(extraReps: int.tryParse(value) ?? 0)),
         ),
       ],
     );
@@ -316,9 +324,8 @@ class _ForTimeEditor extends StatelessWidget {
         PerformanceNumericField(
           label: 'Elapsed seconds',
           value: result.elapsedSeconds?.toString() ?? '',
-          onChanged: (value) => onChanged(
-            result.copyWith(elapsedSeconds: int.tryParse(value)),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(elapsedSeconds: int.tryParse(value))),
         ),
         _MaterialSwitchListTile(
           title: 'Completed',
@@ -327,8 +334,7 @@ class _ForTimeEditor extends StatelessWidget {
         ),
         if (onApplyElapsedSeconds != null)
           TextButton(
-            onPressed: () =>
-                onApplyElapsedSeconds!(result.elapsedSeconds ?? 0),
+            onPressed: () => onApplyElapsedSeconds!(result.elapsedSeconds ?? 0),
             child: const Text('Use timer elapsed time'),
           ),
       ],
@@ -411,12 +417,12 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
           ),
         ),
         DropdownButtonFormField<String>(
-          value: _units.contains(result.distanceUnit) ? result.distanceUnit : 'km',
+          value: _units.contains(result.distanceUnit)
+              ? result.distanceUnit
+              : 'km',
           decoration: const InputDecoration(labelText: 'Distance unit'),
           items: _units
-              .map(
-                (unit) => DropdownMenuItem(value: unit, child: Text(unit)),
-              )
+              .map((unit) => DropdownMenuItem(value: unit, child: Text(unit)))
               .toList(growable: false),
           onChanged: (value) {
             if (value == null) return;
@@ -425,9 +431,8 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
         ),
         EnduranceDurationField(
           durationSeconds: result.durationSeconds,
-          onDurationSecondsChanged: (seconds) => widget.onChanged(
-            result.copyWith(durationSeconds: seconds),
-          ),
+          onDurationSecondsChanged: (seconds) =>
+              widget.onChanged(result.copyWith(durationSeconds: seconds)),
         ),
         if (liveMetric != null) ...[
           const SizedBox(height: CohortSpacing.sm),
@@ -444,9 +449,7 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
         ),
         TextField(
           controller: _noteController,
-          decoration: const InputDecoration(
-            labelText: 'Note (optional)',
-          ),
+          decoration: const InputDecoration(labelText: 'Note (optional)'),
           onChanged: (value) => widget.onChanged(
             result.copyWith(note: value.trim().isEmpty ? null : value.trim()),
           ),
@@ -475,9 +478,8 @@ class _DistanceEditor extends StatelessWidget {
         PerformanceNumericField(
           label: 'Duration (seconds)',
           value: result.durationSeconds?.toString() ?? '',
-          onChanged: (value) => onChanged(
-            result.copyWith(durationSeconds: int.tryParse(value)),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(durationSeconds: int.tryParse(value))),
         ),
       ],
     );
@@ -503,9 +505,8 @@ class _RoundsEditor extends StatelessWidget {
         PerformanceNumericField(
           label: 'Extra reps',
           value: '${result.extraReps}',
-          onChanged: (value) => onChanged(
-            result.copyWith(extraReps: int.tryParse(value) ?? 0),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(extraReps: int.tryParse(value) ?? 0)),
         ),
       ],
     );
@@ -533,9 +534,8 @@ class _CustomMetricEditor extends StatelessWidget {
           label: 'Value',
           value: result.numericValue?.toString() ?? '',
           allowDecimal: true,
-          onChanged: (value) => onChanged(
-            result.copyWith(numericValue: double.tryParse(value)),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(numericValue: double.tryParse(value))),
         ),
       ],
     );
@@ -571,7 +571,8 @@ class _StrengthEditor extends StatelessWidget {
     String exerciseId,
     String setResultId,
     SetPerformanceDraft Function(SetPerformanceDraft) update,
-  ) onUpdateSet;
+  )
+  onUpdateSet;
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
 
@@ -670,19 +671,25 @@ class TrainingHistoryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(record.sessionSnapshot.sessionTitle,
-              style: CohortTextStyles.cardTitle),
+          Text(
+            record.sessionSnapshot.sessionTitle,
+            style: CohortTextStyles.cardTitle,
+          ),
           const SizedBox(height: CohortSpacing.sm),
           Text(
             '${record.status.displayLabel} · ${_formatDate(date)}',
             style: CohortTextStyles.small,
           ),
           if (record.sessionSnapshot.programmeContextLabel != null)
-            Text(record.sessionSnapshot.programmeContextLabel!,
-                style: CohortTextStyles.small),
+            Text(
+              record.sessionSnapshot.programmeContextLabel!,
+              style: CohortTextStyles.small,
+            ),
           if (record.durationSeconds != null)
-            Text('Duration ${_formatDuration(record.durationSeconds!)}',
-                style: CohortTextStyles.small),
+            Text(
+              'Duration ${_formatDuration(record.durationSeconds!)}',
+              style: CohortTextStyles.small,
+            ),
           if (record.overallRpe != null)
             Text('RPE ${record.overallRpe}', style: CohortTextStyles.small),
           Text(

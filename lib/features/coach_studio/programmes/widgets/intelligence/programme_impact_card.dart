@@ -37,18 +37,25 @@ class ProgrammeImpactCard extends StatelessWidget {
             const Center(child: CircularProgressIndicator())
           else if (status == ProgrammeIntelligenceCardStatus.error)
             _ErrorBody(
-              message: errorMessage ?? ProgrammeIntelligenceCopy.impactUnavailableMessage,
+              message:
+                  errorMessage ??
+                  ProgrammeIntelligenceCopy.impactUnavailableMessage,
               onRetry: onRetry,
             )
           else if (summary == null)
             Text(
               'Impact information is unavailable.',
-              style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+              style: CohortTextStyles.body.copyWith(
+                color: CohortColors.textSecondary,
+              ),
             )
           else
-            _ImpactBody(summary: summary!, onViewDetails: () {
-              showImpactDetailSheet(context: context, summary: summary!);
-            }),
+            _ImpactBody(
+              summary: summary!,
+              onViewDetails: () {
+                showImpactDetailSheet(context: context, summary: summary!);
+              },
+            ),
         ],
       ),
     );
@@ -56,10 +63,7 @@ class ProgrammeImpactCard extends StatelessWidget {
 }
 
 class _ImpactBody extends StatelessWidget {
-  const _ImpactBody({
-    required this.summary,
-    required this.onViewDetails,
-  });
+  const _ImpactBody({required this.summary, required this.onViewDetails});
 
   final ProgrammeVersionImpactSummary summary;
   final VoidCallback onViewDetails;
@@ -72,23 +76,28 @@ class _ImpactBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         GovernanceCountRow(
-          label: '${summary.activeAssignmentCount} active assignment'
+          label:
+              '${summary.activeAssignmentCount} active assignment'
               '${summary.activeAssignmentCount == 1 ? '' : 's'}',
         ),
         GovernanceCountRow(
-          label: '${historical.terminalRecordCount} historical session'
+          label:
+              '${historical.terminalRecordCount} historical session'
               '${historical.terminalRecordCount == 1 ? '' : 's'}',
         ),
         GovernanceCountRow(
-          label: '${historical.athleteCount} athlete'
+          label:
+              '${historical.athleteCount} athlete'
               '${historical.athleteCount == 1 ? '' : 's'} (aggregate)',
         ),
         GovernanceCountRow(
-          label: '${summary.distinctSessionRevisionCount} distinct session'
+          label:
+              '${summary.distinctSessionRevisionCount} distinct session'
               '${summary.distinctSessionRevisionCount == 1 ? '' : 's'}',
         ),
         GovernanceCountRow(
-          label: '${summary.distinctExerciseCount} distinct exercise'
+          label:
+              '${summary.distinctExerciseCount} distinct exercise'
               '${summary.distinctExerciseCount == 1 ? '' : 's'}',
         ),
         if (summary.summaryMessages.isNotEmpty) ...[
@@ -114,10 +123,7 @@ class _ImpactBody extends StatelessWidget {
 }
 
 class _ErrorBody extends StatelessWidget {
-  const _ErrorBody({
-    required this.message,
-    required this.onRetry,
-  });
+  const _ErrorBody({required this.message, required this.onRetry});
 
   final String message;
   final VoidCallback onRetry;

@@ -6,10 +6,7 @@ import '../../../models/programme_week_draft.dart';
 /// Reuses existing week/day/slot draft node models.
 /// See `44_Programme_Builder.md`.
 class ProgrammeTemplateDraft {
-  const ProgrammeTemplateDraft({
-    this.weeks = const [],
-    this.phases = const [],
-  });
+  const ProgrammeTemplateDraft({this.weeks = const [], this.phases = const []});
 
   final List<ProgrammeWeekDraft> weeks;
   final List<ProgrammePhaseDraft> phases;

@@ -15,7 +15,8 @@ class AthleteProgrammeSwitchServices {
   }) {
     final coachId = CurrentUserSession.maybeInstance?.coachId ?? '';
     return AthleteProgrammeSwitchCatalogService(
-      catalogService: catalogService ??
+      catalogService:
+          catalogService ??
           ProgrammeCatalogServiceImpl(
             versionStore: const ProgrammeVersionSupabaseStore(),
             coachId: coachId,

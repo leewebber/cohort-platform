@@ -56,7 +56,10 @@ void main() {
         constraints: constraints,
         evaluation: evaluation,
       );
-      expect(result.status, AdaptationPlanApplicationStatus.noAdaptationRequired);
+      expect(
+        result.status,
+        AdaptationPlanApplicationStatus.noAdaptationRequired,
+      );
       expect(result.snapshot!.retainedBlocks, hasLength(3));
       expect(result.snapshot!.appliedAdaptationAudit, isEmpty);
       expect(result.snapshot!.retainedBlocks.every((b) => !b.adapted), isTrue);
@@ -65,7 +68,9 @@ void main() {
     test('2 snapshot independent from later source edits', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final snapshotSets = result.snapshot!.retainedBlocks
           .expand((b) => b.exercises)
@@ -90,10 +95,13 @@ void main() {
     test('3 one set-count reduction applies correctly', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
       );
-      final accessory = result.snapshot!.retainedBlocks
-          .firstWhere((b) => b.sourceBlockLocalId == 'block-accessory');
+      final accessory = result.snapshot!.retainedBlocks.firstWhere(
+        (b) => b.sourceBlockLocalId == 'block-accessory',
+      );
       expect(accessory.adapted, isTrue);
       expect(
         accessory.exercises.first.executionPrescription.sets,
@@ -104,34 +112,48 @@ void main() {
     test('4 multiple reductions apply in order', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 40),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 40,
+        ),
       );
       for (var i = 0; i < result.snapshot!.appliedAdaptationAudit.length; i++) {
-        expect(result.snapshot!.appliedAdaptationAudit[i].planStepSequence, i + 1);
+        expect(
+          result.snapshot!.appliedAdaptationAudit[i].planStepSequence,
+          i + 1,
+        );
       }
     });
 
     test('5 non-target prescription fields unchanged', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final ex = result.snapshot!.retainedBlocks
           .firstWhere((b) => b.sourceBlockLocalId == 'block-strength')
           .exercises
           .first;
       expect(ex.executionPrescription.reps, ex.originalPrescription.reps);
-      expect(ex.executionPrescription.restSeconds, ex.originalPrescription.restSeconds);
+      expect(
+        ex.executionPrescription.restSeconds,
+        ex.originalPrescription.restSeconds,
+      );
     });
 
     test('6 reduction below minimum rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         evaluation: evaluation,
       );
       final badStep = AdaptationPlanStep(
@@ -144,7 +166,8 @@ void main() {
         exerciseLinkLocalId: 'link-strength-1',
         originalValueReference: 'sets=4',
         proposedValueReference: 'sets=1',
-        rationaleCode: AdaptationPlanRationaleCode.prescriptionReductionPreferred,
+        rationaleCode:
+            AdaptationPlanRationaleCode.prescriptionReductionPreferred,
         requiredStep: true,
         policySource: AdaptationPolicySource.explicit,
         prescriptionReduction: const PrescriptionReductionProposal(
@@ -164,7 +187,9 @@ void main() {
         steps: [badStep],
         protectedElements: const [],
         unresolvedConstraints: const [],
-        planFindings: const [AdaptationPlanRationaleCode.durationReductionRequired],
+        planFindings: const [
+          AdaptationPlanRationaleCode.durationReductionRequired,
+        ],
         isApplicable: true,
         requiresConfirmationLater: true,
       );
@@ -175,7 +200,9 @@ void main() {
     test('7 volume increase rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final badPlan = AdaptationPlanResult(
         status: AdaptationPlanStatus.planGenerated,
@@ -192,7 +219,8 @@ void main() {
             targetId: 'link-strength-1',
             blockLocalId: 'block-strength',
             exerciseLinkLocalId: 'link-strength-1',
-            rationaleCode: AdaptationPlanRationaleCode.prescriptionReductionPreferred,
+            rationaleCode:
+                AdaptationPlanRationaleCode.prescriptionReductionPreferred,
             requiredStep: true,
             policySource: AdaptationPolicySource.explicit,
             prescriptionReduction: const PrescriptionReductionProposal(
@@ -217,7 +245,9 @@ void main() {
     test('8 stale original set count rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final badPlan = AdaptationPlanResult(
         status: AdaptationPlanStatus.planGenerated,
@@ -234,7 +264,8 @@ void main() {
             targetId: 'link-strength-1',
             blockLocalId: 'block-strength',
             exerciseLinkLocalId: 'link-strength-1',
-            rationaleCode: AdaptationPlanRationaleCode.prescriptionReductionPreferred,
+            rationaleCode:
+                AdaptationPlanRationaleCode.prescriptionReductionPreferred,
             requiredStep: true,
             policySource: AdaptationPolicySource.explicit,
             prescriptionReduction: const PrescriptionReductionProposal(
@@ -259,14 +290,20 @@ void main() {
     test('9 optional block removal applies correctly', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       expect(
-        result.snapshot!.omittedBlocks.any((o) => o.sourceBlockLocalId == 'block-warmup'),
+        result.snapshot!.omittedBlocks.any(
+          (o) => o.sourceBlockLocalId == 'block-warmup',
+        ),
         isTrue,
       );
       expect(
-        result.snapshot!.retainedBlocks.any((b) => b.sourceBlockLocalId == 'block-warmup'),
+        result.snapshot!.retainedBlocks.any(
+          (b) => b.sourceBlockLocalId == 'block-warmup',
+        ),
         isFalse,
       );
     });
@@ -307,12 +344,15 @@ void main() {
       );
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 40),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 40,
+        ),
         input: blockedInput,
       );
       expect(
-        result.snapshot!.omittedBlocks
-            .where((o) => o.sourceBlockLocalId == 'block-accessory'),
+        result.snapshot!.omittedBlocks.where(
+          (o) => o.sourceBlockLocalId == 'block-accessory',
+        ),
         isEmpty,
       );
     });
@@ -320,11 +360,15 @@ void main() {
     test('11 essential block removal rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
         evaluation: evaluation,
       );
       final illegal = AdaptationPlanResult(
@@ -341,7 +385,8 @@ void main() {
             targetScope: AdaptationConstraintScope.block,
             targetId: 'block-strength',
             blockLocalId: 'block-strength',
-            rationaleCode: AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
+            rationaleCode:
+                AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
             requiredStep: true,
             policySource: AdaptationPolicySource.explicit,
           ),
@@ -361,12 +406,18 @@ void main() {
     test('12 removed block absent from retained list', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
-      final removed = result.snapshot!.omittedBlocks.map((o) => o.sourceBlockLocalId).toSet();
+      final removed = result.snapshot!.omittedBlocks
+          .map((o) => o.sourceBlockLocalId)
+          .toSet();
       for (final id in removed) {
         expect(
-          result.snapshot!.retainedBlocks.any((b) => b.sourceBlockLocalId == id),
+          result.snapshot!.retainedBlocks.any(
+            (b) => b.sourceBlockLocalId == id,
+          ),
           isFalse,
         );
       }
@@ -375,7 +426,9 @@ void main() {
     test('13 removed block in omitted audit records', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       expect(result.snapshot!.omittedBlocks, isNotEmpty);
       expect(result.snapshot!.appliedAdaptationAudit, isNotEmpty);
@@ -384,7 +437,9 @@ void main() {
     test('14 retained block order stable by source position', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       final positions = result.snapshot!.retainedBlocks
           .map((b) => b.sourcePosition)
@@ -395,7 +450,9 @@ void main() {
     test('15 source positions traceable on omitted blocks', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       for (final omitted in result.snapshot!.omittedBlocks) {
         expect(omitted.sourcePosition, greaterThan(0));
@@ -405,7 +462,9 @@ void main() {
     test('16 missing block target rejects application', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       final badPlan = AdaptationPlanResult(
         status: AdaptationPlanStatus.planGenerated,
@@ -421,7 +480,8 @@ void main() {
             targetScope: AdaptationConstraintScope.block,
             targetId: 'missing-block',
             blockLocalId: 'missing-block',
-            rationaleCode: AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
+            rationaleCode:
+                AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
             requiredStep: true,
             policySource: AdaptationPolicySource.derived,
           ),
@@ -441,7 +501,9 @@ void main() {
     test('17 duplicate block removal rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       final step = AdaptationPlanStep(
         sequence: 1,
@@ -476,8 +538,10 @@ void main() {
       );
       expect(
         applyWithPlan(plan: badPlan).issues.any(
-              (i) => i.code == AdaptationPlanApplicationIssueCode.duplicateBlockRemoval,
-            ),
+          (i) =>
+              i.code ==
+              AdaptationPlanApplicationIssueCode.duplicateBlockRemoval,
+        ),
         isTrue,
       );
     });
@@ -485,7 +549,9 @@ void main() {
     test('18 unsupported action rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final badPlan = AdaptationPlanResult(
         status: AdaptationPlanStatus.planGenerated,
@@ -501,7 +567,8 @@ void main() {
             targetScope: AdaptationConstraintScope.block,
             targetId: 'block-strength',
             blockLocalId: 'block-strength',
-            rationaleCode: AdaptationPlanRationaleCode.prescriptionReductionPreferred,
+            rationaleCode:
+                AdaptationPlanRationaleCode.prescriptionReductionPreferred,
             requiredStep: true,
             policySource: AdaptationPolicySource.explicit,
           ),
@@ -521,11 +588,15 @@ void main() {
     test('19 source session mismatch rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         evaluation: evaluation,
       );
       final mismatched = PlannedSessionAdaptationInput(
@@ -537,7 +608,9 @@ void main() {
             .apply(
               source: mismatched,
               plan: plan,
-              constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+              constraints: const AdaptationConstraintContext(
+                availableDurationMin: 55,
+              ),
               evaluation: evaluation,
             )
             .status,
@@ -548,11 +621,15 @@ void main() {
     test('20 stale policy source rejected', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
         evaluation: evaluation,
       );
       final baseStep = plan.steps.firstWhere(
@@ -586,7 +663,9 @@ void main() {
     test('21 each applied step creates audit entry', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       expect(
         result.snapshot!.appliedAdaptationAudit.length,
@@ -600,11 +679,15 @@ void main() {
     test('22 snapshot validator detects retained-and-omitted duplication', () {
       final evaluation = const SessionAdaptationReadOnlyEvaluator().evaluate(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         evaluation: evaluation,
       );
       final badSnapshot = AdaptedSessionExecutionSnapshot(
@@ -644,7 +727,8 @@ void main() {
             sourcePosition: 1,
             blockTypeDbValue: SessionBlockType.warmUp.name,
             omissionAction: AdaptationActionType.removeBlock,
-            rationaleCode: AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
+            rationaleCode:
+                AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
             policySource: AdaptationPolicySource.derived,
             planStepSequence: 1,
           ),
@@ -670,11 +754,15 @@ void main() {
     test('23 snapshot validator detects unplanned adaptation', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
       );
       final plan = planner.plan(
         session: timedInput,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
         evaluation: const SessionAdaptationReadOnlyEvaluator().evaluate(
           session: timedInput,
           constraints: AdaptationConstraintContext(availableDurationMin: 50),
@@ -711,8 +799,10 @@ void main() {
         evaluationOutcome: snapshot.evaluationOutcome,
         planStatus: snapshot.planStatus,
         unresolvedConstraints: snapshot.unresolvedConstraints,
-        exactDurationFeasibilityConfirmed: snapshot.exactDurationFeasibilityConfirmed,
-        unresolvedDurationDeficitMinutes: snapshot.unresolvedDurationDeficitMinutes,
+        exactDurationFeasibilityConfirmed:
+            snapshot.exactDurationFeasibilityConfirmed,
+        unresolvedDurationDeficitMinutes:
+            snapshot.unresolvedDurationDeficitMinutes,
         planFindings: snapshot.planFindings,
       );
       final validation = snapshotValidator.validate(
@@ -723,7 +813,9 @@ void main() {
       expect(validation.isValid, isFalse);
       expect(
         validation.issues.any(
-          (i) => i.code == AdaptedSessionExecutionSnapshotIssueCode.unplannedAdaptation,
+          (i) =>
+              i.code ==
+              AdaptedSessionExecutionSnapshotIssueCode.unplannedAdaptation,
         ),
         isTrue,
       );
@@ -736,7 +828,9 @@ void main() {
       );
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 50,
+        ),
         input: input,
       );
       expect(result.snapshot!.exactDurationFeasibilityConfirmed, isFalse);
@@ -745,7 +839,9 @@ void main() {
     test('25 fidelity propagates from plan', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       expect(result.snapshot!.expectedFidelity, AdaptationFidelity.moderate);
     });
@@ -753,7 +849,9 @@ void main() {
     test('26 confidence propagates from plan', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
       );
       expect(result.snapshot!.adaptationConfidence, isNotNull);
     });
@@ -761,16 +859,22 @@ void main() {
     test('27 unresolved constraints propagate', () {
       final result = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 20),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 20,
+        ),
       );
       expect(result.status, isNot(AdaptationPlanApplicationStatus.applied));
     });
 
     test('28 source input not mutated', () {
-      final before = timedInput.blocks.map((b) => b.exercisePrescriptions.length).toList();
+      final before = timedInput.blocks
+          .map((b) => b.exercisePrescriptions.length)
+          .toList();
       applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       expect(
         timedInput.blocks.map((b) => b.exercisePrescriptions.length).toList(),
@@ -839,7 +943,9 @@ void main() {
       );
       final adapted = applyTimedSessionPlan(
         draft: timedDraft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       );
       expect(unadapted.snapshot!.appliedAdaptationAudit, isEmpty);
       expect(adapted.snapshot!.appliedAdaptationAudit, isNotEmpty);

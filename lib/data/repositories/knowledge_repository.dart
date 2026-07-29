@@ -3,16 +3,12 @@ import '../../models/exercise.dart';
 import 'exercise_repository.dart';
 
 class KnowledgeRepository {
-  KnowledgeRepository({
-    ExerciseRepository? exerciseRepository,
-  }) : _exerciseRepository =
-            exerciseRepository ?? ExerciseRepository();
+  KnowledgeRepository({ExerciseRepository? exerciseRepository})
+    : _exerciseRepository = exerciseRepository ?? ExerciseRepository();
 
   final ExerciseRepository _exerciseRepository;
 
-  Future<List<Exercise>> getExercisesForProtocol(
-    String protocolId,
-  ) async {
+  Future<List<Exercise>> getExercisesForProtocol(String protocolId) async {
     final relationships = await SupabaseService.client
         .from('knowledge_relationships')
         .select()
@@ -27,14 +23,12 @@ class KnowledgeRepository {
 
     if (ids.isEmpty) return [];
 
-    final allExercises =
-        await _exerciseRepository.getExercises();
+    final allExercises = await _exerciseRepository.getExercises();
 
     return ids
         .map(
-          (id) => allExercises.firstWhere(
-            (exercise) => exercise.exerciseId == id,
-          ),
+          (id) =>
+              allExercises.firstWhere((exercise) => exercise.exerciseId == id),
         )
         .toList();
   }

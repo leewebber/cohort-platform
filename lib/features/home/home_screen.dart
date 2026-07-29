@@ -11,9 +11,8 @@ import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
 import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
-import '../../data/repositories/athlete_state_repository.dart';
-import '../../data/repositories/protocol_repository.dart';
-import '../adaptation/services/adaptation_decision_service.dart';
+import '../../application/adaptation/athlete_workout_adaptation_application_service.dart';
+import '../admin/services/protocol_builder_service.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/screens/account_screen.dart';
 import '../auth/services/current_user_session.dart';
@@ -40,6 +39,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
   final _todaySessionRefreshController = HomeTodaySessionRefreshController();
+  final _homeAdaptationService = AthleteWorkoutAdaptationApplicationService(
+    loadProtocolDraft: (protocolId) =>
+        ProtocolBuilderService().loadProtocol(protocolId),
+  );
   int _bottomNavIndex = 0;
 
   String get _athleteId => CurrentUserSession.requireInstance.athleteId;
@@ -106,33 +109,24 @@ class _HomeScreenState extends State<HomeScreen> {
     final request = await showAdaptationBottomSheet(context);
     if (request == null || !context.mounted) return;
 
-    const athleteStateRepository = AthleteStateRepository();
-    final protocolRepository = ProtocolRepository();
-
-    final athleteState = await athleteStateRepository.getAthleteState(
-      _athleteId,
-    );
-    final protocolId = athleteState?.currentProtocolId;
-    if (protocolId == null) {
+    final section = _todaySessionSectionKey.currentState;
+    final protocol = section?.programmeSessionProtocol;
+    if (protocol == null) {
       return;
     }
 
-    final currentProtocol = await protocolRepository.getProtocolById(
-      protocolId,
-    );
-    if (currentProtocol == null) {
-      return;
-    }
-
-    const decisionService = AdaptationDecisionService();
-    final decision = decisionService.evaluate(
-      currentProtocol: currentProtocol,
+    final decision = await _homeAdaptationService.evaluateSessionAdaptation(
+      athleteId: _athleteId,
+      currentProtocol: protocol,
       request: request,
     );
 
     if (!context.mounted) return;
 
-    await showAdaptationDecisionBottomSheet(context, decision);
+    final accepted = await showAdaptationDecisionBottomSheet(context, decision);
+    if (accepted == true && context.mounted) {
+      await section?.commitDayOfAdaptation(request: request);
+    }
   }
 
   String _greetingName(String displayName) {

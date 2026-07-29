@@ -66,8 +66,7 @@ class CircuitPerformance {
       id: map['id'],
       trainingSessionId: map['training_session_id'],
       protocolId: map['protocol_id'].toString(),
-      circuitFormat:
-          CircuitFormatDb.fromDb(map['circuit_format']?.toString()),
+      circuitFormat: CircuitFormatDb.fromDb(map['circuit_format']?.toString()),
       scoreType: CircuitScoreTypeDb.fromDb(map['score_type']?.toString()),
       elapsedDurationSeconds: _nullableInt(map['elapsed_duration_seconds']),
       completedRounds: _nullableInt(map['completed_rounds']),
@@ -101,10 +100,8 @@ class CircuitPerformance {
       if (completedRounds != null) 'completed_rounds': completedRounds,
       if (additionalReps != null) 'additional_reps': additionalReps,
       if (totalReps != null) 'total_reps': totalReps,
-      if (completedIntervals != null)
-        'completed_intervals': completedIntervals,
-      if (completedMovements != null)
-        'completed_movements': completedMovements,
+      if (completedIntervals != null) 'completed_intervals': completedIntervals,
+      if (completedMovements != null) 'completed_movements': completedMovements,
       if (prescribedLoad != null) 'prescribed_load': prescribedLoad,
       if (actualLoad != null) 'actual_load': actualLoad,
       if (rpe != null) 'rpe': rpe,
@@ -196,13 +193,12 @@ extension CircuitScoreTypeDb on CircuitScoreType {
     return switch (normalized) {
       'rounds_and_reps' || 'roundsandreps' => CircuitScoreType.roundsAndReps,
       'elapsed_time' || 'elapsedtime' => CircuitScoreType.elapsedTime,
-      'rounds_completed' || 'roundscompleted' =>
-        CircuitScoreType.roundsCompleted,
+      'rounds_completed' ||
+      'roundscompleted' => CircuitScoreType.roundsCompleted,
       'total_reps' || 'totalreps' => CircuitScoreType.totalReps,
-      'movements_completed' || 'movementscompleted' =>
-        CircuitScoreType.movementsCompleted,
-      'benchmark_score' || 'benchmarkscore' =>
-        CircuitScoreType.benchmarkScore,
+      'movements_completed' ||
+      'movementscompleted' => CircuitScoreType.movementsCompleted,
+      'benchmark_score' || 'benchmarkscore' => CircuitScoreType.benchmarkScore,
       _ => CircuitScoreType.roundsAndReps,
     };
   }

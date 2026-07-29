@@ -1,15 +1,17 @@
+import '../ports/session_occurrence_repository.dart';
 import '../session_occurrence.dart';
 import '../value_objects/session_occurrence_date.dart';
 import 'athlete_session_day_key.dart';
 
-/// Read-only index of occurrences by athlete and calendar day (in-memory).
-class AthleteSessionOccurrenceIndex {
+/// In-memory [SessionOccurrenceRepository] by athlete and calendar day.
+class AthleteSessionOccurrenceIndex implements SessionOccurrenceRepository {
   AthleteSessionOccurrenceIndex({
     Map<AthleteSessionDayKey, List<SessionOccurrence>>? seed,
   }) : _byDay = _cloneSeed(seed);
 
   final Map<AthleteSessionDayKey, List<SessionOccurrence>> _byDay;
 
+  @override
   List<SessionOccurrence> occurrencesOnDay({
     required String athleteId,
     required SessionOccurrenceDate calendarDate,
@@ -25,6 +27,7 @@ class AthleteSessionOccurrenceIndex {
     return List.unmodifiable(sorted);
   }
 
+  @override
   void register({
     required String athleteId,
     required SessionOccurrence occurrence,
@@ -42,6 +45,7 @@ class AthleteSessionOccurrenceIndex {
     _byDay[key] = withoutSameId;
   }
 
+  @override
   void upsert({
     required String athleteId,
     required SessionOccurrence occurrence,

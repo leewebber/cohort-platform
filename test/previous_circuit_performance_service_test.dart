@@ -88,32 +88,30 @@ void main() {
     test('returns null when repository has no comparable session', () async {
       final result = await PreviousCircuitPerformanceService(
         circuitRepository: _EmptyCircuitRepository(),
-      ).load(
-        athleteId: 'athlete-1',
-        protocolId: 'WOD-001',
-      );
+      ).load(athleteId: 'athlete-1', protocolId: 'WOD-001');
 
       expect(result, isNull);
     });
 
     test('loads latest comparable session from repository', () async {
-      final result = await PreviousCircuitPerformanceService(
-        circuitRepository: _FixedCircuitRepository(
-          ComparableCircuitSession(
-            session: _completedSession(id: 100),
-            performance: _performance(
-              scoreType: CircuitScoreType.roundsAndReps,
-              completedRounds: 6,
-              additionalReps: 3,
+      final result =
+          await PreviousCircuitPerformanceService(
+            circuitRepository: _FixedCircuitRepository(
+              ComparableCircuitSession(
+                session: _completedSession(id: 100),
+                performance: _performance(
+                  scoreType: CircuitScoreType.roundsAndReps,
+                  completedRounds: 6,
+                  additionalReps: 3,
+                ),
+              ),
             ),
-          ),
-        ),
-      ).load(
-        athleteId: 'athlete-1',
-        protocolId: 'WOD-001',
-        excludeTrainingSessionId: 200,
-        prescribedIntervalCount: 20,
-      );
+          ).load(
+            athleteId: 'athlete-1',
+            protocolId: 'WOD-001',
+            excludeTrainingSessionId: 200,
+            prescribedIntervalCount: 20,
+          );
 
       expect(result?.displaySummary, '6 rounds + 3 reps');
     });

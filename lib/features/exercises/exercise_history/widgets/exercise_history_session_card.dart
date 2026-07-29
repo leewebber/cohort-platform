@@ -8,10 +8,7 @@ import '../../../../core/widgets/cohort_card.dart';
 import '../../../../models/exercise_history.dart';
 
 class ExerciseHistorySessionCard extends StatelessWidget {
-  const ExerciseHistorySessionCard({
-    super.key,
-    required this.session,
-  });
+  const ExerciseHistorySessionCard({super.key, required this.session});
 
   final ExerciseHistorySession session;
 
@@ -26,22 +23,14 @@ class ExerciseHistorySessionCard extends StatelessWidget {
             style: CohortTextStyles.eyebrow,
           ),
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            session.protocolLabel,
-            style: CohortTextStyles.cardTitle,
-          ),
+          Text(session.protocolLabel, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            session.summaryLine,
-            style: CohortTextStyles.small,
-          ),
+          Text(session.summaryLine, style: CohortTextStyles.small),
           if (session.endedEarly) ...[
             const SizedBox(height: CohortSpacing.xs),
             Text(
               'Session ended early',
-              style: CohortTextStyles.small.copyWith(
-                color: CohortColors.olive,
-              ),
+              style: CohortTextStyles.small.copyWith(color: CohortColors.olive),
             ),
           ],
           if (session.completionReason != null) ...[
@@ -58,9 +47,7 @@ class ExerciseHistorySessionCard extends StatelessWidget {
             Text(
               line.displayLine,
               style: CohortTextStyles.body.copyWith(
-                color: line.isExtraSet
-                    ? CohortColors.warning
-                    : null,
+                color: line.isExtraSet ? CohortColors.warning : null,
               ),
             ),
             const SizedBox(height: CohortSpacing.xs),
@@ -75,10 +62,7 @@ class ExerciseHistorySessionCard extends StatelessWidget {
                 borderRadius: CohortRadius.smallRadius,
                 border: Border.all(color: CohortColors.border),
               ),
-              child: Text(
-                session.athleteNote!,
-                style: CohortTextStyles.small,
-              ),
+              child: Text(session.athleteNote!, style: CohortTextStyles.small),
             ),
           ],
         ],

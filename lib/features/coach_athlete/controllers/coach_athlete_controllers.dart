@@ -12,15 +12,11 @@ import '../services/coach_athlete_service.dart';
 import '../../coach_operations/models/coach_athlete_daily_snapshot.dart';
 import '../../coach_operations/services/coach_athlete_daily_status_service.dart';
 
-enum JoinCoachStatus {
-  idle,
-  submitting,
-  success,
-  error,
-}
+enum JoinCoachStatus { idle, submitting, success, error }
 
 class JoinCoachController extends ChangeNotifier {
-  JoinCoachController({required CoachAthleteService service}) : _service = service;
+  JoinCoachController({required CoachAthleteService service})
+    : _service = service;
 
   final CoachAthleteService _service;
 
@@ -62,11 +58,7 @@ class JoinCoachController extends ChangeNotifier {
   }
 }
 
-enum AthleteDetailStatus {
-  loading,
-  ready,
-  error,
-}
+enum AthleteDetailStatus { loading, ready, error }
 
 class AthleteDetailController extends ChangeNotifier {
   AthleteDetailController({
@@ -74,11 +66,11 @@ class AthleteDetailController extends ChangeNotifier {
     required CoachAthleteRosterEntry athlete,
     CoachAthleteDailyStatusService? dailyStatusService,
     PerformanceRecordStore? performanceRecordStore,
-  })  : _service = service,
-        athlete = athlete,
-        _dailyStatusService = dailyStatusService,
-        _performanceRecordStore =
-            performanceRecordStore ?? SupabasePerformanceRecordStore();
+  }) : _service = service,
+       athlete = athlete,
+       _dailyStatusService = dailyStatusService,
+       _performanceRecordStore =
+           performanceRecordStore ?? SupabasePerformanceRecordStore();
 
   final CoachAthleteService _service;
   final CoachAthleteRosterEntry athlete;
@@ -105,8 +97,9 @@ class AthleteDetailController extends ChangeNotifier {
     errorMessage = null;
     notifyListeners();
 
-    final assignmentResult =
-        await _service.getAthleteAssignment(athlete.athleteId);
+    final assignmentResult = await _service.getAthleteAssignment(
+      athlete.athleteId,
+    );
     if (!assignmentResult.isSuccess &&
         assignmentResult.status != CoachAthleteOperationStatus.failed) {
       status = AthleteDetailStatus.error;
@@ -133,8 +126,9 @@ class AthleteDetailController extends ChangeNotifier {
     final dailyStatusService = _dailyStatusService;
     if (dailyStatusService != null) {
       try {
-        operationalSnapshot =
-            await dailyStatusService.loadSnapshotForAthlete(athlete.athleteId);
+        operationalSnapshot = await dailyStatusService.loadSnapshotForAthlete(
+          athlete.athleteId,
+        );
       } on CoachAthleteDailyStatusException catch (error) {
         errorMessage = error.message;
       }

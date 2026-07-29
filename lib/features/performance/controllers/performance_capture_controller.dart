@@ -17,10 +17,10 @@ class PerformanceCaptureController {
     required ActivePerformanceDraft draft,
     PerformanceSnapshotBuilder? snapshotBuilder,
     PerformanceValidationService? validationService,
-  })  : _draft = draft,
-        _snapshotBuilder = snapshotBuilder ?? const PerformanceSnapshotBuilder(),
-        _validationService =
-            validationService ?? const PerformanceValidationService();
+  }) : _draft = draft,
+       _snapshotBuilder = snapshotBuilder ?? const PerformanceSnapshotBuilder(),
+       _validationService =
+           validationService ?? const PerformanceValidationService();
 
   final PerformanceSnapshotBuilder _snapshotBuilder;
   final PerformanceValidationService _validationService;
@@ -46,8 +46,9 @@ class PerformanceCaptureController {
       assignmentId: programmeContext?.assignmentId,
     );
     final blockDrafts = snapshotBuilder.buildInitialBlockDrafts(plan);
-    final firstBlockId =
-        plan.blocks.isNotEmpty ? plan.blocks.first.blockId : null;
+    final firstBlockId = plan.blocks.isNotEmpty
+        ? plan.blocks.first.blockId
+        : null;
 
     return PerformanceCaptureController(
       draft: ActivePerformanceDraft(
@@ -121,25 +122,27 @@ class PerformanceCaptureController {
 
   PerformanceCaptureController addSet(String sourceBlockId, String exerciseId) {
     return _updateBlock(sourceBlockId, (block) {
-      final exercises = block.exerciseResults.map((exercise) {
-        if (exercise.sourceExerciseId != exerciseId) return exercise;
-        final nextNumber = exercise.sets.isEmpty
-            ? 1
-            : exercise.sets
-                    .map((s) => s.setNumber)
-                    .reduce((a, b) => a > b ? a : b) +
-                1;
-        final nextPosition = exercise.sets.length + 1;
-        return exercise.copyWith(
-          sets: [
-            ...exercise.sets,
-            SetPerformanceDraft.empty(
-              setNumber: nextNumber,
-              position: nextPosition,
-            ),
-          ],
-        );
-      }).toList(growable: false);
+      final exercises = block.exerciseResults
+          .map((exercise) {
+            if (exercise.sourceExerciseId != exerciseId) return exercise;
+            final nextNumber = exercise.sets.isEmpty
+                ? 1
+                : exercise.sets
+                          .map((s) => s.setNumber)
+                          .reduce((a, b) => a > b ? a : b) +
+                      1;
+            final nextPosition = exercise.sets.length + 1;
+            return exercise.copyWith(
+              sets: [
+                ...exercise.sets,
+                SetPerformanceDraft.empty(
+                  setNumber: nextNumber,
+                  position: nextPosition,
+                ),
+              ],
+            );
+          })
+          .toList(growable: false);
       return block.copyWith(exerciseResults: exercises);
     });
   }
@@ -151,15 +154,17 @@ class PerformanceCaptureController {
     SetPerformanceDraft Function(SetPerformanceDraft current) update,
   ) {
     return _updateBlock(sourceBlockId, (block) {
-      final exercises = block.exerciseResults.map((exercise) {
-        if (exercise.sourceExerciseId != exerciseId) return exercise;
-        final sets = exercise.sets
-            .map(
-              (set) => set.setResultId == setResultId ? update(set) : set,
-            )
-            .toList(growable: false);
-        return exercise.copyWith(sets: sets);
-      }).toList(growable: false);
+      final exercises = block.exerciseResults
+          .map((exercise) {
+            if (exercise.sourceExerciseId != exerciseId) return exercise;
+            final sets = exercise.sets
+                .map(
+                  (set) => set.setResultId == setResultId ? update(set) : set,
+                )
+                .toList(growable: false);
+            return exercise.copyWith(sets: sets);
+          })
+          .toList(growable: false);
       return block.copyWith(exerciseResults: exercises);
     });
   }
@@ -170,19 +175,21 @@ class PerformanceCaptureController {
     String setResultId,
   ) {
     return _updateBlock(sourceBlockId, (block) {
-      final exercises = block.exerciseResults.map((exercise) {
-        if (exercise.sourceExerciseId != exerciseId) return exercise;
-        final source = exercise.sets.firstWhere(
-          (set) => set.setResultId == setResultId,
-        );
-        final duplicate = source.copyWith(
-          setResultId: DatabaseUuid.newV4(),
-          setNumber: source.setNumber + 1,
-          position: exercise.sets.length + 1,
-          completed: false,
-        );
-        return exercise.copyWith(sets: [...exercise.sets, duplicate]);
-      }).toList(growable: false);
+      final exercises = block.exerciseResults
+          .map((exercise) {
+            if (exercise.sourceExerciseId != exerciseId) return exercise;
+            final source = exercise.sets.firstWhere(
+              (set) => set.setResultId == setResultId,
+            );
+            final duplicate = source.copyWith(
+              setResultId: DatabaseUuid.newV4(),
+              setNumber: source.setNumber + 1,
+              position: exercise.sets.length + 1,
+              completed: false,
+            );
+            return exercise.copyWith(sets: [...exercise.sets, duplicate]);
+          })
+          .toList(growable: false);
       return block.copyWith(exerciseResults: exercises);
     });
   }
@@ -193,13 +200,15 @@ class PerformanceCaptureController {
     String setResultId,
   ) {
     return _updateBlock(sourceBlockId, (block) {
-      final exercises = block.exerciseResults.map((exercise) {
-        if (exercise.sourceExerciseId != exerciseId) return exercise;
-        final sets = exercise.sets
-            .where((set) => set.setResultId != setResultId)
-            .toList(growable: false);
-        return exercise.copyWith(sets: sets);
-      }).toList(growable: false);
+      final exercises = block.exerciseResults
+          .map((exercise) {
+            if (exercise.sourceExerciseId != exerciseId) return exercise;
+            final sets = exercise.sets
+                .where((set) => set.setResultId != setResultId)
+                .toList(growable: false);
+            return exercise.copyWith(sets: sets);
+          })
+          .toList(growable: false);
       return block.copyWith(exerciseResults: exercises);
     });
   }
@@ -240,8 +249,10 @@ class PerformanceCaptureController {
     _draft = _draft.copyWith(
       status: TrainingSessionRecordStatus.abandoned,
       completedAt: DateTime.now().toUtc(),
-      durationSeconds:
-          DateTime.now().toUtc().difference(_draft.startedAt).inSeconds,
+      durationSeconds: DateTime.now()
+          .toUtc()
+          .difference(_draft.startedAt)
+          .inSeconds,
     );
     return this;
   }
@@ -270,16 +281,19 @@ class PerformanceCaptureController {
     String sourceBlockId,
     BlockPerformanceDraft Function(BlockPerformanceDraft current) update,
   ) {
-    final blocks = _draft.blockDrafts.map((block) {
-      if (block.sourceBlockId != sourceBlockId) return block;
-      final updated = update(block);
-      return updated.copyWith(
-        startedAt: updated.startedAt ??
-            (updated.status == TrainingBlockResultStatus.inProgress
-                ? DateTime.now().toUtc()
-                : null),
-      );
-    }).toList(growable: false);
+    final blocks = _draft.blockDrafts
+        .map((block) {
+          if (block.sourceBlockId != sourceBlockId) return block;
+          final updated = update(block);
+          return updated.copyWith(
+            startedAt:
+                updated.startedAt ??
+                (updated.status == TrainingBlockResultStatus.inProgress
+                    ? DateTime.now().toUtc()
+                    : null),
+          );
+        })
+        .toList(growable: false);
     _draft = _draft.copyWith(blockDrafts: blocks);
     return this;
   }

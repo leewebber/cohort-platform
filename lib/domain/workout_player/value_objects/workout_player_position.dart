@@ -23,9 +23,6 @@ class WorkoutPlayerPosition {
   }
 
   @override
-  int get hashCode => Object.hash(
-        sourceBlockLocalId,
-        exerciseLinkLocalId,
-        stepIndex,
-      );
+  int get hashCode =>
+      Object.hash(sourceBlockLocalId, exerciseLinkLocalId, stepIndex);
 }

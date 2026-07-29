@@ -50,9 +50,7 @@ void main() {
 
       final editedClone = clone.copyWith(
         name: 'Edited clone',
-        steps: [
-          clone.steps.first.copyWith(title: 'Changed step'),
-        ],
+        steps: [clone.steps.first.copyWith(title: 'Changed step')],
       );
 
       expect(source.name, 'Threshold Intervals');

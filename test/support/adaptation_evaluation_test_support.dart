@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/adaptation/adaptation_application.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/programme_builder/authoring/programme_code_authoring.dart';
 import 'package:cohort_platform/features/session_builder/controllers/session_builder_editing_state.dart';
@@ -51,25 +52,25 @@ ProtocolDraft buildTaggedSessionViaVisualBuilder({
   );
 
   final blank =
-      ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(context)
-          .copyWith(
-    protocolId: protocolId,
-    name: 'Upper Body Strength',
-    sessionFormat: 'structured_strength',
-    programmeVersionId: programmeVersionId,
-  );
+      ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(
+        context,
+      ).copyWith(
+        protocolId: protocolId,
+        name: 'Upper Body Strength',
+        sessionFormat: 'structured_strength',
+        programmeVersionId: programmeVersionId,
+      );
 
   final editing = SessionBuilderEditingState(draft: blank);
   editing.setPrimarySessionIntent(SessionIntent.upperBodyStrength);
-  editing.setSecondarySessionIntents(const [SessionIntent.upperBodyHypertrophy]);
+  editing.setSecondarySessionIntents(const [
+    SessionIntent.upperBodyHypertrophy,
+  ]);
   editing.setMinimumViableDurationMin(canonicalMinDuration);
   editing.durationMin = canonicalPlannedDuration;
 
   editing.blocks = [
-    block(
-      type: SessionBlockType.warmUp,
-      content: 'Row and shoulder prep',
-    ),
+    block(type: SessionBlockType.warmUp, content: 'Row and shoulder prep'),
     block(
       type: SessionBlockType.strength,
       title: 'Main strength',

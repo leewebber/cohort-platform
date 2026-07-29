@@ -40,9 +40,8 @@ class _PublishedProtocolsScreenState extends State<PublishedProtocolsScreen> {
     Navigator.of(context)
         .push(
           MaterialPageRoute(
-            builder: (_) => ProtocolBuilderScreen(
-              protocolId: protocol.protocolId,
-            ),
+            builder: (_) =>
+                ProtocolBuilderScreen(protocolId: protocol.protocolId),
           ),
         )
         .then((_) => _reloadProtocols());
@@ -53,121 +52,119 @@ class _PublishedProtocolsScreenState extends State<PublishedProtocolsScreen> {
     return CoachRouteGuard.wrap(
       title: 'Published protocols',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const SectionTitle('Coach Studio'),
-              const SizedBox(height: CohortSpacing.md),
-              const Text(
-                'Published Protocols',
-                style: CohortTextStyles.h1,
-              ),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'Browse and edit live protocols available to athletes.',
-                style: CohortTextStyles.body,
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              Expanded(
-                child: FutureBuilder<List<ProtocolDraftSummary>>(
-                  future: _protocolsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Text(
-                          'Loading published protocols...',
-                          style: CohortTextStyles.body,
-                        ),
-                      );
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          snapshot.error is ProtocolBuilderException
-                              ? (snapshot.error! as ProtocolBuilderException)
-                                  .message
-                              : 'We could not load published protocols right now.',
-                          style: CohortTextStyles.body,
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
-
-                    final protocols = snapshot.data ?? [];
-
-                    if (protocols.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          'No published protocols yet.',
-                          style: CohortTextStyles.body,
-                        ),
-                      );
-                    }
-
-                    return ListView.separated(
-                      itemCount: protocols.length,
-                      separatorBuilder: (_, _) =>
-                          const SizedBox(height: CohortSpacing.md),
-                      itemBuilder: (context, index) {
-                        final protocol = protocols[index];
-                        final subtitleParts = <String>[
-                          protocol.protocolId,
-                          if (protocol.sessionType != null &&
-                              protocol.sessionType!.trim().isNotEmpty)
-                            protocol.sessionType!,
-                          if (protocol.durationMin != null)
-                            '${protocol.durationMin} min',
-                        ];
-
-                        return CohortCard(
-                          onTap: () => _openProtocol(protocol),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      protocol.name,
-                                      style: CohortTextStyles.cardTitle,
-                                    ),
-                                    const SizedBox(height: CohortSpacing.sm),
-                                    Text(
-                                      subtitleParts.join(' · '),
-                                      style: CohortTextStyles.small,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: CohortSpacing.lg),
-                              Text(
-                                'PUBLISHED',
-                                style: CohortTextStyles.eyebrow.copyWith(
-                                  color: CohortColors.success,
-                                ),
-                              ),
-                            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                const SectionTitle('Coach Studio'),
+                const SizedBox(height: CohortSpacing.md),
+                const Text('Published Protocols', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                const Text(
+                  'Browse and edit live protocols available to athletes.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.xl),
+                Expanded(
+                  child: FutureBuilder<List<ProtocolDraftSummary>>(
+                    future: _protocolsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: Text(
+                            'Loading published protocols...',
+                            style: CohortTextStyles.body,
                           ),
                         );
-                      },
-                    );
-                  },
+                      }
+
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            snapshot.error is ProtocolBuilderException
+                                ? (snapshot.error! as ProtocolBuilderException)
+                                      .message
+                                : 'We could not load published protocols right now.',
+                            style: CohortTextStyles.body,
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+
+                      final protocols = snapshot.data ?? [];
+
+                      if (protocols.isEmpty) {
+                        return const Center(
+                          child: Text(
+                            'No published protocols yet.',
+                            style: CohortTextStyles.body,
+                          ),
+                        );
+                      }
+
+                      return ListView.separated(
+                        itemCount: protocols.length,
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(height: CohortSpacing.md),
+                        itemBuilder: (context, index) {
+                          final protocol = protocols[index];
+                          final subtitleParts = <String>[
+                            protocol.protocolId,
+                            if (protocol.sessionType != null &&
+                                protocol.sessionType!.trim().isNotEmpty)
+                              protocol.sessionType!,
+                            if (protocol.durationMin != null)
+                              '${protocol.durationMin} min',
+                          ];
+
+                          return CohortCard(
+                            onTap: () => _openProtocol(protocol),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        protocol.name,
+                                        style: CohortTextStyles.cardTitle,
+                                      ),
+                                      const SizedBox(height: CohortSpacing.sm),
+                                      Text(
+                                        subtitleParts.join(' · '),
+                                        style: CohortTextStyles.small,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: CohortSpacing.lg),
+                                Text(
+                                  'PUBLISHED',
+                                  style: CohortTextStyles.eyebrow.copyWith(
+                                    color: CohortColors.success,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

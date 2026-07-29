@@ -61,7 +61,8 @@ class ProgrammeFutureSlotFinder {
             continue;
           }
 
-          if (matchingProtocolId != null && slot.protocolId != matchingProtocolId) {
+          if (matchingProtocolId != null &&
+              slot.protocolId != matchingProtocolId) {
             continue;
           }
 
@@ -180,7 +181,8 @@ class PostCompletionAdaptationEvaluator {
       );
     }
 
-    if (strengthSummary == null || !strengthSummary.allPrescribedSetsCompleted) {
+    if (strengthSummary == null ||
+        !strengthSummary.allPrescribedSetsCompleted) {
       return null;
     }
 
@@ -221,8 +223,9 @@ class PostCompletionAdaptationEvaluator {
       if (block.exerciseResults.isEmpty) continue;
 
       final exercise = block.exerciseResults.first;
-      final completedSets =
-          exercise.setResults.where((set) => set.completed).toList();
+      final completedSets = exercise.setResults
+          .where((set) => set.completed)
+          .toList();
       if (completedSets.isEmpty) continue;
 
       final prescribedCount = exercise.setResults.length;
@@ -256,10 +259,7 @@ class PostCompletionAdaptationEvaluator {
   }
 }
 
-enum AdaptationEvaluationType {
-  loadProgression,
-  protocolSubstitution,
-}
+enum AdaptationEvaluationType { loadProgression, protocolSubstitution }
 
 class AdaptationEvaluation {
   const AdaptationEvaluation({

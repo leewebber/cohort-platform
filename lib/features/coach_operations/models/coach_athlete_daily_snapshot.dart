@@ -73,7 +73,7 @@ class CoachAthleteDailySnapshot {
         todayStatus == CoachAthleteTodayStatus.trainingToday,
       CoachDashboardFilter.completedToday =>
         todayStatus == CoachAthleteTodayStatus.completedToday ||
-        todayStatus == CoachAthleteTodayStatus.dayComplete,
+            todayStatus == CoachAthleteTodayStatus.dayComplete,
       CoachDashboardFilter.noProgramme =>
         todayStatus == CoachAthleteTodayStatus.noActiveProgramme,
     };

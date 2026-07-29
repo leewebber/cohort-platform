@@ -71,7 +71,8 @@ class CohortProtocolCustomisationResult {
         contentId: partialState!.savedContentId,
         partialState: partialState,
         error: error,
-        coachMessage: coachMessage ??
+        coachMessage:
+            coachMessage ??
             'Session saved, but could not be added to the programme.',
       );
     }

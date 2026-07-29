@@ -1,8 +1,2 @@
 /// Programme Editor screen lifecycle states.
-enum ProgrammeEditorViewState {
-  loading,
-  ready,
-  saving,
-  error,
-  readOnly,
-}
+enum ProgrammeEditorViewState { loading, ready, saving, error, readOnly }

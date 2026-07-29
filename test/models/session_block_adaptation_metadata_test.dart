@@ -72,12 +72,15 @@ void main() {
       );
     });
 
-    test('legacy block with both fields absent loads with null explicit values', () {
-      final block = _legacyStrengthRow();
+    test(
+      'legacy block with both fields absent loads with null explicit values',
+      () {
+        final block = _legacyStrengthRow();
 
-      expect(block.blockPriority, isNull);
-      expect(block.adaptationPolicy, isNull);
-    });
+        expect(block.blockPriority, isNull);
+        expect(block.adaptationPolicy, isNull);
+      },
+    );
 
     test('derives default priority from block type', () {
       final block = SessionBlock.create(
@@ -88,7 +91,9 @@ void main() {
       expect(
         block.effectiveBlockPriority,
         SessionBlockTypeAdaptationPolicy.defaultPriority(
-          SessionBlockType.warmUp,
+          AdaptationBlockTypePlanning.fromPlanningDbValue(
+            SessionBlockType.warmUp.name,
+          ),
         ),
       );
       expect(block.effectiveBlockPriority, BlockPriority.disposable);
@@ -142,40 +147,44 @@ void main() {
 
       final explicit = block.copyWith(blockPriority: BlockPriority.secondary);
       expect(
-        explicit.toRowMap(sessionId: 'sess-1')[
-            SessionBlockAdaptationMetadataKeys.blockPriority],
+        explicit.toRowMap(
+          sessionId: 'sess-1',
+        )[SessionBlockAdaptationMetadataKeys.blockPriority],
         'secondary',
       );
     });
 
-    test('unknown priority value fails safely without crashing session load', () {
-      final rows = [
-        {
-          'block_id': 'a',
-          'block_type': 'strength',
-          'title': 'A',
-          'content': '',
-          'workout_format': 'none',
-          'position': 1,
-          SessionBlockAdaptationMetadataKeys.blockPriority: 'not_a_priority',
-        },
-        {
-          'block_id': 'b',
-          'block_type': 'warm_up',
-          'title': 'B',
-          'content': '',
-          'workout_format': 'none',
-          'position': 2,
-        },
-      ];
+    test(
+      'unknown priority value fails safely without crashing session load',
+      () {
+        final rows = [
+          {
+            'block_id': 'a',
+            'block_type': 'strength',
+            'title': 'A',
+            'content': '',
+            'workout_format': 'none',
+            'position': 1,
+            SessionBlockAdaptationMetadataKeys.blockPriority: 'not_a_priority',
+          },
+          {
+            'block_id': 'b',
+            'block_type': 'warm_up',
+            'title': 'B',
+            'content': '',
+            'workout_format': 'none',
+            'position': 2,
+          },
+        ];
 
-      final blocks = rows.map(SessionBlock.fromRow).toList();
+        final blocks = rows.map(SessionBlock.fromRow).toList();
 
-      expect(blocks, hasLength(2));
-      expect(blocks.first.blockPriority, isNull);
-      expect(blocks.first.effectiveBlockPriority, BlockPriority.primary);
-      expect(blocks.last.blockPriority, isNull);
-    });
+        expect(blocks, hasLength(2));
+        expect(blocks.first.blockPriority, isNull);
+        expect(blocks.first.effectiveBlockPriority, BlockPriority.primary);
+        expect(blocks.last.blockPriority, isNull);
+      },
+    );
 
     test('mergeAdaptationFromRow round-trips explicit priority', () {
       final base = SessionBlock(
@@ -213,8 +222,8 @@ void main() {
       );
 
       final row = {
-        SessionBlockAdaptationMetadataKeys.adaptationPolicy:
-            _explicitPolicy.toJson(),
+        SessionBlockAdaptationMetadataKeys.adaptationPolicy: _explicitPolicy
+            .toJson(),
       };
 
       final merged = SessionBlock.mergeAdaptationFromRow(block: base, row: row);
@@ -227,17 +236,20 @@ void main() {
       expectSamePolicy(roundTrip.adaptationPolicy, _explicitPolicy);
     });
 
-    test('explicitBlockAdaptationMetadata DTO carries only authored values', () {
-      final block = SessionBlock.create(
-        blockType: SessionBlockType.strength,
-        position: 1,
-      ).copyWith(blockPriority: BlockPriority.primary);
+    test(
+      'explicitBlockAdaptationMetadata DTO carries only authored values',
+      () {
+        final block = SessionBlock.create(
+          blockType: SessionBlockType.strength,
+          position: 1,
+        ).copyWith(blockPriority: BlockPriority.primary);
 
-      final dto = block.explicitBlockAdaptationMetadata;
-      expect(dto.blockTypeDbValue, SessionBlockType.strength.dbValue);
-      expect(dto.priority, BlockPriority.primary);
-      expect(dto.adaptationPolicy, isNull);
-    });
+        final dto = block.explicitBlockAdaptationMetadata;
+        expect(dto.blockTypeDbValue, SessionBlockType.strength.dbValue);
+        expect(dto.priority, BlockPriority.primary);
+        expect(dto.adaptationPolicy, isNull);
+      },
+    );
 
     test('withBlockAdaptationMetadata applies DTO fields', () {
       final block = SessionBlock.create(
@@ -299,18 +311,21 @@ void main() {
     });
   });
 
-  group('SessionBlockAdaptationMetadataCodec.stripPendingPersistenceColumns', () {
-    test('removes adaptation keys from upsert map', () {
-      final map = _legacyStrengthRow()
-          .copyWith(blockPriority: BlockPriority.primary)
-          .explicitAdaptationMetadataToMap();
+  group(
+    'SessionBlockAdaptationMetadataCodec.stripPendingPersistenceColumns',
+    () {
+      test('removes adaptation keys from upsert map', () {
+        final map = _legacyStrengthRow()
+            .copyWith(blockPriority: BlockPriority.primary)
+            .explicitAdaptationMetadataToMap();
 
-      SessionBlockAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
+        SessionBlockAdaptationMetadataCodec.stripPendingPersistenceColumns(map);
 
-      expect(
-        map.containsKey(SessionBlockAdaptationMetadataKeys.blockPriority),
-        isFalse,
-      );
-    });
-  });
+        expect(
+          map.containsKey(SessionBlockAdaptationMetadataKeys.blockPriority),
+          isFalse,
+        );
+      });
+    },
+  );
 }

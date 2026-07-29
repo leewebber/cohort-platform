@@ -1,8 +1,4 @@
-enum CoachAthleteInviteStatus {
-  pending,
-  accepted,
-  revoked,
-}
+enum CoachAthleteInviteStatus { pending, accepted, revoked }
 
 extension CoachAthleteInviteStatusDb on CoachAthleteInviteStatus {
   String get dbValue {

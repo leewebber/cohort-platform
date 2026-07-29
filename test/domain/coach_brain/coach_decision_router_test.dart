@@ -62,7 +62,8 @@ void main() {
         issues.every(
           (i) =>
               i.code ==
-              CoachDecisionHandlerRegistryIssueCode.missingHandlerForDecisionType,
+              CoachDecisionHandlerRegistryIssueCode
+                  .missingHandlerForDecisionType,
         ),
         isTrue,
       );
@@ -74,13 +75,10 @@ void main() {
     });
 
     test('validate reports handler decision type mismatch', () {
-      final registry = CoachDecisionHandlerRegistry.fromHandlerMap(
-        {
-          CoachDecisionType.sessionAdaptation:
-              const StubReschedulingCoachDecisionHandler(),
-        },
-        requireAllDecisionTypes: false,
-      );
+      final registry = CoachDecisionHandlerRegistry.fromHandlerMap({
+        CoachDecisionType.sessionAdaptation:
+            const StubReschedulingCoachDecisionHandler(),
+      }, requireAllDecisionTypes: false);
       final issues = registry.validate();
       expect(
         issues.any(
@@ -116,9 +114,7 @@ void main() {
         handlers: const [StubSessionAdaptationCoachDecisionHandler()],
         requireAllDecisionTypes: false,
       ).router;
-      final result = partial.route(
-        _request(CoachDecisionType.rescheduling),
-      );
+      final result = partial.route(_request(CoachDecisionType.rescheduling));
       expect(result.status, CoachDecisionOutcomeStatus.handlerNotRegistered);
     });
 
@@ -164,10 +160,7 @@ void main() {
 
     test('router contains no adaptation domain imports', () {
       // Compile-time boundary: coach_brain library must not depend on adaptation.
-      expect(
-        CoachBrainDependencies.stub().router,
-        isA<CoachDecisionRouter>(),
-      );
+      expect(CoachBrainDependencies.stub().router, isA<CoachDecisionRouter>());
     });
   });
 

@@ -33,9 +33,8 @@ class ProgrammeBuilderCompiler {
                     (day) => day.copyWith(
                       slots: day.slots
                           .map(
-                            (slot) => slot.copyWith(
-                              localId: _ensureId(slot.localId),
-                            ),
+                            (slot) =>
+                                slot.copyWith(localId: _ensureId(slot.localId)),
                           )
                           .toList(),
                     ),
@@ -101,9 +100,10 @@ class ProgrammeBuilderCompiler {
         );
 
         final slots = dayDraft.slots.map((slotDraft) {
-          final protocolId = ProgrammeBuilderConstants.isUnassignedProtocolId(
-            slotDraft.protocolId,
-          )
+          final protocolId =
+              ProgrammeBuilderConstants.isUnassignedProtocolId(
+                slotDraft.protocolId,
+              )
               ? ProgrammeBuilderConstants.unassignedProtocolId
               : slotDraft.protocolId;
           return ProgrammeVersionSessionSlot(
@@ -160,9 +160,11 @@ class ProgrammeBuilderCompiler {
             athleteNote: day.athleteNote,
             slots: dayNode.sortedSlots.map((slot) {
               final protocolId =
-                  ProgrammeBuilderConstants.isUnassignedProtocolId(slot.protocolId)
-                      ? ''
-                      : slot.protocolId;
+                  ProgrammeBuilderConstants.isUnassignedProtocolId(
+                    slot.protocolId,
+                  )
+                  ? ''
+                  : slot.protocolId;
               return ProgrammeSessionSlotDraft(
                 localId: slot.id,
                 sessionOrder: slot.sessionOrder,

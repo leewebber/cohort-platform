@@ -140,17 +140,19 @@ class SessionBuilderEditingState {
 
   void setPrimarySessionIntent(SessionIntent? intent) {
     primarySessionIntent = intent;
-    secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-      primary: primarySessionIntent,
-      secondary: secondarySessionIntents,
-    );
+    secondarySessionIntents =
+        SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+          primary: primarySessionIntent,
+          secondary: secondarySessionIntents,
+        );
   }
 
   void setSecondarySessionIntents(List<SessionIntent> intents) {
-    secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-      primary: primarySessionIntent,
-      secondary: intents,
-    );
+    secondarySessionIntents =
+        SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+          primary: primarySessionIntent,
+          secondary: intents,
+        );
   }
 
   void setMinimumViableDurationMin(int? value) {
@@ -161,10 +163,7 @@ class SessionBuilderEditingState {
   void addBlock(SessionBlockType blockType) {
     blocks = [
       ...blocks,
-      SessionBlock.create(
-        blockType: blockType,
-        position: blocks.length + 1,
-      ),
+      SessionBlock.create(blockType: blockType, position: blocks.length + 1),
     ];
   }
 
@@ -238,9 +237,7 @@ class SessionBuilderEditingState {
     final index = blocks.indexWhere((block) => block.localId == localId);
     if (index < 0) return;
 
-    updateBlock(
-      blocks[index].copyWith(timerConfiguration: configuration),
-    );
+    updateBlock(blocks[index].copyWith(timerConfiguration: configuration));
   }
 
   void addExerciseLink(String localId, Exercise exercise) {
@@ -248,7 +245,9 @@ class SessionBuilderEditingState {
     if (index < 0) return;
 
     final block = blocks[index];
-    if (block.linkedExercises.any((link) => link.exerciseId == exercise.exerciseId)) {
+    if (block.linkedExercises.any(
+      (link) => link.exerciseId == exercise.exerciseId,
+    )) {
       return;
     }
 
@@ -286,19 +285,28 @@ class SessionBuilderEditingState {
     );
   }
 
-  void moveExerciseLink(String blockLocalId, String linkLocalId, int direction) {
-    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+  void moveExerciseLink(
+    String blockLocalId,
+    String linkLocalId,
+    int direction,
+  ) {
+    final blockIndex = blocks.indexWhere(
+      (block) => block.localId == blockLocalId,
+    );
     if (blockIndex < 0) return;
 
     final block = blocks[blockIndex];
-    final linkIndex =
-        block.linkedExercises.indexWhere((link) => link.localId == linkLocalId);
+    final linkIndex = block.linkedExercises.indexWhere(
+      (link) => link.localId == linkLocalId,
+    );
     if (linkIndex < 0) return;
 
     final targetIndex = linkIndex + direction;
     if (targetIndex < 0 || targetIndex >= block.linkedExercises.length) return;
 
-    final reordered = List<SessionBlockExerciseLink>.from(block.linkedExercises);
+    final reordered = List<SessionBlockExerciseLink>.from(
+      block.linkedExercises,
+    );
     final item = reordered.removeAt(linkIndex);
     reordered.insert(targetIndex, item);
 
@@ -317,7 +325,9 @@ class SessionBuilderEditingState {
     String linkLocalId,
     String? label,
   ) {
-    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+    final blockIndex = blocks.indexWhere(
+      (block) => block.localId == blockLocalId,
+    );
     if (blockIndex < 0) return;
 
     final block = blocks[blockIndex];
@@ -340,7 +350,9 @@ class SessionBuilderEditingState {
     required StrengthExercisePrescription prescription,
     String? linkLocalId,
   }) {
-    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+    final blockIndex = blocks.indexWhere(
+      (block) => block.localId == blockLocalId,
+    );
     if (blockIndex < 0) return;
 
     final block = blocks[blockIndex];
@@ -362,7 +374,9 @@ class SessionBuilderEditingState {
       return;
     }
 
-    if (block.linkedExercises.any((link) => link.exerciseId == exercise.exerciseId)) {
+    if (block.linkedExercises.any(
+      (link) => link.exerciseId == exercise.exerciseId,
+    )) {
       return;
     }
 
@@ -383,16 +397,22 @@ class SessionBuilderEditingState {
   }
 
   void duplicateExerciseLink(String blockLocalId, String linkLocalId) {
-    final blockIndex = blocks.indexWhere((block) => block.localId == blockLocalId);
+    final blockIndex = blocks.indexWhere(
+      (block) => block.localId == blockLocalId,
+    );
     if (blockIndex < 0) return;
 
     final block = blocks[blockIndex];
-    final linkIndex =
-        block.linkedExercises.indexWhere((link) => link.localId == linkLocalId);
+    final linkIndex = block.linkedExercises.indexWhere(
+      (link) => link.localId == linkLocalId,
+    );
     if (linkIndex < 0) return;
 
-    final duplicate = block.linkedExercises[linkIndex].duplicateWithNewIdentity();
-    final reordered = List<SessionBlockExerciseLink>.from(block.linkedExercises);
+    final duplicate = block.linkedExercises[linkIndex]
+        .duplicateWithNewIdentity();
+    final reordered = List<SessionBlockExerciseLink>.from(
+      block.linkedExercises,
+    );
     reordered.insert(linkIndex + 1, duplicate);
 
     updateBlock(

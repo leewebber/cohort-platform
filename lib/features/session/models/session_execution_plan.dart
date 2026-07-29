@@ -67,7 +67,9 @@ class SessionExecutionBlock {
 
   bool get hasAthleteVisibleContent {
     if (content.trim().isNotEmpty) return true;
-    if (linkedExercises.any((exercise) => exercise.prescription?.hasStructuredData == true)) {
+    if (linkedExercises.any(
+      (exercise) => exercise.prescription?.hasStructuredData == true,
+    )) {
       return true;
     }
     if (linkedExercises.isNotEmpty) return true;
@@ -95,7 +97,9 @@ class SessionExecutionBlock {
 
     return SessionExecutionBlock(
       blockId: block.stableId,
-      title: block.title.trim().isEmpty ? block.blockType.defaultTitle : block.title.trim(),
+      title: block.title.trim().isEmpty
+          ? block.blockType.defaultTitle
+          : block.title.trim(),
       blockType: block.blockType,
       content: block.content,
       workoutFormat: block.workoutFormat,

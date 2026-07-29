@@ -222,8 +222,10 @@ void main() {
     testWidgets('published edit blocked', (tester) async {
       await pumpGovernanceSection(tester, protocolId: publishedProtocolId);
       expect(actionButton(tester, 'Edit').onPressed, isNull);
-      expect(find.textContaining('Published revisions cannot be edited'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Published revisions cannot be edited'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('published create-revision enabled', (tester) async {
@@ -312,8 +314,10 @@ void main() {
 
     testWidgets('blocked reason displayed', (tester) async {
       await pumpGovernanceSection(tester, protocolId: publishedProtocolId);
-      expect(find.textContaining('Published revisions cannot be edited'),
-          findsOneWidget);
+      expect(
+        find.textContaining('Published revisions cannot be edited'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('recommended alternative displayed', (tester) async {
@@ -326,7 +330,9 @@ void main() {
     testWidgets('create revision calls service once', (tester) async {
       await pumpGovernanceSection(tester, protocolId: publishedProtocolId);
 
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Create new revision'));
+      await tester.tap(
+        find.widgetWithText(OutlinedButton, 'Create new revision'),
+      );
       await tester.pumpAndSettle();
 
       expect(
@@ -343,10 +349,15 @@ void main() {
         onDraftChanged: (draft) => replacedDraft = draft,
       );
 
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Create new revision'));
+      await tester.tap(
+        find.widgetWithText(OutlinedButton, 'Create new revision'),
+      );
       await tester.pumpAndSettle();
 
-      expect(replacedDraft?.lifecycleStatus, SessionRevisionLifecycleStatus.draft);
+      expect(
+        replacedDraft?.lifecycleStatus,
+        SessionRevisionLifecycleStatus.draft,
+      );
       expect(replacedDraft?.revisionNumber, 4);
     });
 
@@ -469,10 +480,7 @@ void main() {
         programmeTables: programmeTables,
         protocolId: publishedProtocolId,
       );
-      _seedActiveAssignment(
-        programmeTables: programmeTables,
-        version: version,
-      );
+      _seedActiveAssignment(programmeTables: programmeTables, version: version);
 
       await pumpGovernanceSection(tester, protocolId: publishedProtocolId);
       expect(find.text('1 Active Assignment'), findsOneWidget);
@@ -504,11 +512,15 @@ void main() {
 
     testWidgets('unused state shown', (tester) async {
       await pumpGovernanceSection(tester, protocolId: draftProtocolId);
-      expect(find.text(GovernanceCopy.unusedSessionRevisionMessage),
-          findsOneWidget);
+      expect(
+        find.text(GovernanceCopy.unusedSessionRevisionMessage),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('archived programme references still displayed', (tester) async {
+    testWidgets('archived programme references still displayed', (
+      tester,
+    ) async {
       _attachProtocolToProgramme(
         programmeTables: programmeTables,
         protocolId: archivedProtocolId,
@@ -540,9 +552,7 @@ void main() {
       final lookup = SessionRevisionUsageLookupResult.lookupFailed('boom');
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: SessionRevisionUsagePanel(usageLookup: lookup),
-          ),
+          home: Scaffold(body: SessionRevisionUsagePanel(usageLookup: lookup)),
         ),
       );
 
@@ -560,11 +570,18 @@ void main() {
         relationshipStore: InMemoryExerciseRelationshipStore(exerciseTables),
       );
       exerciseTables.exercises.add(
-        const Exercise(exerciseId: 'SQ-001', name: 'Back Squat', published: true),
+        const Exercise(
+          exerciseId: 'SQ-001',
+          name: 'Back Squat',
+          published: true,
+        ),
       );
     });
 
-    Future<void> pumpExercisePanel(WidgetTester tester, String exerciseId) async {
+    Future<void> pumpExercisePanel(
+      WidgetTester tester,
+      String exerciseId,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -669,27 +686,33 @@ void main() {
       expect(find.textContaining('2 session blocks'), findsOneWidget);
     });
 
-    testWidgets('same-name exercises remain separate through service fixtures',
-        (tester) async {
-      exerciseTables.exercises.add(
-        const Exercise(exerciseId: 'SQ-002', name: 'Back Squat', published: true),
-      );
-      _seedExerciseBlockLink(
-        exerciseTables: exerciseTables,
-        exerciseId: 'SQ-001',
-        protocolId: 'session-a',
-      );
-      _seedExerciseBlockLink(
-        exerciseTables: exerciseTables,
-        exerciseId: 'SQ-002',
-        protocolId: 'session-b',
-        sessionName: 'Other Session',
-      );
+    testWidgets(
+      'same-name exercises remain separate through service fixtures',
+      (tester) async {
+        exerciseTables.exercises.add(
+          const Exercise(
+            exerciseId: 'SQ-002',
+            name: 'Back Squat',
+            published: true,
+          ),
+        );
+        _seedExerciseBlockLink(
+          exerciseTables: exerciseTables,
+          exerciseId: 'SQ-001',
+          protocolId: 'session-a',
+        );
+        _seedExerciseBlockLink(
+          exerciseTables: exerciseTables,
+          exerciseId: 'SQ-002',
+          protocolId: 'session-b',
+          sessionName: 'Other Session',
+        );
 
-      await pumpExercisePanel(tester, 'SQ-001');
-      expect(find.text('1 Session Revision'), findsOneWidget);
-      expect(find.textContaining('Other Session'), findsNothing);
-    });
+        await pumpExercisePanel(tester, 'SQ-001');
+        expect(find.text('1 Session Revision'), findsOneWidget);
+        expect(find.textContaining('Other Session'), findsNothing);
+      },
+    );
 
     testWidgets('no athlete IDs shown', (tester) async {
       _seedExerciseProgrammeUsage(
@@ -727,9 +750,10 @@ void main() {
   });
 }
 
-class _ThrowingRelationshipStore extends InMemorySessionRevisionRelationshipStore {
+class _ThrowingRelationshipStore
+    extends InMemorySessionRevisionRelationshipStore {
   _ThrowingRelationshipStore(InMemoryProgrammeTables tables)
-      : super(programmeTables: tables);
+    : super(programmeTables: tables);
 
   @override
   Future<List<SessionRevisionProgrammeReference>> listProgrammeSlotReferences(
@@ -765,11 +789,7 @@ void _seedRevision({
       protocolId: protocolId,
       name: name,
       steps: const [
-        ProtocolStepDraft(
-          localId: 'step-1',
-          stepOrder: 1,
-          title: 'Warm-up',
-        ),
+        ProtocolStepDraft(localId: 'step-1', stepOrder: 1, title: 'Warm-up'),
       ],
       blocks: const [
         SessionBlock(
@@ -838,8 +858,7 @@ ProgrammeVersion _attachProtocolToProgramme({
   required InMemoryProgrammeTables programmeTables,
   required String protocolId,
   String programmeName = 'Test Programme',
-  ProgrammeLifecycleStatus lifecycleStatus =
-      ProgrammeLifecycleStatus.published,
+  ProgrammeLifecycleStatus lifecycleStatus = ProgrammeLifecycleStatus.published,
 }) {
   final lineage = SessionRevisionUsageTestFixtures.seedLineage(programmeTables);
   final version = SessionRevisionUsageTestFixtures.seedVersion(

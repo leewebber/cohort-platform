@@ -157,24 +157,27 @@ void main() {
   });
 
   group('planning outcomes', () {
-    test('programme identical yields safeImmediate for active assignment', () async {
-      final assignment = _seedActiveAssignment(
-        programmeTables,
-        id: 'assignment-identical',
-        versionId: versionV2Id,
-      );
+    test(
+      'programme identical yields safeImmediate for active assignment',
+      () async {
+        final assignment = _seedActiveAssignment(
+          programmeTables,
+          id: 'assignment-identical',
+          versionId: versionV2Id,
+        );
 
-      final plan = await service.planMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionIdenticalId,
-        assignmentIds: [assignment.id],
-      );
+        final plan = await service.planMigration(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionIdenticalId,
+          assignmentIds: [assignment.id],
+        );
 
-      expect(
-        plan.assignmentPlans.single.migrationClassification,
-        MigrationClassification.safeImmediate,
-      );
-    });
+        expect(
+          plan.assignmentPlans.single.migrationClassification,
+          MigrationClassification.safeImmediate,
+        );
+      },
+    );
 
     test('assignment not started is safeImmediate', () async {
       final assignment = _seedActiveAssignment(
@@ -196,60 +199,67 @@ void main() {
       );
     });
 
-    test('assignment at week 1 with progress can require review when current session changes',
-        () async {
-      final assignment = _seedActiveAssignment(
-        programmeTables,
-        id: 'assignment-week-1',
-        versionId: versionV2Id,
-        currentWeek: 1,
-        currentDayKey: 'day_1',
-        currentSessionOrder: 1,
-      );
-      _seedCompletedOutcome(
-        programmeTables,
-        assignment: assignment,
-        slotId: 'slot-v2-w1',
-      );
+    test(
+      'assignment at week 1 with progress can require review when current session changes',
+      () async {
+        final assignment = _seedActiveAssignment(
+          programmeTables,
+          id: 'assignment-week-1',
+          versionId: versionV2Id,
+          currentWeek: 1,
+          currentDayKey: 'day_1',
+          currentSessionOrder: 1,
+        );
+        _seedCompletedOutcome(
+          programmeTables,
+          assignment: assignment,
+          slotId: 'slot-v2-w1',
+        );
 
-      final plan = await service.planMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-        assignmentIds: [assignment.id],
-      );
+        final plan = await service.planMigration(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionV3Id,
+          assignmentIds: [assignment.id],
+        );
 
-      expect(plan.assignmentPlans.single.currentWeek, 1);
-      expect(plan.assignmentPlans.single.hasStarted, isTrue);
-      expect(plan.assignmentPlans.single.migrationClassification,
-          isNot(MigrationClassification.safeImmediate));
-    });
+        expect(plan.assignmentPlans.single.currentWeek, 1);
+        expect(plan.assignmentPlans.single.hasStarted, isTrue);
+        expect(
+          plan.assignmentPlans.single.migrationClassification,
+          isNot(MigrationClassification.safeImmediate),
+        );
+      },
+    );
 
-    test('assignment at week 2 with later-week changes is safeAfterCurrentWeek', () async {
-      final assignment = _seedActiveAssignment(
-        programmeTables,
-        id: 'assignment-week-2-future',
-        versionId: versionV2Id,
-        currentWeek: 2,
-        currentDayKey: 'day_1',
-        currentSessionOrder: 1,
-      );
-      _seedCompletedOutcome(
-        programmeTables,
-        assignment: assignment,
-        slotId: 'slot-v2-w1',
-      );
+    test(
+      'assignment at week 2 with later-week changes is safeAfterCurrentWeek',
+      () async {
+        final assignment = _seedActiveAssignment(
+          programmeTables,
+          id: 'assignment-week-2-future',
+          versionId: versionV2Id,
+          currentWeek: 2,
+          currentDayKey: 'day_1',
+          currentSessionOrder: 1,
+        );
+        _seedCompletedOutcome(
+          programmeTables,
+          assignment: assignment,
+          slotId: 'slot-v2-w1',
+        );
 
-      final plan = await service.planMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-        assignmentIds: [assignment.id],
-      );
+        final plan = await service.planMigration(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionV3Id,
+          assignmentIds: [assignment.id],
+        );
 
-      expect(
-        plan.assignmentPlans.single.migrationClassification,
-        MigrationClassification.safeAfterCurrentWeek,
-      );
-    });
+        expect(
+          plan.assignmentPlans.single.migrationClassification,
+          MigrationClassification.safeAfterCurrentWeek,
+        );
+      },
+    );
 
     test('completed assignment is alreadyCompleted', () async {
       final assignment = _seedActiveAssignment(
@@ -272,65 +282,70 @@ void main() {
       expect(plan.summary.completed, 1);
     });
 
-    test('future-only changes before current week classify as safeAfterCurrentWeek',
-        () async {
-      final assignment = _seedActiveAssignment(
-        programmeTables,
-        id: 'assignment-future-only',
-        versionId: versionV2Id,
-        currentWeek: 2,
-        currentDayKey: 'day_1',
-        currentSessionOrder: 1,
-      );
-      _seedCompletedOutcome(
-        programmeTables,
-        assignment: assignment,
-        slotId: 'slot-v2-w1',
-      );
+    test(
+      'future-only changes before current week classify as safeAfterCurrentWeek',
+      () async {
+        final assignment = _seedActiveAssignment(
+          programmeTables,
+          id: 'assignment-future-only',
+          versionId: versionV2Id,
+          currentWeek: 2,
+          currentDayKey: 'day_1',
+          currentSessionOrder: 1,
+        );
+        _seedCompletedOutcome(
+          programmeTables,
+          assignment: assignment,
+          slotId: 'slot-v2-w1',
+        );
 
-      final plan = await service.planMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-        assignmentIds: [assignment.id],
-      );
+        final plan = await service.planMigration(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionV3Id,
+          assignmentIds: [assignment.id],
+        );
 
-      expect(
-        plan.assignmentPlans.single.migrationClassification,
-        MigrationClassification.safeAfterCurrentWeek,
-      );
-    });
+        expect(
+          plan.assignmentPlans.single.migrationClassification,
+          MigrationClassification.safeAfterCurrentWeek,
+        );
+      },
+    );
 
-    test('current session revision change is safeAfterCurrentSession', () async {
-      final assignment = _seedActiveAssignment(
-        programmeTables,
-        id: 'assignment-current-revision',
-        versionId: versionV2Id,
-        currentWeek: 3,
-        currentDayKey: 'day_1',
-        currentSessionOrder: 1,
-      );
-      _seedCompletedOutcome(
-        programmeTables,
-        assignment: assignment,
-        slotId: 'slot-v2-w1',
-      );
-      _seedCompletedOutcome(
-        programmeTables,
-        assignment: assignment,
-        slotId: 'slot-v2-w2',
-      );
+    test(
+      'current session revision change is safeAfterCurrentSession',
+      () async {
+        final assignment = _seedActiveAssignment(
+          programmeTables,
+          id: 'assignment-current-revision',
+          versionId: versionV2Id,
+          currentWeek: 3,
+          currentDayKey: 'day_1',
+          currentSessionOrder: 1,
+        );
+        _seedCompletedOutcome(
+          programmeTables,
+          assignment: assignment,
+          slotId: 'slot-v2-w1',
+        );
+        _seedCompletedOutcome(
+          programmeTables,
+          assignment: assignment,
+          slotId: 'slot-v2-w2',
+        );
 
-      final plan = await service.planMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-        assignmentIds: [assignment.id],
-      );
+        final plan = await service.planMigration(
+          sourceProgrammeVersionId: versionV2Id,
+          targetProgrammeVersionId: versionV3Id,
+          assignmentIds: [assignment.id],
+        );
 
-      expect(
-        plan.assignmentPlans.single.migrationClassification,
-        MigrationClassification.safeAfterCurrentSession,
-      );
-    });
+        expect(
+          plan.assignmentPlans.single.migrationClassification,
+          MigrationClassification.safeAfterCurrentSession,
+        );
+      },
+    );
 
     test('current session removed requires manualReview', () async {
       final removedTarget = _version(
@@ -345,11 +360,7 @@ void main() {
         programmeTables: programmeTables,
         versionId: removedTarget.id,
         weekPrefix: 'removed',
-        slotProtocolByWeek: {
-          1: protocolA,
-          2: protocolA,
-          4: protocolC,
-        },
+        slotProtocolByWeek: {1: protocolA, 2: protocolA, 4: protocolC},
         skipWeek: 3,
       );
 
@@ -448,9 +459,9 @@ void main() {
 
       final lookup = await buildService(comparison: partialComparison)
           .tryPlanMigration(
-        sourceProgrammeVersionId: versionV2Id,
-        targetProgrammeVersionId: versionV3Id,
-      );
+            sourceProgrammeVersionId: versionV2Id,
+            targetProgrammeVersionId: versionV3Id,
+          );
 
       expect(lookup.status, ProgrammeMigrationPlannerStatus.partial);
     });
@@ -496,11 +507,7 @@ void main() {
       final plan = await service.planMigration(
         sourceProgrammeVersionId: versionV2Id,
         targetProgrammeVersionId: versionV3Id,
-        assignmentIds: [
-          'assignment-a',
-          'assignment-b',
-          completed.id,
-        ],
+        assignmentIds: ['assignment-a', 'assignment-b', completed.id],
       );
 
       expect(plan.summary.totalAssignments, 3);
@@ -508,7 +515,9 @@ void main() {
       expect(plan.summary.completed, 1);
       expect(plan.summary.safeAfterCurrentWeek, 0);
       expect(
-        plan.assignmentPlans.firstWhere((p) => p.assignmentId == 'assignment-b').migrationClassification,
+        plan.assignmentPlans
+            .firstWhere((p) => p.assignmentId == 'assignment-b')
+            .migrationClassification,
         isIn([
           MigrationClassification.safeAfterCurrentSession,
           MigrationClassification.manualReview,
@@ -557,8 +566,7 @@ void main() {
 
       for (final assignmentPlan in plan.assignmentPlans) {
         expect(
-          ProgrammeMigrationRecommendationBuilder
-              .recommendationContainsMigrationCommand(
+          ProgrammeMigrationRecommendationBuilder.recommendationContainsMigrationCommand(
             assignmentPlan.recommendation,
           ),
           isFalse,

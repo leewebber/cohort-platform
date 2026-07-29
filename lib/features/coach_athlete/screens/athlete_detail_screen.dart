@@ -31,7 +31,8 @@ class AthleteDetailScreen extends StatefulWidget {
 }
 
 class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
-  late final AthleteDetailController _controller = widget.controller ??
+  late final AthleteDetailController _controller =
+      widget.controller ??
       AthleteDetailController(
         service: CoachAthleteServices.createService(),
         athlete: widget.athlete,
@@ -90,7 +91,8 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                   right: CohortSpacing.lg,
                   top: CohortSpacing.lg,
                   bottom:
-                      MediaQuery.viewInsetsOf(context).bottom + CohortSpacing.lg,
+                      MediaQuery.viewInsetsOf(context).bottom +
+                      CohortSpacing.lg,
                 ),
                 child: SingleChildScrollView(
                   child: Column(
@@ -98,16 +100,18 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        replaceExisting ? 'Replace programme' : 'Assign programme',
+                        replaceExisting
+                            ? 'Replace programme'
+                            : 'Assign programme',
                         style: CohortTextStyles.h2,
                       ),
                       const SizedBox(height: CohortSpacing.sm),
                       Text(
                         replaceExisting
                             ? 'Choose a new programme to replace the current assignment for '
-                                '${widget.athlete.displayName}.'
+                                  '${widget.athlete.displayName}.'
                             : 'Choose a published programme and start date for '
-                                '${widget.athlete.displayName}.',
+                                  '${widget.athlete.displayName}.',
                         style: CohortTextStyles.body.copyWith(
                           color: CohortColors.textSecondary,
                         ),
@@ -115,7 +119,9 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                       const SizedBox(height: CohortSpacing.lg),
                       DropdownButtonFormField<ProgrammeCatalogEntry>(
                         initialValue: selected,
-                        decoration: const InputDecoration(labelText: 'Programme'),
+                        decoration: const InputDecoration(
+                          labelText: 'Programme',
+                        ),
                         items: _controller.publishedProgrammes
                             .map(
                               (entry) => DropdownMenuItem(
@@ -165,20 +171,21 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                         label: _controller.isAssigning
                             ? 'Assigning…'
                             : replaceExisting
-                                ? 'Confirm replacement'
-                                : 'Confirm assignment',
+                            ? 'Confirm replacement'
+                            : 'Confirm assignment',
                         onPressed: _controller.isAssigning
                             ? () {}
                             : () async {
                                 final entry = selected;
                                 if (entry == null) return;
 
-                                final success = await _controller.assignProgramme(
-                                  entry: entry,
-                                  startDate: startDate,
-                                  timezone: timezone,
-                                  replaceExisting: replaceExisting,
-                                );
+                                final success = await _controller
+                                    .assignProgramme(
+                                      entry: entry,
+                                      startDate: startDate,
+                                      timezone: timezone,
+                                      replaceExisting: replaceExisting,
+                                    );
 
                                 if (!context.mounted) return;
                                 if (success) {
@@ -208,9 +215,8 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
   void _openHistory() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => TrainingHistoryScreen(
-          athleteId: widget.athlete.athleteId,
-        ),
+        builder: (_) =>
+            TrainingHistoryScreen(athleteId: widget.athlete.athleteId),
       ),
     );
   }
@@ -220,30 +226,30 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
     return CoachRouteGuard.wrap(
       title: 'Athlete',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              Text(widget.athlete.displayName, style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.lg),
-              Expanded(child: _buildBody()),
-              _QuickActions(
-                hasActiveAssignment: _controller.hasActiveAssignment,
-                onAssign: () => _showAssignSheet(),
-                onReplace: () => _showAssignSheet(replaceExisting: true),
-                onViewHistory: _openHistory,
-              ),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                Text(widget.athlete.displayName, style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.lg),
+                Expanded(child: _buildBody()),
+                _QuickActions(
+                  hasActiveAssignment: _controller.hasActiveAssignment,
+                  onAssign: () => _showAssignSheet(),
+                  onReplace: () => _showAssignSheet(replaceExisting: true),
+                  onViewHistory: _openHistory,
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -360,7 +366,9 @@ class _AthleteDetailScreenState extends State<AthleteDetailScreen> {
                   style: CohortTextStyles.body,
                 ),
                 if (_controller
-                    .latestAdaptation!.affectedSlotIds.isNotEmpty) ...[
+                    .latestAdaptation!
+                    .affectedSlotIds
+                    .isNotEmpty) ...[
                   const SizedBox(height: CohortSpacing.sm),
                   Text(
                     'Affected future sessions: '
@@ -450,10 +458,7 @@ class _QuickActions extends StatelessWidget {
           onPressed: hasActiveAssignment ? onReplace : onAssign,
         ),
         const SizedBox(height: CohortSpacing.sm),
-        CohortButton(
-          label: 'View history',
-          onPressed: onViewHistory,
-        ),
+        CohortButton(label: 'View history', onPressed: onViewHistory),
       ],
     );
   }

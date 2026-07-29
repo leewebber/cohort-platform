@@ -23,8 +23,7 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
 
     final sortedWeeks = tree.weekNodes.toList()
       ..sort(
-        (left, right) =>
-            left.week.weekNumber.compareTo(right.week.weekNumber),
+        (left, right) => left.week.weekNumber.compareTo(right.week.weekNumber),
       );
 
     for (final weekNode in sortedWeeks) {
@@ -94,8 +93,9 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
       );
     }
 
-    final requiredSlots =
-        sortedSlots.where((slot) => slot.isRequiredForProgression).toList();
+    final requiredSlots = sortedSlots
+        .where((slot) => slot.isRequiredForProgression)
+        .toList();
     final optionalUnresolved = sortedSlots
         .where((slot) => !slot.isRequiredForProgression)
         .where((slot) => _isUnresolved(outcomeBySlotId[slot.id]?.outcomeStatus))
@@ -281,8 +281,7 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
   }) {
     final sortedWeeks = tree.weekNodes.toList()
       ..sort(
-        (left, right) =>
-            left.week.weekNumber.compareTo(right.week.weekNumber),
+        (left, right) => left.week.weekNumber.compareTo(right.week.weekNumber),
       );
 
     final weekIndex = sortedWeeks.indexWhere(
@@ -292,9 +291,7 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
 
     final currentWeekNode = sortedWeeks[weekIndex];
     final sortedDays = currentWeekNode.sortedDays;
-    final dayIndex = sortedDays.indexWhere(
-      (node) => node.day.dayKey == dayKey,
-    );
+    final dayIndex = sortedDays.indexWhere((node) => node.day.dayKey == dayKey);
 
     if (dayIndex != -1 && dayIndex < sortedDays.length - 1) {
       return _cursorForDayNode(
@@ -331,10 +328,12 @@ class ProgrammeScheduleResolverImpl implements ProgrammeScheduleResolver {
       );
     }
 
-    final requiredSlots =
-        sortedSlots.where((slot) => slot.isRequiredForProgression).toList();
-    final targetSlot =
-        requiredSlots.isNotEmpty ? requiredSlots.first : sortedSlots.first;
+    final requiredSlots = sortedSlots
+        .where((slot) => slot.isRequiredForProgression)
+        .toList();
+    final targetSlot = requiredSlots.isNotEmpty
+        ? requiredSlots.first
+        : sortedSlots.first;
 
     return ProgrammeSuggestedCursor(
       weekNumber: weekNumber,

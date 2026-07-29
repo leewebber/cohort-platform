@@ -6,9 +6,8 @@ import '../models/training_session_record_status.dart';
 import 'performance_record_store.dart';
 
 class SupabasePerformanceRecordStore extends PerformanceRecordStore {
-  SupabasePerformanceRecordStore({
-    PerformanceRecordMapper? mapper,
-  }) : _mapper = mapper ?? const PerformanceRecordMapper();
+  SupabasePerformanceRecordStore({PerformanceRecordMapper? mapper})
+    : _mapper = mapper ?? const PerformanceRecordMapper();
 
   final PerformanceRecordMapper _mapper;
 
@@ -84,7 +83,9 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     await _upsertRecordTree(record);
     final hydrated = await getById(record.recordId);
     if (hydrated == null) {
-      throw PerformanceRecordStoreException('Failed to save performance draft.');
+      throw PerformanceRecordStoreException(
+        'Failed to save performance draft.',
+      );
     }
     return hydrated;
   }
@@ -102,9 +103,7 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     try {
       final response = await SupabaseService.client.rpc(
         'complete_training_session_record',
-        params: {
-          'payload': _mapper.fromDraft(draft).toUpsertMap(),
-        },
+        params: {'payload': _mapper.fromDraft(draft).toUpsertMap()},
       );
       if (response is Map) {
         return _hydrateRecord(Map<String, dynamic>.from(response));
@@ -151,14 +150,14 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
 
     final response = assignmentId != null && assignmentId.isNotEmpty
         ? await filter
-            .or(
-              'source_protocol_id.eq.$sourceProtocolId,'
-              'assignment_id.eq.$assignmentId',
-            )
-            .select('record_id')
+              .or(
+                'source_protocol_id.eq.$sourceProtocolId,'
+                'assignment_id.eq.$assignmentId',
+              )
+              .select('record_id')
         : await filter
-            .eq('source_protocol_id', sourceProtocolId)
-            .select('record_id');
+              .eq('source_protocol_id', sourceProtocolId)
+              .select('record_id');
 
     return (response as List).length;
   }
@@ -174,16 +173,14 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
           .upsert(block.toUpsertMap(), onConflict: 'block_result_id');
 
       for (final exercise in block.exerciseResults) {
-        await SupabaseService.client.from('training_exercise_results').upsert(
-          exercise.toUpsertMap(),
-          onConflict: 'exercise_result_id',
-        );
+        await SupabaseService.client
+            .from('training_exercise_results')
+            .upsert(exercise.toUpsertMap(), onConflict: 'exercise_result_id');
 
         for (final set in exercise.setResults) {
-          await SupabaseService.client.from('training_set_results').upsert(
-            set.toUpsertMap(),
-            onConflict: 'set_result_id',
-          );
+          await SupabaseService.client
+              .from('training_set_results')
+              .upsert(set.toUpsertMap(), onConflict: 'set_result_id');
         }
       }
     }

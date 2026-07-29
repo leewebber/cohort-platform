@@ -36,7 +36,9 @@ void main() {
     expect(find.textContaining('published programme'), findsOneWidget);
   });
 
-  testWidgets('athlete-only empty state keeps join-coach guidance', (tester) async {
+  testWidgets('athlete-only empty state keeps join-coach guidance', (
+    tester,
+  ) async {
     CurrentUserSession.bind(
       const UserProfile(
         id: 'alex',

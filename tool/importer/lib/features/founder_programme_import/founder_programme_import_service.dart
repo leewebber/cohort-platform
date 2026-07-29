@@ -64,7 +64,9 @@ class FounderProgrammeImportService {
       programme.importKey,
     );
     if (existingLineage == null) {
-      warnings.add('No existing lineage for import_key; apply would create new draft v1.');
+      warnings.add(
+        'No existing lineage for import_key; apply would create new draft v1.',
+      );
     } else {
       warnings.add(
         'Existing lineage ${existingLineage.code}; apply would replace draft v1 tree and session protocols.',

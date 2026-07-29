@@ -9,7 +9,7 @@ class ProgrammeVersionComparisonService {
   ProgrammeVersionComparisonService({
     ProgrammeVersionComparisonStore? comparisonStore,
   }) : _comparisonStore =
-            comparisonStore ?? const ProgrammeVersionComparisonSupabaseStore();
+           comparisonStore ?? const ProgrammeVersionComparisonSupabaseStore();
 
   final ProgrammeVersionComparisonStore _comparisonStore;
 
@@ -107,9 +107,10 @@ class ProgrammeVersionComparisonService {
         hasExerciseChanges: compared.hasExerciseChanges,
         warnings: compared.warnings,
         limitationNotes: compared.limitationNotes,
-        summaryMessages: ProgrammeVersionComparisonMessageBuilder.buildSummaryMessages(
-          compared,
-        ),
+        summaryMessages:
+            ProgrammeVersionComparisonMessageBuilder.buildSummaryMessages(
+              compared,
+            ),
         isPartial: compared.isPartial,
       );
 
@@ -184,10 +185,12 @@ class ProgrammeVersionComparisonService {
               targetSessionRevisionIds: asTarget
                   ? exercise.sourceSessionRevisionIds
                   : const [],
-              sourceBlockLinkCount:
-                  asTarget ? 0 : exercise.sourceBlockLinkCount,
-              targetBlockLinkCount:
-                  asTarget ? exercise.sourceBlockLinkCount : 0,
+              sourceBlockLinkCount: asTarget
+                  ? 0
+                  : exercise.sourceBlockLinkCount,
+              targetBlockLinkCount: asTarget
+                  ? exercise.sourceBlockLinkCount
+                  : 0,
             ),
           )
           .toList(),

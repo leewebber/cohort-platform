@@ -100,9 +100,10 @@ class SessionRevisionRelationshipSupabaseStore
         ? <Map<String, dynamic>>[]
         : List<Map<String, dynamic>>.from(
             await SupabaseService.client
-                .from(_lineagesTable)
-                .select('id, code')
-                .inFilter('id', lineageIds) as List,
+                    .from(_lineagesTable)
+                    .select('id, code')
+                    .inFilter('id', lineageIds)
+                as List,
           );
 
     final lineages = {
@@ -158,9 +159,7 @@ class SessionRevisionRelationshipSupabaseStore
 
   @override
   Future<List<SessionRevisionAssignmentReference>>
-      listActiveAssignmentReferences(
-    String protocolId,
-  ) async {
+  listActiveAssignmentReferences(String protocolId) async {
     final programmeReferences = await listProgrammeSlotReferences(protocolId);
     final versionIds = programmeReferences
         .map((reference) => reference.programmeVersionId)
@@ -206,7 +205,8 @@ class SessionRevisionRelationshipSupabaseStore
       );
       if (!status.isTerminal) continue;
 
-      final performedAt = _parseDateTime(row['completed_at']) ??
+      final performedAt =
+          _parseDateTime(row['completed_at']) ??
           _parseDateTime(row['started_at']);
       if (performedAt == null) continue;
 
@@ -220,12 +220,14 @@ class SessionRevisionRelationshipSupabaseStore
     SessionRevisionProgrammeReference a,
     SessionRevisionProgrammeReference b,
   ) {
-    final lineageCompare =
-        a.programmeLineageCode.compareTo(b.programmeLineageCode);
+    final lineageCompare = a.programmeLineageCode.compareTo(
+      b.programmeLineageCode,
+    );
     if (lineageCompare != 0) return lineageCompare;
 
-    final versionCompare =
-        a.programmeVersionNumber.compareTo(b.programmeVersionNumber);
+    final versionCompare = a.programmeVersionNumber.compareTo(
+      b.programmeVersionNumber,
+    );
     if (versionCompare != 0) return versionCompare;
 
     final weekCompare = a.weekNumber.compareTo(b.weekNumber);

@@ -26,12 +26,12 @@ class ProgrammeAssignmentDevelopmentServiceImpl
     required ProgrammeScheduleResolver scheduleResolver,
     required TodaySessionService todaySessionService,
     required AthleteStateSyncService athleteStateSyncService,
-  })  : _assignmentStore = assignmentStore,
-        _slotOutcomeStore = slotOutcomeStore,
-        _versionStore = versionStore,
-        _scheduleResolver = scheduleResolver,
-        _todaySessionService = todaySessionService,
-        _athleteStateSyncService = athleteStateSyncService;
+  }) : _assignmentStore = assignmentStore,
+       _slotOutcomeStore = slotOutcomeStore,
+       _versionStore = versionStore,
+       _scheduleResolver = scheduleResolver,
+       _todaySessionService = todaySessionService,
+       _athleteStateSyncService = athleteStateSyncService;
 
   final ProgrammeAssignmentStore _assignmentStore;
   final ProgrammeSlotOutcomeStore _slotOutcomeStore;
@@ -83,24 +83,24 @@ class ProgrammeAssignmentDevelopmentServiceImpl
       }
 
       if (clearOutcomes) {
-        final outcomesBefore =
-            await _slotOutcomeStore.listForAssignment(assignment.id);
+        final outcomesBefore = await _slotOutcomeStore.listForAssignment(
+          assignment.id,
+        );
         debugPrint(
           '[ProgrammeAssignmentDev] outcomes before delete: '
           '${outcomesBefore.length}',
         );
 
-        final deleteResult =
-            await _slotOutcomeStore.deleteOutcomesForAssignment(
-          assignmentId: assignment.id,
-        );
+        final deleteResult = await _slotOutcomeStore
+            .deleteOutcomesForAssignment(assignmentId: assignment.id);
         debugPrint(
           '[ProgrammeAssignmentDev] outcomes deleted: '
           '${deleteResult.deletedCount}',
         );
 
-        final outcomesAfter =
-            await _slotOutcomeStore.listForAssignment(assignment.id);
+        final outcomesAfter = await _slotOutcomeStore.listForAssignment(
+          assignment.id,
+        );
         debugPrint(
           '[ProgrammeAssignmentDev] outcomes after delete: '
           '${outcomesAfter.length}',
@@ -108,14 +108,16 @@ class ProgrammeAssignmentDevelopmentServiceImpl
 
         if (outcomesBefore.isNotEmpty && deleteResult.deletedCount == 0) {
           return ProgrammeAssignmentOperationResult.failed(
-            message: 'Reset aborted: ${outcomesBefore.length} slot outcome(s) '
+            message:
+                'Reset aborted: ${outcomesBefore.length} slot outcome(s) '
                 'were visible before delete but DELETE removed 0 rows',
           );
         }
 
         if (outcomesAfter.isNotEmpty) {
           return ProgrammeAssignmentOperationResult.failed(
-            message: 'Reset aborted: ${outcomesAfter.length} slot outcome(s) '
+            message:
+                'Reset aborted: ${outcomesAfter.length} slot outcome(s) '
                 'remain after delete for assignment ${assignment.id}',
           );
         }
@@ -132,8 +134,9 @@ class ProgrammeAssignmentDevelopmentServiceImpl
         ),
       );
 
-      final resolution =
-          await _todaySessionService.resolveForAthlete(updated.athleteId);
+      final resolution = await _todaySessionService.resolveForAthlete(
+        updated.athleteId,
+      );
 
       var synced = false;
       try {

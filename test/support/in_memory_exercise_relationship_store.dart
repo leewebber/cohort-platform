@@ -129,8 +129,9 @@ class InMemoryExerciseRelationshipStore extends ExerciseRelationshipStore {
         )
         .toList();
 
-    final protocolsWithBlockLinks =
-        blockReferences.map((reference) => reference.protocolId).toSet();
+    final protocolsWithBlockLinks = blockReferences
+        .map((reference) => reference.protocolId)
+        .toSet();
 
     final legacyReferences = tables.legacySteps
         .where(

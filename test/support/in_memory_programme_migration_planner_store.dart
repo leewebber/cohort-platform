@@ -22,10 +22,13 @@ class InMemoryProgrammeMigrationPlannerStore
 
     if (assignmentIds != null && assignmentIds.isNotEmpty) {
       final idSet = assignmentIds.toSet();
-      candidates = candidates.where((assignment) => idSet.contains(assignment.id));
+      candidates = candidates.where(
+        (assignment) => idSet.contains(assignment.id),
+      );
     } else {
-      candidates =
-          candidates.where((assignment) => assignment.status == ProgrammeAssignmentStatus.active);
+      candidates = candidates.where(
+        (assignment) => assignment.status == ProgrammeAssignmentStatus.active,
+      );
     }
 
     final results = candidates.toList()..sort((a, b) => a.id.compareTo(b.id));

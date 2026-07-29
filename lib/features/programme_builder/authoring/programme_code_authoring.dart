@@ -89,8 +89,8 @@ SessionBlock block({
     linkedExercises: linkedExercises,
     coachNotes: coachNotes,
     position: position,
-    performanceCaptureMode: performanceCaptureMode ==
-            BlockPerformanceCaptureMode.automatic
+    performanceCaptureMode:
+        performanceCaptureMode == BlockPerformanceCaptureMode.automatic
         ? BlockPerformanceCaptureModeDb.resolveDefault(
             blockType: type,
             workoutFormat: workoutFormat,

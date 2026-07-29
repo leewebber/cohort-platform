@@ -36,7 +36,9 @@ class ProgrammeCatalogueEmptyState extends StatelessWidget {
               onPressed: onCreate,
               child: Text(
                 'Create programme',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
               ),
             ),
           ],

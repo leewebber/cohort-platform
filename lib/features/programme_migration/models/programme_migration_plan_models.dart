@@ -43,8 +43,7 @@ class ProgrammeMigrationPosition {
   final String? protocolId;
   final String? sessionName;
 
-  String get displayLabel =>
-      'Week $weekIndex · $dayKey · Slot $slotIndex';
+  String get displayLabel => 'Week $weekIndex · $dayKey · Slot $slotIndex';
 }
 
 class ProgrammeMigrationIdentity {
@@ -150,44 +149,48 @@ class ProgrammeMigrationPlannerLookupResult {
     this.message,
   });
 
-  const ProgrammeMigrationPlannerLookupResult.success(ProgrammeMigrationPlan plan)
-      : this._(status: ProgrammeMigrationPlannerStatus.success, plan: plan);
+  const ProgrammeMigrationPlannerLookupResult.success(
+    ProgrammeMigrationPlan plan,
+  ) : this._(status: ProgrammeMigrationPlannerStatus.success, plan: plan);
 
-  const ProgrammeMigrationPlannerLookupResult.partial(ProgrammeMigrationPlan plan)
-      : this._(status: ProgrammeMigrationPlannerStatus.partial, plan: plan);
+  const ProgrammeMigrationPlannerLookupResult.partial(
+    ProgrammeMigrationPlan plan,
+  ) : this._(status: ProgrammeMigrationPlannerStatus.partial, plan: plan);
 
   const ProgrammeMigrationPlannerLookupResult.sourceNotFound()
-      : this._(status: ProgrammeMigrationPlannerStatus.sourceNotFound);
+    : this._(status: ProgrammeMigrationPlannerStatus.sourceNotFound);
 
   const ProgrammeMigrationPlannerLookupResult.targetNotFound()
-      : this._(status: ProgrammeMigrationPlannerStatus.targetNotFound);
+    : this._(status: ProgrammeMigrationPlannerStatus.targetNotFound);
 
   const ProgrammeMigrationPlannerLookupResult.incompatibleLineage()
-      : this._(status: ProgrammeMigrationPlannerStatus.incompatibleLineage);
+    : this._(status: ProgrammeMigrationPlannerStatus.incompatibleLineage);
 
-  const ProgrammeMigrationPlannerLookupResult.comparisonUnavailable(String message)
-      : this._(
-          status: ProgrammeMigrationPlannerStatus.comparisonUnavailable,
-          message: message,
-        );
+  const ProgrammeMigrationPlannerLookupResult.comparisonUnavailable(
+    String message,
+  ) : this._(
+        status: ProgrammeMigrationPlannerStatus.comparisonUnavailable,
+        message: message,
+      );
 
   const ProgrammeMigrationPlannerLookupResult.impactUnavailable(String message)
-      : this._(
-          status: ProgrammeMigrationPlannerStatus.impactUnavailable,
-          message: message,
-        );
+    : this._(
+        status: ProgrammeMigrationPlannerStatus.impactUnavailable,
+        message: message,
+      );
 
-  const ProgrammeMigrationPlannerLookupResult.assignmentUnavailable(String message)
-      : this._(
-          status: ProgrammeMigrationPlannerStatus.assignmentUnavailable,
-          message: message,
-        );
+  const ProgrammeMigrationPlannerLookupResult.assignmentUnavailable(
+    String message,
+  ) : this._(
+        status: ProgrammeMigrationPlannerStatus.assignmentUnavailable,
+        message: message,
+      );
 
   const ProgrammeMigrationPlannerLookupResult.lookupFailed(String message)
-      : this._(
-          status: ProgrammeMigrationPlannerStatus.lookupFailed,
-          message: message,
-        );
+    : this._(
+        status: ProgrammeMigrationPlannerStatus.lookupFailed,
+        message: message,
+      );
 
   final ProgrammeMigrationPlannerStatus status;
   final ProgrammeMigrationPlan? plan;

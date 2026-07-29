@@ -7,7 +7,9 @@ import '../../support/adaptation_application_test_support.dart';
 import '../../support/adaptation_planning_test_support.dart';
 
 void main() {
-  final plannedDate = SessionOccurrenceDate.fromDateTime(DateTime.utc(2026, 7, 28));
+  final plannedDate = SessionOccurrenceDate.fromDateTime(
+    DateTime.utc(2026, 7, 28),
+  );
   final t0 = DateTime.utc(2026, 7, 28, 8);
   final t1 = DateTime.utc(2026, 7, 28, 8, 5);
   final t2 = DateTime.utc(2026, 7, 28, 8, 30);
@@ -163,7 +165,10 @@ void main() {
 
       final active = ready.activate(recordedAt: t1);
       expect(active.isSuccess, isTrue);
-      expect(active.player!.executionStatus, WorkoutPlayerExecutionStatus.active);
+      expect(
+        active.player!.executionStatus,
+        WorkoutPlayerExecutionStatus.active,
+      );
       expect(active.player!.startedAt, t1);
       expect(original.executionStatus, WorkoutPlayerExecutionStatus.ready);
 
@@ -177,8 +182,10 @@ void main() {
 
       final completed = resumed.player!.finishWorkout(recordedAt: t3);
       expect(completed.isSuccess, isTrue);
-      expect(completed.player!.executionStatus,
-          WorkoutPlayerExecutionStatus.completed);
+      expect(
+        completed.player!.executionStatus,
+        WorkoutPlayerExecutionStatus.completed,
+      );
       expect(completed.player!.finishedAt, t3);
       expect(completed.player!.hasFinished, isTrue);
     });
@@ -203,9 +210,7 @@ void main() {
         WorkoutPlayerTransitionIssueCode.invalidExecutionStatus,
       );
 
-      final completed = _activePlayer()
-          .finishWorkout(recordedAt: t3)
-          .player!;
+      final completed = _activePlayer().finishWorkout(recordedAt: t3).player!;
       expect(
         completed.activate(recordedAt: t3).issues.single.code,
         WorkoutPlayerTransitionIssueCode.terminalState,
@@ -227,8 +232,10 @@ void main() {
       expect(next.isSuccess, isTrue);
       player = next.player!;
       expect(player.currentPosition.stepIndex, 1);
-      expect(player.currentPosition.exerciseLinkLocalId,
-          steps[1].exerciseLinkLocalId);
+      expect(
+        player.currentPosition.exerciseLinkLocalId,
+        steps[1].exerciseLinkLocalId,
+      );
 
       final prev = player.previousExercise();
       expect(prev.isSuccess, isTrue);

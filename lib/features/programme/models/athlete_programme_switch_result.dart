@@ -2,12 +2,7 @@ import '../../../models/programme_assignment.dart';
 import 'programme_assignment_operation_result.dart';
 import 'resolved_today_session.dart';
 
-enum AthleteProgrammeSwitchStatus {
-  switched,
-  cancelled,
-  alreadyActive,
-  failed,
-}
+enum AthleteProgrammeSwitchStatus { switched, cancelled, alreadyActive, failed }
 
 class AthleteProgrammeSwitchResult {
   const AthleteProgrammeSwitchResult({

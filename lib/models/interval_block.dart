@@ -43,15 +43,10 @@ class IntervalBlock {
   bool get isFullyComplete =>
       entries.isNotEmpty && completedPhases == entries.length;
 
-  List<IntervalRepEntry> get workEntries =>
-      entries.where((entry) => entry.phaseType == IntervalPhaseType.work).toList();
+  List<IntervalRepEntry> get workEntries => entries
+      .where((entry) => entry.phaseType == IntervalPhaseType.work)
+      .toList();
 }
 
 /// Session-structure role of a block.
-enum IntervalBlockType {
-  warmUp,
-  repeated,
-  coolDown,
-  single,
-  instruction,
-}
+enum IntervalBlockType { warmUp, repeated, coolDown, single, instruction }

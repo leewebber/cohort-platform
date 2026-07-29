@@ -32,16 +32,17 @@ class SessionRevisionService {
     SessionRevisionClone? revisionClone,
     SessionRevisionActionPolicyService? actionPolicyService,
     SessionRevisionDeleteStore? deleteStore,
-  })  : _lineageStore = lineageStore ?? const SessionLineageSupabaseStore(),
-        _protocolBuilderService =
-            protocolBuilderService ?? ProtocolBuilderService(),
-        _revisionClone = revisionClone ?? const SessionRevisionClone(),
-        _actionPolicyService = actionPolicyService ??
-            SessionRevisionActionPolicyService(
-              lineageStore: lineageStore ?? const SessionLineageSupabaseStore(),
-              protocolBuilderService: protocolBuilderService,
-            ),
-        _deleteStore = deleteStore ?? const SessionRevisionDeleteSupabaseStore();
+  }) : _lineageStore = lineageStore ?? const SessionLineageSupabaseStore(),
+       _protocolBuilderService =
+           protocolBuilderService ?? ProtocolBuilderService(),
+       _revisionClone = revisionClone ?? const SessionRevisionClone(),
+       _actionPolicyService =
+           actionPolicyService ??
+           SessionRevisionActionPolicyService(
+             lineageStore: lineageStore ?? const SessionLineageSupabaseStore(),
+             protocolBuilderService: protocolBuilderService,
+           ),
+       _deleteStore = deleteStore ?? const SessionRevisionDeleteSupabaseStore();
 
   final SessionLineageStore _lineageStore;
   final ProtocolBuilderService _protocolBuilderService;

@@ -13,8 +13,8 @@ class AdaptationMetadataBuilderVocabulary {
   static List<SessionIntent> get orderedSessionIntents {
     final values = List<SessionIntent>.from(SessionIntent.values);
     values.sort(
-      (a, b) => sessionIntentDisplayLabel(a)
-          .compareTo(sessionIntentDisplayLabel(b)),
+      (a, b) =>
+          sessionIntentDisplayLabel(a).compareTo(sessionIntentDisplayLabel(b)),
     );
     return values;
   }
@@ -28,7 +28,8 @@ class AdaptationMetadataBuilderVocabulary {
       SessionIntent.pullStrength => 'Pull strength',
       SessionIntent.squatStrength => 'Squat strength',
       SessionIntent.hingeStrength => 'Hinge strength',
-      SessionIntent.unilateralLowerBodyStrength => 'Unilateral lower body strength',
+      SessionIntent.unilateralLowerBodyStrength =>
+        'Unilateral lower body strength',
       SessionIntent.strengthEndurance => 'Strength endurance',
       SessionIntent.upperBodyHypertrophy => 'Upper body hypertrophy',
       SessionIntent.lowerBodyHypertrophy => 'Lower body hypertrophy',
@@ -61,7 +62,8 @@ class AdaptationMetadataBuilderVocabulary {
       SessionIntent.highIntensityIntervals => 'High intensity intervals',
       SessionIntent.hyroxSpecificConditioning => 'Hyrox specific conditioning',
       SessionIntent.compromisedRunning => 'Compromised running',
-      SessionIntent.stationSpecificConditioning => 'Station specific conditioning',
+      SessionIntent.stationSpecificConditioning =>
+        'Station specific conditioning',
       SessionIntent.activeRecovery => 'Active recovery',
       SessionIntent.mobility => 'Mobility',
       SessionIntent.flexibility => 'Flexibility',
@@ -83,8 +85,9 @@ class AdaptationMetadataBuilderVocabulary {
   }
 
   static String recommendedBlockPriorityLabel(SessionBlockType blockType) {
-    final effective =
-        SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
+    final effective = SessionBlockTypeAdaptationPolicy.defaultPriority(
+      AdaptationBlockTypePlanning.fromPlanningDbValue(blockType.name),
+    );
     return blockPriorityDisplayLabel(effective);
   }
 

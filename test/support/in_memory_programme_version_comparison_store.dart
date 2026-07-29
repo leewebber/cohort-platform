@@ -52,10 +52,11 @@ class InMemoryProgrammeVersionComparisonStore
       );
     }
 
-    final weeks = programmeTables.weeks
-        .where((week) => week.versionId == version.id)
-        .toList()
-      ..sort((a, b) => a.weekNumber.compareTo(b.weekNumber));
+    final weeks =
+        programmeTables.weeks
+            .where((week) => week.versionId == version.id)
+            .toList()
+          ..sort((a, b) => a.weekNumber.compareTo(b.weekNumber));
 
     final weekRefs = weeks
         .map(
@@ -71,10 +72,9 @@ class InMemoryProgrammeVersionComparisonStore
     final slots = <ProgrammeSlotSnapshot>[];
 
     for (final week in weeks) {
-      final days = programmeTables.days
-          .where((day) => day.weekId == week.id)
-          .toList()
-        ..sort((a, b) => a.dayOrder.compareTo(b.dayOrder));
+      final days =
+          programmeTables.days.where((day) => day.weekId == week.id).toList()
+            ..sort((a, b) => a.dayOrder.compareTo(b.dayOrder));
 
       for (final day in days) {
         dayRefs.add(
@@ -87,10 +87,9 @@ class InMemoryProgrammeVersionComparisonStore
           ),
         );
 
-        final daySlots = programmeTables.slots
-            .where((slot) => slot.dayId == day.id)
-            .toList()
-          ..sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
+        final daySlots =
+            programmeTables.slots.where((slot) => slot.dayId == day.id).toList()
+              ..sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
 
         for (final slot in daySlots) {
           final metadata = await _sessionMetadata(slot.protocolId);
@@ -123,9 +122,11 @@ class InMemoryProgrammeVersionComparisonStore
     final protocolIds = slots.map((slot) => slot.protocolId).toSet();
     final exercises = await _loadExerciseReferences(
       protocolIds,
-      authoritative: exerciseEnrichmentAuthoritative &&
+      authoritative:
+          exerciseEnrichmentAuthoritative &&
           this.exerciseEnrichmentAuthoritative,
-      limitation: exerciseEnrichmentLimitation ?? this.exerciseEnrichmentLimitation,
+      limitation:
+          exerciseEnrichmentLimitation ?? this.exerciseEnrichmentLimitation,
     );
 
     return ProgrammeVersionComparisonSnapshot(
@@ -148,7 +149,8 @@ class InMemoryProgrammeVersionComparisonStore
       days: dayRefs,
       slots: slots,
       exercises: exercises,
-      exerciseEnrichmentAuthoritative: exerciseEnrichmentAuthoritative &&
+      exerciseEnrichmentAuthoritative:
+          exerciseEnrichmentAuthoritative &&
           this.exerciseEnrichmentAuthoritative,
       exerciseEnrichmentLimitation:
           exerciseEnrichmentLimitation ?? this.exerciseEnrichmentLimitation,
@@ -175,8 +177,7 @@ class InMemoryProgrammeVersionComparisonStore
       sessionLineageId: identity?.sessionLineageId ?? 'unknown-lineage',
       revisionNumber: identity?.revisionNumber ?? 1,
       sessionName: protocolNames[protocolId] ?? 'Session',
-      lifecycleStatus:
-          lifecycle ?? SessionRevisionLifecycleStatus.published,
+      lifecycleStatus: lifecycle ?? SessionRevisionLifecycleStatus.published,
     );
   }
 
@@ -266,10 +267,7 @@ class _SessionMetadata {
 }
 
 class _ExerciseAccumulator {
-  _ExerciseAccumulator({
-    required this.exerciseId,
-    required this.exerciseName,
-  });
+  _ExerciseAccumulator({required this.exerciseId, required this.exerciseName});
 
   final String exerciseId;
   final String exerciseName;

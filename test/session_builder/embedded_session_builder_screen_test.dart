@@ -45,15 +45,20 @@ void main() {
   }
 
   group('EmbeddedSessionBuilderScreen', () {
-    testWidgets('displays programme location and active Save & Attach',
-        (tester) async {
+    testWidgets('displays programme location and active Save & Attach', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: EmbeddedSessionBuilderScreen(
             authoringContext: authoringContext,
             coordinator: buildCoordinator(),
             loadExercises: () async => const [
-              Exercise(exerciseId: 'EX-001', name: 'Back Squat', published: true),
+              Exercise(
+                exerciseId: 'EX-001',
+                name: 'Back Squat',
+                published: true,
+              ),
             ],
           ),
         ),
@@ -77,16 +82,16 @@ void main() {
               builder: (context) {
                 return TextButton(
                   onPressed: () async {
-                    popResult =
-                        await Navigator.of(context).push<ProgrammeSessionAuthoringResult>(
-                      MaterialPageRoute<ProgrammeSessionAuthoringResult>(
-                        builder: (_) => EmbeddedSessionBuilderScreen(
-                          authoringContext: authoringContext,
-                          coordinator: buildCoordinator(),
-                          loadExercises: () async => const [],
-                        ),
-                      ),
-                    );
+                    popResult = await Navigator.of(context)
+                        .push<ProgrammeSessionAuthoringResult>(
+                          MaterialPageRoute<ProgrammeSessionAuthoringResult>(
+                            builder: (_) => EmbeddedSessionBuilderScreen(
+                              authoringContext: authoringContext,
+                              coordinator: buildCoordinator(),
+                              loadExercises: () async => const [],
+                            ),
+                          ),
+                        );
                   },
                   child: const Text('Open'),
                 );
@@ -115,17 +120,17 @@ void main() {
               builder: (context) {
                 return TextButton(
                   onPressed: () async {
-                    popResult =
-                        await Navigator.of(context).push<ProgrammeSessionAuthoringResult>(
-                      MaterialPageRoute<ProgrammeSessionAuthoringResult>(
-                        builder: (_) => EmbeddedSessionBuilderScreen(
-                          authoringContext: authoringContext,
-                          coordinator: buildCoordinator(),
-                          initialDraft: buildValidProgrammeSessionDraft(),
-                          loadExercises: () async => const [],
-                        ),
-                      ),
-                    );
+                    popResult = await Navigator.of(context)
+                        .push<ProgrammeSessionAuthoringResult>(
+                          MaterialPageRoute<ProgrammeSessionAuthoringResult>(
+                            builder: (_) => EmbeddedSessionBuilderScreen(
+                              authoringContext: authoringContext,
+                              coordinator: buildCoordinator(),
+                              initialDraft: buildValidProgrammeSessionDraft(),
+                              loadExercises: () async => const [],
+                            ),
+                          ),
+                        );
                   },
                   child: const Text('Open'),
                 );
@@ -166,8 +171,9 @@ void main() {
       expect(find.text('Save & Attach'), findsOneWidget);
     });
 
-    testWidgets('partial failure displays Retry adding to programme',
-        (tester) async {
+    testWidgets('partial failure displays Retry adding to programme', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: EmbeddedSessionBuilderScreen(

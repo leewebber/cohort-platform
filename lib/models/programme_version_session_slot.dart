@@ -14,8 +14,7 @@ class ProgrammeVersionSessionSlot {
     this.displayTitle,
     this.timeOfDay = ProgrammeSessionTimeOfDay.any,
     this.isOptional = false,
-    this.completionExpectation =
-        ProgrammeSessionCompletionExpectation.required,
+    this.completionExpectation = ProgrammeSessionCompletionExpectation.required,
     this.coachNote,
     this.athleteNote,
     this.createdAt,
@@ -36,7 +35,8 @@ class ProgrammeVersionSessionSlot {
   bool get isRequiredForProgression {
     if (isOptional) return false;
 
-    return completionExpectation != ProgrammeSessionCompletionExpectation.optional;
+    return completionExpectation !=
+        ProgrammeSessionCompletionExpectation.optional;
   }
 
   factory ProgrammeVersionSessionSlot.fromMap(Map<String, dynamic> map) {
@@ -46,8 +46,9 @@ class ProgrammeVersionSessionSlot {
       sessionOrder: map['session_order'] ?? 1,
       protocolId: _trimStringRequired(map['protocol_id']),
       displayTitle: _trimString(map['display_title']),
-      timeOfDay:
-          ProgrammeSessionTimeOfDayDb.fromDb(map['time_of_day']?.toString()),
+      timeOfDay: ProgrammeSessionTimeOfDayDb.fromDb(
+        map['time_of_day']?.toString(),
+      ),
       isOptional: map['is_optional'] == true,
       completionExpectation: ProgrammeSessionCompletionExpectationDb.fromDb(
         map['completion_expectation']?.toString(),

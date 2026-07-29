@@ -30,15 +30,17 @@ class CoachDecisionHandlerRegistry {
   CoachDecisionHandlerRegistry.fromHandlerMap(
     Map<CoachDecisionType, CoachDecisionHandler> handlerByType, {
     this.requireAllDecisionTypes = true,
-  }) : _handlers = _buildMapFromEntries(handlerByType.entries, requireAllDecisionTypes);
+  }) : _handlers = _buildMapFromEntries(
+         handlerByType.entries,
+         requireAllDecisionTypes,
+       );
 
   final Map<CoachDecisionType, CoachDecisionHandler> _handlers;
   final bool requireAllDecisionTypes;
 
   CoachDecisionHandler? handlerFor(CoachDecisionType type) => _handlers[type];
 
-  Iterable<CoachDecisionType> get registeredDecisionTypes =>
-      _handlers.keys;
+  Iterable<CoachDecisionType> get registeredDecisionTypes => _handlers.keys;
 
   List<CoachDecisionHandlerRegistryIssue> validate() {
     final issues = <CoachDecisionHandlerRegistryIssue>[];
@@ -100,9 +102,7 @@ class CoachDecisionHandlerRegistry {
     if (requireAllDecisionTypes) {
       for (final type in CoachDecisionType.values) {
         if (!map.containsKey(type)) {
-          throw ArgumentError(
-            'Missing handler for CoachDecisionType.$type',
-          );
+          throw ArgumentError('Missing handler for CoachDecisionType.$type');
         }
       }
     }

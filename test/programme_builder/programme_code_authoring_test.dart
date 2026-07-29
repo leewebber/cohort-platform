@@ -70,7 +70,9 @@ void main() {
       );
 
       expect(draft.primarySessionIntent, SessionIntent.upperBodyStrength);
-      expect(draft.secondarySessionIntents, [SessionIntent.upperBodyHypertrophy]);
+      expect(draft.secondarySessionIntents, [
+        SessionIntent.upperBodyHypertrophy,
+      ]);
       expect(draft.minimumViableDurationMin, 35);
       expect(draft.blocks.first.blockPriority, isNull);
       expect(draft.blocks[1].blockPriority, BlockPriority.essential);
@@ -78,53 +80,63 @@ void main() {
       expect(draft.blocks[1].adaptationPolicy?.canRemove, isFalse);
     });
 
-    test('metadata persists and reloads through row maps and block repository',
-        () async {
-      final draft = fullyTaggedUpperBodyStrengthSession(
-        protocolId: 'code-ubs-2',
-        programmeVersionId: testProgrammeVersionId,
-      );
+    test(
+      'metadata persists and reloads through row maps and block repository',
+      () async {
+        final draft = fullyTaggedUpperBodyStrengthSession(
+          protocolId: 'code-ubs-2',
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      final protocolStore = InMemoryProtocolRowStore()
-        ..upsertFromDraft(draft);
-      final blockRepo = InMemorySessionBlockRepository();
-      await blockRepo.replaceSessionBlocks(
-        sessionId: draft.protocolId,
-        blocks: draft.blocks,
-      );
+        final protocolStore = InMemoryProtocolRowStore()
+          ..upsertFromDraft(draft);
+        final blockRepo = InMemorySessionBlockRepository();
+        await blockRepo.replaceSessionBlocks(
+          sessionId: draft.protocolId,
+          blocks: draft.blocks,
+        );
 
-      final reloadedProtocol = protocolStore.loadDraft(
-        protocolId: draft.protocolId,
-        blocks: await blockRepo.getSessionBlocks(draft.protocolId),
-      );
+        final reloadedProtocol = protocolStore.loadDraft(
+          protocolId: draft.protocolId,
+          blocks: await blockRepo.getSessionBlocks(draft.protocolId),
+        );
 
-      expect(reloadedProtocol.primarySessionIntent, SessionIntent.upperBodyStrength);
-      expect(reloadedProtocol.minimumViableDurationMin, 35);
-      expect(reloadedProtocol.blocks[1].blockPriority, BlockPriority.essential);
-      expect(
-        reloadedProtocol.toProtocolMap()[
-            SessionAdaptationMetadataKeys.primarySessionIntent],
-        'upper_body_strength',
-      );
-    });
+        expect(
+          reloadedProtocol.primarySessionIntent,
+          SessionIntent.upperBodyStrength,
+        );
+        expect(reloadedProtocol.minimumViableDurationMin, 35);
+        expect(
+          reloadedProtocol.blocks[1].blockPriority,
+          BlockPriority.essential,
+        );
+        expect(
+          reloadedProtocol.toProtocolMap()[SessionAdaptationMetadataKeys
+              .primarySessionIntent],
+          'upper_body_strength',
+        );
+      },
+    );
 
-    test('code-created programme session loads via builder protocol service',
-        () async {
-      final builder = FakeProtocolBuilderService();
-      final persistence = ProgrammeCodeAuthoringPersistence(builder);
-      final draft = fullyTaggedUpperBodyStrengthSession(
-        protocolId: 'code-ubs-3',
-        programmeVersionId: testProgrammeVersionId,
-      );
+    test(
+      'code-created programme session loads via builder protocol service',
+      () async {
+        final builder = FakeProtocolBuilderService();
+        final persistence = ProgrammeCodeAuthoringPersistence(builder);
+        final draft = fullyTaggedUpperBodyStrengthSession(
+          protocolId: 'code-ubs-3',
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      await persistence.saveProgrammeSession(draft);
-      final loaded = await persistence.loadSession(draft.protocolId);
+        await persistence.saveProgrammeSession(draft);
+        final loaded = await persistence.loadSession(draft.protocolId);
 
-      expect(loaded.primarySessionIntent, SessionIntent.upperBodyStrength);
-      expect(loaded.blocks.length, draft.blocks.length);
-      expect(loaded.contentKind, TrainingContentKind.session);
-      expect(loaded.authoringScope, TrainingAuthoringScope.programmeOnly);
-    });
+        expect(loaded.primarySessionIntent, SessionIntent.upperBodyStrength);
+        expect(loaded.blocks.length, draft.blocks.length);
+        expect(loaded.contentKind, TrainingContentKind.session);
+        expect(loaded.authoringScope, TrainingAuthoringScope.programmeOnly);
+      },
+    );
 
     test('code-created reusable session remains reusable', () async {
       final builder = FakeProtocolBuilderService();
@@ -138,7 +150,10 @@ void main() {
         primarySessionIntent: SessionIntent.upperBodyStrength,
         minimumViableDurationMin: 30,
         blocks: [
-          block(type: SessionBlockType.strength, blockPriority: BlockPriority.primary),
+          block(
+            type: SessionBlockType.strength,
+            blockPriority: BlockPriority.primary,
+          ),
         ],
       );
 

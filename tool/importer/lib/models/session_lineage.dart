@@ -25,10 +25,7 @@ class SessionLineage {
   }
 
   Map<String, dynamic> toInsertMap() {
-    return {
-      if (id.isNotEmpty) 'id': id,
-      'display_name': displayName,
-    };
+    return {if (id.isNotEmpty) 'id': id, 'display_name': displayName};
   }
 
   SessionLineage copyWith({

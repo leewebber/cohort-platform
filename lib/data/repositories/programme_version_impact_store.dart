@@ -1,7 +1,6 @@
 import '../../features/performance/models/training_session_record.dart';
 import '../../features/performance/models/training_session_record_status.dart';
 import '../../features/performance/repositories/performance_record_store.dart';
-import '../../features/performance/repositories/performance_record_store.dart';
 import '../../features/programme_impact/models/programme_version_impact_models.dart';
 import '../../models/programme_assignment.dart';
 import '../../models/programme_slot_outcome.dart';
@@ -230,7 +229,9 @@ int countSkippedSlotOutcomes({
   required String programmeVersionId,
 }) {
   final assignmentIds = assignments
-      .where((assignment) => assignment.programmeVersionId == programmeVersionId)
+      .where(
+        (assignment) => assignment.programmeVersionId == programmeVersionId,
+      )
       .map((assignment) => assignment.id)
       .toSet();
 
@@ -285,7 +286,10 @@ int countDistinctSessionRevisions(
 int countDistinctSessionLineages(
   Iterable<ProgrammeVersionSessionReference> references,
 ) {
-  return references.map((reference) => reference.sessionLineageId).toSet().length;
+  return references
+      .map((reference) => reference.sessionLineageId)
+      .toSet()
+      .length;
 }
 
 List<ProgrammeVersionSessionReference> applySessionOccurrenceCounts(
@@ -362,7 +366,8 @@ Map<String, String> buildAssignmentVersionIndex(
   Iterable<ProgrammeAssignment> assignments,
 ) {
   return {
-    for (final assignment in assignments) assignment.id: assignment.programmeVersionId,
+    for (final assignment in assignments)
+      assignment.id: assignment.programmeVersionId,
   };
 }
 

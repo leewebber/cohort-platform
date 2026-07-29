@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ProgrammeEditorUnsavedAction {
-  saveAndExit,
-  discard,
-  cancel,
-}
+enum ProgrammeEditorUnsavedAction { saveAndExit, discard, cancel }
 
 Future<ProgrammeEditorUnsavedAction?> showProgrammeEditorUnsavedDialog({
   required BuildContext context,
@@ -13,9 +9,7 @@ Future<ProgrammeEditorUnsavedAction?> showProgrammeEditorUnsavedDialog({
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Unsaved changes'),
-      content: const Text(
-        'You have unsaved changes. Save before leaving?',
-      ),
+      content: const Text('You have unsaved changes. Save before leaving?'),
       actions: [
         TextButton(
           onPressed: () =>

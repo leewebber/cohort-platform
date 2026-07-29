@@ -18,12 +18,12 @@ class PreviousCircuitPerformanceService {
     int? excludeTrainingSessionId,
     int? prescribedIntervalCount,
   }) async {
-    final sessionData =
-        await circuitRepository.getLatestCompletedComparableSession(
-      athleteId: athleteId,
-      protocolId: protocolId,
-      excludeTrainingSessionId: excludeTrainingSessionId,
-    );
+    final sessionData = await circuitRepository
+        .getLatestCompletedComparableSession(
+          athleteId: athleteId,
+          protocolId: protocolId,
+          excludeTrainingSessionId: excludeTrainingSessionId,
+        );
 
     if (sessionData == null) {
       return null;
@@ -81,12 +81,11 @@ class PreviousCircuitPerformanceService {
       CircuitScoreType.roundsAndReps => _roundsAndRepsSummary(performance),
       CircuitScoreType.elapsedTime => _elapsedSummary(performance),
       CircuitScoreType.roundsCompleted => _intervalsSummary(
-          performance,
-          prescribedIntervalCount,
-        ),
-      CircuitScoreType.totalReps => performance.totalReps == null
-          ? null
-          : '${performance.totalReps} reps',
+        performance,
+        prescribedIntervalCount,
+      ),
+      CircuitScoreType.totalReps =>
+        performance.totalReps == null ? null : '${performance.totalReps} reps',
       CircuitScoreType.movementsCompleted =>
         performance.completedMovements == null
             ? null

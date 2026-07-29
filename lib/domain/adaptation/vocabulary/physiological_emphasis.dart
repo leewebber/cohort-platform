@@ -14,8 +14,7 @@ enum PhysiologicalEmphasis {
 extension PhysiologicalEmphasisDb on PhysiologicalEmphasis {
   String get dbValue {
     return switch (this) {
-      PhysiologicalEmphasis.neuromuscularStrength =>
-        'neuromuscular_strength',
+      PhysiologicalEmphasis.neuromuscularStrength => 'neuromuscular_strength',
       PhysiologicalEmphasis.hypertrophy => 'hypertrophy',
       PhysiologicalEmphasis.power => 'power',
       PhysiologicalEmphasis.aerobic => 'aerobic',

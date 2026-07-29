@@ -17,9 +17,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: AuthGate(controller: controller),
-      ),
+      MaterialApp(home: AuthGate(controller: controller)),
     );
     await tester.pumpAndSettle();
 

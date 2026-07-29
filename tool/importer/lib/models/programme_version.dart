@@ -70,10 +70,12 @@ class ProgrammeVersion {
       id: _trimStringRequired(map['id']),
       lineageId: _trimStringRequired(map['lineage_id']),
       versionNumber: map['version_number'] ?? 1,
-      lifecycleStatus:
-          ProgrammeLifecycleStatusDb.fromDb(map['lifecycle_status']?.toString()),
-      libraryScope:
-          ProgrammeLibraryScopeDb.fromDb(map['library_scope']?.toString()),
+      lifecycleStatus: ProgrammeLifecycleStatusDb.fromDb(
+        map['lifecycle_status']?.toString(),
+      ),
+      libraryScope: ProgrammeLibraryScopeDb.fromDb(
+        map['library_scope']?.toString(),
+      ),
       ownerType: ProgrammeOwnerTypeDb.fromDb(map['owner_type']?.toString()),
       ownerId: _trimString(map['owner_id']),
       organisationId: _trimString(map['organisation_id']),
@@ -167,15 +169,18 @@ class ProgrammeVersion {
       libraryScope: libraryScope ?? this.libraryScope,
       ownerType: ownerType ?? this.ownerType,
       ownerId: clearOwnerId ? null : (ownerId ?? this.ownerId),
-      organisationId:
-          clearOrganisationId ? null : (organisationId ?? this.organisationId),
+      organisationId: clearOrganisationId
+          ? null
+          : (organisationId ?? this.organisationId),
       createdBy: clearCreatedBy ? null : (createdBy ?? this.createdBy),
       name: name ?? this.name,
       description: clearDescription ? null : (description ?? this.description),
-      durationWeeks:
-          clearDurationWeeks ? null : (durationWeeks ?? this.durationWeeks),
-      targetAthlete:
-          clearTargetAthlete ? null : (targetAthlete ?? this.targetAthlete),
+      durationWeeks: clearDurationWeeks
+          ? null
+          : (durationWeeks ?? this.durationWeeks),
+      targetAthlete: clearTargetAthlete
+          ? null
+          : (targetAthlete ?? this.targetAthlete),
       difficulty: clearDifficulty ? null : (difficulty ?? this.difficulty),
       primaryGoal: clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
       equipmentRequirements: clearEquipmentRequirements

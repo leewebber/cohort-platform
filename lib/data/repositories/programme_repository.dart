@@ -13,18 +13,11 @@ class ProgrammeRepository extends BaseRepository<Programme> {
   }
 
   Future<List<Programme>> getProgrammes() {
-    return getWhere(
-      column: 'published',
-      value: true,
-      orderBy: 'name',
-    );
+    return getWhere(column: 'published', value: true, orderBy: 'name');
   }
 
   Future<Programme?> getProgrammeById(String programmeId) async {
-    final results = await getWhere(
-      column: 'programme_id',
-      value: programmeId,
-    );
+    final results = await getWhere(column: 'programme_id', value: programmeId);
 
     if (results.isEmpty) return null;
 
@@ -32,8 +25,7 @@ class ProgrammeRepository extends BaseRepository<Programme> {
   }
 }
 
-class ProgrammeWeekRepository
-    extends BaseRepository<ProgrammeWeek> {
+class ProgrammeWeekRepository extends BaseRepository<ProgrammeWeek> {
   @override
   String get tableName => 'programme_weeks';
 
@@ -42,9 +34,7 @@ class ProgrammeWeekRepository
     return ProgrammeWeek.fromMap(map);
   }
 
-  Future<List<ProgrammeWeek>> getWeeksForProgramme(
-    String programmeId,
-  ) {
+  Future<List<ProgrammeWeek>> getWeeksForProgramme(String programmeId) {
     return getWhere(
       column: 'programme_id',
       value: programmeId,
@@ -53,8 +43,7 @@ class ProgrammeWeekRepository
   }
 }
 
-class ProgrammeSessionRepository
-    extends BaseRepository<ProgrammeSession> {
+class ProgrammeSessionRepository extends BaseRepository<ProgrammeSession> {
   @override
   String get tableName => 'programme_sessions';
 
@@ -63,9 +52,7 @@ class ProgrammeSessionRepository
     return ProgrammeSession.fromMap(map);
   }
 
-  Future<List<ProgrammeSession>> getSessionsForProgramme(
-    String programmeId,
-  ) {
+  Future<List<ProgrammeSession>> getSessionsForProgramme(String programmeId) {
     return getWhere(
       column: 'programme_id',
       value: programmeId,

@@ -27,17 +27,20 @@ class CoachAthleteService {
     ProgrammeAssignmentService? assignmentService,
     CoachAthleteInviteCodeGenerator? codeGenerator,
     Duration inviteTtl = const Duration(days: 7),
-  })  : _relationshipRepository =
-            relationshipRepository ?? const SupabaseCoachAthleteRelationshipRepository(),
-        _inviteRepository =
-            inviteRepository ?? const SupabaseCoachAthleteInviteRepository(),
-        _profileRepository = profileRepository ?? const SupabaseProfileRepository(),
-        _assignmentStore = assignmentStore,
-        _versionStore = versionStore,
-        _catalogService = catalogService,
-        _assignmentService = assignmentService,
-        _codeGenerator = codeGenerator ?? const CoachAthleteInviteCodeGenerator(),
-        _inviteTtl = inviteTtl;
+  }) : _relationshipRepository =
+           relationshipRepository ??
+           const SupabaseCoachAthleteRelationshipRepository(),
+       _inviteRepository =
+           inviteRepository ?? const SupabaseCoachAthleteInviteRepository(),
+       _profileRepository =
+           profileRepository ?? const SupabaseProfileRepository(),
+       _assignmentStore = assignmentStore,
+       _versionStore = versionStore,
+       _catalogService = catalogService,
+       _assignmentService = assignmentService,
+       _codeGenerator =
+           codeGenerator ?? const CoachAthleteInviteCodeGenerator(),
+       _inviteTtl = inviteTtl;
 
   final CoachAthleteRelationshipRepository _relationshipRepository;
   final CoachAthleteInviteRepository _inviteRepository;
@@ -95,13 +98,15 @@ class CoachAthleteService {
     }
 
     try {
-      final relationships =
-          await _relationshipRepository.listActiveForCoach(coachId);
+      final relationships = await _relationshipRepository.listActiveForCoach(
+        coachId,
+      );
       final entries = <CoachAthleteRosterEntry>[];
 
       for (final relationship in relationships) {
-        final profile =
-            await _profileRepository.getProfile(relationship.athleteId);
+        final profile = await _profileRepository.getProfile(
+          relationship.athleteId,
+        );
         final assignmentSummary = await _loadAssignmentSummary(
           relationship.athleteId,
         );
@@ -128,7 +133,7 @@ class CoachAthleteService {
   }
 
   Future<CoachAthleteOperationResult<List<CoachAthleteInvite>>>
-      listPendingInvites() async {
+  listPendingInvites() async {
     final coachId = _coachId;
     if (coachId == null) {
       return CoachAthleteOperationResult.failure(
@@ -148,7 +153,9 @@ class CoachAthleteService {
     }
   }
 
-  Future<CoachAthleteOperationResult<void>> revokeInvite(String inviteId) async {
+  Future<CoachAthleteOperationResult<void>> revokeInvite(
+    String inviteId,
+  ) async {
     final coachId = _coachId;
     if (coachId == null) {
       return CoachAthleteOperationResult.failure(
@@ -208,8 +215,9 @@ class CoachAthleteService {
     }
 
     try {
-      final relationship =
-          await _relationshipRepository.getActiveForAthlete(athleteId);
+      final relationship = await _relationshipRepository.getActiveForAthlete(
+        athleteId,
+      );
       return CoachAthleteOperationResult.success(relationship);
     } on ProgrammeStoreException catch (error) {
       return CoachAthleteOperationResult.failure(
@@ -219,9 +227,8 @@ class CoachAthleteService {
     }
   }
 
-  Future<CoachAthleteOperationResult<ProgrammeAssignment?>> getAthleteAssignment(
-    String athleteId,
-  ) async {
+  Future<CoachAthleteOperationResult<ProgrammeAssignment?>>
+  getAthleteAssignment(String athleteId) async {
     final coachId = _coachId;
     if (coachId == null) {
       return CoachAthleteOperationResult.failure(
@@ -260,7 +267,7 @@ class CoachAthleteService {
   }
 
   Future<CoachAthleteOperationResult<List<ProgrammeCatalogEntry>>>
-      listPublishedProgrammes() async {
+  listPublishedProgrammes() async {
     final coachId = _coachId;
     if (coachId == null) {
       return CoachAthleteOperationResult.failure(
@@ -292,7 +299,7 @@ class CoachAthleteService {
   }
 
   Future<CoachAthleteOperationResult<ProgrammeAssignmentOperationSummary>>
-      assignProgrammeToAthlete({
+  assignProgrammeToAthlete({
     required String athleteId,
     required String programmeVersionId,
     required DateTime startedAt,
@@ -364,9 +371,7 @@ class CoachAthleteService {
 
     return _AssignmentSummary(
       programmeName: version?.name ?? assignment.lineageCode,
-      versionLabel: version == null
-          ? null
-          : 'Version ${version.versionNumber}',
+      versionLabel: version == null ? null : 'Version ${version.versionNumber}',
     );
   }
 
@@ -390,7 +395,8 @@ class CoachAthleteService {
         normalized.contains('already linked to this coach')) {
       return CoachAthleteOperationStatus.alreadyLinked;
     }
-    if (normalized.contains('not valid') || normalized.contains('valid invitation')) {
+    if (normalized.contains('not valid') ||
+        normalized.contains('valid invitation')) {
       return CoachAthleteOperationStatus.invalidInvite;
     }
     return CoachAthleteOperationStatus.failed;
@@ -442,10 +448,7 @@ class ProgrammeAssignmentOperationSummary {
 }
 
 class _AssignmentSummary {
-  const _AssignmentSummary({
-    required this.programmeName,
-    this.versionLabel,
-  });
+  const _AssignmentSummary({required this.programmeName, this.versionLabel});
 
   final String programmeName;
   final String? versionLabel;

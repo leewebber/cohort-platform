@@ -45,22 +45,23 @@ class CohortProtocolCustomisationServices {
     TrainingContentIdGenerator? idGenerator,
     CurrentCoachIdentity? coachIdentity,
   }) {
-    final protocolService =
-        protocolBuilderService ?? ProtocolBuilderService();
+    final protocolService = protocolBuilderService ?? ProtocolBuilderService();
 
     return create(
       protocolBuilderService: protocolService,
-      programmeSessionCoordinator: ProgrammeSessionAuthoringServices.createCoordinator(
-        controller: controller,
-        protocolBuilderService: protocolService,
-        idGenerator: idGenerator,
-        coachIdentity: coachIdentity,
-      ),
-      librarySessionCoordinator: SessionLibraryAuthoringServices.createCoordinator(
-        protocolBuilderService: protocolService,
-        idGenerator: idGenerator,
-        coachIdentity: coachIdentity,
-      ),
+      programmeSessionCoordinator:
+          ProgrammeSessionAuthoringServices.createCoordinator(
+            controller: controller,
+            protocolBuilderService: protocolService,
+            idGenerator: idGenerator,
+            coachIdentity: coachIdentity,
+          ),
+      librarySessionCoordinator:
+          SessionLibraryAuthoringServices.createCoordinator(
+            protocolBuilderService: protocolService,
+            idGenerator: idGenerator,
+            coachIdentity: coachIdentity,
+          ),
       coachIdentity: coachIdentity,
       programmeController: controller,
     );
@@ -71,8 +72,7 @@ class CohortProtocolCustomisationServices {
     TrainingContentIdGenerator? idGenerator,
     CurrentCoachIdentity? coachIdentity,
   }) {
-    final protocolService =
-        protocolBuilderService ?? ProtocolBuilderService();
+    final protocolService = protocolBuilderService ?? ProtocolBuilderService();
 
     return create(
       protocolBuilderService: protocolService,
@@ -82,11 +82,12 @@ class CohortProtocolCustomisationServices {
         idGenerator: idGenerator ?? const UuidTrainingContentIdGenerator(),
         coachIdentity: coachIdentity ?? const AuthenticatedCoachIdentity(),
       ),
-      librarySessionCoordinator: SessionLibraryAuthoringServices.createCoordinator(
-        protocolBuilderService: protocolService,
-        idGenerator: idGenerator,
-        coachIdentity: coachIdentity,
-      ),
+      librarySessionCoordinator:
+          SessionLibraryAuthoringServices.createCoordinator(
+            protocolBuilderService: protocolService,
+            idGenerator: idGenerator,
+            coachIdentity: coachIdentity,
+          ),
       coachIdentity: coachIdentity,
     );
   }
@@ -107,8 +108,7 @@ class _NoOpAssignmentPort implements ProgrammeSessionAssignmentPort {
     required String weekLocalId,
     required String dayLocalId,
     required String slotLocalId,
-  }) =>
-      false;
+  }) => false;
 
   @override
   Future<ProgrammeBuilderEditResult> assignSession({

@@ -35,10 +35,9 @@ class AthleteStateSupabaseStore implements AthleteStateStore {
   @override
   Future<void> upsertProjection(AthleteState projection) async {
     try {
-      await SupabaseService.client.from(_tableName).upsert(
-        projection.toUpsertMap(),
-        onConflict: _upsertConflict,
-      );
+      await SupabaseService.client
+          .from(_tableName)
+          .upsert(projection.toUpsertMap(), onConflict: _upsertConflict);
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
@@ -57,9 +56,9 @@ class AthleteStateSupabaseStore implements AthleteStateStore {
     try {
       await SupabaseService.client
           .from(_tableName)
-          .update(AthleteState(
-            athleteId: athleteId,
-          ).toProgrammeProjectionClearMap())
+          .update(
+            AthleteState(athleteId: athleteId).toProgrammeProjectionClearMap(),
+          )
           .eq('athlete_id', athleteId.trim());
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(

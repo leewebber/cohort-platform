@@ -18,9 +18,9 @@ class StrengthPrescriptionDisplay extends StatelessWidget {
   StrengthPrescriptionDisplay.fromSummary({
     super.key,
     required SessionExecutionExerciseSummary summary,
-  })  : exerciseName = summary.athleteLabel,
-        prescription = summary.prescription,
-        coachCue = summary.prescription?.coachCue;
+  }) : exerciseName = summary.athleteLabel,
+       prescription = summary.prescription,
+       coachCue = summary.prescription?.coachCue;
 
   final String exerciseName;
   final StrengthExercisePrescription? prescription;
@@ -61,10 +61,7 @@ class StrengthPrescriptionDisplay extends StatelessWidget {
 }
 
 class StrengthPrescriptionList extends StatelessWidget {
-  const StrengthPrescriptionList({
-    super.key,
-    required this.exercises,
-  });
+  const StrengthPrescriptionList({super.key, required this.exercises});
 
   final List<SessionExecutionExerciseSummary> exercises;
 

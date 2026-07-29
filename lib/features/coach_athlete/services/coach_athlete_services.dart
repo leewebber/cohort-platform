@@ -15,11 +15,13 @@ class CoachAthleteServices {
   }) {
     final coachId = CurrentUserSession.maybeInstance?.coachId ?? '';
     return CoachAthleteService(
-      relationshipRepository: const SupabaseCoachAthleteRelationshipRepository(),
+      relationshipRepository:
+          const SupabaseCoachAthleteRelationshipRepository(),
       inviteRepository: const SupabaseCoachAthleteInviteRepository(),
       assignmentStore: const ProgrammeAssignmentSupabaseStore(),
       versionStore: const ProgrammeVersionSupabaseStore(),
-      catalogService: catalogService ??
+      catalogService:
+          catalogService ??
           ProgrammeCatalogServiceImpl(
             versionStore: const ProgrammeVersionSupabaseStore(),
             coachId: coachId,

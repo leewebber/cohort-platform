@@ -94,8 +94,9 @@ class AdaptationConstraintContext {
       restrictedBodyRegions:
           restrictedBodyRegions ?? this.restrictedBodyRegions,
       excludedExerciseIds: excludedExerciseIds ?? this.excludedExerciseIds,
-      maxPermittedImpact:
-          clearMaxImpact ? null : (maxPermittedImpact ?? this.maxPermittedImpact),
+      maxPermittedImpact: clearMaxImpact
+          ? null
+          : (maxPermittedImpact ?? this.maxPermittedImpact),
       extensions: extensions ?? this.extensions,
     );
   }

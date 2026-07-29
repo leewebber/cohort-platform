@@ -45,11 +45,7 @@ void main() {
 
     test('conversion is deterministic for same input', () {
       const steps = [
-        ProtocolStepDraft(
-          localId: 'step-1',
-          stepOrder: 1,
-          title: 'A',
-        ),
+        ProtocolStepDraft(localId: 'step-1', stepOrder: 1, title: 'A'),
       ];
 
       final first = converter.convertStepsToBlocks(steps);
@@ -57,7 +53,10 @@ void main() {
 
       expect(first.first.title, second.first.title);
       expect(first.first.content, second.first.content);
-      expect(first.first.linkedExercises.length, second.first.linkedExercises.length);
+      expect(
+        first.first.linkedExercises.length,
+        second.first.linkedExercises.length,
+      );
     });
   });
 }

@@ -5,10 +5,7 @@ import '../../../../core/theme/spacing.dart';
 import '../../../../core/theme/text_styles.dart';
 
 class GovernanceCountRow extends StatelessWidget {
-  const GovernanceCountRow({
-    super.key,
-    required this.label,
-  });
+  const GovernanceCountRow({super.key, required this.label});
 
   final String label;
 

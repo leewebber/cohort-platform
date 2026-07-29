@@ -107,12 +107,10 @@ extension BlockPerformanceCaptureModeDb on BlockPerformanceCaptureMode {
 
     return switch (blockType) {
       SessionBlockType.strength ||
-      SessionBlockType.accessory =>
-        BlockPerformanceCaptureMode.strength,
+      SessionBlockType.accessory => BlockPerformanceCaptureMode.strength,
       SessionBlockType.warmUp ||
       SessionBlockType.core ||
-      SessionBlockType.coolDown =>
-        BlockPerformanceCaptureMode.completion,
+      SessionBlockType.coolDown => BlockPerformanceCaptureMode.completion,
       SessionBlockType.conditioning => BlockPerformanceCaptureMode.completion,
       SessionBlockType.skill => BlockPerformanceCaptureMode.completion,
       SessionBlockType.custom => BlockPerformanceCaptureMode.automatic,

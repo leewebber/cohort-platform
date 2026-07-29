@@ -49,9 +49,7 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Training History'),
-      ),
+      appBar: AppBar(title: const Text('Training History')),
       body: SafeArea(
         top: false,
         child: RefreshIndicator(
@@ -63,9 +61,7 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
                 return ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.all(24),
-                  children: const [
-                    Center(child: Text('Loading history…')),
-                  ],
+                  children: const [Center(child: Text('Loading history…'))],
                 );
               }
               if (snapshot.hasError) {

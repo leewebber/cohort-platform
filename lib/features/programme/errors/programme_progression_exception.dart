@@ -1,10 +1,6 @@
 /// Typed programme progression failure.
 class ProgrammeProgressionException implements Exception {
-  ProgrammeProgressionException(
-    this.code,
-    this.message, {
-    this.details,
-  });
+  ProgrammeProgressionException(this.code, this.message, {this.details});
 
   final ProgrammeProgressionErrorCode code;
   final String message;

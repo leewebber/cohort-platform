@@ -1,9 +1,5 @@
 /// Canonical technical complexity (replaces free-text protocol/exercise labels).
-enum CanonicalTechnicalComplexity {
-  beginner,
-  intermediate,
-  advanced,
-}
+enum CanonicalTechnicalComplexity { beginner, intermediate, advanced }
 
 extension CanonicalTechnicalComplexityDb on CanonicalTechnicalComplexity {
   String get dbValue => name;

@@ -51,18 +51,20 @@ class StrengthSessionView extends StatefulWidget {
     StrengthSetPerformanceMapper? performanceMapper,
     StrengthProgressService? progressService,
     StrengthSessionHydrator? sessionHydrator,
-  })  : setRepository = setRepository ?? const TrainingSessionSetRepository(),
-        performanceMapper = performanceMapper ?? const StrengthSetPerformanceMapper(),
-        progressService = progressService ?? const StrengthProgressService(),
-        sessionHydrator = sessionHydrator ?? const StrengthSessionHydrator();
+  }) : setRepository = setRepository ?? const TrainingSessionSetRepository(),
+       performanceMapper =
+           performanceMapper ?? const StrengthSetPerformanceMapper(),
+       progressService = progressService ?? const StrengthProgressService(),
+       sessionHydrator = sessionHydrator ?? const StrengthSessionHydrator();
 
   final String sessionTitle;
   final List<SessionStep> steps;
-  final Future<void> Function(StrengthSessionFinishSummary summary) onFinishSession;
+  final Future<void> Function(StrengthSessionFinishSummary summary)
+  onFinishSession;
   final int? trainingSessionId;
   final String? athleteId;
   final void Function(StrengthSessionLeaveCoordinator coordinator)?
-      onLeaveCoordinatorReady;
+  onLeaveCoordinatorReady;
   final TrainingSessionSetRepository setRepository;
   final StrengthSetPerformanceMapper performanceMapper;
   final StrengthProgressService progressService;
@@ -142,7 +144,8 @@ class _StrengthExerciseLog {
 
 class _StrengthSessionViewState extends State<StrengthSessionView> {
   late final Map<int, _StrengthExerciseLog> _exerciseLogs;
-  late final Map<int, Future<PreviousExercisePerformance?>> _previousPerformanceFutures;
+  late final Map<int, Future<PreviousExercisePerformance?>>
+  _previousPerformanceFutures;
   late final StrengthRestTimerController _restTimerController;
   final Set<int> _completedStepNumbers = {};
   StrengthRestTimerState? _restTimerState;
@@ -281,9 +284,8 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     setState(() => _isHydratingSession = true);
 
     try {
-      final persistedSets = await widget.setRepository.getSetsForTrainingSession(
-        trainingSessionId,
-      );
+      final persistedSets = await widget.setRepository
+          .getSetsForTrainingSession(trainingSessionId);
 
       if (!mounted) {
         return;
@@ -360,45 +362,47 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: CohortColors.surfaceRaised,
-          title: Text(
-            'Leave this session?',
-            style: CohortTextStyles.cardTitle,
-          ),
+          title: Text('Leave this session?', style: CohortTextStyles.cardTitle),
           content: Text(
             'Your completed sets are saved. You can resume this session later from Home.',
             style: CohortTextStyles.body,
           ),
           actions: [
             TextButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(SessionLeaveDecision.resumeLater),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.resumeLater),
               child: Text(
                 'Resume later',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(SessionLeaveDecision.endEarly),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.endEarly),
               child: Text(
                 'End session early',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
             ),
             TextButton(
               onPressed: () =>
                   Navigator.of(dialogContext).pop(SessionLeaveDecision.cancel),
-              child: Text(
-                'Cancel',
-                style: CohortTextStyles.body,
-              ),
+              child: Text('Cancel', style: CohortTextStyles.body),
             ),
           ],
         );
       },
     );
 
-    if (!context.mounted || choice == null || choice == SessionLeaveDecision.cancel) {
+    if (!context.mounted ||
+        choice == null ||
+        choice == SessionLeaveDecision.cancel) {
       return;
     }
 
@@ -447,10 +451,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     for (final step in widget.steps) {
       final log = _logFor(step.stepNumber);
       for (final set in log.sets.where((entry) => entry.completed)) {
-        await _persistCompletedSet(
-          stepNumber: step.stepNumber,
-          entry: set,
-        );
+        await _persistCompletedSet(stepNumber: step.stepNumber, entry: set);
       }
 
       await _persistExerciseNote(step.stepNumber);
@@ -465,9 +466,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     setState(() {
       final log = _logFor(stepNumber);
       log.sets = log.sets
-          .map(
-            (set) => set.localId == localId ? transform(set) : set,
-          )
+          .map((set) => set.localId == localId ? transform(set) : set)
           .toList();
     });
   }
@@ -477,10 +476,10 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       final log = _logFor(stepNumber);
       final nextSetNumber = log.sets.isEmpty
           ? 1
-          : log.sets.map((set) => set.setNumber).reduce(
-                (left, right) => left > right ? left : right,
-              ) +
-              1;
+          : log.sets
+                    .map((set) => set.setNumber)
+                    .reduce((left, right) => left > right ? left : right) +
+                1;
 
       final entry = StrengthSetEntry(
         localId: 'extra-$stepNumber-${DateTime.now().microsecondsSinceEpoch}',
@@ -491,21 +490,16 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       );
       _preserveSetLocalId(entry.localId);
 
-      log.sets = [
-        ...log.sets,
-        entry,
-      ];
+      log.sets = [...log.sets, entry];
     });
   }
 
-  void _removeExtraSet({
-    required int stepNumber,
-    required String localId,
-  }) {
+  void _removeExtraSet({required int stepNumber, required String localId}) {
     setState(() {
       final log = _logFor(stepNumber);
-      log.sets =
-          log.sets.where((set) => set.localId != localId).toList(growable: true);
+      log.sets = log.sets
+          .where((set) => set.localId != localId)
+          .toList(growable: true);
     });
   }
 
@@ -548,9 +542,9 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
   }) async {
     _preserveSetLocalId(localId);
 
-    final previousSet = _logFor(stepNumber).sets.firstWhere(
-          (set) => set.localId == localId,
-        );
+    final previousSet = _logFor(
+      stepNumber,
+    ).sets.firstWhere((set) => set.localId == localId);
     final wasCompleted = previousSet.completed;
 
     _updateSet(
@@ -565,9 +559,9 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       ),
     );
 
-    final updated = _logFor(stepNumber).sets.firstWhere(
-          (set) => set.localId == localId,
-        );
+    final updated = _logFor(
+      stepNumber,
+    ).sets.firstWhere((set) => set.localId == localId);
 
     if (!wasCompleted && updated.completed) {
       _maybeStartRestTimer(
@@ -577,10 +571,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     }
 
     if (widget.trainingSessionId != null && updated.completed) {
-      await _persistCompletedSet(
-        stepNumber: stepNumber,
-        entry: updated,
-      );
+      await _persistCompletedSet(stepNumber: stepNumber, entry: updated);
     }
   }
 
@@ -629,10 +620,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       return;
     }
 
-    await _persistCompletedSet(
-      stepNumber: stepNumber,
-      entry: finalSet,
-    );
+    await _persistCompletedSet(stepNumber: stepNumber, entry: finalSet);
   }
 
   void _maybeStartRestTimer({
@@ -653,7 +641,9 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
     setState(() => _highlightedSetLocalId = null);
 
     _restTimerController.start(
-      exerciseLocalId: StrengthRestTimerState.exerciseLocalIdForStep(stepNumber),
+      exerciseLocalId: StrengthRestTimerState.exerciseLocalIdForStep(
+        stepNumber,
+      ),
       setLocalId: completedSetLocalId,
       totalSeconds: parsedRest.totalSeconds,
       prescribedRestLabel: parsedRest.displayLabel,
@@ -688,7 +678,9 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
 
     if (nextSetLocalId != null) {
       final log = _logFor(stepNumber);
-      final set = log.sets.firstWhere((entry) => entry.localId == nextSetLocalId);
+      final set = log.sets.firstWhere(
+        (entry) => entry.localId == nextSetLocalId,
+      );
       final label = set.isExtraSet
           ? 'Extra set ${set.setNumber}'
           : 'Set ${set.setNumber}';
@@ -854,10 +846,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          message,
-          style: CohortTextStyles.body,
-        ),
+        content: Text(message, style: CohortTextStyles.body),
         backgroundColor: CohortColors.surfaceRaised,
         behavior: SnackBarBehavior.floating,
       ),
@@ -883,10 +872,7 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
         ),
         if (_isHydratingSession) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            'Restoring saved session...',
-            style: CohortTextStyles.small,
-          ),
+          Text('Restoring saved session...', style: CohortTextStyles.small),
         ],
         if (_restTimerState != null) ...[
           const SizedBox(height: CohortSpacing.md),
@@ -907,24 +893,25 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
             showPreviousPerformance: _showPreviousPerformance,
             previousPerformanceFuture:
                 _previousPerformanceFutures[widget.steps[index].stepNumber],
-            onSetChanged: ({
-              required String localId,
-              String? actualReps,
-              String? load,
-              bool? completed,
-              int? rpe,
-              bool clearRpe = false,
-            }) {
-              _handleSetChanged(
-                stepNumber: widget.steps[index].stepNumber,
-                localId: localId,
-                actualReps: actualReps,
-                load: load,
-                completed: completed,
-                rpe: rpe,
-                clearRpe: clearRpe,
-              );
-            },
+            onSetChanged:
+                ({
+                  required String localId,
+                  String? actualReps,
+                  String? load,
+                  bool? completed,
+                  int? rpe,
+                  bool clearRpe = false,
+                }) {
+                  _handleSetChanged(
+                    stepNumber: widget.steps[index].stepNumber,
+                    localId: localId,
+                    actualReps: actualReps,
+                    load: load,
+                    completed: completed,
+                    rpe: rpe,
+                    clearRpe: clearRpe,
+                  );
+                },
             onExerciseNoteChanged: (value) => _handleExerciseNoteChanged(
               widget.steps[index].stepNumber,
               value,
@@ -936,10 +923,8 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
             ),
             onCompleteExercise: () =>
                 _completeExercise(widget.steps[index].stepNumber),
-            onSeeFullHistory: () => _openExerciseHistory(
-              context,
-              widget.steps[index],
-            ),
+            onSeeFullHistory: () =>
+                _openExerciseHistory(context, widget.steps[index]),
           ),
         ],
         if (_isRealSession && !_allExercisesComplete) ...[
@@ -992,7 +977,8 @@ class _StrengthExerciseCard extends StatelessWidget {
     bool? completed,
     int? rpe,
     bool clearRpe,
-  }) onSetChanged;
+  })
+  onSetChanged;
   final ValueChanged<String> onExerciseNoteChanged;
   final VoidCallback onAddSet;
   final void Function(String localId) onRemoveExtraSet;
@@ -1006,11 +992,7 @@ class _StrengthExerciseCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.check_circle,
-              size: 20,
-              color: CohortColors.success,
-            ),
+            Icon(Icons.check_circle, size: 20, color: CohortColors.success),
             const SizedBox(width: CohortSpacing.md),
             Expanded(
               child: Column(
@@ -1021,10 +1003,7 @@ class _StrengthExerciseCard extends StatelessWidget {
                     style: CohortTextStyles.eyebrow,
                   ),
                   const SizedBox(height: CohortSpacing.xs),
-                  Text(
-                    log.step.title,
-                    style: CohortTextStyles.cardTitle,
-                  ),
+                  Text(log.step.title, style: CohortTextStyles.cardTitle),
                   const SizedBox(height: CohortSpacing.sm),
                   Text(
                     '${log.prescribedCompletedCount}/${log.prescribedSetCount} prescribed sets • '
@@ -1065,28 +1044,16 @@ class _StrengthExerciseCard extends StatelessWidget {
             style: CohortTextStyles.eyebrow,
           ),
           const SizedBox(height: CohortSpacing.lg),
-          Text(
-            log.step.title,
-            style: CohortTextStyles.h2,
-          ),
+          Text(log.step.title, style: CohortTextStyles.h2),
           if (log.step.prescription != null) ...[
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              log.step.prescription!,
-              style: CohortTextStyles.body,
-            ),
+            Text(log.step.prescription!, style: CohortTextStyles.body),
           ],
           if (log.step.coachCue != null) ...[
             const SizedBox(height: CohortSpacing.xl),
-            Text(
-              'Coach Cue',
-              style: CohortTextStyles.eyebrow,
-            ),
+            Text('Coach Cue', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              log.step.coachCue!,
-              style: CohortTextStyles.body,
-            ),
+            Text(log.step.coachCue!, style: CohortTextStyles.body),
           ],
           const SizedBox(height: CohortSpacing.xl),
           if (showPreviousPerformance && previousPerformanceFuture != null)
@@ -1095,8 +1062,10 @@ class _StrengthExerciseCard extends StatelessWidget {
               builder: (context, snapshot) {
                 return _PreviousPerformanceSection(
                   performance: snapshot.data,
-                  isLoading: snapshot.connectionState == ConnectionState.waiting,
-                  canOpenFullHistory: onSeeFullHistory != null &&
+                  isLoading:
+                      snapshot.connectionState == ConnectionState.waiting,
+                  canOpenFullHistory:
+                      onSeeFullHistory != null &&
                       (snapshot.data?.hasHistory ?? false),
                   onSeeFullHistory: onSeeFullHistory,
                 );
@@ -1160,7 +1129,9 @@ class _StrengthRestTimerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accentColor = state.finished ? CohortColors.success : CohortColors.olive;
+    final accentColor = state.finished
+        ? CohortColors.success
+        : CohortColors.olive;
 
     return Container(
       width: double.infinity,
@@ -1184,10 +1155,7 @@ class _StrengthRestTimerBar extends StatelessWidget {
           ),
           if (!state.finished) ...[
             const SizedBox(height: CohortSpacing.xs),
-            Text(
-              'of ${state.totalLabel}',
-              style: CohortTextStyles.small,
-            ),
+            Text('of ${state.totalLabel}', style: CohortTextStyles.small),
           ],
           if (state.prescribedRestLabel != null) ...[
             const SizedBox(height: CohortSpacing.xs),
@@ -1198,10 +1166,7 @@ class _StrengthRestTimerBar extends StatelessWidget {
           ],
           if (state.nextTargetLabel != null) ...[
             const SizedBox(height: CohortSpacing.xs),
-            Text(
-              state.nextTargetLabel!,
-              style: CohortTextStyles.small,
-            ),
+            Text(state.nextTargetLabel!, style: CohortTextStyles.small),
           ],
           const SizedBox(height: CohortSpacing.md),
           Wrap(
@@ -1226,10 +1191,7 @@ class _StrengthRestTimerBar extends StatelessWidget {
                   foregroundColor: CohortColors.textSecondary,
                   side: const BorderSide(color: CohortColors.border),
                 ),
-                child: Text(
-                  'Skip',
-                  style: CohortTextStyles.small,
-                ),
+                child: Text('Skip', style: CohortTextStyles.small),
               ),
               if (!state.finished)
                 OutlinedButton(
@@ -1238,10 +1200,7 @@ class _StrengthRestTimerBar extends StatelessWidget {
                     foregroundColor: CohortColors.olive,
                     side: const BorderSide(color: CohortColors.borderStrong),
                   ),
-                  child: Text(
-                    '+15 sec',
-                    style: CohortTextStyles.small,
-                  ),
+                  child: Text('+15 sec', style: CohortTextStyles.small),
                 ),
             ],
           ),
@@ -1281,18 +1240,12 @@ class _PreviousPerformanceSection extends StatelessWidget {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'LAST PERFORMANCE',
-                  style: CohortTextStyles.eyebrow,
-                ),
+                Text('LAST PERFORMANCE', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.sm),
                 for (final set in performance!.sets)
                   Padding(
                     padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-                    child: Text(
-                      set.displayLine,
-                      style: CohortTextStyles.body,
-                    ),
+                    child: Text(set.displayLine, style: CohortTextStyles.body),
                   ),
                 if (canOpenFullHistory && onSeeFullHistory != null) ...[
                   const SizedBox(height: CohortSpacing.sm),
@@ -1331,8 +1284,7 @@ Color _exerciseProgressAccent(ExerciseProgressType progressType) {
     ExerciseProgressType.loadProgress ||
     ExerciseProgressType.repProgress ||
     ExerciseProgressType.volumeProgress ||
-    ExerciseProgressType.rpeProgress =>
-      CohortColors.success,
+    ExerciseProgressType.rpeProgress => CohortColors.success,
     ExerciseProgressType.matchedPerformance => CohortColors.olive,
     ExerciseProgressType.mixedResult => CohortColors.warning,
     ExerciseProgressType.insufficientData => CohortColors.textSecondary,
@@ -1356,7 +1308,8 @@ class _StrengthSetRow extends StatefulWidget {
     bool? completed,
     int? rpe,
     bool clearRpe,
-  }) onChanged;
+  })
+  onChanged;
   final VoidCallback? onRemove;
 
   @override
@@ -1371,8 +1324,9 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
   void initState() {
     super.initState();
     _loadController = TextEditingController(text: widget.set.load ?? '');
-    _actualRepsController =
-        TextEditingController(text: widget.set.actualReps ?? '');
+    _actualRepsController = TextEditingController(
+      text: widget.set.actualReps ?? '',
+    );
   }
 
   @override
@@ -1404,8 +1358,8 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
     final borderColor = widget.highlighted
         ? CohortColors.olive
         : set.completed
-            ? CohortColors.success
-            : CohortColors.border;
+        ? CohortColors.success
+        : CohortColors.border;
 
     return Container(
       padding: const EdgeInsets.all(CohortSpacing.md),
@@ -1418,8 +1372,8 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
         color: widget.highlighted
             ? CohortColors.oliveSoft
             : set.completed
-                ? CohortColors.oliveSoft
-                : Colors.transparent,
+            ? CohortColors.oliveSoft
+            : Colors.transparent,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1459,10 +1413,8 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
                 child: _StrengthInputField(
                   label: 'Load',
                   controller: _loadController,
-                  onChanged: (value) => widget.onChanged(
-                    localId: set.localId,
-                    load: value,
-                  ),
+                  onChanged: (value) =>
+                      widget.onChanged(localId: set.localId, load: value),
                 ),
               ),
               const SizedBox(width: CohortSpacing.md),
@@ -1471,10 +1423,8 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
                   label: 'Actual reps',
                   controller: _actualRepsController,
                   keyboardType: TextInputType.number,
-                  onChanged: (value) => widget.onChanged(
-                    localId: set.localId,
-                    actualReps: value,
-                  ),
+                  onChanged: (value) =>
+                      widget.onChanged(localId: set.localId, actualReps: value),
                 ),
               ),
             ],
@@ -1488,8 +1438,9 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
                 completed: !set.completed,
               ),
               style: OutlinedButton.styleFrom(
-                foregroundColor:
-                    set.completed ? CohortColors.success : CohortColors.olive,
+                foregroundColor: set.completed
+                    ? CohortColors.success
+                    : CohortColors.olive,
                 side: BorderSide(
                   color: set.completed
                       ? CohortColors.success
@@ -1508,17 +1459,11 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
               value: set.rpe,
               onChanged: (value) {
                 if (value == null) {
-                  widget.onChanged(
-                    localId: set.localId,
-                    clearRpe: true,
-                  );
+                  widget.onChanged(localId: set.localId, clearRpe: true);
                   return;
                 }
 
-                widget.onChanged(
-                  localId: set.localId,
-                  rpe: value,
-                );
+                widget.onChanged(localId: set.localId, rpe: value);
               },
             ),
           ],
@@ -1529,10 +1474,7 @@ class _StrengthSetRowState extends State<_StrengthSetRow> {
 }
 
 class _RpeSelector extends StatelessWidget {
-  const _RpeSelector({
-    required this.value,
-    required this.onChanged,
-  });
+  const _RpeSelector({required this.value, required this.onChanged});
 
   final int? value;
   final ValueChanged<int?> onChanged;
@@ -1542,10 +1484,7 @@ class _RpeSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'RPE (optional)',
-          style: CohortTextStyles.muted,
-        ),
+        Text('RPE (optional)', style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.xs),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -1610,10 +1549,7 @@ class _RpeChip extends StatelessWidget {
 }
 
 class _AthleteNoteField extends StatefulWidget {
-  const _AthleteNoteField({
-    required this.value,
-    required this.onChanged,
-  });
+  const _AthleteNoteField({required this.value, required this.onChanged});
 
   final String? value;
   final ValueChanged<String> onChanged;
@@ -1650,10 +1586,7 @@ class _AthleteNoteFieldState extends State<_AthleteNoteField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Athlete note (optional)',
-          style: CohortTextStyles.muted,
-        ),
+        Text('Athlete note (optional)', style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.xs),
         TextField(
           controller: _controller,
@@ -1686,7 +1619,6 @@ class _AthleteNoteFieldState extends State<_AthleteNoteField> {
     );
   }
 }
-
 
 class _StrengthInputField extends StatelessWidget {
   const _StrengthInputField({

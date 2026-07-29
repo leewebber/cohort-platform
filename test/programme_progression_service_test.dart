@@ -61,21 +61,27 @@ void main() {
       expect(after.currentWeek, before.currentWeek);
       expect(after.currentDayKey, before.currentDayKey);
       expect(after.currentSessionOrder, before.currentSessionOrder);
-      expect(result.outcome?.outcomeStatus, ProgrammeSlotOutcomeStatus.inProgress);
-      expect(result.status, ProgrammeProgressionStatus.completed);
-    });
-
-    test('completed outcome advances to next day when day has one slot', () async {
-      final result = await service.completeSession(
-        athleteId: 'lee',
-        resolution: dayOneResolution,
-        trainingSessionId: 201,
+      expect(
+        result.outcome?.outcomeStatus,
+        ProgrammeSlotOutcomeStatus.inProgress,
       );
-
-      expect(tables.assignments.first.currentDayKey, 'day_2');
-      expect(result.nextResolvedSession?.effectiveProtocolId, 'RN-006');
       expect(result.status, ProgrammeProgressionStatus.completed);
     });
+
+    test(
+      'completed outcome advances to next day when day has one slot',
+      () async {
+        final result = await service.completeSession(
+          athleteId: 'lee',
+          resolution: dayOneResolution,
+          trainingSessionId: 201,
+        );
+
+        expect(tables.assignments.first.currentDayKey, 'day_2');
+        expect(result.nextResolvedSession?.effectiveProtocolId, 'RN-006');
+        expect(result.status, ProgrammeProgressionStatus.completed);
+      },
+    );
 
     test('resolve after day_1 complete returns day_2 executable', () async {
       await service.completeSession(
@@ -99,58 +105,67 @@ void main() {
       expect(resolved.weekNumber, 1);
     });
 
-    test('getCurrentAssignment preserves progressed cursor after assign', () async {
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_2',
-        slotOrder: 1,
-      );
+    test(
+      'getCurrentAssignment preserves progressed cursor after assign',
+      () async {
+        tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
+          dayKey: 'day_2',
+          slotOrder: 1,
+        );
 
-      final store = InMemoryProgrammeAssignmentStore(tables);
-      final current = await ProgrammeAssignmentServiceImpl(
-        assignmentStore: store,
-        versionStore: InMemoryProgrammeVersionStore(tables),
-        scheduleResolver: const ProgrammeScheduleResolverImpl(),
-        todaySessionService: TodaySessionServiceImpl(
+        final store = InMemoryProgrammeAssignmentStore(tables);
+        final current = await ProgrammeAssignmentServiceImpl(
           assignmentStore: store,
           versionStore: InMemoryProgrammeVersionStore(tables),
-          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
           scheduleResolver: const ProgrammeScheduleResolverImpl(),
-        ),
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: InMemoryAthleteStateStore(tables),
-        ),
-      ).getCurrentAssignment(athleteId: 'lee');
+          todaySessionService: TodaySessionServiceImpl(
+            assignmentStore: store,
+            versionStore: InMemoryProgrammeVersionStore(tables),
+            slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+            scheduleResolver: const ProgrammeScheduleResolverImpl(),
+          ),
+          athleteStateSyncService: AthleteStateSyncServiceImpl(
+            athleteStateStore: InMemoryAthleteStateStore(tables),
+          ),
+        ).getCurrentAssignment(athleteId: 'lee');
 
-      expect(current?.currentDayKey, 'day_2');
-      expect(current?.currentWeek, 1);
-    });
+        expect(current?.currentDayKey, 'day_2');
+        expect(current?.currentWeek, 1);
+      },
+    );
 
-    test('completed_partial advances day but preserves remaining required slots', () async {
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment();
-      final twoSlotTree = ProgrammeScheduleTestFixtures.twoSlotDayTree();
-      await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
-        version: ProgrammeScheduleTestFixtures.version(),
-        tree: twoSlotTree,
-      );
-
-      final partialService = _buildService(tables);
-      final resolution = ResolvedTodaySession.fromResolution(
-        const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+    test(
+      'completed_partial advances day but preserves remaining required slots',
+      () async {
+        tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment();
+        final twoSlotTree = ProgrammeScheduleTestFixtures.twoSlotDayTree();
+        await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
+          version: ProgrammeScheduleTestFixtures.version(),
           tree: twoSlotTree,
-          outcomes: const [],
-        ),
-      );
+        );
 
-      final result = await partialService.completeSessionPartial(
-        athleteId: 'lee',
-        resolution: resolution,
-        trainingSessionId: 301,
-      );
+        final partialService = _buildService(tables);
+        final resolution = ResolvedTodaySession.fromResolution(
+          const ProgrammeScheduleResolverImpl().resolve(
+            assignment: ProgrammeScheduleTestFixtures.assignment(),
+            tree: twoSlotTree,
+            outcomes: const [],
+          ),
+        );
 
-      expect(tables.assignments.first.currentSessionOrder, 2);
-      expect(result.nextResolvedSession?.slotId, ProgrammeScheduleTestFixtures.slot2Id);
-    });
+        final result = await partialService.completeSessionPartial(
+          athleteId: 'lee',
+          resolution: resolution,
+          trainingSessionId: 301,
+        );
+
+        expect(tables.assignments.first.currentSessionOrder, 2);
+        expect(
+          result.nextResolvedSession?.slotId,
+          ProgrammeScheduleTestFixtures.slot2Id,
+        );
+      },
+    );
 
     test('skipped outcome advances using required-slot rules', () async {
       final result = await service.skipSession(
@@ -189,30 +204,33 @@ void main() {
       expect(result.nextResolvedSession?.effectiveProtocolId, 'RN-006');
     });
 
-    test('multiple required slots stay on same day until all resolved', () async {
-      final twoSlotTree = ProgrammeScheduleTestFixtures.twoSlotDayTree();
-      await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
-        version: ProgrammeScheduleTestFixtures.version(),
-        tree: twoSlotTree,
-      );
-      final twoSlotService = _buildService(tables);
-      final resolution = ResolvedTodaySession.fromResolution(
-        const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+    test(
+      'multiple required slots stay on same day until all resolved',
+      () async {
+        final twoSlotTree = ProgrammeScheduleTestFixtures.twoSlotDayTree();
+        await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
+          version: ProgrammeScheduleTestFixtures.version(),
           tree: twoSlotTree,
-          outcomes: const [],
-        ),
-      );
+        );
+        final twoSlotService = _buildService(tables);
+        final resolution = ResolvedTodaySession.fromResolution(
+          const ProgrammeScheduleResolverImpl().resolve(
+            assignment: ProgrammeScheduleTestFixtures.assignment(),
+            tree: twoSlotTree,
+            outcomes: const [],
+          ),
+        );
 
-      await twoSlotService.completeSession(
-        athleteId: 'lee',
-        resolution: resolution,
-        trainingSessionId: 401,
-      );
+        await twoSlotService.completeSession(
+          athleteId: 'lee',
+          resolution: resolution,
+          trainingSessionId: 401,
+        );
 
-      expect(tables.assignments.first.currentDayKey, 'day_1');
-      expect(tables.assignments.first.currentSessionOrder, 2);
-    });
+        expect(tables.assignments.first.currentDayKey, 'day_1');
+        expect(tables.assignments.first.currentSessionOrder, 2);
+      },
+    );
 
     test('week rollover advances to next week first day', () async {
       tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
@@ -312,7 +330,10 @@ void main() {
         trainingSessionId: 701,
       );
 
-      expect(tables.assignments.first.status, ProgrammeAssignmentStatus.completed);
+      expect(
+        tables.assignments.first.status,
+        ProgrammeAssignmentStatus.completed,
+      );
       expect(tables.assignments.first.completedAt, isNotNull);
       expect(result.status, ProgrammeProgressionStatus.programmeComplete);
       expect(tables.athleteStates.first.currentProtocolId, isNull);
@@ -326,7 +347,10 @@ void main() {
       );
 
       expect(tables.assignments.first.currentDayKey, 'day_1');
-      expect(result.outcome?.outcomeStatus, ProgrammeSlotOutcomeStatus.replaced);
+      expect(
+        result.outcome?.outcomeStatus,
+        ProgrammeSlotOutcomeStatus.replaced,
+      );
       expect(result.nextResolvedSession?.effectiveProtocolId, 'FG-009');
     });
 
@@ -427,7 +451,10 @@ void main() {
       expect(result.status, ProgrammeProgressionStatus.partialSuccess);
       expect(result.outcome, isNotNull);
       expect(result.updatedAssignment, isNull);
-      expect(result.warnings.first, contains('assignment cursor update failed'));
+      expect(
+        result.warnings.first,
+        contains('assignment cursor update failed'),
+      );
     });
 
     test('athlete_state sync failure returns partialSuccess', () async {
@@ -503,7 +530,8 @@ ProgrammeProgressionServiceImpl _buildService(
 }) {
   final assignments =
       assignmentStore ?? InMemoryProgrammeAssignmentStore(tables);
-  final outcomes = slotOutcomeStore ?? InMemoryProgrammeSlotOutcomeStore(tables);
+  final outcomes =
+      slotOutcomeStore ?? InMemoryProgrammeSlotOutcomeStore(tables);
   final athletes = athleteStateStore ?? InMemoryAthleteStateStore(tables);
   const resolver = ProgrammeScheduleResolverImpl();
 

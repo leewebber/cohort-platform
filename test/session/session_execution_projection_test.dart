@@ -67,19 +67,22 @@ void main() {
       expect(summary.athleteLabel, 'Back Squat');
     });
 
-    test('live exercise name resolves when override and displayName missing', () {
-      const summary = SessionExecutionExerciseSummary(
-        exerciseId: 'SQ-001',
-        displayName: 'SQ-001',
-        exercise: Exercise(
+    test(
+      'live exercise name resolves when override and displayName missing',
+      () {
+        const summary = SessionExecutionExerciseSummary(
           exerciseId: 'SQ-001',
-          name: 'Back Squat',
-          published: true,
-        ),
-      );
+          displayName: 'SQ-001',
+          exercise: Exercise(
+            exerciseId: 'SQ-001',
+            name: 'Back Squat',
+            published: true,
+          ),
+        );
 
-      expect(summary.athleteLabel, 'Back Squat');
-    });
+        expect(summary.athleteLabel, 'Back Squat');
+      },
+    );
 
     test('missing name falls back to exerciseId', () {
       const summary = SessionExecutionExerciseSummary(
@@ -143,8 +146,9 @@ void main() {
       await persistFounderBlocks();
 
       final plan = await loadFounderPlan();
-      final strength =
-          plan.blocks.firstWhere((block) => block.title == 'Strength');
+      final strength = plan.blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
 
       expect(strength.linkedExercises[0].displayLabelOverride, 'Back Squat');
       expect(strength.linkedExercises[1].displayLabelOverride, 'Bench Press');
@@ -156,8 +160,9 @@ void main() {
       await persistFounderBlocks();
       final plan = await loadFounderPlan();
 
-      final drafts =
-          const PerformanceSnapshotBuilder().buildInitialBlockDrafts(plan);
+      final drafts = const PerformanceSnapshotBuilder().buildInitialBlockDrafts(
+        plan,
+      );
       final strengthDraft = drafts.firstWhere(
         (draft) => draft.captureMode == BlockCaptureMode.strength,
       );
@@ -180,81 +185,82 @@ void main() {
       );
     });
 
-    test('reinstall updates stale null override rows without duplicates',
-        () async {
-      await blockRepository.replaceSessionBlocks(
-        sessionId: FounderAcceptanceContent.protocolId,
-        blocks: [
-          SessionBlock(
-            localId: 'block-strength',
-            blockType: SessionBlockType.strength,
-            title: 'Strength',
-            content: 'Back squat and bench press',
-            workoutFormat: WorkoutFormat.none,
-            position: 2,
-            linkedExercises: const [
-              SessionBlockExerciseLink(
-                localId: 'stale-link-1',
-                exerciseId: 'SQ-001',
-                position: 1,
-              ),
-              SessionBlockExerciseLink(
-                localId: 'stale-link-2',
-                exerciseId: 'BP-001',
-                position: 2,
-              ),
-            ],
-          ),
-        ],
-      );
+    test(
+      'reinstall updates stale null override rows without duplicates',
+      () async {
+        await blockRepository.replaceSessionBlocks(
+          sessionId: FounderAcceptanceContent.protocolId,
+          blocks: [
+            SessionBlock(
+              localId: 'block-strength',
+              blockType: SessionBlockType.strength,
+              title: 'Strength',
+              content: 'Back squat and bench press',
+              workoutFormat: WorkoutFormat.none,
+              position: 2,
+              linkedExercises: const [
+                SessionBlockExerciseLink(
+                  localId: 'stale-link-1',
+                  exerciseId: 'SQ-001',
+                  position: 1,
+                ),
+                SessionBlockExerciseLink(
+                  localId: 'stale-link-2',
+                  exerciseId: 'BP-001',
+                  position: 2,
+                ),
+              ],
+            ),
+          ],
+        );
 
-      expect(
-        blockRepository.exerciseRowsForSession(
+        expect(
+          blockRepository
+              .exerciseRowsForSession(FounderAcceptanceContent.protocolId)
+              .map((row) => row['display_label_override']),
+          everyElement(isNull),
+        );
+
+        await persistFounderBlocks();
+
+        final rows = blockRepository.exerciseRowsForSession(
           FounderAcceptanceContent.protocolId,
-        ).map((row) => row['display_label_override']),
-        everyElement(isNull),
-      );
+        );
+        expect(rows, hasLength(2));
+        expect(rows.map((row) => row['display_label_override']), [
+          'Back Squat',
+          'Bench Press',
+        ]);
 
-      await persistFounderBlocks();
+        final plan = await loadFounderPlan();
+        final strength = plan.blocks.firstWhere(
+          (block) => block.title == 'Strength',
+        );
+        expect(strength.linkedExercises[0].athleteLabel, 'Back Squat');
+        expect(strength.linkedExercises[1].athleteLabel, 'Bench Press');
+      },
+    );
 
-      final rows = blockRepository.exerciseRowsForSession(
-        FounderAcceptanceContent.protocolId,
-      );
-      expect(rows, hasLength(2));
-      expect(rows.map((row) => row['display_label_override']),
-          ['Back Squat', 'Bench Press']);
+    test(
+      'historical snapshot label remains stable without live exercise lookup',
+      () {
+        const snapshot = ExercisePerformanceSnapshot(
+          sourceExerciseId: 'SQ-001',
+          displayName: 'Back Squat',
+          labelOverride: 'Back Squat',
+          position: 1,
+        );
 
-      final plan = await loadFounderPlan();
-      final strength =
-          plan.blocks.firstWhere((block) => block.title == 'Strength');
-      expect(strength.linkedExercises[0].athleteLabel, 'Back Squat');
-      expect(strength.linkedExercises[1].athleteLabel, 'Bench Press');
-    });
-
-    test('historical snapshot label remains stable without live exercise lookup',
-        () {
-      const snapshot = ExercisePerformanceSnapshot(
-        sourceExerciseId: 'SQ-001',
-        displayName: 'Back Squat',
-        labelOverride: 'Back Squat',
-        position: 1,
-      );
-
-      expect(
-        AthleteExerciseLabelResolver.fromSnapshot(
-          snapshot,
-          historical: true,
-        ),
-        'Back Squat',
-      );
-      expect(
-        AthleteExerciseLabelResolver.fromSnapshot(
-          snapshot,
-          historical: true,
-        ),
-        isNot('Low Bar Back Squat'),
-      );
-    });
+        expect(
+          AthleteExerciseLabelResolver.fromSnapshot(snapshot, historical: true),
+          'Back Squat',
+        );
+        expect(
+          AthleteExerciseLabelResolver.fromSnapshot(snapshot, historical: true),
+          isNot('Low Bar Back Squat'),
+        );
+      },
+    );
   });
 }
 

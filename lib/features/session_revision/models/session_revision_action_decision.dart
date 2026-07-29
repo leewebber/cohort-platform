@@ -59,18 +59,18 @@ class SessionRevisionUsageLookupResult {
   const SessionRevisionUsageLookupResult.success(
     SessionRevisionUsageSummary summary,
   ) : this._(
-          status: SessionRevisionUsageLookupStatus.success,
-          summary: summary,
-        );
+        status: SessionRevisionUsageLookupStatus.success,
+        summary: summary,
+      );
 
   const SessionRevisionUsageLookupResult.revisionNotFound()
-      : this._(status: SessionRevisionUsageLookupStatus.revisionNotFound);
+    : this._(status: SessionRevisionUsageLookupStatus.revisionNotFound);
 
   const SessionRevisionUsageLookupResult.lookupFailed(String message)
-      : this._(
-          status: SessionRevisionUsageLookupStatus.lookupFailed,
-          message: message,
-        );
+    : this._(
+        status: SessionRevisionUsageLookupStatus.lookupFailed,
+        message: message,
+      );
 
   final SessionRevisionUsageLookupStatus status;
   final SessionRevisionUsageSummary? summary;

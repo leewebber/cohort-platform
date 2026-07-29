@@ -11,10 +11,7 @@ void main() {
 
   group('IntervalSessionPlanBuilder', () {
     test('compiles RN-006 Classic Threshold structure', () {
-      final plan = builder.build(
-        protocol: _rn006Protocol,
-        steps: _rn006Steps,
-      );
+      final plan = builder.build(protocol: _rn006Protocol, steps: _rn006Steps);
 
       expect(plan.protocolId, 'RN-006');
       expect(plan.modality, IntervalModality.running);
@@ -78,10 +75,7 @@ void main() {
     test('throws when steps list is empty', () {
       expect(
         () => builder.build(
-          protocol: Protocol(
-            protocolId: 'EMPTY-002',
-            name: 'No steps',
-          ),
+          protocol: Protocol(protocolId: 'EMPTY-002', name: 'No steps'),
           steps: const [],
         ),
         throwsA(isA<StateError>()),
@@ -105,11 +99,7 @@ void main() {
             stepType: 'Run',
             displayStyle: 'run',
             title: '500 m repeats',
-            metadata: const {
-              'distance': '500 m',
-              'sets': '4',
-              'rest': '1:30',
-            },
+            metadata: const {'distance': '500 m', 'sets': '4', 'rest': '1:30'},
           ),
         ],
       );
@@ -136,9 +126,7 @@ final _rn006Steps = [
     stepType: 'Run',
     displayStyle: 'run',
     title: 'Easy jog',
-    metadata: const {
-      'duration': '10 min',
-    },
+    metadata: const {'duration': '10 min'},
   ),
   ProtocolStep(
     id: 102,
@@ -163,8 +151,6 @@ final _rn006Steps = [
     stepType: 'Run',
     displayStyle: 'run',
     title: 'Easy jog',
-    metadata: const {
-      'duration': '5 min',
-    },
+    metadata: const {'duration': '5 min'},
   ),
 ];

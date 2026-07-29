@@ -40,11 +40,12 @@ class ProgrammeTemplateTreeAssembler {
       )..sort((left, right) => left.dayOrder.compareTo(right.dayOrder));
 
       final dayNodes = weekDays.map((day) {
-        final daySlots = List<ProgrammeVersionSessionSlot>.from(
-          slotsByDayId[day.id] ?? const [],
-        )..sort(
-            (left, right) => left.sessionOrder.compareTo(right.sessionOrder),
-          );
+        final daySlots =
+            List<ProgrammeVersionSessionSlot>.from(
+              slotsByDayId[day.id] ?? const [],
+            )..sort(
+              (left, right) => left.sessionOrder.compareTo(right.sessionOrder),
+            );
 
         return ProgrammeTemplateDayNode(day: day, slots: daySlots);
       }).toList();

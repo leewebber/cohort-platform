@@ -13,8 +13,8 @@ class ProgrammeBuilderValidationServiceImpl
   ProgrammeBuilderValidationServiceImpl({
     ProgrammeBuilderCompiler compiler = const ProgrammeBuilderCompiler(),
     ProgrammeScheduleResolver? scheduleResolver,
-  })  : _compiler = compiler,
-        _scheduleResolver = scheduleResolver;
+  }) : _compiler = compiler,
+       _scheduleResolver = scheduleResolver;
 
   final ProgrammeBuilderCompiler _compiler;
   final ProgrammeScheduleResolver? _scheduleResolver;
@@ -42,7 +42,8 @@ class ProgrammeBuilderValidationServiceImpl
     ProgrammeValidationResult? validation,
     Set<String>? knownProtocolIds,
   }) {
-    final result = validation ??
+    final result =
+        validation ??
         validateForPublish(document, knownProtocolIds: knownProtocolIds);
 
     final checks = <ProgrammePublishReadinessCheck>[
@@ -118,7 +119,8 @@ class ProgrammeBuilderValidationServiceImpl
         id: 'resolver_accepts',
         label: 'Resolver accepts initial cursor',
         passed: !result.issues.any(
-          (issue) => issue.code == ProgrammeValidationCode.engineResolverRejects,
+          (issue) =>
+              issue.code == ProgrammeValidationCode.engineResolverRejects,
         ),
         message: 'Programme structure must resolve an initial cursor',
         code: ProgrammeValidationCode.engineResolverRejects,

@@ -159,16 +159,19 @@ class IntervalRepEntry {
       targetPace: targetPace ?? this.targetPace,
       targetIntensity: targetIntensity ?? this.targetIntensity,
       recoveryDuration: recoveryDuration ?? this.recoveryDuration,
-      actualDistance:
-          clearActualDistance ? null : (actualDistance ?? this.actualDistance),
-      actualDuration:
-          clearActualDuration ? null : (actualDuration ?? this.actualDuration),
+      actualDistance: clearActualDistance
+          ? null
+          : (actualDistance ?? this.actualDistance),
+      actualDuration: clearActualDuration
+          ? null
+          : (actualDuration ?? this.actualDuration),
       actualPace: clearActualPace ? null : (actualPace ?? this.actualPace),
       averageHeartRate: clearAverageHeartRate
           ? null
           : (averageHeartRate ?? this.averageHeartRate),
-      maxHeartRate:
-          clearMaxHeartRate ? null : (maxHeartRate ?? this.maxHeartRate),
+      maxHeartRate: clearMaxHeartRate
+          ? null
+          : (maxHeartRate ?? this.maxHeartRate),
       rpe: clearRpe ? null : (rpe ?? this.rpe),
       completed: completed ?? this.completed,
       skipped: skipped ?? this.skipped,

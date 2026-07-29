@@ -3,10 +3,7 @@ import '../../../models/programme_vocabulary.dart';
 import '../../../models/session_revision_vocabulary.dart';
 
 /// Where an Exercise-to-Session link was discovered.
-enum ExerciseRelationshipSource {
-  sessionBlockLink,
-  legacyProtocolStep,
-}
+enum ExerciseRelationshipSource { sessionBlockLink, legacyProtocolStep }
 
 /// One block-level link from an exact Session Revision to an Exercise.
 class ExerciseRevisionReference {
@@ -169,17 +166,14 @@ class ExerciseUsageSummary {
   bool get hasActiveOperationalUsage =>
       classifications.contains(ContentUsageClassification.activeOperational);
 
-  bool get hasHistoricalUsage =>
-      classifications.contains(ContentUsageClassification.historicalPerformance);
+  bool get hasHistoricalUsage => classifications.contains(
+    ContentUsageClassification.historicalPerformance,
+  );
 
   bool get isUnused => classifications.isEmpty;
 }
 
-enum ExerciseUsageLookupStatus {
-  success,
-  exerciseNotFound,
-  lookupFailed,
-}
+enum ExerciseUsageLookupStatus { success, exerciseNotFound, lookupFailed }
 
 class ExerciseUsageLookupResult {
   const ExerciseUsageLookupResult._({
@@ -189,16 +183,13 @@ class ExerciseUsageLookupResult {
   });
 
   const ExerciseUsageLookupResult.success(ExerciseUsageSummary summary)
-      : this._(status: ExerciseUsageLookupStatus.success, summary: summary);
+    : this._(status: ExerciseUsageLookupStatus.success, summary: summary);
 
   const ExerciseUsageLookupResult.exerciseNotFound()
-      : this._(status: ExerciseUsageLookupStatus.exerciseNotFound);
+    : this._(status: ExerciseUsageLookupStatus.exerciseNotFound);
 
   const ExerciseUsageLookupResult.lookupFailed(String message)
-      : this._(
-          status: ExerciseUsageLookupStatus.lookupFailed,
-          message: message,
-        );
+    : this._(status: ExerciseUsageLookupStatus.lookupFailed, message: message);
 
   final ExerciseUsageLookupStatus status;
   final ExerciseUsageSummary? summary;

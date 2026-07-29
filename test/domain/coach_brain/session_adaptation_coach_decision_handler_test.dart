@@ -31,8 +31,9 @@ void main() {
   }
 
   SessionAdaptationCoachDecisionContext _context({
-    AdaptationConstraintContext constraints =
-        const AdaptationConstraintContext(availableDurationMin: 50),
+    AdaptationConstraintContext constraints = const AdaptationConstraintContext(
+      availableDurationMin: 50,
+    ),
   }) {
     return SessionAdaptationCoachDecisionContext(
       plannedSession: timedInput,
@@ -41,22 +42,24 @@ void main() {
   }
 
   group('SessionAdaptationCoachDecisionHandler', () {
-    test('returns completed with execution snapshot on successful pipeline', () {
-      final result = handler.handle(
-        _sessionRequest(context: _context()),
-      );
-      expect(result.status, CoachDecisionOutcomeStatus.completed);
-      expect(result.handlerName, 'session_adaptation');
-      expect(result.executionSnapshot, isNotNull);
-      expect(result.executionSnapshot!.sourceProtocolId, timedInput.protocolId);
-    });
+    test(
+      'returns completed with execution snapshot on successful pipeline',
+      () {
+        final result = handler.handle(_sessionRequest(context: _context()));
+        expect(result.status, CoachDecisionOutcomeStatus.completed);
+        expect(result.handlerName, 'session_adaptation');
+        expect(result.executionSnapshot, isNotNull);
+        expect(
+          result.executionSnapshot!.sourceProtocolId,
+          timedInput.protocolId,
+        );
+      },
+    );
 
     test('noPlanRequired path returns snapshot without adaptation audit', () {
       final result = handler.handle(
         _sessionRequest(
-          context: _context(
-            constraints: AdaptationConstraintContext.empty(),
-          ),
+          context: _context(constraints: AdaptationConstraintContext.empty()),
         ),
       );
       expect(result.status, CoachDecisionOutcomeStatus.completed);
@@ -90,7 +93,9 @@ void main() {
       final result = handler.handle(
         _sessionRequest(
           context: _context(
-            constraints: const AdaptationConstraintContext(availableDurationMin: 20),
+            constraints: const AdaptationConstraintContext(
+              availableDurationMin: 20,
+            ),
           ),
         ),
       );
@@ -143,22 +148,19 @@ void main() {
         constraints: constraints,
       );
       final routed = CoachBrainDependencies.defaults().router.route(
-            CoachDecisionRequest(
-              decisionType: CoachDecisionType.sessionAdaptation,
-              requestId: 'equiv-1',
-              athleteId: 'athlete-1',
-              context: SessionAdaptationCoachDecisionContext(
-                plannedSession: timedInput,
-                constraints: constraints,
-              ),
-            ),
-          );
+        CoachDecisionRequest(
+          decisionType: CoachDecisionType.sessionAdaptation,
+          requestId: 'equiv-1',
+          athleteId: 'athlete-1',
+          context: SessionAdaptationCoachDecisionContext(
+            plannedSession: timedInput,
+            constraints: constraints,
+          ),
+        ),
+      );
       expect(routed.status, CoachDecisionOutcomeStatus.completed);
       expect(
-        snapshotSemanticallyEqual(
-          direct.snapshot!,
-          routed.executionSnapshot!,
-        ),
+        snapshotSemanticallyEqual(direct.snapshot!, routed.executionSnapshot!),
         isTrue,
       );
     });

@@ -192,10 +192,10 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       final daysResponse = weekIds.isEmpty
           ? <Map<String, dynamic>>[]
           : await SupabaseClientHolder.client
-              .from(_daysTable)
-              .select()
-              .inFilter('week_id', weekIds)
-              .order('day_order', ascending: true);
+                .from(_daysTable)
+                .select()
+                .inFilter('week_id', weekIds)
+                .order('day_order', ascending: true);
 
       final dayIds = daysResponse
           .map((row) => row['id']?.toString())
@@ -206,32 +206,29 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
       final slotsResponse = dayIds.isEmpty
           ? <Map<String, dynamic>>[]
           : await SupabaseClientHolder.client
-              .from(_slotsTable)
-              .select()
-              .inFilter('day_id', dayIds)
-              .order('session_order', ascending: true);
+                .from(_slotsTable)
+                .select()
+                .inFilter('day_id', dayIds)
+                .order('session_order', ascending: true);
 
       return _assembler.assemble(
         version: version,
         phases: phasesResponse
             .map(
-              (row) => ProgrammeVersionPhase.fromMap(
-                Map<String, dynamic>.from(row),
-              ),
+              (row) =>
+                  ProgrammeVersionPhase.fromMap(Map<String, dynamic>.from(row)),
             )
             .toList(),
         weeks: weeksResponse
             .map(
-              (row) => ProgrammeVersionWeek.fromMap(
-                Map<String, dynamic>.from(row),
-              ),
+              (row) =>
+                  ProgrammeVersionWeek.fromMap(Map<String, dynamic>.from(row)),
             )
             .toList(),
         days: daysResponse
             .map(
-              (row) => ProgrammeVersionDay.fromMap(
-                Map<String, dynamic>.from(row),
-              ),
+              (row) =>
+                  ProgrammeVersionDay.fromMap(Map<String, dynamic>.from(row)),
             )
             .toList(),
         slots: slotsResponse
@@ -581,7 +578,9 @@ class ProgrammeVersionSupabaseStore implements ProgrammeVersionStore {
   }
 
   /// Binds lineage ownership to the active Supabase auth user for RLS INSERT checks.
-  static void _applyAuthenticatedLineageOwnership(Map<String, dynamic> payload) {
+  static void _applyAuthenticatedLineageOwnership(
+    Map<String, dynamic> payload,
+  ) {
     final authUserId = SupabaseClientHolder.client.auth.currentUser?.id?.trim();
     if (authUserId == null || authUserId.isEmpty) return;
     payload['created_by'] = authUserId;

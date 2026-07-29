@@ -36,10 +36,7 @@ class ProgrammeTemplate {
 
 /// A week node with nested days and slots for schedule resolution.
 class ProgrammeTemplateWeekNode {
-  const ProgrammeTemplateWeekNode({
-    required this.week,
-    required this.days,
-  });
+  const ProgrammeTemplateWeekNode({required this.week, required this.days});
 
   final ProgrammeVersionWeek week;
   final List<ProgrammeTemplateDayNode> days;
@@ -53,19 +50,14 @@ class ProgrammeTemplateWeekNode {
 
 /// A day node with ordered session slots.
 class ProgrammeTemplateDayNode {
-  const ProgrammeTemplateDayNode({
-    required this.day,
-    required this.slots,
-  });
+  const ProgrammeTemplateDayNode({required this.day, required this.slots});
 
   final ProgrammeVersionDay day;
   final List<ProgrammeVersionSessionSlot> slots;
 
   List<ProgrammeVersionSessionSlot> get sortedSlots {
     final copy = List<ProgrammeVersionSessionSlot>.from(slots);
-    copy.sort(
-      (left, right) => left.sessionOrder.compareTo(right.sessionOrder),
-    );
+    copy.sort((left, right) => left.sessionOrder.compareTo(right.sessionOrder));
     return copy;
   }
 }

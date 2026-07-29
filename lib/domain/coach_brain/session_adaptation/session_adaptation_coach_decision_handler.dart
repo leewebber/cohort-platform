@@ -29,7 +29,8 @@ class SessionAdaptationCoachDecisionHandler extends CoachDecisionHandler {
         decisionType: request.decisionType,
         requestId: request.requestId,
         handlerName: handlerName,
-        failureCode: SessionAdaptationCoachDecisionFailureCode.wrongDecisionType,
+        failureCode:
+            SessionAdaptationCoachDecisionFailureCode.wrongDecisionType,
         detail: 'expected_session_adaptation',
       );
     }
@@ -63,7 +64,10 @@ class SessionAdaptationCoachDecisionHandler extends CoachDecisionHandler {
       decisionType: CoachDecisionType.sessionAdaptation,
       requestId: request.requestId,
       handlerName: handlerName,
-      failureCode: _failureCodeForApplication(application.status, run.plan.status),
+      failureCode: _failureCodeForApplication(
+        application.status,
+        run.plan.status,
+      ),
       detail: application.status.name,
     );
   }

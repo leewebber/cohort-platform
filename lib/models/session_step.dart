@@ -84,10 +84,7 @@ class SessionStep {
     return parts.join(' • ');
   }
 
-  static String? _coachCueFromStep(
-    ProtocolStep step,
-    Exercise? exercise,
-  ) {
+  static String? _coachCueFromStep(ProtocolStep step, Exercise? exercise) {
     final coachingCues = exercise?.coachingCues?.trim();
     if (coachingCues != null && coachingCues.isNotEmpty) {
       return coachingCues;

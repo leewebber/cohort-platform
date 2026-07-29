@@ -40,10 +40,6 @@ class CohortCard extends StatelessWidget {
 
     if (onTap == null) return card;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: borderRadius,
-      child: card,
-    );
+    return InkWell(onTap: onTap, borderRadius: borderRadius, child: card);
   }
 }

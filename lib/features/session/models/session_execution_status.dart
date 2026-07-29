@@ -1,12 +1,3 @@
-enum SessionExecutionStatus {
-  notStarted,
-  inProgress,
-  completed,
-  abandoned,
-}
+enum SessionExecutionStatus { notStarted, inProgress, completed, abandoned }
 
-enum BlockExecutionStatus {
-  notStarted,
-  active,
-  complete,
-}
+enum BlockExecutionStatus { notStarted, active, complete }

@@ -14,9 +14,9 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     required String athleteId,
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeVersionStore? versionStore,
-  })  : _athleteId = athleteId.trim(),
-        _assignmentStore = assignmentStore,
-        _versionStore = versionStore;
+  }) : _athleteId = athleteId.trim(),
+       _assignmentStore = assignmentStore,
+       _versionStore = versionStore;
 
   final String _athleteId;
   final ProgrammeAssignmentStore? _assignmentStore;
@@ -72,10 +72,10 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     required AthleteProgrammeSwitchCatalogService catalogService,
     required AthleteProgrammeSwitchCoordinator switchCoordinator,
     ProgrammeAssignmentStore? assignmentStore,
-  })  : _athleteId = athleteId.trim(),
-        _catalogService = catalogService,
-        _switchCoordinator = switchCoordinator,
-        _assignmentStore = assignmentStore;
+  }) : _athleteId = athleteId.trim(),
+       _catalogService = catalogService,
+       _switchCoordinator = switchCoordinator,
+       _assignmentStore = assignmentStore;
 
   final String _athleteId;
   final AthleteProgrammeSwitchCatalogService _catalogService;
@@ -149,7 +149,8 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
       timezone: timezone,
     );
 
-    if (!result.isSuccess && result.status != AthleteProgrammeSwitchStatus.alreadyActive) {
+    if (!result.isSuccess &&
+        result.status != AthleteProgrammeSwitchStatus.alreadyActive) {
       _errorMessage = result.message;
     }
 

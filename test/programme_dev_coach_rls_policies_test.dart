@@ -31,9 +31,18 @@ void main() {
     });
 
     test('defines coach SECURITY DEFINER helpers', () {
-      expect(migrationSql, contains('cohort_programme_lineage_is_dev_coach_owned'));
-      expect(migrationSql, contains('cohort_programme_version_is_dev_coach_draft_writable'));
-      expect(migrationSql, contains('cohort_programme_version_is_dev_coach_draft_deletable'));
+      expect(
+        migrationSql,
+        contains('cohort_programme_lineage_is_dev_coach_owned'),
+      );
+      expect(
+        migrationSql,
+        contains('cohort_programme_version_is_dev_coach_draft_writable'),
+      );
+      expect(
+        migrationSql,
+        contains('cohort_programme_version_is_dev_coach_draft_deletable'),
+      );
       expect(migrationSql, contains('SET search_path = public, pg_temp'));
       expect(migrationSql, contains('REVOKE ALL'));
       expect(migrationSql, contains('GRANT EXECUTE'));
@@ -46,20 +55,35 @@ void main() {
     });
 
     test('defines version coach draft policies', () {
-      expect(migrationSql, contains('dev_programme_versions_insert_coach_draft'));
-      expect(migrationSql, contains('dev_programme_versions_update_coach_draft'));
-      expect(migrationSql, contains('dev_programme_versions_delete_coach_draft'));
+      expect(
+        migrationSql,
+        contains('dev_programme_versions_insert_coach_draft'),
+      );
+      expect(
+        migrationSql,
+        contains('dev_programme_versions_update_coach_draft'),
+      );
+      expect(
+        migrationSql,
+        contains('dev_programme_versions_delete_coach_draft'),
+      );
       expect(migrationSql, contains('dev_programme_versions_select_coach'));
     });
 
     test('defines child tree coach write policies', () {
       expect(migrationSql, contains('dev_programme_version_weeks_write_coach'));
       expect(migrationSql, contains('dev_programme_version_days_write_coach'));
-      expect(migrationSql, contains('dev_programme_version_session_slots_write_coach'));
+      expect(
+        migrationSql,
+        contains('dev_programme_version_session_slots_write_coach'),
+      );
     });
 
     test('denies other-coach ownership in insert WITH CHECK', () {
-      expect(migrationSql, contains("owner_id = cohort_programme_dev_coach_id()"));
+      expect(
+        migrationSql,
+        contains("owner_id = cohort_programme_dev_coach_id()"),
+      );
       expect(migrationSql, contains("owner_id = 'other-coach'"));
     });
 
@@ -73,7 +97,10 @@ void main() {
     });
 
     test('delete safety checks assignments and published versions', () {
-      expect(migrationSql, contains('cohort_programme_version_is_dev_coach_draft_deletable'));
+      expect(
+        migrationSql,
+        contains('cohort_programme_version_is_dev_coach_draft_deletable'),
+      );
       expect(migrationSql, contains('programme_assignments'));
       expect(migrationSql, contains("lifecycle_status = 'published'"));
     });
@@ -90,16 +117,19 @@ void main() {
       expect(lineageFixMigrationFile.existsSync(), isTrue);
     });
 
-    test('uses direct created_by predicates for lineage insert/select/update', () {
-      expect(
-        lineageFixMigrationSql,
-        contains('WITH CHECK (created_by = cohort_programme_dev_coach_id())'),
-      );
-      expect(
-        lineageFixMigrationSql,
-        contains('USING (created_by = cohort_programme_dev_coach_id())'),
-      );
-    });
+    test(
+      'uses direct created_by predicates for lineage insert/select/update',
+      () {
+        expect(
+          lineageFixMigrationSql,
+          contains('WITH CHECK (created_by = cohort_programme_dev_coach_id())'),
+        );
+        expect(
+          lineageFixMigrationSql,
+          contains('USING (created_by = cohort_programme_dev_coach_id())'),
+        );
+      },
+    );
 
     test('preserves global catalogue select policy', () {
       expect(lineageFixMigrationSql, contains('dev_programme_lineages_select'));
@@ -120,11 +150,11 @@ void main() {
     });
 
     test('uses direct row predicates for version select and draft update', () {
-      expect(versionFixMigrationSql, contains('dev_programme_versions_select_coach'));
       expect(
         versionFixMigrationSql,
-        contains("owner_type = 'coach'"),
+        contains('dev_programme_versions_select_coach'),
       );
+      expect(versionFixMigrationSql, contains("owner_type = 'coach'"));
       expect(
         versionFixMigrationSql,
         contains('owner_id = cohort_programme_dev_coach_id()'),
@@ -141,7 +171,10 @@ void main() {
         contains('cohort_programme_lineage_is_dev_coach_owned(lineage_id)'),
       );
       expect(versionFixMigrationSql, contains('SECURITY DEFINER'));
-      expect(versionFixMigrationSql, contains('SET search_path = public, pg_temp'));
+      expect(
+        versionFixMigrationSql,
+        contains('SET search_path = public, pg_temp'),
+      );
     });
 
     test('preserves global catalogue select policy', () {
@@ -159,16 +192,22 @@ void main() {
   });
 
   group('dev identity alignment', () {
-    test('ProgrammeDevIdentity.coachId matches migration dev-coach constant', () {
-      expect(ProgrammeDevIdentity.coachId, 'dev-coach');
-      expect(migrationSql, contains("'dev-coach'"));
-      expect(migrationSql, contains('cohort_programme_dev_coach_id()'));
-    });
+    test(
+      'ProgrammeDevIdentity.coachId matches migration dev-coach constant',
+      () {
+        expect(ProgrammeDevIdentity.coachId, 'dev-coach');
+        expect(migrationSql, contains("'dev-coach'"));
+        expect(migrationSql, contains('cohort_programme_dev_coach_id()'));
+      },
+    );
 
-    test('New Programme default scope matches coach draft policy vocabulary', () {
-      expect(ProgrammeLibraryScope.coachPrivate.dbValue, 'coach_private');
-      expect(ProgrammeOwnerType.coach.dbValue, 'coach');
-      expect(ProgrammeLifecycleStatus.draft.dbValue, 'draft');
-    });
+    test(
+      'New Programme default scope matches coach draft policy vocabulary',
+      () {
+        expect(ProgrammeLibraryScope.coachPrivate.dbValue, 'coach_private');
+        expect(ProgrammeOwnerType.coach.dbValue, 'coach');
+        expect(ProgrammeLifecycleStatus.draft.dbValue, 'draft');
+      },
+    );
   });
 }

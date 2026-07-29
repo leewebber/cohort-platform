@@ -1,8 +1,8 @@
 import '../contracts/block_adaptation_policy.dart';
 import '../evaluation/adaptation_constraint_context.dart';
 import '../evaluation/adaptation_evaluation_result.dart';
-import '../evaluation/planned_session_adaptation_input_factory.dart';
 import '../evaluation/session_adaptation_read_only_evaluator.dart';
+import '../vocabulary/adaptation_block_type.dart';
 import '../mapping/session_block_type_adaptation_policy.dart';
 import '../vocabulary/adaptation_action_type.dart';
 import '../vocabulary/adaptation_confidence.dart';
@@ -47,11 +47,9 @@ class SessionAdaptationPlanner {
     SessionAdaptationEvaluationResult? evaluation,
   }) {
     final validatedConstraints = constraints.validated();
-    final resolvedEvaluation = evaluation ??
-        evaluator.evaluate(
-          session: session,
-          constraints: validatedConstraints,
-        );
+    final resolvedEvaluation =
+        evaluation ??
+        evaluator.evaluate(session: session, constraints: validatedConstraints);
 
     final base = _PlanBuildContext(
       session: session,
@@ -83,23 +81,37 @@ class SessionAdaptationPlanner {
     if (minViable == null) {
       return _finalize(
         base,
-        _planWithMissingMinViableThreshold(base, available: available, planned: planned),
+        _planWithMissingMinViableThreshold(
+          base,
+          available: available,
+          planned: planned,
+        ),
       );
     }
 
     if (available < minViable) {
       return _finalize(
         base,
-        _unableBelowMinimumViable(base, available: available, minViable: minViable),
+        _unableBelowMinimumViable(
+          base,
+          available: available,
+          minViable: minViable,
+        ),
       );
     }
 
-    if (resolvedEvaluation.outcome == AdaptationEvaluationOutcome.notAdaptable ||
-        resolvedEvaluation.outcome == AdaptationEvaluationOutcome.insufficientInformation) {
+    if (resolvedEvaluation.outcome ==
+            AdaptationEvaluationOutcome.notAdaptable ||
+        resolvedEvaluation.outcome ==
+            AdaptationEvaluationOutcome.insufficientInformation) {
       if (available < minViable) {
         return _finalize(
           base,
-          _unableBelowMinimumViable(base, available: available, minViable: minViable),
+          _unableBelowMinimumViable(
+            base,
+            available: available,
+            minViable: minViable,
+          ),
         );
       }
     }
@@ -107,15 +119,21 @@ class SessionAdaptationPlanner {
     final deficit = planned - available;
     return _finalize(
       base,
-      _buildTimeConstrainedPlan(base, deficitMinutes: deficit, available: available),
+      _buildTimeConstrainedPlan(
+        base,
+        deficitMinutes: deficit,
+        available: available,
+      ),
     );
   }
 
   static ResolvedPlannedBlock resolveBlock(PlannedBlockAdaptationInput block) {
-    final blockType =
-        PlannedSessionAdaptationInputFactory.blockTypeFromDb(block.blockTypeDbValue);
-    final derivedPriority =
-        SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
+    final blockType = AdaptationBlockTypePlanning.fromPlanningDbValue(
+      block.blockTypeDbValue,
+    );
+    final derivedPriority = SessionBlockTypeAdaptationPolicy.defaultPriority(
+      blockType,
+    );
     final derivedPolicy =
         SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(blockType);
     final explicitPolicy = block.explicitPolicy;
@@ -129,10 +147,7 @@ class SessionAdaptationPlanner {
     );
   }
 
-  AdaptationPlanResult _finalize(
-    _PlanBuildContext base,
-    _MutablePlan draft,
-  ) {
+  AdaptationPlanResult _finalize(_PlanBuildContext base, _MutablePlan draft) {
     final validation = validator.validate(
       session: base.session,
       evaluation: base.evaluation,
@@ -322,7 +337,8 @@ class SessionAdaptationPlanner {
           draft: draft,
           block: block,
           sequence: sequence,
-          rationale: AdaptationPlanRationaleCode.importantBlockReductionRequired,
+          rationale:
+              AdaptationPlanRationaleCode.importantBlockReductionRequired,
         );
         if (removal != null) {
           removedBlockIds.add(block.input.localId);
@@ -344,7 +360,9 @@ class SessionAdaptationPlanner {
     if (remaining > 0) {
       draft.status = AdaptationPlanStatus.partialPlan;
       draft.unresolvedDurationDeficitMinutes = remaining;
-      draft.planFindings.add(AdaptationPlanRationaleCode.unresolvedDurationDeficit);
+      draft.planFindings.add(
+        AdaptationPlanRationaleCode.unresolvedDurationDeficit,
+      );
       exactFeasibility = false;
     } else if (!exactFeasibility) {
       draft.status = AdaptationPlanStatus.partialPlan;
@@ -355,17 +373,21 @@ class SessionAdaptationPlanner {
 
     draft.exactDurationFeasibilityConfirmed =
         exactFeasibility &&
-            remaining <= 0 &&
-            !draft.steps.any((step) => step.expectedTimeSavingUnknown);
+        remaining <= 0 &&
+        !draft.steps.any((step) => step.expectedTimeSavingUnknown);
     draft.requiresConfirmationLater = draft.steps.isNotEmpty;
 
     if (draft.steps.isEmpty && remaining > 0) {
       draft.status = AdaptationPlanStatus.unableToPlan;
-      draft.planFindings.add(AdaptationPlanRationaleCode.unresolvedDurationDeficit);
+      draft.planFindings.add(
+        AdaptationPlanRationaleCode.unresolvedDurationDeficit,
+      );
     }
 
     if (base.evaluation.primaryIntentPreservable) {
-      draft.planFindings.add(AdaptationPlanRationaleCode.primaryIntentPreserved);
+      draft.planFindings.add(
+        AdaptationPlanRationaleCode.primaryIntentPreserved,
+      );
     } else {
       draft.planFindings.add(AdaptationPlanRationaleCode.primaryIntentAtRisk);
     }
@@ -388,7 +410,9 @@ class SessionAdaptationPlanner {
   }
 
   int _interventionSort(ResolvedPlannedBlock a, ResolvedPlannedBlock b) {
-    final tier = _tierRank(a.effectivePriority).compareTo(_tierRank(b.effectivePriority));
+    final tier = _tierRank(
+      a.effectivePriority,
+    ).compareTo(_tierRank(b.effectivePriority));
     if (tier != 0) return tier;
     return b.input.position.compareTo(a.input.position);
   }
@@ -433,11 +457,13 @@ class SessionAdaptationPlanner {
         );
         continue;
       }
-      final sets = workingSetsByLink[prescription.exerciseLinkLocalId] ??
+      final sets =
+          workingSetsByLink[prescription.exerciseLinkLocalId] ??
           prescription.sets;
       if (sets == null || sets <= 1) continue;
 
-      final minSets = block.input.policyMinimumViablePrescription?.sets ??
+      final minSets =
+          block.input.policyMinimumViablePrescription?.sets ??
           block.effectivePolicy.minimumViablePrescription?.sets ??
           1;
       if (sets <= minSets) {
@@ -452,7 +478,8 @@ class SessionAdaptationPlanner {
         kind: PrescriptionReductionKind.setCount,
         originalValue: sets,
         proposedValue: proposed,
-        minimumViablePrescription: block.input.policyMinimumViablePrescription ??
+        minimumViablePrescription:
+            block.input.policyMinimumViablePrescription ??
             block.effectivePolicy.minimumViablePrescription,
       );
       if (!reduction.isValid) continue;
@@ -502,7 +529,9 @@ class SessionAdaptationPlanner {
         AdaptationPlanRationaleCode.optionalBlockRemovalRequired,
   }) {
     if (!block.effectivePolicy.canRemove) {
-      draft.planFindings.add(AdaptationPlanRationaleCode.removalPreventedByPolicy);
+      draft.planFindings.add(
+        AdaptationPlanRationaleCode.removalPreventedByPolicy,
+      );
       return null;
     }
     if (_isEssential(block)) {
@@ -510,7 +539,8 @@ class SessionAdaptationPlanner {
     }
 
     final duration = block.input.estimatedDurationMinutes;
-    final durationUnknown = block.input.estimatedDurationUnknown || duration == null;
+    final durationUnknown =
+        block.input.estimatedDurationUnknown || duration == null;
 
     draft.steps.add(
       AdaptationPlanStep(
@@ -610,7 +640,8 @@ class _MutablePlan {
     final confidence =
         adaptationConfidence ?? base.evaluation.adaptationConfidence;
 
-    final applicable = !forceNotApplicable &&
+    final applicable =
+        !forceNotApplicable &&
         (status == AdaptationPlanStatus.noPlanRequired ||
             status == AdaptationPlanStatus.planGenerated ||
             (status == AdaptationPlanStatus.partialPlan && steps.isNotEmpty));

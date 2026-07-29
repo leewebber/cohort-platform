@@ -38,10 +38,7 @@ void main() {
 
     test('accepts RFC-4122 UUID strings', () {
       expect(DatabaseUuid.isValidDatabaseUuid(persistedWeekId), isTrue);
-      expect(
-        DatabaseUuid.persistedIdOrNull(persistedWeekId),
-        persistedWeekId,
-      );
+      expect(DatabaseUuid.persistedIdOrNull(persistedWeekId), persistedWeekId);
     });
   });
 
@@ -187,35 +184,35 @@ void main() {
       }
     });
 
-    test('second save after reload keeps valid UUID ids without local id errors', () async {
-      final tables = InMemoryProgrammeTables();
-      final store = InMemoryProgrammeVersionStore(tables);
-      final version = await _seedVersion(store);
-      final tree = _treeFromSeed(ProgrammeSeedTemplate.strength);
+    test(
+      'second save after reload keeps valid UUID ids without local id errors',
+      () async {
+        final tables = InMemoryProgrammeTables();
+        final store = InMemoryProgrammeVersionStore(tables);
+        final version = await _seedVersion(store);
+        final tree = _treeFromSeed(ProgrammeSeedTemplate.strength);
 
-      await store.saveTemplateTree(version: version, tree: tree);
+        await store.saveTemplateTree(version: version, tree: tree);
 
-      final reloaded = await store.loadTemplateTree(version.id);
-      expect(reloaded, isNotNull);
+        final reloaded = await store.loadTemplateTree(version.id);
+        expect(reloaded, isNotNull);
 
-      await store.saveTemplateTree(
-        version: version,
-        tree: reloaded!,
-      );
+        await store.saveTemplateTree(version: version, tree: reloaded!);
 
-      for (final week in tables.weeks) {
-        expect(DatabaseUuid.isValidDatabaseUuid(week.id), isTrue);
-        expect(week.id, isNot('week-1'));
-      }
-      for (final day in tables.days) {
-        expect(DatabaseUuid.isValidDatabaseUuid(day.id), isTrue);
-        expect(day.id.startsWith('day-'), isFalse);
-      }
-      for (final slot in tables.slots) {
-        expect(DatabaseUuid.isValidDatabaseUuid(slot.id), isTrue);
-        expect(slot.id.startsWith('slot-'), isFalse);
-      }
-    });
+        for (final week in tables.weeks) {
+          expect(DatabaseUuid.isValidDatabaseUuid(week.id), isTrue);
+          expect(week.id, isNot('week-1'));
+        }
+        for (final day in tables.days) {
+          expect(DatabaseUuid.isValidDatabaseUuid(day.id), isTrue);
+          expect(day.id.startsWith('day-'), isFalse);
+        }
+        for (final slot in tables.slots) {
+          expect(DatabaseUuid.isValidDatabaseUuid(slot.id), isTrue);
+          expect(slot.id.startsWith('slot-'), isFalse);
+        }
+      },
+    );
 
     test('save reload round trip preserves structure', () async {
       final tables = InMemoryProgrammeTables();
@@ -237,59 +234,59 @@ void main() {
         sourceTree.weekNodes.first.sortedDays.first.sortedSlots.length,
       );
       expect(loaded.weekNodes.first.week.weekNumber, 1);
-      expect(
-        loaded.weekNodes.first.sortedDays.first.day.dayKey,
-        'day_1',
-      );
+      expect(loaded.weekNodes.first.sortedDays.first.day.dayKey, 'day_1');
     });
 
-    test('retains persisted UUID ids when reloading existing draft tree', () async {
-      final tables = InMemoryProgrammeTables();
-      final store = InMemoryProgrammeVersionStore(tables);
-      final version = await _seedVersion(store);
+    test(
+      'retains persisted UUID ids when reloading existing draft tree',
+      () async {
+        final tables = InMemoryProgrammeTables();
+        final store = InMemoryProgrammeVersionStore(tables);
+        final version = await _seedVersion(store);
 
-      final tree = assembler.assemble(
-        version: version,
-        phases: [
-          ProgrammeVersionPhase(
-            id: persistedPhaseId,
-            versionId: version.id,
-            phaseOrder: 1,
-            title: 'Build',
-          ),
-        ],
-        weeks: [
-          ProgrammeVersionWeek(
-            id: persistedWeekId,
-            versionId: version.id,
-            phaseId: persistedPhaseId,
-            weekNumber: 1,
-          ),
-        ],
-        days: [
-          ProgrammeVersionDay(
-            id: persistedDayId,
-            weekId: persistedWeekId,
-            dayKey: 'day_1',
-            dayOrder: 1,
-          ),
-        ],
-        slots: [
-          ProgrammeVersionSessionSlot(
-            id: persistedSlotId,
-            dayId: persistedDayId,
-            sessionOrder: 1,
-            protocolId: 'BW-001',
-          ),
-        ],
-      );
+        final tree = assembler.assemble(
+          version: version,
+          phases: [
+            ProgrammeVersionPhase(
+              id: persistedPhaseId,
+              versionId: version.id,
+              phaseOrder: 1,
+              title: 'Build',
+            ),
+          ],
+          weeks: [
+            ProgrammeVersionWeek(
+              id: persistedWeekId,
+              versionId: version.id,
+              phaseId: persistedPhaseId,
+              weekNumber: 1,
+            ),
+          ],
+          days: [
+            ProgrammeVersionDay(
+              id: persistedDayId,
+              weekId: persistedWeekId,
+              dayKey: 'day_1',
+              dayOrder: 1,
+            ),
+          ],
+          slots: [
+            ProgrammeVersionSessionSlot(
+              id: persistedSlotId,
+              dayId: persistedDayId,
+              sessionOrder: 1,
+              protocolId: 'BW-001',
+            ),
+          ],
+        );
 
-      await store.saveTemplateTree(version: version, tree: tree);
+        await store.saveTemplateTree(version: version, tree: tree);
 
-      expect(tables.weeks.single.id, persistedWeekId);
-      expect(tables.days.single.id, persistedDayId);
-      expect(tables.slots.single.id, persistedSlotId);
-      expect(tables.phases.single.id, persistedPhaseId);
-    });
+        expect(tables.weeks.single.id, persistedWeekId);
+        expect(tables.days.single.id, persistedDayId);
+        expect(tables.slots.single.id, persistedSlotId);
+        expect(tables.phases.single.id, persistedPhaseId);
+      },
+    );
   });
 }

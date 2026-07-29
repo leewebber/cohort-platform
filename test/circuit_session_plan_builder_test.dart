@@ -10,10 +10,7 @@ void main() {
 
   group('CircuitSessionPlanBuilder', () {
     test('compiles AMRAP structure with time cap and rounds+reps score', () {
-      final plan = builder.build(
-        protocol: _amrapProtocol,
-        steps: _amrapSteps,
-      );
+      final plan = builder.build(protocol: _amrapProtocol, steps: _amrapSteps);
 
       expect(plan.protocolId, 'AMRAP-001');
       expect(plan.format, CircuitFormat.amrap);
@@ -35,7 +32,12 @@ void main() {
       expect(plan.scoreType, CircuitScoreType.elapsedTime);
       expect(plan.prescribedRounds, 5);
       expect(plan.movementCount, 4);
-      expect(plan.movements.map((movement) => movement.orderIndex), [1, 2, 3, 4]);
+      expect(plan.movements.map((movement) => movement.orderIndex), [
+        1,
+        2,
+        3,
+        4,
+      ]);
     });
 
     test('compiles chipper with elapsed-time score', () {
@@ -52,10 +54,7 @@ void main() {
     });
 
     test('compiles EMOM with work interval and interval count', () {
-      final plan = builder.build(
-        protocol: _emomProtocol,
-        steps: _emomSteps,
-      );
+      final plan = builder.build(protocol: _emomProtocol, steps: _emomSteps);
 
       expect(plan.format, CircuitFormat.emom);
       expect(plan.scoreType, CircuitScoreType.roundsCompleted);
@@ -71,10 +70,12 @@ void main() {
         steps: _roundsForTimeSteps.reversed.toList(),
       );
 
-      expect(
-        plan.movements.map((movement) => movement.title).toList(),
-        ['Burpees', 'KB Swings', 'Run 200 m', 'Pull-ups'],
-      );
+      expect(plan.movements.map((movement) => movement.title).toList(), [
+        'Burpees',
+        'KB Swings',
+        'Run 200 m',
+        'Pull-ups',
+      ]);
       expect(
         plan.movements.map((movement) => movement.protocolStepId).toList(),
         [202, 203, 204, 205],
@@ -98,10 +99,7 @@ void main() {
               stepType: 'Instruction',
               displayStyle: 'instruction',
               title: 'AMRAP 12:00',
-              metadata: const {
-                'format': 'amrap',
-                'time_cap': '12:00',
-              },
+              metadata: const {'format': 'amrap', 'time_cap': '12:00'},
             ),
           ],
         ),
@@ -109,10 +107,7 @@ void main() {
           isA<StateError>().having(
             (error) => error.message,
             'message',
-            allOf(
-              contains('EMPTY-001'),
-              contains('no executable movements'),
-            ),
+            allOf(contains('EMPTY-001'), contains('no executable movements')),
           ),
         ),
       );
@@ -135,10 +130,7 @@ void main() {
               stepType: 'Instruction',
               displayStyle: 'instruction',
               title: 'AMRAP 10:00',
-              metadata: const {
-                'format': 'amrap',
-                'score_type': 'elapsed_time',
-              },
+              metadata: const {'format': 'amrap', 'score_type': 'elapsed_time'},
             ),
             ProtocolStep(
               id: 2,
@@ -156,10 +148,7 @@ void main() {
           isA<StateError>().having(
             (error) => error.message,
             'message',
-            allOf(
-              contains('BAD-001'),
-              contains('not compatible'),
-            ),
+            allOf(contains('BAD-001'), contains('not compatible')),
           ),
         ),
       );
@@ -219,10 +208,7 @@ final _amrapSteps = [
     displayStyle: 'exercise',
     title: 'KB Swings',
     exerciseId: 'EX-KBS',
-    metadata: const {
-      'reps': '20',
-      'load': '24 kg',
-    },
+    metadata: const {'reps': '20', 'load': '24 kg'},
   ),
 ];
 
@@ -241,10 +227,7 @@ final _roundsForTimeSteps = [
     stepType: 'Instruction',
     displayStyle: 'instruction',
     title: '5 rounds for time',
-    metadata: const {
-      'format': 'rounds_for_time',
-      'rounds': '5',
-    },
+    metadata: const {'format': 'rounds_for_time', 'rounds': '5'},
   ),
   ProtocolStep(
     id: 202,

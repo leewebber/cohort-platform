@@ -18,9 +18,9 @@ class PersonalTrainingSetupService {
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeCatalogService? catalogService,
     ProgrammeAssignmentService? assignmentService,
-  })  : _assignmentStore = assignmentStore,
-        _catalogService = catalogService,
-        _assignmentService = assignmentService;
+  }) : _assignmentStore = assignmentStore,
+       _catalogService = catalogService,
+       _assignmentService = assignmentService;
 
   final ProgrammeAssignmentStore? _assignmentStore;
   final ProgrammeCatalogService? _catalogService;
@@ -36,7 +36,8 @@ class PersonalTrainingSetupService {
     if (athleteId == null) {
       return PersonalTrainingOperationResult.failure(
         status: PersonalTrainingOperationStatus.dualRoleRequired,
-        message: 'Coach and athlete roles are required to set up personal training.',
+        message:
+            'Coach and athlete roles are required to set up personal training.',
       );
     }
 
@@ -100,7 +101,8 @@ class PersonalTrainingSetupService {
     if (athleteId == null) {
       return PersonalTrainingOperationResult.failure(
         status: PersonalTrainingOperationStatus.dualRoleRequired,
-        message: 'Coach and athlete roles are required to assign personal training.',
+        message:
+            'Coach and athlete roles are required to assign personal training.',
       );
     }
 
@@ -167,7 +169,8 @@ class PersonalTrainingSetupService {
   }
 
   String _assignmentFailureMessage(ProgrammeAssignmentOperationResult result) {
-    if (result.status == ProgrammeAssignmentOperationStatus.alreadyActiveConflict) {
+    if (result.status ==
+        ProgrammeAssignmentOperationStatus.alreadyActiveConflict) {
       return 'You already have an active programme. Confirm replacement to continue.';
     }
     if (result.warnings.isNotEmpty) {

@@ -70,13 +70,16 @@ class IntervalPerformance {
       modality: IntervalModalityDb.fromDb(map['modality']?.toString()),
       targetDistanceMeters: _nullableDouble(map['target_distance_meters']),
       targetDurationSeconds: _nullableInt(map['target_duration_seconds']),
-      targetPaceSecondsPerKm:
-          _nullableDouble(map['target_pace_seconds_per_km']),
+      targetPaceSecondsPerKm: _nullableDouble(
+        map['target_pace_seconds_per_km'],
+      ),
       targetIntensity: _trimString(map['target_intensity']),
       recoveryDurationSeconds: _nullableInt(map['recovery_duration_seconds']),
       actualDistanceMeters: _nullableDouble(map['actual_distance_meters']),
       actualDurationSeconds: _nullableInt(map['actual_duration_seconds']),
-      actualPaceSecondsPerKm: _nullableDouble(map['actual_pace_seconds_per_km']),
+      actualPaceSecondsPerKm: _nullableDouble(
+        map['actual_pace_seconds_per_km'],
+      ),
       averageHeartRate: _nullableInt(map['average_heart_rate']),
       maxHeartRate: _nullableInt(map['max_heart_rate']),
       rpe: _nullableInt(map['rpe']),

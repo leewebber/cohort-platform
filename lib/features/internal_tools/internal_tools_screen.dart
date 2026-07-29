@@ -24,14 +24,14 @@ class _InternalToolsScreenState extends State<InternalToolsScreen> {
     try {
       await action();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$label completed')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('$label completed')));
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('$label failed: $error')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('$label failed: $error')));
     }
   }
 
@@ -111,9 +111,10 @@ class _InternalToolsScreenState extends State<InternalToolsScreen> {
                 title: 'Compare BW-001 Suitable Alternatives',
                 onTap: () => _run(
                   'Compare suitable alternatives',
-                  () => InternalToolsDebugActions.compareBw001SuitableAlternatives(
-                    athleteId: _athleteId,
-                  ),
+                  () =>
+                      InternalToolsDebugActions.compareBw001SuitableAlternatives(
+                        athleteId: _athleteId,
+                      ),
                 ),
               ),
               _toolCard(
@@ -183,28 +184,30 @@ class _InternalToolsScreenState extends State<InternalToolsScreen> {
                 title: 'Assign Founder Acceptance Programme',
                 onTap: () => _run(
                   'Assign founder acceptance programme',
-                  () => InternalToolsDebugActions.assignFounderAcceptanceProgramme(
-                    athleteId: _athleteId,
-                  ),
+                  () =>
+                      InternalToolsDebugActions.assignFounderAcceptanceProgramme(
+                        athleteId: _athleteId,
+                      ),
                 ),
               ),
               _toolCard(
                 title: 'Resolve Founder Acceptance Programme',
                 onTap: () => _run(
                   'Resolve founder acceptance programme',
-                  () => InternalToolsDebugActions.resolveFounderAcceptanceProgramme(
-                    athleteId: _athleteId,
-                  ),
+                  () =>
+                      InternalToolsDebugActions.resolveFounderAcceptanceProgramme(
+                        athleteId: _athleteId,
+                      ),
                 ),
               ),
               _toolCard(
                 title: 'Reset Founder Acceptance Programme',
                 onTap: () => _run(
                   'Reset founder acceptance programme',
-                  () => InternalToolsDebugActions
-                      .resetFounderAcceptanceProgrammeAssignment(
-                    athleteId: _athleteId,
-                  ),
+                  () =>
+                      InternalToolsDebugActions.resetFounderAcceptanceProgrammeAssignment(
+                        athleteId: _athleteId,
+                      ),
                 ),
               ),
             ],
@@ -214,19 +217,14 @@ class _InternalToolsScreenState extends State<InternalToolsScreen> {
     );
   }
 
-  Widget _toolCard({
-    required String title,
-    required VoidCallback onTap,
-  }) {
+  Widget _toolCard({required String title, required VoidCallback onTap}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.md),
       child: CohortCard(
         onTap: onTap,
         child: Row(
           children: [
-            Expanded(
-              child: Text(title, style: CohortTextStyles.cardTitle),
-            ),
+            Expanded(child: Text(title, style: CohortTextStyles.cardTitle)),
             Text('RUN', style: CohortTextStyles.eyebrow),
           ],
         ),

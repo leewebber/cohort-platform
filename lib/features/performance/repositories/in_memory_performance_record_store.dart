@@ -5,9 +5,8 @@ import '../models/training_session_record_status.dart';
 import 'performance_record_store.dart';
 
 class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
-  InMemoryPerformanceRecordStore({
-    PerformanceRecordMapper? mapper,
-  }) : _mapper = mapper ?? const PerformanceRecordMapper();
+  InMemoryPerformanceRecordStore({PerformanceRecordMapper? mapper})
+    : _mapper = mapper ?? const PerformanceRecordMapper();
 
   final PerformanceRecordMapper _mapper;
   final Map<String, TrainingSessionRecord> _recordsById = {};
@@ -45,8 +44,9 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
         continue;
       }
       if (latest == null ||
-          (record.completedAt ?? record.startedAt)
-              .isAfter(latest.completedAt ?? latest.startedAt)) {
+          (record.completedAt ?? record.startedAt).isAfter(
+            latest.completedAt ?? latest.startedAt,
+          )) {
         latest = record;
       }
     }
@@ -110,17 +110,19 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
     int limit = 25,
     int offset = 0,
   }) async {
-    final records = _recordsById.values
-        .where(
-          (record) =>
-              record.athleteId == athleteId &&
-              isTerminalRecordStatus(record.status),
-        )
-        .toList()
-      ..sort(
-        (a, b) => (b.completedAt ?? b.startedAt)
-            .compareTo(a.completedAt ?? a.startedAt),
-      );
+    final records =
+        _recordsById.values
+            .where(
+              (record) =>
+                  record.athleteId == athleteId &&
+                  isTerminalRecordStatus(record.status),
+            )
+            .toList()
+          ..sort(
+            (a, b) => (b.completedAt ?? b.startedAt).compareTo(
+              a.completedAt ?? a.startedAt,
+            ),
+          );
 
     if (offset >= records.length) return const [];
     final end = (offset + limit).clamp(0, records.length);
@@ -139,7 +141,8 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
       if (record.athleteId != athleteId) continue;
 
       final matchesProtocol = record.sourceProtocolId == sourceProtocolId;
-      final matchesAssignment = assignmentId != null &&
+      final matchesAssignment =
+          assignmentId != null &&
           assignmentId.isNotEmpty &&
           record.assignmentId == assignmentId;
       if (matchesProtocol || matchesAssignment) {

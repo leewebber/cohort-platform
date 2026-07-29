@@ -118,10 +118,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
     if (assignment == null) {
       return const CohortCard(
-        child: Text(
-          'No active programme.',
-          style: CohortTextStyles.body,
-        ),
+        child: Text('No active programme.', style: CohortTextStyles.body),
       );
     }
 

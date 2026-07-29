@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/adaptation/adaptation_application.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/adaptation/models/programme_adaptation_event.dart';
 import 'package:cohort_platform/models/adaptation_reason.dart';
@@ -5,7 +6,6 @@ import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/adaptation_scoring_reason.dart';
 import 'package:cohort_platform/models/adaptation_session_environment.dart';
 import 'package:cohort_platform/models/recovery_state.dart';
-import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -86,12 +86,14 @@ void main() {
 
     test('SessionBlockTypeAdaptationPolicy provides strength defaults', () {
       final policy = SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(
-        SessionBlockType.strength,
+        AdaptationBlockType.strength,
       );
       expect(policy.canReplaceExercises, isTrue);
       expect(policy.canRemove, isFalse);
       expect(
-        SessionBlockTypeAdaptationPolicy.defaultPriority(SessionBlockType.warmUp),
+        SessionBlockTypeAdaptationPolicy.defaultPriority(
+          AdaptationBlockType.warmUp,
+        ),
         BlockPriority.disposable,
       );
     });
@@ -110,8 +112,9 @@ void main() {
       expect(assessment.primaryIntentRetained, isTrue);
       expect(assessment.secondaryIntentRetained, isFalse);
 
-      final roundTrip =
-          AdaptationFidelityAssessment.fromJson(assessment.toJson());
+      final roundTrip = AdaptationFidelityAssessment.fromJson(
+        assessment.toJson(),
+      );
       expect(roundTrip.fidelity, AdaptationFidelity.high);
     });
   });
@@ -155,7 +158,9 @@ void main() {
         recoveryState: RecoveryState.veryFatigued,
       );
 
-      final constraints = AdaptationReasonMapping.constraintsFromRequest(request);
+      final constraints = AdaptationReasonMapping.constraintsFromRequest(
+        request,
+      );
       expect(constraints, hasLength(1));
       expect(constraints.first.kind, AdaptationConstraintKind.recovery);
       expect(constraints.first.isHard, isTrue);
@@ -173,11 +178,15 @@ void main() {
         environment: AdaptationSessionEnvironment.hotelGym,
       );
 
-      final constraints = AdaptationReasonMapping.constraintsFromRequest(request);
+      final constraints = AdaptationReasonMapping.constraintsFromRequest(
+        request,
+      );
       expect(constraints.first.trainingEnvironment, 'hotel_gym');
 
       expect(
-        AdaptationReasonMapping.primaryScoringReason(AdaptationReason.environment),
+        AdaptationReasonMapping.primaryScoringReason(
+          AdaptationReason.environment,
+        ),
         AdaptationScoringReason.travelling,
       );
 

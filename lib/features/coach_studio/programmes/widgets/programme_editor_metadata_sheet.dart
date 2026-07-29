@@ -18,10 +18,7 @@ Future<void> showProgrammeEditorMetadataSheet({
 }
 
 class ProgrammeEditorMetadataSheet extends StatefulWidget {
-  const ProgrammeEditorMetadataSheet({
-    super.key,
-    required this.controller,
-  });
+  const ProgrammeEditorMetadataSheet({super.key, required this.controller});
 
   final ProgrammeEditorController controller;
 
@@ -47,18 +44,22 @@ class _ProgrammeEditorMetadataSheetState
     super.initState();
     final metadata = widget.controller.document!.metadata;
     _nameController = TextEditingController(text: metadata.name);
-    _descriptionController =
-        TextEditingController(text: metadata.description ?? '');
+    _descriptionController = TextEditingController(
+      text: metadata.description ?? '',
+    );
     _durationController = TextEditingController(
       text: metadata.durationWeeks?.toString() ?? '',
     );
     _goalController = TextEditingController(text: metadata.primaryGoal ?? '');
-    _targetAthleteController =
-        TextEditingController(text: metadata.targetAthlete ?? '');
-    _difficultyController =
-        TextEditingController(text: metadata.difficulty ?? '');
-    _equipmentController =
-        TextEditingController(text: metadata.equipmentRequirements ?? '');
+    _targetAthleteController = TextEditingController(
+      text: metadata.targetAthlete ?? '',
+    );
+    _difficultyController = TextEditingController(
+      text: metadata.difficulty ?? '',
+    );
+    _equipmentController = TextEditingController(
+      text: metadata.equipmentRequirements ?? '',
+    );
     _sessionsPerWeekController = TextEditingController(
       text: metadata.sessionsPerWeek?.toString() ?? '',
     );
@@ -102,8 +103,12 @@ class _ProgrammeEditorMetadataSheetState
             Text(metadata.lineageCode, style: CohortTextStyles.cardTitle),
           ],
           const SizedBox(height: CohortSpacing.md),
-          _field('Description', _descriptionController,
-              enabled: !readOnly, maxLines: 3),
+          _field(
+            'Description',
+            _descriptionController,
+            enabled: !readOnly,
+            maxLines: 3,
+          ),
           const SizedBox(height: CohortSpacing.md),
           DropdownButtonFormField<ProgrammeLibraryScope>(
             value: _libraryScope,
@@ -128,21 +133,28 @@ class _ProgrammeEditorMetadataSheetState
           const SizedBox(height: CohortSpacing.md),
           _field('Primary goal', _goalController, enabled: !readOnly),
           const SizedBox(height: CohortSpacing.md),
-          _field('Target athlete', _targetAthleteController, enabled: !readOnly),
+          _field(
+            'Target athlete',
+            _targetAthleteController,
+            enabled: !readOnly,
+          ),
           const SizedBox(height: CohortSpacing.md),
           _field('Difficulty', _difficultyController, enabled: !readOnly),
           const SizedBox(height: CohortSpacing.md),
-          _field('Equipment requirements', _equipmentController,
-              enabled: !readOnly),
+          _field(
+            'Equipment requirements',
+            _equipmentController,
+            enabled: !readOnly,
+          ),
           const SizedBox(height: CohortSpacing.md),
-          _field('Sessions per week', _sessionsPerWeekController,
-              enabled: !readOnly),
+          _field(
+            'Sessions per week',
+            _sessionsPerWeekController,
+            enabled: !readOnly,
+          ),
           if (!readOnly) ...[
             const SizedBox(height: CohortSpacing.lg),
-            FilledButton(
-              onPressed: _save,
-              child: const Text('Apply changes'),
-            ),
+            FilledButton(onPressed: _save, child: const Text('Apply changes')),
           ],
         ],
       ),

@@ -3,7 +3,7 @@ import 'package:cohort_platform/features/auth/repositories/profile_repository.da
 
 class CountingProfileRepository implements ProfileRepository {
   CountingProfileRepository({Map<String, UserProfile>? seed})
-      : profiles = seed ?? {};
+    : profiles = seed ?? {};
 
   final Map<String, UserProfile> profiles;
   int getProfileCallCount = 0;

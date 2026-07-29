@@ -40,10 +40,9 @@ class SessionCompleteScreen extends StatelessWidget {
     return '${seconds}s';
   }
 
-  String get _adaptationLine =>
-      adaptationMessage?.trim().isNotEmpty == true
-          ? adaptationMessage!.trim()
-          : 'Programme continues as planned.';
+  String get _adaptationLine => adaptationMessage?.trim().isNotEmpty == true
+      ? adaptationMessage!.trim()
+      : 'Programme continues as planned.';
 
   ResolvedTodaySession? get _nextSession =>
       progressionResult?.nextResolvedSession;
@@ -70,10 +69,7 @@ class SessionCompleteScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'SESSION COMPLETE',
-                style: CohortTextStyles.eyebrow,
-              ),
+              Text('SESSION COMPLETE', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
               SessionCompletionSummary(
                 sessionTitle: state.plan.sessionTitle,

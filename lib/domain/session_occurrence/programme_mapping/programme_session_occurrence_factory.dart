@@ -1,4 +1,4 @@
-import '../athlete_daily/athlete_session_occurrence_index.dart';
+import '../ports/session_occurrence_repository.dart';
 import '../session_occurrence.dart';
 import '../value_objects/session_occurrence_audit_entry.dart';
 import '../vocabulary/session_occurrence_completion_status.dart';
@@ -16,7 +16,7 @@ class ProgrammeSessionOccurrenceFactory {
     required ProgrammeScheduledSlotInput input,
     required DateTime recordedAt,
     required ProgrammeSessionOccurrenceRegistry registry,
-    AthleteSessionOccurrenceIndex? athleteIndex,
+    SessionOccurrenceRepository? occurrenceRepository,
   }) {
     final validation = _validateInput(input);
     if (validation != null) return validation;
@@ -57,7 +57,7 @@ class ProgrammeSessionOccurrenceFactory {
     );
 
     registry.register(occurrence);
-    athleteIndex?.register(
+    occurrenceRepository?.register(
       athleteId: input.athleteId.trim(),
       occurrence: occurrence,
     );
@@ -69,7 +69,7 @@ class ProgrammeSessionOccurrenceFactory {
     required ProgrammeScheduledSlotInput input,
     required DateTime recordedAt,
     required ProgrammeSessionOccurrenceRegistry registry,
-    AthleteSessionOccurrenceIndex? athleteIndex,
+    SessionOccurrenceRepository? occurrenceRepository,
   }) {
     final key = input.slotKey;
     final existing = registry.occurrenceForSlot(key);
@@ -85,7 +85,7 @@ class ProgrammeSessionOccurrenceFactory {
       input: input,
       recordedAt: recordedAt,
       registry: registry,
-      athleteIndex: athleteIndex,
+      occurrenceRepository: occurrenceRepository,
     );
   }
 

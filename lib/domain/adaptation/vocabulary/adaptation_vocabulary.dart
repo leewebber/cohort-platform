@@ -10,6 +10,7 @@ export 'session_difficulty.dart';
 export 'impact_level.dart';
 export 'training_environment.dart';
 export 'block_priority.dart';
+export 'adaptation_block_type.dart';
 export 'exercise_placement_role.dart';
 export 'exercise_category.dart';
 export 'movement_pattern.dart';

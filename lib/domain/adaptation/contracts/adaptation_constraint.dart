@@ -44,7 +44,8 @@ class AdaptationConstraint {
         'available_equipment': availableEquipment.toList(),
       if (trainingEnvironment != null)
         'training_environment': trainingEnvironment,
-      if (recoveryStateLabel != null) 'recovery_state_label': recoveryStateLabel,
+      if (recoveryStateLabel != null)
+        'recovery_state_label': recoveryStateLabel,
       if (affectedBlockIds.isNotEmpty) 'affected_block_ids': affectedBlockIds,
       if (affectedExerciseIds.isNotEmpty)
         'affected_exercise_ids': affectedExerciseIds,
@@ -56,13 +57,15 @@ class AdaptationConstraint {
 
   factory AdaptationConstraint.fromJson(Map<String, dynamic> json) {
     return AdaptationConstraint(
-      kind: AdaptationConstraintKindDb.fromDb(json['kind']?.toString()) ??
+      kind:
+          AdaptationConstraintKindDb.fromDb(json['kind']?.toString()) ??
           AdaptationConstraintKind.unknown,
-      scope: AdaptationConstraintScopeDb.fromDb(json['scope']?.toString()) ??
+      scope:
+          AdaptationConstraintScopeDb.fromDb(json['scope']?.toString()) ??
           AdaptationConstraintScope.session,
       severity:
           AdaptationConstraintSeverityDb.fromDb(json['severity']?.toString()) ??
-              AdaptationConstraintSeverity.moderate,
+          AdaptationConstraintSeverity.moderate,
       isHard: json['is_hard'] == true,
       availableMinutes: json['available_minutes'] as int?,
       availableEquipment: _stringSet(json['available_equipment']),

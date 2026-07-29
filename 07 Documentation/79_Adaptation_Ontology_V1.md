@@ -105,7 +105,7 @@ Three layers — **do not conflate**:
 | **Legacy scoring** | `AdaptationScoringReason` | Rank protocols in global pool (transitional) |
 | **Audit output** | `ProgrammeAdaptationType` / `AdaptationAuditEventType` | Post-completion persisted events only |
 
-**Mapping implementation:** `AdaptationReasonMapping` in `lib/domain/adaptation/mapping/adaptation_reason_mapping.dart`.
+**Mapping implementation:** `AdaptationReasonMapping` in `lib/application/adaptation/adaptation_reason_request_adapter.dart`.
 
 | Athlete `AdaptationReason` | Domain kind | Primary `AdaptationScoringReason` | Notes |
 |----------------------------|-------------|-------------------------------------|--------|

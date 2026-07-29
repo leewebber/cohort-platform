@@ -61,7 +61,11 @@ class SessionOccurrence {
     String? notes,
   }) {
     if (occurrenceId.trim().isEmpty) {
-      throw ArgumentError.value(occurrenceId, 'occurrenceId', 'must not be empty');
+      throw ArgumentError.value(
+        occurrenceId,
+        'occurrenceId',
+        'must not be empty',
+      );
     }
     if (sourceSessionId.trim().isEmpty) {
       throw ArgumentError.value(
@@ -156,15 +160,13 @@ class SessionOccurrence {
           ),
         ),
       _ => SessionOccurrenceTransitionResult.singleFailure(
-          SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
-          detail: lifecycleState.name,
-        ),
+        SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
+        detail: lifecycleState.name,
+      ),
     };
   }
 
-  SessionOccurrenceTransitionResult complete({
-    required DateTime completedAt,
-  }) {
+  SessionOccurrenceTransitionResult complete({required DateTime completedAt}) {
     if (lifecycleState != SessionOccurrenceLifecycleState.inProgress) {
       return SessionOccurrenceTransitionResult.singleFailure(
         SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
@@ -214,9 +216,9 @@ class SessionOccurrence {
           ),
         ),
       _ => SessionOccurrenceTransitionResult.singleFailure(
-          SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
-          detail: lifecycleState.name,
-        ),
+        SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
+        detail: lifecycleState.name,
+      ),
     };
   }
 
@@ -248,9 +250,9 @@ class SessionOccurrence {
           ),
         ),
       _ => SessionOccurrenceTransitionResult.singleFailure(
-          SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
-          detail: lifecycleState.name,
-        ),
+        SessionOccurrenceTransitionIssueCode.invalidLifecycleState,
+        detail: lifecycleState.name,
+      ),
     };
   }
 
@@ -366,7 +368,8 @@ class SessionOccurrence {
     return SessionOccurrence(
       occurrenceId: occurrenceId,
       sourceSessionId: sourceSessionId,
-      programmeAssignmentId: programmeAssignmentId ?? this.programmeAssignmentId,
+      programmeAssignmentId:
+          programmeAssignmentId ?? this.programmeAssignmentId,
       programmeSessionSlotId:
           programmeSessionSlotId ?? this.programmeSessionSlotId,
       originalPlannedDate: originalPlannedDate,
@@ -403,21 +406,21 @@ class SessionOccurrence {
 
   @override
   int get hashCode => Object.hash(
-        occurrenceId,
-        sourceSessionId,
-        programmeAssignmentId,
-        programmeSessionSlotId,
-        originalPlannedDate,
-        plannedDate,
-        currentDate,
-        lifecycleState,
-        completionStatus,
-        executionSnapshot,
-        completedAt,
-        notes,
-        Object.hashAll(rescheduleHistory),
-        Object.hashAll(auditTrail),
-      );
+    occurrenceId,
+    sourceSessionId,
+    programmeAssignmentId,
+    programmeSessionSlotId,
+    originalPlannedDate,
+    plannedDate,
+    currentDate,
+    lifecycleState,
+    completionStatus,
+    executionSnapshot,
+    completedAt,
+    notes,
+    Object.hashAll(rescheduleHistory),
+    Object.hashAll(auditTrail),
+  );
 }
 
 bool _listEquals<T>(List<T> a, List<T> b) {

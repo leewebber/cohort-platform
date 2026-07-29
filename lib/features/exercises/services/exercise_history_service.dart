@@ -9,8 +9,8 @@ class ExerciseHistoryService {
   ExerciseHistoryService({
     TrainingSessionSetRepository? setRepository,
     ProtocolRepository? protocolRepository,
-  })  : setRepository = setRepository ?? const TrainingSessionSetRepository(),
-        protocolRepository = protocolRepository ?? ProtocolRepository();
+  }) : setRepository = setRepository ?? const TrainingSessionSetRepository(),
+       protocolRepository = protocolRepository ?? ProtocolRepository();
 
   final TrainingSessionSetRepository setRepository;
   final ProtocolRepository protocolRepository;
@@ -29,10 +29,7 @@ class ExerciseHistoryService {
     );
 
     if (rows.isEmpty) {
-      return ExerciseHistory(
-        exerciseId: exerciseId,
-        sessions: const [],
-      );
+      return ExerciseHistory(exerciseId: exerciseId, sessions: const []);
     }
 
     final protocolIds = rows
@@ -58,56 +55,51 @@ class ExerciseHistoryService {
       sessionCompletionReason[row.trainingSessionId] = row.completionReason;
     }
 
-    final sessions = groupedRows.entries.map((entry) {
-      final trainingSessionId = entry.key;
-      final sets = entry.value.map((row) => row.performance).toList()
-        ..sort(_compareSets);
+    final sessions =
+        groupedRows.entries.map((entry) {
+          final trainingSessionId = entry.key;
+          final sets = entry.value.map((row) => row.performance).toList()
+            ..sort(_compareSets);
 
-      final protocolId = sessionProtocolId[trainingSessionId] ?? '';
-      final protocolLabel = protocolNames[protocolId] ?? protocolId;
+          final protocolId = sessionProtocolId[trainingSessionId] ?? '';
+          final protocolLabel = protocolNames[protocolId] ?? protocolId;
 
-      return ExerciseHistorySession(
-        trainingSessionId: trainingSessionId,
-        performedAt: sessionCompletedAt[trainingSessionId],
-        protocolLabel: protocolLabel.isEmpty ? 'Session' : protocolLabel,
-        setLines: sets.map(_setLineFromPerformance).toList(growable: false),
-        summaryLine: _summaryLineForSets(sets),
-        athleteNote: _athleteNoteFromSets(sets),
-        endedEarly: sessionEndedEarly[trainingSessionId] ?? false,
-        completionReason: sessionCompletionReason[trainingSessionId],
-      );
-    }).toList()
-      ..sort((left, right) {
-        final leftDate = left.performedAt;
-        final rightDate = right.performedAt;
+          return ExerciseHistorySession(
+            trainingSessionId: trainingSessionId,
+            performedAt: sessionCompletedAt[trainingSessionId],
+            protocolLabel: protocolLabel.isEmpty ? 'Session' : protocolLabel,
+            setLines: sets.map(_setLineFromPerformance).toList(growable: false),
+            summaryLine: _summaryLineForSets(sets),
+            athleteNote: _athleteNoteFromSets(sets),
+            endedEarly: sessionEndedEarly[trainingSessionId] ?? false,
+            completionReason: sessionCompletionReason[trainingSessionId],
+          );
+        }).toList()..sort((left, right) {
+          final leftDate = left.performedAt;
+          final rightDate = right.performedAt;
 
-        if (leftDate == null && rightDate == null) {
-          return right.trainingSessionId.compareTo(left.trainingSessionId);
-        }
-        if (leftDate == null) {
-          return 1;
-        }
-        if (rightDate == null) {
-          return -1;
-        }
+          if (leftDate == null && rightDate == null) {
+            return right.trainingSessionId.compareTo(left.trainingSessionId);
+          }
+          if (leftDate == null) {
+            return 1;
+          }
+          if (rightDate == null) {
+            return -1;
+          }
 
-        return rightDate.compareTo(leftDate);
-      });
+          return rightDate.compareTo(leftDate);
+        });
 
-    return ExerciseHistory(
-      exerciseId: exerciseId,
-      sessions: sessions,
-    );
+    return ExerciseHistory(exerciseId: exerciseId, sessions: sessions);
   }
 
   ExerciseHistorySetLine _setLineFromPerformance(
     StrengthSetPerformance performance,
   ) {
-    final loadLabel = _formatLoad(
-      performance.loadValue,
-      performance.loadUnit,
-    );
-    final reps = _nullableString(performance.actualReps) ??
+    final loadLabel = _formatLoad(performance.loadValue, performance.loadUnit);
+    final reps =
+        _nullableString(performance.actualReps) ??
         _nullableString(performance.targetReps);
 
     final performanceCore = _formatPerformanceCore(
@@ -152,9 +144,12 @@ class ExerciseHistoryService {
   }
 
   String _summaryLineForSets(List<StrengthSetPerformance> sets) {
-    final prescribedCount =
-        sets.where((set) => set.completed && !set.isExtraSet).length;
-    final extraCount = sets.where((set) => set.completed && set.isExtraSet).length;
+    final prescribedCount = sets
+        .where((set) => set.completed && !set.isExtraSet)
+        .length;
+    final extraCount = sets
+        .where((set) => set.completed && set.isExtraSet)
+        .length;
 
     final parts = <String>[];
     if (prescribedCount > 0) {
@@ -183,8 +178,9 @@ class ExerciseHistoryService {
     }
 
     rowsWithNotes.sort((left, right) {
-      final completedCompare =
-          (left.completed ? 1 : 0).compareTo(right.completed ? 1 : 0);
+      final completedCompare = (left.completed ? 1 : 0).compareTo(
+        right.completed ? 1 : 0,
+      );
       if (completedCompare != 0) {
         return completedCompare;
       }
@@ -195,12 +191,10 @@ class ExerciseHistoryService {
     return rowsWithNotes.last.athleteNote?.trim();
   }
 
-  int _compareSets(
-    StrengthSetPerformance left,
-    StrengthSetPerformance right,
-  ) {
-    final extraCompare =
-        (left.isExtraSet ? 1 : 0).compareTo(right.isExtraSet ? 1 : 0);
+  int _compareSets(StrengthSetPerformance left, StrengthSetPerformance right) {
+    final extraCompare = (left.isExtraSet ? 1 : 0).compareTo(
+      right.isExtraSet ? 1 : 0,
+    );
     if (extraCompare != 0) {
       return extraCompare;
     }

@@ -4,10 +4,7 @@ import '../models/strength_rest_timer_state.dart';
 
 /// Local countdown orchestration for strength rest periods.
 class StrengthRestTimerController {
-  StrengthRestTimerController({
-    required this.onStateChanged,
-    this.onFinished,
-  });
+  StrengthRestTimerController({required this.onStateChanged, this.onFinished});
 
   final void Function(StrengthRestTimerState? state) onStateChanged;
   final void Function(StrengthRestTimerState state)? onFinished;
@@ -49,10 +46,7 @@ class StrengthRestTimerController {
     }
 
     _cancelTimer();
-    _state = current.copyWith(
-      isRunning: false,
-      isPaused: true,
-    );
+    _state = current.copyWith(isRunning: false, isPaused: true);
     onStateChanged(_state);
   }
 
@@ -62,10 +56,7 @@ class StrengthRestTimerController {
       return;
     }
 
-    _state = current.copyWith(
-      isRunning: true,
-      isPaused: false,
-    );
+    _state = current.copyWith(isRunning: true, isPaused: false);
     onStateChanged(_state);
     _startTicking();
   }
@@ -109,10 +100,7 @@ class StrengthRestTimerController {
       return;
     }
 
-    _state = current.copyWith(
-      remainingSeconds: nextRemaining,
-      isRunning: true,
-    );
+    _state = current.copyWith(remainingSeconds: nextRemaining, isRunning: true);
     onStateChanged(_state);
   }
 

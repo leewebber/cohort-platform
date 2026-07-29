@@ -16,9 +16,9 @@ class SessionLibraryAuthoringCoordinator {
     required ProtocolBuilderService protocolBuilderService,
     required TrainingContentIdGenerator idGenerator,
     required CurrentCoachIdentity coachIdentity,
-  })  : _protocolBuilderService = protocolBuilderService,
-        _idGenerator = idGenerator,
-        _coachIdentity = coachIdentity;
+  }) : _protocolBuilderService = protocolBuilderService,
+       _idGenerator = idGenerator,
+       _coachIdentity = coachIdentity;
 
   final ProtocolBuilderService _protocolBuilderService;
   final TrainingContentIdGenerator _idGenerator;
@@ -88,8 +88,9 @@ class SessionLibraryAuthoringCoordinator {
     final draftToSave = _assignDurableIdIfNeeded(normalized, isEdit: isEdit);
 
     try {
-      final saveResult =
-          await _protocolBuilderService.saveCoachLibrarySession(draftToSave);
+      final saveResult = await _protocolBuilderService.saveCoachLibrarySession(
+        draftToSave,
+      );
       final persisted = draftToSave.copyWith(
         protocolId: saveResult.protocolId,
         published: true,
@@ -188,9 +189,7 @@ class SessionLibraryAuthoringCoordinator {
     }
 
     final ownerId = _coachIdentity.coachId;
-    if (ownerId != null &&
-        draft.ownerId != null &&
-        draft.ownerId != ownerId) {
+    if (ownerId != null && draft.ownerId != null && draft.ownerId != ownerId) {
       throw const ProtocolBuilderException(
         'You can only access your own Sessions.',
       );

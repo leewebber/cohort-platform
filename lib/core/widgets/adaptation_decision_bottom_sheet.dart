@@ -37,7 +37,7 @@ class AdaptationDecisionBottomSheet extends StatelessWidget {
               label: isKeepOriginal
                   ? 'Continue Planned Session'
                   : 'Find Alternative',
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
         ),
@@ -46,11 +46,11 @@ class AdaptationDecisionBottomSheet extends StatelessWidget {
   }
 }
 
-Future<void> showAdaptationDecisionBottomSheet(
+Future<bool?> showAdaptationDecisionBottomSheet(
   BuildContext context,
   AdaptationDecision decision,
 ) {
-  return showModalBottomSheet<void>(
+  return showModalBottomSheet<bool>(
     context: context,
     backgroundColor: CohortColors.surfaceRaised,
     isScrollControlled: true,

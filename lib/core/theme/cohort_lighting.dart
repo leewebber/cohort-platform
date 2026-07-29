@@ -48,7 +48,9 @@ class CohortLighting {
   }
 
   static Gradient panelFill({required bool premium}) {
-    final base = premium ? CohortColors.surfacePremium : CohortColors.surfaceRaised;
+    final base = premium
+        ? CohortColors.surfacePremium
+        : CohortColors.surfaceRaised;
     return LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
@@ -67,7 +69,9 @@ class CohortLighting {
     );
   }
 
-  static Gradient radialAtmosphere({Alignment center = const Alignment(-0.6, -1.1)}) {
+  static Gradient radialAtmosphere({
+    Alignment center = const Alignment(-0.6, -1.1),
+  }) {
     return RadialGradient(
       center: center,
       radius: 1.35,

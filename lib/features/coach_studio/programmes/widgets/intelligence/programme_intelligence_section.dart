@@ -13,10 +13,7 @@ import 'programme_migration_card.dart';
 import 'version_overview_card.dart';
 
 class ProgrammeIntelligenceSection extends StatefulWidget {
-  const ProgrammeIntelligenceSection({
-    super.key,
-    required this.controller,
-  });
+  const ProgrammeIntelligenceSection({super.key, required this.controller});
 
   final ProgrammeIntelligenceController controller;
 
@@ -25,7 +22,8 @@ class ProgrammeIntelligenceSection extends StatefulWidget {
       _ProgrammeIntelligenceSectionState();
 }
 
-class _ProgrammeIntelligenceSectionState extends State<ProgrammeIntelligenceSection> {
+class _ProgrammeIntelligenceSectionState
+    extends State<ProgrammeIntelligenceSection> {
   @override
   void initState() {
     super.initState();

@@ -67,7 +67,8 @@ class ProgrammeDebugActions {
     final versions = versionStore ?? const ProgrammeVersionSupabaseStore();
     final outcomes =
         slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore();
-    final sync = athleteStateSyncService ??
+    final sync =
+        athleteStateSyncService ??
         AthleteStateSyncServiceImpl(
           athleteStateStore: const AthleteStateSupabaseStore(),
         );
@@ -96,7 +97,8 @@ class ProgrammeDebugActions {
     final versions = versionStore ?? const ProgrammeVersionSupabaseStore();
     final outcomes =
         slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore();
-    final sync = athleteStateSyncService ??
+    final sync =
+        athleteStateSyncService ??
         AthleteStateSyncServiceImpl(
           athleteStateStore: const AthleteStateSupabaseStore(),
         );
@@ -151,8 +153,7 @@ class ProgrammeDebugActions {
     ProgrammeAssignmentService? assignmentService,
     bool replaceExistingActive = false,
   }) {
-    final service =
-        assignmentService ?? createAssignmentService();
+    final service = assignmentService ?? createAssignmentService();
 
     return service.assignByLineageVersion(
       athleteId: devAthleteId,
@@ -179,7 +180,8 @@ class ProgrammeDebugActions {
     return service.resolveForAthlete(devAthleteId);
   }
 
-  static Future<ProgrammeAssignmentOperationResult> resetTestProgrammeAssignment({
+  static Future<ProgrammeAssignmentOperationResult>
+  resetTestProgrammeAssignment({
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
     ProgrammeVersionStore? versionStore,
@@ -187,7 +189,8 @@ class ProgrammeDebugActions {
   }) async {
     final assignmentStoreImpl =
         assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
-    final service = developmentService ??
+    final service =
+        developmentService ??
         createDevelopmentService(
           assignmentStore: assignmentStoreImpl,
           slotOutcomeStore:
@@ -195,11 +198,11 @@ class ProgrammeDebugActions {
           versionStore: versionStore ?? const ProgrammeVersionSupabaseStore(),
         );
 
-    final active =
-        await assignmentStoreImpl.getActiveAssignment(devAthleteId);
+    final active = await assignmentStoreImpl.getActiveAssignment(devAthleteId);
     if (active == null) {
       return ProgrammeAssignmentOperationResult.noAssignment(
-        message: 'No active assignment for $devAthleteId — run Assign Test Programme first',
+        message:
+            'No active assignment for $devAthleteId — run Assign Test Programme first',
       );
     }
 
@@ -228,9 +231,8 @@ class ProgrammeDebugActions {
   }
 
   /// Installs or updates the Founder Acceptance Programme and canonical session.
-  static Future<FounderAcceptanceInstallResult> installFounderAcceptanceProgramme({
-    FounderAcceptanceInstaller? installer,
-  }) {
+  static Future<FounderAcceptanceInstallResult>
+  installFounderAcceptanceProgramme({FounderAcceptanceInstaller? installer}) {
     return (installer ?? FounderAcceptanceInstaller()).install();
   }
 
@@ -238,7 +240,8 @@ class ProgrammeDebugActions {
   ///
   /// Developer-only: replaces any other active debug assignment and is
   /// idempotent when Founder Acceptance v1 is already active.
-  static Future<ProgrammeAssignmentOperationResult> assignFounderAcceptanceProgramme({
+  static Future<ProgrammeAssignmentOperationResult>
+  assignFounderAcceptanceProgramme({
     ProgrammeAssignmentService? assignmentService,
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
@@ -258,7 +261,8 @@ class ProgrammeDebugActions {
       );
     }
 
-    final service = assignmentService ??
+    final service =
+        assignmentService ??
         createAssignmentService(
           assignmentStore: store,
           slotOutcomeStore: slotOutcomeStore,
@@ -293,7 +297,7 @@ class ProgrammeDebugActions {
   }
 
   static Future<ProgrammeAssignmentOperationResult>
-      _syncExistingFounderAcceptanceAssignment({
+  _syncExistingFounderAcceptanceAssignment({
     required ProgrammeAssignment assignment,
     required ProgrammeAssignmentStore assignmentStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
@@ -310,8 +314,7 @@ class ProgrammeDebugActions {
       slotOutcomeStore: slotOutcomeStore,
       versionStore: versionStore,
     );
-    final sync =
-        athleteStateSyncService ?? createAthleteStateSyncService();
+    final sync = athleteStateSyncService ?? createAthleteStateSyncService();
 
     try {
       final resolution = await todayService.resolveForAthlete(devAthleteId);
@@ -368,7 +371,7 @@ class ProgrammeDebugActions {
 
   /// Resets the active Founder Acceptance assignment cursor and outcomes.
   static Future<ProgrammeAssignmentOperationResult>
-      resetFounderAcceptanceProgrammeAssignment({
+  resetFounderAcceptanceProgrammeAssignment({
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
     ProgrammeVersionStore? versionStore,
@@ -390,9 +393,9 @@ class ProgrammeDebugActions {
     try {
       await (runtimeResetService ?? FounderAcceptanceRuntimeResetService())
           .clearFounderRuntimeState(
-        athleteId: devAthleteId,
-        assignmentId: result.assignment!.id,
-      );
+            athleteId: devAthleteId,
+            assignmentId: result.assignment!.id,
+          );
     } catch (error) {
       debugPrint('[FounderAcceptanceReset] runtime cleanup failed: $error');
       return ProgrammeAssignmentOperationResult(
@@ -431,7 +434,7 @@ class ProgrammeDebugActions {
   }
 
   static Future<ProgrammeAssignmentOperationResult>
-      resetProgrammeAssignmentForLineage({
+  resetProgrammeAssignmentForLineage({
     required String lineageCode,
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
@@ -440,7 +443,8 @@ class ProgrammeDebugActions {
   }) async {
     final assignmentStoreImpl =
         assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
-    final service = developmentService ??
+    final service =
+        developmentService ??
         createDevelopmentService(
           assignmentStore: assignmentStoreImpl,
           slotOutcomeStore:

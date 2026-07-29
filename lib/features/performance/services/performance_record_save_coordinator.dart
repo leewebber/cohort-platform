@@ -34,13 +34,13 @@ class PerformanceRecordSaveCoordinator {
     TrainingSessionRepository? trainingSessionRepository,
     ProgrammeSessionProgressionCoordinator? progressionCoordinator,
     AdaptationExecutionCoordinator? adaptationCoordinator,
-  })  : _store = store ?? SupabasePerformanceRecordStore(),
-        _trainingSessionRepository =
-            trainingSessionRepository ?? const TrainingSessionRepository(),
-        _progressionCoordinator =
-            progressionCoordinator ?? ProgrammeSessionProgressionCoordinator(),
-        _adaptationCoordinator =
-            adaptationCoordinator ?? AdaptationExecutionCoordinator();
+  }) : _store = store ?? SupabasePerformanceRecordStore(),
+       _trainingSessionRepository =
+           trainingSessionRepository ?? const TrainingSessionRepository(),
+       _progressionCoordinator =
+           progressionCoordinator ?? ProgrammeSessionProgressionCoordinator(),
+       _adaptationCoordinator =
+           adaptationCoordinator ?? AdaptationExecutionCoordinator();
 
   final PerformanceRecordStore _store;
   final TrainingSessionRepository _trainingSessionRepository;
@@ -95,13 +95,14 @@ class PerformanceRecordSaveCoordinator {
 
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
       try {
-        progressionResult = await _progressionCoordinator.handleSessionCompleted(
-          athleteId: athleteId,
-          programmeContext: programmeContext,
-          trainingSessionId: trainingSessionId,
-          endedEarly: endedEarly,
-          resolutionNote: persistableDraft.athleteNote,
-        );
+        progressionResult = await _progressionCoordinator
+            .handleSessionCompleted(
+              athleteId: athleteId,
+              programmeContext: programmeContext,
+              trainingSessionId: trainingSessionId,
+              endedEarly: endedEarly,
+              resolutionNote: persistableDraft.athleteNote,
+            );
       } catch (error) {
         progressionFailed = true;
         progressionMessage = error.toString();
@@ -109,14 +110,15 @@ class PerformanceRecordSaveCoordinator {
 
       if (!progressionFailed) {
         try {
-          adaptationResult = await _adaptationCoordinator.executeAfterSessionCompleted(
-            athleteId: athleteId,
-            record: record,
-            programmeContext: programmeContext,
-            trainingSessionId: trainingSessionId,
-            endedEarly: endedEarly,
-            progressionResult: progressionResult,
-          );
+          adaptationResult = await _adaptationCoordinator
+              .executeAfterSessionCompleted(
+                athleteId: athleteId,
+                record: record,
+                programmeContext: programmeContext,
+                trainingSessionId: trainingSessionId,
+                endedEarly: endedEarly,
+                progressionResult: progressionResult,
+              );
         } catch (_) {
           adaptationResult = AdaptationExecutionResult.skipped(
             'Adaptation execution failed',

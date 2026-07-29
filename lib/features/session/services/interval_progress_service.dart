@@ -65,10 +65,14 @@ class IntervalProgressService {
 
     final paceImproved = _paceImproved(todayMetrics, previousMetrics);
     final paceDeclined = _paceDeclined(todayMetrics, previousMetrics);
-    final consistencyImproved =
-        _consistencyImproved(todayMetrics, previousMetrics);
-    final consistencyDeclined =
-        _consistencyDeclined(todayMetrics, previousMetrics);
+    final consistencyImproved = _consistencyImproved(
+      todayMetrics,
+      previousMetrics,
+    );
+    final consistencyDeclined = _consistencyDeclined(
+      todayMetrics,
+      previousMetrics,
+    );
     final effortImproved = _effortImproved(
       todayMetrics: todayMetrics,
       previousMetrics: previousMetrics,
@@ -105,7 +109,8 @@ class IntervalProgressService {
       return IntervalProgressResult(
         progressType: IntervalProgressType.consistencyImproved,
         title: 'Consistency improved',
-        message: 'Your pacing spread was tighter across completed work intervals.',
+        message:
+            'Your pacing spread was tighter across completed work intervals.',
         reasons: reasons,
       );
     }
@@ -171,7 +176,9 @@ class IntervalProgressService {
     return _insufficientData(reasons: reasons);
   }
 
-  IntervalProgressResult _firstPerformance(List<IntervalRepEntry> todayMeasurable) {
+  IntervalProgressResult _firstPerformance(
+    List<IntervalRepEntry> todayMeasurable,
+  ) {
     final reasons = <String>[];
 
     if (todayMeasurable.isNotEmpty) {
@@ -190,9 +197,7 @@ class IntervalProgressService {
     );
   }
 
-  IntervalProgressResult _insufficientData({
-    required List<String> reasons,
-  }) {
+  IntervalProgressResult _insufficientData({required List<String> reasons}) {
     return IntervalProgressResult(
       progressType: IntervalProgressType.insufficientData,
       title: 'Logged successfully',
@@ -204,17 +209,20 @@ class IntervalProgressService {
   List<IntervalRepEntry> _measurableWorkPhases(
     List<IntervalRepEntry> todayCompletedWorkPhases,
   ) {
-    final workPhases = todayCompletedWorkPhases
-        .where((entry) => entry.isWorkPhase && entry.completed && !entry.skipped)
-        .toList()
-      ..sort((left, right) {
-        final blockCompare = left.blockIndex.compareTo(right.blockIndex);
-        if (blockCompare != 0) {
-          return blockCompare;
-        }
+    final workPhases =
+        todayCompletedWorkPhases
+            .where(
+              (entry) => entry.isWorkPhase && entry.completed && !entry.skipped,
+            )
+            .toList()
+          ..sort((left, right) {
+            final blockCompare = left.blockIndex.compareTo(right.blockIndex);
+            if (blockCompare != 0) {
+              return blockCompare;
+            }
 
-        return left.repNumber.compareTo(right.repNumber);
-      });
+            return left.repNumber.compareTo(right.repNumber);
+          });
 
     return workPhases;
   }
@@ -223,7 +231,9 @@ class IntervalProgressService {
     return _IntervalSessionMetrics(
       validRepCount: entries.length,
       averageDurationSeconds: _averageInt(
-        entries.map((entry) => entry.actualDuration?.inSeconds).whereType<int>(),
+        entries
+            .map((entry) => entry.actualDuration?.inSeconds)
+            .whereType<int>(),
       ),
       averagePaceSecondsPerKm: _averageDouble(
         entries.map((entry) => entry.actualPace).whereType<double>(),
@@ -232,9 +242,10 @@ class IntervalProgressService {
         entries.map((entry) => entry.actualPace).whereType<double>(),
       ),
       averageRpe: _averageDouble(
-        entries.map((entry) => entry.rpe).whereType<int>().map(
-              (value) => value.toDouble(),
-            ),
+        entries
+            .map((entry) => entry.rpe)
+            .whereType<int>()
+            .map((value) => value.toDouble()),
       ),
     );
   }
@@ -392,7 +403,9 @@ class IntervalProgressService {
       previousMetrics.averagePaceSecondsPerKm,
     );
     if (todayPaceLabel != null && previousPaceLabel != null) {
-      reasons.add('Average pace moved from $previousPaceLabel to $todayPaceLabel.');
+      reasons.add(
+        'Average pace moved from $previousPaceLabel to $todayPaceLabel.',
+      );
     }
 
     if (todayMetrics.paceSpreadSeconds != null &&

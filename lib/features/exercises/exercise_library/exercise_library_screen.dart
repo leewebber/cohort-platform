@@ -11,10 +11,7 @@ import '../services/exercise_catalogue_service.dart';
 import '../exercise_detail/exercise_detail_screen.dart';
 
 class ExerciseLibraryScreen extends StatefulWidget {
-  const ExerciseLibraryScreen({
-    super.key,
-    this.athleteId,
-  });
+  const ExerciseLibraryScreen({super.key, this.athleteId});
 
   final String? athleteId;
 
@@ -87,10 +84,7 @@ class _ExerciseLibraryScreenState extends State<ExerciseLibraryScreen> {
                   const SizedBox(height: CohortSpacing.md),
                   const SectionTitle('Knowledge Base'),
                   const SizedBox(height: CohortSpacing.sm),
-                  const Text(
-                    'Exercise Library',
-                    style: CohortTextStyles.h1,
-                  ),
+                  const Text('Exercise Library', style: CohortTextStyles.h1),
                   const SizedBox(height: CohortSpacing.md),
                   const Text(
                     'Browse the exercise knowledge base.',

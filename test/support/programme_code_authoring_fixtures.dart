@@ -39,9 +39,7 @@ ProtocolDraft fullyTaggedUpperBodyStrengthSession({
           canReplaceExercises: true,
           canReplaceBlock: false,
         ),
-        linkedExercises: [
-          exerciseLink(exerciseId: 'BP-001', position: 1),
-        ],
+        linkedExercises: [exerciseLink(exerciseId: 'BP-001', position: 1)],
       ),
       block(
         type: SessionBlockType.accessory,

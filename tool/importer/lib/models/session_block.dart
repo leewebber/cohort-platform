@@ -91,9 +91,7 @@ class SessionBlock {
     if (timerRaw is Map<String, dynamic>) {
       timer = TimerConfiguration.fromJson(timerRaw);
     } else if (timerRaw is Map) {
-      timer = TimerConfiguration.fromJson(
-        Map<String, dynamic>.from(timerRaw),
-      );
+      timer = TimerConfiguration.fromJson(Map<String, dynamic>.from(timerRaw));
     }
 
     return SessionBlock(
@@ -132,7 +130,7 @@ class SessionBlock {
   }
 
   SessionBlock deepClone({required int position, String? titleSuffix}) {
-      final clonedLinks = linkedExercises
+    final clonedLinks = linkedExercises
         .asMap()
         .entries
         .map(

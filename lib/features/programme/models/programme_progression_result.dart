@@ -55,8 +55,8 @@ class ProgrammeProgressionResult {
     required bool athleteStateSynced,
     List<String> warnings = const [],
   }) {
-    final status = nextResolvedSession.kind ==
-            ResolvedTodaySessionKind.programmeComplete
+    final status =
+        nextResolvedSession.kind == ResolvedTodaySessionKind.programmeComplete
         ? ProgrammeProgressionStatus.programmeComplete
         : ProgrammeProgressionStatus.completed;
 

@@ -37,10 +37,7 @@ class _EarlySessionEndDialogState extends State<EarlySessionEndDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: CohortColors.surfaceRaised,
-      title: Text(
-        'End session early?',
-        style: CohortTextStyles.cardTitle,
-      ),
+      title: Text('End session early?', style: CohortTextStyles.cardTitle),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,18 +49,14 @@ class _EarlySessionEndDialogState extends State<EarlySessionEndDialog> {
               style: CohortTextStyles.body,
             ),
             const SizedBox(height: CohortSpacing.lg),
-            Text(
-              'Reason (optional)',
-              style: CohortTextStyles.muted,
-            ),
+            Text('Reason (optional)', style: CohortTextStyles.muted),
             const SizedBox(height: CohortSpacing.sm),
             for (final reason in widget.reasons)
               Padding(
                 padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
                 child: InkWell(
                   onTap: () => setState(() {
-                    _selectedReason =
-                        _selectedReason == reason ? null : reason;
+                    _selectedReason = _selectedReason == reason ? null : reason;
                   }),
                   borderRadius: CohortRadius.smallRadius,
                   child: Container(
@@ -83,10 +76,7 @@ class _EarlySessionEndDialogState extends State<EarlySessionEndDialog> {
                             : CohortColors.border,
                       ),
                     ),
-                    child: Text(
-                      reason.label,
-                      style: CohortTextStyles.small,
-                    ),
+                    child: Text(reason.label, style: CohortTextStyles.small),
                   ),
                 ),
               ),
@@ -96,15 +86,12 @@ class _EarlySessionEndDialogState extends State<EarlySessionEndDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            'Cancel',
-            style: CohortTextStyles.body,
-          ),
+          child: Text('Cancel', style: CohortTextStyles.body),
         ),
         TextButton(
-          onPressed: () => Navigator.of(context).pop(
-            EarlySessionEndResult(reason: _selectedReason),
-          ),
+          onPressed: () => Navigator.of(
+            context,
+          ).pop(EarlySessionEndResult(reason: _selectedReason)),
           child: widget.emphasizeConfirmButton
               ? Text(
                   'End session',

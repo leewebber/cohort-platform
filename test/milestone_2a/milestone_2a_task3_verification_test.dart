@@ -81,13 +81,14 @@ ProtocolDraft buildTaggedSessionViaVisualBuilder({
   );
 
   final blank =
-      ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(context)
-          .copyWith(
-    protocolId: protocolId,
-    name: 'Upper Body Strength',
-    sessionFormat: 'structured_strength',
-    programmeVersionId: programmeVersionId,
-  );
+      ProgrammeSessionDraftFactory.createBlankProgrammeSessionDraft(
+        context,
+      ).copyWith(
+        protocolId: protocolId,
+        name: 'Upper Body Strength',
+        sessionFormat: 'structured_strength',
+        programmeVersionId: programmeVersionId,
+      );
 
   final editing = SessionBuilderEditingState(draft: blank);
   editing.setPrimarySessionIntent(_canonicalPrimary);
@@ -96,10 +97,7 @@ ProtocolDraft buildTaggedSessionViaVisualBuilder({
   editing.durationMin = 60;
 
   editing.blocks = [
-    block(
-      type: SessionBlockType.warmUp,
-      content: 'Row and shoulder prep',
-    ),
+    block(type: SessionBlockType.warmUp, content: 'Row and shoulder prep'),
     block(
       type: SessionBlockType.strength,
       title: 'Main strength',
@@ -120,9 +118,14 @@ void expectEquivalentCanonicalPersistence(
   ProtocolDraft code,
   ProtocolDraft builder,
 ) {
-  final codeMap = InMemoryProtocolRowStore().buildUpsertMap(code, published: false);
-  final builderMap =
-      InMemoryProtocolRowStore().buildUpsertMap(builder, published: false);
+  final codeMap = InMemoryProtocolRowStore().buildUpsertMap(
+    code,
+    published: false,
+  );
+  final builderMap = InMemoryProtocolRowStore().buildUpsertMap(
+    builder,
+    published: false,
+  );
 
   expect(
     builderMap[SessionAdaptationMetadataKeys.primarySessionIntent],
@@ -183,215 +186,230 @@ Future<ProtocolDraft> persistAndReload({
 }
 
 void main() {
-  group('Milestone 2A Task 3 — code vs visual builder canonical equivalence', () {
-    test('A/B same metadata produces equivalent persisted maps', () {
-      const protocolId = 'm2a-equiv-1';
-      final code = buildTaggedSessionViaCode(
-        protocolId: protocolId,
-        programmeVersionId: testProgrammeVersionId,
-      );
-      final visual = buildTaggedSessionViaVisualBuilder(
-        protocolId: protocolId,
-        programmeVersionId: testProgrammeVersionId,
-      );
+  group(
+    'Milestone 2A Task 3 — code vs visual builder canonical equivalence',
+    () {
+      test('A/B same metadata produces equivalent persisted maps', () {
+        const protocolId = 'm2a-equiv-1';
+        final code = buildTaggedSessionViaCode(
+          protocolId: protocolId,
+          programmeVersionId: testProgrammeVersionId,
+        );
+        final visual = buildTaggedSessionViaVisualBuilder(
+          protocolId: protocolId,
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      expectEquivalentCanonicalPersistence(code, visual);
-    });
-  });
+        expectEquivalentCanonicalPersistence(code, visual);
+      });
+    },
+  );
 
-  group('Path A — code create → persist → reload → builder edit → duplicate', () {
-    test('full code path with programme duplicate', () async {
-      final protocolStore = InMemoryProtocolRowStore();
-      final blockRepo = InMemorySessionBlockRepository();
-      final builder = FakeProtocolBuilderService();
-      final persistence = ProgrammeCodeAuthoringPersistence(builder);
+  group(
+    'Path A — code create → persist → reload → builder edit → duplicate',
+    () {
+      test('full code path with programme duplicate', () async {
+        final protocolStore = InMemoryProtocolRowStore();
+        final blockRepo = InMemorySessionBlockRepository();
+        final builder = FakeProtocolBuilderService();
+        final persistence = ProgrammeCodeAuthoringPersistence(builder);
 
-      const protocolId = 'm2a-code-path-1';
-      final created = buildTaggedSessionViaCode(
-        protocolId: protocolId,
-        programmeVersionId: testProgrammeVersionId,
-      );
+        const protocolId = 'm2a-code-path-1';
+        final created = buildTaggedSessionViaCode(
+          protocolId: protocolId,
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      await persistence.saveProgrammeSession(created);
-      expect(builder.draftsById[protocolId], isNotNull);
+        await persistence.saveProgrammeSession(created);
+        expect(builder.draftsById[protocolId], isNotNull);
 
-      protocolStore.upsertFromDraft(created);
-      await blockRepo.replaceSessionBlocks(
-        sessionId: protocolId,
-        blocks: created.blocks,
-      );
+        protocolStore.upsertFromDraft(created);
+        await blockRepo.replaceSessionBlocks(
+          sessionId: protocolId,
+          blocks: created.blocks,
+        );
 
-      var reloaded = await persistAndReload(
-        draft: created,
-        protocolStore: protocolStore,
-        blockRepo: blockRepo,
-      );
-      expect(reloaded.primarySessionIntent, _canonicalPrimary);
+        var reloaded = await persistAndReload(
+          draft: created,
+          protocolStore: protocolStore,
+          blockRepo: blockRepo,
+        );
+        expect(reloaded.primarySessionIntent, _canonicalPrimary);
 
-      final editing = SessionBuilderEditingState(draft: reloaded);
-      editing.setPrimarySessionIntent(SessionIntent.pushStrength);
-      editing.setMinimumViableDurationMin(40);
-      final edited = editing.buildDraft();
-      protocolStore.upsertFromDraft(edited);
-      await blockRepo.replaceSessionBlocks(
-        sessionId: protocolId,
-        blocks: edited.blocks,
-      );
-      reloaded = protocolStore.loadDraft(
-        protocolId: protocolId,
-        blocks: await blockRepo.getSessionBlocks(protocolId),
-      );
-      expect(reloaded.primarySessionIntent, SessionIntent.pushStrength);
-      expect(reloaded.minimumViableDurationMin, 40);
+        final editing = SessionBuilderEditingState(draft: reloaded);
+        editing.setPrimarySessionIntent(SessionIntent.pushStrength);
+        editing.setMinimumViableDurationMin(40);
+        final edited = editing.buildDraft();
+        protocolStore.upsertFromDraft(edited);
+        await blockRepo.replaceSessionBlocks(
+          sessionId: protocolId,
+          blocks: edited.blocks,
+        );
+        reloaded = protocolStore.loadDraft(
+          protocolId: protocolId,
+          blocks: await blockRepo.getSessionBlocks(protocolId),
+        );
+        expect(reloaded.primarySessionIntent, SessionIntent.pushStrength);
+        expect(reloaded.minimumViableDurationMin, 40);
 
-      const sourceVersionId = '44444444-4444-4444-4444-444444444444';
-      protocolStore.upsertFromDraft(reloaded, published: false);
+        const sourceVersionId = '44444444-4444-4444-4444-444444444444';
+        protocolStore.upsertFromDraft(reloaded, published: false);
 
-      final tables = InMemoryProgrammeTables();
-      final versionStore = InMemoryProgrammeVersionStore(tables);
-      final assignmentStore = InMemoryProgrammeAssignmentStore(tables);
-      final service = ProgrammeBuilderServiceImpl(
-        versionStore: versionStore,
-        assignmentStore: assignmentStore,
-        validationService: ProgrammeBuilderValidationServiceImpl(),
-        compiler: const ProgrammeBuilderCompiler(),
-      );
+        final tables = InMemoryProgrammeTables();
+        final versionStore = InMemoryProgrammeVersionStore(tables);
+        final assignmentStore = InMemoryProgrammeAssignmentStore(tables);
+        final service = ProgrammeBuilderServiceImpl(
+          versionStore: versionStore,
+          assignmentStore: assignmentStore,
+          validationService: ProgrammeBuilderValidationServiceImpl(),
+          compiler: const ProgrammeBuilderCompiler(),
+        );
 
-      tables.lineages.add(
-        ProgrammeLineage(id: 'lineage-m2a', code: 'M2A-CODE'),
-      );
-      tables.versions.add(
-        ProgrammeVersion(
-          id: sourceVersionId,
-          lineageId: 'lineage-m2a',
-          versionNumber: 1,
-          lifecycleStatus: ProgrammeLifecycleStatus.published,
-          libraryScope: ProgrammeLibraryScope.coachPrivate,
-          ownerType: ProgrammeOwnerType.coach,
-          ownerId: 'dev-coach',
-          name: 'Source',
-        ),
-      );
+        tables.lineages.add(
+          ProgrammeLineage(id: 'lineage-m2a', code: 'M2A-CODE'),
+        );
+        tables.versions.add(
+          ProgrammeVersion(
+            id: sourceVersionId,
+            lineageId: 'lineage-m2a',
+            versionNumber: 1,
+            lifecycleStatus: ProgrammeLifecycleStatus.published,
+            libraryScope: ProgrammeLibraryScope.coachPrivate,
+            ownerType: ProgrammeOwnerType.coach,
+            ownerId: 'dev-coach',
+            name: 'Source',
+          ),
+        );
 
-      final sourceDocument = ProgrammeBuilderDocument.clean(
-        metadata: ProgrammeVersionDraftMetadata(
-          versionId: sourceVersionId,
-          lineageId: 'lineage-m2a',
-          lineageCode: 'M2A-CODE',
-          versionNumber: 1,
-          name: 'Source Programme',
-        ),
-        template: ProgrammeTemplateDraft(
-          weeks: [
-            ProgrammeWeekDraft(
-              localId: 'week-1',
-              weekNumber: 1,
-              days: [
-                ProgrammeDayDraft(
-                  localId: 'day-1',
-                  dayKey: 'day_1',
-                  dayOrder: 1,
-                  slots: [
-                    ProgrammeSessionSlotDraft(
-                      localId: 'slot-1',
-                      sessionOrder: 1,
-                      protocolId: protocolId,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+        final sourceDocument = ProgrammeBuilderDocument.clean(
+          metadata: ProgrammeVersionDraftMetadata(
+            versionId: sourceVersionId,
+            lineageId: 'lineage-m2a',
+            lineageCode: 'M2A-CODE',
+            versionNumber: 1,
+            name: 'Source Programme',
+          ),
+          template: ProgrammeTemplateDraft(
+            weeks: [
+              ProgrammeWeekDraft(
+                localId: 'week-1',
+                weekNumber: 1,
+                days: [
+                  ProgrammeDayDraft(
+                    localId: 'day-1',
+                    dayKey: 'day_1',
+                    dayOrder: 1,
+                    slots: [
+                      ProgrammeSessionSlotDraft(
+                        localId: 'slot-1',
+                        sessionOrder: 1,
+                        protocolId: protocolId,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
 
-      await versionStore.saveTemplateTree(
-        version: tables.versions.first,
-        tree: const ProgrammeBuilderCompiler().toTemplateTree(sourceDocument),
-      );
+        await versionStore.saveTemplateTree(
+          version: tables.versions.first,
+          tree: const ProgrammeBuilderCompiler().toTemplateTree(sourceDocument),
+        );
 
-      final duplicateResult = await service.duplicateProgramme(
-        sourceVersionId: sourceVersionId,
-        coachId: 'dev-coach',
-        newLineageCode: 'M2A-CODE-DUP',
-        newProgrammeName: 'Duplicate',
-      );
+        final duplicateResult = await service.duplicateProgramme(
+          sourceVersionId: sourceVersionId,
+          coachId: 'dev-coach',
+          newLineageCode: 'M2A-CODE-DUP',
+          newProgrammeName: 'Duplicate',
+        );
 
-      expect(
-        duplicateResult.status,
-        ProgrammeBuilderOperationStatus.duplicated,
-      );
-      final dupProtocolId = duplicateResult.document!.template.allWeeks
-          .first.days.first.slots.first.protocolId;
-      expect(dupProtocolId, protocolId);
+        expect(
+          duplicateResult.status,
+          ProgrammeBuilderOperationStatus.duplicated,
+        );
+        final dupProtocolId = duplicateResult
+            .document!
+            .template
+            .allWeeks
+            .first
+            .days
+            .first
+            .slots
+            .first
+            .protocolId;
+        expect(dupProtocolId, protocolId);
 
-      final dupReload = protocolStore.loadDraft(
-        protocolId: dupProtocolId,
-        blocks: await blockRepo.getSessionBlocks(dupProtocolId),
-      );
-      expect(dupReload.primarySessionIntent, SessionIntent.pushStrength);
-    });
-  });
+        final dupReload = protocolStore.loadDraft(
+          protocolId: dupProtocolId,
+          blocks: await blockRepo.getSessionBlocks(dupProtocolId),
+        );
+        expect(dupReload.primarySessionIntent, SessionIntent.pushStrength);
+      });
+    },
+  );
 
   group('Path B — builder create → persist → clone → attach', () {
-    test('visual builder draft through persist, clone, and slot reference',
-        () async {
-      final protocolStore = InMemoryProtocolRowStore();
-      final blockRepo = InMemorySessionBlockRepository();
-      const cloneService = SessionCloneService();
+    test(
+      'visual builder draft through persist, clone, and slot reference',
+      () async {
+        final protocolStore = InMemoryProtocolRowStore();
+        final blockRepo = InMemorySessionBlockRepository();
+        const cloneService = SessionCloneService();
 
-      const protocolId = 'm2a-builder-path-1';
-      final created = buildTaggedSessionViaVisualBuilder(
-        protocolId: protocolId,
-        programmeVersionId: testProgrammeVersionId,
-      );
+        const protocolId = 'm2a-builder-path-1';
+        final created = buildTaggedSessionViaVisualBuilder(
+          protocolId: protocolId,
+          programmeVersionId: testProgrammeVersionId,
+        );
 
-      final reloaded = await persistAndReload(
-        draft: created,
-        protocolStore: protocolStore,
-        blockRepo: blockRepo,
-      );
-      expect(reloaded.primarySessionIntent, _canonicalPrimary);
+        final reloaded = await persistAndReload(
+          draft: created,
+          protocolStore: protocolStore,
+          blockRepo: blockRepo,
+        );
+        expect(reloaded.primarySessionIntent, _canonicalPrimary);
 
-      final cloned = cloneService.cloneCohortProtocolToSession(
-        source: reloaded.copyWith(
-          contentKind: TrainingContentKind.cohortProtocol,
-          authoringScope: TrainingAuthoringScope.cohortGlobal,
-          endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
-          published: true,
-        ),
-        newContentId: 'm2a-cloned-library-1',
-        ownerId: 'dev-coach',
-        destination: CohortProtocolCopyDestination.sessionLibrary,
-      );
+        final cloned = cloneService.cloneCohortProtocolToSession(
+          source: reloaded.copyWith(
+            contentKind: TrainingContentKind.cohortProtocol,
+            authoringScope: TrainingAuthoringScope.cohortGlobal,
+            endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
+            published: true,
+          ),
+          newContentId: 'm2a-cloned-library-1',
+          ownerId: 'dev-coach',
+          destination: CohortProtocolCopyDestination.sessionLibrary,
+        );
 
-      expect(cloned.primarySessionIntent, _canonicalPrimary);
-      expect(cloned.minimumViableDurationMin, _canonicalMinDuration);
-      expect(cloned.blocks[1].blockPriority, BlockPriority.essential);
+        expect(cloned.primarySessionIntent, _canonicalPrimary);
+        expect(cloned.minimumViableDurationMin, _canonicalMinDuration);
+        expect(cloned.blocks[1].blockPriority, BlockPriority.essential);
 
-      protocolStore.upsertFromDraft(cloned);
-      await blockRepo.replaceSessionBlocks(
-        sessionId: cloned.protocolId,
-        blocks: cloned.blocks,
-      );
+        protocolStore.upsertFromDraft(cloned);
+        await blockRepo.replaceSessionBlocks(
+          sessionId: cloned.protocolId,
+          blocks: cloned.blocks,
+        );
 
-      const targetProgrammeVersionId =
-          '55555555-5555-5555-5555-555555555555';
-      final attachedSlot = ProgrammeSessionSlotDraft(
-        localId: 'slot-target',
-        sessionOrder: 1,
-        protocolId: cloned.protocolId,
-        displayTitle: cloned.name,
-      );
-      expect(attachedSlot.protocolId, cloned.protocolId);
+        const targetProgrammeVersionId = '55555555-5555-5555-5555-555555555555';
+        final attachedSlot = ProgrammeSessionSlotDraft(
+          localId: 'slot-target',
+          sessionOrder: 1,
+          protocolId: cloned.protocolId,
+          displayTitle: cloned.name,
+        );
+        expect(attachedSlot.protocolId, cloned.protocolId);
 
-      final attachedReload = protocolStore.loadDraft(
-        protocolId: cloned.protocolId,
-        blocks: await blockRepo.getSessionBlocks(cloned.protocolId),
-      );
-      expect(attachedReload.primarySessionIntent, _canonicalPrimary);
-      expect(targetProgrammeVersionId, isNotEmpty);
-    });
+        final attachedReload = protocolStore.loadDraft(
+          protocolId: cloned.protocolId,
+          blocks: await blockRepo.getSessionBlocks(cloned.protocolId),
+        );
+        expect(attachedReload.primarySessionIntent, _canonicalPrimary);
+        expect(targetProgrammeVersionId, isNotEmpty);
+      },
+    );
   });
 
   group('Backward compatibility and safe failure modes', () {
@@ -425,8 +443,10 @@ void main() {
         position: 1,
       );
       final row = block.toRowMap(sessionId: 'sess-1');
-      expect(row.containsKey(SessionBlockAdaptationMetadataKeys.blockPriority),
-          isFalse);
+      expect(
+        row.containsKey(SessionBlockAdaptationMetadataKeys.blockPriority),
+        isFalse,
+      );
       expect(
         row.containsKey(SessionBlockAdaptationMetadataKeys.adaptationPolicy),
         isFalse,
@@ -435,15 +455,19 @@ void main() {
     });
 
     test('explicit overrides persist in row maps', () {
-      final block = SessionBlock.create(
-        blockType: SessionBlockType.strength,
-        position: 1,
-      ).copyWith(
-        blockPriority: BlockPriority.essential,
-        adaptationPolicy: _explicitBlockPolicy,
-      );
+      final block =
+          SessionBlock.create(
+            blockType: SessionBlockType.strength,
+            position: 1,
+          ).copyWith(
+            blockPriority: BlockPriority.essential,
+            adaptationPolicy: _explicitBlockPolicy,
+          );
       final row = block.toRowMap(sessionId: 'sess-1');
-      expect(row[SessionBlockAdaptationMetadataKeys.blockPriority], 'essential');
+      expect(
+        row[SessionBlockAdaptationMetadataKeys.blockPriority],
+        'essential',
+      );
       expect(row[SessionBlockAdaptationMetadataKeys.adaptationPolicy], isMap);
     });
 
@@ -466,17 +490,26 @@ void main() {
   });
 
   group('Athlete home and adaptation engine scope guard', () {
-    test('home_screen.dart has no M2A authoring or protocol recommendation hooks',
-        () {
-      final source = File('lib/features/home/home_screen.dart').readAsStringSync();
-      expect(source.contains('AdaptationMetadataCompletenessScreen'), isFalse);
-      expect(source.contains('primarySessionIntent'), isFalse);
-      expect(source.contains('recommendProtocol'), isFalse);
-      expect(source.contains('ProtocolRecommendation'), isFalse);
-    });
+    test(
+      'home_screen.dart has no M2A authoring or protocol recommendation hooks',
+      () {
+        final source = File(
+          'lib/features/home/home_screen.dart',
+        ).readAsStringSync();
+        expect(
+          source.contains('AdaptationMetadataCompletenessScreen'),
+          isFalse,
+        );
+        expect(source.contains('primarySessionIntent'), isFalse);
+        expect(source.contains('recommendProtocol'), isFalse);
+        expect(source.contains('ProtocolRecommendation'), isFalse);
+      },
+    );
 
     test('adaptation_candidate_filter is not imported by home_screen', () {
-      final source = File('lib/features/home/home_screen.dart').readAsStringSync();
+      final source = File(
+        'lib/features/home/home_screen.dart',
+      ).readAsStringSync();
       expect(source.contains('adaptation_candidate_filter'), isFalse);
     });
   });

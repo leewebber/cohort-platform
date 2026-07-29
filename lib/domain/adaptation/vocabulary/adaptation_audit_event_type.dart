@@ -1,10 +1,7 @@
 /// Canonical audit outcomes for programme-backed adaptations (persisted).
 ///
 /// Maps 1:1 to legacy [ProgrammeAdaptationType] until a unified rename migration.
-enum AdaptationAuditEventType {
-  loadProgression,
-  protocolSubstitution,
-}
+enum AdaptationAuditEventType { loadProgression, protocolSubstitution }
 
 extension AdaptationAuditEventTypeDb on AdaptationAuditEventType {
   String get dbValue {

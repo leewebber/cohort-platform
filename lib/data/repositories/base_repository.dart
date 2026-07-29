@@ -7,28 +7,18 @@ abstract class BaseRepository<T> {
 
   T fromMap(Map<String, dynamic> map);
 
-  Future<List<T>> getAll({
-    String? orderBy,
-    bool ascending = true,
-  }) async {
+  Future<List<T>> getAll({String? orderBy, bool ascending = true}) async {
     var query = SupabaseService.client.from(tableName).select();
 
     if (orderBy != null) {
-      final response = await query.order(
-        orderBy,
-        ascending: ascending,
-      );
+      final response = await query.order(orderBy, ascending: ascending);
 
-      return response
-          .map<T>((row) => fromMap(row))
-          .toList();
+      return response.map<T>((row) => fromMap(row)).toList();
     }
 
     final response = await query;
 
-    return response
-        .map<T>((row) => fromMap(row))
-        .toList();
+    return response.map<T>((row) => fromMap(row)).toList();
   }
 
   Future<List<T>> getWhere({
@@ -43,20 +33,13 @@ abstract class BaseRepository<T> {
         .eq(column, value);
 
     if (orderBy != null) {
-      final response = await query.order(
-        orderBy,
-        ascending: ascending,
-      );
+      final response = await query.order(orderBy, ascending: ascending);
 
-      return response
-          .map<T>((row) => fromMap(row))
-          .toList();
+      return response.map<T>((row) => fromMap(row)).toList();
     }
 
     final response = await query;
 
-    return response
-        .map<T>((row) => fromMap(row))
-        .toList();
+    return response.map<T>((row) => fromMap(row)).toList();
   }
 }

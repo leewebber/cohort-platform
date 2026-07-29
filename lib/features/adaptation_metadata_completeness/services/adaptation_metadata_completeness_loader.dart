@@ -16,13 +16,14 @@ class AdaptationMetadataCompletenessLoader {
     ProtocolDraftBlockResolver? blockResolver,
     AdaptationMetadataCompletenessAnalyzer? analyzer,
     CurrentCoachIdentity? coachIdentity,
-  })  : _protocolBuilderService =
-            protocolBuilderService ?? ProtocolBuilderService(),
-        _programmeBuilderService = programmeBuilderService ??
-            ProgrammeCatalogueServices.createBuilderService(),
-        _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
-        _analyzer = analyzer ?? const AdaptationMetadataCompletenessAnalyzer(),
-        _coachIdentity = coachIdentity ?? const AuthenticatedCoachIdentity();
+  }) : _protocolBuilderService =
+           protocolBuilderService ?? ProtocolBuilderService(),
+       _programmeBuilderService =
+           programmeBuilderService ??
+           ProgrammeCatalogueServices.createBuilderService(),
+       _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
+       _analyzer = analyzer ?? const AdaptationMetadataCompletenessAnalyzer(),
+       _coachIdentity = coachIdentity ?? const AuthenticatedCoachIdentity();
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeBuilderService _programmeBuilderService;
@@ -45,19 +46,22 @@ class AdaptationMetadataCompletenessLoader {
     final programmeBuilder = _programmeBuilderService;
     final coachId = _coachIdentity.coachId?.trim();
     if (coachId != null && coachId.isNotEmpty) {
-      final draftProgrammes =
-          await programmeBuilder.listCoachDrafts(coachId: coachId);
+      final draftProgrammes = await programmeBuilder.listCoachDrafts(
+        coachId: coachId,
+      );
       for (final entry in draftProgrammes) {
-        final document =
-            await programmeBuilder.loadDocument(versionId: entry.versionId);
+        final document = await programmeBuilder.loadDocument(
+          versionId: entry.versionId,
+        );
         for (final week in document.template.allWeeks) {
           for (final day in week.days) {
             for (final slot in day.slots) {
               final protocolId = slot.protocolId.trim();
               if (protocolId.isEmpty) continue;
 
-              final draft =
-                  await _protocolBuilderService.loadProtocol(protocolId);
+              final draft = await _protocolBuilderService.loadProtocol(
+                protocolId,
+              );
               inputs.add(
                 completenessInputFromProtocolDraft(
                   draft,

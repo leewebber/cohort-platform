@@ -2,7 +2,7 @@ import 'package:cohort_platform/application/athlete_workout/athlete_workout_appl
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/domain/coach_brain/coach_brain_domain.dart';
 import 'package:cohort_platform/domain/session_occurrence/session_occurrence_domain.dart';
-import 'package:cohort_platform/domain/training_session_record/training_session_record_domain.dart';
+import 'package:cohort_platform/domain/workout_execution_record/workout_execution_record_domain.dart';
 import 'package:cohort_platform/domain/workout_player/workout_player_domain.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -20,7 +20,7 @@ void main() {
   late AthleteSessionOccurrenceIndex index;
 
   setUp(() {
-    registry = ProgrammeSessionOccurrenceRegistry();
+    registry = InMemoryProgrammeSessionOccurrenceRegistry();
     index = AthleteSessionOccurrenceIndex();
   });
 
@@ -35,7 +35,7 @@ void main() {
       ),
       recordedAt: t0,
       registry: registry,
-      athleteIndex: index,
+      occurrenceRepository: index,
     );
   }
 
@@ -43,7 +43,7 @@ void main() {
     return orchestrator.resolveToday(
       athleteId: 'athlete-1',
       date: date,
-      occurrenceIndex: index,
+      occurrenceRepository: index,
     );
   }
 
@@ -71,13 +71,14 @@ void main() {
       final draft = buildTimedPlanningSession(protocolId: 'proto-1');
       final snapshot = applyTimedSessionPlan(
         draft: draft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         input: timedPlanningInputFromDraft(draft),
       ).snapshot!;
-      final planned = index.occurrencesOnDay(
-        athleteId: 'athlete-1',
-        calendarDate: date,
-      ).single;
+      final planned = index
+          .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+          .single;
       index.upsert(
         athleteId: 'athlete-1',
         occurrence: planned
@@ -162,20 +163,18 @@ void main() {
       custom.resolveToday(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
       );
       expect(tracking.callCount, 1);
     });
 
     test('capabilities align with aggregate transition guards', () {
       materialize();
-      final occurrence =
-          index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).single;
+      final occurrence = index
+          .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+          .single;
       expect(AthleteWorkoutCapabilities.canStartWorkout(occurrence), isTrue);
-      expect(
-        occurrence.startInProgress(recordedAt: t0).isSuccess,
-        isTrue,
-      );
+      expect(occurrence.startInProgress(recordedAt: t0).isSuccess, isTrue);
     });
   });
 
@@ -198,31 +197,39 @@ void main() {
       );
     }
 
-    test('successful adaptation attaches snapshot and returns updated workout', () {
-      materialize();
-      final before = index
-          .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
-          .single;
-      final result = orchestrator.adaptTodayWorkout(
-        athleteId: 'athlete-1',
-        date: date,
-        occurrenceIndex: index,
-        adaptationContext: context(),
-        recordedAt: t0,
-        requestId: 'adapt-test-1',
-      );
+    test(
+      'successful adaptation attaches snapshot and returns updated workout',
+      () {
+        materialize();
+        final before = index
+            .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+            .single;
+        final result = orchestrator.adaptTodayWorkout(
+          athleteId: 'athlete-1',
+          date: date,
+          occurrenceRepository: index,
+          adaptationContext: context(),
+          recordedAt: t0,
+          requestId: 'adapt-test-1',
+        );
 
-      expect(result.adaptationSucceeded, isTrue);
-      expect(result.status, AthleteWorkoutResolutionStatus.workoutAdapted);
-      expect(result.executionSnapshot, isNotNull);
-      expect(result.canStartWorkout, isTrue);
-      expect(before.lifecycleState, SessionOccurrenceLifecycleState.scheduled);
-      expect(before.executionSnapshot, isNull);
-      expect(
-        index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).single,
-        result.occurrence,
-      );
-    });
+        expect(result.adaptationSucceeded, isTrue);
+        expect(result.status, AthleteWorkoutResolutionStatus.workoutAdapted);
+        expect(result.executionSnapshot, isNotNull);
+        expect(result.canStartWorkout, isTrue);
+        expect(
+          before.lifecycleState,
+          SessionOccurrenceLifecycleState.scheduled,
+        );
+        expect(before.executionSnapshot, isNull);
+        expect(
+          index
+              .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+              .single,
+          result.occurrence,
+        );
+      },
+    );
 
     test('adaptation unavailable when workout completed', () {
       materialize();
@@ -239,7 +246,7 @@ void main() {
       final result = orchestrator.adaptTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         adaptationContext: context(),
         recordedAt: t0,
       );
@@ -255,9 +262,11 @@ void main() {
       final result = orchestrator.adaptTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         adaptationContext: context(
-          constraints: const AdaptationConstraintContext(availableDurationMin: 20),
+          constraints: const AdaptationConstraintContext(
+            availableDurationMin: 20,
+          ),
         ),
         recordedAt: t0,
       );
@@ -274,10 +283,12 @@ void main() {
       final result = orchestrator.adaptTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         adaptationContext: SessionAdaptationCoachDecisionContext(
           plannedSession: timedPlanningInputFromDraft(wrongDraft),
-          constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+          constraints: const AdaptationConstraintContext(
+            availableDurationMin: 50,
+          ),
         ),
         recordedAt: t0,
       );
@@ -298,7 +309,7 @@ void main() {
       return orchestrator.startTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         startedAt: t0,
       );
     }
@@ -314,7 +325,9 @@ void main() {
       expect(result.canStartWorkout, isFalse);
       expect(before.lifecycleState, SessionOccurrenceLifecycleState.scheduled);
       expect(
-        index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).single,
+        index
+            .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+            .single,
         result.occurrence,
       );
     });
@@ -324,7 +337,9 @@ void main() {
       final draft = buildTimedPlanningSession(protocolId: 'proto-1');
       final snapshot = applyTimedSessionPlan(
         draft: draft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         input: timedPlanningInputFromDraft(draft),
       ).snapshot!;
       final adapted = index
@@ -419,7 +434,7 @@ void main() {
       final result = orchestrator.startTodayWorkout(
         athleteId: '  ',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         startedAt: t0,
       );
       expect(result.startStatus, AthleteWorkoutStartStatus.invalidRequest);
@@ -436,10 +451,12 @@ void main() {
       final adapt = orchestrator.adaptTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         adaptationContext: SessionAdaptationCoachDecisionContext(
           plannedSession: timedPlanningInputFromDraft(draft),
-          constraints: const AdaptationConstraintContext(availableDurationMin: 50),
+          constraints: const AdaptationConstraintContext(
+            availableDurationMin: 50,
+          ),
         ),
         recordedAt: t0,
         requestId: 'regression-adapt',
@@ -451,35 +468,39 @@ void main() {
   group('AthleteWorkoutOrchestrator completeTodayWorkout', () {
     final tFinish = DateTime.utc(2026, 8, 1, 9);
 
-    List<TrainingExerciseExecutionEntry> allCompletedOutcomes(
+    List<WorkoutExerciseExecutionEntry> allCompletedOutcomes(
       AdaptedSessionExecutionSnapshot snapshot,
     ) {
       final steps = WorkoutPlayerNavigation.navigableSteps(snapshot);
       return [
         for (final step in steps)
-          TrainingExerciseExecutionEntry(
+          WorkoutExerciseExecutionEntry(
             sourceBlockLocalId: step.sourceBlockLocalId,
             exerciseLinkLocalId: step.exerciseLinkLocalId,
             exerciseId: snapshot.retainedBlocks
-                .firstWhere((b) => b.sourceBlockLocalId == step.sourceBlockLocalId)
+                .firstWhere(
+                  (b) => b.sourceBlockLocalId == step.sourceBlockLocalId,
+                )
                 .exercises
                 .firstWhere(
                   (e) => e.exerciseLinkLocalId == step.exerciseLinkLocalId,
                 )
                 .exerciseId,
             stepIndex: step.stepIndex,
-            outcome: TrainingExerciseExecutionOutcome.completed,
+            outcome: WorkoutExerciseExecutionOutcome.completed,
           ),
       ];
     }
 
     ({AdaptedSessionExecutionSnapshot snapshot, WorkoutPlayer player})
-        activePlayerAfterStart() {
+    activePlayerAfterStart() {
       materialize();
       final draft = buildTimedPlanningSession(protocolId: 'proto-1');
       final snapshot = applyTimedSessionPlan(
         draft: draft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         input: timedPlanningInputFromDraft(draft),
       ).snapshot!;
       final adapted = index
@@ -491,11 +512,12 @@ void main() {
       orchestrator.startTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         startedAt: t0,
       );
-      final occurrence =
-          index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).single;
+      final occurrence = index
+          .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+          .single;
       final player = WorkoutPlayer.openReady(
         playerId: 'player-1',
         occurrenceId: occurrence.occurrenceId,
@@ -510,7 +532,7 @@ void main() {
       final result = orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         workoutPlayer: setup.player,
         exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
         finishedAt: tFinish,
@@ -520,41 +542,43 @@ void main() {
       expect(result.completionSucceeded, isTrue);
       expect(result.status, AthleteWorkoutResolutionStatus.workoutCompleted);
       expect(result.canCompleteWorkout, isFalse);
-      expect(result.trainingSessionRecord, isNotNull);
+      expect(result.workoutExecutionRecord, isNotNull);
       expect(
-        result.trainingSessionRecord!.lifecycleStatus,
-        TrainingSessionRecordLifecycleStatus.completed,
+        result.workoutExecutionRecord!.lifecycleStatus,
+        WorkoutExecutionRecordLifecycleStatus.completed,
       );
       expect(
-        index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).single,
+        index
+            .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+            .single,
         result.occurrence,
       );
-      expect(
-        playerBefore.executionStatus,
-        WorkoutPlayerExecutionStatus.active,
-      );
+      expect(playerBefore.executionStatus, WorkoutPlayerExecutionStatus.active);
       expect(
         setup.player.finishWorkout(recordedAt: tFinish).player!.executionStatus,
         WorkoutPlayerExecutionStatus.completed,
       );
     });
 
-    test('adapted workout completion preserves execution snapshot on record', () {
-      final setup = activePlayerAfterStart();
-      final result = orchestrator.completeTodayWorkout(
-        athleteId: 'athlete-1',
-        date: date,
-        occurrenceIndex: index,
-        workoutPlayer: setup.player,
-        exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
-        finishedAt: tFinish,
-      );
-      expect(result.completionSucceeded, isTrue);
-      expect(
-        result.trainingSessionRecord!.executionSnapshot,
-        same(setup.snapshot),
-      );
-    });
+    test(
+      'adapted workout completion preserves execution snapshot on record',
+      () {
+        final setup = activePlayerAfterStart();
+        final result = orchestrator.completeTodayWorkout(
+          athleteId: 'athlete-1',
+          date: date,
+          occurrenceRepository: index,
+          workoutPlayer: setup.player,
+          exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
+          finishedAt: tFinish,
+        );
+        expect(result.completionSucceeded, isTrue);
+        expect(
+          result.workoutExecutionRecord!.executionSnapshot,
+          same(setup.snapshot),
+        );
+      },
+    );
 
     test('in progress workout exposes canCompleteWorkout', () {
       final setup = activePlayerAfterStart();
@@ -568,7 +592,7 @@ void main() {
       orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         workoutPlayer: setup.player,
         exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
         finishedAt: tFinish,
@@ -576,12 +600,15 @@ void main() {
       final again = orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         workoutPlayer: setup.player,
         exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
         finishedAt: tFinish,
       );
-      expect(again.completionStatus, AthleteWorkoutCompletionStatus.unavailable);
+      expect(
+        again.completionStatus,
+        AthleteWorkoutCompletionStatus.unavailable,
+      );
       expect(again.completionDetail, 'already_completed');
     });
 
@@ -596,12 +623,15 @@ void main() {
       final result = orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         workoutPlayer: readyPlayer,
         exerciseOutcomes: allCompletedOutcomes(setup.snapshot),
         finishedAt: tFinish,
       );
-      expect(result.completionStatus, AthleteWorkoutCompletionStatus.unavailable);
+      expect(
+        result.completionStatus,
+        AthleteWorkoutCompletionStatus.unavailable,
+      );
       expect(result.completionDetail, WorkoutPlayerExecutionStatus.ready.name);
     });
 
@@ -610,7 +640,7 @@ void main() {
       final result = orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: AthleteSessionOccurrenceIndex(),
+        occurrenceRepository: AthleteSessionOccurrenceIndex(),
         workoutPlayer: setup.player,
         exerciseOutcomes: const [],
         finishedAt: tFinish,
@@ -627,7 +657,9 @@ void main() {
       final draft = buildTimedPlanningSession(protocolId: 'proto-1');
       final snapshot = applyTimedSessionPlan(
         draft: draft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         input: timedPlanningInputFromDraft(draft),
       ).snapshot!;
       final player = WorkoutPlayer.openReady(
@@ -639,7 +671,7 @@ void main() {
       final result = orchestrator.completeTodayWorkout(
         athleteId: 'athlete-1',
         date: date,
-        occurrenceIndex: index,
+        occurrenceRepository: index,
         workoutPlayer: player,
         exerciseOutcomes: const [],
         finishedAt: tFinish,
@@ -658,12 +690,14 @@ void main() {
     test('start workflow unchanged after complete path added', () {
       materialize();
       expect(
-        orchestrator.startTodayWorkout(
-          athleteId: 'athlete-1',
-          date: date,
-          occurrenceIndex: index,
-          startedAt: t0,
-        ).startSucceeded,
+        orchestrator
+            .startTodayWorkout(
+              athleteId: 'athlete-1',
+              date: date,
+              occurrenceRepository: index,
+              startedAt: t0,
+            )
+            .startSucceeded,
         isTrue,
       );
     });
@@ -677,9 +711,13 @@ class _TrackingResolver extends AthleteDailySessionResolver {
   AthleteDailySessionResolutionResult resolve({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex index,
+    required SessionOccurrenceRepository occurrenceRepository,
   }) {
     callCount++;
-    return super.resolve(athleteId: athleteId, date: date, index: index);
+    return super.resolve(
+      athleteId: athleteId,
+      date: date,
+      occurrenceRepository: occurrenceRepository,
+    );
   }
 }

@@ -13,10 +13,32 @@ void main() {
   const mapper = ProgrammeBuilderProtocolOptionMapper();
 
   final catalogProtocols = [
-    Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder', sessionType: 'strength', durationMin: 45, equipment: 'Bodyweight'),
-    Protocol(protocolId: 'RN-006', name: 'Classic Threshold', sessionType: 'interval', durationMin: 60),
-    Protocol(protocolId: 'FG-009', name: 'Full Gym Chipper', sessionType: 'circuit', durationMin: 50, equipment: 'Gym'),
-    Protocol(protocolId: 'ST-001', name: 'Lower Body A', sessionType: 'strength', durationMin: 55),
+    Protocol(
+      protocolId: 'BW-001',
+      name: 'Bodyweight Grinder',
+      sessionType: 'strength',
+      durationMin: 45,
+      equipment: 'Bodyweight',
+    ),
+    Protocol(
+      protocolId: 'RN-006',
+      name: 'Classic Threshold',
+      sessionType: 'interval',
+      durationMin: 60,
+    ),
+    Protocol(
+      protocolId: 'FG-009',
+      name: 'Full Gym Chipper',
+      sessionType: 'circuit',
+      durationMin: 50,
+      equipment: 'Gym',
+    ),
+    Protocol(
+      protocolId: 'ST-001',
+      name: 'Lower Body A',
+      sessionType: 'strength',
+      durationMin: 55,
+    ),
     Protocol(
       protocolId: 'EQ-001',
       name: 'Equipment List Protocol',
@@ -37,16 +59,17 @@ void main() {
   }
 
   group('ProgrammeBuilderProtocolOptionMapper', () {
-    test('maps multiple canonical protocols including BW-001 RN-006 FG-009 ST-001', () {
-      final options = mapper.mapProtocols(catalogProtocols);
+    test(
+      'maps multiple canonical protocols including BW-001 RN-006 FG-009 ST-001',
+      () {
+        final options = mapper.mapProtocols(catalogProtocols);
 
-      expect(options.map((option) => option.protocolId), containsAll([
-        'BW-001',
-        'RN-006',
-        'FG-009',
-        'ST-001',
-      ]));
-    });
+        expect(
+          options.map((option) => option.protocolId),
+          containsAll(['BW-001', 'RN-006', 'FG-009', 'ST-001']),
+        );
+      },
+    );
 
     test('null session_type and duration do not drop row', () {
       final option = mapper.mapProtocol(
@@ -121,7 +144,10 @@ void main() {
       final options = mapper.mapProtocols(catalogProtocols);
       final sessionTypes = options.map((option) => option.sessionType).toSet();
 
-      expect(sessionTypes, containsAll(['strength', 'interval', 'circuit', null]));
+      expect(
+        sessionTypes,
+        containsAll(['strength', 'interval', 'circuit', null]),
+      );
     });
   });
 
@@ -132,18 +158,18 @@ void main() {
       final options = await service.listSelectableProtocols();
 
       expect(options.length, greaterThanOrEqualTo(4));
-      expect(options.map((option) => option.protocolId), containsAll([
-        'BW-001',
-        'RN-006',
-        'FG-009',
-        'ST-001',
-      ]));
+      expect(
+        options.map((option) => option.protocolId),
+        containsAll(['BW-001', 'RN-006', 'FG-009', 'ST-001']),
+      );
     });
 
     test('filters by search term without losing canonical ids', () async {
       final service = serviceWithCatalog(catalogProtocols);
 
-      final options = await service.listSelectableProtocols(searchTerm: 'BW-001');
+      final options = await service.listSelectableProtocols(
+        searchTerm: 'BW-001',
+      );
 
       expect(options, hasLength(1));
       expect(options.single.protocolId, 'BW-001');
@@ -245,7 +271,10 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      expect(find.text('We could not load protocols right now.'), findsOneWidget);
+      expect(
+        find.text('We could not load protocols right now.'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Retry'));
       await tester.pumpAndSettle();

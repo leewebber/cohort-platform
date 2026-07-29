@@ -30,26 +30,29 @@ void main() {
       expect(mode, BlockCaptureMode.completion);
     });
 
-    test('legacy custom session with structured prescription uses strength', () {
-      final mode = BlockCaptureModeResolver.resolveForBlock(
-        const SessionExecutionBlock(
-          blockId: 'legacy-2',
-          title: 'Session',
-          blockType: SessionBlockType.custom,
-          content: 'Back Squat\nSets: 5\nReps: 5\nLoad: 100 kg',
-          workoutFormat: WorkoutFormat.none,
-          position: 1,
-          linkedExercises: [
-            SessionExecutionExerciseSummary(
-              exerciseId: 'SQ-001',
-              displayName: 'Back Squat',
-            ),
-          ],
-        ),
-      );
+    test(
+      'legacy custom session with structured prescription uses strength',
+      () {
+        final mode = BlockCaptureModeResolver.resolveForBlock(
+          const SessionExecutionBlock(
+            blockId: 'legacy-2',
+            title: 'Session',
+            blockType: SessionBlockType.custom,
+            content: 'Back Squat\nSets: 5\nReps: 5\nLoad: 100 kg',
+            workoutFormat: WorkoutFormat.none,
+            position: 1,
+            linkedExercises: [
+              SessionExecutionExerciseSummary(
+                exerciseId: 'SQ-001',
+                displayName: 'Back Squat',
+              ),
+            ],
+          ),
+        );
 
-      expect(mode, BlockCaptureMode.strength);
-    });
+        expect(mode, BlockCaptureMode.strength);
+      },
+    );
 
     test('conditioning block with AMRAP format uses amrap capture', () {
       final mode = BlockCaptureModeResolver.resolveForBlock(
@@ -89,8 +92,9 @@ void main() {
   });
 
   group('PerformanceNumericField', () {
-    testWidgets('preserves digit order while parent rebuilds on each change',
-        (tester) async {
+    testWidgets('preserves digit order while parent rebuilds on each change', (
+      tester,
+    ) async {
       var value = '';
       await tester.pumpWidget(
         MaterialApp(

@@ -9,8 +9,7 @@ class ProgrammeCatalogueListProcessor {
     required List<ProgrammeCatalogEntry> entries,
     String searchTerm = '',
     String? primaryGoal,
-    ProgrammeCatalogueSortMode sortMode =
-        ProgrammeCatalogueSortMode.lastEdited,
+    ProgrammeCatalogueSortMode sortMode = ProgrammeCatalogueSortMode.lastEdited,
   }) {
     final filtered = _filter(
       entries: entries,
@@ -53,7 +52,8 @@ class ProgrammeCatalogueListProcessor {
     switch (sortMode) {
       case ProgrammeCatalogueSortMode.lastEdited:
         sorted.sort((left, right) {
-          final leftStamp = left.updatedAt ?? left.publishedAt ?? left.archivedAt;
+          final leftStamp =
+              left.updatedAt ?? left.publishedAt ?? left.archivedAt;
           final rightStamp =
               right.updatedAt ?? right.publishedAt ?? right.archivedAt;
 
@@ -71,8 +71,7 @@ class ProgrammeCatalogueListProcessor {
         );
       case ProgrammeCatalogueSortMode.versionNewest:
         sorted.sort((left, right) {
-          final lineageCompare =
-              left.lineageCode.compareTo(right.lineageCode);
+          final lineageCompare = left.lineageCode.compareTo(right.lineageCode);
           if (lineageCompare != 0) return lineageCompare;
           return right.versionNumber.compareTo(left.versionNumber);
         });

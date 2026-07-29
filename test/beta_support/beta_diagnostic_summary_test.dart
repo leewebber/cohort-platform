@@ -36,33 +36,33 @@ void main() {
     expect(text.toLowerCase(), isNot(contains('password')));
   });
 
-  test('account switch clears prior debug cache via CurrentUserSession.bind',
-      () {
-    CurrentUserSession.bind(
-      const UserProfile(
-        id: 'user-a',
-        displayName: 'A',
-        isCoach: false,
-        isAthlete: true,
-      ),
-    );
+  test(
+    'account switch clears prior debug cache via CurrentUserSession.bind',
+    () {
+      CurrentUserSession.bind(
+        const UserProfile(
+          id: 'user-a',
+          displayName: 'A',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
 
-    ProgrammeDebugResolutionCache.store(
-      const ResolvedTodaySession(
-        kind: ResolvedTodaySessionKind.executable,
-      ),
-    );
-    expect(ProgrammeDebugResolutionCache.lastResolution, isNotNull);
+      ProgrammeDebugResolutionCache.store(
+        const ResolvedTodaySession(kind: ResolvedTodaySessionKind.executable),
+      );
+      expect(ProgrammeDebugResolutionCache.lastResolution, isNotNull);
 
-    CurrentUserSession.bind(
-      const UserProfile(
-        id: 'user-b',
-        displayName: 'B',
-        isCoach: false,
-        isAthlete: true,
-      ),
-    );
+      CurrentUserSession.bind(
+        const UserProfile(
+          id: 'user-b',
+          displayName: 'B',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
 
-    expect(ProgrammeDebugResolutionCache.lastResolution, isNull);
-  });
+      expect(ProgrammeDebugResolutionCache.lastResolution, isNull);
+    },
+  );
 }

@@ -8,6 +8,7 @@ import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
 import '../models/session_execution_status.dart';
+import '../models/workout_session_launch_context.dart';
 import '../screens/active_session_screen.dart';
 import 'session_execution_loader.dart';
 
@@ -17,11 +18,10 @@ class SessionExecutionLauncher {
     SessionExecutionLoader? loader,
     PerformanceRecordSaveCoordinator? saveCoordinator,
     AdaptationPrescriptionService? prescriptionService,
-  })  : _loader = loader ?? SessionExecutionLoader(),
-        _saveCoordinator =
-            saveCoordinator ?? PerformanceRecordSaveCoordinator(),
-        _prescriptionService =
-            prescriptionService ?? AdaptationPrescriptionService();
+  }) : _loader = loader ?? SessionExecutionLoader(),
+       _saveCoordinator = saveCoordinator ?? PerformanceRecordSaveCoordinator(),
+       _prescriptionService =
+           prescriptionService ?? AdaptationPrescriptionService();
 
   final SessionExecutionLoader _loader;
   final PerformanceRecordSaveCoordinator _saveCoordinator;
@@ -36,7 +36,12 @@ class SessionExecutionLauncher {
     ProgrammeExecutionContext? programmeContext,
     String? programmeContextLabel,
     ProgrammeProgressSummary? programmeProgress,
+    WorkoutSessionLaunchContext? workoutLaunchContext,
   }) async {
+    final resolvedProtocolId =
+        workoutLaunchContext?.legacyProtocolId.trim().isNotEmpty == true
+        ? workoutLaunchContext!.legacyProtocolId.trim()
+        : protocolId;
     var loadOverrides = const <String, String>{};
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
       loadOverrides = await _prescriptionService.loadLoadOverrides(
@@ -46,7 +51,7 @@ class SessionExecutionLauncher {
     }
 
     final loadResult = await _loader.load(
-      protocolId: protocolId,
+      protocolId: resolvedProtocolId,
       displayTitle: displayTitle,
       programmeContextLabel: programmeContextLabel,
       prescriptionLoadOverrides: loadOverrides,
@@ -57,11 +62,12 @@ class SessionExecutionLauncher {
     await _pushActiveSession(
       context: context,
       plan: loadResult.plan,
-      protocolId: protocolId,
+      protocolId: resolvedProtocolId,
       trainingSessionId: trainingSessionId,
       athleteId: athleteId,
       programmeContext: programmeContext,
       programmeProgress: programmeProgress,
+      workoutLaunchContext: workoutLaunchContext,
     );
   }
 
@@ -93,6 +99,7 @@ class SessionExecutionLauncher {
     required String athleteId,
     ProgrammeExecutionContext? programmeContext,
     ProgrammeProgressSummary? programmeProgress,
+    WorkoutSessionLaunchContext? workoutLaunchContext,
   }) async {
     final sessionKey = AthleteSessionMemoryStore.sessionKey(
       protocolId: protocolId,
@@ -103,6 +110,7 @@ class SessionExecutionLauncher {
       plan: plan,
       sessionKey: sessionKey,
       restoredState: restored,
+      workoutLaunchContext: workoutLaunchContext,
     );
 
     final continueSession =
@@ -115,16 +123,17 @@ class SessionExecutionLauncher {
     );
 
     if (existingRecord != null) {
-      performanceController =
-          _saveCoordinator.restoreControllerFromRecord(existingRecord);
+      performanceController = _saveCoordinator.restoreControllerFromRecord(
+        existingRecord,
+      );
     } else {
       performanceController =
           PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: plan,
-        athleteId: athleteId,
-        trainingSessionId: trainingSessionId,
-        programmeContext: programmeContext,
-      );
+            plan: plan,
+            athleteId: athleteId,
+            trainingSessionId: trainingSessionId,
+            programmeContext: programmeContext,
+          );
       await _saveCoordinator.createOrResumeInProgress(
         controller: performanceController,
       );
@@ -146,6 +155,7 @@ class SessionExecutionLauncher {
           programmeProgress: programmeProgress,
           athleteId: athleteId,
           saveCoordinator: _saveCoordinator,
+          workoutLaunchContext: workoutLaunchContext,
         ),
       ),
     );

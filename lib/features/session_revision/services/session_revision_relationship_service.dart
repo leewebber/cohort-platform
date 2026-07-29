@@ -14,9 +14,10 @@ class SessionRevisionRelationshipService {
   SessionRevisionRelationshipService({
     SessionRevisionRelationshipStore? relationshipStore,
     SessionLineageStore? lineageStore,
-  })  : _relationshipStore =
-            relationshipStore ?? const SessionRevisionRelationshipSupabaseStore(),
-        _lineageStore = lineageStore ?? const SessionLineageSupabaseStore();
+  }) : _relationshipStore =
+           relationshipStore ??
+           const SessionRevisionRelationshipSupabaseStore(),
+       _lineageStore = lineageStore ?? const SessionLineageSupabaseStore();
 
   final SessionRevisionRelationshipStore _relationshipStore;
   final SessionLineageStore _lineageStore;
@@ -31,18 +32,21 @@ class SessionRevisionRelationshipService {
       );
     }
 
-    final identity =
-        await _lineageStore.getRevisionIdentity(normalizedProtocolId);
+    final identity = await _lineageStore.getRevisionIdentity(
+      normalizedProtocolId,
+    );
     if (identity == null) {
       throw SessionRevisionRelationshipStoreException(
         'Session revision $normalizedProtocolId was not found.',
       );
     }
 
-    final programmeReferences =
-        await getProgrammeReferences(normalizedProtocolId);
-    final activeAssignmentReferences =
-        await getActiveAssignmentReferences(normalizedProtocolId);
+    final programmeReferences = await getProgrammeReferences(
+      normalizedProtocolId,
+    );
+    final activeAssignmentReferences = await getActiveAssignmentReferences(
+      normalizedProtocolId,
+    );
     final historicalUsage = await getHistoricalUsage(normalizedProtocolId);
 
     final hasDirectAuthoredUsage = programmeReferences.isNotEmpty;
@@ -61,7 +65,9 @@ class SessionRevisionRelationshipService {
         hasActiveOperationalUsage: hasActiveOperationalUsage,
         hasHistoricalUsage: hasHistoricalUsage,
       ),
-      programmeReferenceCount: countDistinctProgrammeVersions(programmeReferences),
+      programmeReferenceCount: countDistinctProgrammeVersions(
+        programmeReferences,
+      ),
       slotReferenceCount: programmeReferences.length,
     );
   }
@@ -76,17 +82,20 @@ class SessionRevisionRelationshipService {
       return const SessionRevisionUsageLookupResult.revisionNotFound();
     }
 
-    final identity =
-        await _lineageStore.getRevisionIdentity(normalizedProtocolId);
+    final identity = await _lineageStore.getRevisionIdentity(
+      normalizedProtocolId,
+    );
     if (identity == null) {
       return const SessionRevisionUsageLookupResult.revisionNotFound();
     }
 
     try {
-      final programmeReferences =
-          await getProgrammeReferences(normalizedProtocolId);
-      final activeAssignmentReferences =
-          await getActiveAssignmentReferences(normalizedProtocolId);
+      final programmeReferences = await getProgrammeReferences(
+        normalizedProtocolId,
+      );
+      final activeAssignmentReferences = await getActiveAssignmentReferences(
+        normalizedProtocolId,
+      );
       final historicalUsage = await getHistoricalUsage(normalizedProtocolId);
 
       final hasDirectAuthoredUsage = programmeReferences.isNotEmpty;
@@ -106,15 +115,14 @@ class SessionRevisionRelationshipService {
             hasActiveOperationalUsage: hasActiveOperationalUsage,
             hasHistoricalUsage: hasHistoricalUsage,
           ),
-          programmeReferenceCount:
-              countDistinctProgrammeVersions(programmeReferences),
+          programmeReferenceCount: countDistinctProgrammeVersions(
+            programmeReferences,
+          ),
           slotReferenceCount: programmeReferences.length,
         ),
       );
     } catch (error) {
-      return SessionRevisionUsageLookupResult.lookupFailed(
-        error.toString(),
-      );
+      return SessionRevisionUsageLookupResult.lookupFailed(error.toString());
     }
   }
 
@@ -125,17 +133,11 @@ class SessionRevisionRelationshipService {
   }
 
   Future<List<SessionRevisionAssignmentReference>>
-      getActiveAssignmentReferences(
-    String protocolId,
-  ) {
-    return _relationshipStore.listActiveAssignmentReferences(
-      protocolId.trim(),
-    );
+  getActiveAssignmentReferences(String protocolId) {
+    return _relationshipStore.listActiveAssignmentReferences(protocolId.trim());
   }
 
-  Future<SessionRevisionHistoricalUsage> getHistoricalUsage(
-    String protocolId,
-  ) {
+  Future<SessionRevisionHistoricalUsage> getHistoricalUsage(String protocolId) {
     return _relationshipStore.getHistoricalUsage(protocolId.trim());
   }
 }

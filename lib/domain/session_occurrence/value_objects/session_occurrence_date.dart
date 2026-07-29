@@ -30,5 +30,6 @@ class SessionOccurrenceDate {
   int get hashCode => Object.hash(year, month, day);
 
   @override
-  String toString() => '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+  String toString() =>
+      '$year-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
 }

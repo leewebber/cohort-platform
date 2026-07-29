@@ -18,17 +18,7 @@ class SessionBuilderConstants {
     'Circuit',
   ];
 
-  static const displayStyles = [
-    'exercise',
-    'instruction',
-    'rest',
-    'run',
-  ];
+  static const displayStyles = ['exercise', 'instruction', 'rest', 'run'];
 
-  static const sections = [
-    'Warm Up',
-    'Main Set',
-    'Accessory',
-    'Cool Down',
-  ];
+  static const sections = ['Warm Up', 'Main Set', 'Accessory', 'Cool Down'];
 }

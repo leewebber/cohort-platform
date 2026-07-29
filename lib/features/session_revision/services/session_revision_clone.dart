@@ -6,9 +6,8 @@ import '../../session_builder/services/protocol_draft_block_resolver.dart';
 
 /// Deep-clones a Session Revision into a new draft revision within the same lineage.
 class SessionRevisionClone {
-  const SessionRevisionClone({
-    ProtocolDraftBlockResolver? blockResolver,
-  }) : _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver();
+  const SessionRevisionClone({ProtocolDraftBlockResolver? blockResolver})
+    : _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver();
 
   final ProtocolDraftBlockResolver _blockResolver;
 
@@ -41,12 +40,7 @@ class SessionRevisionClone {
     final clonedSteps = source.steps
         .asMap()
         .entries
-        .map(
-          (entry) => _cloneStep(
-            entry.value,
-            index: entry.key,
-          ),
-        )
+        .map((entry) => _cloneStep(entry.value, index: entry.key))
         .toList(growable: false);
 
     return source.copyWith(

@@ -5,7 +5,8 @@ import '../models/programme_session_display_labels.dart';
 import 'programme_builder_preview_service.dart';
 
 /// Builds structural and athlete-facing previews from editor documents.
-class ProgrammeBuilderPreviewServiceImpl implements ProgrammeBuilderPreviewService {
+class ProgrammeBuilderPreviewServiceImpl
+    implements ProgrammeBuilderPreviewService {
   const ProgrammeBuilderPreviewServiceImpl();
 
   @override
@@ -16,9 +17,8 @@ class ProgrammeBuilderPreviewServiceImpl implements ProgrammeBuilderPreviewServi
     final weeks = document.template.allWeeks.map((week) {
       final days = week.days.map((day) {
         final slots = day.slots.map((slot) {
-          final protocolId = ProgrammeBuilderConstants.isUnassignedProtocolId(
-            slot.protocolId,
-          )
+          final protocolId =
+              ProgrammeBuilderConstants.isUnassignedProtocolId(slot.protocolId)
               ? ''
               : slot.protocolId;
           final protocolName = protocolId.isEmpty

@@ -5,17 +5,11 @@ import '../models/coach_athlete_operation_result.dart';
 import '../models/coach_athlete_roster_entry.dart';
 import '../services/coach_athlete_service.dart';
 
-enum AthleteRosterStatus {
-  loading,
-  ready,
-  empty,
-  error,
-  coachRoleRequired,
-}
+enum AthleteRosterStatus { loading, ready, empty, error, coachRoleRequired }
 
 class AthleteRosterController extends ChangeNotifier {
   AthleteRosterController({required CoachAthleteService service})
-      : _service = service;
+    : _service = service;
 
   final CoachAthleteService _service;
 
@@ -33,7 +27,8 @@ class AthleteRosterController extends ChangeNotifier {
 
     final rosterResult = await _service.listLinkedAthletes();
     if (!rosterResult.isSuccess) {
-      status = rosterResult.status == CoachAthleteOperationStatus.coachRoleRequired
+      status =
+          rosterResult.status == CoachAthleteOperationStatus.coachRoleRequired
           ? AthleteRosterStatus.coachRoleRequired
           : AthleteRosterStatus.error;
       errorMessage = rosterResult.message;

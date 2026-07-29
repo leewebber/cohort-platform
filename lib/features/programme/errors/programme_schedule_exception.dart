@@ -1,10 +1,6 @@
 /// Typed schedule resolution failure.
 class ProgrammeScheduleException implements Exception {
-  ProgrammeScheduleException(
-    this.code,
-    this.message, {
-    this.details,
-  });
+  ProgrammeScheduleException(this.code, this.message, {this.details});
 
   final ProgrammeScheduleErrorCode code;
   final String message;

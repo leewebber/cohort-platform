@@ -26,19 +26,19 @@ class CircuitTimerController {
 
   static CircuitTimerMode resolveMode(CircuitSessionPlan plan) {
     return switch (plan.format) {
-      CircuitFormat.amrap || CircuitFormat.fixedDuration => CircuitTimerMode.countDown,
-      CircuitFormat.emom || CircuitFormat.intervalClock =>
-        CircuitTimerMode.intervalPhase,
+      CircuitFormat.amrap ||
+      CircuitFormat.fixedDuration => CircuitTimerMode.countDown,
+      CircuitFormat.emom ||
+      CircuitFormat.intervalClock => CircuitTimerMode.intervalPhase,
       CircuitFormat.forTime ||
       CircuitFormat.roundsForTime ||
-      CircuitFormat.chipper =>
-        CircuitTimerMode.countUp,
+      CircuitFormat.chipper => CircuitTimerMode.countUp,
       CircuitFormat.benchmark => switch (plan.scoreType) {
-          CircuitScoreType.roundsAndReps || CircuitScoreType.totalReps =>
-            CircuitTimerMode.countDown,
-          CircuitScoreType.roundsCompleted => CircuitTimerMode.intervalPhase,
-          _ => CircuitTimerMode.countUp,
-        },
+        CircuitScoreType.roundsAndReps ||
+        CircuitScoreType.totalReps => CircuitTimerMode.countDown,
+        CircuitScoreType.roundsCompleted => CircuitTimerMode.intervalPhase,
+        _ => CircuitTimerMode.countUp,
+      },
     };
   }
 
@@ -51,25 +51,25 @@ class CircuitTimerController {
 
     _state = switch (mode) {
       CircuitTimerMode.countDown => CircuitTimerState(
-          mode: mode,
-          isStarted: true,
-          isRunning: countdownSeconds != null,
-          primarySeconds: countdownSeconds ?? 0,
-          finished: countdownSeconds == null,
-        ),
+        mode: mode,
+        isStarted: true,
+        isRunning: countdownSeconds != null,
+        primarySeconds: countdownSeconds ?? 0,
+        finished: countdownSeconds == null,
+      ),
       CircuitTimerMode.countUp => CircuitTimerState(
-          mode: mode,
-          isStarted: true,
-          isRunning: true,
-        ),
+        mode: mode,
+        isStarted: true,
+        isRunning: true,
+      ),
       CircuitTimerMode.intervalPhase => CircuitTimerState(
-          mode: mode,
-          isStarted: true,
-          isRunning: true,
-          primarySeconds: _intervalPhaseSeconds(),
-          currentInterval: 1,
-          totalIntervals: totalIntervals,
-        ),
+        mode: mode,
+        isStarted: true,
+        isRunning: true,
+        primarySeconds: _intervalPhaseSeconds(),
+        currentInterval: 1,
+        totalIntervals: totalIntervals,
+      ),
     };
 
     onStateChanged(_state);
@@ -83,10 +83,7 @@ class CircuitTimerController {
     }
 
     _cancelTimer();
-    _state = current.copyWith(
-      isRunning: false,
-      isPaused: true,
-    );
+    _state = current.copyWith(isRunning: false, isPaused: true);
     onStateChanged(_state);
   }
 
@@ -96,10 +93,7 @@ class CircuitTimerController {
       return;
     }
 
-    _state = current.copyWith(
-      isRunning: true,
-      isPaused: false,
-    );
+    _state = current.copyWith(isRunning: true, isPaused: false);
     onStateChanged(_state);
     _startTicking();
   }
@@ -137,9 +131,7 @@ class CircuitTimerController {
       return;
     }
 
-    _state = current.copyWith(
-      primarySeconds: current.primarySeconds + 15,
-    );
+    _state = current.copyWith(primarySeconds: current.primarySeconds + 15);
     onStateChanged(_state);
   }
 
@@ -216,10 +208,7 @@ class CircuitTimerController {
       return;
     }
 
-    _state = current.copyWith(
-      elapsedSeconds: elapsed,
-      primarySeconds: elapsed,
-    );
+    _state = current.copyWith(elapsedSeconds: elapsed, primarySeconds: elapsed);
     onStateChanged(_state);
   }
 
@@ -236,11 +225,7 @@ class CircuitTimerController {
       return;
     }
 
-    _advanceInterval(
-      current.copyWith(
-        elapsedSeconds: elapsed,
-      ),
-    );
+    _advanceInterval(current.copyWith(elapsedSeconds: elapsed));
   }
 
   void _advanceInterval(CircuitTimerState current) {

@@ -49,7 +49,8 @@ class LibrarySessionBuilderScreen extends StatefulWidget {
       _LibrarySessionBuilderScreenState();
 }
 
-class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScreen> {
+class _LibrarySessionBuilderScreenState
+    extends State<LibrarySessionBuilderScreen> {
   late ProtocolDraft _draft;
   List<String> _feedbackMessages = const [];
   String? _coachMessage;
@@ -65,13 +66,16 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
   @override
   void initState() {
     super.initState();
-    _draft = widget.initialDraft ??
+    _draft =
+        widget.initialDraft ??
         SessionLibraryDraftFactory.createBlankReusableSessionDraft(
           ownerId: widget.coachIdentity?.coachId,
         );
-    _exercisesFuture = widget.loadExercises?.call() ??
+    _exercisesFuture =
+        widget.loadExercises?.call() ??
         ExerciseCatalogueService().loadPublishedExercises();
-    _revisionService = widget.revisionService ??
+    _revisionService =
+        widget.revisionService ??
         CoachStudioGovernanceServices.createRevisionService();
     _initGovernanceController();
   }
@@ -83,10 +87,11 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
       return;
     }
     _ownsGovernanceController = true;
-    _governanceController = CoachStudioGovernanceServices.createSessionGovernanceController(
-      protocolId: _draft.protocolId,
-      sessionDisplayName: _draft.name,
-    );
+    _governanceController =
+        CoachStudioGovernanceServices.createSessionGovernanceController(
+          protocolId: _draft.protocolId,
+          sessionDisplayName: _draft.name,
+        );
   }
 
   @override
@@ -187,139 +192,147 @@ class _LibrarySessionBuilderScreenState extends State<LibrarySessionBuilderScree
     return CoachRouteGuard.wrap(
       title: 'Session builder',
       child: Scaffold(
-      body: SafeArea(
-        child: FutureBuilder<List<Exercise>>(
-          future: _exercisesFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Padding(
-                padding: EdgeInsets.all(24),
-                child: Text('Loading exercises...'),
-              );
-            }
+        body: SafeArea(
+          child: FutureBuilder<List<Exercise>>(
+            future: _exercisesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text('Loading exercises...'),
+                );
+              }
 
-            if (snapshot.hasError) {
-              return Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton(onPressed: _cancel, child: const Text('← Cancel')),
-                    const SizedBox(height: CohortSpacing.md),
-                    const Text(
-                      'We could not load exercises right now.',
-                      style: CohortTextStyles.body,
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            final exercises = snapshot.data ?? const [];
-
-            return Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextButton(
-                          onPressed: _isSaving ? null : _cancel,
-                          child: const Text('← Cancel'),
-                        ),
-                        const SizedBox(height: CohortSpacing.md),
-                        const SectionTitle('Training Library'),
-                        const SizedBox(height: CohortSpacing.md),
-                        Text(
-                          _displayContext.title,
-                          style: CohortTextStyles.h1,
-                        ),
-                        const SizedBox(height: CohortSpacing.sm),
-                        Text(
-                          widget.isEdit
-                              ? 'Edit this reusable Session. Changes apply wherever this Session is referenced.'
-                              : 'Create a reusable Session for your Session Library.',
-                          style: CohortTextStyles.body.copyWith(
-                            color: CohortColors.textSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: CohortSpacing.xl),
-                        if (_showGovernance && _governanceController != null) ...[
-                          SessionGovernanceSection(
-                            controller: _governanceController!,
-                            revisionService: _revisionService,
-                            draft: _draft,
-                            onDraftChanged: _onGovernanceDraftChanged,
-                            onDeleted: _onGovernanceDeleted,
-                          ),
-                          if (!_canEditContent) ...[
-                            Text(
-                              _governanceController!
-                                      .decisionFor(SessionRevisionAction.edit)
-                                      ?.userMessage ??
-                                  'This Session Revision cannot be edited in place.',
-                              style: CohortTextStyles.body.copyWith(
-                                color: CohortColors.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: CohortSpacing.lg),
-                          ],
-                        ],
-                        AbsorbPointer(
-                          absorbing: !_canEditContent,
-                          child: Opacity(
-                            opacity: _canEditContent ? 1 : 0.55,
-                            child: SessionBuilderView(
-                              draft: _draft,
-                              exercises: exercises,
-                              displayContext: _displayContext,
-                              capabilities:
-                                  SessionBuilderCapabilities.librarySession(),
-                              onDraftChanged: _onDraftChanged,
-                              validationMessages: _feedbackMessages,
-                            ),
-                          ),
-                        ),
-                        if (_coachMessage != null) ...[
-                          const SizedBox(height: CohortSpacing.lg),
-                          Text(
-                            _coachMessage!,
-                            style: CohortTextStyles.body.copyWith(
-                              color: CohortColors.danger,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
+              if (snapshot.hasError) {
+                return Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CohortButton(
-                        label: 'Preview',
-                        onPressed: _isSaving ? () {} : _preview,
+                      TextButton(
+                        onPressed: _cancel,
+                        child: const Text('← Cancel'),
                       ),
                       const SizedBox(height: CohortSpacing.md),
-                      CohortButton(
-                        label: _isSaving
-                            ? 'Saving session…'
-                            : (widget.isEdit ? 'Save Session' : 'Save Session'),
-                        onPressed: (_isSaving || !_canEditContent) ? () {} : _save,
+                      const Text(
+                        'We could not load exercises right now.',
+                        style: CohortTextStyles.body,
                       ),
                     ],
                   ),
-                ),
-              ],
-            );
-          },
+                );
+              }
+
+              final exercises = snapshot.data ?? const [];
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton(
+                            onPressed: _isSaving ? null : _cancel,
+                            child: const Text('← Cancel'),
+                          ),
+                          const SizedBox(height: CohortSpacing.md),
+                          const SectionTitle('Training Library'),
+                          const SizedBox(height: CohortSpacing.md),
+                          Text(
+                            _displayContext.title,
+                            style: CohortTextStyles.h1,
+                          ),
+                          const SizedBox(height: CohortSpacing.sm),
+                          Text(
+                            widget.isEdit
+                                ? 'Edit this reusable Session. Changes apply wherever this Session is referenced.'
+                                : 'Create a reusable Session for your Session Library.',
+                            style: CohortTextStyles.body.copyWith(
+                              color: CohortColors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: CohortSpacing.xl),
+                          if (_showGovernance &&
+                              _governanceController != null) ...[
+                            SessionGovernanceSection(
+                              controller: _governanceController!,
+                              revisionService: _revisionService,
+                              draft: _draft,
+                              onDraftChanged: _onGovernanceDraftChanged,
+                              onDeleted: _onGovernanceDeleted,
+                            ),
+                            if (!_canEditContent) ...[
+                              Text(
+                                _governanceController!
+                                        .decisionFor(SessionRevisionAction.edit)
+                                        ?.userMessage ??
+                                    'This Session Revision cannot be edited in place.',
+                                style: CohortTextStyles.body.copyWith(
+                                  color: CohortColors.textSecondary,
+                                ),
+                              ),
+                              const SizedBox(height: CohortSpacing.lg),
+                            ],
+                          ],
+                          AbsorbPointer(
+                            absorbing: !_canEditContent,
+                            child: Opacity(
+                              opacity: _canEditContent ? 1 : 0.55,
+                              child: SessionBuilderView(
+                                draft: _draft,
+                                exercises: exercises,
+                                displayContext: _displayContext,
+                                capabilities:
+                                    SessionBuilderCapabilities.librarySession(),
+                                onDraftChanged: _onDraftChanged,
+                                validationMessages: _feedbackMessages,
+                              ),
+                            ),
+                          ),
+                          if (_coachMessage != null) ...[
+                            const SizedBox(height: CohortSpacing.lg),
+                            Text(
+                              _coachMessage!,
+                              style: CohortTextStyles.body.copyWith(
+                                color: CohortColors.danger,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        CohortButton(
+                          label: 'Preview',
+                          onPressed: _isSaving ? () {} : _preview,
+                        ),
+                        const SizedBox(height: CohortSpacing.md),
+                        CohortButton(
+                          label: _isSaving
+                              ? 'Saving session…'
+                              : (widget.isEdit
+                                    ? 'Save Session'
+                                    : 'Save Session'),
+                          onPressed: (_isSaving || !_canEditContent)
+                              ? () {}
+                              : _save,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
-    ),
     );
   }
 }

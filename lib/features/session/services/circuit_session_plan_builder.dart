@@ -50,14 +50,15 @@ class CircuitSessionPlanBuilder {
       scoreType: scoreType,
     );
 
-    final prescribedRounds = _parsePositiveInt(
-      sessionMetadata,
-      const ['rounds', 'repeats'],
-    );
-    final intervalCount = _parsePositiveInt(
-      sessionMetadata,
-      const ['interval_count', 'intervals', 'sets'],
-    );
+    final prescribedRounds = _parsePositiveInt(sessionMetadata, const [
+      'rounds',
+      'repeats',
+    ]);
+    final intervalCount = _parsePositiveInt(sessionMetadata, const [
+      'interval_count',
+      'intervals',
+      'sets',
+    ]);
     final timeCap = _parseDuration(
       _metadataString(sessionMetadata, 'time_cap') ??
           _metadataString(sessionMetadata, 'timecap'),
@@ -97,10 +98,7 @@ class CircuitSessionPlanBuilder {
         format: format,
         intervalCount: intervalCount,
       ),
-      scoringMethodLabel: _metadataString(
-        sessionMetadata,
-        'scoring_method',
-      ),
+      scoringMethodLabel: _metadataString(sessionMetadata, 'scoring_method'),
       instructions: _compileInstructions(protocol, sortedSteps),
       benchmarkName: _resolveBenchmarkName(protocol, sessionMetadata),
     );
@@ -274,10 +272,14 @@ class CircuitSessionPlanBuilder {
       'emom' => CircuitFormat.emom,
       'chipper' => CircuitFormat.chipper,
       'benchmark' => CircuitFormat.benchmark,
-      'fixed duration' || 'fixed_duration' || 'max reps' => CircuitFormat.fixedDuration,
+      'fixed duration' ||
+      'fixed_duration' ||
+      'max reps' => CircuitFormat.fixedDuration,
       'circuit' || 'conditioning' || 'hybrid' => CircuitFormat.forTime,
-      'e2mom' || 'e3mom' || 'interval clock' || 'interval_clock' =>
-        CircuitFormat.intervalClock,
+      'e2mom' ||
+      'e3mom' ||
+      'interval clock' ||
+      'interval_clock' => CircuitFormat.intervalClock,
       _ => null,
     };
   }
@@ -291,10 +293,10 @@ class CircuitSessionPlanBuilder {
       return sessionTypeFormat;
     }
 
-    final rounds = _parsePositiveInt(
-      sessionMetadata,
-      const ['rounds', 'repeats'],
-    );
+    final rounds = _parsePositiveInt(sessionMetadata, const [
+      'rounds',
+      'repeats',
+    ]);
     final timeCap = _parseDuration(
       _metadataString(sessionMetadata, 'time_cap') ??
           _metadataString(sessionMetadata, 'timecap'),
@@ -338,10 +340,14 @@ class CircuitSessionPlanBuilder {
       final stepType = _normalize(step.stepType);
       final section = _normalize(step.section);
 
-      if (displayStyle == 'amrap' || stepType == 'amrap' || section.contains('amrap')) {
+      if (displayStyle == 'amrap' ||
+          stepType == 'amrap' ||
+          section.contains('amrap')) {
         return CircuitFormat.amrap;
       }
-      if (displayStyle == 'emom' || stepType == 'emom' || section.contains('emom')) {
+      if (displayStyle == 'emom' ||
+          stepType == 'emom' ||
+          section.contains('emom')) {
         return CircuitFormat.emom;
       }
       if (displayStyle == 'chipper' ||
@@ -356,10 +362,10 @@ class CircuitSessionPlanBuilder {
       }
     }
 
-    final rounds = _parsePositiveInt(
-      sessionMetadata,
-      const ['rounds', 'repeats'],
-    );
+    final rounds = _parsePositiveInt(sessionMetadata, const [
+      'rounds',
+      'repeats',
+    ]);
     final timeCap = _parseDuration(
       _metadataString(sessionMetadata, 'time_cap') ??
           _metadataString(sessionMetadata, 'timecap'),
@@ -457,7 +463,8 @@ class CircuitSessionPlanBuilder {
     }
 
     if (format == CircuitFormat.chipper) {
-      final hasTimeCap = _parseDuration(
+      final hasTimeCap =
+          _parseDuration(
             _metadataString(sessionMetadata, 'time_cap') ??
                 _metadataString(sessionMetadata, 'timecap'),
           ) !=
@@ -481,31 +488,29 @@ class CircuitSessionPlanBuilder {
   }) {
     final compatible = switch (format) {
       CircuitFormat.amrap => const {
-          CircuitScoreType.roundsAndReps,
-          CircuitScoreType.totalReps,
-        },
+        CircuitScoreType.roundsAndReps,
+        CircuitScoreType.totalReps,
+      },
       CircuitFormat.forTime ||
-      CircuitFormat.roundsForTime =>
-        const {CircuitScoreType.elapsedTime},
+      CircuitFormat.roundsForTime => const {CircuitScoreType.elapsedTime},
       CircuitFormat.emom ||
-      CircuitFormat.intervalClock =>
-        const {CircuitScoreType.roundsCompleted},
+      CircuitFormat.intervalClock => const {CircuitScoreType.roundsCompleted},
       CircuitFormat.chipper => const {
-          CircuitScoreType.elapsedTime,
-          CircuitScoreType.movementsCompleted,
-        },
+        CircuitScoreType.elapsedTime,
+        CircuitScoreType.movementsCompleted,
+      },
       CircuitFormat.fixedDuration => const {
-          CircuitScoreType.totalReps,
-          CircuitScoreType.roundsAndReps,
-        },
+        CircuitScoreType.totalReps,
+        CircuitScoreType.roundsAndReps,
+      },
       CircuitFormat.benchmark => const {
-          CircuitScoreType.benchmarkScore,
-          CircuitScoreType.elapsedTime,
-          CircuitScoreType.roundsAndReps,
-          CircuitScoreType.totalReps,
-          CircuitScoreType.roundsCompleted,
-          CircuitScoreType.movementsCompleted,
-        },
+        CircuitScoreType.benchmarkScore,
+        CircuitScoreType.elapsedTime,
+        CircuitScoreType.roundsAndReps,
+        CircuitScoreType.totalReps,
+        CircuitScoreType.roundsCompleted,
+        CircuitScoreType.movementsCompleted,
+      },
     };
 
     if (!compatible.contains(scoreType)) {
@@ -528,8 +533,7 @@ class CircuitSessionPlanBuilder {
     return switch (format) {
       CircuitFormat.roundsForTime ||
       CircuitFormat.emom ||
-      CircuitFormat.intervalClock =>
-        prescribedRounds,
+      CircuitFormat.intervalClock => prescribedRounds,
       _ => null,
     };
   }
@@ -667,51 +671,55 @@ class CircuitSessionPlanBuilder {
   }
 
   CircuitFormat? _parseFormat(String? raw) {
-    final normalized = _normalize(raw).replaceAll('-', '_').replaceAll(' ', '_');
+    final normalized = _normalize(
+      raw,
+    ).replaceAll('-', '_').replaceAll(' ', '_');
 
     return switch (normalized) {
       'amrap' => CircuitFormat.amrap,
       'for_time' || 'fortime' => CircuitFormat.forTime,
       'rounds_for_time' || 'roundsfortime' => CircuitFormat.roundsForTime,
       'emom' => CircuitFormat.emom,
-      'e2mom' || 'e3mom' || 'custom_interval' || 'interval_clock' ||
-      'intervalclock' =>
-        CircuitFormat.intervalClock,
+      'e2mom' ||
+      'e3mom' ||
+      'custom_interval' ||
+      'interval_clock' ||
+      'intervalclock' => CircuitFormat.intervalClock,
       'chipper' => CircuitFormat.chipper,
-      'fixed_duration' || 'fixedduration' || 'max_reps' => CircuitFormat.fixedDuration,
+      'fixed_duration' ||
+      'fixedduration' ||
+      'max_reps' => CircuitFormat.fixedDuration,
       'benchmark' => CircuitFormat.benchmark,
       _ => null,
     };
   }
 
   CircuitScoreType? _parseScoreType(String? raw) {
-    final normalized = _normalize(raw).replaceAll('-', '_').replaceAll(' ', '_');
+    final normalized = _normalize(
+      raw,
+    ).replaceAll('-', '_').replaceAll(' ', '_');
 
     return switch (normalized) {
       'rounds_and_reps' ||
       'rounds_plus_reps' ||
       'roundsplusreps' ||
-      'rounds_reps' =>
-        CircuitScoreType.roundsAndReps,
+      'rounds_reps' => CircuitScoreType.roundsAndReps,
       'elapsed_time' || 'elapsedtime' || 'time' => CircuitScoreType.elapsedTime,
       'rounds_completed' ||
       'roundscompleted' ||
       'completed_intervals' ||
-      'intervals_completed' =>
-        CircuitScoreType.roundsCompleted,
+      'intervals_completed' => CircuitScoreType.roundsCompleted,
       'total_reps' || 'totalreps' || 'reps' => CircuitScoreType.totalReps,
-      'movements_completed' || 'movementscompleted' =>
-        CircuitScoreType.movementsCompleted,
-      'benchmark_score' || 'benchmarkscore' || 'benchmark' =>
-        CircuitScoreType.benchmarkScore,
+      'movements_completed' ||
+      'movementscompleted' => CircuitScoreType.movementsCompleted,
+      'benchmark_score' ||
+      'benchmarkscore' ||
+      'benchmark' => CircuitScoreType.benchmarkScore,
       _ => null,
     };
   }
 
-  int? _parsePositiveInt(
-    Map<String, dynamic> metadata,
-    List<String> keys,
-  ) {
+  int? _parsePositiveInt(Map<String, dynamic> metadata, List<String> keys) {
     for (final key in keys) {
       final value = metadata[key];
       final parsed = int.tryParse(value?.toString().trim() ?? '');
@@ -736,19 +744,19 @@ class CircuitSessionPlanBuilder {
       return Duration(minutes: minutes, seconds: seconds);
     }
 
-    final minuteMatch =
-        RegExp(r'^(\d+(?:\.\d+)?)\s*(min|mins|minute|minutes)$',
-                caseSensitive: false)
-            .firstMatch(trimmed);
+    final minuteMatch = RegExp(
+      r'^(\d+(?:\.\d+)?)\s*(min|mins|minute|minutes)$',
+      caseSensitive: false,
+    ).firstMatch(trimmed);
     if (minuteMatch != null) {
       final minutes = double.parse(minuteMatch.group(1)!);
       return Duration(seconds: (minutes * 60).round());
     }
 
-    final secondMatch =
-        RegExp(r'^(\d+(?:\.\d+)?)\s*(sec|secs|second|seconds|s)$',
-                caseSensitive: false)
-            .firstMatch(trimmed);
+    final secondMatch = RegExp(
+      r'^(\d+(?:\.\d+)?)\s*(sec|secs|second|seconds|s)$',
+      caseSensitive: false,
+    ).firstMatch(trimmed);
     if (secondMatch != null) {
       final seconds = double.parse(secondMatch.group(1)!);
       return Duration(milliseconds: (seconds * 1000).round());

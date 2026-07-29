@@ -4,7 +4,7 @@ import '../../../models/exercise.dart';
 /// Canonical published exercise catalogue — same source as [ExerciseLibraryScreen].
 class ExerciseCatalogueService implements ExerciseCatalogueLoader {
   ExerciseCatalogueService({ExerciseRepository? repository})
-      : _repository = repository ?? ExerciseRepository();
+    : _repository = repository ?? ExerciseRepository();
 
   final ExerciseRepository _repository;
 
@@ -21,12 +21,18 @@ class ExerciseCatalogueService implements ExerciseCatalogueLoader {
     }
 
     final normalized = trimmed.toLowerCase();
-    return exercises.where((exercise) {
-      return exercise.name.toLowerCase().contains(normalized) ||
-          (exercise.movementPattern ?? '').toLowerCase().contains(normalized) ||
-          (exercise.primaryMuscles ?? '').toLowerCase().contains(normalized) ||
-          (exercise.equipment ?? '').toLowerCase().contains(normalized);
-    }).toList(growable: false);
+    return exercises
+        .where((exercise) {
+          return exercise.name.toLowerCase().contains(normalized) ||
+              (exercise.movementPattern ?? '').toLowerCase().contains(
+                normalized,
+              ) ||
+              (exercise.primaryMuscles ?? '').toLowerCase().contains(
+                normalized,
+              ) ||
+              (exercise.equipment ?? '').toLowerCase().contains(normalized);
+        })
+        .toList(growable: false);
   }
 
   static Exercise? findById(List<Exercise> exercises, String exerciseId) {

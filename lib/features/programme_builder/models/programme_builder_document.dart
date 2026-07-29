@@ -87,8 +87,7 @@ class ProgrammeBuilderDocument {
       template: template ?? this.template,
       isDirty: isDirty ?? this.isDirty,
       hasUnsavedChanges: hasUnsavedChanges ?? this.hasUnsavedChanges,
-      lastSavedAt:
-          clearLastSavedAt ? null : (lastSavedAt ?? this.lastSavedAt),
+      lastSavedAt: clearLastSavedAt ? null : (lastSavedAt ?? this.lastSavedAt),
       saveGeneration: saveGeneration ?? this.saveGeneration,
       lastValidation: clearLastValidation
           ? null

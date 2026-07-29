@@ -18,12 +18,12 @@ class SessionGovernanceController extends ChangeNotifier {
     required SessionLineageStore lineageStore,
     required ProtocolBuilderService protocolBuilderService,
     String? sessionDisplayName,
-  })  : _protocolId = protocolId.trim(),
-        _actionPolicyService = actionPolicyService,
-        _relationshipService = relationshipService,
-        _lineageStore = lineageStore,
-        _protocolBuilderService = protocolBuilderService,
-        _sessionDisplayName = sessionDisplayName?.trim() {
+  }) : _protocolId = protocolId.trim(),
+       _actionPolicyService = actionPolicyService,
+       _relationshipService = relationshipService,
+       _lineageStore = lineageStore,
+       _protocolBuilderService = protocolBuilderService,
+       _sessionDisplayName = sessionDisplayName?.trim() {
     _state = SessionGovernanceViewState.loading();
   }
 
@@ -82,14 +82,17 @@ class SessionGovernanceController extends ChangeNotifier {
         return;
       }
 
-      final lifecycleStatus =
-          await _lineageStore.getRevisionLifecycleStatus(_protocolId);
+      final lifecycleStatus = await _lineageStore.getRevisionLifecycleStatus(
+        _protocolId,
+      );
 
       String? displayName = _sessionDisplayName;
       if (displayName == null || displayName.isEmpty) {
         try {
           final draft = await _protocolBuilderService.loadProtocol(_protocolId);
-          displayName = draft.name.trim().isEmpty ? 'Session' : draft.name.trim();
+          displayName = draft.name.trim().isEmpty
+              ? 'Session'
+              : draft.name.trim();
         } catch (_) {
           displayName = 'Session';
         }

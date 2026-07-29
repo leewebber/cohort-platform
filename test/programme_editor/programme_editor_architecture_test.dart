@@ -24,10 +24,11 @@ void main() {
       final directory = Directory(target);
       if (!directory.existsSync()) continue;
 
-      for (final file in directory
-          .listSync(recursive: true)
-          .whereType<File>()
-          .where((file) => file.path.endsWith('.dart'))) {
+      for (final file
+          in directory
+              .listSync(recursive: true)
+              .whereType<File>()
+              .where((file) => file.path.endsWith('.dart'))) {
         _scanFile(file, violations);
       }
     }

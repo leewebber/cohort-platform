@@ -37,14 +37,18 @@ class SessionBlockValidation {
       }
 
       messages.addAll(
-        validateBlock(block).map((message) => 'Block ${block.position}: $message'),
+        validateBlock(
+          block,
+        ).map((message) => 'Block ${block.position}: $message'),
       );
     }
 
     if (requirePublishableContent &&
         ordered.isNotEmpty &&
         !ordered.any((block) => block.hasMeaningfulContent)) {
-      messages.add('Add content, linked exercises, or a timer to at least one block.');
+      messages.add(
+        'Add content, linked exercises, or a timer to at least one block.',
+      );
     }
 
     return messages;

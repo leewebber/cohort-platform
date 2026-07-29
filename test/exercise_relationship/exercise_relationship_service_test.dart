@@ -27,8 +27,16 @@ void main() {
     service = ExerciseRelationshipService(relationshipStore: store);
 
     tables.exercises.addAll([
-      const Exercise(exerciseId: exerciseA, name: 'Back Squat', published: true),
-      const Exercise(exerciseId: exerciseB, name: 'Back Squat Clone', published: true),
+      const Exercise(
+        exerciseId: exerciseA,
+        name: 'Back Squat',
+        published: true,
+      ),
+      const Exercise(
+        exerciseId: exerciseB,
+        name: 'Back Squat Clone',
+        published: true,
+      ),
     ]);
   });
 
@@ -92,27 +100,29 @@ void main() {
       expect(summary.directBlockReferenceCount, 2);
     });
 
-    test('exercise removed from newer revision remains linked only to older revision',
-        () async {
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1',
-        revisionNumber: 1,
-      );
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1-rev-2',
-        revisionNumber: 2,
-        includeExercise: false,
-      );
+    test(
+      'exercise removed from newer revision remains linked only to older revision',
+      () async {
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1',
+          revisionNumber: 1,
+        );
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1-rev-2',
+          revisionNumber: 2,
+          includeExercise: false,
+        );
 
-      final summary = await service.getUsageForExercise(exerciseA);
+        final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.directSessionReferences, hasLength(1));
-      expect(summary.directSessionReferences.first.protocolId, 'session-v1');
-    });
+        expect(summary.directSessionReferences, hasLength(1));
+        expect(summary.directSessionReferences.first.protocolId, 'session-v1');
+      },
+    );
 
     test('different exercise with same display name is excluded', () async {
       _seedBlockLink(
@@ -151,8 +161,10 @@ void main() {
 
       final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.directSessionReferences.first.sessionLifecycleStatus,
-          SessionRevisionLifecycleStatus.archived);
+      expect(
+        summary.directSessionReferences.first.sessionLifecycleStatus,
+        SessionRevisionLifecycleStatus.archived,
+      );
     });
 
     test('block ordering and label overrides preserved', () async {
@@ -175,8 +187,10 @@ void main() {
       final summary = await service.getUsageForExercise(exerciseA);
 
       expect(summary.directSessionReferences.first.blockOrder, 1);
-      expect(summary.directSessionReferences.last.displayLabelOverride,
-          'Tempo Squat');
+      expect(
+        summary.directSessionReferences.last.displayLabelOverride,
+        'Tempo Squat',
+      );
     });
 
     test('session revision count differs from block link count', () async {
@@ -202,25 +216,28 @@ void main() {
   });
 
   group('session lineage roll-up', () {
-    test('multiple revisions in same lineage deduplicate lineage count', () async {
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1',
-        revisionNumber: 1,
-      );
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1-rev-2',
-        revisionNumber: 2,
-      );
+    test(
+      'multiple revisions in same lineage deduplicate lineage count',
+      () async {
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1',
+          revisionNumber: 1,
+        );
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1-rev-2',
+          revisionNumber: 2,
+        );
 
-      final summary = await service.getUsageForExercise(exerciseA);
+        final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.sessionLineageCount, 1);
-      expect(summary.sessionLineageReferences.first.revisionCount, 2);
-    });
+        expect(summary.sessionLineageCount, 1);
+        expect(summary.sessionLineageReferences.first.revisionCount, 2);
+      },
+    );
 
     test('multiple different lineages reported separately', () async {
       _seedBlockLink(
@@ -245,23 +262,22 @@ void main() {
   });
 
   group('programme usage', () {
-    test('referencing programme version reported through exact session revision',
-        () async {
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1',
-      );
-      _attachProtocolToProgramme(
-        tables: tables,
-        protocolId: 'session-v1',
-      );
+    test(
+      'referencing programme version reported through exact session revision',
+      () async {
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1',
+        );
+        _attachProtocolToProgramme(tables: tables, protocolId: 'session-v1');
 
-      final summary = await service.getUsageForExercise(exerciseA);
+        final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.programmeVersionCount, 1);
-      expect(summary.programmeReferences.first.protocolId, 'session-v1');
-    });
+        expect(summary.programmeVersionCount, 1);
+        expect(summary.programmeReferences.first.protocolId, 'session-v1');
+      },
+    );
 
     test('non-referencing programme version excluded', () async {
       _seedBlockLink(
@@ -269,59 +285,58 @@ void main() {
         exerciseId: exerciseA,
         protocolId: 'session-v1',
       );
-      _attachProtocolToProgramme(
-        tables: tables,
-        protocolId: 'other-session',
-      );
+      _attachProtocolToProgramme(tables: tables, protocolId: 'other-session');
 
       final summary = await service.getUsageForExercise(exerciseA);
 
       expect(summary.programmeReferences, isEmpty);
     });
 
-    test('multiple sessions in one programme version deduplicate programme count',
-        () async {
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-a',
-      );
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-b',
-      );
-      final lineage = SessionRevisionUsageTestFixtures.seedLineage(
-        tables.programmeTables,
-      );
-      final version = SessionRevisionUsageTestFixtures.seedVersion(
-        tables.programmeTables,
-        lineage: lineage,
-      );
-      for (final protocolId in ['session-a', 'session-b']) {
-        final week = SessionRevisionUsageTestFixtures.seedWeek(
-          tables.programmeTables,
-          version: version,
-          id: 'week-$protocolId',
+    test(
+      'multiple sessions in one programme version deduplicate programme count',
+      () async {
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-a',
         );
-        final day = SessionRevisionUsageTestFixtures.seedDay(
-          tables.programmeTables,
-          week: week,
-          id: 'day-$protocolId',
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-b',
         );
-        SessionRevisionUsageTestFixtures.seedSlot(
+        final lineage = SessionRevisionUsageTestFixtures.seedLineage(
           tables.programmeTables,
-          day: day,
-          protocolId: protocolId,
-          id: 'slot-$protocolId',
         );
-      }
+        final version = SessionRevisionUsageTestFixtures.seedVersion(
+          tables.programmeTables,
+          lineage: lineage,
+        );
+        for (final protocolId in ['session-a', 'session-b']) {
+          final week = SessionRevisionUsageTestFixtures.seedWeek(
+            tables.programmeTables,
+            version: version,
+            id: 'week-$protocolId',
+          );
+          final day = SessionRevisionUsageTestFixtures.seedDay(
+            tables.programmeTables,
+            week: week,
+            id: 'day-$protocolId',
+          );
+          SessionRevisionUsageTestFixtures.seedSlot(
+            tables.programmeTables,
+            day: day,
+            protocolId: protocolId,
+            id: 'slot-$protocolId',
+          );
+        }
 
-      final summary = await service.getUsageForExercise(exerciseA);
+        final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.programmeVersionCount, 1);
-      expect(summary.programmeReferences, hasLength(2));
-    });
+        expect(summary.programmeVersionCount, 1);
+        expect(summary.programmeReferences, hasLength(2));
+      },
+    );
 
     test('archived programme version remains visible', () async {
       _seedBlockLink(
@@ -346,34 +361,38 @@ void main() {
 
       final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.programmeReferences.first.programmeLifecycleStatus,
-          ProgrammeLifecycleStatus.archived);
+      expect(
+        summary.programmeReferences.first.programmeLifecycleStatus,
+        ProgrammeLifecycleStatus.archived,
+      );
     });
 
-    test('newer programme version using revision without exercise is excluded',
-        () async {
-      _seedBlockLink(
-        tables: tables,
-        exerciseId: exerciseA,
-        protocolId: 'session-v1',
-        revisionNumber: 1,
-      );
-      _attachProtocolToProgramme(
-        tables: tables,
-        protocolId: 'session-v1',
-        versionNumber: 1,
-      );
-      _attachProtocolToProgramme(
-        tables: tables,
-        protocolId: 'session-v1-rev-2',
-        versionNumber: 2,
-      );
+    test(
+      'newer programme version using revision without exercise is excluded',
+      () async {
+        _seedBlockLink(
+          tables: tables,
+          exerciseId: exerciseA,
+          protocolId: 'session-v1',
+          revisionNumber: 1,
+        );
+        _attachProtocolToProgramme(
+          tables: tables,
+          protocolId: 'session-v1',
+          versionNumber: 1,
+        );
+        _attachProtocolToProgramme(
+          tables: tables,
+          protocolId: 'session-v1-rev-2',
+          versionNumber: 2,
+        );
 
-      final summary = await service.getUsageForExercise(exerciseA);
+        final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.programmeVersionCount, 1);
-      expect(summary.programmeReferences.first.programmeVersionNumber, 1);
-    });
+        expect(summary.programmeVersionCount, 1);
+        expect(summary.programmeReferences.first.programmeVersionNumber, 1);
+      },
+    );
   });
 
   group('active assignments', () {
@@ -412,8 +431,14 @@ void main() {
       );
       final lineage = tables.programmeTables.lineages.first;
       for (final entry in [
-        (status: ProgrammeAssignmentStatus.completed, id: 'assignment-completed'),
-        (status: ProgrammeAssignmentStatus.reassigned, id: 'assignment-reassigned'),
+        (
+          status: ProgrammeAssignmentStatus.completed,
+          id: 'assignment-completed',
+        ),
+        (
+          status: ProgrammeAssignmentStatus.reassigned,
+          id: 'assignment-reassigned',
+        ),
         (status: ProgrammeAssignmentStatus.paused, id: 'assignment-paused'),
       ]) {
         SessionRevisionUsageTestFixtures.seedAssignment(
@@ -583,8 +608,9 @@ void main() {
         protocolId: 'session-v1',
       );
       final directOnly = await service.getUsageForExercise(exerciseA);
-      expect(directOnly.classifications,
-          [ContentUsageClassification.directAuthored]);
+      expect(directOnly.classifications, [
+        ContentUsageClassification.directAuthored,
+      ]);
 
       final missing = await service.tryGetUsageForExercise('missing-exercise');
       expect(missing.status, ExerciseUsageLookupStatus.exerciseNotFound);
@@ -612,7 +638,10 @@ void main() {
 
       final summary = await service.getUsageForExercise(exerciseA);
 
-      expect(summary.directSessionReferences.first.sessionName, 'Alpha Session');
+      expect(
+        summary.directSessionReferences.first.sessionName,
+        'Alpha Session',
+      );
       expect(
         summary.directSessionReferences.map((row) => row.protocolId).toSet(),
         hasLength(summary.directSessionReferences.length),
@@ -621,7 +650,8 @@ void main() {
   });
 }
 
-class _ThrowingExerciseRelationshipStore extends InMemoryExerciseRelationshipStore {
+class _ThrowingExerciseRelationshipStore
+    extends InMemoryExerciseRelationshipStore {
   _ThrowingExerciseRelationshipStore(super.tables);
 
   @override
@@ -673,9 +703,11 @@ ProgrammeVersion _attachProtocolToProgramme({
   ProgrammeVersion? version,
   ProgrammeLineage? lineage,
 }) {
-  final resolvedLineage = lineage ??
+  final resolvedLineage =
+      lineage ??
       SessionRevisionUsageTestFixtures.seedLineage(tables.programmeTables);
-  final resolvedVersion = version ??
+  final resolvedVersion =
+      version ??
       SessionRevisionUsageTestFixtures.seedVersion(
         tables.programmeTables,
         lineage: resolvedLineage,

@@ -54,10 +54,7 @@ class StrengthSessionHydrator {
 
       final row = _matchingPrescribedRow(stepRows, entry.setNumber);
       if (row != null) {
-        sets[index] = _entryFromPerformance(
-          baseEntry: entry,
-          performance: row,
-        );
+        sets[index] = _entryFromPerformance(baseEntry: entry, performance: row);
       }
     }
 
@@ -98,8 +95,9 @@ class StrengthSessionHydrator {
     }
 
     sets.sort((left, right) {
-      final extraCompare =
-          (left.isExtraSet ? 1 : 0).compareTo(right.isExtraSet ? 1 : 0);
+      final extraCompare = (left.isExtraSet ? 1 : 0).compareTo(
+        right.isExtraSet ? 1 : 0,
+      );
       if (extraCompare != 0) {
         return extraCompare;
       }
@@ -135,10 +133,8 @@ class StrengthSessionHydrator {
   }) {
     return baseEntry.copyWith(
       actualReps: performance.actualReps ?? baseEntry.actualReps,
-      load: formatLoadLabel(
-            performance.loadValue,
-            performance.loadUnit,
-          ) ??
+      load:
+          formatLoadLabel(performance.loadValue, performance.loadUnit) ??
           baseEntry.load,
       rpe: performance.rpe,
       completed: performance.completed,
@@ -173,8 +169,9 @@ class StrengthSessionHydrator {
     }
 
     rowsWithNotes.sort((left, right) {
-      final completedCompare =
-          (left.completed ? 1 : 0).compareTo(right.completed ? 1 : 0);
+      final completedCompare = (left.completed ? 1 : 0).compareTo(
+        right.completed ? 1 : 0,
+      );
       if (completedCompare != 0) {
         return completedCompare;
       }

@@ -1,9 +1,6 @@
 import 'protocol.dart';
 
-enum AdaptationDecisionType {
-  keepOriginal,
-  recommendAlternative,
-}
+enum AdaptationDecisionType { keepOriginal, recommendAlternative }
 
 class AdaptationDecision {
   const AdaptationDecision({

@@ -9,10 +9,7 @@ import '../controllers/coach_athlete_controllers.dart';
 import '../services/coach_athlete_services.dart';
 
 class JoinCoachScreen extends StatefulWidget {
-  const JoinCoachScreen({
-    super.key,
-    this.onJoined,
-  });
+  const JoinCoachScreen({super.key, this.onJoined});
 
   final VoidCallback? onJoined;
 

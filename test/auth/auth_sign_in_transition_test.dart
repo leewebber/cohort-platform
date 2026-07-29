@@ -22,10 +22,7 @@ class SignInTransitionAuthPort implements AuthSessionPort {
   int signInCallCount = 0;
   final _controller = StreamController<AuthState>.broadcast();
 
-  void emitSignedIn({
-    required String userId,
-    required String email,
-  }) {
+  void emitSignedIn({required String userId, required String email}) {
     user = User(
       id: userId,
       appMetadata: const {},
@@ -121,46 +118,52 @@ void main() {
   tearDown(CurrentUserSession.clear);
 
   group('AuthController sign-in transition', () {
-    test('successful sign-in becomes authenticated and clears loading', () async {
-      final authPort = SignInTransitionAuthPort();
-      final profiles = CountingProfileRepository(
-        seed: {
-          'user-123': const UserProfile(
-            id: 'user-123',
-            displayName: 'Alex',
-            isCoach: false,
-            isAthlete: true,
-          ),
-        },
-      );
-      final controller = await _initializedController(
-        authPort: authPort,
-        profileRepository: profiles,
-      );
+    test(
+      'successful sign-in becomes authenticated and clears loading',
+      () async {
+        final authPort = SignInTransitionAuthPort();
+        final profiles = CountingProfileRepository(
+          seed: {
+            'user-123': const UserProfile(
+              id: 'user-123',
+              displayName: 'Alex',
+              isCoach: false,
+              isAthlete: true,
+            ),
+          },
+        );
+        final controller = await _initializedController(
+          authPort: authPort,
+          profileRepository: profiles,
+        );
 
-      await controller.signIn(email: 'alex@example.com', password: 'secret');
+        await controller.signIn(email: 'alex@example.com', password: 'secret');
 
-      expect(authPort.signInCallCount, 1);
-      expect(profiles.getProfileCallCount, 1);
-      expect(controller.state.status, AuthStatus.authenticated);
-      expect(controller.state.profile?.displayName, 'Alex');
-      expect(CurrentUserSession.requireInstance.profile.displayName, 'Alex');
-    });
+        expect(authPort.signInCallCount, 1);
+        expect(profiles.getProfileCallCount, 1);
+        expect(controller.state.status, AuthStatus.authenticated);
+        expect(controller.state.profile?.displayName, 'Alex');
+        expect(CurrentUserSession.requireInstance.profile.displayName, 'Alex');
+      },
+    );
 
-    test('incomplete profile routes to profileRequired and clears loading', () async {
-      final authPort = SignInTransitionAuthPort();
-      final profiles = CountingProfileRepository();
-      final controller = await _initializedController(
-        authPort: authPort,
-        profileRepository: profiles,
-      );
+    test(
+      'incomplete profile routes to profileRequired and clears loading',
+      () async {
+        final authPort = SignInTransitionAuthPort();
+        final profiles = CountingProfileRepository();
+        final controller = await _initializedController(
+          authPort: authPort,
+          profileRepository: profiles,
+        );
 
-      await controller.signIn(email: 'alex@example.com', password: 'secret');
+        await controller.signIn(email: 'alex@example.com', password: 'secret');
 
-      expect(controller.state.status, AuthStatus.profileRequired);
-      expect(profiles.getProfileCallCount, 1);
-      expect(CurrentUserSession.maybeInstance, isNull);
-    });
+        expect(controller.state.status, AuthStatus.profileRequired);
+        expect(profiles.getProfileCallCount, 1);
+        expect(CurrentUserSession.maybeInstance, isNull);
+      },
+    );
 
     test('sign-in failure clears loading and surfaces error', () async {
       final authPort = _FailingSignInAuthPort();
@@ -177,30 +180,33 @@ void main() {
       expect(profiles.getProfileCallCount, 0);
     });
 
-    test('concurrent auth stream refresh does not duplicate profile load', () async {
-      final authPort = SignInTransitionAuthPort();
-      final profiles = DelayedProfileRepository(
-        loadDelay: const Duration(milliseconds: 20),
-        seed: {
-          'user-123': const UserProfile(
-            id: 'user-123',
-            displayName: 'Alex',
-            isCoach: false,
-            isAthlete: true,
-          ),
-        },
-      );
-      final controller = await _initializedController(
-        authPort: authPort,
-        profileRepository: profiles,
-      );
+    test(
+      'concurrent auth stream refresh does not duplicate profile load',
+      () async {
+        final authPort = SignInTransitionAuthPort();
+        final profiles = DelayedProfileRepository(
+          loadDelay: const Duration(milliseconds: 20),
+          seed: {
+            'user-123': const UserProfile(
+              id: 'user-123',
+              displayName: 'Alex',
+              isCoach: false,
+              isAthlete: true,
+            ),
+          },
+        );
+        final controller = await _initializedController(
+          authPort: authPort,
+          profileRepository: profiles,
+        );
 
-      await controller.signIn(email: 'alex@example.com', password: 'secret');
-      await Future<void>.delayed(Duration.zero);
+        await controller.signIn(email: 'alex@example.com', password: 'secret');
+        await Future<void>.delayed(Duration.zero);
 
-      expect(profiles.getProfileCallCount, 1);
-      expect(controller.state.status, AuthStatus.authenticated);
-    });
+        expect(profiles.getProfileCallCount, 1);
+        expect(controller.state.status, AuthStatus.authenticated);
+      },
+    );
 
     test('returnToSignIn exposes login through AuthGate routing', () async {
       final authPort = SignInTransitionAuthPort();
@@ -217,7 +223,9 @@ void main() {
   });
 
   group('AuthGate sign-in routing', () {
-    testWidgets('transitions from overlay login to home without reload', (tester) async {
+    testWidgets('transitions from overlay login to home without reload', (
+      tester,
+    ) async {
       final authPort = SignInTransitionAuthPort();
       final profiles = CountingProfileRepository(
         seed: {
@@ -243,9 +251,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       Navigator.of(tester.element(find.byType(AuthGate))).push(
-        MaterialPageRoute(
-          builder: (_) => LoginScreen(controller: controller),
-        ),
+        MaterialPageRoute(builder: (_) => LoginScreen(controller: controller)),
       );
       await tester.pumpAndSettle();
 

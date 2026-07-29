@@ -40,11 +40,7 @@ void main() {
         }
       }
 
-      expect(
-        violations,
-        isEmpty,
-        reason: violations.join('\n'),
-      );
+      expect(violations, isEmpty, reason: violations.join('\n'));
     });
   });
 }

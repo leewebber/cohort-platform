@@ -21,8 +21,9 @@ class SessionRevisionActionMessageBuilder {
     final versionLabel = programmeReferenceCount == 1
         ? '1 programme version'
         : '$programmeReferenceCount programme versions';
-    final slotLabel =
-        slotReferenceCount == 1 ? '1 slot' : '$slotReferenceCount slots';
+    final slotLabel = slotReferenceCount == 1
+        ? '1 slot'
+        : '$slotReferenceCount slots';
 
     return 'Cannot delete this draft because it is used in $versionLabel across $slotLabel.';
   }

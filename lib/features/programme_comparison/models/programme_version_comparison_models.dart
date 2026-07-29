@@ -19,12 +19,7 @@ enum ProgrammeChangeType {
   unchanged,
 }
 
-enum ProgrammeChangeSeverity {
-  informational,
-  low,
-  moderate,
-  high,
-}
+enum ProgrammeChangeSeverity { informational, low, moderate, high }
 
 enum ProgrammeComparisonClassification {
   metadataChanged,
@@ -389,29 +384,32 @@ class ProgrammeVersionComparisonLookupResult {
 
   const ProgrammeVersionComparisonLookupResult.success(
     ProgrammeVersionComparisonSummary summary,
-  ) : this._(status: ProgrammeVersionComparisonStatus.success, summary: summary);
+  ) : this._(
+        status: ProgrammeVersionComparisonStatus.success,
+        summary: summary,
+      );
 
   const ProgrammeVersionComparisonLookupResult.sourceNotFound()
-      : this._(status: ProgrammeVersionComparisonStatus.sourceNotFound);
+    : this._(status: ProgrammeVersionComparisonStatus.sourceNotFound);
 
   const ProgrammeVersionComparisonLookupResult.targetNotFound()
-      : this._(status: ProgrammeVersionComparisonStatus.targetNotFound);
+    : this._(status: ProgrammeVersionComparisonStatus.targetNotFound);
 
   const ProgrammeVersionComparisonLookupResult.partial(
     ProgrammeVersionComparisonSummary summary,
   ) : this._(
-          status: ProgrammeVersionComparisonStatus.partial,
-          summary: summary,
-        );
+        status: ProgrammeVersionComparisonStatus.partial,
+        summary: summary,
+      );
 
   const ProgrammeVersionComparisonLookupResult.incompatibleLineage()
-      : this._(status: ProgrammeVersionComparisonStatus.incompatibleLineage);
+    : this._(status: ProgrammeVersionComparisonStatus.incompatibleLineage);
 
   const ProgrammeVersionComparisonLookupResult.lookupFailed(String message)
-      : this._(
-          status: ProgrammeVersionComparisonStatus.lookupFailed,
-          message: message,
-        );
+    : this._(
+        status: ProgrammeVersionComparisonStatus.lookupFailed,
+        message: message,
+      );
 
   final ProgrammeVersionComparisonStatus status;
   final ProgrammeVersionComparisonSummary? summary;

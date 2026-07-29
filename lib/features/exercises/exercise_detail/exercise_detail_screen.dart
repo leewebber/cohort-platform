@@ -46,10 +46,7 @@ class ExerciseDetailScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.sm),
 
-              Text(
-                exercise.name,
-                style: CohortTextStyles.h1,
-              ),
+              Text(exercise.name, style: CohortTextStyles.h1),
 
               const SizedBox(height: CohortSpacing.lg),
 
@@ -78,8 +75,8 @@ class ExerciseDetailScreen extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.xl),
                 ExerciseUsagePanel(
                   exerciseId: exercise.exerciseId,
-                  loadUsage: (exerciseId) => _relationshipService
-                      .tryGetUsageForExercise(exerciseId),
+                  loadUsage: (exerciseId) =>
+                      _relationshipService.tryGetUsageForExercise(exerciseId),
                 ),
               ],
 
@@ -88,19 +85,13 @@ class ExerciseDetailScreen extends StatelessWidget {
               if (_hasText(exercise.purpose))
                 _SectionCard(
                   title: 'Purpose',
-                  child: Text(
-                    exercise.purpose!,
-                    style: CohortTextStyles.body,
-                  ),
+                  child: Text(exercise.purpose!, style: CohortTextStyles.body),
                 ),
 
               if (_hasText(exercise.setup))
                 _SectionCard(
                   title: 'Setup',
-                  child: Text(
-                    exercise.setup!,
-                    style: CohortTextStyles.body,
-                  ),
+                  child: Text(exercise.setup!, style: CohortTextStyles.body),
                 ),
 
               if (_hasText(exercise.execution))
@@ -223,10 +214,7 @@ class ExerciseDetailScreen extends StatelessWidget {
 }
 
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({
-    required this.title,
-    required this.child,
-  });
+  const _SectionCard({required this.title, required this.child});
 
   final String title;
   final Widget child;

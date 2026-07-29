@@ -30,14 +30,14 @@ class IntervalSessionExecutionState {
 
   int get totalPhases => entries.length;
 
-  int get completedPhaseCount => entries.where((entry) => entry.completed).length;
+  int get completedPhaseCount =>
+      entries.where((entry) => entry.completed).length;
 
   int get totalWorkPhaseCount =>
       entries.where((entry) => entry.isWorkPhase).length;
 
-  int get completedWorkPhaseCount => entries
-      .where((entry) => entry.isWorkPhase && entry.completed)
-      .length;
+  int get completedWorkPhaseCount =>
+      entries.where((entry) => entry.isWorkPhase && entry.completed).length;
 
   bool get allPhasesComplete =>
       entries.isNotEmpty && completedPhaseCount == entries.length;
@@ -119,8 +119,9 @@ class IntervalSessionExecutionState {
     return IntervalSessionExecutionState(
       plan: plan ?? this.plan,
       entries: entries ?? this.entries,
-      activeLocalId:
-          clearActiveLocalId ? null : (activeLocalId ?? this.activeLocalId),
+      activeLocalId: clearActiveLocalId
+          ? null
+          : (activeLocalId ?? this.activeLocalId),
       sessionNote: clearSessionNote ? null : (sessionNote ?? this.sessionNote),
       endedEarly: endedEarly ?? this.endedEarly,
       endReasonLabel: clearEndReasonLabel

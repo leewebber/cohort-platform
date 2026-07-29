@@ -14,9 +14,9 @@ class ProgrammeBuilderPublishCoordinatorImpl
     required ProgrammeBuilderService builderService,
     required ProgrammePublishingService publishingService,
     required ProgrammeBuilderValidationService validationService,
-  })  : _builderService = builderService,
-        _publishingService = publishingService,
-        _validationService = validationService;
+  }) : _builderService = builderService,
+       _publishingService = publishingService,
+       _validationService = validationService;
 
   final ProgrammeBuilderService _builderService;
   final ProgrammePublishingService _publishingService;
@@ -84,7 +84,9 @@ class ProgrammeBuilderPublishCoordinatorImpl
         publishedByCoachId: coachId,
       );
 
-      final reloaded = await _builderService.loadDocument(versionId: published.id);
+      final reloaded = await _builderService.loadDocument(
+        versionId: published.id,
+      );
 
       return ProgrammeBuilderOperationResult(
         status: ProgrammeBuilderOperationStatus.published,

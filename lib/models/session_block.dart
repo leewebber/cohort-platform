@@ -44,11 +44,15 @@ class SessionBlock {
 
   BlockPriority get effectiveBlockPriority =>
       blockPriority ??
-      SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
+      SessionBlockTypeAdaptationPolicy.defaultPriority(
+        AdaptationBlockTypePlanning.fromPlanningDbValue(blockType.name),
+      );
 
   BlockAdaptationPolicy get effectiveAdaptationPolicy =>
       adaptationPolicy ??
-      SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(blockType);
+      SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(
+        AdaptationBlockTypePlanning.fromPlanningDbValue(blockType.name),
+      );
 
   String get stableId => persistedId ?? 'legacy-$position';
 
@@ -103,8 +107,9 @@ class SessionBlock {
       position: position ?? this.position,
       performanceCaptureMode:
           performanceCaptureMode ?? this.performanceCaptureMode,
-      blockPriority:
-          clearBlockPriority ? null : (blockPriority ?? this.blockPriority),
+      blockPriority: clearBlockPriority
+          ? null
+          : (blockPriority ?? this.blockPriority),
       adaptationPolicy: clearAdaptationPolicy
           ? null
           : (adaptationPolicy ?? this.adaptationPolicy),
@@ -148,9 +153,7 @@ class SessionBlock {
     if (timerRaw is Map<String, dynamic>) {
       timer = TimerConfiguration.fromJson(timerRaw);
     } else if (timerRaw is Map) {
-      timer = TimerConfiguration.fromJson(
-        Map<String, dynamic>.from(timerRaw),
-      );
+      timer = TimerConfiguration.fromJson(Map<String, dynamic>.from(timerRaw));
     }
 
     return SessionBlock(
@@ -170,9 +173,10 @@ class SessionBlock {
       blockPriority: SessionBlockAdaptationMetadataCodec.parseBlockPriority(
         row[SessionBlockAdaptationMetadataKeys.blockPriority],
       ),
-      adaptationPolicy: SessionBlockAdaptationMetadataCodec.parseAdaptationPolicy(
-        row[SessionBlockAdaptationMetadataKeys.adaptationPolicy],
-      ),
+      adaptationPolicy:
+          SessionBlockAdaptationMetadataCodec.parseAdaptationPolicy(
+            row[SessionBlockAdaptationMetadataKeys.adaptationPolicy],
+          ),
     );
   }
 
@@ -293,20 +297,20 @@ class SessionBlock {
 
   @override
   int get hashCode => Object.hash(
-        localId,
-        persistedId,
-        blockType,
-        title,
-        content,
-        workoutFormat,
-        timerConfiguration,
-        Object.hashAll(linkedExercises),
-        coachNotes,
-        position,
-        performanceCaptureMode,
-        blockPriority,
-        adaptationPolicy?.toJson().toString(),
-      );
+    localId,
+    persistedId,
+    blockType,
+    title,
+    content,
+    workoutFormat,
+    timerConfiguration,
+    Object.hashAll(linkedExercises),
+    coachNotes,
+    position,
+    performanceCaptureMode,
+    blockPriority,
+    adaptationPolicy?.toJson().toString(),
+  );
 
   static String? _nullable(String? value) {
     final trimmed = value?.trim();

@@ -25,7 +25,8 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
     DateTime? startedAt,
     DateTime? completedAt,
   }) async {
-    final effectiveStartedAt = startedAt ??
+    final effectiveStartedAt =
+        startedAt ??
         (status == TrainingSessionStatus.inProgress
             ? DateTime.now().toUtc()
             : null);
@@ -63,9 +64,7 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
     return fromMap(response);
   }
 
-  Future<List<TrainingSession>> getSessionsForAthlete(
-    String athleteId,
-  ) {
+  Future<List<TrainingSession>> getSessionsForAthlete(String athleteId) {
     return getWhere(
       column: 'athlete_id',
       value: athleteId,
@@ -119,8 +118,9 @@ class TrainingSessionRepository extends BaseRepository<TrainingSession> {
     };
 
     if (existing.startedAt != null) {
-      updateMap['duration_seconds'] =
-          completedAt.difference(existing.startedAt!).inSeconds;
+      updateMap['duration_seconds'] = completedAt
+          .difference(existing.startedAt!)
+          .inSeconds;
     }
 
     final response = await SupabaseService.client

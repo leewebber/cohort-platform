@@ -10,9 +10,7 @@ import '../vocabulary/session_intent.dart';
 import 'prescription_execution_snapshot.dart';
 
 /// Lifecycle marker for in-memory execution snapshots (persistence in Task 3).
-enum AdaptedSessionExecutionSnapshotStatus {
-  ready,
-}
+enum AdaptedSessionExecutionSnapshotStatus { ready }
 
 class ExerciseExecutionSnapshot {
   const ExerciseExecutionSnapshot({
@@ -78,9 +76,7 @@ class OmittedBlockExecutionRecord {
   final List<ExerciseExecutionSnapshot> capturedExercises;
 }
 
-enum AdaptationStepApplicationStatus {
-  applied,
-}
+enum AdaptationStepApplicationStatus { applied }
 
 class AdaptationStepAuditEntry {
   const AdaptationStepAuditEntry({

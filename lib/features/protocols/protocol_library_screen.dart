@@ -112,10 +112,7 @@ class _ProtocolLibraryScreenState extends State<ProtocolLibraryScreen> {
                   const SizedBox(height: CohortSpacing.md),
                   const SectionTitle('Field Manual'),
                   const SizedBox(height: CohortSpacing.sm),
-                  const Text(
-                    'Protocol Library',
-                    style: CohortTextStyles.h1,
-                  ),
+                  const Text('Protocol Library', style: CohortTextStyles.h1),
                   const SizedBox(height: CohortSpacing.md),
                   const Text(
                     'Search and discover training protocols.',

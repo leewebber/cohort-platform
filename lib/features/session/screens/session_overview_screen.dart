@@ -32,9 +32,9 @@ class SessionOverviewScreen extends StatefulWidget {
     SessionExecutionLoader? loader,
     PerformanceRecordSaveCoordinator? saveCoordinator,
     SessionExecutionLauncher? sessionLauncher,
-  })  : _loader = loader,
-        _saveCoordinator = saveCoordinator,
-        _sessionLauncher = sessionLauncher;
+  }) : _loader = loader,
+       _saveCoordinator = saveCoordinator,
+       _sessionLauncher = sessionLauncher;
 
   final String protocolId;
   final String? displayTitle;
@@ -88,9 +88,9 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
   }
 
   String get _sessionKey => AthleteSessionMemoryStore.sessionKey(
-        protocolId: widget.protocolId,
-        trainingSessionId: widget.trainingSessionId,
-      );
+    protocolId: widget.protocolId,
+    trainingSessionId: widget.trainingSessionId,
+  );
 
   Future<void> _startSession(SessionExecutionPlan plan) async {
     final trainingSessionId = widget.trainingSessionId;
@@ -130,11 +130,11 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
           controller: controller,
           performanceController:
               PerformanceCaptureController.initializeFromExecutionPlan(
-            plan: plan,
-            athleteId: athleteId ?? 'preview',
-            trainingSessionId: trainingSessionId ?? 0,
-            programmeContext: widget.programmeContext,
-          ),
+                plan: plan,
+                athleteId: athleteId ?? 'preview',
+                trainingSessionId: trainingSessionId ?? 0,
+                programmeContext: widget.programmeContext,
+              ),
           trainingSessionId: trainingSessionId,
           programmeContext: widget.programmeContext,
           athleteId: athleteId,
@@ -171,12 +171,14 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
             }
 
             final plan = snapshot.data!.plan;
-            final restored = AthleteSessionMemoryStore.instance.read(_sessionKey);
+            final restored = AthleteSessionMemoryStore.instance.read(
+              _sessionKey,
+            );
             final canStart = plan.hasExecutableBlocks;
             final buttonLabel =
                 restored?.sessionStatus == SessionExecutionStatus.inProgress
-                    ? 'Continue Session'
-                    : 'Start Session';
+                ? 'Continue Session'
+                : 'Start Session';
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -197,7 +199,10 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Session overview', style: CohortTextStyles.cardTitle),
+                        Text(
+                          'Session overview',
+                          style: CohortTextStyles.cardTitle,
+                        ),
                         const SizedBox(height: CohortSpacing.md),
                         if (plan.durationMin != null)
                           Text(
@@ -210,7 +215,10 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
                         ),
                         if (widget.sessionGoal?.trim().isNotEmpty == true) ...[
                           const SizedBox(height: CohortSpacing.md),
-                          Text(widget.sessionGoal!, style: CohortTextStyles.body),
+                          Text(
+                            widget.sessionGoal!,
+                            style: CohortTextStyles.body,
+                          ),
                         ],
                         if (widget.adaptationNotice?.trim().isNotEmpty ==
                             true) ...[
@@ -222,10 +230,7 @@ class _SessionOverviewScreenState extends State<SessionOverviewScreen> {
                         ],
                         if (plan.coachNotes?.trim().isNotEmpty == true) ...[
                           const SizedBox(height: CohortSpacing.md),
-                          Text(
-                            'Coach notes',
-                            style: CohortTextStyles.small,
-                          ),
+                          Text('Coach notes', style: CohortTextStyles.small),
                           const SizedBox(height: CohortSpacing.xs),
                           Text(plan.coachNotes!, style: CohortTextStyles.body),
                         ],

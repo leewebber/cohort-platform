@@ -9,13 +9,14 @@ class ProgrammeBuilderProtocolPickerServiceImpl
   ProgrammeBuilderProtocolPickerServiceImpl({
     ProtocolRepository? protocolRepository,
     ProgrammeBuilderProtocolOptionMapper? mapper,
-  })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
-        _mapper = mapper ?? const ProgrammeBuilderProtocolOptionMapper();
+  }) : _protocolRepository = protocolRepository ?? ProtocolRepository(),
+       _mapper = mapper ?? const ProgrammeBuilderProtocolOptionMapper();
 
   final ProtocolRepository _protocolRepository;
   final ProgrammeBuilderProtocolOptionMapper _mapper;
 
-  static const _catalogPublishedFilter = 'published=true (cohort_protocol catalogue)';
+  static const _catalogPublishedFilter =
+      'published=true (cohort_protocol catalogue)';
 
   @override
   Future<List<ProgrammeBuilderProtocolOption>> listSelectableProtocols({
@@ -35,9 +36,7 @@ class ProgrammeBuilderProtocolPickerServiceImpl
       limit: limit,
     );
 
-    ProgrammeProtocolPickerDiagnostics.log(
-      'raw row count=${protocols.length}',
-    );
+    ProgrammeProtocolPickerDiagnostics.log('raw row count=${protocols.length}');
 
     final mapped = _mapper.mapProtocols(
       protocols,
@@ -64,7 +63,9 @@ class ProgrammeBuilderProtocolPickerServiceImpl
 
   @override
   Future<ProgrammeBuilderProtocolOption?> getById(String protocolId) async {
-    final protocol = await _protocolRepository.getProtocolById(protocolId.trim());
+    final protocol = await _protocolRepository.getProtocolById(
+      protocolId.trim(),
+    );
     if (protocol == null) return null;
 
     return _mapper.mapProtocol(protocol);

@@ -23,8 +23,8 @@ class IntervalSessionPlan {
   final String? protocolId;
 
   List<IntervalRepEntry> get timelineEntries => [
-        for (final block in blocks) ...block.entries,
-      ];
+    for (final block in blocks) ...block.entries,
+  ];
 
   int get totalPhases => timelineEntries.length;
 

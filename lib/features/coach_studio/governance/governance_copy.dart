@@ -30,7 +30,9 @@ class GovernanceCopy {
     return 'Revision $revisionNumber · ${lifecycleLabel(lifecycleStatus)}';
   }
 
-  static String programmeVersionReference(SessionRevisionProgrammeReference ref) {
+  static String programmeVersionReference(
+    SessionRevisionProgrammeReference ref,
+  ) {
     return '${ref.programmeName} · Programme Version ${ref.programmeVersionNumber}';
   }
 
@@ -47,9 +49,9 @@ class GovernanceCopy {
   static String classificationLabel(ContentUsageClassification classification) {
     return switch (classification) {
       ContentUsageClassification.directAuthored => 'Authored usage',
-      ContentUsageClassification.activeOperational => 'Active operational usage',
-      ContentUsageClassification.historicalPerformance =>
-        'Historical usage',
+      ContentUsageClassification.activeOperational =>
+        'Active operational usage',
+      ContentUsageClassification.historicalPerformance => 'Historical usage',
     };
   }
 
@@ -83,9 +85,12 @@ class GovernanceCopy {
     required int blockCount,
     required int revisionCount,
   }) {
-    final blockLabel = blockCount == 1 ? '1 session block' : '$blockCount session blocks';
-    final revisionLabel =
-        revisionCount == 1 ? '1 revision' : '$revisionCount revisions';
+    final blockLabel = blockCount == 1
+        ? '1 session block'
+        : '$blockCount session blocks';
+    final revisionLabel = revisionCount == 1
+        ? '1 revision'
+        : '$revisionCount revisions';
     return 'Used in $blockLabel across $revisionLabel.';
   }
 

@@ -91,9 +91,7 @@ class _EnduranceDurationFieldState extends State<EnduranceDurationField> {
         errorText: _validationError,
       ),
       keyboardType: TextInputType.datetime,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9:]')),
-      ],
+      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9:]'))],
       onChanged: _handleChanged,
     );
   }

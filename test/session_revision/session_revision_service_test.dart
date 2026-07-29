@@ -66,7 +66,9 @@ void main() {
     });
 
     test('createLineage inserts lineage row', () async {
-      final lineage = await service.createLineage(displayName: 'Strength Foundation');
+      final lineage = await service.createLineage(
+        displayName: 'Strength Foundation',
+      );
 
       expect(lineage.displayName, 'Strength Foundation');
       expect(lineageStore.lineages, hasLength(1));
@@ -99,19 +101,23 @@ void main() {
       expect(result.revisionNumber, 2);
       expect(result.draft.protocolId, 'session-a-rev-2');
       expect(result.draft.sessionLineageId, lineageId);
-      expect(result.draft.lifecycleStatus, SessionRevisionLifecycleStatus.draft);
+      expect(
+        result.draft.lifecycleStatus,
+        SessionRevisionLifecycleStatus.draft,
+      );
       expect(builder.draftsById['session-a']!.name, source.name);
       expect(builder.saveDraftCalls, hasLength(1));
     });
 
     test('draft revision remains editable in place', () async {
-      final draft = _publishedRevisionDraft(
-        protocolId: 'session-draft',
-        lineageId: 'lineage-draft',
-      ).copyWith(
-        published: false,
-        lifecycleStatus: SessionRevisionLifecycleStatus.draft,
-      );
+      final draft =
+          _publishedRevisionDraft(
+            protocolId: 'session-draft',
+            lineageId: 'lineage-draft',
+          ).copyWith(
+            published: false,
+            lifecycleStatus: SessionRevisionLifecycleStatus.draft,
+          );
 
       expect(draft.isRevisionEditable, isTrue);
     });
@@ -133,10 +139,9 @@ void main() {
         id: lineageId,
       );
 
-      builder.seed(_publishedRevisionDraft(
-        protocolId: 'session-v1',
-        lineageId: lineageId,
-      ));
+      builder.seed(
+        _publishedRevisionDraft(protocolId: 'session-v1', lineageId: lineageId),
+      );
       lineageStore.seedRevision(
         protocolId: 'session-v1',
         sessionLineageId: lineageId,
@@ -148,10 +153,12 @@ void main() {
         sourceProtocolId: 'session-v1',
         newProtocolId: 'session-v2',
       );
-      builder.seed(second.draft.copyWith(
-        lifecycleStatus: SessionRevisionLifecycleStatus.published,
-        published: true,
-      ));
+      builder.seed(
+        second.draft.copyWith(
+          lifecycleStatus: SessionRevisionLifecycleStatus.published,
+          published: true,
+        ),
+      );
       lineageStore.seedRevision(
         protocolId: 'session-v2',
         sessionLineageId: lineageId,
@@ -199,7 +206,8 @@ void main() {
       );
 
       expect(
-        () => service.createNewSessionRevision(sourceProtocolId: 'session-draft'),
+        () =>
+            service.createNewSessionRevision(sourceProtocolId: 'session-draft'),
         throwsA(isA<SessionRevisionPolicyException>()),
       );
     });
@@ -214,11 +222,7 @@ ProtocolDraft _publishedRevisionDraft({
     protocolId: protocolId,
     name: 'Strength Foundation',
     steps: const [
-      ProtocolStepDraft(
-        localId: 'step-1',
-        stepOrder: 1,
-        title: 'Warm-up',
-      ),
+      ProtocolStepDraft(localId: 'step-1', stepOrder: 1, title: 'Warm-up'),
     ],
     blocks: [
       SessionBlock(

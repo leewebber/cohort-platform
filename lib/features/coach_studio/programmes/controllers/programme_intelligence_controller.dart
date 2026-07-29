@@ -19,12 +19,12 @@ class ProgrammeIntelligenceController extends ChangeNotifier {
     required ProgrammeVersionComparisonService comparisonService,
     required ProgrammeMigrationPlannerService migrationPlannerService,
     required ProgrammeVersionImpactStore impactStore,
-  })  : _versionId = versionId.trim(),
-        _impactService = impactService,
-        _comparisonService = comparisonService,
-        _migrationPlannerService = migrationPlannerService,
-        _impactStore = impactStore,
-        _state = ProgrammeIntelligenceViewState.initial();
+  }) : _versionId = versionId.trim(),
+       _impactService = impactService,
+       _comparisonService = comparisonService,
+       _migrationPlannerService = migrationPlannerService,
+       _impactStore = impactStore,
+       _state = ProgrammeIntelligenceViewState.initial();
 
   final String _versionId;
   final ProgrammeVersionImpactService _impactService;
@@ -130,12 +130,14 @@ class ProgrammeIntelligenceController extends ChangeNotifier {
         case ProgrammeVersionComparisonStatus.targetNotFound:
           _state = _state.copyWith(
             comparisonStatus: ProgrammeIntelligenceCardStatus.error,
-            comparisonError: 'One of the selected programme versions was not found.',
+            comparisonError:
+                'One of the selected programme versions was not found.',
           );
         case ProgrammeVersionComparisonStatus.incompatibleLineage:
           _state = _state.copyWith(
             comparisonStatus: ProgrammeIntelligenceCardStatus.error,
-            comparisonError: 'Versions must belong to the same programme lineage.',
+            comparisonError:
+                'Versions must belong to the same programme lineage.',
           );
         case ProgrammeVersionComparisonStatus.lookupFailed:
           _state = _state.copyWith(
@@ -180,12 +182,14 @@ class ProgrammeIntelligenceController extends ChangeNotifier {
         case ProgrammeMigrationPlannerStatus.targetNotFound:
           _state = _state.copyWith(
             migrationStatus: ProgrammeIntelligenceCardStatus.error,
-            migrationError: 'One of the selected programme versions was not found.',
+            migrationError:
+                'One of the selected programme versions was not found.',
           );
         case ProgrammeMigrationPlannerStatus.incompatibleLineage:
           _state = _state.copyWith(
             migrationStatus: ProgrammeIntelligenceCardStatus.error,
-            migrationError: 'Versions must belong to the same programme lineage.',
+            migrationError:
+                'Versions must belong to the same programme lineage.',
           );
         case ProgrammeMigrationPlannerStatus.comparisonUnavailable:
         case ProgrammeMigrationPlannerStatus.impactUnavailable:
@@ -221,7 +225,9 @@ class ProgrammeIntelligenceController extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<ProgrammeVersion> _sortedLineageVersions(List<ProgrammeVersion> versions) {
+  List<ProgrammeVersion> _sortedLineageVersions(
+    List<ProgrammeVersion> versions,
+  ) {
     final sorted = versions.toList()
       ..sort((a, b) => b.versionNumber.compareTo(a.versionNumber));
     return sorted;

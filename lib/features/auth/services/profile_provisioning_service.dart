@@ -4,10 +4,9 @@ import '../repositories/profile_repository.dart';
 import '../repositories/supabase_profile_repository.dart';
 
 class ProfileProvisioningService {
-  ProfileProvisioningService({
-    ProfileRepository? profileRepository,
-  }) : _profileRepository =
-            profileRepository ?? const SupabaseProfileRepository();
+  ProfileProvisioningService({ProfileRepository? profileRepository})
+    : _profileRepository =
+          profileRepository ?? const SupabaseProfileRepository();
 
   final ProfileRepository _profileRepository;
 

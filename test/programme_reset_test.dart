@@ -97,13 +97,12 @@ void main() {
 
     test('fresh resolve after reset returns day_1 executable', () async {
       tables.outcomes.add(completedDayOneOutcome());
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_2',
-      ).copyWith(
-        id: devAssignmentId,
-        programmeVersionId: ProgrammeDevFixtures.foundationTestVersionId,
-        lineageCode: ProgrammeDevFixtures.foundationTestLineageCode,
-      );
+      tables.assignments[0] =
+          ProgrammeScheduleTestFixtures.assignment(dayKey: 'day_2').copyWith(
+            id: devAssignmentId,
+            programmeVersionId: ProgrammeDevFixtures.foundationTestVersionId,
+            lineageCode: ProgrammeDevFixtures.foundationTestLineageCode,
+          );
 
       await reset();
 
@@ -167,12 +166,9 @@ void main() {
               dayKey: 'day_2',
             ),
             tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(
-              programmeVersionId:
-                  ProgrammeDevFixtures.foundationTestVersionId,
+              programmeVersionId: ProgrammeDevFixtures.foundationTestVersionId,
             ),
-            outcomes: [
-              completedDayOneOutcome(),
-            ],
+            outcomes: [completedDayOneOutcome()],
           ),
         ),
       );

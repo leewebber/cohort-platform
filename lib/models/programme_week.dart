@@ -11,9 +11,7 @@ class ProgrammeWeek {
     required this.title,
   });
 
-  factory ProgrammeWeek.fromMap(
-    Map<String, dynamic> map,
-  ) {
+  factory ProgrammeWeek.fromMap(Map<String, dynamic> map) {
     return ProgrammeWeek(
       id: map['id'],
       programmeId: map['programme_id'],

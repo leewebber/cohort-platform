@@ -8,7 +8,8 @@ import '../../features/adaptation/models/programme_adaptation_event.dart';
 import 'programme_adaptation_event_store.dart';
 import 'programme_store_exception.dart';
 
-class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventStore {
+class ProgrammeAdaptationEventSupabaseStore
+    implements ProgrammeAdaptationEventStore {
   const ProgrammeAdaptationEventSupabaseStore();
 
   static const _tableName = 'programme_adaptation_events';
@@ -36,7 +37,9 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
           .maybeSingle();
 
       if (response == null) return null;
-      return ProgrammeAdaptationEvent.fromMap(Map<String, dynamic>.from(response));
+      return ProgrammeAdaptationEvent.fromMap(
+        Map<String, dynamic>.from(response),
+      );
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
@@ -59,7 +62,9 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
           .maybeSingle();
 
       if (response == null) return null;
-      return ProgrammeAdaptationEvent.fromMap(Map<String, dynamic>.from(response));
+      return ProgrammeAdaptationEvent.fromMap(
+        Map<String, dynamic>.from(response),
+      );
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
@@ -104,7 +109,9 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
           .maybeSingle();
 
       if (response == null) return null;
-      return ProgrammeAdaptationEvent.fromMap(Map<String, dynamic>.from(response));
+      return ProgrammeAdaptationEvent.fromMap(
+        Map<String, dynamic>.from(response),
+      );
     } on ProgrammeStoreException catch (error) {
       if (error.code == '22P02') {
         debugPrint(
@@ -133,7 +140,9 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
   }
 
   @override
-  Future<ProgrammeAdaptationEvent> insert(ProgrammeAdaptationEvent event) async {
+  Future<ProgrammeAdaptationEvent> insert(
+    ProgrammeAdaptationEvent event,
+  ) async {
     try {
       final response = await SupabaseService.client
           .from(_tableName)
@@ -141,7 +150,9 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
           .select()
           .single();
 
-      return ProgrammeAdaptationEvent.fromMap(Map<String, dynamic>.from(response));
+      return ProgrammeAdaptationEvent.fromMap(
+        Map<String, dynamic>.from(response),
+      );
     } catch (error) {
       throw ProgrammeStoreException.fromDynamic(
         error,
@@ -152,7 +163,8 @@ class ProgrammeAdaptationEventSupabaseStore implements ProgrammeAdaptationEventS
 }
 
 /// In-memory store for unit tests.
-class InMemoryProgrammeAdaptationEventStore implements ProgrammeAdaptationEventStore {
+class InMemoryProgrammeAdaptationEventStore
+    implements ProgrammeAdaptationEventStore {
   InMemoryProgrammeAdaptationEventStore(this.events);
 
   final List<ProgrammeAdaptationEvent> events;
@@ -179,8 +191,9 @@ class InMemoryProgrammeAdaptationEventStore implements ProgrammeAdaptationEventS
     for (final event in events) {
       if (event.assignmentId != assignmentId) continue;
       if (latest == null ||
-          (event.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
-              .isAfter(latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))) {
+          (event.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).isAfter(
+            latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          )) {
         latest = event;
       }
     }
@@ -197,8 +210,9 @@ class InMemoryProgrammeAdaptationEventStore implements ProgrammeAdaptationEventS
       if (event.assignmentId != assignmentId) continue;
       if (!event.affectedSlotIds.contains(sessionSlotId)) continue;
       if (latest == null ||
-          (event.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
-              .isAfter(latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))) {
+          (event.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).isAfter(
+            latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          )) {
         latest = event;
       }
     }
@@ -206,7 +220,9 @@ class InMemoryProgrammeAdaptationEventStore implements ProgrammeAdaptationEventS
   }
 
   @override
-  Future<ProgrammeAdaptationEvent> insert(ProgrammeAdaptationEvent event) async {
+  Future<ProgrammeAdaptationEvent> insert(
+    ProgrammeAdaptationEvent event,
+  ) async {
     final persisted = ProgrammeAdaptationEvent(
       id: event.id.isEmpty ? DatabaseUuid.newV4() : event.id,
       assignmentId: event.assignmentId,

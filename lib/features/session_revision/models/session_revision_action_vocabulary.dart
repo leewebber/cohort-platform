@@ -1,11 +1,5 @@
 /// Supported Session Revision actions for policy evaluation (M9.3).
-enum SessionRevisionAction {
-  edit,
-  createNewRevision,
-  publish,
-  archive,
-  delete,
-}
+enum SessionRevisionAction { edit, createNewRevision, publish, archive, delete }
 
 extension SessionRevisionActionLabels on SessionRevisionAction {
   String get displayLabel {
@@ -50,11 +44,7 @@ enum SessionRevisionActionReasonCode {
 }
 
 /// Decision severity for future Coach Studio UI.
-enum SessionRevisionActionSeverity {
-  info,
-  warning,
-  blocking,
-}
+enum SessionRevisionActionSeverity { info, warning, blocking }
 
 extension SessionRevisionActionSeverityLabels on SessionRevisionActionSeverity {
   String get displayLabel {

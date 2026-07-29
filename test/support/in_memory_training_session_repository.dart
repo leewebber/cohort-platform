@@ -40,8 +40,9 @@ class InMemoryTrainingSessionRepository extends TrainingSessionRepository {
         continue;
       }
       if (latest == null ||
-          (session.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
-              .isAfter(latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))) {
+          (session.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).isAfter(
+            latest.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0),
+          )) {
         latest = session;
       }
     }

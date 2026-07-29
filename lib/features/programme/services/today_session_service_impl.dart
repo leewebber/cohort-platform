@@ -14,10 +14,10 @@ class TodaySessionServiceImpl implements TodaySessionService {
     required ProgrammeVersionStore versionStore,
     required ProgrammeSlotOutcomeStore slotOutcomeStore,
     required ProgrammeScheduleResolver scheduleResolver,
-  })  : _assignmentStore = assignmentStore,
-        _versionStore = versionStore,
-        _slotOutcomeStore = slotOutcomeStore,
-        _scheduleResolver = scheduleResolver;
+  }) : _assignmentStore = assignmentStore,
+       _versionStore = versionStore,
+       _slotOutcomeStore = slotOutcomeStore,
+       _scheduleResolver = scheduleResolver;
 
   final ProgrammeAssignmentStore _assignmentStore;
   final ProgrammeVersionStore _versionStore;

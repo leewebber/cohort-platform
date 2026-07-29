@@ -14,8 +14,14 @@ void main() {
       'lib/features/session_builder/widgets/strength_exercise_prescription_sheet.dart',
     ).readAsStringSync();
 
-    expect(embedded, contains('ExerciseCatalogueService().loadPublishedExercises()'));
-    expect(library, contains('ExerciseCatalogueService().loadPublishedExercises()'));
+    expect(
+      embedded,
+      contains('ExerciseCatalogueService().loadPublishedExercises()'),
+    );
+    expect(
+      library,
+      contains('ExerciseCatalogueService().loadPublishedExercises()'),
+    );
     expect(sheet, contains('ExerciseCatalogueService()'));
     expect(sheet, contains('ExercisePickerField'));
     expect(sheet, isNot(contains('required List<Exercise> exercises')));

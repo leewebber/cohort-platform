@@ -34,15 +34,26 @@ void main() {
     test('full capture plan has five typed blocks', () {
       final blocks = FounderAcceptanceContent.sessionBlocks();
       expect(blocks, hasLength(5));
-      expect(blocks[0].performanceCaptureMode,
-          BlockPerformanceCaptureMode.completion);
-      expect(blocks[1].performanceCaptureMode,
-          BlockPerformanceCaptureMode.strength);
-      expect(blocks[2].performanceCaptureMode,
-          BlockPerformanceCaptureMode.endurance);
-      expect(blocks[3].performanceCaptureMode, BlockPerformanceCaptureMode.amrap);
-      expect(blocks[4].performanceCaptureMode,
-          BlockPerformanceCaptureMode.completion);
+      expect(
+        blocks[0].performanceCaptureMode,
+        BlockPerformanceCaptureMode.completion,
+      );
+      expect(
+        blocks[1].performanceCaptureMode,
+        BlockPerformanceCaptureMode.strength,
+      );
+      expect(
+        blocks[2].performanceCaptureMode,
+        BlockPerformanceCaptureMode.endurance,
+      );
+      expect(
+        blocks[3].performanceCaptureMode,
+        BlockPerformanceCaptureMode.amrap,
+      );
+      expect(
+        blocks[4].performanceCaptureMode,
+        BlockPerformanceCaptureMode.completion,
+      );
     });
   });
 
@@ -93,24 +104,26 @@ void main() {
       );
     });
 
-    test('install when already present updates without duplicate lineage',
-        () async {
-      await installer.install();
-      final lineageCountAfterFirst = tables.lineages.length;
+    test(
+      'install when already present updates without duplicate lineage',
+      () async {
+        await installer.install();
+        final lineageCountAfterFirst = tables.lineages.length;
 
-      final second = await installer.install();
+        final second = await installer.install();
 
-      expect(second.programmeUpdated, isTrue);
-      expect(tables.lineages.length, lineageCountAfterFirst);
-      expect(
-        tables.lineages.where(
-          (lineage) =>
-              lineage.code == FounderAcceptanceContent.programmeLineageCode,
-        ),
-        hasLength(1),
-      );
-      expect(protocolService.saveCallCount, 2);
-    });
+        expect(second.programmeUpdated, isTrue);
+        expect(tables.lineages.length, lineageCountAfterFirst);
+        expect(
+          tables.lineages.where(
+            (lineage) =>
+                lineage.code == FounderAcceptanceContent.programmeLineageCode,
+          ),
+          hasLength(1),
+        );
+        expect(protocolService.saveCallCount, 2);
+      },
+    );
 
     test('stable IDs retained across reinstall', () async {
       await installer.install();
@@ -123,11 +136,18 @@ void main() {
       expect(version?.id, FounderAcceptanceDevFixtures.versionId);
 
       final tree = await versionStore.loadTemplateTree(version!.id);
-      expect(tree?.weekNodes.first.week.id, FounderAcceptanceDevFixtures.weekId);
-      expect(tree?.weekNodes.first.days.first.day.id,
-          FounderAcceptanceDevFixtures.dayId);
-      expect(tree?.weekNodes.first.days.first.slots.first.id,
-          FounderAcceptanceDevFixtures.slotId);
+      expect(
+        tree?.weekNodes.first.week.id,
+        FounderAcceptanceDevFixtures.weekId,
+      );
+      expect(
+        tree?.weekNodes.first.days.first.day.id,
+        FounderAcceptanceDevFixtures.dayId,
+      );
+      expect(
+        tree?.weekNodes.first.days.first.slots.first.id,
+        FounderAcceptanceDevFixtures.slotId,
+      );
     });
   });
 
@@ -207,14 +227,14 @@ void main() {
     test('assigns when no existing active assignment', () async {
       final assignResult =
           await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
-        assignmentService: assignmentService(),
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
-        ),
-      );
+            assignmentService: assignmentService(),
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+            athleteStateSyncService: AthleteStateSyncServiceImpl(
+              athleteStateStore: athleteStore,
+            ),
+          );
 
       expect(assignResult.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(assignResult.athleteStateSynced, isTrue);
@@ -232,66 +252,71 @@ void main() {
       );
     });
 
-    test('replaces another active assignment and preserves historical outcomes',
-        () async {
-      await seedFoundationActiveAssignment();
-      final foundationOutcomeCount = tables.outcomes.length;
+    test(
+      'replaces another active assignment and preserves historical outcomes',
+      () async {
+        await seedFoundationActiveAssignment();
+        final foundationOutcomeCount = tables.outcomes.length;
 
-      final assignResult =
-          await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
-        assignmentService: assignmentService(),
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
-        ),
-      );
+        final assignResult =
+            await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
+              assignmentService: assignmentService(),
+              assignmentStore: assignmentStore,
+              slotOutcomeStore: outcomeStore,
+              versionStore: versionStore,
+              athleteStateSyncService: AthleteStateSyncServiceImpl(
+                athleteStateStore: athleteStore,
+              ),
+            );
 
-      expect(assignResult.status, ProgrammeAssignmentOperationStatus.replaced);
-      expect(assignResult.replacedAssignmentId, isNotNull);
-      expect(
-        tables.assignments.where((assignment) => assignment.isActive),
-        hasLength(1),
-      );
-      expect(
-        tables.assignments
-            .where(
-              (assignment) =>
-                  assignment.status == ProgrammeAssignmentStatus.reassigned,
-            )
-            .length,
-        1,
-      );
-      expect(tables.outcomes.length, foundationOutcomeCount);
-      expect(
-        assignResult.assignment?.lineageCode,
-        ProgrammeDevFixtures.founderAcceptanceLineageCode,
-      );
-    });
+        expect(
+          assignResult.status,
+          ProgrammeAssignmentOperationStatus.replaced,
+        );
+        expect(assignResult.replacedAssignmentId, isNotNull);
+        expect(
+          tables.assignments.where((assignment) => assignment.isActive),
+          hasLength(1),
+        );
+        expect(
+          tables.assignments
+              .where(
+                (assignment) =>
+                    assignment.status == ProgrammeAssignmentStatus.reassigned,
+              )
+              .length,
+          1,
+        );
+        expect(tables.outcomes.length, foundationOutcomeCount);
+        expect(
+          assignResult.assignment?.lineageCode,
+          ProgrammeDevFixtures.founderAcceptanceLineageCode,
+        );
+      },
+    );
 
     test('is idempotent when founder programme already active', () async {
       final first =
           await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
-        assignmentService: assignmentService(),
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
-        ),
-      );
+            assignmentService: assignmentService(),
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+            athleteStateSyncService: AthleteStateSyncServiceImpl(
+              athleteStateStore: athleteStore,
+            ),
+          );
 
       final second =
           await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
-        assignmentService: assignmentService(),
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
-        ),
-      );
+            assignmentService: assignmentService(),
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+            athleteStateSyncService: AthleteStateSyncServiceImpl(
+              athleteStateStore: athleteStore,
+            ),
+          );
 
       expect(first.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(second.status, ProgrammeAssignmentOperationStatus.assigned);
@@ -332,14 +357,14 @@ void main() {
     test('assignment resolves executable founder session', () async {
       final assignResult =
           await ProgrammeDebugActions.assignFounderAcceptanceProgramme(
-        assignmentService: assignmentService(),
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: athleteStore,
-        ),
-      );
+            assignmentService: assignmentService(),
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+            athleteStateSyncService: AthleteStateSyncServiceImpl(
+              athleteStateStore: athleteStore,
+            ),
+          );
 
       expect(assignResult.status, ProgrammeAssignmentOperationStatus.assigned);
       expect(
@@ -349,16 +374,13 @@ void main() {
 
       final resolved =
           await ProgrammeDebugActions.resolveFounderAcceptanceProgramme(
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-      );
+            assignmentStore: assignmentStore,
+            slotOutcomeStore: outcomeStore,
+            versionStore: versionStore,
+          );
 
       expect(resolved.kind, ResolvedTodaySessionKind.executable);
-      expect(
-        resolved.effectiveProtocolId,
-        FounderAcceptanceContent.protocolId,
-      );
+      expect(resolved.effectiveProtocolId, FounderAcceptanceContent.protocolId);
     });
 
     test('home projection resolves M8 Modern Capture Test', () async {
@@ -372,12 +394,18 @@ void main() {
         ),
       );
 
-      final athleteState =
-          await athleteStore.getByAthleteId(ProgrammeDebugActions.devAthleteId);
+      final athleteState = await athleteStore.getByAthleteId(
+        ProgrammeDebugActions.devAthleteId,
+      );
 
-      expect(athleteState?.programmeId,
-          ProgrammeDevFixtures.founderAcceptanceLineageCode);
-      expect(athleteState?.currentProtocolId, FounderAcceptanceContent.protocolId);
+      expect(
+        athleteState?.programmeId,
+        ProgrammeDevFixtures.founderAcceptanceLineageCode,
+      );
+      expect(
+        athleteState?.currentProtocolId,
+        FounderAcceptanceContent.protocolId,
+      );
     });
 
     test('reset returns cursor to week 1 day 1 slot 1', () async {
@@ -393,27 +421,30 @@ void main() {
 
       final resetResult =
           await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment(
-        assignmentStore: assignmentStore,
-        slotOutcomeStore: outcomeStore,
-        versionStore: versionStore,
-        developmentService: ProgrammeAssignmentDevelopmentServiceImpl(
-          assignmentStore: assignmentStore,
-          slotOutcomeStore: outcomeStore,
-          versionStore: versionStore,
-          scheduleResolver: const ProgrammeScheduleResolverImpl(),
-          todaySessionService: TodaySessionServiceImpl(
             assignmentStore: assignmentStore,
-            versionStore: versionStore,
             slotOutcomeStore: outcomeStore,
-            scheduleResolver: const ProgrammeScheduleResolverImpl(),
-          ),
-          athleteStateSyncService: AthleteStateSyncServiceImpl(
-            athleteStateStore: athleteStore,
-          ),
-        ),
-      );
+            versionStore: versionStore,
+            developmentService: ProgrammeAssignmentDevelopmentServiceImpl(
+              assignmentStore: assignmentStore,
+              slotOutcomeStore: outcomeStore,
+              versionStore: versionStore,
+              scheduleResolver: const ProgrammeScheduleResolverImpl(),
+              todaySessionService: TodaySessionServiceImpl(
+                assignmentStore: assignmentStore,
+                versionStore: versionStore,
+                slotOutcomeStore: outcomeStore,
+                scheduleResolver: const ProgrammeScheduleResolverImpl(),
+              ),
+              athleteStateSyncService: AthleteStateSyncServiceImpl(
+                athleteStateStore: athleteStore,
+              ),
+            ),
+          );
 
-      expect(resetResult.status, isNot(ProgrammeAssignmentOperationStatus.failed));
+      expect(
+        resetResult.status,
+        isNot(ProgrammeAssignmentOperationStatus.failed),
+      );
       expect(resetResult.assignment?.currentWeek, 1);
       expect(resetResult.assignment?.currentDayKey, 'day_1');
       expect(resetResult.assignment?.currentSessionOrder, 1);

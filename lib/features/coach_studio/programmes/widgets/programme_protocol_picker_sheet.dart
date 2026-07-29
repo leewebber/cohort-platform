@@ -5,14 +5,11 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/services/programme_builder_protocol_picker_service.dart';
 import 'cohort_protocol_programme_options_sheet.dart';
 
-typedef ProgrammeProtocolListLoader = Future<List<ProgrammeBuilderProtocolOption>>
-    Function({String? searchTerm});
+typedef ProgrammeProtocolListLoader =
+    Future<List<ProgrammeBuilderProtocolOption>> Function({String? searchTerm});
 
 class ProgrammeProtocolPickerSheet extends StatefulWidget {
-  const ProgrammeProtocolPickerSheet({
-    super.key,
-    required this.listProtocols,
-  });
+  const ProgrammeProtocolPickerSheet({super.key, required this.listProtocols});
 
   final ProgrammeProtocolListLoader listProtocols;
 
@@ -107,8 +104,7 @@ class _ProgrammeProtocolPickerSheetState
                 ],
               ),
             )
-          else if (_options.isEmpty &&
-              _searchController.text.trim().isEmpty)
+          else if (_options.isEmpty && _searchController.text.trim().isEmpty)
             Padding(
               padding: const EdgeInsets.all(CohortSpacing.lg),
               child: Text(
@@ -134,10 +130,7 @@ class _ProgrammeProtocolPickerSheetState
                 itemBuilder: (context, index) {
                   final option = _options[index];
                   return ListTile(
-                    title: Text(
-                      option.name,
-                      style: CohortTextStyles.cardTitle,
-                    ),
+                    title: Text(option.name, style: CohortTextStyles.cardTitle),
                     subtitle: Text(
                       [
                         option.protocolId,
@@ -152,14 +145,15 @@ class _ProgrammeProtocolPickerSheetState
                     onTap: () async {
                       final selection =
                           await showModalBottomSheet<
-                              CohortProtocolProgrammeSelection>(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) =>
-                            CohortProtocolProgrammeOptionsSheet(
-                          protocol: option,
-                        ),
-                      );
+                            CohortProtocolProgrammeSelection
+                          >(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) =>
+                                CohortProtocolProgrammeOptionsSheet(
+                                  protocol: option,
+                                ),
+                          );
                       if (selection != null && context.mounted) {
                         Navigator.pop(context, selection);
                       }

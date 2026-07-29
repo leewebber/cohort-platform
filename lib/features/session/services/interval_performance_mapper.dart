@@ -99,8 +99,9 @@ class IntervalPerformanceMapper {
       }
     }
 
-    final meterMatch =
-        RegExp(r'^(\d+(?:\.\d+)?)\s*m(?:eters?)?$').firstMatch(normalized);
+    final meterMatch = RegExp(
+      r'^(\d+(?:\.\d+)?)\s*m(?:eters?)?$',
+    ).firstMatch(normalized);
     if (meterMatch != null) {
       return double.tryParse(meterMatch.group(1) ?? '');
     }

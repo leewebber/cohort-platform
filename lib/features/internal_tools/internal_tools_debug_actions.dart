@@ -14,7 +14,8 @@ import '../../models/protocol_analysis.dart';
 import '../../models/protocol_similarity_result.dart';
 import '../../models/session_fingerprint.dart';
 import '../adaptation/services/adaptation_candidate_filter.dart';
-import '../adaptation/services/adaptation_decision_service.dart';
+import '../admin/services/protocol_builder_service.dart';
+import '../../application/adaptation/athlete_workout_adaptation_application_service.dart';
 import '../home/debug/home_debug_programme_refresh_policy.dart';
 import '../programme/debug/programme_debug_actions.dart';
 import '../programme/debug/programme_debug_resolution_cache.dart';
@@ -29,7 +30,9 @@ class InternalToolsDebugActions {
   InternalToolsDebugActions._();
 
   // TODO(debug): Remove temporary ProtocolAnalyzer hook once analysis UI exists.
-  static Future<void> analyzeCurrentProtocol({required String athleteId}) async {
+  static Future<void> analyzeCurrentProtocol({
+    required String athleteId,
+  }) async {
     const athleteStateRepository = AthleteStateRepository();
     final analyzer = ProtocolAnalyzer(
       ProtocolRepository(),
@@ -37,8 +40,9 @@ class InternalToolsDebugActions {
       ExerciseRepository(),
     );
 
-    final athleteState =
-        await athleteStateRepository.getAthleteState(athleteId);
+    final athleteState = await athleteStateRepository.getAthleteState(
+      athleteId,
+    );
     final protocolId = athleteState?.currentProtocolId?.trim();
     if (protocolId == null || protocolId.isEmpty) {
       debugPrint('[ProtocolAnalyzer] aborted: current_protocol_id is null');
@@ -91,7 +95,9 @@ class InternalToolsDebugActions {
     debugPrint('[ProtocolAnalyzer] movementProfile.lunge: ${profile.lunge}');
     debugPrint('[ProtocolAnalyzer] movementProfile.carry: ${profile.carry}');
     debugPrint('[ProtocolAnalyzer] movementProfile.core: ${profile.core}');
-    debugPrint('[ProtocolAnalyzer] movementProfile.running: ${profile.running}');
+    debugPrint(
+      '[ProtocolAnalyzer] movementProfile.running: ${profile.running}',
+    );
     debugPrint('[ProtocolAnalyzer] movementProfile.erg: ${profile.erg}');
     debugPrint(
       '[ProtocolAnalyzer] movementProfile.upperBody: ${profile.upperBody}',
@@ -332,7 +338,9 @@ class InternalToolsDebugActions {
   }
 
   // TODO(debug): Remove once programme-driven Home replaces manual projection.
-  static Future<void> assignFounderAcceptanceProgramme({required String athleteId}) async {
+  static Future<void> assignFounderAcceptanceProgramme({
+    required String athleteId,
+  }) async {
     try {
       final result =
           await ProgrammeDebugActions.assignFounderAcceptanceProgramme();
@@ -350,7 +358,9 @@ class InternalToolsDebugActions {
   }
 
   // TODO(debug): Remove once programme-driven Home replaces manual projection.
-  static Future<void> resolveFounderAcceptanceProgramme({required String athleteId}) async {
+  static Future<void> resolveFounderAcceptanceProgramme({
+    required String athleteId,
+  }) async {
     try {
       final resolution =
           await ProgrammeDebugActions.resolveFounderAcceptanceProgramme();
@@ -363,7 +373,9 @@ class InternalToolsDebugActions {
   }
 
   // TODO(debug): Remove once programme progression is production-wired.
-  static Future<void> resetFounderAcceptanceProgrammeAssignment({required String athleteId}) async {
+  static Future<void> resetFounderAcceptanceProgrammeAssignment({
+    required String athleteId,
+  }) async {
     try {
       final result =
           await ProgrammeDebugActions.resetFounderAcceptanceProgrammeAssignment();
@@ -408,7 +420,8 @@ class InternalToolsDebugActions {
   // TODO(debug): Remove once programme-driven Home replaces manual projection.
   static Future<void> resolveTestProgramme({required String athleteId}) async {
     try {
-      final resolution = await ProgrammeDebugActions.resolveCurrentTestSession();
+      final resolution =
+          await ProgrammeDebugActions.resolveCurrentTestSession();
 
       ProgrammeDebugResolutionCache.store(resolution);
 
@@ -423,9 +436,7 @@ class InternalToolsDebugActions {
   static Future<void> syncResolvedSession({required String athleteId}) async {
     final resolution = ProgrammeDebugResolutionCache.lastResolution;
     if (resolution == null) {
-      debugPrint(
-        '[ProgrammeSync] aborted: run Resolve Test Programme first',
-      );
+      debugPrint('[ProgrammeSync] aborted: run Resolve Test Programme first');
       return;
     }
 
@@ -437,8 +448,9 @@ class InternalToolsDebugActions {
       );
 
       const athleteStateRepository = AthleteStateRepository();
-      final athleteState =
-          await athleteStateRepository.getAthleteState(athleteId);
+      final athleteState = await athleteStateRepository.getAthleteState(
+        athleteId,
+      );
 
       debugPrint('[ProgrammeSync] projection updated for $athleteId');
       debugPrint('[ProgrammeSync] athlete_state: $athleteState');
@@ -455,8 +467,9 @@ class InternalToolsDebugActions {
   }) async {
     try {
       final assignmentService = ProgrammeDebugActions.createAssignmentService();
-      final assignment =
-          await assignmentService.getCurrentAssignment(athleteId: athleteId);
+      final assignment = await assignmentService.getCurrentAssignment(
+        athleteId: athleteId,
+      );
       if (assignment == null) {
         debugPrint(
           '[ProgrammeProgress] aborted: no active assignment for $athleteId '
@@ -469,7 +482,8 @@ class InternalToolsDebugActions {
           'week ${assignment.currentWeek} ${assignment.currentDayKey} '
           'slot ${assignment.currentSessionOrder}';
 
-      final resolution = await ProgrammeDebugActions.resolveCurrentTestSession();
+      final resolution =
+          await ProgrammeDebugActions.resolveCurrentTestSession();
       ProgrammeDebugResolutionCache.clear();
 
       final progression = ProgrammeDebugActions.createProgressionService();
@@ -491,7 +505,9 @@ class InternalToolsDebugActions {
         '${result.updatedAssignment?.currentDayKey} '
         'slot ${result.updatedAssignment?.currentSessionOrder}',
       );
-      debugPrint('[ProgrammeProgress] next session: ${result.nextResolvedSession}');
+      debugPrint(
+        '[ProgrammeProgress] next session: ${result.nextResolvedSession}',
+      );
       debugPrint('[ProgrammeProgress] status: ${result.status}');
       if (result.nextResolvedSession != null) {
         ProgrammeDebugResolutionCache.store(result.nextResolvedSession!);
@@ -499,7 +515,9 @@ class InternalToolsDebugActions {
         ProgrammeDebugResolutionCache.clear();
       }
 
-      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterProgression(result)) {
+      if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterProgression(
+        result,
+      )) {
         debugPrint('[InternalTools] refresh requested after programme action');
       } else {
         debugPrint(
@@ -514,14 +532,18 @@ class InternalToolsDebugActions {
   }
 
   // TODO(debug): Remove once programme progression is production-wired.
-  static Future<void> resetTestProgrammeAssignment({required String athleteId}) async {
+  static Future<void> resetTestProgrammeAssignment({
+    required String athleteId,
+  }) async {
     try {
       final result = await ProgrammeDebugActions.resetTestProgrammeAssignment();
       if (HomeDebugProgrammeRefreshPolicy.shouldRefreshAfterReset(result)) {
         debugPrint('[InternalTools] refresh requested after programme action');
       } else if (result.status == ProgrammeAssignmentOperationStatus.failed ||
           result.status == ProgrammeAssignmentOperationStatus.noAssignment) {
-        debugPrint('[HomeDebug] action=reset failed warnings=${result.warnings}');
+        debugPrint(
+          '[HomeDebug] action=reset failed warnings=${result.warnings}',
+        );
         debugPrint('[ProgrammeReset] failed: ${result.warnings}');
       } else {
         debugPrint(
@@ -537,14 +559,19 @@ class InternalToolsDebugActions {
   }
 
   // TODO(debug): Remove once adaptation ranking is wired to athlete UI.
-  static Future<void> compareBw001SuitableAlternatives({required String athleteId}) async {
+  static Future<void> compareBw001SuitableAlternatives({
+    required String athleteId,
+  }) async {
     const sourceProtocolId = 'FG-009';
     const debugRequest = AdaptationRequest(
       reason: AdaptationReason.environment,
       environment: AdaptationSessionEnvironment.hotelRoom,
     );
     const candidateFilter = AdaptationCandidateFilter();
-    const decisionService = AdaptationDecisionService();
+    final adaptationService = AthleteWorkoutAdaptationApplicationService(
+      loadProtocolDraft: (protocolId) =>
+          ProtocolBuilderService().loadProtocol(protocolId),
+    );
     const similarityService = ProtocolSimilarityService();
     final analyzer = ProtocolAnalyzer(
       ProtocolRepository(),
@@ -554,8 +581,9 @@ class InternalToolsDebugActions {
     final protocolRepository = ProtocolRepository();
 
     try {
-      final currentProtocol =
-          await protocolRepository.getProtocolById(sourceProtocolId);
+      final currentProtocol = await protocolRepository.getProtocolById(
+        sourceProtocolId,
+      );
       if (currentProtocol == null) {
         debugPrint(
           '[AdaptationSimilarity] aborted: $sourceProtocolId not found',
@@ -571,7 +599,8 @@ class InternalToolsDebugActions {
         return;
       }
 
-      final decision = decisionService.evaluate(
+      final decision = await adaptationService.evaluateSessionAdaptation(
+        athleteId: athleteId,
         currentProtocol: currentProtocol,
         request: debugRequest,
       );
@@ -673,9 +702,7 @@ class InternalToolsDebugActions {
         );
       }
 
-      if (suitableAnalyses.any(
-        (analysis) => analysis.protocolId == 'FG-009',
-      )) {
+      if (suitableAnalyses.any((analysis) => analysis.protocolId == 'FG-009')) {
         debugPrint(
           '[AdaptationSimilarity] warning: FG-009 incorrectly ranked as '
           'suitable for Hotel Room',
@@ -702,7 +729,7 @@ class InternalToolsDebugActions {
         final result = topMatches[index];
         final candidateName =
             protocolById[result.candidateProtocolId]?.name ??
-                result.candidateProtocolId;
+            result.candidateProtocolId;
 
         debugPrintSimilarityResult(
           result,
@@ -804,9 +831,7 @@ class InternalToolsDebugActions {
         ? result.candidateProtocolId
         : '${result.candidateProtocolId} ($candidateName)';
 
-    debugPrint(
-      '$logPrefix #$rank $candidateLabel score: $scoreLabel',
-    );
+    debugPrint('$logPrefix #$rank $candidateLabel score: $scoreLabel');
 
     if (result.reasons.isEmpty) {
       debugPrint('$logPrefix #$rank reasons: none');

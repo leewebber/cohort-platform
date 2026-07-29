@@ -14,10 +14,7 @@ enum SessionOccurrenceTransitionIssueCode {
 }
 
 class SessionOccurrenceTransitionIssue {
-  const SessionOccurrenceTransitionIssue({
-    required this.code,
-    this.detail,
-  });
+  const SessionOccurrenceTransitionIssue({required this.code, this.detail});
 
   final SessionOccurrenceTransitionIssueCode code;
   final String? detail;
@@ -34,7 +31,9 @@ class SessionOccurrenceTransitionResult {
   final SessionOccurrence? occurrence;
   final List<SessionOccurrenceTransitionIssue> issues;
 
-  factory SessionOccurrenceTransitionResult.success(SessionOccurrence occurrence) {
+  factory SessionOccurrenceTransitionResult.success(
+    SessionOccurrence occurrence,
+  ) {
     return SessionOccurrenceTransitionResult._(
       isSuccess: true,
       occurrence: occurrence,

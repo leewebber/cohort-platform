@@ -61,9 +61,7 @@ class InMemorySessionRevisionRelationshipStore
 
   @override
   Future<List<SessionRevisionAssignmentReference>>
-      listActiveAssignmentReferences(
-    String protocolId,
-  ) async {
+  listActiveAssignmentReferences(String protocolId) async {
     final programmeReferences = await listProgrammeSlotReferences(protocolId);
     final versionIds = programmeReferences
         .map((reference) => reference.programmeVersionId)
@@ -90,11 +88,7 @@ class InMemorySessionRevisionRelationshipStore
               record.sourceProtocolId == normalizedProtocolId &&
               isTerminalRecordStatus(record.status),
         )
-        .map(
-          (record) => (
-            performedAt: record.completedAt ?? record.startedAt,
-          ),
-        );
+        .map((record) => (performedAt: record.completedAt ?? record.startedAt));
 
     return buildHistoricalUsage(terminalRecords: terminalRecords);
   }
@@ -154,12 +148,14 @@ class InMemorySessionRevisionRelationshipStore
     SessionRevisionProgrammeReference a,
     SessionRevisionProgrammeReference b,
   ) {
-    final lineageCompare =
-        a.programmeLineageCode.compareTo(b.programmeLineageCode);
+    final lineageCompare = a.programmeLineageCode.compareTo(
+      b.programmeLineageCode,
+    );
     if (lineageCompare != 0) return lineageCompare;
 
-    final versionCompare =
-        a.programmeVersionNumber.compareTo(b.programmeVersionNumber);
+    final versionCompare = a.programmeVersionNumber.compareTo(
+      b.programmeVersionNumber,
+    );
     if (versionCompare != 0) return versionCompare;
 
     final weekCompare = a.weekNumber.compareTo(b.weekNumber);

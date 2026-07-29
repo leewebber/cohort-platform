@@ -1,6 +1,7 @@
+import 'package:cohort_platform/application/ports/workout_execution_record_store.dart';
 import 'package:cohort_platform/domain/coach_brain/coach_brain_domain.dart';
 import 'package:cohort_platform/domain/session_occurrence/session_occurrence_domain.dart';
-import 'package:cohort_platform/domain/training_session_record/training_session_record_domain.dart';
+import 'package:cohort_platform/domain/workout_execution_record/workout_execution_record_domain.dart';
 import 'package:cohort_platform/domain/workout_player/workout_player_domain.dart';
 
 import 'athlete_workout_capabilities.dart';
@@ -12,7 +13,7 @@ class AthleteWorkoutOrchestrator {
     AthleteDailySessionResolver? dailySessionResolver,
     this.coachBrainRouter,
   }) : _dailySessionResolver =
-            dailySessionResolver ?? const AthleteDailySessionResolver();
+           dailySessionResolver ?? const AthleteDailySessionResolver();
 
   final AthleteDailySessionResolver _dailySessionResolver;
   final CoachDecisionRouter? coachBrainRouter;
@@ -20,12 +21,12 @@ class AthleteWorkoutOrchestrator {
   AthleteWorkoutResult resolveToday({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex occurrenceIndex,
+    required SessionOccurrenceRepository occurrenceRepository,
   }) {
     final resolution = _dailySessionResolver.resolve(
       athleteId: athleteId,
       date: date,
-      index: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     return _resultFromResolution(resolution);
@@ -35,7 +36,7 @@ class AthleteWorkoutOrchestrator {
   AthleteWorkoutResult adaptTodayWorkout({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex occurrenceIndex,
+    required SessionOccurrenceRepository occurrenceRepository,
     required SessionAdaptationCoachDecisionContext adaptationContext,
     required DateTime recordedAt,
     CoachDecisionRouter? coachBrainRouter,
@@ -44,7 +45,7 @@ class AthleteWorkoutOrchestrator {
     final current = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     if (!current.hasWorkout) {
@@ -54,7 +55,8 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    if (current.status == AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
+    if (current.status ==
+        AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
       return current.withAdaptationOutcome(
         adaptationStatus: AthleteWorkoutAdaptationStatus.invalidWorkoutState,
         adaptationDetail: 'multiple_workouts_scheduled',
@@ -78,7 +80,9 @@ class AthleteWorkoutOrchestrator {
     }
 
     final router =
-        coachBrainRouter ?? this.coachBrainRouter ?? CoachBrainDependencies.defaults().router;
+        coachBrainRouter ??
+        this.coachBrainRouter ??
+        CoachBrainDependencies.defaults().router;
     final resolvedRequestId =
         requestId ?? 'adapt-${occurrence.occurrenceId}-$recordedAt';
 
@@ -94,7 +98,8 @@ class AthleteWorkoutOrchestrator {
     if (!coachResult.isCompleted || coachResult.executionSnapshot == null) {
       return current.withAdaptationOutcome(
         adaptationStatus: AthleteWorkoutAdaptationStatus.coachBrainFailed,
-        adaptationDetail: coachResult.sessionAdaptationFailureCode?.name ??
+        adaptationDetail:
+            coachResult.sessionAdaptationFailureCode?.name ??
             coachResult.status.name,
       );
     }
@@ -114,12 +119,15 @@ class AthleteWorkoutOrchestrator {
     }
 
     final updatedOccurrence = attachResult.occurrence!;
-    occurrenceIndex.upsert(athleteId: athleteId, occurrence: updatedOccurrence);
+    occurrenceRepository.upsert(
+      athleteId: athleteId,
+      occurrence: updatedOccurrence,
+    );
 
     final refreshed = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     return refreshed.withAdaptationOutcome(
@@ -131,13 +139,13 @@ class AthleteWorkoutOrchestrator {
   AthleteWorkoutResult startTodayWorkout({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex occurrenceIndex,
+    required SessionOccurrenceRepository occurrenceRepository,
     required DateTime startedAt,
   }) {
     final current = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     if (current.status == AthleteWorkoutResolutionStatus.invalidRequest) {
@@ -152,7 +160,8 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    if (current.status == AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
+    if (current.status ==
+        AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
       return current.withStartOutcome(
         startStatus: AthleteWorkoutStartStatus.multipleWorkoutsScheduled,
       );
@@ -184,7 +193,7 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    occurrenceIndex.upsert(
+    occurrenceRepository.upsert(
       athleteId: athleteId,
       occurrence: transition.occurrence!,
     );
@@ -192,7 +201,7 @@ class AthleteWorkoutOrchestrator {
     final refreshed = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     return refreshed.withStartOutcome(
@@ -204,16 +213,17 @@ class AthleteWorkoutOrchestrator {
   AthleteWorkoutResult completeTodayWorkout({
     required String athleteId,
     required SessionOccurrenceDate date,
-    required AthleteSessionOccurrenceIndex occurrenceIndex,
+    required SessionOccurrenceRepository occurrenceRepository,
     required WorkoutPlayer workoutPlayer,
-    required List<TrainingExerciseExecutionEntry> exerciseOutcomes,
+    required List<WorkoutExerciseExecutionEntry> exerciseOutcomes,
     required DateTime finishedAt,
     String? recordId,
+    WorkoutExecutionRecordStore? workoutExecutionRecordStore,
   }) {
     final current = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     if (current.status == AthleteWorkoutResolutionStatus.invalidRequest) {
@@ -228,9 +238,11 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    if (current.status == AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
+    if (current.status ==
+        AthleteWorkoutResolutionStatus.multipleWorkoutsScheduled) {
       return current.withCompletionOutcome(
-        completionStatus: AthleteWorkoutCompletionStatus.multipleWorkoutsScheduled,
+        completionStatus:
+            AthleteWorkoutCompletionStatus.multipleWorkoutsScheduled,
       );
     }
 
@@ -289,10 +301,11 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    final resolvedRecordId = recordId ??
+    final resolvedRecordId =
+        recordId ??
         'record-${occurrence.occurrenceId}-${finishedAt.millisecondsSinceEpoch}';
 
-    final recordResult = TrainingSessionRecord.finalizeFromWorkoutPlayer(
+    final recordResult = WorkoutExecutionRecord.finalizeFromWorkoutPlayer(
       player: playerFinish.player!,
       recordId: resolvedRecordId,
       exerciseOutcomes: exerciseOutcomes,
@@ -307,6 +320,8 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
+    workoutExecutionRecordStore?.save(recordResult.record!);
+
     final completeResult = occurrence.complete(completedAt: finishedAt);
     if (!completeResult.isSuccess || completeResult.occurrence == null) {
       return current.withCompletionOutcome(
@@ -317,7 +332,7 @@ class AthleteWorkoutOrchestrator {
       );
     }
 
-    occurrenceIndex.upsert(
+    occurrenceRepository.upsert(
       athleteId: athleteId,
       occurrence: completeResult.occurrence!,
     );
@@ -325,12 +340,12 @@ class AthleteWorkoutOrchestrator {
     final refreshed = resolveToday(
       athleteId: athleteId,
       date: date,
-      occurrenceIndex: occurrenceIndex,
+      occurrenceRepository: occurrenceRepository,
     );
 
     return refreshed.withCompletionOutcome(
       completionStatus: AthleteWorkoutCompletionStatus.succeeded,
-      trainingSessionRecord: recordResult.record,
+      workoutExecutionRecord: recordResult.record,
     );
   }
 
@@ -357,9 +372,13 @@ class AthleteWorkoutOrchestrator {
       matchingOccurrences: resolution.matchingOccurrences,
       lifecycleState: occurrence.lifecycleState,
       executionSnapshot: occurrence.executionSnapshot,
-      adaptationAvailable: AthleteWorkoutCapabilities.adaptationAvailable(occurrence),
+      adaptationAvailable: AthleteWorkoutCapabilities.adaptationAvailable(
+        occurrence,
+      ),
       canStartWorkout: AthleteWorkoutCapabilities.canStartWorkout(occurrence),
-      canCompleteWorkout: AthleteWorkoutCapabilities.canCompleteWorkout(occurrence),
+      canCompleteWorkout: AthleteWorkoutCapabilities.canCompleteWorkout(
+        occurrence,
+      ),
     );
   }
 

@@ -3,11 +3,7 @@ import '../../../models/interval_modality.dart';
 import '../../../models/interval_rep_entry.dart';
 
 /// Identifies which interval metric field the athlete edited.
-enum IntervalMetricField {
-  distance,
-  duration,
-  pace,
-}
+enum IntervalMetricField { distance, duration, pace }
 
 /// Parsed interval metric inputs before auto-calculation.
 class IntervalMetricInput {
@@ -203,7 +199,8 @@ class IntervalMetricCalculator {
       } else {
         distanceSource = IntervalMetricEntrySource.manual;
       }
-    } else if (_isBlank(distanceText) && distanceSource == IntervalMetricEntrySource.auto) {
+    } else if (_isBlank(distanceText) &&
+        distanceSource == IntervalMetricEntrySource.auto) {
       distanceMeters = null;
       distanceSource = IntervalMetricEntrySource.unset;
     }
@@ -228,7 +225,8 @@ class IntervalMetricCalculator {
       } else {
         paceSource = IntervalMetricEntrySource.manual;
       }
-    } else if (_isBlank(paceText) && paceSource == IntervalMetricEntrySource.auto) {
+    } else if (_isBlank(paceText) &&
+        paceSource == IntervalMetricEntrySource.auto) {
       paceSecondsPerKm = null;
       paceSource = IntervalMetricEntrySource.unset;
     }
@@ -386,8 +384,7 @@ class IntervalMetricCalculator {
       IntervalModality.cycling ||
       IntervalModality.rowing ||
       IntervalModality.skiing ||
-      IntervalModality.other =>
-        formatted,
+      IntervalModality.other => formatted,
     };
   }
 

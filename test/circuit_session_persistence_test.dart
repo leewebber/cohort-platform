@@ -104,12 +104,16 @@ void main() {
 
       final elapsedFields = find.byKey(const ValueKey('circuit-elapsed-time'));
       await tester.enterText(
-        find.descendant(of: elapsedFields, matching: find.byType(TextField)).first,
+        find
+            .descendant(of: elapsedFields, matching: find.byType(TextField))
+            .first,
         '14',
       );
       await tester.pump();
       await tester.enterText(
-        find.descendant(of: elapsedFields, matching: find.byType(TextField)).last,
+        find
+            .descendant(of: elapsedFields, matching: find.byType(TextField))
+            .last,
         '32',
       );
       await tester.pump();
@@ -138,16 +142,20 @@ void main() {
       await _pumpFrames(tester);
 
       final minutesField = tester.widget<TextField>(
-        find.descendant(
-          of: find.byKey(const ValueKey('circuit-elapsed-time')),
-          matching: find.byType(TextField),
-        ).first,
+        find
+            .descendant(
+              of: find.byKey(const ValueKey('circuit-elapsed-time')),
+              matching: find.byType(TextField),
+            )
+            .first,
       );
       final secondsField = tester.widget<TextField>(
-        find.descendant(
-          of: find.byKey(const ValueKey('circuit-elapsed-time')),
-          matching: find.byType(TextField),
-        ).last,
+        find
+            .descendant(
+              of: find.byKey(const ValueKey('circuit-elapsed-time')),
+              matching: find.byType(TextField),
+            )
+            .last,
       );
       expect(minutesField.controller?.text, '14');
       expect(secondsField.controller?.text, '32');
@@ -174,8 +182,9 @@ void main() {
       await tester.pump();
 
       expect(coordinator, isNotNull);
-      final leaveFuture =
-          coordinator!.confirmLeave(tester.element(find.byType(Scaffold)));
+      final leaveFuture = coordinator!.confirmLeave(
+        tester.element(find.byType(Scaffold)),
+      );
       await _pumpFrames(tester);
 
       await tester.tap(find.text('Resume later'));
@@ -249,10 +258,7 @@ void main() {
   });
 }
 
-Future<void> _pumpCircuitView(
-  WidgetTester tester,
-  Widget child,
-) async {
+Future<void> _pumpCircuitView(WidgetTester tester, Widget child) async {
   tester.view.physicalSize = const Size(1080, 2400);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(() {
@@ -262,9 +268,7 @@ Future<void> _pumpCircuitView(
 
   await tester.pumpWidget(
     MaterialApp(
-      home: Scaffold(
-        body: SingleChildScrollView(child: child),
-      ),
+      home: Scaffold(body: SingleChildScrollView(child: child)),
     ),
   );
   await tester.pump();

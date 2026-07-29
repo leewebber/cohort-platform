@@ -36,16 +36,11 @@ class TrainingSessionCircuitRepository implements TrainingSessionCircuitStore {
   ) async {
     final response = await SupabaseService.client
         .from(_tableName)
-        .upsert(
-          performance.toUpsertMap(),
-          onConflict: _upsertConflict,
-        )
+        .upsert(performance.toUpsertMap(), onConflict: _upsertConflict)
         .select()
         .single();
 
-    return CircuitPerformance.fromMap(
-      Map<String, dynamic>.from(response),
-    );
+    return CircuitPerformance.fromMap(Map<String, dynamic>.from(response));
   }
 
   @override
@@ -62,9 +57,7 @@ class TrainingSessionCircuitRepository implements TrainingSessionCircuitStore {
       return null;
     }
 
-    return CircuitPerformance.fromMap(
-      Map<String, dynamic>.from(response),
-    );
+    return CircuitPerformance.fromMap(Map<String, dynamic>.from(response));
   }
 
   Future<ComparableCircuitSession?> getLatestCompletedComparableSession({
@@ -101,9 +94,6 @@ class TrainingSessionCircuitRepository implements TrainingSessionCircuitStore {
       return null;
     }
 
-    return ComparableCircuitSession(
-      session: session,
-      performance: performance,
-    );
+    return ComparableCircuitSession(session: session, performance: performance);
   }
 }

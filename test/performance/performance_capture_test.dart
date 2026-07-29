@@ -23,38 +23,57 @@ void main() {
 
   group('PerformanceCaptureController', () {
     test('initialises block drafts from execution plan', () {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _samplePlan(),
-        athleteId: 'lee',
-        trainingSessionId: 42,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'lee',
+            trainingSessionId: 42,
+          );
 
       expect(controller.draft.blockDrafts, hasLength(2));
-      expect(controller.draft.blockDrafts.first.resultData, isA<CompletionResultData>());
+      expect(
+        controller.draft.blockDrafts.first.resultData,
+        isA<CompletionResultData>(),
+      );
     });
 
     test('markBlockComplete preserves entered set data on reopen', () {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _strengthPlan(),
-        athleteId: 'lee',
-        trainingSessionId: 43,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _strengthPlan(),
+            athleteId: 'lee',
+            trainingSessionId: 43,
+          );
       final blockId = controller.draft.blockDrafts.first.sourceBlockId;
-      final exerciseId =
-          controller.draft.blockDrafts.first.exerciseResults.first.sourceExerciseId;
+      final exerciseId = controller
+          .draft
+          .blockDrafts
+          .first
+          .exerciseResults
+          .first
+          .sourceExerciseId;
 
       controller
         ..addSet(blockId, exerciseId)
         ..updateSet(
           blockId,
           exerciseId,
-          controller.draft.blockDrafts.first.exerciseResults.first.sets.first.setResultId,
+          controller
+              .draft
+              .blockDrafts
+              .first
+              .exerciseResults
+              .first
+              .sets
+              .first
+              .setResultId,
           (set) => set.copyWith(reps: 5, load: 100, completed: true),
         )
         ..markBlockComplete(blockId)
         ..reopenBlock(blockId);
 
-      final set = controller.draft.blockDrafts.first.exerciseResults.first.sets.first;
+      final set =
+          controller.draft.blockDrafts.first.exerciseResults.first.sets.first;
       expect(set.reps, 5);
       expect(set.load, 100);
       expect(
@@ -64,11 +83,12 @@ void main() {
     });
 
     test('partial completion when a block is skipped', () {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _samplePlan(),
-        athleteId: 'lee',
-        trainingSessionId: 44,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'lee',
+            trainingSessionId: 44,
+          );
 
       final first = controller.draft.blockDrafts.first.sourceBlockId;
       controller
@@ -86,14 +106,19 @@ void main() {
     test('createOrResume prevents duplicate in-progress records', () async {
       final store = InMemoryPerformanceRecordStore();
       final coordinator = PerformanceRecordSaveCoordinator(store: store);
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _samplePlan(),
-        athleteId: 'lee',
-        trainingSessionId: 100,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'lee',
+            trainingSessionId: 100,
+          );
 
-      final first = await coordinator.createOrResumeInProgress(controller: controller);
-      final second = await coordinator.createOrResumeInProgress(controller: controller);
+      final first = await coordinator.createOrResumeInProgress(
+        controller: controller,
+      );
+      final second = await coordinator.createOrResumeInProgress(
+        controller: controller,
+      );
 
       expect(first.recordId, second.recordId);
       final history = await store.listHistory(athleteId: 'lee');
@@ -102,11 +127,12 @@ void main() {
 
     test('store completeRecord is idempotent', () async {
       final store = InMemoryPerformanceRecordStore();
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _samplePlan(),
-        athleteId: 'lee',
-        trainingSessionId: 101,
-      );
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'lee',
+            trainingSessionId: 101,
+          );
 
       for (final block in controller.draft.blockDrafts) {
         controller.markBlockComplete(block.sourceBlockId);
@@ -126,11 +152,12 @@ void main() {
 
   group('PerformanceValidationService', () {
     test('rejects invalid session RPE', () {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: _samplePlan(),
-        athleteId: 'lee',
-        trainingSessionId: 102,
-      )..updateSessionRpe(11);
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: _samplePlan(),
+            athleteId: 'lee',
+            trainingSessionId: 102,
+          )..updateSessionRpe(11);
 
       final result = const PerformanceValidationService().validateForCompletion(
         controller.draft,

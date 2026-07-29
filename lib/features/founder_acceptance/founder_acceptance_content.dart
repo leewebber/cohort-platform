@@ -76,9 +76,9 @@ class FounderAcceptanceContent {
     return SessionExecutionPlan(
       sessionId: protocolId,
       sessionTitle: sessionTitle,
-      blocks: sessionBlocks(singleBlock: singleBlock)
-          .map(executionBlockFrom)
-          .toList(growable: false),
+      blocks: sessionBlocks(
+        singleBlock: singleBlock,
+      ).map(executionBlockFrom).toList(growable: false),
     );
   }
 
@@ -91,7 +91,8 @@ class FounderAcceptanceContent {
       workoutFormat: block.workoutFormat,
       position: block.position,
       timerConfiguration: block.timerConfiguration,
-      timerSummary: block.timerConfiguration == null ||
+      timerSummary:
+          block.timerConfiguration == null ||
               block.workoutFormat == WorkoutFormat.none
           ? null
           : block.timerConfiguration!.summaryForFormat(block.workoutFormat),

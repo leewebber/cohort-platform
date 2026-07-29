@@ -32,7 +32,8 @@ class AthleteDailySessionResolutionResult {
 
   bool get hasSingleOccurrence => occurrence != null;
 
-  SessionOccurrenceLifecycleState? get lifecycleState => occurrence?.lifecycleState;
+  SessionOccurrenceLifecycleState? get lifecycleState =>
+      occurrence?.lifecycleState;
 
   bool get hasExecutionSnapshot => occurrence?.executionSnapshot != null;
 
@@ -48,12 +49,12 @@ class AthleteDailySessionResolutionResult {
 
   @override
   int get hashCode => Object.hash(
-        outcome,
-        athleteId,
-        date,
-        occurrence,
-        Object.hashAll(matchingOccurrences),
-      );
+    outcome,
+    athleteId,
+    date,
+    occurrence,
+    Object.hashAll(matchingOccurrences),
+  );
 }
 
 bool _listEquals<T>(List<T> a, List<T> b) {

@@ -43,8 +43,9 @@ List<ExerciseAssignmentReference> buildExerciseActiveAssignmentReferences({
 
   final sortedAssignments = assignments.toList()
     ..sort((a, b) {
-      final versionCompare =
-          a.programmeVersionId.compareTo(b.programmeVersionId);
+      final versionCompare = a.programmeVersionId.compareTo(
+        b.programmeVersionId,
+      );
       if (versionCompare != 0) return versionCompare;
       return a.id.compareTo(b.id);
     });
@@ -81,11 +82,12 @@ List<ExerciseSessionLineageReference> buildSessionLineageReferences(
 
   final results = <ExerciseSessionLineageReference>[];
   for (final entry in byLineage.entries) {
-    final revisions = entry.value
-        .map((reference) => reference.sessionRevisionNumber)
-        .toSet()
-        .toList()
-      ..sort();
+    final revisions =
+        entry.value
+            .map((reference) => reference.sessionRevisionNumber)
+            .toSet()
+            .toList()
+          ..sort();
     final displayName = entry.value.first.sessionName;
 
     results.add(
@@ -98,9 +100,7 @@ List<ExerciseSessionLineageReference> buildSessionLineageReferences(
     );
   }
 
-  results.sort(
-    (a, b) => a.sessionDisplayName.compareTo(b.sessionDisplayName),
-  );
+  results.sort((a, b) => a.sessionDisplayName.compareTo(b.sessionDisplayName));
   return results;
 }
 
@@ -129,8 +129,9 @@ int compareExerciseRevisionReferences(
   final nameCompare = a.sessionName.compareTo(b.sessionName);
   if (nameCompare != 0) return nameCompare;
 
-  final revisionCompare =
-      a.sessionRevisionNumber.compareTo(b.sessionRevisionNumber);
+  final revisionCompare = a.sessionRevisionNumber.compareTo(
+    b.sessionRevisionNumber,
+  );
   if (revisionCompare != 0) return revisionCompare;
 
   return a.blockOrder.compareTo(b.blockOrder);
@@ -143,8 +144,9 @@ int compareExerciseProgrammeReferences(
   final programmeCompare = a.programmeName.compareTo(b.programmeName);
   if (programmeCompare != 0) return programmeCompare;
 
-  final versionCompare =
-      a.programmeVersionNumber.compareTo(b.programmeVersionNumber);
+  final versionCompare = a.programmeVersionNumber.compareTo(
+    b.programmeVersionNumber,
+  );
   if (versionCompare != 0) return versionCompare;
 
   final weekCompare = a.weekNumber.compareTo(b.weekNumber);

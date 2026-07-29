@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/athlete_workout/athlete_today_workout_resolution_service.dart';
 import 'package:cohort_platform/data/repositories/athlete_state_repository.dart';
 import 'package:cohort_platform/data/repositories/programme_repository.dart';
 import 'package:cohort_platform/data/repositories/protocol_repository.dart';
@@ -50,8 +51,7 @@ class _StubTrainingSessionRepository extends TrainingSessionRepository {
   Future<TrainingSession?> getLatestSessionForAthleteAndProtocol({
     required String athleteId,
     required String protocolId,
-  }) async =>
-      null;
+  }) async => null;
 }
 
 void main() {
@@ -123,10 +123,7 @@ void main() {
 
     Future<void> seedPublishedProgramme() async {
       tables.lineages.add(
-        const ProgrammeLineage(
-          id: 'lineage-1',
-          code: 'COHORT-FOUNDATION-TEST',
-        ),
+        const ProgrammeLineage(id: 'lineage-1', code: 'COHORT-FOUNDATION-TEST'),
       );
       await versionStore.saveTemplateTree(
         version: ProgrammeScheduleTestFixtures.version().copyWith(
@@ -205,56 +202,64 @@ void main() {
       );
     });
 
-    test('assignment creation then resolve returns executable session', () async {
-      await seedPublishedProgramme();
+    test(
+      'assignment creation then resolve returns executable session',
+      () async {
+        await seedPublishedProgramme();
 
-      final result = await service.assignProgramme(
-        athleteId: 'lee',
-        programmeVersionId: 'version-1',
-        startedAt: DateTime.utc(2026, 7, 15),
-        timezone: 'UTC',
-      );
+        final result = await service.assignProgramme(
+          athleteId: 'lee',
+          programmeVersionId: 'version-1',
+          startedAt: DateTime.utc(2026, 7, 15),
+          timezone: 'UTC',
+        );
 
-      expect(
-        result.resolvedTodaySession?.kind,
-        ResolvedTodaySessionKind.executable,
-      );
-      expect(result.resolvedTodaySession?.effectiveProtocolId, 'BW-001');
-    });
+        expect(
+          result.resolvedTodaySession?.kind,
+          ResolvedTodaySessionKind.executable,
+        );
+        expect(result.resolvedTodaySession?.effectiveProtocolId, 'BW-001');
+      },
+    );
 
-    test('Home loader sees programme executable after successful assignment',
-        () async {
-      await seedPublishedProgramme();
+    test(
+      'Home loader sees programme executable after successful assignment',
+      () async {
+        await seedPublishedProgramme();
 
-      await service.assignProgramme(
-        athleteId: 'lee',
-        programmeVersionId: 'version-1',
-        startedAt: DateTime.utc(2026, 7, 15),
-        timezone: 'UTC',
-      );
+        await service.assignProgramme(
+          athleteId: 'lee',
+          programmeVersionId: 'version-1',
+          startedAt: DateTime.utc(2026, 7, 15),
+          timezone: 'UTC',
+        );
 
-      final loader = HomeTodaySessionLoader(
-        todaySessionService: TodaySessionServiceImpl(
+        final todayService = TodaySessionServiceImpl(
           assignmentStore: assignmentStore,
           versionStore: versionStore,
           slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
           scheduleResolver: const ProgrammeScheduleResolverImpl(),
-        ),
-        athleteStateSyncService: AthleteStateSyncServiceImpl(
-          athleteStateStore: InMemoryAthleteStateStore(tables),
-        ),
-        athleteStateRepository: _StubAthleteStateRepository(),
-        protocolRepository: _StubProtocolRepository(),
-        programmeRepository: _StubProgrammeRepository(),
-        trainingSessionRepository: _StubTrainingSessionRepository(),
-      );
+        );
+        final loader = HomeTodaySessionLoader(
+          todayWorkoutResolutionService: AthleteTodayWorkoutResolutionService(
+            todaySessionService: todayService,
+          ),
+          athleteStateSyncService: AthleteStateSyncServiceImpl(
+            athleteStateStore: InMemoryAthleteStateStore(tables),
+          ),
+          athleteStateRepository: _StubAthleteStateRepository(),
+          protocolRepository: _StubProtocolRepository(),
+          programmeRepository: _StubProgrammeRepository(),
+          trainingSessionRepository: _StubTrainingSessionRepository(),
+        );
 
-      final state = await loader.load('lee');
+        final state = await loader.load('lee');
 
-      expect(state, isA<HomeTodaySessionProgrammeExecutable>());
-      final executable = state as HomeTodaySessionProgrammeExecutable;
-      expect(executable.resolution.effectiveProtocolId, 'BW-001');
-      expect(executable.executionContext.assignmentId, 'assignment-test-1');
-    });
+        expect(state, isA<HomeTodaySessionProgrammeExecutable>());
+        final executable = state as HomeTodaySessionProgrammeExecutable;
+        expect(executable.resolution.effectiveProtocolId, 'BW-001');
+        expect(executable.executionContext.assignmentId, 'assignment-test-1');
+      },
+    );
   });
 }

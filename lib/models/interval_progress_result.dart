@@ -17,7 +17,8 @@ class IntervalProgressResult {
       IntervalProgressType.firstPerformance =>
         'First recorded interval performance.',
       IntervalProgressType.averagePaceImproved => 'Average pace improved.',
-      IntervalProgressType.consistencyImproved => 'Pacing consistency improved.',
+      IntervalProgressType.consistencyImproved =>
+        'Pacing consistency improved.',
       IntervalProgressType.effortImproved => 'Same work at lower effort.',
       IntervalProgressType.moreWorkCompleted => 'More work completed.',
       IntervalProgressType.matchedPerformance =>

@@ -33,7 +33,9 @@ class InMemoryCoachAthleteRelationshipRepository
   }
 
   @override
-  Future<CoachAthleteRelationship?> getActiveForAthlete(String athleteId) async {
+  Future<CoachAthleteRelationship?> getActiveForAthlete(
+    String athleteId,
+  ) async {
     for (final relationship in tables.relationships) {
       if (relationship.athleteId == athleteId &&
           relationship.status == CoachAthleteRelationshipStatus.active) {
@@ -72,7 +74,8 @@ class InMemoryCoachAthleteRelationshipRepository
   }
 }
 
-class InMemoryCoachAthleteInviteRepository implements CoachAthleteInviteRepository {
+class InMemoryCoachAthleteInviteRepository
+    implements CoachAthleteInviteRepository {
   InMemoryCoachAthleteInviteRepository(
     this.tables, {
     this.currentAthleteId,
@@ -136,7 +139,9 @@ class InMemoryCoachAthleteInviteRepository implements CoachAthleteInviteReposito
 
     final profile = tables.profiles[athleteId];
     if (profile == null || !profile.isAthlete) {
-      throw Exception('An athlete profile is required to accept an invitation.');
+      throw Exception(
+        'An athlete profile is required to accept an invitation.',
+      );
     }
 
     CoachAthleteInvite? invite;

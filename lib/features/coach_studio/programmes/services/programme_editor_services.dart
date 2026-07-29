@@ -123,7 +123,8 @@ class ProgrammeEditorServices {
     );
   }
 
-  static ProgrammeSessionAuthoringCoordinator createSessionAuthoringCoordinator({
+  static ProgrammeSessionAuthoringCoordinator
+  createSessionAuthoringCoordinator({
     required ProgrammeEditorController controller,
     ProtocolBuilderService? protocolBuilderService,
   }) {

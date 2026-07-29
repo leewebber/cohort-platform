@@ -115,8 +115,8 @@ class _NavItem extends StatelessWidget {
     final color = !enabled
         ? CohortColors.textMuted.withValues(alpha: 0.45)
         : selected
-            ? CohortColors.phosphor
-            : CohortColors.textMuted;
+        ? CohortColors.phosphor
+        : CohortColors.textMuted;
 
     return Material(
       color: Colors.transparent,
@@ -143,7 +143,9 @@ class _NavItem extends StatelessWidget {
                   shadows: selected && enabled
                       ? [
                           Shadow(
-                            color: CohortColors.phosphor.withValues(alpha: 0.45),
+                            color: CohortColors.phosphor.withValues(
+                              alpha: 0.45,
+                            ),
                             blurRadius: 6,
                           ),
                         ]

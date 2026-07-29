@@ -10,8 +10,9 @@ Future<void> main() async {
 
   runApp(
     CohortPlatformApp(
-      configurationError:
-          initResult.isConfigured ? null : initResult.errorMessage,
+      configurationError: initResult.isConfigured
+          ? null
+          : initResult.errorMessage,
     ),
   );
 }

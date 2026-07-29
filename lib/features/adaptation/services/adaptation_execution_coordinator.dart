@@ -6,9 +6,8 @@ import 'adaptation_execution_service.dart';
 
 /// Bridge between M8 session completion and deterministic adaptation execution.
 class AdaptationExecutionCoordinator {
-  AdaptationExecutionCoordinator({
-    AdaptationExecutionService? executionService,
-  }) : _executionService = executionService ?? AdaptationExecutionService();
+  AdaptationExecutionCoordinator({AdaptationExecutionService? executionService})
+    : _executionService = executionService ?? AdaptationExecutionService();
 
   final AdaptationExecutionService _executionService;
 
@@ -24,7 +23,8 @@ class AdaptationExecutionCoordinator {
       return null;
     }
 
-    if (progressionResult?.status == ProgrammeProgressionStatus.staleResolution) {
+    if (progressionResult?.status ==
+        ProgrammeProgressionStatus.staleResolution) {
       return AdaptationExecutionResult.skipped('Stale programme resolution');
     }
 

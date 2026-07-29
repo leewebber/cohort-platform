@@ -50,10 +50,7 @@ class SessionLibraryCard extends StatelessWidget {
                     child: const Text('Preview'),
                   ),
                 if (onEdit != null)
-                  TextButton(
-                    onPressed: onEdit,
-                    child: const Text('Edit'),
-                  ),
+                  TextButton(onPressed: onEdit, child: const Text('Edit')),
               ],
             ),
           ],

@@ -30,19 +30,21 @@ class AdaptationExecutionService {
     PostCompletionAdaptationEvaluator? evaluator,
     ProgrammeFutureSlotFinder? futureSlotFinder,
     AdaptationService? adaptationService,
-  })  : _adaptationEventStore =
-            adaptationEventStore ?? const ProgrammeAdaptationEventSupabaseStore(),
-        _assignmentStore =
-            assignmentStore ?? const ProgrammeAssignmentSupabaseStore(),
-        _slotOutcomeStore =
-            slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
-        _versionStore = versionStore ?? const ProgrammeVersionSupabaseStore(),
-        _protocolRepository = protocolRepository ?? ProtocolRepository(),
-        _evaluator = evaluator ?? const PostCompletionAdaptationEvaluator(),
-        _futureSlotFinder = futureSlotFinder ?? const ProgrammeFutureSlotFinder(),
-        _adaptationService = AdaptationService(
-          protocolRepository ?? ProtocolRepository(),
-        );
+  }) : _adaptationEventStore =
+           adaptationEventStore ??
+           const ProgrammeAdaptationEventSupabaseStore(),
+       _assignmentStore =
+           assignmentStore ?? const ProgrammeAssignmentSupabaseStore(),
+       _slotOutcomeStore =
+           slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
+       _versionStore = versionStore ?? const ProgrammeVersionSupabaseStore(),
+       _protocolRepository = protocolRepository ?? ProtocolRepository(),
+       _evaluator = evaluator ?? const PostCompletionAdaptationEvaluator(),
+       _futureSlotFinder =
+           futureSlotFinder ?? const ProgrammeFutureSlotFinder(),
+       _adaptationService = AdaptationService(
+         protocolRepository ?? ProtocolRepository(),
+       );
 
   final ProgrammeAdaptationEventStore _adaptationEventStore;
   final ProgrammeAssignmentStore _assignmentStore;
@@ -62,7 +64,9 @@ class AdaptationExecutionService {
     ProgrammeProgressionResult? progressionResult,
   }) async {
     if (!programmeContext.isProgrammeBacked) {
-      return AdaptationExecutionResult.skipped('Session is not programme-backed');
+      return AdaptationExecutionResult.skipped(
+        'Session is not programme-backed',
+      );
     }
 
     final assignmentId = programmeContext.assignmentId;
@@ -83,7 +87,9 @@ class AdaptationExecutionService {
       assignment.programmeVersionId,
     );
     if (tree == null) {
-      return AdaptationExecutionResult.skipped('Programme template unavailable');
+      return AdaptationExecutionResult.skipped(
+        'Programme template unavailable',
+      );
     }
 
     final outcomes = await _slotOutcomeStore.listForAssignment(assignmentId);
@@ -102,8 +108,9 @@ class AdaptationExecutionService {
       matchingProtocolId: plannedProtocolId,
     );
 
-    final nextMatchingFutureSlot =
-        futureSlots.isEmpty ? null : futureSlots.first;
+    final nextMatchingFutureSlot = futureSlots.isEmpty
+        ? null
+        : futureSlots.first;
 
     final strengthSummary = _evaluator.summarizeStrengthPerformance(record);
 
@@ -138,8 +145,9 @@ class AdaptationExecutionService {
     };
 
     if (evaluation.type == AdaptationEvaluationType.protocolSubstitution) {
-      final currentProtocol =
-          await _protocolRepository.getProtocolById(plannedProtocolId);
+      final currentProtocol = await _protocolRepository.getProtocolById(
+        plannedProtocolId,
+      );
       if (currentProtocol == null) {
         return AdaptationExecutionResult.skipped('Planned protocol not found');
       }
@@ -195,7 +203,8 @@ class AdaptationExecutionService {
         assignmentId: assignmentId,
         athleteId: athleteId,
         triggerTrainingSessionId: trainingSessionId,
-        adaptationType: evaluation.type == AdaptationEvaluationType.loadProgression
+        adaptationType:
+            evaluation.type == AdaptationEvaluationType.loadProgression
             ? ProgrammeAdaptationType.loadProgression
             : ProgrammeAdaptationType.protocolSubstitution,
         explanation: evaluation.explanation,

@@ -47,9 +47,7 @@ class ProgrammeAssignmentOperationResult {
     return ProgrammeAssignmentOperationResult(
       status: ProgrammeAssignmentOperationStatus.alreadyActiveConflict,
       assignment: existing,
-      warnings: [
-        'Athlete already has active assignment ${existing.id}',
-      ],
+      warnings: ['Athlete already has active assignment ${existing.id}'],
     );
   }
 
@@ -62,18 +60,14 @@ class ProgrammeAssignmentOperationResult {
     );
   }
 
-  factory ProgrammeAssignmentOperationResult.noAssignment({
-    String? message,
-  }) {
+  factory ProgrammeAssignmentOperationResult.noAssignment({String? message}) {
     return ProgrammeAssignmentOperationResult(
       status: ProgrammeAssignmentOperationStatus.noAssignment,
       warnings: message == null ? const [] : [message],
     );
   }
 
-  factory ProgrammeAssignmentOperationResult.failed({
-    required String message,
-  }) {
+  factory ProgrammeAssignmentOperationResult.failed({required String message}) {
     return ProgrammeAssignmentOperationResult(
       status: ProgrammeAssignmentOperationStatus.failed,
       warnings: [message],

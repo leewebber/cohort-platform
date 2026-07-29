@@ -113,8 +113,9 @@ class SessionRevisionUsageSummary {
   bool get hasActiveOperationalUsage =>
       classifications.contains(ContentUsageClassification.activeOperational);
 
-  bool get hasHistoricalUsage =>
-      classifications.contains(ContentUsageClassification.historicalPerformance);
+  bool get hasHistoricalUsage => classifications.contains(
+    ContentUsageClassification.historicalPerformance,
+  );
 
   bool get isUnused => classifications.isEmpty;
 }

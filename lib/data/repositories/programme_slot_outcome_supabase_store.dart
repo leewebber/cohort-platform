@@ -49,9 +49,8 @@ class ProgrammeSlotOutcomeSupabaseStore implements ProgrammeSlotOutcomeStore {
 
       return response
           .map(
-            (row) => ProgrammeSlotOutcome.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProgrammeSlotOutcome.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } catch (error) {
@@ -79,9 +78,8 @@ class ProgrammeSlotOutcomeSupabaseStore implements ProgrammeSlotOutcomeStore {
 
       return response
           .map(
-            (row) => ProgrammeSlotOutcome.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProgrammeSlotOutcome.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } catch (error) {
@@ -97,10 +95,7 @@ class ProgrammeSlotOutcomeSupabaseStore implements ProgrammeSlotOutcomeStore {
     try {
       final response = await SupabaseService.client
           .from(_tableName)
-          .upsert(
-            outcome.toUpsertMap(),
-            onConflict: _upsertConflict,
-          )
+          .upsert(outcome.toUpsertMap(), onConflict: _upsertConflict)
           .select()
           .single();
 

@@ -44,10 +44,10 @@ class SupabaseSessionBlockRepository extends SessionBlockRepository {
     for (final row in exerciseRows) {
       final blockId = row['block_id']?.toString();
       if (blockId == null) continue;
-      linksByBlock.putIfAbsent(blockId, () => []).add(
-            SessionBlockExerciseLink.fromRow(
-              Map<String, dynamic>.from(row),
-            ),
+      linksByBlock
+          .putIfAbsent(blockId, () => [])
+          .add(
+            SessionBlockExerciseLink.fromRow(Map<String, dynamic>.from(row)),
           );
     }
 
@@ -95,9 +95,7 @@ class SupabaseSessionBlockRepository extends SessionBlockRepository {
       if (block.linkedExercises.isEmpty) continue;
 
       final linkMaps = block.linkedExercises
-          .map(
-            (link) => link.toRowMap(blockId: blockId)..remove('id'),
-          )
+          .map((link) => link.toRowMap(blockId: blockId)..remove('id'))
           .toList(growable: false);
 
       await SupabaseService.client

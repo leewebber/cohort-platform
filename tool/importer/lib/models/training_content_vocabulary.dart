@@ -92,8 +92,7 @@ extension TrainingEndorsementStatusDb on TrainingEndorsementStatus {
   String get dbValue {
     return switch (this) {
       TrainingEndorsementStatus.cohortEndorsed => 'cohort_endorsed',
-      TrainingEndorsementStatus.organisationApproved =>
-        'organisation_approved',
+      TrainingEndorsementStatus.organisationApproved => 'organisation_approved',
       TrainingEndorsementStatus.coachAuthored => 'coach_authored',
       TrainingEndorsementStatus.unreviewed => 'unreviewed',
     };
@@ -103,8 +102,7 @@ extension TrainingEndorsementStatusDb on TrainingEndorsementStatus {
   static TrainingEndorsementStatus fromDb(String? value) {
     return switch (value?.trim()) {
       'cohort_endorsed' => TrainingEndorsementStatus.cohortEndorsed,
-      'organisation_approved' =>
-        TrainingEndorsementStatus.organisationApproved,
+      'organisation_approved' => TrainingEndorsementStatus.organisationApproved,
       'coach_authored' => TrainingEndorsementStatus.coachAuthored,
       'unreviewed' => TrainingEndorsementStatus.unreviewed,
       _ => TrainingEndorsementStatus.unreviewed,

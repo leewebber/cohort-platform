@@ -25,16 +25,11 @@ class TrainingSessionIntervalRepository {
   ) async {
     final response = await SupabaseService.client
         .from(_tableName)
-        .upsert(
-          performance.toUpsertMap(),
-          onConflict: _upsertConflict,
-        )
+        .upsert(performance.toUpsertMap(), onConflict: _upsertConflict)
         .select()
         .single();
 
-    return IntervalPerformance.fromMap(
-      Map<String, dynamic>.from(response),
-    );
+    return IntervalPerformance.fromMap(Map<String, dynamic>.from(response));
   }
 
   Future<List<IntervalPerformance>> getIntervalsForTrainingSession(
@@ -50,9 +45,7 @@ class TrainingSessionIntervalRepository {
 
     return response
         .map<IntervalPerformance>(
-          (row) => IntervalPerformance.fromMap(
-            Map<String, dynamic>.from(row),
-          ),
+          (row) => IntervalPerformance.fromMap(Map<String, dynamic>.from(row)),
         )
         .toList();
   }
@@ -88,10 +81,7 @@ class TrainingSessionIntervalRepository {
 
     final intervals = await getIntervalsForTrainingSession(session.id);
 
-    return ComparableIntervalSession(
-      session: session,
-      intervals: intervals,
-    );
+    return ComparableIntervalSession(session: session, intervals: intervals);
   }
 
   Future<List<IntervalPerformance>> getLatestCompletedIntervalSession({

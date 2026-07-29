@@ -59,15 +59,9 @@ class SessionProgressIndicator extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Block $current of $total',
-            style: CohortTextStyles.eyebrow,
-          ),
+          Text('Block $current of $total', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            '$completed / $total complete',
-            style: CohortTextStyles.small,
-          ),
+          Text('$completed / $total complete', style: CohortTextStyles.small),
           const SizedBox(height: CohortSpacing.sm),
           ClipRRect(
             borderRadius: BorderRadius.circular(999),

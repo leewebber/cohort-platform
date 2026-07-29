@@ -56,9 +56,7 @@ class ProtocolRepository {
         .order('name')
         .limit(limit);
 
-    return response
-        .map<Protocol>((item) => Protocol.fromMap(item))
-        .toList();
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
 
   /// Coach-authored reusable sessions (`content_kind=session`, `coach_private`).
@@ -80,9 +78,7 @@ class ProtocolRepository {
         .order('name')
         .limit(limit);
 
-    return response
-        .map<Protocol>((item) => Protocol.fromMap(item))
-        .toList();
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
 
   /// Programme-only sessions bound to a draft programme version.
@@ -104,9 +100,7 @@ class ProtocolRepository {
         .order('name')
         .limit(limit);
 
-    return response
-        .map<Protocol>((item) => Protocol.fromMap(item))
-        .toList();
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
 
   /// Reusable session templates (`content_kind=session_template`).
@@ -128,9 +122,7 @@ class ProtocolRepository {
 
     final response = await query.order('name').limit(limit);
 
-    return response
-        .map<Protocol>((item) => Protocol.fromMap(item))
-        .toList();
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
 
   /// Alias for [listCohortProtocols] — Programme Builder and Protocol Library.
@@ -145,9 +137,7 @@ class ProtocolRepository {
         .select()
         .order('name');
 
-    return response
-        .map<Protocol>((item) => Protocol.fromMap(item))
-        .toList();
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
 
   Future<Protocol?> getProtocolById(String protocolId) async {
@@ -184,8 +174,7 @@ class ProtocolRepository {
         continue;
       }
 
-      names[protocolId] =
-          name == null || name.isEmpty ? protocolId : name;
+      names[protocolId] = name == null || name.isEmpty ? protocolId : name;
     }
 
     return names;

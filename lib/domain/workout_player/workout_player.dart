@@ -10,7 +10,7 @@ import 'workout_player_transition_result.dart';
 /// Active execution state for an in-progress [SessionOccurrence].
 ///
 /// Prescription content lives on [executionSnapshot]; this aggregate only tracks
-/// position and execution status until [TrainingSessionRecord] captures metrics.
+/// position and execution status until [WorkoutExecutionRecord] captures metrics.
 class WorkoutPlayer {
   const WorkoutPlayer({
     required this.playerId,
@@ -38,16 +38,16 @@ class WorkoutPlayer {
       WorkoutPlayerNavigation.navigableSteps(executionSnapshot).length;
 
   int get remainingStepCount => WorkoutPlayerNavigation.remainingStepsAfter(
-        snapshot: executionSnapshot,
-        current: currentPosition,
-      );
+    snapshot: executionSnapshot,
+    current: currentPosition,
+  );
 
   bool get isAtFirstStep => currentPosition.stepIndex == 0;
 
   bool get isAtLastStep => WorkoutPlayerNavigation.isAtLastStep(
-        snapshot: executionSnapshot,
-        current: currentPosition,
-      );
+    snapshot: executionSnapshot,
+    current: currentPosition,
+  );
 
   bool get hasFinished =>
       executionStatus == WorkoutPlayerExecutionStatus.completed;
@@ -58,7 +58,10 @@ class WorkoutPlayer {
     required String occurrenceId,
     required AdaptedSessionExecutionSnapshot executionSnapshot,
   }) {
-    final idIssue = _validateIds(playerId: playerId, occurrenceId: occurrenceId);
+    final idIssue = _validateIds(
+      playerId: playerId,
+      occurrenceId: occurrenceId,
+    );
     if (idIssue != null) return idIssue;
 
     final first = WorkoutPlayerNavigation.firstPosition(executionSnapshot);
@@ -84,7 +87,8 @@ class WorkoutPlayer {
     required SessionOccurrence occurrence,
     required String playerId,
   }) {
-    if (occurrence.lifecycleState != SessionOccurrenceLifecycleState.inProgress) {
+    if (occurrence.lifecycleState !=
+        SessionOccurrenceLifecycleState.inProgress) {
       return WorkoutPlayerTransitionResult.singleFailure(
         WorkoutPlayerTransitionIssueCode.occurrenceNotInProgress,
         detail: occurrence.lifecycleState.name,
@@ -190,7 +194,9 @@ class WorkoutPlayer {
     return _complete(recordedAt: recordedAt);
   }
 
-  WorkoutPlayerTransitionResult completeWorkout({required DateTime recordedAt}) {
+  WorkoutPlayerTransitionResult completeWorkout({
+    required DateTime recordedAt,
+  }) {
     return _complete(recordedAt: recordedAt);
   }
 
@@ -200,6 +206,11 @@ class WorkoutPlayer {
 
   WorkoutPlayerTransitionResult previousExercise() {
     return _moveToStepIndex(currentPosition.stepIndex - 1);
+  }
+
+  /// Jumps to a navigable step index (block/exercise boundary).
+  WorkoutPlayerTransitionResult goToStepIndex(int stepIndex) {
+    return _moveToStepIndex(stepIndex);
   }
 
   WorkoutPlayerTransitionResult nextBlock() {
@@ -334,13 +345,13 @@ class WorkoutPlayer {
 
   @override
   int get hashCode => Object.hash(
-        playerId,
-        occurrenceId,
-        executionSnapshot,
-        currentPosition,
-        executionStatus,
-        startedAt,
-        pausedAt,
-        finishedAt,
-      );
+    playerId,
+    occurrenceId,
+    executionSnapshot,
+    currentPosition,
+    executionStatus,
+    startedAt,
+    pausedAt,
+    finishedAt,
+  );
 }

@@ -23,9 +23,7 @@ class PrescriptionReductionProposal {
   final MinimumViablePrescription? minimumViablePrescription;
 
   bool get isValid =>
-      originalValue > 0 &&
-      proposedValue > 0 &&
-      proposedValue < originalValue;
+      originalValue > 0 && proposedValue > 0 && proposedValue < originalValue;
 
   Map<String, dynamic> toCanonicalMap() {
     return {

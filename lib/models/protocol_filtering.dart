@@ -9,17 +9,18 @@ List<Protocol> filterProtocols({
   final query = search.toLowerCase().trim();
 
   return protocols.where((protocol) {
-    final matchesSearch = query.isEmpty ||
+    final matchesSearch =
+        query.isEmpty ||
         protocol.name.toLowerCase().contains(query) ||
         protocol.protocolId.toLowerCase().contains(query) ||
         (protocol.goal ?? '').toLowerCase().contains(query) ||
         (protocol.capability ?? '').toLowerCase().contains(query) ||
         (protocol.equipment ?? '').toLowerCase().contains(query);
 
-    final matchesGoal =
-        filters.goal == null || protocol.goal == filters.goal;
+    final matchesGoal = filters.goal == null || protocol.goal == filters.goal;
 
-    final matchesEquipment = filters.equipment == null ||
+    final matchesEquipment =
+        filters.equipment == null ||
         (protocol.equipment ?? '').contains(filters.equipment!);
 
     final matchesCapability =

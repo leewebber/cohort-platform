@@ -18,16 +18,11 @@ class TrainingSessionSetRepository {
   ) async {
     final response = await SupabaseService.client
         .from(_tableName)
-        .upsert(
-          performance.toUpsertMap(),
-          onConflict: _upsertConflict,
-        )
+        .upsert(performance.toUpsertMap(), onConflict: _upsertConflict)
         .select()
         .single();
 
-    return StrengthSetPerformance.fromMap(
-      Map<String, dynamic>.from(response),
-    );
+    return StrengthSetPerformance.fromMap(Map<String, dynamic>.from(response));
   }
 
   Future<List<StrengthSetPerformance>> getSetsForTrainingSession(
@@ -43,9 +38,8 @@ class TrainingSessionSetRepository {
 
     return response
         .map<StrengthSetPerformance>(
-          (row) => StrengthSetPerformance.fromMap(
-            Map<String, dynamic>.from(row),
-          ),
+          (row) =>
+              StrengthSetPerformance.fromMap(Map<String, dynamic>.from(row)),
         )
         .toList();
   }
@@ -67,9 +61,8 @@ class TrainingSessionSetRepository {
 
     return response
         .map<StrengthSetPerformance>(
-          (row) => StrengthSetPerformance.fromMap(
-            Map<String, dynamic>.from(row),
-          ),
+          (row) =>
+              StrengthSetPerformance.fromMap(Map<String, dynamic>.from(row)),
         )
         .toList();
   }
@@ -96,14 +89,13 @@ class TrainingSessionSetRepository {
       return const [];
     }
 
-    final sessionIds =
-        sessionHeaders.map((header) => header.trainingSessionId).toList();
+    final sessionIds = sessionHeaders
+        .map((header) => header.trainingSessionId)
+        .toList();
 
     final response = await SupabaseService.client
         .from(_tableName)
-        .select(
-          '*, training_sessions!inner($_sessionCompletionFields)',
-        )
+        .select('*, training_sessions!inner($_sessionCompletionFields)')
         .eq('exercise_id', exerciseId)
         .eq('completed', true)
         .inFilter('training_session_id', sessionIds)
@@ -114,9 +106,8 @@ class TrainingSessionSetRepository {
 
     final rows = response
         .map(
-          (row) => ExerciseHistoryRawRow.fromMap(
-            Map<String, dynamic>.from(row),
-          ),
+          (row) =>
+              ExerciseHistoryRawRow.fromMap(Map<String, dynamic>.from(row)),
         )
         .toList();
 
@@ -136,8 +127,9 @@ class TrainingSessionSetRepository {
         }
       }
 
-      final extraCompare = (left.performance.isExtraSet ? 1 : 0)
-          .compareTo(right.performance.isExtraSet ? 1 : 0);
+      final extraCompare = (left.performance.isExtraSet ? 1 : 0).compareTo(
+        right.performance.isExtraSet ? 1 : 0,
+      );
       if (extraCompare != 0) {
         return extraCompare;
       }
@@ -148,7 +140,8 @@ class TrainingSessionSetRepository {
     return rows;
   }
 
-  Future<List<ExerciseHistorySessionHeader>> _fetchRecentCompletedSessionHeaders({
+  Future<List<ExerciseHistorySessionHeader>>
+  _fetchRecentCompletedSessionHeaders({
     required String athleteId,
     required String exerciseId,
     required int sessionLimit,
@@ -261,23 +254,26 @@ class TrainingSessionSetRepository {
       return null;
     }
 
-    final latestSets = response
-        .where((row) => row['training_session_id'] == latestSessionId)
-        .map(
-          (row) => StrengthSetPerformance.fromMap(
-            Map<String, dynamic>.from(row),
-          ),
-        )
-        .where((set) => !set.isExtraSet)
-        .toList()
-      ..sort((a, b) {
-        final extraCompare = (a.isExtraSet ? 1 : 0).compareTo(b.isExtraSet ? 1 : 0);
-        if (extraCompare != 0) {
-          return extraCompare;
-        }
+    final latestSets =
+        response
+            .where((row) => row['training_session_id'] == latestSessionId)
+            .map(
+              (row) => StrengthSetPerformance.fromMap(
+                Map<String, dynamic>.from(row),
+              ),
+            )
+            .where((set) => !set.isExtraSet)
+            .toList()
+          ..sort((a, b) {
+            final extraCompare = (a.isExtraSet ? 1 : 0).compareTo(
+              b.isExtraSet ? 1 : 0,
+            );
+            if (extraCompare != 0) {
+              return extraCompare;
+            }
 
-        return a.setNumber.compareTo(b.setNumber);
-      });
+            return a.setNumber.compareTo(b.setNumber);
+          });
 
     if (latestSets.isEmpty) {
       return null;

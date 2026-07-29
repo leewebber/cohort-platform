@@ -16,10 +16,10 @@ class AuthController extends ChangeNotifier {
   AuthController({
     AuthSessionPort? authService,
     ProfileProvisioningService? profileProvisioningService,
-  })  : _authService = authService ?? AuthService(),
-        _profileProvisioningService =
-            profileProvisioningService ?? ProfileProvisioningService(),
-        _state = AuthViewState.initial();
+  }) : _authService = authService ?? AuthService(),
+       _profileProvisioningService =
+           profileProvisioningService ?? ProfileProvisioningService(),
+       _state = AuthViewState.initial();
 
   final AuthSessionPort _authService;
   final ProfileProvisioningService _profileProvisioningService;
@@ -32,10 +32,7 @@ class AuthController extends ChangeNotifier {
   AuthViewState get state => _state;
 
   Future<void> initialize() async {
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     _authSubscription ??= _authService.authStateChanges.listen((_) {
@@ -45,14 +42,8 @@ class AuthController extends ChangeNotifier {
     await _refreshFromSession();
   }
 
-  Future<void> signIn({
-    required String email,
-    required String password,
-  }) async {
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+  Future<void> signIn({required String email, required String password}) async {
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     try {
@@ -94,10 +85,7 @@ class AuthController extends ChangeNotifier {
     required String displayName,
     required Set<UserRole> roles,
   }) async {
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     try {
@@ -164,10 +152,7 @@ class AuthController extends ChangeNotifier {
       return;
     }
 
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     await _completeProfileProvisioning(
@@ -196,10 +181,7 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<void> requestPasswordReset({required String email}) async {
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     try {
@@ -341,10 +323,7 @@ class AuthController extends ChangeNotifier {
       return;
     }
 
-    _state = _state.copyWith(
-      status: AuthStatus.loading,
-      clearError: true,
-    );
+    _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
     notifyListeners();
 
     try {

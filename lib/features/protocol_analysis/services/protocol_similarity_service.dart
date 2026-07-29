@@ -38,7 +38,8 @@ class ProtocolSimilarityService {
         reasons.add('Same dominant stimulus');
       }
 
-      if (sourceFingerprint.structureType == candidateFingerprint.structureType) {
+      if (sourceFingerprint.structureType ==
+          candidateFingerprint.structureType) {
         score += _structureTypeWeight;
         reasons.add(_structureMatchReason(sourceFingerprint.structureType));
       }
@@ -94,13 +95,12 @@ class ProtocolSimilarityService {
     required ProtocolAnalysis source,
     required List<ProtocolAnalysis> candidates,
   }) {
-    final results = candidates
-        .where((candidate) => candidate.protocolId != source.protocolId)
-        .map(
-          (candidate) => compare(source: source, candidate: candidate),
-        )
-        .toList()
-      ..sort((a, b) => b.score.compareTo(a.score));
+    final results =
+        candidates
+            .where((candidate) => candidate.protocolId != source.protocolId)
+            .map((candidate) => compare(source: source, candidate: candidate))
+            .toList()
+          ..sort((a, b) => b.score.compareTo(a.score));
 
     return results;
   }

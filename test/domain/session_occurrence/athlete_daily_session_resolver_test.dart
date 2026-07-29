@@ -15,7 +15,7 @@ void main() {
   late AthleteSessionOccurrenceIndex index;
 
   setUp(() {
-    registry = ProgrammeSessionOccurrenceRegistry();
+    registry = InMemoryProgrammeSessionOccurrenceRegistry();
     index = AthleteSessionOccurrenceIndex();
   });
 
@@ -34,7 +34,7 @@ void main() {
       ),
       recordedAt: t0,
       registry: registry,
-      athleteIndex: index,
+      occurrenceRepository: index,
     );
     return result.occurrence!;
   }
@@ -44,9 +44,12 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.noSessionScheduled);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.noSessionScheduled,
+      );
       expect(result.hasSingleOccurrence, isFalse);
     });
 
@@ -55,9 +58,12 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.sessionPlanned);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.sessionPlanned,
+      );
       expect(result.occurrence!.occurrenceId, startsWith('pso:'));
     });
 
@@ -65,7 +71,9 @@ void main() {
       final draft = buildTimedPlanningSession(protocolId: 'proto-1');
       final snapshot = applyTimedSessionPlan(
         draft: draft,
-        constraints: const AdaptationConstraintContext(availableDurationMin: 55),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 55,
+        ),
         input: timedPlanningInputFromDraft(draft),
       ).snapshot!;
       final scheduled = _materialize();
@@ -77,9 +85,12 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.sessionAdapted);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.sessionAdapted,
+      );
       expect(result.hasExecutionSnapshot, isTrue);
     });
 
@@ -94,9 +105,12 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.sessionCompleted);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.sessionCompleted,
+      );
     });
 
     test('skipped session outcome', () {
@@ -106,9 +120,12 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.sessionSkipped);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.sessionSkipped,
+      );
     });
 
     test('cancelled session outcome', () {
@@ -118,18 +135,24 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.sessionCancelled);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.sessionCancelled,
+      );
     });
 
     test('invalid lookup for empty athlete id', () {
       final result = resolver.resolve(
         athleteId: '  ',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.invalidLookup);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.invalidLookup,
+      );
     });
 
     test('multiple sessions on same day reported explicitly', () {
@@ -138,7 +161,7 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-1',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
       expect(
         result.outcome,
@@ -150,8 +173,16 @@ void main() {
 
     test('deterministic resolution for identical inputs', () {
       _materialize();
-      final a = resolver.resolve(athleteId: 'athlete-1', date: date, index: index);
-      final b = resolver.resolve(athleteId: 'athlete-1', date: date, index: index);
+      final a = resolver.resolve(
+        athleteId: 'athlete-1',
+        date: date,
+        occurrenceRepository: index,
+      );
+      final b = resolver.resolve(
+        athleteId: 'athlete-1',
+        date: date,
+        occurrenceRepository: index,
+      );
       expect(a, equals(b));
     });
 
@@ -160,15 +191,20 @@ void main() {
       final result = resolver.resolve(
         athleteId: 'athlete-2',
         date: date,
-        index: index,
+        occurrenceRepository: index,
       );
-      expect(result.outcome, AthleteDailySessionResolutionOutcome.noSessionScheduled);
+      expect(
+        result.outcome,
+        AthleteDailySessionResolutionOutcome.noSessionScheduled,
+      );
     });
 
     test('factory registers into athlete index when provided', () {
       _materialize();
       expect(
-        index.occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date).length,
+        index
+            .occurrencesOnDay(athleteId: 'athlete-1', calendarDate: date)
+            .length,
         1,
       );
     });

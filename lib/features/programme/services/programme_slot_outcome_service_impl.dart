@@ -40,10 +40,14 @@ class ProgrammeSlotOutcomeServiceImpl implements ProgrammeSlotOutcomeService {
       sessionOrder: resolution.slotOrder!,
       outcomeStatus: outcomeStatus,
       trainingSessionId: trainingSessionId ?? existing?.trainingSessionId,
-      replacementProtocolId: replacementProtocolId ?? existing?.replacementProtocolId,
+      replacementProtocolId:
+          replacementProtocolId ?? existing?.replacementProtocolId,
       resolutionNote: resolutionNote ?? existing?.resolutionNote,
-      resolvedAt: resolvedAt ??
-          (outcomeStatus.isTerminal ? DateTime.now().toUtc() : existing?.resolvedAt),
+      resolvedAt:
+          resolvedAt ??
+          (outcomeStatus.isTerminal
+              ? DateTime.now().toUtc()
+              : existing?.resolvedAt),
     );
 
     return _slotOutcomeStore.upsert(outcome);

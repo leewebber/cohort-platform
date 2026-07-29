@@ -11,7 +11,9 @@ class SessionRevisionDeleteSupabaseStore extends SessionRevisionDeleteStore {
   Future<void> deleteRevision(String protocolId) async {
     final normalizedProtocolId = protocolId.trim();
     if (normalizedProtocolId.isEmpty) {
-      throw const SessionRevisionDeleteStoreException('protocolId is required.');
+      throw const SessionRevisionDeleteStoreException(
+        'protocolId is required.',
+      );
     }
 
     await SupabaseService.client

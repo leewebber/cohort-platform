@@ -94,103 +94,108 @@ class _AthleteRosterScreenState extends State<AthleteRosterScreen> {
     return CoachRouteGuard.wrap(
       title: 'Athletes',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SectionTitle('Athletes'),
-              const SizedBox(height: CohortSpacing.sm),
-              Text('Your roster', style: CohortTextStyles.h1),
-              const SizedBox(height: CohortSpacing.sm),
-              Text(
-                'Invite private athletes and assign their training.',
-                style: CohortTextStyles.body,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              CohortButton(
-                label: _controller.isCreatingInvite
-                    ? 'Creating invite…'
-                    : 'Invite athlete',
-                onPressed: _controller.isCreatingInvite ? () {} : _showInviteSheet,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              Expanded(child: _buildBody()),
-            ],
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                const SectionTitle('Athletes'),
+                const SizedBox(height: CohortSpacing.sm),
+                Text('Your roster', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  'Invite private athletes and assign their training.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                CohortButton(
+                  label: _controller.isCreatingInvite
+                      ? 'Creating invite…'
+                      : 'Invite athlete',
+                  onPressed: _controller.isCreatingInvite
+                      ? () {}
+                      : _showInviteSheet,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                Expanded(child: _buildBody()),
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 
   Widget _buildBody() {
     return switch (_controller.status) {
       AthleteRosterStatus.loading => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: CircularProgressIndicator(),
+      ),
       AthleteRosterStatus.coachRoleRequired => _MessageCard(
-          message: 'A coach profile is required to manage athletes.',
-        ),
+        message: 'A coach profile is required to manage athletes.',
+      ),
       AthleteRosterStatus.error => _MessageCard(
-          message: _controller.errorMessage ?? 'Unable to load roster.',
-          actionLabel: 'Retry',
-          onAction: _controller.load,
-        ),
+        message: _controller.errorMessage ?? 'Unable to load roster.',
+        actionLabel: 'Retry',
+        onAction: _controller.load,
+      ),
       AthleteRosterStatus.empty => _MessageCard(
-          message:
-              'No athletes linked yet. Create an invitation and share the code.',
-        ),
+        message:
+            'No athletes linked yet. Create an invitation and share the code.',
+      ),
       AthleteRosterStatus.ready => RefreshIndicator(
-          onRefresh: _controller.load,
-          child: ListView(
-            children: [
-              if (_controller.pendingInvites.isNotEmpty) ...[
-                const SectionTitle('Pending invitations'),
-                const SizedBox(height: CohortSpacing.sm),
-                for (final invite in _controller.pendingInvites)
-                  _PendingInviteCard(
-                    invite: invite,
-                    onRevoke: () => _controller.revokeInvite(invite.id),
-                  ),
-                const SizedBox(height: CohortSpacing.lg),
-              ],
-              const SectionTitle('Linked athletes'),
+        onRefresh: _controller.load,
+        child: ListView(
+          children: [
+            if (_controller.pendingInvites.isNotEmpty) ...[
+              const SectionTitle('Pending invitations'),
               const SizedBox(height: CohortSpacing.sm),
-              for (final athlete in _controller.athletes)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: CohortSpacing.md),
-                  child: CohortCard(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => AthleteDetailScreen(athlete: athlete),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(athlete.displayName, style: CohortTextStyles.cardTitle),
-                        const SizedBox(height: CohortSpacing.xs),
-                        Text(
-                          athlete.hasActiveAssignment
-                              ? '${athlete.activeProgrammeName ?? 'Programme'} · ${athlete.activeProgrammeVersionLabel ?? ''}'
-                              : 'No active programme',
-                          style: CohortTextStyles.body,
-                        ),
-                      ],
-                    ),
+              for (final invite in _controller.pendingInvites)
+                _PendingInviteCard(
+                  invite: invite,
+                  onRevoke: () => _controller.revokeInvite(invite.id),
+                ),
+              const SizedBox(height: CohortSpacing.lg),
+            ],
+            const SectionTitle('Linked athletes'),
+            const SizedBox(height: CohortSpacing.sm),
+            for (final athlete in _controller.athletes)
+              Padding(
+                padding: const EdgeInsets.only(bottom: CohortSpacing.md),
+                child: CohortCard(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => AthleteDetailScreen(athlete: athlete),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        athlete.displayName,
+                        style: CohortTextStyles.cardTitle,
+                      ),
+                      const SizedBox(height: CohortSpacing.xs),
+                      Text(
+                        athlete.hasActiveAssignment
+                            ? '${athlete.activeProgrammeName ?? 'Programme'} · ${athlete.activeProgrammeVersionLabel ?? ''}'
+                            : 'No active programme',
+                        style: CohortTextStyles.body,
+                      ),
+                    ],
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
+      ),
     };
   }
 }
@@ -220,10 +225,7 @@ class _InviteCodeDisplay extends StatelessWidget {
 }
 
 class _PendingInviteCard extends StatelessWidget {
-  const _PendingInviteCard({
-    required this.invite,
-    required this.onRevoke,
-  });
+  const _PendingInviteCard({required this.invite, required this.onRevoke});
 
   final CoachAthleteInvite invite;
   final VoidCallback onRevoke;
@@ -261,11 +263,7 @@ class _PendingInviteCard extends StatelessWidget {
 }
 
 class _MessageCard extends StatelessWidget {
-  const _MessageCard({
-    required this.message,
-    this.actionLabel,
-    this.onAction,
-  });
+  const _MessageCard({required this.message, this.actionLabel, this.onAction});
 
   final String message;
   final String? actionLabel;

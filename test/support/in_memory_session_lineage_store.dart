@@ -57,7 +57,9 @@ class InMemorySessionLineageStore extends SessionLineageStore {
   }
 
   @override
-  Future<SessionRevisionIdentity?> getRevisionIdentity(String protocolId) async {
+  Future<SessionRevisionIdentity?> getRevisionIdentity(
+    String protocolId,
+  ) async {
     final metadata = revisionMetadata[protocolId];
     if (metadata == null) return null;
 

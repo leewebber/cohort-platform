@@ -1,9 +1,5 @@
 /// How strongly a constraint should affect candidate elimination vs ranking.
-enum AdaptationConstraintSeverity {
-  mild,
-  moderate,
-  severe,
-}
+enum AdaptationConstraintSeverity { mild, moderate, severe }
 
 extension AdaptationConstraintSeverityDb on AdaptationConstraintSeverity {
   String get dbValue => name;

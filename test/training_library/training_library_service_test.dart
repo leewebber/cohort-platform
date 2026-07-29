@@ -11,22 +11,28 @@ import '../support/session_library_test_support.dart';
 
 void main() {
   group('TrainingLibraryService', () {
-    test('loadReusableSessionSummaries returns reusable sessions only', () async {
-      final repository = FakeTrainingLibraryRepository(
-        reusableSessions: const [
-          Protocol(protocolId: testDurableSessionId, name: 'Morning Strength'),
-        ],
-      );
-      final service = TrainingLibraryService(protocolRepository: repository);
+    test(
+      'loadReusableSessionSummaries returns reusable sessions only',
+      () async {
+        final repository = FakeTrainingLibraryRepository(
+          reusableSessions: const [
+            Protocol(
+              protocolId: testDurableSessionId,
+              name: 'Morning Strength',
+            ),
+          ],
+        );
+        final service = TrainingLibraryService(protocolRepository: repository);
 
-      final summaries = await service.loadReusableSessionSummaries(
-        ownerId: 'dev-coach',
-      );
+        final summaries = await service.loadReusableSessionSummaries(
+          ownerId: 'dev-coach',
+        );
 
-      expect(summaries, hasLength(1));
-      expect(summaries.first.title, 'Morning Strength');
-      expect(summaries.first.isReusableSession, isTrue);
-    });
+        expect(summaries, hasLength(1));
+        expect(summaries.first.title, 'Morning Strength');
+        expect(summaries.first.isReusableSession, isTrue);
+      },
+    );
 
     test('search filters by title case-insensitively', () async {
       final repository = FakeTrainingLibraryRepository(
@@ -48,36 +54,39 @@ void main() {
   });
 
   group('SessionLibraryAuthoringCoordinator', () {
-    test('createSession assigns durable ID and coach_private metadata', () async {
-      final protocolService = FakeProtocolBuilderService();
-      final coordinator = SessionLibraryAuthoringCoordinator(
-        protocolBuilderService: protocolService,
-        idGenerator: FixedSessionIdGenerator(testDurableSessionId),
-        coachIdentity: const FixedCoachIdentity('dev-coach'),
-      );
+    test(
+      'createSession assigns durable ID and coach_private metadata',
+      () async {
+        final protocolService = FakeProtocolBuilderService();
+        final coordinator = SessionLibraryAuthoringCoordinator(
+          protocolBuilderService: protocolService,
+          idGenerator: FixedSessionIdGenerator(testDurableSessionId),
+          coachIdentity: const FixedCoachIdentity('dev-coach'),
+        );
 
-      final result = await coordinator.createSession(
-        draft: buildValidLibrarySessionDraft(),
-      );
+        final result = await coordinator.createSession(
+          draft: buildValidLibrarySessionDraft(),
+        );
 
-      expect(result.isSuccess, isTrue);
-      expect(result.contentId, testDurableSessionId);
-      expect(protocolService.librarySaveCallCount, 1);
+        expect(result.isSuccess, isTrue);
+        expect(result.contentId, testDurableSessionId);
+        expect(protocolService.librarySaveCallCount, 1);
 
-      final saved = protocolService.libraryDrafts[testDurableSessionId];
-      expect(saved!.authoringScope, TrainingAuthoringScope.coachPrivate);
-      expect(saved.programmeVersionId, isNull);
-      expect(saved.published, isTrue);
-      expect(saved.ownerId, 'dev-coach');
-    });
+        final saved = protocolService.libraryDrafts[testDurableSessionId];
+        expect(saved!.authoringScope, TrainingAuthoringScope.coachPrivate);
+        expect(saved.programmeVersionId, isNull);
+        expect(saved.published, isTrue);
+        expect(saved.ownerId, 'dev-coach');
+      },
+    );
 
     test('updateSession preserves ID and does not duplicate row', () async {
       final protocolService = FakeProtocolBuilderService();
       protocolService.libraryDrafts[testDurableSessionId] =
           buildValidLibrarySessionDraft(
-        protocolId: testDurableSessionId,
-        name: 'Original',
-      );
+            protocolId: testDurableSessionId,
+            name: 'Original',
+          );
 
       final coordinator = SessionLibraryAuthoringCoordinator(
         protocolBuilderService: protocolService,
@@ -94,8 +103,10 @@ void main() {
 
       expect(result.status.name, 'updated');
       expect(protocolService.libraryDrafts.length, 1);
-      expect(protocolService.libraryDrafts[testDurableSessionId]!.name,
-          'Updated Title');
+      expect(
+        protocolService.libraryDrafts[testDurableSessionId]!.name,
+        'Updated Title',
+      );
     });
 
     test('rejects programme-only draft on update', () async {
@@ -118,9 +129,7 @@ void main() {
 }
 
 class FakeTrainingLibraryRepository extends ProtocolRepository {
-  FakeTrainingLibraryRepository({
-    this.reusableSessions = const [],
-  });
+  FakeTrainingLibraryRepository({this.reusableSessions = const []});
 
   final List<Protocol> reusableSessions;
 

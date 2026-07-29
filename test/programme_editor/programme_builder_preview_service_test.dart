@@ -48,8 +48,10 @@ void main() {
 
     expect(preview.programmeName, 'Foundation Test');
     expect(preview.weeks, hasLength(1));
-    expect(preview.weeks.single.days.single.slots.single.protocolName,
-        'Bodyweight Grinder');
+    expect(
+      preview.weeks.single.days.single.slots.single.protocolName,
+      'Bodyweight Grinder',
+    );
     expect(preview.initialAthletePreview, isNotNull);
     expect(preview.initialAthletePreview!.title, 'Bodyweight Grinder');
   });

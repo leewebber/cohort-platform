@@ -87,15 +87,15 @@ class ProgrammeVersionDraftMetadata {
       ownerType: ownerType ?? this.ownerType,
       ownerId: clearOwnerId ? null : (ownerId ?? this.ownerId),
       name: name ?? this.name,
-      description:
-          clearDescription ? null : (description ?? this.description),
-      durationWeeks:
-          clearDurationWeeks ? null : (durationWeeks ?? this.durationWeeks),
-      targetAthlete:
-          clearTargetAthlete ? null : (targetAthlete ?? this.targetAthlete),
+      description: clearDescription ? null : (description ?? this.description),
+      durationWeeks: clearDurationWeeks
+          ? null
+          : (durationWeeks ?? this.durationWeeks),
+      targetAthlete: clearTargetAthlete
+          ? null
+          : (targetAthlete ?? this.targetAthlete),
       difficulty: clearDifficulty ? null : (difficulty ?? this.difficulty),
-      primaryGoal:
-          clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
+      primaryGoal: clearPrimaryGoal ? null : (primaryGoal ?? this.primaryGoal),
       equipmentRequirements: clearEquipmentRequirements
           ? null
           : (equipmentRequirements ?? this.equipmentRequirements),

@@ -77,10 +77,7 @@ void main() {
     test('strength template includes rest day', () {
       final template = builder.build(ProgrammeSeedTemplate.strength);
       expect(template.allWeeks.first.days, hasLength(2));
-      expect(
-        template.allWeeks.first.days.last.dayType,
-        ProgrammeDayType.rest,
-      );
+      expect(template.allWeeks.first.days.last.dayType, ProgrammeDayType.rest);
     });
 
     test('hybrid template includes three training days and rest', () {
@@ -99,7 +96,8 @@ void main() {
         final validation = validationService.validate(documentFor(template));
         expect(
           validation.issues.any(
-            (issue) => issue.code == ProgrammeValidationCode.slotProtocolRequired,
+            (issue) =>
+                issue.code == ProgrammeValidationCode.slotProtocolRequired,
           ),
           isTrue,
           reason: '${template.label} should surface missing protocol errors',

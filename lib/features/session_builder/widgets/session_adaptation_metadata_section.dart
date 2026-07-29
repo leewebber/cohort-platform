@@ -48,7 +48,8 @@ class SessionAdaptationMetadataSection extends StatelessWidget {
           label: 'Primary session intent',
           value: primary,
           options: AdaptationMetadataBuilderVocabulary.orderedSessionIntents,
-          displayLabel: AdaptationMetadataBuilderVocabulary.sessionIntentDisplayLabel,
+          displayLabel:
+              AdaptationMetadataBuilderVocabulary.sessionIntentDisplayLabel,
           onChanged: (value) {
             editing.setPrimarySessionIntent(value);
             onChanged();
@@ -67,7 +68,8 @@ class SessionAdaptationMetadataSection extends StatelessWidget {
           label: 'Minimum viable duration (min)',
           controller: minimumViableDurationController,
           keyboardType: TextInputType.number,
-          helperText: AdaptationMetadataBuilderVocabulary.minimumViableDurationHelper,
+          helperText:
+              AdaptationMetadataBuilderVocabulary.minimumViableDurationHelper,
           onChanged: (_) {
             final parsed = int.tryParse(
               minimumViableDurationController.text.trim(),
@@ -83,7 +85,9 @@ class SessionAdaptationMetadataSection extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
               child: Text(
                 message,
-                style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
             ),
         ],
@@ -132,7 +136,10 @@ class SessionBuilderEnumDropdown<T> extends StatelessWidget {
               ...options.map(
                 (option) => DropdownMenuItem<T?>(
                   value: option,
-                  child: Text(displayLabel(option), style: CohortTextStyles.small),
+                  child: Text(
+                    displayLabel(option),
+                    style: CohortTextStyles.small,
+                  ),
                 ),
               ),
             ],

@@ -39,16 +39,18 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
   }
 
   @override
-  Future<List<ProgrammeVersion>> listVersionsForLineage(String lineageId) async {
+  Future<List<ProgrammeVersion>> listVersionsForLineage(
+    String lineageId,
+  ) async {
     final rows = await SupabaseService.client
         .from(_versionsTable)
         .select()
         .eq('lineage_id', lineageId.trim())
         .order('version_number');
 
-    return List<Map<String, dynamic>>.from(rows as List)
-        .map(ProgrammeVersion.fromMap)
-        .toList();
+    return List<Map<String, dynamic>>.from(
+      rows as List,
+    ).map(ProgrammeVersion.fromMap).toList();
   }
 
   @override
@@ -118,7 +120,8 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
           sessionLineageId: metadata?.sessionLineageId ?? 'unknown-lineage',
           sessionRevisionNumber: metadata?.revisionNumber ?? 1,
           sessionName: metadata?.sessionName ?? 'Session',
-          sessionLifecycleStatus: metadata?.lifecycleStatus ??
+          sessionLifecycleStatus:
+              metadata?.lifecycleStatus ??
               SessionRevisionLifecycleStatus.published,
           weekNumber: week['week_number'] ?? 1,
           dayKey: day['day_key']?.toString() ?? 'day_1',
@@ -143,9 +146,9 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
         .eq('programme_version_id', programmeVersionId.trim())
         .eq('status', ProgrammeAssignmentStatus.active.dbValue);
 
-    final assignments = List<Map<String, dynamic>>.from(rows as List)
-        .map(ProgrammeAssignment.fromMap)
-        .toList();
+    final assignments = List<Map<String, dynamic>>.from(
+      rows as List,
+    ).map(ProgrammeAssignment.fromMap).toList();
 
     return buildActiveAssignmentImpact(
       assignments: assignments,
@@ -166,7 +169,9 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
           .eq('programme_version_id', normalizedVersionId);
 
       final assignmentVersionById = {
-        for (final row in List<Map<String, dynamic>>.from(assignmentRows as List))
+        for (final row in List<Map<String, dynamic>>.from(
+          assignmentRows as List,
+        ))
           row['id']?.toString(): row['programme_version_id']?.toString(),
       };
 
@@ -176,12 +181,18 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
           ? <Map<String, dynamic>>[]
           : List<Map<String, dynamic>>.from(
               await SupabaseService.client
-                  .from(_recordsTable)
-                  .select(
-                    'record_id, athlete_id, assignment_id, programme_session_id, source_protocol_id, status, started_at, completed_at',
-                  )
-                  .inFilter('assignment_id', assignmentVersionById.keys.toList())
-                  .neq('status', TrainingSessionRecordStatus.inProgress.dbValue)
+                      .from(_recordsTable)
+                      .select(
+                        'record_id, athlete_id, assignment_id, programme_session_id, source_protocol_id, status, started_at, completed_at',
+                      )
+                      .inFilter(
+                        'assignment_id',
+                        assignmentVersionById.keys.toList(),
+                      )
+                      .neq(
+                        'status',
+                        TrainingSessionRecordStatus.inProgress.dbValue,
+                      )
                   as List,
             );
 
@@ -190,12 +201,15 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
           ? <Map<String, dynamic>>[]
           : List<Map<String, dynamic>>.from(
               await SupabaseService.client
-                  .from(_recordsTable)
-                  .select(
-                    'record_id, athlete_id, assignment_id, programme_session_id, source_protocol_id, status, started_at, completed_at',
-                  )
-                  .inFilter('programme_session_id', slotIds)
-                  .neq('status', TrainingSessionRecordStatus.inProgress.dbValue)
+                      .from(_recordsTable)
+                      .select(
+                        'record_id, athlete_id, assignment_id, programme_session_id, source_protocol_id, status, started_at, completed_at',
+                      )
+                      .inFilter('programme_session_id', slotIds)
+                      .neq(
+                        'status',
+                        TrainingSessionRecordStatus.inProgress.dbValue,
+                      )
                   as List,
             );
 
@@ -227,10 +241,16 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
           ? <Map<String, dynamic>>[]
           : List<Map<String, dynamic>>.from(
               await SupabaseService.client
-                  .from(_outcomesTable)
-                  .select('assignment_id, outcome_status')
-                  .inFilter('assignment_id', assignmentVersionById.keys.toList())
-                  .eq('outcome_status', ProgrammeSlotOutcomeStatus.skipped.dbValue)
+                      .from(_outcomesTable)
+                      .select('assignment_id, outcome_status')
+                      .inFilter(
+                        'assignment_id',
+                        assignmentVersionById.keys.toList(),
+                      )
+                      .eq(
+                        'outcome_status',
+                        ProgrammeSlotOutcomeStatus.skipped.dbValue,
+                      )
                   as List,
             );
 
@@ -241,9 +261,10 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
       if (recordIds.isNotEmpty) {
         final blockRows = List<Map<String, dynamic>>.from(
           await SupabaseService.client
-              .from(_blockResultsTable)
-              .select('block_result_id, session_record_id')
-              .inFilter('session_record_id', recordIds) as List,
+                  .from(_blockResultsTable)
+                  .select('block_result_id, session_record_id')
+                  .inFilter('session_record_id', recordIds)
+              as List,
         );
 
         final blockIds = blockRows
@@ -256,8 +277,9 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
               .from(_exerciseResultsTable)
               .select('exercise_result_id')
               .inFilter('block_result_id', blockIds);
-          exerciseResultCount =
-              List<Map<String, dynamic>>.from(exerciseRows as List).length;
+          exerciseResultCount = List<Map<String, dynamic>>.from(
+            exerciseRows as List,
+          ).length;
         }
       }
 
@@ -374,19 +396,22 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
       accumulator.isLegacyReference = true;
     }
 
-    final results = byExercise.values
-        .map(
-          (accumulator) => ProgrammeVersionExerciseReference(
-            exerciseId: accumulator.exerciseId,
-            exerciseName: accumulator.exerciseName ?? accumulator.exerciseId,
-            sessionRevisionIds: accumulator.sessionRevisionIds.toList()..sort(),
-            sessionCount: accumulator.sessionRevisionIds.length,
-            blockLinkCount: accumulator.blockLinkCount,
-            isLegacyReference: accumulator.isLegacyReference,
-          ),
-        )
-        .toList()
-      ..sort(compareProgrammeVersionExerciseReferences);
+    final results =
+        byExercise.values
+            .map(
+              (accumulator) => ProgrammeVersionExerciseReference(
+                exerciseId: accumulator.exerciseId,
+                exerciseName:
+                    accumulator.exerciseName ?? accumulator.exerciseId,
+                sessionRevisionIds: accumulator.sessionRevisionIds.toList()
+                  ..sort(),
+                sessionCount: accumulator.sessionRevisionIds.length,
+                blockLinkCount: accumulator.blockLinkCount,
+                isLegacyReference: accumulator.isLegacyReference,
+              ),
+            )
+            .toList()
+          ..sort(compareProgrammeVersionExerciseReferences);
 
     return results;
   }
@@ -426,10 +451,9 @@ class ProgrammeVersionImpactSupabaseStore extends ProgrammeVersionImpactStore {
         .select('id')
         .eq('version_id', versionId);
 
-    final weekIds = List<Map<String, dynamic>>.from(weekRows as List)
-        .map((row) => row['id']?.toString())
-        .whereType<String>()
-        .toList();
+    final weekIds = List<Map<String, dynamic>>.from(
+      weekRows as List,
+    ).map((row) => row['id']?.toString()).whereType<String>().toList();
 
     if (weekIds.isEmpty) return const {};
 
@@ -521,10 +545,7 @@ class _ProtocolMetadata {
 }
 
 class _ExerciseAccumulator {
-  _ExerciseAccumulator({
-    required this.exerciseId,
-    this.exerciseName,
-  });
+  _ExerciseAccumulator({required this.exerciseId, this.exerciseName});
 
   final String exerciseId;
   String? exerciseName;

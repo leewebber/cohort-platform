@@ -12,10 +12,7 @@ import '../widgets/auth_scaffold.dart';
 import '../widgets/role_selection_chips.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
-  const ProfileSetupScreen({
-    super.key,
-    required this.controller,
-  });
+  const ProfileSetupScreen({super.key, required this.controller});
 
   final AuthController controller;
 
@@ -75,7 +72,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           const SizedBox(height: CohortSpacing.xs),
           Text(
             'Select all that apply.',
-            style: CohortTextStyles.small.copyWith(color: CohortColors.textSecondary),
+            style: CohortTextStyles.small.copyWith(
+              color: CohortColors.textSecondary,
+            ),
           ),
           const SizedBox(height: CohortSpacing.sm),
           RoleSelectionChips(
@@ -86,7 +85,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             const SizedBox(height: CohortSpacing.sm),
             Text(
               state.errorMessage!,
-              style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
             ),
           ],
           const SizedBox(height: CohortSpacing.lg),

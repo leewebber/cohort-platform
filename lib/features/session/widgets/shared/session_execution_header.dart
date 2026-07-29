@@ -19,16 +19,10 @@ class SessionExecutionHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          modeLabel,
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text(modeLabel, style: CohortTextStyles.eyebrow),
         if (sessionTitle != null) ...[
           const SizedBox(height: CohortSpacing.sm),
-          Text(
-            sessionTitle!,
-            style: CohortTextStyles.h2,
-          ),
+          Text(sessionTitle!, style: CohortTextStyles.h2),
         ],
       ],
     );

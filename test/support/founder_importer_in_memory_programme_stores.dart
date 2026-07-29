@@ -151,9 +151,7 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
           )
           .toList(),
       slots: tables.slots
-          .where(
-            (row) => tables.days.any((day) => day.id == row.dayId),
-          )
+          .where((row) => tables.days.any((day) => day.id == row.dayId))
           .toList(),
     );
   }
@@ -234,9 +232,9 @@ class InMemoryProgrammeVersionStore implements ProgrammeVersionStore {
       final phaseId = weekNode.week.phaseId == null
           ? null
           : phaseIdsByLocalId[weekNode.week.phaseId!] ??
-              (DatabaseUuid.isValidDatabaseUuid(weekNode.week.phaseId)
-                  ? weekNode.week.phaseId!.trim()
-                  : null);
+                (DatabaseUuid.isValidDatabaseUuid(weekNode.week.phaseId)
+                    ? weekNode.week.phaseId!.trim()
+                    : null);
 
       tables.weeks.add(
         ProgrammeVersionWeek(

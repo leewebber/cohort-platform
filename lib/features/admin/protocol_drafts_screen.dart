@@ -39,9 +39,7 @@ class _ProtocolDraftsScreenState extends State<ProtocolDraftsScreen> {
     Navigator.of(context)
         .push(
           MaterialPageRoute(
-            builder: (_) => ProtocolBuilderScreen(
-              protocolId: draft.protocolId,
-            ),
+            builder: (_) => ProtocolBuilderScreen(protocolId: draft.protocolId),
           ),
         )
         .then((_) => _reloadDrafts());
@@ -49,11 +47,7 @@ class _ProtocolDraftsScreenState extends State<ProtocolDraftsScreen> {
 
   void _openNewDraft() {
     Navigator.of(context)
-        .push(
-          MaterialPageRoute(
-            builder: (_) => const ProtocolBuilderScreen(),
-          ),
-        )
+        .push(MaterialPageRoute(builder: (_) => const ProtocolBuilderScreen()))
         .then((_) => _reloadDrafts());
   }
 
@@ -62,136 +56,134 @@ class _ProtocolDraftsScreenState extends State<ProtocolDraftsScreen> {
     return CoachRouteGuard.wrap(
       title: 'Draft protocols',
       child: Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('← Back'),
-              ),
-              const SizedBox(height: CohortSpacing.md),
-              const SectionTitle('Coach Studio'),
-              const SizedBox(height: CohortSpacing.md),
-              const Text(
-                'Draft Protocols',
-                style: CohortTextStyles.h1,
-              ),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'Unpublished protocols saved from Protocol Builder.',
-                style: CohortTextStyles.body,
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              Expanded(
-                child: FutureBuilder<List<ProtocolDraftSummary>>(
-                  future: _draftsFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Text(
-                          'Loading drafts...',
-                          style: CohortTextStyles.body,
-                        ),
-                      );
-                    }
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('← Back'),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                const SectionTitle('Coach Studio'),
+                const SizedBox(height: CohortSpacing.md),
+                const Text('Draft Protocols', style: CohortTextStyles.h1),
+                const SizedBox(height: CohortSpacing.sm),
+                const Text(
+                  'Unpublished protocols saved from Protocol Builder.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.xl),
+                Expanded(
+                  child: FutureBuilder<List<ProtocolDraftSummary>>(
+                    future: _draftsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: Text(
+                            'Loading drafts...',
+                            style: CohortTextStyles.body,
+                          ),
+                        );
+                      }
 
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          snapshot.error is ProtocolBuilderException
-                              ? (snapshot.error! as ProtocolBuilderException)
-                                  .message
-                              : 'We could not load drafts right now.',
-                          style: CohortTextStyles.body,
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            snapshot.error is ProtocolBuilderException
+                                ? (snapshot.error! as ProtocolBuilderException)
+                                      .message
+                                : 'We could not load drafts right now.',
+                            style: CohortTextStyles.body,
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
 
-                    final drafts = snapshot.data ?? [];
+                      final drafts = snapshot.data ?? [];
 
-                    if (drafts.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              'No draft protocols yet.',
-                              style: CohortTextStyles.body,
-                            ),
-                            const SizedBox(height: CohortSpacing.md),
-                            TextButton(
-                              onPressed: _openNewDraft,
-                              child: Text(
-                                'Create a protocol',
-                                style: CohortTextStyles.body.copyWith(
-                                  color: CohortColors.olive,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return ListView.separated(
-                      itemCount: drafts.length,
-                      separatorBuilder: (_, _) =>
-                          const SizedBox(height: CohortSpacing.md),
-                      itemBuilder: (context, index) {
-                        final draft = drafts[index];
-                        final subtitleParts = <String>[
-                          draft.protocolId,
-                          if (draft.sessionType != null &&
-                              draft.sessionType!.trim().isNotEmpty)
-                            draft.sessionType!,
-                          if (draft.durationMin != null)
-                            '${draft.durationMin} min',
-                        ];
-
-                        return CohortCard(
-                          onTap: () => _openDraft(draft),
-                          child: Row(
+                      if (drafts.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      draft.name,
-                                      style: CohortTextStyles.cardTitle,
-                                    ),
-                                    const SizedBox(height: CohortSpacing.sm),
-                                    Text(
-                                      subtitleParts.join(' · '),
-                                      style: CohortTextStyles.small,
-                                    ),
-                                  ],
-                                ),
+                              const Text(
+                                'No draft protocols yet.',
+                                style: CohortTextStyles.body,
                               ),
-                              const SizedBox(width: CohortSpacing.lg),
-                              Text(
-                                'DRAFT',
-                                style: CohortTextStyles.eyebrow.copyWith(
-                                  color: CohortColors.warning,
+                              const SizedBox(height: CohortSpacing.md),
+                              TextButton(
+                                onPressed: _openNewDraft,
+                                child: Text(
+                                  'Create a protocol',
+                                  style: CohortTextStyles.body.copyWith(
+                                    color: CohortColors.olive,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         );
-                      },
-                    );
-                  },
+                      }
+
+                      return ListView.separated(
+                        itemCount: drafts.length,
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(height: CohortSpacing.md),
+                        itemBuilder: (context, index) {
+                          final draft = drafts[index];
+                          final subtitleParts = <String>[
+                            draft.protocolId,
+                            if (draft.sessionType != null &&
+                                draft.sessionType!.trim().isNotEmpty)
+                              draft.sessionType!,
+                            if (draft.durationMin != null)
+                              '${draft.durationMin} min',
+                          ];
+
+                          return CohortCard(
+                            onTap: () => _openDraft(draft),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        draft.name,
+                                        style: CohortTextStyles.cardTitle,
+                                      ),
+                                      const SizedBox(height: CohortSpacing.sm),
+                                      Text(
+                                        subtitleParts.join(' · '),
+                                        style: CohortTextStyles.small,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: CohortSpacing.lg),
+                                Text(
+                                  'DRAFT',
+                                  style: CohortTextStyles.eyebrow.copyWith(
+                                    color: CohortColors.warning,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

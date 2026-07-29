@@ -1,6 +1,6 @@
 # 66 — V2.0 End-to-End Execution and Adaptation
 
-**Status:** Implemented (Sprint 3)  
+**Status:** Implemented (Sprint 3; execution flow updated Phase 2 Sprint 9–10)  
 **Related:** `43_Programme_Engine_Service_Contracts.md`, `52_M8_Performance_Capture_and_Training_History.md`, `65_V2_0_Athlete_Management_And_Assignment.md`
 
 ---
@@ -28,10 +28,12 @@ Coach assigns programme
 | Training session record | Live — immutable M8 performance tree |
 | Assignment progression | Live — `ProgrammeSessionProgressionCoordinator` |
 | Schedule resolution | Live — `ProgrammeScheduleResolver` (read-only) |
-| Pre-session adaptation | Evaluate only — `AdaptationDecisionService` + Home sheet |
-| Post-completion adaptation | **Missing** — no execution bridge |
+| Pre-session adaptation (day-of) | Evaluate only — Coach Brain pipeline + Home sheet (see superseded note below) |
+| Programme post-completion adaptation | Live — `AdaptationExecutionCoordinator` (future slots; not day-of sheet) |
 | `replaceSession` / slot outcomes | Service live; no post-completion caller |
 | Adaptation audit | **Missing** |
+
+> **Historical (superseded):** Pre–Phase 2A Sprint 6B, day-of Home adaptation used `AdaptationDecisionService` (removed). Current path: `AthleteWorkoutAdaptationApplicationService` + Coach Brain.
 
 **Exact gap:** After `ProgrammeProgressionService.completeSession`, no service evaluated completed performance and mutated future programme slots.
 
@@ -41,11 +43,16 @@ Coach assigns programme
 
 ```
 SessionFinishReviewScreen._saveAndFinish
+  → (Home + WorkoutSessionLaunchContext) AthleteWorkoutCompletionApplicationService.complete
+      → AthleteWorkoutOrchestrator.completeTodayWorkout
+      → domain WorkoutExecutionRecord.finalizeFromWorkoutPlayer
+      → SessionOccurrence.complete
   → PerformanceRecordSaveCoordinator.completeSession
       1. M8 completeRecord
       2. training_sessions.complete
       3. ProgrammeSessionProgressionCoordinator.handleSessionCompleted
-      4. AdaptationExecutionCoordinator.executeAfterSessionCompleted   ← NEW
+      4. AdaptationExecutionCoordinator.executeAfterSessionCompleted
+  → SessionExecutionController.applyDomainCompletionProjection (Home path UI sync only)
   → SessionCompleteScreen (adaptation message)
 ```
 

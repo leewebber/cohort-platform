@@ -14,8 +14,14 @@ import '../../../models/training_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
+import '../../../models/protocol.dart';
 import '../../session/screens/session_overview_screen.dart';
 import '../../session/services/session_execution_launcher.dart';
+import '../../../application/athlete_workout/home_workout_execution_context.dart';
+import '../../../application/athlete_workout/home_workout_launch_service.dart';
+import '../../../models/adaptation_request.dart';
+import '../../admin/services/protocol_builder_service.dart';
+import '../../session/models/workout_session_launch_context.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
 import '../models/home_today_session_state.dart';
 import '../services/home_today_session_loader.dart';
@@ -49,6 +55,13 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       HomeTodaySessionServices.createProgressionCoordinator();
   final _trainingSessionRepository = const TrainingSessionRepository();
   final _sessionLauncher = SessionExecutionLauncher();
+  final _workoutLaunchService = HomeWorkoutLaunchService(
+    loadProtocolDraft: (protocolId) =>
+        ProtocolBuilderService().loadProtocol(protocolId),
+  );
+
+  HomeWorkoutExecutionContext? _workoutExecutionContext;
+  HomeTodaySessionProgrammeExecutable? _programmeExecutable;
 
   late Future<HomeTodaySessionState> _sessionFuture;
   int _refreshGeneration = 0;
@@ -86,6 +99,68 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     });
   }
 
+  HomeWorkoutExecutionContext? get workoutExecutionContext =>
+      _workoutExecutionContext;
+
+  Protocol? get programmeSessionProtocol => _programmeExecutable?.protocol;
+
+  Future<void> commitDayOfAdaptation({
+    required AdaptationRequest request,
+  }) async {
+    final context = _workoutExecutionContext;
+    final protocol = _programmeExecutable?.protocol;
+    if (context == null || protocol == null) {
+      return;
+    }
+
+    final updated = await _workoutLaunchService.commitDayOfAdaptation(
+      executionContext: context,
+      athleteId: widget.athleteId,
+      protocol: protocol,
+      request: request,
+    );
+    if (updated != null && mounted) {
+      setState(() {
+        _workoutExecutionContext = updated;
+      });
+    }
+  }
+
+  Future<WorkoutSessionLaunchContext?> _prepareWorkoutLaunchContext({
+    required Protocol protocol,
+    required int trainingSessionId,
+  }) async {
+    final context = _workoutExecutionContext;
+    if (context == null) {
+      return null;
+    }
+
+    final prepared = await _workoutLaunchService.prepareForLegacyLaunch(
+      executionContext: context,
+      athleteId: widget.athleteId,
+      protocol: protocol,
+      trainingSessionId: trainingSessionId,
+    );
+
+    if (!prepared.isSuccess || prepared.launchContext == null) {
+      debugPrint(
+        '[HomeWorkoutLaunch] prepare failed: ${prepared.detail ?? 'unknown'}',
+      );
+      return null;
+    }
+
+    if (mounted && prepared.context != null) {
+      setState(() {
+        _workoutExecutionContext = prepared.context;
+      });
+    }
+
+    return WorkoutSessionLaunchContext.fromBundle(
+      prepared.launchContext!,
+      homeWorkoutExecution: prepared.context ?? context,
+    );
+  }
+
   Future<HomeTodaySessionState> _loadSession({required String source}) {
     final generation = ++_refreshGeneration;
     debugPrint(
@@ -109,6 +184,13 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       }
 
       _logResolvedState(state);
+      if (state is HomeTodaySessionProgrammeExecutable) {
+        _programmeExecutable = state;
+        _workoutExecutionContext = state.workoutExecution;
+      } else {
+        _programmeExecutable = null;
+        _workoutExecutionContext = null;
+      }
       return state;
     });
   }
@@ -253,6 +335,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     ProgrammeExecutionContext? programmeContext,
     String? programmeContextLabel,
     ProgrammeProgressSummary? programmeProgress,
+    WorkoutSessionLaunchContext? workoutLaunchContext,
   }) async {
     await _sessionLauncher.launchActiveSession(
       context: context,
@@ -263,6 +346,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       programmeContext: programmeContext,
       programmeContextLabel: programmeContextLabel,
       programmeProgress: programmeProgress,
+      workoutLaunchContext: workoutLaunchContext,
     );
 
     if (mounted) refresh(source: 'session_return');
@@ -300,6 +384,11 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       final session = state.latestTrainingSession;
       if (session == null) return;
 
+      final launchContext = await _prepareWorkoutLaunchContext(
+        protocol: state.protocol,
+        trainingSessionId: session.id,
+      );
+
       await _launchActiveSession(
         protocolId: state.executionContext.effectiveProtocolId,
         displayTitle: state.protocol.name,
@@ -307,6 +396,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         programmeContext: state.executionContext,
         programmeContextLabel: contextLabel,
         programmeProgress: state.progressSummary,
+        workoutLaunchContext: launchContext,
       );
       return;
     }
@@ -328,6 +418,11 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         trainingSessionId: session.id,
       );
 
+      final launchContext = await _prepareWorkoutLaunchContext(
+        protocol: state.protocol,
+        trainingSessionId: session.id,
+      );
+
       await _launchActiveSession(
         protocolId: state.executionContext.effectiveProtocolId,
         displayTitle: state.protocol.name,
@@ -335,6 +430,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         programmeContext: state.executionContext,
         programmeContextLabel: contextLabel,
         programmeProgress: state.progressSummary,
+        workoutLaunchContext: launchContext,
       );
     } catch (error, stackTrace) {
       debugPrint('[Begin] programme session failed: $error');

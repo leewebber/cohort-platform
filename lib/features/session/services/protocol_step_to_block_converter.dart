@@ -39,8 +39,9 @@ class ProtocolStepToBlockConverter {
             localId: 'link-legacy-${step.id}',
             exerciseId: exerciseId,
             position: linkPosition,
-            displayLabelOverride:
-                step.title.trim().isEmpty ? null : step.title.trim(),
+            displayLabelOverride: step.title.trim().isEmpty
+                ? null
+                : step.title.trim(),
           ),
         );
         linkPosition++;

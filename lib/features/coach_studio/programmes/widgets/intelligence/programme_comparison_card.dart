@@ -58,7 +58,9 @@ class ProgrammeComparisonCard extends StatelessWidget {
           if (selectedTargetVersionId == null)
             Text(
               ProgrammeIntelligenceCopy.selectComparisonPrompt,
-              style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+              style: CohortTextStyles.body.copyWith(
+                color: CohortColors.textSecondary,
+              ),
             )
           else if (status == ProgrammeIntelligenceCardStatus.loading)
             const Center(child: CircularProgressIndicator())
@@ -67,8 +69,11 @@ class ProgrammeComparisonCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  errorMessage ?? ProgrammeIntelligenceCopy.comparisonUnavailableMessage,
-                  style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                  errorMessage ??
+                      ProgrammeIntelligenceCopy.comparisonUnavailableMessage,
+                  style: CohortTextStyles.body.copyWith(
+                    color: CohortColors.warning,
+                  ),
                 ),
                 TextButton(onPressed: onRetry, child: const Text('Retry')),
               ],

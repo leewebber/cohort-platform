@@ -58,8 +58,11 @@ void main() {
         ],
       );
 
-      expect(result?.reps.map((rep) => rep.actualDurationSeconds).toList(),
-          [188, 190, 200]);
+      expect(result?.reps.map((rep) => rep.actualDurationSeconds).toList(), [
+        188,
+        190,
+        200,
+      ]);
     });
 
     test('excludes skipped work reps from performance averages', () {
@@ -126,27 +129,25 @@ void main() {
     test('returns null when repository has no comparable session', () async {
       final result = await PreviousIntervalPerformanceService(
         intervalRepository: _EmptyIntervalRepository(),
-      ).load(
-        athleteId: 'athlete-1',
-        protocolId: 'RN-006',
-      );
+      ).load(athleteId: 'athlete-1', protocolId: 'RN-006');
 
       expect(result, isNull);
     });
 
     test('loads latest comparable session from repository', () async {
-      final result = await PreviousIntervalPerformanceService(
-        intervalRepository: _FixedIntervalRepository(
-          ComparableIntervalSession(
-            session: _completedSession(id: 100),
-            intervals: _threeRepSession(),
-          ),
-        ),
-      ).load(
-        athleteId: 'athlete-1',
-        protocolId: 'RN-006',
-        excludeTrainingSessionId: 200,
-      );
+      final result =
+          await PreviousIntervalPerformanceService(
+            intervalRepository: _FixedIntervalRepository(
+              ComparableIntervalSession(
+                session: _completedSession(id: 100),
+                intervals: _threeRepSession(),
+              ),
+            ),
+          ).load(
+            athleteId: 'athlete-1',
+            protocolId: 'RN-006',
+            excludeTrainingSessionId: 200,
+          );
 
       expect(result?.trainingSessionId, 100);
       expect(result?.reps.length, 3);

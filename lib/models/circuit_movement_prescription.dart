@@ -68,8 +68,9 @@ class CircuitMovementPrescription {
       localId: localId ?? this.localId,
       orderIndex: orderIndex ?? this.orderIndex,
       title: title ?? this.title,
-      protocolStepId:
-          clearProtocolStepId ? null : (protocolStepId ?? this.protocolStepId),
+      protocolStepId: clearProtocolStepId
+          ? null
+          : (protocolStepId ?? this.protocolStepId),
       exerciseId: clearExerciseId ? null : (exerciseId ?? this.exerciseId),
       reps: clearReps ? null : (reps ?? this.reps),
       distance: clearDistance ? null : (distance ?? this.distance),

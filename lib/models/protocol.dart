@@ -62,13 +62,17 @@ class Protocol {
     this.primarySessionIntent,
     List<SessionIntent>? secondarySessionIntents,
     int? minimumViableDurationMin,
-  }) : secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-          primary: primarySessionIntent,
-          secondary: secondarySessionIntents ?? SessionAdaptationMetadataCodec.emptySecondaries,
-        ),
-       minimumViableDurationMin = SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
-          minimumViableDurationMin,
-        );
+  }) : secondarySessionIntents =
+           SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+             primary: primarySessionIntent,
+             secondary:
+                 secondarySessionIntents ??
+                 SessionAdaptationMetadataCodec.emptySecondaries,
+           ),
+       minimumViableDurationMin =
+           SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
+             minimumViableDurationMin,
+           );
 
   factory Protocol.fromMap(Map<String, dynamic> map) {
     final primary = SessionAdaptationMetadataCodec.parsePrimary(
@@ -77,9 +81,10 @@ class Protocol {
     final secondary = SessionAdaptationMetadataCodec.parseSecondaryList(
       map[SessionAdaptationMetadataKeys.secondarySessionIntents],
     );
-    final minDuration = SessionAdaptationMetadataCodec.parseMinimumViableDurationMin(
-      map[SessionAdaptationMetadataKeys.minimumViableDurationMin],
-    );
+    final minDuration =
+        SessionAdaptationMetadataCodec.parseMinimumViableDurationMin(
+          map[SessionAdaptationMetadataKeys.minimumViableDurationMin],
+        );
 
     return Protocol(
       protocolId: map['protocol_id'] ?? '',
@@ -111,9 +116,9 @@ class Protocol {
       primarySessionIntent: primary,
       secondarySessionIntents:
           SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-        primary: primary,
-        secondary: secondary,
-      ),
+            primary: primary,
+            secondary: secondary,
+          ),
       minimumViableDurationMin: minDuration,
     );
   }
@@ -249,11 +254,11 @@ class Protocol {
 
   @override
   int get hashCode => Object.hash(
-        protocolId,
-        primarySessionIntent,
-        Object.hashAll(secondarySessionIntents),
-        minimumViableDurationMin,
-      );
+    protocolId,
+    primarySessionIntent,
+    Object.hashAll(secondarySessionIntents),
+    minimumViableDurationMin,
+  );
 
   static bool _listEquals<T>(List<T> a, List<T> b) {
     if (a.length != b.length) return false;

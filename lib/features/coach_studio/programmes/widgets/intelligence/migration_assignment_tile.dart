@@ -18,7 +18,8 @@ class MigrationAssignmentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final position = plan.currentProgrammePosition?.displayLabel ??
+    final position =
+        plan.currentProgrammePosition?.displayLabel ??
         'Week ${plan.currentWeek} · ${plan.currentDayKey} · '
             'Slot ${plan.currentSessionOrder}';
 
@@ -36,11 +37,16 @@ class MigrationAssignmentTile extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(label, style: CohortTextStyles.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                )),
+                child: Text(
+                  label,
+                  style: CohortTextStyles.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              _ClassificationBadge(classification: plan.migrationClassification),
+              _ClassificationBadge(
+                classification: plan.migrationClassification,
+              ),
             ],
           ),
           const SizedBox(height: CohortSpacing.xs),
@@ -55,7 +61,9 @@ class MigrationAssignmentTile extends StatelessWidget {
           const SizedBox(height: CohortSpacing.xs),
           Text(
             plan.reasoning,
-            style: CohortTextStyles.small.copyWith(color: CohortColors.textSecondary),
+            style: CohortTextStyles.small.copyWith(
+              color: CohortColors.textSecondary,
+            ),
           ),
         ],
       ),

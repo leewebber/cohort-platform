@@ -31,13 +31,13 @@ class ProgrammeCatalogueController {
     required String coachId,
     ProgrammeCatalogueListProcessor listProcessor =
         const ProgrammeCatalogueListProcessor(),
-  })  : _builderService = builderService,
-        _catalogService = catalogService,
-        _publishCoordinator = publishCoordinator,
-        _publishingService = publishingService,
-        _validationService = validationService,
-        _coachId = coachId,
-        _listProcessor = listProcessor;
+  }) : _builderService = builderService,
+       _catalogService = catalogService,
+       _publishCoordinator = publishCoordinator,
+       _publishingService = publishingService,
+       _validationService = validationService,
+       _coachId = coachId,
+       _listProcessor = listProcessor;
 
   final ProgrammeBuilderService _builderService;
   final ProgrammeCatalogService _catalogService;
@@ -113,8 +113,9 @@ class ProgrammeCatalogueController {
       _tabCache[tab] = entries;
       loadedEntries = entries;
       lastRefreshedAt = DateTime.now();
-      viewState =
-          entries.isEmpty ? ProgrammeCatalogueViewState.empty : ProgrammeCatalogueViewState.ready;
+      viewState = entries.isEmpty
+          ? ProgrammeCatalogueViewState.empty
+          : ProgrammeCatalogueViewState.ready;
       errorMessage = null;
     } on ProgrammeStoreException catch (error) {
       loadedEntries = [];
@@ -216,9 +217,8 @@ class ProgrammeCatalogueController {
           success: false,
           message: _operationMessage(result),
           warnings: result.warnings,
-          debugDetail: ProgrammeCreateDiagnostics.debugDetailFromOperationResult(
-            result,
-          ),
+          debugDetail:
+              ProgrammeCreateDiagnostics.debugDetailFromOperationResult(result),
         );
         ProgrammeCreateDiagnostics.log(
           'controller failure message=${actionResult.message}',
@@ -325,7 +325,9 @@ class ProgrammeCatalogueController {
     );
   }
 
-  Future<ProgrammeCatalogueActionResult> archiveVersion(String versionId) async {
+  Future<ProgrammeCatalogueActionResult> archiveVersion(
+    String versionId,
+  ) async {
     if (isActionInProgress) {
       return _busyResult(ProgrammeCatalogueAction.archive);
     }
@@ -362,15 +364,15 @@ class ProgrammeCatalogueController {
     return _runVersionAction(
       action: ProgrammeCatalogueAction.deleteDraft,
       versionId: versionId,
-      operation: () => _builderService.deleteDraft(
-        versionId: versionId,
-        coachId: _coachId,
-      ),
+      operation: () =>
+          _builderService.deleteDraft(versionId: versionId, coachId: _coachId),
       refreshTab: activeTab,
     );
   }
 
-  Future<ProgrammeCatalogueActionResult> _validateDraft(String versionId) async {
+  Future<ProgrammeCatalogueActionResult> _validateDraft(
+    String versionId,
+  ) async {
     if (isActionInProgress) {
       return _busyResult(ProgrammeCatalogueAction.validate);
     }
@@ -412,7 +414,9 @@ class ProgrammeCatalogueController {
       action: ProgrammeCatalogueAction.publish,
       versionId: versionId,
       operation: () async {
-        final document = await _builderService.loadDocument(versionId: versionId);
+        final document = await _builderService.loadDocument(
+          versionId: versionId,
+        );
         return _publishCoordinator.publish(
           document: document,
           coachId: _coachId,
@@ -459,7 +463,8 @@ class ProgrammeCatalogueController {
         await refreshCurrentTab();
       }
 
-      final navigate = action == ProgrammeCatalogueAction.cloneVersion ||
+      final navigate =
+          action == ProgrammeCatalogueAction.cloneVersion ||
           action == ProgrammeCatalogueAction.duplicateProgramme;
 
       return ProgrammeCatalogueActionResult(
@@ -487,31 +492,32 @@ class ProgrammeCatalogueController {
     ProgrammeCatalogueTab tab,
   ) {
     return switch (tab) {
-      ProgrammeCatalogueTab.drafts =>
-        _builderService.listCoachDrafts(coachId: _coachId),
+      ProgrammeCatalogueTab.drafts => _builderService.listCoachDrafts(
+        coachId: _coachId,
+      ),
       ProgrammeCatalogueTab.published => _catalogService.listCatalogue(
-          query: ProgrammeCatalogueQuery(
-            ownerType: ProgrammeOwnerType.coach,
-            ownerId: _coachId,
-            lifecycleStatus: ProgrammeLifecycleStatus.published,
-          ),
+        query: ProgrammeCatalogueQuery(
+          ownerType: ProgrammeOwnerType.coach,
+          ownerId: _coachId,
           lifecycleStatus: ProgrammeLifecycleStatus.published,
         ),
+        lifecycleStatus: ProgrammeLifecycleStatus.published,
+      ),
       ProgrammeCatalogueTab.cohortGlobal => _catalogService.listCatalogue(
-          query: const ProgrammeCatalogueQuery(
-            includeGlobalApprovedOnly: true,
-            lifecycleStatus: ProgrammeLifecycleStatus.published,
-          ),
+        query: const ProgrammeCatalogueQuery(
+          includeGlobalApprovedOnly: true,
           lifecycleStatus: ProgrammeLifecycleStatus.published,
         ),
+        lifecycleStatus: ProgrammeLifecycleStatus.published,
+      ),
       ProgrammeCatalogueTab.archived => _catalogService.listCatalogue(
-          query: ProgrammeCatalogueQuery(
-            ownerType: ProgrammeOwnerType.coach,
-            ownerId: _coachId,
-            lifecycleStatus: ProgrammeLifecycleStatus.archived,
-          ),
+        query: ProgrammeCatalogueQuery(
+          ownerType: ProgrammeOwnerType.coach,
+          ownerId: _coachId,
           lifecycleStatus: ProgrammeLifecycleStatus.archived,
         ),
+        lifecycleStatus: ProgrammeLifecycleStatus.archived,
+      ),
     };
   }
 

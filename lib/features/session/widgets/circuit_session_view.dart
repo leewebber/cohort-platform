@@ -58,22 +58,23 @@ class CircuitSessionView extends StatefulWidget {
     PreviousCircuitPerformanceService? previousPerformanceService,
     CircuitProgressService? progressService,
     this.onLeaveCoordinatorReady,
-  })  : circuitRepository =
-            circuitRepository ?? const TrainingSessionCircuitRepository(),
-        performanceMapper =
-            performanceMapper ?? const CircuitPerformanceMapper(),
-        sessionHydrator = sessionHydrator ?? const CircuitSessionHydrator(),
-        trainingSessionRepository =
-            trainingSessionRepository ?? const TrainingSessionRepository(),
-        finishValidator = finishValidator ?? const CircuitFinishValidator(),
-        previousPerformanceService = previousPerformanceService ??
-            const PreviousCircuitPerformanceService(),
-        progressService = progressService ?? const CircuitProgressService();
+  }) : circuitRepository =
+           circuitRepository ?? const TrainingSessionCircuitRepository(),
+       performanceMapper =
+           performanceMapper ?? const CircuitPerformanceMapper(),
+       sessionHydrator = sessionHydrator ?? const CircuitSessionHydrator(),
+       trainingSessionRepository =
+           trainingSessionRepository ?? const TrainingSessionRepository(),
+       finishValidator = finishValidator ?? const CircuitFinishValidator(),
+       previousPerformanceService =
+           previousPerformanceService ??
+           const PreviousCircuitPerformanceService(),
+       progressService = progressService ?? const CircuitProgressService();
 
   final String sessionTitle;
   final CircuitSessionPlan plan;
   final Future<void> Function(CircuitSessionFinishSummary summary)
-      onFinishSession;
+  onFinishSession;
   final bool previewMode;
   final int? trainingSessionId;
   final String? athleteId;
@@ -86,7 +87,7 @@ class CircuitSessionView extends StatefulWidget {
   final PreviousCircuitPerformanceService previousPerformanceService;
   final CircuitProgressService progressService;
   final void Function(CircuitSessionLeaveCoordinator coordinator)?
-      onLeaveCoordinatorReady;
+  onLeaveCoordinatorReady;
 
   @override
   State<CircuitSessionView> createState() => _CircuitSessionViewState();
@@ -134,14 +135,14 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
       _executionState.entryMode == CircuitEntryMode.postSession;
 
   bool get _hasValidScore => _validator.hasValidScore(
-        performance: _executionState.performance,
-        scoreType: widget.plan.scoreType,
-      );
+    performance: _executionState.performance,
+    scoreType: widget.plan.scoreType,
+  );
 
   bool get _hasWorkStarted => _validator.hasWorkStarted(
-        state: _executionState,
-        timerState: _timerState,
-      );
+    state: _executionState,
+    timerState: _timerState,
+  );
 
   @override
   void initState() {
@@ -233,7 +234,8 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
       updated = updated.copyWith(timeCapped: true);
     }
 
-    if (widget.plan.scoreType == CircuitScoreType.totalReps && state.timeCapped) {
+    if (widget.plan.scoreType == CircuitScoreType.totalReps &&
+        state.timeCapped) {
       updated = updated.copyWith(timeCapped: true);
     }
 
@@ -262,8 +264,9 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
     }
 
     _elapsedMinutesController.text = (duration.inSeconds ~/ 60).toString();
-    _elapsedSecondsController.text =
-        (duration.inSeconds % 60).toString().padLeft(2, '0');
+    _elapsedSecondsController.text = (duration.inSeconds % 60)
+        .toString()
+        .padLeft(2, '0');
   }
 
   void _preserveLocalPerformance() {
@@ -321,25 +324,20 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
     try {
       CircuitPerformance? persisted;
       try {
-        persisted =
-            await widget.circuitRepository.getPerformanceForTrainingSession(
-          trainingSessionId,
-        );
+        persisted = await widget.circuitRepository
+            .getPerformanceForTrainingSession(trainingSessionId);
       } catch (error) {
-        debugPrint(
-          '[CircuitSessionView] performance hydrate failed: $error',
-        );
+        debugPrint('[CircuitSessionView] performance hydrate failed: $error');
       }
 
       String? sessionNote;
       try {
-        final session =
-            await widget.trainingSessionRepository.getSessionById(trainingSessionId);
+        final session = await widget.trainingSessionRepository.getSessionById(
+          trainingSessionId,
+        );
         sessionNote = session?.sessionNote;
       } catch (error) {
-        debugPrint(
-          '[CircuitSessionView] session note hydrate failed: $error',
-        );
+        debugPrint('[CircuitSessionView] session note hydrate failed: $error');
       }
 
       if (!mounted) {
@@ -461,7 +459,9 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
       SnackBar(
         content: Text(
           message,
-          style: CohortTextStyles.small.copyWith(color: CohortColors.textPrimary),
+          style: CohortTextStyles.small.copyWith(
+            color: CohortColors.textPrimary,
+          ),
         ),
         backgroundColor: CohortColors.surfaceRaised,
         behavior: SnackBarBehavior.floating,
@@ -525,38 +525,38 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: CohortColors.surfaceRaised,
-          title: Text(
-            'Leave this session?',
-            style: CohortTextStyles.cardTitle,
-          ),
+          title: Text('Leave this session?', style: CohortTextStyles.cardTitle),
           content: Text(
             'Your saved result is preserved. You can resume this session later from Home.',
             style: CohortTextStyles.body,
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(dialogContext)
-                  .pop(SessionLeaveDecision.resumeLater),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.resumeLater),
               child: Text(
                 'Resume later',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(SessionLeaveDecision.endEarly),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.endEarly),
               child: Text(
                 'End session early',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
             ),
             TextButton(
               onPressed: () =>
                   Navigator.of(dialogContext).pop(SessionLeaveDecision.cancel),
-              child: Text(
-                'Cancel',
-                style: CohortTextStyles.body,
-              ),
+              child: Text('Cancel', style: CohortTextStyles.body),
             ),
           ],
         );
@@ -617,9 +617,7 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
   }
 
   int _earlyEndTotalCount() {
-    return widget.plan.intervalCount ??
-        widget.plan.prescribedRounds ??
-        1;
+    return widget.plan.intervalCount ?? widget.plan.prescribedRounds ?? 1;
   }
 
   String _earlyEndUnitLabel() {
@@ -671,7 +669,9 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
           const SizedBox(height: CohortSpacing.sm),
           Text(
             'Restoring saved session...',
-            style: CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
+            style: CohortTextStyles.small.copyWith(
+              color: CohortColors.textMuted,
+            ),
           ),
         ],
         const SizedBox(height: CohortSpacing.xl),
@@ -679,15 +679,9 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'HOW TODAY IS SCORED',
-                style: CohortTextStyles.eyebrow,
-              ),
+              Text('HOW TODAY IS SCORED', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
-              Text(
-                plan.resolvedScoringLabel,
-                style: CohortTextStyles.body,
-              ),
+              Text(plan.resolvedScoringLabel, style: CohortTextStyles.body),
             ],
           ),
         ),
@@ -712,19 +706,13 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
           ),
         ],
         const SizedBox(height: CohortSpacing.xl),
-        Text(
-          'FULL WORKOUT',
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text('FULL WORKOUT', style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.sm),
         _PlanStructureSummary(plan: plan),
         const SizedBox(height: CohortSpacing.md),
         _MovementList(movements: plan.movements),
         const SizedBox(height: CohortSpacing.xl),
-        Text(
-          'YOUR RESULT',
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text('YOUR RESULT', style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.md),
         _ScoreEntrySection(
           plan: plan,
@@ -747,9 +735,7 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
             child: OutlinedButton(
               key: const ValueKey('circuit-save-progress'),
               onPressed: _isSavingPerformance ? null : _saveProgress,
-              child: Text(
-                _isSavingPerformance ? 'Saving...' : 'Save progress',
-              ),
+              child: Text(_isSavingPerformance ? 'Saving...' : 'Save progress'),
             ),
           ),
         ],
@@ -788,7 +774,8 @@ class _CircuitSessionViewState extends State<CircuitSessionView> {
   int _progressCompletedCount() {
     if (widget.plan.scoreType == CircuitScoreType.roundsCompleted) {
       final total = widget.plan.intervalCount ?? widget.plan.prescribedRounds;
-      final completed = _executionState.performance.completedRounds ??
+      final completed =
+          _executionState.performance.completedRounds ??
           ((_timerState?.currentInterval ?? 1) - 1).clamp(0, 999);
       return total == null ? completed : completed;
     }
@@ -879,16 +866,10 @@ class _CircuitTimerPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'TIMER',
-            style: CohortTextStyles.eyebrow,
-          ),
+          Text('TIMER', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.md),
           if (state == null || !state.isStarted) ...[
-            Text(
-              _timerDescription(mode, plan),
-              style: CohortTextStyles.body,
-            ),
+            Text(_timerDescription(mode, plan), style: CohortTextStyles.body),
             const SizedBox(height: CohortSpacing.md),
             SizedBox(
               width: double.infinity,
@@ -910,15 +891,9 @@ class _CircuitTimerPanel extends StatelessWidget {
               ),
               const SizedBox(height: CohortSpacing.xs),
             ],
-            Text(
-              _primaryClockLabel(state),
-              style: CohortTextStyles.eyebrow,
-            ),
+            Text(_primaryClockLabel(state), style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.sm),
-            Text(
-              _formatClock(state),
-              style: CohortTextStyles.h2,
-            ),
+            Text(_formatClock(state), style: CohortTextStyles.h2),
             if (state.mode == CircuitTimerMode.countDown) ...[
               const SizedBox(height: CohortSpacing.xs),
               Text(
@@ -932,10 +907,7 @@ class _CircuitTimerPanel extends StatelessWidget {
               runSpacing: CohortSpacing.sm,
               children: [
                 if (state.isRunning)
-                  OutlinedButton(
-                    onPressed: onPause,
-                    child: const Text('Pause'),
-                  )
+                  OutlinedButton(onPressed: onPause, child: const Text('Pause'))
                 else if (state.isPaused)
                   OutlinedButton(
                     onPressed: onResume,
@@ -1025,10 +997,14 @@ class _PlanStructureSummary extends StatelessWidget {
       items.add('Cap ${_CircuitTimerPanel._formatDuration(plan.timeCap)}');
     }
     if (plan.workInterval != null) {
-      items.add('Work ${_CircuitTimerPanel._formatDuration(plan.workInterval)}');
+      items.add(
+        'Work ${_CircuitTimerPanel._formatDuration(plan.workInterval)}',
+      );
     }
     if (plan.restInterval != null) {
-      items.add('Rest ${_CircuitTimerPanel._formatDuration(plan.restInterval)}');
+      items.add(
+        'Rest ${_CircuitTimerPanel._formatDuration(plan.restInterval)}',
+      );
     }
     if (plan.intervalCount != null) {
       items.add('${plan.intervalCount} intervals');
@@ -1038,10 +1014,7 @@ class _PlanStructureSummary extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Text(
-      items.join(' • '),
-      style: CohortTextStyles.small,
-    );
+    return Text(items.join(' • '), style: CohortTextStyles.small);
   }
 }
 
@@ -1088,17 +1061,12 @@ class _MovementRow extends StatelessWidget {
         ),
         if (details.isNotEmpty) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            details.join(' • '),
-            style: CohortTextStyles.body,
-          ),
+          Text(details.join(' • '), style: CohortTextStyles.body),
         ],
-        if (movement.coachCue != null && movement.coachCue!.trim().isNotEmpty) ...[
+        if (movement.coachCue != null &&
+            movement.coachCue!.trim().isNotEmpty) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            movement.coachCue!,
-            style: CohortTextStyles.small,
-          ),
+          Text(movement.coachCue!, style: CohortTextStyles.small),
         ],
       ],
     );
@@ -1156,10 +1124,7 @@ class _ScoreEntrySection extends StatelessWidget {
           _RpeSelector(
             value: performance.rpe,
             onChanged: (rpe) => onPerformanceChanged(
-              performance.copyWith(
-                rpe: rpe,
-                clearRpe: rpe == null,
-              ),
+              performance.copyWith(rpe: rpe, clearRpe: rpe == null),
             ),
           ),
           const SizedBox(height: CohortSpacing.md),
@@ -1203,100 +1168,100 @@ class _ScoreEntrySection extends StatelessWidget {
   List<Widget> _scoreFields() {
     return switch (plan.scoreType) {
       CircuitScoreType.roundsAndReps => [
-          _CircuitField(
-            key: const ValueKey('circuit-completed-rounds'),
-            label: 'Completed rounds',
-            controller: completedRoundsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) => onPerformanceChanged(
-              performance.copyWith(
-                completedRounds: int.tryParse(value),
-                clearCompletedRounds: value.trim().isEmpty,
-              ),
+        _CircuitField(
+          key: const ValueKey('circuit-completed-rounds'),
+          label: 'Completed rounds',
+          controller: completedRoundsController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (value) => onPerformanceChanged(
+            performance.copyWith(
+              completedRounds: int.tryParse(value),
+              clearCompletedRounds: value.trim().isEmpty,
             ),
           ),
-          const SizedBox(height: CohortSpacing.md),
-          _CircuitField(
-            key: const ValueKey('circuit-additional-reps'),
-            label: 'Additional reps',
-            controller: additionalRepsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) => onPerformanceChanged(
-              performance.copyWith(
-                additionalReps: int.tryParse(value),
-                clearAdditionalReps: value.trim().isEmpty,
-              ),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        _CircuitField(
+          key: const ValueKey('circuit-additional-reps'),
+          label: 'Additional reps',
+          controller: additionalRepsController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (value) => onPerformanceChanged(
+            performance.copyWith(
+              additionalReps: int.tryParse(value),
+              clearAdditionalReps: value.trim().isEmpty,
             ),
           ),
-        ],
+        ),
+      ],
       CircuitScoreType.elapsedTime || CircuitScoreType.benchmarkScore => [
-          _ElapsedTimeFields(
-            key: const ValueKey('circuit-elapsed-time'),
-            minutesController: elapsedMinutesController,
-            secondsController: elapsedSecondsController,
-            onChanged: (duration) => onPerformanceChanged(
-              performance.copyWith(
-                elapsedDuration: duration,
-                clearElapsedDuration: duration == null,
-              ),
+        _ElapsedTimeFields(
+          key: const ValueKey('circuit-elapsed-time'),
+          minutesController: elapsedMinutesController,
+          secondsController: elapsedSecondsController,
+          onChanged: (duration) => onPerformanceChanged(
+            performance.copyWith(
+              elapsedDuration: duration,
+              clearElapsedDuration: duration == null,
             ),
           ),
-        ],
+        ),
+      ],
       CircuitScoreType.totalReps => [
-          _CircuitField(
-            label: 'Total reps',
-            controller: totalRepsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) => onPerformanceChanged(
-              performance.copyWith(
-                totalReps: int.tryParse(value),
-                clearTotalReps: value.trim().isEmpty,
-              ),
+        _CircuitField(
+          label: 'Total reps',
+          controller: totalRepsController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (value) => onPerformanceChanged(
+            performance.copyWith(
+              totalReps: int.tryParse(value),
+              clearTotalReps: value.trim().isEmpty,
             ),
           ),
-        ],
+        ),
+      ],
       CircuitScoreType.roundsCompleted => [
-          _CircuitField(
-            label: 'Intervals / rounds completed',
-            controller: completedIntervalsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) => onPerformanceChanged(
-              performance.copyWith(
-                completedRounds: int.tryParse(value),
-                clearCompletedRounds: value.trim().isEmpty,
-              ),
+        _CircuitField(
+          label: 'Intervals / rounds completed',
+          controller: completedIntervalsController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (value) => onPerformanceChanged(
+            performance.copyWith(
+              completedRounds: int.tryParse(value),
+              clearCompletedRounds: value.trim().isEmpty,
             ),
           ),
-        ],
+        ),
+      ],
       CircuitScoreType.movementsCompleted => [
-          _CircuitField(
-            label: 'Movements completed',
-            controller: completedMovementsController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (value) => onPerformanceChanged(
-              performance.copyWith(
-                completedMovements: int.tryParse(value),
-                clearCompletedMovements: value.trim().isEmpty,
-              ),
+        _CircuitField(
+          label: 'Movements completed',
+          controller: completedMovementsController,
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (value) => onPerformanceChanged(
+            performance.copyWith(
+              completedMovements: int.tryParse(value),
+              clearCompletedMovements: value.trim().isEmpty,
             ),
           ),
-          const SizedBox(height: CohortSpacing.md),
-          _ElapsedTimeFields(
-            minutesController: elapsedMinutesController,
-            secondsController: elapsedSecondsController,
-            onChanged: (duration) => onPerformanceChanged(
-              performance.copyWith(
-                elapsedDuration: duration,
-                clearElapsedDuration: duration == null,
-              ),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        _ElapsedTimeFields(
+          minutesController: elapsedMinutesController,
+          secondsController: elapsedSecondsController,
+          onChanged: (duration) => onPerformanceChanged(
+            performance.copyWith(
+              elapsedDuration: duration,
+              clearElapsedDuration: duration == null,
             ),
           ),
-        ],
+        ),
+      ],
     };
   }
 }
@@ -1410,10 +1375,7 @@ class _CircuitField extends StatelessWidget {
 }
 
 class _RpeSelector extends StatelessWidget {
-  const _RpeSelector({
-    required this.value,
-    required this.onChanged,
-  });
+  const _RpeSelector({required this.value, required this.onChanged});
 
   final int? value;
   final ValueChanged<int?> onChanged;
@@ -1432,8 +1394,7 @@ class _RpeSelector extends StatelessWidget {
               ChoiceChip(
                 label: Text('$score'),
                 selected: value == score,
-                onSelected: (selected) =>
-                    onChanged(selected ? score : null),
+                onSelected: (selected) => onChanged(selected ? score : null),
               ),
           ],
         ),
@@ -1460,8 +1421,9 @@ class _PreviousCircuitPerformanceSection extends StatelessWidget {
     return PreviousPerformanceShell(
       isLoading: isLoading,
       visible: hasLoaded,
-      loadingTextStyle:
-          CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
+      loadingTextStyle: CohortTextStyles.small.copyWith(
+        color: CohortColors.textMuted,
+      ),
       emptyState: Text(
         'This is your first recorded circuit performance.',
         style: CohortTextStyles.body,
@@ -1477,10 +1439,7 @@ class _PreviousCircuitPerformanceSection extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: CohortSpacing.md),
-                Text(
-                  performance!.displaySummary,
-                  style: CohortTextStyles.body,
-                ),
+                Text(performance!.displaySummary, style: CohortTextStyles.body),
                 if (performance!.averageRpe != null) ...[
                   const SizedBox(height: CohortSpacing.sm),
                   Text(
@@ -1516,8 +1475,7 @@ Color _circuitProgressAccent(CircuitProgressType progressType) {
     CircuitProgressType.fasterCompletion ||
     CircuitProgressType.moreWorkCompleted ||
     CircuitProgressType.heavierLoad ||
-    CircuitProgressType.effortImproved =>
-      CohortColors.success,
+    CircuitProgressType.effortImproved => CohortColors.success,
     CircuitProgressType.matchedPerformance => CohortColors.olive,
     CircuitProgressType.mixedResult => CohortColors.warning,
     CircuitProgressType.insufficientData => CohortColors.textSecondary,

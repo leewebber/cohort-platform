@@ -44,7 +44,8 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
   @override
   void didUpdateWidget(covariant ExercisePickerField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.initialExercise?.exerciseId != oldWidget.initialExercise?.exerciseId) {
+    if (widget.initialExercise?.exerciseId !=
+        oldWidget.initialExercise?.exerciseId) {
       _selectedExercise = widget.initialExercise;
     }
   }
@@ -77,7 +78,9 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
               const SizedBox(height: CohortSpacing.sm),
               Text(
                 'Exercises could not be loaded right now. Please try again.',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.danger),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.danger,
+                ),
               ),
             ],
           );
@@ -101,8 +104,10 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
           );
         }
 
-        final filtered =
-            ExerciseCatalogueService.filter(catalogue, _search).take(widget.maxVisibleResults);
+        final filtered = ExerciseCatalogueService.filter(
+          catalogue,
+          _search,
+        ).take(widget.maxVisibleResults);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +123,10 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: CohortColors.olive),
                 ),
-                child: Text(resolvedSelection.name, style: CohortTextStyles.body),
+                child: Text(
+                  resolvedSelection.name,
+                  style: CohortTextStyles.body,
+                ),
               ),
               const SizedBox(height: CohortSpacing.sm),
             ],
@@ -139,7 +147,11 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
                 contentPadding: EdgeInsets.zero,
                 title: Text(exercise.name, style: CohortTextStyles.body),
                 trailing: resolvedSelection?.exerciseId == exercise.exerciseId
-                    ? const Icon(Icons.check, color: CohortColors.olive, size: 18)
+                    ? const Icon(
+                        Icons.check,
+                        color: CohortColors.olive,
+                        size: 18,
+                      )
                     : null,
                 onTap: () => _select(exercise),
               ),
@@ -147,7 +159,9 @@ class ExercisePickerFieldState extends State<ExercisePickerField> {
               const SizedBox(height: CohortSpacing.xs),
               Text(
                 _errorMessage!,
-                style: CohortTextStyles.small.copyWith(color: CohortColors.danger),
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.danger,
+                ),
               ),
             ],
           ],

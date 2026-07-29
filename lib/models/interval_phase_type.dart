@@ -2,10 +2,4 @@
 ///
 /// Device-neutral and modality-agnostic. See
 /// `07 Documentation/37_Interval_Execution_Engine.md`.
-enum IntervalPhaseType {
-  warmUp,
-  work,
-  recovery,
-  coolDown,
-  instruction,
-}
+enum IntervalPhaseType { warmUp, work, recovery, coolDown, instruction }

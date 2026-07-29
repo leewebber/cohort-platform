@@ -54,17 +54,22 @@ class ProtocolDraft {
     this.primarySessionIntent,
     List<SessionIntent>? secondarySessionIntents,
     int? minimumViableDurationMin,
-  }) : secondarySessionIntents = SessionAdaptationMetadataCodec.canonicalizeSecondaries(
-          primary: primarySessionIntent,
-          secondary: secondarySessionIntents ?? SessionAdaptationMetadataCodec.emptySecondaries,
-        ),
-       minimumViableDurationMin = SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
-          minimumViableDurationMin,
-        );
+  }) : secondarySessionIntents =
+           SessionAdaptationMetadataCodec.canonicalizeSecondaries(
+             primary: primarySessionIntent,
+             secondary:
+                 secondarySessionIntents ??
+                 SessionAdaptationMetadataCodec.emptySecondaries,
+           ),
+       minimumViableDurationMin =
+           SessionAdaptationMetadataCodec.normalizeMinimumViableDurationMin(
+             minimumViableDurationMin,
+           );
 
   final String protocolId;
   final String name;
   final List<ProtocolStepDraft> steps;
+
   /// Modular Session blocks (M6). Authoring source of truth when non-empty.
   final List<SessionBlock> blocks;
   final bool published;
@@ -195,8 +200,7 @@ class ProtocolDraft {
       sessionLineageId: sessionLineageId ?? this.sessionLineageId,
       revisionNumber: revisionNumber ?? this.revisionNumber,
       lifecycleStatus: lifecycleStatus ?? this.lifecycleStatus,
-      publishedAt:
-          clearPublishedAt ? null : (publishedAt ?? this.publishedAt),
+      publishedAt: clearPublishedAt ? null : (publishedAt ?? this.publishedAt),
       archivedAt: clearArchivedAt ? null : (archivedAt ?? this.archivedAt),
       primaryCapability: primaryCapability ?? this.primaryCapability,
       secondaryCapability: secondaryCapability ?? this.secondaryCapability,
@@ -290,38 +294,43 @@ class ProtocolDraft {
 
     SessionAdaptationMetadataCodec.applyFromMap(
       map: row,
-      apply: ({
-        SessionIntent? primarySessionIntent,
-        List<SessionIntent> secondarySessionIntents = SessionAdaptationMetadataCodec.emptySecondaries,
-        int? minimumViableDurationMin,
-      }) {
-        primary = primarySessionIntent;
-        secondary = secondarySessionIntents;
-        minDuration = minimumViableDurationMin;
-      },
+      apply:
+          ({
+            SessionIntent? primarySessionIntent,
+            List<SessionIntent> secondarySessionIntents =
+                SessionAdaptationMetadataCodec.emptySecondaries,
+            int? minimumViableDurationMin,
+          }) {
+            primary = primarySessionIntent;
+            secondary = secondarySessionIntents;
+            minDuration = minimumViableDurationMin;
+          },
     );
 
     if (primary == null &&
         secondary == null &&
         minDuration == null &&
         !row.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent) &&
-        !row.containsKey(SessionAdaptationMetadataKeys.secondarySessionIntents) &&
-        !row.containsKey(SessionAdaptationMetadataKeys.minimumViableDurationMin)) {
+        !row.containsKey(
+          SessionAdaptationMetadataKeys.secondarySessionIntents,
+        ) &&
+        !row.containsKey(
+          SessionAdaptationMetadataKeys.minimumViableDurationMin,
+        )) {
       return draft;
     }
 
     return draft.copyWith(
-      primarySessionIntent: row.containsKey(
-            SessionAdaptationMetadataKeys.primarySessionIntent,
-          )
+      primarySessionIntent:
+          row.containsKey(SessionAdaptationMetadataKeys.primarySessionIntent)
           ? primary
           : draft.primarySessionIntent,
-      secondarySessionIntents: row.containsKey(
-            SessionAdaptationMetadataKeys.secondarySessionIntents,
-          )
+      secondarySessionIntents:
+          row.containsKey(SessionAdaptationMetadataKeys.secondarySessionIntents)
           ? (secondary ?? SessionAdaptationMetadataCodec.emptySecondaries)
           : draft.secondarySessionIntents,
-      minimumViableDurationMin: row.containsKey(
+      minimumViableDurationMin:
+          row.containsKey(
             SessionAdaptationMetadataKeys.minimumViableDurationMin,
           )
           ? minDuration
@@ -342,12 +351,12 @@ class ProtocolDraft {
 
   @override
   int get hashCode => Object.hash(
-        protocolId,
-        name,
-        primarySessionIntent,
-        Object.hashAll(secondarySessionIntents),
-        minimumViableDurationMin,
-      );
+    protocolId,
+    name,
+    primarySessionIntent,
+    Object.hashAll(secondarySessionIntents),
+    minimumViableDurationMin,
+  );
 
   static bool _listEquals<T>(List<T> a, List<T> b) {
     if (a.length != b.length) return false;
@@ -363,9 +372,12 @@ class ProtocolDraft {
     required Map<String, dynamic> row,
   }) {
     return draft.copyWith(
-      contentKind: TrainingContentKindDb.fromDb(row['content_kind']?.toString()),
-      authoringScope:
-          TrainingAuthoringScopeDb.fromDb(row['authoring_scope']?.toString()),
+      contentKind: TrainingContentKindDb.fromDb(
+        row['content_kind']?.toString(),
+      ),
+      authoringScope: TrainingAuthoringScopeDb.fromDb(
+        row['authoring_scope']?.toString(),
+      ),
       endorsementStatus: TrainingEndorsementStatusDb.fromDb(
         row['endorsement_status']?.toString(),
       ),

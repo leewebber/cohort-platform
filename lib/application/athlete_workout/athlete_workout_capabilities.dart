@@ -13,8 +13,7 @@ class AthleteWorkoutCapabilities {
     if (occurrence.isTerminal) return false;
     return switch (occurrence.lifecycleState) {
       SessionOccurrenceLifecycleState.scheduled ||
-      SessionOccurrenceLifecycleState.adapted =>
-        true,
+      SessionOccurrenceLifecycleState.adapted => true,
       _ => false,
     };
   }

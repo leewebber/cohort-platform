@@ -39,10 +39,7 @@ sealed class PerformanceResultData {
 }
 
 class CompletionResultData extends PerformanceResultData {
-  const CompletionResultData({
-    this.completed = true,
-    this.note,
-  });
+  const CompletionResultData({this.completed = true, this.note});
 
   final bool completed;
   final String? note;
@@ -52,10 +49,10 @@ class CompletionResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        'completed': completed,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    'completed': completed,
+    if (note != null) 'note': note,
+  };
 
   factory CompletionResultData.fromJson(Map<String, dynamic> json) {
     return CompletionResultData(
@@ -82,9 +79,9 @@ class StrengthResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    if (note != null) 'note': note,
+  };
 
   factory StrengthResultData.fromJson(Map<String, dynamic> json) {
     return StrengthResultData(note: _trim(json['note']));
@@ -92,11 +89,7 @@ class StrengthResultData extends PerformanceResultData {
 }
 
 class AmrapResultData extends PerformanceResultData {
-  const AmrapResultData({
-    this.rounds = 0,
-    this.extraReps = 0,
-    this.note,
-  });
+  const AmrapResultData({this.rounds = 0, this.extraReps = 0, this.note});
 
   final int rounds;
   final int extraReps;
@@ -107,11 +100,11 @@ class AmrapResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        'rounds': rounds,
-        'extraReps': extraReps,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    'rounds': rounds,
+    'extraReps': extraReps,
+    if (note != null) 'note': note,
+  };
 
   factory AmrapResultData.fromJson(Map<String, dynamic> json) {
     return AmrapResultData(
@@ -150,13 +143,13 @@ class ForTimeResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
-        'completed': completed,
-        'timeCapped': timeCapped,
-        if (remainingWorkNote != null) 'remainingWorkNote': remainingWorkNote,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
+    'completed': completed,
+    'timeCapped': timeCapped,
+    if (remainingWorkNote != null) 'remainingWorkNote': remainingWorkNote,
+    if (note != null) 'note': note,
+  };
 
   factory ForTimeResultData.fromJson(Map<String, dynamic> json) {
     return ForTimeResultData(
@@ -205,13 +198,13 @@ class IntervalResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        'intervalsCompleted': intervalsCompleted,
-        if (totalIntervals != null) 'totalIntervals': totalIntervals,
-        if (totalDistance != null) 'totalDistance': totalDistance,
-        if (distanceUnit != null) 'distanceUnit': distanceUnit,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    'intervalsCompleted': intervalsCompleted,
+    if (totalIntervals != null) 'totalIntervals': totalIntervals,
+    if (totalDistance != null) 'totalDistance': totalDistance,
+    if (distanceUnit != null) 'distanceUnit': distanceUnit,
+    if (note != null) 'note': note,
+  };
 
   factory IntervalResultData.fromJson(Map<String, dynamic> json) {
     return IntervalResultData(
@@ -258,12 +251,12 @@ class DistanceResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        if (distance != null) 'distance': distance,
-        'distanceUnit': distanceUnit,
-        if (durationSeconds != null) 'durationSeconds': durationSeconds,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    if (distance != null) 'distance': distance,
+    'distanceUnit': distanceUnit,
+    if (durationSeconds != null) 'durationSeconds': durationSeconds,
+    if (note != null) 'note': note,
+  };
 
   factory DistanceResultData.fromJson(Map<String, dynamic> json) {
     return DistanceResultData(
@@ -311,14 +304,14 @@ class EnduranceResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        'completed': completed,
-        if (distance != null) 'distance': distance,
-        'distanceUnit': distanceUnit,
-        if (durationSeconds != null) 'durationSeconds': durationSeconds,
-        if (averageHeartRate != null) 'averageHeartRate': averageHeartRate,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    'completed': completed,
+    if (distance != null) 'distance': distance,
+    'distanceUnit': distanceUnit,
+    if (durationSeconds != null) 'durationSeconds': durationSeconds,
+    if (averageHeartRate != null) 'averageHeartRate': averageHeartRate,
+    if (note != null) 'note': note,
+  };
 
   factory EnduranceResultData.fromJson(Map<String, dynamic> json) {
     return EnduranceResultData(
@@ -351,10 +344,7 @@ class EnduranceResultData extends PerformanceResultData {
 }
 
 class DurationResultData extends PerformanceResultData {
-  const DurationResultData({
-    this.durationSeconds,
-    this.note,
-  });
+  const DurationResultData({this.durationSeconds, this.note});
 
   final int? durationSeconds;
   final String? note;
@@ -364,10 +354,10 @@ class DurationResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        if (durationSeconds != null) 'durationSeconds': durationSeconds,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    if (durationSeconds != null) 'durationSeconds': durationSeconds,
+    if (note != null) 'note': note,
+  };
 
   factory DurationResultData.fromJson(Map<String, dynamic> json) {
     return DurationResultData(
@@ -402,12 +392,12 @@ class RoundsResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        'roundsCompleted': roundsCompleted,
-        'extraReps': extraReps,
-        if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    'roundsCompleted': roundsCompleted,
+    'extraReps': extraReps,
+    if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
+    if (note != null) 'note': note,
+  };
 
   factory RoundsResultData.fromJson(Map<String, dynamic> json) {
     return RoundsResultData(
@@ -453,13 +443,13 @@ class CustomMetricResultData extends PerformanceResultData {
 
   @override
   Map<String, dynamic> toJson() => {
-        'resultType': resultType.dbValue,
-        if (label != null) 'label': label,
-        if (numericValue != null) 'numericValue': numericValue,
-        if (unit != null) 'unit': unit,
-        if (textValue != null) 'textValue': textValue,
-        if (note != null) 'note': note,
-      };
+    'resultType': resultType.dbValue,
+    if (label != null) 'label': label,
+    if (numericValue != null) 'numericValue': numericValue,
+    if (unit != null) 'unit': unit,
+    if (textValue != null) 'textValue': textValue,
+    if (note != null) 'note': note,
+  };
 
   factory CustomMetricResultData.fromJson(Map<String, dynamic> json) {
     return CustomMetricResultData(

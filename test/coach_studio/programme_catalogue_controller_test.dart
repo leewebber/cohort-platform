@@ -64,9 +64,7 @@ void main() {
   }) {
     final lineageId = 'lineage-$lineageCode';
     if (!tables.lineages.any((lineage) => lineage.id == lineageId)) {
-      tables.lineages.add(
-        ProgrammeLineage(id: lineageId, code: lineageCode),
-      );
+      tables.lineages.add(ProgrammeLineage(id: lineageId, code: lineageCode));
     }
 
     tables.versions.add(
@@ -174,8 +172,10 @@ void main() {
 
     await controller.loadTab(ProgrammeCatalogueTab.published);
 
-    expect(controller.loadedEntries.single.lifecycleStatus,
-        ProgrammeLifecycleStatus.published);
+    expect(
+      controller.loadedEntries.single.lifecycleStatus,
+      ProgrammeLifecycleStatus.published,
+    );
   });
 
   test('global load', () async {
@@ -202,8 +202,10 @@ void main() {
 
     await controller.loadTab(ProgrammeCatalogueTab.archived);
 
-    expect(controller.loadedEntries.single.lifecycleStatus,
-        ProgrammeLifecycleStatus.archived);
+    expect(
+      controller.loadedEntries.single.lifecycleStatus,
+      ProgrammeLifecycleStatus.archived,
+    );
   });
 
   test('search by name', () async {
@@ -438,6 +440,9 @@ void main() {
     final result = await controller.deleteDraft('draft-1');
 
     expect(result.success, isTrue);
-    expect(tables.versions.where((version) => version.id == 'draft-1'), isEmpty);
+    expect(
+      tables.versions.where((version) => version.id == 'draft-1'),
+      isEmpty,
+    );
   });
 }

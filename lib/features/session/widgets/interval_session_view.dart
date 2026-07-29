@@ -56,21 +56,22 @@ class IntervalSessionView extends StatefulWidget {
     IntervalProgressService? progressService,
     TrainingSessionRepository? trainingSessionRepository,
     this.onLeaveCoordinatorReady,
-  })  : intervalRepository =
-            intervalRepository ?? const TrainingSessionIntervalRepository(),
-        performanceMapper =
-            performanceMapper ?? const IntervalPerformanceMapper(),
-        sessionHydrator = sessionHydrator ?? const IntervalSessionHydrator(),
-        previousPerformanceService = previousPerformanceService ??
-            const PreviousIntervalPerformanceService(),
-        progressService = progressService ?? const IntervalProgressService(),
-        trainingSessionRepository =
-            trainingSessionRepository ?? const TrainingSessionRepository();
+  }) : intervalRepository =
+           intervalRepository ?? const TrainingSessionIntervalRepository(),
+       performanceMapper =
+           performanceMapper ?? const IntervalPerformanceMapper(),
+       sessionHydrator = sessionHydrator ?? const IntervalSessionHydrator(),
+       previousPerformanceService =
+           previousPerformanceService ??
+           const PreviousIntervalPerformanceService(),
+       progressService = progressService ?? const IntervalProgressService(),
+       trainingSessionRepository =
+           trainingSessionRepository ?? const TrainingSessionRepository();
 
   final String sessionTitle;
   final IntervalSessionPlan plan;
   final Future<void> Function(IntervalSessionFinishSummary summary)
-      onFinishSession;
+  onFinishSession;
   final bool previewMode;
   final int? trainingSessionId;
   final String? athleteId;
@@ -82,7 +83,7 @@ class IntervalSessionView extends StatefulWidget {
   final IntervalProgressService progressService;
   final TrainingSessionRepository trainingSessionRepository;
   final void Function(IntervalSessionLeaveCoordinator coordinator)?
-      onLeaveCoordinatorReady;
+  onLeaveCoordinatorReady;
 
   @override
   State<IntervalSessionView> createState() => _IntervalSessionViewState();
@@ -110,11 +111,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
   bool _sessionNoteLocallyEdited = false;
   final Set<String> _preservedLocalIds = {};
 
-  bool get _hasRecordedWorkProgress =>
-      _executionState.entries.any(
-        (entry) =>
-            entry.isWorkPhase && (entry.completed || entry.hasStartedData),
-      );
+  bool get _hasRecordedWorkProgress => _executionState.entries.any(
+    (entry) => entry.isWorkPhase && (entry.completed || entry.hasStartedData),
+  );
 
   bool get hasRecordedProgress => _executionState.hasRecordedProgress;
 
@@ -149,13 +148,18 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
     _durationControllers = {};
     _distanceControllers = {};
     _paceControllers = {};
-    for (final entry in _executionState.entries.where((item) => item.isWorkPhase)) {
-      _durationControllers[entry.localId] =
-          TextEditingController(text: _formatDuration(entry.actualDuration));
-      _distanceControllers[entry.localId] =
-          TextEditingController(text: _formatDistance(entry.actualDistance));
-      _paceControllers[entry.localId] =
-          TextEditingController(text: _formatPace(entry.actualPace));
+    for (final entry in _executionState.entries.where(
+      (item) => item.isWorkPhase,
+    )) {
+      _durationControllers[entry.localId] = TextEditingController(
+        text: _formatDuration(entry.actualDuration),
+      );
+      _distanceControllers[entry.localId] = TextEditingController(
+        text: _formatDistance(entry.actualDistance),
+      );
+      _paceControllers[entry.localId] = TextEditingController(
+        text: _formatPace(entry.actualPace),
+      );
     }
 
     if (_isRealSession) {
@@ -255,12 +259,11 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
     setState(() => _isHydratingSession = true);
 
     try {
-      final persisted =
-          await widget.intervalRepository.getIntervalsForTrainingSession(
+      final persisted = await widget.intervalRepository
+          .getIntervalsForTrainingSession(trainingSessionId);
+      final session = await widget.trainingSessionRepository.getSessionById(
         trainingSessionId,
       );
-      final session =
-          await widget.trainingSessionRepository.getSessionById(trainingSessionId);
 
       if (!mounted) {
         return;
@@ -300,8 +303,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
   void _syncWorkControllersFromState() {
     _suppressMetricUpdate = true;
     try {
-      for (final entry
-          in _executionState.entries.where((item) => item.isWorkPhase)) {
+      for (final entry in _executionState.entries.where(
+        (item) => item.isWorkPhase,
+      )) {
         if (_preservedLocalIds.contains(entry.localId)) {
           continue;
         }
@@ -329,7 +333,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
     }
 
     setState(() {
-      _executionState = _executionState.copyWith(activeLocalId: current.localId);
+      _executionState = _executionState.copyWith(
+        activeLocalId: current.localId,
+      );
       _phaseStarted = true;
     });
 
@@ -423,7 +429,8 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       clearActiveLocalId: next == null,
     );
 
-    final shouldAutoStartRecovery = completed.isWorkPhase &&
+    final shouldAutoStartRecovery =
+        completed.isWorkPhase &&
         next != null &&
         next.isRecoveryPhase &&
         StrengthRestParser.parse(next.targetDuration) != null;
@@ -470,10 +477,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       paceText: _paceControllers[entry.localId]?.text,
     );
 
-    return _metricCalculator.applyToEntry(
-      entry: entry,
-      input: input,
-    );
+    return _metricCalculator.applyToEntry(entry: entry, input: input);
   }
 
   void _onWorkMetricFieldChanged(
@@ -499,10 +503,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       editedField: field,
     );
 
-    final updated = _metricCalculator.applyToEntry(
-      entry: entry,
-      input: input,
-    );
+    final updated = _metricCalculator.applyToEntry(entry: entry, input: input);
 
     _suppressMetricUpdate = true;
     try {
@@ -553,7 +554,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       return;
     }
 
-    for (final entry in _executionState.entries.where((item) => item.completed)) {
+    for (final entry in _executionState.entries.where(
+      (item) => item.completed,
+    )) {
       await _persistPhase(entry, skipped: entry.skipped);
     }
   }
@@ -582,38 +585,38 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       builder: (dialogContext) {
         return AlertDialog(
           backgroundColor: CohortColors.surfaceRaised,
-          title: Text(
-            'Leave this session?',
-            style: CohortTextStyles.cardTitle,
-          ),
+          title: Text('Leave this session?', style: CohortTextStyles.cardTitle),
           content: Text(
             'Your completed intervals are saved. You can resume this session later from Home.',
             style: CohortTextStyles.body,
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(dialogContext)
-                  .pop(SessionLeaveDecision.resumeLater),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.resumeLater),
               child: Text(
                 'Resume later',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.olive),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.olive,
+                ),
               ),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.of(dialogContext).pop(SessionLeaveDecision.endEarly),
+              onPressed: () => Navigator.of(
+                dialogContext,
+              ).pop(SessionLeaveDecision.endEarly),
               child: Text(
                 'End session early',
-                style: CohortTextStyles.body.copyWith(color: CohortColors.warning),
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.warning,
+                ),
               ),
             ),
             TextButton(
               onPressed: () =>
                   Navigator.of(dialogContext).pop(SessionLeaveDecision.cancel),
-              child: Text(
-                'Cancel',
-                style: CohortTextStyles.body,
-              ),
+              child: Text('Cancel', style: CohortTextStyles.body),
             ),
           ],
         );
@@ -658,10 +661,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
   }
 
   void _completeWorkEntryFromPostSession(IntervalRepEntry entry) {
-    final updated = _workEntryFromInputs(entry).copyWith(
-      completed: true,
-      skipped: false,
-    );
+    final updated = _workEntryFromInputs(
+      entry,
+    ).copyWith(completed: true, skipped: false);
     setState(() {
       _executionState = _executionState.updateEntry(updated);
       _recalculateProgress();
@@ -704,7 +706,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
       SnackBar(
         content: Text(
           message,
-          style: CohortTextStyles.small.copyWith(color: CohortColors.textPrimary),
+          style: CohortTextStyles.small.copyWith(
+            color: CohortColors.textPrimary,
+          ),
         ),
         backgroundColor: CohortColors.surfaceRaised,
         behavior: SnackBarBehavior.floating,
@@ -757,7 +761,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
           const SizedBox(height: CohortSpacing.sm),
           Text(
             'Restoring saved session...',
-            style: CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
+            style: CohortTextStyles.small.copyWith(
+              color: CohortColors.textMuted,
+            ),
           ),
         ],
         if (_shouldLoadPreviousPerformance) ...[
@@ -771,10 +777,7 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
           ),
         ],
         const SizedBox(height: CohortSpacing.xl),
-        Text(
-          'FULL SESSION PLAN',
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text('FULL SESSION PLAN', style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.md),
         _SessionPlanOverview(
           entries: _executionState.entries,
@@ -788,7 +791,9 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
         if (_postSessionEntryMode) ...[
           const SizedBox(height: CohortSpacing.lg),
           _PostSessionWorkList(
-            entries: _executionState.entries.where((e) => e.isWorkPhase).toList(),
+            entries: _executionState.entries
+                .where((e) => e.isWorkPhase)
+                .toList(),
             durationControllers: _durationControllers,
             distanceControllers: _distanceControllers,
             paceControllers: _paceControllers,
@@ -799,16 +804,10 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
           ),
         ] else ...[
           const SizedBox(height: CohortSpacing.xl),
-          Text(
-            'CURRENT PHASE',
-            style: CohortTextStyles.eyebrow,
-          ),
+          Text('CURRENT PHASE', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.md),
           if (current == null)
-            const Text(
-              'All phases complete.',
-              style: CohortTextStyles.body,
-            )
+            const Text('All phases complete.', style: CohortTextStyles.body)
           else
             _CurrentPhaseCard(
               entry: current,
@@ -853,9 +852,8 @@ class _IntervalSessionViewState extends State<IntervalSessionView> {
         SessionFinishActions(
           showFinishSession: _canFinishSession,
           onFinishSession: () => _finishSession(),
-          showEndSessionEarly: _isRealSession &&
-              _hasRecordedWorkProgress &&
-              !_canFinishSession,
+          showEndSessionEarly:
+              _isRealSession && _hasRecordedWorkProgress && !_canFinishSession,
           onEndSessionEarly: _confirmEndSessionEarly,
         ),
       ],
@@ -885,8 +883,9 @@ class _PreviousIntervalPerformanceSection extends StatelessWidget {
     return PreviousPerformanceShell(
       isLoading: isLoading,
       visible: hasLoaded,
-      loadingTextStyle:
-          CohortTextStyles.small.copyWith(color: CohortColors.textMuted),
+      loadingTextStyle: CohortTextStyles.small.copyWith(
+        color: CohortColors.textMuted,
+      ),
       emptyState: Text(
         'This is your first recorded interval performance.',
         style: CohortTextStyles.body,
@@ -949,8 +948,7 @@ Color _intervalProgressAccent(IntervalProgressType progressType) {
     IntervalProgressType.averagePaceImproved ||
     IntervalProgressType.consistencyImproved ||
     IntervalProgressType.effortImproved ||
-    IntervalProgressType.moreWorkCompleted =>
-      CohortColors.success,
+    IntervalProgressType.moreWorkCompleted => CohortColors.success,
     IntervalProgressType.matchedPerformance => CohortColors.olive,
     IntervalProgressType.mixedResult => CohortColors.warning,
     IntervalProgressType.insufficientData => CohortColors.textSecondary,
@@ -985,10 +983,7 @@ class _SessionPlanOverview extends StatelessWidget {
 }
 
 class _SessionPlanRow extends StatelessWidget {
-  const _SessionPlanRow({
-    required this.entry,
-    required this.isCurrent,
-  });
+  const _SessionPlanRow({required this.entry, required this.isCurrent});
 
   final IntervalRepEntry entry;
   final bool isCurrent;
@@ -1001,14 +996,14 @@ class _SessionPlanRow extends StatelessWidget {
     final accentColor = isCurrent
         ? CohortColors.olive
         : isCompleted
-            ? CohortColors.success
-            : CohortColors.textSecondary;
+        ? CohortColors.success
+        : CohortColors.textSecondary;
 
     final backgroundColor = isCurrent
         ? CohortColors.oliveSoft
         : isCompleted
-            ? CohortColors.surface
-            : CohortColors.surfaceRaised;
+        ? CohortColors.surface
+        : CohortColors.surfaceRaised;
 
     return Container(
       width: double.infinity,
@@ -1020,8 +1015,8 @@ class _SessionPlanRow extends StatelessWidget {
           color: isCurrent
               ? CohortColors.olive
               : isCompleted
-                  ? CohortColors.success.withValues(alpha: 0.35)
-                  : CohortColors.border,
+              ? CohortColors.success.withValues(alpha: 0.35)
+              : CohortColors.border,
         ),
       ),
       child: Row(
@@ -1031,8 +1026,8 @@ class _SessionPlanRow extends StatelessWidget {
             isCompleted
                 ? Icons.check_circle_outline
                 : isCurrent
-                    ? Icons.play_circle_outline
-                    : Icons.circle_outlined,
+                ? Icons.play_circle_outline
+                : Icons.circle_outlined,
             size: 18,
             color: accentColor,
           ),
@@ -1043,7 +1038,9 @@ class _SessionPlanRow extends StatelessWidget {
               children: [
                 Text(
                   _phaseTitle(entry),
-                  style: CohortTextStyles.cardTitle.copyWith(color: accentColor),
+                  style: CohortTextStyles.cardTitle.copyWith(
+                    color: accentColor,
+                  ),
                 ),
                 if (_targetSummary(entry) != null) ...[
                   const SizedBox(height: CohortSpacing.xs),
@@ -1119,7 +1116,8 @@ class _CurrentPhaseCard extends StatelessWidget {
   final VoidCallback onCompletePhase;
   final VoidCallback onSkipPhase;
   final void Function(int? rpe) onRpeChanged;
-  final void Function(IntervalMetricField field, String text)? onMetricFieldChanged;
+  final void Function(IntervalMetricField field, String text)?
+  onMetricFieldChanged;
   final VoidCallback? onPauseRecovery;
   final VoidCallback? onResumeRecovery;
   final VoidCallback? onSkipRecovery;
@@ -1136,10 +1134,7 @@ class _CurrentPhaseCard extends StatelessWidget {
             style: CohortTextStyles.eyebrow.copyWith(color: CohortColors.olive),
           ),
           const SizedBox(height: CohortSpacing.sm),
-          Text(
-            _phaseHeadline(entry),
-            style: CohortTextStyles.h2,
-          ),
+          Text(_phaseHeadline(entry), style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.md),
           if (entry.targetDistance != null)
             _TargetLine(label: 'Distance', value: entry.targetDistance!),
@@ -1177,10 +1172,8 @@ class _CurrentPhaseCard extends StatelessWidget {
                 IntervalMetricField.distance,
                 text,
               ),
-              onPaceChanged: (text) => onMetricFieldChanged?.call(
-                IntervalMetricField.pace,
-                text,
-              ),
+              onPaceChanged: (text) =>
+                  onMetricFieldChanged?.call(IntervalMetricField.pace, text),
             ),
           ],
           if (entry.isRecoveryPhase && recoveryTimerState != null) ...[
@@ -1204,57 +1197,38 @@ class _CurrentPhaseCard extends StatelessWidget {
     if (entry.isWorkPhase) {
       return [
         if (!phaseStarted) ...[
-          CohortButton(
-            label: 'Start Phase',
-            onPressed: onStartPhase,
-          ),
+          CohortButton(label: 'Start Phase', onPressed: onStartPhase),
           const SizedBox(height: CohortSpacing.md),
         ],
-        CohortButton(
-          label: 'Complete Phase',
-          onPressed: onCompletePhase,
-        ),
+        CohortButton(label: 'Complete Phase', onPressed: onCompletePhase),
       ];
     }
 
     if (entry.isRecoveryPhase) {
       return [
         if (recoveryTimerState == null && !phaseStarted)
-          CohortButton(
-            label: 'Start Phase',
-            onPressed: onStartPhase,
-          ),
+          CohortButton(label: 'Start Phase', onPressed: onStartPhase),
         if (recoveryTimerState == null && !phaseStarted)
           const SizedBox(height: CohortSpacing.md),
         CohortButton(
           label: recoveryTimerState?.finished == true
               ? 'Complete Phase'
               : 'Skip Phase',
-          onPressed:
-              recoveryTimerState?.finished == true ? onCompletePhase : onSkipPhase,
+          onPressed: recoveryTimerState?.finished == true
+              ? onCompletePhase
+              : onSkipPhase,
         ),
       ];
     }
 
     if (!phaseStarted) {
-      return [
-        CohortButton(
-          label: 'Start Phase',
-          onPressed: onStartPhase,
-        ),
-      ];
+      return [CohortButton(label: 'Start Phase', onPressed: onStartPhase)];
     }
 
     return [
-      CohortButton(
-        label: 'Complete Phase',
-        onPressed: onCompletePhase,
-      ),
+      CohortButton(label: 'Complete Phase', onPressed: onCompletePhase),
       const SizedBox(height: CohortSpacing.sm),
-      TextButton(
-        onPressed: onSkipPhase,
-        child: const Text('Skip Phase'),
-      ),
+      TextButton(onPressed: onSkipPhase, child: const Text('Skip Phase')),
     ];
   }
 
@@ -1268,10 +1242,7 @@ class _CurrentPhaseCard extends StatelessWidget {
 }
 
 class _TargetLine extends StatelessWidget {
-  const _TargetLine({
-    required this.label,
-    required this.value,
-  });
+  const _TargetLine({required this.label, required this.value});
 
   final String label;
   final String value;
@@ -1280,10 +1251,7 @@ class _TargetLine extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
-      child: Text(
-        '$label: $value',
-        style: CohortTextStyles.body,
-      ),
+      child: Text('$label: $value', style: CohortTextStyles.body),
     );
   }
 }
@@ -1345,10 +1313,7 @@ class _ManualEntryFields extends StatelessWidget {
           onChanged: onPaceChanged,
         ),
         const SizedBox(height: CohortSpacing.md),
-        Text(
-          'RPE (optional)',
-          style: CohortTextStyles.muted,
-        ),
+        Text('RPE (optional)', style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.sm),
         Wrap(
           spacing: CohortSpacing.sm,
@@ -1456,10 +1421,7 @@ class _IntervalTextField extends StatelessWidget {
 }
 
 class _PostSessionToggle extends StatelessWidget {
-  const _PostSessionToggle({
-    required this.enabled,
-    required this.onChanged,
-  });
+  const _PostSessionToggle({required this.enabled, required this.onChanged});
 
   final bool enabled;
   final ValueChanged<bool> onChanged;
@@ -1473,10 +1435,7 @@ class _PostSessionToggle extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: CohortRadius.largeRadius,
-          border: Border.all(
-            color: CohortColors.border,
-            width: 1,
-          ),
+          border: Border.all(color: CohortColors.border, width: 1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: CohortSpacing.lg),
         child: SwitchListTile(
@@ -1519,7 +1478,7 @@ class _PostSessionWorkList extends StatelessWidget {
   final void Function(IntervalRepEntry entry, int? rpe) onRpeChanged;
   final void Function(IntervalRepEntry entry) onComplete;
   final void Function(String localId, IntervalMetricField field, String text)
-      onMetricFieldChanged;
+  onMetricFieldChanged;
   final IntervalSessionExecutionState executionState;
 
   @override
@@ -1527,15 +1486,13 @@ class _PostSessionWorkList extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'WORK INTERVAL RESULTS',
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text('WORK INTERVAL RESULTS', style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.md),
         for (var index = 0; index < entries.length; index++) ...[
           if (index > 0) const SizedBox(height: CohortSpacing.md),
           _PostSessionWorkCard(
-            entry: executionState.entryByLocalId(entries[index].localId) ??
+            entry:
+                executionState.entryByLocalId(entries[index].localId) ??
                 entries[index],
             durationController: durationControllers[entries[index].localId],
             distanceController: distanceControllers[entries[index].localId],
@@ -1569,7 +1526,7 @@ class _PostSessionWorkCard extends StatelessWidget {
   final void Function(int? rpe) onRpeChanged;
   final VoidCallback onComplete;
   final void Function(IntervalMetricField field, String text)?
-      onMetricFieldChanged;
+  onMetricFieldChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -1619,18 +1576,12 @@ class _PostSessionWorkCard extends StatelessWidget {
             showAutoDistance:
                 entry.distanceSource == IntervalMetricEntrySource.auto,
             showAutoPace: entry.paceSource == IntervalMetricEntrySource.auto,
-            onDurationChanged: (text) => onMetricFieldChanged?.call(
-              IntervalMetricField.duration,
-              text,
-            ),
-            onDistanceChanged: (text) => onMetricFieldChanged?.call(
-              IntervalMetricField.distance,
-              text,
-            ),
-            onPaceChanged: (text) => onMetricFieldChanged?.call(
-              IntervalMetricField.pace,
-              text,
-            ),
+            onDurationChanged: (text) =>
+                onMetricFieldChanged?.call(IntervalMetricField.duration, text),
+            onDistanceChanged: (text) =>
+                onMetricFieldChanged?.call(IntervalMetricField.distance, text),
+            onPaceChanged: (text) =>
+                onMetricFieldChanged?.call(IntervalMetricField.pace, text),
           ),
           const SizedBox(height: CohortSpacing.md),
           CohortButton(
@@ -1660,8 +1611,9 @@ class _RecoveryTimerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accentColor =
-        state.finished ? CohortColors.success : CohortColors.olive;
+    final accentColor = state.finished
+        ? CohortColors.success
+        : CohortColors.olive;
 
     return Container(
       width: double.infinity,
@@ -1749,12 +1701,15 @@ String _phaseTypeLabel(IntervalPhaseType type) {
 }
 
 String? _formatDuration(Duration? duration) {
-  return _IntervalSessionViewState._metricCalculator
-      .formatDurationSeconds(duration?.inSeconds);
+  return _IntervalSessionViewState._metricCalculator.formatDurationSeconds(
+    duration?.inSeconds,
+  );
 }
 
 String? _formatDistance(double? meters) {
-  return _IntervalSessionViewState._metricCalculator.formatDistanceMeters(meters);
+  return _IntervalSessionViewState._metricCalculator.formatDistanceMeters(
+    meters,
+  );
 }
 
 String? _formatPace(double? secondsPerKm) {

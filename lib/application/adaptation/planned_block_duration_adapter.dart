@@ -1,14 +1,14 @@
-import '../../../models/session_block.dart';
-import '../../../models/session_block_exercise_link.dart';
-import '../../../models/session_block_type.dart';
-import '../../../models/strength_exercise_prescription.dart';
-import '../../../models/timer_configuration.dart';
-import '../../../models/workout_format.dart';
-import '../evaluation/adaptation_evaluation_result.dart';
+import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
+import 'package:cohort_platform/models/session_block.dart';
+import 'package:cohort_platform/models/session_block_exercise_link.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/strength_exercise_prescription.dart';
+import 'package:cohort_platform/models/timer_configuration.dart';
+import 'package:cohort_platform/models/workout_format.dart';
 
 /// Derives reliable block duration estimates from authored block metadata only.
-class PlannedBlockDurationEstimator {
-  const PlannedBlockDurationEstimator._();
+class PlannedBlockDurationAdapter {
+  const PlannedBlockDurationAdapter._();
 
   static int? estimatedMinutesFromBlock(SessionBlock block) {
     final timer = block.timerConfiguration;
@@ -28,11 +28,18 @@ class PlannedBlockDurationEstimator {
     return switch (format) {
       WorkoutFormat.amrap => timer.durationSeconds,
       WorkoutFormat.emom => timer.totalDurationSeconds,
-      WorkoutFormat.intervals =>
-        _intervalTotalSeconds(timer.workSeconds, timer.restSeconds, timer.rounds),
-      WorkoutFormat.tabata =>
-        _intervalTotalSeconds(timer.workSeconds, timer.restSeconds, timer.rounds),
-      WorkoutFormat.other => timer.durationSeconds ?? timer.totalDurationSeconds,
+      WorkoutFormat.intervals => _intervalTotalSeconds(
+        timer.workSeconds,
+        timer.restSeconds,
+        timer.rounds,
+      ),
+      WorkoutFormat.tabata => _intervalTotalSeconds(
+        timer.workSeconds,
+        timer.restSeconds,
+        timer.rounds,
+      ),
+      WorkoutFormat.other =>
+        timer.durationSeconds ?? timer.totalDurationSeconds,
       WorkoutFormat.forTime => timer.timeCapSeconds,
       WorkoutFormat.rounds => null,
       WorkoutFormat.none => null,
@@ -75,7 +82,7 @@ class PlannedBlockDurationEstimator {
       restSeconds: prescription.restSeconds,
       supportsStructuredReduction:
           block.blockType.supportsStructuredStrengthPrescription &&
-              prescription.sets > 0,
+          prescription.sets > 0,
     );
   }
 }

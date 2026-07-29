@@ -56,10 +56,7 @@ class _SessionNoteFieldState extends State<SessionNoteField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: CohortTextStyles.eyebrow,
-        ),
+        Text(widget.label, style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.sm),
         TextField(
           controller: _controller,
@@ -100,10 +97,7 @@ class _SessionNoteFieldState extends State<SessionNoteField> {
         ),
         if (widget.helperText != null) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            widget.helperText!,
-            style: CohortTextStyles.small,
-          ),
+          Text(widget.helperText!, style: CohortTextStyles.small),
         ],
       ],
     );

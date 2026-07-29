@@ -1,11 +1,5 @@
 /// Structural and systemic load impact (not pain diagnosis).
-enum ImpactLevel {
-  veryLow,
-  low,
-  moderate,
-  high,
-  veryHigh,
-}
+enum ImpactLevel { veryLow, low, moderate, high, veryHigh }
 
 extension ImpactLevelDb on ImpactLevel {
   String get dbValue {

@@ -1,5 +1,6 @@
 import '../contracts/adaptation_constraint_kind.dart';
 import '../mapping/session_block_type_adaptation_policy.dart';
+import '../vocabulary/adaptation_block_type.dart';
 import '../vocabulary/adaptation_action_type.dart';
 import '../vocabulary/adaptation_confidence.dart';
 import '../vocabulary/adaptation_fidelity.dart';
@@ -8,7 +9,6 @@ import '../vocabulary/impact_level.dart';
 import '../vocabulary/training_environment.dart';
 import 'adaptation_constraint_context.dart';
 import 'adaptation_evaluation_result.dart';
-import 'planned_session_adaptation_input_factory.dart';
 
 /// Deterministic, read-only feasibility analysis for planned sessions.
 ///
@@ -58,9 +58,19 @@ class SessionAdaptationReadOnlyEvaluator {
       }
     }
 
-    final timeAnalysis = _analyzeTime(session, validatedConstraints, findings, missingMetadata);
+    final timeAnalysis = _analyzeTime(
+      session,
+      validatedConstraints,
+      findings,
+      missingMetadata,
+    );
     final blockResults = _evaluateBlocks(session, timeAnalysis, findings);
-    _evaluateEquipment(session, validatedConstraints, findings, missingMetadata);
+    _evaluateEquipment(
+      session,
+      validatedConstraints,
+      findings,
+      missingMetadata,
+    );
     _evaluateEnvironment(
       session,
       validatedConstraints,
@@ -68,7 +78,14 @@ class SessionAdaptationReadOnlyEvaluator {
       missingMetadata,
       diagnostics,
     );
-    _evaluateImpact(session, validatedConstraints, findings, missingMetadata, diagnostics);
+    _evaluateRecovery(session, validatedConstraints, findings);
+    _evaluateImpact(
+      session,
+      validatedConstraints,
+      findings,
+      missingMetadata,
+      diagnostics,
+    );
     _evaluateMovementRestrictions(
       session,
       validatedConstraints,
@@ -83,14 +100,18 @@ class SessionAdaptationReadOnlyEvaluator {
       findings: findings,
     );
 
-    final primaryPreservable = primaryKnown &&
+    final primaryPreservable =
+        primaryKnown &&
         timeAnalysis.primaryIntentPreservable &&
         !findings.any(
           (f) =>
-              f.confidence == AdaptationFindingConfidence.confirmedIncompatible &&
+              f.confidence ==
+                  AdaptationFindingConfidence.confirmedIncompatible &&
               (f.code == AdaptationEvaluationFindingCode.insufficientDuration ||
                   f.code == AdaptationEvaluationFindingCode.impactConflict ||
-                  f.code == AdaptationEvaluationFindingCode.movementRestrictionConflict),
+                  f.code ==
+                      AdaptationEvaluationFindingCode
+                          .movementRestrictionConflict),
         );
 
     final expectedFidelity = _expectedFidelity(
@@ -130,7 +151,8 @@ class SessionAdaptationReadOnlyEvaluator {
       permittedAdaptationActions: actionSets.permitted,
       blockedAdaptationActions: actionSets.blocked,
       findings: List.unmodifiable(findings),
-      missingMetadata: missingMetadata.toList()..sort((a, b) => a.name.compareTo(b.name)),
+      missingMetadata: missingMetadata.toList()
+        ..sort((a, b) => a.name.compareTo(b.name)),
       confidenceFindings: confidenceAssessment.findings,
       blockResults: blockResults,
     );
@@ -155,7 +177,9 @@ class SessionAdaptationReadOnlyEvaluator {
     }
 
     if (planned == null) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.missingMinimumViableDuration);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.missingMinimumViableDuration,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.missingMinimumViableDuration,
@@ -185,7 +209,9 @@ class SessionAdaptationReadOnlyEvaluator {
     }
 
     if (minViable == null) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.missingMinimumViableDuration);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.missingMinimumViableDuration,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.missingMinimumViableDuration,
@@ -237,71 +263,78 @@ class SessionAdaptationReadOnlyEvaluator {
     _TimeAnalysis timeAnalysis,
     List<AdaptationEvaluationFinding> findings,
   ) {
-    return session.blocks.map((block) {
-      final blockType =
-          PlannedSessionAdaptationInputFactory.blockTypeFromDb(block.blockTypeDbValue);
-      final derivedPriority =
-          SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
-      final derivedPolicy =
-          SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(blockType);
-      final explicitPriority = block.explicitPriority;
-      final explicitPolicy = block.explicitPolicy;
-      final policySource = explicitPolicy != null
-          ? AdaptationPolicySource.explicit
-          : AdaptationPolicySource.derived;
-      final effectivePriority = explicitPriority ?? derivedPriority;
-      final effectivePolicy = explicitPolicy ?? derivedPolicy;
+    return session.blocks
+        .map((block) {
+          final blockType = AdaptationBlockTypePlanning.fromPlanningDbValue(
+            block.blockTypeDbValue,
+          );
+          final derivedPriority =
+              SessionBlockTypeAdaptationPolicy.defaultPriority(blockType);
+          final derivedPolicy =
+              SessionBlockTypeAdaptationPolicy.defaultAdaptationPolicy(
+                blockType,
+              );
+          final explicitPriority = block.explicitPriority;
+          final explicitPolicy = block.explicitPolicy;
+          final policySource = explicitPolicy != null
+              ? AdaptationPolicySource.explicit
+              : AdaptationPolicySource.derived;
+          final effectivePriority = explicitPriority ?? derivedPriority;
+          final effectivePolicy = explicitPolicy ?? derivedPolicy;
 
-      final blockFindings = <AdaptationEvaluationFinding>[
-        AdaptationEvaluationFinding(
-          code: policySource == AdaptationPolicySource.explicit
-              ? AdaptationEvaluationFindingCode.explicitPolicyInUse
-              : AdaptationEvaluationFindingCode.derivedPolicyInUse,
-          confidence: AdaptationFindingConfidence.confirmedCompatible,
-          blockLocalId: block.localId,
-        ),
-      ];
+          final blockFindings = <AdaptationEvaluationFinding>[
+            AdaptationEvaluationFinding(
+              code: policySource == AdaptationPolicySource.explicit
+                  ? AdaptationEvaluationFindingCode.explicitPolicyInUse
+                  : AdaptationEvaluationFindingCode.derivedPolicyInUse,
+              confidence: AdaptationFindingConfidence.confirmedCompatible,
+              blockLocalId: block.localId,
+            ),
+          ];
 
-      final removalPermitted = effectivePolicy.canRemove;
-      final essentialBlocksNotRemovable =
-          effectivePriority == BlockPriority.essential;
+          final removalPermitted = effectivePolicy.canRemove;
+          final essentialBlocksNotRemovable =
+              effectivePriority == BlockPriority.essential;
 
-      if (!removalPermitted) {
-        blockFindings.add(
-          AdaptationEvaluationFinding(
-            code: AdaptationEvaluationFindingCode.adaptationPolicyPreventsRemoval,
-            confidence: AdaptationFindingConfidence.confirmedIncompatible,
+          if (!removalPermitted) {
+            blockFindings.add(
+              AdaptationEvaluationFinding(
+                code: AdaptationEvaluationFindingCode
+                    .adaptationPolicyPreventsRemoval,
+                confidence: AdaptationFindingConfidence.confirmedIncompatible,
+                blockLocalId: block.localId,
+              ),
+            );
+          }
+
+          if (essentialBlocksNotRemovable && timeAnalysis.requiresShortening) {
+            blockFindings.add(
+              AdaptationEvaluationFinding(
+                code: AdaptationEvaluationFindingCode.essentialBlockAtRisk,
+                confidence: AdaptationFindingConfidence.confirmedIncompatible,
+                blockLocalId: block.localId,
+                message:
+                    'Essential block cannot be assumed removable under time pressure.',
+              ),
+            );
+            findings.add(blockFindings.last);
+          }
+
+          findings.addAll(blockFindings);
+
+          return BlockAdaptationEvaluation(
             blockLocalId: block.localId,
-          ),
-        );
-      }
-
-      if (essentialBlocksNotRemovable && timeAnalysis.requiresShortening) {
-        blockFindings.add(
-          AdaptationEvaluationFinding(
-            code: AdaptationEvaluationFindingCode.essentialBlockAtRisk,
-            confidence: AdaptationFindingConfidence.confirmedIncompatible,
-            blockLocalId: block.localId,
-            message: 'Essential block cannot be assumed removable under time pressure.',
-          ),
-        );
-        findings.add(blockFindings.last);
-      }
-
-      findings.addAll(blockFindings);
-
-      return BlockAdaptationEvaluation(
-        blockLocalId: block.localId,
-        effectivePriority: effectivePriority,
-        explicitPriority: explicitPriority,
-        effectivePolicy: effectivePolicy,
-        explicitPolicy: explicitPolicy,
-        policySource: policySource,
-        removalPermittedByPolicy: removalPermitted,
-        removalBlockedByEssentialPriority: essentialBlocksNotRemovable,
-        findings: blockFindings,
-      );
-    }).toList(growable: false);
+            effectivePriority: effectivePriority,
+            explicitPriority: explicitPriority,
+            effectivePolicy: effectivePolicy,
+            explicitPolicy: explicitPolicy,
+            policySource: policySource,
+            removalPermittedByPolicy: removalPermitted,
+            removalBlockedByEssentialPriority: essentialBlocksNotRemovable,
+            findings: blockFindings,
+          );
+        })
+        .toList(growable: false);
   }
 
   void _evaluateEquipment(
@@ -313,7 +346,9 @@ class SessionAdaptationReadOnlyEvaluator {
     if (!constraints.hasEquipmentConstraint) return;
 
     if (session.requiredEquipmentTokens.isEmpty) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.equipmentMetadataMissing);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.equipmentMetadataMissing,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.equipmentMetadataMissing,
@@ -357,13 +392,16 @@ class SessionAdaptationReadOnlyEvaluator {
     final env = constraints.trainingEnvironment;
     if (env == null) return;
 
-    final hasSessionEnvMetadata = (session.sessionEnvironmentLabel != null &&
+    final hasSessionEnvMetadata =
+        (session.sessionEnvironmentLabel != null &&
             session.sessionEnvironmentLabel!.trim().isNotEmpty) ||
         session.hotelFriendly != null ||
         session.indoorFriendly != null;
 
     if (!hasSessionEnvMetadata) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.environmentMetadataMissing);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.environmentMetadataMissing,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.environmentMetadataMissing,
@@ -378,16 +416,164 @@ class SessionAdaptationReadOnlyEvaluator {
         session.sessionEnvironmentLabel!.trim().isNotEmpty) {
       diagnostics.environmentCompatibilityUsesLabelHeuristic = true;
     }
+    if (!compatible) {
+      findings.add(
+        const AdaptationEvaluationFinding(
+          code: AdaptationEvaluationFindingCode.environmentMismatch,
+          confidence: AdaptationFindingConfidence.confirmedIncompatible,
+        ),
+      );
+      return;
+    }
+
+    if (env == TrainingEnvironment.hotelRoom &&
+        !_hotelRoomEquipmentCompatible(session)) {
+      findings.add(
+        const AdaptationEvaluationFinding(
+          code: AdaptationEvaluationFindingCode.equipmentMismatch,
+          confidence: AdaptationFindingConfidence.confirmedIncompatible,
+          message:
+              'Requires equipment not suitable for hotel room environment.',
+        ),
+      );
+      return;
+    }
+
     findings.add(
-      AdaptationEvaluationFinding(
-        code: compatible
-            ? AdaptationEvaluationFindingCode.environmentCompatible
-            : AdaptationEvaluationFindingCode.environmentMismatch,
-        confidence: compatible
-            ? AdaptationFindingConfidence.confirmedCompatible
-            : AdaptationFindingConfidence.confirmedIncompatible,
+      const AdaptationEvaluationFinding(
+        code: AdaptationEvaluationFindingCode.environmentCompatible,
+        confidence: AdaptationFindingConfidence.confirmedCompatible,
       ),
     );
+  }
+
+  void _evaluateRecovery(
+    PlannedSessionAdaptationInput session,
+    AdaptationConstraintContext constraints,
+    List<AdaptationEvaluationFinding> findings,
+  ) {
+    final label = constraints.recoveryStateLabel?.trim();
+    if (label == null || label.isEmpty) {
+      return;
+    }
+
+    final maxAllowed = _maxAllowedRecoveryLevelForLabel(label);
+    final demandRank = _physiologicalLevelRank(
+      session.physiologicalDemandLabel,
+    );
+    final recoveryRank = _physiologicalLevelRank(session.recoveryCostLabel);
+
+    if (demandRank > maxAllowed) {
+      findings.add(
+        AdaptationEvaluationFinding(
+          code: AdaptationEvaluationFindingCode.recoveryConflict,
+          confidence: AdaptationFindingConfidence.confirmedIncompatible,
+          message: 'Physiological demand too high for $label',
+        ),
+      );
+      return;
+    }
+
+    if (recoveryRank > maxAllowed) {
+      findings.add(
+        AdaptationEvaluationFinding(
+          code: AdaptationEvaluationFindingCode.recoveryConflict,
+          confidence: AdaptationFindingConfidence.confirmedIncompatible,
+          message: 'Recovery cost too high for $label',
+        ),
+      );
+      return;
+    }
+
+    findings.add(
+      const AdaptationEvaluationFinding(
+        code: AdaptationEvaluationFindingCode.recoveryCompatible,
+        confidence: AdaptationFindingConfidence.confirmedCompatible,
+      ),
+    );
+  }
+
+  bool _hotelRoomEquipmentCompatible(PlannedSessionAdaptationInput session) {
+    if (session.requiredEquipmentTokens.isEmpty) {
+      return true;
+    }
+
+    for (final required in session.requiredEquipmentTokens) {
+      final normalized = _normalizeToken(required);
+      if (_isBodyweightCompatibleEquipment(normalized)) {
+        continue;
+      }
+      if (_findHotelRoomIncompatibleEquipment(normalized) != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  static const _hotelRoomIncompatibleEquipment = [
+    'full gym',
+    'barbell',
+    'bike erg',
+    'row erg',
+    'rower',
+    'ski erg',
+    'sandbag',
+    'wall ball',
+    'box',
+  ];
+
+  String? _findHotelRoomIncompatibleEquipment(String normalizedEquipment) {
+    for (final incompatible in _hotelRoomIncompatibleEquipment) {
+      if (normalizedEquipment == incompatible ||
+          normalizedEquipment.contains(incompatible)) {
+        return incompatible;
+      }
+    }
+    return null;
+  }
+
+  bool _isBodyweightCompatibleEquipment(String normalizedEquipment) {
+    return normalizedEquipment.isEmpty ||
+        normalizedEquipment == 'bodyweight' ||
+        normalizedEquipment == 'none';
+  }
+
+  int _maxAllowedRecoveryLevelForLabel(String recoveryStateLabel) {
+    final normalized = _normalizeToken(recoveryStateLabel);
+    if (normalized.contains('slightly tired')) return 3;
+    if (normalized.contains('poor sleep')) return 2;
+    if (normalized.contains('very fatigued')) return 1;
+    if (normalized.contains('feeling ill')) return 0;
+    return 2;
+  }
+
+  int _physiologicalLevelRank(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 99;
+    }
+
+    final lower = value.trim().toLowerCase();
+
+    if (lower.contains('very high') || lower.contains('very hard')) {
+      return 4;
+    }
+    if (lower.contains('high') || lower.contains('hard')) {
+      return 3;
+    }
+    if (lower.contains('moderate') ||
+        lower.contains('medium') ||
+        lower.contains('standard')) {
+      return 2;
+    }
+    if (lower.contains('very low')) {
+      return 0;
+    }
+    if (lower.contains('low') ||
+        lower.contains('light') ||
+        lower.contains('minimal')) {
+      return 1;
+    }
+    return 2;
   }
 
   void _evaluateImpact(
@@ -402,7 +588,9 @@ class SessionAdaptationReadOnlyEvaluator {
 
     final sessionImpact = session.sessionImpact;
     if (sessionImpact == null) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.impactMetadataMissing);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.impactMetadataMissing,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.impactMetadataMissing,
@@ -461,7 +649,8 @@ class SessionAdaptationReadOnlyEvaluator {
           if (constraints.restrictedMovementPatterns.contains(pattern)) {
             findings.add(
               AdaptationEvaluationFinding(
-                code: AdaptationEvaluationFindingCode.movementRestrictionConflict,
+                code:
+                    AdaptationEvaluationFindingCode.movementRestrictionConflict,
                 confidence: AdaptationFindingConfidence.confirmedIncompatible,
                 exerciseId: exerciseId,
                 blockLocalId: block.localId,
@@ -490,7 +679,9 @@ class SessionAdaptationReadOnlyEvaluator {
 
     if (!evaluatedAny &&
         session.blocks.any((b) => b.linkedExerciseIds.isNotEmpty)) {
-      missingMetadata.add(AdaptationEvaluationFindingCode.movementMetadataMissing);
+      missingMetadata.add(
+        AdaptationEvaluationFindingCode.movementMetadataMissing,
+      );
       findings.add(
         const AdaptationEvaluationFinding(
           code: AdaptationEvaluationFindingCode.movementMetadataMissing,
@@ -535,20 +726,25 @@ class SessionAdaptationReadOnlyEvaluator {
 
     for (final block in blockResults) {
       final policy = block.effectivePolicy;
-      if (!policy.canReduceVolume) blocked.add(AdaptationActionType.reduceVolume);
+      if (!policy.canReduceVolume)
+        blocked.add(AdaptationActionType.reduceVolume);
       if (!policy.canReduceIntensity) {
         blocked.add(AdaptationActionType.reduceIntensity);
       }
-      if (!policy.canIncreaseRest) blocked.add(AdaptationActionType.increaseRest);
+      if (!policy.canIncreaseRest)
+        blocked.add(AdaptationActionType.increaseRest);
       if (!policy.canReplaceExercises) {
         blocked.add(AdaptationActionType.swapExercise);
       }
-      if (!policy.canReplaceBlock) blocked.add(AdaptationActionType.replaceBlock);
+      if (!policy.canReplaceBlock)
+        blocked.add(AdaptationActionType.replaceBlock);
       if (!policy.canRemove) blocked.add(AdaptationActionType.removeBlock);
     }
 
     if (findings.any(
-      (f) => f.code == AdaptationEvaluationFindingCode.adaptationPolicyPreventsRemoval,
+      (f) =>
+          f.code ==
+          AdaptationEvaluationFindingCode.adaptationPolicyPreventsRemoval,
     )) {
       blocked.add(AdaptationActionType.removeBlock);
     }
@@ -570,7 +766,9 @@ class SessionAdaptationReadOnlyEvaluator {
     required Set<AdaptationEvaluationFindingCode> missingMetadata,
   }) {
     if (!primaryKnown ||
-        missingMetadata.contains(AdaptationEvaluationFindingCode.missingMinimumViableDuration)) {
+        missingMetadata.contains(
+          AdaptationEvaluationFindingCode.missingMinimumViableDuration,
+        )) {
       return AdaptationFidelity.compromised;
     }
     if (!primaryPreservable) return AdaptationFidelity.low;
@@ -602,7 +800,8 @@ class SessionAdaptationReadOnlyEvaluator {
       (f) =>
           f.confidence == AdaptationFindingConfidence.confirmedIncompatible &&
           f.code != AdaptationEvaluationFindingCode.insufficientDuration &&
-          f.code != AdaptationEvaluationFindingCode.adaptationPolicyPreventsRemoval &&
+          f.code !=
+              AdaptationEvaluationFindingCode.adaptationPolicyPreventsRemoval &&
           f.code != AdaptationEvaluationFindingCode.essentialBlockAtRisk,
     );
 
@@ -610,7 +809,8 @@ class SessionAdaptationReadOnlyEvaluator {
       return AdaptationEvaluationOutcome.notAdaptable;
     }
 
-    if (timeAnalysis.minimumScope == AdaptationMinimumScope.sessionReplacement) {
+    if (timeAnalysis.minimumScope ==
+        AdaptationMinimumScope.sessionReplacement) {
       return AdaptationEvaluationOutcome.notAdaptable;
     }
 
@@ -709,7 +909,8 @@ class SessionAdaptationReadOnlyEvaluator {
           b.explicitPriority != null ||
           b.policySource == AdaptationPolicySource.explicit,
     );
-    final allBlocksFullyDerived = blockResults.isNotEmpty &&
+    final allBlocksFullyDerived =
+        blockResults.isNotEmpty &&
         blockResults.every(
           (b) =>
               b.explicitPolicy == null &&
@@ -722,7 +923,9 @@ class SessionAdaptationReadOnlyEvaluator {
         AdaptationConfidenceFindingCode.explicitBlockAdaptationMetadataInUse,
       );
     }
-    if (blockResults.any((b) => b.policySource == AdaptationPolicySource.derived)) {
+    if (blockResults.any(
+      (b) => b.policySource == AdaptationPolicySource.derived,
+    )) {
       confidenceFindings.add(
         AdaptationConfidenceFindingCode.derivedBlockAdaptationDefaultsInUse,
       );
@@ -736,11 +939,13 @@ class SessionAdaptationReadOnlyEvaluator {
     }
     if (diagnostics.environmentCompatibilityUsesLabelHeuristic) {
       confidenceFindings.add(
-        AdaptationConfidenceFindingCode.environmentCompatibilityUsesLabelHeuristic,
+        AdaptationConfidenceFindingCode
+            .environmentCompatibilityUsesLabelHeuristic,
       );
     }
 
-    final lowConfidence = !primaryKnown ||
+    final lowConfidence =
+        !primaryKnown ||
         (timeConstraintActive && session.plannedDurationMin == null) ||
         (timeAnalysis.requiresShortening &&
             session.minimumViableDurationMin == null) ||
@@ -759,7 +964,8 @@ class SessionAdaptationReadOnlyEvaluator {
       );
     }
 
-    final highConfidence = primaryKnown &&
+    final highConfidence =
+        primaryKnown &&
         (!timeConstraintActive ||
             (session.plannedDurationMin != null &&
                 (!timeAnalysis.requiresShortening ||
@@ -830,24 +1036,25 @@ class SessionAdaptationReadOnlyEvaluator {
     return switch (environment) {
       TrainingEnvironment.home =>
         session.indoorFriendly == true ||
-            _envLabelContains(session.sessionEnvironmentLabel, ['home', 'anywhere']),
+            _envLabelContains(session.sessionEnvironmentLabel, [
+              'home',
+              'anywhere',
+            ]),
       TrainingEnvironment.hotelRoom => session.hotelFriendly == true,
       TrainingEnvironment.hotelGym =>
         session.hotelFriendly == true ||
             _envLabelContains(session.sessionEnvironmentLabel, ['hotel']),
       TrainingEnvironment.commercialGym ||
-      TrainingEnvironment.fullGym =>
-        _envLabelContains(
-          session.sessionEnvironmentLabel,
-          ['gym', 'full gym', 'commercial', 'anywhere'],
-        ),
+      TrainingEnvironment.fullGym => _envLabelContains(
+        session.sessionEnvironmentLabel,
+        ['gym', 'full gym', 'commercial', 'anywhere'],
+      ),
       TrainingEnvironment.outdoors ||
       TrainingEnvironment.track ||
-      TrainingEnvironment.trail =>
-        _envLabelContains(
-          session.sessionEnvironmentLabel,
-          ['outdoor', 'track', 'trail', 'anywhere'],
-        ),
+      TrainingEnvironment.trail => _envLabelContains(
+        session.sessionEnvironmentLabel,
+        ['outdoor', 'track', 'trail', 'anywhere'],
+      ),
       TrainingEnvironment.anywhere => true,
     };
   }
@@ -893,10 +1100,7 @@ class _ActionSets {
 }
 
 class _ConfidenceAssessment {
-  const _ConfidenceAssessment({
-    required this.level,
-    required this.findings,
-  });
+  const _ConfidenceAssessment({required this.level, required this.findings});
 
   final AdaptationConfidence level;
   final List<AdaptationConfidenceFindingCode> findings;

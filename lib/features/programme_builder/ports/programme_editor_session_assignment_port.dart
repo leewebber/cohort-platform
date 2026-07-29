@@ -60,8 +60,6 @@ class ProgrammeEditorSessionAssignmentPort
       displayTitle: displayTitle,
     );
 
-    return ProgrammeBuilderEditResult(
-      document: _controller.document ?? doc,
-    );
+    return ProgrammeBuilderEditResult(document: _controller.document ?? doc);
   }
 }

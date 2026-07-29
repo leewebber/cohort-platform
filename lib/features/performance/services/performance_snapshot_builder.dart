@@ -38,7 +38,8 @@ class PerformanceSnapshotBuilder {
       sessionTitle: plan.sessionTitle,
       sessionDescription: plan.coachNotes,
       programmeTitle: programmeContext?.programmeName,
-      programmeContextLabel: plan.programmeContextLabel ??
+      programmeContextLabel:
+          plan.programmeContextLabel ??
           (programmeContext != null
               ? 'Week ${programmeContext.weekNumber} · ${programmeContext.dayKey}'
               : null),
@@ -75,61 +76,67 @@ class PerformanceSnapshotBuilder {
     );
   }
 
-  List<BlockPerformanceDraft> buildInitialBlockDrafts(SessionExecutionPlan plan) {
-    return plan.blocks.map((block) {
-      final snapshot = BlockPerformanceSnapshot(
-        sourceBlockId: block.blockId,
-        title: block.title,
-        blockType: block.blockType,
-        content: block.content,
-        workoutFormat: block.workoutFormat,
-        position: block.position,
-        timerSummary: block.timerSummary,
-        coachNotes: block.coachNotes,
-        performanceCaptureMode: block.performanceCaptureMode.dbValue,
-        exercises: block.linkedExercises
-            .asMap()
-            .entries
-            .map(
-              (entry) => exerciseSnapshotFromSummary(
-                entry.value,
-                position: entry.key + 1,
-              ),
-            )
-            .toList(growable: false),
-      );
+  List<BlockPerformanceDraft> buildInitialBlockDrafts(
+    SessionExecutionPlan plan,
+  ) {
+    return plan.blocks
+        .map((block) {
+          final snapshot = BlockPerformanceSnapshot(
+            sourceBlockId: block.blockId,
+            title: block.title,
+            blockType: block.blockType,
+            content: block.content,
+            workoutFormat: block.workoutFormat,
+            position: block.position,
+            timerSummary: block.timerSummary,
+            coachNotes: block.coachNotes,
+            performanceCaptureMode: block.performanceCaptureMode.dbValue,
+            exercises: block.linkedExercises
+                .asMap()
+                .entries
+                .map(
+                  (entry) => exerciseSnapshotFromSummary(
+                    entry.value,
+                    position: entry.key + 1,
+                  ),
+                )
+                .toList(growable: false),
+          );
 
-      final captureMode = BlockCaptureModeResolver.resolveForBlock(block);
-      final resultType = BlockCaptureModeResolver.resultTypeFor(captureMode);
+          final captureMode = BlockCaptureModeResolver.resolveForBlock(block);
+          final resultType = BlockCaptureModeResolver.resultTypeFor(
+            captureMode,
+          );
 
-      return BlockPerformanceDraft(
-        blockResultId: DatabaseUuid.newV4(),
-        sourceBlockId: block.blockId,
-        blockSnapshot: snapshot,
-        position: block.position,
-        status: TrainingBlockResultStatus.notStarted,
-        captureMode: captureMode,
-        resultType: resultType,
-        resultData: BlockCaptureModeResolver.initialResultData(
-          captureMode,
-          block,
-        ),
-        exerciseResults: block.linkedExercises
-            .asMap()
-            .entries
-            .map(
-              (entry) => ExercisePerformanceDraft(
-                exerciseResultId: DatabaseUuid.newV4(),
-                sourceExerciseId: entry.value.exerciseId,
-                exerciseSnapshot: exerciseSnapshotFromSummary(
-                  entry.value,
-                  position: entry.key + 1,
-                ),
-                position: entry.key + 1,
-              ),
-            )
-            .toList(growable: false),
-      );
-    }).toList(growable: false);
+          return BlockPerformanceDraft(
+            blockResultId: DatabaseUuid.newV4(),
+            sourceBlockId: block.blockId,
+            blockSnapshot: snapshot,
+            position: block.position,
+            status: TrainingBlockResultStatus.notStarted,
+            captureMode: captureMode,
+            resultType: resultType,
+            resultData: BlockCaptureModeResolver.initialResultData(
+              captureMode,
+              block,
+            ),
+            exerciseResults: block.linkedExercises
+                .asMap()
+                .entries
+                .map(
+                  (entry) => ExercisePerformanceDraft(
+                    exerciseResultId: DatabaseUuid.newV4(),
+                    sourceExerciseId: entry.value.exerciseId,
+                    exerciseSnapshot: exerciseSnapshotFromSummary(
+                      entry.value,
+                      position: entry.key + 1,
+                    ),
+                    position: entry.key + 1,
+                  ),
+                )
+                .toList(growable: false),
+          );
+        })
+        .toList(growable: false);
   }
 }

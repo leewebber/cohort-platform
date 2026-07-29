@@ -41,7 +41,8 @@ class SessionRevisionUsagePanel extends StatelessWidget {
         return _SuccessBody(
           summary: usageLookup.summary!,
           maxReferences: maxReferences,
-          onOpenProgrammeVersion: onOpenProgrammeVersion ??
+          onOpenProgrammeVersion:
+              onOpenProgrammeVersion ??
               (versionId) => _defaultOpenProgramme(context, versionId),
         );
       case SessionRevisionUsageLookupStatus.revisionNotFound:
@@ -82,11 +83,14 @@ class _SuccessBody extends StatelessWidget {
     if (summary.isUnused) {
       return Text(
         GovernanceCopy.unusedSessionRevisionMessage,
-        style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+        style: CohortTextStyles.body.copyWith(
+          color: CohortColors.textSecondary,
+        ),
       );
     }
 
-    final isHistoricalOnly = summary.hasHistoricalUsage &&
+    final isHistoricalOnly =
+        summary.hasHistoricalUsage &&
         !summary.hasDirectAuthoredUsage &&
         !summary.hasActiveOperationalUsage;
 
@@ -145,7 +149,9 @@ class _SuccessBody extends StatelessWidget {
         ],
         if (distinctProgrammes.isNotEmpty) ...[
           const SizedBox(height: CohortSpacing.md),
-          ...distinctProgrammes.take(maxReferences).map(
+          ...distinctProgrammes
+              .take(maxReferences)
+              .map(
                 (ref) => Padding(
                   padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
                   child: TextButton(

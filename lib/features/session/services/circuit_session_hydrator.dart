@@ -66,8 +66,8 @@ class CircuitSessionHydrator {
       athleteNote: performance.athleteNote,
       dataSource: performance.dataSource,
       clearElapsedDuration: performance.elapsedDuration == null,
-      clearCompletedRounds: _restoredCompletedRounds(scoreType, performance) ==
-          null,
+      clearCompletedRounds:
+          _restoredCompletedRounds(scoreType, performance) == null,
       clearAdditionalReps: performance.additionalReps == null,
       clearTotalReps: performance.totalReps == null,
       clearCompletedMovements: performance.completedMovements == null,
@@ -100,7 +100,8 @@ class CircuitSessionHydrator {
       return (completed + 1).clamp(1, plan.intervalCount ?? 999);
     }
 
-    if (performance.completedRounds != null && performance.completedRounds! > 0) {
+    if (performance.completedRounds != null &&
+        performance.completedRounds! > 0) {
       return performance.completedRounds! + 1;
     }
 

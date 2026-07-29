@@ -14,6 +14,9 @@ void main() {
     expect(sql, contains('CREATE TABLE IF NOT EXISTS profiles'));
     expect(sql, contains('profiles_select_own'));
     expect(sql, contains('auth.uid()'));
-    expect(sql, contains('CREATE OR REPLACE FUNCTION cohort_programme_dev_athlete_ids()'));
+    expect(
+      sql,
+      contains('CREATE OR REPLACE FUNCTION cohort_programme_dev_athlete_ids()'),
+    );
   });
 }

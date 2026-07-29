@@ -7,10 +7,7 @@ import '../../../core/widgets/section_title.dart';
 import '../../../models/protocol.dart';
 
 class ProtocolHeader extends StatelessWidget {
-  const ProtocolHeader({
-    super.key,
-    required this.protocol,
-  });
+  const ProtocolHeader({super.key, required this.protocol});
 
   final Protocol protocol;
 
@@ -21,10 +18,7 @@ class ProtocolHeader extends StatelessWidget {
       children: [
         SectionTitle(protocol.goal ?? 'Protocol'),
         const SizedBox(height: CohortSpacing.sm),
-        Text(
-          protocol.name,
-          style: CohortTextStyles.h1,
-        ),
+        Text(protocol.name, style: CohortTextStyles.h1),
         const SizedBox(height: CohortSpacing.lg),
         MetadataRow(
           icon: Icons.timer_outlined,
@@ -36,10 +30,7 @@ class ProtocolHeader extends StatelessWidget {
           icon: Icons.fitness_center_outlined,
           text: protocol.capability,
         ),
-        MetadataRow(
-          icon: Icons.place_outlined,
-          text: protocol.equipment,
-        ),
+        MetadataRow(icon: Icons.place_outlined, text: protocol.equipment),
       ],
     );
   }

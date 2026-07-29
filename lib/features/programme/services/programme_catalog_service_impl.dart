@@ -9,8 +9,8 @@ class ProgrammeCatalogServiceImpl implements ProgrammeCatalogService {
   ProgrammeCatalogServiceImpl({
     required ProgrammeVersionStore versionStore,
     required String coachId,
-  })  : _versionStore = versionStore,
-        _coachId = coachId;
+  }) : _versionStore = versionStore,
+       _coachId = coachId;
 
   final ProgrammeVersionStore _versionStore;
   final String _coachId;

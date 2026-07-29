@@ -45,13 +45,17 @@ class ProgrammeCreateDiagnostics {
     }
   }
 
-  static void logPartialCreation(ProgrammePartialCreationState partialCreation) {
+  static void logPartialCreation(
+    ProgrammePartialCreationState partialCreation,
+  ) {
     for (final line in partialCreation.toDiagnosticLines()) {
       log(line);
     }
   }
 
-  static List<String> warningsFromStoreException(ProgrammeStoreException error) {
+  static List<String> warningsFromStoreException(
+    ProgrammeStoreException error,
+  ) {
     return [
       if (error.operation != null) 'operation=${error.operation}',
       if (error.tableName != null) 'table=${error.tableName}',

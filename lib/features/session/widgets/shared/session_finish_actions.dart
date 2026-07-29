@@ -51,10 +51,7 @@ class SessionFinishActions extends StatelessWidget {
                 foregroundColor: CohortColors.textSecondary,
                 side: const BorderSide(color: CohortColors.border),
               ),
-              child: Text(
-                endEarlyLabel,
-                style: CohortTextStyles.body,
-              ),
+              child: Text(endEarlyLabel, style: CohortTextStyles.body),
             ),
           ),
       ],

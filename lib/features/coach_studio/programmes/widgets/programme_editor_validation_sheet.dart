@@ -19,10 +19,7 @@ Future<void> showProgrammeEditorValidationSheet({
 }
 
 class ProgrammeEditorValidationSheet extends StatelessWidget {
-  const ProgrammeEditorValidationSheet({
-    super.key,
-    required this.controller,
-  });
+  const ProgrammeEditorValidationSheet({super.key, required this.controller});
 
   final ProgrammeEditorController controller;
 
@@ -52,44 +49,50 @@ class ProgrammeEditorValidationSheet extends StatelessWidget {
           else ...[
             if (errors.isNotEmpty) ...[
               Text('Errors', style: CohortTextStyles.cardTitle),
-              ...errors.map((issue) => _IssueTile(
-                    issue: issue,
-                    color: CohortColors.danger,
-                    onTap: issue.path == null
-                        ? null
-                        : () {
-                            controller.selectPath(issue.path!);
-                            Navigator.pop(context);
-                          },
-                  )),
+              ...errors.map(
+                (issue) => _IssueTile(
+                  issue: issue,
+                  color: CohortColors.danger,
+                  onTap: issue.path == null
+                      ? null
+                      : () {
+                          controller.selectPath(issue.path!);
+                          Navigator.pop(context);
+                        },
+                ),
+              ),
             ],
             if (warnings.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.md),
               Text('Warnings', style: CohortTextStyles.cardTitle),
-              ...warnings.map((issue) => _IssueTile(
-                    issue: issue,
-                    color: CohortColors.warning,
-                    onTap: issue.path == null
-                        ? null
-                        : () {
-                            controller.selectPath(issue.path!);
-                            Navigator.pop(context);
-                          },
-                  )),
+              ...warnings.map(
+                (issue) => _IssueTile(
+                  issue: issue,
+                  color: CohortColors.warning,
+                  onTap: issue.path == null
+                      ? null
+                      : () {
+                          controller.selectPath(issue.path!);
+                          Navigator.pop(context);
+                        },
+                ),
+              ),
             ],
             if (info.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.md),
               Text('Info', style: CohortTextStyles.cardTitle),
-              ...info.map((issue) => _IssueTile(
-                    issue: issue,
-                    color: CohortColors.textMuted,
-                    onTap: issue.path == null
-                        ? null
-                        : () {
-                            controller.selectPath(issue.path!);
-                            Navigator.pop(context);
-                          },
-                  )),
+              ...info.map(
+                (issue) => _IssueTile(
+                  issue: issue,
+                  color: CohortColors.textMuted,
+                  onTap: issue.path == null
+                      ? null
+                      : () {
+                          controller.selectPath(issue.path!);
+                          Navigator.pop(context);
+                        },
+                ),
+              ),
             ],
           ],
         ],
@@ -99,11 +102,7 @@ class ProgrammeEditorValidationSheet extends StatelessWidget {
 }
 
 class _IssueTile extends StatelessWidget {
-  const _IssueTile({
-    required this.issue,
-    required this.color,
-    this.onTap,
-  });
+  const _IssueTile({required this.issue, required this.color, this.onTap});
 
   final ProgrammeValidationIssue issue;
   final Color color;

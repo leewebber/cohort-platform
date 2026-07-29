@@ -55,7 +55,8 @@ class CoachComplianceSummaryService {
         sessionsBehind: sessionsBehind,
         completedToday: completedToday,
       ),
-      needsAttention: sessionsBehind > 0 ||
+      needsAttention:
+          sessionsBehind > 0 ||
           resolution.kind == ResolvedTodaySessionKind.noActiveProgramme ||
           resolution.kind == ResolvedTodaySessionKind.paused,
     );
@@ -101,8 +102,9 @@ class CoachComplianceSummaryService {
     final slots = <_OrderedSlot>[];
 
     final sortedWeeks = List.of(tree.weekNodes)
-      ..sort((left, right) =>
-          left.week.weekNumber.compareTo(right.week.weekNumber));
+      ..sort(
+        (left, right) => left.week.weekNumber.compareTo(right.week.weekNumber),
+      );
 
     for (final weekNode in sortedWeeks) {
       for (final dayNode in weekNode.sortedDays) {

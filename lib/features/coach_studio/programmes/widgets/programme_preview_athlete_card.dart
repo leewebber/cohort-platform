@@ -6,10 +6,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../programme_builder/models/programme_builder_preview.dart';
 
 class ProgrammePreviewAthleteCard extends StatelessWidget {
-  const ProgrammePreviewAthleteCard({
-    super.key,
-    required this.preview,
-  });
+  const ProgrammePreviewAthleteCard({super.key, required this.preview});
 
   final ProgrammeBuilderPreview preview;
 

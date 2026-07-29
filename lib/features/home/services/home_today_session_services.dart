@@ -6,6 +6,7 @@ import '../../../data/repositories/programme_slot_outcome_supabase_store.dart';
 import '../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../data/repositories/protocol_repository.dart';
 import '../../../data/repositories/training_session_repository.dart';
+import '../../../application/athlete_workout/athlete_today_workout_resolution_service.dart';
 import '../../programme/services/athlete_state_sync_service.dart';
 import '../../programme/services/athlete_state_sync_service_impl.dart';
 import '../../programme/services/programme_schedule_resolver_impl.dart';
@@ -34,9 +35,18 @@ class HomeTodaySessionServices {
     );
   }
 
+  static AthleteTodayWorkoutResolutionService
+  createTodayWorkoutResolutionService({
+    TodaySessionService? todaySessionService,
+  }) {
+    return AthleteTodayWorkoutResolutionService(
+      todaySessionService: todaySessionService ?? createTodaySessionService(),
+    );
+  }
+
   static HomeTodaySessionLoader createLoader() {
     return HomeTodaySessionLoader(
-      todaySessionService: createTodaySessionService(),
+      todayWorkoutResolutionService: createTodayWorkoutResolutionService(),
       athleteStateSyncService: createAthleteStateSyncService(),
       athleteStateRepository: const AthleteStateRepository(),
       protocolRepository: ProtocolRepository(),

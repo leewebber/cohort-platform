@@ -6,7 +6,9 @@ import '../../support/adaptation_application_test_support.dart';
 import '../../support/adaptation_planning_test_support.dart';
 
 void main() {
-  final plannedDate = SessionOccurrenceDate.fromDateTime(DateTime.utc(2026, 7, 28));
+  final plannedDate = SessionOccurrenceDate.fromDateTime(
+    DateTime.utc(2026, 7, 28),
+  );
   final t0 = DateTime.utc(2026, 7, 28, 8);
   final t1 = DateTime.utc(2026, 7, 28, 9);
   final t2 = DateTime.utc(2026, 7, 28, 10);
@@ -36,14 +38,22 @@ void main() {
   group('SessionOccurrence creation', () {
     test('schedule factory sets initial lifecycle and dates', () {
       final occurrence = _scheduled();
-      expect(occurrence.lifecycleState, SessionOccurrenceLifecycleState.scheduled);
-      expect(occurrence.completionStatus, SessionOccurrenceCompletionStatus.pending);
+      expect(
+        occurrence.lifecycleState,
+        SessionOccurrenceLifecycleState.scheduled,
+      );
+      expect(
+        occurrence.completionStatus,
+        SessionOccurrenceCompletionStatus.pending,
+      );
       expect(occurrence.plannedDate, plannedDate);
       expect(occurrence.originalPlannedDate, plannedDate);
       expect(occurrence.currentDate, plannedDate);
       expect(occurrence.executionSnapshot, isNull);
-      expect(occurrence.auditTrail.single.eventType,
-          SessionOccurrenceAuditEventType.scheduled);
+      expect(
+        occurrence.auditTrail.single.eventType,
+        SessionOccurrenceAuditEventType.scheduled,
+      );
     });
 
     test('rejects empty occurrence id', () {
@@ -121,13 +131,16 @@ void main() {
         executionSnapshot: snapshot,
         recordedAt: t2,
       );
-      expect(result.issues.first.code,
-          SessionOccurrenceTransitionIssueCode.terminalState);
+      expect(
+        result.issues.first.code,
+        SessionOccurrenceTransitionIssueCode.terminalState,
+      );
     });
 
     test('reschedule while in progress rejected', () {
-      final inProgress =
-          _scheduled().startInProgress(recordedAt: t1).occurrence!;
+      final inProgress = _scheduled()
+          .startInProgress(recordedAt: t1)
+          .occurrence!;
       final result = inProgress.reschedule(
         toDate: SessionOccurrenceDate.fromDateTime(DateTime.utc(2026, 7, 29)),
         recordedAt: t2,
@@ -155,8 +168,10 @@ void main() {
         evaluationOutcome: snapshot.evaluationOutcome,
         planStatus: snapshot.planStatus,
         unresolvedConstraints: snapshot.unresolvedConstraints,
-        exactDurationFeasibilityConfirmed: snapshot.exactDurationFeasibilityConfirmed,
-        unresolvedDurationDeficitMinutes: snapshot.unresolvedDurationDeficitMinutes,
+        exactDurationFeasibilityConfirmed:
+            snapshot.exactDurationFeasibilityConfirmed,
+        unresolvedDurationDeficitMinutes:
+            snapshot.unresolvedDurationDeficitMinutes,
         planFindings: snapshot.planFindings,
       );
       final result = _scheduled().attachAdaptation(
@@ -175,7 +190,9 @@ void main() {
           .occurrence!;
       final secondSnapshot = applyTimedSessionPlan(
         draft: buildTimedPlanningSession(protocolId: 'proto-occ-1'),
-        constraints: const AdaptationConstraintContext(availableDurationMin: 45),
+        constraints: const AdaptationConstraintContext(
+          availableDurationMin: 45,
+        ),
       ).snapshot!;
       final second = first.attachAdaptation(
         executionSnapshot: secondSnapshot,
@@ -183,8 +200,10 @@ void main() {
       );
       expect(second.isSuccess, isTrue);
       expect(
-        second.occurrence!.auditTrail
-            .where((e) => e.eventType == SessionOccurrenceAuditEventType.adaptationReplaced),
+        second.occurrence!.auditTrail.where(
+          (e) =>
+              e.eventType == SessionOccurrenceAuditEventType.adaptationReplaced,
+        ),
         isNotEmpty,
       );
     });
@@ -192,7 +211,9 @@ void main() {
 
   group('rescheduling metadata', () {
     test('reschedule preserves original planned date and appends history', () {
-      final movedDate = SessionOccurrenceDate.fromDateTime(DateTime.utc(2026, 7, 30));
+      final movedDate = SessionOccurrenceDate.fromDateTime(
+        DateTime.utc(2026, 7, 30),
+      );
       final result = _scheduled().reschedule(
         toDate: movedDate,
         recordedAt: t1,
@@ -208,7 +229,10 @@ void main() {
     });
 
     test('reschedule to same date rejected', () {
-      final result = _scheduled().reschedule(toDate: plannedDate, recordedAt: t1);
+      final result = _scheduled().reschedule(
+        toDate: plannedDate,
+        recordedAt: t1,
+      );
       expect(
         result.issues.first.code,
         SessionOccurrenceTransitionIssueCode.invalidRescheduleTarget,
@@ -221,7 +245,10 @@ void main() {
       final original = _scheduled();
       final updated = original.startInProgress(recordedAt: t1).occurrence!;
       expect(identical(original, updated), isFalse);
-      expect(original.lifecycleState, SessionOccurrenceLifecycleState.scheduled);
+      expect(
+        original.lifecycleState,
+        SessionOccurrenceLifecycleState.scheduled,
+      );
     });
 
     test('equal occurrences compare equal', () {
@@ -230,11 +257,14 @@ void main() {
       expect(a, equals(b));
     });
 
-    test('copy via transition does not mutate prior instance audit trail length', () {
-      final original = _scheduled();
-      original.updateNotes(notes: 'note', recordedAt: t1);
-      expect(original.notes, isNull);
-    });
+    test(
+      'copy via transition does not mutate prior instance audit trail length',
+      () {
+        final original = _scheduled();
+        original.updateNotes(notes: 'note', recordedAt: t1);
+        expect(original.notes, isNull);
+      },
+    );
   });
 
   group('SessionOccurrenceLifecycle rules', () {

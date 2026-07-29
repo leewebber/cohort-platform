@@ -1,11 +1,5 @@
 /// How well an adaptation preserved session intent.
-enum AdaptationFidelity {
-  full,
-  high,
-  moderate,
-  low,
-  compromised,
-}
+enum AdaptationFidelity { full, high, moderate, low, compromised }
 
 extension AdaptationFidelityDb on AdaptationFidelity {
   String get dbValue => name;

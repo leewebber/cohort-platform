@@ -16,9 +16,7 @@ class SessionLibraryDraftFactory {
     return protocolId.trim().startsWith(localDraftIdPrefix);
   }
 
-  static ProtocolDraft createBlankReusableSessionDraft({
-    String? ownerId,
-  }) {
+  static ProtocolDraft createBlankReusableSessionDraft({String? ownerId}) {
     return ProtocolDraft(
       protocolId: localDraftProtocolId(),
       name: 'New Session',

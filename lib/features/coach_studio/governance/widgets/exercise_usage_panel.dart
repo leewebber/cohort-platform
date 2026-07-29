@@ -85,7 +85,8 @@ class _ExerciseUsagePanelState extends State<ExerciseUsagePanel> {
         return _SuccessBody(
           summary: lookup.summary!,
           maxSessionReferences: widget.maxSessionReferences,
-          onOpenSessionRevision: widget.onOpenSessionRevision ??
+          onOpenSessionRevision:
+              widget.onOpenSessionRevision ??
               (protocolId) => _defaultOpenSessionRevision(context, protocolId),
         );
       case ExerciseUsageLookupStatus.exerciseNotFound:
@@ -121,7 +122,9 @@ class _ExerciseUsagePanelState extends State<ExerciseUsagePanel> {
     } catch (_) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('This session revision could not be opened.')),
+        const SnackBar(
+          content: Text('This session revision could not be opened.'),
+        ),
       );
     }
   }
@@ -143,7 +146,9 @@ class _SuccessBody extends StatelessWidget {
     if (summary.isUnused) {
       return Text(
         GovernanceCopy.exerciseUnusedMessage,
-        style: CohortTextStyles.body.copyWith(color: CohortColors.textSecondary),
+        style: CohortTextStyles.body.copyWith(
+          color: CohortColors.textSecondary,
+        ),
       );
     }
 
@@ -196,7 +201,9 @@ class _SuccessBody extends StatelessWidget {
         ],
         if (distinctSessions.isNotEmpty) ...[
           const SizedBox(height: CohortSpacing.md),
-          ...distinctSessions.take(maxSessionReferences).map(
+          ...distinctSessions
+              .take(maxSessionReferences)
+              .map(
                 (ref) => Padding(
                   padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
                   child: TextButton(

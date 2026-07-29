@@ -5,11 +5,7 @@
 ///
 /// Assigned only by [SessionAdaptationReadOnlyEvaluator] from structured
 /// [AdaptationConfidenceFindingCode] signals (see evaluator docs).
-enum AdaptationConfidence {
-  high,
-  moderate,
-  low,
-}
+enum AdaptationConfidence { high, moderate, low }
 
 extension AdaptationConfidenceDb on AdaptationConfidence {
   String get dbValue => name;

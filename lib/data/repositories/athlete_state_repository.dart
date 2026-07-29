@@ -13,10 +13,7 @@ class AthleteStateRepository extends BaseRepository<AthleteState> {
   }
 
   Future<AthleteState?> getAthleteState(String athleteId) async {
-    final results = await getWhere(
-      column: 'athlete_id',
-      value: athleteId,
-    );
+    final results = await getWhere(column: 'athlete_id', value: athleteId);
 
     if (results.isEmpty) return null;
 

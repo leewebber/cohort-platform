@@ -24,13 +24,13 @@ class ProgrammeMigrationPlannerService {
     ProgrammeVersionImpactService? impactService,
     ProgrammeMigrationPlannerStore? plannerStore,
     ProgrammeVersionComparisonStore? comparisonStore,
-  })  : _comparisonService =
-            comparisonService ?? ProgrammeVersionComparisonService(),
-        _impactService = impactService ?? ProgrammeVersionImpactService(),
-        _plannerStore =
-            plannerStore ?? const ProgrammeMigrationPlannerSupabaseStore(),
-        _comparisonStore =
-            comparisonStore ?? const ProgrammeVersionComparisonSupabaseStore();
+  }) : _comparisonService =
+           comparisonService ?? ProgrammeVersionComparisonService(),
+       _impactService = impactService ?? ProgrammeVersionImpactService(),
+       _plannerStore =
+           plannerStore ?? const ProgrammeMigrationPlannerSupabaseStore(),
+       _comparisonStore =
+           comparisonStore ?? const ProgrammeVersionComparisonSupabaseStore();
 
   final ProgrammeVersionComparisonService _comparisonService;
   final ProgrammeVersionImpactService _impactService;
@@ -183,13 +183,14 @@ class ProgrammeMigrationPlannerService {
           currentPosition: progress.currentPosition,
         );
 
-        final classification = ProgrammeMigrationPlannerEngine.classifyAssignment(
-          assignment: assignment,
-          progress: progress,
-          changeScope: changeScope,
-          comparisonAvailable: true,
-          comparisonPartial: comparison.isPartial,
-        );
+        final classification =
+            ProgrammeMigrationPlannerEngine.classifyAssignment(
+              assignment: assignment,
+              progress: progress,
+              changeScope: changeScope,
+              comparisonAvailable: true,
+              comparisonPartial: comparison.isPartial,
+            );
 
         final reasoning = ProgrammeMigrationPlannerEngine.buildReasoning(
           classification: classification,
@@ -213,8 +214,8 @@ class ProgrammeMigrationPlannerService {
             migrationClassification: classification,
             recommendation:
                 ProgrammeMigrationRecommendationBuilder.recommendationFor(
-              classification,
-            ),
+                  classification,
+                ),
             reasoning: reasoning,
             warnings: progress.limitationNote == null
                 ? const []

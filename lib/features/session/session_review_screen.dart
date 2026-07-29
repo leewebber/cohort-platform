@@ -42,21 +42,12 @@ class SessionReviewScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'SESSION COMPLETE',
-                style: CohortTextStyles.eyebrow,
-              ),
+              Text('SESSION COMPLETE', style: CohortTextStyles.eyebrow),
               const SizedBox(height: CohortSpacing.sm),
-              Text(
-                'Session Complete',
-                style: CohortTextStyles.h1,
-              ),
+              Text('Session Complete', style: CohortTextStyles.h1),
               if (sessionTitle != null && sessionTitle!.trim().isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.sm),
-                Text(
-                  sessionTitle!,
-                  style: CohortTextStyles.body,
-                ),
+                Text(sessionTitle!, style: CohortTextStyles.body),
               ],
               if (endedEarly) ...[
                 const SizedBox(height: CohortSpacing.lg),
@@ -71,7 +62,8 @@ class SessionReviewScreen extends StatelessWidget {
                   'Completed ${completedExerciseCount ?? 0} of ${totalExerciseCount ?? 0} exercises',
                   style: CohortTextStyles.body,
                 ),
-                if (endReasonLabel != null && endReasonLabel!.trim().isNotEmpty) ...[
+                if (endReasonLabel != null &&
+                    endReasonLabel!.trim().isNotEmpty) ...[
                   const SizedBox(height: CohortSpacing.xs),
                   Text(
                     'Reason: ${endReasonLabel!.trim()}',
@@ -80,10 +72,7 @@ class SessionReviewScreen extends StatelessWidget {
                 ],
               ],
               const SizedBox(height: CohortSpacing.xl),
-              Text(
-                "Today's Wins",
-                style: CohortTextStyles.h2,
-              ),
+              Text("Today's Wins", style: CohortTextStyles.h2),
               const SizedBox(height: CohortSpacing.md),
               for (var index = 0; index < wins.length; index++) ...[
                 if (index > 0) const SizedBox(height: CohortSpacing.md),
@@ -91,23 +80,14 @@ class SessionReviewScreen extends StatelessWidget {
               ],
               if (trimmedNote != null && trimmedNote.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.xl),
-                Text(
-                  'YOUR NOTE',
-                  style: CohortTextStyles.eyebrow,
-                ),
+                Text('YOUR NOTE', style: CohortTextStyles.eyebrow),
                 const SizedBox(height: CohortSpacing.sm),
                 CohortCard(
-                  child: Text(
-                    trimmedNote,
-                    style: CohortTextStyles.body,
-                  ),
+                  child: Text(trimmedNote, style: CohortTextStyles.body),
                 ),
               ],
               const SizedBox(height: CohortSpacing.xl),
-              CohortButton(
-                label: 'Return Home',
-                onPressed: onReturnHome,
-              ),
+              CohortButton(label: 'Return Home', onPressed: onReturnHome),
             ],
           ),
         ),
@@ -128,10 +108,9 @@ class _SessionWinCard extends StatelessWidget {
       SessionWinType.paceProgress ||
       SessionWinType.repProgress ||
       SessionWinType.volumeProgress ||
-      SessionWinType.rpeProgress =>
-        CohortColors.success,
-      SessionWinType.matchedPerformance || SessionWinType.consistency =>
-        CohortColors.olive,
+      SessionWinType.rpeProgress => CohortColors.success,
+      SessionWinType.matchedPerformance ||
+      SessionWinType.consistency => CohortColors.olive,
       SessionWinType.firstPerformance => CohortColors.olive,
       SessionWinType.completedAsPlanned => CohortColors.textSecondary,
       SessionWinType.recoveryDecision => CohortColors.warning,
@@ -150,16 +129,11 @@ class _SessionWinCard extends StatelessWidget {
         children: [
           Text(
             win.title,
-            style: CohortTextStyles.cardTitle.copyWith(
-              color: accentColor,
-            ),
+            style: CohortTextStyles.cardTitle.copyWith(color: accentColor),
           ),
           if (win.message.trim().isNotEmpty) ...[
             const SizedBox(height: CohortSpacing.xs),
-            Text(
-              win.message,
-              style: CohortTextStyles.small,
-            ),
+            Text(win.message, style: CohortTextStyles.small),
           ],
           if (win.supportingDetail != null) ...[
             const SizedBox(height: CohortSpacing.xs),

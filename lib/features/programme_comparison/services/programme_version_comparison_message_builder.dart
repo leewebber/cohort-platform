@@ -9,8 +9,8 @@ class ProgrammeVersionComparisonMessageBuilder {
     if (summary.isIdentical && !summary.isPartial) {
       return [
         'No differences were found between Version '
-        '${summary.identity.sourceVersionNumber} and Version '
-        '${summary.identity.targetVersionNumber}.',
+            '${summary.identity.sourceVersionNumber} and Version '
+            '${summary.identity.targetVersionNumber}.',
       ];
     }
 
@@ -26,23 +26,31 @@ class ProgrammeVersionComparisonMessageBuilder {
     final parts = <String>[];
 
     if (metrics.weekCountDelta != 0) {
-      parts.add('${metrics.weekCountDelta.abs()} week${metrics.weekCountDelta.abs() == 1 ? '' : 's'}');
+      parts.add(
+        '${metrics.weekCountDelta.abs()} week${metrics.weekCountDelta.abs() == 1 ? '' : 's'}',
+      );
     }
     if (metrics.slotCountDelta != 0) {
-      parts.add('${metrics.slotCountDelta.abs()} Session slot${metrics.slotCountDelta.abs() == 1 ? '' : 's'}');
+      parts.add(
+        '${metrics.slotCountDelta.abs()} Session slot${metrics.slotCountDelta.abs() == 1 ? '' : 's'}',
+      );
     }
     if (summary.exerciseSetChange.netExerciseCountChange != 0 &&
-        summary.exerciseSetChange.addedExercises.isNotEmpty ||
+            summary.exerciseSetChange.addedExercises.isNotEmpty ||
         summary.exerciseSetChange.removedExercises.isNotEmpty) {
-      final exerciseDelta = summary.exerciseSetChange.addedExercises.length -
+      final exerciseDelta =
+          summary.exerciseSetChange.addedExercises.length -
           summary.exerciseSetChange.removedExercises.length;
       if (exerciseDelta != 0) {
-        parts.add('${exerciseDelta.abs()} Exercise${exerciseDelta.abs() == 1 ? '' : 's'}');
+        parts.add(
+          '${exerciseDelta.abs()} Exercise${exerciseDelta.abs() == 1 ? '' : 's'}',
+        );
       }
     }
 
     if (parts.isNotEmpty) {
-      final direction = metrics.slotCountDelta >= 0 &&
+      final direction =
+          metrics.slotCountDelta >= 0 &&
               metrics.weekCountDelta >= 0 &&
               summary.exerciseSetChange.netExerciseCountChange >= 0
           ? 'adds'
@@ -71,7 +79,9 @@ class ProgrammeVersionComparisonMessageBuilder {
       }
     }
 
-    if (summary.dayChanges.any((c) => c.changeType == ProgrammeChangeType.removed)) {
+    if (summary.dayChanges.any(
+      (c) => c.changeType == ProgrammeChangeType.removed,
+    )) {
       messages.add(
         'Version ${summary.identity.targetVersionNumber} removes '
         '${summary.dayChanges.where((c) => c.changeType == ProgrammeChangeType.removed).length} '

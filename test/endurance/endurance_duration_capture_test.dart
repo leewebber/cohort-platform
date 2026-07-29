@@ -30,17 +30,11 @@ void main() {
     });
 
     test('1800 seconds restores as 30:00', () {
-      expect(
-        EnduranceMetricsCalculator.formatAthleteDuration(1800),
-        '30:00',
-      );
+      expect(EnduranceMetricsCalculator.formatAthleteDuration(1800), '30:00');
     });
 
     test('3930 seconds restores as 1:05:30', () {
-      expect(
-        EnduranceMetricsCalculator.formatAthleteDuration(3930),
-        '1:05:30',
-      );
+      expect(EnduranceMetricsCalculator.formatAthleteDuration(3930), '1:05:30');
     });
 
     test('partial duration input does not throw', () {
@@ -160,7 +154,9 @@ void main() {
   });
 
   group('EnduranceDurationField', () {
-    testWidgets('restores formatted duration from durationSeconds', (tester) async {
+    testWidgets('restores formatted duration from durationSeconds', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -314,24 +310,25 @@ void main() {
     });
 
     test('capture controller preserves durationSeconds on update', () {
-      final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: SessionExecutionPlan(
-          sessionId: 'run-session',
-          sessionTitle: 'Run',
-          blocks: const [
-            SessionExecutionBlock(
-              blockId: 'run-1',
-              title: 'Run',
-              blockType: SessionBlockType.conditioning,
-              content: 'Steady run',
-              workoutFormat: WorkoutFormat.none,
-              position: 1,
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: SessionExecutionPlan(
+              sessionId: 'run-session',
+              sessionTitle: 'Run',
+              blocks: const [
+                SessionExecutionBlock(
+                  blockId: 'run-1',
+                  title: 'Run',
+                  blockType: SessionBlockType.conditioning,
+                  content: 'Steady run',
+                  workoutFormat: WorkoutFormat.none,
+                  position: 1,
+                ),
+              ],
             ),
-          ],
-        ),
-        athleteId: 'athlete-1',
-        trainingSessionId: 42,
-      );
+            athleteId: 'athlete-1',
+            trainingSessionId: 42,
+          );
 
       final blockId = controller.draft.blockDrafts.first.sourceBlockId;
       controller.updateBlockResultData(

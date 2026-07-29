@@ -16,14 +16,14 @@ class SessionGovernanceViewState {
   });
 
   const SessionGovernanceViewState.loading()
-      : isLoading = true,
-        loadError = null,
-        sessionDisplayName = null,
-        revisionNumber = null,
-        lifecycleStatus = null,
-        policy = null,
-        usageLookup = null,
-        revisionNotFound = false;
+    : isLoading = true,
+      loadError = null,
+      sessionDisplayName = null,
+      revisionNumber = null,
+      lifecycleStatus = null,
+      policy = null,
+      usageLookup = null,
+      revisionNotFound = false;
 
   final bool isLoading;
   final String? loadError;
@@ -36,9 +36,7 @@ class SessionGovernanceViewState {
 
   bool get hasPolicy => policy != null;
 
-  SessionRevisionActionDecision? decisionFor(
-    SessionRevisionAction action,
-  ) {
+  SessionRevisionActionDecision? decisionFor(SessionRevisionAction action) {
     return policy?.decisions[action];
   }
 }

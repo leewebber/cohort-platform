@@ -4,10 +4,9 @@ import '../models/exercise_usage_models.dart';
 
 /// Read-only Exercise usage relationships (M9.4).
 class ExerciseRelationshipService {
-  ExerciseRelationshipService({
-    ExerciseRelationshipStore? relationshipStore,
-  }) : _relationshipStore =
-            relationshipStore ?? const ExerciseRelationshipSupabaseStore();
+  ExerciseRelationshipService({ExerciseRelationshipStore? relationshipStore})
+    : _relationshipStore =
+          relationshipStore ?? const ExerciseRelationshipSupabaseStore();
 
   final ExerciseRelationshipStore _relationshipStore;
 
@@ -36,18 +35,23 @@ class ExerciseRelationshipService {
     }
 
     try {
-      final exercise =
-          await _relationshipStore.getExerciseById(normalizedExerciseId);
+      final exercise = await _relationshipStore.getExerciseById(
+        normalizedExerciseId,
+      );
       if (exercise == null) {
         return const ExerciseUsageLookupResult.exerciseNotFound();
       }
 
-      final sessionReferences =
-          await getSessionRevisionReferences(normalizedExerciseId);
-      final protocolIds =
-          sessionReferences.map((reference) => reference.protocolId).toSet();
-      final programmeReferences =
-          await getProgrammeReferences(normalizedExerciseId, protocolIds);
+      final sessionReferences = await getSessionRevisionReferences(
+        normalizedExerciseId,
+      );
+      final protocolIds = sessionReferences
+          .map((reference) => reference.protocolId)
+          .toSet();
+      final programmeReferences = await getProgrammeReferences(
+        normalizedExerciseId,
+        protocolIds,
+      );
       final programmeVersionIds = programmeReferences
           .map((reference) => reference.programmeVersionId)
           .toSet();
@@ -55,11 +59,11 @@ class ExerciseRelationshipService {
         normalizedExerciseId,
         programmeVersionIds,
       );
-      final historicalUsage =
-          await getHistoricalUsage(normalizedExerciseId);
+      final historicalUsage = await getHistoricalUsage(normalizedExerciseId);
 
-      final sessionLineageReferences =
-          buildSessionLineageReferences(sessionReferences);
+      final sessionLineageReferences = buildSessionLineageReferences(
+        sessionReferences,
+      );
 
       final hasDirectAuthoredUsage = sessionReferences.isNotEmpty;
       final hasActiveOperationalUsage = activeAssignmentReferences.isNotEmpty;

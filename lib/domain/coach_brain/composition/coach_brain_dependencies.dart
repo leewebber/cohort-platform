@@ -7,10 +7,7 @@ import '../session_adaptation/session_adaptation_pipeline.dart';
 
 /// Composition root for Coach Brain — wire handlers without changing router API.
 class CoachBrainDependencies {
-  CoachBrainDependencies._({
-    required this.registry,
-    required this.router,
-  });
+  CoachBrainDependencies._({required this.registry, required this.router});
 
   final CoachDecisionHandlerRegistry registry;
   final CoachDecisionRouter router;

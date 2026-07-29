@@ -18,7 +18,7 @@ class ProgrammeBuilderHistoryResult {
 /// Never persisted to Supabase. See `44_Programme_Builder.md` §3.
 class ProgrammeBuilderHistory {
   ProgrammeBuilderHistory({this.maxDepth = 20})
-      : assert(maxDepth > 0, 'maxDepth must be positive');
+    : assert(maxDepth > 0, 'maxDepth must be positive');
 
   final int maxDepth;
   final List<ProgrammeBuilderDocument> _undoStack = [];

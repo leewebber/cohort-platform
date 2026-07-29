@@ -46,29 +46,47 @@ void main() {
     });
 
     test('adds UUID-native cohort_coach_has_active_athlete overload', () {
-      expect(conversionSql, contains('cohort_coach_has_active_athlete(p_athlete_id UUID)'));
-      expect(conversionSql, contains('cohort_coach_has_active_athlete(p_athlete_id TEXT)'));
+      expect(
+        conversionSql,
+        contains('cohort_coach_has_active_athlete(p_athlete_id UUID)'),
+      );
+      expect(
+        conversionSql,
+        contains('cohort_coach_has_active_athlete(p_athlete_id TEXT)'),
+      );
     });
 
-    test('adaptation events migration still joins relationships to assignments', () {
-      expect(adaptationSql, contains('car.athlete_id = pa.athlete_id'));
-    });
+    test(
+      'adaptation events migration still joins relationships to assignments',
+      () {
+        expect(adaptationSql, contains('car.athlete_id = pa.athlete_id'));
+      },
+    );
   });
 
   group('programme_assignments UUID RLS normalization', () {
-    test('normalize migration uses auth.uid() without text casts in policy SQL', () {
-      final sqlWithoutComments = normalizeSql
-          .split('\n')
-          .where((line) => !line.trimLeft().startsWith('--'))
-          .join('\n');
+    test(
+      'normalize migration uses auth.uid() without text casts in policy SQL',
+      () {
+        final sqlWithoutComments = normalizeSql
+            .split('\n')
+            .where((line) => !line.trimLeft().startsWith('--'))
+            .join('\n');
 
-      expect(sqlWithoutComments, contains('athlete_id = auth.uid()'));
-      expect(sqlWithoutComments, isNot(contains('auth.uid()::TEXT')));
-    });
+        expect(sqlWithoutComments, contains('athlete_id = auth.uid()'));
+        expect(sqlWithoutComments, isNot(contains('auth.uid()::TEXT')));
+      },
+    );
 
     test('recreates dual-role self-assignment insert policy', () {
-      expect(normalizeSql, contains('programme_assignments_dual_role_self_insert'));
-      expect(normalizeSql, contains('cohort_auth_is_dual_role_coach_athlete()'));
+      expect(
+        normalizeSql,
+        contains('programme_assignments_dual_role_self_insert'),
+      );
+      expect(
+        normalizeSql,
+        contains('cohort_auth_is_dual_role_coach_athlete()'),
+      );
     });
   });
 }

@@ -8,7 +8,8 @@ class AdaptationPrescriptionService {
   AdaptationPrescriptionService({
     ProgrammeAdaptationEventStore? adaptationEventStore,
   }) : _adaptationEventStore =
-            adaptationEventStore ?? const ProgrammeAdaptationEventSupabaseStore();
+           adaptationEventStore ??
+           const ProgrammeAdaptationEventSupabaseStore();
 
   final ProgrammeAdaptationEventStore _adaptationEventStore;
 

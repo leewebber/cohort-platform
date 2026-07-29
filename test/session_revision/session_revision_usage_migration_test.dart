@@ -10,7 +10,10 @@ void main() {
     expect(migration.existsSync(), isTrue);
 
     final sql = migration.readAsStringSync();
-    expect(sql, contains('idx_training_session_records_source_protocol_terminal'));
+    expect(
+      sql,
+      contains('idx_training_session_records_source_protocol_terminal'),
+    );
     expect(sql, contains('source_protocol_id'));
     expect(sql, contains("status <> 'in_progress'"));
     expect(sql, isNot(contains('CREATE TABLE')));

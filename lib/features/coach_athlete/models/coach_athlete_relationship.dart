@@ -1,7 +1,4 @@
-enum CoachAthleteRelationshipStatus {
-  active,
-  ended,
-}
+enum CoachAthleteRelationshipStatus { active, ended }
 
 extension CoachAthleteRelationshipStatusDb on CoachAthleteRelationshipStatus {
   String get dbValue {

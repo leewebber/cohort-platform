@@ -15,7 +15,8 @@ class PersonalTrainingSetupServices {
     final coachId = CurrentUserSession.maybeInstance?.coachId ?? '';
     return PersonalTrainingSetupService(
       assignmentStore: const ProgrammeAssignmentSupabaseStore(),
-      catalogService: catalogService ??
+      catalogService:
+          catalogService ??
           ProgrammeCatalogServiceImpl(
             versionStore: const ProgrammeVersionSupabaseStore(),
             coachId: coachId,

@@ -4,13 +4,7 @@ import '../../../programme_impact/models/programme_version_impact_models.dart';
 import '../../../programme_migration/models/programme_migration_plan_models.dart';
 
 /// Per-card load status for Programme Intelligence (M10.4).
-enum ProgrammeIntelligenceCardStatus {
-  idle,
-  loading,
-  ready,
-  error,
-  empty,
-}
+enum ProgrammeIntelligenceCardStatus { idle, loading, ready, error, empty }
 
 class ProgrammeIntelligenceViewState {
   const ProgrammeIntelligenceViewState({
@@ -85,19 +79,22 @@ class ProgrammeIntelligenceViewState {
       comparisonSummary: clearComparisonSummary
           ? null
           : (comparisonSummary ?? this.comparisonSummary),
-      comparisonError:
-          clearComparisonError ? null : (comparisonError ?? this.comparisonError),
+      comparisonError: clearComparisonError
+          ? null
+          : (comparisonError ?? this.comparisonError),
       comparisonPartial: comparisonPartial ?? this.comparisonPartial,
-      migrationPlan:
-          clearMigrationPlan ? null : (migrationPlan ?? this.migrationPlan),
-      migrationError:
-          clearMigrationError ? null : (migrationError ?? this.migrationError),
+      migrationPlan: clearMigrationPlan
+          ? null
+          : (migrationPlan ?? this.migrationPlan),
+      migrationError: clearMigrationError
+          ? null
+          : (migrationError ?? this.migrationError),
       migrationPartial: migrationPartial ?? this.migrationPartial,
       lineageVersions: lineageVersions ?? this.lineageVersions,
       selectedComparisonTargetVersionId: clearComparisonTarget
           ? null
           : (selectedComparisonTargetVersionId ??
-              this.selectedComparisonTargetVersionId),
+                this.selectedComparisonTargetVersionId),
     );
   }
 }

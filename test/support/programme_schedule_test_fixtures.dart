@@ -60,12 +60,7 @@ class ProgrammeScheduleTestFixtures {
             ),
           ],
         ),
-        restDay(
-          id: day3Id,
-          weekId: week1Id,
-          dayKey: 'day_3',
-          dayOrder: 3,
-        ),
+        restDay(id: day3Id, weekId: week1Id, dayKey: 'day_3', dayOrder: 3),
         trainingDay(
           id: day4Id,
           weekId: week1Id,
@@ -179,7 +174,8 @@ class ProgrammeScheduleTestFixtures {
         ProgrammeTemplateWeekNode(week: weekOne, days: weekOneDays),
         ProgrammeTemplateWeekNode(
           week: weekTwo,
-          days: weekTwoDays ??
+          days:
+              weekTwoDays ??
               [
                 trainingDay(
                   id: day5Id,

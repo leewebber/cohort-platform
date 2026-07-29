@@ -134,7 +134,10 @@ void main() {
         ],
       );
 
-      expect(resolution.kind, ProgrammeScheduleResolutionKind.programmeComplete);
+      expect(
+        resolution.kind,
+        ProgrammeScheduleResolutionKind.programmeComplete,
+      );
       expect(resolution.suggestedNextCursor, isNull);
     });
 
@@ -248,7 +251,10 @@ void main() {
         ],
       );
 
-      expect(resolution.kind, ProgrammeScheduleResolutionKind.programmeComplete);
+      expect(
+        resolution.kind,
+        ProgrammeScheduleResolutionKind.programmeComplete,
+      );
       expect(resolution.suggestedNextCursor, isNull);
     });
 
@@ -272,7 +278,9 @@ void main() {
     test('throws for missing day', () {
       expect(
         () => resolver.resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(dayKey: 'day_99'),
+          assignment: ProgrammeScheduleTestFixtures.assignment(
+            dayKey: 'day_99',
+          ),
           tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
           outcomes: const [],
         ),
@@ -422,47 +430,53 @@ void main() {
       expect(assignment.currentSessionOrder, beforeSlot);
     });
 
-    test('resolveInitialCursor returns first required slot on flat programme', () {
-      final cursor = resolver.resolveInitialCursor(
-        tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
-      );
+    test(
+      'resolveInitialCursor returns first required slot on flat programme',
+      () {
+        final cursor = resolver.resolveInitialCursor(
+          tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+        );
 
-      expect(cursor.weekNumber, 1);
-      expect(cursor.dayKey, 'day_1');
-      expect(cursor.slotOrder, 1);
-    });
+        expect(cursor.weekNumber, 1);
+        expect(cursor.dayKey, 'day_1');
+        expect(cursor.slotOrder, 1);
+      },
+    );
 
-    test('resolveInitialCursor returns rest day when programme begins with rest', () {
-      final cursor = resolver.resolveInitialCursor(
-        tree: ProgrammeScheduleTestFixtures.singleWeekTree(
-          days: [
-            ProgrammeScheduleTestFixtures.restDay(
-              id: 'day-1',
-              weekId: 'week-1',
-              dayKey: 'day_1',
-              dayOrder: 1,
-            ),
-            ProgrammeScheduleTestFixtures.trainingDay(
-              id: 'day-2',
-              weekId: 'week-1',
-              dayKey: 'day_2',
-              dayOrder: 2,
-              slots: [
-                ProgrammeScheduleTestFixtures.requiredSlot(
-                  id: ProgrammeScheduleTestFixtures.slot2Id,
-                  dayId: 'day-2',
-                  sessionOrder: 1,
-                  protocolId: 'RN-006',
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+    test(
+      'resolveInitialCursor returns rest day when programme begins with rest',
+      () {
+        final cursor = resolver.resolveInitialCursor(
+          tree: ProgrammeScheduleTestFixtures.singleWeekTree(
+            days: [
+              ProgrammeScheduleTestFixtures.restDay(
+                id: 'day-1',
+                weekId: 'week-1',
+                dayKey: 'day_1',
+                dayOrder: 1,
+              ),
+              ProgrammeScheduleTestFixtures.trainingDay(
+                id: 'day-2',
+                weekId: 'week-1',
+                dayKey: 'day_2',
+                dayOrder: 2,
+                slots: [
+                  ProgrammeScheduleTestFixtures.requiredSlot(
+                    id: ProgrammeScheduleTestFixtures.slot2Id,
+                    dayId: 'day-2',
+                    sessionOrder: 1,
+                    protocolId: 'RN-006',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
 
-      expect(cursor.dayKey, 'day_1');
-      expect(cursor.slotOrder, 1);
-    });
+        expect(cursor.dayKey, 'day_1');
+        expect(cursor.slotOrder, 1);
+      },
+    );
 
     test('resolveInitialCursor does not assume week 1 exists', () {
       final weekTwo = ProgrammeVersionWeek(
@@ -489,7 +503,9 @@ void main() {
           version: ProgrammeScheduleTestFixtures.version(),
           weeks: [weekTwo],
         ),
-        weekNodes: [ProgrammeTemplateWeekNode(week: weekTwo, days: [day])],
+        weekNodes: [
+          ProgrammeTemplateWeekNode(week: weekTwo, days: [day]),
+        ],
       );
 
       final cursor = resolver.resolveInitialCursor(tree: tree);

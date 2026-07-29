@@ -1,7 +1,6 @@
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/domain/session_occurrence/session_occurrence_domain.dart';
-import 'package:cohort_platform/domain/training_session_record/training_session_record_domain.dart'
-    as domain_record;
+import 'package:cohort_platform/domain/workout_execution_record/workout_execution_record_domain.dart';
 
 enum AthleteWorkoutResolutionStatus {
   invalidRequest,
@@ -64,7 +63,7 @@ class AthleteWorkoutResult {
     this.canCompleteWorkout = false,
     this.completionStatus = AthleteWorkoutCompletionStatus.none,
     this.completionDetail,
-    this.trainingSessionRecord,
+    this.workoutExecutionRecord,
   });
 
   final AthleteWorkoutResolutionStatus status;
@@ -83,7 +82,7 @@ class AthleteWorkoutResult {
   final bool canCompleteWorkout;
   final AthleteWorkoutCompletionStatus completionStatus;
   final String? completionDetail;
-  final domain_record.TrainingSessionRecord? trainingSessionRecord;
+  final WorkoutExecutionRecord? workoutExecutionRecord;
 
   bool get hasWorkout => occurrence != null;
 
@@ -125,7 +124,7 @@ class AthleteWorkoutResult {
       canCompleteWorkout: canCompleteWorkout,
       completionStatus: completionStatus,
       completionDetail: completionDetail,
-      trainingSessionRecord: trainingSessionRecord,
+      workoutExecutionRecord: workoutExecutionRecord,
     );
   }
 
@@ -157,14 +156,14 @@ class AthleteWorkoutResult {
       canCompleteWorkout: canCompleteWorkout ?? this.canCompleteWorkout,
       completionStatus: completionStatus,
       completionDetail: completionDetail,
-      trainingSessionRecord: trainingSessionRecord,
+      workoutExecutionRecord: workoutExecutionRecord,
     );
   }
 
   AthleteWorkoutResult withCompletionOutcome({
     required AthleteWorkoutCompletionStatus completionStatus,
     String? completionDetail,
-    domain_record.TrainingSessionRecord? trainingSessionRecord,
+    WorkoutExecutionRecord? workoutExecutionRecord,
     SessionOccurrence? occurrence,
     SessionOccurrenceLifecycleState? lifecycleState,
     AdaptedSessionExecutionSnapshot? executionSnapshot,
@@ -190,8 +189,8 @@ class AthleteWorkoutResult {
       canCompleteWorkout: canCompleteWorkout ?? this.canCompleteWorkout,
       completionStatus: completionStatus,
       completionDetail: completionDetail,
-      trainingSessionRecord:
-          trainingSessionRecord ?? this.trainingSessionRecord,
+      workoutExecutionRecord:
+          workoutExecutionRecord ?? this.workoutExecutionRecord,
     );
   }
 
@@ -211,28 +210,28 @@ class AthleteWorkoutResult {
         other.startDetail == startDetail &&
         other.completionStatus == completionStatus &&
         other.completionDetail == completionDetail &&
-        other.trainingSessionRecord == trainingSessionRecord &&
+        other.workoutExecutionRecord == workoutExecutionRecord &&
         _listEquals(other.matchingOccurrences, matchingOccurrences);
   }
 
   @override
   int get hashCode => Object.hash(
-        status,
-        athleteId,
-        date,
-        occurrence,
-        adaptationAvailable,
-        canStartWorkout,
-        canCompleteWorkout,
-        adaptationStatus,
-        adaptationDetail,
-        startStatus,
-        startDetail,
-        completionStatus,
-        completionDetail,
-        trainingSessionRecord,
-        Object.hashAll(matchingOccurrences),
-      );
+    status,
+    athleteId,
+    date,
+    occurrence,
+    adaptationAvailable,
+    canStartWorkout,
+    canCompleteWorkout,
+    adaptationStatus,
+    adaptationDetail,
+    startStatus,
+    startDetail,
+    completionStatus,
+    completionDetail,
+    workoutExecutionRecord,
+    Object.hashAll(matchingOccurrences),
+  );
 }
 
 bool _listEquals<T>(List<T> a, List<T> b) {

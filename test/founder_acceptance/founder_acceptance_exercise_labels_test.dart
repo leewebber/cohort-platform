@@ -31,14 +31,8 @@ void main() {
       );
 
       expect(strength.linkedExercises, hasLength(2));
-      expect(
-        strength.linkedExercises[0].displayLabelOverride,
-        'Back Squat',
-      );
-      expect(
-        strength.linkedExercises[1].displayLabelOverride,
-        'Bench Press',
-      );
+      expect(strength.linkedExercises[0].displayLabelOverride, 'Back Squat');
+      expect(strength.linkedExercises[1].displayLabelOverride, 'Bench Press');
     });
 
     test('execution plan resolves labels without exercise catalogue', () async {
@@ -51,16 +45,18 @@ void main() {
         blocks: const ProtocolDraftBlockResolver().resolveBlocks(draft),
       );
 
-      final plan = await SessionExecutionLoader(
-        sessionBlockRepository: blockRepository,
-        protocolRepository: _FounderProtocolRepository(),
-        exerciseRepository: _EmptyExerciseRepository(),
-      ).load(protocolId: FounderAcceptanceContent.protocolId).then(
-            (result) => result.plan,
-          );
+      final plan =
+          await SessionExecutionLoader(
+                sessionBlockRepository: blockRepository,
+                protocolRepository: _FounderProtocolRepository(),
+                exerciseRepository: _EmptyExerciseRepository(),
+              )
+              .load(protocolId: FounderAcceptanceContent.protocolId)
+              .then((result) => result.plan);
 
-      final strength =
-          plan.blocks.firstWhere((block) => block.title == 'Strength');
+      final strength = plan.blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
       expect(strength.linkedExercises[0].displayLabelOverride, 'Back Squat');
       expect(strength.linkedExercises[0].athleteLabel, 'Back Squat');
       expect(strength.linkedExercises[1].displayLabelOverride, 'Bench Press');
@@ -76,16 +72,18 @@ void main() {
         sessionId: draft.protocolId,
         blocks: const ProtocolDraftBlockResolver().resolveBlocks(draft),
       );
-      final plan = await SessionExecutionLoader(
-        sessionBlockRepository: blockRepository,
-        protocolRepository: _FounderProtocolRepository(),
-        exerciseRepository: _EmptyExerciseRepository(),
-      ).load(protocolId: FounderAcceptanceContent.protocolId).then(
-            (result) => result.plan,
-          );
+      final plan =
+          await SessionExecutionLoader(
+                sessionBlockRepository: blockRepository,
+                protocolRepository: _FounderProtocolRepository(),
+                exerciseRepository: _EmptyExerciseRepository(),
+              )
+              .load(protocolId: FounderAcceptanceContent.protocolId)
+              .then((result) => result.plan);
 
-      final drafts =
-          const PerformanceSnapshotBuilder().buildInitialBlockDrafts(plan);
+      final drafts = const PerformanceSnapshotBuilder().buildInitialBlockDrafts(
+        plan,
+      );
       final strengthDraft = drafts.firstWhere(
         (draft) => draft.blockSnapshot.title == 'Strength',
       );
@@ -137,7 +135,8 @@ void main() {
     });
 
     SessionExecutionPlan installedExecutionPlan() {
-      final draft = protocolService.drafts[FounderAcceptanceContent.protocolId]!;
+      final draft =
+          protocolService.drafts[FounderAcceptanceContent.protocolId]!;
       return const SessionExecutionPlanBuilder().build(
         sessionId: draft.protocolId,
         sessionTitle: draft.name,
@@ -148,8 +147,11 @@ void main() {
     test('install persists displayLabelOverride on strength links', () async {
       await installer.install();
 
-      final draft = protocolService.drafts[FounderAcceptanceContent.protocolId]!;
-      final strength = draft.blocks.firstWhere((block) => block.title == 'Strength');
+      final draft =
+          protocolService.drafts[FounderAcceptanceContent.protocolId]!;
+      final strength = draft.blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
 
       expect(
         strength.linkedExercises.map((link) => link.displayLabelOverride),
@@ -157,8 +159,9 @@ void main() {
       );
 
       final plan = installedExecutionPlan();
-      final strengthBlock =
-          plan.blocks.firstWhere((block) => block.title == 'Strength');
+      final strengthBlock = plan.blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
       expect(strengthBlock.linkedExercises[0].athleteLabel, 'Back Squat');
       expect(strengthBlock.linkedExercises[1].athleteLabel, 'Bench Press');
     });
@@ -173,9 +176,9 @@ void main() {
         hasLength(5),
       );
 
-      final strength = installedExecutionPlan()
-          .blocks
-          .firstWhere((block) => block.title == 'Strength');
+      final strength = installedExecutionPlan().blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
       expect(strength.linkedExercises, hasLength(2));
       expect(strength.linkedExercises[0].athleteLabel, 'Back Squat');
       expect(strength.linkedExercises[1].athleteLabel, 'Bench Press');
@@ -192,13 +195,14 @@ void main() {
         sessionId: draft.protocolId,
         blocks: const ProtocolDraftBlockResolver().resolveBlocks(draft),
       );
-      final plan = await SessionExecutionLoader(
-        sessionBlockRepository: blockRepository,
-        protocolRepository: _FounderProtocolRepository(),
-        exerciseRepository: _EmptyExerciseRepository(),
-      ).load(protocolId: FounderAcceptanceContent.protocolId).then(
-            (result) => result.plan,
-          );
+      final plan =
+          await SessionExecutionLoader(
+                sessionBlockRepository: blockRepository,
+                protocolRepository: _FounderProtocolRepository(),
+                exerciseRepository: _EmptyExerciseRepository(),
+              )
+              .load(protocolId: FounderAcceptanceContent.protocolId)
+              .then((result) => result.plan);
 
       final controller = SessionExecutionController(
         plan: plan,
@@ -212,10 +216,10 @@ void main() {
             controller: controller,
             performanceController:
                 PerformanceCaptureController.initializeFromExecutionPlan(
-              plan: plan,
-              athleteId: 'founder-test-athlete',
-              trainingSessionId: 9001,
-            ),
+                  plan: plan,
+                  athleteId: 'founder-test-athlete',
+                  trainingSessionId: 9001,
+                ),
           ),
         ),
       );
@@ -239,25 +243,27 @@ void main() {
         sessionId: draft.protocolId,
         blocks: const ProtocolDraftBlockResolver().resolveBlocks(draft),
       );
-      final plan = await SessionExecutionLoader(
-        sessionBlockRepository: blockRepository,
-        protocolRepository: _FounderProtocolRepository(),
-        exerciseRepository: _EmptyExerciseRepository(),
-      ).load(protocolId: FounderAcceptanceContent.protocolId).then(
-            (result) => result.plan,
-          );
+      final plan =
+          await SessionExecutionLoader(
+                sessionBlockRepository: blockRepository,
+                protocolRepository: _FounderProtocolRepository(),
+                exerciseRepository: _EmptyExerciseRepository(),
+              )
+              .load(protocolId: FounderAcceptanceContent.protocolId)
+              .then((result) => result.plan);
 
       final performanceController =
           PerformanceCaptureController.initializeFromExecutionPlan(
-        plan: plan,
-        athleteId: 'founder-test-athlete',
-        trainingSessionId: 9001,
-      );
+            plan: plan,
+            athleteId: 'founder-test-athlete',
+            trainingSessionId: 9001,
+          );
       final strengthDraft = performanceController.draft.blockDrafts.firstWhere(
         (draft) => draft.captureMode == BlockCaptureMode.strength,
       );
-      final strengthBlock =
-          plan.blocks.firstWhere((block) => block.title == 'Strength');
+      final strengthBlock = plan.blocks.firstWhere(
+        (block) => block.title == 'Strength',
+      );
 
       await tester.pumpWidget(
         MaterialApp(

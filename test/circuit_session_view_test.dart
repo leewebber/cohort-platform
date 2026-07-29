@@ -10,10 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Future<void> pumpCircuitView(
-    WidgetTester tester,
-    Widget child,
-  ) async {
+  Future<void> pumpCircuitView(WidgetTester tester, Widget child) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() {
@@ -23,19 +20,16 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: SingleChildScrollView(
-            child: child,
-          ),
-        ),
+        home: Scaffold(body: SingleChildScrollView(child: child)),
       ),
     );
     await tester.pumpAndSettle();
   }
 
   group('CircuitSessionView', () {
-    testWidgets('shows AMRAP score fields and enables finish after entry',
-        (tester) async {
+    testWidgets('shows AMRAP score fields and enables finish after entry', (
+      tester,
+    ) async {
       CircuitSessionFinishSummary? summary;
 
       await pumpCircuitView(
@@ -105,8 +99,9 @@ void main() {
       expect(find.text('+15 sec'), findsOneWidget);
     });
 
-    testWidgets('preview finish returns summary through callback',
-        (tester) async {
+    testWidgets('preview finish returns summary through callback', (
+      tester,
+    ) async {
       CircuitSessionFinishSummary? summary;
 
       await pumpCircuitView(
@@ -126,18 +121,16 @@ void main() {
 
       final elapsedFields = find.byKey(const ValueKey('circuit-elapsed-time'));
       await tester.enterText(
-        find.descendant(
-          of: elapsedFields,
-          matching: find.byType(TextField),
-        ).first,
+        find
+            .descendant(of: elapsedFields, matching: find.byType(TextField))
+            .first,
         '14',
       );
       await tester.pump();
       await tester.enterText(
-        find.descendant(
-          of: elapsedFields,
-          matching: find.byType(TextField),
-        ).last,
+        find
+            .descendant(of: elapsedFields, matching: find.byType(TextField))
+            .last,
         '32',
       );
       await tester.pump();

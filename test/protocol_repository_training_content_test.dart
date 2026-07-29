@@ -9,20 +9,14 @@ void main() {
     Protocol(protocolId: 'ST-001', name: 'Lower Body A'),
   ];
 
-  final coachSession = Protocol(
-    protocolId: 'SES-001',
-    name: 'Coach Session',
-  );
+  final coachSession = Protocol(protocolId: 'SES-001', name: 'Coach Session');
 
   final programmeSession = Protocol(
     protocolId: 'SES-P1',
     name: 'Programme Session',
   );
 
-  final template = Protocol(
-    protocolId: 'TPL-001',
-    name: 'Template',
-  );
+  final template = Protocol(protocolId: 'TPL-001', name: 'Template');
 
   final unpublishedCohort = Protocol(
     protocolId: 'BW-001',
@@ -32,12 +26,7 @@ void main() {
   group('ProtocolRepository training content queries (fake)', () {
     test('listCohortProtocols excludes coach sessions and templates', () async {
       final repository = _FakeTrainingContentRepository(
-        rows: [
-          ...cohortPublished,
-          coachSession,
-          programmeSession,
-          template,
-        ],
+        rows: [...cohortPublished, coachSession, programmeSession, template],
         metadata: {
           'RN-006': _Metadata.cohortPublished,
           'ST-001': _Metadata.cohortPublished,
@@ -56,10 +45,7 @@ void main() {
 
     test('listCohortProtocols requires published=true', () async {
       final repository = _FakeTrainingContentRepository(
-        rows: [
-          ...cohortPublished,
-          unpublishedCohort,
-        ],
+        rows: [...cohortPublished, unpublishedCohort],
         metadata: {
           'RN-006': _Metadata.cohortPublished,
           'ST-001': _Metadata.cohortPublished,
@@ -76,26 +62,29 @@ void main() {
       expect(results.map((p) => p.protocolId), isNot(contains('BW-001')));
     });
 
-    test('listCoachSessions scopes by owner and excludes programme-only', () async {
-      final repository = _FakeTrainingContentRepository(
-        rows: [
-          coachSession,
-          programmeSession,
-          Protocol(protocolId: 'SES-002', name: 'Other Coach'),
-        ],
-        metadata: {
-          'SES-001': _Metadata.coachPrivate(ownerId: 'dev-coach'),
-          'SES-P1': _Metadata.programmeOnly(
-            programmeVersionId: '11111111-1111-1111-1111-111111111111',
-          ),
-          'SES-002': _Metadata.coachPrivate(ownerId: 'other-coach'),
-        },
-      );
+    test(
+      'listCoachSessions scopes by owner and excludes programme-only',
+      () async {
+        final repository = _FakeTrainingContentRepository(
+          rows: [
+            coachSession,
+            programmeSession,
+            Protocol(protocolId: 'SES-002', name: 'Other Coach'),
+          ],
+          metadata: {
+            'SES-001': _Metadata.coachPrivate(ownerId: 'dev-coach'),
+            'SES-P1': _Metadata.programmeOnly(
+              programmeVersionId: '11111111-1111-1111-1111-111111111111',
+            ),
+            'SES-002': _Metadata.coachPrivate(ownerId: 'other-coach'),
+          },
+        );
 
-      final results = await repository.listCoachSessions('dev-coach');
+        final results = await repository.listCoachSessions('dev-coach');
 
-      expect(results.map((p) => p.protocolId), ['SES-001']);
-    });
+        expect(results.map((p) => p.protocolId), ['SES-001']);
+      },
+    );
 
     test('listProgrammeSessions scopes by programme version', () async {
       final versionA = '11111111-1111-1111-1111-111111111111';
@@ -121,11 +110,7 @@ void main() {
 
     test('listSessionTemplates filters by content kind', () async {
       final repository = _FakeTrainingContentRepository(
-        rows: [
-          template,
-          coachSession,
-          ...cohortPublished,
-        ],
+        rows: [template, coachSession, ...cohortPublished],
         metadata: {
           'TPL-001': _Metadata.template(ownerId: 'dev-coach'),
           'SES-001': _Metadata.coachPrivate(ownerId: 'dev-coach'),
@@ -192,8 +177,8 @@ class _FakeTrainingContentRepository extends ProtocolRepository {
   _FakeTrainingContentRepository({
     required List<Protocol> rows,
     Map<String, _Metadata>? metadata,
-  })  : _rows = rows,
-        _metadata = metadata ?? _defaultCohortMetadata(rows);
+  }) : _rows = rows,
+       _metadata = metadata ?? _defaultCohortMetadata(rows);
 
   final List<Protocol> _rows;
   final Map<String, _Metadata> _metadata;

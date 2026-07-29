@@ -297,9 +297,7 @@ class ProtocolAnalyzer {
   }
 
   bool _isLowDependencyEquipment(String value) {
-    return value == 'bodyweight' ||
-        value == 'running shoes' ||
-        value == 'none';
+    return value == 'bodyweight' || value == 'running shoes' || value == 'none';
   }
 
   bool _isModerateDependencyEquipment(String value) {
@@ -351,10 +349,9 @@ class ProtocolAnalyzer {
       'erg': profile.ergPercent,
     };
 
-    final activePatterns = patternPercents.entries
-        .where((entry) => entry.value > 0)
-        .toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final activePatterns =
+        patternPercents.entries.where((entry) => entry.value > 0).toList()
+          ..sort((a, b) => b.value.compareTo(a.value));
 
     if (activePatterns.isEmpty) {
       return MovementBias.mixed;
@@ -506,8 +503,9 @@ class ProtocolAnalyzer {
       if (stepProfile.lowerBody) lowerBody += 1;
     }
 
-    final totalMovements =
-        stepProfiles.where((profile) => profile.hasAnyMovement).length;
+    final totalMovements = stepProfiles
+        .where((profile) => profile.hasAnyMovement)
+        .length;
 
     return MovementProfile(
       push: push,
@@ -553,7 +551,8 @@ class ProtocolAnalyzer {
       hasLowerBody = true;
     }
 
-    final hasAnyMovement = hasPush ||
+    final hasAnyMovement =
+        hasPush ||
         hasPull ||
         hasSquat ||
         hasHinge ||

@@ -42,7 +42,9 @@ class InMemoryProgrammeVersionImpactStore extends ProgrammeVersionImpactStore {
   }
 
   @override
-  Future<List<ProgrammeVersion>> listVersionsForLineage(String lineageId) async {
+  Future<List<ProgrammeVersion>> listVersionsForLineage(
+    String lineageId,
+  ) async {
     return programmeTables.versions
         .where((version) => version.lineageId == lineageId)
         .toList()
@@ -56,24 +58,23 @@ class InMemoryProgrammeVersionImpactStore extends ProgrammeVersionImpactStore {
     final version = await getVersionById(programmeVersionId);
     if (version == null) return const [];
 
-    final weeks = programmeTables.weeks
-        .where((week) => week.versionId == version.id)
-        .toList()
-      ..sort((a, b) => a.weekNumber.compareTo(b.weekNumber));
+    final weeks =
+        programmeTables.weeks
+            .where((week) => week.versionId == version.id)
+            .toList()
+          ..sort((a, b) => a.weekNumber.compareTo(b.weekNumber));
 
     final references = <ProgrammeVersionSessionReference>[];
 
     for (final week in weeks) {
-      final days = programmeTables.days
-          .where((day) => day.weekId == week.id)
-          .toList()
-        ..sort((a, b) => a.dayOrder.compareTo(b.dayOrder));
+      final days =
+          programmeTables.days.where((day) => day.weekId == week.id).toList()
+            ..sort((a, b) => a.dayOrder.compareTo(b.dayOrder));
 
       for (final day in days) {
-        final slots = programmeTables.slots
-            .where((slot) => slot.dayId == day.id)
-            .toList()
-          ..sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
+        final slots =
+            programmeTables.slots.where((slot) => slot.dayId == day.id).toList()
+              ..sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
 
         for (final slot in slots) {
           final metadata = await _sessionMetadata(slot.protocolId);
@@ -128,8 +129,9 @@ class InMemoryProgrammeVersionImpactStore extends ProgrammeVersionImpactStore {
       );
     }
 
-    final assignmentVersionById =
-        buildAssignmentVersionIndex(programmeTables.assignments);
+    final assignmentVersionById = buildAssignmentVersionIndex(
+      programmeTables.assignments,
+    );
     final slotVersionById = buildSlotVersionIndex(
       slots: programmeTables.slots,
       days: programmeTables.days,
@@ -224,19 +226,21 @@ class InMemoryProgrammeVersionImpactStore extends ProgrammeVersionImpactStore {
       accumulator.isLegacyReference = true;
     }
 
-    final results = byExercise.values
-        .map(
-          (accumulator) => ProgrammeVersionExerciseReference(
-            exerciseId: accumulator.exerciseId,
-            exerciseName: accumulator.exerciseName,
-            sessionRevisionIds: accumulator.sessionRevisionIds.toList()..sort(),
-            sessionCount: accumulator.sessionRevisionIds.length,
-            blockLinkCount: accumulator.blockLinkCount,
-            isLegacyReference: accumulator.isLegacyReference,
-          ),
-        )
-        .toList()
-      ..sort(compareProgrammeVersionExerciseReferences);
+    final results =
+        byExercise.values
+            .map(
+              (accumulator) => ProgrammeVersionExerciseReference(
+                exerciseId: accumulator.exerciseId,
+                exerciseName: accumulator.exerciseName,
+                sessionRevisionIds: accumulator.sessionRevisionIds.toList()
+                  ..sort(),
+                sessionCount: accumulator.sessionRevisionIds.length,
+                blockLinkCount: accumulator.blockLinkCount,
+                isLegacyReference: accumulator.isLegacyReference,
+              ),
+            )
+            .toList()
+          ..sort(compareProgrammeVersionExerciseReferences);
 
     return results;
   }
@@ -250,8 +254,8 @@ class InMemoryProgrammeVersionImpactStore extends ProgrammeVersionImpactStore {
       sessionLineageId: identity?.sessionLineageId ?? 'unknown-lineage',
       revisionNumber: identity?.revisionNumber ?? 1,
       sessionName: protocolNames[protocolId] ?? 'Session',
-      lifecycleStatus: lifecycle ??
-          defaultSessionLifecycleForProtocol(published: published),
+      lifecycleStatus:
+          lifecycle ?? defaultSessionLifecycleForProtocol(published: published),
     );
   }
 }
@@ -271,10 +275,7 @@ class _SessionMetadata {
 }
 
 class _ExerciseAccumulator {
-  _ExerciseAccumulator({
-    required this.exerciseId,
-    required this.exerciseName,
-  });
+  _ExerciseAccumulator({required this.exerciseId, required this.exerciseName});
 
   final String exerciseId;
   final String exerciseName;

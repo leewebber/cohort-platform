@@ -44,15 +44,15 @@ class ProtocolBuilderService {
     SessionLineageStore? sessionLineageStore,
     ProtocolDraftBlockResolver? blockResolver,
     SessionBlockValidation? blockValidation,
-  })  : _protocolRepository = protocolRepository ?? ProtocolRepository(),
-        _protocolStepRepository =
-            protocolStepRepository ?? const ProtocolStepRepository(),
-        _sessionBlockRepository =
-            sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
-        _sessionLineageStore =
-            sessionLineageStore ?? const SessionLineageSupabaseStore(),
-        _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
-        _blockValidation = blockValidation ?? const SessionBlockValidation();
+  }) : _protocolRepository = protocolRepository ?? ProtocolRepository(),
+       _protocolStepRepository =
+           protocolStepRepository ?? const ProtocolStepRepository(),
+       _sessionBlockRepository =
+           sessionBlockRepository ?? const SupabaseSessionBlockRepository(),
+       _sessionLineageStore =
+           sessionLineageStore ?? const SessionLineageSupabaseStore(),
+       _blockResolver = blockResolver ?? const ProtocolDraftBlockResolver(),
+       _blockValidation = blockValidation ?? const SessionBlockValidation();
 
   final ProtocolRepository _protocolRepository;
   final ProtocolStepRepository _protocolStepRepository;
@@ -86,9 +86,8 @@ class ProtocolBuilderService {
 
       return response
           .map<ProtocolDraftSummary>(
-            (row) => ProtocolDraftSummary.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProtocolDraftSummary.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } on PostgrestException catch (error) {
@@ -110,9 +109,8 @@ class ProtocolBuilderService {
 
       return response
           .map<ProtocolDraftSummary>(
-            (row) => ProtocolDraftSummary.fromMap(
-              Map<String, dynamic>.from(row),
-            ),
+            (row) =>
+                ProtocolDraftSummary.fromMap(Map<String, dynamic>.from(row)),
           )
           .toList();
     } on PostgrestException catch (error) {
@@ -148,9 +146,7 @@ class ProtocolBuilderService {
 
       final draft = _draftFromProtocolRow(
         Map<String, dynamic>.from(protocolRow),
-        steps
-            .map(ProtocolStepDraft.fromProtocolStep)
-            .toList(growable: false),
+        steps.map(ProtocolStepDraft.fromProtocolStep).toList(growable: false),
         blocks: blocks,
       );
 
@@ -243,8 +239,9 @@ class ProtocolBuilderService {
 
     var syncedDraft = _blockResolver.withSyncedStepsFromBlocks(draft);
     final protocolId = syncedDraft.protocolId.trim();
-    final existingProtocol =
-        await _protocolRepository.getProtocolById(protocolId);
+    final existingProtocol = await _protocolRepository.getProtocolById(
+      protocolId,
+    );
     final created = existingProtocol == null;
 
     if (!created) {
@@ -287,22 +284,19 @@ class ProtocolBuilderService {
       published: lifecycleStatus == SessionRevisionLifecycleStatus.published,
     );
     final orderedSteps = _orderedSteps(syncedDraft.steps);
-    final orderedBlocks = _orderedBlocks(_blockResolver.resolveBlocks(syncedDraft));
-    final stepMaps = orderedSteps
-        .map((step) {
-          final map = step.toStepMap(protocolId: protocolId);
-          map.remove('id');
-          return map;
-        })
-        .toList();
+    final orderedBlocks = _orderedBlocks(
+      _blockResolver.resolveBlocks(syncedDraft),
+    );
+    final stepMaps = orderedSteps.map((step) {
+      final map = step.toStepMap(protocolId: protocolId);
+      map.remove('id');
+      return map;
+    }).toList();
 
     try {
       await SupabaseClientHolder.client
           .from('performance_protocols')
-          .upsert(
-            protocolMap,
-            onConflict: 'protocol_id',
-          );
+          .upsert(protocolMap, onConflict: 'protocol_id');
 
       await SupabaseClientHolder.client
           .from('protocol_steps')
@@ -310,7 +304,9 @@ class ProtocolBuilderService {
           .eq('protocol_id', protocolId);
 
       if (stepMaps.isNotEmpty) {
-        await SupabaseClientHolder.client.from('protocol_steps').insert(stepMaps);
+        await SupabaseClientHolder.client
+            .from('protocol_steps')
+            .insert(stepMaps);
       }
 
       await _sessionBlockRepository.replaceSessionBlocks(
@@ -320,9 +316,7 @@ class ProtocolBuilderService {
     } on PostgrestException catch (error) {
       throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
     } catch (error) {
-      throw ProtocolBuilderException(
-        _failureMessageFor(resultKind),
-      );
+      throw ProtocolBuilderException(_failureMessageFor(resultKind));
     }
 
     return _resultFor(
@@ -334,8 +328,9 @@ class ProtocolBuilderService {
   }
 
   Future<void> _assertRevisionEditable(String protocolId) async {
-    final status =
-        await _sessionLineageStore.getRevisionLifecycleStatus(protocolId);
+    final status = await _sessionLineageStore.getRevisionLifecycleStatus(
+      protocolId,
+    );
     if (status == SessionRevisionLifecycleStatus.published) {
       throw ProtocolBuilderException(
         'Published session revisions cannot be edited in place. '
@@ -426,10 +421,7 @@ class ProtocolBuilderService {
 
     final blocks = _blockResolver.resolveBlocks(draft);
     messages.addAll(
-      _blockValidation.validateSession(
-        name: draft.name,
-        blocks: blocks,
-      ),
+      _blockValidation.validateSession(name: draft.name, blocks: blocks),
     );
 
     if (messages.isNotEmpty) {
@@ -494,10 +486,7 @@ class ProtocolBuilderService {
       purpose: row['purpose']?.toString(),
     );
 
-    return ProtocolDraft.applyTrainingContentMetadata(
-      draft: base,
-      row: row,
-    );
+    return ProtocolDraft.applyTrainingContentMetadata(draft: base, row: row);
   }
 
   /// `session_format` is validated in the builder but not yet a DB column.
@@ -570,9 +559,4 @@ class ProtocolBuilderService {
   }
 }
 
-enum _PersistResultKind {
-  draft,
-  published,
-  savedChanges,
-  unpublished,
-}
+enum _PersistResultKind { draft, published, savedChanges, unpublished }

@@ -31,7 +31,9 @@ void main() {
     expect(find.text('Sign in'), findsOneWidget);
   });
 
-  testWidgets('AuthGate routes to home when authenticated with profile', (tester) async {
+  testWidgets('AuthGate routes to home when authenticated with profile', (
+    tester,
+  ) async {
     CurrentUserSession.clear();
     final authService = FakeAuthSessionPort();
     authService.setAuthenticated(userId: 'user-123', email: 'lee@example.com');

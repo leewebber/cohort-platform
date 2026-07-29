@@ -1,10 +1,5 @@
 /// Programme Catalogue tabs.
-enum ProgrammeCatalogueTab {
-  drafts,
-  published,
-  cohortGlobal,
-  archived,
-}
+enum ProgrammeCatalogueTab { drafts, published, cohortGlobal, archived }
 
 extension ProgrammeCatalogueTabLabels on ProgrammeCatalogueTab {
   String get label {

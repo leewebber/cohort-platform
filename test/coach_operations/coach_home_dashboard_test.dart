@@ -18,27 +18,25 @@ import '../support/in_memory_programme_stores.dart';
 
 class _FakeDailyStatusService extends CoachAthleteDailyStatusService {
   _FakeDailyStatusService(this._snapshots)
-      : super(
-          coachAthleteService: CoachAthleteService(
-            relationshipRepository: InMemoryCoachAthleteRelationshipRepository(
-              InMemoryCoachAthleteTables(),
-            ),
-            inviteRepository: InMemoryCoachAthleteInviteRepository(
-              InMemoryCoachAthleteTables(),
-            ),
-            profileRepository: InMemoryProfileRepository(),
+    : super(
+        coachAthleteService: CoachAthleteService(
+          relationshipRepository: InMemoryCoachAthleteRelationshipRepository(
+            InMemoryCoachAthleteTables(),
           ),
-          assignmentStore: InMemoryProgrammeAssignmentStore(
-            InMemoryProgrammeTables(),
+          inviteRepository: InMemoryCoachAthleteInviteRepository(
+            InMemoryCoachAthleteTables(),
           ),
-          versionStore: InMemoryProgrammeVersionStore(
-            InMemoryProgrammeTables(),
-          ),
-          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(
-            InMemoryProgrammeTables(),
-          ),
-          scheduleResolver: const ProgrammeScheduleResolverImpl(),
-        );
+          profileRepository: InMemoryProfileRepository(),
+        ),
+        assignmentStore: InMemoryProgrammeAssignmentStore(
+          InMemoryProgrammeTables(),
+        ),
+        versionStore: InMemoryProgrammeVersionStore(InMemoryProgrammeTables()),
+        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(
+          InMemoryProgrammeTables(),
+        ),
+        scheduleResolver: const ProgrammeScheduleResolverImpl(),
+      );
 
   final List<CoachAthleteDailySnapshot> _snapshots;
 
@@ -225,9 +223,7 @@ void main() {
         assignmentStore: InMemoryProgrammeAssignmentStore(
           InMemoryProgrammeTables(),
         ),
-        versionStore: InMemoryProgrammeVersionStore(
-          InMemoryProgrammeTables(),
-        ),
+        versionStore: InMemoryProgrammeVersionStore(InMemoryProgrammeTables()),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(
           InMemoryProgrammeTables(),
         ),
@@ -257,9 +253,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: CoachHomeDashboardScreen(controller: controller),
-        ),
+        MaterialApp(home: CoachHomeDashboardScreen(controller: controller)),
       );
       await tester.pumpAndSettle();
 
@@ -284,9 +278,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: CoachHomeDashboardScreen(controller: controller),
-        ),
+        MaterialApp(home: CoachHomeDashboardScreen(controller: controller)),
       );
       await tester.pumpAndSettle();
 
@@ -302,9 +294,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: CoachHomeDashboardScreen(controller: controller),
-        ),
+        MaterialApp(home: CoachHomeDashboardScreen(controller: controller)),
       );
       await tester.pumpAndSettle();
 

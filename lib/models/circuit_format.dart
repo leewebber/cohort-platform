@@ -49,8 +49,7 @@ extension CircuitScoreTypeLabels on CircuitScoreType {
     return switch (this) {
       CircuitScoreType.roundsAndReps =>
         'Score is rounds plus extra reps, e.g. 5+12.',
-      CircuitScoreType.elapsedTime =>
-        'Score is total time to finish.',
+      CircuitScoreType.elapsedTime => 'Score is total time to finish.',
       CircuitScoreType.roundsCompleted =>
         'Score is rounds or intervals completed.',
       CircuitScoreType.totalReps =>
