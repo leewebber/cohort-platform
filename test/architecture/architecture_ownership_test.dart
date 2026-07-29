@@ -1,0 +1,58 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+
+/// Layer ownership and module presence (Phase 4.5 freeze).
+void main() {
+  final root = Directory.current.path.contains('cohort_platform')
+      ? Directory.current.path
+      : _repoRoot(Directory.current);
+
+  test('planning pipeline modules exist under lib/planning', () {
+    final required = [
+      'lib/planning/planning_engine_service.dart',
+      'lib/planning/session_blueprint/deterministic_session_blueprint_generator.dart',
+      'lib/planning/exercise_policy/deterministic_exercise_policy_engine.dart',
+      'lib/planning/prescription/deterministic_prescription_engine.dart',
+      'lib/planning/orchestration/coach_brain_service.dart',
+    ];
+    for (final path in required) {
+      expect(File('$root/$path').existsSync(), isTrue, reason: path);
+    }
+  });
+
+  test('application ports exist for each engine stage', () {
+    final ports = [
+      'lib/application/ports/planning_engine_reader.dart',
+      'lib/application/ports/session_blueprint_generator.dart',
+      'lib/application/ports/exercise_policy_engine.dart',
+      'lib/application/ports/prescription_engine.dart',
+      'lib/application/ports/coach_brain_orchestrator.dart',
+    ];
+    for (final path in ports) {
+      expect(File('$root/$path').existsSync(), isTrue, reason: path);
+    }
+  });
+
+  test('canonical architecture ADRs 023-027 exist', () {
+    const ids = ['023', '024', '025', '026', '027'];
+    final dir = Directory('$root/docs/architecture/adrs');
+    for (final id in ids) {
+      final match = dir
+          .listSync()
+          .whereType<File>()
+          .where((f) => f.path.contains('ADR-$id-'))
+          .toList();
+      expect(match, isNotEmpty, reason: 'ADR-$id');
+    }
+  });
+}
+
+String _repoRoot(Directory start) {
+  var dir = start;
+  while (true) {
+    if (File('${dir.path}/pubspec.yaml').existsSync()) return dir.path;
+    if (dir.parent.path == dir.path) return start.path;
+    dir = dir.parent;
+  }
+}
