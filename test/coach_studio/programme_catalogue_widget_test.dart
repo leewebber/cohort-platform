@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/coach_studio/coach_studio_home_screen.dart';
 import 'package:cohort_platform/features/coach_studio/models/coach_studio_navigation_state.dart';
 import 'package:cohort_platform/features/coach_studio/models/coach_studio_section.dart';
@@ -84,6 +86,19 @@ class _NoopValidationService implements ProgrammeBuilderValidationService {
 }
 
 void main() {
+  setUp(() {
+    CurrentUserSession.bind(
+      const UserProfile(
+        id: 'coach-1',
+        displayName: 'Coach',
+        isCoach: true,
+        isAthlete: false,
+      ),
+    );
+  });
+
+  tearDown(CurrentUserSession.clear);
+
   testWidgets('Coach Studio landing shows sections and availability labels', (
     tester,
   ) async {

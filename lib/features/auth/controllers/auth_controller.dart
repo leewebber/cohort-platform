@@ -7,6 +7,7 @@ import '../models/auth_view_state.dart';
 import '../models/user_role.dart';
 import '../services/auth_session_port.dart';
 import '../services/auth_service.dart';
+import '../../../core/access/founder_access_policy.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/services/user_session_cache.dart';
 import '../services/current_user_session.dart';
@@ -30,6 +31,9 @@ class AuthController extends ChangeNotifier {
   Future<void>? _userBootstrapInFlight;
 
   AuthViewState get state => _state;
+
+  /// Signed-in email when available (founder allowlist resolution).
+  String? get currentEmail => _authService.currentUser?.email;
 
   Future<void> initialize() async {
     _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
@@ -166,6 +170,7 @@ class AuthController extends ChangeNotifier {
     await _authService.signOut();
     CurrentUserSession.clear();
     UserSessionCache.clearAll();
+    FounderAccessPolicy.bindSessionEmail(null);
     _state = AuthViewState.initial().copyWith(
       status: AuthStatus.unauthenticated,
     );

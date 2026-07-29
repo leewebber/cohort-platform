@@ -240,6 +240,17 @@ void main() {
   });
 
   group('CoachHomeDashboardScreen', () {
+    setUp(() {
+      CurrentUserSession.bind(
+        const UserProfile(
+          id: 'coach-1',
+          displayName: 'Coach',
+          isCoach: true,
+          isAthlete: false,
+        ),
+      );
+    });
+
     testWidgets('renders athlete cards and filter chips', (tester) async {
       final controller = CoachHomeDashboardController(
         dailyStatusService: _FakeDailyStatusService([

@@ -1,7 +1,7 @@
 import '../../athlete_profile/models/athlete_profile.dart';
 import '../data/plan_catalog.dart';
-import '../models/plan.dart';
 import '../models/plan_assignment.dart';
+import '../models/plan_definition.dart';
 
 /// Lightweight filter state for the Plan Library.
 class PlanLibraryFilters {
@@ -9,33 +9,33 @@ class PlanLibraryFilters {
     this.goalId,
     this.equipmentPresetId,
     this.daysPerWeek,
-    this.difficulty,
+    this.experienceLevel,
     this.maxDurationMinutes,
   });
 
   final String? goalId;
   final String? equipmentPresetId;
   final int? daysPerWeek;
-  final PlanDifficulty? difficulty;
+  final AthleteExperienceLevel? experienceLevel;
   final int? maxDurationMinutes;
 
   bool get isEmpty =>
       goalId == null &&
       equipmentPresetId == null &&
       daysPerWeek == null &&
-      difficulty == null &&
+      experienceLevel == null &&
       maxDurationMinutes == null;
 
   PlanLibraryFilters copyWith({
     String? goalId,
     String? equipmentPresetId,
     int? daysPerWeek,
-    PlanDifficulty? difficulty,
+    AthleteExperienceLevel? experienceLevel,
     int? maxDurationMinutes,
     bool clearGoal = false,
     bool clearEquipment = false,
     bool clearDays = false,
-    bool clearDifficulty = false,
+    bool clearExperience = false,
     bool clearDuration = false,
   }) {
     return PlanLibraryFilters(
@@ -44,14 +44,16 @@ class PlanLibraryFilters {
           ? null
           : (equipmentPresetId ?? this.equipmentPresetId),
       daysPerWeek: clearDays ? null : (daysPerWeek ?? this.daysPerWeek),
-      difficulty: clearDifficulty ? null : (difficulty ?? this.difficulty),
+      experienceLevel: clearExperience
+          ? null
+          : (experienceLevel ?? this.experienceLevel),
       maxDurationMinutes: clearDuration
           ? null
           : (maxDurationMinutes ?? this.maxDurationMinutes),
     );
   }
 
-  List<Plan> apply(List<Plan> plans) {
+  List<PlanDefinition> apply(List<PlanDefinition> plans) {
     return plans.where((plan) {
       if (goalId != null && plan.primaryGoal.id != goalId) return false;
       if (equipmentPresetId != null &&
@@ -61,7 +63,9 @@ class PlanLibraryFilters {
       if (daysPerWeek != null && plan.recommendedDaysPerWeek != daysPerWeek) {
         return false;
       }
-      if (difficulty != null && plan.difficulty != difficulty) return false;
+      if (experienceLevel != null && plan.experienceLevel != experienceLevel) {
+        return false;
+      }
       if (maxDurationMinutes != null &&
           plan.typicalSessionDurationMinutes > maxDurationMinutes!) {
         return false;
@@ -71,15 +75,51 @@ class PlanLibraryFilters {
   }
 }
 
-/// Creates and activates plan assignments (in-memory MVP).
+/// In-memory plan assignment store (MVP — no persistence).
+///
+/// Responsibilities: assign, replace active, read active, clear active.
 class PlanAssignmentService {
+  PlanAssignment? _activeAssignment;
+  PlanDefinition? _activeDefinition;
+  final List<PlanAssignment> _history = [];
+
+  PlanAssignment? get activeAssignment => _activeAssignment;
+  PlanDefinition? get activePlan => _activeDefinition;
+  bool get hasActivePlan =>
+      _activeAssignment != null &&
+      _activeAssignment!.isActive &&
+      _activeDefinition != null;
+
+  /// Assigns [plan] as the athlete's active plan (replaces any existing active).
   PlanAssignment assign({
     required String athleteId,
-    required Plan plan,
+    required PlanDefinition plan,
+    DateTime? now,
+  }) {
+    return replaceActivePlan(
+      athleteId: athleteId,
+      plan: plan,
+      now: now,
+    );
+  }
+
+  /// Replaces the current active plan with [plan]. Prior active → cancelled.
+  PlanAssignment replaceActivePlan({
+    required String athleteId,
+    required PlanDefinition plan,
     DateTime? now,
   }) {
     final stamp = now ?? DateTime.now().toUtc();
-    return PlanAssignment(
+    final previous = _activeAssignment;
+    if (previous != null && previous.isActive) {
+      final cancelled = previous.copyWith(
+        status: PlanAssignmentStatus.cancelled,
+        completedAt: stamp,
+      );
+      _history.add(cancelled);
+    }
+
+    final assignment = PlanAssignment(
       assignmentId: 'assignment.$athleteId.${plan.planId}.$stamp',
       athleteId: athleteId,
       planId: plan.planId,
@@ -90,12 +130,63 @@ class PlanAssignmentService {
       currentDay: 1,
       status: PlanAssignmentStatus.active,
     );
+
+    _activeAssignment = assignment;
+    _activeDefinition = plan;
+    return assignment;
+  }
+
+  /// Reads the active assignment, if any.
+  PlanAssignment? readActiveAssignment() => _activeAssignment;
+
+  /// Reads the active [PlanDefinition], if any.
+  PlanDefinition? readActivePlan() => _activeDefinition;
+
+  /// Clears the active plan assignment (in-memory).
+  void clearActivePlan({DateTime? now}) {
+    final stamp = now ?? DateTime.now().toUtc();
+    final previous = _activeAssignment;
+    if (previous != null && previous.isActive) {
+      _history.add(
+        previous.copyWith(
+          status: PlanAssignmentStatus.cancelled,
+          completedAt: stamp,
+        ),
+      );
+    }
+    _activeAssignment = null;
+    _activeDefinition = null;
+  }
+
+  /// Updates progress cursor on the active assignment.
+  PlanAssignment? updateProgress({
+    String? currentPhase,
+    int? currentWeek,
+    int? currentDay,
+  }) {
+    final active = _activeAssignment;
+    if (active == null || !active.isActive) return null;
+    final updated = active.copyWith(
+      currentPhase: currentPhase,
+      currentWeek: currentWeek,
+      currentDay: currentDay,
+    );
+    _activeAssignment = updated;
+    return updated;
+  }
+
+  List<PlanAssignment> history() => List.unmodifiable(_history);
+
+  void resetForTests() {
+    _activeAssignment = null;
+    _activeDefinition = null;
+    _history.clear();
   }
 
   /// Ensures a usable [AthleteProfile] when starting a plan.
   AthleteProfile ensureProfile({
     AthleteProfile? existing,
-    required Plan plan,
+    required PlanDefinition plan,
     required String athleteId,
     String? displayName,
     DateTime? now,
@@ -111,7 +202,9 @@ class PlanAssignmentService {
     }
 
     final stamp = now ?? DateTime.now().toUtc();
-    final presetId = plan.equipmentPresetIds.first;
+    final presetId = plan.equipmentPresetIds.isNotEmpty
+        ? plan.equipmentPresetIds.first
+        : 'minimal';
     final preset = AthleteEquipmentCatalog.byId(presetId);
     return AthleteProfile(
       athleteId: athleteId,
@@ -123,7 +216,7 @@ class PlanAssignmentService {
       environmentId: preset.environmentId,
       trainingDaysPerWeek: plan.recommendedDaysPerWeek,
       preferredSessionDurationMinutes: plan.typicalSessionDurationMinutes,
-      experienceLevel: plan.experience,
+      experienceLevel: plan.experienceLevel,
       assessmentComplete: true,
       preferredTrainingStyle: plan.primaryGoal.preferenceTag,
       createdAt: stamp,
@@ -131,7 +224,7 @@ class PlanAssignmentService {
     );
   }
 
-  Plan requirePlan(String planId) {
+  PlanDefinition requirePlan(String planId) {
     final plan = PlanCatalog.byId(planId);
     if (plan == null) {
       throw StateError('Unknown plan: $planId');

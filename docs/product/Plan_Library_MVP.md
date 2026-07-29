@@ -1,121 +1,136 @@
 # Plan Library MVP — Phase 5 Sprint 3
 
 **Date:** 2026-07-29  
-**Status:** Plans as products · browse · assign · Home from PlanAssignment  
+**Status:** PlanDefinition · PlanAssignment · active coaching context  
 **Engine:** Unchanged Phase 4 Coach Brain pipeline
 
 ---
 
-## Product intent
+## Architecture
 
-A **Plan** is a coaching product.  
-A **PlanAssignment** is the athlete↔plan relationship.
+Three distinct concepts — never blur them:
 
-The athlete chooses a plan. The coaching engine personalises sessions from that assignment. Programme construction is never exposed.
+| Concept | Role |
+|---------|------|
+| **PlanDefinition** | Immutable coaching product in the Plan Library |
+| **PlanAssignment** | Athlete↔Plan relationship; progress only |
+| **Active coaching context** | Built at planning time → consumed by Coach Brain |
 
 ```
 AthleteProfile
-  → PlanAssignment (active plan)
-  → PlanningInput (plan tags + profile)
+  + PlanAssignment (active)
+  + PlanDefinition
+  → PlanningInput
   → Coach Brain
-  → Today's Session
+  → SessionExecutionPlan
 ```
+
+Plans describe coaching philosophy.  
+The coaching engine generates daily execution.
 
 ---
 
-## Plan model
+## PlanDefinition
 
-Canonical immutable model: `lib/features/plans/models/plan.dart`
+`lib/features/plans/models/plan_definition.dart`
+
+Immutable. **Contains no workouts.**
 
 | Area | Fields |
 |------|--------|
-| Identity | `planId`, `name`, `subtitle`, `description` |
-| Classification | `primaryGoal`, `category`, `difficulty` |
-| Training | `recommendedDaysPerWeek`, `typicalSessionDurationMinutes` |
-| Requirements | `equipmentPresetIds`, `experience` |
-| Presentation | `coverImageAsset` (placeholder), `colourTheme`, `tags` |
+| Identity | `planId`, `slug`, `version` |
+| Presentation | `name`, `subtitle`, `shortDescription`, `longDescription`, `coverImagePlaceholder`, `colourTheme`, `tags` |
+| Classification | `category`, `primaryGoal`, `supportedGoals` |
+| Training shape | `recommendedDaysPerWeek`, `typicalSessionDurationMinutes`, `durationWeeks` |
+| Requirements | `equipmentProfile`, `experienceLevel` |
+| Philosophy | `progressionModel`, `coachingFocus`, `capabilityPriorities` |
 | Detail copy | `whoItsFor`, `whatYouImprove`, `typicalWeekSummary`, `faqs` |
-| Metadata | `version`, `author`, `status` |
+| Metadata | `author`, `published`, `createdAt` |
 
-Catalog (in-memory, no persistence): `lib/features/plans/data/plan_catalog.dart`
+Catalog: `lib/features/plans/data/plan_catalog.dart` (in-memory).
 
 ---
 
 ## PlanAssignment
 
-Immutable model: `lib/features/plans/models/plan_assignment.dart`
+`lib/features/plans/models/plan_assignment.dart`
 
-| Field | Role |
-|-------|------|
-| `assignmentId` | Unique assignment id |
-| `athleteId` / `planId` | Relationship |
-| `assignedAt` / `startedAt` | Lifecycle stamps |
-| `currentPhase` / `currentWeek` / `currentDay` | Progress cursor |
-| `status` | `active` · `paused` · `completed` · `cancelled` |
-| `configuration` | Reserved map for future athlete-specific config |
+Progress only:
 
-MVP: **one active assignment**. The model allows future multi-assignment; UI does not.
+`assignmentId`, `athleteId`, `planId`, `status`, `assignedAt`, `startedAt`, `completedAt`, `currentPhase`, `currentWeek`, `currentDay`, `configuration`
+
+Statuses: `active` · `paused` · `completed` · `cancelled`
+
+MVP: one active assignment (model allows future multi-assignment).
 
 ---
 
-## Navigation
+## PlanAssignmentService
+
+`lib/features/plans/services/plan_assignment_service.dart` (in-memory):
+
+- Assign Plan  
+- Replace Active Plan  
+- Read Active Plan / Assignment  
+- Clear Active Plan  
+
+---
+
+## Navigation & UI
 
 | Entry | Destination |
 |-------|-------------|
 | Bottom nav **Plans** | `PlanLibraryScreen` |
-| Home empty CTA **Choose a Plan** | `PlanLibraryScreen` |
+| Home empty **Browse Plans** | `PlanLibraryScreen` |
 | Plan card | `PlanDetailScreen` |
-| **Start This Plan** | `PlanStartService` → bind session → pop to Home |
+| **START PLAN** | `PlanStartService` → Home |
 
-Screen hierarchy:
+Hierarchy:
 
 ```
 HomeScreen
-  ├─ (empty) ChoosePlanEntryCard → PlanLibraryScreen
-  │                              → PlanDetailScreen
-  │                              → Start → Home (active plan)
-  └─ (active) AthleteGeneratedTodaySection
-       → Workout Player (existing Sprint 1 path)
+  ├─ (empty) Choose Your First Plan → Browse Plans
+  │         → Plan Library → Plan Detail → START PLAN → Home
+  └─ (active) Active Plan · Phase · Week · Day · Today's Session
+              → Workout Player
 ```
 
 ---
 
-## Dependencies
+## Planning integration
 
-| Layer | Ownership |
-|-------|-----------|
-| `features/plans` | Plan product + assignment + library UI |
-| `features/athlete_profile` | Profile session store; PlanningInput builder accepts Plan |
-| `features/workout_player` | `CoachBrainWorkoutPlanService.resolveFromProfile` (+ plan) |
-| Planning / Coach Brain / engines | **Unchanged** |
+`AthletePlanningInputBuilder` accepts `PlanDefinition` + `PlanAssignment`.
 
-Plan identity is carried on `PlanningInput.athletePreferences.tags`:
+Preference tags (engines unchanged):
 
 - `plan_id:<planId>`
 - `plan_assignment:<assignmentId>`
+- `progression_model:<…>`
+- `coaching_focus:<…>`
+- `priority_<capabilityId>`
+- week / day cursors
 
-Days / duration / goal come from the Plan when present.  
-`progressionPathId` is **not** set to `planId` (ontology path validation).
+`progressionPathId` is **not** set to plan ids (ontology validation).
+
+---
+
+## Future marketplace
+
+Plans become catalogue SKUs: discovery, recommendations, entitlements, coach publishing — without changing Coach Brain. Assignment remains the athlete↔product link.
 
 ---
 
 ## Known limitations
 
-- No persistence / cloud sync of assignments
-- Cover images are colour placeholders
-- Single active plan only (UI)
-- Plan does not alter engine algorithms — tags + profile fields only
-- FAQs are curated placeholders on catalog entries
-- Sprint 2 onboarding can still generate a programme without a plan; Home requires an active plan for the today card
-
----
-
-## Future recommendation engine (Sprint 4+)
-
-Recommend plans from `AthleteProfile` (goal, equipment, days, experience) without exposing construction. Rank catalog, surface “Recommended for you”, keep assignment + Coach Brain path unchanged.
+- No persistence / cloud sync  
+- Cover images are colour placeholders  
+- Single active plan (UI)  
+- Philosophy tags influence preferences only — not engine algorithms  
+- No subscriptions, payments, or coach editing  
+- Sprint 2 onboarding can still generate without a plan; Home today requires an active plan  
 
 ---
 
 ## Tests
 
-`test/plans/plan_library_test.dart` covers catalog, filters, details, assignment, PlanningInput tags, Coach Brain invocation, Home empty + active plan.
+`test/plans/plan_library_test.dart` — models, assignment service, filters, details, PlanningInput, Coach Brain, Home empty/active.

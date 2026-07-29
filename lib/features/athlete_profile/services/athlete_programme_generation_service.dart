@@ -1,6 +1,6 @@
 import '../../workout_player/services/coach_brain_workout_plan_service.dart';
-import '../../plans/models/plan.dart';
 import '../../plans/models/plan_assignment.dart';
+import '../../plans/models/plan_definition.dart';
 import '../models/athlete_profile.dart';
 import 'athlete_profile_session.dart';
 
@@ -14,7 +14,7 @@ class AthleteProgrammeGenerationService {
 
   Future<AthleteGeneratedProgramme> generate(
     AthleteProfile profile, {
-    Plan? activePlan,
+    PlanDefinition? activePlan,
     PlanAssignment? assignment,
   }) async {
     final plan = activePlan ?? AthleteProfileSession.activePlan;

@@ -4,6 +4,8 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../adaptive_progression/services/adaptive_progression_coordinator.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../models/workout_player_result.dart';
 import '../models/workout_player_state.dart';
@@ -18,6 +20,7 @@ class WorkoutCompleteScreen extends StatefulWidget {
     this.trainingSessionId,
     this.programmeContext,
     this.completionService,
+    this.progressionCoordinator,
   });
 
   final WorkoutPlayerState state;
@@ -25,6 +28,7 @@ class WorkoutCompleteScreen extends StatefulWidget {
   final int? trainingSessionId;
   final ProgrammeExecutionContext? programmeContext;
   final WorkoutCompletionService? completionService;
+  final AdaptiveProgressionCoordinator? progressionCoordinator;
 
   @override
   State<WorkoutCompleteScreen> createState() => _WorkoutCompleteScreenState();
@@ -34,6 +38,8 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
   late final TextEditingController _notesController;
   int? _rpe;
   bool _finishing = false;
+  _AdaptStatus _adaptStatus = _AdaptStatus.idle;
+  String? _adaptError;
 
   @override
   void initState() {
@@ -58,7 +64,10 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
 
   Future<void> _finish() async {
     if (_finishing) return;
-    setState(() => _finishing = true);
+    setState(() {
+      _finishing = true;
+      _adaptError = null;
+    });
 
     final result = WorkoutPlayerResult(
       completed: true,
@@ -85,6 +94,36 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
       debugPrint('[WorkoutComplete] bookkeeping failed: $error');
     }
 
+    final shouldAdapt = AthleteProfileSession.hasActivePlan;
+    if (shouldAdapt) {
+      try {
+        setState(() => _adaptStatus = _AdaptStatus.analysing);
+        await Future<void>.delayed(const Duration(milliseconds: 450));
+        if (!mounted) return;
+
+        setState(() => _adaptStatus = _AdaptStatus.updating);
+        final coordinator =
+            widget.progressionCoordinator ?? AdaptiveProgressionCoordinator();
+        await coordinator.runAfterCompletion(
+          result: result,
+          athleteId: widget.athleteId,
+        );
+
+        if (!mounted) return;
+        setState(() => _adaptStatus = _AdaptStatus.ready);
+        await Future<void>.delayed(const Duration(milliseconds: 650));
+      } catch (error) {
+        debugPrint('[WorkoutComplete] adaptive progression failed: $error');
+        if (!mounted) return;
+        setState(() {
+          _adaptStatus = _AdaptStatus.idle;
+          _adaptError = 'Could not update your plan. Your session is still saved.';
+          _finishing = false;
+        });
+        return;
+      }
+    }
+
     if (!mounted) return;
     Navigator.of(context).pop(result);
   }
@@ -92,6 +131,7 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
   @override
   Widget build(BuildContext context) {
     final state = widget.state;
+    final adapting = _adaptStatus != _AdaptStatus.idle;
 
     return Scaffold(
       backgroundColor: CohortColors.background,
@@ -113,92 +153,164 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
                   CohortSpacing.xl,
                   CohortSpacing.xl,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Workout Complete', style: CohortTextStyles.h1),
-                    const SizedBox(height: CohortSpacing.sm),
-                    Text(
-                      state.brief.sessionName,
-                      style: CohortTextStyles.body,
-                    ),
-                    const SizedBox(height: CohortSpacing.xl),
-                    WorkoutMetaRow(
-                      label: 'Duration',
-                      value: _formatDuration(state.elapsed),
-                    ),
-                    WorkoutMetaRow(
-                      label: 'Exercises completed',
-                      value:
-                          '${state.completedExerciseCount} of ${state.totalExercises}',
-                    ),
-                    const SizedBox(height: CohortSpacing.md),
-                    Text('SESSION RPE', style: CohortTextStyles.sectionLabel),
-                    const SizedBox(height: CohortSpacing.sm),
-                    Wrap(
-                      spacing: CohortSpacing.sm,
-                      runSpacing: CohortSpacing.sm,
-                      children: List.generate(10, (index) {
-                        final value = index + 1;
-                        final selected = _rpe == value;
-                        return ChoiceChip(
-                          label: Text('$value'),
-                          selected: selected,
-                          onSelected: (_) => setState(() => _rpe = value),
-                          selectedColor: CohortColors.phosphorDeep,
-                          labelStyle: TextStyle(
-                            color: selected
-                                ? const Color(0xFF0C0E0B)
-                                : CohortColors.textPrimary,
-                            fontWeight: FontWeight.w700,
+                child: adapting
+                    ? _AdaptTransition(status: _adaptStatus)
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Workout Complete',
+                            style: CohortTextStyles.h1,
                           ),
-                          backgroundColor: CohortColors.surfaceRaised,
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: CohortSpacing.xl),
-                    Text('NOTES (OPTIONAL)', style: CohortTextStyles.sectionLabel),
-                    const SizedBox(height: CohortSpacing.sm),
-                    TextField(
-                      controller: _notesController,
-                      maxLines: 3,
-                      style: CohortTextStyles.body.copyWith(
-                        color: CohortColors.textPrimary,
+                          const SizedBox(height: CohortSpacing.sm),
+                          Text(
+                            state.brief.sessionName,
+                            style: CohortTextStyles.body,
+                          ),
+                          const SizedBox(height: CohortSpacing.xl),
+                          WorkoutMetaRow(
+                            label: 'Duration',
+                            value: _formatDuration(state.elapsed),
+                          ),
+                          WorkoutMetaRow(
+                            label: 'Exercises completed',
+                            value:
+                                '${state.completedExerciseCount} of ${state.totalExercises}',
+                          ),
+                          const SizedBox(height: CohortSpacing.md),
+                          Text(
+                            'SESSION RPE',
+                            style: CohortTextStyles.sectionLabel,
+                          ),
+                          const SizedBox(height: CohortSpacing.sm),
+                          Wrap(
+                            spacing: CohortSpacing.sm,
+                            runSpacing: CohortSpacing.sm,
+                            children: List.generate(10, (index) {
+                              final value = index + 1;
+                              final selected = _rpe == value;
+                              return ChoiceChip(
+                                label: Text('$value'),
+                                selected: selected,
+                                onSelected: _finishing
+                                    ? null
+                                    : (_) => setState(() => _rpe = value),
+                                selectedColor: CohortColors.phosphorDeep,
+                                labelStyle: TextStyle(
+                                  color: selected
+                                      ? const Color(0xFF0C0E0B)
+                                      : CohortColors.textPrimary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                backgroundColor: CohortColors.surfaceRaised,
+                              );
+                            }),
+                          ),
+                          const SizedBox(height: CohortSpacing.xl),
+                          Text(
+                            'NOTES (OPTIONAL)',
+                            style: CohortTextStyles.sectionLabel,
+                          ),
+                          const SizedBox(height: CohortSpacing.sm),
+                          TextField(
+                            controller: _notesController,
+                            enabled: !_finishing,
+                            maxLines: 3,
+                            style: CohortTextStyles.body.copyWith(
+                              color: CohortColors.textPrimary,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'How did the session feel?',
+                              hintStyle: CohortTextStyles.body,
+                              filled: true,
+                              fillColor: CohortColors.surfaceRaised,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: CohortColors.border,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: CohortColors.border,
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (_adaptError != null) ...[
+                            const SizedBox(height: CohortSpacing.lg),
+                            Text(
+                              _adaptError!,
+                              style: CohortTextStyles.small.copyWith(
+                                color: CohortColors.danger,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
-                      decoration: InputDecoration(
-                        hintText: 'How did the session feel?',
-                        hintStyle: CohortTextStyles.body,
-                        filled: true,
-                        fillColor: CohortColors.surfaceRaised,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: CohortColors.border),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: CohortColors.border),
-                        ),
-                      ),
-                    ),
-                  ],
+              ),
+            ),
+            if (!adapting)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  CohortSpacing.xl,
+                  CohortSpacing.md,
+                  CohortSpacing.xl,
+                  CohortSpacing.xl,
+                ),
+                child: CohortButton(
+                  label: _finishing ? 'FINISHING...' : 'FINISH',
+                  showTrailingArrow: true,
+                  onPressed: _finishing ? () {} : _finish,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                CohortSpacing.xl,
-                CohortSpacing.md,
-                CohortSpacing.xl,
-                CohortSpacing.xl,
-              ),
-              child: CohortButton(
-                label: _finishing ? 'FINISHING...' : 'FINISH',
-                showTrailingArrow: true,
-                onPressed: _finishing ? () {} : _finish,
-              ),
-            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+enum _AdaptStatus { idle, analysing, updating, ready }
+
+class _AdaptTransition extends StatelessWidget {
+  const _AdaptTransition({required this.status});
+
+  final _AdaptStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final message = switch (status) {
+      _AdaptStatus.analysing => 'Analysing today\'s training…',
+      _AdaptStatus.updating => 'Updating your plan…',
+      _AdaptStatus.ready => 'Tomorrow is ready.',
+      _AdaptStatus.idle => '',
+    };
+
+    return Padding(
+      padding: const EdgeInsets.only(top: CohortSpacing.xxl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('COHORT', style: CohortTextStyles.eyebrow),
+          const SizedBox(height: CohortSpacing.lg),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 280),
+            child: Text(
+              message,
+              key: ValueKey(message),
+              style: CohortTextStyles.h1,
+            ),
+          ),
+          const SizedBox(height: CohortSpacing.md),
+          Text(
+            status == _AdaptStatus.ready
+                ? 'Your next session is waiting on Home.'
+                : 'Your coach is adapting from what you just completed.',
+            style: CohortTextStyles.body,
+          ),
+        ],
       ),
     );
   }

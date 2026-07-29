@@ -1,12 +1,13 @@
+import 'package:cohort_platform/core/access/founder_access_config.dart';
+import 'package:cohort_platform/core/access/founder_access_policy.dart';
 import 'package:cohort_platform/core/config/internal_tools_policy.dart';
-import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
+import 'package:cohort_platform/features/app_shell/athlete_app_shell.dart';
+import 'package:cohort_platform/features/app_shell/founder_workspace_shell.dart';
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../support/fake_auth_session_port.dart';
 
 const _forbiddenProductionLabels = <String>[
   'Analyze Current Protocol',
@@ -28,200 +29,96 @@ const _forbiddenProductionLabels = <String>[
   'DEBUG',
 ];
 
-Future<void> _pumpHome(
-  WidgetTester tester, {
-  required UserProfile profile,
-  AuthController? authController,
-}) async {
-  CurrentUserSession.bind(profile);
-  await tester.pumpWidget(
-    MaterialApp(home: HomeScreen(authController: authController)),
-  );
-  await tester.pumpAndSettle();
-}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   tearDown(() {
     CurrentUserSession.clear();
     InternalToolsPolicy.reset();
+    FounderAccessPolicy.reset();
   });
 
-  group('Production home navigation', () {
-    testWidgets('athlete-only profile sees athlete destinations only', (
+  group('Production athlete Home', () {
+    testWidgets('athlete Home has no founder/knowledge/history cards', (
       tester,
     ) async {
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
+      CurrentUserSession.bind(
+        const UserProfile(
           id: 'athlete-1',
           displayName: 'Alex',
           isCoach: false,
           isAthlete: true,
         ),
       );
-
-      expect(find.text('EXECUTE TODAY'), findsOneWidget);
-      expect(find.text('Training History'), findsOneWidget);
-      expect(find.text('Need to Adapt?'), findsOneWidget);
-      expect(find.text('Protocol Library'), findsOneWidget);
-      expect(find.text('Help & feedback'), findsOneWidget);
-      expect(
-        find.text(
-          'Have an invitation code? Link to your coach to receive training.',
-        ),
-        findsNothing,
+      await tester.pumpWidget(
+        const MaterialApp(home: HomeScreen(embeddedInShell: true)),
       );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Training History'), findsNothing);
+      expect(find.text('Protocol Library'), findsNothing);
+      expect(find.text('Exercise Library'), findsNothing);
+      expect(find.text('Coach Studio'), findsNothing);
+      expect(find.text('My Athletes'), findsNothing);
+      expect(find.text('Internal tools'), findsNothing);
+      expect(find.text('Help & feedback'), findsNothing);
+
+      for (final label in _forbiddenProductionLabels) {
+        expect(
+          find.text(label),
+          findsNothing,
+          reason: 'Found forbidden label: $label',
+        );
+      }
+    });
+
+    testWidgets('coach profile still does not put coach tools on athlete Home', (
+      tester,
+    ) async {
+      CurrentUserSession.bind(
+        const UserProfile(
+          id: 'coach-1',
+          displayName: 'Sam',
+          isCoach: true,
+          isAthlete: false,
+        ),
+      );
+      await tester.pumpWidget(
+        const MaterialApp(home: HomeScreen(embeddedInShell: true)),
+      );
+      await tester.pumpAndSettle();
 
       expect(find.text('Coach Studio'), findsNothing);
       expect(find.text('My Athletes'), findsNothing);
       expect(find.text('Internal tools'), findsNothing);
-
-      for (final label in _forbiddenProductionLabels) {
-        expect(
-          find.text(label),
-          findsNothing,
-          reason: 'Found forbidden label: $label',
-        );
-      }
     });
 
-    testWidgets(
-      'coach-only profile sees coach destinations without athlete Today',
-      (tester) async {
-        await _pumpHome(
-          tester,
-          profile: const UserProfile(
-            id: 'coach-1',
-            displayName: 'Sam',
-            isCoach: true,
-            isAthlete: false,
-          ),
-        );
-
-        expect(find.text('Coach Studio'), findsOneWidget);
-        expect(find.text('My Athletes'), findsOneWidget);
-        expect(
-          find.textContaining('Manage athletes and programmes'),
-          findsOneWidget,
-        );
-
-        expect(find.text('Training History'), findsNothing);
-        expect(find.text('Need to Adapt?'), findsNothing);
-        expect(find.text('Internal tools'), findsNothing);
-
-        for (final label in _forbiddenProductionLabels) {
-          expect(
-            find.text(label),
-            findsNothing,
-            reason: 'Found forbidden label: $label',
-          );
-        }
-      },
-    );
-
-    testWidgets('dual-role profile sees athlete and coach sections', (
-      tester,
-    ) async {
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
-          id: 'dual-1',
-          displayName: 'Lee',
-          isCoach: true,
-          isAthlete: true,
-        ),
-      );
-
-      expect(find.text('EXECUTE TODAY'), findsOneWidget);
-      expect(find.text('Training History'), findsOneWidget);
-      expect(find.text('Coach Studio'), findsOneWidget);
-      expect(find.text('My Athletes'), findsOneWidget);
-      expect(find.text('Internal tools'), findsNothing);
-      expect(find.text('Join a coach'), findsNothing);
-      expect(
-        find.text(
-          'Prefer coach-led training? Link to another coach with an invitation code.',
-        ),
-        findsNothing,
-      );
-
-      for (final label in _forbiddenProductionLabels) {
-        expect(
-          find.text(label),
-          findsNothing,
-          reason: 'Found forbidden label: $label',
-        );
-      }
-    });
-
-    testWidgets('founder build sees coach destinations on home', (
-      tester,
-    ) async {
-      InternalToolsPolicy.enableForTesting();
-
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
-          id: 'founder-1',
-          displayName: 'Founder',
-          isCoach: false,
-          isAthlete: true,
-        ),
-      );
-
-      expect(find.text('Coach Studio'), findsOneWidget);
-      expect(find.text('My Athletes'), findsOneWidget);
-      expect(find.text('Internal tools'), findsOneWidget);
-    });
-
-    testWidgets('internal tools entry appears only when explicitly enabled', (
-      tester,
-    ) async {
-      InternalToolsPolicy.enableForTesting();
-
-      await _pumpHome(
-        tester,
-        profile: const UserProfile(
-          id: 'athlete-1',
-          displayName: 'Alex',
-          isCoach: false,
-          isAthlete: true,
-        ),
-      );
-
-      expect(find.text('Internal tools'), findsOneWidget);
-      await tester.ensureVisible(find.text('Internal tools'));
-      await tester.tap(find.text('Internal tools'));
+    testWidgets('athlete shell exposes four destinations', (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
       await tester.pumpAndSettle();
 
-      expect(find.text('Assign Test Programme'), findsOneWidget);
-      expect(find.text('Admin Protocol Editor'), findsOneWidget);
+      expect(find.text('Home'), findsWidgets);
+      expect(find.text('Plans'), findsOneWidget);
+      expect(find.text('Progress'), findsOneWidget);
+      expect(find.text('Profile'), findsOneWidget);
+      expect(find.text('Sessions'), findsNothing);
     });
+  });
 
-    testWidgets(
-      'account header opens account surface when controller provided',
-      (tester) async {
-        final auth = AuthController(authService: FakeAuthSessionPort());
-        await auth.initialize();
+  group('Founder workspace separation', () {
+    testWidgets('founder workspace hosts coach tools', (tester) async {
+      FounderAccessPolicy.configure(
+        const FounderAccessConfig(developmentOverride: true),
+      );
+      await tester.pumpWidget(
+        const MaterialApp(home: FounderWorkspaceShell()),
+      );
+      await tester.pump();
 
-        await _pumpHome(
-          tester,
-          profile: const UserProfile(
-            id: 'athlete-1',
-            displayName: 'Alex',
-            isCoach: false,
-            isAthlete: true,
-          ),
-          authController: auth,
-        );
-
-        await tester.tap(find.text('Alex'));
-        await tester.pumpAndSettle();
-
-        expect(find.text('Sign out'), findsOneWidget);
-      },
-    );
+      expect(find.text('FOUNDER WORKSPACE'), findsOneWidget);
+      expect(find.text('PREVIEW ATHLETE APP'), findsOneWidget);
+      expect(find.text('My Athletes'), findsOneWidget);
+      expect(find.text('Coach Studio'), findsWidgets);
+    });
   });
 }

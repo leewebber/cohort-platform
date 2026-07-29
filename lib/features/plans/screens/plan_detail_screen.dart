@@ -5,7 +5,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
-import '../models/plan.dart';
+import '../models/plan_definition.dart';
 import '../services/plan_start_service.dart';
 
 class PlanDetailScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class PlanDetailScreen extends StatefulWidget {
     this.athleteId,
   });
 
-  final Plan plan;
+  final PlanDefinition plan;
   final PlanStartService? startService;
   final String? athleteId;
 
@@ -87,7 +87,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 160,
+                      height: 200,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(16),
@@ -101,7 +101,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       alignment: Alignment.center,
                       child: const Icon(
                         Icons.terrain_rounded,
-                        size: 56,
+                        size: 64,
                         color: CohortColors.textPrimary,
                       ),
                     ),
@@ -110,7 +110,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                     const SizedBox(height: CohortSpacing.sm),
                     Text(plan.subtitle, style: CohortTextStyles.body),
                     const SizedBox(height: CohortSpacing.xl),
-                    _Section(title: 'Overview', body: plan.description),
+                    _Section(title: 'Overview', body: plan.longDescription),
                     _Section(title: 'Who it\'s for', body: plan.whoItsFor),
                     _Section(
                       title: 'What you\'ll improve',
@@ -120,7 +120,8 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                       title: 'Requirements',
                       body:
                           '${plan.difficultyLabel} · ${plan.daysLabel} · '
-                          '${plan.durationLabel}\n${plan.equipmentSummary}',
+                          '${plan.weeksLabel} · ${plan.durationLabel}\n'
+                          '${plan.equipmentSummary}',
                     ),
                     _Section(
                       title: 'Typical week',
@@ -158,7 +159,7 @@ class _PlanDetailScreenState extends State<PlanDetailScreen> {
                 CohortSpacing.xl,
               ),
               child: CohortButton(
-                label: _starting ? 'STARTING…' : 'START THIS PLAN',
+                label: _starting ? 'STARTING…' : 'START PLAN',
                 showTrailingArrow: true,
                 onPressed: _starting ? () {} : _start,
               ),

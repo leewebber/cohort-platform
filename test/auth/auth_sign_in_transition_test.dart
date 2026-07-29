@@ -265,7 +265,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Welcome back'), findsNothing);
-      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('COHORT'), findsOneWidget);
+      expect(find.text('Home'), findsWidgets);
       expect(find.text('Alex'), findsOneWidget);
       expect(controller.state.status, AuthStatus.authenticated);
       expect(profiles.getProfileCallCount, 1);

@@ -2,10 +2,10 @@ import '../../../knowledge/gap_analysis/capability_evidence_models.dart';
 import '../../../planning/models/planning_goal_context.dart';
 import '../../../planning/models/planning_input.dart';
 import '../../athlete_profile/models/athlete_profile.dart';
-import '../../plans/models/plan.dart';
 import '../../plans/models/plan_assignment.dart';
+import '../../plans/models/plan_definition.dart';
 
-/// Maps [AthleteProfile] (+ optional active [Plan]) → [PlanningInput].
+/// Maps [AthleteProfile] (+ optional active [PlanDefinition]) → [PlanningInput].
 ///
 /// Plan context is carried via preferences tags and existing PlanningInput fields
 /// so Coach Brain / engines remain unchanged.
@@ -26,11 +26,13 @@ class AthletePlanningInputBuilder {
   /// Preference tag prefix for active plan id (asserted in tests).
   static const planIdTagPrefix = 'plan_id:';
   static const assignmentIdTagPrefix = 'plan_assignment:';
+  static const progressionModelTagPrefix = 'progression_model:';
+  static const coachingFocusTagPrefix = 'coaching_focus:';
 
   PlanningInput build({
     required AthleteProfile profile,
     required String knowledgeOntologyVersion,
-    Plan? activePlan,
+    PlanDefinition? activePlan,
     PlanAssignment? assignment,
     DateTime? asOf,
   }) {
@@ -42,6 +44,12 @@ class AthletePlanningInputBuilder {
     final preferences = <String>[
       if (activePlan != null) '$planIdTagPrefix${activePlan.planId}',
       if (assignment != null) '$assignmentIdTagPrefix${assignment.assignmentId}',
+      if (activePlan != null)
+        '$progressionModelTagPrefix${activePlan.progressionModel}',
+      if (activePlan != null)
+        '$coachingFocusTagPrefix${activePlan.coachingFocus}',
+      if (activePlan != null)
+        for (final cap in activePlan.capabilityPriorities) 'priority_$cap',
       if (goal.preferenceTag != null) goal.preferenceTag!,
       if (profile.preferredTrainingStyle != null)
         profile.preferredTrainingStyle!,

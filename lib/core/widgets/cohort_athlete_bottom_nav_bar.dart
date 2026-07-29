@@ -31,15 +31,9 @@ class CohortAthleteBottomNavBar extends StatelessWidget {
       selectedIcon: Icons.calendar_view_week_rounded,
     ),
     CohortAthleteNavDestination(
-      label: 'Sessions',
-      icon: Icons.view_list_outlined,
-      selectedIcon: Icons.view_list_rounded,
-    ),
-    CohortAthleteNavDestination(
-      label: 'Analytics',
+      label: 'Progress',
       icon: Icons.insights_outlined,
       selectedIcon: Icons.insights_rounded,
-      enabled: false,
     ),
     CohortAthleteNavDestination(
       label: 'Profile',

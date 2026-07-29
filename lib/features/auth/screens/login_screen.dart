@@ -4,9 +4,9 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../app_shell/athlete_app_shell.dart';
 import '../../athlete_profile/onboarding/athlete_onboarding_flow.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
-import '../../home/home_screen.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
 import '../models/user_profile.dart';
@@ -170,8 +170,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (_) =>
-                              HomeScreen(authController: widget.controller),
+                          builder: (_) => AthleteAppShell(
+                            authController: widget.controller,
+                          ),
                         ),
                         (_) => false,
                       );

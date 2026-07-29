@@ -1,8 +1,8 @@
 import '../../athlete_profile/models/athlete_profile.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../workout_player/services/coach_brain_workout_plan_service.dart';
-import '../models/plan.dart';
 import '../models/plan_assignment.dart';
+import '../models/plan_definition.dart';
 import 'plan_assignment_service.dart';
 
 /// Starts a plan: assignment + Coach Brain today's session.
@@ -16,7 +16,13 @@ class PlanStartService {
   final PlanAssignmentService _assignments;
   final CoachBrainWorkoutPlanService _planService;
 
-  Future<({Plan plan, PlanAssignment assignment, AthleteGeneratedProgramme programme})>
+  Future<
+    ({
+      PlanDefinition plan,
+      PlanAssignment assignment,
+      AthleteGeneratedProgramme programme,
+    })
+  >
   startPlan({
     required String planId,
     required String athleteId,
@@ -48,7 +54,9 @@ class PlanStartService {
       phaseLabel: phase,
     );
 
-    final updatedAssignment = assignment.copyWith(currentPhase: phase);
+    final updatedAssignment =
+        _assignments.updateProgress(currentPhase: phase) ??
+        assignment.copyWith(currentPhase: phase);
 
     AthleteProfileSession.bind(
       profile: profile,

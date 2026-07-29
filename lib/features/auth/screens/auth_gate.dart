@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/access/app_access_role.dart';
+import '../../../core/access/app_experience_resolver.dart';
+import '../../../core/access/founder_access_policy.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../app_shell/athlete_app_shell.dart';
+import '../../app_shell/founder_workspace_shell.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
-import '../../home/home_screen.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
 import 'email_verification_screen.dart';
@@ -20,6 +24,8 @@ class AuthGate extends StatefulWidget {
 }
 
 class _AuthGateState extends State<AuthGate> {
+  final _experienceResolver = const AppExperienceResolver();
+
   @override
   void initState() {
     super.initState();
@@ -45,19 +51,29 @@ class _AuthGateState extends State<AuthGate> {
     setState(() {});
   }
 
+  Widget _experienceRoot() {
+    final email = widget.controller.currentEmail;
+    FounderAccessPolicy.bindSessionEmail(email);
+    final role = _experienceResolver.resolve(email: email);
+    if (role == AppAccessRole.founder) {
+      return FounderWorkspaceShell(authController: widget.controller);
+    }
+    return AthleteAppShell(authController: widget.controller);
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = widget.controller.state;
 
     return switch (state.status) {
       AuthStatus.initial || AuthStatus.loading => const _AuthLoadingScreen(),
-      AuthStatus.authenticated => HomeScreen(authController: widget.controller),
+      AuthStatus.authenticated => _experienceRoot(),
       AuthStatus.profileRequired => ProfileSetupScreen(
         controller: widget.controller,
       ),
       AuthStatus.unauthenticated || AuthStatus.error =>
         AthleteProfileSession.hasCompletedOnboarding
-            ? HomeScreen(authController: widget.controller)
+            ? AthleteAppShell(authController: widget.controller)
             : LoginScreen(controller: widget.controller),
       AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
         controller: widget.controller,

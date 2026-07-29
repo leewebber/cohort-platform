@@ -6,8 +6,11 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../controllers/workout_player_controller.dart';
+import '../models/previous_performance_snapshot.dart';
+import '../models/workout_player_exercise_step.dart';
 import '../models/workout_player_result.dart';
 import '../models/workout_player_state.dart';
+import '../services/previous_performance_resolver.dart';
 import '../widgets/workout_player_widgets.dart';
 import 'workout_complete_screen.dart';
 import 'workout_overview_screen.dart';
@@ -21,6 +24,7 @@ class WorkoutPlayerScreen extends StatefulWidget {
     this.trainingSessionId,
     this.programmeContext,
     this.completionService,
+    this.previousPerformanceResolver = const PreviousPerformanceResolver(),
   });
 
   final WorkoutPlayerController controller;
@@ -28,6 +32,7 @@ class WorkoutPlayerScreen extends StatefulWidget {
   final int? trainingSessionId;
   final ProgrammeExecutionContext? programmeContext;
   final WorkoutCompletionService? completionService;
+  final PreviousPerformanceResolver previousPerformanceResolver;
 
   @override
   State<WorkoutPlayerScreen> createState() => _WorkoutPlayerScreenState();
@@ -130,9 +135,25 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                             ),
                           ],
                           const SizedBox(height: CohortSpacing.xl),
-                          const ExerciseVideoPlaceholder(),
-                          const SizedBox(height: CohortSpacing.xl),
-                          Text(step.name, style: CohortTextStyles.h1),
+                          Builder(
+                            builder: (context) {
+                              final media =
+                                  step.exercise.exercise?.videoUrl ??
+                                  step.exercise.exercise?.imageUrl;
+                              final slot = ExerciseMediaSlot(mediaUrl: media);
+                              if (!slot.hasMedia) {
+                                return Text(step.name, style: CohortTextStyles.h1);
+                              }
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  slot,
+                                  const SizedBox(height: CohortSpacing.xl),
+                                  Text(step.name, style: CohortTextStyles.h1),
+                                ],
+                              );
+                            },
+                          ),
                           if (step.movementCategory != null) ...[
                             const SizedBox(height: CohortSpacing.sm),
                             Text(
@@ -144,17 +165,20 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                             const SizedBox(height: CohortSpacing.lg),
                             Text(step.description!, style: CohortTextStyles.body),
                           ],
+                          WorkoutMetaRow(
+                            label: 'Prescription',
+                            value: step.prescriptionSummary,
+                          ),
+                          if (_previousFor(step) != null)
+                            PreviousPerformanceSection(
+                              snapshot: _previousFor(step)!,
+                            ),
                           if (step.coachingCues != null) ...[
-                            const SizedBox(height: CohortSpacing.lg),
                             WorkoutMetaRow(
                               label: 'Coaching cues',
                               value: step.coachingCues!,
                             ),
                           ],
-                          WorkoutMetaRow(
-                            label: 'Prescription',
-                            value: step.prescriptionSummary,
-                          ),
                           if (step.restGuidance != null)
                             WorkoutMetaRow(
                               label: 'Rest',
@@ -214,6 +238,12 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                 ],
               ),
             ),
+    );
+  }
+
+  PreviousPerformanceSnapshot? _previousFor(WorkoutPlayerExerciseStep step) {
+    return widget.previousPerformanceResolver.resolveLatest(
+      exerciseId: step.exercise.exerciseId,
     );
   }
 }

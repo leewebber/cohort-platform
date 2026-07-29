@@ -260,7 +260,7 @@ void main() {
 
       expect(find.byType(AthleteGeneratedTodaySection), findsOneWidget);
       expect(find.textContaining('Casey'), findsWidgets);
-      expect(find.text('EXECUTE TODAY\'S SESSION'), findsOneWidget);
+      expect(find.text('EXECUTE TODAY\'S TRAINING'), findsOneWidget);
       expect(find.textContaining('FAT LOSS PROGRAMME'), findsOneWidget);
       expect(find.textContaining('PERSONAL STRENGTH SESSION'), findsOneWidget);
     });

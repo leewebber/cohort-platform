@@ -219,7 +219,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('EXECUTE TODAY\'S SESSION'), findsOneWidget);
+    expect(find.text('EXECUTE TODAY\'S TRAINING'), findsOneWidget);
   });
 
   test(

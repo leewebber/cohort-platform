@@ -5,6 +5,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/today_session_card.dart';
+import '../../workout_player/models/workout_player_result.dart';
 import '../../workout_player/services/workout_player_launcher.dart';
 import '../services/athlete_profile_session.dart';
 
@@ -12,12 +13,10 @@ import '../services/athlete_profile_session.dart';
 class AthleteGeneratedTodaySection extends StatelessWidget {
   const AthleteGeneratedTodaySection({
     super.key,
-    this.sessionComplete = false,
     this.onSessionReturned,
   });
 
-  final bool sessionComplete;
-  final VoidCallback? onSessionReturned;
+  final ValueChanged<WorkoutPlayerResult?>? onSessionReturned;
 
   @override
   Widget build(BuildContext context) {
@@ -52,34 +51,26 @@ class AthleteGeneratedTodaySection extends StatelessWidget {
           const SizedBox(height: CohortSpacing.xl),
         ],
         TodaySessionCard(
-          title: sessionComplete ? 'Training Complete' : programme.sessionTitle,
-          subtitle: sessionComplete
-              ? 'Well done — today\'s session is finished.'
-              : 'Today\'s Session · ${programme.goalLabel}',
+          title: programme.sessionTitle,
+          subtitle: 'Today\'s Session · ${programme.goalLabel}',
           programmeName: plan?.name ?? programme.programmeName,
           weekLabel: weekLabel,
           duration: durationLabel,
           sessionGoal: 'Goal: ${plan?.goalLabel ?? profile.primaryGoal.label}',
           progressLabel: profile.displayName,
-          status: sessionComplete ? 'Completed today' : 'Planned Session',
-          statusDetail: sessionComplete
-              ? 'Training complete for today.'
-              : (plan != null
-                    ? 'Active plan · personalised for today.'
-                    : 'Built for you by Cohort.'),
-          buttonLabel: sessionComplete
-              ? 'TRAINING COMPLETE'
-              : 'EXECUTE TODAY\'S SESSION',
-          onPressed: sessionComplete
-              ? null
-              : () async {
-                  await WorkoutPlayerLauncher().launchWithPlan(
-                    context: context,
-                    athleteId: profile.athleteId,
-                    plan: programme.planBundle,
-                  );
-                  onSessionReturned?.call();
-                },
+          status: 'Planned Session',
+          statusDetail: plan != null
+              ? 'Active plan · personalised for today.'
+              : 'Built for you by Cohort.',
+          buttonLabel: "EXECUTE TODAY'S TRAINING",
+          onPressed: () async {
+            final result = await WorkoutPlayerLauncher().launchWithPlan(
+              context: context,
+              athleteId: profile.athleteId,
+              plan: programme.planBundle,
+            );
+            onSessionReturned?.call(result);
+          },
         ),
       ],
     );
@@ -110,13 +101,12 @@ class ChoosePlanEntryCard extends StatelessWidget {
           Text('Choose a Plan', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.sm),
           Text(
-            'Browse coaching plans and start one. Cohort will generate '
-            'today\'s session from your active plan.',
+            'Cohort will personalise each session around you.',
             style: CohortTextStyles.body,
           ),
           const SizedBox(height: CohortSpacing.xl),
           CohortButton(
-            label: 'CHOOSE A PLAN',
+            label: 'BROWSE PLANS',
             showTrailingArrow: true,
             onPressed: onChoosePlan,
           ),

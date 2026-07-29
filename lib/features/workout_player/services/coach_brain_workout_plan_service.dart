@@ -18,8 +18,8 @@ import '../../../planning/session_blueprint/models/session_blueprint.dart';
 import '../../athlete_profile/models/athlete_profile.dart';
 import '../../athlete_profile/services/athlete_planning_input_builder.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
-import '../../plans/models/plan.dart';
 import '../../plans/models/plan_assignment.dart';
+import '../../plans/models/plan_definition.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/workout_session_brief.dart';
 import 'workout_plan_from_planning_context.dart';
@@ -70,7 +70,7 @@ class CoachBrainWorkoutPlanService {
   /// Primary path: athlete profile (+ optional active plan) → PlanningInput → Coach Brain.
   Future<CoachBrainWorkoutPlan> resolveFromProfile({
     required AthleteProfile profile,
-    Plan? activePlan,
+    PlanDefinition? activePlan,
     PlanAssignment? assignment,
     DateTime? asOf,
   }) async {

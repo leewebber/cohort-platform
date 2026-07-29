@@ -58,7 +58,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
 
-    expect(find.text('Today'), findsOneWidget);
+    expect(find.text('COHORT'), findsOneWidget);
+    expect(find.text('Home'), findsWidgets);
     expect(find.text('Lee'), findsOneWidget);
   });
 }

@@ -1,50 +1,42 @@
 import 'package:flutter/material.dart';
 
-import '../../core/access/app_role_access.dart';
-import '../../core/config/production_navigation_policy.dart';
 import '../../core/theme/cohort_lighting.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
-import '../../core/widgets/adaptation_bottom_sheet.dart';
-import '../../core/widgets/adaptation_decision_bottom_sheet.dart';
-import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../../core/widgets/cohort_card.dart';
-import '../../core/widgets/section_title.dart';
-import '../../application/adaptation/athlete_workout_adaptation_application_service.dart';
-import '../admin/services/protocol_builder_service.dart';
 import '../auth/controllers/auth_controller.dart';
-import '../auth/screens/account_screen.dart';
 import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
-import '../plans/screens/plan_library_screen.dart';
-import '../beta_support/beta_support_screen.dart';
-import '../coach_operations/screens/coach_home_dashboard_screen.dart';
-import '../coach_studio/coach_studio_access.dart';
-import '../exercises/exercise_library/exercise_library_screen.dart';
-import '../internal_tools/internal_tools_screen.dart';
-import '../performance/screens/training_history_screen.dart';
-import '../protocols/protocol_library_screen.dart';
-import 'widgets/home_today_session_section.dart';
+import '../daily_briefing/widgets/daily_briefing_section.dart';
+import 'services/home_adapt_flow.dart';
 
+/// Athlete Home — entirely focused on today.
+///
+/// Founder/coach/knowledge cards are absent. Navigation lives in [AthleteAppShell].
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, this.authController});
+  const HomeScreen({
+    super.key,
+    this.authController,
+    this.embeddedInShell = false,
+    this.onBrowsePlans,
+  });
 
   final AuthController? authController;
+
+  /// When true, bottom nav is owned by the shell (do not render here).
+  final bool embeddedInShell;
+
+  /// Shell callback to switch to Plans tab.
+  final VoidCallback? onBrowsePlans;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
-  final _homeAdaptationService = AthleteWorkoutAdaptationApplicationService(
-    loadProtocolDraft: (protocolId) =>
-        ProtocolBuilderService().loadProtocol(protocolId),
-  );
-  int _bottomNavIndex = 0;
-  bool _engineSessionComplete = false;
+  final _adaptFlow = HomeAdaptFlow();
 
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
@@ -57,307 +49,50 @@ class _HomeScreenState extends State<HomeScreen> {
       'Athlete';
 
   Future<void> _openPlanLibrary() async {
-    final started = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => PlanLibraryScreen(athleteId: _athleteId),
-      ),
-    );
-    if (started == true && mounted) {
-      setState(() {
-        _engineSessionComplete = false;
-        _bottomNavIndex = 0;
-      });
-    }
-  }
-
-  void _openAccount(BuildContext context) {
-    final controller = widget.authController;
-    if (controller == null) return;
-
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => AccountScreen(controller: controller)),
-    );
-  }
-
-  void _openProtocolLibrary(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const ProtocolLibraryScreen()));
-  }
-
-  void _openExerciseLibrary(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ExerciseLibraryScreen(athleteId: _athleteId),
-      ),
-    );
-  }
-
-  void _openCoachHome(BuildContext context) {
-    if (!AppRoleAccess.canAccessCoachOperations) return;
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const CoachHomeDashboardScreen()));
-  }
-
-  void _openCoachStudio(BuildContext context) {
-    if (!AppRoleAccess.canAccessCoachOperations) return;
-    CoachStudioAccess.open(context);
-  }
-
-  void _openInternalTools(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const InternalToolsScreen()));
-  }
-
-  Future<void> _openAdaptationSheet(BuildContext context) async {
-    final request = await showAdaptationBottomSheet(context);
-    if (request == null || !context.mounted) return;
-
-    final section = _todaySessionSectionKey.currentState;
-    final protocol = section?.programmeSessionProtocol;
-    if (protocol == null) {
+    if (widget.onBrowsePlans != null) {
+      widget.onBrowsePlans!();
       return;
     }
-
-    final decision = await _homeAdaptationService.evaluateSessionAdaptation(
-      athleteId: _athleteId,
-      currentProtocol: protocol,
-      request: request,
-    );
-
-    if (!context.mounted) return;
-
-    final accepted = await showAdaptationDecisionBottomSheet(context, decision);
-    if (accepted == true && context.mounted) {
-      await section?.commitDayOfAdaptation(request: request);
-    }
+    // Fallback when Home is not embedded (tests / deep entry).
+    if (!mounted) return;
   }
 
-  String _greetingName(String displayName) {
-    final trimmed = displayName.trim();
-    if (trimmed.isEmpty) return 'ATHLETE';
-    return trimmed.split(' ').first.toUpperCase();
-  }
-
-  String _timeOfDayGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'GOOD MORNING';
-    if (hour < 17) return 'GOOD AFTERNOON';
-    return 'GOOD EVENING';
-  }
-
-  void _onBottomNavSelected(int index) {
-    setState(() => _bottomNavIndex = index);
-    switch (index) {
-      case 0:
-        return;
-      case 1:
-        _openPlanLibrary();
-      case 2:
-        _openProtocolLibrary(context);
-      case 4:
-        if (widget.authController != null) {
-          _openAccount(context);
-        }
-      default:
-        return;
-    }
-  }
+  Future<void> _openAdapt() =>
+      _adaptFlow.open(context, athleteId: _athleteId);
 
   @override
   Widget build(BuildContext context) {
-    final session = CurrentUserSession.maybeInstance;
-    final profileName = _displayName;
     final hasActivePlan = AthleteProfileSession.hasActivePlan;
-    final showAthlete = ProductionNavigationPolicy.showAthleteTodayExperience() ||
-        AthleteProfileSession.hasCompletedOnboarding ||
-        AthleteProfileSession.profile != null ||
-        CurrentUserSession.maybeInstance?.isAthlete == true;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
-    final navBarHeight = showAthlete ? 72.0 + bottomInset : 0.0;
+    final bottomPad = widget.embeddedInShell
+        ? 24.0
+        : 24.0 + 72.0 + bottomInset;
 
     return Scaffold(
+      backgroundColor: CohortColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(24, 16, 24, 24 + navBarHeight),
+          padding: EdgeInsets.fromLTRB(24, 16, 24, bottomPad),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _HomeBrandHeader(
-                displayName: profileName,
-                onProfileTap: widget.authController != null && session != null
-                    ? () => _openAccount(context)
-                    : null,
-              ),
-              if (ProductionNavigationPolicy.showCoachLandingMessage()) ...[
-                const SizedBox(height: CohortSpacing.lg),
-                const Text('Coach', style: CohortTextStyles.h1),
-                const SizedBox(height: CohortSpacing.sm),
-                const Text(
-                  'Manage athletes and programmes from Coach Studio and My Athletes.',
-                  style: CohortTextStyles.body,
-                ),
-              ],
-              if (showAthlete) ...[
-                const SizedBox(height: CohortSpacing.lg),
-                Text(
-                  '${_timeOfDayGreeting()}, ${_greetingName(profileName)}',
-                  style: CohortTextStyles.sectionLabel,
-                ),
-                const SizedBox(height: CohortSpacing.sm),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    const Text('EXECUTE TODAY', style: CohortTextStyles.hero),
-                    Text(
-                      '.',
-                      style: CohortTextStyles.hero.copyWith(
-                        color: CohortColors.phosphor,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: CohortSpacing.sm),
-                const Text(
-                  'Discipline in the present. Results in the future.',
-                  style: CohortTextStyles.body,
-                ),
-                const SizedBox(height: CohortSpacing.xl),
-                if (hasActivePlan)
-                  AthleteGeneratedTodaySection(
-                    sessionComplete: _engineSessionComplete,
-                    onSessionReturned: () {
-                      setState(() => _engineSessionComplete = true);
-                    },
-                  )
-                else
-                  ChoosePlanEntryCard(onChoosePlan: _openPlanLibrary),
-              ],
-              if (ProductionNavigationPolicy.showTrainingHistory()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                const Text('PROGRAMME', style: CohortTextStyles.sectionLabel),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            TrainingHistoryScreen(athleteId: _athleteId),
-                      ),
-                    );
+              _HomeBrandHeader(displayName: _displayName),
+              const SizedBox(height: CohortSpacing.lg),
+              if (hasActivePlan) ...[
+                DailyBriefingSection(
+                  onSessionReturned: (_) {
+                    if (mounted) setState(() {});
                   },
-                  child: const _HomeActionRow(
-                    icon: Icons.fitness_center_outlined,
-                    title: 'Training History',
-                    subtitle:
-                        'Review completed sessions and performance records.',
-                    trailing: Icons.trending_up_rounded,
-                  ),
                 ),
-              ],
-              if (ProductionNavigationPolicy.showAdaptationPrompt()) ...[
                 const SizedBox(height: CohortSpacing.xl),
-                const Text(
-                  'OPTIMISE TODAY',
-                  style: CohortTextStyles.sectionLabel,
-                ),
+                Text('NEED TO ADAPT?', style: CohortTextStyles.sectionLabel),
                 const SizedBox(height: CohortSpacing.md),
                 CohortCard(
-                  onTap: () => _openAdaptationSheet(context),
+                  onTap: _openAdapt,
                   child: const _AdaptationPromptRow(),
                 ),
-              ],
-              if (ProductionNavigationPolicy.showAthleteKnowledge()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                const SectionTitle('Knowledge'),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () => _openProtocolLibrary(context),
-                  child: const _HomeActionRow(
-                    title: 'Protocol Library',
-                    subtitle: 'Browse structured training sessions.',
-                    icon: Icons.menu_book_outlined,
-                    status: 'OPEN',
-                  ),
-                ),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () => _openExerciseLibrary(context),
-                  child: const _HomeActionRow(
-                    title: 'Exercise Library',
-                    subtitle: 'Browse movements, cues and coaching knowledge.',
-                    icon: Icons.sports_gymnastics_outlined,
-                    status: 'OPEN',
-                  ),
-                ),
-              ],
-              if (ProductionNavigationPolicy.showCoachHome()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                const SectionTitle('Coach Home'),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () => _openCoachHome(context),
-                  child: const _HomeActionRow(
-                    title: 'My Athletes',
-                    subtitle:
-                        'Daily operations — who trained, who is due, who needs attention.',
-                    icon: Icons.groups_outlined,
-                    status: 'COACH',
-                  ),
-                ),
-              ],
-              if (ProductionNavigationPolicy.showCoachStudio()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                const SectionTitle('Coach Studio'),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () => _openCoachStudio(context),
-                  child: const _HomeActionRow(
-                    title: 'Coach Studio',
-                    subtitle:
-                        'Programmes, protocols, and coach authoring tools.',
-                    icon: Icons.dashboard_customize_outlined,
-                    status: 'COACH',
-                  ),
-                ),
-              ],
-              if (ProductionNavigationPolicy.showHelpAndFeedback()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                CohortCard(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const BetaSupportScreen(),
-                      ),
-                    );
-                  },
-                  child: const _HomeActionRow(
-                    title: 'Help & feedback',
-                    subtitle:
-                        'Report a problem or share beta feedback with the Cohort team.',
-                    icon: Icons.support_agent_outlined,
-                    status: 'HELP',
-                  ),
-                ),
-              ],
-              if (ProductionNavigationPolicy.showInternalToolsEntry()) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                const SectionTitle('Engineering'),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: () => _openInternalTools(context),
-                  child: const _HomeActionRow(
-                    title: 'Internal tools',
-                    subtitle:
-                        'Explicitly enabled engineering utilities. Not shown in production athlete builds.',
-                    icon: Icons.build_outlined,
-                    status: 'DEV',
-                  ),
-                ),
-              ],
+              ] else
+                ChoosePlanEntryCard(onChoosePlan: _openPlanLibrary),
               const SizedBox(height: CohortSpacing.xxl),
               const Center(
                 child: Text(
@@ -369,21 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: showAthlete
-          ? CohortAthleteBottomNavBar(
-              selectedIndex: _bottomNavIndex,
-              onDestinationSelected: _onBottomNavSelected,
-            )
-          : null,
     );
   }
 }
 
 class _HomeBrandHeader extends StatelessWidget {
-  const _HomeBrandHeader({required this.displayName, this.onProfileTap});
+  const _HomeBrandHeader({required this.displayName});
 
   final String displayName;
-  final VoidCallback? onProfileTap;
 
   @override
   Widget build(BuildContext context) {
@@ -418,21 +146,13 @@ class _HomeBrandHeader extends StatelessWidget {
           style: CohortTextStyles.h2.copyWith(letterSpacing: 2, fontSize: 18),
         ),
         const Spacer(),
-        if (onProfileTap != null)
-          TextButton(
-            onPressed: onProfileTap,
-            style: TextButton.styleFrom(
-              foregroundColor: CohortColors.phosphor,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-            ),
-            child: Text(
-              displayName,
-              style: CohortTextStyles.statusActive.copyWith(
-                color: CohortColors.phosphor,
-                letterSpacing: 0.4,
-              ),
-            ),
+        Text(
+          displayName.split(' ').first,
+          style: CohortTextStyles.statusActive.copyWith(
+            color: CohortColors.phosphor,
+            letterSpacing: 0.4,
           ),
+        ),
       ],
     );
   }
@@ -445,7 +165,22 @@ class _AdaptationPromptRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _HexIcon(icon: Icons.psychology_outlined),
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: CohortColors.background.withValues(alpha: 0.55),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: CohortColors.edgeHighlight.withValues(alpha: 0.22),
+            ),
+          ),
+          child: Icon(
+            Icons.psychology_outlined,
+            color: CohortColors.phosphor,
+            size: 22,
+          ),
+        ),
         const SizedBox(width: CohortSpacing.md),
         Expanded(
           child: Column(
@@ -454,109 +189,14 @@ class _AdaptationPromptRow extends StatelessWidget {
               Text('Need to Adapt?', style: CohortTextStyles.cardTitle),
               const SizedBox(height: CohortSpacing.sm),
               Text(
-                'Tell us what is affecting today’s session.',
+                'Recovery, environment, equipment, or time.',
                 style: CohortTextStyles.small,
               ),
             ],
           ),
         ),
-        const SizedBox(width: CohortSpacing.md),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          decoration: BoxDecoration(
-            color: CohortColors.oliveSoft,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: CohortColors.borderAccent),
-          ),
-          child: Text(
-            'SMART ADAPT',
-            style: CohortTextStyles.sectionLabel.copyWith(fontSize: 9),
-          ),
-        ),
+        Text('ADAPT', style: CohortTextStyles.eyebrow),
       ],
-    );
-  }
-}
-
-class _HomeActionRow extends StatelessWidget {
-  const _HomeActionRow({
-    required this.title,
-    required this.subtitle,
-    this.icon = Icons.arrow_forward_ios_rounded,
-    this.trailing,
-    this.status,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final IconData? trailing;
-  final String? status;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _HexIcon(icon: icon),
-        const SizedBox(width: CohortSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: CohortTextStyles.cardTitle),
-              const SizedBox(height: CohortSpacing.sm),
-              Text(subtitle, style: CohortTextStyles.small),
-            ],
-          ),
-        ),
-        if (trailing != null)
-          Icon(
-            trailing,
-            color: CohortColors.phosphor,
-            size: 22,
-            shadows: [
-              Shadow(
-                color: CohortColors.phosphor.withValues(alpha: 0.3),
-                blurRadius: 4,
-              ),
-            ],
-          )
-        else if (status != null)
-          Text(status!, style: CohortTextStyles.eyebrow),
-      ],
-    );
-  }
-}
-
-class _HexIcon extends StatelessWidget {
-  const _HexIcon({required this.icon});
-
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 44,
-      height: 44,
-      decoration: BoxDecoration(
-        color: CohortColors.background.withValues(alpha: 0.55),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: CohortColors.edgeHighlight.withValues(alpha: 0.22),
-        ),
-        boxShadow: CohortLighting.emissive(opacity: 0.05, blurRadius: 8),
-      ),
-      child: Icon(
-        icon,
-        color: CohortColors.phosphor,
-        size: 22,
-        shadows: [
-          Shadow(
-            color: CohortColors.phosphor.withValues(alpha: 0.32),
-            blurRadius: 4,
-          ),
-        ],
-      ),
     );
   }
 }

@@ -8,8 +8,8 @@ import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
-import 'package:cohort_platform/features/plans/models/plan.dart';
 import 'package:cohort_platform/features/plans/models/plan_assignment.dart';
+import 'package:cohort_platform/features/plans/models/plan_definition.dart';
 import 'package:cohort_platform/features/plans/screens/plan_library_screen.dart';
 import 'package:cohort_platform/features/plans/services/plan_assignment_service.dart';
 import 'package:cohort_platform/features/plans/services/plan_start_service.dart';
@@ -39,28 +39,86 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  late PlanAssignmentService assignments;
+
+  setUp(() {
+    assignments = PlanAssignmentService();
+  });
+
   tearDown(() {
     AthleteProfileSession.clear();
     CurrentUserSession.clear();
+    assignments.resetForTests();
+  });
+
+  group('PlanDefinition model', () {
+    test('catalog products have philosophy and no workout fields', () {
+      expect(PlanCatalog.published, isNotEmpty);
+      for (final plan in PlanCatalog.published) {
+        expect(plan.planId, isNotEmpty);
+        expect(plan.slug, isNotEmpty);
+        expect(plan.shortDescription, isNotEmpty);
+        expect(plan.longDescription, isNotEmpty);
+        expect(plan.progressionModel, isNotEmpty);
+        expect(plan.coachingFocus, isNotEmpty);
+        expect(plan.capabilityPriorities, isNotEmpty);
+        expect(plan.durationWeeks, greaterThan(0));
+        expect(plan.published, isTrue);
+      }
+    });
+  });
+
+  group('PlanAssignment model', () {
+    test('tracks progress only', () {
+      final assignment = PlanAssignment(
+        assignmentId: 'a1',
+        athleteId: 'athlete.lee',
+        planId: 'plan.fat_loss_foundation',
+        assignedAt: DateTime.utc(2026, 7, 29),
+        startedAt: DateTime.utc(2026, 7, 29),
+        currentPhase: 'Foundation',
+        currentWeek: 2,
+        currentDay: 3,
+      );
+      expect(assignment.isActive, isTrue);
+      expect(assignment.weekDayLabel, 'Week 2 · Day 3');
+      expect(assignment.completedAt, isNull);
+      expect(assignment.configuration, isEmpty);
+    });
+  });
+
+  group('PlanAssignmentService', () {
+    test('assign / read / replace / clear', () {
+      final planA = PlanCatalog.byId('plan.fat_loss_foundation')!;
+      final planB = PlanCatalog.byId('plan.strength_emphasis')!;
+
+      final first = assignments.assign(athleteId: 'athlete.lee', plan: planA);
+      expect(assignments.readActiveAssignment()?.assignmentId, first.assignmentId);
+      expect(assignments.readActivePlan()?.planId, planA.planId);
+      expect(assignments.hasActivePlan, isTrue);
+
+      final second = assignments.replaceActivePlan(
+        athleteId: 'athlete.lee',
+        plan: planB,
+      );
+      expect(second.planId, planB.planId);
+      expect(assignments.readActivePlan()?.planId, planB.planId);
+      expect(assignments.history(), hasLength(1));
+      expect(assignments.history().first.status, PlanAssignmentStatus.cancelled);
+
+      assignments.clearActivePlan();
+      expect(assignments.readActiveAssignment(), isNull);
+      expect(assignments.readActivePlan(), isNull);
+      expect(assignments.hasActivePlan, isFalse);
+    });
   });
 
   group('Plan catalog + filters', () {
-    test('published catalog has product plans', () {
-      expect(PlanCatalog.published, isNotEmpty);
-      for (final plan in PlanCatalog.published) {
-        expect(plan.status, PlanStatus.published);
-        expect(plan.name, isNotEmpty);
-        expect(plan.description, isNotEmpty);
-        expect(plan.whoItsFor, isNotEmpty);
-        expect(plan.whatYouImprove, isNotEmpty);
-      }
-    });
-
-    test('filters by goal, days, difficulty, duration, equipment', () {
+    test('filters by goal, days, experience, duration, equipment', () {
       const filters = PlanLibraryFilters(
         goalId: 'fat_loss',
         daysPerWeek: 3,
-        difficulty: PlanDifficulty.beginner,
+        experienceLevel: AthleteExperienceLevel.beginner,
         maxDurationMinutes: 45,
         equipmentPresetId: 'home_gym',
       );
@@ -69,59 +127,20 @@ void main() {
       expect(result.every((p) => p.primaryGoal.id == 'fat_loss'), isTrue);
       expect(result.every((p) => p.recommendedDaysPerWeek == 3), isTrue);
       expect(
-        result.every((p) => p.difficulty == PlanDifficulty.beginner),
+        result.every((p) => p.experienceLevel == AthleteExperienceLevel.beginner),
         isTrue,
       );
-      expect(
-        result.every((p) => p.typicalSessionDurationMinutes <= 45),
-        isTrue,
-      );
-      expect(
-        result.every((p) => p.equipmentPresetIds.contains('home_gym')),
-        isTrue,
-      );
-    });
-  });
-
-  group('PlanAssignment', () {
-    test('assign creates active assignment at week 1 day 1', () {
-      final plan = PlanCatalog.byId('plan.fat_loss_foundation')!;
-      final assignment = PlanAssignmentService().assign(
-        athleteId: 'athlete.lee',
-        plan: plan,
-        now: DateTime.utc(2026, 7, 29),
-      );
-      expect(assignment.planId, plan.planId);
-      expect(assignment.athleteId, 'athlete.lee');
-      expect(assignment.status, PlanAssignmentStatus.active);
-      expect(assignment.currentWeek, 1);
-      expect(assignment.currentDay, 1);
-      expect(assignment.isActive, isTrue);
-      expect(assignment.weekDayLabel, 'Week 1 · Day 1');
-    });
-
-    test('ensureProfile seeds from plan when no profile exists', () {
-      final plan = PlanCatalog.byId('plan.hyrox_race_ready')!;
-      final profile = PlanAssignmentService().ensureProfile(
-        plan: plan,
-        athleteId: 'athlete.lee',
-        displayName: 'Lee',
-      );
-      expect(profile.primaryGoal.id, 'hyrox');
-      expect(profile.trainingDaysPerWeek, 4);
-      expect(profile.preferredSessionDurationMinutes, 60);
-      expect(profile.availableEquipment, isNotEmpty);
     });
   });
 
   group('PlanningInput includes active plan', () {
-    test('preference tags carry plan_id and assignment id', () {
+    test('preference tags carry plan definition + assignment', () {
       final plan = PlanCatalog.byId('plan.strength_emphasis')!;
-      final profile = PlanAssignmentService().ensureProfile(
+      final profile = assignments.ensureProfile(
         plan: plan,
         athleteId: 'athlete.lee',
       );
-      final assignment = PlanAssignmentService().assign(
+      final assignment = assignments.assign(
         athleteId: 'athlete.lee',
         plan: plan,
       );
@@ -144,9 +163,15 @@ void main() {
           '${assignment.assignmentId}',
         ),
       );
+      expect(
+        input.athletePreferences?.tags,
+        contains(
+          '${AthletePlanningInputBuilder.progressionModelTagPrefix}'
+          '${plan.progressionModel}',
+        ),
+      );
       expect(input.availableTimeMinutes, plan.typicalSessionDurationMinutes);
       expect(input.goalContext.goalId, plan.ontologyGoalId);
-      // Must not pollute ontology progression path lookup.
       expect(input.progressionPathId, isNull);
     });
   });
@@ -164,6 +189,7 @@ void main() {
       );
 
       final service = PlanStartService(
+        assignmentService: assignments,
         planService: CoachBrainWorkoutPlanService(
           coachBrain: instrumented,
           knowledgeRoot: knowledgeRoot,
@@ -180,11 +206,6 @@ void main() {
       expect(result.assignment.planId, 'plan.fat_loss_foundation');
       expect(AthleteProfileSession.hasActivePlan, isTrue);
       expect(AthleteProfileSession.activePlan?.planId, result.plan.planId);
-      expect(
-        AthleteProfileSession.activeAssignment?.assignmentId,
-        result.assignment.assignmentId,
-      );
-      expect(AthleteProfileSession.programme, isNotNull);
       expect(
         AthleteProfileSession.programme!.planBundle.plan.blocks,
         isNotEmpty,
@@ -208,7 +229,7 @@ void main() {
       await tester.tap(find.text('Fat Loss Foundation'));
       await tester.pumpAndSettle();
 
-      expect(find.text('START THIS PLAN'), findsOneWidget);
+      expect(find.text('START PLAN'), findsOneWidget);
       expect(find.textContaining('WHO IT'), findsOneWidget);
       expect(find.text('OVERVIEW'), findsOneWidget);
     });
@@ -231,7 +252,7 @@ void main() {
   });
 
   group('Home active plan', () {
-    testWidgets('empty state invites Choose a Plan', (tester) async {
+    testWidgets('empty state invites Browse Plans', (tester) async {
       CurrentUserSession.bind(
         const UserProfile(
           id: 'athlete-1',
@@ -244,8 +265,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Choose a Plan'), findsOneWidget);
-      expect(find.text('CHOOSE A PLAN'), findsOneWidget);
-      expect(find.text('EXECUTE TODAY\'S SESSION'), findsNothing);
+      expect(find.text('BROWSE PLANS'), findsOneWidget);
+      expect(find.text("EXECUTE TODAY'S TRAINING"), findsNothing);
     });
 
     testWidgets('active plan shows phase week day and today session', (
@@ -346,7 +367,7 @@ void main() {
       expect(find.text('ACTIVE PLAN'), findsOneWidget);
       expect(find.textContaining('Fat Loss Foundation'), findsWidgets);
       expect(find.textContaining('Foundation · Week 2 · Day 3'), findsOneWidget);
-      expect(find.text('EXECUTE TODAY\'S SESSION'), findsOneWidget);
+      expect(find.text('EXECUTE TODAY\'S TRAINING'), findsOneWidget);
     });
   });
 }

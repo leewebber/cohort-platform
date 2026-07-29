@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
-import '../models/plan.dart';
+import '../models/plan_definition.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({super.key, required this.plan, required this.onTap});
 
-  final Plan plan;
+  final PlanDefinition plan;
   final VoidCallback onTap;
 
   @override
@@ -39,7 +39,7 @@ class PlanCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 96,
+                    height: 120,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -51,7 +51,7 @@ class PlanCard extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Icon(
                       Icons.terrain_rounded,
-                      size: 40,
+                      size: 48,
                       color: CohortColors.textPrimary.withValues(alpha: 0.7),
                     ),
                   ),
@@ -66,6 +66,7 @@ class PlanCard extends StatelessWidget {
                     children: [
                       _Chip(label: plan.goalLabel),
                       _Chip(label: plan.daysLabel),
+                      _Chip(label: plan.weeksLabel),
                       _Chip(label: plan.durationLabel),
                       _Chip(label: plan.difficultyLabel),
                     ],

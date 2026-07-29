@@ -1,7 +1,7 @@
 import '../../workout_player/services/coach_brain_workout_plan_service.dart';
 import '../models/athlete_profile.dart';
-import '../../plans/models/plan.dart';
 import '../../plans/models/plan_assignment.dart';
+import '../../plans/models/plan_definition.dart';
 
 /// In-memory athlete coaching context (profile + plan assignment + today's session).
 class AthleteProfileSession {
@@ -9,12 +9,12 @@ class AthleteProfileSession {
 
   static AthleteProfile? _profile;
   static AthleteGeneratedProgramme? _programme;
-  static Plan? _activePlan;
+  static PlanDefinition? _activePlan;
   static PlanAssignment? _assignment;
 
   static AthleteProfile? get profile => _profile;
   static AthleteGeneratedProgramme? get programme => _programme;
-  static Plan? get activePlan => _activePlan;
+  static PlanDefinition? get activePlan => _activePlan;
   static PlanAssignment? get activeAssignment => _assignment;
 
   static bool get hasActivePlan =>
@@ -30,7 +30,7 @@ class AthleteProfileSession {
   static void bind({
     required AthleteProfile profile,
     AthleteGeneratedProgramme? programme,
-    Plan? activePlan,
+    PlanDefinition? activePlan,
     PlanAssignment? assignment,
   }) {
     _profile = profile;

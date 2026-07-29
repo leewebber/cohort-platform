@@ -1,5 +1,6 @@
-/// Relationship between an athlete and a [Plan].
+/// Relationship between an athlete and a [PlanDefinition].
 ///
+/// Contains **progress only** — never workouts or coaching product copy.
 /// MVP: one active assignment. Model allows future multi-assignment.
 class PlanAssignment {
   const PlanAssignment({
@@ -8,6 +9,7 @@ class PlanAssignment {
     required this.planId,
     required this.assignedAt,
     this.startedAt,
+    this.completedAt,
     this.currentPhase = 'Foundation',
     this.currentWeek = 1,
     this.currentDay = 1,
@@ -18,12 +20,13 @@ class PlanAssignment {
   final String assignmentId;
   final String athleteId;
   final String planId;
+  final PlanAssignmentStatus status;
   final DateTime assignedAt;
   final DateTime? startedAt;
+  final DateTime? completedAt;
   final String currentPhase;
   final int currentWeek;
   final int currentDay;
-  final PlanAssignmentStatus status;
 
   /// Reserved for future athlete-specific plan configuration.
   final Map<String, String> configuration;
@@ -34,6 +37,7 @@ class PlanAssignment {
 
   PlanAssignment copyWith({
     DateTime? startedAt,
+    DateTime? completedAt,
     String? currentPhase,
     int? currentWeek,
     int? currentDay,
@@ -46,6 +50,7 @@ class PlanAssignment {
       planId: planId,
       assignedAt: assignedAt,
       startedAt: startedAt ?? this.startedAt,
+      completedAt: completedAt ?? this.completedAt,
       currentPhase: currentPhase ?? this.currentPhase,
       currentWeek: currentWeek ?? this.currentWeek,
       currentDay: currentDay ?? this.currentDay,
@@ -58,12 +63,13 @@ class PlanAssignment {
     'assignmentId': assignmentId,
     'athleteId': athleteId,
     'planId': planId,
+    'status': status.name,
     'assignedAt': assignedAt.toIso8601String(),
     'startedAt': startedAt?.toIso8601String(),
+    'completedAt': completedAt?.toIso8601String(),
     'currentPhase': currentPhase,
     'currentWeek': currentWeek,
     'currentDay': currentDay,
-    'status': status.name,
     'configuration': configuration,
   };
 }

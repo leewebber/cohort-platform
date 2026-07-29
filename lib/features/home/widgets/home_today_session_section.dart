@@ -228,7 +228,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   String _buttonLabel(_SessionButtonState state) {
     switch (state) {
       case _SessionButtonState.planned:
-        return 'EXECUTE TODAY\'S SESSION';
+        return "EXECUTE TODAY'S TRAINING";
       case _SessionButtonState.inProgress:
         return 'RESUME SESSION';
       case _SessionButtonState.completed:

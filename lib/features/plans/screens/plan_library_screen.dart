@@ -5,15 +5,22 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../athlete_profile/models/athlete_profile.dart';
 import '../data/plan_catalog.dart';
-import '../models/plan.dart';
+import '../models/plan_definition.dart';
 import '../services/plan_assignment_service.dart';
 import '../widgets/plan_widgets.dart';
 import 'plan_detail_screen.dart';
 
 class PlanLibraryScreen extends StatefulWidget {
-  const PlanLibraryScreen({super.key, this.athleteId});
+  const PlanLibraryScreen({
+    super.key,
+    this.athleteId,
+    this.embeddedInShell = false,
+  });
 
   final String? athleteId;
+
+  /// When true, starting a plan does not pop the route (shell owns navigation).
+  final bool embeddedInShell;
 
   @override
   State<PlanLibraryScreen> createState() => _PlanLibraryScreenState();
@@ -22,9 +29,9 @@ class PlanLibraryScreen extends StatefulWidget {
 class _PlanLibraryScreenState extends State<PlanLibraryScreen> {
   PlanLibraryFilters _filters = const PlanLibraryFilters();
 
-  List<Plan> get _plans => _filters.apply(PlanCatalog.published);
+  List<PlanDefinition> get _plans => _filters.apply(PlanCatalog.published);
 
-  Future<void> _openPlan(Plan plan) async {
+  Future<void> _openPlan(PlanDefinition plan) async {
     final started = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (_) => PlanDetailScreen(
@@ -34,7 +41,11 @@ class _PlanLibraryScreenState extends State<PlanLibraryScreen> {
       ),
     );
     if (started == true && mounted) {
-      Navigator.of(context).pop(true);
+      if (widget.embeddedInShell) {
+        setState(() {});
+      } else {
+        Navigator.of(context).pop(true);
+      }
     }
   }
 
@@ -88,13 +99,15 @@ class _PlanLibraryScreenState extends State<PlanLibraryScreen> {
                   PlanFilterChip(
                     key: const Key('plan_filter_beginner'),
                     label: 'Beginner',
-                    selected: _filters.difficulty == PlanDifficulty.beginner,
+                    selected:
+                        _filters.experienceLevel ==
+                        AthleteExperienceLevel.beginner,
                     onSelected: (selected) => setState(() {
                       _filters = selected
                           ? _filters.copyWith(
-                              difficulty: PlanDifficulty.beginner,
+                              experienceLevel: AthleteExperienceLevel.beginner,
                             )
-                          : _filters.copyWith(clearDifficulty: true);
+                          : _filters.copyWith(clearExperience: true);
                     }),
                   ),
                   for (final goal in AthleteGoalCatalog.options)

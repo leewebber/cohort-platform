@@ -1,38 +1,66 @@
 import 'package:flutter/material.dart';
 
 import '../../athlete_profile/models/athlete_profile.dart';
-import '../models/plan.dart';
+import '../models/plan_definition.dart';
 
 /// In-memory published plan catalog (no persistence).
+///
+/// Products only — no workouts.
 class PlanCatalog {
   const PlanCatalog._();
 
-  static List<Plan> get published =>
-      all.where((p) => p.status == PlanStatus.published).toList(growable: false);
+  static List<PlanDefinition> get published =>
+      all.where((p) => p.published).toList(growable: false);
 
-  static Plan? byId(String planId) {
+  static PlanDefinition? byId(String planId) {
     for (final plan in all) {
       if (plan.planId == planId) return plan;
     }
     return null;
   }
 
-  static final List<Plan> all = [
-    Plan(
+  static PlanDefinition? bySlug(String slug) {
+    for (final plan in all) {
+      if (plan.slug == slug) return plan;
+    }
+    return null;
+  }
+
+  static final DateTime _created = DateTime.utc(2026, 7, 1);
+
+  static final List<PlanDefinition> all = [
+    PlanDefinition(
       planId: 'plan.hyrox_race_ready',
+      slug: 'hyrox-race-ready',
       name: 'HYROX Race Ready',
       subtitle: 'Stations, pacing, and durable engine work.',
-      description:
+      shortDescription:
+          'Race-focused plan for HYROX engine, stations, and pacing.',
+      longDescription:
           'A race-focused plan that builds aerobic capacity, station skill, '
           'and the strength endurance HYROX demands — personalised each session '
           'by Cohort\'s coaching engine.',
-      primaryGoal: AthleteGoalCatalog.byId('hyrox'),
       category: PlanCategory.race,
-      difficulty: PlanDifficulty.intermediate,
+      primaryGoal: AthleteGoalCatalog.byId('hyrox'),
+      supportedGoals: [
+        AthleteGoalCatalog.byId('hyrox'),
+        AthleteGoalCatalog.byId('general_fitness'),
+      ],
       recommendedDaysPerWeek: 4,
       typicalSessionDurationMinutes: 60,
-      equipmentPresetIds: const ['commercial_gym'],
-      experience: AthleteExperienceLevel.intermediate,
+      durationWeeks: 12,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['commercial_gym'],
+      ),
+      experienceLevel: AthleteExperienceLevel.intermediate,
+      progressionModel: 'race_capacity_build',
+      coachingFocus: 'hyrox_engine_and_stations',
+      capabilityPriorities: const [
+        'cohort.capability.aerobic_capacity',
+        'cohort.capability.threshold',
+        'cohort.capability.strength_endurance',
+        'cohort.capability.pacing',
+      ],
       whoItsFor:
           'Athletes preparing for HYROX who already train consistently and '
           'want structured race emphasis without programming complexity.',
@@ -46,6 +74,7 @@ class PlanCatalog {
           'volume — intensity shaped by your profile each day.',
       tags: const ['hyrox', 'race', 'conditioning'],
       colourTheme: const Color(0xFF7A8B62),
+      createdAt: _created,
       faqs: const [
         PlanFaq(
           question: 'Do I need a full gym?',
@@ -61,21 +90,38 @@ class PlanCatalog {
         ),
       ],
     ),
-    Plan(
+    PlanDefinition(
       planId: 'plan.fat_loss_foundation',
+      slug: 'fat-loss-foundation',
       name: 'Fat Loss Foundation',
       subtitle: 'Strength that protects progress.',
-      description:
+      shortDescription:
+          'Sustainable conditioning with strength that protects progress.',
+      longDescription:
           'Sustainable conditioning with relative strength and movement '
           'quality — built for athletes who want fat loss without losing '
           'capability.',
-      primaryGoal: AthleteGoalCatalog.byId('fat_loss'),
       category: PlanCategory.physique,
-      difficulty: PlanDifficulty.beginner,
+      primaryGoal: AthleteGoalCatalog.byId('fat_loss'),
+      supportedGoals: [
+        AthleteGoalCatalog.byId('fat_loss'),
+        AthleteGoalCatalog.byId('general_fitness'),
+      ],
       recommendedDaysPerWeek: 3,
       typicalSessionDurationMinutes: 45,
-      equipmentPresetIds: const ['home_gym', 'commercial_gym', 'minimal'],
-      experience: AthleteExperienceLevel.beginner,
+      durationWeeks: 8,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['home_gym', 'commercial_gym', 'minimal'],
+        label: 'Home or gym',
+      ),
+      experienceLevel: AthleteExperienceLevel.beginner,
+      progressionModel: 'foundation_capacity',
+      coachingFocus: 'relative_strength_and_work_capacity',
+      capabilityPriorities: const [
+        'cohort.capability.relative_strength',
+        'cohort.capability.work_capacity',
+        'cohort.capability.movement_competency',
+      ],
       whoItsFor:
           'Beginners and returning athletes who want clear structure and '
           'honest session lengths.',
@@ -88,6 +134,7 @@ class PlanCatalog {
           'Three focused sessions with optional recovery emphasis on lighter days.',
       tags: const ['fat_loss', 'foundation', 'beginner'],
       colourTheme: const Color(0xFF96A872),
+      createdAt: _created,
       faqs: const [
         PlanFaq(
           question: 'Can I train at home?',
@@ -97,20 +144,33 @@ class PlanCatalog {
         ),
       ],
     ),
-    Plan(
+    PlanDefinition(
       planId: 'plan.military_selection',
+      slug: 'military-selection',
       name: 'Military Selection Prep',
       subtitle: 'Strength, carry capacity, and aerobic base.',
-      description:
+      shortDescription:
+          'Selection-oriented strength, carry capacity, and aerobic base.',
+      longDescription:
           'Selection-oriented preparation emphasising pushing and pulling '
           'strength, loaded capacity, and durable aerobic work.',
-      primaryGoal: AthleteGoalCatalog.byId('military'),
       category: PlanCategory.military,
-      difficulty: PlanDifficulty.advanced,
+      primaryGoal: AthleteGoalCatalog.byId('military'),
       recommendedDaysPerWeek: 5,
       typicalSessionDurationMinutes: 60,
-      equipmentPresetIds: const ['commercial_gym'],
-      experience: AthleteExperienceLevel.advanced,
+      durationWeeks: 16,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['commercial_gym'],
+      ),
+      experienceLevel: AthleteExperienceLevel.advanced,
+      progressionModel: 'selection_readiness',
+      coachingFocus: 'push_pull_carry_aerobic',
+      capabilityPriorities: const [
+        'cohort.capability.pushing_strength',
+        'cohort.capability.pulling_strength',
+        'cohort.capability.loaded_carry_capacity',
+        'cohort.capability.aerobic_capacity',
+      ],
       whoItsFor:
           'Athletes preparing for military selection standards who can commit '
           'to higher weekly volume.',
@@ -123,21 +183,37 @@ class PlanCatalog {
           'Five sessions balancing strength, capacity, and recovery posture.',
       tags: const ['military', 'selection', 'strength'],
       colourTheme: const Color(0xFF5E6D4F),
+      createdAt: _created,
     ),
-    Plan(
+    PlanDefinition(
       planId: 'plan.general_fitness',
+      slug: 'general-fitness',
       name: 'General Fitness Loop',
       subtitle: 'Balanced strength, capacity, and movement.',
-      description:
+      shortDescription: 'Balanced strength, capacity, and movement for life.',
+      longDescription:
           'A well-rounded plan for athletes who want consistent training '
           'without a single race or selection target.',
-      primaryGoal: AthleteGoalCatalog.byId('general_fitness'),
       category: PlanCategory.general,
-      difficulty: PlanDifficulty.intermediate,
+      primaryGoal: AthleteGoalCatalog.byId('general_fitness'),
+      supportedGoals: [
+        AthleteGoalCatalog.byId('general_fitness'),
+        AthleteGoalCatalog.byId('longevity'),
+      ],
       recommendedDaysPerWeek: 4,
       typicalSessionDurationMinutes: 45,
-      equipmentPresetIds: const ['commercial_gym', 'home_gym'],
-      experience: AthleteExperienceLevel.intermediate,
+      durationWeeks: 10,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['commercial_gym', 'home_gym'],
+      ),
+      experienceLevel: AthleteExperienceLevel.intermediate,
+      progressionModel: 'balanced_loop',
+      coachingFocus: 'sustainable_general_fitness',
+      capabilityPriorities: const [
+        'cohort.capability.work_capacity',
+        'cohort.capability.relative_strength',
+        'cohort.capability.movement_competency',
+      ],
       whoItsFor:
           'Busy athletes who want balanced fitness and flexible equipment.',
       whatYouImprove: const [
@@ -149,21 +225,34 @@ class PlanCatalog {
           'Four sessions rotating strength emphasis and conditioning.',
       tags: const ['general', 'balanced'],
       colourTheme: const Color(0xFF738864),
+      createdAt: _created,
     ),
-    Plan(
+    PlanDefinition(
       planId: 'plan.strength_emphasis',
+      slug: 'strength-emphasis',
       name: 'Strength Emphasis',
       subtitle: 'Resilient force with clean movement.',
-      description:
+      shortDescription:
+          'Strength-first training with enough capacity to stay athletic.',
+      longDescription:
           'Prioritises relative strength and movement quality while keeping '
           'enough capacity work to stay athletic.',
-      primaryGoal: AthleteGoalCatalog.byId('strength'),
       category: PlanCategory.strength,
-      difficulty: PlanDifficulty.intermediate,
+      primaryGoal: AthleteGoalCatalog.byId('strength'),
       recommendedDaysPerWeek: 4,
       typicalSessionDurationMinutes: 55,
-      equipmentPresetIds: const ['commercial_gym', 'home_gym'],
-      experience: AthleteExperienceLevel.intermediate,
+      durationWeeks: 12,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['commercial_gym', 'home_gym'],
+      ),
+      experienceLevel: AthleteExperienceLevel.intermediate,
+      progressionModel: 'strength_emphasis',
+      coachingFocus: 'force_and_movement_quality',
+      capabilityPriorities: const [
+        'cohort.capability.relative_strength',
+        'cohort.capability.pushing_strength',
+        'cohort.capability.pulling_strength',
+      ],
       whoItsFor:
           'Athletes who want strength as the primary adaptation without '
           'abandoning conditioning.',
@@ -176,21 +265,35 @@ class PlanCatalog {
           'Four sessions with primary strength development and supporting capacity.',
       tags: const ['strength'],
       colourTheme: const Color(0xFFA8B584),
+      createdAt: _created,
     ),
-    Plan(
+    PlanDefinition(
       planId: 'plan.longevity',
+      slug: 'longevity-base',
       name: 'Longevity Base',
       subtitle: 'Train for decades.',
-      description:
+      shortDescription:
+          'Capacity, strength, and recovery balance for long-term health.',
+      longDescription:
           'Capacity, strength, and recovery balance for athletes investing in '
           'long-term health and performance.',
-      primaryGoal: AthleteGoalCatalog.byId('longevity'),
       category: PlanCategory.longevity,
-      difficulty: PlanDifficulty.beginner,
+      primaryGoal: AthleteGoalCatalog.byId('longevity'),
       recommendedDaysPerWeek: 3,
       typicalSessionDurationMinutes: 40,
-      equipmentPresetIds: const ['home_gym', 'minimal', 'outdoor'],
-      experience: AthleteExperienceLevel.beginner,
+      durationWeeks: 12,
+      equipmentProfile: const PlanEquipmentProfile(
+        presetIds: ['home_gym', 'minimal', 'outdoor'],
+        label: 'Home / outdoor',
+      ),
+      experienceLevel: AthleteExperienceLevel.beginner,
+      progressionModel: 'longevity_base',
+      coachingFocus: 'sustainable_capacity_and_recovery',
+      capabilityPriorities: const [
+        'cohort.capability.movement_competency',
+        'cohort.capability.aerobic_capacity',
+        'cohort.capability.relative_strength',
+      ],
       whoItsFor:
           'Athletes who value consistency, recovery, and sustainable intensity.',
       whatYouImprove: const [
@@ -202,6 +305,7 @@ class PlanCatalog {
           'Three moderate sessions with recovery-friendly posture.',
       tags: const ['longevity', 'recovery'],
       colourTheme: const Color(0xFF667A58),
+      createdAt: _created,
     ),
   ];
 }

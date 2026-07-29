@@ -1,3 +1,5 @@
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/coach_studio/coach_studio_home_screen.dart';
 import 'package:cohort_platform/features/coach_studio/models/coach_studio_section.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/controllers/programme_catalogue_controller.dart';
@@ -54,6 +56,19 @@ class _NoopValidationServiceForStudio
 }
 
 void main() {
+  setUp(() {
+    CurrentUserSession.bind(
+      const UserProfile(
+        id: 'coach-1',
+        displayName: 'Coach',
+        isCoach: true,
+        isAthlete: false,
+      ),
+    );
+  });
+
+  tearDown(CurrentUserSession.clear);
+
   group('TrainingLibraryScreen', () {
     testWidgets('shows Cohort Protocols and Session Library tabs', (
       tester,
