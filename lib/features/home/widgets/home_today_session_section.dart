@@ -8,20 +8,15 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/today_session_card.dart';
 import '../../auth/services/current_user_session.dart';
 import '../../personal_training/screens/personal_training_setup_screen.dart';
-import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/training_session_status.dart';
 import '../../../models/training_session.dart';
-import '../../programme/models/programme_execution_context.dart';
-import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/models/resolved_today_session.dart';
 import '../../../models/protocol.dart';
-import '../../session/screens/session_overview_screen.dart';
-import '../../session/services/session_execution_launcher.dart';
 import '../../../application/athlete_workout/home_workout_execution_context.dart';
 import '../../../application/athlete_workout/home_workout_launch_service.dart';
 import '../../../models/adaptation_request.dart';
 import '../../admin/services/protocol_builder_service.dart';
-import '../../session/models/workout_session_launch_context.dart';
+import '../../workout_player/services/workout_player_launcher.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
 import '../models/home_today_session_state.dart';
 import '../services/home_today_session_loader.dart';
@@ -51,10 +46,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       widget.loader ?? HomeTodaySessionServices.createLoader();
   final _continuationService =
       HomeTodaySessionServices.createContinuationService();
-  final _progressionCoordinator =
-      HomeTodaySessionServices.createProgressionCoordinator();
-  final _trainingSessionRepository = const TrainingSessionRepository();
-  final _sessionLauncher = SessionExecutionLauncher();
+  final _workoutPlayerLauncher = WorkoutPlayerLauncher();
   final _workoutLaunchService = HomeWorkoutLaunchService(
     loadProtocolDraft: (protocolId) =>
         ProtocolBuilderService().loadProtocol(protocolId),
@@ -124,41 +116,6 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         _workoutExecutionContext = updated;
       });
     }
-  }
-
-  Future<WorkoutSessionLaunchContext?> _prepareWorkoutLaunchContext({
-    required Protocol protocol,
-    required int trainingSessionId,
-  }) async {
-    final context = _workoutExecutionContext;
-    if (context == null) {
-      return null;
-    }
-
-    final prepared = await _workoutLaunchService.prepareForLegacyLaunch(
-      executionContext: context,
-      athleteId: widget.athleteId,
-      protocol: protocol,
-      trainingSessionId: trainingSessionId,
-    );
-
-    if (!prepared.isSuccess || prepared.launchContext == null) {
-      debugPrint(
-        '[HomeWorkoutLaunch] prepare failed: ${prepared.detail ?? 'unknown'}',
-      );
-      return null;
-    }
-
-    if (mounted && prepared.context != null) {
-      setState(() {
-        _workoutExecutionContext = prepared.context;
-      });
-    }
-
-    return WorkoutSessionLaunchContext.fromBundle(
-      prepared.launchContext!,
-      homeWorkoutExecution: prepared.context ?? context,
-    );
   }
 
   Future<HomeTodaySessionState> _loadSession({required String source}) {
@@ -271,11 +228,11 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   String _buttonLabel(_SessionButtonState state) {
     switch (state) {
       case _SessionButtonState.planned:
-        return 'START SESSION';
+        return 'EXECUTE TODAY\'S SESSION';
       case _SessionButtonState.inProgress:
         return 'RESUME SESSION';
       case _SessionButtonState.completed:
-        return 'VIEW SESSION';
+        return 'TRAINING COMPLETE';
     }
   }
 
@@ -286,7 +243,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
       case _SessionButtonState.inProgress:
         return 'Session in progress.';
       case _SessionButtonState.completed:
-        return 'Completed for today.';
+        return 'Training complete for today.';
     }
   }
 
@@ -301,141 +258,39 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     return HomeTodaySessionLabels.estimatedDuration(durationMin);
   }
 
-  Future<void> _openSessionOverview({
-    required String protocolId,
-    String? displayTitle,
-    required int trainingSessionId,
-    ProgrammeExecutionContext? programmeContext,
-    String? programmeContextLabel,
-    String? sessionGoal,
-    String? adaptationNotice,
-  }) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => SessionOverviewScreen(
-          protocolId: protocolId,
-          displayTitle: displayTitle,
-          trainingSessionId: trainingSessionId,
-          programmeContext: programmeContext,
-          programmeContextLabel: programmeContextLabel,
-          sessionGoal: sessionGoal,
-          adaptationNotice: adaptationNotice,
-          athleteId: widget.athleteId,
-        ),
-      ),
-    );
-
-    if (mounted) refresh(source: 'session_return');
-  }
-
-  Future<void> _launchActiveSession({
-    required String protocolId,
-    required int trainingSessionId,
-    String? displayTitle,
-    ProgrammeExecutionContext? programmeContext,
-    String? programmeContextLabel,
-    ProgrammeProgressSummary? programmeProgress,
-    WorkoutSessionLaunchContext? workoutLaunchContext,
-  }) async {
-    await _sessionLauncher.launchActiveSession(
-      context: context,
-      protocolId: protocolId,
-      trainingSessionId: trainingSessionId,
-      athleteId: widget.athleteId,
-      displayTitle: displayTitle,
-      programmeContext: programmeContext,
-      programmeContextLabel: programmeContextLabel,
-      programmeProgress: programmeProgress,
-      workoutLaunchContext: workoutLaunchContext,
-    );
-
-    if (mounted) refresh(source: 'session_return');
-  }
-
   Future<void> _beginProgrammeSession(
     HomeTodaySessionProgrammeExecutable state,
     _SessionButtonState buttonState,
   ) async {
-    final contextLabel = HomeTodaySessionLabels.executableSubtitle(
-      state.resolution,
-      state.protocol,
-    );
-
     if (buttonState == _SessionButtonState.completed) {
-      final session = state.latestTrainingSession;
-      if (session == null) return;
-
-      await _openSessionOverview(
-        protocolId: state.executionContext.effectiveProtocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
-        programmeContext: state.executionContext,
-        programmeContextLabel: contextLabel,
-        sessionGoal: HomeTodaySessionLabels.sessionGoal(state.resolution),
-        adaptationNotice: HomeTodaySessionLabels.adaptationNotice(
-          state.resolution,
-          state.protocol,
-        ),
-      );
+      // Success state only — no editing or replay in Sprint 1.
       return;
     }
 
-    if (buttonState == _SessionButtonState.inProgress) {
-      final session = state.latestTrainingSession;
-      if (session == null) return;
-
-      final launchContext = await _prepareWorkoutLaunchContext(
-        protocol: state.protocol,
-        trainingSessionId: session.id,
-      );
-
-      await _launchActiveSession(
-        protocolId: state.executionContext.effectiveProtocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
-        programmeContext: state.executionContext,
-        programmeContextLabel: contextLabel,
-        programmeProgress: state.progressSummary,
-        workoutLaunchContext: launchContext,
-      );
-      return;
-    }
-
-    debugPrint('[Begin] programme session pressed');
+    debugPrint('[Begin] programme session → Workout Player');
 
     try {
-      final session = await _trainingSessionRepository.createSession(
+      final existingId = buttonState == _SessionButtonState.inProgress
+          ? state.latestTrainingSession?.id
+          : null;
+
+      await _workoutPlayerLauncher.launchFromHome(
+        context: context,
         athleteId: widget.athleteId,
         protocolId: state.executionContext.effectiveProtocolId,
-        status: TrainingSessionStatus.inProgress,
+        existingTrainingSessionId: existingId,
+        programmeContext: state.executionContext,
+        programmeProgress: state.progressSummary,
         programmeId: state.resolution.lineageCode,
         weekNumber: state.resolution.weekNumber,
-      );
-
-      await _progressionCoordinator.markSessionStartedIfProgrammeBacked(
-        athleteId: widget.athleteId,
-        programmeContext: state.executionContext,
-        trainingSessionId: session.id,
-      );
-
-      final launchContext = await _prepareWorkoutLaunchContext(
-        protocol: state.protocol,
-        trainingSessionId: session.id,
-      );
-
-      await _launchActiveSession(
-        protocolId: state.executionContext.effectiveProtocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
-        programmeContext: state.executionContext,
-        programmeContextLabel: contextLabel,
-        programmeProgress: state.progressSummary,
-        workoutLaunchContext: launchContext,
+        resume: buttonState == _SessionButtonState.inProgress,
       );
     } catch (error, stackTrace) {
-      debugPrint('[Begin] programme session failed: $error');
+      debugPrint('[Begin] workout player failed: $error');
       debugPrint('[Begin] stackTrace: $stackTrace');
     }
+
+    if (mounted) refresh(source: 'session_return');
   }
 
   Future<void> _beginManualSession(
@@ -449,48 +304,59 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
     }
 
     if (buttonState == _SessionButtonState.completed) {
-      final session = state.latestTrainingSession;
-      if (session == null) return;
-
-      await _openSessionOverview(
-        protocolId: protocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
-      );
       return;
     }
 
-    if (buttonState == _SessionButtonState.inProgress) {
-      final session = state.latestTrainingSession;
-      if (session == null) return;
-
-      await _launchActiveSession(
-        protocolId: protocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
-      );
-      return;
-    }
-
-    debugPrint('[Begin] manual session pressed');
+    debugPrint('[Begin] manual session → Workout Player');
 
     try {
-      final session = await _trainingSessionRepository.createSession(
+      final existingId = buttonState == _SessionButtonState.inProgress
+          ? state.latestTrainingSession?.id
+          : null;
+
+      await _workoutPlayerLauncher.launchFromHome(
+        context: context,
         athleteId: widget.athleteId,
         protocolId: protocolId,
-        status: TrainingSessionStatus.inProgress,
+        existingTrainingSessionId: existingId,
         programmeId: state.athleteState.programmeId,
         weekNumber: state.athleteState.currentWeek,
-      );
-
-      await _launchActiveSession(
-        protocolId: protocolId,
-        displayTitle: state.protocol.name,
-        trainingSessionId: session.id,
+        resume: buttonState == _SessionButtonState.inProgress,
       );
     } catch (error, stackTrace) {
-      debugPrint('[Begin] manual session failed: $error');
+      debugPrint('[Begin] workout player failed: $error');
       debugPrint('[Begin] stackTrace: $stackTrace');
+    }
+
+    if (mounted) refresh(source: 'session_return');
+  }
+
+  Future<void> _launchWorkoutPlayerFromRestOrContinue(
+    HomeTodaySessionRestDay state,
+  ) async {
+    if (_isContinuing) return;
+    setState(() => _isContinuing = true);
+    try {
+      final protocolId =
+          state.resolution.effectiveProtocolId ??
+          state.resolution.plannedProtocolId ??
+          'coach_brain.today';
+
+      await _workoutPlayerLauncher.launchFromHome(
+        context: context,
+        athleteId: widget.athleteId,
+        protocolId: protocolId,
+        programmeId: state.resolution.lineageCode,
+        weekNumber: state.resolution.weekNumber,
+      );
+    } catch (error, stackTrace) {
+      debugPrint('[HomeTodaySession] rest-day workout player failed: $error');
+      debugPrint('[HomeTodaySession] stackTrace: $stackTrace');
+    } finally {
+      if (mounted) {
+        setState(() => _isContinuing = false);
+        refresh(source: 'session_return');
+      }
     }
   }
 
@@ -587,7 +453,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
 
   Widget _buildError(HomeTodaySessionError state) {
     final message = AthleteSafeErrorPresenter.message(
-      state.error ?? state.message,
+      state.error,
       logTag: 'home_today',
     );
     return CohortCard(
@@ -696,14 +562,19 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             final buttonState = _resolveButtonState(
               state.latestTrainingSession,
             );
+            final isComplete = buttonState == _SessionButtonState.completed;
             return TodaySessionCard(
-              title: HomeTodaySessionLabels.canonicalSessionTitle(
-                state.protocol,
-              ),
-              subtitle: HomeTodaySessionLabels.executableSubtitle(
-                state.resolution,
-                state.protocol,
-              ),
+              title: isComplete
+                  ? 'Training Complete'
+                  : HomeTodaySessionLabels.canonicalSessionTitle(
+                      state.protocol,
+                    ),
+              subtitle: isComplete
+                  ? 'Well done — today\'s session is finished.'
+                  : HomeTodaySessionLabels.executableSubtitle(
+                      state.resolution,
+                      state.protocol,
+                    ),
               programmeName: HomeTodaySessionLabels.programmeName(
                 state.resolution,
               ),
@@ -723,13 +594,16 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
               status: _statusLabel(buttonState),
               statusDetail: _statusDetail(buttonState),
               buttonLabel: _buttonLabel(buttonState),
-              onPressed: () => _beginProgrammeSession(state, buttonState),
+              onPressed: isComplete
+                  ? null
+                  : () => _beginProgrammeSession(state, buttonState),
             );
           }(),
           HomeTodaySessionManual() => () {
             final buttonState = _resolveButtonState(
               state.latestTrainingSession,
             );
+            final isComplete = buttonState == _SessionButtonState.completed;
             final parts = <String>[];
             final goal = state.athleteState.currentGoal?.trim();
             if (goal != null && goal.isNotEmpty) parts.add(goal);
@@ -743,15 +617,19 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             if (week != null) weekParts.add('Week $week');
 
             return TodaySessionCard(
-              title: state.protocol.name,
-              subtitle: parts.isEmpty ? "Today's session" : parts.join(' • '),
+              title: isComplete ? 'Training Complete' : state.protocol.name,
+              subtitle: isComplete
+                  ? 'Well done — today\'s session is finished.'
+                  : (parts.isEmpty ? "Today's session" : parts.join(' • ')),
               programmeName: state.programme?.name,
               weekLabel: weekParts.join(' • '),
               duration: _buildDuration(state.protocol.durationMin),
               status: _statusLabel(buttonState),
               statusDetail: _statusDetail(buttonState),
               buttonLabel: _buttonLabel(buttonState),
-              onPressed: () => _beginManualSession(state, buttonState),
+              onPressed: isComplete
+                  ? null
+                  : () => _beginManualSession(state, buttonState),
             );
           }(),
           HomeTodaySessionRestDay() => _buildProgrammeStatusCard(
@@ -770,7 +648,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
                 : 'Continue to next programme day',
             onPressed: _isContinuing
                 ? () {}
-                : () => _continueProgramme(state.resolution),
+                : () => _launchWorkoutPlayerFromRestOrContinue(state),
           ),
           HomeTodaySessionDayComplete() => _buildProgrammeStatusCard(
             title: 'Day Complete',

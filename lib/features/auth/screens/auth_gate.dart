@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../home/home_screen.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
@@ -54,8 +55,10 @@ class _AuthGateState extends State<AuthGate> {
       AuthStatus.profileRequired => ProfileSetupScreen(
         controller: widget.controller,
       ),
-      AuthStatus.unauthenticated ||
-      AuthStatus.error => LoginScreen(controller: widget.controller),
+      AuthStatus.unauthenticated || AuthStatus.error =>
+        AthleteProfileSession.hasCompletedOnboarding
+            ? HomeScreen(authController: widget.controller)
+            : LoginScreen(controller: widget.controller),
       AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
         controller: widget.controller,
       ),

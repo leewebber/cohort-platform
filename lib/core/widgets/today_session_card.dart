@@ -132,11 +132,12 @@ class TodaySessionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: CohortSpacing.xl),
-          CohortButton(
-            label: buttonLabel,
-            showTrailingArrow: true,
-            onPressed: onPressed ?? () {},
-          ),
+          if (onPressed != null)
+            CohortButton(
+              label: buttonLabel,
+              showTrailingArrow: true,
+              onPressed: onPressed!,
+            ),
         ],
       ),
     );

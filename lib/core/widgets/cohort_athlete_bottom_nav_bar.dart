@@ -26,7 +26,7 @@ class CohortAthleteBottomNavBar extends StatelessWidget {
       selectedIcon: Icons.home_rounded,
     ),
     CohortAthleteNavDestination(
-      label: 'Programme',
+      label: 'Plans',
       icon: Icons.calendar_view_week_outlined,
       selectedIcon: Icons.calendar_view_week_rounded,
     ),

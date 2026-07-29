@@ -16,6 +16,9 @@ import '../admin/services/protocol_builder_service.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/screens/account_screen.dart';
 import '../auth/services/current_user_session.dart';
+import '../athlete_profile/services/athlete_profile_session.dart';
+import '../athlete_profile/widgets/athlete_generated_today_section.dart';
+import '../plans/screens/plan_library_screen.dart';
 import '../beta_support/beta_support_screen.dart';
 import '../coach_operations/screens/coach_home_dashboard_screen.dart';
 import '../coach_studio/coach_studio_access.dart';
@@ -23,8 +26,6 @@ import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../internal_tools/internal_tools_screen.dart';
 import '../performance/screens/training_history_screen.dart';
 import '../protocols/protocol_library_screen.dart';
-import '../programme/screens/athlete_programme_screen.dart';
-import 'controllers/home_today_session_refresh_controller.dart';
 import 'widgets/home_today_session_section.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -38,14 +39,36 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _todaySessionSectionKey = GlobalKey<HomeTodaySessionSectionState>();
-  final _todaySessionRefreshController = HomeTodaySessionRefreshController();
   final _homeAdaptationService = AthleteWorkoutAdaptationApplicationService(
     loadProtocolDraft: (protocolId) =>
         ProtocolBuilderService().loadProtocol(protocolId),
   );
   int _bottomNavIndex = 0;
+  bool _engineSessionComplete = false;
 
-  String get _athleteId => CurrentUserSession.requireInstance.athleteId;
+  String get _athleteId =>
+      AthleteProfileSession.profile?.athleteId ??
+      CurrentUserSession.maybeInstance?.athleteId ??
+      'athlete.local';
+
+  String get _displayName =>
+      AthleteProfileSession.profile?.displayName ??
+      CurrentUserSession.maybeInstance?.profile.displayName ??
+      'Athlete';
+
+  Future<void> _openPlanLibrary() async {
+    final started = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => PlanLibraryScreen(athleteId: _athleteId),
+      ),
+    );
+    if (started == true && mounted) {
+      setState(() {
+        _engineSessionComplete = false;
+        _bottomNavIndex = 0;
+      });
+    }
+  }
 
   void _openAccount(BuildContext context) {
     final controller = widget.authController;
@@ -86,23 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute(builder: (_) => const InternalToolsScreen()));
-  }
-
-  Future<void> _openProgramme(BuildContext context) async {
-    final switched = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(
-        builder: (_) => AthleteProgrammeScreen(
-          athleteId: _athleteId,
-          refreshController: _todaySessionRefreshController,
-        ),
-      ),
-    );
-
-    if (switched == true) {
-      _todaySessionRefreshController.requestRefresh(
-        source: 'athlete_programme_screen',
-      );
-    }
   }
 
   Future<void> _openAdaptationSheet(BuildContext context) async {
@@ -148,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 0:
         return;
       case 1:
-        _openProgramme(context);
+        _openPlanLibrary();
       case 2:
         _openProtocolLibrary(context);
       case 4:
@@ -162,8 +168,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final profile = CurrentUserSession.requireInstance.profile;
-    final showAthlete = ProductionNavigationPolicy.showAthleteTodayExperience();
+    final session = CurrentUserSession.maybeInstance;
+    final profileName = _displayName;
+    final hasActivePlan = AthleteProfileSession.hasActivePlan;
+    final showAthlete = ProductionNavigationPolicy.showAthleteTodayExperience() ||
+        AthleteProfileSession.hasCompletedOnboarding ||
+        AthleteProfileSession.profile != null ||
+        CurrentUserSession.maybeInstance?.isAthlete == true;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final navBarHeight = showAthlete ? 72.0 + bottomInset : 0.0;
 
@@ -175,8 +186,8 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _HomeBrandHeader(
-                displayName: profile.displayName,
-                onProfileTap: widget.authController != null
+                displayName: profileName,
+                onProfileTap: widget.authController != null && session != null
                     ? () => _openAccount(context)
                     : null,
               ),
@@ -192,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if (showAthlete) ...[
                 const SizedBox(height: CohortSpacing.lg),
                 Text(
-                  '${_timeOfDayGreeting()}, ${_greetingName(profile.displayName)}',
+                  '${_timeOfDayGreeting()}, ${_greetingName(profileName)}',
                   style: CohortTextStyles.sectionLabel,
                 ),
                 const SizedBox(height: CohortSpacing.sm),
@@ -215,11 +226,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: CohortTextStyles.body,
                 ),
                 const SizedBox(height: CohortSpacing.xl),
-                HomeTodaySessionSection(
-                  key: _todaySessionSectionKey,
-                  refreshController: _todaySessionRefreshController,
-                  athleteId: _athleteId,
-                ),
+                if (hasActivePlan)
+                  AthleteGeneratedTodaySection(
+                    sessionComplete: _engineSessionComplete,
+                    onSessionReturned: () {
+                      setState(() => _engineSessionComplete = true);
+                    },
+                  )
+                else
+                  ChoosePlanEntryCard(onChoosePlan: _openPlanLibrary),
               ],
               if (ProductionNavigationPolicy.showTrainingHistory()) ...[
                 const SizedBox(height: CohortSpacing.xl),
