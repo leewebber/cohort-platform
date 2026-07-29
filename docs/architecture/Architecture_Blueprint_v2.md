@@ -562,6 +562,8 @@ erDiagram
 
 ### 12.2 Design intent
 
+- **Phase 3 blueprint:** [Knowledge_Blueprint_v1.md](../knowledge/Knowledge_Blueprint_v1.md) defines the full semantic model (entities, relationships, AI reasoning, versioning) independent of Supabase and UI.
+- **Machine-readable ontology (Sprint 2):** repo-root [`knowledge/`](../../knowledge/) — manifest **1.0.0**, YAML schemas, representative reference dataset; validated by `test/knowledge/ontology_validation_test.dart`. Read ports in `lib/application/ports/knowledge_graph_reader.dart` (not production-wired).
 - **Canonical movement knowledge** lives on `Exercise` (`lib/models/exercise.dart`) and curated content—not invented in UI placeholders (workspace rule: use Protocol/Exercise records).
 - **Adaptation metadata** is gradually structured in domain types (`ExerciseAdaptationMetadata`, session/block metadata contracts in `79_Adaptation_Ontology_V1.md`) with legacy string fields mapped via transitional tables in that doc.
 - **Knowledge relationships** supplement session content for discovery and future substitution graphs; they do not replace block-linked exercises for authoring.

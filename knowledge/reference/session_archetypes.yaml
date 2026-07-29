@@ -1,0 +1,144 @@
+# Session archetypes — semantic session templates (not workouts).
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.session_archetype.long_easy_run
+    canonical_name: long_easy_run
+    label: Long easy run
+    description: Extended low-intensity aerobic session archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids: [cohort.training_intent.aerobic_base]
+    typical_progression_characteristics: [extend_duration, cap_intensity]
+    fatigue_characteristics: local:low;systemic:low-moderate
+    recovery_characteristics: 12-24h
+
+  - id: cohort.session_archetype.tempo_run
+    canonical_name: tempo_run
+    label: Tempo run
+    description: Sustained threshold-adjacent running archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.tempo_development
+      - cohort.training_intent.threshold_development
+      - cohort.training_intent.threshold_progression
+    typical_progression_characteristics: [extend_steady_block]
+    fatigue_characteristics: local:moderate;systemic:moderate-high
+    recovery_characteristics: 24-48h
+
+  - id: cohort.session_archetype.heavy_lower
+    canonical_name: heavy_lower
+    label: Heavy lower
+    description: Lower-body strength or hypertrophy emphasis archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.squat_strength
+      - cohort.training_intent.hinge_strength
+      - cohort.training_intent.max_strength_development
+      - cohort.training_intent.lower_body_hypertrophy
+    typical_progression_characteristics: [main_lift_plus_accessory]
+    fatigue_characteristics: local:high;systemic:moderate
+    recovery_characteristics: 48-72h
+
+  - id: cohort.session_archetype.heavy_upper
+    canonical_name: heavy_upper
+    label: Heavy upper
+    description: Upper-body strength or hypertrophy emphasis archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.pull_strength
+      - cohort.training_intent.push_strength
+      - cohort.training_intent.upper_body_hypertrophy
+    typical_progression_characteristics: [horizontal_vertical_push_pull]
+    fatigue_characteristics: local:high;systemic:moderate
+    recovery_characteristics: 48h
+
+  - id: cohort.session_archetype.carry_session
+    canonical_name: carry_session
+    label: Carry session
+    description: Loaded carry and grip endurance archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.loaded_carry_development
+      - cohort.training_intent.grip_endurance
+    typical_progression_characteristics: [distance_load_alternation]
+    fatigue_characteristics: local:moderate-high;systemic:high
+    recovery_characteristics: 48h
+
+  - id: cohort.session_archetype.mobility_flow
+    canonical_name: mobility_flow
+    label: Mobility flow
+    description: Mobility and tissue prep archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.mobility_development
+      - cohort.training_intent.movement_quality
+    typical_progression_characteristics: [ROM_sequences]
+    fatigue_characteristics: local:minimal;systemic:minimal
+    recovery_characteristics: restorative
+
+  - id: cohort.session_archetype.technique_session
+    canonical_name: technique_session
+    label: Technique session
+    description: Low-fatigue skill and pattern practice archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.technique_practice
+      - cohort.training_intent.movement_skill_acquisition
+      - cohort.training_intent.stability_development
+      - cohort.training_intent.assessment
+    typical_progression_characteristics: [quality_reps]
+    fatigue_characteristics: local:low;systemic:low
+    recovery_characteristics: 12-24h
+
+  - id: cohort.session_archetype.recovery_session
+    canonical_name: recovery_session
+    label: Recovery session
+    description: Deload or active recovery archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.recovery
+      - cohort.training_intent.deload
+      - cohort.training_intent.taper
+    typical_progression_characteristics: [reduce_stimulus]
+    fatigue_characteristics: minimal
+    recovery_characteristics: restorative
+
+  - id: cohort.session_archetype.mixed_engine
+    canonical_name: mixed_engine
+    label: Mixed engine
+    description: Circuits, intervals, and hybrid conditioning archetype.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: training_intent_engine_v1
+    confidence: curated
+    primary_training_intent_ids:
+      - cohort.training_intent.work_capacity
+      - cohort.training_intent.strength_endurance
+      - cohort.training_intent.cruise_intervals
+      - cohort.training_intent.race_preparation
+    typical_progression_characteristics: [density_or_interval_progression]
+    fatigue_characteristics: local:moderate;systemic:high
+    recovery_characteristics: 48h

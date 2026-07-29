@@ -1,0 +1,26 @@
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.energy_system.aerobic
+    canonical_name: aerobic
+    label: Aerobic
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.energy_system.anaerobic_lactic
+    canonical_name: anaerobic_lactic
+    label: Anaerobic lactic
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.energy_system.anaerobic_alactic
+    canonical_name: anaerobic_alactic
+    label: Anaerobic alactic
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.energy_system.mixed
+    canonical_name: mixed
+    label: Mixed
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated

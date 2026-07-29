@@ -1,0 +1,48 @@
+# Goal → required capability metadata (no athlete storage, no programme generation).
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.goal.hyrox_sub_60
+    canonical_name: hyrox_sub_60
+    label: HYROX Sub-60
+    description: Representative race-performance goal for capability requirement modelling.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    required_capability_ids:
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.threshold
+      - cohort.capability.strength_endurance
+      - cohort.capability.grip_strength
+      - cohort.capability.running_economy
+      - cohort.capability.pacing
+      - cohort.capability.burpee_efficiency
+      - cohort.capability.work_capacity
+
+  - id: cohort.goal.general_fat_loss
+    canonical_name: general_fat_loss
+    label: General fat loss
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    required_capability_ids:
+      - cohort.capability.relative_strength
+      - cohort.capability.work_capacity
+      - cohort.capability.movement_competency
+      - cohort.capability.aerobic_capacity
+
+  - id: cohort.goal.military_selection
+    canonical_name: military_selection
+    label: Military selection
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    required_capability_ids:
+      - cohort.capability.loaded_carry_capacity
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.pushing_strength
+      - cohort.capability.pulling_strength
+      - cohort.capability.resilience
+      - cohort.capability.work_capacity

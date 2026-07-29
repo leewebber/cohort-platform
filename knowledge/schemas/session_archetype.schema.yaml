@@ -1,0 +1,23 @@
+# High-level session templates (semantic — not workouts).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  description:
+    type: string
+  primary_training_intent_ids:
+    type: array
+    items: string
+  fatigue_characteristics:
+    type: string
+  recovery_characteristics:
+    type: string
+  typical_progression_characteristics:
+    type: array
+    items: string

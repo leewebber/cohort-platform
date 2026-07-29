@@ -1,0 +1,33 @@
+# Programme phase semantics (no calendar scheduling).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  description:
+    type: string
+  typical_duration_weeks_min:
+    type: number
+  typical_duration_weeks_max:
+    type: number
+  capability_priority_ids:
+    type: array
+    items: string
+  training_intent_priority_ids:
+    type: array
+    items: string
+  fatigue_expectations:
+    type: string
+  recovery_expectations:
+    type: string
+  progression_characteristics:
+    type: array
+    items: string
+  allowable_next_phase_ids:
+    type: array
+    items: string

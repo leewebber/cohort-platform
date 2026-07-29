@@ -1,0 +1,45 @@
+# Base entity fields for all ontology reference nodes.
+# Validated by KnowledgeOntologyValidator (Dart).
+
+type: object
+description: Shared metadata for knowledge entities
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  id:
+    type: string
+    pattern: "^cohort\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
+  canonical_name:
+    type: string
+    pattern: "^[a-z0-9_]+$"
+  label:
+    type: string
+  description:
+    type: string
+  aliases:
+    type: array
+    items: string
+  namespace:
+    type: string
+    default: core
+  ontology_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+  status:
+    enum: [draft, active, deprecated]
+  replaces_id:
+    type: string
+    description: Required when status is deprecated
+  provenance:
+    type: string
+  confidence:
+    enum: [curated, inferred, provisional, unknown]
+  evidence:
+    type: string
+  extension:
+    type: object
+    description: Sport-specific extension metadata

@@ -1,0 +1,185 @@
+# Training block semantics — mesocycle-scale reusable concepts.
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.training_block.aerobic_base
+    canonical_name: aerobic_base_block
+    label: Aerobic base block
+    description: Low-intensity durable volume for cardiac and mitochondrial adaptations.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: [cohort.capability.aerobic_capacity]
+    secondary_capability_ids: [cohort.capability.running_economy]
+    supported_training_intent_ids: [cohort.training_intent.aerobic_base]
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.foundation
+      - cohort.programme_phase.general_preparation
+    expected_adaptations: [capillary_density, stroke_volume, fat_oxidation]
+    entry_criteria: movement_competency_baseline
+    exit_criteria: aerobic_evidence_adequate_or_duration_cap_reached
+
+  - id: cohort.training_block.strength
+    canonical_name: strength_block
+    label: Strength block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: [cohort.capability.relative_strength]
+    secondary_capability_ids: [cohort.capability.movement_competency]
+    supported_training_intent_ids:
+      - cohort.training_intent.max_strength_development
+      - cohort.training_intent.relative_strength_development
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.foundation
+      - cohort.programme_phase.general_preparation
+    expected_adaptations: [neural_drive, cross_sectional_area]
+    entry_criteria: pain_free_patterns
+    exit_criteria: strength_benchmark_or_plateau_protocol
+
+  - id: cohort.training_block.hypertrophy
+    canonical_name: hypertrophy_block
+    label: Hypertrophy block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: [cohort.capability.hypertrophy]
+    secondary_capability_ids: [cohort.capability.relative_strength]
+    supported_training_intent_ids:
+      - cohort.training_intent.hypertrophy_development
+      - cohort.training_intent.lower_body_hypertrophy
+      - cohort.training_intent.upper_body_hypertrophy
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.general_preparation
+    expected_adaptations: [muscle_cross_section]
+    entry_criteria: training_age_appropriate
+    exit_criteria: volume_landmark_achieved
+
+  - id: cohort.training_block.threshold
+    canonical_name: threshold_block
+    label: Threshold block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: [cohort.capability.threshold]
+    secondary_capability_ids: [cohort.capability.aerobic_capacity]
+    supported_training_intent_ids:
+      - cohort.training_intent.threshold_development
+      - cohort.training_intent.tempo_development
+      - cohort.training_intent.threshold_progression
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.specific_preparation
+      - cohort.programme_phase.performance
+    expected_adaptations: [lactate_clearance, sustainable_power]
+    entry_criteria: aerobic_base_adequate
+    exit_criteria: threshold_test_stable_or_race_phase
+
+  - id: cohort.training_block.vo2max
+    canonical_name: vo2max_block
+    label: VO₂max block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids:
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.anaerobic_capacity
+    secondary_capability_ids: []
+    supported_training_intent_ids: [cohort.training_intent.vo2max_development]
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.general_preparation
+      - cohort.programme_phase.specific_preparation
+    expected_adaptations: [max_aerobic_power]
+    entry_criteria: aerobic_base_4_weeks_minimum
+    exit_criteria: vo2_session_tolerance_cap
+
+  - id: cohort.training_block.race_preparation
+    canonical_name: race_preparation_block
+    label: Race preparation block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids:
+      - cohort.capability.pacing
+      - cohort.capability.work_capacity
+      - cohort.capability.burpee_efficiency
+    secondary_capability_ids: [cohort.capability.grip_strength]
+    supported_training_intent_ids:
+      - cohort.training_intent.race_preparation
+      - cohort.training_intent.pacing_skill
+      - cohort.training_intent.grip_endurance
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.specific_preparation
+      - cohort.programme_phase.performance
+      - cohort.programme_phase.peak
+    expected_adaptations: [race_specific_fitness, pacing_accuracy]
+    entry_criteria: goal_capabilities_partially_adequate
+    exit_criteria: simulation_targets_met
+
+  - id: cohort.training_block.recovery
+    canonical_name: recovery_block
+    label: Recovery block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: []
+    secondary_capability_ids: [cohort.capability.movement_competency]
+    supported_training_intent_ids:
+      - cohort.training_intent.recovery
+      - cohort.training_intent.deload
+      - cohort.training_intent.mobility_development
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.recovery
+      - cohort.programme_phase.deload
+      - cohort.programme_phase.transition
+    expected_adaptations: [fatigue_dissipation]
+    entry_criteria: accumulated_fatigue_or_post_event
+    exit_criteria: subjective_readiness_restored
+
+  - id: cohort.training_block.mixed_development
+    canonical_name: mixed_development_block
+    label: Mixed development block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids:
+      - cohort.capability.work_capacity
+      - cohort.capability.strength_endurance
+    secondary_capability_ids: [cohort.capability.relative_strength]
+    supported_training_intent_ids:
+      - cohort.training_intent.work_capacity
+      - cohort.training_intent.strength_endurance
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.foundation
+      - cohort.programme_phase.general_preparation
+      - cohort.programme_phase.specific_preparation
+    expected_adaptations: [mixed_modal_tolerance]
+    entry_criteria: basic_strength_and_movement
+    exit_criteria: work_capacity_gap_closed
+
+  - id: cohort.training_block.loaded_carry
+    canonical_name: loaded_carry_block
+    label: Loaded carry block
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    primary_capability_ids: [cohort.capability.loaded_carry_capacity]
+    secondary_capability_ids:
+      - cohort.capability.grip_strength
+      - cohort.capability.resilience
+    supported_training_intent_ids:
+      - cohort.training_intent.loaded_carry_development
+      - cohort.training_intent.grip_endurance
+    suitable_programme_phase_ids:
+      - cohort.programme_phase.general_preparation
+      - cohort.programme_phase.specific_preparation
+    expected_adaptations: [carry_specific_strength, grip_endurance]
+    entry_criteria: grip_baseline
+    exit_criteria: carry_standard_met

@@ -1,0 +1,14 @@
+# Programme / athlete goal capability requirements (metadata only).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - required_capability_ids
+fields:
+  required_capability_ids:
+    type: array
+    items: string
+  optional_capability_ids:
+    type: array
+    items: string

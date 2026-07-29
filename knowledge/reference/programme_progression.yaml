@@ -1,0 +1,68 @@
+# Programme progression paths — semantic order, not scheduled dates.
+ontology_version: "1.3.0"
+default_path_id: cohort.progression_path.competition_standard
+paths:
+  - id: cohort.progression_path.competition_standard
+    label: Competition standard
+    description: Foundation through competition and recovery for event-focused goals.
+    steps:
+      - phase_id: cohort.programme_phase.foundation
+        recommended_duration_weeks_min: 3
+        recommended_duration_weeks_max: 8
+        rationale: Build durable movement, aerobic base, and general strength tolerance.
+        optional_alternate_phase_ids: [cohort.programme_phase.transition]
+      - phase_id: cohort.programme_phase.general_preparation
+        recommended_duration_weeks_min: 4
+        recommended_duration_weeks_max: 12
+        rationale: Accumulate broad fitness aligned to programme goal capabilities.
+        optional_alternate_phase_ids: [cohort.programme_phase.deload]
+      - phase_id: cohort.programme_phase.specific_preparation
+        recommended_duration_weeks_min: 4
+        recommended_duration_weeks_max: 10
+        rationale: Shift emphasis to goal-specific capabilities and intents.
+        optional_alternate_phase_ids: [cohort.programme_phase.deload]
+      - phase_id: cohort.programme_phase.performance
+        recommended_duration_weeks_min: 2
+        recommended_duration_weeks_max: 6
+        rationale: Express developed qualities with reduced junk volume.
+        optional_alternate_phase_ids: []
+      - phase_id: cohort.programme_phase.peak
+        recommended_duration_weeks_min: 1
+        recommended_duration_weeks_max: 3
+        rationale: Narrow focus on highest-value sessions.
+        optional_alternate_phase_ids: [cohort.programme_phase.taper]
+      - phase_id: cohort.programme_phase.taper
+        recommended_duration_weeks_min: 1
+        recommended_duration_weeks_max: 3
+        rationale: Shed fatigue while maintaining intensity touch.
+        optional_alternate_phase_ids: []
+      - phase_id: cohort.programme_phase.competition
+        recommended_duration_weeks_min: 1
+        recommended_duration_weeks_max: 2
+        rationale: Event or selection window.
+        optional_alternate_phase_ids: []
+      - phase_id: cohort.programme_phase.recovery
+        recommended_duration_weeks_min: 1
+        recommended_duration_weeks_max: 4
+        rationale: Restore before next macro cycle.
+        optional_alternate_phase_ids: [cohort.programme_phase.transition]
+
+  - id: cohort.progression_path.general_fitness
+    label: General fitness loop
+    description: Shorter loop without peak/competition for health and body composition goals.
+    steps:
+      - phase_id: cohort.programme_phase.foundation
+        recommended_duration_weeks_min: 2
+        recommended_duration_weeks_max: 6
+        rationale: Establish baseline movement and engine.
+        optional_alternate_phase_ids: []
+      - phase_id: cohort.programme_phase.general_preparation
+        recommended_duration_weeks_min: 4
+        recommended_duration_weeks_max: 8
+        rationale: Maintain progressive overload and work capacity.
+        optional_alternate_phase_ids: [cohort.programme_phase.deload]
+      - phase_id: cohort.programme_phase.recovery
+        recommended_duration_weeks_min: 1
+        recommended_duration_weeks_max: 2
+        rationale: Planned reset before repeating macro structure.
+        optional_alternate_phase_ids: [cohort.programme_phase.foundation]

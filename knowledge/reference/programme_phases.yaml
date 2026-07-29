@@ -1,0 +1,239 @@
+# Programme phases — long-horizon adaptation context (semantic only).
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.programme_phase.foundation
+    canonical_name: foundation
+    label: Foundation
+    description: Establish movement competency, tissue tolerance, and basic work capacity.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 2
+    typical_duration_weeks_max: 8
+    capability_priority_ids:
+      - cohort.capability.movement_competency
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.relative_strength
+    training_intent_priority_ids:
+      - cohort.training_intent.movement_quality
+      - cohort.training_intent.aerobic_base
+      - cohort.training_intent.relative_strength_development
+    fatigue_expectations: systemic:low-moderate;local:moderate
+    recovery_expectations: 24-48h_between_hard_days
+    progression_characteristics: [volume_first, skill_acquisition, conservative_intensity]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.general_preparation
+      - cohort.programme_phase.deload
+      - cohort.programme_phase.transition
+
+  - id: cohort.programme_phase.general_preparation
+    canonical_name: general_preparation
+    label: General preparation
+    description: Broad base — strength, engine, and work capacity for the goal.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 4
+    typical_duration_weeks_max: 12
+    capability_priority_ids:
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.relative_strength
+      - cohort.capability.work_capacity
+    training_intent_priority_ids:
+      - cohort.training_intent.aerobic_base
+      - cohort.training_intent.max_strength_development
+      - cohort.training_intent.work_capacity
+    fatigue_expectations: systemic:moderate;local:moderate-high
+    recovery_expectations: 48h_between_same_patterns
+    progression_characteristics: [accumulation_blocks, dual_progression]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.specific_preparation
+      - cohort.programme_phase.deload
+      - cohort.programme_phase.transition
+      - cohort.programme_phase.recovery
+
+  - id: cohort.programme_phase.specific_preparation
+    canonical_name: specific_preparation
+    label: Specific preparation
+    description: Goal-specific capabilities and intents dominate training emphasis.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 4
+    typical_duration_weeks_max: 10
+    capability_priority_ids:
+      - cohort.capability.threshold
+      - cohort.capability.strength_endurance
+      - cohort.capability.pacing
+    training_intent_priority_ids:
+      - cohort.training_intent.threshold_development
+      - cohort.training_intent.strength_endurance
+      - cohort.training_intent.race_preparation
+    fatigue_expectations: systemic:moderate-high;local:moderate-high
+    recovery_expectations: planned_easy_days
+    progression_characteristics: [specificity_increase, race_rehearsal]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.performance
+      - cohort.programme_phase.peak
+      - cohort.programme_phase.deload
+
+  - id: cohort.programme_phase.performance
+    canonical_name: performance
+    label: Performance
+    description: Express developed qualities — high-quality work at goal-relevant intensities.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 2
+    typical_duration_weeks_max: 6
+    capability_priority_ids:
+      - cohort.capability.threshold
+      - cohort.capability.pacing
+      - cohort.capability.work_capacity
+    training_intent_priority_ids:
+      - cohort.training_intent.threshold_progression
+      - cohort.training_intent.pacing_skill
+      - cohort.training_intent.race_preparation
+    fatigue_expectations: systemic:moderate;local:moderate
+    recovery_expectations: quality_over_volume
+    progression_characteristics: [maintain_fitness, sharpen_intensity]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.peak
+      - cohort.programme_phase.competition
+      - cohort.programme_phase.taper
+
+  - id: cohort.programme_phase.peak
+    canonical_name: peak
+    label: Peak
+    description: Narrow focus on highest-value sessions for target performance.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 3
+    capability_priority_ids:
+      - cohort.capability.threshold
+      - cohort.capability.pacing
+    training_intent_priority_ids:
+      - cohort.training_intent.threshold_progression
+      - cohort.training_intent.race_preparation
+    fatigue_expectations: systemic:moderate;local:moderate
+    recovery_expectations: full_recovery_before_key_sessions
+    progression_characteristics: [reduce_volume, maintain_neural_drive]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.taper
+      - cohort.programme_phase.competition
+
+  - id: cohort.programme_phase.competition
+    canonical_name: competition
+    label: Competition
+    description: Event or selection window — minimal training stress, maximal readiness.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 2
+    capability_priority_ids:
+      - cohort.capability.pacing
+      - cohort.capability.resilience
+    training_intent_priority_ids:
+      - cohort.training_intent.taper
+      - cohort.training_intent.race_preparation
+    fatigue_expectations: systemic:low;local:low
+    recovery_expectations: restorative
+    progression_characteristics: [readiness_only]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.recovery
+      - cohort.programme_phase.transition
+
+  - id: cohort.programme_phase.taper
+    canonical_name: taper
+    label: Taper
+    description: Pre-event volume reduction with selective intensity maintenance.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 3
+    capability_priority_ids:
+      - cohort.capability.threshold
+      - cohort.capability.pacing
+    training_intent_priority_ids:
+      - cohort.training_intent.taper
+    fatigue_expectations: systemic:low-moderate;local:low
+    recovery_expectations: supercompensation
+    progression_characteristics: [volume_drop, short_sharps]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.competition
+      - cohort.programme_phase.recovery
+
+  - id: cohort.programme_phase.recovery
+    canonical_name: recovery
+    label: Recovery
+    description: Post-event or post-block restoration before rebuilding.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 4
+    capability_priority_ids:
+      - cohort.capability.movement_competency
+    training_intent_priority_ids:
+      - cohort.training_intent.recovery
+      - cohort.training_intent.mobility_development
+    fatigue_expectations: minimal
+    recovery_expectations: restorative
+    progression_characteristics: [active_recovery, rebuild_tolerance]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.transition
+      - cohort.programme_phase.foundation
+
+  - id: cohort.programme_phase.transition
+    canonical_name: transition
+    label: Transition
+    description: Off-season or between-goal bridge — unstructured to low-structure work.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 4
+    capability_priority_ids: []
+    training_intent_priority_ids:
+      - cohort.training_intent.recovery
+      - cohort.training_intent.movement_quality
+    fatigue_expectations: low
+    recovery_expectations: flexible
+    progression_characteristics: [maintain_touch, no_peaking]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.foundation
+      - cohort.programme_phase.general_preparation
+
+  - id: cohort.programme_phase.deload
+    canonical_name: deload
+    label: Deload
+    description: Planned fatigue dissipation within a larger block.
+    ontology_version: "1.3.0"
+    status: active
+    provenance: programme_semantics_v1
+    confidence: curated
+    typical_duration_weeks_min: 1
+    typical_duration_weeks_max: 1
+    capability_priority_ids: []
+    training_intent_priority_ids:
+      - cohort.training_intent.deload
+    fatigue_expectations: low
+    recovery_expectations: restorative
+    progression_characteristics: [volume_intensity_reduction]
+    allowable_next_phase_ids:
+      - cohort.programme_phase.general_preparation
+      - cohort.programme_phase.specific_preparation
+      - cohort.programme_phase.performance

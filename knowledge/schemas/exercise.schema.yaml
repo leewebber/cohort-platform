@@ -1,0 +1,82 @@
+# Exercise knowledge semantics (reference dataset + future curation).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+  - curation_status
+fields:
+  curation_status:
+    enum: [reference_only, curated, provisional, deprecated]
+  movement_patterns:
+    type: array
+    items:
+      type: object
+      fields:
+        id: { type: string }
+        role: { enum: [primary, secondary] }
+  joint_actions:
+    type: array
+    items:
+      type: object
+      fields:
+        id: { type: string }
+        role: { enum: [primary, secondary] }
+  primary_muscles:
+    type: array
+    items: string
+  secondary_muscles:
+    type: array
+    items: string
+  required_equipment:
+    type: array
+    items: string
+  optional_equipment:
+    type: array
+    items: string
+  suitable_environments:
+    type: array
+    items: string
+  develops_capabilities:
+    type: array
+    items: string
+    deprecated: use primary_capabilities, secondary_capabilities, supporting_capabilities
+  primary_capabilities:
+    type: array
+    items: string
+  secondary_capabilities:
+    type: array
+    items: string
+  supporting_capabilities:
+    type: array
+    items: string
+  energy_system_contribution:
+    type: object
+    fields:
+      primary_id: { type: string }
+      secondary_id: { type: string }
+      state: { enum: [unknown, none, not_applicable] }
+  supports_training_intents:
+    type: array
+    items: string
+  technical_demand:
+    enum: [unknown, none, not_applicable, beginner, intermediate, advanced]
+  local_fatigue:
+    enum: [unknown, none, not_applicable, low, moderate, high, very_high]
+  systemic_fatigue:
+    enum: [unknown, none, not_applicable, low, moderate, high, very_high]
+  recovery_cost:
+    enum: [unknown, none, not_applicable, low, moderate, high, very_high]
+  contraindication_tags:
+    type: array
+    items: string
+    description: Non-clinical constraint tags only
+  platform_exercise_id:
+    type: string
+    description: Optional link to exercises_v2 row when curated
+  sport_extension:
+    type: object

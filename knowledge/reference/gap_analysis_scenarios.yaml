@@ -1,0 +1,108 @@
+# Representative gap analysis scenarios (in-memory evidence only).
+ontology_version: "1.3.0"
+scenarios:
+  - id: cohort.scenario.hyrox_athlete_a
+    goal_id: cohort.goal.hyrox_sub_60
+    label: HYROX athlete — strong engine, weak grip and stations
+    description: >
+      Runner with solid aerobic base but limited grip and HYROX-specific station evidence.
+    evidence:
+      - capability_id: cohort.capability.aerobic_capacity
+        state: assessed
+        confidence: 0.92
+        source: threshold_field_test
+        recorded_at: "2026-06-15T10:00:00Z"
+      - capability_id: cohort.capability.running_economy
+        state: coach_observation
+        confidence: 0.8
+        source: coach_review
+      - capability_id: cohort.capability.threshold
+        state: estimated
+        confidence: 0.7
+        source: race_split_projection
+      - capability_id: cohort.capability.strength_endurance
+        state: inferred
+        confidence: 0.55
+        source: session_completion_history
+      - capability_id: cohort.capability.pacing
+        state: coach_observation
+        confidence: 0.75
+        source: coach_review
+      - capability_id: cohort.capability.grip_strength
+        state: unknown
+      - capability_id: cohort.capability.burpee_efficiency
+        state: unknown
+      - capability_id: cohort.capability.work_capacity
+        state: estimated
+        confidence: 0.6
+        source: hyrox_simulation
+
+  - id: cohort.scenario.general_fat_loss_a
+    goal_id: cohort.goal.general_fat_loss
+    label: General fat loss — well-rounded baseline
+    description: Adequate evidence across required capabilities; few gaps expected.
+    evidence:
+      - capability_id: cohort.capability.relative_strength
+        state: assessed
+        confidence: 0.85
+        source: strength_audit
+      - capability_id: cohort.capability.work_capacity
+        state: coach_observation
+        confidence: 0.8
+        source: coach_review
+      - capability_id: cohort.capability.movement_competency
+        state: coach_observation
+        confidence: 0.82
+        source: movement_screen
+      - capability_id: cohort.capability.aerobic_capacity
+        state: assessed
+        confidence: 0.88
+        source: submax_bike_test
+
+  - id: cohort.scenario.military_selection_a
+    goal_id: cohort.goal.military_selection
+    label: Military selection — partial evidence, load carry unknown
+    description: Upper body strength inferred; carry and resilience largely unknown.
+    evidence:
+      - capability_id: cohort.capability.pushing_strength
+        state: estimated
+        confidence: 0.65
+        source: push_up_test
+      - capability_id: cohort.capability.pulling_strength
+        state: inferred
+        confidence: 0.5
+        source: limited_pull_data
+      - capability_id: cohort.capability.aerobic_capacity
+        state: assessed
+        confidence: 0.78
+        source: run_test
+      - capability_id: cohort.capability.work_capacity
+        state: unknown
+      - capability_id: cohort.capability.loaded_carry_capacity
+        state: unknown
+      - capability_id: cohort.capability.resilience
+        state: unknown
+
+  - id: cohort.scenario.hyrox_prerequisite_chain
+    goal_id: cohort.goal.hyrox_sub_60
+    label: HYROX — weak aerobic base blocks threshold emphasis
+    description: Tests prerequisite handling for threshold capability.
+    evidence:
+      - capability_id: cohort.capability.aerobic_capacity
+        state: inferred
+        confidence: 0.4
+        source: self_report
+      - capability_id: cohort.capability.threshold
+        state: unknown
+      - capability_id: cohort.capability.strength_endurance
+        state: unknown
+      - capability_id: cohort.capability.grip_strength
+        state: unknown
+      - capability_id: cohort.capability.running_economy
+        state: unknown
+      - capability_id: cohort.capability.pacing
+        state: unknown
+      - capability_id: cohort.capability.burpee_efficiency
+        state: unknown
+      - capability_id: cohort.capability.work_capacity
+        state: unknown

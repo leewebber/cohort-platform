@@ -1,0 +1,53 @@
+# Athletic capability node (hierarchical graph).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  parent_ids:
+    type: array
+    items: string
+    description: Hierarchy — child points to one or more parents
+  prerequisite_ids:
+    type: array
+    items: string
+    description: Training readiness — must be developed before emphasis
+  supporting_capability_ids:
+    type: array
+    items: string
+    description: Qualities that reinforce this capability
+  conflicting_capability_ids:
+    type: array
+    items: string
+    description: Rare — simultaneous peak emphasis conflicts
+  related_movement_pattern_ids:
+    type: array
+    items: string
+  related_energy_system_ids:
+    type: array
+    items: string
+  related_training_intent_ids:
+    type: array
+    items: string
+  typical_assessment_methods:
+    type: array
+    items: string
+    description: Evidence types — not athlete scores (see Capability_Ontology_v1.md)
+
+capability_relationship_types:
+  - develops
+  - requires
+  - supports
+  - limited_by
+  - expressed_by
+  - measured_by
+
+graph_rules:
+  parent_hierarchy: must_be_acyclic
+  prerequisite_graph: must_be_acyclic
+  deprecated: requires_replaces_id

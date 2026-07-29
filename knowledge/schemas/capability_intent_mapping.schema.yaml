@@ -1,0 +1,30 @@
+# Contextual capability → training intent mapping.
+type: object
+required:
+  - id
+  - capability_id
+  - training_intent_id
+  - suitability
+  - progression_stage
+  - rationale
+fields:
+  prerequisite_intent_ids:
+    type: array
+    items: string
+  prerequisite_capability_ids:
+    type: array
+    items: string
+  status:
+    type: string
+  confidence:
+    type: string
+  provenance:
+    type: string
+
+progression_stages:
+  - foundation
+  - development
+  - emphasis
+  - peaking
+  - maintenance
+  - recovery

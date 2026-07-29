@@ -1,0 +1,58 @@
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.environment.commercial_gym
+    canonical_name: commercial_gym
+    label: Commercial gym
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.full_gym
+    canonical_name: full_gym
+    label: Full gym
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.hotel_gym
+    canonical_name: hotel_gym
+    label: Hotel gym
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.hotel_room
+    canonical_name: hotel_room
+    label: Hotel room
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.home
+    canonical_name: home
+    label: Home
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.outdoors
+    canonical_name: outdoors
+    label: Outdoors
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.track
+    canonical_name: track
+    label: Track
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated
+  - id: cohort.environment.trail
+    canonical_name: trail
+    label: Trail
+    ontology_version: "1.3.0"
+    status: active
+    provenance: domain.TrainingEnvironment
+    confidence: curated

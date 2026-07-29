@@ -1,0 +1,86 @@
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.equipment.barbell
+    canonical_name: barbell
+    label: Barbell
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.squat_rack
+    canonical_name: squat_rack
+    label: Squat rack
+    aliases: [rack]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.dumbbell
+    canonical_name: dumbbell
+    label: Dumbbell
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.kettlebell
+    canonical_name: kettlebell
+    label: Kettlebell
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.pull_up_bar
+    canonical_name: pull_up_bar
+    label: Pull-up bar
+    aliases: [pullup_bar, bar]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.bench
+    canonical_name: bench
+    label: Bench
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.rower
+    canonical_name: rower
+    label: Rowing ergometer
+    aliases: [concept2_rower, erg]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.ski_erg
+    canonical_name: ski_erg
+    label: Ski ergometer
+    aliases: [skierg]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.sled
+    canonical_name: sled
+    label: Sled
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.wall_ball
+    canonical_name: wall_ball
+    label: Wall ball
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.plyo_box
+    canonical_name: plyo_box
+    label: Plyometric box
+    aliases: [box]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.cable_machine
+    canonical_name: cable_machine
+    label: Cable machine
+    aliases: [cable_stack, lat_pulldown_station]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+  - id: cohort.equipment.bodyweight
+    canonical_name: bodyweight
+    label: Bodyweight only
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated

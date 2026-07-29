@@ -1,0 +1,134 @@
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.substitution.back_squat_to_goblet_squat
+    canonical_name: back_squat_to_goblet_squat
+    label: Back squat → goblet squat (limited equipment)
+    ontology_version: "1.3.0"
+    status: active
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    source_exercise_id: cohort.exercise.back_squat
+    candidate_exercise_id: cohort.exercise.goblet_squat
+    substitution_kind: regression
+    applicable_constraints:
+      - no_barbell
+      - no_squat_rack
+      - hotel_gym
+      - hotel_room
+      - limited_equipment
+    preserved_movement_patterns:
+      - cohort.movement_pattern.squat
+    preserved_training_intents:
+      - cohort.training_intent.lower_body_hypertrophy
+      - cohort.training_intent.squat_strength
+    preserved_capabilities:
+      - cohort.capability.hypertrophy
+      - cohort.capability.strength_endurance
+    compromised_qualities:
+      - cohort.capability.absolute_strength
+      - absolute_loading_potential
+      - advanced_strength_specificity
+    equipment_delta:
+      removed: [cohort.equipment.barbell, cohort.equipment.squat_rack]
+      added: [cohort.equipment.kettlebell]
+    environment_compatibility:
+      - cohort.environment.hotel_gym
+      - cohort.environment.hotel_room
+      - cohort.environment.home
+    suitability_band: good
+    suitability_score: 0.78
+    explanation: >
+      Maintains knee-dominant squat pattern and hypertrophy-oriented lower body intent
+      when barbell and rack are unavailable. Reduces absolute load potential and
+      maximal strength specificity.
+    prescription_adjustment_guidance: >
+      Increase reps or tempo control; avoid treating as 1RM-equivalent loading.
+
+  - id: cohort.substitution.pull_up_to_lat_pulldown
+    canonical_name: pull_up_to_lat_pulldown
+    label: Pull-up → lat pulldown
+    ontology_version: "1.3.0"
+    status: active
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    source_exercise_id: cohort.exercise.pull_up
+    candidate_exercise_id: cohort.exercise.lat_pulldown
+    substitution_kind: regression
+    applicable_constraints:
+      - cannot_do_pull_ups
+      - hotel_gym
+    preserved_movement_patterns:
+      - cohort.movement_pattern.vertical_pull
+    preserved_training_intents:
+      - cohort.training_intent.pull_strength
+    preserved_capabilities:
+      - cohort.capability.hypertrophy
+    compromised_qualities:
+      - cohort.capability.absolute_strength
+      - bodyweight_control
+    environment_compatibility:
+      - cohort.environment.commercial_gym
+      - cohort.environment.hotel_gym
+    suitability_band: good
+    suitability_score: 0.82
+    explanation: Preserves vertical pull intent when bodyweight pull-ups are not feasible.
+
+  - id: cohort.substitution.bench_press_to_push_up
+    canonical_name: bench_press_to_push_up
+    label: Bench press → push-up
+    ontology_version: "1.3.0"
+    status: active
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    source_exercise_id: cohort.exercise.bench_press
+    candidate_exercise_id: cohort.exercise.push_up
+    substitution_kind: regression
+    applicable_constraints:
+      - no_barbell
+      - no_bench
+      - hotel_room
+    preserved_movement_patterns:
+      - cohort.movement_pattern.horizontal_push
+    preserved_training_intents:
+      - cohort.training_intent.upper_body_hypertrophy
+    preserved_capabilities:
+      - cohort.capability.muscular_endurance
+    compromised_qualities:
+      - cohort.capability.absolute_strength
+    equipment_delta:
+      removed: [cohort.equipment.barbell, cohort.equipment.bench]
+      added: [cohort.equipment.bodyweight]
+    environment_compatibility:
+      - cohort.environment.home
+      - cohort.environment.hotel_room
+    suitability_band: fair
+    suitability_score: 0.65
+    explanation: Maintains horizontal push pattern with minimal equipment.
+
+  - id: cohort.substitution.running_to_rowing
+    canonical_name: running_to_rowing
+    label: Running → rowing (modality swap)
+    ontology_version: "1.3.0"
+    status: active
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    source_exercise_id: cohort.exercise.running
+    candidate_exercise_id: cohort.exercise.rowing
+    substitution_kind: modality_swap
+    applicable_constraints:
+      - no_outdoor_run
+      - weather
+      - lower_impact_preference
+    preserved_training_intents:
+      - cohort.training_intent.aerobic_base
+    preserved_capabilities:
+      - cohort.capability.aerobic_capacity
+    compromised_qualities:
+      - running_specific_economy
+      - impact_loading
+    environment_compatibility:
+      - cohort.environment.commercial_gym
+      - cohort.environment.hotel_gym
+    suitability_band: good
+    suitability_score: 0.7
+    explanation: Aerobic base intent with reduced impact when running is unavailable.

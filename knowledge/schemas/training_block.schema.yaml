@@ -1,0 +1,32 @@
+# Reusable training block semantics.
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  description:
+    type: string
+  primary_capability_ids:
+    type: array
+    items: string
+  secondary_capability_ids:
+    type: array
+    items: string
+  supported_training_intent_ids:
+    type: array
+    items: string
+  suitable_programme_phase_ids:
+    type: array
+    items: string
+  expected_adaptations:
+    type: array
+    items: string
+  entry_criteria:
+    type: string
+  exit_criteria:
+    type: string

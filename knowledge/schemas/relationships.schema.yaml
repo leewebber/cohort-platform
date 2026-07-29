@@ -1,0 +1,37 @@
+# Typed relationship vocabulary (blueprint §4).
+# Stored inline on exercises/substitutions; not a separate edge store in Sprint 2.
+
+type: object
+fields:
+  type:
+    enum:
+      - expresses
+      - requires
+      - optionally_uses
+      - primarily_trains
+      - secondarily_trains
+      - involves_joint_action
+      - develops_capability
+      - constrained_by
+      - suitable_for_environment
+      - targets_energy_system
+      - supports_training_intent
+      - substitutes_for
+      - preserves
+      - compromises
+  target_id:
+    type: string
+  role:
+    enum: [primary, secondary, tertiary]
+  weight:
+    type: number
+    description: Optional soft weight 0-1 for ranking
+  note:
+    type: string
+
+inverse_hints:
+  expresses: expressed_by
+  requires: required_by
+  substitutes_for: substituted_by
+  preserves: preserved_by
+  compromises: compromised_by

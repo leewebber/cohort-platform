@@ -1,0 +1,26 @@
+# Training intent taxonomy (Sprint 5). Semantic training type — not exercises.
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  description:
+    type: string
+  applicable_capability_ids:
+    type: array
+    items: string
+  common_session_archetype_ids:
+    type: array
+    items: string
+  typical_progression_characteristics:
+    type: array
+    items: string
+  fatigue_characteristics:
+    type: string
+  recovery_characteristics:
+    type: string

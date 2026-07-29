@@ -1,0 +1,457 @@
+# Athletic Capability Ontology — hierarchical reference (v1.1)
+# Capabilities describe trainable qualities in the athlete — not exercises or muscles.
+ontology_version: "1.3.0"
+
+entities:
+  - id: cohort.capability.athletic_performance
+    canonical_name: athletic_performance
+    label: Athletic performance
+    description: Root for trainable qualities that change in the athlete over time.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: []
+    prerequisite_ids: []
+    supporting_capability_ids: []
+    conflicting_capability_ids: []
+    related_movement_pattern_ids: []
+    related_energy_system_ids: []
+    related_training_intent_ids: []
+    typical_assessment_methods: [coach_observation, programme_outcomes]
+
+  - id: cohort.capability.strength
+    canonical_name: strength
+    label: Strength
+    description: Ability to produce force against external resistance.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+    related_training_intent_ids:
+      - cohort.training_intent.squat_strength
+      - cohort.training_intent.push_strength
+      - cohort.training_intent.pull_strength
+
+  - id: cohort.capability.absolute_strength
+    canonical_name: absolute_strength
+    label: Absolute strength
+    aliases: [max_strength]
+    description: Maximal force production regardless of body mass.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.strength]
+    typical_assessment_methods:
+      - one_rm
+      - estimated_one_rm
+      - velocity_based_estimate
+      - coach_assessment
+
+  - id: cohort.capability.relative_strength
+    canonical_name: relative_strength
+    label: Relative strength
+    description: Force production relative to body mass.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.strength]
+    prerequisite_ids: [cohort.capability.movement_competency]
+    typical_assessment_methods:
+      - bodyweight_max_reps
+      - relative_load_tests
+      - coach_assessment
+
+  - id: cohort.capability.pulling_strength
+    canonical_name: pulling_strength
+    label: Pulling strength (relative)
+    description: Relative strength in vertical or horizontal pulling patterns.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.relative_strength]
+    related_movement_pattern_ids:
+      - cohort.movement_pattern.vertical_pull
+      - cohort.movement_pattern.horizontal_pull
+    related_training_intent_ids: [cohort.training_intent.pull_strength]
+
+  - id: cohort.capability.pushing_strength
+    canonical_name: pushing_strength
+    label: Pushing strength (relative)
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.relative_strength]
+    related_movement_pattern_ids:
+      - cohort.movement_pattern.horizontal_push
+      - cohort.movement_pattern.vertical_push
+    related_training_intent_ids: [cohort.training_intent.push_strength]
+
+  - id: cohort.capability.strength_endurance
+    canonical_name: strength_endurance
+    label: Strength endurance
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.strength]
+    related_training_intent_ids: [cohort.training_intent.work_capacity]
+
+  - id: cohort.capability.hypertrophy
+    canonical_name: hypertrophy
+    label: Hypertrophy
+    description: Structural adaptation for increased muscle cross-sectional area.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.strength]
+    related_training_intent_ids:
+      - cohort.training_intent.lower_body_hypertrophy
+      - cohort.training_intent.upper_body_hypertrophy
+
+  - id: cohort.capability.power
+    canonical_name: power
+    label: Power
+    description: Rapid force production.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+    related_training_intent_ids: [cohort.training_intent.power_development]
+
+  - id: cohort.capability.reactive_power
+    canonical_name: reactive_power
+    label: Reactive power
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.power]
+    prerequisite_ids: [cohort.capability.strength_endurance]
+
+  - id: cohort.capability.endurance
+    canonical_name: endurance
+    label: Endurance
+    description: Sustained work capacity across energy systems.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+
+  - id: cohort.capability.aerobic_capacity
+    canonical_name: aerobic_capacity
+    label: Aerobic capacity
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.endurance]
+    related_energy_system_ids: [cohort.energy_system.aerobic]
+    related_training_intent_ids: [cohort.training_intent.aerobic_base]
+    typical_assessment_methods:
+      - threshold_test
+      - time_trial
+      - pace_vs_heart_rate
+      - coach_assessment
+
+  - id: cohort.capability.anaerobic_capacity
+    canonical_name: anaerobic_capacity
+    label: Anaerobic capacity
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.endurance]
+    related_energy_system_ids:
+      - cohort.energy_system.anaerobic_lactic
+      - cohort.energy_system.mixed
+    typical_assessment_methods:
+      - repeat_sprint_test
+      - interval_completion
+      - coach_assessment
+
+  - id: cohort.capability.threshold
+    canonical_name: threshold
+    label: Threshold
+    description: Sustainable high-intensity aerobic/anaerobic boundary.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.endurance]
+    prerequisite_ids: [cohort.capability.aerobic_capacity]
+    related_training_intent_ids: [cohort.training_intent.aerobic_base]
+
+  - id: cohort.capability.running_economy
+    canonical_name: running_economy
+    label: Running economy
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.endurance]
+    related_movement_pattern_ids: [cohort.movement_pattern.locomotion]
+    typical_assessment_methods:
+      - pace_vs_heart_rate
+      - race_performance
+      - coach_assessment
+
+  - id: cohort.capability.pacing
+    canonical_name: pacing
+    label: Pacing
+    description: Ability to distribute effort over time.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.endurance]
+    supporting_capability_ids: [cohort.capability.aerobic_capacity]
+
+  - id: cohort.capability.movement_quality
+    canonical_name: movement_quality
+    label: Movement quality
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+
+  - id: cohort.capability.movement_competency
+    canonical_name: movement_competency
+    label: Movement competency
+    aliases: [movement_efficiency]
+    description: Safe, repeatable movement under load and fatigue.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+    related_training_intent_ids: [cohort.training_intent.movement_quality]
+
+  - id: cohort.capability.mobility
+    canonical_name: mobility
+    label: Mobility
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.coordination
+    canonical_name: coordination
+    label: Coordination
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.balance
+    canonical_name: balance
+    label: Balance
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.agility
+    canonical_name: agility
+    label: Agility
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+    prerequisite_ids:
+      - cohort.capability.acceleration
+      - cohort.capability.deceleration
+      - cohort.capability.change_of_direction
+
+  - id: cohort.capability.acceleration
+    canonical_name: acceleration
+    label: Acceleration
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+    related_movement_pattern_ids: [cohort.movement_pattern.locomotion]
+
+  - id: cohort.capability.deceleration
+    canonical_name: deceleration
+    label: Deceleration
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.change_of_direction
+    canonical_name: change_of_direction
+    label: Change of direction
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.stability
+    canonical_name: stability
+    label: Stability (general)
+    ontology_version: "1.3.0"
+    status: deprecated
+    replaces_id: cohort.capability.core_stability
+    confidence: curated
+    provenance: sprint2_flat_capability
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.core_stability
+    canonical_name: core_stability
+    label: Core stability
+    aliases: [trunk_stability]
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+    related_movement_pattern_ids: [cohort.movement_pattern.core]
+    typical_assessment_methods:
+      - plank_hold
+      - side_plank_hold
+      - coach_observation
+
+  - id: cohort.capability.rotational_stability
+    canonical_name: rotational_stability
+    label: Rotational stability
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.core_stability]
+
+  - id: cohort.capability.shoulder_stability
+    canonical_name: shoulder_stability
+    label: Shoulder stability
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.scapular_control
+    canonical_name: scapular_control
+    label: Scapular control
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.shoulder_stability]
+    supporting_capability_ids: [cohort.capability.pulling_strength]
+
+  - id: cohort.capability.hip_stability
+    canonical_name: hip_stability
+    label: Hip stability
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.movement_quality]
+
+  - id: cohort.capability.overhead_tolerance
+    canonical_name: overhead_tolerance
+    label: Overhead tolerance
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.shoulder_stability]
+    related_movement_pattern_ids: [cohort.movement_pattern.vertical_push]
+
+  - id: cohort.capability.grip_strength
+    canonical_name: grip_strength
+    label: Grip strength
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.strength]
+
+  - id: cohort.capability.grip_endurance
+    canonical_name: grip_endurance
+    label: Grip endurance
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.grip_strength]
+
+  - id: cohort.capability.work_capacity
+    canonical_name: work_capacity
+    label: Work capacity
+    description: Tolerance for sustained mixed-modality training stress.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+    related_training_intent_ids: [cohort.training_intent.work_capacity]
+
+  - id: cohort.capability.loaded_carry_capacity
+    canonical_name: loaded_carry_capacity
+    label: Loaded carry capacity
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.work_capacity]
+    related_movement_pattern_ids: [cohort.movement_pattern.carry]
+
+  - id: cohort.capability.resilience
+    canonical_name: resilience
+    label: Resilience
+    description: Tolerance for repeated training and life stress without breakdown.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1
+    parent_ids: [cohort.capability.athletic_performance]
+
+  - id: cohort.capability.burpee_efficiency
+    canonical_name: burpee_efficiency
+    label: Burpee efficiency
+    description: HYROX-style burpee broad jump skill and economy.
+    ontology_version: "1.3.0"
+    status: active
+    confidence: curated
+    provenance: capability_ontology_v1.ext.hyrox
+    parent_ids: [cohort.capability.work_capacity]
+    namespace: ext_hyrox
+
+  - id: cohort.capability.max_strength
+    canonical_name: max_strength
+    label: Maximal strength (legacy)
+    ontology_version: "1.3.0"
+    status: deprecated
+    replaces_id: cohort.capability.absolute_strength
+    confidence: curated
+    provenance: sprint2_flat_capability
+    parent_ids: [cohort.capability.strength]
+
+  - id: cohort.capability.muscular_endurance
+    canonical_name: muscular_endurance
+    label: Muscular endurance (legacy label)
+    ontology_version: "1.3.0"
+    status: deprecated
+    replaces_id: cohort.capability.strength_endurance
+    confidence: curated
+    provenance: sprint2_flat_capability
+    parent_ids: [cohort.capability.strength]

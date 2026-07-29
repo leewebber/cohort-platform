@@ -1,0 +1,52 @@
+# Contextual substitution rule (not exercise equality).
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+  - source_exercise_id
+  - candidate_exercise_id
+  - explanation
+fields:
+  source_exercise_id: { type: string }
+  candidate_exercise_id: { type: string }
+  substitution_kind:
+    enum: [regression, progression, lateral, modality_swap]
+  applicable_constraints:
+    type: array
+    items: string
+    description: Constraint tags e.g. no_barbell, hotel_gym, short_on_time
+  preserved_movement_patterns:
+    type: array
+    items: string
+  preserved_training_intents:
+    type: array
+    items: string
+  preserved_capabilities:
+    type: array
+    items: string
+  compromised_qualities:
+    type: array
+    items: string
+  equipment_delta:
+    type: object
+    fields:
+      removed: { type: array, items: string }
+      added: { type: array, items: string }
+  environment_compatibility:
+    type: array
+    items: string
+  suitability_band:
+    enum: [poor, fair, good, excellent, unknown]
+  suitability_score:
+    type: number
+    minimum: 0
+    maximum: 1
+  prescription_adjustment_guidance:
+    type: string
+  confidence:
+    enum: [curated, inferred, provisional, unknown]

@@ -1,0 +1,281 @@
+# Contextual capability → training intent mappings (Sprint 5).
+ontology_version: "1.3.0"
+mappings:
+  - id: cohort.mapping.threshold.tempo
+    capability_id: cohort.capability.threshold
+    training_intent_id: cohort.training_intent.tempo_development
+    suitability: 0.88
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.aerobic_base]
+    prerequisite_capability_ids: [cohort.capability.aerobic_capacity]
+    rationale: Steady sub-threshold work extends time at intensity before formal threshold blocks.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.threshold.cruise
+    capability_id: cohort.capability.threshold
+    training_intent_id: cohort.training_intent.cruise_intervals
+    suitability: 0.82
+    progression_stage: emphasis
+    prerequisite_intent_ids:
+      - cohort.training_intent.aerobic_base
+      - cohort.training_intent.tempo_development
+    prerequisite_capability_ids: [cohort.capability.aerobic_capacity]
+    rationale: Repeated near-threshold intervals raise sustainable boundary with incomplete recovery.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.threshold.progression
+    capability_id: cohort.capability.threshold
+    training_intent_id: cohort.training_intent.threshold_progression
+    suitability: 0.9
+    progression_stage: emphasis
+    prerequisite_intent_ids: [cohort.training_intent.threshold_development]
+    prerequisite_capability_ids:
+      - cohort.capability.aerobic_capacity
+    rationale: Mesocycle progression of threshold exposure after base and intro tempo work.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.threshold.general
+    capability_id: cohort.capability.threshold
+    training_intent_id: cohort.training_intent.threshold_development
+    suitability: 0.85
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.aerobic_base]
+    prerequisite_capability_ids: [cohort.capability.aerobic_capacity]
+    rationale: Primary intent label for threshold capability gaps once aerobic base is adequate.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.aerobic.base
+    capability_id: cohort.capability.aerobic_capacity
+    training_intent_id: cohort.training_intent.aerobic_base
+    suitability: 0.95
+    progression_stage: foundation
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Foundational easy volume and cardiac efficiency for most endurance goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.aerobic.vo2
+    capability_id: cohort.capability.aerobic_capacity
+    training_intent_id: cohort.training_intent.vo2max_development
+    suitability: 0.75
+    progression_stage: emphasis
+    prerequisite_intent_ids: [cohort.training_intent.aerobic_base]
+    prerequisite_capability_ids: []
+    rationale: High-intensity intervals after aerobic base supports VO₂max ceiling work.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.relative_strength.max
+    capability_id: cohort.capability.relative_strength
+    training_intent_id: cohort.training_intent.max_strength_development
+    suitability: 0.9
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.movement_quality]
+    prerequisite_capability_ids: [cohort.capability.movement_competency]
+    rationale: Max strength blocks once movement competency baseline is established.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.relative_strength.general
+    capability_id: cohort.capability.relative_strength
+    training_intent_id: cohort.training_intent.relative_strength_development
+    suitability: 0.85
+    progression_stage: development
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Bodyweight-relative strength emphasis for general performance and fat loss goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.relative_strength.hypertrophy
+    capability_id: cohort.capability.relative_strength
+    training_intent_id: cohort.training_intent.hypertrophy_development
+    suitability: 0.7
+    progression_stage: development
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Hypertrophy mesocycles support long-term relative strength for non-maximal goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.pulling.strength
+    capability_id: cohort.capability.pulling_strength
+    training_intent_id: cohort.training_intent.pull_strength
+    suitability: 0.92
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.movement_quality]
+    prerequisite_capability_ids: [cohort.capability.scapular_control]
+    rationale: Vertical/horizontal pull strength with scapular stability prerequisite.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.pushing.strength
+    capability_id: cohort.capability.pushing_strength
+    training_intent_id: cohort.training_intent.push_strength
+    suitability: 0.92
+    progression_stage: development
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Push pattern strength for military and general strength goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.strength_endurance.engine
+    capability_id: cohort.capability.strength_endurance
+    training_intent_id: cohort.training_intent.strength_endurance
+    suitability: 0.9
+    progression_stage: emphasis
+    prerequisite_intent_ids: [cohort.training_intent.relative_strength_development]
+    prerequisite_capability_ids: [cohort.capability.relative_strength]
+    rationale: Repeated submaximal efforts after a strength floor for HYROX-style demands.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.work_capacity.mixed
+    capability_id: cohort.capability.work_capacity
+    training_intent_id: cohort.training_intent.work_capacity
+    suitability: 0.93
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.aerobic_base]
+    prerequisite_capability_ids: []
+    rationale: Mixed-modal density and circuit work for broad work capacity gaps.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.grip.endurance
+    capability_id: cohort.capability.grip_strength
+    training_intent_id: cohort.training_intent.grip_endurance
+    suitability: 0.94
+    progression_stage: development
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Grip and forearm endurance for sled, carry, and pull station demands.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.loaded_carry
+    capability_id: cohort.capability.loaded_carry_capacity
+    training_intent_id: cohort.training_intent.loaded_carry_development
+    suitability: 0.96
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.grip_endurance]
+    prerequisite_capability_ids: [cohort.capability.grip_strength]
+    rationale: Progressive carries once grip baseline reduces limiting factor.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.movement.competency
+    capability_id: cohort.capability.movement_competency
+    training_intent_id: cohort.training_intent.movement_skill_acquisition
+    suitability: 0.9
+    progression_stage: foundation
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Skill acquisition and pattern ownership for fat loss and general training.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.movement.quality
+    capability_id: cohort.capability.movement_competency
+    training_intent_id: cohort.training_intent.movement_quality
+    suitability: 0.88
+    progression_stage: foundation
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: []
+    rationale: Legacy-aligned movement quality intent for curated exercise graph.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.pacing.skill
+    capability_id: cohort.capability.pacing
+    training_intent_id: cohort.training_intent.pacing_skill
+    suitability: 0.91
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.aerobic_base]
+    prerequisite_capability_ids: [cohort.capability.aerobic_capacity]
+    rationale: Split and effort targeting practice for race and HYROX goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.burpee.technique
+    capability_id: cohort.capability.burpee_efficiency
+    training_intent_id: cohort.training_intent.technique_practice
+    suitability: 0.89
+    progression_stage: foundation
+    prerequisite_intent_ids: [cohort.training_intent.movement_quality]
+    prerequisite_capability_ids: [cohort.capability.movement_competency]
+    rationale: Low-fatigue skill reps for burpee efficiency before density work.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.burpee.race
+    capability_id: cohort.capability.burpee_efficiency
+    training_intent_id: cohort.training_intent.race_preparation
+    suitability: 0.8
+    progression_stage: emphasis
+    prerequisite_intent_ids: [cohort.training_intent.technique_practice]
+    prerequisite_capability_ids: []
+    rationale: Race-specific simulation after technique baseline.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.running_economy
+    capability_id: cohort.capability.running_economy
+    training_intent_id: cohort.training_intent.aerobic_base
+    suitability: 0.85
+    progression_stage: foundation
+    prerequisite_intent_ids: []
+    prerequisite_capability_ids: [cohort.capability.aerobic_capacity]
+    rationale: Easy running volume supports running economy alongside aerobic capacity.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.power
+    capability_id: cohort.capability.power
+    training_intent_id: cohort.training_intent.power_development
+    suitability: 0.86
+    progression_stage: emphasis
+    prerequisite_intent_ids: [cohort.training_intent.max_strength_development]
+    prerequisite_capability_ids: [cohort.capability.relative_strength]
+    rationale: Power work after strength base and movement quality.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1
+
+  - id: cohort.mapping.resilience
+    capability_id: cohort.capability.resilience
+    training_intent_id: cohort.training_intent.resilience_development
+    suitability: 0.87
+    progression_stage: development
+    prerequisite_intent_ids: [cohort.training_intent.work_capacity]
+    prerequisite_capability_ids: [cohort.capability.work_capacity]
+    rationale: Progressive stress exposure after work capacity baseline for selection goals.
+    status: active
+    confidence: curated
+    provenance: training_intent_engine_v1

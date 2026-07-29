@@ -1,0 +1,564 @@
+# Representative exercise semantics — NOT production library coverage.
+ontology_version: "1.3.0"
+entities:
+  - id: cohort.exercise.back_squat
+    canonical_name: back_squat
+    label: Back squat
+    aliases: [barbell_back_squat, back squat]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns:
+      - { id: cohort.movement_pattern.squat, role: primary }
+    joint_actions:
+      - { id: cohort.joint_action.knee_extension, role: primary }
+      - { id: cohort.joint_action.hip_extension, role: primary }
+    primary_muscles: [cohort.muscle_group.quadriceps, cohort.muscle_group.glutes]
+    secondary_muscles: [cohort.muscle_group.hamstrings, cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.barbell, cohort.equipment.squat_rack]
+    optional_equipment: []
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.absolute_strength
+      - cohort.capability.hypertrophy
+    secondary_capabilities:
+      - cohort.capability.strength_endurance
+    supporting_capabilities:
+      - cohort.capability.core_stability
+      - cohort.capability.hip_stability
+    energy_system_contribution:
+      primary_id: cohort.energy_system.anaerobic_alactic
+      state: unknown
+    supports_training_intents:
+      - cohort.training_intent.squat_strength
+      - cohort.training_intent.lower_body_hypertrophy
+    technical_demand: intermediate
+    local_fatigue: high
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.front_squat
+    canonical_name: front_squat
+    label: Front squat
+    aliases: [barbell_front_squat]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.squat, role: primary }]
+    primary_muscles: [cohort.muscle_group.quadriceps, cohort.muscle_group.core_musculature]
+    secondary_muscles: [cohort.muscle_group.glutes]
+    required_equipment: [cohort.equipment.barbell, cohort.equipment.squat_rack]
+    suitable_environments: [cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.absolute_strength
+    secondary_capabilities:
+      - cohort.capability.core_stability
+    supporting_capabilities:
+      - cohort.capability.hip_stability
+    supports_training_intents: [cohort.training_intent.squat_strength]
+    technical_demand: advanced
+    local_fatigue: high
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.goblet_squat
+    canonical_name: goblet_squat
+    label: Goblet squat
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.squat, role: primary }]
+    primary_muscles: [cohort.muscle_group.quadriceps]
+    secondary_muscles: [cohort.muscle_group.glutes, cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.kettlebell]
+    optional_equipment: [cohort.equipment.dumbbell]
+    suitable_environments:
+      - cohort.environment.home
+      - cohort.environment.hotel_gym
+      - cohort.environment.hotel_room
+    primary_capabilities:
+      - cohort.capability.hypertrophy
+      - cohort.capability.relative_strength
+    secondary_capabilities:
+      - cohort.capability.strength_endurance
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents:
+      - cohort.training_intent.lower_body_hypertrophy
+      - cohort.training_intent.squat_strength
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.romanian_deadlift
+    canonical_name: romanian_deadlift
+    label: Romanian deadlift
+    aliases: [rdl, RDL]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.hinge, role: primary }]
+    joint_actions: [{ id: cohort.joint_action.hip_extension, role: primary }]
+    primary_muscles: [cohort.muscle_group.hamstrings, cohort.muscle_group.glutes]
+    required_equipment: [cohort.equipment.barbell]
+    optional_equipment: [cohort.equipment.dumbbell, cohort.equipment.kettlebell]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.absolute_strength
+      - cohort.capability.hypertrophy
+    secondary_capabilities:
+      - cohort.capability.hip_stability
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.hinge_strength]
+    technical_demand: intermediate
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.walking_lunge
+    canonical_name: walking_lunge
+    label: Walking lunge
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.lunge, role: primary }]
+    primary_muscles: [cohort.muscle_group.quadriceps, cohort.muscle_group.glutes]
+    required_equipment: [cohort.equipment.bodyweight]
+    optional_equipment: [cohort.equipment.dumbbell, cohort.equipment.kettlebell]
+    suitable_environments: [cohort.environment.home, cohort.environment.outdoors, cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.hypertrophy
+      - cohort.capability.relative_strength
+    secondary_capabilities:
+      - cohort.capability.strength_endurance
+    supporting_capabilities:
+      - cohort.capability.balance
+      - cohort.capability.hip_stability
+    supports_training_intents: [cohort.training_intent.lower_body_hypertrophy]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.pull_up
+    canonical_name: pull_up
+    label: Pull-up
+    aliases: [pullup, strict_pull_up]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.vertical_pull, role: primary }]
+    primary_muscles: [cohort.muscle_group.latissimus_dorsi]
+    secondary_muscles: [cohort.muscle_group.core_musculature, cohort.muscle_group.deltoids]
+    required_equipment: [cohort.equipment.pull_up_bar]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym, cohort.environment.outdoors]
+    primary_capabilities:
+      - cohort.capability.pulling_strength
+    secondary_capabilities:
+      - cohort.capability.grip_strength
+    supporting_capabilities:
+      - cohort.capability.scapular_control
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.pull_strength]
+    technical_demand: intermediate
+    local_fatigue: moderate
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.lat_pulldown
+    canonical_name: lat_pulldown
+    label: Lat pulldown
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.vertical_pull, role: primary }]
+    primary_muscles: [cohort.muscle_group.latissimus_dorsi]
+    required_equipment: [cohort.equipment.cable_machine]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.hotel_gym]
+    primary_capabilities:
+      - cohort.capability.pulling_strength
+      - cohort.capability.hypertrophy
+    secondary_capabilities:
+      - cohort.capability.grip_endurance
+    supporting_capabilities:
+      - cohort.capability.scapular_control
+    supports_training_intents: [cohort.training_intent.pull_strength]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.bench_press
+    canonical_name: bench_press
+    label: Bench press
+    aliases: [barbell_bench_press]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.horizontal_push, role: primary }]
+    primary_muscles: [cohort.muscle_group.pectorals, cohort.muscle_group.triceps]
+    secondary_muscles: [cohort.muscle_group.deltoids]
+    required_equipment: [cohort.equipment.barbell, cohort.equipment.bench]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.absolute_strength
+      - cohort.capability.hypertrophy
+    secondary_capabilities:
+      - cohort.capability.pushing_strength
+    supporting_capabilities:
+      - cohort.capability.scapular_control
+    supports_training_intents: [cohort.training_intent.push_strength, cohort.training_intent.upper_body_hypertrophy]
+    technical_demand: intermediate
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.strict_press
+    canonical_name: strict_press
+    label: Strict press
+    aliases: [overhead_press, shoulder_press]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.vertical_push, role: primary }]
+    primary_muscles: [cohort.muscle_group.deltoids, cohort.muscle_group.triceps]
+    required_equipment: [cohort.equipment.barbell]
+    optional_equipment: [cohort.equipment.dumbbell]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.absolute_strength
+      - cohort.capability.pushing_strength
+    secondary_capabilities:
+      - cohort.capability.overhead_tolerance
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.push_strength]
+    technical_demand: intermediate
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.push_up
+    canonical_name: push_up
+    label: Push-up
+    aliases: [press_up]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.horizontal_push, role: primary }]
+    primary_muscles: [cohort.muscle_group.pectorals, cohort.muscle_group.triceps]
+    required_equipment: [cohort.equipment.bodyweight]
+    suitable_environments: [cohort.environment.home, cohort.environment.hotel_room, cohort.environment.outdoors]
+    primary_capabilities:
+      - cohort.capability.pushing_strength
+      - cohort.capability.relative_strength
+    secondary_capabilities:
+      - cohort.capability.hypertrophy
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.upper_body_hypertrophy]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.running
+    canonical_name: running
+    label: Running
+    aliases: [run, jogging]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.locomotion, role: primary }]
+    primary_muscles: [cohort.muscle_group.calves, cohort.muscle_group.quadriceps]
+    secondary_muscles: [cohort.muscle_group.hamstrings, cohort.muscle_group.glutes]
+    required_equipment: [cohort.equipment.bodyweight]
+    suitable_environments: [cohort.environment.outdoors, cohort.environment.track, cohort.environment.trail]
+    primary_capabilities:
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.running_economy
+    secondary_capabilities:
+      - cohort.capability.pacing
+    supporting_capabilities:
+      - cohort.capability.movement_competency
+    energy_system_contribution:
+      primary_id: cohort.energy_system.aerobic
+      secondary_id: cohort.energy_system.mixed
+    supports_training_intents: [cohort.training_intent.aerobic_base]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.rowing
+    canonical_name: rowing
+    label: Rowing (erg)
+    aliases: [row, erg_row]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.cyclical, role: primary }]
+    primary_muscles: [cohort.muscle_group.latissimus_dorsi, cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.rower]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.hotel_gym]
+    primary_capabilities:
+      - cohort.capability.aerobic_capacity
+    secondary_capabilities:
+      - cohort.capability.anaerobic_capacity
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    energy_system_contribution:
+      primary_id: cohort.energy_system.mixed
+    supports_training_intents: [cohort.training_intent.aerobic_base, cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: low
+
+  - id: cohort.exercise.ski_erg
+    canonical_name: ski_erg
+    label: SkiErg
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.cyclical, role: primary }]
+    primary_muscles: [cohort.muscle_group.latissimus_dorsi, cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.ski_erg]
+    suitable_environments: [cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.aerobic_capacity
+      - cohort.capability.anaerobic_capacity
+    secondary_capabilities:
+      - cohort.capability.work_capacity
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: high
+    recovery_cost: moderate
+
+  - id: cohort.exercise.burpee_broad_jump
+    canonical_name: burpee_broad_jump
+    label: Burpee broad jump
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns:
+      - { id: cohort.movement_pattern.jump, role: primary }
+      - { id: cohort.movement_pattern.locomotion, role: secondary }
+    required_equipment: [cohort.equipment.bodyweight]
+    suitable_environments: [cohort.environment.outdoors, cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.power
+      - cohort.capability.work_capacity
+    secondary_capabilities:
+      - cohort.capability.burpee_efficiency
+    supporting_capabilities:
+      - cohort.capability.movement_competency
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: intermediate
+    local_fatigue: high
+    systemic_fatigue: very_high
+    recovery_cost: high
+
+  - id: cohort.exercise.sled_push
+    canonical_name: sled_push
+    label: Sled push
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.locomotion, role: primary }]
+    primary_muscles: [cohort.muscle_group.quadriceps, cohort.muscle_group.glutes]
+    required_equipment: [cohort.equipment.sled]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.full_gym]
+    primary_capabilities:
+      - cohort.capability.power
+      - cohort.capability.strength_endurance
+    secondary_capabilities:
+      - cohort.capability.work_capacity
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: high
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.sled_pull
+    canonical_name: sled_pull
+    label: Sled pull
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.locomotion, role: primary }]
+    primary_muscles: [cohort.muscle_group.hamstrings, cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.sled]
+    suitable_environments: [cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.strength_endurance
+      - cohort.capability.grip_endurance
+    secondary_capabilities:
+      - cohort.capability.work_capacity
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: high
+    systemic_fatigue: moderate
+    recovery_cost: moderate
+
+  - id: cohort.exercise.farmer_carry
+    canonical_name: farmer_carry
+    label: Farmer carry
+    aliases: [farmers_walk]
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.carry, role: primary }]
+    required_equipment: [cohort.equipment.dumbbell, cohort.equipment.kettlebell]
+    suitable_environments: [cohort.environment.commercial_gym, cohort.environment.outdoors]
+    primary_capabilities:
+      - cohort.capability.loaded_carry_capacity
+      - cohort.capability.grip_endurance
+    secondary_capabilities:
+      - cohort.capability.core_stability
+    supporting_capabilities:
+      - cohort.capability.hip_stability
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: low
+
+  - id: cohort.exercise.wall_ball
+    canonical_name: wall_ball
+    label: Wall ball shot
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns:
+      - { id: cohort.movement_pattern.squat, role: secondary }
+      - { id: cohort.movement_pattern.vertical_push, role: primary }
+    required_equipment: [cohort.equipment.wall_ball]
+    suitable_environments: [cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.power
+      - cohort.capability.strength_endurance
+    secondary_capabilities:
+      - cohort.capability.overhead_tolerance
+    supporting_capabilities:
+      - cohort.capability.core_stability
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: beginner
+    local_fatigue: high
+    systemic_fatigue: high
+    recovery_cost: moderate
+
+  - id: cohort.exercise.plank
+    canonical_name: plank
+    label: Plank
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.core, role: primary }]
+    primary_muscles: [cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.bodyweight]
+    suitable_environments: [cohort.environment.home, cohort.environment.hotel_room]
+    primary_capabilities:
+      - cohort.capability.core_stability
+    secondary_capabilities: []
+    supporting_capabilities:
+      - cohort.capability.shoulder_stability
+    supports_training_intents: [cohort.training_intent.movement_quality]
+    technical_demand: beginner
+    local_fatigue: low
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.dead_bug
+    canonical_name: dead_bug
+    label: Dead bug
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.core, role: primary }]
+    primary_muscles: [cohort.muscle_group.core_musculature]
+    required_equipment: [cohort.equipment.bodyweight]
+    suitable_environments: [cohort.environment.home, cohort.environment.hotel_room]
+    primary_capabilities:
+      - cohort.capability.core_stability
+    secondary_capabilities: []
+    supporting_capabilities:
+      - cohort.capability.coordination
+    supports_training_intents: [cohort.training_intent.movement_quality]
+    technical_demand: beginner
+    local_fatigue: low
+    systemic_fatigue: low
+    recovery_cost: low
+
+  - id: cohort.exercise.box_jump
+    canonical_name: box_jump
+    label: Box jump
+    ontology_version: "1.3.0"
+    status: active
+    curation_status: reference_only
+    provenance: phase3_sprint2_reference
+    confidence: curated
+    movement_patterns: [{ id: cohort.movement_pattern.jump, role: primary }]
+    required_equipment: [cohort.equipment.plyo_box]
+    suitable_environments: [cohort.environment.commercial_gym]
+    primary_capabilities:
+      - cohort.capability.reactive_power
+      - cohort.capability.power
+    secondary_capabilities:
+      - cohort.capability.deceleration
+    supporting_capabilities:
+      - cohort.capability.balance
+    supports_training_intents: [cohort.training_intent.work_capacity]
+    technical_demand: intermediate
+    local_fatigue: moderate
+    systemic_fatigue: moderate
+    recovery_cost: moderate

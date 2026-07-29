@@ -1,0 +1,26 @@
+# Semantic week emphasis types.
+extends: ontology_entity.schema.yaml
+
+type: object
+required:
+  - id
+  - canonical_name
+  - label
+  - ontology_version
+  - status
+fields:
+  description:
+    type: string
+  capability_emphasis_ids:
+    type: array
+    items: string
+  intent_emphasis_ids:
+    type: array
+    items: string
+  fatigue_target:
+    type: string
+  recovery_target:
+    type: string
+  compatible_programme_phase_ids:
+    type: array
+    items: string
