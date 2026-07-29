@@ -7,5 +7,6 @@
 | [Session_Blueprint_Implementation_v1.md](./Session_Blueprint_Implementation_v1.md) | Phase 4 Sprint 2 — `SessionBlueprint` and deterministic generator |
 | [Exercise_Policy_Implementation_v1.md](./Exercise_Policy_Implementation_v1.md) | Phase 4 Sprint 3 — Exercise Policy Engine |
 | [Prescription_Engine_Implementation_v1.md](./Prescription_Engine_Implementation_v1.md) | Phase 4 Sprint 4 — Prescription Engine |
+| [Coach_Brain_Orchestration_v1.md](./Coach_Brain_Orchestration_v1.md) | Phase 4 Sprint 5 — Coach Brain orchestration |
 
 Related ADRs: [ADR-023](../architecture/adrs/ADR-023-planning-engine-ownership.md) through [ADR-027](../architecture/adrs/ADR-027-session-blueprint-contract.md).
