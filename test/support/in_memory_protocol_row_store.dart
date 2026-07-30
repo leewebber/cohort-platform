@@ -1,4 +1,5 @@
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
+import 'package:cohort_platform/models/performance_protocol_published.dart';
 import 'package:cohort_platform/models/protocol.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_adaptation_metadata_codec.dart';
@@ -17,7 +18,7 @@ class InMemoryProtocolRowStore {
       secondarySessionIntents: draft.secondarySessionIntents,
       minimumViableDurationMin: draft.minimumViableDurationMin,
     );
-    map['published'] = published;
+    map['published'] = PerformanceProtocolPublished.toDb(published);
     rowsByProtocolId[draft.protocolId] = map;
   }
 
@@ -46,7 +47,7 @@ class InMemoryProtocolRowStore {
       name: map['name']?.toString() ?? '',
       steps: const [],
       blocks: blocks,
-      published: map['published'] == true,
+      published: PerformanceProtocolPublished.isPublished(map['published']),
       primaryCapability: map['primary_capability']?.toString(),
       secondaryCapability: map['secondary_capability']?.toString(),
       sessionType: map['session_type']?.toString(),
@@ -74,7 +75,7 @@ class InMemoryProtocolRowStore {
       secondarySessionIntents: draft.secondarySessionIntents,
       minimumViableDurationMin: draft.minimumViableDurationMin,
     );
-    map['published'] = published;
+    map['published'] = PerformanceProtocolPublished.toDb(published);
     return map;
   }
 }

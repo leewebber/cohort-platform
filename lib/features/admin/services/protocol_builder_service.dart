@@ -7,6 +7,7 @@ import '../../../data/repositories/protocol_step_repository.dart';
 import '../../../data/repositories/session_block_repository.dart';
 import '../../../data/repositories/session_lineage_store.dart';
 import '../../../data/repositories/session_lineage_supabase_store.dart';
+import '../../../models/performance_protocol_published.dart';
 import '../../../models/protocol_builder_save_result.dart';
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_draft_summary.dart';
@@ -80,7 +81,7 @@ class ProtocolBuilderService {
       final response = await SupabaseService.client
           .from('performance_protocols')
           .select('protocol_id, name, session_type, duration_min')
-          .eq('published', true)
+          .eq('published', PerformanceProtocolPublished.dbTrue)
           .order('name');
 
       return response
@@ -103,7 +104,7 @@ class ProtocolBuilderService {
       final response = await SupabaseService.client
           .from('performance_protocols')
           .select('protocol_id, name, session_type, duration_min')
-          .eq('published', false)
+          .eq('published', PerformanceProtocolPublished.dbFalse)
           .order('name');
 
       return response
@@ -245,6 +246,14 @@ class ProtocolBuilderService {
 
     if (!created) {
       await _assertRevisionEditable(protocolId);
+      await _assertCohortProtocolNotOverwrittenByNonCohort(
+        protocolId: protocolId,
+        incoming: syncedDraft,
+      );
+      await _assertCanonicalTemplateNotOverwrittenByNonTemplate(
+        protocolId: protocolId,
+        incoming: syncedDraft,
+      );
     }
 
     if (created &&
@@ -339,6 +348,84 @@ class ProtocolBuilderService {
         'Archived session revisions cannot be edited in place. '
         'Create a new revision instead.',
       );
+    }
+  }
+
+  /// Refuses Session/template upserts that would overwrite a Cohort Protocol row.
+  ///
+  /// Admin Cohort authoring may still save when [incoming] remains
+  /// `content_kind=cohort_protocol`. Coach Session paths normalize to `session`
+  /// and therefore cannot clobber Cohort product content.
+  Future<void> _assertCohortProtocolNotOverwrittenByNonCohort({
+    required String protocolId,
+    required ProtocolDraft incoming,
+  }) async {
+    try {
+      final row = await SupabaseService.client
+          .from('performance_protocols')
+          .select('content_kind')
+          .eq('protocol_id', protocolId)
+          .maybeSingle();
+      if (row == null) return;
+
+      final existingKind = row['content_kind']?.toString().trim();
+      if (existingKind != TrainingContentKind.cohortProtocol.dbValue) {
+        return;
+      }
+
+      if (incoming.contentKind != TrainingContentKind.cohortProtocol) {
+        throw const ProtocolBuilderException(
+          'Official Cohort Protocols cannot be overwritten by Session content.',
+        );
+      }
+    } on ProtocolBuilderException {
+      rethrow;
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+    }
+  }
+
+  /// Refuses mutation of official Cohort Templates via ordinary persist paths.
+  ///
+  /// Existing `session_template` + `cohort_global` rows cannot be updated or
+  /// overwritten through [ProtocolBuilderService]. Deployment uses SQL seed;
+  /// admin template CMS is intentionally out of scope.
+  Future<void> _assertCanonicalTemplateNotOverwrittenByNonTemplate({
+    required String protocolId,
+    required ProtocolDraft incoming,
+  }) async {
+    try {
+      final row = await SupabaseService.client
+          .from('performance_protocols')
+          .select('content_kind, authoring_scope')
+          .eq('protocol_id', protocolId)
+          .maybeSingle();
+      if (row == null) return;
+
+      final existingKind = row['content_kind']?.toString().trim();
+      final existingScope = row['authoring_scope']?.toString().trim();
+      if (existingKind != TrainingContentKind.sessionTemplate.dbValue) {
+        return;
+      }
+
+      // Any existing template row is protected from coach Session upserts.
+      if (incoming.contentKind != TrainingContentKind.sessionTemplate) {
+        throw const ProtocolBuilderException(
+          'Official Cohort Templates cannot be overwritten by Session content.',
+        );
+      }
+
+      // Canonical Cohort templates are immutable through this service.
+      if (existingScope == TrainingAuthoringScope.cohortGlobal.dbValue) {
+        throw const ProtocolBuilderException(
+          'Official Cohort Templates cannot be edited in place. '
+          'Use Template creates a coach-owned Session instead.',
+        );
+      }
+    } on ProtocolBuilderException {
+      rethrow;
+    } on PostgrestException catch (error) {
+      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
     }
   }
 
@@ -460,7 +547,7 @@ class ProtocolBuilderService {
       secondarySessionIntents: draft.secondarySessionIntents,
       minimumViableDurationMin: draft.minimumViableDurationMin,
     );
-    map['published'] = published;
+    map['published'] = PerformanceProtocolPublished.toDb(published);
     _applySessionFormatFallback(map, draft.sessionFormat);
     return map;
   }
@@ -475,7 +562,7 @@ class ProtocolBuilderService {
       name: row['name']?.toString() ?? '',
       steps: steps,
       blocks: blocks,
-      published: row['published'] == true,
+      published: PerformanceProtocolPublished.isPublished(row['published']),
       primaryCapability: row['primary_capability']?.toString(),
       secondaryCapability: row['secondary_capability']?.toString(),
       sessionType: row['session_type']?.toString(),

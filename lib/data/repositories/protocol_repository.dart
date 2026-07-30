@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
-
 import '../../core/services/supabase_service.dart';
 import '../../features/protocols/diagnostics/protocol_repository_diagnostics.dart';
+import '../../models/performance_protocol_published.dart';
 import '../../models/protocol.dart';
 import '../../models/protocol_metadata_update.dart';
 import '../../models/training_content_vocabulary.dart';
@@ -18,7 +17,7 @@ class ProtocolRepository {
         .select()
         .eq('content_kind', TrainingContentKind.cohortProtocol.dbValue)
         .eq('authoring_scope', TrainingAuthoringScope.cohortGlobal.dbValue)
-        .eq('published', true)
+        .eq('published', PerformanceProtocolPublished.dbTrue)
         .order('name')
         .limit(limit);
 
@@ -52,7 +51,7 @@ class ProtocolRepository {
         .eq('content_kind', TrainingContentKind.session.dbValue)
         .eq('authoring_scope', TrainingAuthoringScope.coachPrivate.dbValue)
         .eq('owner_id', trimmedOwnerId)
-        .eq('published', true)
+        .eq('published', PerformanceProtocolPublished.dbTrue)
         .order('name')
         .limit(limit);
 
@@ -121,6 +120,31 @@ class ProtocolRepository {
     }
 
     final response = await query.order('name').limit(limit);
+
+    return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
+  }
+
+  /// Official Cohort starter templates for Training Library + Programme Builder.
+  ///
+  /// Requires full official-content policy:
+  /// `session_template` + `cohort_global` + `cohort_endorsed` + published +
+  /// no owner. Coach-owned or incomplete template rows are excluded.
+  Future<List<Protocol>> listCanonicalSessionTemplates({
+    int limit = 100,
+  }) async {
+    final response = await SupabaseService.client
+        .from(catalogTable)
+        .select()
+        .eq('content_kind', TrainingContentKind.sessionTemplate.dbValue)
+        .eq('authoring_scope', TrainingAuthoringScope.cohortGlobal.dbValue)
+        .eq(
+          'endorsement_status',
+          TrainingEndorsementStatus.cohortEndorsed.dbValue,
+        )
+        .eq('published', PerformanceProtocolPublished.dbTrue)
+        .isFilter('owner_id', null)
+        .order('name')
+        .limit(limit);
 
     return response.map<Protocol>((item) => Protocol.fromMap(item)).toList();
   }
@@ -220,7 +244,7 @@ class ProtocolRepository {
         .select(column)
         .eq('content_kind', TrainingContentKind.cohortProtocol.dbValue)
         .eq('authoring_scope', TrainingAuthoringScope.cohortGlobal.dbValue)
-        .eq('published', true);
+        .eq('published', PerformanceProtocolPublished.dbTrue);
 
     final values = response
         .map<String?>((item) => item[column]?.toString())

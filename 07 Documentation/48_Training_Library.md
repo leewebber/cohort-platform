@@ -10,9 +10,9 @@
 ```
 Coach Studio
 └── Training Library
-    ├── Cohort Protocols      (M4 — read-only browse)
-    ├── Session Library       (M4 — reusable coach Sessions)
-    ├── Templates             (future)
+    ├── Cohort Protocols      (read-only browse)
+    ├── My Sessions           (reusable coach Sessions)
+    ├── Templates             (Cohort starter templates — copy-on-use)
     └── Exercises             (future)
 ```
 
@@ -25,9 +25,18 @@ Athlete-facing **Protocol Library** (Home → Knowledge) remains separate and un
 | Tab | Query filters | Coach actions |
 |-----|---------------|---------------|
 | **Cohort Protocols** | `content_kind=cohort_protocol`, `authoring_scope=cohort_global`, `published=true` | Preview, **Copy to Session Library**, search |
-| **Session Library** | `content_kind=session`, `authoring_scope=coach_private`, `owner_id=current coach`, `published=true` | Create, edit, preview, search |
+| **My Sessions** | `content_kind=session`, `authoring_scope=coach_private`, `owner_id=current coach`, `published=true` | Create, edit, preview, search |
+| **Templates** | `content_kind=session_template`, `authoring_scope=cohort_global`, `published=true` | Preview template, **Use Template** (creates coach-owned session), modality/equipment filters |
 
-Programme-only Sessions (`authoring_scope=programme_only`) **never** appear in Session Library.
+Programme-only Sessions (`authoring_scope=programme_only`) **never** appear in My Sessions.
+
+Canonical starter templates are seeded via `supabase/migrations/20260730150000_seed_cohort_session_templates.sql`.
+
+Deployment rules:
+- Apply once via normal Supabase migration push (`supabase db push` against the confirmed target).
+- The migration is fail-closed: colliding non-canonical `TMP-*` rows and corrupt non-zero step counts raise exceptions; there is no auto-overwrite.
+- Application catalogue source of truth remains `CohortSessionTemplateCatalogue`.
+- Seeding is **not** run on app startup.
 
 ---
 

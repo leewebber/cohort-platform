@@ -1,3 +1,4 @@
+import 'performance_protocol_published.dart';
 import 'protocol_step_draft.dart';
 import 'session_adaptation_metadata_codec.dart';
 import 'session_block.dart';
@@ -396,7 +397,7 @@ class ProtocolDraft {
               row['lifecycle_status']?.toString(),
             )
           : SessionRevisionLifecycleStatusDb.fromPublishedBoolean(
-              row['published'] == true,
+              PerformanceProtocolPublished.isPublished(row['published']),
             ),
       publishedAt: _parseDateTime(row['published_at']),
       archivedAt: _parseDateTime(row['archived_at']),
@@ -411,10 +412,7 @@ class ProtocolDraft {
 
   static TrainingContentKind? _parseSourceContentKind(dynamic value) {
     if (value == null) return null;
-    final normalized = value.toString().trim();
-    if (normalized.isEmpty) return null;
-
-    return TrainingContentKindDb.fromDb(normalized);
+    return TrainingContentKindDb.tryFromDb(value.toString());
   }
 
   static String? _nullableString(String? value) {
