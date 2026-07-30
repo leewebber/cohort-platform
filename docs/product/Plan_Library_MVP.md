@@ -4,6 +4,14 @@
 **Status:** PlanDefinition · PlanAssignment · active coaching context  
 **Engine:** Unchanged Phase 4 Coach Brain pipeline
 
+> **Legacy quarantine (Sprint 1.1):** `PlanDefinition` and its Coach Brain
+> workout-generation pathway are **non-authoritative**. Production programme
+> development uses `ProgrammeLineage` / immutable `ProgrammeVersion` and the
+> Authored Plan Package (`docs/architecture/Authored_Plan_Package_v1.md`).
+> New Plan Package code must not depend on this pathway. Existing behaviour
+> remains temporarily supported pending a separately approved migration/removal
+> sprint — do not delete or redirect users from this document alone.
+
 ---
 
 ## Architecture

@@ -1,0 +1,100 @@
+# Minimal Authored Plan Package fixture (architectural — not HYROX).
+# Package schema version 1. Meaning is in the fields, not in comments.
+
+package_schema_version: 1
+
+programme:
+  lineage_code: PROG-FIXTURE-01
+  version_number: 1
+  name: Fixture Strength Base
+  description: Minimal authored package for compiler foundation tests.
+  library_scope: cohort_global
+  owner_type: global
+  coaching_intent: Establish squat pattern under controlled authored volume.
+  duration_weeks: 2
+  sessions_per_week: 1
+  primary_goal: strength
+
+sessions:
+  - session_key: SES-SQUAT-A
+    protocol_id: PROT-SQUAT-A-R1
+    session_lineage_id: SL-SQUAT-A
+    revision_number: 1
+    title: Squat A
+
+phases: []
+
+weeks:
+  - week_number: 1
+    title: Foundation
+    intent: build
+    coach_note: Establish baseline volume.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-SQUAT-A
+            completion_expectation: required
+            progression:
+              prescription_summary: 3x5 @ RPE 7
+              volume_note: Accumulate quality sets
+              intensity_note: Submaximal
+      - day_key: day_2
+        day_order: 2
+        day_type: rest
+
+  - week_number: 2
+    title: Progression and assessment
+    intent: test
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        intent: test
+        slots:
+          - slot_key: W2D1S1
+            session_order: 1
+            session_key: SES-SQUAT-A
+            completion_expectation: required
+            progression:
+              prescription_summary: 3x5 @ RPE 8 assessment
+              volume_note: Same set structure as week 1
+              intensity_note: Authored intensity step; not athlete-history driven
+      - day_key: day_2
+        day_order: 2
+        day_type: rest
+
+adaptation_permissions:
+  - id: ADP-REDUCE-VOLUME-W1
+    change_kind: reduce_volume
+    target_ref: W1D1S1
+    athlete_agreement_required: true
+    scope_note: Volume reduction only on foundation slot.
+
+protected_invariants:
+  - id: INV-ASSESSMENT-IMMUTABLE
+    kind: assessment_immutable
+    target_ref: ASM-SQUAT-BASELINE
+    description: Assessment session must not be adapted.
+
+assessments:
+  - id: ASM-SQUAT-BASELINE
+    slot_ref: W2D1S1
+    evidence_requirement: recorded_load_and_reps
+    comparison_identity_id: CMP-SQUAT-3X5
+    label: Squat A baseline assessment
+
+performance_evidence_requirements:
+  - id: EVD-SQUAT-LOAD
+    comparison_identity_id: CMP-SQUAT-3X5
+    metric: load_kg
+    required: true
+
+comparison_identities:
+  - id: CMP-SQUAT-3X5
+    session_lineage_id: SL-SQUAT-A
+    label: Squat A 3x5 like-for-like
