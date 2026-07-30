@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../core/persistence/athlete_persistence.dart';
+import '../../core/persistence/models/execution_result_models.dart';
 import '../../core/theme/colors.dart';
+import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../auth/controllers/auth_controller.dart';
@@ -14,9 +17,16 @@ import 'screens/athlete_profile_screen.dart';
 ///
 /// Founder/coach tools are absent from this widget tree.
 class AthleteAppShell extends StatefulWidget {
-  const AthleteAppShell({super.key, this.authController});
+  const AthleteAppShell({
+    super.key,
+    this.authController,
+    this.pendingWorkoutProgress,
+    this.planDefinitionMissing = false,
+  });
 
   final AuthController? authController;
+  final WorkoutProgressSnapshot? pendingWorkoutProgress;
+  final bool planDefinitionMissing;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -47,11 +57,103 @@ class AthleteAppShell extends StatefulWidget {
 
 class _AthleteAppShellState extends State<AthleteAppShell> {
   int _index = 0;
+  bool _recoveryPromptShown = false;
 
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
       CurrentUserSession.maybeInstance?.athleteId ??
       'athlete.local';
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeShowRecoveryPrompts();
+    });
+  }
+
+  Future<void> _maybeShowRecoveryPrompts() async {
+    if (!mounted || _recoveryPromptShown) return;
+    _recoveryPromptShown = true;
+
+    if (widget.planDefinitionMissing) {
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text('Plan unavailable', style: CohortTextStyles.h2),
+          content: Text(
+            'Your active Plan could not be restored. '
+            'Browse Plans to continue training.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() => _index = 1);
+              },
+              child: const Text('Browse Plans'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final progress = widget.pendingWorkoutProgress;
+    if (!mounted || progress == null || progress.phase != 'active') return;
+
+    final choice = await showDialog<_WorkoutRecoveryChoice>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        backgroundColor: CohortColors.surface,
+        title: Text('Resume training?', style: CohortTextStyles.h2),
+        content: Text(
+          'You have an unfinished session. '
+          'Resume continues from where you left off. '
+          'Discard clears the in-progress session without marking it complete.',
+          style: CohortTextStyles.body,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).pop(_WorkoutRecoveryChoice.discard),
+            child: const Text('Discard In-Progress Session'),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).pop(_WorkoutRecoveryChoice.resume),
+            child: const Text('Resume Training'),
+          ),
+        ],
+      ),
+    );
+
+    if (!mounted) return;
+    if (choice == _WorkoutRecoveryChoice.discard) {
+      if (AthletePersistence.isInitialized) {
+        await AthletePersistence.hydrator.discardWorkoutProgress(_athleteId);
+      }
+      return;
+    }
+
+    if (choice == _WorkoutRecoveryChoice.resume) {
+      // Safe subset: acknowledge resume intent; full player restore is limited
+      // to clearing the prompt and returning Home so the athlete can relaunch
+      // today's session. Cursor indexes are retained in the snapshot for later.
+      setState(() => _index = 0);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Open Today\'s Training to continue. '
+            'Your in-progress position was saved.',
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,3 +187,5 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
     );
   }
 }
+
+enum _WorkoutRecoveryChoice { resume, discard }

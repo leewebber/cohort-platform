@@ -150,11 +150,14 @@ void main() {
 
     test('assign and clear protocol', () {
       final document = sampleDocument();
-      final slotId =
-          document.template.allWeeks.single.days.single.slots.single.localId;
+      final week = document.template.allWeeks.single;
+      final day = week.days.single;
+      final slotId = day.slots.single.localId;
 
       final assigned = operations.assignProtocol(
         document,
+        weekLocalId: week.localId,
+        dayLocalId: day.localId,
         slotLocalId: slotId,
         protocolId: 'BW-001',
         displayTitle: 'Bodyweight Grinder',
@@ -164,7 +167,12 @@ void main() {
         'BW-001',
       );
 
-      final cleared = operations.clearProtocol(assigned, slotLocalId: slotId);
+      final cleared = operations.clearProtocol(
+        assigned,
+        weekLocalId: week.localId,
+        dayLocalId: day.localId,
+        slotLocalId: slotId,
+      );
       expect(
         cleared.template.allWeeks.single.days.single.slots.single.protocolId,
         '',
@@ -173,11 +181,14 @@ void main() {
 
     test('update slot metadata stores optional flag', () {
       final document = sampleDocument(protocolId: 'BW-001');
-      final slotId =
-          document.template.allWeeks.single.days.single.slots.single.localId;
+      final week = document.template.allWeeks.single;
+      final day = week.days.single;
+      final slotId = day.slots.single.localId;
 
       final result = operations.updateSlotMetadata(
         document,
+        weekLocalId: week.localId,
+        dayLocalId: day.localId,
         slotLocalId: slotId,
         isOptional: true,
         displayTitle: 'Optional grinder',

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../../core/services/current_coach_identity.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
-import '../../../features/admin/services/protocol_builder_service.dart';
 import '../../session/session_preview_screen.dart';
 import '../models/training_library_item_summary.dart';
 import '../services/session_library_authoring_coordinator.dart';
@@ -151,11 +150,11 @@ class _SessionLibraryPickerSheetState extends State<SessionLibraryPickerSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Session Library', style: CohortTextStyles.h2),
+          Text('My Sessions', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.md),
           TextField(
             controller: _searchController,
-            decoration: const InputDecoration(labelText: 'Search Sessions'),
+            decoration: const InputDecoration(labelText: 'Search My Sessions'),
           ),
           const SizedBox(height: CohortSpacing.md),
           if (_loading)
@@ -182,7 +181,7 @@ class _SessionLibraryPickerSheetState extends State<SessionLibraryPickerSheet> {
             const Padding(
               padding: EdgeInsets.all(CohortSpacing.lg),
               child: Text(
-                'No reusable Sessions yet. Create one in Training Library.',
+                'No My Sessions yet. Create one in Training Library.',
                 style: CohortTextStyles.body,
                 textAlign: TextAlign.center,
               ),

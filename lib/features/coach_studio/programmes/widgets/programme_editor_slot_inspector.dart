@@ -9,14 +9,16 @@ import '../../../programme_builder/models/programme_session_authoring_result.dar
 import '../../../programme_builder/screens/embedded_session_builder_screen.dart';
 import '../../../programme_builder/services/cohort_protocol_customisation_coordinator.dart';
 import '../../../programme_builder/services/cohort_protocol_customisation_services.dart';
-import '../../../programme_builder/services/programme_builder_protocol_picker_service.dart';
 import '../../../programme_builder/services/programme_session_authoring_services.dart';
+import 'programme_protocol_picker_sheet.dart';
 import '../../../session/session_preview_screen.dart';
 import '../../../session_builder/models/cohort_protocol_copy_destination.dart';
 import '../../../session_builder/models/programme_session_authoring_context.dart';
 import '../../../session_builder/models/session_builder_host_mode.dart';
 import '../../../session_builder/services/programme_session_slot_content_classifier.dart';
+import '../../../programme_builder/models/programme_session_source_choice.dart';
 import '../../../training_library/widgets/session_library_picker_sheet.dart';
+import '../../../training_library/widgets/session_template_picker_sheet.dart';
 import '../../../../models/programme_day_draft.dart';
 import '../../../../models/protocol_draft.dart';
 import '../../../../models/programme_session_slot_draft.dart';
@@ -61,6 +63,7 @@ class _ProgrammeEditorSlotInspectorState
   ProgrammeSessionTimeOfDay _timeOfDay = ProgrammeSessionTimeOfDay.any;
   bool _isOptional = false;
   Future<ProgrammeSlotContentKind>? _contentKindFuture;
+  bool _sourceActionInFlight = false;
 
   bool get _hasAssignedProtocol =>
       !ProgrammeBuilderConstants.isUnassignedProtocolId(widget.slot.protocolId);
@@ -155,12 +158,16 @@ class _ProgrammeEditorSlotInspectorState
                       contentKind: kind,
                       onPickProtocol: _pickProtocol,
                       onUseSessionLibrary: _pickSessionFromLibrary,
+                      onUseTemplate: _useTemplate,
                       onBuildNewSession: _buildNewSession,
                       onEditSession: _editSession,
                       onCopyAndCustomise: _copyAndCustomiseAssignedProtocol,
                       onPreviewProtocol: _previewAssignedProtocol,
-                      onRemove: () =>
-                          widget.controller.clearProtocol(widget.slot.localId),
+                      onRemove: () => widget.controller.clearProtocol(
+                        weekLocalId: widget.weekLocalId,
+                        dayLocalId: widget.dayLocalId,
+                        slotLocalId: widget.slot.localId,
+                      ),
                     ),
                   ],
                 ],
@@ -222,8 +229,11 @@ class _ProgrammeEditorSlotInspectorState
           if (!widget.readOnly) ...[
             const SizedBox(height: CohortSpacing.lg),
             TextButton(
-              onPressed: () =>
-                  widget.controller.removeSlot(widget.slot.localId),
+              onPressed: () => widget.controller.removeSlot(
+                weekLocalId: widget.weekLocalId,
+                dayLocalId: widget.dayLocalId,
+                slotLocalId: widget.slot.localId,
+              ),
               child: const Text('Remove slot'),
             ),
           ],
@@ -270,43 +280,95 @@ class _ProgrammeEditorSlotInspectorState
   }
 
   Future<void> _pickSessionFromLibrary() async {
-    final authoringContext = _authoringContext(
-      intent: ProgrammeSessionAuthoringIntent.createBlank,
-    );
-    if (authoringContext == null) return;
-
-    final selected = await showModalBottomSheet<SessionLibraryPickerSelection>(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => const SessionLibraryPickerSheet(),
-    );
-
-    if (selected == null) return;
-
-    final coordinator = ProgrammeSessionAuthoringServices.createCoordinator(
-      controller: widget.controller,
-      protocolBuilderService: _protocolBuilderService,
-    );
-
-    final result = await coordinator.attachExistingSession(
-      context: authoringContext,
-      contentId: selected.contentId,
-      displayTitle: selected.displayTitle,
-    );
-
-    if (!mounted) return;
-
-    if (result.isAttached) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(result.coachMessage ?? 'Session added to programme'),
-        ),
+    if (_sourceActionInFlight) return;
+    _sourceActionInFlight = true;
+    try {
+      final authoringContext = _authoringContext(
+        intent: ProgrammeSessionAuthoringIntent.createBlank,
       );
-      setState(_reloadContentKind);
-    } else if (result.coachMessage != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(result.coachMessage!)));
+      if (authoringContext == null) return;
+
+      final selected =
+          await showModalBottomSheet<SessionLibraryPickerSelection>(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => const SessionLibraryPickerSheet(),
+          );
+
+      if (selected == null) return;
+
+      final coordinator = ProgrammeSessionAuthoringServices.createCoordinator(
+        controller: widget.controller,
+        protocolBuilderService: _protocolBuilderService,
+      );
+
+      final result = await coordinator.attachExistingSession(
+        context: authoringContext,
+        contentId: selected.contentId,
+        displayTitle: selected.displayTitle,
+      );
+
+      if (!mounted) return;
+
+      if (result.isAttached) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.coachMessage ?? 'Session added to programme'),
+          ),
+        );
+        setState(_reloadContentKind);
+      } else if (result.coachMessage != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(result.coachMessage!)));
+      }
+    } finally {
+      _sourceActionInFlight = false;
+    }
+  }
+
+  Future<void> _useTemplate() async {
+    if (_sourceActionInFlight) return;
+    _sourceActionInFlight = true;
+    try {
+      final authoringContext = _authoringContext(
+        intent: ProgrammeSessionAuthoringIntent.fromTemplate,
+      );
+      if (authoringContext == null) return;
+
+      final selected =
+          await showModalBottomSheet<SessionLibraryPickerSelection>(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => const SessionTemplatePickerSheet(),
+          );
+
+      if (selected == null || !mounted) return;
+
+      final coordinator = ProgrammeSessionAuthoringServices.createCoordinator(
+        controller: widget.controller,
+        protocolBuilderService: _protocolBuilderService,
+      );
+
+      ProtocolDraft draft;
+      try {
+        draft = await coordinator.prepareDraftFromTemplate(
+          context: authoringContext,
+          templateContentId: selected.contentId,
+        );
+      } catch (_) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('This template could not be opened right now.'),
+          ),
+        );
+        return;
+      }
+
+      await _openEmbeddedSessionBuilder(authoringContext, initialDraft: draft);
+    } finally {
+      _sourceActionInFlight = false;
     }
   }
 
@@ -325,6 +387,8 @@ class _ProgrammeEditorSlotInspectorState
     switch (selected.action) {
       case CohortProtocolProgrammeAction.addUnchanged:
         await widget.controller.assignProtocol(
+          weekLocalId: widget.weekLocalId,
+          dayLocalId: widget.dayLocalId,
           slotLocalId: widget.slot.localId,
           protocolId: selected.protocol.protocolId,
           displayTitle: selected.protocol.name,
@@ -493,6 +557,8 @@ class _ProgrammeEditorSlotInspectorState
 
   Future<void> _saveMetadata() async {
     await widget.controller.updateSlotMetadata(
+      weekLocalId: widget.weekLocalId,
+      dayLocalId: widget.dayLocalId,
       slotLocalId: widget.slot.localId,
       displayTitle: _nullable(_displayTitleController.text),
       timeOfDay: _timeOfDay,
@@ -568,7 +634,7 @@ class _AssignedContentHeader extends StatelessWidget {
             ),
             const SizedBox(height: CohortSpacing.xs),
             Text(
-              'Session Library',
+              'My Session',
               style: CohortTextStyles.body.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
@@ -596,6 +662,7 @@ class _SlotActions extends StatelessWidget {
     required this.contentKind,
     required this.onPickProtocol,
     required this.onUseSessionLibrary,
+    required this.onUseTemplate,
     required this.onBuildNewSession,
     required this.onEditSession,
     required this.onCopyAndCustomise,
@@ -606,6 +673,7 @@ class _SlotActions extends StatelessWidget {
   final ProgrammeSlotContentKind contentKind;
   final VoidCallback onPickProtocol;
   final VoidCallback onUseSessionLibrary;
+  final VoidCallback onUseTemplate;
   final VoidCallback onBuildNewSession;
   final VoidCallback onEditSession;
   final VoidCallback onCopyAndCustomise;
@@ -619,18 +687,19 @@ class _SlotActions extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextButton(
-              onPressed: onPickProtocol,
-              child: const Text('Use Cohort Protocol'),
-            ),
-            TextButton(
-              onPressed: onUseSessionLibrary,
-              child: const Text('Use Session Library'),
-            ),
-            TextButton(
-              onPressed: onBuildNewSession,
-              child: const Text('Build New Session'),
-            ),
+            for (final choice in ProgrammeSessionSourceChoice.values)
+              TextButton(
+                onPressed: switch (choice) {
+                  ProgrammeSessionSourceChoice.useCohortProtocol =>
+                    onPickProtocol,
+                  ProgrammeSessionSourceChoice.useMySession =>
+                    onUseSessionLibrary,
+                  ProgrammeSessionSourceChoice.buildNewSession =>
+                    onBuildNewSession,
+                  ProgrammeSessionSourceChoice.useTemplate => onUseTemplate,
+                },
+                child: Text(choice.coachFacingLabel),
+              ),
           ],
         );
       case ProgrammeSlotContentKind.cohortProtocol:

@@ -2,6 +2,7 @@ import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/domain/coach_brain/coach_brain_domain.dart';
 import 'package:cohort_platform/domain/session_occurrence/session_occurrence_domain.dart';
 import 'package:cohort_platform/domain/workout_player/workout_player_domain.dart';
+import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
@@ -114,12 +115,17 @@ class HomeWorkoutLaunchService {
     AdaptationRequest? request,
   }) async {
     if (request == null) {
-      return _attachWithEmptyConstraints(
+      return _attachBaselinePreparedExecution(
         context: context,
         athleteId: athleteId,
         protocol: protocol,
       );
     }
+
+    const AdaptationPolicyGate().assertAllowed(
+      AdaptationPolicyGate.kindsForDayOf(request.reason),
+    );
+
     final draft = await _loadProtocolDraft(protocol.protocolId.trim());
     final plannedSession = PlannedSessionProtocolMetadataMerge.merge(
       draft: draft,
@@ -152,7 +158,11 @@ class HomeWorkoutLaunchService {
     );
   }
 
-  Future<_AttachResult> _attachWithEmptyConstraints({
+  /// Baseline prepare for launch — not an athlete-accepted adaptation.
+  ///
+  /// Empty-constraint Coach Brain attach is allowed only when the snapshot is
+  /// materially identical to the planned session (no silent substitutions).
+  Future<_AttachResult> _attachBaselinePreparedExecution({
     required HomeWorkoutExecutionContext context,
     required String athleteId,
     required Protocol protocol,
@@ -182,7 +192,27 @@ class HomeWorkoutLaunchService {
       );
     }
 
+    final snapshot = result.executionSnapshot ?? result.occurrence?.executionSnapshot;
+    if (snapshot != null && _hasMaterialAdaptation(snapshot)) {
+      return const _AttachResult(
+        isSuccess: false,
+        detail: 'silent_adaptation_rejected',
+      );
+    }
+
     return _AttachResult(isSuccess: true, context: context.withWorkout(result));
+  }
+
+  static bool _hasMaterialAdaptation(AdaptedSessionExecutionSnapshot snapshot) {
+    if (snapshot.omittedBlocks.isNotEmpty) return true;
+    if (snapshot.appliedAdaptationAudit.isNotEmpty) return true;
+    for (final block in snapshot.retainedBlocks) {
+      if (block.adapted) return true;
+      for (final exercise in block.exercises) {
+        if (exercise.adapted) return true;
+      }
+    }
+    return false;
   }
 
   static Future<ProtocolDraft> _unsupportedProtocolDraftLoader(

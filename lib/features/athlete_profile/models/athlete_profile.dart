@@ -121,6 +121,79 @@ class AthleteProfile {
       'onboardingVersion': onboardingVersion,
     };
   }
+
+  /// Restores from [toPersistenceMap] payload. Throws on invalid shape.
+  factory AthleteProfile.fromPersistenceMap(Map<String, dynamic> map) {
+    final primaryId = map['primaryGoalId']?.toString();
+    if (primaryId == null || primaryId.isEmpty) {
+      throw const FormatException('Missing primaryGoalId');
+    }
+    final primary = AthleteGoalCatalog.byId(primaryId);
+    final secondaryId = map['secondaryGoalId']?.toString();
+    final secondary = secondaryId == null || secondaryId.isEmpty
+        ? null
+        : AthleteGoalCatalog.byId(secondaryId);
+
+    final experienceName = map['experienceLevel']?.toString() ?? 'beginner';
+    final experience = AthleteExperienceLevel.values.firstWhere(
+      (e) => e.name == experienceName,
+      orElse: () => AthleteExperienceLevel.beginner,
+    );
+
+    final baselinesRaw = map['baselineCapabilities'];
+    final baselines = <AthleteBaselineCapability>[];
+    if (baselinesRaw is List) {
+      for (final item in baselinesRaw) {
+        if (item is Map) {
+          final m = Map<String, dynamic>.from(item);
+          baselines.add(
+            AthleteBaselineCapability(
+              capabilityId: m['capabilityId']?.toString() ?? '',
+              relativeLevel: (m['relativeLevel'] as num?)?.toDouble() ?? 0,
+            ),
+          );
+        }
+      }
+    }
+
+    DateTime parseRequired(String key) {
+      final raw = map[key]?.toString();
+      final parsed = raw == null ? null : DateTime.tryParse(raw);
+      if (parsed == null) {
+        throw FormatException('Invalid $key');
+      }
+      return parsed.toUtc();
+    }
+
+    return AthleteProfile(
+      athleteId: map['athleteId']?.toString() ?? '',
+      displayName: map['displayName']?.toString() ?? 'Athlete',
+      primaryGoal: primary,
+      secondaryGoal: secondary,
+      availableEquipment: (map['availableEquipment'] as List? ?? const [])
+          .map((e) => e.toString())
+          .toList(),
+      environmentId: map['environmentId']?.toString() ?? 'gym',
+      trainingDaysPerWeek: (map['trainingDaysPerWeek'] as num?)?.toInt() ?? 3,
+      preferredSessionDurationMinutes:
+          (map['preferredSessionDurationMinutes'] as num?)?.toInt() ?? 45,
+      experienceLevel: experience,
+      assessmentComplete: map['assessmentComplete'] == true,
+      baselineCapabilities: baselines,
+      currentActivity: map['currentActivity']?.toString(),
+      preferredTrainingStyle: map['preferredTrainingStyle']?.toString(),
+      injuries: (map['injuries'] as List? ?? const [])
+          .map((e) => e.toString())
+          .toList(),
+      constraints: (map['constraints'] as List? ?? const [])
+          .map((e) => e.toString())
+          .toList(),
+      createdAt: parseRequired('createdAt'),
+      updatedAt: parseRequired('updatedAt'),
+      onboardingVersion:
+          map['onboardingVersion']?.toString() ?? onboardingVersionV1,
+    );
+  }
 }
 
 enum AthleteExperienceLevel { beginner, intermediate, advanced }

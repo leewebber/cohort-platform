@@ -3,6 +3,7 @@ import 'package:cohort_platform/features/session_builder/services/protocol_draft
 import 'package:cohort_platform/models/protocol_builder_save_result.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_revision_vocabulary.dart';
+import 'package:cohort_platform/models/training_content_vocabulary.dart';
 
 /// In-memory [ProtocolBuilderService] stand-in for session revision tests.
 class FakeProtocolBuilderService extends ProtocolBuilderService {
@@ -28,6 +29,23 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
     return draft;
   }
 
+  void _assertCohortNotOverwritten(ProtocolDraft draft) {
+    final existing = draftsById[draft.protocolId];
+    if (existing == null) return;
+    if (existing.contentKind == TrainingContentKind.cohortProtocol &&
+        draft.contentKind != TrainingContentKind.cohortProtocol) {
+      throw const ProtocolBuilderException(
+        'Official Cohort Protocols cannot be overwritten by Session content.',
+      );
+    }
+    if (existing.contentKind == TrainingContentKind.sessionTemplate &&
+        draft.contentKind != TrainingContentKind.sessionTemplate) {
+      throw const ProtocolBuilderException(
+        'Official Cohort Templates cannot be overwritten by Session content.',
+      );
+    }
+  }
+
   @override
   Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) async {
     final existing = draftsById[draft.protocolId];
@@ -41,11 +59,13 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
       );
     }
 
+    _assertCohortNotOverwritten(draft);
+    final created = !draftsById.containsKey(draft.protocolId);
     saveDraftCalls.add(draft);
     draftsById[draft.protocolId] = draft;
     return ProtocolBuilderSaveResult.draft(
       protocolId: draft.protocolId,
-      created: !draftsById.containsKey(draft.protocolId),
+      created: created,
       stepCount: draft.steps.length,
     );
   }
@@ -54,11 +74,13 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
   Future<ProtocolBuilderSaveResult> saveCoachLibrarySession(
     ProtocolDraft draft,
   ) async {
+    _assertCohortNotOverwritten(draft);
+    final created = !draftsById.containsKey(draft.protocolId);
     saveDraftCalls.add(draft);
     draftsById[draft.protocolId] = draft.copyWith(published: true);
     return ProtocolBuilderSaveResult.draft(
       protocolId: draft.protocolId,
-      created: !draftsById.containsKey(draft.protocolId),
+      created: created,
       stepCount: draft.steps.length,
     );
   }

@@ -347,8 +347,17 @@ class ProgrammeEditorController {
     () => _builderService.addSlot(document!, dayLocalId: dayLocalId),
   );
 
-  Future<void> removeSlot(String slotLocalId) => _applyEdit(
-    () => _builderService.removeSlot(document!, slotLocalId: slotLocalId),
+  Future<void> removeSlot({
+    required String weekLocalId,
+    required String dayLocalId,
+    required String slotLocalId,
+  }) => _applyEdit(
+    () => _builderService.removeSlot(
+      document!,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
+      slotLocalId: slotLocalId,
+    ),
     onApplied: () {
       if (selection.slotLocalId == slotLocalId) {
         selection = selection.copyWith(clearSlot: true);
@@ -357,23 +366,38 @@ class ProgrammeEditorController {
   );
 
   Future<void> assignProtocol({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
   }) => _applyEdit(
     () => _builderService.assignProtocol(
       document!,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
       slotLocalId: slotLocalId,
       protocolId: protocolId,
       displayTitle: displayTitle,
     ),
   );
 
-  Future<void> clearProtocol(String slotLocalId) => _applyEdit(
-    () => _builderService.clearProtocol(document!, slotLocalId: slotLocalId),
+  Future<void> clearProtocol({
+    required String weekLocalId,
+    required String dayLocalId,
+    required String slotLocalId,
+  }) => _applyEdit(
+    () => _builderService.clearProtocol(
+      document!,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
+      slotLocalId: slotLocalId,
+    ),
   );
 
   Future<void> updateSlotMetadata({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     String? displayTitle,
     ProgrammeSessionTimeOfDay? timeOfDay,
@@ -387,6 +411,8 @@ class ProgrammeEditorController {
   }) => _applyEdit(
     () => _builderService.updateSlotMetadata(
       document!,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
       slotLocalId: slotLocalId,
       displayTitle: displayTitle,
       timeOfDay: timeOfDay,

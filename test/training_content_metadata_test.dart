@@ -214,7 +214,48 @@ void main() {
 
       expect(TrainingContentClassification.isSessionTemplate(draft), isTrue);
       expect(
+        TrainingContentClassification.isCanonicalSessionTemplate(draft),
+        isFalse,
+      );
+      expect(
         TrainingContentClassification.isProgrammeBuilderAttachable(draft),
+        isFalse,
+      );
+    });
+
+    test('canonical session template requires full official policy', () {
+      final draft = ProtocolDraft(
+        protocolId: 'TMP-001',
+        name: 'Full-Body Strength',
+        steps: const [],
+        contentKind: TrainingContentKind.sessionTemplate,
+        authoringScope: TrainingAuthoringScope.cohortGlobal,
+        endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
+        published: true,
+      );
+
+      expect(
+        TrainingContentClassification.isCanonicalSessionTemplate(draft),
+        isTrue,
+      );
+      expect(
+        TrainingContentClassification.isCanonicalSessionTemplate(
+          draft.copyWith(ownerId: 'coach-1'),
+        ),
+        isFalse,
+      );
+      expect(
+        TrainingContentClassification.isCanonicalSessionTemplate(
+          draft.copyWith(published: false),
+        ),
+        isFalse,
+      );
+      expect(
+        TrainingContentClassification.isCanonicalSessionTemplate(
+          draft.copyWith(
+            endorsementStatus: TrainingEndorsementStatus.coachAuthored,
+          ),
+        ),
         isFalse,
       );
     });

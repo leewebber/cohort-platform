@@ -22,6 +22,12 @@ import '../models/home_today_session_state.dart';
 import '../services/home_today_session_loader.dart';
 import '../services/home_today_session_services.dart';
 
+/// Quarantined for athlete Home (Sprint 2+ / Sprint 3).
+///
+/// Classification: **quarantine** — retained for founder/Supabase programme-assignment
+/// Adapt path (`HomeAdaptFlow` / programme schedule). Athlete Home uses
+/// `DailyBriefingSection` instead. Do not reintroduce on athlete Home.
+/// Remove when the founder programme home path is deleted.
 class HomeTodaySessionSection extends StatefulWidget {
   const HomeTodaySessionSection({
     super.key,
@@ -409,12 +415,12 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             const Text('Set up your training', style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.sm),
             const Text(
-              'Choose a published programme and start training through Cohort.',
+              'Choose a published plan and start training through Cohort.',
               style: CohortTextStyles.body,
             ),
             const SizedBox(height: CohortSpacing.xl),
             CohortButton(
-              label: 'CHOOSE PROGRAMME',
+              label: 'CHOOSE PLAN',
               onPressed: _openPersonalTrainingSetup,
             ),
           ],
@@ -428,12 +434,12 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
         children: [
           const Text("TODAY'S TRAINING", style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.lg),
-          const Text('No programme assigned', style: CohortTextStyles.h2),
+          const Text('No plan assigned', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.sm),
           Text(
             isAthleteOnly
-                ? 'Join your coach to receive a programme, or ask them to assign training.'
-                : 'When a programme is assigned, today\'s session will appear here.',
+                ? 'Join your coach to receive a plan, or ask them to assign training.'
+                : 'When a plan is assigned, today\'s session will appear here.',
             style: CohortTextStyles.body,
           ),
         ],
@@ -634,7 +640,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
           }(),
           HomeTodaySessionRestDay() => _buildProgrammeStatusCard(
             title: 'Rest Day',
-            subtitle: 'Recovery is part of the programme.',
+            subtitle: 'Recovery is part of the plan.',
             programmeName: HomeTodaySessionLabels.programmeName(
               state.resolution,
             ),
@@ -645,7 +651,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
             status: 'Rest Day',
             buttonLabel: _isContinuing
                 ? 'Continuing...'
-                : 'Continue to next programme day',
+                : 'Continue to next plan day',
             onPressed: _isContinuing
                 ? () {}
                 : () => _launchWorkoutPlayerFromRestOrContinue(state),
@@ -661,31 +667,31 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
               state.progressSummary,
             ),
             status: 'Day Complete',
-            buttonLabel: _isContinuing ? 'Continuing...' : 'Continue programme',
+            buttonLabel: _isContinuing ? 'Continuing...' : 'Continue plan',
             onPressed: _isContinuing
                 ? () {}
                 : () => _continueProgramme(state.resolution),
           ),
           HomeTodaySessionProgrammeComplete() => _buildProgrammeStatusCard(
-            title: 'Programme Complete',
-            subtitle: 'Congratulations — you finished this programme block.',
+            title: 'Plan Complete',
+            subtitle: 'Congratulations — you finished this plan block.',
             programmeName:
                 state.resolution.programmeName ??
                 state.resolution.lineageCode ??
-                'Your programme',
+                'Your plan',
             weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
             progressLabel: HomeTodaySessionLabels.progressLabel(
               state.progressSummary,
             ),
-            status: 'Programme Complete',
+            status: 'Plan Complete',
           ),
           HomeTodaySessionPaused() => _buildProgrammeStatusCard(
-            title: 'Programme Paused',
-            subtitle: 'Resume your programme to continue training.',
+            title: 'Plan Paused',
+            subtitle: 'Resume your plan to continue training.',
             programmeName:
                 state.resolution.programmeName ??
                 state.resolution.lineageCode ??
-                'Your programme',
+                'Your plan',
             weekLabel: HomeTodaySessionLabels.weekLabel(state.resolution),
             progressLabel: HomeTodaySessionLabels.progressLabel(
               state.progressSummary,

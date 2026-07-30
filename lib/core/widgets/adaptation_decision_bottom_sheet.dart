@@ -32,12 +32,60 @@ class AdaptationDecisionBottomSheet extends StatelessWidget {
             CohortCard(
               child: Text(decision.message, style: CohortTextStyles.body),
             ),
+            if (decision.programmedSessionKey != null) ...[
+              const SizedBox(height: CohortSpacing.md),
+              Text(
+                'Programmed session: ${decision.programmedSessionKey}',
+                style: CohortTextStyles.muted,
+              ),
+            ],
+            if (decision.changeSummary.isNotEmpty) ...[
+              const SizedBox(height: CohortSpacing.md),
+              Text('WHAT CHANGES', style: CohortTextStyles.sectionLabel),
+              const SizedBox(height: CohortSpacing.sm),
+              ...decision.changeSummary.map(
+                (line) => Padding(
+                  padding: const EdgeInsets.only(bottom: CohortSpacing.xs),
+                  child: Text('• $line', style: CohortTextStyles.body),
+                ),
+              ),
+            ],
+            if (decision.preservedIntent != null) ...[
+              const SizedBox(height: CohortSpacing.sm),
+              Text(
+                'Preserved intent: ${decision.preservedIntent}',
+                style: CohortTextStyles.muted,
+              ),
+            ],
             const SizedBox(height: CohortSpacing.xl),
-            CohortButton(
-              label: isKeepOriginal
-                  ? 'Continue Planned Session'
-                  : 'Find Alternative',
-              onPressed: () => Navigator.of(context).pop(true),
+            if (isKeepOriginal)
+              CohortButton(
+                label: 'Keep Planned Session',
+                onPressed: () => Navigator.of(context).pop(false),
+              )
+            else ...[
+              CohortButton(
+                label: 'Review Adaptation',
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+              const SizedBox(height: CohortSpacing.md),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'Keep Planned Session',
+                  style: CohortTextStyles.body.copyWith(
+                    color: CohortColors.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: CohortSpacing.sm),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(null),
+              child: Text(
+                'Dismiss',
+                style: CohortTextStyles.muted,
+              ),
             ),
           ],
         ),

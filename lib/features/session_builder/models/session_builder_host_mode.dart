@@ -16,7 +16,9 @@ enum ProgrammeSessionAuthoringIntent {
   editCoachSession,
   copyCohortProtocol,
 
-  // Reserved for M6+ — not implemented in M5.
-  // fromTemplate,
+  /// Copy-on-use from a session template into a new programme session draft.
+  fromTemplate,
+
+  // Reserved for M6+ .
   // duplicateSession,
 }

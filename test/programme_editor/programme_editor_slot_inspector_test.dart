@@ -73,36 +73,36 @@ void main() {
   }
 
   group('ProgrammeEditorSlotInspector M3 actions', () {
-    testWidgets(
-      'empty slot shows Use Cohort Protocol, Use Session Library and Build New Session',
-      (tester) async {
-        const slot = ProgrammeSessionSlotDraft(
-          localId: testSlotLocalId,
-          sessionOrder: 1,
-          protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
-        );
+    testWidgets('empty slot shows four explicit session source choices', (
+      tester,
+    ) async {
+      const slot = ProgrammeSessionSlotDraft(
+        localId: testSlotLocalId,
+        sessionOrder: 1,
+        protocolId: ProgrammeBuilderConstants.unassignedProtocolId,
+      );
 
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: ProgrammeEditorSlotInspector(
-                controller: buildController(slot: slot),
-                weekLocalId: testWeekLocalId,
-                dayLocalId: testDayLocalId,
-                slot: slot,
-                slotContentClassifier: _FixedClassifier(
-                  ProgrammeSlotContentKind.empty,
-                ),
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ProgrammeEditorSlotInspector(
+              controller: buildController(slot: slot),
+              weekLocalId: testWeekLocalId,
+              dayLocalId: testDayLocalId,
+              slot: slot,
+              slotContentClassifier: _FixedClassifier(
+                ProgrammeSlotContentKind.empty,
               ),
             ),
           ),
-        );
+        ),
+      );
 
-        expect(find.text('Use Cohort Protocol'), findsOneWidget);
-        expect(find.text('Use Session Library'), findsOneWidget);
-        expect(find.text('Build New Session'), findsOneWidget);
-      },
-    );
+      expect(find.text('Use Cohort Protocol'), findsOneWidget);
+      expect(find.text('Use My Session'), findsOneWidget);
+      expect(find.text('Build New Session'), findsOneWidget);
+      expect(find.text('Use Template'), findsOneWidget);
+    });
 
     testWidgets('cohort protocol slot shows code and hides Edit Session', (
       tester,
@@ -190,6 +190,8 @@ void main() {
         );
 
         await controller.assignProtocol(
+          weekLocalId: testWeekLocalId,
+          dayLocalId: testDayLocalId,
           slotLocalId: testSlotLocalId,
           protocolId: testDurableSessionId,
           displayTitle: 'Morning Strength',
@@ -276,6 +278,8 @@ class _RecordingBuilderService implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> assignProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
@@ -284,8 +288,10 @@ class _RecordingBuilderService implements ProgrammeBuilderService {
     this.document = document.markDirty().copyWith(
       template: document.template.copyWith(
         weeks: document.template.weeks.map((week) {
+          if (week.localId != weekLocalId) return week;
           return week.copyWith(
             days: week.days.map((day) {
+              if (day.localId != dayLocalId) return day;
               return day.copyWith(
                 slots: day.slots.map((slot) {
                   if (slot.localId != slotLocalId) return slot;

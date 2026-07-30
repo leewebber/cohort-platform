@@ -112,6 +112,8 @@ class _NoOpAssignmentPort implements ProgrammeSessionAssignmentPort {
 
   @override
   Future<ProgrammeBuilderEditResult> assignSession({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String contentId,
     required String displayTitle,

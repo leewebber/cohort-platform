@@ -70,7 +70,7 @@ void main() {
   tearDown(CurrentUserSession.clear);
 
   group('TrainingLibraryScreen', () {
-    testWidgets('shows Cohort Protocols and Session Library tabs', (
+    testWidgets('shows Cohort Protocols, My Sessions, and Templates tabs', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -78,13 +78,15 @@ void main() {
           home: TrainingLibraryScreen(
             cohortTab: const Text('Cohort tab content'),
             sessionTab: const Text('Session tab content'),
+            templatesTab: const Text('Templates tab content'),
           ),
         ),
       );
 
       expect(find.text('Training Library'), findsOneWidget);
       expect(find.text('Cohort Protocols'), findsOneWidget);
-      expect(find.text('Session Library'), findsOneWidget);
+      expect(find.text('My Sessions'), findsOneWidget);
+      expect(find.text('Templates'), findsOneWidget);
       expect(find.text('Cohort tab content'), findsOneWidget);
     });
 
@@ -94,11 +96,12 @@ void main() {
           home: TrainingLibraryScreen(
             cohortTab: const Text('Cohort tab content'),
             sessionTab: const Text('Session tab content'),
+            templatesTab: const Text('Templates tab content'),
           ),
         ),
       );
 
-      await tester.tap(find.text('Session Library'));
+      await tester.tap(find.text('My Sessions'));
       await tester.pumpAndSettle();
 
       expect(find.text('Session tab content'), findsOneWidget);
@@ -129,6 +132,7 @@ void main() {
   test('CoachStudioSection exposes trainingLibrary in v0.1', () {
     expect(CoachStudioSection.trainingLibrary.isAvailableInV01, isTrue);
     expect(CoachStudioSection.trainingLibrary.title, 'Training Library');
-    expect(TrainingLibraryTab.sessionLibrary.title, 'Session Library');
+    expect(TrainingLibraryTab.sessionLibrary.title, 'My Sessions');
+    expect(TrainingLibraryTab.templates.title, 'Templates');
   });
 }

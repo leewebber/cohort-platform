@@ -6,7 +6,7 @@ import 'package:cohort_platform/models/protocol.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const protocol = Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder');
+  final protocol = Protocol(protocolId: 'BW-001', name: 'Bodyweight Grinder');
 
   ResolvedTodaySession resolution({String? slotTitle}) {
     return ResolvedTodaySession(

@@ -1,3 +1,5 @@
+import '../../adaptation/models/accepted_adaptation_decision.dart';
+import '../../plans/models/programmed_session_key.dart';
 import '../../workout_player/services/coach_brain_workout_plan_service.dart';
 import '../models/athlete_profile.dart';
 import '../../plans/models/plan_assignment.dart';
@@ -64,17 +66,21 @@ class AthleteProfileSession {
   }
 }
 
-/// Coach Brain output bound after plan assignment / generation.
+/// Prepared execution bound after plan assignment / programmed resolve.
 class AthleteGeneratedProgramme {
   const AthleteGeneratedProgramme({
     required this.planBundle,
     required this.programmeName,
     required this.phaseLabel,
+    this.programmedSessionKey,
+    this.acceptedAdaptation,
   });
 
   final CoachBrainWorkoutPlan planBundle;
   final String programmeName;
   final String phaseLabel;
+  final ProgrammedSessionKey? programmedSessionKey;
+  final AcceptedAdaptationDecision? acceptedAdaptation;
 
   String get sessionTitle => planBundle.brief.sessionName;
   int? get durationMinutes => planBundle.brief.estimatedDurationMinutes;
@@ -83,4 +89,24 @@ class AthleteGeneratedProgramme {
       AthleteProfileSession.profile?.planningGoalLabel ??
       planBundle.brief.trainingIntent ??
       'Training';
+
+  AthleteGeneratedProgramme copyWith({
+    CoachBrainWorkoutPlan? planBundle,
+    String? programmeName,
+    String? phaseLabel,
+    ProgrammedSessionKey? programmedSessionKey,
+    AcceptedAdaptationDecision? acceptedAdaptation,
+    bool clearAdaptation = false,
+  }) {
+    return AthleteGeneratedProgramme(
+      planBundle: planBundle ?? this.planBundle,
+      programmeName: programmeName ?? this.programmeName,
+      phaseLabel: phaseLabel ?? this.phaseLabel,
+      programmedSessionKey:
+          programmedSessionKey ?? this.programmedSessionKey,
+      acceptedAdaptation: clearAdaptation
+          ? null
+          : (acceptedAdaptation ?? this.acceptedAdaptation),
+    );
+  }
 }

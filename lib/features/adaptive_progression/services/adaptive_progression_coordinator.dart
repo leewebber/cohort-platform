@@ -1,3 +1,4 @@
+import '../../../core/persistence/athlete_persistence.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../athlete_profile/services/athlete_programme_generation_service.dart';
 import '../../plans/services/plan_assignment_service.dart';
@@ -27,9 +28,10 @@ class AdaptiveProgressionResult {
   final PlanDefinition plan;
 }
 
-/// Orchestrates: completion → evidence → plan advance → Coach Brain → bind.
+/// Orchestrates: completion → evidence → plan advance → prepare next execution.
 ///
-/// Does not modify Coach Brain / planning engines.
+/// Next day's package is resolved from the programmed session key (plan-canonical),
+/// not invented from athlete history. Does not modify Coach Brain engines.
 class AdaptiveProgressionCoordinator {
   AdaptiveProgressionCoordinator({
     TrainingEvidenceUpdateService evidenceService =
@@ -71,6 +73,9 @@ class AdaptiveProgressionCoordinator {
       totalExercises: result.totalExercises,
       sessionRpe: result.sessionRpe,
       notes: result.notes,
+      programmedSessionKey: programme?.programmedSessionKey?.value,
+      planVersion: programme?.programmedSessionKey?.planVersion ?? plan?.version,
+      acceptedAdaptationId: programme?.acceptedAdaptation?.decisionId,
     );
   }
 
@@ -116,11 +121,22 @@ class AdaptiveProgressionCoordinator {
       currentDay: advanced.currentDay,
     );
 
-    final programme = await _generation.generate(
+    final programme = await _generation.prepareExecution(
       updatedProfile,
       activePlan: plan,
       assignment: advanced,
     );
+
+    AthleteProfileSession.bind(
+      profile: updatedProfile,
+      programme: programme,
+      activePlan: plan,
+      assignment: advanced,
+    );
+
+    if (AthletePersistence.isInitialized) {
+      await AthletePersistence.persistBoundSession(now: now);
+    }
 
     return AdaptiveProgressionResult(
       completion: completion,

@@ -75,9 +75,9 @@ class PlanLibraryFilters {
   }
 }
 
-/// In-memory plan assignment store (MVP — no persistence).
+/// In-memory plan assignment store, mirrored to [AthleteLocalRepository].
 ///
-/// Responsibilities: assign, replace active, read active, clear active.
+/// Responsibilities: assign, replace active, read active, clear active, restore.
 class PlanAssignmentService {
   PlanAssignment? _activeAssignment;
   PlanDefinition? _activeDefinition;
@@ -176,6 +176,15 @@ class PlanAssignmentService {
   }
 
   List<PlanAssignment> history() => List.unmodifiable(_history);
+
+  /// Restores an assignment from persistence without rewriting history.
+  void restoreActive({
+    required PlanAssignment assignment,
+    PlanDefinition? plan,
+  }) {
+    _activeAssignment = assignment;
+    _activeDefinition = plan;
+  }
 
   void resetForTests() {
     _activeAssignment = null;

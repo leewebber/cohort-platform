@@ -536,17 +536,26 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> removeSlot(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   }) {
     return _edit(
       document,
-      _editOperations.removeSlot(document, slotLocalId: slotLocalId),
+      _editOperations.removeSlot(
+        document,
+        weekLocalId: weekLocalId,
+        dayLocalId: dayLocalId,
+        slotLocalId: slotLocalId,
+      ),
     );
   }
 
   @override
   Future<ProgrammeBuilderEditResult> assignProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
@@ -555,6 +564,8 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       document,
       _editOperations.assignProtocol(
         document,
+        weekLocalId: weekLocalId,
+        dayLocalId: dayLocalId,
         slotLocalId: slotLocalId,
         protocolId: protocolId,
         displayTitle: displayTitle,
@@ -565,17 +576,26 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> clearProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   }) {
     return _edit(
       document,
-      _editOperations.clearProtocol(document, slotLocalId: slotLocalId),
+      _editOperations.clearProtocol(
+        document,
+        weekLocalId: weekLocalId,
+        dayLocalId: dayLocalId,
+        slotLocalId: slotLocalId,
+      ),
     );
   }
 
   @override
   Future<ProgrammeBuilderEditResult> updateSlotMetadata(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     String? displayTitle,
     ProgrammeSessionTimeOfDay? timeOfDay,
@@ -591,6 +611,8 @@ class ProgrammeBuilderServiceImpl implements ProgrammeBuilderService {
       document,
       _editOperations.updateSlotMetadata(
         document,
+        weekLocalId: weekLocalId,
+        dayLocalId: dayLocalId,
         slotLocalId: slotLocalId,
         displayTitle: displayTitle,
         timeOfDay: timeOfDay,

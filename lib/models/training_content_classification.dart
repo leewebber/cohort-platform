@@ -30,9 +30,31 @@ class TrainingContentClassification {
     return draft.contentKind == TrainingContentKind.sessionTemplate;
   }
 
+  /// Official Cohort starter / product templates (catalogue eligibility).
+  ///
+  /// Requires the full official-content policy — not merely
+  /// `content_kind=session_template`.
+  static bool isCanonicalSessionTemplate(ProtocolDraft draft) {
+    return draft.contentKind == TrainingContentKind.sessionTemplate &&
+        draft.authoringScope == TrainingAuthoringScope.cohortGlobal &&
+        draft.endorsementStatus == TrainingEndorsementStatus.cohortEndorsed &&
+        draft.published == true &&
+        !_hasValue(draft.ownerId);
+  }
+
   /// Whether content may be attached via normal Programme Builder protocol picker.
   static bool isProgrammeBuilderAttachable(ProtocolDraft draft) {
     return isCohortProtocol(draft);
+  }
+
+  static void validateCanonicalSessionTemplate(ProtocolDraft draft) {
+    if (!isCanonicalSessionTemplate(draft)) {
+      throw const TrainingContentInvariantException(
+        'Canonical Session Template requires contentKind=sessionTemplate, '
+        'authoringScope=cohortGlobal, endorsementStatus=cohortEndorsed, '
+        'published=true, and no owner.',
+      );
+    }
   }
 
   static void validateCohortProtocol(ProtocolDraft draft) {

@@ -9,7 +9,12 @@ import '../services/auth_session_port.dart';
 import '../services/auth_service.dart';
 import '../../../core/access/founder_access_policy.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
+import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/services/user_session_cache.dart';
+import '../../adaptive_progression/models/capability_timeline.dart';
+import '../../adaptive_progression/models/session_completion.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
+import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../services/current_user_session.dart';
 import '../services/profile_provisioning_service.dart';
 
@@ -167,10 +172,22 @@ class AuthController extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    // Capture before clearing sessions (guest athletes use profile session id).
+    final athleteId = CurrentUserSession.maybeInstance?.athleteId ??
+        AthleteProfileSession.profile?.athleteId;
     await _authService.signOut();
     CurrentUserSession.clear();
     UserSessionCache.clearAll();
     FounderAccessPolicy.bindSessionEmail(null);
+    // Sign-out policy B: clear local athlete training data from the device.
+    if (AthletePersistence.isInitialized) {
+      await AthletePersistence.clearForSignOut(athleteId: athleteId);
+    } else {
+      AthleteProfileSession.clear();
+      SessionCompletionStore.clear();
+      CapabilityTimelineStore.clear();
+      PreviousPerformanceStore.clear();
+    }
     _state = AuthViewState.initial().copyWith(
       status: AuthStatus.unauthenticated,
     );

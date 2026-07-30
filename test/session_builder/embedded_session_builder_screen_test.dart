@@ -197,7 +197,7 @@ void main() {
     });
 
     testWidgets('uses preloaded draft when provided', (tester) async {
-      const preloaded = ProtocolDraft(
+      final preloaded = ProtocolDraft(
         protocolId: 'local-session-slot-am',
         name: 'Custom Session',
         steps: [],

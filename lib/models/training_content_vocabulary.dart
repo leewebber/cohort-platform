@@ -57,11 +57,18 @@ extension TrainingContentKindDb on TrainingContentKind {
   /// Parses database values safely. Unknown values fall back to [session]
   /// — never [cohortProtocol] (avoid silent Cohort-endorsed classification).
   static TrainingContentKind fromDb(String? value) {
+    return tryFromDb(value) ?? TrainingContentKind.session;
+  }
+
+  /// Nullable parse for provenance fields. Unknown values stay null rather
+  /// than coercing to [TrainingContentKind.session].
+  static TrainingContentKind? tryFromDb(String? value) {
     return switch (value?.trim()) {
+      null || '' => null,
       'cohort_protocol' => TrainingContentKind.cohortProtocol,
       'session_template' => TrainingContentKind.sessionTemplate,
       'session' => TrainingContentKind.session,
-      _ => TrainingContentKind.session,
+      _ => null,
     };
   }
 }

@@ -10,7 +10,7 @@ void main() {
 
   tearDown(CurrentUserSession.clear);
 
-  testWidgets('dual-role empty state shows CHOOSE PROGRAMME', (tester) async {
+  testWidgets('dual-role empty state shows CHOOSE PLAN', (tester) async {
     CurrentUserSession.bind(
       const UserProfile(
         id: 'lee',
@@ -32,8 +32,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Set up your training'), findsOneWidget);
-    expect(find.text('CHOOSE PROGRAMME'), findsOneWidget);
-    expect(find.textContaining('published programme'), findsOneWidget);
+    expect(find.text('CHOOSE PLAN'), findsOneWidget);
   });
 
   testWidgets('athlete-only empty state keeps join-coach guidance', (
@@ -61,9 +60,9 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('No programme assigned'), findsOneWidget);
+    expect(find.text('No plan assigned'), findsOneWidget);
     expect(find.textContaining('Join your coach'), findsOneWidget);
-    expect(find.text('CHOOSE PROGRAMME'), findsNothing);
+    expect(find.text('CHOOSE PLAN'), findsNothing);
   });
 
   testWidgets('coach-only user does not see athlete setup CTA', (tester) async {
@@ -87,7 +86,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('CHOOSE PROGRAMME'), findsNothing);
+    expect(find.text('CHOOSE PLAN'), findsNothing);
     expect(find.text('Set up your training'), findsNothing);
   });
 }

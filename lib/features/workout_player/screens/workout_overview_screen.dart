@@ -6,6 +6,8 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../models/training_session_completion_context.dart';
 import '../../../data/repositories/training_session_repository.dart';
+import '../../adaptation/services/prepared_execution_reverter.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/services/programme_session_progression_coordinator.dart';
 import '../controllers/workout_player_controller.dart';
@@ -65,6 +67,20 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
     });
   }
 
+  Future<void> _revertToProgrammed() async {
+    final restored = await PreparedExecutionReverter().revertToProgrammed();
+    if (!mounted) return;
+    if (restored == null) return;
+    setState(() {
+      _planFuture = Future.value(restored.planBundle);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Restored the original programmed session.'),
+      ),
+    );
+  }
+
   Future<void> _start(CoachBrainWorkoutPlan resolved) async {
     final controller = WorkoutPlayerController(
       plan: resolved.plan,
@@ -120,6 +136,8 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
 
           final resolved = snapshot.data!;
           final brief = resolved.brief;
+          final adaptation =
+              AthleteProfileSession.programme?.acceptedAdaptation;
 
           return SafeArea(
             child: Column(
@@ -171,6 +189,36 @@ class _WorkoutOverviewScreenState extends State<WorkoutOverviewScreen> {
                             label: 'Coach notes',
                             value: brief.coachNotes!,
                           ),
+                        if (adaptation != null) ...[
+                          const SizedBox(height: CohortSpacing.xl),
+                          Text(
+                            'ACCEPTED ADAPTATION',
+                            style: CohortTextStyles.sectionLabel,
+                          ),
+                          const SizedBox(height: CohortSpacing.sm),
+                          Text(
+                            'Reason: ${adaptation.reasonCode}',
+                            style: CohortTextStyles.body,
+                          ),
+                          if (adaptation.changeSummary.isNotEmpty) ...[
+                            const SizedBox(height: CohortSpacing.sm),
+                            ...adaptation.changeSummary.map(
+                              (line) => Text(
+                                '• $line',
+                                style: CohortTextStyles.body,
+                              ),
+                            ),
+                          ],
+                          TextButton(
+                            onPressed: _revertToProgrammed,
+                            child: Text(
+                              'Use original programmed session',
+                              style: CohortTextStyles.body.copyWith(
+                                color: CohortColors.textPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   ),

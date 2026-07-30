@@ -243,17 +243,15 @@ void main() {
 
   test('protocol assign replace and clear', () async {
     await controller.load();
-    final slotId = controller
-        .document!
-        .template
-        .allWeeks
-        .single
-        .days
-        .single
-        .slots
-        .single
-        .localId;
-    await controller.assignProtocol(slotLocalId: slotId, protocolId: 'BW-002');
+    final week = controller.document!.template.allWeeks.single;
+    final day = week.days.single;
+    final slotId = day.slots.single.localId;
+    await controller.assignProtocol(
+      weekLocalId: week.localId,
+      dayLocalId: day.localId,
+      slotLocalId: slotId,
+      protocolId: 'BW-002',
+    );
     expect(
       controller
           .document!
@@ -268,7 +266,11 @@ void main() {
       'BW-002',
     );
 
-    await controller.clearProtocol(slotId);
+    await controller.clearProtocol(
+      weekLocalId: week.localId,
+      dayLocalId: day.localId,
+      slotLocalId: slotId,
+    );
     expect(
       controller
           .document!
@@ -372,17 +374,12 @@ void main() {
 
   test('round-trip save and reload preserves slot protocol', () async {
     await controller.load();
+    final week = controller.document!.template.allWeeks.single;
+    final day = week.days.single;
     await controller.assignProtocol(
-      slotLocalId: controller
-          .document!
-          .template
-          .allWeeks
-          .single
-          .days
-          .single
-          .slots
-          .single
-          .localId,
+      weekLocalId: week.localId,
+      dayLocalId: day.localId,
+      slotLocalId: day.slots.single.localId,
       protocolId: 'BW-009',
     );
     await controller.save();
@@ -494,11 +491,15 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> assignProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
   }) => _delegate.assignProtocol(
     document,
+    weekLocalId: weekLocalId,
+    dayLocalId: dayLocalId,
     slotLocalId: slotLocalId,
     protocolId: protocolId,
     displayTitle: displayTitle,
@@ -507,8 +508,15 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> clearProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
-  }) => _delegate.clearProtocol(document, slotLocalId: slotLocalId);
+  }) => _delegate.clearProtocol(
+    document,
+    weekLocalId: weekLocalId,
+    dayLocalId: dayLocalId,
+    slotLocalId: slotLocalId,
+  );
 
   @override
   Future<ProgrammeBuilderOperationResult> createDraftProgramme({
@@ -564,8 +572,15 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> removeSlot(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
-  }) => _delegate.removeSlot(document, slotLocalId: slotLocalId);
+  }) => _delegate.removeSlot(
+    document,
+    weekLocalId: weekLocalId,
+    dayLocalId: dayLocalId,
+    slotLocalId: slotLocalId,
+  );
 
   @override
   Future<ProgrammeBuilderEditResult> removeWeek(
@@ -625,6 +640,8 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
   @override
   Future<ProgrammeBuilderEditResult> updateSlotMetadata(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     String? displayTitle,
     ProgrammeSessionTimeOfDay? timeOfDay,
@@ -637,6 +654,8 @@ class FailingSaveBuilderService implements ProgrammeBuilderService {
     bool clearAthleteNote = false,
   }) => _delegate.updateSlotMetadata(
     document,
+    weekLocalId: weekLocalId,
+    dayLocalId: dayLocalId,
     slotLocalId: slotLocalId,
     displayTitle: displayTitle,
     timeOfDay: timeOfDay,

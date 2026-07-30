@@ -53,14 +53,16 @@ Location: `lib/features/session_builder/`
 | `cohortProtocolAdmin` | Protocol, protocol_id, Publish | `ProtocolBuilderService` (unchanged) |
 | `embeddedProgrammeSession` | Session, Blocks, Exercises | `ProgrammeSessionAuthoringCoordinator` → `ProtocolBuilderService` + slot attach |
 
-### Programme entry (M2)
+### Programme entry (M2 / foundation)
 
-Empty programme slot inspector:
+Empty programme slot inspector (`ProgrammeSessionSourceChoice`):
 
-- **Use Cohort Protocol** → existing `listCohortProtocols()` picker (`Cohort Protocols` sheet title)
+- **Use Cohort Protocol** → `listCohortProtocols()` picker (read-only attach or copy-and-customise)
+- **Use My Session** → coach-owned reusable sessions (`session` + `coach_private`); live reference attach
 - **Build New Session** → `EmbeddedSessionBuilderScreen` with `ProgrammeSessionAuthoringContext`
+- **Use Template** → `session_template` picker; **copy-on-use** into a new programme session draft (never live-attaches the template)
 
-No slot mutation until Save & Attach (M3).
+No slot mutation until Save & Attach / attachExistingSession (explicit coach action).
 
 ### M3 — Save & Attach and coordinator (implemented)
 

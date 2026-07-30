@@ -311,7 +311,7 @@ class _AthleteOnboardingFlowState extends State<AthleteOnboardingFlow> {
               children: [
                 const Spacer(),
                 Text(
-                  'Generating Your Programme',
+                  'Generating Your Plan',
                   style: CohortTextStyles.h1,
                 ),
                 const SizedBox(height: CohortSpacing.lg),

@@ -83,6 +83,82 @@ class AthletePlanningInputBuilder {
     );
   }
 
+  /// Plan-canonical input for programmed session resolve.
+  ///
+  /// Ignores athlete-specific capability history, injuries, and equipment so
+  /// two athletes on the same Plan version + week + day share structure.
+  PlanningInput buildPlanCanonical({
+    required PlanDefinition plan,
+    required PlanAssignment assignment,
+    required String knowledgeOntologyVersion,
+  }) {
+    final days = plan.recommendedDaysPerWeek;
+    final duration = plan.typicalSessionDurationMinutes;
+    final goal = plan.primaryGoal;
+    final presetId = plan.equipmentPresetIds.isNotEmpty
+        ? plan.equipmentPresetIds.first
+        : 'minimal';
+    final preset = AthleteEquipmentCatalog.byId(presetId);
+    final preferences = <String>[
+      '$planIdTagPrefix${plan.planId}',
+      '$progressionModelTagPrefix${plan.progressionModel}',
+      '$coachingFocusTagPrefix${plan.coachingFocus}',
+      for (final cap in plan.capabilityPriorities) 'priority_$cap',
+      if (goal.preferenceTag != null) goal.preferenceTag!,
+      'days_$days',
+      'duration_$duration',
+      'experience_${plan.experienceLevel.name}',
+      'week_${assignment.currentWeek}',
+      'day_${assignment.currentDay}',
+      'programmed_canonical',
+    ];
+
+    // Deterministic asOf from plan cursor — not wall clock.
+    final asOf = DateTime.utc(
+      2026,
+      1,
+      1,
+    ).add(Duration(days: assignment.currentWeek * 7 + assignment.currentDay));
+
+    return PlanningInput(
+      athleteId: 'programmed.${plan.planId}.${plan.version}',
+      goalContext: PlanningGoalContext(
+        goalId: goal.ontologyGoalId,
+        goalLabel: goal.label,
+      ),
+      capabilityEvidence: _canonicalEvidence(plan),
+      knowledgeOntologyVersion: knowledgeOntologyVersion,
+      asOf: asOf,
+      equipmentContext: PlanningEquipmentContext(
+        availableEquipmentIds: preset.equipmentIds,
+      ),
+      environmentContext: PlanningEnvironmentContext(
+        environmentId: preset.environmentId,
+      ),
+      availableTimeMinutes: duration,
+      injuryFlags: const [],
+      athletePreferences: PlanningAthletePreferences(tags: preferences),
+    );
+  }
+
+  AthleteCapabilityEvidenceProfile _canonicalEvidence(PlanDefinition plan) {
+    final confidenceBase = switch (plan.experienceLevel) {
+      AthleteExperienceLevel.beginner => 0.45,
+      AthleteExperienceLevel.intermediate => 0.65,
+      AthleteExperienceLevel.advanced => 0.8,
+    };
+    final items = <CapabilityEvidenceItem>[
+      for (final capabilityId in _seedCapabilityIds)
+        CapabilityEvidenceItem(
+          capabilityId: capabilityId,
+          state: CapabilityEvidenceState.estimated,
+          confidence: confidenceBase * 0.7,
+          source: 'plan_canonical',
+        ),
+    ];
+    return AthleteCapabilityEvidenceProfile.fromItems(items);
+  }
+
   AthleteCapabilityEvidenceProfile _evidenceFromProfile(AthleteProfile profile) {
     final byId = {
       for (final c in profile.baselineCapabilities) c.capabilityId: c,

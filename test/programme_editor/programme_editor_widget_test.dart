@@ -1,3 +1,5 @@
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/controllers/programme_editor_controller.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/models/programme_editor_selection.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/models/programme_editor_view_state.dart';
@@ -23,6 +25,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  setUp(() {
+    CurrentUserSession.bind(
+      const UserProfile(
+        id: 'dev-coach',
+        displayName: 'Coach',
+        isCoach: true,
+        isAthlete: false,
+      ),
+    );
+  });
+
+  tearDown(CurrentUserSession.clear);
+
   ProgrammeEditorController buildReadyController({bool dirty = false}) {
     final document = ProgrammeBuilderDocument.clean(
       metadata: const ProgrammeVersionDraftMetadata(
@@ -90,7 +105,7 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('● Unsaved'), findsOneWidget);
   });
@@ -107,7 +122,7 @@ void main() {
         ),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final saveButton = find.widgetWithText(FilledButton, 'Saving…');
     expect(saveButton, findsOneWidget);
@@ -115,20 +130,22 @@ void main() {
   });
 
   testWidgets('mobile week chips render', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     final controller = buildReadyController();
 
     await tester.pumpWidget(
       MaterialApp(
-        home: MediaQuery(
-          data: const MediaQueryData(size: Size(390, 844)),
-          child: ProgrammeEditorScreen(
-            versionId: 'version-1',
-            controller: controller,
-          ),
+        home: ProgrammeEditorScreen(
+          versionId: 'version-1',
+          controller: controller,
         ),
       ),
     );
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('Week 1'), findsWidgets);
     expect(find.byType(ChoiceChip), findsWidgets);

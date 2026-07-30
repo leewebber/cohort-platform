@@ -16,10 +16,14 @@ import '../../programme/models/programme_progression_result.dart';
 import '../../programme/models/programme_template.dart';
 import '../models/adaptation_execution_result.dart';
 import '../models/programme_adaptation_event.dart';
+import 'adaptation_policy_gate.dart';
 import 'adaptation_service.dart';
 import 'post_completion_adaptation_evaluator.dart';
 
 /// Executes deterministic post-completion adaptations on future programme slots.
+///
+/// Durable future-slot mutation requires explicit athlete acceptance and
+/// coach-authored permission, and must pass [AdaptationPolicyGate].
 class AdaptationExecutionService {
   AdaptationExecutionService({
     ProgrammeAdaptationEventStore? adaptationEventStore,
@@ -30,6 +34,7 @@ class AdaptationExecutionService {
     PostCompletionAdaptationEvaluator? evaluator,
     ProgrammeFutureSlotFinder? futureSlotFinder,
     AdaptationService? adaptationService,
+    this._policyGate = const AdaptationPolicyGate(),
   }) : _adaptationEventStore =
            adaptationEventStore ??
            const ProgrammeAdaptationEventSupabaseStore(),
@@ -54,6 +59,7 @@ class AdaptationExecutionService {
   final PostCompletionAdaptationEvaluator _evaluator;
   final ProgrammeFutureSlotFinder _futureSlotFinder;
   final AdaptationService _adaptationService;
+  final AdaptationPolicyGate _policyGate;
 
   Future<AdaptationExecutionResult> executeAfterSessionCompletion({
     required String athleteId,
@@ -62,7 +68,18 @@ class AdaptationExecutionService {
     required int trainingSessionId,
     required bool endedEarly,
     ProgrammeProgressionResult? progressionResult,
+    bool athleteAcceptedRecommendation = false,
+    bool coachAuthoredFutureMutationPermission = false,
   }) async {
+    if (!athleteAcceptedRecommendation) {
+      return AdaptationExecutionResult.skipped('awaiting_athlete_acceptance');
+    }
+    if (!coachAuthoredFutureMutationPermission) {
+      return AdaptationExecutionResult.skipped(
+        'requires_coach_authored_future_permission',
+      );
+    }
+
     if (!programmeContext.isProgrammeBacked) {
       return AdaptationExecutionResult.skipped(
         'Session is not programme-backed',
@@ -134,6 +151,16 @@ class AdaptationExecutionService {
 
     if (evaluation == null) {
       return AdaptationExecutionResult.skipped('No adaptation rules matched');
+    }
+
+    final proposedKinds = AdaptationPolicyGate.kindsForPostCompletion(
+      evaluation.type,
+    );
+    final rejected = _policyGate.rejectUnsupported(proposedKinds);
+    if (rejected.isNotEmpty) {
+      return AdaptationExecutionResult.skipped(
+        'policy_rejected:${rejected.map((e) => e.name).join(',')}',
+      );
     }
 
     String? replacementProtocolId;

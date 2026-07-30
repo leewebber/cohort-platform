@@ -7,19 +7,22 @@ import '../diagnostics/training_library_diagnostics.dart';
 import '../models/training_library_tab.dart';
 import '../widgets/cohort_protocols_tab.dart';
 import '../widgets/session_library_tab.dart';
+import '../widgets/session_templates_tab.dart';
 
-/// Coach Studio Training Library shell (M4).
+/// Coach Studio Training Library shell.
 class TrainingLibraryScreen extends StatefulWidget {
   const TrainingLibraryScreen({
     super.key,
     this.initialTab = TrainingLibraryTab.cohortProtocols,
     this.cohortTab,
     this.sessionTab,
+    this.templatesTab,
   });
 
   final TrainingLibraryTab initialTab;
   final Widget? cohortTab;
   final Widget? sessionTab;
+  final Widget? templatesTab;
 
   @override
   State<TrainingLibraryScreen> createState() => _TrainingLibraryScreenState();
@@ -78,12 +81,13 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
                     const Text('Training Library', style: CohortTextStyles.h1),
                     const SizedBox(height: CohortSpacing.sm),
                     const Text(
-                      'Browse official Cohort Protocols and manage reusable Sessions.',
+                      'Browse Cohort Protocols and Templates, and manage your reusable Sessions.',
                       style: CohortTextStyles.body,
                     ),
                     const SizedBox(height: CohortSpacing.lg),
                     TabBar(
                       controller: _tabController,
+                      isScrollable: true,
                       tabs: TrainingLibraryTab.values
                           .map((tab) => Tab(text: tab.title))
                           .toList(),
@@ -97,6 +101,7 @@ class _TrainingLibraryScreenState extends State<TrainingLibraryScreen>
                   children: [
                     widget.cohortTab ?? const CohortProtocolsTab(),
                     widget.sessionTab ?? const SessionLibraryTab(),
+                    widget.templatesTab ?? const SessionTemplatesTab(),
                   ],
                 ),
               ),

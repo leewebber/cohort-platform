@@ -32,9 +32,45 @@ class CapabilityTimelineEvent {
   };
 
   String get summaryLine => '$label $directionSymbol';
+
+  Map<String, dynamic> toPersistenceMap() => {
+    'eventId': eventId,
+    'recordedAt': recordedAt.toIso8601String(),
+    'capabilityId': capabilityId,
+    'label': label,
+    'direction': direction.name,
+    'fromLevel': fromLevel,
+    'toLevel': toLevel,
+    'sourceCompletionId': sourceCompletionId,
+  };
+
+  factory CapabilityTimelineEvent.fromPersistenceMap(Map<String, dynamic> map) {
+    final recordedRaw = map['recordedAt']?.toString();
+    final recordedAt = recordedRaw == null
+        ? null
+        : DateTime.tryParse(recordedRaw)?.toUtc();
+    if (recordedAt == null) {
+      throw const FormatException('Invalid recordedAt');
+    }
+    final directionName = map['direction']?.toString() ?? 'steady';
+    final direction = CapabilityChangeDirection.values.firstWhere(
+      (d) => d.name == directionName,
+      orElse: () => CapabilityChangeDirection.steady,
+    );
+    return CapabilityTimelineEvent(
+      eventId: map['eventId']?.toString() ?? '',
+      recordedAt: recordedAt,
+      capabilityId: map['capabilityId']?.toString() ?? '',
+      label: map['label']?.toString() ?? '',
+      direction: direction,
+      fromLevel: (map['fromLevel'] as num?)?.toDouble(),
+      toLevel: (map['toLevel'] as num?)?.toDouble(),
+      sourceCompletionId: map['sourceCompletionId']?.toString(),
+    );
+  }
 }
 
-/// In-memory capability timeline (memory only).
+/// In-memory capability timeline, hydrated from [AthleteLocalRepository].
 class CapabilityTimelineStore {
   CapabilityTimelineStore._();
 
@@ -52,8 +88,33 @@ class CapabilityTimelineStore {
 
   static void add(CapabilityTimelineEvent event) => _items.add(event);
 
-  static void addAll(Iterable<CapabilityTimelineEvent> events) =>
-      _items.addAll(events);
+  static void addAll(Iterable<CapabilityTimelineEvent> events) {
+    final byId = <String, CapabilityTimelineEvent>{
+      for (final e in _items)
+        if (e.eventId.isNotEmpty) e.eventId: e,
+    };
+    for (final e in events) {
+      if (e.eventId.isEmpty) {
+        _items.add(e);
+        continue;
+      }
+      byId[e.eventId] = e;
+    }
+    _items
+      ..clear()
+      ..addAll(byId.values);
+  }
+
+  static void replaceAll(Iterable<CapabilityTimelineEvent> events) {
+    final byId = <String, CapabilityTimelineEvent>{};
+    for (final e in events) {
+      if (e.eventId.isEmpty) continue;
+      byId[e.eventId] = e;
+    }
+    _items
+      ..clear()
+      ..addAll(byId.values);
+  }
 
   static void clear() => _items.clear();
 }

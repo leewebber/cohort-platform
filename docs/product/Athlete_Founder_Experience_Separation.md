@@ -2,6 +2,7 @@
 
 **Phase:** 6 — Product Hardening  
 **Sprint:** 2 — Athlete Experience Simplification & Founder Workspace Separation  
+**Sprint 3:** Local athlete memory + product constitution (no founder tools on athlete)  
 **Status:** Implemented (MVP v1.1)
 
 ---
@@ -112,3 +113,19 @@ Reset with `FounderAccessPolicy.reset()`.
 ## Preview Athlete behaviour
 
 Founders open the athlete experience via **Preview Athlete App** on Founder Overview. This pushes `AthleteAppShell` without mixing founder cards into athlete Home.
+
+---
+
+## Product constitution (Sprint 3)
+
+Binding principles live in `docs/product/Cohort_Product_Constitution_v1.md`.
+
+Athlete vocabulary: **Plan · Today's Training · Progress · Adapt · Profile**.
+
+Athlete and founder experiences remain separate. Complexity belongs in the engine; simplicity belongs in the athlete interface.
+
+---
+
+## Legacy athlete Home path
+
+`HomeTodaySessionSection` is **quarantined** — not used on athlete Home (replaced by `DailyBriefingSection`). Retained only for the programme-assignment Adapt / Supabase schedule path until that founder path is removed.

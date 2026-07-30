@@ -5,6 +5,7 @@ import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/adaptation_bottom_sheet.dart';
 import '../../../core/widgets/adaptation_decision_bottom_sheet.dart';
+import '../../../models/adaptation_decision.dart';
 import '../../../models/adaptation_request.dart';
 import '../../admin/services/protocol_builder_service.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
@@ -97,7 +98,11 @@ class HomeAdaptFlow {
         context,
         decision,
       );
+      // Keep planned / dismiss — no durable mutation.
       if (accepted != true || !context.mounted) return;
+      if (decision.decisionType == AdaptationDecisionType.keepOriginal) {
+        return;
+      }
 
       if (execution == null) {
         await _showSafeMessage(

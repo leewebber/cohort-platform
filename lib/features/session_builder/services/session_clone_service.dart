@@ -1,6 +1,5 @@
 import '../../../models/protocol_draft.dart';
 import '../../../models/protocol_step_draft.dart';
-import '../../../models/session_block.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../models/cohort_protocol_copy_destination.dart';
 import 'protocol_draft_block_resolver.dart';
@@ -30,12 +29,73 @@ class SessionCloneService {
     required CohortProtocolCopyDestination destination,
     String? programmeVersionId,
   }) {
+    return _cloneToSession(
+      source: source,
+      newContentId: newContentId,
+      ownerId: ownerId,
+      destination: destination,
+      programmeVersionId: programmeVersionId,
+      sourceContentKind: TrainingContentKind.cohortProtocol,
+      nameSuffix: ' — Custom',
+    );
+  }
+
+  /// Creates an independent programme Session draft from a session template.
+  ///
+  /// Templates are never attached by live reference — always copy-on-use.
+  ProtocolDraft cloneTemplateToSession({
+    required ProtocolDraft source,
+    required String newContentId,
+    required String ownerId,
+    CohortProtocolCopyDestination destination =
+        CohortProtocolCopyDestination.programmeOnly,
+    String? programmeVersionId,
+  }) {
+    if (destination == CohortProtocolCopyDestination.programmeOnly &&
+        (programmeVersionId == null || programmeVersionId.trim().isEmpty)) {
+      throw ArgumentError(
+        'programmeVersionId is required when cloning a template for a programme.',
+      );
+    }
+
+    return _cloneToSession(
+      source: source,
+      newContentId: newContentId,
+      ownerId: ownerId,
+      destination: destination,
+      programmeVersionId: programmeVersionId,
+      sourceContentKind: TrainingContentKind.sessionTemplate,
+      nameSuffix: '',
+    );
+  }
+
+  ProtocolDraft _cloneToSession({
+    required ProtocolDraft source,
+    required String newContentId,
+    required String ownerId,
+    required CohortProtocolCopyDestination destination,
+    required TrainingContentKind sourceContentKind,
+    required String nameSuffix,
+    String? programmeVersionId,
+  }) {
+    final trimmedNewId = newContentId.trim();
+    final trimmedSourceId = source.protocolId.trim();
+    if (trimmedNewId.isEmpty || trimmedNewId == trimmedSourceId) {
+      throw ArgumentError(
+        'Clone requires a new content identity distinct from the source.',
+      );
+    }
+
     final destinationScope =
         destination == CohortProtocolCopyDestination.programmeOnly
         ? TrainingAuthoringScope.programmeOnly
         : TrainingAuthoringScope.coachPrivate;
 
-    final copiedName = _copiedSessionName(source.name);
+    final copiedName = nameSuffix.isEmpty
+        ? source.name.trim().isEmpty
+              ? 'Session from template'
+              : source.name.trim()
+        : _copiedSessionName(source.name);
     final sourceBlocks = _blockResolver.resolveBlocks(source);
     final clonedBlocks = sourceBlocks
         .asMap()
@@ -65,12 +125,14 @@ class SessionCloneService {
           ? programmeVersionId
           : null,
       sourceContentId: source.protocolId,
-      sourceContentKind: TrainingContentKind.cohortProtocol,
+      sourceContentKind: sourceContentKind,
       sourceVersionId: null,
       primaryCapability: source.primaryCapability,
       secondaryCapability: source.secondaryCapability,
       sessionType: source.sessionType,
-      sessionFormat: source.sessionFormat,
+      sessionFormat: source.sessionFormat?.trim().isNotEmpty == true
+          ? source.sessionFormat
+          : source.sessionType,
       durationMin: source.durationMin,
       durationCategory: source.durationCategory,
       physiologicalDemand: source.physiologicalDemand,

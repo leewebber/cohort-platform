@@ -123,6 +123,67 @@ void main() {
 
       expect(results.map((p) => p.protocolId), ['TPL-001']);
     });
+
+    test(
+      'listCanonicalSessionTemplates returns only published cohort templates',
+      () async {
+        final canonical = Protocol(protocolId: 'TMP-001', name: 'Full-Body');
+        final coachTemplate = Protocol(
+          protocolId: 'TPL-COACH',
+          name: 'Coach Template',
+        );
+        final unpublished = Protocol(
+          protocolId: 'TMP-UNPUB',
+          name: 'Unpublished',
+        );
+        final unendorsed = Protocol(
+          protocolId: 'TMP-UNEND',
+          name: 'Unendorsed',
+        );
+        final ownedGlobal = Protocol(
+          protocolId: 'TMP-OWNED',
+          name: 'Owned Global',
+        );
+        final repository = _FakeTrainingContentRepository(
+          rows: [
+            canonical,
+            coachTemplate,
+            coachSession,
+            unpublished,
+            unendorsed,
+            ownedGlobal,
+          ],
+          metadata: {
+            'TMP-001': _Metadata.canonicalTemplate,
+            'TPL-COACH': _Metadata.template(ownerId: 'dev-coach'),
+            'SES-001': _Metadata.coachPrivate(ownerId: 'dev-coach'),
+            'TMP-UNPUB': _Metadata(
+              contentKind: TrainingContentKind.sessionTemplate,
+              authoringScope: TrainingAuthoringScope.cohortGlobal,
+              published: false,
+              endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
+            ),
+            'TMP-UNEND': _Metadata(
+              contentKind: TrainingContentKind.sessionTemplate,
+              authoringScope: TrainingAuthoringScope.cohortGlobal,
+              published: true,
+              endorsementStatus: TrainingEndorsementStatus.coachAuthored,
+            ),
+            'TMP-OWNED': _Metadata(
+              contentKind: TrainingContentKind.sessionTemplate,
+              authoringScope: TrainingAuthoringScope.cohortGlobal,
+              published: true,
+              ownerId: 'dev-coach',
+              endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
+            ),
+          },
+        );
+
+        final results = await repository.listCanonicalSessionTemplates();
+
+        expect(results.map((p) => p.protocolId), ['TMP-001']);
+      },
+    );
   });
 }
 
@@ -133,6 +194,7 @@ class _Metadata {
     this.ownerId,
     this.programmeVersionId,
     this.published = false,
+    this.endorsementStatus,
   });
 
   final TrainingContentKind contentKind;
@@ -140,11 +202,13 @@ class _Metadata {
   final String? ownerId;
   final String? programmeVersionId;
   final bool published;
+  final TrainingEndorsementStatus? endorsementStatus;
 
   static const cohortPublished = _Metadata(
     contentKind: TrainingContentKind.cohortProtocol,
     authoringScope: TrainingAuthoringScope.cohortGlobal,
     published: true,
+    endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
   );
 
   static _Metadata coachPrivate({required String ownerId}) {
@@ -152,6 +216,7 @@ class _Metadata {
       contentKind: TrainingContentKind.session,
       authoringScope: TrainingAuthoringScope.coachPrivate,
       ownerId: ownerId,
+      endorsementStatus: TrainingEndorsementStatus.coachAuthored,
     );
   }
 
@@ -160,16 +225,33 @@ class _Metadata {
       contentKind: TrainingContentKind.session,
       authoringScope: TrainingAuthoringScope.programmeOnly,
       programmeVersionId: programmeVersionId,
+      endorsementStatus: TrainingEndorsementStatus.coachAuthored,
     );
   }
 
-  static _Metadata template({required String ownerId}) {
+  static _Metadata template({
+    String? ownerId,
+    bool published = true,
+    TrainingEndorsementStatus endorsementStatus =
+        TrainingEndorsementStatus.coachAuthored,
+  }) {
     return _Metadata(
       contentKind: TrainingContentKind.sessionTemplate,
-      authoringScope: TrainingAuthoringScope.coachPrivate,
+      authoringScope: ownerId == null
+          ? TrainingAuthoringScope.cohortGlobal
+          : TrainingAuthoringScope.coachPrivate,
       ownerId: ownerId,
+      published: published,
+      endorsementStatus: endorsementStatus,
     );
   }
+
+  static const canonicalTemplate = _Metadata(
+    contentKind: TrainingContentKind.sessionTemplate,
+    authoringScope: TrainingAuthoringScope.cohortGlobal,
+    published: true,
+    endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
+  );
 }
 
 /// In-memory filter mirror of repository query predicates for unit tests.
@@ -258,6 +340,25 @@ class _FakeTrainingContentRepository extends ProtocolRepository {
             return true;
           }
           return meta.ownerId == ownerId.trim();
+        })
+        .take(limit)
+        .toList();
+  }
+
+  @override
+  Future<List<Protocol>> listCanonicalSessionTemplates({
+    int limit = 100,
+  }) async {
+    return _rows
+        .where((row) {
+          final meta = _metadata[row.protocolId];
+          return meta != null &&
+              meta.contentKind == TrainingContentKind.sessionTemplate &&
+              meta.authoringScope == TrainingAuthoringScope.cohortGlobal &&
+              meta.endorsementStatus ==
+                  TrainingEndorsementStatus.cohortEndorsed &&
+              meta.published &&
+              (meta.ownerId == null || meta.ownerId!.trim().isEmpty);
         })
         .take(limit)
         .toList();

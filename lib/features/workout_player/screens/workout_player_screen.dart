@@ -166,7 +166,7 @@ class _WorkoutPlayerScreenState extends State<WorkoutPlayerScreen> {
                             Text(step.description!, style: CohortTextStyles.body),
                           ],
                           WorkoutMetaRow(
-                            label: 'Prescription',
+                            label: 'Programmed',
                             value: step.prescriptionSummary,
                           ),
                           if (_previousFor(step) != null)

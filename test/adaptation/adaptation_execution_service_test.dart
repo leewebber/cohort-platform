@@ -191,7 +191,8 @@ void main() {
       );
     });
 
-    test('applies load progression to a future slot', () async {
+    test('skips load progression without explicit accept and coach permission',
+        () async {
       final result = await service.executeAfterSessionCompletion(
         athleteId: 'lee',
         record: strengthCompletionRecord(),
@@ -205,19 +206,14 @@ void main() {
         endedEarly: false,
       );
 
-      expect(result.applied, isTrue);
-      expect(result.event, isNotNull);
-      expect(adaptationEvents.events, hasLength(1));
-
-      final futureOutcome = tables.outcomes.firstWhere(
-        (outcome) => outcome.sessionSlotId == slot5Id,
-      );
-      expect(futureOutcome.outcomeStatus, ProgrammeSlotOutcomeStatus.scheduled);
-      expect(futureOutcome.resolutionNote, contains('Progression rule'));
+      expect(result.applied, isFalse);
+      expect(result.skippedReason, 'awaiting_athlete_acceptance');
+      expect(adaptationEvents.events, isEmpty);
     });
 
-    test('duplicate completion is idempotent', () async {
-      await service.executeAfterSessionCompletion(
+    test('policy gate rejects future-slot mutation even when accept flags set',
+        () async {
+      final result = await service.executeAfterSessionCompletion(
         athleteId: 'lee',
         record: strengthCompletionRecord(),
         programmeContext: contextForSlot(
@@ -228,23 +224,21 @@ void main() {
         ),
         trainingSessionId: 9002,
         endedEarly: false,
+        athleteAcceptedRecommendation: true,
+        coachAuthoredFutureMutationPermission: true,
       );
 
-      final second = await service.executeAfterSessionCompletion(
-        athleteId: 'lee',
-        record: strengthCompletionRecord(),
-        programmeContext: contextForSlot(
-          slotId: slot1Id,
-          week: 1,
-          dayKey: 'day_1',
-          order: 1,
-        ),
-        trainingSessionId: 9002,
-        endedEarly: false,
-      );
+      expect(result.applied, isFalse);
+      expect(result.skippedReason, contains('policy_rejected'));
+      expect(adaptationEvents.events, isEmpty);
 
-      expect(second.applied, isTrue);
-      expect(adaptationEvents.events, hasLength(1));
+      final futureStillScheduled = tables.outcomes
+          .where((outcome) => outcome.sessionSlotId == slot5Id)
+          .toList();
+      expect(
+        futureStillScheduled.every((o) => o.resolutionNote == null),
+        isTrue,
+      );
     });
 
     test('skips when no adaptation rules match', () async {
@@ -268,6 +262,8 @@ void main() {
         ),
         trainingSessionId: 9003,
         endedEarly: false,
+        athleteAcceptedRecommendation: true,
+        coachAuthoredFutureMutationPermission: true,
       );
 
       expect(result.applied, isFalse);

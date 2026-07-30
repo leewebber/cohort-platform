@@ -1,19 +1,26 @@
 import 'package:flutter/widgets.dart';
 
+import '../../../core/persistence/athlete_persistence.dart';
+import '../../../core/persistence/workout_execution_capture.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/workout_player_state.dart';
 import '../models/workout_session_brief.dart';
 import '../services/workout_player_plan_flattener.dart';
 
-/// Owns in-memory Workout Player progression. No persistence yet.
+/// Owns Workout Player progression and lightweight local progress snapshots.
 class WorkoutPlayerController extends ChangeNotifier
     with WidgetsBindingObserver {
   WorkoutPlayerController({
     required SessionExecutionPlan plan,
     required WorkoutSessionBrief brief,
     String? orchestrationId,
+    String? athleteId,
     WorkoutPlayerPlanFlattener flattener = const WorkoutPlayerPlanFlattener(),
-  }) : _state = WorkoutPlayerState(
+  }) : _athleteId = athleteId ??
+           AthleteProfileSession.profile?.athleteId ??
+           'athlete.local',
+       _state = WorkoutPlayerState(
          plan: plan,
          brief: brief,
          steps: flattener.flatten(plan),
@@ -24,8 +31,10 @@ class WorkoutPlayerController extends ChangeNotifier
          orchestrationId: orchestrationId,
        );
 
+  final String _athleteId;
   WorkoutPlayerState _state;
   bool _observingLifecycle = false;
+  DateTime? _lastSnapshotAt;
 
   WorkoutPlayerState get state => _state;
 
@@ -43,13 +52,9 @@ class WorkoutPlayerController extends ChangeNotifier
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // State remains in memory; persistence can snapshot [state.toPersistenceMap].
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      debugPrint(
-        '[WorkoutPlayer] lifecycle=${state.name} '
-        'snapshot=${_state.toPersistenceMap()}',
-      );
+      _persistProgress(force: true);
     }
   }
 
@@ -72,6 +77,7 @@ class WorkoutPlayerController extends ChangeNotifier
       clearCompletedAt: true,
     );
     notifyListeners();
+    _persistProgress(force: true);
   }
 
   void completeSet() {
@@ -82,6 +88,7 @@ class WorkoutPlayerController extends ChangeNotifier
     if (_state.currentSet < step.totalSets) {
       _state = _state.copyWith(currentSet: _state.currentSet + 1);
       notifyListeners();
+      _persistProgress();
       return;
     }
 
@@ -102,6 +109,7 @@ class WorkoutPlayerController extends ChangeNotifier
       );
     }
     notifyListeners();
+    _persistProgress(force: true);
   }
 
   void goToPrevious() {
@@ -109,6 +117,7 @@ class WorkoutPlayerController extends ChangeNotifier
     if (_state.currentSet > 1) {
       _state = _state.copyWith(currentSet: _state.currentSet - 1);
       notifyListeners();
+      _persistProgress();
       return;
     }
     if (_state.currentExerciseIndex <= 0) return;
@@ -121,6 +130,7 @@ class WorkoutPlayerController extends ChangeNotifier
       completedExerciseIndexes: completed,
     );
     notifyListeners();
+    _persistProgress();
   }
 
   void goToNext() {
@@ -130,6 +140,7 @@ class WorkoutPlayerController extends ChangeNotifier
     if (_state.currentSet < step.totalSets) {
       _state = _state.copyWith(currentSet: _state.currentSet + 1);
       notifyListeners();
+      _persistProgress();
       return;
     }
     final completed = {
@@ -151,6 +162,7 @@ class WorkoutPlayerController extends ChangeNotifier
       );
     }
     notifyListeners();
+    _persistProgress(force: true);
   }
 
   void updateNotes(String? notes) {
@@ -171,6 +183,25 @@ class WorkoutPlayerController extends ChangeNotifier
       completedAt: DateTime.now().toUtc(),
     );
     notifyListeners();
+  }
+
+  void _persistProgress({bool force = false}) {
+    if (!AthletePersistence.isInitialized) return;
+    if (_state.phase != WorkoutPlayerPhase.active) return;
+    final now = DateTime.now().toUtc();
+    if (!force &&
+        _lastSnapshotAt != null &&
+        now.difference(_lastSnapshotAt!) < const Duration(seconds: 2)) {
+      return;
+    }
+    _lastSnapshotAt = now;
+    final snapshot = const WorkoutExecutionCapture().snapshotFromState(
+      state: _state,
+      athleteId: _athleteId,
+      assignmentId: AthleteProfileSession.activeAssignment?.assignmentId,
+      now: now,
+    );
+    AthletePersistence.hydrator.saveWorkoutProgress(snapshot);
   }
 
   @override

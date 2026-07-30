@@ -42,7 +42,7 @@ class SessionCompleteScreen extends StatelessWidget {
 
   String get _adaptationLine => adaptationMessage?.trim().isNotEmpty == true
       ? adaptationMessage!.trim()
-      : 'Programme continues as planned.';
+      : 'Plan continues as planned.';
 
   ResolvedTodaySession? get _nextSession =>
       progressionResult?.nextResolvedSession;
@@ -102,7 +102,7 @@ class SessionCompleteScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Programme progress',
+                        'Plan progress',
                         style: CohortTextStyles.cardTitle,
                       ),
                       const SizedBox(height: CohortSpacing.sm),

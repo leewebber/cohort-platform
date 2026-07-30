@@ -1,4 +1,6 @@
 import 'package:cohort_platform/domain/coach_brain/coach_brain_domain.dart';
+import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
+import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/models/adaptation_decision.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol.dart';
@@ -35,6 +37,10 @@ class AthleteWorkoutAdaptationApplicationService {
     required AdaptationRequest request,
     ProtocolDraft? protocolDraft,
   }) async {
+    const AdaptationPolicyGate().assertAllowed(
+      AdaptationPolicyGate.kindsForDayOf(request.reason),
+    );
+
     final draft =
         protocolDraft ??
         await _loadProtocolDraft(currentProtocol.protocolId.trim());
@@ -62,6 +68,8 @@ class AthleteWorkoutAdaptationApplicationService {
       request: request,
       protocol: currentProtocol,
       coachResult: coachResult,
+      programmedSessionKey:
+          AthleteProfileSession.programme?.programmedSessionKey?.value,
     );
   }
 

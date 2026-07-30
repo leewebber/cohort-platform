@@ -11,6 +11,9 @@ enum ProgrammeSessionAuthoringStatus {
   programmeNotEditable,
   slotNotFound,
   cancelled,
+
+  /// Repeated Save & Attach / attach callback ignored (idempotent).
+  duplicateAttachIgnored,
 }
 
 /// Tracks a saved Session that could not be attached to the programme slot.

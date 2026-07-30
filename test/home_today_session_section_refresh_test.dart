@@ -103,7 +103,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+      expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsOneWidget);
       expect(find.textContaining('Day 2'), findsOneWidget);
       expect(loadCount, 1);
 
@@ -113,9 +113,9 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Bodyweight Grinder'), findsOneWidget);
+      expect(find.text('BODYWEIGHT GRINDER'), findsOneWidget);
       expect(find.textContaining('Day 1'), findsOneWidget);
-      expect(find.text('Classic Threshold Intervals'), findsNothing);
+      expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsNothing);
       expect(loadCount, 2);
     });
 
@@ -151,12 +151,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Bodyweight Grinder'), findsOneWidget);
+      expect(find.text('BODYWEIGHT GRINDER'), findsOneWidget);
 
       controller.requestRefresh(source: 'programme_complete');
       await tester.pumpAndSettle();
 
-      expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+      expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsOneWidget);
       expect(find.textContaining('Day 2'), findsOneWidget);
       expect(loadCount, 2);
     });
@@ -197,7 +197,7 @@ void main() {
           isFalse,
         );
 
-        expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+        expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsOneWidget);
         expect(loadCount, 1);
       },
     );
@@ -231,7 +231,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(loadCount, 1);
-      expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+      expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsOneWidget);
       expect(find.byType(TodaySessionCard), findsOneWidget);
     });
 
@@ -270,12 +270,12 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(sectionKey.currentState, isNotNull);
-      expect(find.text('Classic Threshold Intervals'), findsOneWidget);
+      expect(find.text('CLASSIC THRESHOLD INTERVALS'), findsOneWidget);
 
       sectionKey.currentState!.refresh(source: 'programme_reset');
       await tester.pumpAndSettle();
 
-      expect(find.text('Bodyweight Grinder'), findsOneWidget);
+      expect(find.text('BODYWEIGHT GRINDER'), findsOneWidget);
       expect(loadCount, 2);
     });
   });

@@ -44,7 +44,7 @@ class PreviousPerformanceSnapshot {
       rpe != null;
 }
 
-/// In-memory store of prior performances (memory only — no cloud).
+/// In-memory store of prior performances, hydrated from local persistence.
 class PreviousPerformanceStore {
   PreviousPerformanceStore._();
 
@@ -60,6 +60,14 @@ class PreviousPerformanceStore {
   }
 
   static void recordAll(Iterable<PreviousPerformanceSnapshot> snapshots) {
+    for (final s in snapshots) {
+      record(s);
+    }
+  }
+
+  static void replaceAll(Iterable<PreviousPerformanceSnapshot> snapshots) {
+    _items
+      ..clear();
     for (final s in snapshots) {
       record(s);
     }

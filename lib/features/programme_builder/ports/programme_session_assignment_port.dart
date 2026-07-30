@@ -16,6 +16,8 @@ abstract interface class ProgrammeSessionAssignmentPort {
   });
 
   Future<ProgrammeBuilderEditResult> assignSession({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String contentId,
     required String displayTitle,

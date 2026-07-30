@@ -16,8 +16,13 @@ class HomeAdaptationDecisionPresenter {
     required AdaptationRequest request,
     required Protocol protocol,
     required CoachDecisionResult coachResult,
+    String? programmedSessionKey,
   }) {
     final keepOriginal = _keepOriginalFromCoachResult(coachResult);
+    final snapshot = coachResult.executionSnapshot;
+    final changeSummary = keepOriginal
+        ? const <String>[]
+        : _changeSummaryFromSnapshot(snapshot);
     return AdaptationDecision(
       decisionType: keepOriginal
           ? AdaptationDecisionType.keepOriginal
@@ -28,6 +33,9 @@ class HomeAdaptationDecisionPresenter {
               request.reason,
             ),
       protocol: protocol,
+      changeSummary: changeSummary,
+      programmedSessionKey: programmedSessionKey,
+      preservedIntent: snapshot?.primarySessionIntent?.name,
     );
   }
 
@@ -38,5 +46,25 @@ class HomeAdaptationDecisionPresenter {
 
     return coachResult.executionSnapshot!.evaluationOutcome ==
         AdaptationEvaluationOutcome.noAdaptationRequired;
+  }
+
+  static List<String> _changeSummaryFromSnapshot(
+    AdaptedSessionExecutionSnapshot? snapshot,
+  ) {
+    if (snapshot == null) return const [];
+    final lines = <String>[];
+    for (final entry in snapshot.appliedAdaptationAudit) {
+      lines.add(
+        '${entry.actionType.name} · ${entry.targetScopeDbValue} · '
+        '${entry.targetId}',
+      );
+    }
+    for (final omitted in snapshot.omittedBlocks) {
+      lines.add(
+        'omit block ${omitted.sourceBlockLocalId} '
+        '(${omitted.omissionAction.name})',
+      );
+    }
+    return List.unmodifiable(lines);
   }
 }

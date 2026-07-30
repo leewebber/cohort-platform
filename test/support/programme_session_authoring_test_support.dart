@@ -142,17 +142,44 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
   int saveCallCount = 0;
   int librarySaveCallCount = 0;
 
+  void _assertCohortNotOverwritten(ProtocolDraft draft) {
+    final existing =
+        drafts[draft.protocolId] ?? libraryDrafts[draft.protocolId];
+    if (existing == null) return;
+    if (existing.contentKind == TrainingContentKind.cohortProtocol &&
+        draft.contentKind != TrainingContentKind.cohortProtocol) {
+      throw const ProtocolBuilderException(
+        'Official Cohort Protocols cannot be overwritten by Session content.',
+      );
+    }
+    if (existing.contentKind == TrainingContentKind.sessionTemplate) {
+      if (draft.contentKind != TrainingContentKind.sessionTemplate) {
+        throw const ProtocolBuilderException(
+          'Official Cohort Templates cannot be overwritten by Session content.',
+        );
+      }
+      if (existing.authoringScope == TrainingAuthoringScope.cohortGlobal) {
+        throw const ProtocolBuilderException(
+          'Official Cohort Templates cannot be edited in place. '
+          'Use Template creates a coach-owned Session instead.',
+        );
+      }
+    }
+  }
+
   @override
   Future<ProtocolBuilderSaveResult> saveDraft(ProtocolDraft draft) async {
     saveCallCount++;
     if (failSave) {
       throw const ProtocolBuilderException('Save failed.');
     }
+    _assertCohortNotOverwritten(draft);
 
+    final created = !drafts.containsKey(draft.protocolId);
     drafts[draft.protocolId] = draft;
     return ProtocolBuilderSaveResult.draft(
       protocolId: draft.protocolId,
-      created: !drafts.containsKey(draft.protocolId),
+      created: created,
       stepCount: draft.steps.length,
     );
   }
@@ -165,12 +192,14 @@ class FakeProtocolBuilderService extends ProtocolBuilderService {
     if (failSave) {
       throw const ProtocolBuilderException('Save failed.');
     }
+    _assertCohortNotOverwritten(draft);
 
+    final created = !libraryDrafts.containsKey(draft.protocolId);
     libraryDrafts[draft.protocolId] = draft;
     drafts[draft.protocolId] = draft;
     return ProtocolBuilderSaveResult.draft(
       protocolId: draft.protocolId,
-      created: !libraryDrafts.containsKey(draft.protocolId),
+      created: created,
       stepCount: draft.steps.length,
     );
   }
@@ -245,6 +274,8 @@ class FakeProgrammeSessionAssignmentPort
 
   @override
   Future<ProgrammeBuilderEditResult> assignSession({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String contentId,
     required String displayTitle,
@@ -257,8 +288,18 @@ class FakeProgrammeSessionAssignmentPort
       throw StateError('Attach failed.');
     }
 
+    if (!slotExists(
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
+      slotLocalId: slotLocalId,
+    )) {
+      throw StateError('Programme slot is no longer available.');
+    }
+
     _document = const ProgrammeBuilderEditOperations().assignProtocol(
       _document,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
       slotLocalId: slotLocalId,
       protocolId: contentId,
       displayTitle: displayTitle,

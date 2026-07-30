@@ -45,6 +45,8 @@ class ProgrammeEditorSessionAssignmentPort
 
   @override
   Future<ProgrammeBuilderEditResult> assignSession({
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String contentId,
     required String displayTitle,
@@ -54,7 +56,17 @@ class ProgrammeEditorSessionAssignmentPort
       throw StateError('Programme document is not loaded.');
     }
 
+    if (!slotExists(
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
+      slotLocalId: slotLocalId,
+    )) {
+      throw StateError('Programme slot is no longer available.');
+    }
+
     await _controller.assignProtocol(
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
       slotLocalId: slotLocalId,
       protocolId: contentId,
       displayTitle: displayTitle,

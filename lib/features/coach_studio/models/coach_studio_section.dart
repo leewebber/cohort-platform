@@ -23,7 +23,7 @@ extension CoachStudioSectionLabels on CoachStudioSection {
       CoachStudioSection.programmes =>
         'Multi-week curricula, drafts, and publishing.',
       CoachStudioSection.trainingLibrary =>
-        'Cohort Protocols, Session Library, and reusable workouts.',
+        'Cohort Protocols, Templates, and reusable My Sessions.',
       CoachStudioSection.exercises =>
         'Movement library and coaching knowledge.',
       CoachStudioSection.athletes =>

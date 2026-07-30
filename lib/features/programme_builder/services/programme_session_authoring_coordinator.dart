@@ -2,12 +2,13 @@ import '../../../core/services/current_coach_identity.dart';
 import '../../../core/services/training_content_id_generator.dart';
 import '../../../core/utils/database_uuid.dart';
 import '../../../features/admin/services/protocol_builder_service.dart';
+import '../../../features/session_builder/models/cohort_protocol_copy_destination.dart';
 import '../../../features/session_builder/models/programme_session_authoring_context.dart';
 import '../../../features/session_builder/models/session_builder_host_mode.dart';
-import '../../../features/session_builder/services/programme_session_draft_factory.dart';
 import '../../../features/session_builder/services/session_clone_service.dart';
 import '../../../features/session_builder/services/programme_session_persistence_validation.dart';
 import '../../../models/protocol_draft.dart';
+import '../../../models/training_content_edit_policy.dart';
 import '../../../models/training_content_vocabulary.dart';
 import '../diagnostics/programme_session_authoring_diagnostics.dart';
 import '../models/programme_session_authoring_result.dart';
@@ -20,15 +21,54 @@ class ProgrammeSessionAuthoringCoordinator {
     required ProgrammeSessionAssignmentPort assignmentPort,
     required TrainingContentIdGenerator idGenerator,
     required CurrentCoachIdentity coachIdentity,
+    SessionCloneService cloneService = const SessionCloneService(),
+    TrainingContentEditPolicy editPolicy = const TrainingContentEditPolicy(),
   }) : _protocolBuilderService = protocolBuilderService,
        _assignmentPort = assignmentPort,
        _idGenerator = idGenerator,
-       _coachIdentity = coachIdentity;
+       _coachIdentity = coachIdentity,
+       _cloneService = cloneService,
+       _editPolicy = editPolicy;
 
   final ProtocolBuilderService _protocolBuilderService;
   final ProgrammeSessionAssignmentPort _assignmentPort;
   final TrainingContentIdGenerator _idGenerator;
   final CurrentCoachIdentity _coachIdentity;
+  final SessionCloneService _cloneService;
+  final TrainingContentEditPolicy _editPolicy;
+
+  bool _attachInFlight = false;
+  String? _lastSuccessfulAttachKey;
+
+  /// Copy-on-use: load a template and return an independent programme session draft.
+  Future<ProtocolDraft> prepareDraftFromTemplate({
+    required ProgrammeSessionAuthoringContext context,
+    required String templateContentId,
+  }) async {
+    final loaded = await _protocolBuilderService.loadProtocol(
+      templateContentId.trim(),
+    );
+    if (!_editPolicy.isCanonicalTemplateSource(loaded)) {
+      throw ProtocolBuilderException(
+        'Only official Cohort Templates can be used with Use Template.',
+      );
+    }
+
+    final ownerId = _coachIdentity.coachId?.trim();
+    if (ownerId == null || ownerId.isEmpty) {
+      throw ProtocolBuilderException(
+        'A signed-in coach is required to use a template.',
+      );
+    }
+
+    return _cloneService.cloneTemplateToSession(
+      source: loaded,
+      newContentId: SessionCloneService.newLocalCloneDraftId(),
+      ownerId: ownerId,
+      destination: CohortProtocolCopyDestination.programmeOnly,
+      programmeVersionId: context.programmeVersionId,
+    );
+  }
 
   Future<ProgrammeSessionAuthoringResult> saveAndAttach({
     required ProgrammeSessionAuthoringContext context,
@@ -43,13 +83,28 @@ class ProgrammeSessionAuthoringCoordinator {
       'slot=${context.slotLocalId} isEdit=$isEdit',
     );
 
+    if (_attachInFlight) {
+      return const ProgrammeSessionAuthoringResult(
+        status: ProgrammeSessionAuthoringStatus.duplicateAttachIgnored,
+        coachMessage: 'Session attach is already in progress.',
+      );
+    }
+
     final preflight = _validatePreflight(context);
     if (preflight != null) return preflight;
 
-    if (draft.contentKind == TrainingContentKind.cohortProtocol) {
+    if (_editPolicy.isReadOnlyCohortProtocol(draft) ||
+        draft.contentKind == TrainingContentKind.cohortProtocol) {
       return ProgrammeSessionAuthoringResult.validationFailed(
         coachMessage:
             'Official Cohort Protocol content cannot be saved as a programme Session.',
+      );
+    }
+
+    if (draft.contentKind == TrainingContentKind.sessionTemplate) {
+      return ProgrammeSessionAuthoringResult.validationFailed(
+        coachMessage:
+            'Templates cannot be attached directly. Use Template creates a copy.',
       );
     }
 
@@ -79,35 +134,71 @@ class ProgrammeSessionAuthoringCoordinator {
 
     final draftToSave = _assignDurableIdIfNeeded(normalized, isEdit: isEdit);
 
-    ProtocolDraft persistedDraft;
-    try {
-      final saveResult = await _protocolBuilderService.saveDraft(draftToSave);
-      ProgrammeSessionAuthoringDiagnostics.log('sessionSaved');
-      persistedDraft = draftToSave.copyWith(
-        protocolId: saveResult.protocolId,
-        published: false,
-      );
-    } on ProtocolBuilderException catch (error) {
-      ProgrammeSessionAuthoringDiagnostics.log('attachFailed stage=save');
-      return ProgrammeSessionAuthoringResult.sessionSaveFailed(
-        coachMessage: 'Session could not be saved.',
-        error: error,
-      );
-    } catch (error) {
-      ProgrammeSessionAuthoringDiagnostics.log('attachFailed stage=save');
-      return ProgrammeSessionAuthoringResult.sessionSaveFailed(
-        coachMessage: 'Session could not be saved.',
-        error: error,
+    final pendingAttachKey = _attachKey(context, draftToSave.protocolId);
+    if (_lastSuccessfulAttachKey == pendingAttachKey) {
+      return const ProgrammeSessionAuthoringResult(
+        status: ProgrammeSessionAuthoringStatus.duplicateAttachIgnored,
+        coachMessage: 'This Session is already attached to the slot.',
       );
     }
 
-    return _attachSavedContent(
-      context: context,
-      savedContentId: persistedDraft.protocolId,
-      displayTitle: persistedDraft.name.trim(),
-      persistedDraft: persistedDraft,
-      warnings: warnings,
-    );
+    if (isEdit) {
+      final editGate = await _assertExistingRowEditableForProgramme(
+        draftToSave,
+        context: context,
+      );
+      if (editGate != null) return editGate;
+    }
+
+    _attachInFlight = true;
+    try {
+      ProtocolDraft persistedDraft;
+      try {
+        final saveResult = await _protocolBuilderService.saveDraft(draftToSave);
+        ProgrammeSessionAuthoringDiagnostics.log('sessionSaved');
+        persistedDraft = draftToSave.copyWith(
+          protocolId: saveResult.protocolId,
+          published: false,
+        );
+      } on ProtocolBuilderException catch (error) {
+        ProgrammeSessionAuthoringDiagnostics.log('attachFailed stage=save');
+        return ProgrammeSessionAuthoringResult.sessionSaveFailed(
+          coachMessage: 'Session could not be saved.',
+          error: error,
+        );
+      } catch (error) {
+        ProgrammeSessionAuthoringDiagnostics.log('attachFailed stage=save');
+        return ProgrammeSessionAuthoringResult.sessionSaveFailed(
+          coachMessage: 'Session could not be saved.',
+          error: error,
+        );
+      }
+
+      // Slot may have disappeared while save was in flight.
+      final postSavePreflight = _validatePreflight(context);
+      if (postSavePreflight != null) {
+        return ProgrammeSessionAuthoringResult.sessionSavedAttachFailed(
+          savedContentId: persistedDraft.protocolId,
+          partialState: ProgrammeSessionPartialState(
+            savedContentId: persistedDraft.protocolId,
+            programmeVersionId: context.programmeVersionId,
+            dayLocalId: context.dayLocalId,
+            slotLocalId: context.slotLocalId,
+            failureStage: 'attach',
+          ),
+        );
+      }
+
+      return _attachSavedContent(
+        context: context,
+        savedContentId: persistedDraft.protocolId,
+        displayTitle: persistedDraft.name.trim(),
+        persistedDraft: persistedDraft,
+        warnings: warnings,
+      );
+    } finally {
+      _attachInFlight = false;
+    }
   }
 
   Future<ProgrammeSessionAuthoringResult> retryAttach({
@@ -163,6 +254,13 @@ class ProgrammeSessionAuthoringCoordinator {
   }) async {
     ProgrammeSessionAuthoringDiagnostics.log('attachExistingSession start');
 
+    if (_attachInFlight) {
+      return const ProgrammeSessionAuthoringResult(
+        status: ProgrammeSessionAuthoringStatus.duplicateAttachIgnored,
+        coachMessage: 'Session attach is already in progress.',
+      );
+    }
+
     final preflight = _validatePreflight(context);
     if (preflight != null) return preflight;
 
@@ -170,6 +268,14 @@ class ProgrammeSessionAuthoringCoordinator {
     if (trimmedId.isEmpty) {
       return ProgrammeSessionAuthoringResult.validationFailed(
         coachMessage: 'Session could not be added to the programme.',
+      );
+    }
+
+    final duplicateKey = _attachKey(context, trimmedId);
+    if (_lastSuccessfulAttachKey == duplicateKey) {
+      return const ProgrammeSessionAuthoringResult(
+        status: ProgrammeSessionAuthoringStatus.duplicateAttachIgnored,
+        coachMessage: 'This Session is already attached to the slot.',
       );
     }
 
@@ -183,34 +289,28 @@ class ProgrammeSessionAuthoringCoordinator {
     }
 
     final ownerId = _coachIdentity.coachId;
-    if (loaded.contentKind != TrainingContentKind.session ||
-        loaded.authoringScope != TrainingAuthoringScope.coachPrivate) {
+    if (!_editPolicy.canAttachAsLiveReference(loaded, coachId: ownerId)) {
+      if (loaded.contentKind == TrainingContentKind.sessionTemplate) {
+        return ProgrammeSessionAuthoringResult.validationFailed(
+          coachMessage:
+              'Templates cannot be attached directly. Choose Use Template.',
+        );
+      }
+      if (_editPolicy.isReadOnlyCohortProtocol(loaded)) {
+        return ProgrammeSessionAuthoringResult.validationFailed(
+          coachMessage: 'Cohort Protocols cannot be added from My Sessions.',
+        );
+      }
+      if (ownerId != null &&
+          loaded.ownerId != null &&
+          loaded.ownerId != ownerId) {
+        return const ProgrammeSessionAuthoringResult(
+          status: ProgrammeSessionAuthoringStatus.ownershipInvalid,
+          coachMessage: 'This Session belongs to another coach.',
+        );
+      }
       return ProgrammeSessionAuthoringResult.validationFailed(
-        coachMessage:
-            'Only reusable Sessions can be added from Session Library.',
-      );
-    }
-
-    if (loaded.programmeVersionId != null &&
-        loaded.programmeVersionId!.trim().isNotEmpty) {
-      return ProgrammeSessionAuthoringResult.validationFailed(
-        coachMessage:
-            'Programme sessions must be edited from Programme Builder.',
-      );
-    }
-
-    if (ownerId != null &&
-        loaded.ownerId != null &&
-        loaded.ownerId != ownerId) {
-      return const ProgrammeSessionAuthoringResult(
-        status: ProgrammeSessionAuthoringStatus.ownershipInvalid,
-        coachMessage: 'This Session belongs to another coach.',
-      );
-    }
-
-    if (loaded.published != true) {
-      return ProgrammeSessionAuthoringResult.validationFailed(
-        coachMessage: 'This Session is not available for use.',
+        coachMessage: 'Only your reusable My Sessions can be attached here.',
       );
     }
 
@@ -218,19 +318,24 @@ class ProgrammeSessionAuthoringCoordinator {
         ? loaded.name.trim()
         : displayTitle.trim();
 
-    final result = await _attachSavedContent(
-      context: context,
-      savedContentId: trimmedId,
-      displayTitle: title,
-      persistedDraft: loaded,
-      warnings: const [],
-    );
+    _attachInFlight = true;
+    try {
+      final result = await _attachSavedContent(
+        context: context,
+        savedContentId: trimmedId,
+        displayTitle: title,
+        persistedDraft: loaded,
+        warnings: const [],
+      );
 
-    ProgrammeSessionAuthoringDiagnostics.log(
-      'attachExistingSession result=${result.status.name}',
-    );
+      ProgrammeSessionAuthoringDiagnostics.log(
+        'attachExistingSession result=${result.status.name}',
+      );
 
-    return result;
+      return result;
+    } finally {
+      _attachInFlight = false;
+    }
   }
 
   ProgrammeSessionAuthoringResult? _validatePreflight(
@@ -299,9 +404,10 @@ class ProgrammeSessionAuthoringCoordinator {
 
     final isBlankCreate =
         context.authoringIntent == ProgrammeSessionAuthoringIntent.createBlank;
-    final isCopy =
+    final keepsProvenance =
         context.authoringIntent ==
-        ProgrammeSessionAuthoringIntent.copyCohortProtocol;
+            ProgrammeSessionAuthoringIntent.copyCohortProtocol ||
+        context.authoringIntent == ProgrammeSessionAuthoringIntent.fromTemplate;
 
     return draft.copyWith(
       contentKind: TrainingContentKind.session,
@@ -310,13 +416,13 @@ class ProgrammeSessionAuthoringCoordinator {
       programmeVersionId: context.programmeVersionId,
       published: false,
       ownerId: _coachIdentity.coachId ?? draft.ownerId,
-      sourceContentId: (isBlankCreate && !isCopy)
+      sourceContentId: (isBlankCreate && !keepsProvenance)
           ? null
           : draft.sourceContentId,
-      sourceContentKind: (isBlankCreate && !isCopy)
+      sourceContentKind: (isBlankCreate && !keepsProvenance)
           ? null
           : draft.sourceContentKind,
-      sourceVersionId: (isBlankCreate && !isCopy)
+      sourceVersionId: (isBlankCreate && !keepsProvenance)
           ? null
           : draft.sourceVersionId,
     );
@@ -328,18 +434,46 @@ class ProgrammeSessionAuthoringCoordinator {
   }) {
     final currentId = draft.protocolId.trim();
 
+    // Edit keeps verified durable IDs only after ownership/kind gate.
     if (isEdit && DatabaseUuid.isValidDatabaseUuid(currentId)) {
       return draft;
     }
 
-    if (ProgrammeSessionDraftFactory.isLocalDraftId(currentId) ||
-        SessionCloneService.isLocalCloneDraftId(currentId) ||
-        currentId.isEmpty ||
-        !DatabaseUuid.isValidDatabaseUuid(currentId)) {
-      return draft.copyWith(protocolId: _idGenerator.newSessionId());
-    }
+    // Create always mints a new ID — never retain a caller UUID that could
+    // collide with an existing Cohort Protocol row.
+    return draft.copyWith(protocolId: _idGenerator.newSessionId());
+  }
 
-    return draft;
+  Future<ProgrammeSessionAuthoringResult?>
+  _assertExistingRowEditableForProgramme(
+    ProtocolDraft draft, {
+    required ProgrammeSessionAuthoringContext context,
+  }) async {
+    try {
+      final existing = await _protocolBuilderService.loadProtocol(
+        draft.protocolId.trim(),
+      );
+      if (_editPolicy.isReadOnlyCohortProtocol(existing) ||
+          existing.contentKind == TrainingContentKind.cohortProtocol) {
+        return ProgrammeSessionAuthoringResult.validationFailed(
+          coachMessage: 'Official Cohort Protocols cannot be edited in place.',
+        );
+      }
+      if (!_editPolicy.canEditInPlace(
+        existing,
+        coachId: _coachIdentity.coachId,
+        programmeVersionId: context.programmeVersionId,
+      )) {
+        return ProgrammeSessionAuthoringResult.validationFailed(
+          coachMessage: 'This Session cannot be edited here.',
+        );
+      }
+      return null;
+    } catch (_) {
+      return ProgrammeSessionAuthoringResult.validationFailed(
+        coachMessage: 'This Session could not be verified for editing.',
+      );
+    }
   }
 
   Future<ProgrammeSessionAuthoringResult> _attachSavedContent({
@@ -349,14 +483,25 @@ class ProgrammeSessionAuthoringCoordinator {
     required ProtocolDraft persistedDraft,
     required List<String> warnings,
   }) async {
+    final key = _attachKey(context, savedContentId);
+    if (_lastSuccessfulAttachKey == key) {
+      return const ProgrammeSessionAuthoringResult(
+        status: ProgrammeSessionAuthoringStatus.duplicateAttachIgnored,
+        coachMessage: 'This Session is already attached to the slot.',
+      );
+    }
+
     try {
       final editResult = await _assignmentPort.assignSession(
+        weekLocalId: context.weekLocalId,
+        dayLocalId: context.dayLocalId,
         slotLocalId: context.slotLocalId,
         contentId: savedContentId,
         displayTitle: displayTitle,
       );
 
       ProgrammeSessionAuthoringDiagnostics.log('attachSucceeded');
+      _lastSuccessfulAttachKey = key;
 
       return ProgrammeSessionAuthoringResult.attached(
         contentId: savedContentId,
@@ -379,5 +524,14 @@ class ProgrammeSessionAuthoringCoordinator {
         error: error,
       );
     }
+  }
+
+  String _attachKey(
+    ProgrammeSessionAuthoringContext context,
+    String contentId,
+  ) {
+    return '${context.programmeVersionId}|'
+        '${context.weekLocalId}|${context.dayLocalId}|'
+        '${context.slotLocalId}|${contentId.trim()}';
   }
 }

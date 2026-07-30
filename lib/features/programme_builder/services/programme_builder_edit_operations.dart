@@ -262,34 +262,54 @@ class ProgrammeBuilderEditOperations {
 
   ProgrammeBuilderDocument removeSlot(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   }) {
     _assertEditable(document);
+    var matchCount = 0;
     final weeks = document.template.weeks.map((week) {
+      if (week.localId != weekLocalId) return week;
       final days = week.days.map((day) {
-        final slots = day.slots
-            .where((slot) => slot.localId != slotLocalId)
-            .toList();
+        if (day.localId != dayLocalId) return day;
+        final slots = day.slots.where((slot) {
+          if (slot.localId != slotLocalId) return true;
+          matchCount++;
+          return false;
+        }).toList();
         if (slots.length == day.slots.length) return day;
         return day.copyWith(slots: _renumberSlots(slots));
       }).toList();
       return week.copyWith(days: days);
     }).toList();
 
+    if (matchCount != 1) {
+      throw StateError(
+        'Expected exactly one programme slot match for removeSlot '
+        '(found $matchCount).',
+      );
+    }
+
     return _withTemplate(document, weeks);
   }
 
   ProgrammeBuilderDocument assignProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
   }) {
     _assertEditable(document);
+    var matchCount = 0;
     final weeks = document.template.weeks.map((week) {
+      if (week.localId != weekLocalId) return week;
       final days = week.days.map((day) {
+        if (day.localId != dayLocalId) return day;
         final slots = day.slots.map((slot) {
           if (slot.localId != slotLocalId) return slot;
+          matchCount++;
           return slot.copyWith(
             protocolId: protocolId.trim(),
             displayTitle: displayTitle,
@@ -300,15 +320,26 @@ class ProgrammeBuilderEditOperations {
       return week.copyWith(days: days);
     }).toList();
 
+    if (matchCount != 1) {
+      throw StateError(
+        'Expected exactly one programme slot match for assignProtocol '
+        '(found $matchCount).',
+      );
+    }
+
     return _withTemplate(document, weeks);
   }
 
   ProgrammeBuilderDocument clearProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   }) {
     return assignProtocol(
       document,
+      weekLocalId: weekLocalId,
+      dayLocalId: dayLocalId,
       slotLocalId: slotLocalId,
       protocolId: '',
       displayTitle: null,
@@ -317,6 +348,8 @@ class ProgrammeBuilderEditOperations {
 
   ProgrammeBuilderDocument updateSlotMetadata(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     String? displayTitle,
     ProgrammeSessionTimeOfDay? timeOfDay,
@@ -329,10 +362,14 @@ class ProgrammeBuilderEditOperations {
     bool clearAthleteNote = false,
   }) {
     _assertEditable(document);
+    var matchCount = 0;
     final weeks = document.template.weeks.map((week) {
+      if (week.localId != weekLocalId) return week;
       final days = week.days.map((day) {
+        if (day.localId != dayLocalId) return day;
         final slots = day.slots.map((slot) {
           if (slot.localId != slotLocalId) return slot;
+          matchCount++;
 
           final optional = isOptional ?? slot.isOptional;
           final expectation =
@@ -357,6 +394,13 @@ class ProgrammeBuilderEditOperations {
       }).toList();
       return week.copyWith(days: days);
     }).toList();
+
+    if (matchCount != 1) {
+      throw StateError(
+        'Expected exactly one programme slot match for updateSlotMetadata '
+        '(found $matchCount).',
+      );
+    }
 
     return _withTemplate(document, weeks);
   }

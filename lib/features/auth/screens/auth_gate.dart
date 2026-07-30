@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/access/app_access_role.dart';
 import '../../../core/access/app_experience_resolver.dart';
 import '../../../core/access/founder_access_policy.dart';
+import '../../../core/persistence/athlete_persistence.dart';
+import '../../../core/persistence/athlete_state_hydrator.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../app_shell/athlete_app_shell.dart';
@@ -25,12 +27,32 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> {
   final _experienceResolver = const AppExperienceResolver();
+  bool _hydrating = true;
+  AthleteHydrationResult? _hydration;
 
   @override
   void initState() {
     super.initState();
     widget.controller.addListener(_onChanged);
-    widget.controller.initialize();
+    _bootstrap();
+  }
+
+  Future<void> _bootstrap() async {
+    await widget.controller.initialize();
+    AthleteHydrationResult? hydration;
+    if (AthletePersistence.isInitialized) {
+      try {
+        hydration = await AthletePersistence.hydrate(allowRegenerate: true);
+      } catch (e, st) {
+        debugPrint('[AuthGate] athlete hydration failed: $e');
+        debugPrint('$st');
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _hydration = hydration;
+      _hydrating = false;
+    });
   }
 
   @override
@@ -58,11 +80,21 @@ class _AuthGateState extends State<AuthGate> {
     if (role == AppAccessRole.founder) {
       return FounderWorkspaceShell(authController: widget.controller);
     }
-    return AthleteAppShell(authController: widget.controller);
+    return AthleteAppShell(
+      authController: widget.controller,
+      pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
+      planDefinitionMissing: _hydration?.planDefinitionMissing ?? false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_hydrating ||
+        widget.controller.state.status == AuthStatus.initial ||
+        widget.controller.state.status == AuthStatus.loading) {
+      return const _AuthLoadingScreen();
+    }
+
     final state = widget.controller.state;
 
     return switch (state.status) {
@@ -73,7 +105,12 @@ class _AuthGateState extends State<AuthGate> {
       ),
       AuthStatus.unauthenticated || AuthStatus.error =>
         AthleteProfileSession.hasCompletedOnboarding
-            ? AthleteAppShell(authController: widget.controller)
+            ? AthleteAppShell(
+                authController: widget.controller,
+                pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
+                planDefinitionMissing:
+                    _hydration?.planDefinitionMissing ?? false,
+              )
             : LoginScreen(controller: widget.controller),
       AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
         controller: widget.controller,
@@ -93,9 +130,9 @@ class _AuthLoadingScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const CircularProgressIndicator(),
+            Text('COHORT', style: CohortTextStyles.eyebrow),
             const SizedBox(height: 16),
-            Text('Loading Cohort…', style: CohortTextStyles.body),
+            Text('Preparing…', style: CohortTextStyles.body),
           ],
         ),
       ),

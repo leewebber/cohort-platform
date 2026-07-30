@@ -7,11 +7,17 @@ class AdaptationDecision {
     required this.decisionType,
     required this.message,
     required this.protocol,
+    this.changeSummary = const [],
+    this.programmedSessionKey,
+    this.preservedIntent,
   });
 
   final AdaptationDecisionType decisionType;
   final String message;
   final Protocol protocol;
+  final List<String> changeSummary;
+  final String? programmedSessionKey;
+  final String? preservedIntent;
 
   @override
   String toString() {

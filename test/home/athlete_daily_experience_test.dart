@@ -99,9 +99,9 @@ void main() {
       );
 
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
-      expect(find.text('Recovery Flow'), findsOneWidget);
-      expect(find.text('Cohort Foundation'), findsOneWidget);
-      expect(find.text('Session goal: Build'), findsOneWidget);
+      expect(find.text('RECOVERY FLOW'), findsOneWidget);
+      expect(find.text('COHORT FOUNDATION'), findsOneWidget);
+      expect(find.text('Build'), findsOneWidget);
       expect(find.textContaining('12 / 32 sessions completed'), findsOneWidget);
       expect(find.textContaining('Adapted for today'), findsOneWidget);
       expect(find.text('START SESSION'), findsOneWidget);
@@ -158,7 +158,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('No programme assigned'), findsOneWidget);
+      expect(find.text('No plan assigned'), findsOneWidget);
       expect(find.textContaining('Join your coach'), findsOneWidget);
     });
 
@@ -216,7 +216,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.textContaining('Congratulations'), findsOneWidget);
-      expect(find.textContaining('Programme Complete'), findsWidgets);
+      expect(find.textContaining('Programme Complete'), findsNothing);
+      expect(find.textContaining('Plan Complete'), findsWidgets);
     });
   });
 
@@ -286,7 +287,7 @@ void main() {
 
       expect(find.text('SESSION COMPLETE'), findsOneWidget);
       expect(find.text('Session saved'), findsOneWidget);
-      expect(find.text('Programme progress'), findsOneWidget);
+      expect(find.text('Plan progress'), findsOneWidget);
       expect(find.textContaining('12 / 32 sessions completed'), findsOneWidget);
       expect(find.textContaining('Load increased'), findsOneWidget);
       expect(find.text('Next scheduled session'), findsOneWidget);
@@ -313,7 +314,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Programme continues as planned.'), findsOneWidget);
+      expect(find.text('Plan continues as planned.'), findsOneWidget);
     });
   });
 }

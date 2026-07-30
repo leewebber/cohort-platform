@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/persistence/athlete_persistence.dart';
+import '../../../core/persistence/previous_performance_from_results.dart';
+import '../../../core/persistence/workout_execution_capture.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../adaptive_progression/models/session_completion.dart';
 import '../../adaptive_progression/services/adaptive_progression_coordinator.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../models/previous_performance_snapshot.dart';
 import '../models/workout_player_result.dart';
 import '../models/workout_player_state.dart';
 import '../widgets/workout_player_widgets.dart';
@@ -81,10 +86,10 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
           : _notesController.text.trim(),
     );
 
-    final completion =
+    final completionService =
         widget.completionService ?? WorkoutCompletionService();
     try {
-      await completion.complete(
+      await completionService.complete(
         athleteId: widget.athleteId,
         trainingSessionId: widget.trainingSessionId,
         programmeContext: widget.programmeContext,
@@ -94,6 +99,26 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
       debugPrint('[WorkoutComplete] bookkeeping failed: $error');
     }
 
+    final coordinator =
+        widget.progressionCoordinator ?? AdaptiveProgressionCoordinator();
+    final sessionCompletion = coordinator.buildCompletion(
+      result: result,
+      athleteId: widget.athleteId,
+    );
+    if (!AthleteProfileSession.hasActivePlan) {
+      SessionCompletionStore.add(sessionCompletion);
+    }
+
+    const capture = WorkoutExecutionCapture();
+    final executionResults = capture.captureCompletedSteps(
+      state: widget.state,
+      completionId: sessionCompletion.completionId,
+      completedAt: sessionCompletion.completedAt,
+    );
+    final derived = const PreviousPerformanceFromResults()
+        .derive(executionResults);
+    PreviousPerformanceStore.recordAll(derived);
+
     final shouldAdapt = AthleteProfileSession.hasActivePlan;
     if (shouldAdapt) {
       try {
@@ -102,8 +127,6 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
         if (!mounted) return;
 
         setState(() => _adaptStatus = _AdaptStatus.updating);
-        final coordinator =
-            widget.progressionCoordinator ?? AdaptiveProgressionCoordinator();
         await coordinator.runAfterCompletion(
           result: result,
           athleteId: widget.athleteId,
@@ -121,6 +144,29 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
           _finishing = false;
         });
         return;
+      }
+    }
+
+    if (AthletePersistence.isInitialized) {
+      try {
+        await AthletePersistence.hydrator.persistExerciseResults(
+          widget.athleteId,
+          executionResults,
+        );
+        await AthletePersistence.hydrator.persistPreviousPerformance(
+          widget.athleteId,
+        );
+        await AthletePersistence.hydrator.persistCompletions(
+          widget.athleteId,
+        );
+        await AthletePersistence.hydrator.discardWorkoutProgress(
+          widget.athleteId,
+        );
+        if (!shouldAdapt) {
+          await AthletePersistence.persistBoundSession();
+        }
+      } catch (error) {
+        debugPrint('[WorkoutComplete] local persist failed: $error');
       }
     }
 
@@ -282,9 +328,9 @@ class _AdaptTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final message = switch (status) {
-      _AdaptStatus.analysing => 'Analysing today\'s training…',
-      _AdaptStatus.updating => 'Updating your plan…',
-      _AdaptStatus.ready => 'Tomorrow is ready.',
+      _AdaptStatus.analysing => 'Saving today\'s session…',
+      _AdaptStatus.updating => 'Preparing your next programmed session…',
+      _AdaptStatus.ready => 'Next programmed session is ready.',
       _AdaptStatus.idle => '',
     };
 
@@ -306,8 +352,9 @@ class _AdaptTransition extends StatelessWidget {
           const SizedBox(height: CohortSpacing.md),
           Text(
             status == _AdaptStatus.ready
-                ? 'Your next session is waiting on Home.'
-                : 'Your coach is adapting from what you just completed.',
+                ? 'Your next coach-authored session is waiting on Home.'
+                : 'Calendar advances to the next programmed day — loads and '
+                    'exercises are not changed automatically.',
             style: CohortTextStyles.body,
           ),
         ],

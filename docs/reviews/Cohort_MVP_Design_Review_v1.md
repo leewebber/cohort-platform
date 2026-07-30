@@ -3,10 +3,11 @@
 **Phase:** 6 — Product Hardening  
 **Sprint:** 1 — Cohort MVP Design Review  
 **Date:** 2026-07-29  
-**Status:** Recommendations baseline + Sprint 2 Critical/High addressed  
+**Status:** Recommendations baseline + Sprint 2 Critical/High addressed + Sprint 3 persistence  
 **Scope:** Athlete-facing MVP (closed-beta readiness)  
 **Out of scope (Sprint 1):** New features, engine changes, persistence, coach surfaces as product work  
-**Sprint 2:** Athlete/Founder separation, Home/Progress/Profile polish, contextual previous performance
+**Sprint 2:** Athlete/Founder separation, Home/Progress/Profile polish, contextual previous performance  
+**Sprint 3:** Local athlete memory, product constitution, legacy test debt closure, welcome/assessment backlog docs
 
 This document is the baseline for closed-beta preparation and defines the intended shape of **MVP v1.1** polish before external testing.
 
@@ -441,9 +442,9 @@ Communicate clearly:
 
 ## Recommended next sprint
 
-**Phase 6 Sprint 2 — MVP v1.1 Polish Pass**
+**Phase 6 Sprint 4 — Visual Polish + Welcome Transition**
 
-Execute Critical + High items only. Then internal dogfood. Then closed beta.
+Candidate work (see `docs/product/Welcome_Briefing_Transition.md`): calm COHORT → greeting → Home fade (&lt;1s when data ready), reduced-motion honour, no theatrical spinner. Continue deleting quarantined `HomeTodaySessionSection` once founder programme Adapt path is retired. Assessment frameworks remain vision-only (`Plan_Assessments_Vision.md`).
 
 ---
 

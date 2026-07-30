@@ -15,7 +15,7 @@ void main() {
       'loadReusableSessionSummaries returns reusable sessions only',
       () async {
         final repository = FakeTrainingLibraryRepository(
-          reusableSessions: const [
+          reusableSessions: [
             Protocol(
               protocolId: testDurableSessionId,
               name: 'Morning Strength',
@@ -36,7 +36,7 @@ void main() {
 
     test('search filters by title case-insensitively', () async {
       final repository = FakeTrainingLibraryRepository(
-        reusableSessions: const [
+        reusableSessions: [
           Protocol(protocolId: 'a', name: 'Upper Body'),
           Protocol(protocolId: 'b', name: 'Lower Body'),
         ],
@@ -129,9 +129,13 @@ void main() {
 }
 
 class FakeTrainingLibraryRepository extends ProtocolRepository {
-  FakeTrainingLibraryRepository({this.reusableSessions = const []});
+  FakeTrainingLibraryRepository({
+    this.reusableSessions = const [],
+    this.canonicalTemplates = const [],
+  });
 
   final List<Protocol> reusableSessions;
+  final List<Protocol> canonicalTemplates;
 
   @override
   Future<List<Protocol>> listReusableCoachSessions(
@@ -139,5 +143,12 @@ class FakeTrainingLibraryRepository extends ProtocolRepository {
     int limit = 100,
   }) async {
     return reusableSessions;
+  }
+
+  @override
+  Future<List<Protocol>> listCanonicalSessionTemplates({
+    int limit = 100,
+  }) async {
+    return canonicalTemplates.take(limit).toList();
   }
 }

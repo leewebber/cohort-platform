@@ -65,11 +65,15 @@ abstract class ProgrammeBuilderService {
 
   Future<ProgrammeBuilderEditResult> removeSlot(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   });
 
   Future<ProgrammeBuilderEditResult> assignProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     required String protocolId,
     String? displayTitle,
@@ -77,11 +81,15 @@ abstract class ProgrammeBuilderService {
 
   Future<ProgrammeBuilderEditResult> clearProtocol(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
   });
 
   Future<ProgrammeBuilderEditResult> updateSlotMetadata(
     ProgrammeBuilderDocument document, {
+    required String weekLocalId,
+    required String dayLocalId,
     required String slotLocalId,
     String? displayTitle,
     ProgrammeSessionTimeOfDay? timeOfDay,

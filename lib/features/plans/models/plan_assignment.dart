@@ -72,6 +72,49 @@ class PlanAssignment {
     'currentDay': currentDay,
     'configuration': configuration,
   };
+
+  factory PlanAssignment.fromPersistenceMap(Map<String, dynamic> map) {
+    final statusName = map['status']?.toString() ?? 'active';
+    final status = PlanAssignmentStatus.values.firstWhere(
+      (s) => s.name == statusName,
+      orElse: () => PlanAssignmentStatus.active,
+    );
+    DateTime? parseOptional(String key) {
+      final raw = map[key]?.toString();
+      if (raw == null || raw.isEmpty) return null;
+      return DateTime.tryParse(raw)?.toUtc();
+    }
+
+    final assignedRaw = map['assignedAt']?.toString();
+    final assignedAt = assignedRaw == null
+        ? null
+        : DateTime.tryParse(assignedRaw)?.toUtc();
+    if (assignedAt == null) {
+      throw const FormatException('Invalid assignedAt');
+    }
+
+    final configRaw = map['configuration'];
+    final configuration = <String, String>{};
+    if (configRaw is Map) {
+      configRaw.forEach((k, v) {
+        configuration[k.toString()] = v.toString();
+      });
+    }
+
+    return PlanAssignment(
+      assignmentId: map['assignmentId']?.toString() ?? '',
+      athleteId: map['athleteId']?.toString() ?? '',
+      planId: map['planId']?.toString() ?? '',
+      assignedAt: assignedAt,
+      startedAt: parseOptional('startedAt'),
+      completedAt: parseOptional('completedAt'),
+      currentPhase: map['currentPhase']?.toString() ?? 'Foundation',
+      currentWeek: (map['currentWeek'] as num?)?.toInt() ?? 1,
+      currentDay: (map['currentDay'] as num?)?.toInt() ?? 1,
+      status: status,
+      configuration: configuration,
+    );
+  }
 }
 
 enum PlanAssignmentStatus { active, paused, completed, cancelled }

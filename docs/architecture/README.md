@@ -14,6 +14,13 @@
 | [../product/Progress_Experience_MVP.md](../product/Progress_Experience_MVP.md) | **Phase 5 Sprint 5** — Progress experience (“Am I getting better?”) |
 | [../product/Daily_Briefing_MVP.md](../product/Daily_Briefing_MVP.md) | **Phase 5 Sprint 6** — Home daily coaching briefing |
 | [../reviews/Cohort_MVP_Design_Review_v1.md](../reviews/Cohort_MVP_Design_Review_v1.md) | **Phase 6 Sprint 1** — Athlete MVP UX design review (recommendations) |
+| [Local_Persistence_v1.md](./Local_Persistence_v1.md) | **Phase 6 Sprint 3** — local athlete memory technology + hydration |
+| [Local_Persistence_Inventory_v1.md](./Local_Persistence_Inventory_v1.md) | **Phase 6 Sprint 3** — stored aggregates inventory |
+| [../product/Cohort_Product_Constitution_v1.md](../product/Cohort_Product_Constitution_v1.md) | **Phase 6 Sprint 3** — athlete product surface principles |
+| [Coaching_Constitution_v1.md](./Coaching_Constitution_v1.md) | **Phase 6 Sprint 4** — coach authority & programme integrity |
+| [Session_Authority_Model_v1.md](./Session_Authority_Model_v1.md) | **Phase 6 Sprint 4** — programmed / prepared / completed |
+| [Adaptation_Policy_v1.md](./Adaptation_Policy_v1.md) | **Phase 6 Sprint 4** — explicit adaptation rules |
+| [Connected_Data_Privacy_v1.md](./Connected_Data_Privacy_v1.md) | **Phase 6 Sprint 4** — connected data & no-location policy |
 | [../planning/Planning_Engine_Implementation_v1.md](../planning/Planning_Engine_Implementation_v1.md) | Phase 4 Sprint 1 — `PlanningEngineService` merge policies |
 | [../planning/Session_Blueprint_Implementation_v1.md](../planning/Session_Blueprint_Implementation_v1.md) | Phase 4 Sprint 2 — `SessionBlueprint` generator |
 | [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md) | Sprint 10 closure report — verification, adapters, limitations, DoD |

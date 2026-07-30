@@ -1,3 +1,5 @@
+import 'package:cohort_platform/features/auth/models/user_profile.dart';
+import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/controllers/programme_editor_controller.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/models/programme_editor_view_state.dart';
 import 'package:cohort_platform/features/coach_studio/programmes/programme_editor_screen.dart';
@@ -21,6 +23,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  setUp(() {
+    CurrentUserSession.bind(
+      const UserProfile(
+        id: 'coach-1',
+        displayName: 'Coach',
+        isCoach: true,
+        isAthlete: false,
+      ),
+    );
+  });
+
+  tearDown(CurrentUserSession.clear);
+
   ProgrammeBuilderDocument buildDocument() {
     return ProgrammeBuilderDocument.clean(
       metadata: const ProgrammeVersionDraftMetadata(

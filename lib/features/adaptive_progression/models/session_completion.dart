@@ -14,6 +14,9 @@ class SessionCompletion {
     this.duration,
     this.sessionRpe,
     this.notes,
+    this.programmedSessionKey,
+    this.planVersion,
+    this.acceptedAdaptationId,
   });
 
   final String completionId;
@@ -29,6 +32,9 @@ class SessionCompletion {
   final int totalExercises;
   final int? sessionRpe;
   final String? notes;
+  final String? programmedSessionKey;
+  final String? planVersion;
+  final String? acceptedAdaptationId;
 
   double get completionRatio {
     if (totalExercises <= 0) return 1.0;
@@ -49,10 +55,44 @@ class SessionCompletion {
     'totalExercises': totalExercises,
     'sessionRpe': sessionRpe,
     'notes': notes,
+    'programmedSessionKey': programmedSessionKey,
+    'planVersion': planVersion,
+    'acceptedAdaptationId': acceptedAdaptationId,
   };
+
+  factory SessionCompletion.fromPersistenceMap(Map<String, dynamic> map) {
+    final completedRaw = map['completedAt']?.toString();
+    final completedAt = completedRaw == null
+        ? null
+        : DateTime.tryParse(completedRaw)?.toUtc();
+    if (completedAt == null) {
+      throw const FormatException('Invalid completedAt');
+    }
+    final durationSeconds = (map['durationSeconds'] as num?)?.toInt();
+    return SessionCompletion(
+      completionId: map['completionId']?.toString() ?? '',
+      athleteId: map['athleteId']?.toString() ?? '',
+      sessionId: map['sessionId']?.toString(),
+      planId: map['planId']?.toString(),
+      assignmentId: map['assignmentId']?.toString(),
+      planName: map['planName']?.toString(),
+      sessionName: map['sessionName']?.toString(),
+      completedAt: completedAt,
+      duration: durationSeconds == null
+          ? null
+          : Duration(seconds: durationSeconds),
+      exercisesCompleted: (map['exercisesCompleted'] as num?)?.toInt() ?? 0,
+      totalExercises: (map['totalExercises'] as num?)?.toInt() ?? 0,
+      sessionRpe: (map['sessionRpe'] as num?)?.toInt(),
+      notes: map['notes']?.toString(),
+      programmedSessionKey: map['programmedSessionKey']?.toString(),
+      planVersion: map['planVersion']?.toString(),
+      acceptedAdaptationId: map['acceptedAdaptationId']?.toString(),
+    );
+  }
 }
 
-/// Ephemeral store of session completions (Sprint 4 — memory only).
+/// In-memory session completions, hydrated from [AthleteLocalRepository].
 class SessionCompletionStore {
   SessionCompletionStore._();
 
@@ -64,6 +104,12 @@ class SessionCompletionStore {
       _items.isEmpty ? null : _items.last;
 
   static void add(SessionCompletion completion) => _items.add(completion);
+
+  static void replaceAll(Iterable<SessionCompletion> completions) {
+    _items
+      ..clear()
+      ..addAll(completions);
+  }
 
   static void clear() => _items.clear();
 }
