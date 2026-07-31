@@ -43,8 +43,22 @@ YAML input
   → SHA-256 content hash (lowercase hex)
 ```
 
-Raw YAML text is not canonical programme meaning. Hash is **not** persisted in
-Sprint 1.1.
+Raw YAML text is not canonical programme meaning.
+
+## Import + publication (Sprint 1.2)
+
+```
+Successful compile result
+  → side-effect-free import preview
+  → service-role-only SECURITY DEFINER import RPC
+  → hidden Cohort Global draft (never auto-publish)
+  → explicit publish RPC (approved_for_global stays false)
+  → explicit catalogue-approval RPC (separate gate)
+```
+
+Import execution is granted only to `service_role`. Flutter/client code must
+never embed service-role credentials. Ordinary authenticated users cannot read
+Cohort Global drafts or published-but-unapproved globals.
 
 ## Module
 

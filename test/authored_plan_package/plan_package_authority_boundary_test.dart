@@ -30,28 +30,28 @@ void main() {
     ).readAsStringSync();
     expect(compiler.contains('Future<'), isFalse);
     expect(compiler.contains('compile(String'), isTrue);
-    expect(
-      RegExp(r'''import\s+['"].*supabase''').hasMatch(compiler),
-      isFalse,
-    );
+    expect(RegExp(r'''import\s+['"].*supabase''').hasMatch(compiler), isFalse);
     expect(
       RegExp(r'''import\s+['"].*features/plans/''').hasMatch(compiler),
       isFalse,
     );
   });
 
-  test('compiler behavioural authority: no PlanDefinition types in compile path', () {
-    // Type-level: compile only accepts String YAML and returns package types.
-    // Import graph already checked above; this asserts the public API shape.
-    final manifest = File(
-      '$root/lib/features/authored_plan_package/plan_package_manifest.dart',
-    ).readAsStringSync();
-    expect(
-      RegExp(r'''import\s+['"].*plan_definition''').hasMatch(manifest),
-      isFalse,
-    );
-    expect(manifest.contains('class PlanPackageManifest'), isTrue);
-  });
+  test(
+    'compiler behavioural authority: no PlanDefinition types in compile path',
+    () {
+      // Type-level: compile only accepts String YAML and returns package types.
+      // Import graph already checked above; this asserts the public API shape.
+      final manifest = File(
+        '$root/lib/features/authored_plan_package/plan_package_manifest.dart',
+      ).readAsStringSync();
+      expect(
+        RegExp(r'''import\s+['"].*plan_definition''').hasMatch(manifest),
+        isFalse,
+      );
+      expect(manifest.contains('class PlanPackageManifest'), isTrue);
+    },
+  );
 }
 
 String _repoRoot(Directory start) {

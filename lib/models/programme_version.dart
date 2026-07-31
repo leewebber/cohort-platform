@@ -29,6 +29,11 @@ class ProgrammeVersion {
     this.archivedAt,
     this.createdAt,
     this.updatedAt,
+    this.packageSchemaVersion,
+    this.packageContentHash,
+    this.coachingIntent,
+    this.packageImportedAt,
+    this.packageImportedBy,
   });
 
   /// UUID primary key.
@@ -58,6 +63,13 @@ class ProgrammeVersion {
   final DateTime? archivedAt;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  /// Authored Plan Package provenance (null for legacy non-package versions).
+  final int? packageSchemaVersion;
+  final String? packageContentHash;
+  final String? coachingIntent;
+  final DateTime? packageImportedAt;
+  final String? packageImportedBy;
 
   bool get isPublished => lifecycleStatus == ProgrammeLifecycleStatus.published;
 
@@ -94,6 +106,11 @@ class ProgrammeVersion {
       archivedAt: _parseDateTime(map['archived_at']),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
+      packageSchemaVersion: _nullableInt(map['package_schema_version']),
+      packageContentHash: _trimString(map['package_content_hash']),
+      coachingIntent: _trimString(map['coaching_intent']),
+      packageImportedAt: _parseDateTime(map['package_imported_at']),
+      packageImportedBy: _trimString(map['package_imported_by']),
     );
   }
 
@@ -121,6 +138,14 @@ class ProgrammeVersion {
       'approved_for_adaptation': approvedForAdaptation,
       if (publishedAt != null) 'published_at': publishedAt!.toIso8601String(),
       if (archivedAt != null) 'archived_at': archivedAt!.toIso8601String(),
+      if (packageSchemaVersion != null)
+        'package_schema_version': packageSchemaVersion,
+      if (packageContentHash != null)
+        'package_content_hash': packageContentHash,
+      if (coachingIntent != null) 'coaching_intent': coachingIntent,
+      if (packageImportedAt != null)
+        'package_imported_at': packageImportedAt!.toIso8601String(),
+      if (packageImportedBy != null) 'package_imported_by': packageImportedBy,
     };
   }
 
@@ -196,6 +221,11 @@ class ProgrammeVersion {
       archivedAt: clearArchivedAt ? null : (archivedAt ?? this.archivedAt),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      packageSchemaVersion: packageSchemaVersion,
+      packageContentHash: packageContentHash,
+      coachingIntent: coachingIntent,
+      packageImportedAt: packageImportedAt,
+      packageImportedBy: packageImportedBy,
     );
   }
 
