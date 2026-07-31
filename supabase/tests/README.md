@@ -10,10 +10,12 @@ Uncommitted test infrastructure. **Does not authorise staging or production.**
 | True multi-session concurrency | `concurrency/gate_g.sh` (G1/G2 only) |
 | Sequential duplicate validation | Gate E in `sql/gates_c_to_i.sql` (includes former G3) |
 | Helper/setup | `sql/helpers.sql`, `lib/*`, `fixtures/*` |
+| Baseline fidelity (separate) | `sql/baseline_fidelity.sql` → `sprint12_baseline_fidelity_results` |
 | Orchestrator | `run_local_db_gate.sh` |
 | Dart / static SQL contracts | existing `test/` (unchanged) |
 
-Assertions are **custom SQL** (`sprint12_gate_results`), not pgTAP.
+Behavioural assertions are **custom SQL** (`sprint12_gate_results`), not pgTAP.
+Baseline-fidelity assertions use a separate table and are not mixed into C–I totals.
 
 Gate D reporting:
 - **Setup/helper assertions** (e.g. `setup_seed_complete_import`) are labelled and are not counted as malformed-state completeness cases.
@@ -30,13 +32,16 @@ Gate D reporting:
 ## Test-only baseline
 
 - Fixture: `fixtures/local_test_baseline_prereq.sql`
+- Derived from the authorised hosted **schema-only** dump
+  (`SHA256 25be877b2acfaa69ee4b3db28a2e9a03419259a362ca143fa6f2c01c7f787d90`)
 - **Never** placed under the repository’s production `supabase/migrations/`
 - Copied only into an isolated temporary workdir created under `$TMPDIR`
 - Temporary workdir also receives **copies** of real production migrations in order
 - Unique `project_id` + ports; no copy of repository `.temp` / linked metadata
 - Trap cleanup removes the workdir after the run
-
-This stub is sufficient only for disposable Sprint 1.2 behavioural validation. It is **not** the authoritative hosted baseline.
+- Deliberate local accommodations (unique / programme_version FK / privileges) are
+  documented in the fixture header — not claimed as hosted grant parity
+- Orchestrator rejects `INSERT`/`COPY` in the baseline fixture file
 
 ## Target safety
 
@@ -76,11 +81,10 @@ Gate G negative control uses a **fresh unique lineage**, proves a real import+re
 
 ## Known limitations / product gates (not fixed here)
 
-1. **Authoritative baseline** still needed for production-shaped fresh applies.
-2. **Catalogue SELECT grants** are absent from migrations under local/new-cloud auto-expose defaults — reported as a **deployment/integration gate** in Gate I privilege tests. This harness does **not** add production grants.
-3. RLS policy semantics are tested only after **temporary disposable GRANT SELECT**, then revoked.
-4. Concurrency overlap uses `pg_sleep` plus the production import advisory lock (documented in Gate G output).
-5. Role probes use `set_config('role', …)` (direct PostgreSQL role simulation), not full athlete JWT HTTP flows, except a PostgREST privilege-denial check.
+1. **Catalogue SELECT grants** remain a separate deployment/integration gate (Gate I). This harness does **not** add production grants or treat local privilege defaults as hosted parity.
+2. RLS policy semantics are tested only after **temporary disposable GRANT SELECT**, then revoked.
+3. Concurrency overlap uses `pg_sleep` plus the production import advisory lock (documented in Gate G output).
+4. Role probes use `set_config('role', …)` (direct PostgreSQL role simulation), not full athlete JWT HTTP flows, except a PostgREST privilege-denial check.
 
 ## Cleanup
 

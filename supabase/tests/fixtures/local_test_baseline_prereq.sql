@@ -1,104 +1,296 @@
--- TEST-ONLY disposable baseline stub for Sprint 1.2 local validation.
+-- Authoritative local test baseline (Sprint 1.2 disposable harness).
 --
--- NOT an authoritative hosted schema dump.
--- Must never live under the repository's production supabase/migrations/.
--- Copied only into an isolated temporary Supabase workdir by the local harness.
+-- Source: hosted schema-only dump (project otnhhdxstdnwccehacku / Cohort Field Manual)
+-- Dump SHA256: 25be877b2acfaa69ee4b3db28a2e9a03419259a362ca143fa6f2c01c7f787d90
+-- Extracted during authorised read-only preflight; not a full dump copy.
 --
--- Repository production migrations begin at 20260713140000 and assume preexisting
--- training_sessions, performance_protocols, protocol_steps, athlete_state, and
--- exercises_v2. This stub supplies the minimum shapes needed for those migrations
--- to apply in a disposable environment so Sprint 1.2 behavioural RPCs can be exercised.
+-- Scope: public baseline tables required before replaying repository migrations
+-- in an isolated temporary Supabase workdir. NEVER place under production
+-- supabase/migrations/.
+--
+-- Faithfulness: column names/order/types/nullability/defaults/PKs/checks/indexes
+-- and RLS-disabled state match the hosted dump for the five baseline tables.
+--
+-- Deliberate local-only accommodations (documented; not claimed as hosted parity):
+-- 1) athlete_state_athlete_id_unique is OMITTED here so production migration
+--    20260715150000_add_athlete_state_athlete_unique.sql can apply unchanged.
+--    After that migration, the unique constraint matches hosted.
+-- 2) performance_protocols_programme_version_id_fkey is OMITTED here because
+--    programme_versions is created by 20260715120000_add_programme_engine_v1.sql
+--    (non-IF-NOT-EXISTS). Column programme_version_id is present; migration
+--    20260718130000 adds the FK with an existence guard.
+-- 3) Table privileges are left to local Supabase defaults / later test setup.
+--    Hosted GRANT ALL to anon/authenticated/service_role is NOT reproduced here
+--    and must not be mistaken for a production grant decision.
+-- 4) No application data is seeded.
+--
+-- Dependency included: public.session_lineages (FK target for
+-- performance_protocols.session_lineage_id). Migration
+-- 20260721100000 uses CREATE TABLE IF NOT EXISTS for this relation.
+
+CREATE SCHEMA IF NOT EXISTS public;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS public.training_sessions (
-  id            BIGSERIAL PRIMARY KEY,
-  athlete_id    TEXT,
-  programme_id  TEXT,
-  status        TEXT NOT NULL DEFAULT 'planned',
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+-- Dependency: session_lineages (referenced by performance_protocols.session_lineage_id)
+CREATE TABLE public.session_lineages (
+
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    display_name text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+ALTER TABLE ONLY public.session_lineages
+    ADD CONSTRAINT session_lineages_pkey PRIMARY KEY (id);
+COMMENT ON TABLE public.session_lineages IS 'M9.1 stable Session identity across immutable revisions (performance_protocols rows).';
 
-CREATE TABLE IF NOT EXISTS public.performance_protocols (
-  protocol_id              TEXT PRIMARY KEY,
-  name                     TEXT NOT NULL,
-  purpose                  TEXT,
-  published                TEXT NOT NULL DEFAULT 'false',
-  primary_capability       TEXT,
-  session_type             TEXT,
-  duration_min             INTEGER,
-  duration_category        TEXT,
-  technical_complexity     TEXT,
-  environment              TEXT,
-  required_equipment       TEXT,
-  optional_equipment       TEXT,
-  suitable_for             TEXT,
-  physiological_demand     TEXT,
-  recovery_cost            TEXT,
-  adaptability             INTEGER,
-  running_required         BOOLEAN,
-  running_replaceable      BOOLEAN,
-  hotel_friendly           BOOLEAN,
-  indoor_friendly          BOOLEAN,
-  noise_friendly           BOOLEAN,
-  coaching_notes           TEXT,
-  created_at               TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at               TIMESTAMPTZ NOT NULL DEFAULT NOW()
+-- === training_sessions (hosted-faithful) ===
+CREATE TABLE public.training_sessions (
+
+    id bigint NOT NULL,
+    athlete_id text,
+    protocol_id text,
+    programme_id text,
+    programme_week smallint,
+    session_date date,
+    status text,
+    completed_at timestamp with time zone,
+    duration_seconds bigint,
+    adapted boolean,
+    notes text,
+    created_at timestamp with time zone,
+    updated_at timestamp with time zone,
+    week_number smallint,
+    started_at timestamp with time zone,
+    session_note text,
+    ended_early boolean DEFAULT false NOT NULL,
+    completion_reason text,
+    completed_exercise_count integer,
+    total_exercise_count integer
 );
-
-CREATE TABLE IF NOT EXISTS public.protocol_steps (
-  id            BIGSERIAL PRIMARY KEY,
-  protocol_id   TEXT NOT NULL
-                  REFERENCES public.performance_protocols (protocol_id)
-                  ON DELETE CASCADE,
-  step_order    INTEGER NOT NULL,
-  section       TEXT,
-  step_type     TEXT,
-  display_style TEXT,
-  exercise_id   TEXT,
-  title         TEXT,
-  notes         TEXT,
-  metadata      JSONB NOT NULL DEFAULT '{}'::JSONB,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+ALTER TABLE public.training_sessions ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.training_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
+ALTER TABLE ONLY public.training_sessions
+    ADD CONSTRAINT training_sessions_pkey PRIMARY KEY (id);
+COMMENT ON COLUMN public.training_sessions.session_note IS 'Optional athlete session reflection saved at completion.';
+COMMENT ON COLUMN public.training_sessions.ended_early IS 'True when the athlete ended the session before all exercises were completed.';
+COMMENT ON COLUMN public.training_sessions.completion_reason IS 'Optional athlete-selected reason for ending a session early.';
+COMMENT ON COLUMN public.training_sessions.completed_exercise_count IS 'Exercises fully completed when the session was closed.';
+COMMENT ON COLUMN public.training_sessions.total_exercise_count IS 'Total programmed exercises in the session at completion time.';
+-- Hosted: RLS disabled, zero policies on training_sessions
+ALTER TABLE public.training_sessions DISABLE ROW LEVEL SECURITY;
 
-CREATE INDEX IF NOT EXISTS idx_protocol_steps_protocol_id
-  ON public.protocol_steps (protocol_id);
+-- === athlete_state (hosted-faithful) ===
+CREATE TABLE public.athlete_state (
 
-CREATE TABLE IF NOT EXISTS public.athlete_state (
-  id            BIGSERIAL PRIMARY KEY,
-  athlete_id    TEXT NOT NULL,
-  current_week  INTEGER,
-  current_day   INTEGER,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id bigint NOT NULL,
+    athlete_id text,
+    current_goal text,
+    current_programme_id text,
+    current_week smallint,
+    current_day text,
+    current_protocol_id text,
+    session_status text,
+    updated_at timestamp with time zone DEFAULT now()
 );
-
-CREATE TABLE IF NOT EXISTS public.exercises_v2 (
-  exercise_id          TEXT PRIMARY KEY,
-  name                 TEXT NOT NULL,
-  slug                 TEXT NOT NULL UNIQUE,
-  published            BOOLEAN NOT NULL DEFAULT TRUE,
-  category             TEXT,
-  movement_pattern     TEXT,
-  equipment            TEXT,
-  primary_muscles      TEXT,
-  primary_capability   TEXT,
-  loading_options      TEXT,
-  purpose              TEXT,
-  created_at           TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at           TIMESTAMPTZ NOT NULL DEFAULT NOW()
+ALTER TABLE public.athlete_state ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.athlete_state_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
 );
+-- OMITTED (local accommodation): athlete_state_athlete_id_unique — applied by production migration 20260715150000.
+ALTER TABLE ONLY public.athlete_state
+    ADD CONSTRAINT athlete_state_pkey PRIMARY KEY (id);
+-- Hosted: RLS disabled, zero policies on athlete_state
+ALTER TABLE public.athlete_state DISABLE ROW LEVEL SECURITY;
 
-COMMENT ON TABLE public.training_sessions IS
-  'TEST-ONLY disposable baseline stub — not authoritative hosted DDL.';
-COMMENT ON TABLE public.performance_protocols IS
-  'TEST-ONLY disposable baseline stub — not authoritative hosted DDL.';
-COMMENT ON TABLE public.protocol_steps IS
-  'TEST-ONLY disposable baseline stub — not authoritative hosted DDL.';
-COMMENT ON TABLE public.athlete_state IS
-  'TEST-ONLY disposable baseline stub — not authoritative hosted DDL.';
-COMMENT ON TABLE public.exercises_v2 IS
-  'TEST-ONLY disposable baseline stub — not authoritative hosted DDL.';
+-- === exercises_v2 (hosted-faithful) ===
+CREATE TABLE public.exercises_v2 (
+
+    exercise_id text NOT NULL,
+    name text,
+    slug text,
+    published boolean,
+    category text,
+    movement_pattern text,
+    movement_plane text,
+    exercise_type text,
+    primary_capability text,
+    body_region text,
+    primary_muscles text,
+    secondary_muscle_groups text,
+    technical_complexity text,
+    equipment text,
+    equipment_category text,
+    environment text,
+    purpose text,
+    setup text,
+    execution text,
+    coaching_cues text,
+    common_mistakes text,
+    breathing_notes text,
+    safety_notes text,
+    regression text,
+    progression text,
+    scaling_notes text,
+    best_used_for text,
+    loading_options text,
+    rep_range_guidance text,
+    tempo_guidance text,
+    rest_guidance text,
+    unilateral text,
+    fatigue_score text,
+    skill_score text,
+    video_url text,
+    image_url text,
+    related_protocols text,
+    coaching_priority text,
+    notes_internal text
+);
+ALTER TABLE ONLY public.exercises_v2
+    ADD CONSTRAINT exercises_v2_pkey PRIMARY KEY (exercise_id);
+-- Hosted: RLS disabled, zero policies on exercises_v2
+ALTER TABLE public.exercises_v2 DISABLE ROW LEVEL SECURITY;
+
+-- === protocol_steps (hosted-faithful) ===
+CREATE TABLE public.protocol_steps (
+
+    id bigint NOT NULL,
+    protocol_id text NOT NULL,
+    step_order smallint,
+    section text,
+    step_type text,
+    exercise_id text,
+    title text,
+    notes text,
+    metadata jsonb,
+    display_style text
+);
+ALTER TABLE public.protocol_steps ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.protocol_steps_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+ALTER TABLE ONLY public.protocol_steps
+    ADD CONSTRAINT protocol_steps_pkey PRIMARY KEY (id);
+-- Hosted: RLS disabled, zero policies on protocol_steps
+ALTER TABLE public.protocol_steps DISABLE ROW LEVEL SECURITY;
+
+-- === performance_protocols (hosted-faithful) ===
+CREATE TABLE public.performance_protocols (
+
+    name text,
+    protocol_id text NOT NULL,
+    library text,
+    session_type text,
+    training_quality text,
+    running_category text,
+    running_target_intensity text,
+    pace_guidance text,
+    primary_capability text,
+    session_intention text,
+    score_type text,
+    training_theme text,
+    duration_min bigint,
+    duration_category text,
+    technical_complexity text,
+    physiological_demand text,
+    recovery_cost text,
+    body_focus text,
+    suitable_for text,
+    environment text,
+    recovery_friendly text,
+    exercises text,
+    equipment text,
+    recommended_after text,
+    impact text,
+    cohort_rating text,
+    published text,
+    original_workout text,
+    purpose text,
+    "warm-up" text,
+    main_session text,
+    cool_down text,
+    coaching_notes text,
+    scaling_options text,
+    progression_notes text,
+    secondary_capability text,
+    required_equipment text,
+    optional_equipment text,
+    adaptability integer,
+    running_required boolean,
+    running_replaceable boolean,
+    hotel_friendly boolean,
+    indoor_friendly boolean,
+    noise_friendly boolean,
+    content_kind text DEFAULT 'cohort_protocol'::text NOT NULL,
+    authoring_scope text DEFAULT 'cohort_global'::text NOT NULL,
+    endorsement_status text DEFAULT 'cohort_endorsed'::text NOT NULL,
+    owner_id text,
+    organisation_id text,
+    programme_version_id uuid,
+    source_content_id text,
+    source_content_kind text,
+    source_version_id text,
+    session_lineage_id uuid,
+    revision_number integer DEFAULT 1 NOT NULL,
+    lifecycle_status text DEFAULT 'published'::text NOT NULL,
+    published_at timestamp with time zone,
+    archived_at timestamp with time zone,
+    primary_session_intent text,
+    secondary_session_intents jsonb,
+    minimum_viable_duration_min integer,
+    CONSTRAINT performance_protocols_authoring_scope_check CHECK ((authoring_scope = ANY (ARRAY['cohort_global'::text, 'coach_private'::text, 'organisation'::text, 'programme_only'::text]))),
+    CONSTRAINT performance_protocols_content_kind_check CHECK ((content_kind = ANY (ARRAY['cohort_protocol'::text, 'session'::text, 'session_template'::text]))),
+    CONSTRAINT performance_protocols_endorsement_status_check CHECK ((endorsement_status = ANY (ARRAY['cohort_endorsed'::text, 'organisation_approved'::text, 'coach_authored'::text, 'unreviewed'::text]))),
+    CONSTRAINT performance_protocols_lifecycle_status_check CHECK ((lifecycle_status = ANY (ARRAY['draft'::text, 'published'::text, 'archived'::text]))),
+    CONSTRAINT performance_protocols_minimum_viable_duration_min_positive CHECK (((minimum_viable_duration_min IS NULL) OR (minimum_viable_duration_min > 0))),
+    CONSTRAINT performance_protocols_revision_number_positive CHECK ((revision_number > 0)),
+    CONSTRAINT performance_protocols_secondary_session_intents_array CHECK (((secondary_session_intents IS NULL) OR (jsonb_typeof(secondary_session_intents) = 'array'::text))),
+    CONSTRAINT performance_protocols_source_content_kind_check CHECK (((source_content_kind IS NULL) OR (source_content_kind = ANY (ARRAY['cohort_protocol'::text, 'session'::text, 'session_template'::text]))))
+);
+ALTER TABLE ONLY public.performance_protocols
+    ADD CONSTRAINT "Performance Protocols_pkey" PRIMARY KEY (protocol_id);
+ALTER TABLE ONLY public.performance_protocols
+    ADD CONSTRAINT performance_protocols_lineage_revision_unique UNIQUE (session_lineage_id, revision_number);
+-- OMITTED (local accommodation): performance_protocols_programme_version_id_fkey — applied by production migration 20260718130000 after programme_versions exists.
+ALTER TABLE ONLY public.performance_protocols
+    ADD CONSTRAINT performance_protocols_session_lineage_id_fkey FOREIGN KEY (session_lineage_id) REFERENCES public.session_lineages(id) ON DELETE RESTRICT;
+CREATE INDEX idx_performance_protocols_coach_sessions ON public.performance_protocols USING btree (owner_id, content_kind, authoring_scope) WHERE ((content_kind = 'session'::text) AND (authoring_scope = 'coach_private'::text));
+CREATE INDEX idx_performance_protocols_cohort_catalogue ON public.performance_protocols USING btree (content_kind, authoring_scope, published) WHERE ((content_kind = 'cohort_protocol'::text) AND (authoring_scope = 'cohort_global'::text));
+CREATE INDEX idx_performance_protocols_lifecycle_status ON public.performance_protocols USING btree (lifecycle_status);
+CREATE INDEX idx_performance_protocols_programme_sessions ON public.performance_protocols USING btree (programme_version_id, content_kind, authoring_scope) WHERE ((content_kind = 'session'::text) AND (authoring_scope = 'programme_only'::text));
+CREATE INDEX idx_performance_protocols_session_lineage ON public.performance_protocols USING btree (session_lineage_id, revision_number);
+CREATE INDEX idx_performance_protocols_session_templates ON public.performance_protocols USING btree (content_kind, authoring_scope, owner_id) WHERE (content_kind = 'session_template'::text);
+COMMENT ON TABLE public.performance_protocols IS 'All the training sessions';
+COMMENT ON COLUMN public.performance_protocols.content_kind IS 'Training content classification: cohort_protocol | session | session_template. Programme-only workouts use session + programme_only scope (not a separate kind).';
+COMMENT ON COLUMN public.performance_protocols.authoring_scope IS 'Visibility/ownership scope: cohort_global | coach_private | organisation | programme_only.';
+COMMENT ON COLUMN public.performance_protocols.endorsement_status IS 'Endorsement/review state: cohort_endorsed | organisation_approved | coach_authored | unreviewed.';
+COMMENT ON COLUMN public.performance_protocols.owner_id IS 'Coach owner for coach_private sessions/templates. TEXT to match programme_versions.owner_id and dev-coach identity during development.';
+COMMENT ON COLUMN public.performance_protocols.organisation_id IS 'Organisation scope identifier when authoring_scope = organisation.';
+COMMENT ON COLUMN public.performance_protocols.programme_version_id IS 'Populated when authoring_scope = programme_only; FK to programme_versions.id.';
+COMMENT ON COLUMN public.performance_protocols.source_content_id IS 'Provenance: source protocol/session/template id when copied or customised.';
+COMMENT ON COLUMN public.performance_protocols.source_content_kind IS 'Provenance: kind of source content (cohort_protocol | session | session_template).';
+COMMENT ON COLUMN public.performance_protocols.source_version_id IS 'Provenance: optional version identifier for source content.';
+COMMENT ON COLUMN public.performance_protocols.session_lineage_id IS 'M9.1 lineage grouping for immutable session revisions.';
+COMMENT ON COLUMN public.performance_protocols.revision_number IS 'M9.1 monotonic revision number within session_lineage_id.';
+COMMENT ON COLUMN public.performance_protocols.lifecycle_status IS 'M9.1 draft | published | archived. Published revisions are immutable.';
+COMMENT ON COLUMN public.performance_protocols.published_at IS 'Timestamp when lifecycle_status became published.';
+COMMENT ON COLUMN public.performance_protocols.archived_at IS 'Timestamp when lifecycle_status became archived.';
+COMMENT ON COLUMN public.performance_protocols.primary_session_intent IS 'M2A canonical SessionIntent dbValue when explicitly authored (e.g. lower_body_strength). NULL = unset; app ignores unknown values.';
+COMMENT ON COLUMN public.performance_protocols.secondary_session_intents IS 'M2A JSON array of SessionIntent dbValue strings when explicitly authored. NULL = unset; omit empty arrays at write time in app.';
+COMMENT ON COLUMN public.performance_protocols.minimum_viable_duration_min IS 'M2A minimum viable session duration in minutes when explicitly authored. NULL = unset.';
+-- Hosted: RLS disabled, zero policies on performance_protocols
+ALTER TABLE public.performance_protocols DISABLE ROW LEVEL SECURITY;

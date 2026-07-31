@@ -145,12 +145,24 @@ fi
 SPRINT12_DB_CONTAINER="$(sprint12_resolve_exact_db_container "$SPRINT12_PROJECT_ID")"
 sprint12_assert_local_container "$SPRINT12_DB_CONTAINER" "$SPRINT12_PROJECT_ID"
 
+echo "=== Baseline fixture must not seed application data ==="
+if rg -n '^COPY |^INSERT INTO ' "${TESTS_DIR}/fixtures/local_test_baseline_prereq.sql" >/dev/null; then
+  sprint12_die "Baseline fixture contains COPY/INSERT (must be schema-only)"
+fi
+echo "Baseline fixture has no COPY/INSERT."
+
 echo "=== Fresh reset (no seed; local only) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
 supabase db reset --local --no-seed --yes --workdir "${SPRINT12_WORKDIR}"
 
 echo "=== Lint (before helpers) ==="
 supabase db lint --local --level error --fail-on error --workdir "${SPRINT12_WORKDIR}"
+
+echo "=== Baseline fidelity (separate from behavioural C–I totals) ==="
+docker cp "${TESTS_DIR}/sql/baseline_fidelity.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_baseline_fidelity.sql"
+docker exec -i "${SPRINT12_DB_CONTAINER}" \
+  psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
+  -f /tmp/sprint12_baseline_fidelity.sql
 
 echo "=== Load helpers + Gates C–I ==="
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
@@ -160,9 +172,13 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_helpers.sql \
   -f /tmp/sprint12_gates.sql
 
-echo "=== Repeat run (db reset + fresh helpers/gates; no stale dependence) ==="
+echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
 supabase db reset --local --no-seed --yes --workdir "${SPRINT12_WORKDIR}"
+docker cp "${TESTS_DIR}/sql/baseline_fidelity.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_baseline_fidelity.sql"
+docker exec -i "${SPRINT12_DB_CONTAINER}" \
+  psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
+  -f /tmp/sprint12_baseline_fidelity.sql
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
 docker cp "${TESTS_DIR}/sql/gates_c_to_i.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gates.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \

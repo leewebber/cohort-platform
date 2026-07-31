@@ -117,5 +117,5 @@ EOF
   echo "Prepared disposable workdir=${workdir}"
   echo "project_id=${project_id}"
   echo "expected_container=${SPRINT12_DB_CONTAINER}"
-  echo "NOTE: test-only baseline is sufficient for disposable Sprint 1.2 behavioural validation only; not authoritative hosted baseline."
+  echo "NOTE: test-only baseline is derived from the authorised hosted schema-only dump for disposable Sprint 1.2 validation; see fixtures/local_test_baseline_prereq.sql header for accommodations."
 }
