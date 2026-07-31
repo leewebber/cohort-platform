@@ -280,6 +280,173 @@ void main() {
       );
       expect(preview.isImportable, isFalse);
     });
+
+    test(
+      'same hash with non-global scope is partial, not idempotent',
+      () async {
+        final service = PlanPackageImportPreviewService(
+          sessionResolution: resolvedSessions(),
+          existingVersionLookup: _FakeExistingLookup(
+            PlanPackageExistingVersionSnapshot(
+              versionId: 'existing',
+              lineageId: 'lin',
+              lineageCode: 'PROG-FIXTURE-01',
+              versionNumber: 1,
+              lifecycleStatus: ProgrammeLifecycleStatus.draft,
+              libraryScope: ProgrammeLibraryScope.coachPrivate,
+              ownerType: ProgrammeOwnerType.coach,
+              approvedForGlobal: false,
+              packageContentHash: compileResult.contentHashSha256,
+              packageSchemaVersion: 1,
+            ),
+          ),
+        );
+        final preview = await service.preview(compileResult: compileResult);
+        expect(preview.isImportable, isFalse);
+        expect(
+          preview.existingOutcome,
+          PlanPackageExistingImportOutcome.partialDraftConflict,
+        );
+      },
+    );
+
+    test('same hash with approved_for_global true is partial', () async {
+      final service = PlanPackageImportPreviewService(
+        sessionResolution: resolvedSessions(),
+        existingVersionLookup: _FakeExistingLookup(
+          PlanPackageExistingVersionSnapshot(
+            versionId: 'existing',
+            lineageId: 'lin',
+            lineageCode: 'PROG-FIXTURE-01',
+            versionNumber: 1,
+            lifecycleStatus: ProgrammeLifecycleStatus.draft,
+            libraryScope: ProgrammeLibraryScope.cohortGlobal,
+            ownerType: ProgrammeOwnerType.global,
+            approvedForGlobal: true,
+            packageContentHash: compileResult.contentHashSha256,
+            packageSchemaVersion: 1,
+          ),
+        ),
+      );
+      final preview = await service.preview(compileResult: compileResult);
+      expect(
+        preview.existingOutcome,
+        PlanPackageExistingImportOutcome.partialDraftConflict,
+      );
+      expect(preview.isImportable, isFalse);
+    });
+
+    test('same hash with non-null owner_id is partial', () async {
+      final service = PlanPackageImportPreviewService(
+        sessionResolution: resolvedSessions(),
+        existingVersionLookup: _FakeExistingLookup(
+          PlanPackageExistingVersionSnapshot(
+            versionId: 'existing',
+            lineageId: 'lin',
+            lineageCode: 'PROG-FIXTURE-01',
+            versionNumber: 1,
+            lifecycleStatus: ProgrammeLifecycleStatus.draft,
+            libraryScope: ProgrammeLibraryScope.cohortGlobal,
+            ownerType: ProgrammeOwnerType.global,
+            approvedForGlobal: false,
+            ownerId: 'spoofed-owner',
+            packageContentHash: compileResult.contentHashSha256,
+            packageSchemaVersion: 1,
+          ),
+        ),
+      );
+      final preview = await service.preview(compileResult: compileResult);
+      expect(
+        preview.existingOutcome,
+        PlanPackageExistingImportOutcome.partialDraftConflict,
+      );
+    });
+
+    test(
+      'null package hash existing draft is partial, not idempotent',
+      () async {
+        final service = PlanPackageImportPreviewService(
+          sessionResolution: resolvedSessions(),
+          existingVersionLookup: _FakeExistingLookup(
+            const PlanPackageExistingVersionSnapshot(
+              versionId: 'existing',
+              lineageId: 'lin',
+              lineageCode: 'PROG-FIXTURE-01',
+              versionNumber: 1,
+              lifecycleStatus: ProgrammeLifecycleStatus.draft,
+              libraryScope: ProgrammeLibraryScope.cohortGlobal,
+              ownerType: ProgrammeOwnerType.global,
+              approvedForGlobal: false,
+            ),
+          ),
+        );
+        final preview = await service.preview(compileResult: compileResult);
+        expect(
+          preview.existingOutcome,
+          PlanPackageExistingImportOutcome.partialDraftConflict,
+        );
+        expect(preview.isImportable, isFalse);
+      },
+    );
+  });
+
+  group('existing snapshot SQL-aligned classification', () {
+    test('exact idempotent predicate matches SQL requirements', () {
+      final snap = PlanPackageExistingVersionSnapshot(
+        versionId: 'v',
+        lineageId: 'l',
+        lineageCode: 'PROG-FIXTURE-01',
+        versionNumber: 1,
+        lifecycleStatus: ProgrammeLifecycleStatus.draft,
+        libraryScope: ProgrammeLibraryScope.cohortGlobal,
+        ownerType: ProgrammeOwnerType.global,
+        approvedForGlobal: false,
+        packageContentHash: compileResult.contentHashSha256,
+        packageSchemaVersion: 1,
+      );
+      expect(
+        snap.isExactIdempotentDraft(
+          packageContentHash: compileResult.contentHashSha256!,
+          packageSchemaVersion: 1,
+        ),
+        isTrue,
+      );
+    });
+  });
+
+  group('RPC result mapping', () {
+    test('maps unexpected_database_failure without treating as success', () {
+      final result = PlanPackageImportResult.fromRpcMap({
+        'status': 'database_failure',
+        'code': 'unexpected_database_failure',
+        'message': 'Import failed and was rolled back.',
+      });
+      expect(result.status, PlanPackageImportStatus.databaseFailure);
+      expect(result.code, 'unexpected_database_failure');
+      expect(result.isSuccess, isFalse);
+    });
+
+    test('maps lineage_or_version_race as version collision status text', () {
+      final result = PlanPackageImportResult.fromRpcMap({
+        'status': 'version_collision',
+        'code': 'lineage_or_version_race',
+        'message':
+            'Concurrent import conflicted on lineage or version identity.',
+      });
+      expect(result.status, PlanPackageImportStatus.versionCollision);
+      expect(result.isSuccess, isFalse);
+    });
+
+    test('maps broken_reference validation failure', () {
+      final result = PlanPackageImportResult.fromRpcMap({
+        'status': 'validation_failure',
+        'code': 'broken_reference',
+        'message':
+            'Import references an unknown package identity and was rolled back.',
+      });
+      expect(result.status, PlanPackageImportStatus.validationFailure);
+      expect(result.code, 'broken_reference');
+    });
   });
 
   group('import payload and application boundary', () {

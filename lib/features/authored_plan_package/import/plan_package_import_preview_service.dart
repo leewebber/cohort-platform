@@ -90,53 +90,50 @@ class PlanPackageImportPreviewService {
         versionNumber: manifest.programme.versionNumber,
       );
       if (existing != null) {
-        if (existing.lifecycleStatus == ProgrammeLifecycleStatus.published) {
-          existingOutcome = PlanPackageExistingImportOutcome.publishedConflict;
-          errors.add(
-            PlanPackageValidationIssue(
-              path: 'programme.version_number',
-              code: 'published_version_exists',
-              message:
-                  'Programme version ${existing.versionNumber} is published '
-                  'and cannot be overwritten.',
-            ),
-          );
-        } else if (existing.lifecycleStatus != ProgrammeLifecycleStatus.draft) {
-          existingOutcome = PlanPackageExistingImportOutcome.nonDraftConflict;
-          errors.add(
-            const PlanPackageValidationIssue(
-              path: 'programme.version_number',
-              code: 'non_draft_exists',
-              message: 'Existing version is not an importable draft.',
-            ),
-          );
-        } else if (existing.packageContentHash ==
-                compileResult.contentHashSha256 &&
-            existing.packageSchemaVersion == manifest.packageSchemaVersion) {
-          existingOutcome = PlanPackageExistingImportOutcome.idempotentSameHash;
-        } else if (existing.packageContentHash != null &&
-            existing.packageContentHash != compileResult.contentHashSha256) {
-          existingOutcome = PlanPackageExistingImportOutcome.hashCollision;
-          errors.add(
-            const PlanPackageValidationIssue(
-              path: 'package_content_hash',
-              code: 'hash_collision',
-              message:
-                  'Same lineage/version exists with a different hash. '
-                  'Bump version_number for corrected content.',
-            ),
-          );
-        } else {
-          existingOutcome =
-              PlanPackageExistingImportOutcome.partialDraftConflict;
-          errors.add(
-            const PlanPackageValidationIssue(
-              path: 'programme',
-              code: 'partial_existing_draft',
-              message:
-                  'Existing draft is incomplete or inconsistent. Fail closed.',
-            ),
-          );
+        existingOutcome = existing.classifyAgainstPackage(
+          packageContentHash: compileResult.contentHashSha256!,
+          packageSchemaVersion: manifest.packageSchemaVersion,
+        );
+        switch (existingOutcome) {
+          case PlanPackageExistingImportOutcome.publishedConflict:
+            errors.add(
+              PlanPackageValidationIssue(
+                path: 'programme.version_number',
+                code: 'published_version_exists',
+                message:
+                    'Programme version ${existing.versionNumber} is published '
+                    'and cannot be overwritten.',
+              ),
+            );
+          case PlanPackageExistingImportOutcome.nonDraftConflict:
+            errors.add(
+              const PlanPackageValidationIssue(
+                path: 'programme.version_number',
+                code: 'non_draft_exists',
+                message: 'Existing version is not an importable draft.',
+              ),
+            );
+          case PlanPackageExistingImportOutcome.hashCollision:
+            errors.add(
+              const PlanPackageValidationIssue(
+                path: 'package_content_hash',
+                code: 'hash_collision',
+                message:
+                    'Same lineage/version exists with a different hash. '
+                    'Bump version_number for corrected content.',
+              ),
+            );
+          case PlanPackageExistingImportOutcome.partialDraftConflict:
+            errors.add(
+              const PlanPackageValidationIssue(
+                path: 'programme',
+                code: 'partial_existing_draft',
+                message:
+                    'Existing draft is incomplete or inconsistent. Fail closed.',
+              ),
+            );
+          case PlanPackageExistingImportOutcome.idempotentSameHash:
+            break;
         }
       }
     }

@@ -103,7 +103,7 @@ void main() {
     test('import never publishes or approves for catalogue', () {
       expect(sql, contains("'approved_for_global', FALSE"));
       expect(sql, contains("'lifecycle_status', 'draft'"));
-      expect(sql, contains("'draft',\n    'cohort_global',\n    'global'"));
+      expect(sql, contains("'draft',\n      'cohort_global',\n      'global'"));
       expect(sql, contains('ownership_or_lifecycle_spoof'));
       expect(sql, contains('idempotent_existing_draft'));
       expect(sql, contains('hash_collision'));
@@ -143,6 +143,7 @@ void main() {
           sql,
           contains('cohort_reject_published_programme_content_mutation'),
         );
+        expect(sql, contains('cohort_programme_version_is_immutable'));
         expect(sql, contains('programme_versions_immutability'));
         expect(sql, contains('programme_version_session_slots_immutability'));
         expect(
@@ -165,6 +166,12 @@ void main() {
         expect(
           sql,
           contains('Catalogue approval cannot occur during publication'),
+        );
+        expect(
+          sql,
+          contains(
+            'Publish transition cannot alter authored programme content',
+          ),
         );
       },
     );

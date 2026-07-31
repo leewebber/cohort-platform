@@ -438,10 +438,10 @@ CREATE POLICY programme_version_comparison_identities_select_coach
 -- Package-owned rows are created only by service-role import RPC.
 
 -- ---------------------------------------------------------------------------
--- 6. Published immutability triggers (DB boundary)
+-- 6. Published/archived immutability triggers (DB boundary)
 -- ---------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.cohort_programme_version_is_published(p_version_id UUID)
+CREATE OR REPLACE FUNCTION public.cohort_programme_version_is_immutable(p_version_id UUID)
 RETURNS BOOLEAN
 LANGUAGE sql
 STABLE
@@ -452,13 +452,60 @@ AS $$
     SELECT 1
     FROM public.programme_versions v
     WHERE v.id = p_version_id
-      AND v.lifecycle_status = 'published'
+      AND v.lifecycle_status IN ('published', 'archived')
   );
+$$;
+
+REVOKE ALL ON FUNCTION public.cohort_programme_version_is_immutable(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_is_immutable(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_is_immutable(UUID) TO service_role;
+
+-- Compatibility alias used by earlier Sprint 1.2 drafts; now means immutable snapshot.
+CREATE OR REPLACE FUNCTION public.cohort_programme_version_is_published(p_version_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT public.cohort_programme_version_is_immutable(p_version_id);
 $$;
 
 REVOKE ALL ON FUNCTION public.cohort_programme_version_is_published(UUID) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.cohort_programme_version_is_published(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.cohort_programme_version_is_published(UUID) TO service_role;
+
+CREATE OR REPLACE FUNCTION public.cohort_programme_version_id_for_week(p_week_id UUID)
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT w.version_id
+  FROM public.programme_version_weeks w
+  WHERE w.id = p_week_id;
+$$;
+
+CREATE OR REPLACE FUNCTION public.cohort_programme_version_id_for_day(p_day_id UUID)
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT w.version_id
+  FROM public.programme_version_days d
+  JOIN public.programme_version_weeks w ON w.id = d.week_id
+  WHERE d.id = p_day_id;
+$$;
+
+REVOKE ALL ON FUNCTION public.cohort_programme_version_id_for_week(UUID) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.cohort_programme_version_id_for_day(UUID) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_id_for_week(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_id_for_week(UUID) TO service_role;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_id_for_day(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cohort_programme_version_id_for_day(UUID) TO service_role;
 
 CREATE OR REPLACE FUNCTION public.cohort_reject_published_programme_content_mutation()
 RETURNS TRIGGER
@@ -467,65 +514,123 @@ SECURITY DEFINER
 SET search_path = public, pg_temp
 AS $$
 DECLARE
-  v_version_id UUID;
-  v_lifecycle TEXT;
+  v_old_version_id UUID;
+  v_new_version_id UUID;
 BEGIN
   IF TG_TABLE_NAME = 'programme_versions' THEN
-    v_lifecycle := CASE WHEN TG_OP = 'DELETE' THEN OLD.lifecycle_status ELSE OLD.lifecycle_status END;
     IF TG_OP = 'UPDATE' THEN
-      -- Allow only: draft→published (+published_at), published→archived (+archived_at),
-      -- and approved_for_global toggle on published rows (catalogue gate).
+      -- Strict archive transition: lifecycle + archived_at (+ updated_at) only.
+      IF OLD.lifecycle_status = 'published'
+         AND NEW.lifecycle_status = 'archived'
+         AND NEW.archived_at IS NOT NULL
+         AND NEW.id IS NOT DISTINCT FROM OLD.id
+         AND NEW.lineage_id IS NOT DISTINCT FROM OLD.lineage_id
+         AND NEW.version_number IS NOT DISTINCT FROM OLD.version_number
+         AND NEW.library_scope IS NOT DISTINCT FROM OLD.library_scope
+         AND NEW.owner_type IS NOT DISTINCT FROM OLD.owner_type
+         AND NEW.owner_id IS NOT DISTINCT FROM OLD.owner_id
+         AND NEW.organisation_id IS NOT DISTINCT FROM OLD.organisation_id
+         AND NEW.created_by IS NOT DISTINCT FROM OLD.created_by
+         AND NEW.name IS NOT DISTINCT FROM OLD.name
+         AND NEW.description IS NOT DISTINCT FROM OLD.description
+         AND NEW.duration_weeks IS NOT DISTINCT FROM OLD.duration_weeks
+         AND NEW.target_athlete IS NOT DISTINCT FROM OLD.target_athlete
+         AND NEW.difficulty IS NOT DISTINCT FROM OLD.difficulty
+         AND NEW.primary_goal IS NOT DISTINCT FROM OLD.primary_goal
+         AND NEW.equipment_requirements IS NOT DISTINCT FROM OLD.equipment_requirements
+         AND NEW.sessions_per_week IS NOT DISTINCT FROM OLD.sessions_per_week
+         AND NEW.approved_for_global IS NOT DISTINCT FROM OLD.approved_for_global
+         AND NEW.approved_for_adaptation IS NOT DISTINCT FROM OLD.approved_for_adaptation
+         AND NEW.published_at IS NOT DISTINCT FROM OLD.published_at
+         AND NEW.created_at IS NOT DISTINCT FROM OLD.created_at
+         AND NEW.package_schema_version IS NOT DISTINCT FROM OLD.package_schema_version
+         AND NEW.package_content_hash IS NOT DISTINCT FROM OLD.package_content_hash
+         AND NEW.coaching_intent IS NOT DISTINCT FROM OLD.coaching_intent
+         AND NEW.package_imported_at IS NOT DISTINCT FROM OLD.package_imported_at
+         AND NEW.package_imported_by IS NOT DISTINCT FROM OLD.package_imported_by
+      THEN
+        RETURN NEW;
+      END IF;
+
+      -- Strict catalogue-approval whitelist: approved_for_global (+ updated_at) only.
+      IF OLD.lifecycle_status = 'published'
+         AND NEW.lifecycle_status = 'published'
+         AND NEW.approved_for_global IS DISTINCT FROM OLD.approved_for_global
+         AND NEW.id IS NOT DISTINCT FROM OLD.id
+         AND NEW.lineage_id IS NOT DISTINCT FROM OLD.lineage_id
+         AND NEW.version_number IS NOT DISTINCT FROM OLD.version_number
+         AND NEW.library_scope IS NOT DISTINCT FROM OLD.library_scope
+         AND NEW.owner_type IS NOT DISTINCT FROM OLD.owner_type
+         AND NEW.owner_id IS NOT DISTINCT FROM OLD.owner_id
+         AND NEW.organisation_id IS NOT DISTINCT FROM OLD.organisation_id
+         AND NEW.created_by IS NOT DISTINCT FROM OLD.created_by
+         AND NEW.name IS NOT DISTINCT FROM OLD.name
+         AND NEW.description IS NOT DISTINCT FROM OLD.description
+         AND NEW.duration_weeks IS NOT DISTINCT FROM OLD.duration_weeks
+         AND NEW.target_athlete IS NOT DISTINCT FROM OLD.target_athlete
+         AND NEW.difficulty IS NOT DISTINCT FROM OLD.difficulty
+         AND NEW.primary_goal IS NOT DISTINCT FROM OLD.primary_goal
+         AND NEW.equipment_requirements IS NOT DISTINCT FROM OLD.equipment_requirements
+         AND NEW.sessions_per_week IS NOT DISTINCT FROM OLD.sessions_per_week
+         AND NEW.approved_for_adaptation IS NOT DISTINCT FROM OLD.approved_for_adaptation
+         AND NEW.published_at IS NOT DISTINCT FROM OLD.published_at
+         AND NEW.archived_at IS NOT DISTINCT FROM OLD.archived_at
+         AND NEW.created_at IS NOT DISTINCT FROM OLD.created_at
+         AND NEW.package_schema_version IS NOT DISTINCT FROM OLD.package_schema_version
+         AND NEW.package_content_hash IS NOT DISTINCT FROM OLD.package_content_hash
+         AND NEW.coaching_intent IS NOT DISTINCT FROM OLD.coaching_intent
+         AND NEW.package_imported_at IS NOT DISTINCT FROM OLD.package_imported_at
+         AND NEW.package_imported_by IS NOT DISTINCT FROM OLD.package_imported_by
+      THEN
+        RETURN NEW;
+      END IF;
+
       IF OLD.lifecycle_status = 'published' THEN
-        IF NEW.lifecycle_status = 'archived'
-           AND NEW.archived_at IS NOT NULL
-           AND NEW.package_content_hash IS NOT DISTINCT FROM OLD.package_content_hash
-           AND NEW.package_schema_version IS NOT DISTINCT FROM OLD.package_schema_version
-           AND NEW.coaching_intent IS NOT DISTINCT FROM OLD.coaching_intent
-           AND NEW.name IS NOT DISTINCT FROM OLD.name
-           AND NEW.description IS NOT DISTINCT FROM OLD.description
-           AND NEW.duration_weeks IS NOT DISTINCT FROM OLD.duration_weeks
-           AND NEW.primary_goal IS NOT DISTINCT FROM OLD.primary_goal
-           AND NEW.sessions_per_week IS NOT DISTINCT FROM OLD.sessions_per_week
-           AND NEW.library_scope IS NOT DISTINCT FROM OLD.library_scope
-           AND NEW.owner_type IS NOT DISTINCT FROM OLD.owner_type
-           AND NEW.owner_id IS NOT DISTINCT FROM OLD.owner_id
-           AND NEW.lineage_id IS NOT DISTINCT FROM OLD.lineage_id
-           AND NEW.version_number IS NOT DISTINCT FROM OLD.version_number
-           AND NEW.package_imported_at IS NOT DISTINCT FROM OLD.package_imported_at
-           AND NEW.package_imported_by IS NOT DISTINCT FROM OLD.package_imported_by
-           AND NEW.approved_for_adaptation IS NOT DISTINCT FROM OLD.approved_for_adaptation
-        THEN
-          RETURN NEW;
-        END IF;
-        IF NEW.lifecycle_status = 'published'
-           AND NEW.approved_for_global IS DISTINCT FROM OLD.approved_for_global
-           AND NEW.package_content_hash IS NOT DISTINCT FROM OLD.package_content_hash
-           AND NEW.package_schema_version IS NOT DISTINCT FROM OLD.package_schema_version
-           AND NEW.coaching_intent IS NOT DISTINCT FROM OLD.coaching_intent
-           AND NEW.name IS NOT DISTINCT FROM OLD.name
-           AND NEW.description IS NOT DISTINCT FROM OLD.description
-           AND NEW.lineage_id IS NOT DISTINCT FROM OLD.lineage_id
-           AND NEW.version_number IS NOT DISTINCT FROM OLD.version_number
-           AND NEW.published_at IS NOT DISTINCT FROM OLD.published_at
-           AND NEW.library_scope IS NOT DISTINCT FROM OLD.library_scope
-           AND NEW.owner_type IS NOT DISTINCT FROM OLD.owner_type
-        THEN
-          RETURN NEW;
-        END IF;
         RAISE EXCEPTION 'Published programme version content is immutable'
           USING ERRCODE = 'integrity_constraint_violation';
       END IF;
+
+      -- Strict publish transition: lifecycle + published_at (+ updated_at) only.
       IF OLD.lifecycle_status = 'draft' AND NEW.lifecycle_status = 'published' THEN
         IF NEW.published_at IS NULL THEN
           RAISE EXCEPTION 'published_at is required when publishing'
             USING ERRCODE = 'check_violation';
         END IF;
-        IF NEW.approved_for_global = TRUE THEN
+        IF NEW.approved_for_global IS DISTINCT FROM FALSE THEN
           RAISE EXCEPTION 'Catalogue approval cannot occur during publication'
             USING ERRCODE = 'check_violation';
         END IF;
-        RETURN NEW;
+        IF NEW.id IS NOT DISTINCT FROM OLD.id
+           AND NEW.lineage_id IS NOT DISTINCT FROM OLD.lineage_id
+           AND NEW.version_number IS NOT DISTINCT FROM OLD.version_number
+           AND NEW.library_scope IS NOT DISTINCT FROM OLD.library_scope
+           AND NEW.owner_type IS NOT DISTINCT FROM OLD.owner_type
+           AND NEW.owner_id IS NOT DISTINCT FROM OLD.owner_id
+           AND NEW.organisation_id IS NOT DISTINCT FROM OLD.organisation_id
+           AND NEW.created_by IS NOT DISTINCT FROM OLD.created_by
+           AND NEW.name IS NOT DISTINCT FROM OLD.name
+           AND NEW.description IS NOT DISTINCT FROM OLD.description
+           AND NEW.duration_weeks IS NOT DISTINCT FROM OLD.duration_weeks
+           AND NEW.target_athlete IS NOT DISTINCT FROM OLD.target_athlete
+           AND NEW.difficulty IS NOT DISTINCT FROM OLD.difficulty
+           AND NEW.primary_goal IS NOT DISTINCT FROM OLD.primary_goal
+           AND NEW.equipment_requirements IS NOT DISTINCT FROM OLD.equipment_requirements
+           AND NEW.sessions_per_week IS NOT DISTINCT FROM OLD.sessions_per_week
+           AND NEW.approved_for_adaptation IS NOT DISTINCT FROM OLD.approved_for_adaptation
+           AND NEW.archived_at IS NOT DISTINCT FROM OLD.archived_at
+           AND NEW.created_at IS NOT DISTINCT FROM OLD.created_at
+           AND NEW.package_schema_version IS NOT DISTINCT FROM OLD.package_schema_version
+           AND NEW.package_content_hash IS NOT DISTINCT FROM OLD.package_content_hash
+           AND NEW.coaching_intent IS NOT DISTINCT FROM OLD.coaching_intent
+           AND NEW.package_imported_at IS NOT DISTINCT FROM OLD.package_imported_at
+           AND NEW.package_imported_by IS NOT DISTINCT FROM OLD.package_imported_by
+        THEN
+          RETURN NEW;
+        END IF;
+        RAISE EXCEPTION 'Publish transition cannot alter authored programme content'
+          USING ERRCODE = 'integrity_constraint_violation';
       END IF;
+
       IF OLD.lifecycle_status = 'archived' THEN
         RAISE EXCEPTION 'Archived programme versions are immutable'
           USING ERRCODE = 'integrity_constraint_violation';
@@ -540,33 +645,78 @@ BEGIN
     END IF;
   END IF;
 
-  -- Child / structure tables: resolve version_id
-  IF TG_TABLE_NAME = 'programme_version_phases' THEN
-    v_version_id := COALESCE(NEW.version_id, OLD.version_id);
-  ELSIF TG_TABLE_NAME = 'programme_version_weeks' THEN
-    v_version_id := COALESCE(NEW.version_id, OLD.version_id);
-  ELSIF TG_TABLE_NAME = 'programme_version_days' THEN
-    SELECT w.version_id INTO v_version_id
-    FROM public.programme_version_weeks w
-    WHERE w.id = COALESCE(NEW.week_id, OLD.week_id);
-  ELSIF TG_TABLE_NAME = 'programme_version_session_slots' THEN
-    SELECT w.version_id INTO v_version_id
-    FROM public.programme_version_days d
-    JOIN public.programme_version_weeks w ON w.id = d.week_id
-    WHERE d.id = COALESCE(NEW.day_id, OLD.day_id);
-  ELSIF TG_TABLE_NAME IN (
+  -- Child / structure tables: INSERT checks destination; DELETE checks origin;
+  -- UPDATE checks BOTH original and proposed parents independently.
+  IF TG_TABLE_NAME IN (
+    'programme_version_phases',
+    'programme_version_weeks',
     'programme_version_adaptation_permissions',
     'programme_version_protected_invariants',
     'programme_version_assessments',
     'programme_version_evidence_requirements',
     'programme_version_comparison_identities'
   ) THEN
-    v_version_id := COALESCE(NEW.version_id, OLD.version_id);
-  END IF;
-
-  IF v_version_id IS NOT NULL AND public.cohort_programme_version_is_published(v_version_id) THEN
-    RAISE EXCEPTION 'Published programme package content is immutable (%)', TG_TABLE_NAME
-      USING ERRCODE = 'integrity_constraint_violation';
+    IF TG_OP = 'INSERT' THEN
+      IF public.cohort_programme_version_is_immutable(NEW.version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'DELETE' THEN
+      IF public.cohort_programme_version_is_immutable(OLD.version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'UPDATE' THEN
+      IF public.cohort_programme_version_is_immutable(OLD.version_id)
+         OR public.cohort_programme_version_is_immutable(NEW.version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    END IF;
+  ELSIF TG_TABLE_NAME = 'programme_version_days' THEN
+    IF TG_OP = 'INSERT' THEN
+      v_new_version_id := public.cohort_programme_version_id_for_week(NEW.week_id);
+      IF public.cohort_programme_version_is_immutable(v_new_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'DELETE' THEN
+      v_old_version_id := public.cohort_programme_version_id_for_week(OLD.week_id);
+      IF public.cohort_programme_version_is_immutable(v_old_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'UPDATE' THEN
+      v_old_version_id := public.cohort_programme_version_id_for_week(OLD.week_id);
+      v_new_version_id := public.cohort_programme_version_id_for_week(NEW.week_id);
+      IF public.cohort_programme_version_is_immutable(v_old_version_id)
+         OR public.cohort_programme_version_is_immutable(v_new_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    END IF;
+  ELSIF TG_TABLE_NAME = 'programme_version_session_slots' THEN
+    IF TG_OP = 'INSERT' THEN
+      v_new_version_id := public.cohort_programme_version_id_for_day(NEW.day_id);
+      IF public.cohort_programme_version_is_immutable(v_new_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'DELETE' THEN
+      v_old_version_id := public.cohort_programme_version_id_for_day(OLD.day_id);
+      IF public.cohort_programme_version_is_immutable(v_old_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    ELSIF TG_OP = 'UPDATE' THEN
+      v_old_version_id := public.cohort_programme_version_id_for_day(OLD.day_id);
+      v_new_version_id := public.cohort_programme_version_id_for_day(NEW.day_id);
+      IF public.cohort_programme_version_is_immutable(v_old_version_id)
+         OR public.cohort_programme_version_is_immutable(v_new_version_id) THEN
+        RAISE EXCEPTION 'Published or archived programme package content is immutable (%)', TG_TABLE_NAME
+          USING ERRCODE = 'integrity_constraint_violation';
+      END IF;
+    END IF;
   END IF;
 
   IF TG_OP = 'DELETE' THEN
@@ -642,6 +792,7 @@ CREATE TRIGGER programme_version_comparison_identities_immutability
   FOR EACH ROW
   EXECUTE FUNCTION public.cohort_reject_published_programme_content_mutation();
 
+
 -- ---------------------------------------------------------------------------
 -- 7. Import RPC (service_role only)
 -- ---------------------------------------------------------------------------
@@ -672,6 +823,10 @@ DECLARE
   v_day_id UUID;
   v_phase_map JSONB := '{}'::JSONB;
   v_slot_keys TEXT[] := ARRAY[]::TEXT[];
+  v_assessment_keys TEXT[] := ARRAY[]::TEXT[];
+  v_comparison_keys TEXT[] := ARRAY[]::TEXT[];
+  v_session_lineages TEXT[] := ARRAY[]::TEXT[];
+  v_session_keys TEXT[] := ARRAY[]::TEXT[];
   v_session JSONB;
   v_protocol_id TEXT;
   v_session_lineage_id TEXT;
@@ -682,6 +837,11 @@ DECLARE
   v_assessment_slot TEXT;
   v_cmp_key TEXT;
   v_target TEXT;
+  v_kind TEXT;
+  v_session_key TEXT;
+  v_slot_key TEXT;
+  v_match_count INT;
+  v_lineage_missing BOOLEAN := FALSE;
 BEGIN
   IF payload IS NULL OR jsonb_typeof(payload) <> 'object' THEN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_payload', 'message', 'Payload must be a JSON object.');
@@ -720,95 +880,41 @@ BEGIN
   IF v_lineage_code = '' OR v_version_number IS NULL OR v_version_number < 1 THEN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_programme_identity', 'message', 'lineage_code and version_number are required.');
   END IF;
-
-  -- Resolve / create lineage under lock.
-  SELECT * INTO v_lineage
-  FROM public.programme_lineages
-  WHERE code = v_lineage_code
-  FOR UPDATE;
-
-  IF NOT FOUND THEN
-    INSERT INTO public.programme_lineages (code, created_by)
-    VALUES (v_lineage_code, v_imported_by)
-    RETURNING * INTO v_lineage;
+  IF nullif(trim(COALESCE(v_programme->>'name', '')), '') IS NULL
+     OR nullif(trim(COALESCE(v_programme->>'coaching_intent', '')), '') IS NULL THEN
+    RETURN jsonb_build_object('status', 'validation_failure', 'code', 'missing_programme_fields', 'message', 'programme.name and coaching_intent are required.');
   END IF;
 
-  SELECT * INTO v_existing
-  FROM public.programme_versions
-  WHERE lineage_id = v_lineage.id
-    AND version_number = v_version_number
-  FOR UPDATE;
-
-  IF FOUND THEN
-    IF v_existing.lifecycle_status = 'published' THEN
-      RETURN jsonb_build_object(
-        'status', 'published_version_conflict',
-        'code', 'published_version_exists',
-        'message', 'Target programme version is published and cannot be overwritten.',
-        'programme_version_id', v_existing.id
-      );
-    END IF;
-    IF v_existing.lifecycle_status <> 'draft' THEN
-      RETURN jsonb_build_object(
-        'status', 'version_collision',
-        'code', 'non_draft_exists',
-        'message', 'Target programme version exists and is not an importable draft.',
-        'programme_version_id', v_existing.id
-      );
-    END IF;
-    IF v_existing.package_content_hash IS NOT NULL
-       AND v_existing.package_content_hash = v_hash
-       AND v_existing.package_schema_version = v_schema_version
-       AND v_existing.library_scope = 'cohort_global'
-       AND v_existing.owner_type = 'global'
-       AND v_existing.approved_for_global = FALSE THEN
-      -- Exact idempotent replay: no writes.
-      RETURN jsonb_build_object(
-        'status', 'idempotent_existing_draft',
-        'code', 'same_hash_existing_draft',
-        'programme_version_id', v_existing.id,
-        'lineage_id', v_lineage.id,
-        'lineage_code', v_lineage.code,
-        'version_number', v_existing.version_number,
-        'package_content_hash', v_existing.package_content_hash,
-        'lifecycle_status', v_existing.lifecycle_status
-      );
-    END IF;
-    IF v_existing.package_content_hash IS NOT NULL
-       AND v_existing.package_content_hash IS DISTINCT FROM v_hash THEN
-      RETURN jsonb_build_object(
-        'status', 'version_collision',
-        'code', 'hash_collision',
-        'message', 'Same lineage/version exists with a different package_content_hash. Bump version_number.',
-        'programme_version_id', v_existing.id
-      );
-    END IF;
-    -- Draft exists without matching complete package provenance → partial state.
-    RETURN jsonb_build_object(
-      'status', 'partial_state_conflict',
-      'code', 'partial_existing_draft',
-      'message', 'Existing draft is incomplete or inconsistent with this package. Fail closed; no repair.',
-      'programme_version_id', v_existing.id
-    );
-  END IF;
-
-  -- Verify every session revision (published, exact identity, not templates).
+  -- -----------------------------------------------------------------------
+  -- Pre-write validation: sessions, structure keys, and package references.
+  -- No programme_lineages / programme_versions writes occur before this completes.
+  -- -----------------------------------------------------------------------
   IF jsonb_typeof(payload->'sessions') <> 'array' OR jsonb_array_length(payload->'sessions') < 1 THEN
     RETURN jsonb_build_object('status', 'session_resolution_failure', 'code', 'sessions_required', 'message', 'At least one session revision reference is required.');
   END IF;
 
   FOR v_session IN SELECT value FROM jsonb_array_elements(payload->'sessions')
   LOOP
+    v_session_key := trim(COALESCE(v_session->>'session_key', ''));
     v_protocol_id := trim(COALESCE(v_session->>'protocol_id', ''));
     v_session_lineage_id := trim(COALESCE(v_session->>'session_lineage_id', ''));
     v_revision_number := NULLIF(v_session->>'revision_number', '')::INT;
-    IF v_protocol_id = '' OR v_session_lineage_id = '' OR v_revision_number IS NULL THEN
+    IF v_session_key = '' OR v_protocol_id = '' OR v_session_lineage_id = '' OR v_revision_number IS NULL THEN
       RETURN jsonb_build_object(
         'status', 'session_resolution_failure',
         'code', 'incomplete_session_identity',
         'message', 'Session revision identity incomplete.'
       );
     END IF;
+    IF v_session_key = ANY (v_session_keys) THEN
+      RETURN jsonb_build_object(
+        'status', 'validation_failure',
+        'code', 'duplicate_session_key',
+        'message', 'Duplicate session_key in package sessions catalogue.'
+      );
+    END IF;
+    v_session_keys := array_append(v_session_keys, v_session_key);
+    v_session_lineages := array_append(v_session_lineages, v_session_lineage_id);
 
     SELECT
       p.lifecycle_status,
@@ -827,15 +933,14 @@ BEGIN
       RETURN jsonb_build_object(
         'status', 'session_resolution_failure',
         'code', 'session_missing',
-        'message', format('Session revision %s not found.', v_protocol_id)
+        'message', 'Referenced session revision was not found.'
       );
     END IF;
-
     IF v_lifecycle IS DISTINCT FROM 'published' THEN
       RETURN jsonb_build_object(
         'status', 'session_resolution_failure',
         'code', 'session_not_published',
-        'message', format('Session revision %s is not published.', v_protocol_id)
+        'message', 'Referenced session revision is not published.'
       );
     END IF;
     IF v_content_kind = 'session_template' OR v_protocol_id LIKE 'TMP-%' THEN
@@ -850,258 +955,524 @@ BEGIN
       RETURN jsonb_build_object(
         'status', 'session_resolution_failure',
         'code', 'session_identity_mismatch',
-        'message', format('Session identity mismatch for %s.', v_protocol_id)
+        'message', 'Session identity does not match the published revision.'
       );
     END IF;
   END LOOP;
 
-  -- Create draft version (ownership enforced server-side).
-  INSERT INTO public.programme_versions (
-    lineage_id,
-    version_number,
-    lifecycle_status,
-    library_scope,
-    owner_type,
-    owner_id,
-    organisation_id,
-    created_by,
-    name,
-    description,
-    duration_weeks,
-    sessions_per_week,
-    primary_goal,
-    coaching_intent,
-    package_schema_version,
-    package_content_hash,
-    package_imported_at,
-    package_imported_by,
-    approved_for_global,
-    approved_for_adaptation
-  ) VALUES (
-    v_lineage.id,
-    v_version_number,
-    'draft',
-    'cohort_global',
-    'global',
-    NULL,
-    NULL,
-    v_imported_by,
-    trim(v_programme->>'name'),
-    nullif(trim(COALESCE(v_programme->>'description', '')), ''),
-    NULLIF(v_programme->>'duration_weeks', '')::INT,
-    NULLIF(v_programme->>'sessions_per_week', '')::INT,
-    nullif(trim(COALESCE(v_programme->>'primary_goal', '')), ''),
-    trim(v_programme->>'coaching_intent'),
-    v_schema_version,
-    v_hash,
-    NOW(),
-    v_imported_by,
-    FALSE,
-    FALSE
-  )
-  RETURNING id INTO v_version_id;
+  IF jsonb_typeof(payload->'weeks') <> 'array' OR jsonb_array_length(payload->'weeks') < 1 THEN
+    RETURN jsonb_build_object('status', 'validation_failure', 'code', 'weeks_required', 'message', 'At least one week is required.');
+  END IF;
 
-  -- Phases
+  -- Collect phase keys (optional) and validate uniqueness.
   IF jsonb_typeof(payload->'phases') = 'array' THEN
     FOR v_phase IN SELECT value FROM jsonb_array_elements(payload->'phases')
     LOOP
-      INSERT INTO public.programme_version_phases (
-        version_id, phase_order, title, intent, coach_note
-      ) VALUES (
-        v_version_id,
-        (v_phase->>'phase_order')::INT,
-        trim(v_phase->>'title'),
-        nullif(trim(COALESCE(v_phase->>'intent', '')), ''),
-        nullif(trim(COALESCE(v_phase->>'coach_note', '')), '')
-      )
-      RETURNING id INTO v_phase_id;
-      v_phase_map := v_phase_map || jsonb_build_object(trim(v_phase->>'phase_key'), v_phase_id::TEXT);
+      v_target := trim(COALESCE(v_phase->>'phase_key', ''));
+      IF v_target = '' OR v_phase_map ? v_target THEN
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_phase_key', 'message', 'phase_key missing or duplicated.');
+      END IF;
+      v_phase_map := v_phase_map || jsonb_build_object(v_target, 'pending');
     END LOOP;
-  END IF;
-
-  IF jsonb_typeof(payload->'weeks') <> 'array' OR jsonb_array_length(payload->'weeks') < 1 THEN
-    RAISE EXCEPTION 'weeks required' USING ERRCODE = 'check_violation';
   END IF;
 
   FOR v_week IN SELECT value FROM jsonb_array_elements(payload->'weeks')
   LOOP
-    v_phase_id := NULL;
-    IF nullif(trim(COALESCE(v_week->>'phase_key', '')), '') IS NOT NULL THEN
-      v_phase_id := NULLIF(v_phase_map->>trim(v_week->>'phase_key'), '')::UUID;
-      IF v_phase_id IS NULL THEN
-        RAISE EXCEPTION 'Unknown phase_key %', v_week->>'phase_key' USING ERRCODE = 'foreign_key_violation';
-      END IF;
+    v_target := nullif(trim(COALESCE(v_week->>'phase_key', '')), '');
+    IF v_target IS NOT NULL AND NOT (v_phase_map ? v_target) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Week references unknown phase_key.');
     END IF;
-
-    INSERT INTO public.programme_version_weeks (
-      version_id, phase_id, week_number, title, intent, coach_note
-    ) VALUES (
-      v_version_id,
-      v_phase_id,
-      (v_week->>'week_number')::INT,
-      nullif(trim(COALESCE(v_week->>'title', '')), ''),
-      nullif(trim(COALESCE(v_week->>'intent', '')), ''),
-      nullif(trim(COALESCE(v_week->>'coach_note', '')), '')
-    )
-    RETURNING id INTO v_week_id;
-
     FOR v_day IN SELECT value FROM jsonb_array_elements(COALESCE(v_week->'days', '[]'::JSONB))
     LOOP
-      INSERT INTO public.programme_version_days (
-        week_id, day_key, day_order, day_type, title, intent, coach_note
-      ) VALUES (
-        v_week_id,
-        trim(v_day->>'day_key'),
-        (v_day->>'day_order')::INT,
-        trim(v_day->>'day_type'),
-        nullif(trim(COALESCE(v_day->>'title', '')), ''),
-        nullif(trim(COALESCE(v_day->>'intent', '')), ''),
-        nullif(trim(COALESCE(v_day->>'coach_note', '')), '')
-      )
-      RETURNING id INTO v_day_id;
-
       FOR v_slot IN SELECT value FROM jsonb_array_elements(COALESCE(v_day->'slots', '[]'::JSONB))
       LOOP
-        -- Resolve session_key → protocol_id from payload sessions catalogue.
-        SELECT s.value->>'protocol_id' INTO v_protocol_id
-        FROM jsonb_array_elements(payload->'sessions') AS s(value)
-        WHERE trim(s.value->>'session_key') = trim(v_slot->>'session_key')
-        LIMIT 1;
-
-        IF v_protocol_id IS NULL OR trim(v_protocol_id) = '' THEN
-          RAISE EXCEPTION 'Unknown session_key %', v_slot->>'session_key'
-            USING ERRCODE = 'foreign_key_violation';
+        v_slot_key := trim(COALESCE(v_slot->>'slot_key', ''));
+        v_session_key := trim(COALESCE(v_slot->>'session_key', ''));
+        IF v_slot_key = '' THEN
+          RETURN jsonb_build_object('status', 'validation_failure', 'code', 'missing_slot_key', 'message', 'slot_key is required.');
         END IF;
-
-        INSERT INTO public.programme_version_session_slots (
-          day_id,
-          session_order,
-          protocol_id,
-          display_title,
-          time_of_day,
-          is_optional,
-          completion_expectation,
-          coach_note,
-          package_slot_key,
-          authored_progression
-        ) VALUES (
-          v_day_id,
-          (v_slot->>'session_order')::INT,
-          trim(v_protocol_id),
-          nullif(trim(COALESCE(v_slot->>'display_title', '')), ''),
-          COALESCE(nullif(trim(COALESCE(v_slot->>'time_of_day', '')), ''), 'any'),
-          COALESCE((v_slot->>'is_optional')::BOOLEAN, FALSE),
-          COALESCE(nullif(trim(COALESCE(v_slot->>'completion_expectation', '')), ''), 'required'),
-          nullif(trim(COALESCE(v_slot->>'coach_note', '')), ''),
-          trim(v_slot->>'slot_key'),
-          v_slot->'progression'
-        );
-
-        v_slot_keys := array_append(v_slot_keys, trim(v_slot->>'slot_key'));
+        IF v_slot_key = ANY (v_slot_keys) THEN
+          RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_slot_key', 'message', 'Duplicate package_slot_key in package.');
+        END IF;
+        SELECT COUNT(*) INTO v_match_count
+        FROM unnest(v_session_keys) AS sk(session_key)
+        WHERE sk.session_key = v_session_key;
+        IF v_match_count <> 1 THEN
+          RETURN jsonb_build_object(
+            'status', 'validation_failure',
+            'code', 'broken_reference',
+            'message', 'Slot session_key is missing or ambiguous.'
+          );
+        END IF;
+        IF v_slot->'progression' IS NULL
+           OR jsonb_typeof(v_slot->'progression') <> 'object'
+           OR nullif(trim(COALESCE(v_slot->'progression'->>'prescription_summary', '')), '') IS NULL THEN
+          RETURN jsonb_build_object(
+            'status', 'validation_failure',
+            'code', 'invalid_authored_progression',
+            'message', 'Authored progression requires prescription_summary.'
+          );
+        END IF;
+        v_slot_keys := array_append(v_slot_keys, v_slot_key);
       END LOOP;
     END LOOP;
   END LOOP;
 
-  -- Comparison identities first (FK target for assessments/evidence).
+  IF coalesce(array_length(v_slot_keys, 1), 0) < 1 THEN
+    RETURN jsonb_build_object('status', 'validation_failure', 'code', 'incomplete_structure', 'message', 'At least one session slot is required.');
+  END IF;
+
+  -- Comparison identities (anchors are package session lineages, not exact revisions).
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'comparison_identities', '[]'::JSONB))
   LOOP
-    INSERT INTO public.programme_version_comparison_identities (
-      version_id, comparison_key, session_lineage_id, label
-    ) VALUES (
-      v_version_id,
-      trim(v_item->>'id'),
-      trim(v_item->>'session_lineage_id'),
-      trim(v_item->>'label')
-    );
+    v_cmp_key := trim(COALESCE(v_item->>'id', ''));
+    v_session_lineage_id := trim(COALESCE(v_item->>'session_lineage_id', ''));
+    IF v_cmp_key = '' OR v_cmp_key = ANY (v_comparison_keys) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_comparison_identity', 'message', 'comparison identity id missing or duplicated.');
+    END IF;
+    IF NOT (v_session_lineage_id = ANY (v_session_lineages)) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Comparison identity session_lineage_id is not in package sessions.');
+    END IF;
+    v_comparison_keys := array_append(v_comparison_keys, v_cmp_key);
   END LOOP;
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'adaptation_permissions', '[]'::JSONB))
   LOOP
     IF (v_item->>'athlete_agreement_required')::BOOLEAN IS DISTINCT FROM TRUE THEN
-      RAISE EXCEPTION 'athlete_agreement_required must be true' USING ERRCODE = 'check_violation';
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'agreement_required', 'message', 'athlete_agreement_required must be true.');
     END IF;
-    v_target := trim(v_item->>'target_ref');
+    v_target := trim(COALESCE(v_item->>'target_ref', ''));
     IF v_target <> 'programme' AND NOT (v_target = ANY (v_slot_keys)) THEN
-      RAISE EXCEPTION 'adaptation target_ref % unresolved', v_target USING ERRCODE = 'foreign_key_violation';
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Adaptation target_ref does not resolve to a package slot.');
     END IF;
-    INSERT INTO public.programme_version_adaptation_permissions (
-      version_id, permission_key, change_kind, target_ref, athlete_agreement_required, scope_note
-    ) VALUES (
-      v_version_id,
-      trim(v_item->>'id'),
-      trim(v_item->>'change_kind'),
-      v_target,
-      TRUE,
-      nullif(trim(COALESCE(v_item->>'scope_note', '')), '')
-    );
-  END LOOP;
-
-  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'protected_invariants', '[]'::JSONB))
-  LOOP
-    INSERT INTO public.programme_version_protected_invariants (
-      version_id, invariant_key, kind, target_ref, description
-    ) VALUES (
-      v_version_id,
-      trim(v_item->>'id'),
-      trim(v_item->>'kind'),
-      trim(v_item->>'target_ref'),
-      trim(v_item->>'description')
-    );
   END LOOP;
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'assessments', '[]'::JSONB))
   LOOP
-    v_assessment_slot := trim(v_item->>'slot_ref');
-    IF NOT (v_assessment_slot = ANY (v_slot_keys)) THEN
-      RAISE EXCEPTION 'assessment slot_ref % unresolved', v_assessment_slot
-        USING ERRCODE = 'foreign_key_violation';
+    v_target := trim(COALESCE(v_item->>'id', ''));
+    IF v_target = '' OR v_target = ANY (v_assessment_keys) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_assessment', 'message', 'assessment id missing or duplicated.');
     END IF;
-    INSERT INTO public.programme_version_assessments (
-      version_id, assessment_key, slot_ref, evidence_requirement, comparison_identity_key, label
-    ) VALUES (
-      v_version_id,
-      trim(v_item->>'id'),
-      v_assessment_slot,
-      trim(v_item->>'evidence_requirement'),
-      trim(v_item->>'comparison_identity_id'),
-      nullif(trim(COALESCE(v_item->>'label', '')), '')
-    );
+    v_assessment_keys := array_append(v_assessment_keys, v_target);
+  END LOOP;
+
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'protected_invariants', '[]'::JSONB))
+  LOOP
+    v_kind := trim(COALESCE(v_item->>'kind', ''));
+    v_target := trim(COALESCE(v_item->>'target_ref', ''));
+    IF v_kind = 'assessment_immutable' THEN
+      IF NOT (v_target = ANY (v_assessment_keys)) AND NOT (v_target = ANY (v_slot_keys)) THEN
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Protected invariant target_ref does not resolve.');
+      END IF;
+    ELSIF v_target <> 'programme'
+          AND NOT (v_target = ANY (v_slot_keys))
+          AND NOT (v_target = ANY (v_assessment_keys)) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Protected invariant target_ref does not resolve.');
+    END IF;
+  END LOOP;
+
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'assessments', '[]'::JSONB))
+  LOOP
+    v_assessment_slot := trim(COALESCE(v_item->>'slot_ref', ''));
+    v_cmp_key := trim(COALESCE(v_item->>'comparison_identity_id', ''));
+    IF NOT (v_assessment_slot = ANY (v_slot_keys)) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Assessment slot_ref does not resolve to a package slot.');
+    END IF;
+    IF v_cmp_key = '' OR NOT (v_cmp_key = ANY (v_comparison_keys)) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Assessment comparison_identity_id does not resolve.');
+    END IF;
   END LOOP;
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'performance_evidence_requirements', '[]'::JSONB))
   LOOP
-    INSERT INTO public.programme_version_evidence_requirements (
-      version_id, evidence_key, comparison_identity_key, metric, required
-    ) VALUES (
-      v_version_id,
-      trim(v_item->>'id'),
-      trim(v_item->>'comparison_identity_id'),
-      trim(v_item->>'metric'),
-      (v_item->>'required')::BOOLEAN
-    );
+    v_cmp_key := trim(COALESCE(v_item->>'comparison_identity_id', ''));
+    IF v_cmp_key = '' OR NOT (v_cmp_key = ANY (v_comparison_keys)) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Evidence requirement comparison_identity_id does not resolve.');
+    END IF;
   END LOOP;
 
-  RETURN jsonb_build_object(
-    'status', 'imported_draft',
-    'code', 'created_hidden_draft',
-    'programme_version_id', v_version_id,
-    'lineage_id', v_lineage.id,
-    'lineage_code', v_lineage.code,
-    'version_number', v_version_number,
-    'package_content_hash', v_hash,
-    'package_schema_version', v_schema_version,
-    'lifecycle_status', 'draft',
-    'library_scope', 'cohort_global',
-    'owner_type', 'global',
-    'approved_for_global', FALSE
+  -- Reset phase map for write phase (keys only).
+  v_phase_map := '{}'::JSONB;
+
+  -- -----------------------------------------------------------------------
+  -- Concurrency-safe lineage resolution + collision classification.
+  -- Advisory xact lock serialises creators of the same lineage_code.
+  -- -----------------------------------------------------------------------
+  PERFORM pg_advisory_xact_lock(
+    872314001,
+    hashtext(v_lineage_code)
   );
-EXCEPTION
-  WHEN OTHERS THEN
+
+  SELECT * INTO v_lineage
+  FROM public.programme_lineages
+  WHERE code = v_lineage_code
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    v_lineage_missing := TRUE;
+  ELSE
+    SELECT * INTO v_existing
+    FROM public.programme_versions
+    WHERE lineage_id = v_lineage.id
+      AND version_number = v_version_number
+    FOR UPDATE;
+
+    IF FOUND THEN
+      IF v_existing.lifecycle_status = 'published' THEN
+        RETURN jsonb_build_object(
+          'status', 'published_version_conflict',
+          'code', 'published_version_exists',
+          'message', 'Target programme version is published and cannot be overwritten.',
+          'programme_version_id', v_existing.id
+        );
+      END IF;
+      IF v_existing.lifecycle_status <> 'draft' THEN
+        RETURN jsonb_build_object(
+          'status', 'version_collision',
+          'code', 'non_draft_exists',
+          'message', 'Target programme version exists and is not an importable draft.',
+          'programme_version_id', v_existing.id
+        );
+      END IF;
+      IF v_existing.package_content_hash IS NOT NULL
+         AND v_existing.package_content_hash = v_hash
+         AND v_existing.package_schema_version = v_schema_version
+         AND v_existing.library_scope = 'cohort_global'
+         AND v_existing.owner_type = 'global'
+         AND v_existing.owner_id IS NULL
+         AND v_existing.approved_for_global = FALSE THEN
+        RETURN jsonb_build_object(
+          'status', 'idempotent_existing_draft',
+          'code', 'same_hash_existing_draft',
+          'programme_version_id', v_existing.id,
+          'lineage_id', v_lineage.id,
+          'lineage_code', v_lineage.code,
+          'version_number', v_existing.version_number,
+          'package_content_hash', v_existing.package_content_hash,
+          'lifecycle_status', v_existing.lifecycle_status,
+          'approved_for_global', FALSE
+        );
+      END IF;
+      IF v_existing.package_content_hash IS NOT NULL
+         AND v_existing.package_content_hash IS DISTINCT FROM v_hash THEN
+        RETURN jsonb_build_object(
+          'status', 'version_collision',
+          'code', 'hash_collision',
+          'message', 'Same lineage/version exists with a different package_content_hash. Bump version_number.',
+          'programme_version_id', v_existing.id
+        );
+      END IF;
+      RETURN jsonb_build_object(
+        'status', 'partial_state_conflict',
+        'code', 'partial_existing_draft',
+        'message', 'Existing draft is incomplete or inconsistent with this package. Fail closed; no repair.',
+        'programme_version_id', v_existing.id
+      );
+    END IF;
+  END IF;
+
+  -- -----------------------------------------------------------------------
+  -- Atomic write section. Any exception rolls back lineage + all children.
+  -- -----------------------------------------------------------------------
+  BEGIN
+    IF v_lineage_missing THEN
+      INSERT INTO public.programme_lineages (code, created_by)
+      VALUES (v_lineage_code, v_imported_by)
+      RETURNING * INTO v_lineage;
+    END IF;
+
+    INSERT INTO public.programme_versions (
+      lineage_id,
+      version_number,
+      lifecycle_status,
+      library_scope,
+      owner_type,
+      owner_id,
+      organisation_id,
+      created_by,
+      name,
+      description,
+      duration_weeks,
+      sessions_per_week,
+      primary_goal,
+      coaching_intent,
+      package_schema_version,
+      package_content_hash,
+      package_imported_at,
+      package_imported_by,
+      approved_for_global,
+      approved_for_adaptation
+    ) VALUES (
+      v_lineage.id,
+      v_version_number,
+      'draft',
+      'cohort_global',
+      'global',
+      NULL,
+      NULL,
+      v_imported_by,
+      trim(v_programme->>'name'),
+      nullif(trim(COALESCE(v_programme->>'description', '')), ''),
+      NULLIF(v_programme->>'duration_weeks', '')::INT,
+      NULLIF(v_programme->>'sessions_per_week', '')::INT,
+      nullif(trim(COALESCE(v_programme->>'primary_goal', '')), ''),
+      trim(v_programme->>'coaching_intent'),
+      v_schema_version,
+      v_hash,
+      NOW(),
+      v_imported_by,
+      FALSE,
+      FALSE
+    )
+    RETURNING id INTO v_version_id;
+
+    IF jsonb_typeof(payload->'phases') = 'array' THEN
+      FOR v_phase IN SELECT value FROM jsonb_array_elements(payload->'phases')
+      LOOP
+        INSERT INTO public.programme_version_phases (
+          version_id, phase_order, title, intent, coach_note
+        ) VALUES (
+          v_version_id,
+          (v_phase->>'phase_order')::INT,
+          trim(v_phase->>'title'),
+          nullif(trim(COALESCE(v_phase->>'intent', '')), ''),
+          nullif(trim(COALESCE(v_phase->>'coach_note', '')), '')
+        )
+        RETURNING id INTO v_phase_id;
+        v_phase_map := v_phase_map || jsonb_build_object(trim(v_phase->>'phase_key'), v_phase_id::TEXT);
+      END LOOP;
+    END IF;
+
+    FOR v_week IN SELECT value FROM jsonb_array_elements(payload->'weeks')
+    LOOP
+      v_phase_id := NULL;
+      IF nullif(trim(COALESCE(v_week->>'phase_key', '')), '') IS NOT NULL THEN
+        v_phase_id := NULLIF(v_phase_map->>trim(v_week->>'phase_key'), '')::UUID;
+      END IF;
+
+      INSERT INTO public.programme_version_weeks (
+        version_id, phase_id, week_number, title, intent, coach_note
+      ) VALUES (
+        v_version_id,
+        v_phase_id,
+        (v_week->>'week_number')::INT,
+        nullif(trim(COALESCE(v_week->>'title', '')), ''),
+        nullif(trim(COALESCE(v_week->>'intent', '')), ''),
+        nullif(trim(COALESCE(v_week->>'coach_note', '')), '')
+      )
+      RETURNING id INTO v_week_id;
+
+      FOR v_day IN SELECT value FROM jsonb_array_elements(COALESCE(v_week->'days', '[]'::JSONB))
+      LOOP
+        INSERT INTO public.programme_version_days (
+          week_id, day_key, day_order, day_type, title, intent, coach_note
+        ) VALUES (
+          v_week_id,
+          trim(v_day->>'day_key'),
+          (v_day->>'day_order')::INT,
+          trim(v_day->>'day_type'),
+          nullif(trim(COALESCE(v_day->>'title', '')), ''),
+          nullif(trim(COALESCE(v_day->>'intent', '')), ''),
+          nullif(trim(COALESCE(v_day->>'coach_note', '')), '')
+        )
+        RETURNING id INTO v_day_id;
+
+        FOR v_slot IN SELECT value FROM jsonb_array_elements(COALESCE(v_day->'slots', '[]'::JSONB))
+        LOOP
+          SELECT s.value->>'protocol_id' INTO v_protocol_id
+          FROM jsonb_array_elements(payload->'sessions') AS s(value)
+          WHERE trim(s.value->>'session_key') = trim(v_slot->>'session_key');
+
+          INSERT INTO public.programme_version_session_slots (
+            day_id,
+            session_order,
+            protocol_id,
+            display_title,
+            time_of_day,
+            is_optional,
+            completion_expectation,
+            coach_note,
+            package_slot_key,
+            authored_progression
+          ) VALUES (
+            v_day_id,
+            (v_slot->>'session_order')::INT,
+            trim(v_protocol_id),
+            nullif(trim(COALESCE(v_slot->>'display_title', '')), ''),
+            COALESCE(nullif(trim(COALESCE(v_slot->>'time_of_day', '')), ''), 'any'),
+            COALESCE((v_slot->>'is_optional')::BOOLEAN, FALSE),
+            COALESCE(nullif(trim(COALESCE(v_slot->>'completion_expectation', '')), ''), 'required'),
+            nullif(trim(COALESCE(v_slot->>'coach_note', '')), ''),
+            trim(v_slot->>'slot_key'),
+            v_slot->'progression'
+          );
+        END LOOP;
+      END LOOP;
+    END LOOP;
+
+    FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'comparison_identities', '[]'::JSONB))
+    LOOP
+      INSERT INTO public.programme_version_comparison_identities (
+        version_id, comparison_key, session_lineage_id, label
+      ) VALUES (
+        v_version_id,
+        trim(v_item->>'id'),
+        trim(v_item->>'session_lineage_id'),
+        trim(v_item->>'label')
+      );
+    END LOOP;
+
+    FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'adaptation_permissions', '[]'::JSONB))
+    LOOP
+      INSERT INTO public.programme_version_adaptation_permissions (
+        version_id, permission_key, change_kind, target_ref, athlete_agreement_required, scope_note
+      ) VALUES (
+        v_version_id,
+        trim(v_item->>'id'),
+        trim(v_item->>'change_kind'),
+        trim(v_item->>'target_ref'),
+        TRUE,
+        nullif(trim(COALESCE(v_item->>'scope_note', '')), '')
+      );
+    END LOOP;
+
+    FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'protected_invariants', '[]'::JSONB))
+    LOOP
+      INSERT INTO public.programme_version_protected_invariants (
+        version_id, invariant_key, kind, target_ref, description
+      ) VALUES (
+        v_version_id,
+        trim(v_item->>'id'),
+        trim(v_item->>'kind'),
+        trim(v_item->>'target_ref'),
+        trim(v_item->>'description')
+      );
+    END LOOP;
+
+    FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'assessments', '[]'::JSONB))
+    LOOP
+      INSERT INTO public.programme_version_assessments (
+        version_id, assessment_key, slot_ref, evidence_requirement, comparison_identity_key, label
+      ) VALUES (
+        v_version_id,
+        trim(v_item->>'id'),
+        trim(v_item->>'slot_ref'),
+        trim(v_item->>'evidence_requirement'),
+        trim(v_item->>'comparison_identity_id'),
+        nullif(trim(COALESCE(v_item->>'label', '')), '')
+      );
+    END LOOP;
+
+    FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'performance_evidence_requirements', '[]'::JSONB))
+    LOOP
+      INSERT INTO public.programme_version_evidence_requirements (
+        version_id, evidence_key, comparison_identity_key, metric, required
+      ) VALUES (
+        v_version_id,
+        trim(v_item->>'id'),
+        trim(v_item->>'comparison_identity_id'),
+        trim(v_item->>'metric'),
+        (v_item->>'required')::BOOLEAN
+      );
+    END LOOP;
+
     RETURN jsonb_build_object(
-      'status', 'database_failure',
-      'code', SQLSTATE,
-      'message', SQLERRM
+      'status', 'imported_draft',
+      'code', 'created_hidden_draft',
+      'programme_version_id', v_version_id,
+      'lineage_id', v_lineage.id,
+      'lineage_code', v_lineage.code,
+      'version_number', v_version_number,
+      'package_content_hash', v_hash,
+      'package_schema_version', v_schema_version,
+      'lifecycle_status', 'draft',
+      'library_scope', 'cohort_global',
+      'owner_type', 'global',
+      'approved_for_global', FALSE
     );
+  EXCEPTION
+    WHEN unique_violation THEN
+      -- Concurrent creator won; classify against persisted row (writes rolled back).
+      SELECT * INTO v_lineage
+      FROM public.programme_lineages
+      WHERE code = v_lineage_code;
+
+      IF FOUND THEN
+        SELECT * INTO v_existing
+        FROM public.programme_versions
+        WHERE lineage_id = v_lineage.id
+          AND version_number = v_version_number;
+
+        IF FOUND THEN
+          IF v_existing.package_content_hash IS NOT NULL
+             AND v_existing.package_content_hash = v_hash
+             AND v_existing.package_schema_version = v_schema_version
+             AND v_existing.library_scope = 'cohort_global'
+             AND v_existing.owner_type = 'global'
+             AND v_existing.owner_id IS NULL
+             AND v_existing.approved_for_global = FALSE
+             AND v_existing.lifecycle_status = 'draft' THEN
+            RETURN jsonb_build_object(
+              'status', 'idempotent_existing_draft',
+              'code', 'same_hash_existing_draft',
+              'programme_version_id', v_existing.id,
+              'lineage_id', v_lineage.id,
+              'lineage_code', v_lineage.code,
+              'version_number', v_existing.version_number,
+              'package_content_hash', v_existing.package_content_hash,
+              'lifecycle_status', v_existing.lifecycle_status,
+              'approved_for_global', FALSE
+            );
+          END IF;
+          IF v_existing.package_content_hash IS NOT NULL
+             AND v_existing.package_content_hash IS DISTINCT FROM v_hash THEN
+            RETURN jsonb_build_object(
+              'status', 'version_collision',
+              'code', 'hash_collision',
+              'message', 'Same lineage/version exists with a different package_content_hash. Bump version_number.',
+              'programme_version_id', v_existing.id
+            );
+          END IF;
+          IF v_existing.lifecycle_status = 'published' THEN
+            RETURN jsonb_build_object(
+              'status', 'published_version_conflict',
+              'code', 'published_version_exists',
+              'message', 'Target programme version is published and cannot be overwritten.',
+              'programme_version_id', v_existing.id
+            );
+          END IF;
+          RETURN jsonb_build_object(
+            'status', 'partial_state_conflict',
+            'code', 'partial_existing_draft',
+            'message', 'Existing draft is incomplete or inconsistent with this package. Fail closed; no repair.',
+            'programme_version_id', v_existing.id
+          );
+        END IF;
+      END IF;
+      RETURN jsonb_build_object(
+        'status', 'version_collision',
+        'code', 'lineage_or_version_race',
+        'message', 'Concurrent import conflicted on lineage or version identity. Retry safely.'
+      );
+    WHEN check_violation THEN
+      RETURN jsonb_build_object(
+        'status', 'validation_failure',
+        'code', 'constraint_violation',
+        'message', 'Import rejected by database constraints and was rolled back.'
+      );
+    WHEN foreign_key_violation THEN
+      RETURN jsonb_build_object(
+        'status', 'validation_failure',
+        'code', 'broken_reference',
+        'message', 'Import references an unknown package identity and was rolled back.'
+      );
+    WHEN OTHERS THEN
+      RETURN jsonb_build_object(
+        'status', 'database_failure',
+        'code', 'unexpected_database_failure',
+        'message', 'Import failed and was rolled back.'
+      );
+  END;
 END;
 $$;
 
@@ -1111,7 +1482,7 @@ REVOKE ALL ON FUNCTION public.import_authored_plan_package(JSONB) FROM authentic
 GRANT EXECUTE ON FUNCTION public.import_authored_plan_package(JSONB) TO service_role;
 
 COMMENT ON FUNCTION public.import_authored_plan_package(JSONB) IS
-  'Sprint 1.2 service-role-only atomic Plan Package import. Always creates/returns a hidden Cohort Global draft. Never publishes or approves for catalogue.';
+  'Sprint 1.2 service-role-only atomic Plan Package import. Always creates/returns a hidden Cohort Global draft. Never publishes or approves for catalogue. Pre-write validation; write-section failures roll back completely.';
 
 -- ---------------------------------------------------------------------------
 -- 8. Publish + catalogue-approve RPCs (service_role only, separate gates)
@@ -1165,7 +1536,6 @@ BEGIN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'incomplete_structure');
   END IF;
 
-  -- Ensure every slot protocol is still published.
   IF EXISTS (
     SELECT 1
     FROM public.programme_version_session_slots s
@@ -1173,7 +1543,12 @@ BEGIN
     JOIN public.programme_version_weeks w ON w.id = d.week_id
     LEFT JOIN public.performance_protocols p ON p.protocol_id = s.protocol_id
     WHERE w.version_id = p_version_id
-      AND (p.protocol_id IS NULL OR p.lifecycle_status <> 'published')
+      AND (
+        p.protocol_id IS NULL
+        OR p.lifecycle_status <> 'published'
+        OR COALESCE(p.content_kind, '') = 'session_template'
+        OR s.protocol_id LIKE 'TMP-%'
+      )
   ) THEN
     RETURN jsonb_build_object('status', 'session_resolution_failure', 'code', 'session_not_eligible');
   END IF;
@@ -1231,6 +1606,7 @@ BEGIN
     RETURN jsonb_build_object('status', 'authorization_failure', 'code', 'not_cohort_global');
   END IF;
 
+  -- Strict whitelist: catalogue flag + audit timestamp only.
   UPDATE public.programme_versions
   SET approved_for_global = TRUE,
       updated_at = NOW()
@@ -1253,7 +1629,7 @@ GRANT EXECUTE ON FUNCTION public.approve_cohort_global_programme_version(UUID, T
 COMMENT ON FUNCTION public.publish_cohort_global_programme_version(UUID, TEXT) IS
   'Service-role-only publish gate for Cohort Global package drafts. Leaves approved_for_global false.';
 COMMENT ON FUNCTION public.approve_cohort_global_programme_version(UUID, TEXT) IS
-  'Service-role-only catalogue approval gate. Requires published. Does not mutate authored content.';
+  'Service-role-only catalogue approval gate. Updates only approved_for_global and updated_at.';
 
 -- Manual verification checklist (local only — do not apply remotely from CI):
 -- 1. anon/authenticated EXECUTE import_authored_plan_package → denied
@@ -1262,3 +1638,7 @@ COMMENT ON FUNCTION public.approve_cohort_global_programme_version(UUID, TEXT) I
 -- 4. publish leaves approved_for_global false; athlete SELECT still denied
 -- 5. approve then athlete SELECT catalogue → allowed
 -- 6. UPDATE published package hash → denied by trigger
+-- 7. Reparent child from published → draft parent → denied
+-- 8. Missing session before lineage write → zero programme_lineages rows
+-- 9. Concurrent same lineage/version/hash → one create + idempotent
+-- 10. Hosted preflight must ABORT if approved_for_global=true on non-published rows
