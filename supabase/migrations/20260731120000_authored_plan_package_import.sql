@@ -794,6 +794,375 @@ CREATE TRIGGER programme_version_comparison_identities_immutability
 
 
 -- ---------------------------------------------------------------------------
+-- 6b. Authoritative package-graph equivalence (idempotency gate)
+-- ---------------------------------------------------------------------------
+-- Compares a persisted programme version against a validated import payload.
+-- phase_key is not stored; phase identity uses persisted phase_order (unique
+-- per version) and week.phase_id → phase.phase_order linkage.
+-- Returns TRUE only for a complete, consistent match of all package-owned domains.
+
+CREATE OR REPLACE FUNCTION public.cohort_authored_plan_package_graph_matches(
+  p_version_id UUID,
+  payload JSONB
+)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  v_prog JSONB;
+  v_phase JSONB;
+  v_week JSONB;
+  v_day JSONB;
+  v_slot JSONB;
+  v_item JSONB;
+  v_expected INT;
+  v_actual INT;
+  v_phase_order INT;
+  v_week_number INT;
+  v_day_key TEXT;
+  v_slot_key TEXT;
+  v_session_key TEXT;
+  v_protocol_id TEXT;
+  v_phase_key TEXT;
+  v_expected_phase_order INT;
+BEGIN
+  IF p_version_id IS NULL OR payload IS NULL OR jsonb_typeof(payload) <> 'object' THEN
+    RETURN FALSE;
+  END IF;
+
+  v_prog := payload->'programme';
+  IF v_prog IS NULL OR jsonb_typeof(v_prog) <> 'object' THEN
+    RETURN FALSE;
+  END IF;
+
+  -- Programme authored metadata (package truth, not lifecycle/ownership).
+  IF NOT EXISTS (
+    SELECT 1
+    FROM public.programme_versions v
+    WHERE v.id = p_version_id
+      AND v.name IS NOT DISTINCT FROM trim(v_prog->>'name')
+      AND v.coaching_intent IS NOT DISTINCT FROM trim(v_prog->>'coaching_intent')
+      AND v.description IS NOT DISTINCT FROM nullif(trim(COALESCE(v_prog->>'description', '')), '')
+      AND v.duration_weeks IS NOT DISTINCT FROM NULLIF(v_prog->>'duration_weeks', '')::INT
+      AND v.sessions_per_week IS NOT DISTINCT FROM NULLIF(v_prog->>'sessions_per_week', '')::INT
+      AND v.primary_goal IS NOT DISTINCT FROM nullif(trim(COALESCE(v_prog->>'primary_goal', '')), '')
+      AND v.package_schema_version IS NOT DISTINCT FROM NULLIF(payload->>'package_schema_version', '')::INT
+      AND v.package_content_hash IS NOT DISTINCT FROM lower(trim(COALESCE(payload->>'package_content_hash', '')))
+  ) THEN
+    RETURN FALSE;
+  END IF;
+
+  -- Phases: identity = phase_order (DB unique). Key set + authored values.
+  v_expected := CASE
+    WHEN jsonb_typeof(payload->'phases') = 'array' THEN jsonb_array_length(payload->'phases')
+    ELSE 0
+  END;
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_phases p
+  WHERE p.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+
+  IF v_expected > 0 THEN
+    FOR v_phase IN SELECT value FROM jsonb_array_elements(payload->'phases')
+    LOOP
+      v_phase_order := NULLIF(v_phase->>'phase_order', '')::INT;
+      IF v_phase_order IS NULL THEN
+        RETURN FALSE;
+      END IF;
+      IF NOT EXISTS (
+        SELECT 1
+        FROM public.programme_version_phases p
+        WHERE p.version_id = p_version_id
+          AND p.phase_order = v_phase_order
+          AND p.title IS NOT DISTINCT FROM trim(v_phase->>'title')
+          AND p.intent IS NOT DISTINCT FROM nullif(trim(COALESCE(v_phase->>'intent', '')), '')
+          AND p.coach_note IS NOT DISTINCT FROM nullif(trim(COALESCE(v_phase->>'coach_note', '')), '')
+      ) THEN
+        RETURN FALSE;
+      END IF;
+    END LOOP;
+  END IF;
+
+  -- Weeks: identity = week_number.
+  v_expected := jsonb_array_length(payload->'weeks');
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_weeks w
+  WHERE w.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+
+  FOR v_week IN SELECT value FROM jsonb_array_elements(payload->'weeks')
+  LOOP
+    v_week_number := NULLIF(v_week->>'week_number', '')::INT;
+    IF v_week_number IS NULL THEN
+      RETURN FALSE;
+    END IF;
+
+    v_phase_key := nullif(trim(COALESCE(v_week->>'phase_key', '')), '');
+    v_expected_phase_order := NULL;
+    IF v_phase_key IS NOT NULL THEN
+      SELECT NULLIF(p->>'phase_order', '')::INT INTO v_expected_phase_order
+      FROM jsonb_array_elements(COALESCE(payload->'phases', '[]'::JSONB)) AS p
+      WHERE trim(p->>'phase_key') = v_phase_key
+      LIMIT 1;
+      IF v_expected_phase_order IS NULL THEN
+        RETURN FALSE;
+      END IF;
+    END IF;
+
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_weeks w
+      LEFT JOIN public.programme_version_phases ph ON ph.id = w.phase_id
+      WHERE w.version_id = p_version_id
+        AND w.week_number = v_week_number
+        AND w.title IS NOT DISTINCT FROM nullif(trim(COALESCE(v_week->>'title', '')), '')
+        AND w.intent IS NOT DISTINCT FROM nullif(trim(COALESCE(v_week->>'intent', '')), '')
+        AND w.coach_note IS NOT DISTINCT FROM nullif(trim(COALESCE(v_week->>'coach_note', '')), '')
+        AND (
+          (v_phase_key IS NULL AND w.phase_id IS NULL)
+          OR (v_phase_key IS NOT NULL AND ph.version_id = p_version_id AND ph.phase_order = v_expected_phase_order)
+        )
+    ) THEN
+      RETURN FALSE;
+    END IF;
+
+    -- Days under this week.
+    v_expected := jsonb_array_length(COALESCE(v_week->'days', '[]'::JSONB));
+    SELECT COUNT(*) INTO v_actual
+    FROM public.programme_version_days d
+    JOIN public.programme_version_weeks w ON w.id = d.week_id
+    WHERE w.version_id = p_version_id
+      AND w.week_number = v_week_number;
+    IF v_actual IS DISTINCT FROM v_expected THEN
+      RETURN FALSE;
+    END IF;
+
+    FOR v_day IN SELECT value FROM jsonb_array_elements(COALESCE(v_week->'days', '[]'::JSONB))
+    LOOP
+      v_day_key := trim(COALESCE(v_day->>'day_key', ''));
+      IF v_day_key = '' THEN
+        RETURN FALSE;
+      END IF;
+      IF NOT EXISTS (
+        SELECT 1
+        FROM public.programme_version_days d
+        JOIN public.programme_version_weeks w ON w.id = d.week_id
+        WHERE w.version_id = p_version_id
+          AND w.week_number = v_week_number
+          AND d.day_key = v_day_key
+          AND d.day_order IS NOT DISTINCT FROM (v_day->>'day_order')::INT
+          AND d.day_type IS NOT DISTINCT FROM trim(v_day->>'day_type')
+          AND d.title IS NOT DISTINCT FROM nullif(trim(COALESCE(v_day->>'title', '')), '')
+          AND d.intent IS NOT DISTINCT FROM nullif(trim(COALESCE(v_day->>'intent', '')), '')
+          AND d.coach_note IS NOT DISTINCT FROM nullif(trim(COALESCE(v_day->>'coach_note', '')), '')
+      ) THEN
+        RETURN FALSE;
+      END IF;
+
+      -- Slots under this day.
+      v_expected := jsonb_array_length(COALESCE(v_day->'slots', '[]'::JSONB));
+      SELECT COUNT(*) INTO v_actual
+      FROM public.programme_version_session_slots s
+      JOIN public.programme_version_days d ON d.id = s.day_id
+      JOIN public.programme_version_weeks w ON w.id = d.week_id
+      WHERE w.version_id = p_version_id
+        AND w.week_number = v_week_number
+        AND d.day_key = v_day_key;
+      IF v_actual IS DISTINCT FROM v_expected THEN
+        RETURN FALSE;
+      END IF;
+
+      FOR v_slot IN SELECT value FROM jsonb_array_elements(COALESCE(v_day->'slots', '[]'::JSONB))
+      LOOP
+        v_slot_key := trim(COALESCE(v_slot->>'slot_key', ''));
+        v_session_key := trim(COALESCE(v_slot->>'session_key', ''));
+        SELECT trim(s.value->>'protocol_id') INTO v_protocol_id
+        FROM jsonb_array_elements(payload->'sessions') AS s(value)
+        WHERE trim(s.value->>'session_key') = v_session_key
+        LIMIT 1;
+
+        IF v_slot_key = '' OR v_protocol_id IS NULL OR trim(v_protocol_id) = '' THEN
+          RETURN FALSE;
+        END IF;
+
+        IF NOT EXISTS (
+          SELECT 1
+          FROM public.programme_version_session_slots s
+          JOIN public.programme_version_days d ON d.id = s.day_id
+          JOIN public.programme_version_weeks w ON w.id = d.week_id
+          WHERE w.version_id = p_version_id
+            AND w.week_number = v_week_number
+            AND d.day_key = v_day_key
+            AND s.package_slot_key IS NOT DISTINCT FROM v_slot_key
+            AND s.session_order IS NOT DISTINCT FROM (v_slot->>'session_order')::INT
+            AND s.protocol_id IS NOT DISTINCT FROM trim(v_protocol_id)
+            AND s.display_title IS NOT DISTINCT FROM nullif(trim(COALESCE(v_slot->>'display_title', '')), '')
+            AND s.time_of_day IS NOT DISTINCT FROM COALESCE(nullif(trim(COALESCE(v_slot->>'time_of_day', '')), ''), 'any')
+            AND s.is_optional IS NOT DISTINCT FROM COALESCE((v_slot->>'is_optional')::BOOLEAN, FALSE)
+            AND s.completion_expectation IS NOT DISTINCT FROM COALESCE(nullif(trim(COALESCE(v_slot->>'completion_expectation', '')), ''), 'required')
+            AND s.coach_note IS NOT DISTINCT FROM nullif(trim(COALESCE(v_slot->>'coach_note', '')), '')
+            AND s.authored_progression IS NOT DISTINCT FROM (v_slot->'progression')
+        ) THEN
+          RETURN FALSE;
+        END IF;
+      END LOOP;
+    END LOOP;
+  END LOOP;
+
+  -- Global slot key set: every persisted package_slot_key must be expected.
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_session_slots s
+  JOIN public.programme_version_days d ON d.id = s.day_id
+  JOIN public.programme_version_weeks w ON w.id = d.week_id
+  WHERE w.version_id = p_version_id
+    AND s.package_slot_key IS NOT NULL
+    AND NOT EXISTS (
+      SELECT 1
+      FROM jsonb_array_elements(payload->'weeks') AS wk(value),
+           jsonb_array_elements(COALESCE(wk.value->'days', '[]'::JSONB)) AS dy(value),
+           jsonb_array_elements(COALESCE(dy.value->'slots', '[]'::JSONB)) AS sl(value)
+      WHERE trim(sl.value->>'slot_key') = s.package_slot_key
+    );
+  IF v_actual <> 0 THEN
+    RETURN FALSE;
+  END IF;
+
+  -- Comparison identities
+  v_expected := jsonb_array_length(COALESCE(payload->'comparison_identities', '[]'::JSONB));
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_comparison_identities c
+  WHERE c.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'comparison_identities', '[]'::JSONB))
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_comparison_identities c
+      WHERE c.version_id = p_version_id
+        AND c.comparison_key IS NOT DISTINCT FROM trim(v_item->>'id')
+        AND c.session_lineage_id IS NOT DISTINCT FROM trim(v_item->>'session_lineage_id')
+        AND c.label IS NOT DISTINCT FROM trim(v_item->>'label')
+    ) THEN
+      RETURN FALSE;
+    END IF;
+  END LOOP;
+
+  -- Adaptation permissions
+  v_expected := jsonb_array_length(COALESCE(payload->'adaptation_permissions', '[]'::JSONB));
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_adaptation_permissions a
+  WHERE a.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'adaptation_permissions', '[]'::JSONB))
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_adaptation_permissions a
+      WHERE a.version_id = p_version_id
+        AND a.permission_key IS NOT DISTINCT FROM trim(v_item->>'id')
+        AND a.change_kind IS NOT DISTINCT FROM trim(v_item->>'change_kind')
+        AND a.target_ref IS NOT DISTINCT FROM trim(v_item->>'target_ref')
+        AND a.athlete_agreement_required IS NOT DISTINCT FROM TRUE
+        AND a.scope_note IS NOT DISTINCT FROM nullif(trim(COALESCE(v_item->>'scope_note', '')), '')
+    ) THEN
+      RETURN FALSE;
+    END IF;
+  END LOOP;
+
+  -- Protected invariants
+  v_expected := jsonb_array_length(COALESCE(payload->'protected_invariants', '[]'::JSONB));
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_protected_invariants i
+  WHERE i.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'protected_invariants', '[]'::JSONB))
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_protected_invariants i
+      WHERE i.version_id = p_version_id
+        AND i.invariant_key IS NOT DISTINCT FROM trim(v_item->>'id')
+        AND i.kind IS NOT DISTINCT FROM trim(v_item->>'kind')
+        AND i.target_ref IS NOT DISTINCT FROM trim(v_item->>'target_ref')
+        AND i.description IS NOT DISTINCT FROM trim(v_item->>'description')
+    ) THEN
+      RETURN FALSE;
+    END IF;
+  END LOOP;
+
+  -- Assessments
+  v_expected := jsonb_array_length(COALESCE(payload->'assessments', '[]'::JSONB));
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_assessments a
+  WHERE a.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'assessments', '[]'::JSONB))
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_assessments a
+      WHERE a.version_id = p_version_id
+        AND a.assessment_key IS NOT DISTINCT FROM trim(v_item->>'id')
+        AND a.slot_ref IS NOT DISTINCT FROM trim(v_item->>'slot_ref')
+        AND a.evidence_requirement IS NOT DISTINCT FROM trim(v_item->>'evidence_requirement')
+        AND a.comparison_identity_key IS NOT DISTINCT FROM trim(v_item->>'comparison_identity_id')
+        AND a.label IS NOT DISTINCT FROM nullif(trim(COALESCE(v_item->>'label', '')), '')
+    ) THEN
+      RETURN FALSE;
+    END IF;
+  END LOOP;
+
+  -- Evidence requirements
+  v_expected := jsonb_array_length(COALESCE(payload->'performance_evidence_requirements', '[]'::JSONB));
+  SELECT COUNT(*) INTO v_actual
+  FROM public.programme_version_evidence_requirements e
+  WHERE e.version_id = p_version_id;
+  IF v_actual IS DISTINCT FROM v_expected THEN
+    RETURN FALSE;
+  END IF;
+  FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'performance_evidence_requirements', '[]'::JSONB))
+  LOOP
+    IF NOT EXISTS (
+      SELECT 1
+      FROM public.programme_version_evidence_requirements e
+      WHERE e.version_id = p_version_id
+        AND e.evidence_key IS NOT DISTINCT FROM trim(v_item->>'id')
+        AND e.comparison_identity_key IS NOT DISTINCT FROM trim(v_item->>'comparison_identity_id')
+        AND e.metric IS NOT DISTINCT FROM trim(v_item->>'metric')
+        AND e.required IS NOT DISTINCT FROM (v_item->>'required')::BOOLEAN
+    ) THEN
+      RETURN FALSE;
+    END IF;
+  END LOOP;
+
+  RETURN TRUE;
+END;
+$$;
+
+REVOKE ALL ON FUNCTION public.cohort_authored_plan_package_graph_matches(UUID, JSONB) FROM PUBLIC;
+REVOKE ALL ON FUNCTION public.cohort_authored_plan_package_graph_matches(UUID, JSONB) FROM anon;
+REVOKE ALL ON FUNCTION public.cohort_authored_plan_package_graph_matches(UUID, JSONB) FROM authenticated;
+GRANT EXECUTE ON FUNCTION public.cohort_authored_plan_package_graph_matches(UUID, JSONB) TO service_role;
+
+COMMENT ON FUNCTION public.cohort_authored_plan_package_graph_matches(UUID, JSONB) IS
+  'Sprint 1.2 idempotency gate: TRUE only when persisted package graph completely matches the validated import payload.';
+
+-- ---------------------------------------------------------------------------
 -- 7. Import RPC (service_role only)
 -- ---------------------------------------------------------------------------
 
@@ -842,6 +1211,15 @@ DECLARE
   v_slot_key TEXT;
   v_match_count INT;
   v_lineage_missing BOOLEAN := FALSE;
+  v_constraint TEXT;
+  v_week_numbers INT[] := ARRAY[]::INT[];
+  v_phase_orders INT[] := ARRAY[]::INT[];
+  v_day_keys TEXT[] := ARRAY[]::TEXT[];
+  v_day_orders INT[] := ARRAY[]::INT[];
+  v_session_orders INT[] := ARRAY[]::INT[];
+  v_permission_keys TEXT[] := ARRAY[]::TEXT[];
+  v_invariant_keys TEXT[] := ARRAY[]::TEXT[];
+  v_evidence_keys TEXT[] := ARRAY[]::TEXT[];
 BEGIN
   IF payload IS NULL OR jsonb_typeof(payload) <> 'object' THEN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_payload', 'message', 'Payload must be a JSON object.');
@@ -964,35 +1342,67 @@ BEGIN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'weeks_required', 'message', 'At least one week is required.');
   END IF;
 
-  -- Collect phase keys (optional) and validate uniqueness.
+  -- Collect phase keys/orders (optional) and validate uniqueness before writes.
   IF jsonb_typeof(payload->'phases') = 'array' THEN
     FOR v_phase IN SELECT value FROM jsonb_array_elements(payload->'phases')
     LOOP
       v_target := trim(COALESCE(v_phase->>'phase_key', ''));
+      v_row_count := NULLIF(v_phase->>'phase_order', '')::INT;
       IF v_target = '' OR v_phase_map ? v_target THEN
-        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_phase_key', 'message', 'phase_key missing or duplicated.');
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'phase_key missing or duplicated.');
+      END IF;
+      IF v_row_count IS NULL OR v_row_count = ANY (v_phase_orders) THEN
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'phase_order missing or duplicated.');
       END IF;
       v_phase_map := v_phase_map || jsonb_build_object(v_target, 'pending');
+      v_phase_orders := array_append(v_phase_orders, v_row_count);
     END LOOP;
   END IF;
 
   FOR v_week IN SELECT value FROM jsonb_array_elements(payload->'weeks')
   LOOP
+    v_revision_number := NULLIF(v_week->>'week_number', '')::INT;
+    IF v_revision_number IS NULL OR v_revision_number = ANY (v_week_numbers) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'week_number missing or duplicated.');
+    END IF;
+    v_week_numbers := array_append(v_week_numbers, v_revision_number);
+
     v_target := nullif(trim(COALESCE(v_week->>'phase_key', '')), '');
     IF v_target IS NOT NULL AND NOT (v_phase_map ? v_target) THEN
       RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Week references unknown phase_key.');
     END IF;
+
+    -- Per-week day uniqueness (day_key and day_order are unique under a week).
+    v_day_keys := ARRAY[]::TEXT[];
+    v_day_orders := ARRAY[]::INT[];
+
     FOR v_day IN SELECT value FROM jsonb_array_elements(COALESCE(v_week->'days', '[]'::JSONB))
     LOOP
+      v_assessment_slot := trim(COALESCE(v_day->>'day_key', ''));
+      v_match_count := NULLIF(v_day->>'day_order', '')::INT;
+      IF v_assessment_slot = '' OR v_assessment_slot = ANY (v_day_keys) THEN
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'day_key missing or duplicated within week.');
+      END IF;
+      IF v_match_count IS NULL OR v_match_count = ANY (v_day_orders) THEN
+        RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'day_order missing or duplicated within week.');
+      END IF;
+      v_day_keys := array_append(v_day_keys, v_assessment_slot);
+      v_day_orders := array_append(v_day_orders, v_match_count);
+
+      v_session_orders := ARRAY[]::INT[];
       FOR v_slot IN SELECT value FROM jsonb_array_elements(COALESCE(v_day->'slots', '[]'::JSONB))
       LOOP
         v_slot_key := trim(COALESCE(v_slot->>'slot_key', ''));
         v_session_key := trim(COALESCE(v_slot->>'session_key', ''));
+        v_row_count := NULLIF(v_slot->>'session_order', '')::INT;
         IF v_slot_key = '' THEN
           RETURN jsonb_build_object('status', 'validation_failure', 'code', 'missing_slot_key', 'message', 'slot_key is required.');
         END IF;
         IF v_slot_key = ANY (v_slot_keys) THEN
-          RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_slot_key', 'message', 'Duplicate package_slot_key in package.');
+          RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'Duplicate package_slot_key in package.');
+        END IF;
+        IF v_row_count IS NULL OR v_row_count = ANY (v_session_orders) THEN
+          RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'session_order missing or duplicated within day.');
         END IF;
         SELECT COUNT(*) INTO v_match_count
         FROM unnest(v_session_keys) AS sk(session_key)
@@ -1014,6 +1424,7 @@ BEGIN
           );
         END IF;
         v_slot_keys := array_append(v_slot_keys, v_slot_key);
+        v_session_orders := array_append(v_session_orders, v_row_count);
       END LOOP;
     END LOOP;
   END LOOP;
@@ -1028,7 +1439,7 @@ BEGIN
     v_cmp_key := trim(COALESCE(v_item->>'id', ''));
     v_session_lineage_id := trim(COALESCE(v_item->>'session_lineage_id', ''));
     IF v_cmp_key = '' OR v_cmp_key = ANY (v_comparison_keys) THEN
-      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_comparison_identity', 'message', 'comparison identity id missing or duplicated.');
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'comparison identity id missing or duplicated.');
     END IF;
     IF NOT (v_session_lineage_id = ANY (v_session_lineages)) THEN
       RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Comparison identity session_lineage_id is not in package sessions.');
@@ -1038,6 +1449,11 @@ BEGIN
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'adaptation_permissions', '[]'::JSONB))
   LOOP
+    v_cmp_key := trim(COALESCE(v_item->>'id', ''));
+    IF v_cmp_key = '' OR v_cmp_key = ANY (v_permission_keys) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'adaptation permission id missing or duplicated.');
+    END IF;
+    v_permission_keys := array_append(v_permission_keys, v_cmp_key);
     IF (v_item->>'athlete_agreement_required')::BOOLEAN IS DISTINCT FROM TRUE THEN
       RETURN jsonb_build_object('status', 'validation_failure', 'code', 'agreement_required', 'message', 'athlete_agreement_required must be true.');
     END IF;
@@ -1051,13 +1467,18 @@ BEGIN
   LOOP
     v_target := trim(COALESCE(v_item->>'id', ''));
     IF v_target = '' OR v_target = ANY (v_assessment_keys) THEN
-      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_assessment', 'message', 'assessment id missing or duplicated.');
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'assessment id missing or duplicated.');
     END IF;
     v_assessment_keys := array_append(v_assessment_keys, v_target);
   END LOOP;
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'protected_invariants', '[]'::JSONB))
   LOOP
+    v_cmp_key := trim(COALESCE(v_item->>'id', ''));
+    IF v_cmp_key = '' OR v_cmp_key = ANY (v_invariant_keys) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'protected invariant id missing or duplicated.');
+    END IF;
+    v_invariant_keys := array_append(v_invariant_keys, v_cmp_key);
     v_kind := trim(COALESCE(v_item->>'kind', ''));
     v_target := trim(COALESCE(v_item->>'target_ref', ''));
     IF v_kind = 'assessment_immutable' THEN
@@ -1085,6 +1506,11 @@ BEGIN
 
   FOR v_item IN SELECT value FROM jsonb_array_elements(COALESCE(payload->'performance_evidence_requirements', '[]'::JSONB))
   LOOP
+    v_target := trim(COALESCE(v_item->>'id', ''));
+    IF v_target = '' OR v_target = ANY (v_evidence_keys) THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_package_identity', 'message', 'evidence requirement id missing or duplicated.');
+    END IF;
+    v_evidence_keys := array_append(v_evidence_keys, v_target);
     v_cmp_key := trim(COALESCE(v_item->>'comparison_identity_id', ''));
     IF v_cmp_key = '' OR NOT (v_cmp_key = ANY (v_comparison_keys)) THEN
       RETURN jsonb_build_object('status', 'validation_failure', 'code', 'broken_reference', 'message', 'Evidence requirement comparison_identity_id does not resolve.');
@@ -1141,16 +1567,25 @@ BEGIN
          AND v_existing.owner_type = 'global'
          AND v_existing.owner_id IS NULL
          AND v_existing.approved_for_global = FALSE THEN
+        IF public.cohort_authored_plan_package_graph_matches(v_existing.id, payload) THEN
+          RETURN jsonb_build_object(
+            'status', 'idempotent_existing_draft',
+            'code', 'same_hash_existing_draft',
+            'programme_version_id', v_existing.id,
+            'lineage_id', v_lineage.id,
+            'lineage_code', v_lineage.code,
+            'version_number', v_existing.version_number,
+            'package_content_hash', v_existing.package_content_hash,
+            'lifecycle_status', v_existing.lifecycle_status,
+            'approved_for_global', FALSE
+          );
+        END IF;
+        -- Provenance matches but persisted graph is hollow/altered/incomplete.
         RETURN jsonb_build_object(
-          'status', 'idempotent_existing_draft',
-          'code', 'same_hash_existing_draft',
-          'programme_version_id', v_existing.id,
-          'lineage_id', v_lineage.id,
-          'lineage_code', v_lineage.code,
-          'version_number', v_existing.version_number,
-          'package_content_hash', v_existing.package_content_hash,
-          'lifecycle_status', v_existing.lifecycle_status,
-          'approved_for_global', FALSE
+          'status', 'partial_state_conflict',
+          'code', 'partial_existing_draft',
+          'message', 'Existing draft provenance matches but package graph is incomplete or inconsistent. Fail closed; no repair.',
+          'programme_version_id', v_existing.id
         );
       END IF;
       IF v_existing.package_content_hash IS NOT NULL
@@ -1392,7 +1827,10 @@ BEGIN
     );
   EXCEPTION
     WHEN unique_violation THEN
-      -- Concurrent creator won; classify against persisted row (writes rolled back).
+      -- Writes in this block are rolled back. Discriminate race vs package uniqueness
+      -- without leaking constraint names or SQL detail to the caller.
+      GET STACKED DIAGNOSTICS v_constraint = CONSTRAINT_NAME;
+
       SELECT * INTO v_lineage
       FROM public.programme_lineages
       WHERE code = v_lineage_code;
@@ -1404,14 +1842,23 @@ BEGIN
           AND version_number = v_version_number;
 
         IF FOUND THEN
-          IF v_existing.package_content_hash IS NOT NULL
+          IF v_existing.lifecycle_status = 'published' THEN
+            RETURN jsonb_build_object(
+              'status', 'published_version_conflict',
+              'code', 'published_version_exists',
+              'message', 'Target programme version is published and cannot be overwritten.',
+              'programme_version_id', v_existing.id
+            );
+          END IF;
+          IF v_existing.lifecycle_status = 'draft'
+             AND v_existing.package_content_hash IS NOT NULL
              AND v_existing.package_content_hash = v_hash
              AND v_existing.package_schema_version = v_schema_version
              AND v_existing.library_scope = 'cohort_global'
              AND v_existing.owner_type = 'global'
              AND v_existing.owner_id IS NULL
              AND v_existing.approved_for_global = FALSE
-             AND v_existing.lifecycle_status = 'draft' THEN
+             AND public.cohort_authored_plan_package_graph_matches(v_existing.id, payload) THEN
             RETURN jsonb_build_object(
               'status', 'idempotent_existing_draft',
               'code', 'same_hash_existing_draft',
@@ -1433,14 +1880,6 @@ BEGIN
               'programme_version_id', v_existing.id
             );
           END IF;
-          IF v_existing.lifecycle_status = 'published' THEN
-            RETURN jsonb_build_object(
-              'status', 'published_version_conflict',
-              'code', 'published_version_exists',
-              'message', 'Target programme version is published and cannot be overwritten.',
-              'programme_version_id', v_existing.id
-            );
-          END IF;
           RETURN jsonb_build_object(
             'status', 'partial_state_conflict',
             'code', 'partial_existing_draft',
@@ -1449,10 +1888,23 @@ BEGIN
           );
         END IF;
       END IF;
+
+      -- Race only when the uniqueness conflict is on lineage/version identity.
+      IF v_constraint IN (
+        'programme_lineages_code_unique',
+        'programme_versions_lineage_version_unique'
+      ) THEN
+        RETURN jsonb_build_object(
+          'status', 'version_collision',
+          'code', 'lineage_or_version_race',
+          'message', 'Concurrent import conflicted on lineage or version identity. Retry safely.'
+        );
+      END IF;
+
       RETURN jsonb_build_object(
-        'status', 'version_collision',
-        'code', 'lineage_or_version_race',
-        'message', 'Concurrent import conflicted on lineage or version identity. Retry safely.'
+        'status', 'validation_failure',
+        'code', 'duplicate_package_identity',
+        'message', 'Import rejected due to duplicate package identity and was rolled back.'
       );
     WHEN check_violation THEN
       RETURN jsonb_build_object(

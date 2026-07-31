@@ -203,7 +203,7 @@ void main() {
       );
     });
 
-    test('same hash existing draft is idempotent-importable', () async {
+    test('same hash with verified graph is idempotent-importable', () async {
       final service = PlanPackageImportPreviewService(
         sessionResolution: resolvedSessions(),
         existingVersionLookup: _FakeExistingLookup(
@@ -218,6 +218,7 @@ void main() {
             approvedForGlobal: false,
             packageContentHash: compileResult.contentHashSha256,
             packageSchemaVersion: 1,
+            packageGraphMatches: true,
           ),
         ),
       );
@@ -226,6 +227,72 @@ void main() {
       expect(
         preview.existingOutcome,
         PlanPackageExistingImportOutcome.idempotentSameHash,
+      );
+    });
+
+    test(
+      'same hash without graph proof does not promise idempotency',
+      () async {
+        final service = PlanPackageImportPreviewService(
+          sessionResolution: resolvedSessions(),
+          existingVersionLookup: _FakeExistingLookup(
+            PlanPackageExistingVersionSnapshot(
+              versionId: 'existing',
+              lineageId: 'lin',
+              lineageCode: 'PROG-FIXTURE-01',
+              versionNumber: 1,
+              lifecycleStatus: ProgrammeLifecycleStatus.draft,
+              libraryScope: ProgrammeLibraryScope.cohortGlobal,
+              ownerType: ProgrammeOwnerType.global,
+              approvedForGlobal: false,
+              packageContentHash: compileResult.contentHashSha256,
+              packageSchemaVersion: 1,
+            ),
+          ),
+        );
+        final preview = await service.preview(compileResult: compileResult);
+        expect(preview.isImportable, isTrue);
+        expect(
+          preview.existingOutcome,
+          PlanPackageExistingImportOutcome.authoritativeCompletenessRequired,
+        );
+        expect(
+          preview.existingOutcome,
+          isNot(PlanPackageExistingImportOutcome.idempotentSameHash),
+        );
+        expect(
+          preview.warnings.any(
+            (w) => w.code == 'completeness_requires_authoritative_import',
+          ),
+          isTrue,
+        );
+      },
+    );
+
+    test('same hash with failed graph match is partial', () async {
+      final service = PlanPackageImportPreviewService(
+        sessionResolution: resolvedSessions(),
+        existingVersionLookup: _FakeExistingLookup(
+          PlanPackageExistingVersionSnapshot(
+            versionId: 'existing',
+            lineageId: 'lin',
+            lineageCode: 'PROG-FIXTURE-01',
+            versionNumber: 1,
+            lifecycleStatus: ProgrammeLifecycleStatus.draft,
+            libraryScope: ProgrammeLibraryScope.cohortGlobal,
+            ownerType: ProgrammeOwnerType.global,
+            approvedForGlobal: false,
+            packageContentHash: compileResult.contentHashSha256,
+            packageSchemaVersion: 1,
+            packageGraphMatches: false,
+          ),
+        ),
+      );
+      final preview = await service.preview(compileResult: compileResult);
+      expect(preview.isImportable, isFalse);
+      expect(
+        preview.existingOutcome,
+        PlanPackageExistingImportOutcome.partialDraftConflict,
       );
     });
 
@@ -391,8 +458,28 @@ void main() {
   });
 
   group('existing snapshot SQL-aligned classification', () {
-    test('exact idempotent predicate matches SQL requirements', () {
-      final snap = PlanPackageExistingVersionSnapshot(
+    test('exact idempotent requires provenance and verified graph', () {
+      final verified = PlanPackageExistingVersionSnapshot(
+        versionId: 'v',
+        lineageId: 'l',
+        lineageCode: 'PROG-FIXTURE-01',
+        versionNumber: 1,
+        lifecycleStatus: ProgrammeLifecycleStatus.draft,
+        libraryScope: ProgrammeLibraryScope.cohortGlobal,
+        ownerType: ProgrammeOwnerType.global,
+        approvedForGlobal: false,
+        packageContentHash: compileResult.contentHashSha256,
+        packageSchemaVersion: 1,
+        packageGraphMatches: true,
+      );
+      expect(
+        verified.isExactIdempotentDraft(
+          packageContentHash: compileResult.contentHashSha256!,
+          packageSchemaVersion: 1,
+        ),
+        isTrue,
+      );
+      final unknown = PlanPackageExistingVersionSnapshot(
         versionId: 'v',
         lineageId: 'l',
         lineageCode: 'PROG-FIXTURE-01',
@@ -405,11 +492,11 @@ void main() {
         packageSchemaVersion: 1,
       );
       expect(
-        snap.isExactIdempotentDraft(
+        unknown.isExactIdempotentDraft(
           packageContentHash: compileResult.contentHashSha256!,
           packageSchemaVersion: 1,
         ),
-        isTrue,
+        isFalse,
       );
     });
   });
@@ -446,6 +533,18 @@ void main() {
       });
       expect(result.status, PlanPackageImportStatus.validationFailure);
       expect(result.code, 'broken_reference');
+    });
+
+    test('maps duplicate_package_identity as validation failure not race', () {
+      final result = PlanPackageImportResult.fromRpcMap({
+        'status': 'validation_failure',
+        'code': 'duplicate_package_identity',
+        'message':
+            'Import rejected due to duplicate package identity and was rolled back.',
+      });
+      expect(result.status, PlanPackageImportStatus.validationFailure);
+      expect(result.code, 'duplicate_package_identity');
+      expect(result.isSuccess, isFalse);
     });
   });
 

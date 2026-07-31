@@ -15,6 +15,7 @@ class PlanPackageExistingVersionSnapshot {
     this.ownerId,
     this.packageContentHash,
     this.packageSchemaVersion,
+    this.packageGraphMatches,
   });
 
   final String versionId;
@@ -31,10 +32,17 @@ class PlanPackageExistingVersionSnapshot {
   final String? packageContentHash;
   final int? packageSchemaVersion;
 
+  /// Result of comparing the persisted package graph to the incoming package.
+  ///
+  /// - `true`: lookup proved complete equivalence (same gate as SQL helper)
+  /// - `false`: lookup proved incompleteness / mismatch
+  /// - `null`: completeness unknown — preview must not promise idempotency
+  final bool? packageGraphMatches;
+
   /// Mirrors `import_authored_plan_package` idempotent / collision classification.
   ///
-  /// SQL remains authoritative; preview must not report idempotent when SQL
-  /// would return partial_state or another conflict.
+  /// SQL remains authoritative. Preview never claims exact idempotency unless
+  /// [packageGraphMatches] is explicitly `true`.
   PlanPackageExistingImportOutcome classifyAgainstPackage({
     required String packageContentHash,
     required int packageSchemaVersion,
@@ -45,20 +53,27 @@ class PlanPackageExistingVersionSnapshot {
     if (lifecycleStatus != ProgrammeLifecycleStatus.draft) {
       return PlanPackageExistingImportOutcome.nonDraftConflict;
     }
-    if (isExactIdempotentDraft(
+    if (!matchesProvenance(
       packageContentHash: packageContentHash,
       packageSchemaVersion: packageSchemaVersion,
     )) {
-      return PlanPackageExistingImportOutcome.idempotentSameHash;
+      if (this.packageContentHash != null &&
+          this.packageContentHash != packageContentHash) {
+        return PlanPackageExistingImportOutcome.hashCollision;
+      }
+      return PlanPackageExistingImportOutcome.partialDraftConflict;
     }
-    if (this.packageContentHash != null &&
-        this.packageContentHash != packageContentHash) {
-      return PlanPackageExistingImportOutcome.hashCollision;
-    }
-    return PlanPackageExistingImportOutcome.partialDraftConflict;
+
+    // Provenance matches. Completeness decides idempotent vs partial vs defer.
+    return switch (packageGraphMatches) {
+      true => PlanPackageExistingImportOutcome.idempotentSameHash,
+      false => PlanPackageExistingImportOutcome.partialDraftConflict,
+      null =>
+        PlanPackageExistingImportOutcome.authoritativeCompletenessRequired,
+    };
   }
 
-  bool isExactIdempotentDraft({
+  bool matchesProvenance({
     required String packageContentHash,
     required int packageSchemaVersion,
   }) {
@@ -70,6 +85,17 @@ class PlanPackageExistingVersionSnapshot {
         ownerType == ProgrammeOwnerType.global &&
         ownerId == null &&
         !approvedForGlobal;
+  }
+
+  bool isExactIdempotentDraft({
+    required String packageContentHash,
+    required int packageSchemaVersion,
+  }) {
+    return matchesProvenance(
+          packageContentHash: packageContentHash,
+          packageSchemaVersion: packageSchemaVersion,
+        ) &&
+        packageGraphMatches == true;
   }
 }
 

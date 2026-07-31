@@ -134,6 +134,18 @@ class PlanPackageImportPreviewService {
             );
           case PlanPackageExistingImportOutcome.idempotentSameHash:
             break;
+          case PlanPackageExistingImportOutcome
+              .authoritativeCompletenessRequired:
+            warnings.add(
+              const PlanPackageValidationIssue(
+                path: 'programme',
+                code: 'completeness_requires_authoritative_import',
+                message:
+                    'Existing draft provenance matches, but package-graph '
+                    'completeness was not verified in preview. The import RPC '
+                    'performs the authoritative completeness check.',
+              ),
+            );
         }
       }
     }

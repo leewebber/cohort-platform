@@ -59,7 +59,10 @@ class PlanPackageImportPreview {
       blockingErrors.isEmpty &&
       (existingOutcome == null ||
           existingOutcome ==
-              PlanPackageExistingImportOutcome.idempotentSameHash);
+              PlanPackageExistingImportOutcome.idempotentSameHash ||
+          existingOutcome ==
+              PlanPackageExistingImportOutcome
+                  .authoritativeCompletenessRequired);
 }
 
 enum PlanPackageExistingImportOutcome {
@@ -68,6 +71,10 @@ enum PlanPackageExistingImportOutcome {
   publishedConflict,
   partialDraftConflict,
   nonDraftConflict,
+
+  /// Provenance matches but preview cannot prove package-graph completeness.
+  /// Importable; SQL performs the authoritative completeness gate.
+  authoritativeCompletenessRequired,
 }
 
 class PlanPackageResolvedSessionRevision {
