@@ -210,19 +210,111 @@ set -e
 [[ "$GNEG_EC" -ne 0 ]] || sprint12_die "Gate G negative control unexpectedly exited 0"
 echo "Gate G isolated negative control PASSED (exit=${GNEG_EC})"
 
-echo "=== PostgREST privilege denial without temporary grants ==="
+echo "=== PostgREST catalogue privilege controls (anon negative + auth positive) ==="
 # Use status from disposable workdir only.
 STATUS_JSON="$(supabase status -o json --workdir "${SPRINT12_WORKDIR}")"
 API="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["API_URL"])' <<<"$STATUS_JSON")"
 ANON="$(python3 -c 'import json,sys; print(json.load(sys.stdin)["ANON_KEY"])' <<<"$STATUS_JSON")"
-# Redact: do not print keys
-echo "TARGET: api=${API} (local disposable; keys redacted)"
+JWT_SECRET="$(python3 -c 'import json,sys; print(json.load(sys.stdin).get("JWT_SECRET") or "")' <<<"$STATUS_JSON")"
+[[ -n "$JWT_SECRET" ]] || sprint12_die "Disposable stack JWT_SECRET missing from status"
+# Mint a short-lived local authenticated JWT (no hosted credentials).
+AUTH_JWT="$(JWT_SECRET="$JWT_SECRET" python3 - <<'PY'
+import base64, hashlib, hmac, json, os, time
+secret = os.environ["JWT_SECRET"].encode()
+
+def b64url(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).rstrip(b"=").decode()
+
+header = b64url(json.dumps({"alg": "HS256", "typ": "JWT"}, separators=(",", ":")).encode())
+now = int(time.time())
+payload = b64url(json.dumps({
+    "role": "authenticated",
+    "iss": "supabase",
+    "iat": now,
+    "exp": now + 3600,
+    "sub": "11111111-1111-4111-8111-111111111111",
+    "aud": "authenticated",
+}, separators=(",", ":")).encode())
+sig = hmac.new(secret, f"{header}.{payload}".encode(), hashlib.sha256).digest()
+print(f"{header}.{payload}.{b64url(sig)}")
+PY
+)"
+echo "TARGET: api=${API} (local disposable; keys/tokens redacted)"
 [[ "$API" == http://127.0.0.1:* || "$API" == http://localhost:* ]] || sprint12_die "API not loopback"
-CODE="$(curl -sS -o /tmp/sprint12_http.json -w '%{http_code}' \
-  "${API}/rest/v1/programme_versions?select=id&limit=1" \
+
+CATALOGUE_PATH="programme_versions?select=id,name,programme_lineages!inner(code)&approved_for_global=eq.true&lifecycle_status=eq.published"
+
+# Anon negative: must not succeed as a catalogue read.
+CODE="$(curl -sS -o /tmp/sprint12_http_anon.json -w '%{http_code}' \
+  "${API}/rest/v1/${CATALOGUE_PATH}" \
   -H "apikey: ${ANON}" -H "Authorization: Bearer ${ANON}")"
-echo "HTTP catalogue without migration SELECT grant: http=${CODE}"
-[[ "$CODE" == "401" || "$CODE" == "403" ]] || sprint12_die "Expected privilege failure HTTP, got ${CODE}"
+echo "HTTP anon catalogue negative: http=${CODE}"
+[[ "$CODE" == "401" || "$CODE" == "403" ]] || sprint12_die "Anon catalogue expected 401/403, got ${CODE}"
+python3 - <<'PY'
+import json
+from pathlib import Path
+raw = Path('/tmp/sprint12_http_anon.json').read_text().strip()
+if raw:
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        data = None
+    if isinstance(data, list) and len(data) > 0:
+        raise SystemExit('Anon catalogue negative returned data rows')
+print('Anon catalogue negative: no data rows')
+PY
+
+# Authenticated positive: approved published + embedded lineage code.
+CODE="$(curl -sS -o /tmp/sprint12_http_auth.json -w '%{http_code}' \
+  "${API}/rest/v1/${CATALOGUE_PATH}" \
+  -H "apikey: ${ANON}" -H "Authorization: Bearer ${AUTH_JWT}")"
+echo "HTTP authenticated catalogue positive: http=${CODE}"
+[[ "$CODE" == "200" ]] || {
+  head -c 400 /tmp/sprint12_http_auth.json || true
+  sprint12_die "Authenticated catalogue expected HTTP 200, got ${CODE}"
+}
+python3 - <<'PY'
+import json
+from pathlib import Path
+rows = json.loads(Path('/tmp/sprint12_http_auth.json').read_text())
+if not isinstance(rows, list) or len(rows) < 1:
+    raise SystemExit('Authenticated catalogue returned no approved rows')
+for row in rows:
+    lineage = row.get('programme_lineages') or {}
+    code = lineage.get('code') if isinstance(lineage, dict) else None
+    if not row.get('id') or not row.get('name') or not code:
+        raise SystemExit(f'Authenticated catalogue row missing id/name/lineage code: {row!r}')
+print(f'Authenticated catalogue positive: rows={len(rows)} embed_ok')
+PY
+
+# Authenticated must not see drafts via Data API.
+CODE="$(curl -sS -o /tmp/sprint12_http_auth_draft.json -w '%{http_code}' \
+  "${API}/rest/v1/programme_versions?select=id&lifecycle_status=eq.draft&library_scope=eq.cohort_global" \
+  -H "apikey: ${ANON}" -H "Authorization: Bearer ${AUTH_JWT}")"
+[[ "$CODE" == "200" ]] || sprint12_die "Authenticated draft probe expected HTTP 200 (empty), got ${CODE}"
+python3 - <<'PY'
+import json
+from pathlib import Path
+rows = json.loads(Path('/tmp/sprint12_http_auth_draft.json').read_text())
+if rows:
+    raise SystemExit(f'Authenticated draft probe leaked {len(rows)} row(s)')
+print('Authenticated draft probe: empty')
+PY
+
+# Authenticated must not see published-but-unapproved.
+CODE="$(curl -sS -o /tmp/sprint12_http_auth_unapp.json -w '%{http_code}' \
+  "${API}/rest/v1/programme_versions?select=id&lifecycle_status=eq.published&approved_for_global=eq.false&library_scope=eq.cohort_global" \
+  -H "apikey: ${ANON}" -H "Authorization: Bearer ${AUTH_JWT}")"
+[[ "$CODE" == "200" ]] || sprint12_die "Authenticated unapproved probe expected HTTP 200 (empty), got ${CODE}"
+python3 - <<'PY'
+import json
+from pathlib import Path
+rows = json.loads(Path('/tmp/sprint12_http_auth_unapp.json').read_text())
+if rows:
+    raise SystemExit(f'Authenticated unapproved probe leaked {len(rows)} row(s)')
+print('Authenticated unapproved probe: empty')
+PY
+unset AUTH_JWT JWT_SECRET ANON
 
 echo "=== Final production migrations integrity ==="
 if compgen -G "${TESTS_DIR}/../migrations/20260701000000_*" >/dev/null; then

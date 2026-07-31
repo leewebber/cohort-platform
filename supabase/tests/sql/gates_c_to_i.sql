@@ -797,9 +797,8 @@ BEGIN
   PERFORM sprint12_record('H','coach_private_intact','1', v_after::TEXT, v_after=1, v_after=1, 'self-contained fixture');
 
   -- =========================================================================
-  -- Gate I-A — Migration-installed privileges (no temporary grants)
+  -- Gate I-A — Migration-installed privileges (permanent catalogue SELECT)
   -- =========================================================================
-  -- actual = has_*_privilege; expected false means EXECUTE/SELECT must be absent.
   SELECT has_function_privilege('anon', 'public.import_authored_plan_package(jsonb)', 'EXECUTE') INTO v_ok;
   PERFORM sprint12_assert_eq('I','priv_anon_execute_import','false', v_ok::TEXT, 'migration-installed EXECUTE');
   SELECT has_function_privilege('authenticated', 'public.import_authored_plan_package(jsonb)', 'EXECUTE') INTO v_ok;
@@ -807,21 +806,70 @@ BEGIN
   SELECT has_function_privilege('service_role', 'public.import_authored_plan_package(jsonb)', 'EXECUTE') INTO v_ok;
   PERFORM sprint12_assert_eq('I','priv_service_execute_import','true', v_ok::TEXT, 'migration-installed EXECUTE');
 
+  SELECT has_function_privilege('anon', 'public.publish_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_anon_execute_publish','false', v_ok::TEXT, 'migration-installed EXECUTE');
+  SELECT has_function_privilege('authenticated', 'public.publish_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_auth_execute_publish','false', v_ok::TEXT, 'migration-installed EXECUTE');
+  SELECT has_function_privilege('service_role', 'public.publish_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_service_execute_publish','true', v_ok::TEXT, 'migration-installed EXECUTE');
+
+  SELECT has_function_privilege('anon', 'public.approve_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_anon_execute_approve','false', v_ok::TEXT, 'migration-installed EXECUTE');
+  SELECT has_function_privilege('authenticated', 'public.approve_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_auth_execute_approve','false', v_ok::TEXT, 'migration-installed EXECUTE');
+  SELECT has_function_privilege('service_role', 'public.approve_cohort_global_programme_version(uuid,text)', 'EXECUTE') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_service_execute_approve','true', v_ok::TEXT, 'migration-installed EXECUTE');
+
   SELECT has_function_privilege('anon', 'public.cohort_authored_plan_package_graph_matches(uuid,jsonb)', 'EXECUTE') INTO v_ok;
   PERFORM sprint12_assert_eq('I','priv_anon_execute_helper','false', v_ok::TEXT, 'migration-installed EXECUTE');
   SELECT has_function_privilege('authenticated', 'public.cohort_authored_plan_package_graph_matches(uuid,jsonb)', 'EXECUTE') INTO v_ok;
   PERFORM sprint12_assert_eq('I','priv_auth_execute_helper','false', v_ok::TEXT, 'migration-installed EXECUTE');
 
-  -- Catalogue table SELECT currently absent — deployment/integration gate (assert absence).
-  SELECT has_table_privilege('authenticated', 'programme_versions', 'SELECT') INTO v_ok;
-  PERFORM sprint12_assert_eq('I','priv_auth_select_programme_versions_absent','false', v_ok::TEXT,
-    'DEPLOYMENT_GATE: migration-installed SELECT absent for authenticated');
-  SELECT has_table_privilege('anon', 'programme_versions', 'SELECT') INTO v_ok;
-  PERFORM sprint12_assert_eq('I','priv_anon_select_programme_versions_absent','false', v_ok::TEXT,
-    'DEPLOYMENT_GATE: migration-installed SELECT absent for anon');
-  SELECT has_table_privilege('service_role', 'programme_versions', 'SELECT') INTO v_ok;
-  PERFORM sprint12_assert_eq('I','priv_service_select_programme_versions_absent','false', v_ok::TEXT,
-    'DEPLOYMENT_GATE: migration-installed SELECT absent for service_role under local auto_expose=false');
+  -- Catalogue SELECT contract: authenticated only on versions + lineages.
+  SELECT has_table_privilege('authenticated', 'public.programme_versions', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_auth_select_programme_versions','true', v_ok::TEXT,
+    'migration-installed catalogue SELECT for authenticated');
+  SELECT has_table_privilege('authenticated', 'public.programme_lineages', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_auth_select_programme_lineages','true', v_ok::TEXT,
+    'migration-installed embed SELECT for authenticated');
+  SELECT has_table_privilege('anon', 'public.programme_versions', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_anon_select_programme_versions','false', v_ok::TEXT,
+    'anon has no catalogue SELECT');
+  SELECT has_table_privilege('anon', 'public.programme_lineages', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_anon_select_programme_lineages','false', v_ok::TEXT,
+    'anon has no lineage SELECT');
+  SELECT has_table_privilege('public', 'public.programme_versions', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_public_select_programme_versions','false', v_ok::TEXT,
+    'PUBLIC has no catalogue SELECT');
+  SELECT has_table_privilege('public', 'public.programme_lineages', 'SELECT') INTO v_ok;
+  PERFORM sprint12_assert_eq('I','priv_public_select_programme_lineages','false', v_ok::TEXT,
+    'PUBLIC has no lineage SELECT');
+
+  -- Sprint 1.2 adds SELECT only. Earlier migrations / platform defaults may already
+  -- grant INSERT/UPDATE (RLS-gated coach authoring). Do not require absence of
+  -- those pre-existing table privileges. Catalogue write denial is asserted
+  -- behaviourally below (insert/update/delete on non-owned global catalogue rows).
+  -- Static migration contract tests prove section 4c issues only GRANT SELECT.
+
+  -- Package-internal tables: no direct client SELECT/write from Sprint 1.2 grants.
+  FOREACH child IN ARRAY ARRAY[
+    'programme_version_adaptation_permissions',
+    'programme_version_protected_invariants',
+    'programme_version_assessments',
+    'programme_version_evidence_requirements',
+    'programme_version_comparison_identities'
+  ] LOOP
+    SELECT has_table_privilege('authenticated', 'public.' || child, 'SELECT')
+         OR has_table_privilege('authenticated', 'public.' || child, 'INSERT')
+         OR has_table_privilege('authenticated', 'public.' || child, 'UPDATE')
+         OR has_table_privilege('authenticated', 'public.' || child, 'DELETE')
+         OR has_table_privilege('anon', 'public.' || child, 'SELECT')
+      INTO v_ok;
+    PERFORM sprint12_assert_eq(
+      'I', 'priv_no_client_' || replace(child, 'programme_version_', ''),
+      'false', v_ok::TEXT, 'package-internal table not client-exposed'
+    );
+  END LOOP;
 
   SELECT count(*) INTO v_after FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
   WHERE n.nspname='public' AND p.proname='import_authored_plan_package';
@@ -832,9 +880,8 @@ BEGIN
   PERFORM sprint12_record('I','import_search_path','true', v_ok::TEXT, v_ok, v_ok, NULL);
 
   -- =========================================================================
-  -- Gate I-B — RLS semantics with disposable test-only grants (then revoke)
+  -- Gate I-B — RLS under permanent migration-defined SELECT grant
   -- =========================================================================
-  -- Fresh draft for RLS probes
   v_hash := sprint12_hash('gate-i-rls-draft');
   v_payload := sprint12_build_package('PROG-GATE-I-RLS', 1, v_hash, v_protocol, v_lineage);
   PERFORM set_config('role', 'service_role', true);
@@ -846,7 +893,6 @@ BEGIN
   WHERE approved_for_global AND lifecycle_status='published' AND library_scope='cohort_global'
   ORDER BY created_at DESC LIMIT 1;
 
-  -- Create published-unapproved via import+publish without approve
   v_hash := sprint12_hash('gate-i-pub-unapp');
   v_payload := sprint12_build_package('PROG-GATE-I-PUB', 1, v_hash, v_protocol, v_lineage);
   PERFORM set_config('role', 'service_role', true);
@@ -855,20 +901,32 @@ BEGIN
   PERFORM public.publish_cohort_global_programme_version(v_pub_unapproved, 'publisher');
   PERFORM set_config('role', 'postgres', true);
 
-  -- Temporary test-only grants (disposable DB only; revoked below).
-  EXECUTE 'GRANT SELECT ON TABLE public.programme_versions TO anon, authenticated, service_role';
-
-  -- With grants, privilege errors must not occur; RLS must filter.
+  -- Draft-only lineage (no published/approved version): must stay hidden on both tables.
   BEGIN
     PERFORM set_config('role', 'authenticated', true);
     SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_draft;
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_draft_hidden','0', v_after::TEXT, v_after=0, v_after=0,
-      'RLS after temporary GRANT SELECT (not privilege denial)');
+      'permanent SELECT + catalogue RLS');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_draft_hidden','0','privilege_error', FALSE, FALSE,
-      '42501 is NOT RLS proof');
+      'unexpected 42501 under permanent catalogue SELECT');
+  END;
+
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    SELECT count(*) INTO v_after
+    FROM programme_lineages pl
+    JOIN programme_versions pv ON pv.lineage_id = pl.id
+    WHERE pv.id = v_draft;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_draft_only_lineage_hidden','0', v_after::TEXT, v_after=0, v_after=0,
+      'draft-only lineage must not be catalogue-readable after SELECT grant');
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_draft_only_lineage_hidden','0','privilege_error', FALSE, FALSE,
+      'unexpected 42501 under permanent lineage SELECT');
   END;
 
   BEGIN
@@ -876,10 +934,24 @@ BEGIN
     SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_pub_unapproved;
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_published_unapproved_hidden','0', v_after::TEXT, v_after=0, v_after=0,
-      'RLS after temporary GRANT SELECT');
+      'published-unapproved hidden by RLS');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM set_config('role', 'postgres', true);
-    PERFORM sprint12_record('I','rls_auth_published_unapproved_hidden','0','privilege_error', FALSE, FALSE, '42501 != RLS');
+    PERFORM sprint12_record('I','rls_auth_published_unapproved_hidden','0','privilege_error', FALSE, FALSE, 'unexpected 42501');
+  END;
+
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    SELECT count(*) INTO v_after
+    FROM programme_lineages pl
+    JOIN programme_versions pv ON pv.lineage_id = pl.id
+    WHERE pv.id = v_pub_unapproved;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unapproved_lineage_hidden','0', v_after::TEXT, v_after=0, v_after=0,
+      'lineage with only published-unapproved version stays hidden');
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unapproved_lineage_hidden','0','privilege_error', FALSE, FALSE, 'unexpected 42501');
   END;
 
   BEGIN
@@ -887,21 +959,65 @@ BEGIN
     SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_approved;
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_approved_visible','1', v_after::TEXT, v_after=1, v_after=1,
-      'RLS after temporary GRANT SELECT');
+      'approved published visible under permanent SELECT');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM set_config('role', 'postgres', true);
-    PERFORM sprint12_record('I','rls_auth_approved_visible','1','privilege_error', FALSE, FALSE, '42501 != RLS');
+    PERFORM sprint12_record('I','rls_auth_approved_visible','1','privilege_error', FALSE, FALSE, 'unexpected 42501');
   END;
+
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    SELECT count(*) INTO v_after
+    FROM programme_lineages pl
+    JOIN programme_versions pv ON pv.lineage_id = pl.id
+    WHERE pv.id = v_approved;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_approved_lineage_visible','1', v_after::TEXT, v_after=1, v_after=1,
+      'lineage of approved published version is catalogue-readable');
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_approved_lineage_visible','1','privilege_error', FALSE, FALSE, 'unexpected 42501');
+  END;
+
+  -- After visibility qualification removed, catalogue rows must disappear again.
+  PERFORM set_config('role', 'postgres', true);
+  UPDATE programme_versions SET approved_for_global = FALSE WHERE id = v_approved;
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_approved;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unqualified_hidden','0', v_after::TEXT, v_after=0, v_after=0,
+      'approved→unapproved removes version catalogue visibility');
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unqualified_hidden','0','privilege_error', FALSE, FALSE, 'unexpected 42501');
+  END;
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    SELECT count(*) INTO v_after
+    FROM programme_lineages pl
+    JOIN programme_versions pv ON pv.lineage_id = pl.id
+    WHERE pv.id = v_approved;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unqualified_lineage_hidden','0', v_after::TEXT, v_after=0, v_after=0,
+      'approved→unapproved removes lineage catalogue visibility');
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_unqualified_lineage_hidden','0','privilege_error', FALSE, FALSE, 'unexpected 42501');
+  END;
+  -- Restore qualification so later cases using v_approved remain valid.
+  UPDATE programme_versions SET approved_for_global = TRUE WHERE id = v_approved;
 
   BEGIN
     PERFORM set_config('role', 'anon', true);
     SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_approved;
     PERFORM set_config('role', 'postgres', true);
-    PERFORM sprint12_record('I','rls_anon_approved_hidden','0', v_after::TEXT, v_after=0, v_after=0,
-      'anon outside authenticated catalogue policy; after temporary GRANT');
+    PERFORM sprint12_record('I','rls_anon_approved_denied','privilege_denied', 'unexpected_rows', FALSE, FALSE,
+      'anon must not SELECT catalogue tables');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM set_config('role', 'postgres', true);
-    PERFORM sprint12_record('I','rls_anon_approved_hidden','0','privilege_error', FALSE, FALSE, '42501 != RLS');
+    PERFORM sprint12_record('I','rls_anon_approved_denied','privilege_denied','privilege_denied', TRUE, TRUE,
+      'anon SELECT correctly denied at privilege layer');
   END;
 
   BEGIN
@@ -909,26 +1025,57 @@ BEGIN
     SELECT count(*) INTO v_after FROM programme_versions WHERE id = v_coach_version;
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_coach_private_hidden','0', v_after::TEXT, v_after=0, v_after=0,
-      'coach_private not visible without ownership claims');
+      'foreign coach_private hidden without ownership claims');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM set_config('role', 'postgres', true);
-    PERFORM sprint12_record('I','rls_auth_coach_private_hidden','0','privilege_error', FALSE, FALSE, '42501 != RLS');
+    PERFORM sprint12_record('I','rls_auth_coach_private_hidden','0','privilege_error', FALSE, FALSE, 'unexpected 42501');
   END;
 
   BEGIN
     PERFORM set_config('role', 'authenticated', true);
-    UPDATE programme_versions SET name='hacked' WHERE id = v_draft;
+    INSERT INTO programme_versions (
+      lineage_id, version_number, lifecycle_status, library_scope, owner_type,
+      name, approved_for_global
+    )
+    SELECT lineage_id, 9999, 'draft', 'cohort_global', 'global', 'catalogue-insert-probe', FALSE
+    FROM programme_versions WHERE id = v_draft;
+    GET DIAGNOSTICS v_after = ROW_COUNT;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_insert_catalogue','0', v_after::TEXT, v_after=0, v_after=0,
+      'SELECT grant must not enable catalogue INSERT');
+  EXCEPTION WHEN insufficient_privilege OR OTHERS THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_insert_catalogue','denied', SQLSTATE, TRUE, TRUE,
+      'INSERT denied under privilege and/or RLS');
+  END;
+
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    UPDATE programme_versions
+    SET approved_for_global = TRUE, lifecycle_status = 'published'
+    WHERE id = v_draft;
     GET DIAGNOSTICS v_after = ROW_COUNT;
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_update_global_draft','0', v_after::TEXT, v_after=0, v_after=0,
-      'direct write denied/filtered under RLS');
+      'SELECT grant must not enable catalogue publication/approval writes');
   EXCEPTION WHEN insufficient_privilege OR OTHERS THEN
     PERFORM set_config('role', 'postgres', true);
     PERFORM sprint12_record('I','rls_auth_update_global_draft','denied', SQLSTATE, TRUE, TRUE,
-      'write denied (may be missing UPDATE privilege and/or RLS); not SELECT visibility proof');
+      'write denied under privilege and/or RLS');
   END;
 
-  EXECUTE 'REVOKE SELECT ON TABLE public.programme_versions FROM anon, authenticated, service_role';
+  BEGIN
+    PERFORM set_config('role', 'authenticated', true);
+    DELETE FROM programme_versions WHERE id = v_approved;
+    GET DIAGNOSTICS v_after = ROW_COUNT;
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_delete_approved','0', v_after::TEXT, v_after=0, v_after=0,
+      'DELETE denied/filtered');
+  EXCEPTION WHEN insufficient_privilege OR OTHERS THEN
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record('I','rls_auth_delete_approved','denied', SQLSTATE, TRUE, TRUE,
+      'DELETE denied');
+  END;
 
 END $$;
 

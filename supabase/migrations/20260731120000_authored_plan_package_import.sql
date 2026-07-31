@@ -309,6 +309,49 @@ CREATE POLICY programme_version_session_slots_select_catalogue
   );
 
 -- ---------------------------------------------------------------------------
+-- 4b. Align lineage catalogue helper with published+approved boundary
+-- ---------------------------------------------------------------------------
+-- Used by programme_lineages_select_catalogue. Must not treat global drafts as
+-- catalogue-readable (closes draft-lineage enumeration after SELECT grants).
+-- Coach-owned lineage access remains on separate select_coach policies.
+
+CREATE OR REPLACE FUNCTION public.cohort_programme_lineage_has_dev_readable_version(
+  p_lineage_id UUID
+)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.programme_versions v
+    WHERE v.lineage_id = p_lineage_id
+      AND v.lifecycle_status = 'published'
+      AND v.library_scope = 'cohort_global'
+      AND v.approved_for_global = TRUE
+  );
+$$;
+
+COMMENT ON FUNCTION public.cohort_programme_lineage_has_dev_readable_version(UUID) IS
+  'SECURITY DEFINER lineage catalogue read gate: TRUE only when a related version is published, cohort_global, and approved_for_global. Avoids programme_lineages → programme_versions RLS recursion. Global drafts are not catalogue-readable.';
+
+-- ---------------------------------------------------------------------------
+-- 4c. Catalogue Data API SELECT contract (authenticated browse only)
+-- ---------------------------------------------------------------------------
+-- programme_versions: direct catalogue table for listCatalogueVersions.
+-- programme_lineages: required by PostgREST embed programme_lineages!inner(code).
+-- RLS remains the row-visibility boundary (published + cohort_global + approved).
+-- No anonymous catalogue product path. No write privileges granted here.
+
+REVOKE SELECT ON TABLE public.programme_versions FROM PUBLIC, anon;
+REVOKE SELECT ON TABLE public.programme_lineages FROM PUBLIC, anon;
+
+GRANT SELECT ON TABLE public.programme_versions TO authenticated;
+GRANT SELECT ON TABLE public.programme_lineages TO authenticated;
+
+-- ---------------------------------------------------------------------------
 -- 5. Child-table RLS (no athlete read of hidden package data)
 -- ---------------------------------------------------------------------------
 

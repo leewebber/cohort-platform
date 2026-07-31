@@ -79,12 +79,29 @@ Expected: process exits **non-zero** if any assertion fails (`sprint12_fail_if_a
 
 Gate G negative control uses a **fresh unique lineage**, proves a real import+replay concurrent pair, then deliberately inverts one expected outcome and exits non-zero for that reason (not stale G1 state).
 
+## Catalogue permission contract (Sprint 1.2)
+
+Installed by `20260731120000_authored_plan_package_import.sql`:
+
+- `authenticated`: `SELECT` on `programme_versions` and `programme_lineages` (Sprint 1.2)
+- `anon` / `PUBLIC`: no catalogue `SELECT`
+- RLS: published + `cohort_global` + `approved_for_global` (versions and lineage helper)
+- Sprint 1.2 does not grant catalogue writes; pre-existing coach-authoring table
+  privileges (if any) remain RLS-gated and are not blanket-revoked here
+- Import / publish / approve RPCs: `service_role` `EXECUTE` only
+- Package-internal tables: no direct client grants
+
+Harness checks:
+
+- Gate I privilege + RLS assertions under the permanent grant
+- Anon Data API catalogue negative (401/403, no rows)
+- Authenticated Data API catalogue positive (embed `programme_lineages!inner(code)`)
+
 ## Known limitations / product gates (not fixed here)
 
-1. **Catalogue SELECT grants** remain a separate deployment/integration gate (Gate I). This harness does **not** add production grants or treat local privilege defaults as hosted parity.
-2. RLS policy semantics are tested only after **temporary disposable GRANT SELECT**, then revoked.
-3. Concurrency overlap uses `pg_sleep` plus the production import advisory lock (documented in Gate G output).
-4. Role probes use `set_config('role', …)` (direct PostgreSQL role simulation), not full athlete JWT HTTP flows, except a PostgREST privilege-denial check.
+1. Concurrency overlap uses `pg_sleep` plus the production import advisory lock (documented in Gate G output).
+2. Most role probes use `set_config('role', …)` (direct PostgreSQL role simulation); catalogue HTTP uses a disposable-stack signed JWT.
+3. Optional column-selection hardening for `select('*')` is out of scope for Sprint 1.2.
 
 ## Cleanup
 

@@ -66,6 +66,60 @@ void main() {
       );
     });
 
+    test('grants authenticated catalogue SELECT on versions and lineages only', () {
+      expect(
+        sql,
+        contains(
+          'REVOKE SELECT ON TABLE public.programme_versions FROM PUBLIC, anon',
+        ),
+      );
+      expect(
+        sql,
+        contains(
+          'REVOKE SELECT ON TABLE public.programme_lineages FROM PUBLIC, anon',
+        ),
+      );
+      expect(
+        sql,
+        contains(
+          'GRANT SELECT ON TABLE public.programme_versions TO authenticated',
+        ),
+      );
+      expect(
+        sql,
+        contains(
+          'GRANT SELECT ON TABLE public.programme_lineages TO authenticated',
+        ),
+      );
+      expect(
+        sql,
+        contains('cohort_programme_lineage_has_dev_readable_version'),
+      );
+      expect(
+        sql,
+        contains("AND v.approved_for_global = TRUE"),
+      );
+      // Must not grant catalogue browse writes or package-internal table SELECT.
+      expect(sql, isNot(contains('GRANT INSERT ON TABLE public.programme_versions')));
+      expect(sql, isNot(contains('GRANT UPDATE ON TABLE public.programme_versions')));
+      expect(sql, isNot(contains('GRANT DELETE ON TABLE public.programme_versions')));
+      expect(sql, isNot(contains('GRANT ALL ON TABLE public.programme_versions')));
+      expect(sql, isNot(contains('GRANT INSERT ON TABLE public.programme_lineages')));
+      expect(sql, isNot(contains('GRANT UPDATE ON TABLE public.programme_lineages')));
+      expect(sql, isNot(contains('GRANT DELETE ON TABLE public.programme_lineages')));
+      expect(sql, isNot(contains('GRANT ALL ON TABLE public.programme_lineages')));
+      expect(sql, isNot(contains('ALTER DEFAULT PRIVILEGES')));
+      expect(sql, isNot(contains('GRANT SELECT ON ALL TABLES')));
+      expect(
+        sql,
+        isNot(
+          contains(
+            'GRANT SELECT ON TABLE public.programme_version_adaptation_permissions',
+          ),
+        ),
+      );
+    });
+
     test('import function is service_role only with fixed search_path', () {
       expect(
         sql,
