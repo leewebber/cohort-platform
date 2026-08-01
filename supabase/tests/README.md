@@ -79,6 +79,16 @@ Expected: process exits **non-zero** if any assertion fails (`sprint12_fail_if_a
 
 Gate G negative control uses a **fresh unique lineage**, proves a real import+replay concurrent pair, then deliberately inverts one expected outcome and exits non-zero for that reason (not stale G1 state).
 
+## Athlete catalogue enrolment (Sprint 1.3)
+
+Installed by `20260801120000_athlete_catalogue_enrolment.sql`:
+
+- Extends `programme_assignments` with `enrolment_source` (not a payment record)
+- RPC `enrol_athlete_in_catalogue_programme_version` for authenticated athletes
+- Temporary non-commercial authorisation seam for Self-Test / closed-beta
+- Exact `programme_version_id` pin; draft/unapproved/private denied
+- Gate J in `sql/gate_j_catalogue_enrolment.sql` (run after Gates C–I)
+
 ## Catalogue permission contract (Sprint 1.2)
 
 Installed by `20260731120000_authored_plan_package_import.sql`:
