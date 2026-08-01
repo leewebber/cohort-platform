@@ -30,6 +30,7 @@ class HomeScreen extends StatefulWidget {
     this.refreshController,
     this.assignmentStore,
     this.prepareService,
+    this.athleteIdOverride,
   });
 
   final AuthController? authController;
@@ -46,6 +47,9 @@ class HomeScreen extends StatefulWidget {
   /// Optional prepare service for programme-backed today card.
   final AthleteProgrammeSessionPrepareService? prepareService;
 
+  /// Optional athlete id (staging/tests). Defaults to session profile.
+  final String? athleteIdOverride;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -56,10 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
       widget.refreshController ?? HomeTodaySessionRefreshController();
   bool? _hasMaterialisedProgramme;
 
-  String get _athleteId =>
-      AthleteProfileSession.profile?.athleteId ??
-      CurrentUserSession.maybeInstance?.athleteId ??
-      'athlete.local';
+  String get _athleteId {
+    final override = widget.athleteIdOverride?.trim();
+    if (override != null && override.isNotEmpty) return override;
+    return AthleteProfileSession.profile?.athleteId ??
+        CurrentUserSession.maybeInstance?.athleteId ??
+        'athlete.local';
+  }
 
   String get _displayName =>
       AthleteProfileSession.profile?.displayName ??
@@ -111,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final hasActivePlan = AthleteProfileSession.hasActivePlan;
-    final hasMaterialisedProgramme = _hasMaterialisedProgramme ?? false;
+    final materialisedGate = _hasMaterialisedProgramme;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
@@ -138,7 +145,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: _openAdapt,
                   child: const _AdaptationPromptRow(),
                 ),
-              ] else if (hasMaterialisedProgramme) ...[
+              ] else if (materialisedGate == null) ...[
+                const Text('TODAY', style: CohortTextStyles.sectionLabel),
+                const SizedBox(height: CohortSpacing.md),
+                const Text(
+                  'Checking programme…',
+                  style: CohortTextStyles.muted,
+                ),
+              ] else if (materialisedGate) ...[
                 AthleteProgrammeTodaySection(
                   athleteId: _athleteId,
                   refreshController: _refreshController,

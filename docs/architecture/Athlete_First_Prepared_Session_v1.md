@@ -164,7 +164,8 @@ Local automated journey (`athlete_programme_first_session_integration_test.dart`
 12. Cursor unchanged  
 13. No Coach Brain / adaptation apply / commerce / latest-version substitution  
 
-Staging-backed Self-Test 1 is a separate authorised task after local 1.4B gates pass.
+Staging-backed Self-Test 1 evidence:
+see `docs/architecture/Sprint_1_4B_Staging_Self_Test_1.md`.
 
 ---
 

@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/core/persistence/session_execution_plan_codec.dart';
+import 'package:cohort_platform/data/repositories/programme_assignment_store.dart';
 import 'package:cohort_platform/features/home/controllers/home_today_session_refresh_controller.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
@@ -26,6 +29,35 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../support/in_memory_programme_stores.dart';
 import '../support/programme_schedule_test_fixtures.dart';
+
+class _PendingAssignmentStore implements ProgrammeAssignmentStore {
+  _PendingAssignmentStore(this._future);
+
+  final Future<ProgrammeAssignment?> _future;
+
+  @override
+  Future<ProgrammeAssignment?> getActiveAssignment(String athleteId) => _future;
+
+  @override
+  Future<ProgrammeAssignment?> getById(String assignmentId) async => null;
+
+  @override
+  Future<ProgrammeAssignment> insert(ProgrammeAssignment assignment) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ProgrammeAssignment> update(ProgrammeAssignment assignment) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ProgrammeAssignment>> listForAthlete(String athleteId) async =>
+      const [];
+
+  @override
+  Future<int> countAssignmentsForVersion(String programmeVersionId) async => 0;
+}
 
 const _hashExact =
     'abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789';
@@ -572,6 +604,30 @@ void main() {
       expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
       expect(find.textContaining('subscription'), findsNothing);
       expect(find.textContaining('Coach Brain'), findsNothing);
+    });
+
+    testWidgets('home shows checking programme while gate loads', (
+      tester,
+    ) async {
+      final pending = Completer<ProgrammeAssignment?>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: HomeScreen(
+            embeddedInShell: true,
+            assignmentStore: _PendingAssignmentStore(pending.future),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('Checking programme…'), findsOneWidget);
+      expect(find.text('Choose a programme'), findsNothing);
+      expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
+
+      pending.complete(null);
+      await tester.pumpAndSettle();
+      expect(find.text('Choose a programme'), findsOneWidget);
+      expect(find.text('Checking programme…'), findsNothing);
     });
 
     testWidgets('materialised first session appears when prepared', (
