@@ -70,6 +70,12 @@ void main() {
           reason: 'Found forbidden label: $label',
         );
       }
+
+      expect(
+        find.widgetWithText(TextButton, 'Programme'),
+        findsOneWidget,
+        reason: 'Home must expose catalogue enrolment entry',
+      );
     });
 
     testWidgets('coach profile still does not put coach tools on athlete Home', (

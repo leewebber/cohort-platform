@@ -186,8 +186,8 @@ void main() {
         ),
       );
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
-      expect(find.text('Choose a Plan'), findsOneWidget);
-      expect(find.text('BROWSE PLANS'), findsOneWidget);
+      expect(find.text('Choose a programme'), findsOneWidget);
+      expect(find.text('VIEW PROGRAMMES'), findsOneWidget);
       expect(find.text('Choose Your First Plan'), findsNothing);
       expect(find.textContaining('No plan assigned'), findsNothing);
       expect(find.textContaining('Start with a plan'), findsNothing);

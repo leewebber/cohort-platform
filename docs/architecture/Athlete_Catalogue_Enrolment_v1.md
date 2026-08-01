@@ -138,6 +138,19 @@ details.
 
 ---
 
+## Athlete entry points
+
+1. Home → muted **Programme** link (always)
+2. Home empty state → **VIEW PROGRAMMES** (when no active plan)
+3. Programme screen → muted **View programmes**
+4. Selection → confirm → `enrol_athlete_in_catalogue_programme_version`
+5. Today refresh via `HomeTodaySessionRefreshController` when wired
+
+Legacy Plan Library remains on the shell **Plans** tab; it is not the
+Sprint 1.3 catalogue enrolment path.
+
+---
+
 ## UI language
 
 Use: View programme, Choose programme, Enrol, Enrolled, Your programmes,

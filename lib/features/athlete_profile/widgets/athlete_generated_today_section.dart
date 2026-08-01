@@ -98,15 +98,15 @@ class ChoosePlanEntryCard extends StatelessWidget {
         children: [
           Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
           const SizedBox(height: CohortSpacing.lg),
-          Text('Choose a Plan', style: CohortTextStyles.h2),
+          Text('Choose a programme', style: CohortTextStyles.h2),
           const SizedBox(height: CohortSpacing.sm),
           Text(
-            'Cohort will personalise each session around you.',
+            'Enrol in a Cohort catalogue programme to start training.',
             style: CohortTextStyles.body,
           ),
           const SizedBox(height: CohortSpacing.xl),
           CohortButton(
-            label: 'BROWSE PLANS',
+            label: 'VIEW PROGRAMMES',
             showTrailingArrow: true,
             onPressed: onChoosePlan,
           ),

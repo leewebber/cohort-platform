@@ -252,7 +252,7 @@ void main() {
   });
 
   group('Home active plan', () {
-    testWidgets('empty state invites Browse Plans', (tester) async {
+    testWidgets('empty state invites catalogue programmes', (tester) async {
       CurrentUserSession.bind(
         const UserProfile(
           id: 'athlete-1',
@@ -264,8 +264,9 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
       await tester.pumpAndSettle();
 
-      expect(find.text('Choose a Plan'), findsOneWidget);
-      expect(find.text('BROWSE PLANS'), findsOneWidget);
+      expect(find.text('Choose a programme'), findsOneWidget);
+      expect(find.text('VIEW PROGRAMMES'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Programme'), findsOneWidget);
       expect(find.text("EXECUTE TODAY'S TRAINING"), findsNothing);
     });
 

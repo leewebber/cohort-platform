@@ -10,6 +10,8 @@ import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../daily_briefing/widgets/daily_briefing_section.dart';
+import '../programme/screens/athlete_programme_screen.dart';
+import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/home_adapt_flow.dart';
 
 /// Athlete Home — entirely focused on today.
@@ -20,7 +22,7 @@ class HomeScreen extends StatefulWidget {
     super.key,
     this.authController,
     this.embeddedInShell = false,
-    this.onBrowsePlans,
+    this.refreshController,
   });
 
   final AuthController? authController;
@@ -28,8 +30,8 @@ class HomeScreen extends StatefulWidget {
   /// When true, bottom nav is owned by the shell (do not render here).
   final bool embeddedInShell;
 
-  /// Shell callback to switch to Plans tab.
-  final VoidCallback? onBrowsePlans;
+  /// Optional today refresh after catalogue enrolment.
+  final HomeTodaySessionRefreshController? refreshController;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -37,6 +39,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _adaptFlow = HomeAdaptFlow();
+  late final HomeTodaySessionRefreshController _refreshController =
+      widget.refreshController ?? HomeTodaySessionRefreshController();
 
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
@@ -48,13 +52,23 @@ class _HomeScreenState extends State<HomeScreen> {
       CurrentUserSession.maybeInstance?.profile.displayName ??
       'Athlete';
 
-  Future<void> _openPlanLibrary() async {
-    if (widget.onBrowsePlans != null) {
-      widget.onBrowsePlans!();
-      return;
-    }
-    // Fallback when Home is not embedded (tests / deep entry).
+  /// Sprint 1.3 catalogue enrolment entry (exact-version programme access).
+  Future<void> _openProgrammeCatalogue() async {
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => AthleteProgrammeScreen(
+          athleteId: _athleteId,
+          refreshController: _refreshController,
+        ),
+      ),
+    );
     if (!mounted) return;
+    if (changed == true) {
+      _refreshController.requestRefresh(
+        source: 'athlete_catalogue_enrolment',
+      );
+      setState(() {});
+    }
   }
 
   Future<void> _openAdapt() =>
@@ -92,8 +106,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const _AdaptationPromptRow(),
                 ),
               ] else
-                ChoosePlanEntryCard(onChoosePlan: _openPlanLibrary),
-              const SizedBox(height: CohortSpacing.xxl),
+                ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),
+              const SizedBox(height: CohortSpacing.lg),
+              Center(
+                child: TextButton(
+                  onPressed: _openProgrammeCatalogue,
+                  style: TextButton.styleFrom(
+                    foregroundColor: CohortColors.textMuted,
+                    textStyle: CohortTextStyles.muted,
+                  ),
+                  child: const Text('Programme'),
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.xl),
               const Center(
                 child: Text(
                   'Build physical capability.',
