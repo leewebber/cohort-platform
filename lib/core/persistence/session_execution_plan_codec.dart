@@ -62,8 +62,8 @@ class SessionExecutionPlanCodec {
     return WorkoutSessionBrief(
       sessionName: map['sessionName']?.toString() ?? "Today's Training",
       objective: map['objective']?.toString(),
-      estimatedDurationMinutes:
-          (map['estimatedDurationMinutes'] as num?)?.toInt(),
+      estimatedDurationMinutes: (map['estimatedDurationMinutes'] as num?)
+          ?.toInt(),
       primaryFocus: map['primaryFocus']?.toString(),
       trainingIntent: map['trainingIntent']?.toString(),
       sessionDifficulty: map['sessionDifficulty']?.toString(),
@@ -157,6 +157,11 @@ class GeneratedSessionRecord {
     this.planVersion,
     this.week,
     this.day,
+    this.programmeVersionId,
+    this.packageContentHash,
+    this.dayKey,
+    this.slotOrder,
+    this.protocolId,
     this.acceptedAdaptation,
   });
 
@@ -175,6 +180,11 @@ class GeneratedSessionRecord {
   final String? planVersion;
   final int? week;
   final int? day;
+  final String? programmeVersionId;
+  final String? packageContentHash;
+  final String? dayKey;
+  final int? slotOrder;
+  final String? protocolId;
   final Map<String, dynamic>? acceptedAdaptation;
 
   /// Calendar-day match in local time.
@@ -200,6 +210,11 @@ class GeneratedSessionRecord {
       'planVersion': planVersion,
       'week': week,
       'day': day,
+      'programmeVersionId': programmeVersionId,
+      'packageContentHash': packageContentHash,
+      'dayKey': dayKey,
+      'slotOrder': slotOrder,
+      'protocolId': protocolId,
       'acceptedAdaptation': acceptedAdaptation,
       'plan': codec.encodePlan(plan),
       'brief': codec.encodeBrief(brief),
@@ -242,6 +257,11 @@ class GeneratedSessionRecord {
       planVersion: optionalId('planVersion'),
       week: (map['week'] as num?)?.toInt(),
       day: (map['day'] as num?)?.toInt(),
+      programmeVersionId: optionalId('programmeVersionId'),
+      packageContentHash: optionalId('packageContentHash'),
+      dayKey: optionalId('dayKey'),
+      slotOrder: (map['slotOrder'] as num?)?.toInt(),
+      protocolId: optionalId('protocolId'),
       acceptedAdaptation: adaptationRaw is Map
           ? Map<String, dynamic>.from(adaptationRaw)
           : null,

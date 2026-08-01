@@ -7,8 +7,10 @@ import '../../../models/programme_version.dart';
 import '../models/athlete_catalogue_enrolment.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../models/programme_catalog_entry.dart';
+import '../models/athlete_programme_prepared_session.dart';
 import '../services/athlete_catalogue_enrolment_service.dart';
 import '../services/athlete_plan_materialisation_service.dart';
+import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/athlete_programme_switch_catalog_service.dart';
 
 class AthleteProgrammeScreenController extends ChangeNotifier {
@@ -17,25 +19,31 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeVersionStore? versionStore,
     AthletePlanMaterialisationService? materialisationService,
+    AthleteProgrammeSessionPrepareService? prepareService,
   }) : _athleteId = athleteId.trim(),
        _assignmentStore = assignmentStore,
        _versionStore = versionStore,
-       _materialisationService = materialisationService;
+       _materialisationService = materialisationService,
+       _prepareService = prepareService;
 
   final String _athleteId;
   final ProgrammeAssignmentStore? _assignmentStore;
   final ProgrammeVersionStore? _versionStore;
   final AthletePlanMaterialisationService? _materialisationService;
+  final AthleteProgrammeSessionPrepareService? _prepareService;
 
   bool _loading = true;
   bool _starting = false;
+  bool _preparing = false;
   ProgrammeAssignment? _assignment;
   ProgrammeVersion? _version;
   String? _errorMessage;
   AthletePlanMaterialisationResult? _lastMaterialisationResult;
+  AthleteProgrammePrepareResult? _lastPrepareResult;
 
   bool get isLoading => _loading;
   bool get isStarting => _starting;
+  bool get isPreparing => _preparing;
   ProgrammeAssignment? get activeAssignment => _assignment;
   ProgrammeVersion? get activeVersion => _version;
   String? get errorMessage => _errorMessage;
@@ -44,6 +52,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
   bool get isMaterialised => _assignment?.isMaterialised ?? false;
   AthletePlanMaterialisationResult? get lastMaterialisationResult =>
       _lastMaterialisationResult;
+  AthleteProgrammePrepareResult? get lastPrepareResult => _lastPrepareResult;
 
   Future<void> load() async {
     _loading = true;
@@ -77,7 +86,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Explicit Start Programme — materialises enrolment only (no prepare/Home).
+  /// Explicit Start Programme — materialises, then prepares the current session.
   Future<AthletePlanMaterialisationResult?> startProgramme({
     String? timezone,
   }) async {
@@ -106,6 +115,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
           message: 'This programme is already started.',
         );
         _lastMaterialisationResult = already;
+        await prepareCurrentSession();
         notifyListeners();
         return already;
       }
@@ -125,6 +135,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
 
     if (result.isSuccess) {
       await load();
+      await prepareCurrentSession();
     } else {
       _errorMessage = result.message;
       _starting = false;
@@ -132,6 +143,26 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     }
 
     _starting = false;
+    notifyListeners();
+    return result;
+  }
+
+  /// Idempotent prepare/restore for the materialised assignment cursor.
+  Future<AthleteProgrammePrepareResult?> prepareCurrentSession() async {
+    final prepare = _prepareService;
+    final assignment = _assignment;
+    if (prepare == null || assignment == null || !assignment.isMaterialised) {
+      return null;
+    }
+    if (_preparing) return _lastPrepareResult;
+    _preparing = true;
+    notifyListeners();
+    final result = await prepare.prepareForAssignment(assignment);
+    _lastPrepareResult = result;
+    if (result.isRecoverableFailure) {
+      _errorMessage = result.message;
+    }
+    _preparing = false;
     notifyListeners();
     return result;
   }

@@ -27,12 +27,23 @@ class TodaySessionServiceImpl implements TodaySessionService {
   @override
   Future<ResolvedTodaySession> resolveForAthlete(String athleteId) async {
     // programme_assignments is the sole cursor source of truth.
+    // Sprint 1.4B: catalogue enrolled-only (enrolment_source set, not
+    // materialised) is not executable. Coach/dev assignments without an
+    // enrolment_source remain resolvable until they use Start Programme.
     final assignment = await _assignmentStore.getActiveAssignment(athleteId);
     if (assignment == null) {
       return ResolvedTodaySession.noActiveProgramme();
     }
+    if (_isCatalogueEnrolledOnly(assignment)) {
+      return ResolvedTodaySession.noActiveProgramme();
+    }
 
     return _resolveFromAssignment(assignment);
+  }
+
+  bool _isCatalogueEnrolledOnly(ProgrammeAssignment assignment) {
+    final source = assignment.enrolmentSource?.trim() ?? '';
+    return source.isNotEmpty && !assignment.isMaterialised;
   }
 
   Future<ResolvedTodaySession> _resolveFromAssignment(
