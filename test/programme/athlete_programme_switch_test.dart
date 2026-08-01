@@ -4,6 +4,9 @@ import 'package:cohort_platform/features/programme/models/athlete_programme_swit
 import 'package:cohort_platform/features/programme/models/programme_assignment_operation_result.dart';
 import 'package:cohort_platform/features/programme/models/programme_catalog_entry.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
+import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
+import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
+import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_store.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_switch_catalog_service.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_switch_coordinator.dart';
 import 'package:cohort_platform/features/programme/models/resolved_today_session.dart';
@@ -40,6 +43,23 @@ class _FakeCatalogService implements ProgrammeCatalogService {
     required ProgrammeCatalogueQuery query,
     ProgrammeLifecycleStatus? lifecycleStatus,
   }) async => entries;
+}
+
+class _FakeEnrolmentStore implements AthleteCatalogueEnrolmentStore {
+  @override
+  Future<AthleteCatalogueEnrolmentResult> enrol({
+    required String programmeVersionId,
+    String? timezone,
+    bool replaceActive = false,
+  }) async {
+    return AthleteCatalogueEnrolmentResult(
+      status: AthleteCatalogueEnrolmentStatus.enrolled,
+      enrolmentId: 'enrol-1',
+      programmeVersionId: programmeVersionId,
+      athleteId: 'lee',
+      enrolmentSource: EnrolmentSource.nonCommercialTest,
+    );
+  }
 }
 
 class _FakeAssignmentService implements ProgrammeAssignmentService {
@@ -126,6 +146,7 @@ ProgrammeCatalogEntry _entry({
   ProgrammeLifecycleStatus status = ProgrammeLifecycleStatus.published,
   DateTime? archivedAt,
   bool blocking = false,
+  bool approvedForGlobal = true,
   String name = 'Programme',
 }) {
   return ProgrammeCatalogEntry(
@@ -135,12 +156,13 @@ ProgrammeCatalogEntry _entry({
     name: name,
     lifecycleStatus: status,
     libraryScope: ProgrammeLibraryScope.cohortGlobal,
-    ownerType: ProgrammeOwnerType.coach,
+    ownerType: ProgrammeOwnerType.global,
     primaryGoal: 'Build capacity',
     durationWeeks: 8,
     sessionsPerWeek: 4,
     equipmentRequirements: 'Barbell, rack',
     archivedAt: archivedAt,
+    approvedForGlobal: approvedForGlobal,
     hasBlockingValidationErrors: blocking,
   );
 }
@@ -350,7 +372,7 @@ void main() {
   });
 
   group('AthleteProgrammeSelectionController', () {
-    test('load excludes current programme from switch target list', () async {
+    test('load marks current enrolled programme', () async {
       final catalog = AthleteProgrammeSwitchCatalogService(
         catalogService: _FakeCatalogService([
           _entry(id: 'version-1', name: 'Current'),
@@ -360,8 +382,8 @@ void main() {
       final controller = AthleteProgrammeSelectionController(
         athleteId: athleteId,
         catalogService: catalog,
-        switchCoordinator: AthleteProgrammeSwitchCoordinator(
-          assignmentService: _FakeAssignmentService(),
+        enrolmentService: AthleteCatalogueEnrolmentService(
+          enrolmentStore: _FakeEnrolmentStore(),
         ),
         assignmentStore: InMemoryProgrammeAssignmentStore(
           InMemoryProgrammeTables()
@@ -381,44 +403,59 @@ void main() {
         isTrue,
       );
     });
+
+    test(
+      'catalogue filter requires approved cohort_global programmes',
+      () async {
+        final catalog = AthleteProgrammeSwitchCatalogService(
+          catalogService: _FakeCatalogService([
+            _entry(id: 'ok', approvedForGlobal: true),
+            _entry(id: 'unapproved', approvedForGlobal: false),
+          ]),
+        );
+
+        final list = await catalog.listPublishedAssignableProgrammes();
+        expect(list.map((e) => e.versionId), ['ok']);
+      },
+    );
   });
 
   group('AthleteProgrammeScreen widget', () {
-    testWidgets(
-      'Start New Programme visible when athlete has active programme',
-      (tester) async {
-        final tables = InMemoryProgrammeTables()
-          ..assignments.add(ProgrammeScheduleTestFixtures.assignment())
-          ..versions.add(
-            ProgrammeScheduleTestFixtures.version().copyWith(
-              lifecycleStatus: ProgrammeLifecycleStatus.published,
-              name: 'Foundation',
-            ),
-          );
-
-        final controller = AthleteProgrammeScreenController(
-          athleteId: athleteId,
-          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-          versionStore: InMemoryProgrammeVersionStore(tables),
-        );
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: AthleteProgrammeScreen(
-              athleteId: athleteId,
-              controller: controller,
-            ),
+    testWidgets('View programmes visible when athlete has active enrolment', (
+      tester,
+    ) async {
+      final tables = InMemoryProgrammeTables()
+        ..assignments.add(ProgrammeScheduleTestFixtures.assignment())
+        ..versions.add(
+          ProgrammeScheduleTestFixtures.version().copyWith(
+            lifecycleStatus: ProgrammeLifecycleStatus.published,
+            name: 'Foundation',
           ),
         );
 
-        await tester.pumpAndSettle();
+      final controller = AthleteProgrammeScreenController(
+        athleteId: athleteId,
+        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+        versionStore: InMemoryProgrammeVersionStore(tables),
+      );
 
-        expect(find.text('Start New Programme'), findsOneWidget);
-        expect(find.text('Foundation'), findsOneWidget);
-      },
-    );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteProgrammeScreen(
+            athleteId: athleteId,
+            controller: controller,
+          ),
+        ),
+      );
 
-    testWidgets('Start New Programme available without active programme', (
+      await tester.pumpAndSettle();
+
+      expect(find.text('View programmes'), findsOneWidget);
+      expect(find.text('Foundation'), findsOneWidget);
+      expect(find.textContaining('Enrolled ·'), findsOneWidget);
+    });
+
+    testWidgets('View programmes available without active enrolment', (
       tester,
     ) async {
       final controller = AthleteProgrammeScreenController(
@@ -440,7 +477,8 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Start New Programme'), findsOneWidget);
+      expect(find.text('View programmes'), findsOneWidget);
+      expect(find.textContaining('not enrolled'), findsOneWidget);
     });
   });
 
