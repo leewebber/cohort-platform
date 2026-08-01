@@ -229,9 +229,9 @@ BEGIN
 END;
 $$;
 
-SELECT gate, assertion, expected, actual, passed, notes
+SELECT gate, case_id, expected, actual, pass, detail
 FROM sprint12_gate_results
 WHERE gate = 'J'
-ORDER BY assertion;
+ORDER BY case_id;
 
 SELECT sprint12_fail_if_any_failed();

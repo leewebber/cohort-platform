@@ -164,15 +164,17 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_baseline_fidelity.sql
 
-echo "=== Load helpers + Gates C–I + Gate J enrolment ==="
+echo "=== Load helpers + Gates C–I + Gate J enrolment + Gate K materialisation ==="
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
 docker cp "${TESTS_DIR}/sql/gates_c_to_i.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gates.sql"
 docker cp "${TESTS_DIR}/sql/gate_j_catalogue_enrolment.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_j.sql"
+docker cp "${TESTS_DIR}/sql/gate_k_plan_materialisation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_k.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
   -f /tmp/sprint12_gates.sql \
-  -f /tmp/sprint12_gate_j.sql
+  -f /tmp/sprint12_gate_j.sql \
+  -f /tmp/sprint12_gate_k.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -184,11 +186,13 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
 docker cp "${TESTS_DIR}/sql/gates_c_to_i.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gates.sql"
 docker cp "${TESTS_DIR}/sql/gate_j_catalogue_enrolment.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_j.sql"
+docker cp "${TESTS_DIR}/sql/gate_k_plan_materialisation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_k.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
   -f /tmp/sprint12_gates.sql \
-  -f /tmp/sprint12_gate_j.sql
+  -f /tmp/sprint12_gate_j.sql \
+  -f /tmp/sprint12_gate_k.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e
