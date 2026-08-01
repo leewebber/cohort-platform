@@ -93,7 +93,10 @@ void main() {
       final planB = PlanCatalog.byId('plan.strength_emphasis')!;
 
       final first = assignments.assign(athleteId: 'athlete.lee', plan: planA);
-      expect(assignments.readActiveAssignment()?.assignmentId, first.assignmentId);
+      expect(
+        assignments.readActiveAssignment()?.assignmentId,
+        first.assignmentId,
+      );
       expect(assignments.readActivePlan()?.planId, planA.planId);
       expect(assignments.hasActivePlan, isTrue);
 
@@ -104,7 +107,10 @@ void main() {
       expect(second.planId, planB.planId);
       expect(assignments.readActivePlan()?.planId, planB.planId);
       expect(assignments.history(), hasLength(1));
-      expect(assignments.history().first.status, PlanAssignmentStatus.cancelled);
+      expect(
+        assignments.history().first.status,
+        PlanAssignmentStatus.cancelled,
+      );
 
       assignments.clearActivePlan();
       expect(assignments.readActiveAssignment(), isNull);
@@ -127,7 +133,9 @@ void main() {
       expect(result.every((p) => p.primaryGoal.id == 'fat_loss'), isTrue);
       expect(result.every((p) => p.recommendedDaysPerWeek == 3), isTrue);
       expect(
-        result.every((p) => p.experienceLevel == AthleteExperienceLevel.beginner),
+        result.every(
+          (p) => p.experienceLevel == AthleteExperienceLevel.beginner,
+        ),
         isTrue,
       );
     });
@@ -154,7 +162,9 @@ void main() {
 
       expect(
         input.athletePreferences?.tags,
-        contains('${AthletePlanningInputBuilder.planIdTagPrefix}${plan.planId}'),
+        contains(
+          '${AthletePlanningInputBuilder.planIdTagPrefix}${plan.planId}',
+        ),
       );
       expect(
         input.athletePreferences?.tags,
@@ -238,9 +248,7 @@ void main() {
       await tester.binding.setSurfaceSize(const Size(400, 1200));
       addTearDown(() => tester.binding.setSurfaceSize(null));
 
-      await tester.pumpWidget(
-        const MaterialApp(home: PlanLibraryScreen()),
-      );
+      await tester.pumpWidget(const MaterialApp(home: PlanLibraryScreen()));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('plan_filter_beginner')));
@@ -359,15 +367,16 @@ void main() {
       );
 
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: AthleteGeneratedTodaySection()),
-        ),
+        const MaterialApp(home: Scaffold(body: AthleteGeneratedTodaySection())),
       );
       await tester.pump();
 
       expect(find.text('ACTIVE PLAN'), findsOneWidget);
       expect(find.textContaining('Fat Loss Foundation'), findsWidgets);
-      expect(find.textContaining('Foundation · Week 2 · Day 3'), findsOneWidget);
+      expect(
+        find.textContaining('Foundation · Week 2 · Day 3'),
+        findsOneWidget,
+      );
       expect(find.text('EXECUTE TODAY\'S TRAINING'), findsOneWidget);
     });
   });
@@ -387,7 +396,9 @@ class _CountingBrain extends CoachBrainService {
          blueprintGenerator: DeterministicSessionBlueprintGenerator(
            knowledge: knowledge,
          ),
-         exercisePolicy: DeterministicExercisePolicyEngine(knowledge: knowledge),
+         exercisePolicy: DeterministicExercisePolicyEngine(
+           knowledge: knowledge,
+         ),
          prescriptionEngine: DeterministicPrescriptionEngine(
            knowledge: knowledge,
          ),

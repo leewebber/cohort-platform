@@ -166,10 +166,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             authController: widget.authController,
             embeddedInShell: true,
           ),
-          PlanLibraryScreen(
-            athleteId: _athleteId,
-            embeddedInShell: true,
-          ),
+          PlanLibraryScreen(athleteId: _athleteId, embeddedInShell: true),
           ProgressScreen(
             embeddedInShell: true,
             onChoosePlan: () => setState(() => _index = 1),

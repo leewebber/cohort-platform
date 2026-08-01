@@ -77,17 +77,22 @@ void main() {
       );
       expect(FounderAccessPolicy.isAuthorisedFounder(email: 'a@b.com'), isTrue);
       FounderAccessPolicy.reset();
-      expect(FounderAccessPolicy.isAuthorisedFounder(email: 'a@b.com'), isFalse);
+      expect(
+        FounderAccessPolicy.isAuthorisedFounder(email: 'a@b.com'),
+        isFalse,
+      );
     });
   });
 
   group('Athlete navigation', () {
     test('athlete shell exposes exactly four destinations', () {
       expect(AthleteAppShell.destinations.length, 4);
-      expect(
-        AthleteAppShell.destinations.map((d) => d.label).toList(),
-        ['Home', 'Plans', 'Progress', 'Profile'],
-      );
+      expect(AthleteAppShell.destinations.map((d) => d.label).toList(), [
+        'Home',
+        'Plans',
+        'Progress',
+        'Profile',
+      ]);
       expect(
         AthleteAppShell.destinations.map((d) => d.label),
         isNot(contains('Sessions')),
@@ -99,9 +104,7 @@ void main() {
     });
 
     testWidgets('athlete shell bottom bar has four tabs only', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: AthleteAppShell()),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
       await tester.pumpAndSettle();
 
       expect(find.text('Home'), findsWidgets);
@@ -136,9 +139,7 @@ void main() {
 
   group('Founder workspace', () {
     testWidgets('founder shell shows workspace tools', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(home: FounderWorkspaceShell()),
-      );
+      await tester.pumpWidget(const MaterialApp(home: FounderWorkspaceShell()));
       await tester.pump();
 
       expect(find.text('FOUNDER WORKSPACE'), findsOneWidget);
@@ -151,9 +152,7 @@ void main() {
   group('Home athlete surface', () {
     testWidgets('home has no history or knowledge cards', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: HomeScreen(embeddedInShell: true),
-        ),
+        const MaterialApp(home: HomeScreen(embeddedInShell: true)),
       );
       await tester.pumpAndSettle();
 
@@ -167,11 +166,7 @@ void main() {
     });
 
     testWidgets('profile exposes Training History', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: AthleteProfileScreen(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: AthleteProfileScreen()));
       await tester.pumpAndSettle();
       expect(find.text('Training History'), findsOneWidget);
       expect(find.text('PROFILE'), findsOneWidget);
@@ -180,9 +175,7 @@ void main() {
     testWidgets('no-plan copy is concise and not redundant', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: ChoosePlanEntryCard(onChoosePlan: () {}),
-          ),
+          home: Scaffold(body: ChoosePlanEntryCard(onChoosePlan: () {})),
         ),
       );
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
@@ -311,9 +304,7 @@ void main() {
 
     testWidgets('no media placeholder without media', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: ExerciseMediaSlot()),
-        ),
+        const MaterialApp(home: Scaffold(body: ExerciseMediaSlot())),
       );
       expect(find.byType(SizedBox), findsOneWidget);
       expect(find.textContaining('coming soon'), findsNothing);

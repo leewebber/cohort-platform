@@ -11,10 +11,7 @@ import '../services/athlete_profile_session.dart';
 
 /// Home "Today" card driven by active PlanAssignment + Coach Brain session.
 class AthleteGeneratedTodaySection extends StatelessWidget {
-  const AthleteGeneratedTodaySection({
-    super.key,
-    this.onSessionReturned,
-  });
+  const AthleteGeneratedTodaySection({super.key, this.onSessionReturned});
 
   final ValueChanged<WorkoutPlayerResult?>? onSessionReturned;
 
@@ -34,7 +31,8 @@ class AthleteGeneratedTodaySection extends StatelessWidget {
         : '$duration min estimated';
 
     final weekLabel =
-        assignment?.weekDayLabel ?? '${profile.trainingDaysPerWeek} days / week';
+        assignment?.weekDayLabel ??
+        '${profile.trainingDaysPerWeek} days / week';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

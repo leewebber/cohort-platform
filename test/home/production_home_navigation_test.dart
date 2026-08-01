@@ -78,26 +78,27 @@ void main() {
       );
     });
 
-    testWidgets('coach profile still does not put coach tools on athlete Home', (
-      tester,
-    ) async {
-      CurrentUserSession.bind(
-        const UserProfile(
-          id: 'coach-1',
-          displayName: 'Sam',
-          isCoach: true,
-          isAthlete: false,
-        ),
-      );
-      await tester.pumpWidget(
-        const MaterialApp(home: HomeScreen(embeddedInShell: true)),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'coach profile still does not put coach tools on athlete Home',
+      (tester) async {
+        CurrentUserSession.bind(
+          const UserProfile(
+            id: 'coach-1',
+            displayName: 'Sam',
+            isCoach: true,
+            isAthlete: false,
+          ),
+        );
+        await tester.pumpWidget(
+          const MaterialApp(home: HomeScreen(embeddedInShell: true)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Coach Studio'), findsNothing);
-      expect(find.text('My Athletes'), findsNothing);
-      expect(find.text('Internal tools'), findsNothing);
-    });
+        expect(find.text('Coach Studio'), findsNothing);
+        expect(find.text('My Athletes'), findsNothing);
+        expect(find.text('Internal tools'), findsNothing);
+      },
+    );
 
     testWidgets('athlete shell exposes four destinations', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
@@ -116,9 +117,7 @@ void main() {
       FounderAccessPolicy.configure(
         const FounderAccessConfig(developmentOverride: true),
       );
-      await tester.pumpWidget(
-        const MaterialApp(home: FounderWorkspaceShell()),
-      );
+      await tester.pumpWidget(const MaterialApp(home: FounderWorkspaceShell()));
       await tester.pump();
 
       expect(find.text('FOUNDER WORKSPACE'), findsOneWidget);

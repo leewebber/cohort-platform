@@ -64,23 +64,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (!mounted) return;
     if (changed == true) {
-      _refreshController.requestRefresh(
-        source: 'athlete_catalogue_enrolment',
-      );
+      _refreshController.requestRefresh(source: 'athlete_catalogue_enrolment');
       setState(() {});
     }
   }
 
-  Future<void> _openAdapt() =>
-      _adaptFlow.open(context, athleteId: _athleteId);
+  Future<void> _openAdapt() => _adaptFlow.open(context, athleteId: _athleteId);
 
   @override
   Widget build(BuildContext context) {
     final hasActivePlan = AthleteProfileSession.hasActivePlan;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
-    final bottomPad = widget.embeddedInShell
-        ? 24.0
-        : 24.0 + 72.0 + bottomInset;
+    final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
     return Scaffold(
       backgroundColor: CohortColors.background,
