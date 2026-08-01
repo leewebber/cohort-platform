@@ -355,7 +355,10 @@ void main() {
 
       expect(store.calls, 1);
       expect(find.text('Start Programme'), findsNothing);
-      expect(find.textContaining('Programme started'), findsWidgets);
+      expect(
+        find.textContaining('Today\'s authored session appears on Home'),
+        findsOneWidget,
+      );
     });
   });
 }

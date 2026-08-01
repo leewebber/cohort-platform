@@ -37,12 +37,14 @@ void main() {
         version: ProgrammeScheduleTestFixtures.version(),
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
       );
-      tables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
+      tables.assignments.add(
+        ProgrammeScheduleTestFixtures.materialisedAssignment(),
+      );
 
       service = _buildService(tables);
       dayOneResolution = ResolvedTodaySession.fromResolution(
         const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+          assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
           tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
           outcomes: const [],
         ),
@@ -108,10 +110,11 @@ void main() {
     test(
       'getCurrentAssignment preserves progressed cursor after assign',
       () async {
-        tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-          dayKey: 'day_2',
-          slotOrder: 1,
-        );
+        tables.assignments[0] =
+            ProgrammeScheduleTestFixtures.materialisedAssignment(
+              dayKey: 'day_2',
+              slotOrder: 1,
+            );
 
         final store = InMemoryProgrammeAssignmentStore(tables);
         final current = await ProgrammeAssignmentServiceImpl(
@@ -137,7 +140,8 @@ void main() {
     test(
       'completed_partial advances day but preserves remaining required slots',
       () async {
-        tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment();
+        tables.assignments[0] =
+            ProgrammeScheduleTestFixtures.materialisedAssignment();
         final twoSlotTree = ProgrammeScheduleTestFixtures.twoSlotDayTree();
         await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
           version: ProgrammeScheduleTestFixtures.version(),
@@ -147,7 +151,7 @@ void main() {
         final partialService = _buildService(tables);
         final resolution = ResolvedTodaySession.fromResolution(
           const ProgrammeScheduleResolverImpl().resolve(
-            assignment: ProgrammeScheduleTestFixtures.assignment(),
+            assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
             tree: twoSlotTree,
             outcomes: const [],
           ),
@@ -189,7 +193,7 @@ void main() {
       final optionalService = _buildService(tables);
       final resolution = ResolvedTodaySession.fromResolution(
         const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+          assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
           tree: optionalTree,
           outcomes: const [],
         ),
@@ -215,7 +219,7 @@ void main() {
         final twoSlotService = _buildService(tables);
         final resolution = ResolvedTodaySession.fromResolution(
           const ProgrammeScheduleResolverImpl().resolve(
-            assignment: ProgrammeScheduleTestFixtures.assignment(),
+            assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
             tree: twoSlotTree,
             outcomes: const [],
           ),
@@ -233,9 +237,8 @@ void main() {
     );
 
     test('week rollover advances to next week first day', () async {
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_4',
-      );
+      tables.assignments[0] =
+          ProgrammeScheduleTestFixtures.materialisedAssignment(dayKey: 'day_4');
       final resolution = ResolvedTodaySession.fromResolution(
         const ProgrammeScheduleResolverImpl().resolve(
           assignment: tables.assignments.first,
@@ -256,9 +259,8 @@ void main() {
     });
 
     test('rest day clears current protocol projection', () async {
-      tables.assignments[0] = ProgrammeScheduleTestFixtures.assignment(
-        dayKey: 'day_2',
-      );
+      tables.assignments[0] =
+          ProgrammeScheduleTestFixtures.materialisedAssignment(dayKey: 'day_2');
       tables.athleteStates.add(
         const AthleteState(
           athleteId: 'lee',
@@ -318,7 +320,7 @@ void main() {
       final completeService = _buildService(tables);
       final resolution = ResolvedTodaySession.fromResolution(
         const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+          assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
           tree: singleDayTree,
           outcomes: const [],
         ),
@@ -434,7 +436,9 @@ void main() {
         version: ProgrammeScheduleTestFixtures.version(),
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
       );
-      failingTables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
+      failingTables.assignments.add(
+        ProgrammeScheduleTestFixtures.materialisedAssignment(),
+      );
 
       final assignmentStore = _FailingOnUpdateAssignmentStore(failingTables);
       final serviceWithFailingAssignment = _buildService(
@@ -463,7 +467,9 @@ void main() {
         version: ProgrammeScheduleTestFixtures.version(),
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
       );
-      failingTables.assignments.add(ProgrammeScheduleTestFixtures.assignment());
+      failingTables.assignments.add(
+        ProgrammeScheduleTestFixtures.materialisedAssignment(),
+      );
 
       final serviceWithFailingSync = _buildService(
         failingTables,
@@ -508,7 +514,7 @@ void main() {
     test('programme execution context round-trips from resolution', () {
       final resolution = ResolvedTodaySession.fromResolution(
         const ProgrammeScheduleResolverImpl().resolve(
-          assignment: ProgrammeScheduleTestFixtures.assignment(),
+          assignment: ProgrammeScheduleTestFixtures.materialisedAssignment(),
           tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
           outcomes: const [],
         ),

@@ -119,11 +119,10 @@ This is compatibility protection only — not a cross-device database invariant.
 
 ---
 
-## Why preparation is deferred (Sprint 1.4B)
+## Preparation (Sprint 1.4B)
 
-1.4A materialises the durable plan only.
-
-1.4B will:
+1.4A materialises the durable plan only. Sprint 1.4B connects that row to
+deterministic preparation — see `Athlete_First_Prepared_Session_v1.md`.
 
 ```text
 materialised assignment
