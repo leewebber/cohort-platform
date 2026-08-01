@@ -157,3 +157,83 @@ Use: View programme, Choose programme, Enrol, Enrolled, Your programmes,
 Programme access.
 
 Avoid: Buy, Purchase, Owned, Order, Checkout, Payment complete, Your purchase.
+
+---
+
+## Cohort Staging verification fixtures (non-production)
+
+Synthetic fixtures may remain in **Cohort Staging** for Sprint 1.3 regression
+and Self-Test 1. They are **not** customers, payments, or production content.
+They must **never** be copied to production.
+
+Namespace / run label: `s13_stage_20260801T022309Z`  
+Display label namespace: `S13-STAGING-FIXTURE`
+
+### Synthetic athletes
+
+| Label | Display name | Purpose |
+|-------|--------------|---------|
+| Athlete A | `S13 Staging Athlete A` | Catalogue visibility, enrol, idempotency, UI journey |
+| Athlete B | `S13 Staging Athlete B` | Cross-athlete isolation + independent enrol |
+
+Emails use the run namespace and `@example.invalid`. Credentials are stored
+**outside the repository** (operator secret store / local temp only). Never
+commit passwords or tokens.
+
+Stable non-sensitive profile ids (staging only):
+
+- Athlete A: `f55719cd-9721-48af-895c-c5547f8d0ec2`
+- Athlete B: `1e268186-281a-464a-b2a4-da2d2cde33ba`
+
+### Programme fixtures
+
+| State | Lineage `code` | Role |
+|-------|----------------|------|
+| Eligible | `PROG-S13-ELIG` | Published, `cohort_global`, approved — positive catalogue + enrol |
+| Draft | `PROG-S13-DRAFT` | Draft denial |
+| Unapproved | `PROG-S13-UNAPP` | Published but not approved — denial |
+| Private / wrong scope | `PROG-S13-PRIV` | `coach_private` published — denial |
+
+Stable non-sensitive version ids (staging only):
+
+- Eligible: `e9bd7e19-6eb9-4f7e-abf6-d08ac4368748`
+- Draft: `0a0c8e5b-13cf-4633-b982-cd59b0524c23`
+- Unapproved: `9ea3e34b-e2b3-4cd7-b6af-5af00498f01d`
+- Private: `ff107a53-19e2-5996-b144-a498be3d9b1e`
+
+Session prerequisite lineage/protocol used for package import:
+`PROT-S13-STAGING-1` (synthetic staging session content only).
+
+Eligible enrolment uses `enrolment_source = non_commercial_test` and does
+**not** create payments, ownership, subscriptions, or executable athlete plans.
+
+### Creation method
+
+1. Positively confirm Supabase CLI is linked to **Cohort Staging**
+   (`ACTIVE_HEALTHY`; production not linked).
+2. Create two Auth users + athlete-only `profiles` via Admin Auth API
+   (service role for fixture setup only; never in Flutter client).
+3. Author minimal Plan Packages through official import → publish / approve
+   workflows for the eligible case; leave draft / unapproved / private in
+   their denial states on separate lineages.
+4. Do not invent catalogue rows that bypass validation.
+
+### Validate / recreate
+
+- Presence check (fail-closed staging guard):
+
+```bash
+CONFIRM_COHORT_STAGING=1 ./tool/staging/validate_s13_catalogue_fixtures.sh --dry-run
+CONFIRM_COHORT_STAGING=1 ./tool/staging/validate_s13_catalogue_fixtures.sh
+```
+
+- Flutter UI against staging (temporary staging `.env` with anon key only;
+  overwrite stub `lib/s13_staging_secrets.g.dart` then restore; never commit
+  secrets):
+
+```bash
+flutter run -d chrome -t lib/main_s13_staging_verify.dart
+```
+
+Opt-in integration test (device/desktop target): set `S13_STAGING_UI=1` plus
+external `S13_CREDS_FILE` / `S13_IDS_FILE`.
