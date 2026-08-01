@@ -2,7 +2,9 @@ import 'programme_vocabulary.dart';
 
 /// Athlete enrolment on a published programme version.
 ///
-/// Source of truth for cursor position and Today's Session resolution.
+/// Source of truth for cursor position and Today's Session resolution after
+/// materialisation. Before [materialisedAt], the row is enrolment-only:
+/// [startedAt] from catalogue enrolment is inert as an execution anchor.
 /// `athlete_state` is a denormalised projection — see `AthleteStateSyncService`.
 /// See `42_Programme_Engine_Schema.md`.
 class ProgrammeAssignment {
@@ -22,6 +24,10 @@ class ProgrammeAssignment {
     this.supersededByAssignmentId,
     this.lastProgressedTrainingSessionId,
     this.enrolmentSource,
+    this.materialisedAt,
+    this.materialisationSource,
+    this.materialisedPackageContentHash,
+    this.materialisedPackageSchemaVersion,
     this.createdAt,
     this.updatedAt,
   });
@@ -40,7 +46,8 @@ class ProgrammeAssignment {
 
   final ProgrammeAssignmentStatus status;
 
-  /// Calendar anchor for weekday label derivation.
+  /// Schedule anchor after materialisation. Before materialisation this value
+  /// may reflect enrolment-time write and must not advance the programme.
   final DateTime startedAt;
 
   /// Cursor: current week (1-based).
@@ -67,12 +74,30 @@ class ProgrammeAssignment {
   /// How enrolment was authorised (`non_commercial_test`, etc.). Not payment.
   final String? enrolmentSource;
 
+  /// When Start Programme materialised this enrolment. Null = enrolled only.
+  final DateTime? materialisedAt;
+
+  /// Materialisation authorisation source (`athlete_start_programme`).
+  final String? materialisationSource;
+
+  /// Server snapshot of package content hash at materialisation.
+  final String? materialisedPackageContentHash;
+
+  /// Optional package schema version snapshot at materialisation.
+  final String? materialisedPackageSchemaVersion;
+
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   bool get isActive => status == ProgrammeAssignmentStatus.active;
 
   bool get isPaused => status == ProgrammeAssignmentStatus.paused;
+
+  /// True only after Sprint 1.4A Start Programme materialisation.
+  bool get isMaterialised => materialisedAt != null;
+
+  /// Active enrolment that is not yet an executable materialised plan.
+  bool get isEnrolledOnly => isActive && !isMaterialised;
 
   /// Pre-persist assignment draft — [id] is empty until the store inserts.
   factory ProgrammeAssignment.forCreate({
@@ -119,6 +144,14 @@ class ProgrammeAssignment {
         map['last_progressed_training_session_id'],
       ),
       enrolmentSource: _trimString(map['enrolment_source']),
+      materialisedAt: _parseDateTime(map['materialised_at']),
+      materialisationSource: _trimString(map['materialisation_source']),
+      materialisedPackageContentHash: _trimString(
+        map['materialised_package_content_hash'],
+      ),
+      materialisedPackageSchemaVersion: _trimString(
+        map['materialised_package_schema_version'],
+      ),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
     );
@@ -167,6 +200,10 @@ class ProgrammeAssignment {
     String? supersededByAssignmentId,
     int? lastProgressedTrainingSessionId,
     String? enrolmentSource,
+    DateTime? materialisedAt,
+    String? materialisationSource,
+    String? materialisedPackageContentHash,
+    String? materialisedPackageSchemaVersion,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool clearCompletedAt = false,
@@ -175,6 +212,10 @@ class ProgrammeAssignment {
     bool clearSupersededByAssignmentId = false,
     bool clearLastProgressedTrainingSessionId = false,
     bool clearEnrolmentSource = false,
+    bool clearMaterialisedAt = false,
+    bool clearMaterialisationSource = false,
+    bool clearMaterialisedPackageContentHash = false,
+    bool clearMaterialisedPackageSchemaVersion = false,
   }) {
     return ProgrammeAssignment(
       id: id ?? this.id,
@@ -199,6 +240,20 @@ class ProgrammeAssignment {
       enrolmentSource: clearEnrolmentSource
           ? null
           : (enrolmentSource ?? this.enrolmentSource),
+      materialisedAt: clearMaterialisedAt
+          ? null
+          : (materialisedAt ?? this.materialisedAt),
+      materialisationSource: clearMaterialisationSource
+          ? null
+          : (materialisationSource ?? this.materialisationSource),
+      materialisedPackageContentHash: clearMaterialisedPackageContentHash
+          ? null
+          : (materialisedPackageContentHash ??
+                this.materialisedPackageContentHash),
+      materialisedPackageSchemaVersion: clearMaterialisedPackageSchemaVersion
+          ? null
+          : (materialisedPackageSchemaVersion ??
+                this.materialisedPackageSchemaVersion),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

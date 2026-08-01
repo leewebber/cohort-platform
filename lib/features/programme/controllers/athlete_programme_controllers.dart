@@ -5,8 +5,10 @@ import '../../../data/repositories/programme_version_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../../models/programme_version.dart';
 import '../models/athlete_catalogue_enrolment.dart';
+import '../models/athlete_plan_materialisation.dart';
 import '../models/programme_catalog_entry.dart';
 import '../services/athlete_catalogue_enrolment_service.dart';
+import '../services/athlete_plan_materialisation_service.dart';
 import '../services/athlete_programme_switch_catalog_service.dart';
 
 class AthleteProgrammeScreenController extends ChangeNotifier {
@@ -14,24 +16,34 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     required String athleteId,
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeVersionStore? versionStore,
+    AthletePlanMaterialisationService? materialisationService,
   }) : _athleteId = athleteId.trim(),
        _assignmentStore = assignmentStore,
-       _versionStore = versionStore;
+       _versionStore = versionStore,
+       _materialisationService = materialisationService;
 
   final String _athleteId;
   final ProgrammeAssignmentStore? _assignmentStore;
   final ProgrammeVersionStore? _versionStore;
+  final AthletePlanMaterialisationService? _materialisationService;
 
   bool _loading = true;
+  bool _starting = false;
   ProgrammeAssignment? _assignment;
   ProgrammeVersion? _version;
   String? _errorMessage;
+  AthletePlanMaterialisationResult? _lastMaterialisationResult;
 
   bool get isLoading => _loading;
+  bool get isStarting => _starting;
   ProgrammeAssignment? get activeAssignment => _assignment;
   ProgrammeVersion? get activeVersion => _version;
   String? get errorMessage => _errorMessage;
   bool get hasActiveProgramme => _assignment != null;
+  bool get canStartProgramme => _assignment?.canStartProgramme ?? false;
+  bool get isMaterialised => _assignment?.isMaterialised ?? false;
+  AthletePlanMaterialisationResult? get lastMaterialisationResult =>
+      _lastMaterialisationResult;
 
   Future<void> load() async {
     _loading = true;
@@ -63,6 +75,65 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
 
     _loading = false;
     notifyListeners();
+  }
+
+  /// Explicit Start Programme — materialises enrolment only (no prepare/Home).
+  Future<AthletePlanMaterialisationResult?> startProgramme({
+    String? timezone,
+  }) async {
+    final assignment = _assignment;
+    final service = _materialisationService;
+    if (assignment == null || service == null || _starting) return null;
+    if (!assignment.canStartProgramme) {
+      if (assignment.isMaterialised) {
+        final already = AthletePlanMaterialisationResult(
+          status: AthletePlanMaterialisationStatus.alreadyMaterialised,
+          enrolmentId: assignment.id,
+          programmeVersionId: assignment.programmeVersionId,
+          lineageCode: assignment.lineageCode,
+          materialisedAt: assignment.materialisedAt,
+          materialisationSource: assignment.materialisationSource,
+          materialisedPackageContentHash:
+              assignment.materialisedPackageContentHash,
+          materialisedPackageSchemaVersion:
+              assignment.materialisedPackageSchemaVersion,
+          startedAt: assignment.startedAt,
+          timezone: assignment.timezone,
+          currentWeek: assignment.currentWeek,
+          currentDayKey: assignment.currentDayKey,
+          currentSlotOrder: assignment.currentSessionOrder,
+          athleteId: assignment.athleteId,
+          message: 'This programme is already started.',
+        );
+        _lastMaterialisationResult = already;
+        notifyListeners();
+        return already;
+      }
+      return null;
+    }
+
+    _starting = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final result = await service.startProgramme(
+      programmeAssignmentId: assignment.id,
+      athleteId: _athleteId,
+      timezone: timezone ?? assignment.timezone,
+    );
+    _lastMaterialisationResult = result;
+
+    if (result.isSuccess) {
+      await load();
+    } else {
+      _errorMessage = result.message;
+      _starting = false;
+      notifyListeners();
+    }
+
+    _starting = false;
+    notifyListeners();
+    return result;
   }
 }
 

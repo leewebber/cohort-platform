@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
+import '../models/athlete_plan_materialisation.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
+import '../services/athlete_plan_materialisation_service.dart';
 import 'athlete_programme_selection_screen.dart';
 
-/// Athlete-facing programme overview — current assignment context and de-emphasised switching.
+/// Athlete-facing programme overview — enrolment, Start Programme, no prepare.
 class AthleteProgrammeScreen extends StatefulWidget {
   const AthleteProgrammeScreen({
     super.key,
@@ -66,6 +69,47 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       if (mounted) {
         Navigator.of(context).pop(true);
       }
+    }
+  }
+
+  Future<void> _startProgramme() async {
+    if (_controller.isStarting) return;
+    final result = await _controller.startProgramme();
+    if (!mounted || result == null) return;
+
+    if (result.isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result.isIdempotentAlreadyMaterialised
+                ? 'This programme is already started.'
+                : 'Programme started today.',
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (result.status == AthletePlanMaterialisationStatus.legacyPlanConflict) {
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text('Cannot start programme', style: CohortTextStyles.h2),
+          content: Text(
+            result.message ??
+                'You already have an active plan on this device. '
+                    'Switching programmes is not available yet.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -149,9 +193,37 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           ],
           const SizedBox(height: CohortSpacing.md),
           Text(
-            'Enrolled · Week ${assignment.currentWeek} · ${assignment.currentDayKey.replaceAll('_', ' ')}',
+            AthletePlanMaterialisationLabels.statusLabel(assignment),
             style: CohortTextStyles.small,
           ),
+          if (assignment.isEnrolledOnly) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(
+              'Start Programme begins this programme today. '
+              'It does not purchase access or open a workout session.',
+              style: CohortTextStyles.muted,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            IgnorePointer(
+              ignoring: _controller.isStarting,
+              child: Opacity(
+                opacity: _controller.isStarting ? 0.6 : 1,
+                child: CohortButton(
+                  label: _controller.isStarting
+                      ? 'Starting…'
+                      : 'Start Programme',
+                  onPressed: _startProgramme,
+                ),
+              ),
+            ),
+          ],
+          if (assignment.isMaterialised) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              'Programme started. First session preparation comes next.',
+              style: CohortTextStyles.muted,
+            ),
+          ],
         ],
       ),
     );
