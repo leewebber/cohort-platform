@@ -10,9 +10,14 @@ import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../daily_briefing/widgets/daily_briefing_section.dart';
+import '../../data/repositories/programme_assignment_store.dart';
+import '../../data/repositories/programme_assignment_supabase_store.dart';
 import '../programme/screens/athlete_programme_screen.dart';
+import '../programme/services/athlete_catalogue_enrolment_services.dart';
+import '../programme/services/athlete_programme_session_prepare_service.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/home_adapt_flow.dart';
+import 'widgets/athlete_programme_today_section.dart';
 
 /// Athlete Home — entirely focused on today.
 ///
@@ -23,6 +28,8 @@ class HomeScreen extends StatefulWidget {
     this.authController,
     this.embeddedInShell = false,
     this.refreshController,
+    this.assignmentStore,
+    this.prepareService,
   });
 
   final AuthController? authController;
@@ -30,8 +37,14 @@ class HomeScreen extends StatefulWidget {
   /// When true, bottom nav is owned by the shell (do not render here).
   final bool embeddedInShell;
 
-  /// Optional today refresh after catalogue enrolment.
+  /// Optional today refresh after catalogue enrolment / Start Programme.
   final HomeTodaySessionRefreshController? refreshController;
+
+  /// Optional assignment store (tests / local wiring). Defaults to Supabase.
+  final ProgrammeAssignmentStore? assignmentStore;
+
+  /// Optional prepare service for programme-backed today card.
+  final AthleteProgrammeSessionPrepareService? prepareService;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -41,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _adaptFlow = HomeAdaptFlow();
   late final HomeTodaySessionRefreshController _refreshController =
       widget.refreshController ?? HomeTodaySessionRefreshController();
+  bool? _hasMaterialisedProgramme;
 
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
@@ -52,7 +66,29 @@ class _HomeScreenState extends State<HomeScreen> {
       CurrentUserSession.maybeInstance?.profile.displayName ??
       'Athlete';
 
-  /// Sprint 1.3 catalogue enrolment entry (exact-version programme access).
+  ProgrammeAssignmentStore get _assignmentStore =>
+      widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshMaterialisedGate();
+  }
+
+  Future<void> _refreshMaterialisedGate() async {
+    try {
+      final assignment = await _assignmentStore.getActiveAssignment(_athleteId);
+      if (!mounted) return;
+      setState(() {
+        _hasMaterialisedProgramme = assignment?.isMaterialised ?? false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _hasMaterialisedProgramme = false);
+    }
+  }
+
+  /// Sprint 1.3/1.4 programme catalogue + Start Programme entry.
   Future<void> _openProgrammeCatalogue() async {
     final changed = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
@@ -63,8 +99,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
     if (!mounted) return;
-    if (changed == true) {
-      _refreshController.requestRefresh(source: 'athlete_catalogue_enrolment');
+    await _refreshMaterialisedGate();
+    if (changed == true || (_hasMaterialisedProgramme ?? false)) {
+      _refreshController.requestRefresh(source: 'athlete_programme_return');
       setState(() {});
     }
   }
@@ -74,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final hasActivePlan = AthleteProfileSession.hasActivePlan;
+    final hasMaterialisedProgramme = _hasMaterialisedProgramme ?? false;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
@@ -99,6 +137,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 CohortCard(
                   onTap: _openAdapt,
                   child: const _AdaptationPromptRow(),
+                ),
+              ] else if (hasMaterialisedProgramme) ...[
+                AthleteProgrammeTodaySection(
+                  athleteId: _athleteId,
+                  refreshController: _refreshController,
+                  prepareService:
+                      widget.prepareService ??
+                      AthleteCatalogueEnrolmentServices.createPrepareService(),
                 ),
               ] else
                 ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),

@@ -13,7 +13,7 @@ import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
 import 'athlete_programme_selection_screen.dart';
 
-/// Athlete-facing programme overview — enrolment, Start Programme, no prepare.
+/// Athlete-facing programme overview — enrolment, Start Programme, prepare handoff.
 class AthleteProgrammeScreen extends StatefulWidget {
   const AthleteProgrammeScreen({
     super.key,
@@ -78,15 +78,19 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     if (!mounted || result == null) return;
 
     if (result.isSuccess) {
+      widget.refreshController?.requestRefresh(source: 'start_programme');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             result.isIdempotentAlreadyMaterialised
-                ? 'This programme is already started.'
-                : 'Programme started today.',
+                ? 'This programme is already started. Check Home for today\'s session.'
+                : 'Programme started. Today\'s session is available on Home.',
           ),
         ),
       );
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(true);
+      }
       return;
     }
 
@@ -220,7 +224,14 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           if (assignment.isMaterialised) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(
-              'Programme started. First session preparation comes next.',
+              _controller.lastPrepareResult?.isReady == true
+                  ? 'Programme started. Today\'s authored session is ready on Home.'
+                  : _controller.isPreparing
+                  ? 'Preparing today\'s authored session…'
+                  : _controller.lastPrepareResult?.isRecoverableFailure == true
+                  ? (_controller.lastPrepareResult?.message ??
+                        'Today\'s session could not be prepared yet. Retry from Home.')
+                  : 'Programme started. Today\'s authored session appears on Home.',
               style: CohortTextStyles.muted,
             ),
           ],
