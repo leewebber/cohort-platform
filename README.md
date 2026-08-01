@@ -55,12 +55,32 @@ flutter test
 flutter analyze
 ```
 
+Targeted architecture and current Sprint 1.5A checks include:
+
+```bash
+flutter test test/architecture/ test/planning/ test/knowledge/
+flutter test test/programme/athlete_programme_completion_self_test_2_test.dart
+```
+
+The Docker-backed local database gate is
+`./supabase/tests/run_local_db_gate.sh`. Guarded scripts under `tool/staging/`
+contact a remote environment and must not be run without explicit staging
+authorisation.
+
 ## Documentation
 
-Product and engineering docs live in `07 Documentation/`. Start with:
+Start with the current repository checkpoint and architecture index:
 
-- `64_V2_0_Authentication_And_Profiles.md`
-- `69_V2_0_Coach_Daily_Operations.md`
-- `70_V2_0_Beta_Readiness_And_Production_Hardening.md`
-- `71_V2_0_Production_Identity_And_RLS_Lockdown.md`
-- `72_V2_0_Production_Athlete_Experience.md`
+- [`docs/checkpoints/CURRENT_CHECKPOINT.md`](docs/checkpoints/CURRENT_CHECKPOINT.md)
+- [`docs/architecture/README.md`](docs/architecture/README.md)
+- [`AGENTS.md`](AGENTS.md)
+
+Product history and engineering delivery documents also live in
+[`07 Documentation/`](07%20Documentation/). Current surviving entry points
+include:
+
+- [`64_V2_0_Product_Readiness_First_Slice.md`](07%20Documentation/64_V2_0_Product_Readiness_First_Slice.md)
+- [`69_V2_0_Coach_Daily_Operations.md`](07%20Documentation/69_V2_0_Coach_Daily_Operations.md)
+- [`70_V2_0_Beta_Readiness_And_Production_Hardening.md`](07%20Documentation/70_V2_0_Beta_Readiness_And_Production_Hardening.md)
+- [`71_V2_0_Production_Identity_And_RLS_Lockdown.md`](07%20Documentation/71_V2_0_Production_Identity_And_RLS_Lockdown.md)
+- [`72_V2_0_Production_Athlete_Experience.md`](07%20Documentation/72_V2_0_Production_Athlete_Experience.md)
