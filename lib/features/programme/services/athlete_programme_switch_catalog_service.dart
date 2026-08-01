@@ -12,19 +12,33 @@ class AthleteProgrammeSwitchCatalogService {
 
   final ProgrammeCatalogService _catalogService;
 
+  /// Lists Sprint 1.2 / 1.3 catalogue-eligible programmes for athlete enrolment.
+  ///
+  /// Requires published + cohort_global + approved_for_global (server RLS also
+  /// enforces this for athletes). Not a commercial catalogue.
   Future<List<ProgrammeCatalogEntry>>
   listPublishedAssignableProgrammes() async {
     final entries = await _catalogService.listCatalogue(
       query: const ProgrammeCatalogueQuery(
         lifecycleStatus: ProgrammeLifecycleStatus.published,
+        libraryScope: ProgrammeLibraryScope.cohortGlobal,
+        includeGlobalApprovedOnly: true,
       ),
     );
 
-    return entries.where(_isEligibleForAthleteSwitch).toList(growable: false);
+    return entries
+        .where(_isEligibleForAthleteCatalogue)
+        .toList(growable: false);
   }
 
-  bool _isEligibleForAthleteSwitch(ProgrammeCatalogEntry entry) {
+  bool _isEligibleForAthleteCatalogue(ProgrammeCatalogEntry entry) {
     if (entry.lifecycleStatus != ProgrammeLifecycleStatus.published) {
+      return false;
+    }
+    if (entry.libraryScope != ProgrammeLibraryScope.cohortGlobal) {
+      return false;
+    }
+    if (!entry.approvedForGlobal) {
       return false;
     }
     if (entry.archivedAt != null) {

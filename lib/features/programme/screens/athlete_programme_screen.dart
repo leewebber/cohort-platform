@@ -7,7 +7,7 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
-import '../services/athlete_programme_switch_services.dart';
+import '../services/athlete_catalogue_enrolment_services.dart';
 import 'athlete_programme_selection_screen.dart';
 
 /// Athlete-facing programme overview — current assignment context and de-emphasised switching.
@@ -30,7 +30,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
 class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   late final AthleteProgrammeScreenController _controller =
       widget._controller ??
-      AthleteProgrammeSwitchServices.createProgrammeScreenController(
+      AthleteCatalogueEnrolmentServices.createProgrammeScreenController(
         athleteId: widget.athleteId,
       );
 
@@ -102,7 +102,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                           foregroundColor: CohortColors.textMuted,
                           textStyle: CohortTextStyles.muted,
                         ),
-                        child: const Text('Start New Programme'),
+                        child: const Text('View programmes'),
                       ),
                     ),
                   ],
@@ -118,7 +118,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
     if (assignment == null) {
       return const CohortCard(
-        child: Text('No active programme.', style: CohortTextStyles.body),
+        child: Text(
+          'You are not enrolled in a programme yet. Choose a programme to get access.',
+          style: CohortTextStyles.body,
+        ),
       );
     }
 
@@ -146,7 +149,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           ],
           const SizedBox(height: CohortSpacing.md),
           Text(
-            'Week ${assignment.currentWeek} · ${assignment.currentDayKey.replaceAll('_', ' ')}',
+            'Enrolled · Week ${assignment.currentWeek} · ${assignment.currentDayKey.replaceAll('_', ' ')}',
             style: CohortTextStyles.small,
           ),
         ],

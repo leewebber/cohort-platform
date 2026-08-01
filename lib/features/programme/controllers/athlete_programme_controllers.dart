@@ -4,10 +4,10 @@ import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_version_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../../models/programme_version.dart';
-import '../models/athlete_programme_switch_result.dart';
+import '../models/athlete_catalogue_enrolment.dart';
 import '../models/programme_catalog_entry.dart';
+import '../services/athlete_catalogue_enrolment_service.dart';
 import '../services/athlete_programme_switch_catalog_service.dart';
-import '../services/athlete_programme_switch_coordinator.dart';
 
 class AthleteProgrammeScreenController extends ChangeNotifier {
   AthleteProgrammeScreenController({
@@ -66,20 +66,21 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
   }
 }
 
+/// Catalogue browse + enrol controller (Sprint 1.3).
 class AthleteProgrammeSelectionController extends ChangeNotifier {
   AthleteProgrammeSelectionController({
     required String athleteId,
     required AthleteProgrammeSwitchCatalogService catalogService,
-    required AthleteProgrammeSwitchCoordinator switchCoordinator,
+    required AthleteCatalogueEnrolmentService enrolmentService,
     ProgrammeAssignmentStore? assignmentStore,
   }) : _athleteId = athleteId.trim(),
        _catalogService = catalogService,
-       _switchCoordinator = switchCoordinator,
+       _enrolmentService = enrolmentService,
        _assignmentStore = assignmentStore;
 
   final String _athleteId;
   final AthleteProgrammeSwitchCatalogService _catalogService;
-  final AthleteProgrammeSwitchCoordinator _switchCoordinator;
+  final AthleteCatalogueEnrolmentService _enrolmentService;
   final ProgrammeAssignmentStore? _assignmentStore;
 
   bool _loading = true;
@@ -88,6 +89,7 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   List<ProgrammeCatalogEntry> _programmes = const [];
   ProgrammeCatalogEntry? _selected;
   String? _activeVersionId;
+  AthleteCatalogueEnrolmentResult? _lastResult;
 
   bool get isLoading => _loading;
   bool get isSubmitting => _submitting;
@@ -95,10 +97,12 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   List<ProgrammeCatalogEntry> get programmes => _programmes;
   ProgrammeCatalogEntry? get selectedProgramme => _selected;
   String? get activeVersionId => _activeVersionId;
+  AthleteCatalogueEnrolmentResult? get lastEnrolmentResult => _lastResult;
 
   Future<void> load() async {
     _loading = true;
     _errorMessage = null;
+    _lastResult = null;
     notifyListeners();
 
     try {
@@ -117,9 +121,9 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   }
 
   void selectProgramme(ProgrammeCatalogEntry entry) {
-    if (entry.versionId == _activeVersionId) return;
     _selected = entry;
     _errorMessage = null;
+    _lastResult = null;
     notifyListeners();
   }
 
@@ -127,30 +131,43 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     return entry.versionId == _activeVersionId;
   }
 
-  Future<AthleteProgrammeSwitchResult?> confirmSwitch({
+  /// Enrols in the selected catalogue programme (exact version id).
+  Future<AthleteCatalogueEnrolmentResult?> confirmEnrol({
     required DateTime startedAt,
     required String timezone,
+    bool replaceActive = false,
   }) async {
     final selected = _selected;
     if (selected == null || _submitting) return null;
 
     if (selected.versionId == _activeVersionId) {
-      return AthleteProgrammeSwitchResult.alreadyActive();
+      final already = AthleteCatalogueEnrolmentResult(
+        status: AthleteCatalogueEnrolmentStatus.alreadyEnrolled,
+        programmeVersionId: selected.versionId,
+        athleteId: _athleteId,
+        message: 'You are already enrolled in this programme.',
+      );
+      _lastResult = already;
+      notifyListeners();
+      return already;
     }
 
     _submitting = true;
     _errorMessage = null;
     notifyListeners();
 
-    final result = await _switchCoordinator.switchToProgramme(
+    final hasActive = _activeVersionId != null && _activeVersionId!.isNotEmpty;
+    final result = await _enrolmentService.enrol(
       athleteId: _athleteId,
       programmeVersionId: selected.versionId,
-      startedAt: startedAt,
       timezone: timezone,
+      replaceActive: replaceActive || hasActive,
     );
 
-    if (!result.isSuccess &&
-        result.status != AthleteProgrammeSwitchStatus.alreadyActive) {
+    _lastResult = result;
+    if (result.isSuccess) {
+      _activeVersionId = result.programmeVersionId ?? selected.versionId;
+    } else if (result.status != AthleteCatalogueEnrolmentStatus.conflict) {
       _errorMessage = result.message;
     }
 

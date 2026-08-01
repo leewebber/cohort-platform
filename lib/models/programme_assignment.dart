@@ -21,6 +21,7 @@ class ProgrammeAssignment {
     this.timezone,
     this.supersededByAssignmentId,
     this.lastProgressedTrainingSessionId,
+    this.enrolmentSource,
     this.createdAt,
     this.updatedAt,
   });
@@ -62,6 +63,9 @@ class ProgrammeAssignment {
 
   /// Idempotency guard — last session that advanced the cursor.
   final int? lastProgressedTrainingSessionId;
+
+  /// How enrolment was authorised (`non_commercial_test`, etc.). Not payment.
+  final String? enrolmentSource;
 
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -114,6 +118,7 @@ class ProgrammeAssignment {
       lastProgressedTrainingSessionId: _nullableInt(
         map['last_progressed_training_session_id'],
       ),
+      enrolmentSource: _trimString(map['enrolment_source']),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
     );
@@ -139,6 +144,7 @@ class ProgrammeAssignment {
         'superseded_by_assignment_id': supersededByAssignmentId,
       if (lastProgressedTrainingSessionId != null)
         'last_progressed_training_session_id': lastProgressedTrainingSessionId,
+      if (enrolmentSource != null) 'enrolment_source': enrolmentSource,
     };
   }
 
@@ -160,6 +166,7 @@ class ProgrammeAssignment {
     String? timezone,
     String? supersededByAssignmentId,
     int? lastProgressedTrainingSessionId,
+    String? enrolmentSource,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool clearCompletedAt = false,
@@ -167,6 +174,7 @@ class ProgrammeAssignment {
     bool clearTimezone = false,
     bool clearSupersededByAssignmentId = false,
     bool clearLastProgressedTrainingSessionId = false,
+    bool clearEnrolmentSource = false,
   }) {
     return ProgrammeAssignment(
       id: id ?? this.id,
@@ -188,6 +196,9 @@ class ProgrammeAssignment {
           ? null
           : (lastProgressedTrainingSessionId ??
                 this.lastProgressedTrainingSessionId),
+      enrolmentSource: clearEnrolmentSource
+          ? null
+          : (enrolmentSource ?? this.enrolmentSource),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
