@@ -140,10 +140,19 @@ redesign, client-nominated athlete id / next cursor, service-role in Flutter.
 
 ---
 
-## Self-Test 2 boundary (local only)
+## Self-Test 2 boundary
 
 Local automated journey proves prepare → explicit submit → one completion →
-one advance → reconcile/replay → next key differs. Staging-backed Self-Test 2
-is a separate authorised task after local Sprint 1.5A gates pass.
+one advance → reconcile/replay → next key differs.
+
+Cohort Staging Self-Test 2 uses a dedicated multi-slot fixture (Athlete C /
+`PROG-S15A-STAGING`, three authored executable slots). It must not mutate the
+retained Self-Test 1 one-slot Athlete A package. Guarded tooling:
+
+- `tool/staging/create_s15a_self_test_2_fixture.sh`
+- `tool/staging/run_s15a_flutter_staging_verify.sh`
+- `lib/main_s15a_staging_verify.dart` (anon-only; secrets stub restored after)
 
 Gate L covers hosted-security-equivalent disposable DB assertions for the RPC.
+Local Gate K remains the authoritative GUC-bypass denial evidence when a hosted
+privileged SQL session cannot safely demote to authenticated.
