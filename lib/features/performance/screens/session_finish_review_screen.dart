@@ -6,6 +6,7 @@ import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../programme/models/athlete_programme_completion.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/performance_capture_controller.dart';
@@ -49,6 +50,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
   final _noteController = TextEditingController();
   PerformanceSaveState _saveState = PerformanceSaveState.idle;
   String? _errorMessage;
+  String? _frozenIdempotencyKey;
 
   late final PerformanceRecordSaveCoordinator _saveCoordinator =
       widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
@@ -114,12 +116,18 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         usedDomainCompletion = true;
       }
 
+      // Freeze request identity for retries; never mint a new key on resubmit.
+      _frozenIdempotencyKey ??=
+          'finish-${widget.trainingSessionId}-'
+          '${DateTime.now().toUtc().microsecondsSinceEpoch}';
+
       final result = await _saveCoordinator.completeSession(
         controller: _performanceController,
         trainingSessionId: widget.trainingSessionId,
         athleteId: widget.athleteId,
         programmeContext: widget.programmeContext,
         forcedStatus: status,
+        idempotencyKey: _frozenIdempotencyKey,
       );
 
       if (usedDomainCompletion) {
@@ -134,7 +142,24 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
 
       if (!mounted) return;
 
+      final programmeCompletion = result.programmeCompletion;
       if (result.progressionFailed) {
+        final uncertain =
+            programmeCompletion?.status ==
+            AthleteProgrammeCompletionStatus.networkUncertain;
+        setState(() {
+          _saveState = PerformanceSaveState.error;
+          _errorMessage = uncertain
+              ? 'Submission is still confirming. Tap Save and finish to reconcile — do not start a new attempt.'
+              : (programmeCompletion?.message ??
+                    UserFacingErrorMessages.sessionProgressionWarning());
+        });
+        return;
+      }
+
+      // Never show success from optimistic local state alone.
+      if (widget.programmeContext?.isProgrammeBacked == true &&
+          programmeCompletion?.isSuccess != true) {
         setState(() {
           _saveState = PerformanceSaveState.error;
           _errorMessage = UserFacingErrorMessages.sessionProgressionWarning();

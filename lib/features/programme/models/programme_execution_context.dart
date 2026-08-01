@@ -17,6 +17,8 @@ class ProgrammeExecutionContext {
     required this.effectiveProtocolId,
     this.lineageCode,
     this.programmeName,
+    this.packageContentHash,
+    this.programmedSessionKey,
   });
 
   final String assignmentId;
@@ -29,6 +31,12 @@ class ProgrammeExecutionContext {
   final String effectiveProtocolId;
   final String? lineageCode;
   final String? programmeName;
+
+  /// Materialised package hash provenance for Sprint 1.5A completion.
+  final String? packageContentHash;
+
+  /// Programme-shaped key for the prepared authored slot.
+  final String? programmedSessionKey;
 
   bool get isProgrammeBacked =>
       assignmentId.isNotEmpty && sessionSlotId.isNotEmpty;
@@ -69,6 +77,7 @@ class ProgrammeExecutionContext {
       effectiveProtocolId: effective,
       lineageCode: resolution.lineageCode,
       programmeName: resolution.programmeName,
+      packageContentHash: resolution.assignment?.materialisedPackageContentHash,
     );
   }
 
@@ -86,6 +95,26 @@ class ProgrammeExecutionContext {
       plannedProtocolId: plannedProtocolId,
       effectiveProtocolId: effectiveProtocolId,
       outcomeStatus: ProgrammeSlotOutcomeStatus.scheduled,
+    );
+  }
+
+  ProgrammeExecutionContext copyWith({
+    String? packageContentHash,
+    String? programmedSessionKey,
+  }) {
+    return ProgrammeExecutionContext(
+      assignmentId: assignmentId,
+      programmeVersionId: programmeVersionId,
+      sessionSlotId: sessionSlotId,
+      weekNumber: weekNumber,
+      dayKey: dayKey,
+      sessionOrder: sessionOrder,
+      plannedProtocolId: plannedProtocolId,
+      effectiveProtocolId: effectiveProtocolId,
+      lineageCode: lineageCode,
+      programmeName: programmeName,
+      packageContentHash: packageContentHash ?? this.packageContentHash,
+      programmedSessionKey: programmedSessionKey ?? this.programmedSessionKey,
     );
   }
 }

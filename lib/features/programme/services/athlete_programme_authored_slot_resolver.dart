@@ -161,6 +161,8 @@ class AthleteProgrammeAuthoredSlotResolver {
       effectiveProtocolId: protocolId,
       lineageCode: assignment.lineageCode,
       programmeName: version.name,
+      packageContentHash: materialisedHash,
+      programmedSessionKey: key.value,
     );
 
     return AuthoredProgrammeSlotResolution(

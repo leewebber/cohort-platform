@@ -156,7 +156,7 @@ class _AthleteProgrammeTodaySectionState
           programmeName: ctx?.programmeName,
           status: 'Prepared Session',
           statusDetail:
-              'Authored programme · exact version. Completion is deferred.',
+              'Authored programme · exact version. Submit completion to advance.',
           buttonLabel: _opening ? 'Opening…' : 'Begin',
           onPressed: _opening ? null : _open,
         ),

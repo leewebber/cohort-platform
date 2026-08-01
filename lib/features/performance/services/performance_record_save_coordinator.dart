@@ -1,10 +1,13 @@
+import '../../../core/persistence/athlete_local_repository.dart';
 import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/training_session_completion_context.dart';
+import '../../programme/models/athlete_programme_completion.dart';
 import '../../programme/models/programme_execution_context.dart';
+import '../../programme/models/programme_progression_result.dart';
+import '../../programme/services/athlete_programme_completion_service.dart';
 import '../../session/services/programme_session_progression_coordinator.dart';
 import '../../adaptation/models/adaptation_execution_result.dart';
 import '../../adaptation/services/adaptation_execution_coordinator.dart';
-import '../../programme/models/programme_progression_result.dart';
 import '../controllers/performance_capture_controller.dart';
 import '../mappers/performance_record_mapper.dart';
 import '../models/training_session_record.dart';
@@ -19,6 +22,7 @@ class PerformanceCompletionResult {
     this.progressionMessage,
     this.progressionResult,
     this.adaptationResult,
+    this.programmeCompletion,
   });
 
   final TrainingSessionRecord record;
@@ -26,26 +30,34 @@ class PerformanceCompletionResult {
   final String? progressionMessage;
   final ProgrammeProgressionResult? progressionResult;
   final AdaptationExecutionResult? adaptationResult;
+  final AthleteProgrammeCompletionResult? programmeCompletion;
 }
 
 class PerformanceRecordSaveCoordinator {
   PerformanceRecordSaveCoordinator({
     PerformanceRecordStore? store,
     TrainingSessionRepository? trainingSessionRepository,
+    // ignore: avoid_unused_constructor_parameters
     ProgrammeSessionProgressionCoordinator? progressionCoordinator,
     AdaptationExecutionCoordinator? adaptationCoordinator,
+    AthleteProgrammeCompletionService? programmeCompletionService,
+    AthleteLocalRepository? localRepository,
   }) : _store = store ?? SupabasePerformanceRecordStore(),
        _trainingSessionRepository =
            trainingSessionRepository ?? const TrainingSessionRepository(),
-       _progressionCoordinator =
-           progressionCoordinator ?? ProgrammeSessionProgressionCoordinator(),
        _adaptationCoordinator =
-           adaptationCoordinator ?? AdaptationExecutionCoordinator();
+           adaptationCoordinator ?? AdaptationExecutionCoordinator(),
+       _programmeCompletionService =
+           programmeCompletionService ??
+           AthleteProgrammeCompletionService(
+             performanceStore: store ?? SupabasePerformanceRecordStore(),
+             localRepository: localRepository,
+           );
 
   final PerformanceRecordStore _store;
   final TrainingSessionRepository _trainingSessionRepository;
-  final ProgrammeSessionProgressionCoordinator _progressionCoordinator;
   final AdaptationExecutionCoordinator _adaptationCoordinator;
+  final AthleteProgrammeCompletionService _programmeCompletionService;
 
   Future<TrainingSessionRecord> createOrResumeInProgress({
     required PerformanceCaptureController controller,
@@ -65,11 +77,23 @@ class PerformanceRecordSaveCoordinator {
     required String athleteId,
     ProgrammeExecutionContext? programmeContext,
     TrainingSessionRecordStatus? forcedStatus,
+    String? idempotencyKey,
   }) async {
     final validation = controller.validateForCompletion();
     if (!validation.isValid) {
       throw PerformanceRecordStoreException(
         validation.fieldErrors.values.first,
+      );
+    }
+
+    // Sprint 1.5A programme path: one atomic RPC for completion + cursor.
+    if (programmeContext != null && programmeContext.isProgrammeBacked) {
+      return _completeProgrammeBacked(
+        controller: controller,
+        trainingSessionId: trainingSessionId,
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+        idempotencyKey: idempotencyKey,
       );
     }
 
@@ -88,50 +112,91 @@ class PerformanceRecordSaveCoordinator {
       ),
     );
 
-    var progressionFailed = false;
-    String? progressionMessage;
-    ProgrammeProgressionResult? progressionResult;
+    return PerformanceCompletionResult(record: record);
+  }
+
+  Future<PerformanceCompletionResult> _completeProgrammeBacked({
+    required PerformanceCaptureController controller,
+    required int trainingSessionId,
+    required String athleteId,
+    required ProgrammeExecutionContext programmeContext,
+    String? idempotencyKey,
+  }) async {
+    final logicalKey = _programmeCompletionService.buildLogicalCompletionKey(
+      programmeContext,
+    );
+    final key =
+        idempotencyKey ??
+        _programmeCompletionService.buildIdempotencyKey(
+          logicalCompletionKey: logicalKey,
+          requestNonce:
+              '${DateTime.now().toUtc().microsecondsSinceEpoch}-'
+              '${identityHashCode(controller)}',
+        );
+
+    final programmeCompletion = await _programmeCompletionService.submit(
+      controller: controller,
+      programmeContext: programmeContext,
+      trainingSessionId: trainingSessionId,
+      idempotencyKey: key,
+      frozenLogicalKey: logicalKey,
+    );
+
+    if (!programmeCompletion.isSuccess) {
+      final record = const PerformanceRecordMapper().fromDraft(
+        controller.buildPersistableDraft(
+          status: controller.resolveCompletionStatus(),
+        ),
+      );
+      return PerformanceCompletionResult(
+        record: programmeCompletion.record ?? record,
+        progressionFailed: true,
+        progressionMessage:
+            programmeCompletion.message ??
+            programmeCompletion.code ??
+            programmeCompletion.status.name,
+        programmeCompletion: programmeCompletion,
+      );
+    }
+
+    final record = programmeCompletion.record!;
+    final endedEarly = record.status != TrainingSessionRecordStatus.completed;
+    try {
+      await _trainingSessionRepository.completeSession(
+        trainingSessionId,
+        completion: TrainingSessionCompletionContext(
+          endedEarly: endedEarly,
+          sessionNote: record.athleteNote,
+          completedExerciseCount: record.completedBlockCount,
+          totalExerciseCount: record.blockResults.length,
+        ),
+      );
+    } catch (_) {
+      // Secondary context only; RPC already committed authority.
+    }
+
+    // Adaptation remains behind existing acceptance policy (defaults skip).
     AdaptationExecutionResult? adaptationResult;
-
-    if (programmeContext != null && programmeContext.isProgrammeBacked) {
-      try {
-        progressionResult = await _progressionCoordinator
-            .handleSessionCompleted(
-              athleteId: athleteId,
-              programmeContext: programmeContext,
-              trainingSessionId: trainingSessionId,
-              endedEarly: endedEarly,
-              resolutionNote: persistableDraft.athleteNote,
-            );
-      } catch (error) {
-        progressionFailed = true;
-        progressionMessage = error.toString();
-      }
-
-      if (!progressionFailed) {
-        try {
-          adaptationResult = await _adaptationCoordinator
-              .executeAfterSessionCompleted(
-                athleteId: athleteId,
-                record: record,
-                programmeContext: programmeContext,
-                trainingSessionId: trainingSessionId,
-                endedEarly: endedEarly,
-                progressionResult: progressionResult,
-              );
-        } catch (_) {
-          adaptationResult = AdaptationExecutionResult.skipped(
-            'Adaptation execution failed',
+    try {
+      adaptationResult = await _adaptationCoordinator
+          .executeAfterSessionCompleted(
+            athleteId: athleteId,
+            record: record,
+            programmeContext: programmeContext,
+            trainingSessionId: trainingSessionId,
+            endedEarly: endedEarly,
+            progressionResult: null,
           );
-        }
-      }
+    } catch (_) {
+      adaptationResult = AdaptationExecutionResult.skipped(
+        'Adaptation execution failed',
+      );
     }
 
     return PerformanceCompletionResult(
       record: record,
-      progressionFailed: progressionFailed,
-      progressionMessage: progressionMessage,
-      progressionResult: progressionResult,
+      progressionFailed: false,
+      programmeCompletion: programmeCompletion,
       adaptationResult: adaptationResult,
     );
   }
