@@ -119,9 +119,10 @@ Successful enrolment yields:
 
 Dart type: `AthletePlanMaterialisationHandoff`
 
-Materialisation (prepared session / executable plan) is **out of Sprint 1.3**.
-It must consume the exact enrolled version and must not require payment-provider
-details.
+Sprint 1.4A implements materialisation foundation via explicit **Start Programme**
+(`docs/architecture/Athlete_Plan_Materialisation_v1.md`). Enrolment alone remains
+non-executable (`materialised_at` null). First-session preparation remains
+Sprint 1.4B.
 
 ---
 
