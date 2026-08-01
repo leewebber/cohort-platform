@@ -144,7 +144,40 @@ authored Plan Package path.
 - `SECURITY DEFINER` RPC with `search_path = public, pg_temp`
 - Identity from `auth.uid()` only
 - `EXECUTE` for `authenticated`; revoked from `anon` / `PUBLIC`
-- Trigger + GUC `cohort.allow_materialisation_write` blocks direct authenticated
-  updates to materialisation-controlled columns
+- Trigger blocks direct authenticated updates to materialisation-controlled
+  columns. Bypass requires transaction-local GUC
+  `cohort.allow_materialisation_write=on` **and** `current_user` in
+  (`postgres`, `supabase_admin`) — satisfied by the `SECURITY DEFINER` RPC,
+  not by an athlete calling `set_config`
+- Corrective migration `20260801150000_harden_materialisation_write_guard.sql`
+  closes the authenticated-GUC bypass found during staging verification
 - No import/publish/approve grant expansion
 - No client service-role use
+
+---
+
+## Cohort Staging verification
+
+Synthetic Sprint 1.3 fixtures remain the staging substrate. After Sprint 1.4A
+hosted verification, Athlete A’s retained enrolment
+(`dcb723e3-f0b1-4606-85d7-b446813b38d2` on `PROG-S13-ELIG` /
+`e9bd7e19-6eb9-4f7e-abf6-d08ac4368748`) is **materialised** with
+`materialisation_source = athlete_start_programme`.
+
+Presence check (fail-closed staging guard):
+
+```bash
+CONFIRM_COHORT_STAGING=1 ./tool/staging/validate_s13_catalogue_fixtures.sh --dry-run
+CONFIRM_COHORT_STAGING=1 ./tool/staging/validate_s13_catalogue_fixtures.sh
+```
+
+Flutter reconciliation against staging (temporary staging `.env` + secrets
+overwrite; restore afterward; never commit credentials):
+
+```bash
+CONFIRM_COHORT_STAGING=1 ./tool/staging/run_s14a_flutter_staging_verify.sh
+```
+
+Fresh Start Programme UI submit is not re-run against Athlete A after hosted
+materialisation. Hosted DB probes own fresh-success evidence; Flutter verifies
+already-materialised reconciliation + legacy preflight.

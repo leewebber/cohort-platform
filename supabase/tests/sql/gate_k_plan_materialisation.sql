@@ -147,6 +147,29 @@ BEGIN
   END;
   PERFORM set_config('role', 'postgres', true);
 
+  -- Authenticated set_config of the RPC GUC must not bypass the write guard.
+  BEGIN
+    PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
+    PERFORM set_config('role', 'authenticated', true);
+    PERFORM set_config('cohort.allow_materialisation_write', 'on', true);
+    UPDATE programme_assignments
+    SET materialised_at = NOW(),
+        materialisation_source = 'athlete_start_programme',
+        materialised_package_content_hash = v_hash_before
+    WHERE id = v_enrol_a;
+    PERFORM sprint12_record(
+      'K','guc_bypass_blocked','denied','updated', NULL, FALSE,
+      'authenticated GUC bypass succeeded'
+    );
+  EXCEPTION WHEN insufficient_privilege THEN
+    PERFORM sprint12_record('K','guc_bypass_blocked','denied','denied', TRUE, TRUE, SQLERRM);
+  WHEN OTHERS THEN
+    PERFORM sprint12_record(
+      'K','guc_bypass_blocked','denied', SQLSTATE, NULL, (SQLSTATE = '42501'), SQLERRM
+    );
+  END;
+  PERFORM set_config('role', 'postgres', true);
+
   -- Direct INSERT still denied for plain athlete (no INSERT grant / RLS)
   BEGIN
     PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);

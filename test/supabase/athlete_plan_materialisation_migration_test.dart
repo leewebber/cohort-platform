@@ -6,16 +6,22 @@ void main() {
   final migrationFile = File(
     'supabase/migrations/20260801140000_athlete_plan_materialisation.sql',
   );
+  final hardenFile = File(
+    'supabase/migrations/20260801150000_harden_materialisation_write_guard.sql',
+  );
 
   late String sql;
+  late String hardenSql;
 
   setUpAll(() {
     sql = migrationFile.readAsStringSync();
+    hardenSql = hardenFile.readAsStringSync();
   });
 
   group('athlete plan materialisation migration', () {
     test('file exists', () {
       expect(migrationFile.existsSync(), isTrue);
+      expect(hardenFile.existsSync(), isTrue);
     });
 
     test(
@@ -76,6 +82,14 @@ void main() {
         );
       },
     );
+
+    test('hardens GUC bypass to privileged roles only', () {
+      expect(
+        hardenSql,
+        contains("current_user IN ('postgres', 'supabase_admin')"),
+      );
+      expect(hardenSql, contains('cohort.allow_materialisation_write'));
+    });
 
     test('uses athlete-local today and first executable slot', () {
       expect(sql, contains('cohort_resolve_athlete_local_date'));
