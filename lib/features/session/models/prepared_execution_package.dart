@@ -18,6 +18,11 @@ class PreparedExecutionPackage {
     this.planId,
     this.planVersion,
     this.assignmentId,
+    this.programmeVersionId,
+    this.packageContentHash,
+    this.dayKey,
+    this.slotOrder,
+    this.protocolId,
     this.acceptedAdaptation,
     this.coachBrainPlan,
   });
@@ -28,11 +33,28 @@ class PreparedExecutionPackage {
   final DateTime preparedAt;
   final String? planId;
   final String? planVersion;
+
+  /// Plan Library assignment id, or materialised `programme_assignments.id`.
   final String? assignmentId;
+
+  /// Exact programme version id for authored Plan Package preparation.
+  final String? programmeVersionId;
+
+  /// Materialised package content hash provenance.
+  final String? packageContentHash;
+  final String? dayKey;
+  final int? slotOrder;
+  final String? protocolId;
   final AcceptedAdaptationDecision? acceptedAdaptation;
   final CoachBrainWorkoutPlan? coachBrainPlan;
 
   bool get hasAcceptedAdaptation => acceptedAdaptation != null;
+
+  bool get isProgrammeBacked =>
+      programmeVersionId != null &&
+      programmeVersionId!.trim().isNotEmpty &&
+      packageContentHash != null &&
+      packageContentHash!.trim().isNotEmpty;
 
   PreparedExecutionPackage withAcceptedAdaptation(
     AcceptedAdaptationDecision decision,
@@ -45,6 +67,11 @@ class PreparedExecutionPackage {
       planId: planId,
       planVersion: planVersion,
       assignmentId: assignmentId,
+      programmeVersionId: programmeVersionId,
+      packageContentHash: packageContentHash,
+      dayKey: dayKey,
+      slotOrder: slotOrder,
+      protocolId: protocolId,
       acceptedAdaptation: decision,
       coachBrainPlan: coachBrainPlan,
     );
@@ -59,6 +86,11 @@ class PreparedExecutionPackage {
       planId: planId,
       planVersion: planVersion,
       assignmentId: assignmentId,
+      programmeVersionId: programmeVersionId,
+      packageContentHash: packageContentHash,
+      dayKey: dayKey,
+      slotOrder: slotOrder,
+      protocolId: protocolId,
       coachBrainPlan: coachBrainPlan,
     );
   }
@@ -72,8 +104,7 @@ class LoadSelectionPolicy {
   double? suggestedNextLoadKg({
     double? previousLoadKg,
     double? programmedLoadKg,
-  }) =>
-      null;
+  }) => null;
 
   bool get allowsAutomaticProgression => false;
   bool get allowsForcedLoadFromPrevious => false;

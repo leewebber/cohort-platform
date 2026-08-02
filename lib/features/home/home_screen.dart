@@ -10,7 +10,14 @@ import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../daily_briefing/widgets/daily_briefing_section.dart';
+import '../../data/repositories/programme_assignment_store.dart';
+import '../../data/repositories/programme_assignment_supabase_store.dart';
+import '../programme/screens/athlete_programme_screen.dart';
+import '../programme/services/athlete_catalogue_enrolment_services.dart';
+import '../programme/services/athlete_programme_session_prepare_service.dart';
+import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/home_adapt_flow.dart';
+import 'widgets/athlete_programme_today_section.dart';
 
 /// Athlete Home — entirely focused on today.
 ///
@@ -20,7 +27,10 @@ class HomeScreen extends StatefulWidget {
     super.key,
     this.authController,
     this.embeddedInShell = false,
-    this.onBrowsePlans,
+    this.refreshController,
+    this.assignmentStore,
+    this.prepareService,
+    this.athleteIdOverride,
   });
 
   final AuthController? authController;
@@ -28,8 +38,17 @@ class HomeScreen extends StatefulWidget {
   /// When true, bottom nav is owned by the shell (do not render here).
   final bool embeddedInShell;
 
-  /// Shell callback to switch to Plans tab.
-  final VoidCallback? onBrowsePlans;
+  /// Optional today refresh after catalogue enrolment / Start Programme.
+  final HomeTodaySessionRefreshController? refreshController;
+
+  /// Optional assignment store (tests / local wiring). Defaults to Supabase.
+  final ProgrammeAssignmentStore? assignmentStore;
+
+  /// Optional prepare service for programme-backed today card.
+  final AthleteProgrammeSessionPrepareService? prepareService;
+
+  /// Optional athlete id (staging/tests). Defaults to session profile.
+  final String? athleteIdOverride;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -37,36 +56,71 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _adaptFlow = HomeAdaptFlow();
+  late final HomeTodaySessionRefreshController _refreshController =
+      widget.refreshController ?? HomeTodaySessionRefreshController();
+  bool? _hasMaterialisedProgramme;
 
-  String get _athleteId =>
-      AthleteProfileSession.profile?.athleteId ??
-      CurrentUserSession.maybeInstance?.athleteId ??
-      'athlete.local';
+  String get _athleteId {
+    final override = widget.athleteIdOverride?.trim();
+    if (override != null && override.isNotEmpty) return override;
+    return AthleteProfileSession.profile?.athleteId ??
+        CurrentUserSession.maybeInstance?.athleteId ??
+        'athlete.local';
+  }
 
   String get _displayName =>
       AthleteProfileSession.profile?.displayName ??
       CurrentUserSession.maybeInstance?.profile.displayName ??
       'Athlete';
 
-  Future<void> _openPlanLibrary() async {
-    if (widget.onBrowsePlans != null) {
-      widget.onBrowsePlans!();
-      return;
-    }
-    // Fallback when Home is not embedded (tests / deep entry).
-    if (!mounted) return;
+  ProgrammeAssignmentStore get _assignmentStore =>
+      widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshMaterialisedGate();
   }
 
-  Future<void> _openAdapt() =>
-      _adaptFlow.open(context, athleteId: _athleteId);
+  Future<void> _refreshMaterialisedGate() async {
+    try {
+      final assignment = await _assignmentStore.getActiveAssignment(_athleteId);
+      if (!mounted) return;
+      setState(() {
+        _hasMaterialisedProgramme = assignment?.isMaterialised ?? false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _hasMaterialisedProgramme = false);
+    }
+  }
+
+  /// Sprint 1.3/1.4 programme catalogue + Start Programme entry.
+  Future<void> _openProgrammeCatalogue() async {
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => AthleteProgrammeScreen(
+          athleteId: _athleteId,
+          refreshController: _refreshController,
+        ),
+      ),
+    );
+    if (!mounted) return;
+    await _refreshMaterialisedGate();
+    if (changed == true || (_hasMaterialisedProgramme ?? false)) {
+      _refreshController.requestRefresh(source: 'athlete_programme_return');
+      setState(() {});
+    }
+  }
+
+  Future<void> _openAdapt() => _adaptFlow.open(context, athleteId: _athleteId);
 
   @override
   Widget build(BuildContext context) {
     final hasActivePlan = AthleteProfileSession.hasActivePlan;
+    final materialisedGate = _hasMaterialisedProgramme;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
-    final bottomPad = widget.embeddedInShell
-        ? 24.0
-        : 24.0 + 72.0 + bottomInset;
+    final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
     return Scaffold(
       backgroundColor: CohortColors.background,
@@ -91,9 +145,35 @@ class _HomeScreenState extends State<HomeScreen> {
                   onTap: _openAdapt,
                   child: const _AdaptationPromptRow(),
                 ),
+              ] else if (materialisedGate == null) ...[
+                const Text('TODAY', style: CohortTextStyles.sectionLabel),
+                const SizedBox(height: CohortSpacing.md),
+                const Text(
+                  'Checking programme…',
+                  style: CohortTextStyles.muted,
+                ),
+              ] else if (materialisedGate) ...[
+                AthleteProgrammeTodaySection(
+                  athleteId: _athleteId,
+                  refreshController: _refreshController,
+                  prepareService:
+                      widget.prepareService ??
+                      AthleteCatalogueEnrolmentServices.createPrepareService(),
+                ),
               ] else
-                ChoosePlanEntryCard(onChoosePlan: _openPlanLibrary),
-              const SizedBox(height: CohortSpacing.xxl),
+                ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),
+              const SizedBox(height: CohortSpacing.lg),
+              Center(
+                child: TextButton(
+                  onPressed: _openProgrammeCatalogue,
+                  style: TextButton.styleFrom(
+                    foregroundColor: CohortColors.textMuted,
+                    textStyle: CohortTextStyles.muted,
+                  ),
+                  child: const Text('Programme'),
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.xl),
               const Center(
                 child: Text(
                   'Build physical capability.',

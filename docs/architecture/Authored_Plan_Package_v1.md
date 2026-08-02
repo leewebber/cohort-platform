@@ -60,6 +60,13 @@ Import execution is granted only to `service_role`. Flutter/client code must
 never embed service-role credentials. Ordinary authenticated users cannot read
 Cohort Global drafts or published-but-unapproved globals.
 
+## Athlete catalogue enrolment (Sprint 1.3)
+
+After catalogue approval, athletes enrol via the Sprint 1.3 contract documented in
+`docs/architecture/Athlete_Catalogue_Enrolment_v1.md`. Enrolment pins an exact
+`programme_version_id` (non-commercial test / closed-beta access). It does not
+implement payment, subscription, or athlete-plan materialisation.
+
 ## Module
 
 `lib/features/authored_plan_package/`

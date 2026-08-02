@@ -249,6 +249,33 @@ class ProgrammeScheduleTestFixtures {
     );
   }
 
+  /// Active materialised assignment for executable Today / progression tests.
+  static ProgrammeAssignment materialisedAssignment({
+    int week = 1,
+    String dayKey = 'day_1',
+    int slotOrder = 1,
+    String athleteId = 'lee',
+    String? id,
+    String? programmeVersionId,
+    String packageContentHash =
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+  }) {
+    final startedAt = DateTime.utc(2026, 7, 15);
+    return assignment(
+      week: week,
+      dayKey: dayKey,
+      slotOrder: slotOrder,
+      athleteId: athleteId,
+      id: id,
+      programmeVersionId: programmeVersionId,
+    ).copyWith(
+      startedAt: startedAt,
+      materialisedAt: startedAt,
+      materialisationSource: 'athlete_start_programme',
+      materialisedPackageContentHash: packageContentHash,
+    );
+  }
+
   static ProgrammeTemplateDayNode trainingDay({
     required String id,
     required String weekId,

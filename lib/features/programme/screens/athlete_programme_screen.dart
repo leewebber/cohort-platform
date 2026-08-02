@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
-import '../services/athlete_programme_switch_services.dart';
+import '../models/athlete_plan_materialisation.dart';
+import '../services/athlete_catalogue_enrolment_services.dart';
+import '../services/athlete_plan_materialisation_service.dart';
 import 'athlete_programme_selection_screen.dart';
 
-/// Athlete-facing programme overview — current assignment context and de-emphasised switching.
+/// Athlete-facing programme overview — enrolment, Start Programme, prepare handoff.
 class AthleteProgrammeScreen extends StatefulWidget {
   const AthleteProgrammeScreen({
     super.key,
@@ -30,7 +33,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
 class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   late final AthleteProgrammeScreenController _controller =
       widget._controller ??
-      AthleteProgrammeSwitchServices.createProgrammeScreenController(
+      AthleteCatalogueEnrolmentServices.createProgrammeScreenController(
         athleteId: widget.athleteId,
       );
 
@@ -69,6 +72,51 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     }
   }
 
+  Future<void> _startProgramme() async {
+    if (_controller.isStarting) return;
+    final result = await _controller.startProgramme();
+    if (!mounted || result == null) return;
+
+    if (result.isSuccess) {
+      widget.refreshController?.requestRefresh(source: 'start_programme');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            result.isIdempotentAlreadyMaterialised
+                ? 'This programme is already started. Check Home for today\'s session.'
+                : 'Programme started. Today\'s session is available on Home.',
+          ),
+        ),
+      );
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(true);
+      }
+      return;
+    }
+
+    if (result.status == AthletePlanMaterialisationStatus.legacyPlanConflict) {
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text('Cannot start programme', style: CohortTextStyles.h2),
+          content: Text(
+            result.message ??
+                'You already have an active plan on this device. '
+                    'Switching programmes is not available yet.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,7 +150,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                           foregroundColor: CohortColors.textMuted,
                           textStyle: CohortTextStyles.muted,
                         ),
-                        child: const Text('Start New Programme'),
+                        child: const Text('View programmes'),
                       ),
                     ),
                   ],
@@ -118,7 +166,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
     if (assignment == null) {
       return const CohortCard(
-        child: Text('No active programme.', style: CohortTextStyles.body),
+        child: Text(
+          'You are not enrolled in a programme yet. Choose a programme to get access.',
+          style: CohortTextStyles.body,
+        ),
       );
     }
 
@@ -146,9 +197,44 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           ],
           const SizedBox(height: CohortSpacing.md),
           Text(
-            'Week ${assignment.currentWeek} · ${assignment.currentDayKey.replaceAll('_', ' ')}',
+            AthletePlanMaterialisationLabels.statusLabel(assignment),
             style: CohortTextStyles.small,
           ),
+          if (assignment.isEnrolledOnly) ...[
+            const SizedBox(height: CohortSpacing.md),
+            Text(
+              'Start Programme begins this programme today. '
+              'It does not purchase access or open a workout session.',
+              style: CohortTextStyles.muted,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            IgnorePointer(
+              ignoring: _controller.isStarting,
+              child: Opacity(
+                opacity: _controller.isStarting ? 0.6 : 1,
+                child: CohortButton(
+                  label: _controller.isStarting
+                      ? 'Starting…'
+                      : 'Start Programme',
+                  onPressed: _startProgramme,
+                ),
+              ),
+            ),
+          ],
+          if (assignment.isMaterialised) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              _controller.lastPrepareResult?.isReady == true
+                  ? 'Programme started. Today\'s authored session is ready on Home.'
+                  : _controller.isPreparing
+                  ? 'Preparing today\'s authored session…'
+                  : _controller.lastPrepareResult?.isRecoverableFailure == true
+                  ? (_controller.lastPrepareResult?.message ??
+                        'Today\'s session could not be prepared yet. Retry from Home.')
+                  : 'Programme started. Today\'s authored session appears on Home.',
+              style: CohortTextStyles.muted,
+            ),
+          ],
         ],
       ),
     );

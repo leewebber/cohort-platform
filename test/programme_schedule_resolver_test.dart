@@ -530,7 +530,56 @@ void main() {
       expect(result.kind, ResolvedTodaySessionKind.noActiveProgramme);
     });
 
-    test('resolves first required slot for active assignment', () async {
+    test('resolves first required slot for materialised assignment', () async {
+      final tables = InMemoryProgrammeTables();
+      final tree = ProgrammeScheduleTestFixtures.foundationWeekOneTree();
+      await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
+        version: ProgrammeScheduleTestFixtures.version(),
+        tree: tree,
+      );
+      tables.assignments.add(
+        ProgrammeScheduleTestFixtures.assignment().copyWith(
+          materialisedAt: DateTime.utc(2026, 7, 15),
+          materialisationSource: 'athlete_start_programme',
+          materialisedPackageContentHash: 'a' * 64,
+        ),
+      );
+
+      final service = TodaySessionServiceImpl(
+        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+        versionStore: InMemoryProgrammeVersionStore(tables),
+        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+        scheduleResolver: resolver,
+      );
+
+      final result = await service.resolveForAthlete('lee');
+
+      expect(result.kind, ResolvedTodaySessionKind.executable);
+      expect(result.effectiveProtocolId, 'BW-001');
+      expect(result.lineageCode, 'COHORT-FOUNDATION-TEST');
+    });
+
+    test('catalogue enrolled-only assignment is not executable', () async {
+      final tables = InMemoryProgrammeTables();
+      tables.assignments.add(
+        ProgrammeScheduleTestFixtures.assignment().copyWith(
+          enrolmentSource: 'non_commercial_test',
+        ),
+      );
+
+      final service = TodaySessionServiceImpl(
+        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+        versionStore: InMemoryProgrammeVersionStore(tables),
+        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+        scheduleResolver: resolver,
+      );
+
+      final result = await service.resolveForAthlete('lee');
+
+      expect(result.kind, ResolvedTodaySessionKind.noActiveProgramme);
+    });
+
+    test('coach assign without enrolment_source remains resolvable', () async {
       final tables = InMemoryProgrammeTables();
       final tree = ProgrammeScheduleTestFixtures.foundationWeekOneTree();
       await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
@@ -550,7 +599,6 @@ void main() {
 
       expect(result.kind, ResolvedTodaySessionKind.executable);
       expect(result.effectiveProtocolId, 'BW-001');
-      expect(result.lineageCode, 'COHORT-FOUNDATION-TEST');
     });
   });
 
