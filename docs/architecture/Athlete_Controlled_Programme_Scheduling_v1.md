@@ -562,7 +562,7 @@ Scheduling and adaptation remain distinct:
 |--------|-------|--------------------|
 | **1.7A** | Discovery + binding contract + architecture guards | This document; ownership tests; no product behaviour — **complete** |
 | **1.7B** | Domain model, identity, preview engine, policy/eligibility validation (compute-only) | Deterministic previews + fingerprints; no durable mutate — **complete** |
-| **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required |
+| **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required — **complete** |
 | **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules |
 | **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green |
 | **1.7F** | Undo, Today/UI integration, hardening, authorised staging evidence if approved | Undo eligibility; milestone closeout |
@@ -587,6 +587,28 @@ Implemented under `lib/domain/programme_scheduling/`:
 Sprint 1.7B does **not** persist schedules, bump durable `scheduleRevision`,
 apply operations, clear prepared state, mutate cursor, create completion, add UI,
 or contact Supabase.
+
+### Sprint 1.7C delivery status
+
+Durable foundation delivered:
+
+- tables `programme_schedule_projections`, `programme_schedule_occurrences`,
+  `programme_schedule_operations` + `programme_assignments.schedule_revision`;
+- sole durable write RPC `ensure_programme_schedule_projection` (atomic
+  idempotent baseline initialisation / reload);
+- fail-closed `apply_programme_schedule_operation` placeholder **not** granted
+  to authenticated athletes;
+- SELECT-only RLS for athletes/coaches; no direct client mutation;
+- Dart owners: `ProgrammeScheduleProjectionSupabaseStore`,
+  `ProgrammeScheduleRestoreService`, local cache via `AthleteLocalRepository`;
+- lifecycle: lazy ensure on first scheduling-state load (not Start Programme UI);
+- baseline revision `0`; completed/skipped dispositions mirrored from
+  `programme_slot_outcomes` without rewriting completion evidence;
+- no Move/Swap/Push/Skip apply, no cursor/prepared/adaptation mutation.
+
+Existing assignments obtain a baseline on first `ensure` after materialisation.
+Production backfill of remote/staging rows remains a separately authorised
+rollout step.
 
 ---
 
@@ -678,3 +700,13 @@ typed preview result.
 Sprint 1.7B does **not** deliver confirmation/apply, durable persistence, cache
 replacement, cursor mutation, prepared-state invalidation, athlete-facing UI,
 migrations, RPCs, or Supabase contact. Those remain assigned to 1.7C–1.7F.
+
+## Sprint 1.7C boundary
+
+Sprint 1.7C delivers durable baseline projection initialisation, revision
+ownership, operation-log structure, SELECT-only RLS, repository restore, and
+local cache subordinated to server authority.
+
+Sprint 1.7C does **not** deliver Move/Swap/Push/Skip apply, schedule revision
+advancement from athlete operations, prepared clearing, cursor advancement,
+Undo behaviour, or athlete-facing scheduling UI. Those remain 1.7D–1.7F.

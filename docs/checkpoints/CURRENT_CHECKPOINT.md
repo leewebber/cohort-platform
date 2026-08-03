@@ -2,8 +2,8 @@
 
 **Recorded:** 2026-08-03
 **Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
-Sprint 1.7A contract + Sprint 1.7B compute-only scheduling domain/preview complete
-on dedicated branch (not pushed)
+Sprint 1.7A–1.7C scheduling (contract, compute-only preview, durable projection
+foundation) complete on dedicated branch (not pushed)
 
 ## Merged main checkpoint
 
@@ -25,15 +25,17 @@ on dedicated branch (not pushed)
 - Sprint 1.7B feature: `a11fe73353e337c77b482b03bcbb59e071f83bf5`
   (`lib/domain/programme_scheduling/`, owner
   `ProgrammeSchedulingPreviewEngine`)
-- Next sprint: **1.7C — durable schedule projection, revision, operation log,
-  atomic RPC skeleton, local restore**
+- Sprint 1.7C: durable projection via
+  `ensure_programme_schedule_projection` +
+  `ProgrammeScheduleRestoreService` (baseline init/restore only; no apply)
+- Next sprint: **1.7D — Move + Swap apply paths + UI confirm**
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 - Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
-  Scheduling authority: 1.7A contract + 1.7B compute-only preview; no durable
-  mutate, athlete UI, migrations, or Supabase contact yet.
+  Scheduling authority: 1.7A–1.7C (contract + preview + durable baseline);
+  Move/Swap/Push/Skip apply and athlete UI remain later increments.
 
 ## Approved direction (summary)
 
@@ -58,9 +60,9 @@ on dedicated branch (not pushed)
 
 ## Exact next sequence
 
-1. After review of Sprint 1.7B, implement Sprint 1.7C durable persistence only.
-2. Move/Swap apply remain 1.7D; Push/Skip apply remain 1.7E; Undo/UI/hardening
-   remain 1.7F. No athlete-facing scheduling behaviour before those increments.
+1. After review of Sprint 1.7C, implement Sprint 1.7D Move/Swap apply only.
+2. Push/Skip apply remain 1.7E; Undo/UI/hardening remain 1.7F. No athlete-facing
+   scheduling behaviour before those increments.
 
 ## Resume checks
 

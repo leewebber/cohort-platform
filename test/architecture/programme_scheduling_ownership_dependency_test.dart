@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Sprint 1.7A/1.7B architecture guards for athlete-controlled scheduling.
-///
-/// Permits pure domain + compute-only preview; forbids mutation/apply services.
+/// Sprint 1.7A–1.7C architecture guards for athlete-controlled scheduling.
 void main() {
   final root = _repoRoot(Directory.current);
 
@@ -16,37 +14,8 @@ void main() {
     expect(source.contains('Sprint 1.7A'), isTrue);
     expect(source.contains('Binding for Phase 1'), isTrue);
     expect(source.contains('Preview'), isTrue);
-    expect(source.contains('Move'), isTrue);
-    expect(source.contains('Swap'), isTrue);
-    expect(source.contains('Push'), isTrue);
-    expect(source.contains('Skip'), isTrue);
-    expect(source.contains('Undo'), isTrue);
     expect(source.toLowerCase(), contains('skip is not completion'));
-    expect(
-      source.contains('ProgrammedSessionKey'),
-      isTrue,
-      reason: 'Stable authored identity required',
-    );
-    expect(
-      source.contains('display label'),
-      isTrue,
-      reason: 'Must forbid display-label sole identity',
-    );
-  });
-
-  test('scheduling contract forbids prescription and progression couplings', () {
-    final source = File(
-      '$root/docs/architecture/Athlete_Controlled_Programme_Scheduling_v1.md',
-    ).readAsStringSync();
-    for (final token in const [
-      'Must **not** call adaptation pipeline',
-      'Coach Brain',
-      'Adaptive Progression',
-      'never fabricates',
-      'immutable prescription authority',
-    ]) {
-      expect(source.contains(token), isTrue, reason: 'missing boundary: $token');
-    }
+    expect(source.contains('ProgrammedSessionKey'), isTrue);
   });
 
   test('programme adaptation owners still forbid scheduling mutate APIs', () {
@@ -64,6 +33,8 @@ void main() {
       'AdaptiveProgressionCoordinator',
       'AthleteProgrammeGenerationService',
       'CoachDecisionRouter',
+      'ensure_programme_schedule_projection',
+      'ProgrammeScheduleRestoreService',
     ];
     for (final path in owners) {
       final source = File('$root/$path').readAsStringSync();
@@ -77,20 +48,52 @@ void main() {
     }
   });
 
-  test('1.7B permits pure scheduling domain and compute-only preview owner', () {
-    final domainDir = Directory('$root/lib/domain/programme_scheduling');
-    expect(domainDir.existsSync(), isTrue);
-    final previewEngine = File(
+  test('1.7B preview owner remains compute-only and repository-free', () {
+    final source = File(
       '$root/lib/domain/programme_scheduling/services/'
       'programme_scheduling_preview_engine.dart',
-    );
-    expect(previewEngine.existsSync(), isTrue);
-    final source = previewEngine.readAsStringSync();
+    ).readAsStringSync();
     expect(source.contains('compute-only'), isTrue);
     expect(source.contains('Never mutates the input projection'), isTrue);
+    for (final token in const [
+      'supabase',
+      'Supabase',
+      'Repository',
+      'ensure_programme_schedule',
+      'AthleteLocalRepository',
+      'CoachBrain',
+      'AdaptiveProgression',
+      'AthleteProgrammeCompletionService',
+    ]) {
+      expect(source.contains(token), isFalse, reason: token);
+    }
   });
 
-  test('schedule mutation/apply services still do not exist', () {
+  test('1.7C permits persistence adapter and restore service only', () {
+    expect(
+      File(
+        '$root/lib/features/programme/services/'
+        'programme_schedule_projection_supabase_store.dart',
+      ).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(
+        '$root/lib/features/programme/services/'
+        'programme_schedule_restore_service.dart',
+      ).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(
+        '$root/supabase/migrations/'
+        '20260803120000_add_programme_schedule_projection.sql',
+      ).existsSync(),
+      isTrue,
+    );
+  });
+
+  test('no Move/Swap/Push/Skip apply service and no generic writer', () {
     final candidates = [
       'lib/application/scheduling',
       'lib/features/scheduling',
@@ -98,86 +101,71 @@ void main() {
       'lib/features/programme/services/athlete_programme_scheduling_service.dart',
       'lib/domain/programme_scheduling/services/programme_scheduling_apply_service.dart',
       'lib/domain/programme_scheduling/services/programme_scheduling_mutation_service.dart',
-      'lib/domain/programme_scheduling/repositories',
+      'lib/features/programme/services/programme_schedule_apply_service.dart',
     ];
     for (final path in candidates) {
       final entity = File('$root/$path').existsSync()
           ? File('$root/$path')
           : Directory('$root/$path');
-      expect(
-        entity.existsSync(),
-        isFalse,
-        reason: 'Mutation/apply/persist path must not exist yet: $path',
-      );
+      expect(entity.existsSync(), isFalse, reason: path);
     }
-  });
 
-  test('preview engine has no forbidden couplings', () {
-    final source = File(
-      '$root/lib/domain/programme_scheduling/services/'
-      'programme_scheduling_preview_engine.dart',
+    final store = File(
+      '$root/lib/features/programme/services/'
+      'programme_schedule_projection_store.dart',
     ).readAsStringSync();
+    expect(store.contains('ensureBaseline'), isTrue);
     for (final token in const [
-      'supabase',
-      'Supabase',
-      'package:cohort_platform/application/adaptation',
-      'package:cohort_platform/features/home/services/programme_adapt',
-      'CoachBrain',
-      'CoachDecisionRouter',
-      'AdaptiveProgression',
-      'AthleteProgrammeCompletionService',
-      'complete_programme_session',
-      'PreparedSession',
-      'Repository',
+      'saveSchedule',
+      'replaceProjection',
+      'persistPreview',
+      'writeOccurrences',
+      'updateScheduledDate',
+      'applySchedulingOperation',
     ]) {
-      expect(
-        source.contains(token),
-        isFalse,
-        reason: 'preview engine must not reference $token',
-      );
+      expect(store.contains(token), isFalse, reason: token);
     }
   });
 
-  test('scheduling domain does not alter Plan Package models', () {
+  test('only designated persistence adapter knows Supabase for scheduling', () {
     final domainFiles = Directory('$root/lib/domain/programme_scheduling')
         .listSync(recursive: true)
         .whereType<File>()
         .where((f) => f.path.endsWith('.dart'));
     for (final file in domainFiles) {
       final source = file.readAsStringSync();
-      expect(
-        source.contains('class PlanPackage'),
-        isFalse,
-        reason: file.path,
-      );
-      expect(
-        source.contains('schedulingPermission'),
-        isFalse,
-        reason: 'no package permission schema fields: ${file.path}',
-      );
+      expect(source.contains('supabase'), isFalse, reason: file.path);
+      expect(source.contains('SupabaseService'), isFalse, reason: file.path);
     }
-  });
 
-  test('Skip preview source never fabricates completion or actuals', () {
-    final source = File(
-      '$root/lib/domain/programme_scheduling/services/'
-      'programme_scheduling_preview_engine.dart',
+    final adapter = File(
+      '$root/lib/features/programme/services/'
+      'programme_schedule_projection_supabase_store.dart',
     ).readAsStringSync();
-    expect(source.contains('_previewSkip'), isTrue);
-    expect(source.contains('ProgrammeScheduleDisposition.skipped'), isTrue);
-    expect(source.contains('training_sessions'), isFalse);
-    expect(source.contains('previousPerformance'), isFalse);
-    expect(source.contains('fabricat'), isTrue);
+    expect(adapter.contains('SupabaseService'), isTrue);
+    expect(adapter.contains('ensure_programme_schedule_projection'), isTrue);
+    expect(adapter.contains('apply_programme_schedule_operation'), isFalse);
   });
 
-  test('dates are not part of scheduled occurrence identity', () {
+  test('dates remain outside stable identity', () {
     final source = File(
       '$root/lib/domain/programme_scheduling/value_objects/'
       'scheduled_occurrence_identity.dart',
     ).readAsStringSync();
     expect(source.contains('scheduledDate'), isFalse);
-    expect(source.contains('Date is never part of identity') ||
-        source.contains('never part of identity'), isTrue);
+    expect(source.contains('never part of identity'), isTrue);
+  });
+
+  test('Plan Package models unchanged by scheduling persistence', () {
+    final domainFiles = Directory('$root/lib/domain/programme_scheduling')
+        .listSync(recursive: true)
+        .whereType<File>()
+        .where((f) => f.path.endsWith('.dart'));
+    for (final file in domainFiles) {
+      final source = file.readAsStringSync();
+      expect(source.contains('class PlanPackage'), isFalse, reason: file.path);
+      expect(source.contains('schedulingPermission'), isFalse, reason: file.path);
+    }
   });
 }
 

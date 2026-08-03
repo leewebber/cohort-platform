@@ -99,6 +99,13 @@ abstract final class PersistenceKeys {
   static String exerciseResults(String athleteId) =>
       '${athleteRoot(athleteId)}.exercise_results';
 
+  /// Server-subordinate schedule projection cache (Sprint 1.7C).
+  static String programmeScheduleProjection(
+    String athleteId,
+    String assignmentId,
+  ) =>
+      '${athleteRoot(athleteId)}.programme_schedule_projection.$assignmentId';
+
   /// Last guest / local athlete id for bootstrap without auth.
   static const lastLocalAthleteId = '$root.last_local_athlete_id';
 }

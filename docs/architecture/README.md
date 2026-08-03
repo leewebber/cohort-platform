@@ -48,9 +48,10 @@
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
 `fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete.
-Sprint 1.7A contract + Sprint 1.7B compute-only scheduling domain/preview are
-complete on `phase1-athlete-controlled-scheduling` (not pushed). Preview owner:
-`lib/domain/programme_scheduling/services/programme_scheduling_preview_engine.dart`.
-Persistence/apply remain 1.7C+. See
+Sprints 1.7A–1.7C (contract, compute-only preview, durable baseline projection)
+are complete on `phase1-athlete-controlled-scheduling` (not pushed). Preview
+owner: `programme_scheduling_preview_engine.dart`. Persistence owner:
+`ensure_programme_schedule_projection` + `ProgrammeScheduleRestoreService`.
+Move/Swap apply remains 1.7D. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.

@@ -4,6 +4,7 @@ import '../../features/adaptive_progression/models/capability_timeline.dart';
 import '../../features/adaptive_progression/models/session_completion.dart';
 import '../../features/athlete_profile/models/athlete_profile.dart';
 import '../../features/plans/models/plan_assignment.dart';
+import '../../features/programme/models/programme_schedule_persistence.dart';
 import '../../features/workout_player/models/previous_performance_snapshot.dart';
 import 'local_kv_store.dart';
 import 'models/execution_result_models.dart';
@@ -319,6 +320,71 @@ class AthleteLocalRepository {
 
   Future<void> clearWorkoutProgress(String athleteId) async {
     await _store.remove(PersistenceKeys.workoutProgress(athleteId));
+  }
+
+  // --- Programme schedule projection (Sprint 1.7C; cache only) ---
+
+  /// Persists server-authoritative projection after successful ensure/load.
+  ///
+  /// Never call this with a client-invented projection that has not been
+  /// returned by the server ensure/load path.
+  Future<void> saveProgrammeScheduleProjection({
+    required String athleteId,
+    required PersistedProgrammeScheduleProjection projection,
+  }) async {
+    if (projection.athleteId != athleteId) {
+      throw ArgumentError(
+        'Schedule cache athlete scope mismatch.',
+      );
+    }
+    await _write(
+      PersistenceKeys.programmeScheduleProjection(
+        athleteId,
+        projection.assignmentId,
+      ),
+      PersistenceSchemaVersions.programmeScheduleProjection,
+      Map<String, dynamic>.from(projection.toPersistenceMap()),
+    );
+  }
+
+  Future<PersistedProgrammeScheduleProjection?> readProgrammeScheduleProjection({
+    required String athleteId,
+    required String assignmentId,
+  }) async {
+    final envelope = await _readEnvelope(
+      PersistenceKeys.programmeScheduleProjection(athleteId, assignmentId),
+      expectedVersion: PersistenceSchemaVersions.programmeScheduleProjection,
+      aggregate: 'programme_schedule_projection',
+    );
+    if (envelope == null) return null;
+    try {
+      final projection = PersistedProgrammeScheduleProjection.fromMap(
+        envelope.payload,
+      );
+      if (projection.athleteId != athleteId ||
+          projection.assignmentId != assignmentId) {
+        await _store.remove(
+          PersistenceKeys.programmeScheduleProjection(athleteId, assignmentId),
+        );
+        return null;
+      }
+      return projection;
+    } catch (e, st) {
+      _logCorrupt('programme_schedule_projection', e, st);
+      await _store.remove(
+        PersistenceKeys.programmeScheduleProjection(athleteId, assignmentId),
+      );
+      return null;
+    }
+  }
+
+  Future<void> clearProgrammeScheduleProjection({
+    required String athleteId,
+    required String assignmentId,
+  }) async {
+    await _store.remove(
+      PersistenceKeys.programmeScheduleProjection(athleteId, assignmentId),
+    );
   }
 
   // --- Lifecycle ---
