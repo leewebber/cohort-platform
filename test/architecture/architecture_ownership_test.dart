@@ -52,6 +52,19 @@ void main() {
         '$root/docs/architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md';
     expect(File(path).existsSync(), isTrue, reason: path);
   });
+
+  test('Sprint 1.6B programme adaptation adapter and proposal modules exist', () {
+    final required = [
+      'lib/application/adaptation/plan_package_session_adaptation_adapter.dart',
+      'lib/application/adaptation/programme_adaptation_proposal_service.dart',
+      'lib/application/adaptation/programme_adaptation_proposal_mapper.dart',
+      'lib/features/adaptation/models/programme_adaptation_proposal.dart',
+      'lib/features/home/services/programme_adapt_flow.dart',
+    ];
+    for (final path in required) {
+      expect(File('$root/$path').existsSync(), isTrue, reason: path);
+    }
+  });
 }
 
 String _repoRoot(Directory start) {

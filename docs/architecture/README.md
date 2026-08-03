@@ -46,7 +46,7 @@
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
-`fdae6dd`. Active work is Sprint 1.6A on
+`fdae6dd`. Active work is Sprint 1.6B (programme adaptation propose/review) on
 `phase1-acceptance-gated-adaptation`. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.

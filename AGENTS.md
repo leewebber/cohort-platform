@@ -19,8 +19,8 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
 
 Current feature branch: `phase1-acceptance-gated-adaptation`. Active sprint:
-**1.6A — Acceptance-Gated Adaptation Authority Contract** (documentation /
-architecture only until later increments are authorised).
+**1.6B — Programme Adaptation Proposal and Review** (propose/review only; no
+acceptance mutation until Sprint 1.6C).
 
 ## Authority and product invariants
 
@@ -89,11 +89,11 @@ record.
 
 The exact next sequence is:
 
-1. Finish Sprint 1.6A architecture contract on
-   `phase1-acceptance-gated-adaptation` (no product implementation).
-2. Implement Sprint 1.6B propose/review after 1.6A review.
-3. Continue 1.6C–1.6E in small verifiable increments.
+1. Finish Sprint 1.6B propose/review on
+   `phase1-acceptance-gated-adaptation` (no acceptance mutation).
+2. Implement Sprint 1.6C explicit accept + local prepared mutation after review.
+3. Continue 1.6D–1.6E in small verifiable increments.
 4. Do not begin proposed Sprint 1.7 scheduling until separately approved.
 
-Do not implement adaptation product behaviour in 1.6A, and do not smuggle
-rescheduling through the adaptation acceptance path.
+Do not implement acceptance, rescheduling, Adaptive Progression reauthoring, or
+future-session mutation in Sprint 1.6B.

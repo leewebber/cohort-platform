@@ -1,7 +1,7 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-03
-**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A acceptance-gated adaptation contract in progress
+**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6B programme adaptation proposal/review in progress
 
 ## Merged main checkpoint
 
@@ -18,42 +18,32 @@ Sprints 1.3, 1.4A, 1.4B and 1.5A are landed on main through that controlled merg
 
 - Branch: `phase1-acceptance-gated-adaptation`
 - Based on: `fdae6dd37330980c3e775da8e651a51f86f5b99c`
-- Active sprint: **1.6A — Acceptance-Gated Adaptation Authority Contract**
+- Sprint 1.6A contract commit: `daa4080286697dead686da35c5cbcd19c7c25385`
+- Active sprint: **1.6B — Programme Adaptation Proposal and Review**
 - Binding contract:
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
-- General adaptation policy (still binding):
-  [`../architecture/Adaptation_Policy_v1.md`](../architecture/Adaptation_Policy_v1.md)
+- ADR-020 clarification: programme path uses Plan-Package-native adapter →
+  `SessionAdaptationPipeline` directly; Coach Brain must not reauthor programmes.
 
-Sprint 1.6A is documentation and architecture-contract only. Do not implement
-product behaviour, UI, persistence, migrations, or Supabase changes in 1.6A.
+Sprint 1.6B implements athlete-initiated propose/review only. It must **not**
+accept, persist accepted decisions, mutate prepared sessions, change completion,
+cursor, scheduling, or invoke Adaptive Progression / generative Plan Library
+authoring.
 
 ## Approved adaptation direction (summary)
 
-1. Reuse `SessionAdaptationPipeline` through a Plan-Package-native adapter; the
-   programme journey must not depend on the legacy generative Plan Library /
-   Coach Brain product path.
-2. Adaptation may apply at whole-session and individual-exercise granularity.
-3. Nothing changes without explicit athlete acceptance; accept mutates only the
-   current prepared executable session.
-4. Initial reasons: time, equipment, environment, recovery — or clear
-   no-safe-adaptation when unlawful.
-5. Phase 1 persistence: local prepared session only; no new server table in
-   this sprint series unless later authorised.
-6. Accept replaces the current prepared `SessionExecutionPlan` while retaining
-   original programmed reference, decision metadata, and provenance.
-7. Reject / Keep Original / cancel / dismiss / ignore are complete no-ops.
-8. Post-completion adaptation remains closed for Phase 1.
-9. Programme Today will eventually expose athlete-initiated Adapt Session; no
-   unsolicited recommendation banners in Phase 1.
-10. Sprint 1.5A atomic completion and advancement remain unchanged.
+1. Authored Plan Package is the sole prescription authority.
+2. Reuse `SessionAdaptationPipeline` through a Plan-Package-native adapter.
+3. Adaptation may apply at whole-session and individual-exercise granularity.
+4. Nothing changes without explicit athlete acceptance (1.6C+).
+5. Non-acceptance outcomes are complete no-ops.
+6. Post-completion adaptation remains closed for Phase 1.
+7. Rescheduling is a separate proposed Sprint 1.7 authority.
 
 ## Rescheduling boundary
 
 Adaptation changes **what** is performed. Rescheduling changes **when** / order
-and is a **separate future authority** (proposed Sprint 1.7). Scheduling
-operations must not be implemented through the adaptation acceptance path.
-See the binding contract for proposed 1.7 principles (final approval during
-Sprint 1.7).
+and must not be implemented through the adaptation acceptance path.
 
 ## Preserved state
 
@@ -68,11 +58,11 @@ Sprint 1.7).
 
 ## Exact next sequence
 
-1. Complete Sprint 1.6A contract documentation on
-   `phase1-acceptance-gated-adaptation` (this checkpoint).
-2. After review, implement Sprint 1.6B propose/review (no durable write on
-   dismiss) per the binding contract.
-3. Continue 1.6C–1.6E only after each prior increment is accepted.
+1. Complete Sprint 1.6B propose/review on
+   `phase1-acceptance-gated-adaptation`.
+2. After review, implement Sprint 1.6C explicit acceptance + local prepared
+   mutation per the binding contract.
+3. Continue 1.6D–1.6E only after each prior increment is accepted.
 4. Do not begin Sprint 1.7 scheduling until separately approved.
 
 ## Resume checks

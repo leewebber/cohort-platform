@@ -4,6 +4,14 @@
 **Status:** Complete workout → evidence → plan advance → Coach Brain → Home  
 **Engine:** Unchanged Phase 4 Coach Brain pipeline
 
+**Scope note (Sprint 1.6B):** This document describes the **legacy Plan Library /
+generative Adaptive Progression** loop. It is **not** the prescription authority
+for Authored Plan Package programmes. Programme-backed adaptation must not
+invoke Adaptive Progression to reauthor, personalise, optimise, or progress an
+authored programme. See
+[`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
+and the Sprint 1.6B clarification on ADR-020.
+
 ---
 
 ## Product intent

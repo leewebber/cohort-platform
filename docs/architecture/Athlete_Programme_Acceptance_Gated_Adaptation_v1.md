@@ -1,7 +1,7 @@
 # Athlete Programme Acceptance-Gated Adaptation v1 — Sprint 1.6A
 
 **Status:** Binding for Phase 1 programme-backed adaptation  
-**Sprint:** 1.6A (architecture contract only — no product implementation)  
+**Sprint:** 1.6A contract; Sprint 1.6B implements propose/review only  
 **Depends on:** Sprint 1.4B prepared session, Sprint 1.5A completion/advancement  
 **Companions:** [Adaptation_Policy_v1.md](./Adaptation_Policy_v1.md),
 [Session_Authority_Model_v1.md](./Session_Authority_Model_v1.md),

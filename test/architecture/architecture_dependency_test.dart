@@ -64,6 +64,52 @@ void main() {
     expect(rx.contains('ExercisePolicyEngine'), isFalse);
     expect(rx.contains('PlanningEngine'), isFalse);
   });
+
+  test('programme adaptation path does not import generative reauthoring', () {
+    final files = [
+      'lib/application/adaptation/plan_package_session_adaptation_adapter.dart',
+      'lib/application/adaptation/programme_adaptation_proposal_service.dart',
+      'lib/features/home/services/programme_adapt_flow.dart',
+    ];
+    const forbiddenPathTokens = [
+      'coach_decision_router',
+      'adaptive_progression/',
+      'athlete_programme_generation_service',
+      'adaptive_progression_coordinator',
+    ];
+    const forbiddenCalls = [
+      'withAcceptedAdaptation(',
+      'commitDayOfAdaptation(',
+      'attachAdaptation(',
+      'CoachDecisionRouter(',
+      'AdaptiveProgressionCoordinator(',
+      'AthleteProgrammeGenerationService(',
+    ];
+    for (final path in files) {
+      final source = File('$root/$path').readAsStringSync();
+      final importLines = source
+          .split('\n')
+          .where((line) => line.trimLeft().startsWith('import '))
+          .join('\n');
+      for (final token in forbiddenPathTokens) {
+        expect(
+          importLines.contains(token),
+          isFalse,
+          reason: '$path must not import $token',
+        );
+      }
+      for (final token in forbiddenCalls) {
+        expect(
+          source.contains(token),
+          isFalse,
+          reason: '$path must not call $token',
+        );
+      }
+      if (path.endsWith('plan_package_session_adaptation_adapter.dart')) {
+        expect(source.contains('SessionAdaptationPipeline'), isTrue);
+      }
+    }
+  });
 }
 
 String _repoRoot(Directory start) {

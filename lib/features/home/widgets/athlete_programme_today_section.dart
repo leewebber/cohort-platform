@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -9,10 +10,12 @@ import '../../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
 import '../../workout_player/services/workout_player_launcher.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
+import '../services/programme_adapt_flow.dart';
 
 /// Home/today surface for a materialised authored programme session.
 ///
 /// Uses Sprint 1.4B deterministic preparation only — no Coach Brain resolve.
+/// Sprint 1.6B adds athlete-initiated Adapt Session (propose/review only).
 class AthleteProgrammeTodaySection extends StatefulWidget {
   const AthleteProgrammeTodaySection({
     super.key,
@@ -20,12 +23,19 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     this.refreshController,
     this.prepareService,
     this.launcher,
+    this.adaptFlow,
+    this.prepareOverride,
   });
 
   final String athleteId;
   final HomeTodaySessionRefreshController? refreshController;
   final AthleteProgrammeSessionPrepareService? prepareService;
   final WorkoutPlayerLauncher? launcher;
+  final ProgrammeAdaptFlow? adaptFlow;
+
+  /// Test seam: when set, used instead of [prepareService] for load.
+  final Future<AthleteProgrammePrepareResult> Function(String athleteId)?
+  prepareOverride;
 
   @override
   State<AthleteProgrammeTodaySection> createState() =>
@@ -39,10 +49,13 @@ class _AthleteProgrammeTodaySectionState
       AthleteCatalogueEnrolmentServices.createPrepareService();
   late final WorkoutPlayerLauncher _launcher =
       widget.launcher ?? WorkoutPlayerLauncher();
+  late final ProgrammeAdaptFlow _adaptFlow =
+      widget.adaptFlow ?? ProgrammeAdaptFlow();
 
   AthleteProgrammePrepareResult? _result;
   bool _loading = true;
   bool _opening = false;
+  bool _adapting = false;
   String? _error;
 
   @override
@@ -74,7 +87,9 @@ class _AthleteProgrammeTodaySectionState
       _loading = true;
       _error = null;
     });
-    final result = await _prepare.prepareForAthlete(widget.athleteId);
+    final result = widget.prepareOverride != null
+        ? await widget.prepareOverride!(widget.athleteId)
+        : await _prepare.prepareForAthlete(widget.athleteId);
     if (!mounted) return;
     setState(() {
       _result = result;
@@ -101,6 +116,33 @@ class _AthleteProgrammeTodaySectionState
       if (mounted) {
         setState(() => _opening = false);
         await _load(source: 'session_return');
+      }
+    }
+  }
+
+  bool get _canAdapt {
+    final package = _result?.package;
+    if (_result == null || !_result!.isReady || package == null) return false;
+    if (_opening || _adapting) return false;
+    return package.isProgrammeBacked &&
+        package.protocolId != null &&
+        package.protocolId!.trim().isNotEmpty &&
+        package.assignmentId != null &&
+        package.plan.blocks.isNotEmpty &&
+        package.acceptedAdaptation == null;
+  }
+
+  Future<void> _adapt() async {
+    final package = _result?.package;
+    if (package == null || !_canAdapt) return;
+    setState(() => _adapting = true);
+    try {
+      await _adaptFlow.open(context, package: package);
+    } finally {
+      if (mounted) {
+        setState(() => _adapting = false);
+        // Reconcile prepared state; Sprint 1.6B must not have mutated it.
+        await _load(source: 'adapt_return');
       }
     }
   }
@@ -158,8 +200,24 @@ class _AthleteProgrammeTodaySectionState
           statusDetail:
               'Authored programme · exact version. Submit completion to advance.',
           buttonLabel: _opening ? 'Opening…' : 'Begin',
-          onPressed: _opening ? null : _open,
+          onPressed: _opening || _adapting ? null : _open,
         ),
+        if (_canAdapt || _adapting) ...[
+          const SizedBox(height: CohortSpacing.md),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: _adapting ? null : _adapt,
+              child: Text(
+                _adapting ? 'Preparing adaptation…' : 'Adapt Session',
+                style: CohortTextStyles.body.copyWith(
+                  color: CohortColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
       ],
     );
   }
