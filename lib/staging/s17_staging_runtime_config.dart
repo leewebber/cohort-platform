@@ -15,6 +15,9 @@ class S17StagingRuntimeConfig {
     required this.packageHash,
     required this.runMarker,
     required this.lineageCode,
+    this.resumeMode = false,
+    this.selectedJourneysRaw = '',
+    this.schedulingLineageCode = 'PROG-S15A-STAGING',
   });
 
   static const stagingHostMarker = 'tsbadngzgvsyfqjupkng';
@@ -31,6 +34,9 @@ class S17StagingRuntimeConfig {
   final String packageHash;
   final String runMarker;
   final String lineageCode;
+  final bool resumeMode;
+  final String selectedJourneysRaw;
+  final String schedulingLineageCode;
 
   /// Loads compile-time defines. Empty/disabled when not provided.
   factory S17StagingRuntimeConfig.fromEnvironment() {
@@ -49,6 +55,38 @@ class S17StagingRuntimeConfig {
         'S17_LINEAGE_CODE',
         defaultValue: 'PROG-S13-ELIG',
       ),
+      resumeMode: const bool.fromEnvironment('S17_RESUME_MODE'),
+      selectedJourneysRaw: const String.fromEnvironment(
+        'S17_SELECTED_JOURNEYS',
+      ),
+      schedulingLineageCode: const String.fromEnvironment(
+        'S17_SCHEDULING_LINEAGE_CODE',
+        defaultValue: 'PROG-S15A-STAGING',
+      ),
+    );
+  }
+
+  S17StagingRuntimeConfig copyWith({
+    String? assignmentId,
+    String? versionId,
+    String? packageHash,
+    String? lineageCode,
+  }) {
+    return S17StagingRuntimeConfig(
+      enabled: enabled,
+      supabaseUrl: supabaseUrl,
+      supabaseAnonKey: supabaseAnonKey,
+      athleteEmail: athleteEmail,
+      athletePassword: athletePassword,
+      athleteId: athleteId,
+      assignmentId: assignmentId ?? this.assignmentId,
+      versionId: versionId ?? this.versionId,
+      packageHash: packageHash ?? this.packageHash,
+      runMarker: runMarker,
+      lineageCode: lineageCode ?? this.lineageCode,
+      resumeMode: resumeMode,
+      selectedJourneysRaw: selectedJourneysRaw,
+      schedulingLineageCode: schedulingLineageCode,
     );
   }
 
@@ -100,6 +138,7 @@ class S17StagingRuntimeConfig {
       'assignment_id_prefix': prefix(assignmentId),
       'version_id_prefix': prefix(versionId),
       'lineage_code': lineageCode,
+      'resume_mode': resumeMode ? 'true' : 'false',
       'targets_cohort_staging': 'true',
     };
   }

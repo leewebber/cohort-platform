@@ -121,6 +121,7 @@ plan = {
     "dry_run": ${DRY_RUN},
     "notes": [
         "Uses immutable published PROG-S13-ELIG; does not edit catalogue content.",
+        "PROG-S13-ELIG is the Self-Test 1 one-slot package; schedule ops F-J require later Athlete D-owned multi-slot preparation (B4c/B4d resume).",
         "Never enumerates or mutates existing athlete identities.",
         "Credentials written only under private_dir modes 700/600.",
     ],

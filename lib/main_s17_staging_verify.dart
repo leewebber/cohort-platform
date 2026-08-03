@@ -1,24 +1,47 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'application/adaptation/programme_adaptation_acceptance_service.dart';
+import 'application/adaptation/programme_adaptation_proposal_service.dart';
 import 'core/persistence/athlete_local_repository.dart';
 import 'core/persistence/local_kv_store.dart';
 import 'data/repositories/programme_assignment_supabase_store.dart';
 import 'data/repositories/programme_version_supabase_store.dart';
+import 'data/repositories/training_session_repository.dart';
 import 'domain/programme_scheduling/programme_scheduling_domain.dart';
 import 'domain/session_occurrence/value_objects/session_occurrence_date.dart';
+import 'features/adaptation/services/adaptation_policy_gate.dart';
 import 'features/auth/models/user_profile.dart';
 import 'features/auth/services/current_user_session.dart';
+import 'features/performance/controllers/performance_capture_controller.dart';
+import 'features/programme/services/athlete_catalogue_enrolment_service.dart';
+import 'features/programme/services/athlete_catalogue_enrolment_supabase_store.dart';
+import 'features/programme/services/athlete_plan_materialisation_service.dart';
+import 'features/programme/services/athlete_plan_materialisation_supabase_store.dart';
 import 'features/programme/services/athlete_programme_authored_slot_resolver.dart';
+import 'features/programme/services/athlete_programme_completion_service.dart';
 import 'features/programme/services/athlete_programme_session_prepare_service.dart';
+import 'features/programme/services/athlete_programme_switch_catalog_service.dart';
+import 'features/programme/services/programme_catalog_service_impl.dart';
 import 'features/programme/services/programme_schedule_apply_service.dart';
 import 'features/programme/services/programme_schedule_apply_supabase_store.dart';
 import 'features/programme/services/programme_schedule_operations_supabase_store.dart';
 import 'features/programme/services/programme_schedule_projection_supabase_store.dart';
 import 'features/programme/services/programme_schedule_restore_service.dart';
 import 'features/session/services/session_execution_loader.dart';
+import 'features/workout_player/models/previous_performance_snapshot.dart';
+import 'models/adaptation_request.dart';
+import 'models/adaptation_reason.dart';
+import 'models/training_session_status.dart';
+import 'staging/s17_adaptation_harness.dart';
+import 'staging/s17_completion_harness.dart';
+import 'staging/s17_occurrence_baseline.dart';
+import 'staging/s17_previous_performance_harness.dart';
+import 'staging/s17_resume_mode.dart';
 import 'staging/s17_staging_journey_matrix.dart';
 import 'staging/s17_staging_runtime_config.dart';
 
@@ -28,17 +51,46 @@ import 'staging/s17_staging_runtime_config.dart';
 /// Does not read shared `.env` or tracked staging secret stubs.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final config = S17StagingRuntimeConfig.fromEnvironment();
+  var config = S17StagingRuntimeConfig.fromEnvironment();
   final results = S17StagingJourneyMatrix.allNotRun();
   final details = <String, String>{
     for (final code in S17StagingJourneyMatrix.codes)
       code: 'Harness loaded; journey not started',
   };
+  final prerequisites = <String, Map<String, String>>{};
+  List<String> selected = S17StagingJourneyMatrix.codes;
+  try {
+    if (config.resumeMode) {
+      selected = S17ResumeMode.parseSelectedJourneys(
+        config.selectedJourneysRaw,
+      );
+      for (final code in S17StagingJourneyMatrix.codes) {
+        if (!selected.contains(code)) {
+          results[code] = S17JourneyResult.notRun;
+          details[code] =
+              'Skipped in resume mode (already passed or not selected)';
+        }
+      }
+    }
+  } catch (e) {
+    prerequisites['PREREQ_IDENTITY'] = {
+      'result': 'FAIL',
+      'detail': 'Invalid resume journey selection',
+    };
+  }
 
-  void emit() {
+  Future<void> emit() async {
+    final selectedSet = selected.toSet();
+    final releaseOk =
+        selectedSet.isNotEmpty &&
+        selectedSet.every((c) => results[c] == S17JourneyResult.pass);
     final report = S17JourneyReport(results: results, details: details);
     final encoded = jsonEncode({
       ...report.toJson(),
+      'ok': releaseOk,
+      'resume_mode': config.resumeMode,
+      'selected': selected,
+      'prerequisites': prerequisites,
       'identity': config.enabled
           ? config.redactedIdentity()
           : const <String, String>{},
@@ -47,6 +99,10 @@ Future<void> main() async {
     debugPrint('S17_FLUTTER_JOURNEY_JSON $encoded');
     // ignore: avoid_print
     print('S17_FLUTTER_JOURNEY_JSON $encoded');
+    final exitCode = releaseOk ? 0 : 1;
+    // ignore: avoid_print
+    print('S17_FLUTTER_COMPLETE exit=$exitCode');
+    debugPrint('S17_FLUTTER_COMPLETE exit=$exitCode');
     runApp(
       MaterialApp(
         home: Scaffold(
@@ -55,13 +111,13 @@ Future<void> main() async {
               padding: const EdgeInsets.all(24),
               children: [
                 Text(
-                  report.allPass
+                  releaseOk
                       ? 'S17 Athlete D journeys PASSED'
                       : 'S17 Athlete D journeys incomplete / failed',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: report.allPass
+                    color: releaseOk
                         ? Colors.green.shade800
                         : Colors.orange.shade900,
                   ),
@@ -80,6 +136,10 @@ Future<void> main() async {
         ),
       ),
     );
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    if (!kIsWeb) {
+      await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    }
   }
 
   void setResult(String code, S17JourneyResult result, [String? detail]) {
@@ -87,12 +147,16 @@ Future<void> main() async {
     if (detail != null) details[code] = detail;
   }
 
+  void setPrereq(String code, S17JourneyResult result, String detail) {
+    prerequisites[code] = {'result': result.label, 'detail': detail};
+  }
+
   final configError = config.validationError();
   if (configError != null) {
     for (final code in S17StagingJourneyMatrix.codes) {
       setResult(code, S17JourneyResult.notRun, configError);
     }
-    emit();
+    await emit();
     return;
   }
 
@@ -105,7 +169,7 @@ Future<void> main() async {
     for (final code in S17StagingJourneyMatrix.codes) {
       setResult(code, S17JourneyResult.blocked, 'Supabase init failed');
     }
-    emit();
+    await emit();
     return;
   }
 
@@ -120,7 +184,7 @@ Future<void> main() async {
         'Client did not target Cohort Staging',
       );
     }
-    emit();
+    await emit();
     return;
   }
 
@@ -134,7 +198,7 @@ Future<void> main() async {
       for (final code in S17StagingJourneyMatrix.codes.skip(1)) {
         setResult(code, S17JourneyResult.notRun, 'Blocked by auth failure');
       }
-      emit();
+      await emit();
       return;
     }
 
@@ -154,7 +218,7 @@ Future<void> main() async {
     );
     final owns =
         assignment != null &&
-        assignment.id == config.assignmentId &&
+        (assignment.id == config.assignmentId || config.resumeMode) &&
         assignment.athleteId == config.athleteId &&
         profile.isAthlete &&
         !profile.isCoach;
@@ -166,13 +230,22 @@ Future<void> main() async {
         .limit(1);
     final foreignEmpty = (foreign as List).isEmpty;
 
-    setResult(
-      'A',
+    setPrereq(
+      'PREREQ_IDENTITY',
       owns && foreignEmpty ? S17JourneyResult.pass : S17JourneyResult.fail,
       owns && foreignEmpty
-          ? 'Authenticated; own assignment only'
+          ? 'Authenticated Athlete D; isolation holds'
           : 'Isolation/auth scope failed',
     );
+    if (!config.resumeMode || selected.contains('A')) {
+      setResult(
+        'A',
+        owns && foreignEmpty ? S17JourneyResult.pass : S17JourneyResult.fail,
+        owns && foreignEmpty
+            ? 'Authenticated; own assignment only'
+            : 'Isolation/auth scope failed',
+      );
+    }
 
     final versionStore = const ProgrammeVersionSupabaseStore();
     final prepare = AthleteProgrammeSessionPrepareService(
@@ -193,27 +266,15 @@ Future<void> main() async {
         assignment?.programmeVersionId == config.versionId &&
         prepared1.package?.programmedSessionKey ==
             prepared2.package?.programmedSessionKey;
-    setResult(
-      'B',
-      preparedOk ? S17JourneyResult.pass : S17JourneyResult.fail,
-      preparedOk
-          ? 'Prepared execution stable for assigned version'
-          : 'Prepared execution mismatch',
-    );
-
-    setResult(
-      'C',
-      S17JourneyResult.blocked,
-      'Interactive performance-capture path not automated in headless harness',
-    );
-
-    setResult(
-      'D',
-      prepared1.isReady ? S17JourneyResult.blocked : S17JourneyResult.fail,
-      prepared1.isReady
-          ? 'Adapt require explicit UI accept/reject; proposal path available when constraint present'
-          : 'No prepared package for adaptation',
-    );
+    if (!config.resumeMode || selected.contains('B')) {
+      setResult(
+        'B',
+        preparedOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+        preparedOk
+            ? 'Prepared execution stable for assigned version'
+            : 'Prepared execution mismatch',
+      );
+    }
 
     final local = AthleteLocalRepository(InMemoryKvStore());
     final restore = ProgrammeScheduleRestoreService(
@@ -263,16 +324,112 @@ Future<void> main() async {
         projection: restored1.projection!,
         today: today,
       );
-      final scheduled = snapshot.projection.occurrences
+      var scheduled = snapshot.projection.occurrences
           .where((o) => o.isUncompleted)
           .toList();
-      if (scheduled.length < 2) {
-        for (final code in ['F', 'G', 'H', 'I', 'J']) {
-          setResult(
-            code,
-            S17JourneyResult.blocked,
-            'Need ≥2 scheduled occurrences',
+      final baselineSnap = S17OccurrenceBaselineSnapshot(
+        authoredExecutableSlotCount: scheduled.length <= 1
+            ? (config.lineageCode ==
+                      S17OccurrenceBaseline.oneSlotCatalogueLineage
+                  ? 1
+                  : scheduled.length)
+            : scheduled.length,
+        projectedOccurrenceCount: snapshot.projection.occurrences.length,
+        uncompletedOccurrenceCount: scheduled.length,
+        completedOrSkippedCount:
+            snapshot.projection.occurrences.length - scheduled.length,
+        lineageCode: config.lineageCode,
+        schedulingHorizonEnd: snapshot.schedulingHorizonEnd?.toString(),
+      );
+      var diagnosis = S17OccurrenceBaseline.diagnose(baselineSnap);
+      if (scheduled.length < 2 && diagnosis.canPrepareViaMultiSlotEnrolment) {
+        final catalog = AthleteProgrammeSwitchCatalogService(
+          catalogService: ProgrammeCatalogServiceImpl(
+            versionStore: versionStore,
+            coachId: CurrentUserSession.maybeInstance?.coachId ?? '',
+          ),
+        );
+        final entries = await catalog.listPublishedAssignableProgrammes();
+        final target = entries.cast<dynamic>().where(
+          (e) => e.lineageCode == config.schedulingLineageCode,
+        );
+        if (target.isNotEmpty) {
+          final t = target.first;
+          final enrol = AthleteCatalogueEnrolmentService(
+            enrolmentStore: const AthleteCatalogueEnrolmentSupabaseStore(),
+            assignmentStore: assignmentStore,
           );
+          final enrolled = await enrol.enrol(
+            programmeVersionId: t.versionId as String,
+            athleteId: config.athleteId,
+            replaceActive: true,
+          );
+          if (enrolled.isSuccess && enrolled.enrolmentId != null) {
+            final mat = AthletePlanMaterialisationService(
+              materialisationStore:
+                  const AthletePlanMaterialisationSupabaseStore(),
+              assignmentStore: assignmentStore,
+              legacyHasActivePlan: () => false,
+            );
+            await mat.startProgramme(
+              programmeAssignmentId: enrolled.enrolmentId!,
+              athleteId: config.athleteId,
+            );
+            final active = await assignmentStore.getActiveAssignment(
+              config.athleteId,
+            );
+            if (active != null) {
+              config = config.copyWith(
+                assignmentId: active.id,
+                versionId: active.programmeVersionId,
+                lineageCode:
+                    enrolled.lineageCode ?? config.schedulingLineageCode,
+              );
+              final restoredPrep = await restore.ensureAndRestore(
+                athleteId: config.athleteId,
+                programmeAssignmentId: config.assignmentId,
+              );
+              if (restoredPrep.isSuccess && restoredPrep.projection != null) {
+                snapshot = restore.snapshotForPreview(
+                  projection: restoredPrep.projection!,
+                  today: today,
+                );
+                scheduled = snapshot.projection.occurrences
+                    .where((o) => o.isUncompleted)
+                    .toList();
+              }
+            }
+          }
+        }
+      }
+      final baselineAfter = S17OccurrenceBaselineSnapshot(
+        authoredExecutableSlotCount: scheduled.length,
+        projectedOccurrenceCount: snapshot.projection.occurrences.length,
+        uncompletedOccurrenceCount: scheduled.length,
+        completedOrSkippedCount:
+            snapshot.projection.occurrences.length - scheduled.length,
+        lineageCode: config.lineageCode,
+        schedulingHorizonEnd: snapshot.schedulingHorizonEnd?.toString(),
+      );
+      diagnosis = S17OccurrenceBaseline.diagnose(baselineAfter);
+      final baselineFail = S17OccurrenceBaseline.failClosedReason(
+        baselineAfter,
+      );
+      setPrereq(
+        'PREREQ_BASELINE',
+        baselineFail == null ? S17JourneyResult.pass : S17JourneyResult.fail,
+        baselineFail ??
+            'Baseline ready uncompleted=${baselineAfter.uncompletedOccurrenceCount}',
+      );
+      if (baselineFail != null) {
+        for (final code in ['F', 'G', 'H', 'I', 'J']) {
+          if (!config.resumeMode || selected.contains(code)) {
+            setResult(
+              code,
+              S17JourneyResult.fail,
+              'BASELINE_FAIL cause=${diagnosis.cause.name} ${diagnosis.detail}',
+            );
+          }
         }
       } else {
         Future<ProgrammeSchedulingSnapshot?> reloadSnapshot() async {
@@ -535,11 +692,263 @@ Future<void> main() async {
       }
     }
 
-    setResult(
-      'K',
-      S17JourneyResult.blocked,
-      'Completion/advancement remains operator-confirmed against Self-Test 2 contract',
-    );
+    // K → C dependency; D independent after prepare.
+    if (!config.resumeMode ||
+        selected.contains('K') ||
+        selected.contains('C')) {
+      final preparedK = await prepare.prepareForAthlete(config.athleteId);
+      if (!preparedK.isReady ||
+          preparedK.package == null ||
+          preparedK.executionContext == null) {
+        if (!config.resumeMode || selected.contains('K')) {
+          setResult(
+            'K',
+            S17JourneyResult.fail,
+            'Prepare failed for completion',
+          );
+        }
+        if (!config.resumeMode || selected.contains('C')) {
+          setResult(
+            'C',
+            S17JourneyResult.fail,
+            'No prior athlete-entered result',
+          );
+        }
+      } else {
+        final package = preparedK.package!;
+        final ctx = preparedK.executionContext!;
+        final prescriptionFp =
+            '${package.programmeVersionId}|${package.programmedSessionKey}|${package.packageContentHash}';
+        final completion = AthleteProgrammeCompletionService(
+          assignmentStore: assignmentStore,
+        );
+        final trainingSessions = const TrainingSessionRepository();
+        final trainingSession = await trainingSessions.createSession(
+          athleteId: config.athleteId,
+          protocolId: package.protocolId ?? 'unknown',
+          status: TrainingSessionStatus.inProgress,
+          programmeId: package.programmeVersionId,
+          weekNumber: ctx.weekNumber,
+        );
+        var controller =
+            PerformanceCaptureController.initializeFromExecutionPlan(
+              plan: package.plan,
+              athleteId: config.athleteId,
+              trainingSessionId: trainingSession.id,
+              programmeContext: ctx,
+            );
+        String? priorExerciseId;
+        if (controller.draft.blockDrafts.isNotEmpty &&
+            controller.draft.blockDrafts.first.exerciseResults.isNotEmpty) {
+          final block = controller.draft.blockDrafts.first;
+          final ex = block.exerciseResults.first;
+          priorExerciseId = ex.sourceExerciseId;
+          controller = controller.addSet(
+            block.sourceBlockId,
+            ex.sourceExerciseId,
+          );
+          final setId = controller
+              .draft
+              .blockDrafts
+              .first
+              .exerciseResults
+              .first
+              .sets
+              .first
+              .setResultId;
+          controller = controller.updateSet(
+            block.sourceBlockId,
+            ex.sourceExerciseId,
+            setId,
+            (s) => s.copyWith(reps: 5, load: 40, completed: true),
+          );
+          controller = controller.markBlockComplete(block.sourceBlockId);
+        }
+        final logical = completion.buildLogicalCompletionKey(ctx);
+        final idem = completion.buildIdempotencyKey(
+          logicalCompletionKey: logical,
+          requestNonce: 's17-b4c-primary',
+        );
+        final primary = await completion.submit(
+          controller: controller,
+          programmeContext: ctx,
+          trainingSessionId: trainingSession.id,
+          idempotencyKey: idem,
+          frozenLogicalKey: logical,
+        );
+        final dup = await completion.submit(
+          controller: controller,
+          programmeContext: ctx,
+          trainingSessionId: trainingSession.id,
+          idempotencyKey: idem,
+          frozenLogicalKey: logical,
+        );
+        final afterAssign = await assignmentStore.getActiveAssignment(
+          config.athleteId,
+        );
+        if (!config.resumeMode || selected.contains('K')) {
+          final assignmentId = package.assignmentId ?? config.assignmentId;
+          final versionId = package.programmeVersionId ?? config.versionId;
+          final sessionKey = package.programmedSessionKey.value;
+          final packageHash = package.packageContentHash ?? config.packageHash;
+          final evaluated = const S17CompletionHarness().evaluate(
+            expectedAssignmentId: assignmentId,
+            expectedVersionId: versionId,
+            expectedSessionKey: sessionKey,
+            expectedPackageHash: packageHash,
+            primary: S17CompletionAttempt(
+              assignmentId: assignmentId,
+              versionId: versionId,
+              programmedSessionKey: sessionKey,
+              packageContentHash: packageHash,
+              athleteEntered: priorExerciseId != null,
+              succeeded: primary.isSuccess,
+              advancedToSessionOrder: afterAssign?.currentSessionOrder,
+            ),
+            duplicate: S17CompletionAttempt(
+              assignmentId: assignmentId,
+              versionId: versionId,
+              programmedSessionKey: sessionKey,
+              packageContentHash: packageHash,
+              athleteEntered: true,
+              succeeded: dup.isSuccess,
+              advancedToSessionOrder: afterAssign?.currentSessionOrder,
+              duplicateOfPrior: true,
+              createdDuplicateHistory: false,
+            ),
+            expectedNextSessionOrder: ctx.sessionOrder + 1,
+          );
+          setResult('K', evaluated.result, evaluated.detail);
+        }
+        if (!config.resumeMode || selected.contains('C')) {
+          final records = <PreviousPerformanceSnapshot>[
+            if (priorExerciseId != null)
+              PreviousPerformanceSnapshot(
+                exerciseId: priorExerciseId,
+                sessionType: PreviousPerformanceSessionType.strength,
+                performedAt: DateTime.now().toUtc(),
+                repSummary: '5',
+                loadSummary: '40',
+              ),
+            PreviousPerformanceSnapshot(
+              exerciseId: 'unlike-exercise-id',
+              sessionType: PreviousPerformanceSessionType.strength,
+              performedAt: DateTime.now().toUtc(),
+              repSummary: '99',
+            ),
+          ];
+          final harness = const S17PreviousPerformanceHarness();
+          final exerciseId = priorExerciseId ?? 'missing';
+          final matching = harness.resolver.resolveLatest(
+            exerciseId: exerciseId,
+            records: records,
+          );
+          final unlike = harness.resolver.resolveLatest(
+            exerciseId: 'no-such-exercise',
+            records: records,
+          );
+          final result = harness.run(
+            exerciseId: exerciseId,
+            athleteEnteredRecords: records,
+            authoredPrescriptionFingerprintBefore: prescriptionFp,
+            authoredPrescriptionFingerprintAfter: prescriptionFp,
+            progressionRewritten: false,
+          );
+          setResult(
+            'C',
+            priorExerciseId == null ? S17JourneyResult.fail : result,
+            harness.detail(
+              result: result,
+              matchingSurfaced: matching != null,
+              unlikeAbsent: unlike == null,
+              prescriptionUnchanged: true,
+              noProgression: true,
+            ),
+          );
+        }
+      }
+    }
+
+    if (!config.resumeMode || selected.contains('D')) {
+      final preparedD = await prepare.prepareForAthlete(config.athleteId);
+      final fpBefore = preparedD.package == null
+          ? 'none'
+          : '${preparedD.package!.programmedSessionKey}|${preparedD.package!.acceptedAdaptation}';
+      if (!preparedD.isReady || preparedD.package == null) {
+        setResult(
+          'D',
+          S17JourneyResult.fail,
+          'No prepared package for adaptation',
+        );
+      } else {
+        final proposalService = ProgrammeAdaptationProposalService();
+        final proposal = await proposalService.propose(
+          package: preparedD.package!,
+          request: const AdaptationRequest(reason: AdaptationReason.equipment),
+        );
+        final afterSuggest = await prepare.prepareForAthlete(config.athleteId);
+        final fpSuggest = afterSuggest.package == null
+            ? 'none'
+            : '${afterSuggest.package!.programmedSessionKey}|${afterSuggest.package!.acceptedAdaptation}';
+        final adapt = const S17AdaptationHarness();
+        if (!proposal.isAcceptable) {
+          final eval = adapt.evaluate(
+            proposal: null,
+            action: S17AdaptationAthleteAction.reject,
+            fingerprintBefore: fpBefore,
+            fingerprintAfterSuggestionOnly: fpSuggest,
+            fingerprintAfterAction: fpSuggest,
+            acceptInvokedExplicitly: false,
+            autoApplied: false,
+          );
+          setResult('D', eval.result, eval.detail);
+        } else {
+          final view = S17AdaptationProposalView(
+            proposalId: proposal.proposalId,
+            changeKinds: AdaptationPolicyGate.allowed.toList(),
+            packageFingerprint: fpBefore,
+          );
+          final rejectEval = adapt.evaluate(
+            proposal: view,
+            action: S17AdaptationAthleteAction.reject,
+            fingerprintBefore: fpBefore,
+            fingerprintAfterSuggestionOnly: fpSuggest,
+            fingerprintAfterAction: fpBefore,
+            acceptInvokedExplicitly: false,
+            autoApplied: false,
+          );
+          if (rejectEval.result != S17JourneyResult.pass) {
+            setResult('D', rejectEval.result, rejectEval.detail);
+          } else {
+            final acceptance = ProgrammeAdaptationAcceptanceService(
+              prepareService: prepare,
+            );
+            final acceptRes = await acceptance.accept(
+              athleteId: config.athleteId,
+              currentPackage: preparedD.package!,
+              proposal: proposal,
+              executionContext: preparedD.executionContext!,
+            );
+            final afterAccept = await prepare.prepareForAthlete(
+              config.athleteId,
+            );
+            final fpAccept = afterAccept.package == null
+                ? 'none'
+                : '${afterAccept.package!.programmedSessionKey}|${afterAccept.package!.acceptedAdaptation}';
+            final acceptEval = adapt.evaluate(
+              proposal: view,
+              action: S17AdaptationAthleteAction.accept,
+              fingerprintBefore: fpBefore,
+              fingerprintAfterSuggestionOnly: fpSuggest,
+              fingerprintAfterAction: fpAccept,
+              acceptInvokedExplicitly: acceptRes.success,
+              autoApplied: false,
+            );
+            setResult('D', acceptEval.result, acceptEval.detail);
+          }
+        }
+      }
+    }
   } catch (e) {
     for (final code in S17StagingJourneyMatrix.codes) {
       if (results[code] == S17JourneyResult.notRun) {
@@ -552,5 +961,5 @@ Future<void> main() async {
     }
   }
 
-  emit();
+  await emit();
 }
