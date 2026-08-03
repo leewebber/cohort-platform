@@ -2,7 +2,8 @@
 
 **Recorded:** 2026-08-03
 **Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
-Sprint 1.7A scheduling binding contract complete on dedicated branch
+Sprint 1.7A contract + Sprint 1.7B compute-only scheduling domain/preview complete
+on dedicated branch (not pushed)
 
 ## Merged main checkpoint
 
@@ -21,13 +22,18 @@ Sprint 1.7A scheduling binding contract complete on dedicated branch
   `phase1-acceptance-gated-adaptation` @ `30ec8b0`
 - Sprint 1.6E tip: `bcc4b36a7f0849440bf7716f0c4bca7304ee559f`
 - Sprint 1.7A tip: `c95c5e2f6594858918ea754eac16c428f66fef4a`
-- Next sprint: **1.7B — scheduling domain model, identity, preview and policy**
+- Sprint 1.7B: compute-only domain/policy/preview under
+  `lib/domain/programme_scheduling/` (owner:
+  `ProgrammeSchedulingPreviewEngine`)
+- Next sprint: **1.7C — durable schedule projection, revision, operation log,
+  atomic RPC skeleton, local restore**
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 - Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
-  Scheduling is a separate authority beginning at 1.7A (contract only).
+  Scheduling authority: 1.7A contract + 1.7B compute-only preview; no durable
+  mutate, athlete UI, migrations, or Supabase contact yet.
 
 ## Approved direction (summary)
 
@@ -37,6 +43,11 @@ Sprint 1.7A scheduling binding contract complete on dedicated branch
 4. Completion remains Sprint 1.5A-owned; skip is not completion.
 5. Adaptation remains limited to the current prepared executable session.
 6. No Coach Brain, Adaptive Progression, or adaptation-pipeline scheduling.
+7. Founder-approved Sprint 1.7 defaults: Move/Swap/Push/Skip default-allow via
+   central policy (no package permission schema fields); past-date catch-up
+   allowed from `started_at` through today; push horizon fail-closed; undo TTL
+   72 athlete-local hours (modelled only in 1.7B); paused assignments block
+   preview/mutation.
 
 ## Preserved state
 
@@ -47,9 +58,9 @@ Sprint 1.7A scheduling binding contract complete on dedicated branch
 
 ## Exact next sequence
 
-1. After review of Sprint 1.7A, implement Sprint 1.7B preview/domain model only.
-2. Do not implement durable mutate RPCs or athlete scheduling UI before their
-   assigned increments (1.7C+).
+1. After review of Sprint 1.7B, implement Sprint 1.7C durable persistence only.
+2. Move/Swap apply remain 1.7D; Push/Skip apply remain 1.7E; Undo/UI/hardening
+   remain 1.7F. No athlete-facing scheduling behaviour before those increments.
 
 ## Resume checks
 

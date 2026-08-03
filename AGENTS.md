@@ -21,8 +21,10 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 Acceptance-gated adaptation (Sprints 1.6A–1.6E) is complete on
 `phase1-acceptance-gated-adaptation` @ `30ec8b0`. Active scheduling workstream
 branch: `phase1-athlete-controlled-scheduling`. Sprint **1.7A** binding contract
-is complete (documentation and architecture guards only). Next: **1.7B**
-preview/domain model — still no athlete-facing scheduling mutate UI.
+and Sprint **1.7B** compute-only domain/policy/preview
+(`lib/domain/programme_scheduling/`, `ProgrammeSchedulingPreviewEngine`) are
+complete. Next: **1.7C** durable projection/revision/operation log — still no
+athlete-facing scheduling mutate UI.
 
 ## Authority and product invariants
 
@@ -93,10 +95,10 @@ record.
 
 The exact next sequence is:
 
-1. After review, continue Sprint 1.7B preview/domain model on
+1. After review, continue Sprint 1.7C durable schedule persistence on
    `phase1-athlete-controlled-scheduling`.
-2. Do not implement durable scheduling mutate RPCs or athlete UI before their
-   assigned increments.
+2. Do not implement athlete scheduling UI or apply paths before their assigned
+   increments (Move/Swap apply = 1.7D; Push/Skip apply = 1.7E; Undo/UI = 1.7F).
 3. Optional later authorised staging evidence remains deferred unless a task
    explicitly authorises staging contact.
 

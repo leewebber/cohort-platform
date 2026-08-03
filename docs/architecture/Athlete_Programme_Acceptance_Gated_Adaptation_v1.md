@@ -381,7 +381,7 @@ See [Proposed Sprint 1.7](#proposed-sprint-17--athlete-controlled-scheduling).
 
 ## Proposed Sprint 1.7 — athlete-controlled scheduling
 
-**Status:** Binding contract opened in Sprint **1.7A** —
+**Status:** Binding contract opened in Sprint **1.7A**; compute-only domain/preview delivered in Sprint **1.7B** —
 see [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md).
 Not part of adaptation implementation Sprints 1.6B–1.6E.
 

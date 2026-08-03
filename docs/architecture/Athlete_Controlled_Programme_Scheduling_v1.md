@@ -560,8 +560,8 @@ Scheduling and adaptation remain distinct:
 
 | Sprint | Scope | Verifiable outcome |
 |--------|-------|--------------------|
-| **1.7A** | Discovery + binding contract + architecture guards | This document; ownership tests; no product behaviour |
-| **1.7B** | Domain model, identity, preview engine, policy/eligibility validation (compute-only) | Deterministic previews + fingerprints; no durable mutate |
+| **1.7A** | Discovery + binding contract + architecture guards | This document; ownership tests; no product behaviour — **complete** |
+| **1.7B** | Domain model, identity, preview engine, policy/eligibility validation (compute-only) | Deterministic previews + fingerprints; no durable mutate — **complete** |
 | **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required |
 | **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules |
 | **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green |
@@ -570,6 +570,23 @@ Scheduling and adaptation remain distinct:
 Deviation note: Preview is intentionally front-loaded in 1.7B before persistence
 (1.7C) so eligibility rules are locked before RPCs exist. Move/Swap precede
 Push/Skip because they do not require cursor-transition authority.
+
+### Sprint 1.7B delivery status
+
+Implemented under `lib/domain/programme_scheduling/`:
+
+- stable `ScheduledOccurrenceIdentity` (date not part of identity);
+- `ProgrammeScheduleProjection` + authoritative `ProgrammeSchedulingSnapshot`;
+- Move/Swap/Push/Skip request types and typed preview outcomes;
+- central `ProgrammeSchedulingPolicy` (default-allow; no package permission fields);
+- compute-only `ProgrammeSchedulingPreviewEngine` with canonical SHA-256 fingerprint;
+- undo TTL / prior-snapshot inputs modelled only (`ProgrammeSchedulingUndoPolicyInputs`);
+- architecture guards updated to permit the domain/preview owner while forbidding
+  apply/mutate/persist/UI services.
+
+Sprint 1.7B does **not** persist schedules, bump durable `scheduleRevision`,
+apply operations, clear prepared state, mutate cursor, create completion, add UI,
+or contact Supabase.
 
 ---
 
@@ -589,8 +606,10 @@ Minimum future coverage themes:
 - architecture dependency: scheduling owners forbid adaptation/Coach
   Brain/Adaptive Progression/Plan Package mutation APIs.
 
-Sprint 1.7A adds architecture ownership/dependency guards for the contract file
-and forbidden couplings only.
+Sprint 1.7A added architecture ownership/dependency guards for the contract file
+and forbidden couplings. Sprint 1.7B extends those guards to permit
+`lib/domain/programme_scheduling/` and the compute-only preview owner while
+continuing to forbid mutation/apply/persist services.
 
 ---
 
@@ -610,19 +629,30 @@ No staging contact is authorised in 1.7A.
 
 ---
 
-## Unresolved decisions requiring founder approval
+## Founder decisions (approved and binding for Sprint 1.7)
 
-1. **Package permission schema** — Plan Package fields governing allow/deny of
-   move, swap, push, skip do not exist yet. Default Phase 1 proposal: allow all
-   four for materialised athlete plans until package permissions ship.
-2. **Catch-up into the past** — default allows scheduling uncompleted
-   occurrences onto past dates for overdue catch-up; confirm product preference.
-3. **Push horizon extension** — default fail closed when exceeding package
-   horizon; confirm whether athletes may explicitly extend.
-4. **Undo TTL** — default 72 athlete-local hours; confirm.
-5. **Pause interaction** — paused assignments block scheduling; confirm whether
-   resume should recompute overdue Today automatically (recommended: yes, no
-   date rewrite).
+1. **Scheduling permissions** — Move, Swap, Push and Skip are default-allowed for
+   eligible athlete programme assignments. No scheduling-permission field is
+   added to the Plan Package schema in this milestone. A central policy boundary
+   supports future restrictions without changing operation or preview semantics.
+   The Plan Package remains prescription authority, not scheduling-permission
+   authority.
+2. **Past-date catch-up** — An uncompleted occurrence may be scheduled onto an
+   athlete-local date from the assignment’s `started_at` through today,
+   inclusive. It may never be moved before `started_at`. Placing an uncompleted
+   occurrence in the past makes it overdue; it must not mark complete, fabricate
+   actuals, create previous-performance evidence, imply performance on that date,
+   or bypass Skip/completion authority.
+3. **Push horizon** — Push beyond the programme scheduling horizon fails closed
+   by default. Preview returns a typed horizon-exceeded result without mutation.
+   Do not silently extend, truncate, or partially apply.
+4. **Undo TTL** — Default undo eligibility window is 72 athlete-local hours from
+   the successful scheduling operation. Sprint 1.7B models policy inputs only;
+   durable undo / operation-log persistence remain later-sprint work.
+5. **Paused assignments** — Paused assignments block Preview and mutation for
+   Move, Swap, Push and Skip with a typed paused-assignment outcome. Resume does
+   not rewrite dates; Today/overdue selection recomputes from the preserved
+   projection after resume.
 
 ---
 
@@ -637,3 +667,14 @@ This document is the binding architecture contract. Sprint 1.7A delivers:
 
 Sprint 1.7A does **not** deliver athlete-facing scheduling behaviour, UI,
 migrations, RPCs, repositories, or server persistence.
+
+## Sprint 1.7B boundary
+
+Sprint 1.7B delivers the pure scheduling domain and compute-only preview path
+ending at: authoritative snapshot → operation request → policy/eligibility →
+proposed projection → impacts/collisions → canonical preview fingerprint →
+typed preview result.
+
+Sprint 1.7B does **not** deliver confirmation/apply, durable persistence, cache
+replacement, cursor mutation, prepared-state invalidation, athlete-facing UI,
+migrations, RPCs, or Supabase contact. Those remain assigned to 1.7C–1.7F.

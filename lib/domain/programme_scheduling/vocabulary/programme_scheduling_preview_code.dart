@@ -1,0 +1,19 @@
+/// Typed preview outcomes for compute-only scheduling (Sprint 1.7B).
+enum ProgrammeSchedulingPreviewCode {
+  previewReady,
+  noChange,
+  assignmentPaused,
+  occurrenceNotFound,
+  provenanceMismatch,
+  occurrenceCompleted,
+  occurrenceAlreadySkipped,
+  inFlightExecution,
+  invalidDate,
+  beforeAssignmentStart,
+  invalidPushDistance,
+  horizonExceeded,
+  swapRequiresDistinctOccurrences,
+  crossAssignmentOrVersionSwap,
+  unsupportedOrMalformedRequest,
+  inconsistentProjection,
+}
