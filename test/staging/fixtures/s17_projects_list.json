@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Cohort Field Manual",
+    "ref": "otnhhdxstdnwccehacku",
+    "region": "eu-west-1",
+    "status": "ACTIVE_HEALTHY",
+    "linked": false
+  },
+  {
+    "name": "Cohort Staging",
+    "ref": "tsbadngzgvsyfqjupkng",
+    "region": "eu-west-2",
+    "status": "ACTIVE_HEALTHY",
+    "linked": true
+  }
+]

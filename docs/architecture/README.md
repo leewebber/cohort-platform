@@ -14,6 +14,7 @@
 | [Sprint_1_5A_Staging_Self_Test_2.md](./Sprint_1_5A_Staging_Self_Test_2.md) | Phase 1 Sprint 1.5A — staging Self-Test 2 closure at `4365568` |
 | [Athlete_Programme_Acceptance_Gated_Adaptation_v1.md](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md) | Phase 1 Sprint 1.6A — programme-backed acceptance-gated adaptation authority |
 | [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7 — athlete-controlled programme scheduling (1.7A–1.7F complete: restore, Move/Swap/Push/Skip/Undo, durable horizon, calendar) |
+| [Sprint_1_7_Athlete_D_Staging_Harness.md](./Sprint_1_7_Athlete_D_Staging_Harness.md) | Phase 1 Release Gate B4a — Athlete D staging harness (local); hosted create/verify remains B4b |
 | [Planning_Engine_v1.md](./Planning_Engine_v1.md) | **Phase 3.5** — planning pipeline, contracts, ownership (canonical for Phase 4) |
 | [Architecture_Freeze_v1.md](./Architecture_Freeze_v1.md) | **Phase 4.5** — freeze, readiness, architecture tests, Phase 5 recommendation |
 | [../product/Workout_Player_MVP.md](../product/Workout_Player_MVP.md) | **Phase 5 Sprint 1** — athlete Workout Player vertical slice |
