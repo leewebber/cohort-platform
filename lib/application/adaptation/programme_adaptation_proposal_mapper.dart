@@ -6,6 +6,10 @@ import 'package:cohort_platform/features/plans/models/programmed_session_key.dar
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
 import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
+import 'package:cohort_platform/models/protocol_draft.dart';
+
+import 'programme_adaptation_fingerprints.dart';
+import 'programme_adaptation_plan_applier.dart';
 
 /// Maps a compute-only pipeline run into a first-class programme proposal.
 class ProgrammeAdaptationProposalMapper {
@@ -15,6 +19,7 @@ class ProgrammeAdaptationProposalMapper {
     required PreparedExecutionPackage package,
     required AdaptationRequest request,
     required SessionAdaptationPipelineRun run,
+    required ProtocolDraft authoredDraft,
     DateTime? proposedAt,
   }) {
     final stamp = proposedAt ?? DateTime.now().toUtc();
@@ -141,34 +146,63 @@ class ProgrammeAdaptationProposalMapper {
       );
     }
 
-    return ProgrammeAdaptationProposal(
-      proposalId: _proposalId(identity, request, stamp),
-      outcome: ProgrammeAdaptationProposalOutcome.reviewable,
-      reason: request.reason,
-      programmedSessionKey: identity.key,
-      assignmentId: identity.assignmentId,
-      programmeVersionId: identity.programmeVersionId,
-      packageContentHash: identity.packageContentHash,
-      protocolId: identity.protocolId,
-      preparedAt: identity.preparedAt,
-      proposedAt: stamp,
-      dayKey: identity.dayKey,
-      slotOrder: identity.slotOrder,
-      sessionChanges: sessionChanges,
-      exerciseChanges: exerciseChanges,
-      preservedIntent: preservedIntent,
-      derivationExplanation:
-          'Each proposed change is derived from today’s authored prescription '
-          'for programmed session ${identity.key.value}. The authored Plan '
-          'Package, later sessions, programme position, and scheduling remain '
-          'unchanged. Only the current prepared session could be affected '
-          'after explicit acceptance in a later sprint.',
-      athleteFacingMessage:
-          'Review the proposed adjustments below. Nothing has changed yet. '
-          'Your authored programme and later sessions stay as prescribed.',
-      policyKinds: policyKinds,
-      evaluationProvenance: provenance,
-    );
+    try {
+      final reviewedPlan = const ProgrammeAdaptationPlanApplier().applySnapshot(
+        originalPlan: package.plan,
+        authoredDraft: authoredDraft,
+        snapshot: snapshot,
+      );
+      final originalFingerprint = ProgrammeAdaptationFingerprints.plan(
+        package.plan,
+      );
+      final reviewedFingerprint = ProgrammeAdaptationFingerprints.plan(
+        reviewedPlan,
+      );
+      return ProgrammeAdaptationProposal(
+        proposalId: _proposalId(identity, request, stamp),
+        outcome: ProgrammeAdaptationProposalOutcome.reviewable,
+        reason: request.reason,
+        programmedSessionKey: identity.key,
+        assignmentId: identity.assignmentId,
+        programmeVersionId: identity.programmeVersionId,
+        packageContentHash: identity.packageContentHash,
+        protocolId: identity.protocolId,
+        preparedAt: identity.preparedAt,
+        proposedAt: stamp,
+        dayKey: identity.dayKey,
+        slotOrder: identity.slotOrder,
+        sessionChanges: sessionChanges,
+        exerciseChanges: exerciseChanges,
+        preservedIntent: preservedIntent,
+        derivationExplanation:
+            'Each proposed change is derived from today’s authored prescription '
+            'for programmed session ${identity.key.value}. The authored Plan '
+            'Package, later sessions, programme position, and scheduling remain '
+            'unchanged. Only the current prepared session can change after '
+            'explicit acceptance.',
+        athleteFacingMessage:
+            'Review the proposed adjustments below. Nothing has changed yet. '
+            'Your authored programme and later sessions stay as prescribed.',
+        policyKinds: policyKinds,
+        evaluationProvenance: provenance,
+        request: request,
+        originalPlanFingerprint: originalFingerprint,
+        reviewedExecutablePlan: reviewedPlan,
+        snapshotId: snapshot.snapshotId,
+        reviewedPlanFingerprint: reviewedFingerprint,
+      );
+    } catch (_) {
+      return _noSafe(
+        identity: identity,
+        request: request,
+        stamp: stamp,
+        policyKinds: policyKinds,
+        provenance: provenance,
+        preservedIntent: preservedIntent,
+        noSafeReason: ProgrammeAdaptationNoSafeReason.pipelineUnableToPlan,
+        message: _noSafeMessage(request.reason, planStatus),
+      );
+    }
   }
 
   static ProgrammeAdaptationProposal noSafeFromException({

@@ -56,13 +56,17 @@ class PreparedExecutionPackage {
       packageContentHash != null &&
       packageContentHash!.trim().isNotEmpty;
 
+  /// Attaches an accepted decision and optionally replaces the active executable
+  /// plan. Programmed identity and package provenance are preserved.
   PreparedExecutionPackage withAcceptedAdaptation(
-    AcceptedAdaptationDecision decision,
-  ) {
+    AcceptedAdaptationDecision decision, {
+    SessionExecutionPlan? executablePlan,
+    WorkoutSessionBrief? executableBrief,
+  }) {
     return PreparedExecutionPackage(
       programmedSessionKey: programmedSessionKey,
-      plan: plan,
-      brief: brief,
+      plan: executablePlan ?? plan,
+      brief: executableBrief ?? brief,
       preparedAt: preparedAt,
       planId: planId,
       planVersion: planVersion,

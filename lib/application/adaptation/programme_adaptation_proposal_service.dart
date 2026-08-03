@@ -78,6 +78,7 @@ class ProgrammeAdaptationProposalService {
         package: package,
         request: request,
         run: run,
+        authoredDraft: draft,
         proposedAt: proposedAt,
       );
     } on PlanPackageAdaptationAdapterException catch (error) {

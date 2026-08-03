@@ -11,5 +11,8 @@ export 'plan_package_session_adaptation_adapter.dart';
 export 'planned_session_protocol_metadata_merge.dart';
 export 'planned_block_duration_adapter.dart';
 export 'planned_session_adaptation_input_adapter.dart';
+export 'programme_adaptation_acceptance_service.dart';
+export 'programme_adaptation_fingerprints.dart';
+export 'programme_adaptation_plan_applier.dart';
 export 'programme_adaptation_proposal_mapper.dart';
 export 'programme_adaptation_proposal_service.dart';

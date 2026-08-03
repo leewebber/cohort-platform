@@ -8,11 +8,11 @@ import 'cohort_button.dart';
 import 'cohort_card.dart';
 import 'section_title.dart';
 
-/// Athlete review for a programme adaptation proposal (Sprint 1.6B).
+/// Athlete review for a programme adaptation proposal.
 ///
-/// No Accept control is shown. Sprint 1.6C may add explicit acceptance without
-/// redesigning [ProgrammeAdaptationProposal].
-class ProgrammeAdaptationProposalSheet extends StatelessWidget {
+/// Accept is enabled only for [ProgrammeAdaptationProposal.isAcceptable]
+/// reviewable proposals (Sprint 1.6C).
+class ProgrammeAdaptationProposalSheet extends StatefulWidget {
   const ProgrammeAdaptationProposalSheet({
     super.key,
     required this.proposal,
@@ -21,9 +21,28 @@ class ProgrammeAdaptationProposalSheet extends StatelessWidget {
   final ProgrammeAdaptationProposal proposal;
 
   @override
+  State<ProgrammeAdaptationProposalSheet> createState() =>
+      _ProgrammeAdaptationProposalSheetState();
+}
+
+class _ProgrammeAdaptationProposalSheetState
+    extends State<ProgrammeAdaptationProposalSheet> {
+  bool _submitting = false;
+
+  ProgrammeAdaptationProposal get proposal => widget.proposal;
+
+  void _accept() {
+    if (_submitting || !proposal.isAcceptable) return;
+    setState(() => _submitting = true);
+    // Pop true only after deliberate Accept tap; caller performs mutation.
+    Navigator.of(context).pop(true);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isReviewable = proposal.isReviewable;
     final isNoSafe = proposal.isNoSafeAdaptation;
+    final canAccept = proposal.isAcceptable && !_submitting;
 
     return SafeArea(
       child: Padding(
@@ -99,9 +118,9 @@ class ProgrammeAdaptationProposalSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: CohortSpacing.md),
                 Text(
-                  'Nothing has changed yet. Your authored programme, later '
-                  'sessions, progression, and scheduling remain unchanged. '
-                  'Explicit confirmation will arrive in a later sprint.',
+                  'Accepting changes only today’s prepared session. Your '
+                  'authored programme, later sessions, progression, and '
+                  'scheduling remain unchanged.',
                   style: CohortTextStyles.muted,
                 ),
               ],
@@ -114,13 +133,24 @@ class ProgrammeAdaptationProposalSheet extends StatelessWidget {
                 ),
               ],
               const SizedBox(height: CohortSpacing.xl),
+              if (canAccept) ...[
+                CohortButton(
+                  label: _submitting ? 'Applying…' : 'Accept Adaptation',
+                  onPressed: _submitting ? () {} : _accept,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+              ],
               CohortButton(
                 label: 'Keep Original Session',
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: _submitting
+                    ? () {}
+                    : () => Navigator.of(context).pop(false),
               ),
               const SizedBox(height: CohortSpacing.sm),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(null),
+                onPressed: _submitting
+                    ? () {}
+                    : () => Navigator.of(context).pop(null),
                 child: Text('Cancel', style: CohortTextStyles.muted),
               ),
             ],

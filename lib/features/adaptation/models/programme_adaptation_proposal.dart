@@ -1,10 +1,12 @@
 import '../../../models/adaptation_reason.dart';
+import '../../../models/adaptation_request.dart';
 import '../../plans/models/programmed_session_key.dart';
+import '../../session/models/session_execution_plan.dart';
 
 /// Outcome of a programme-backed adaptation evaluation (Sprint 1.6B).
 ///
 /// Distinct from [AcceptedAdaptationDecision] — proposals never mutate prepared
-/// state in 1.6B.
+/// state until explicit acceptance (Sprint 1.6C).
 enum ProgrammeAdaptationProposalOutcome {
   /// Material session and/or exercise changes are available for athlete review.
   reviewable,
@@ -63,11 +65,22 @@ class ProgrammeAdaptationMaterialChange {
   final String? beforeValue;
   final String? afterValue;
   final int? planStepSequence;
+
+  Map<String, dynamic> toPersistenceMap() => {
+    'scope': scope.name,
+    'targetId': targetId,
+    'actionLabel': actionLabel,
+    'summary': summary,
+    'exerciseId': exerciseId,
+    'exerciseLinkLocalId': exerciseLinkLocalId,
+    'blockLocalId': blockLocalId,
+    'beforeValue': beforeValue,
+    'afterValue': afterValue,
+    'planStepSequence': planStepSequence,
+  };
 }
 
 /// First-class in-memory proposal for the programme Adapt Session path.
-///
-/// Compute-only in Sprint 1.6B — must not be confused with an accepted decision.
 class ProgrammeAdaptationProposal {
   const ProgrammeAdaptationProposal({
     required this.proposalId,
@@ -90,6 +103,11 @@ class ProgrammeAdaptationProposal {
     this.noSafeReason,
     this.policyKinds = const [],
     this.evaluationProvenance = const [],
+    this.request,
+    this.originalPlanFingerprint,
+    this.reviewedExecutablePlan,
+    this.snapshotId,
+    this.reviewedPlanFingerprint,
   });
 
   final String proposalId;
@@ -113,11 +131,30 @@ class ProgrammeAdaptationProposal {
   final List<String> policyKinds;
   final List<String> evaluationProvenance;
 
+  /// Original athlete request retained for freshness revalidation on accept.
+  final AdaptationRequest? request;
+
+  /// Fingerprint of the prepared plan at proposal time.
+  final String? originalPlanFingerprint;
+
+  /// Exact reviewed executable plan (reviewable proposals only).
+  final SessionExecutionPlan? reviewedExecutablePlan;
+
+  final String? snapshotId;
+  final String? reviewedPlanFingerprint;
+
   bool get isReviewable =>
       outcome == ProgrammeAdaptationProposalOutcome.reviewable;
 
   bool get isNoSafeAdaptation =>
       outcome == ProgrammeAdaptationProposalOutcome.noSafeAdaptation;
+
+  bool get isAcceptable =>
+      isReviewable &&
+      reviewedExecutablePlan != null &&
+      reviewedExecutablePlan!.hasExecutableBlocks &&
+      request != null &&
+      originalPlanFingerprint != null;
 
   List<ProgrammeAdaptationMaterialChange> get allMaterialChanges => [
     ...sessionChanges,

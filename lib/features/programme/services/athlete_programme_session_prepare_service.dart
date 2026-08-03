@@ -2,6 +2,7 @@ import '../../../core/persistence/athlete_local_repository.dart';
 import '../../../core/persistence/session_execution_plan_codec.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../models/programme_assignment.dart';
+import '../../adaptation/models/accepted_adaptation_decision.dart';
 import '../../plans/models/programmed_session_key.dart';
 import '../../session/models/prepared_execution_package.dart';
 import '../../session/services/session_execution_loader.dart';
@@ -304,6 +305,11 @@ class AthleteProgrammeSessionPrepareService {
         dayKey: record.dayKey,
         slotOrder: record.slotOrder,
         protocolId: record.protocolId,
+        acceptedAdaptation: record.acceptedAdaptation == null
+            ? null
+            : AcceptedAdaptationDecision.fromPersistenceMap(
+                record.acceptedAdaptation!,
+              ),
       );
     } catch (_) {
       return null;
@@ -348,7 +354,26 @@ class AthleteProgrammeSessionPrepareService {
       protocolId: package.protocolId,
       phaseLabel: 'Programme',
       ontologyVersion: 'programme.authored.v1',
+      acceptedAdaptation: package.acceptedAdaptation?.toPersistenceMap(),
     );
     await repo.saveGeneratedSession(record);
+  }
+
+  /// Atomically replaces the current prepared package in memory + local store.
+  ///
+  /// Used by Sprint 1.6C acceptance. Does not change assignment cursor.
+  Future<void> replacePreparedPackage({
+    required String athleteId,
+    required PreparedExecutionPackage package,
+    required ProgrammeExecutionContext executionContext,
+  }) async {
+    final trimmed = athleteId.trim();
+    if (trimmed.isEmpty) {
+      throw ArgumentError.value(athleteId, 'athleteId', 'Required');
+    }
+    // Persist first so a store failure leaves the previous prepared state as
+    // the authoritative in-memory package for the caller.
+    await _persist(trimmed, package, executionContext);
+    _memoryCache[package.programmedSessionKey.value] = package;
   }
 }

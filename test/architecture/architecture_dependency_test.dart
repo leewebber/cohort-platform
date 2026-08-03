@@ -69,6 +69,7 @@ void main() {
     final files = [
       'lib/application/adaptation/plan_package_session_adaptation_adapter.dart',
       'lib/application/adaptation/programme_adaptation_proposal_service.dart',
+      'lib/application/adaptation/programme_adaptation_acceptance_service.dart',
       'lib/features/home/services/programme_adapt_flow.dart',
     ];
     const forbiddenPathTokens = [
@@ -78,7 +79,6 @@ void main() {
       'adaptive_progression_coordinator',
     ];
     const forbiddenCalls = [
-      'withAcceptedAdaptation(',
       'commitDayOfAdaptation(',
       'attachAdaptation(',
       'CoachDecisionRouter(',
@@ -103,6 +103,15 @@ void main() {
           source.contains(token),
           isFalse,
           reason: '$path must not call $token',
+        );
+      }
+      // Propose/review paths must not mutate; acceptance service may call
+      // withAcceptedAdaptation as the sole prepared-mutation entry.
+      if (!path.endsWith('programme_adaptation_acceptance_service.dart')) {
+        expect(
+          source.contains('withAcceptedAdaptation('),
+          isFalse,
+          reason: '$path must not call withAcceptedAdaptation(',
         );
       }
       if (path.endsWith('plan_package_session_adaptation_adapter.dart')) {

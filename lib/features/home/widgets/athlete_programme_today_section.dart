@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -15,7 +16,7 @@ import '../services/programme_adapt_flow.dart';
 /// Home/today surface for a materialised authored programme session.
 ///
 /// Uses Sprint 1.4B deterministic preparation only — no Coach Brain resolve.
-/// Sprint 1.6B adds athlete-initiated Adapt Session (propose/review only).
+/// Sprint 1.6B/1.6C adds athlete-initiated Adapt Session with explicit accept.
 class AthleteProgrammeTodaySection extends StatefulWidget {
   const AthleteProgrammeTodaySection({
     super.key,
@@ -50,7 +51,12 @@ class _AthleteProgrammeTodaySectionState
   late final WorkoutPlayerLauncher _launcher =
       widget.launcher ?? WorkoutPlayerLauncher();
   late final ProgrammeAdaptFlow _adaptFlow =
-      widget.adaptFlow ?? ProgrammeAdaptFlow();
+      widget.adaptFlow ??
+      ProgrammeAdaptFlow(
+        acceptanceService: ProgrammeAdaptationAcceptanceService(
+          prepareService: _prepare,
+        ),
+      );
 
   AthleteProgrammePrepareResult? _result;
   bool _loading = true;
@@ -133,15 +139,31 @@ class _AthleteProgrammeTodaySectionState
   }
 
   Future<void> _adapt() async {
-    final package = _result?.package;
+    final result = _result;
+    final package = result?.package;
     if (package == null || !_canAdapt) return;
     setState(() => _adapting = true);
     try {
-      await _adaptFlow.open(context, package: package);
+      final flowResult = await _adaptFlow.open(
+        context,
+        athleteId: widget.athleteId,
+        package: package,
+        executionContext: result?.executionContext,
+      );
+      if (flowResult.accepted && flowResult.acceptedPackage != null && mounted) {
+        setState(() {
+          _result = AthleteProgrammePrepareResult(
+            status: AthleteProgrammePrepareStatus.restored,
+            package: flowResult.acceptedPackage,
+            executionContext: result?.executionContext,
+            programmedSessionKey:
+                flowResult.acceptedPackage!.programmedSessionKey,
+          );
+        });
+      }
     } finally {
       if (mounted) {
         setState(() => _adapting = false);
-        // Reconcile prepared state; Sprint 1.6B must not have mutated it.
         await _load(source: 'adapt_return');
       }
     }
@@ -196,9 +218,16 @@ class _AthleteProgrammeTodaySectionState
           weekLabel: weekLabel,
           duration: package.brief.durationLabel,
           programmeName: ctx?.programmeName,
-          status: 'Prepared Session',
-          statusDetail:
-              'Authored programme · exact version. Submit completion to advance.',
+          adaptationNotice: package.hasAcceptedAdaptation
+              ? 'Adapted for today — original authored prescription retained as reference.'
+              : null,
+          status: package.hasAcceptedAdaptation
+              ? 'Adapted Prepared Session'
+              : 'Prepared Session',
+          statusDetail: package.hasAcceptedAdaptation
+              ? 'Accepted adaptation applies only to this prepared session. '
+                  'Programme and later sessions unchanged.'
+              : 'Authored programme · exact version. Submit completion to advance.',
           buttonLabel: _opening ? 'Opening…' : 'Begin',
           onPressed: _opening || _adapting ? null : _open,
         ),
