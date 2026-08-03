@@ -1,6 +1,7 @@
 import '../data/repositories/programme_assignment_store.dart';
 import '../data/repositories/programme_version_store.dart';
 import '../features/programme/models/athlete_catalogue_enrolment.dart';
+import '../features/programme/models/athlete_plan_materialisation.dart';
 import '../features/programme/models/programme_template.dart';
 import '../features/programme/services/athlete_catalogue_enrolment_service.dart';
 import '../features/programme/services/athlete_plan_materialisation_service.dart';
@@ -83,6 +84,10 @@ class S17AthleteEnrolmentAdapter implements S17AthleteEnrolmentPort {
 
   final AthleteCatalogueEnrolmentService _enrolment;
 
+  /// Same timezone the Athlete D creator fixture uses for enrolment.
+  /// Required by materialisation when assignment.timezone would otherwise be null.
+  static const athleteTimezone = 'UTC';
+
   @override
   Future<S17EnrolmentOutcome> enrolOrSwitch({
     required String athleteId,
@@ -91,6 +96,7 @@ class S17AthleteEnrolmentAdapter implements S17AthleteEnrolmentPort {
     final result = await _enrolment.enrol(
       programmeVersionId: versionId,
       athleteId: athleteId,
+      timezone: athleteTimezone,
       replaceActive: true,
     );
     if (!result.isSuccess) {
@@ -140,15 +146,77 @@ class S17PlanMaterialiseAdapter implements S17PlanMaterialisePort {
   final AthletePlanMaterialisationService _materialise;
 
   @override
-  Future<bool> materialise({
+  Future<S17MaterialisationOutcome> materialise({
     required String athleteId,
     required String assignmentId,
   }) async {
-    final result = await _materialise.startProgramme(
-      programmeAssignmentId: assignmentId,
-      athleteId: athleteId,
-    );
-    return result.isSuccess;
+    if (assignmentId.trim().isEmpty) {
+      return const S17MaterialisationOutcome(
+        ok: false,
+        callKind: S17MaterialisationCallKind.nullOrMalformed,
+        statusName: 'validationFailure',
+        code: 'invalid_args',
+        detail: 'empty assignment id',
+        attempted: false,
+        returnedNormally: true,
+      );
+    }
+    try {
+      final result = await _materialise.startProgramme(
+        programmeAssignmentId: assignmentId,
+        athleteId: athleteId,
+        timezone: S17AthleteEnrolmentAdapter.athleteTimezone,
+      );
+      final code = result.code?.trim() ?? '';
+      final statusName = result.status.name;
+      if (result.isSuccess) {
+        return S17MaterialisationOutcome(
+          ok: true,
+          callKind: S17MaterialisationCallKind.success,
+          statusName: statusName,
+          code: code.isEmpty ? 'ok' : code,
+          detail: 'materialisation succeeded',
+        );
+      }
+      final kind = switch (result.status) {
+        AthletePlanMaterialisationStatus.authorizationFailure ||
+        AthletePlanMaterialisationStatus.validationFailure ||
+        AthletePlanMaterialisationStatus.conflict ||
+        AthletePlanMaterialisationStatus.legacyPlanConflict =>
+          S17MaterialisationCallKind.typedRejection,
+        AthletePlanMaterialisationStatus.failed =>
+          code == 'client_error'
+              ? S17MaterialisationCallKind.transportOrRpcFailure
+              : S17MaterialisationCallKind.typedRejection,
+        AthletePlanMaterialisationStatus.materialised ||
+        AthletePlanMaterialisationStatus.alreadyMaterialised =>
+          S17MaterialisationCallKind.postconditionMismatch,
+      };
+      return S17MaterialisationOutcome(
+        ok: false,
+        callKind: kind,
+        statusName: statusName,
+        code: code.isEmpty ? 'none' : _safeCode(code),
+        detail: 'typed materialisation rejection',
+      );
+    } catch (_) {
+      return const S17MaterialisationOutcome(
+        ok: false,
+        callKind: S17MaterialisationCallKind.transportOrRpcFailure,
+        statusName: 'failed',
+        code: 'client_error',
+        detail: 'uncaught client exception (redacted)',
+        returnedNormally: false,
+      );
+    }
+  }
+
+  static String _safeCode(String code) {
+    // Stable product codes only — reject free-form payloads.
+    final trimmed = code.trim();
+    if (trimmed.length > 64) return 'code_truncated';
+    if (!RegExp(r'^[a-z0-9_]+$').hasMatch(trimmed)) return 'code_redacted';
+    return trimmed;
   }
 }
 

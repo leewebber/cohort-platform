@@ -39,6 +39,7 @@ import 'models/adaptation_reason.dart';
 import 'models/training_session_status.dart';
 import 'staging/s17_adaptation_harness.dart';
 import 'staging/s17_completion_harness.dart';
+import 'staging/s17_isolation_prereq.dart';
 import 'staging/s17_occurrence_baseline.dart';
 import 'staging/s17_preparation_adapters.dart';
 import 'staging/s17_previous_performance_harness.dart';
@@ -218,43 +219,49 @@ Future<void> main() async {
     final assignment = await assignmentStore.getActiveAssignment(
       config.athleteId,
     );
-    final owns =
-        assignment != null &&
-        (assignment.id == config.assignmentId || config.resumeMode) &&
-        assignment.athleteId == config.athleteId &&
-        profile.isAthlete &&
-        !profile.isCoach;
+    bool? foreignProbe;
+    try {
+      final foreign = await client
+          .from('programme_assignments')
+          .select('id')
+          .neq('athlete_id', config.athleteId)
+          .limit(1);
+      foreignProbe = (foreign as List).isNotEmpty;
+      // Do not inspect or log foreign ids — presence alone is the signal.
+    } catch (_) {
+      foreignProbe = null;
+    }
 
-    final foreign = await client
-        .from('programme_assignments')
-        .select('id')
-        .neq('athlete_id', config.athleteId)
-        .limit(1);
-    final foreignEmpty = (foreign as List).isEmpty;
-
-    final identityOk = owns && foreignEmpty;
-    setPrereq(
-      'PREREQ_A',
-      identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
-      identityOk
-          ? 'Authenticated Athlete D; isolation holds'
-          : 'Isolation/auth scope failed',
+    final isolation = S17IsolationPrereq.assess(
+      authenticated: true,
+      isAthlete: profile.isAthlete,
+      isCoach: profile.isCoach,
+      ownAssignmentFound: assignment != null,
+      ownAssignmentOwned:
+          assignment != null && assignment.athleteId == config.athleteId,
+      foreignProbe: foreignProbe,
     );
+    setPrereq('PREREQ_A', isolation.overallResult, isolation.reportDetail);
     setPrereq(
       'PREREQ_IDENTITY',
-      identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
-      identityOk
-          ? 'Authenticated Athlete D; isolation holds'
-          : 'Isolation/auth scope failed',
+      isolation.overallResult,
+      isolation.reportDetail,
     );
+    if (isolation.isolationBreachProven) {
+      for (final code in selected) {
+        if (['C', 'D', 'F', 'G', 'H', 'I', 'J', 'K'].contains(code)) {
+          setResult(
+            code,
+            S17JourneyResult.fail,
+            'Stopped: isolation breach suspected (FOREIGN=FAIL)',
+          );
+        }
+      }
+      await emit();
+      return;
+    }
     if (!config.resumeMode) {
-      setResult(
-        'A',
-        identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
-        identityOk
-            ? 'Authenticated; own assignment only'
-            : 'Isolation/auth scope failed',
-      );
+      setResult('A', isolation.overallResult, isolation.reportDetail);
     }
 
     final versionStore = const ProgrammeVersionSupabaseStore();

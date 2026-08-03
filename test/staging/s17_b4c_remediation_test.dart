@@ -456,10 +456,15 @@ class _FakeEnrolment implements S17AthleteEnrolmentPort {
 
 class _FakeMaterialise implements S17PlanMaterialisePort {
   @override
-  Future<bool> materialise({
+  Future<S17MaterialisationOutcome> materialise({
     required String athleteId,
     required String assignmentId,
-  }) async => true;
+  }) async => const S17MaterialisationOutcome(
+    ok: true,
+    callKind: S17MaterialisationCallKind.success,
+    statusName: 'materialised',
+    code: 'ok',
+  );
 }
 
 class _FakeProjection implements S17ProjectionBaselinePort {

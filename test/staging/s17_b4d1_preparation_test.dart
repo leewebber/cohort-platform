@@ -434,14 +434,23 @@ class _FakeEnrolment implements S17AthleteEnrolmentPort {
 }
 
 class _FakeMaterialise implements S17PlanMaterialisePort {
-  _FakeMaterialise({this.ok = true});
+  _FakeMaterialise({this.ok = true, this.code = 'ok'});
   final bool ok;
+  final String code;
 
   @override
-  Future<bool> materialise({
+  Future<S17MaterialisationOutcome> materialise({
     required String athleteId,
     required String assignmentId,
-  }) async => ok;
+  }) async => S17MaterialisationOutcome(
+    ok: ok,
+    callKind: ok
+        ? S17MaterialisationCallKind.success
+        : S17MaterialisationCallKind.typedRejection,
+    statusName: ok ? 'materialised' : 'validationFailure',
+    code: code,
+    detail: ok ? 'ok' : 'typed rejection',
+  );
 }
 
 class _FakeActive implements S17ActiveAssignmentPort {

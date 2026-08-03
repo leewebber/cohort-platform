@@ -125,8 +125,48 @@ abstract class S17AthleteEnrolmentPort {
   });
 }
 
+/// Safe, redacted materialisation outcome for staging reports.
+enum S17MaterialisationCallKind {
+  success,
+  typedRejection,
+  transportOrRpcFailure,
+  nullOrMalformed,
+  emptyResult,
+  postconditionMismatch,
+}
+
+class S17MaterialisationOutcome {
+  const S17MaterialisationOutcome({
+    required this.ok,
+    required this.callKind,
+    this.statusName = '',
+    this.code = '',
+    this.detail = '',
+    this.attempted = true,
+    this.returnedNormally = true,
+  });
+
+  final bool ok;
+  final S17MaterialisationCallKind callKind;
+  final String statusName;
+  final String code;
+  final String detail;
+  final bool attempted;
+  final bool returnedNormally;
+
+  /// One-line report fragment — never includes credentials or full UUIDs.
+  String get classifiedDetail {
+    final codePart = code.trim().isEmpty ? 'none' : code.trim();
+    final statusPart = statusName.trim().isEmpty
+        ? 'unknown'
+        : statusName.trim();
+    return 'kind=${callKind.name} status=$statusPart code=$codePart '
+        'attempted=$attempted returnedNormally=$returnedNormally $detail';
+  }
+}
+
 abstract class S17PlanMaterialisePort {
-  Future<bool> materialise({
+  Future<S17MaterialisationOutcome> materialise({
     required String athleteId,
     required String assignmentId,
   });
@@ -399,11 +439,13 @@ class S17SchedulePreparation {
       athleteId: request.athleteId,
       assignmentId: enrolled.assignmentId,
     );
-    if (!materialised) {
+    if (!materialised.ok) {
       return S17SchedulePreparationResult(
         ok: false,
         stage: S17PreparationStage.materialisation,
-        detail: 'Materialisation failed after switch',
+        detail:
+            'Materialisation failed after switch; '
+            '${materialised.classifiedDetail}',
         assignmentId: enrolled.assignmentId,
         versionId: enrolled.versionId,
         lineageCode: target.lineageCode,

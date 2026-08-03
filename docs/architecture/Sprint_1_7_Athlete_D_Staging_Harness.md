@@ -1,147 +1,144 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.1 local preparation remediation complete. A single B4d retry
-requires separate founder authorisation. Do not execute another live run from
-this document alone.
+**Status:** B4d.2 local diagnosis complete. Another B4d dry/live retry is **not**
+authorised by B4d.2. Choose the next authority from the diagnosis classification.
 
 **Harness tip (B4a):** `c9bf996`  
-**B4c remediation:** `f58f55c` (`codex/b4c-staging-harness-remediation`)  
-**B4d.1 remediation branch (local):** `codex/b4d-preparation-remediation`
+**B4c remediation:** `f58f55c`  
+**B4d.1 remediation:** `4ae9ba1` (`codex/b4d-preparation-remediation`)  
+**B4d.2 diagnosis branch (local):** `codex/b4d2-materialisation-diagnosis`
 
-## B4b partial result
+## B4d retry result (hosted)
 
-| Journey | Result | Cause class |
-|---------|--------|-------------|
-| A | PASS | — |
-| B | PASS | — |
-| C | BLOCKED | Tooling — previous-performance not automated |
-| D | BLOCKED | Tooling — accept/reject not automated |
-| E | PASS | — |
-| F–J | BLOCKED | Fixture — `<2` uncompleted occurrences |
-| K | BLOCKED | Tooling — completion path not automated |
+Retained marker: `s17_stage_20260803T065749Z_55ec68c6`
 
-## B4d blocked result (hosted resume)
+| Item | Result |
+|------|--------|
+| Catalogue / target | Reached `PROG-S15A-STAGING` |
+| Enrol/switch | Success path + assignment postcondition |
+| **First failing boundary** | **`materialisation`** |
+| C/D/F–K | Cascading prep FAIL (not meaningfully executed) |
+| Journey E | NOT RUN (prerequisite-only) — corrected |
+| PREREQ_A | Opaque FAIL (`Isolation/auth scope failed`) — ambiguous |
 
-Retained Athlete D marker: `s17_stage_20260803T065749Z_55ec68c6`
+Assignment success is **not** materialisation success. After B4d retry Athlete D
+is likely in a **mid-switch** state: active enrolment on `PROG-S15A-STAGING`
+without successful materialisation (previous S13 reassigned).
 
-| Item | Observed |
-|------|----------|
-| Intended preparation programme | `PROG-S15A-STAGING` |
-| Observed programme after B4d | `PROG-S13-ELIG` (version prefix `e9bd7e19…`) |
-| Uncompleted occurrences | 1 |
-| PREREQ_IDENTITY | PASS |
-| PREREQ_BASELINE | FAIL (`authoredProgrammeInsufficientSlots`) |
-| Selected journeys C/D/F–K | FAIL |
-| Journey E in resume report | Incorrectly recorded PASS (should be prerequisite-only) |
+## B4d.2 diagnosis (local + optional read-only)
 
-Multi-slot preparation **did not take effect**. Creator was never invoked.
-Production untouched. No cleanup authorised.
+### Materialisation
 
-### Diagnosed first failing boundary (B4d.1)
+**Call path:** `S17PlanMaterialiseAdapter` →
+`AthletePlanMaterialisationService.startProgramme` →
+RPC `materialise_athlete_plan_from_enrolment`.
 
-**Classification: harness/tooling defect.**
+**Reporting defect (proven tooling):** the adapter previously collapsed the typed
+result to `bool`, discarding `status` / stable `code` (e.g.
+`timezone_unavailable`, `invalid_package_integrity`,
+`active_materialised_programme_exists`).
 
-B4c added `S17SchedulePreparation` with fail-closed stages, but
-`lib/main_s17_staging_verify.dart` used an **inline** enrol/switch path that:
+**Likely tooling cause (strong, pending status capture on next authorised run):**
+enrol/materialise adapters omitted timezone. Creator fixture used `UTC`. Product
+RPC fails closed with `validation_failure` / `timezone_unavailable` when both
+`p_timezone` and `assignment.timezone` are null. B4d.2 wires `UTC` into the
+staging adapters and retains safe status/code in `PREP_FAIL` detail.
 
-1. Looked up `PROG-S15A-STAGING` in the athlete catalogue.
-2. On empty match, enrol failure, or ignored materialisation result, **silently
-   continued** on `PROG-S13-ELIG`.
-3. Reported only the downstream baseline failure — no preparation stage,
-   no enrol/switch classification, no assignment/package/materialisation
-   postconditions.
-4. Still entered C/D/K after baseline failure.
-5. Always wrote journey **E** as PASS, including in resume mode.
+**Product defect proven?** No — typed rejection without captured code is not
+enough to prove a product contract break.
 
-Retained B4d evidence therefore cannot distinguish catalogue absence from
-enrol rejection; the harness omitted the failure. Staging catalogue presence of
-`PROG-S15A-STAGING` remains to be confirmed by a fail-closed retry (read-only
-Athlete D diagnostics were not used: private defines must not be opened under
-B4d.1, and no alternate read-only boundary was available without that file).
+### PREREQ_A isolation ambiguity
 
-## Required preparation postconditions (fail-closed)
+Prior check collapsed auth + own-row + foreign-probe into one FAIL string.
 
-Preparation must stop before C/D/F–K unless every stage passes:
+Corrected semantics (independent components):
 
-| Stage | Postcondition |
-|-------|----------------|
-| Catalogue | Exact lineage `PROG-S15A-STAGING` visible and eligible |
-| Target identity | Version ≠ current one-slot; not `PROG-S13-ELIG` |
-| Enrol/switch | Response success classified; reject/malformed → fail |
-| Assignment | Active assignment lineage/version = intended programme |
-| Package | Materialised package hash belongs to intended version |
-| Materialisation | Start Programme success |
-| Prepared execution | Prepare resolves intended assignment/version |
-| Projection/restore | Reconstruction retains intended lineage |
-| Occurrences | ≥2 uncompleted |
-| Fallback guard | Never silently continue on `PROG-S13-ELIG` |
+| Component | Meaning |
+|-----------|---------|
+| AUTH | Sign-in / Athlete D session |
+| OWN | Active own assignment visible and owned |
+| FOREIGN | Athlete-only empty probe for `athlete_id != self` |
 
-Failures report `PREP_FAIL stage=<name> …` under `PREREQ_PREP` /
-`PREREQ_BASELINE`. Journey E must **not** appear as PASS in resume mode.
+- `PASS` only when AUTH+OWN+FOREIGN all pass.
+- Foreign probe empty under athlete SELECT policy ⇒ FOREIGN PASS.
+- Foreign row visible ⇒ FOREIGN FAIL (isolation breach suspected; stop).
+- Coach/dual-role ⇒ FOREIGN/OWN **UNSUPPORTED** (coach policy can see athletes);
+  overall **BLOCKED**, never PASS.
+- Probe error ⇒ FOREIGN **UNCERTAIN**; overall **BLOCKED**, never PASS.
 
-## Resume-only workflow (retained Athlete D)
+The foreign probe must not enumerate athletes, print foreign ids, or use
+Athlete C.
 
-Do **not** rerun the live creator. B4d.1 does **not** authorise a retry.
+### Safe materialisation status capture
 
-Retained marker: `s17_stage_20260803T065749Z_55ec68c6`  
-Private defines file path only (never inspect/edit contents in chat).
+Future prep failures report:
+
+```text
+PREP_FAIL stage=materialisation kind=<…> status=<…> code=<stable> …
+```
+
+Never log credentials, tokens, emails, full UUIDs, or raw exception bodies.
+
+## Read-only diagnostic (B4d.2)
+
+```bash
+CONFIRM_COHORT_STAGING=1 \
+  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  ./tool/staging/diagnose_s17_athlete_d_readonly.sh
+```
+
+Read-only. No enrol/switch/materialise/prepare/projection. Creator forbidden.
+
+## Next authority (choose one; do not improvise)
+
+| Classification | Next step |
+|----------------|-----------|
+| Tooling (timezone / status capture) — implemented locally | Separately authorise **one** B4d retry after reviewing B4d.2 |
+| Staging-state (partial S15A enrolment) | Athlete D state repair / resume materialisation only |
+| Staging-data (package ineligible) | Representative data repair (not catalogue mutation ad hoc) |
+| Product defect | Product remediation with contract tests |
+| Isolation/security | Security remediation; stop staging athlete work |
+
+**Do not** run another B4d retry under B4d.2. B4e remains blocked.
+
+## Resume workflow (retained Athlete D)
+
+Do **not** rerun the live creator.
 
 ### Prerequisites
 
 1. `CONFIRM_COHORT_STAGING=1`
 2. Private `flutter_dart_defines.json` mode `600`, outside Git, not a symlink
 3. Cohort Staging identity confirmed by runner guards
-4. Identity + preparation postconditions inside the Flutter entrypoint
+4. Classified PREREQ_A + preparation postconditions
 
-### Proposed dry-run resume (do not execute under B4d.1)
+### Proposed dry-run / live (separate founder authority only)
 
 ```bash
 CONFIRM_COHORT_STAGING=1 \
   S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  S17_SELECTED_JOURNEYS=C,D,F,G,H,I,J,K \
   ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
-```
 
-### Proposed single live resume (separate founder authority only)
-
-```bash
 CONFIRM_COHORT_STAGING=1 \
   S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
   S17_SELECTED_JOURNEYS=C,D,F,G,H,I,J,K \
   ./tool/staging/run_s17_flutter_staging_verify.sh --resume
 ```
 
-Resume mode:
-
-* never invokes `create_s17_athlete_d_fixture.sh`
-* never searches for athletes by email/name/marker
-* authenticates only from the supplied private config
-* records `PREREQ_A`, `PREREQ_B`, `PREREQ_E`, `PREREQ_PREP`, `PREREQ_BASELINE`
-  separately from journey results
-* never records journey E as PASS unless E was explicitly selected under
-  separate non-resume authority
-* default order F→G→H→I→J→K→C→D (K before C for prior-result dependency)
-* stops before C/D/F–K when any preparation postcondition fails
-
 ## Report / exit semantics
 
-1. App prints `S17_FLUTTER_JOURNEY_JSON {...}`
-2. App prints `S17_FLUTTER_COMPLETE exit=<0|1>`
-3. Runner captures JSON, terminates Flutter, exits:
-   * `0` — all selected journeys PASS
-   * `1` — report ok=false
-   * `2` — refused
-   * `3` — timeout / missing sentinel
-   * `4` — malformed report
+1. `S17_FLUTTER_JOURNEY_JSON {...}`
+2. `S17_FLUTTER_COMPLETE exit=<0|1>`
+3. Runner exits `0` only if selected journeys PASS; missing sentinel → `3`
 
 ## Retention / cleanup
 
 Retain until separately authorised:
 
 * Athlete D identity and private credential directory
-* B4b / B4d evidence under `/tmp/b4b_*`, `/tmp/b4d_*`, `/tmp/s17_flutter_staging_report_b4*.txt`
-* B3a backup (`/private/tmp/cohort_staging_p1_b3a_backup.JGk5Mbqd`) — do not open/restore/delete
-* staging operations worktree
-* B4a / B4c / B4d.1 harness worktrees
+* B4b / B4d / B4d-retry / B4d.2 evidence under `/tmp/b4*`
+* B3a backup — do not open/restore/delete
+* B4a / B4c / B4d.1 / B4d.2 harness worktrees
 
-Do not delete Athlete C. Production remains rejected (`otnhhdxs…` /
-Cohort Field Manual). No migration, schema, or deployment from this harness.
+Production remains rejected. No migration, schema, or deployment from this harness.
