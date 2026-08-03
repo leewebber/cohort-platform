@@ -53,15 +53,17 @@ void main() {
     expect(File(path).existsSync(), isTrue, reason: path);
   });
 
-  test('Sprint 1.6B/1.6C programme adaptation modules exist', () {
+  test('Sprint 1.6B/1.6C/1.6D programme adaptation modules exist', () {
     final required = [
       'lib/application/adaptation/plan_package_session_adaptation_adapter.dart',
       'lib/application/adaptation/programme_adaptation_proposal_service.dart',
       'lib/application/adaptation/programme_adaptation_proposal_mapper.dart',
       'lib/application/adaptation/programme_adaptation_acceptance_service.dart',
+      'lib/application/adaptation/programme_adaptation_reversion_service.dart',
       'lib/application/adaptation/programme_adaptation_plan_applier.dart',
       'lib/features/adaptation/models/programme_adaptation_proposal.dart',
       'lib/features/home/services/programme_adapt_flow.dart',
+      'lib/core/widgets/programme_adaptation_revert_sheet.dart',
     ];
     for (final path in required) {
       expect(File('$root/$path').existsSync(), isTrue, reason: path);

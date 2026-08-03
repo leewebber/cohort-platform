@@ -16,3 +16,4 @@ export 'programme_adaptation_fingerprints.dart';
 export 'programme_adaptation_plan_applier.dart';
 export 'programme_adaptation_proposal_mapper.dart';
 export 'programme_adaptation_proposal_service.dart';
+export 'programme_adaptation_reversion_service.dart';

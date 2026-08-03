@@ -70,6 +70,7 @@ void main() {
       'lib/application/adaptation/plan_package_session_adaptation_adapter.dart',
       'lib/application/adaptation/programme_adaptation_proposal_service.dart',
       'lib/application/adaptation/programme_adaptation_acceptance_service.dart',
+      'lib/application/adaptation/programme_adaptation_reversion_service.dart',
       'lib/features/home/services/programme_adapt_flow.dart',
     ];
     const forbiddenPathTokens = [
@@ -116,6 +117,11 @@ void main() {
       }
       if (path.endsWith('plan_package_session_adaptation_adapter.dart')) {
         expect(source.contains('SessionAdaptationPipeline'), isTrue);
+      }
+      if (path.endsWith('programme_adaptation_reversion_service.dart')) {
+        expect(source.contains('SessionAdaptationPipeline'), isFalse);
+        expect(source.contains('withRevertedToOriginal('), isTrue);
+        expect(source.contains('loadAuthoredExecutablePlan'), isTrue);
       }
     }
   });

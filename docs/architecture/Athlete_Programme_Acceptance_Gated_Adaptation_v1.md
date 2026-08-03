@@ -1,7 +1,8 @@
 # Athlete Programme Acceptance-Gated Adaptation v1 — Sprint 1.6A
 
 **Status:** Binding for Phase 1 programme-backed adaptation  
-**Sprint:** 1.6A contract; 1.6B propose/review; 1.6C explicit accept + local persist/restore  
+**Sprint:** 1.6A contract; 1.6B–1.6D propose/review/accept/revert implemented; 1.6E hardening next  
+
 **Depends on:** Sprint 1.4B prepared session, Sprint 1.5A completion/advancement  
 **Companions:** [Adaptation_Policy_v1.md](./Adaptation_Policy_v1.md),
 [Session_Authority_Model_v1.md](./Session_Authority_Model_v1.md),
@@ -372,7 +373,7 @@ See [Proposed Sprint 1.7](#proposed-sprint-17--athlete-controlled-scheduling).
 |--------|-------|--------------------|
 | **1.6B** | Plan-Package-native adapter + propose/review against prepared authored session; no durable write on dismiss | Decision / no-safe-adaptation surfaces on programme path; dismiss leaves package unchanged |
 | **1.6C** | Explicit accept replaces local prepared `SessionExecutionPlan` + stores accepted decision; restore after relaunch | **Implemented** — `ProgrammeAdaptationAcceptanceService`; Accept mutates only current prepared package; relaunch restores accepted state for same key |
-| **1.6D** | Pre-completion revert; completion remains 1.5A-atomic and adaptation-agnostic for cursor | Revert restores programmed prepare; Self-Test 2 completion/advance still green |
+| **1.6D** | Pre-completion revert; completion remains 1.5A-atomic and adaptation-agnostic for cursor | **Implemented** — `ProgrammeAdaptationReversionService`; clears active accepted decision; reconstructs authored plan via prepare bank path; Self-Test 2 completion/advance still green |
 | **1.6E** | Hardening: policy/no-safe cases, Coaching Recognition fixtures, authorised staging evidence if approved | Focused + staging checks without opening post-completion or rescheduling |
 
 ---

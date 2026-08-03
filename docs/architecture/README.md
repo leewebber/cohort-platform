@@ -46,7 +46,7 @@
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
-`fdae6dd`. Sprint 1.6C (explicit accept + local persist/restore) is complete on
-`phase1-acceptance-gated-adaptation`; next is 1.6D revert. See
+`fdae6dd`. Sprints 1.6B–1.6D (propose/review, accept, revert) are complete on
+`phase1-acceptance-gated-adaptation`; next is 1.6E hardening. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.

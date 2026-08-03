@@ -18,9 +18,9 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 `fdae6dd37330980c3e775da8e651a51f86f5b99c` (includes staging-verified Sprint
 1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
 
-Current feature branch: `phase1-acceptance-gated-adaptation`. Sprint 1.6C
-(explicit accept + local persist/restore) is implemented. Next: **1.6D
-pre-completion revert**.
+Current feature branch: `phase1-acceptance-gated-adaptation`. Sprints 1.6B–1.6D
+(propose/review, accept + persist/restore, pre-completion revert) are
+implemented. Next: **1.6E hardening**.
 
 ## Authority and product invariants
 
@@ -89,10 +89,9 @@ record.
 
 The exact next sequence is:
 
-1. Implement Sprint 1.6D pre-completion revert on
-   `phase1-acceptance-gated-adaptation` after 1.6C review.
-2. Continue 1.6E hardening in a small verifiable increment.
-4. Do not begin proposed Sprint 1.7 scheduling until separately approved.
+1. Continue Sprint 1.6E hardening in a small verifiable increment on
+   `phase1-acceptance-gated-adaptation`.
+2. Do not begin proposed Sprint 1.7 scheduling until separately approved.
 
 Acceptance mutates only the current prepared executable session. Do not
 implement rescheduling, Adaptive Progression reauthoring, or future-session

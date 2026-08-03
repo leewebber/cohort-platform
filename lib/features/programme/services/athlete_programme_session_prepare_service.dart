@@ -361,7 +361,8 @@ class AthleteProgrammeSessionPrepareService {
 
   /// Atomically replaces the current prepared package in memory + local store.
   ///
-  /// Used by Sprint 1.6C acceptance. Does not change assignment cursor.
+  /// Used by Sprint 1.6C acceptance and Sprint 1.6D reversion. Does not change
+  /// assignment cursor.
   Future<void> replacePreparedPackage({
     required String athleteId,
     required PreparedExecutionPackage package,
@@ -375,5 +376,29 @@ class AthleteProgrammeSessionPrepareService {
     // the authoritative in-memory package for the caller.
     await _persist(trimmed, package, executionContext);
     _memoryCache[package.programmedSessionKey.value] = package;
+  }
+
+  /// Deterministic authored executable plan for [package] via the bank/compiler
+  /// path. Does not mutate cache or local persistence.
+  ///
+  /// Sprint 1.6D reversion authority — not adaptation planning.
+  Future<SessionExecutionLoadResult?> loadAuthoredExecutablePlan(
+    PreparedExecutionPackage package, {
+    String? programmeContextLabel,
+  }) async {
+    final protocolId = package.protocolId?.trim();
+    if (protocolId == null || protocolId.isEmpty) return null;
+    final loaded = await _sessionLoader.load(
+      protocolId: protocolId,
+      displayTitle: package.brief.sessionName,
+      programmeContextLabel: programmeContextLabel,
+    );
+    if (!loaded.plan.hasExecutableBlocks) return null;
+    return loaded;
+  }
+
+  /// Returns the in-memory prepared package for [programmedSessionKey], if any.
+  PreparedExecutionPackage? cachedPackageForKey(String programmedSessionKey) {
+    return _memoryCache[programmedSessionKey];
   }
 }
