@@ -25,7 +25,8 @@ foundation) complete on dedicated branch (not pushed)
 - Sprint 1.7B feature: `a11fe73353e337c77b482b03bcbb59e071f83bf5`
   (`lib/domain/programme_scheduling/`, owner
   `ProgrammeSchedulingPreviewEngine`)
-- Sprint 1.7C: durable projection via
+- Sprint 1.7C feature: 
+  durable projection via
   `ensure_programme_schedule_projection` +
   `ProgrammeScheduleRestoreService` (baseline init/restore only; no apply)
 - Next sprint: **1.7D — Move + Swap apply paths + UI confirm**
