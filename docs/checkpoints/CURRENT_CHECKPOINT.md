@@ -28,7 +28,8 @@ exact-preview apply) complete on dedicated branch (not pushed)
 - Sprint 1.7C feature: `17a12ce4fcfe05bbf9ca7ea3158edc0b46f15693`
   durable projection via `ensure_programme_schedule_projection` +
   `ProgrammeScheduleRestoreService` (baseline init/restore only; no apply)
-- Sprint 1.7D feature: exact-preview Move/Swap apply via
+- Sprint 1.7D feature: `596f36ad5c27ca9bc4157d55367f7c24dbdea1ab`
+  exact-preview Move/Swap apply via
   `apply_programme_schedule_operation`, `ProgrammeScheduleApplyService`,
   and `AthleteProgrammeScheduleScreen` (Push/Skip/Undo remain closed)
 - Next sprint: **1.7E — Push + Skip apply**
