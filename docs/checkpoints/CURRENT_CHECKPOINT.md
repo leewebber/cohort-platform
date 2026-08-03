@@ -1,7 +1,7 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-03
-**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6D adaptation reversion complete
+**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6E adaptation hardening complete
 
 ## Merged main checkpoint
 
@@ -19,26 +19,25 @@
 - Sprint 1.6B propose/review: `f7812771348dc8faf6d77fdb95e7567b9e16d9b3`
 - Sprint 1.6C tip: `86d335e0ad6c7e995b1f300283d9009fc26191c2`
 - Sprint 1.6D tip: `926b8d5e01166892626439a2aed56a4b26659286`
-- Next sprint: **1.6E — Hardening**
+- Sprint 1.6E tip: recorded on commit of this checkpoint
 - Binding contract:
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Acceptance owner: `ProgrammeAdaptationAcceptanceService`
 - Reversion owner: `ProgrammeAdaptationReversionService`
-- Local persistence: accepted decision + executable plan on
-  `PreparedExecutionPackage` / `GeneratedSessionRecord`; relaunch restores
-  accepted state for the same key. Pre-completion revert clears the active
-  accepted decision, reconstructs the authored plan via
-  `SessionExecutionLoader` / prepare bank path, and persists the original
-  prepared package. Consumed proposals remain non-replayable after revert.
+- Hardening (1.6E): local focused policy/no-safe cases + Coaching Recognition
+  fixtures; staging evidence deferred (not authorised in this increment).
+- Milestone status: **acceptance-gated adaptation (1.6A–1.6E) is contractually
+  complete** on this branch. Rescheduling remains proposed Sprint 1.7.
 
 ## Approved adaptation direction (summary)
 
 1. Authored Plan Package is the sole prescription authority.
 2. Propose/review via Plan-Package-native adapter → `SessionAdaptationPipeline`.
 3. Explicit Accept mutates only the current prepared executable session.
-4. Non-acceptance outcomes remain complete no-ops.
-5. Post-completion adaptation remains closed for Phase 1.
-6. Rescheduling remains a separate proposed Sprint 1.7 authority.
+4. Pre-completion revert reconstructs the authored prepare via bank/compiler path.
+5. Non-acceptance outcomes remain complete no-ops.
+6. Post-completion adaptation remains closed for Phase 1.
+7. Rescheduling remains a separate proposed Sprint 1.7 authority.
 
 ## Preserved state
 
@@ -49,9 +48,9 @@
 
 ## Exact next sequence
 
-1. After review of Sprint 1.6D, implement Sprint 1.6E hardening on
-   `phase1-acceptance-gated-adaptation`.
-2. Do not begin Sprint 1.7 scheduling until separately approved.
+1. Do not begin Sprint 1.7 scheduling until separately approved.
+2. Optional later: authorised staging evidence for adaptation, if separately
+   approved (outside the local 1.6E hardening delivered here).
 
 ## Resume checks
 

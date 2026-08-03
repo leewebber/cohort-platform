@@ -18,9 +18,10 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 `fdae6dd37330980c3e775da8e651a51f86f5b99c` (includes staging-verified Sprint
 1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
 
-Current feature branch: `phase1-acceptance-gated-adaptation`. Sprints 1.6B–1.6D
-(propose/review, accept + persist/restore, pre-completion revert) are
-implemented. Next: **1.6E hardening**.
+Current feature branch: `phase1-acceptance-gated-adaptation`. Sprints 1.6B–1.6E
+(propose/review, accept, revert, hardening) are complete. Acceptance-gated
+adaptation is contractually complete on this branch. Next authorised workstream
+is proposed Sprint **1.7 scheduling** only after separate approval.
 
 ## Authority and product invariants
 
@@ -89,9 +90,9 @@ record.
 
 The exact next sequence is:
 
-1. Continue Sprint 1.6E hardening in a small verifiable increment on
-   `phase1-acceptance-gated-adaptation`.
-2. Do not begin proposed Sprint 1.7 scheduling until separately approved.
+1. Do not begin proposed Sprint 1.7 scheduling until separately approved.
+2. Optional later authorised staging evidence for adaptation remains deferred
+   unless a task explicitly authorises staging contact.
 
 Acceptance mutates only the current prepared executable session. Do not
 implement rescheduling, Adaptive Progression reauthoring, or future-session
