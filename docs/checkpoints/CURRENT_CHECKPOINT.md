@@ -20,7 +20,7 @@ Sprint 1.7A scheduling binding contract complete on dedicated branch
 - Preserved adaptation branch (do not rewrite):
   `phase1-acceptance-gated-adaptation` @ `30ec8b0`
 - Sprint 1.6E tip: `bcc4b36a7f0849440bf7716f0c4bca7304ee559f`
-- Sprint 1.7A tip: recorded on commit of this checkpoint
+- Sprint 1.7A tip: `c95c5e2f6594858918ea754eac16c428f66fef4a`
 - Next sprint: **1.7B — scheduling domain model, identity, preview and policy**
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
