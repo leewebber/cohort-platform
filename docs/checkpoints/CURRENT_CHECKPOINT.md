@@ -33,7 +33,7 @@ Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
   exact-preview Move/Swap apply via
   `apply_programme_schedule_operation`, `ProgrammeScheduleApplyService`,
   and `AthleteProgrammeScheduleScreen`
-- Sprint 1.7E feature: *(pending commit)*
+- Sprint 1.7E feature: `0a2b51b2af7eb793c4ffbc3358e18f5d80f7d5d2`
   exact-preview Push/Skip apply on the same RPC/service path; Skip atomically
   writes skipped disposition/outcome and advances programme cursor; Gate O
 - Next sprint: **1.7F — Undo + broader UI / hardening**
