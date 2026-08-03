@@ -20,10 +20,10 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 
 Acceptance-gated adaptation (Sprints 1.6A–1.6E) is complete on
 `phase1-acceptance-gated-adaptation` @ `30ec8b0`. Active scheduling workstream
-branch: `phase1-athlete-controlled-scheduling`. Sprints **1.7A–1.7E** are
+branch: `phase1-athlete-controlled-scheduling`. Sprints **1.7A–1.7F** are
 complete (binding contract, compute-only preview, durable baseline, exact-preview
-Move/Swap/Push/Skip apply + minimal confirm UI). Next: **1.7F** Undo and
-broader calendar UX / hardening.
+Move/Swap/Push/Skip/Undo apply, durable horizon, calendar UX). Staging rollout
+remains separately authorised.
 
 ## Authority and product invariants
 

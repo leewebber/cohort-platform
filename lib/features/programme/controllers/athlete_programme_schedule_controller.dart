@@ -6,11 +6,12 @@ import '../../../domain/session_occurrence/value_objects/session_occurrence_date
 import '../models/programme_schedule_apply.dart';
 import '../models/programme_schedule_persistence.dart';
 import '../services/programme_schedule_apply_service.dart';
+import '../services/programme_schedule_operations_store.dart';
 import '../services/programme_schedule_restore_service.dart';
 
-/// Minimal athlete Move/Swap/Push/Skip scheduling surface controller (Sprint 1.7E).
+/// Athlete assignment calendar controller (Sprint 1.7F).
 ///
-/// Owns restore → preview → exact-preview confirm. Undo remains out of scope.
+/// Owns restore → preview → exact-preview confirm for Move/Swap/Push/Skip/Undo.
 class AthleteProgrammeScheduleController extends ChangeNotifier {
   AthleteProgrammeScheduleController({
     required this.athleteId,
@@ -18,6 +19,7 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
     required this._restoreService,
     required this._applyService,
     this._assignmentStore,
+    this._operationsStore,
   });
 
   final String athleteId;
@@ -25,6 +27,7 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
   final ProgrammeScheduleRestoreService _restoreService;
   final ProgrammeScheduleApplyService _applyService;
   final ProgrammeAssignmentStore? _assignmentStore;
+  final ProgrammeScheduleOperationsStore? _operationsStore;
 
   bool _loading = true;
   bool _confirming = false;
@@ -36,6 +39,7 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
   ProgrammeScheduleApplyCommand? _pendingCommand;
   String? _idempotencyKey;
   ProgrammeScheduleApplyResult? _lastApplyResult;
+  ProgrammeSchedulingUndoableOperation? _undoableOperation;
 
   bool get isLoading => _loading;
   bool get isConfirming => _confirming;
@@ -45,6 +49,8 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
   ProgrammeSchedulingPreviewCode? get previewCode => _previewCode;
   String? get previewDetail => _previewDetail;
   ProgrammeScheduleApplyResult? get lastApplyResult => _lastApplyResult;
+  ProgrammeSchedulingUndoableOperation? get undoableOperation =>
+      _undoableOperation;
   bool get hasConfirmablePreview =>
       _preview != null && _pendingCommand != null && !_confirming;
 
@@ -75,12 +81,43 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
     }
 
     _snapshot = await _snapshotFromPersisted(result.projection!);
+    await _refreshUndoable();
     _loading = false;
     notifyListeners();
   }
 
   void cancelPreview() {
     _clearPreview();
+    notifyListeners();
+  }
+
+  Future<void> previewUndo() async {
+    final snap = _snapshot;
+    final operation = _undoableOperation;
+    if (snap == null || operation == null) return;
+    _clearPreview();
+    final result = _applyService.previewUndo(
+      snapshot: snap,
+      operation: operation,
+    );
+    if (!result.isReady || result.preview == null) {
+      _previewCode = result.code;
+      _previewDetail = result.detail;
+      _errorMessage = result.detail ?? result.code.name;
+      notifyListeners();
+      return;
+    }
+    final preview = result.preview!;
+    _preview = preview;
+    _previewCode = result.code;
+    _previewDetail = null;
+    _idempotencyKey ??= ProgrammeScheduleApplyService.newIdempotencyKey();
+    _pendingCommand = _applyService.undoCommandFromPreview(
+      snapshot: snap,
+      operation: operation,
+      preview: preview,
+      idempotencyKey: _idempotencyKey,
+    );
     notifyListeners();
   }
 
@@ -190,6 +227,7 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
         result.projection!,
         cursorAfter: result.cursorAfter,
       );
+      await _refreshUndoable();
       _clearPreview();
     } else if (result.requiresReload) {
       await load();
@@ -263,6 +301,30 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
     _idempotencyKey = null;
   }
 
+  Future<void> _refreshUndoable() async {
+    final store = _operationsStore;
+    if (store == null) {
+      _undoableOperation = null;
+      return;
+    }
+    final candidate = await store.latestUndoableOperation(
+      assignmentId: assignmentId,
+    );
+    final snap = _snapshot;
+    if (candidate == null || snap == null) {
+      _undoableOperation = null;
+      return;
+    }
+    final now = DateTime.now().toUtc();
+    if (!candidate.isStructurallyEligible ||
+        candidate.isExpiredAt(now) ||
+        candidate.resultRevision != snap.projection.scheduleRevision) {
+      _undoableOperation = null;
+      return;
+    }
+    _undoableOperation = candidate;
+  }
+
   Future<ProgrammeSchedulingSnapshot> _snapshotFromPersisted(
     PersistedProgrammeScheduleProjection projection, {
     Map<String, dynamic>? cursorAfter,
@@ -276,6 +338,7 @@ class AthleteProgrammeScheduleController extends ChangeNotifier {
       today: today,
       assignmentStatus: ProgrammeSchedulingAssignmentStatus.active,
       cursorSessionSlotId: cursorSlotId,
+      schedulingHorizonEnd: projection.schedulingHorizonEnd,
     );
   }
 

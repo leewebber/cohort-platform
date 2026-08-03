@@ -282,7 +282,7 @@ affected `scheduledDate`.
 | Week-only push | Out of Phase 1 core; may be a later scoped variant |
 | Entire remaining assignment | Covered when S is the earliest remaining uncompleted occurrence |
 | Off-days / rest | Calendar rest days are not authored occurrences; push shifts dates only |
-| Programme end | If package declares an end/horizon, push that would exceed it fails closed unless athlete confirms an explicit “extend horizon” preview flag (default: fail closed) |
+| Programme end | Durable `scheduling_horizon_end` on the assignment projection: `NULL` = unbounded (current Phase 1 packages). A non-null inclusive local date is enforced for Move/Push. `duration_weeks` does **not** declare a horizon. Future bounded horizons require a separate authorised package schema change. |
 | Collisions | May create multi-session days; preview must list them |
 | Prepared | Any prepared key among shifted set is cleared after success |
 | Cursor | Unchanged except via due recalculation |
@@ -320,15 +320,21 @@ the immediately preceding successful scheduling operation for the assignment.
 
 | Rule | Decision |
 |------|----------|
-| Scope | One-level undo (last operation only) |
+| Scope | One-level undo (last successful undoable mutation only) |
 | Undoable ops | Move, Swap, Push, Skip |
-| Not undoable | Completion, adaptation accept/revert, materialisation, pause |
-| Eligibility | Until: any later scheduling op; completion of any occurrence affected by the undone op; or explicit undo TTL (default 72 athlete-local hours) |
+| Not undoable | Undo itself, completion, adaptation accept/revert, materialisation, pause, baseline |
+| RPC | Extends `apply_programme_schedule_operation` (`operation_type = undo`); no second mutation RPC |
+| Client envelope | Target operation id + provenance + expected revision + fingerprint + idempotency key only — never inverse rows |
+| Eligibility | Latest successful undoable op; `undo_consumed_at`/`undo_invalidated_at` null; `NOW() < undo_expires_at`; `result_revision` = current revision; complete after-state still matches; provenance unchanged |
+| TTL | Stored `undo_expires_at` is authoritative (72 elapsed hours from operate time). Do not re-derive in athlete-local time |
+| Later scheduling op | Atomically sets prior op `undo_invalidated_at`, then appends the new op |
+| Non-scheduling changes | Need not stamp `undo_invalidated_at`; after-state/completion/cursor checks still fail closed |
 | Across relaunch | **Yes**, if operation record persisted |
 | After prepare of an unaffected key | Still undoable if eligibility holds; prepare for cleared keys remains cleared |
 | After prepare of an affected key | Undo allowed only if that prepare is cleared or athlete confirms discard of that prepare in preview |
 | Freshness | Undo preview fingerprints current `scheduleRevision`; stale fails closed |
-| Audit | Prior operation remains in audit history; undo appends a compensating operation |
+| Audit | Prior op remains; successful Undo sets `undo_consumed_at` once and appends non-undoable compensating `undo` row; revision `N→N+1` |
+| Skip inverse | Requires complete Skip before/after snapshot (disposition, outcome existence/status, cursor, assignment status/`completed_at`). Legacy incomplete Skip logs → typed `incomplete_inverse_snapshot` |
 
 No general event-sourcing platform is required: a bounded operation log
 (last snapshot + history rows) is sufficient.
@@ -565,7 +571,7 @@ Scheduling and adaptation remain distinct:
 | **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required — **complete** |
 | **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules — **complete** |
 | **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green — **complete** |
-| **1.7F** | Undo, Today/UI integration, hardening, authorised staging evidence if approved | Undo eligibility; milestone closeout |
+| **1.7F** | Undo, assignment calendar UX, durable horizon, hardening | Undo eligibility; milestone closeout |
 
 Deviation note: Preview is intentionally front-loaded in 1.7B before persistence
 (1.7C) so eligibility rules are locked before RPCs exist. Move/Swap precede
@@ -667,6 +673,35 @@ Exact-preview Push/Skip apply delivered on the same closed apply path:
 Sprint 1.7E does **not** execute Undo, redesign the calendar, open coach
 scheduling, or authorise staging rollout. Those remain 1.7F / separate owners.
 
+### Sprint 1.7F delivery status
+
+One-level Undo, durable horizon, and calendar hardening delivered:
+
+- durable `programme_schedule_projections.scheduling_horizon_end` (`NULL` =
+  explicitly unbounded for current packages); ensure writes `NULL`; Move/Push
+  enforce inclusive non-null horizons; client never supplies the field;
+- new Skip operation rows capture complete before/after inverse snapshots
+  (disposition, outcome existence/status, cursor, assignment status/
+  `completed_at`); legacy incomplete Skip logs fail closed as
+  `incomplete_inverse_snapshot`;
+- Undo extends `apply_programme_schedule_operation` (`operation_type = undo`);
+  client envelope is target `operation_id` + provenance/revision/fingerprint/
+  idempotency only;
+- eligibility is latest successful Move/Swap/Push/Skip with
+  `undo_consumed_at`/`undo_invalidated_at` null, `NOW() < undo_expires_at`,
+  `result_revision` = current revision, and complete after-state match;
+- successful Undo consumes the target once, appends a non-undoable `undo` audit
+  row, advances revision `N→N+1`, and never reveals deeper history;
+- Dart owners: `ProgrammeSchedulingPreviewEngine.previewUndo`,
+  `ProgrammeScheduleApplyService`, `ProgrammeScheduleOperationsStore`,
+  `AthleteProgrammeScheduleScreen` (date-grouped calendar + Undo control);
+- Gate P proves horizon enforcement, complete Skip snapshot, Undo apply/
+  restore, invalidation, and fingerprint conformance (undo-move
+  `d5d7aeaf…`, undo-skip `befab0de…`, move+horizon `6dafec7a…`).
+
+Sprint 1.7F does **not** add Plan Package horizon schema fields, Undo of Undo,
+coach scheduling, or staging rollout (separately authorised).
+
 ---
 
 ## Test strategy
@@ -722,12 +757,15 @@ No staging contact is authorised in 1.7A.
    occurrence in the past makes it overdue; it must not mark complete, fabricate
    actuals, create previous-performance evidence, imply performance on that date,
    or bypass Skip/completion authority.
-3. **Push horizon** — Push beyond the programme scheduling horizon fails closed
-   by default. Preview returns a typed horizon-exceeded result without mutation.
-   Do not silently extend, truncate, or partially apply.
-4. **Undo TTL** — Default undo eligibility window is 72 athlete-local hours from
-   the successful scheduling operation. Sprint 1.7B models policy inputs only;
-   durable undo / operation-log persistence remain later-sprint work.
+3. **Push/Move horizon** — Durable projection field `scheduling_horizon_end`
+   (`NULL` = explicitly unbounded for current Phase 1 packages). Non-null values
+   are inclusive athlete-local last permitted dates for Move and Push. Client
+   never supplies or extends the horizon. `duration_weeks` is structure only and
+   does not declare a horizon. Future bounded package declarations require a
+   separate authorised schema change and must fail closed if unsupported.
+4. **Undo TTL** — Eligibility uses stored `undo_expires_at` with
+   `NOW() < undo_expires_at` (72 elapsed hours). UI may display local time; it
+   does not alter eligibility.
 5. **Paused assignments** — Paused assignments block Preview and mutation for
    Move, Swap, Push and Skip with a typed paused-assignment outcome. Resume does
    not rewrite dates; Today/overdue selection recomputes from the preserved
@@ -789,3 +827,14 @@ smallest athlete Push/Skip confirm UI.
 Sprint 1.7E does **not** deliver Undo execution, broader calendar UX, coach
 scheduling, bulk rescheduling beyond Push, or staging rollout (1.7F /
 separately authorised).
+
+## Sprint 1.7F boundary
+
+Sprint 1.7F delivers one-level Undo on `apply_programme_schedule_operation`,
+durable nullable `scheduling_horizon_end` (NULL = explicitly unbounded),
+complete Skip inverse snapshots for new Skips, athlete Undo preview/confirm,
+date-grouped assignment calendar hardening, and Gate P.
+
+Sprint 1.7F does **not** deliver Plan Package horizon schema fields, Undo of
+Undo, multi-level undo stacks, coach scheduling, bulk rescheduling beyond Push,
+or staging rollout (separately authorised).

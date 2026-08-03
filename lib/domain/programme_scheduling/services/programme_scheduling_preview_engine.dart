@@ -3,6 +3,7 @@ import '../models/programme_schedule_projection.dart';
 import '../models/programme_scheduling_preview.dart';
 import '../models/programme_scheduling_requests.dart';
 import '../models/programme_scheduling_snapshot.dart';
+import '../models/programme_scheduling_undoable_operation.dart';
 import '../models/scheduled_programme_occurrence.dart';
 import '../policy/programme_scheduling_policy.dart';
 import '../support/programme_scheduling_apply_fingerprint.dart';
@@ -54,6 +55,63 @@ class ProgrammeSchedulingPreviewEngine {
         _previewPush(snapshot, fromSessionSlotId, dayDelta),
       ProgrammeSchedulingSkipRequest(:final sessionSlotId) =>
         _previewSkip(snapshot, sessionSlotId),
+      ProgrammeSchedulingUndoRequest() =>
+        ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.unsupportedOrMalformedRequest,
+          detail:
+              'Undo preview requires the durable undoable operation record via '
+              'previewUndo.',
+        ),
+    };
+  }
+
+  /// Compute-only Undo inverse from an authoritative undoable operation record.
+  ProgrammeSchedulingPreviewResult previewUndo({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required ProgrammeSchedulingUndoableOperation operation,
+  }) {
+    final assignmentDecision = policy.evaluateAssignment(snapshot);
+    if (!assignmentDecision.isAllowed) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        assignmentDecision.code,
+        detail: assignmentDecision.detail,
+      );
+    }
+    if (operation.assignmentId != snapshot.assignmentId) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.provenanceMismatch,
+        detail: 'Undo operation assignment does not match snapshot.',
+      );
+    }
+    if (operation.resultRevision != snapshot.projection.scheduleRevision) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.staleScheduleRevision,
+        detail: 'Undo target is not the latest schedule revision.',
+      );
+    }
+    if (!operation.isStructurallyEligible) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        operation.incompleteSnapshot
+            ? ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot
+            : ProgrammeSchedulingPreviewCode.undoUnavailable,
+        detail: operation.ineligibilityDetail,
+      );
+    }
+
+    return switch (operation.originalType) {
+      ProgrammeSchedulingOperationType.move =>
+        _previewUndoMove(snapshot, operation),
+      ProgrammeSchedulingOperationType.swap =>
+        _previewUndoSwap(snapshot, operation),
+      ProgrammeSchedulingOperationType.push =>
+        _previewUndoPush(snapshot, operation),
+      ProgrammeSchedulingOperationType.skip =>
+        _previewUndoSkip(snapshot, operation),
+      ProgrammeSchedulingOperationType.undo =>
+        ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.undoUnavailable,
+          detail: 'Undo of Undo is not permitted.',
+        ),
     };
   }
 
@@ -112,6 +170,16 @@ class ProgrammeSchedulingPreviewEngine {
       return ProgrammeSchedulingPreviewResult.ineligible(
         dateDecision.code,
         detail: dateDecision.detail,
+      );
+    }
+    final horizon = policy.evaluateHorizon(
+      proposedDate: targetDate,
+      horizonEnd: snapshot.schedulingHorizonEnd,
+    );
+    if (!horizon.isAllowed) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        horizon.code,
+        detail: 'Move would exceed programme scheduling horizon.',
       );
     }
 
@@ -640,6 +708,328 @@ class ProgrammeSchedulingPreviewEngine {
         a.packageContentHash == b.packageContentHash;
   }
 
+  SessionOccurrenceDate? _parseLocalDate(String raw) {
+    final parsed = DateTime.tryParse(raw.trim());
+    if (parsed == null) return null;
+    return SessionOccurrenceDate.fromDateTime(parsed);
+  }
+
+  ProgrammeSchedulingPreviewResult _previewUndoMove(
+    ProgrammeSchedulingSnapshot snapshot,
+    ProgrammeSchedulingUndoableOperation operation,
+  ) {
+    final snap = operation.priorSnapshot;
+    final slotId = snap['session_slot_id']?.toString();
+    final priorDateRaw = snap['scheduled_date']?.toString();
+    if (slotId == null || priorDateRaw == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final current = snapshot.projection.bySlotId(slotId);
+    if (current == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.occurrenceNotFound,
+      );
+    }
+    final priorDate = _parseLocalDate(priorDateRaw);
+    if (priorDate == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final changes = [
+      ProgrammeSchedulingOccurrenceChange(
+        identity: current.identity,
+        originalDate: current.scheduledDate,
+        proposedDate: priorDate,
+        originalDisposition: current.disposition,
+        proposedDisposition: current.disposition,
+      ),
+    ];
+    final proposed = current.copyWith(scheduledDate: priorDate);
+    final proposedProjection = snapshot.projection.replacing({slotId: proposed});
+    return _ready(
+      snapshot: snapshot,
+      requestCanonical: ProgrammeSchedulingUndoRequest(
+        operationId: operation.operationId,
+      ).toCanonicalMap(),
+      proposedProjection: proposedProjection,
+      changes: changes,
+      impacts: _undoImpacts(operation, preparedKeys: {
+        current.identity.programmedSessionKey,
+      }),
+      operationType: ProgrammeSchedulingOperationType.undo,
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult _previewUndoSwap(
+    ProgrammeSchedulingSnapshot snapshot,
+    ProgrammeSchedulingUndoableOperation operation,
+  ) {
+    final snap = operation.priorSnapshot;
+    final slotA = snap['session_slot_id_a']?.toString();
+    final slotB = snap['session_slot_id_b']?.toString();
+    final dateARaw = snap['scheduled_date_a']?.toString();
+    final dateBRaw = snap['scheduled_date_b']?.toString();
+    if (slotA == null || slotB == null || dateARaw == null || dateBRaw == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final a = snapshot.projection.bySlotId(slotA);
+    final b = snapshot.projection.bySlotId(slotB);
+    if (a == null || b == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.occurrenceNotFound,
+      );
+    }
+    final dateA = _parseLocalDate(dateARaw);
+    final dateB = _parseLocalDate(dateBRaw);
+    if (dateA == null || dateB == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final proposedA = a.copyWith(scheduledDate: dateA);
+    final proposedB = b.copyWith(scheduledDate: dateB);
+    final changes = [
+      ProgrammeSchedulingOccurrenceChange(
+        identity: a.identity,
+        originalDate: a.scheduledDate,
+        proposedDate: dateA,
+        originalDisposition: a.disposition,
+        proposedDisposition: a.disposition,
+      ),
+      ProgrammeSchedulingOccurrenceChange(
+        identity: b.identity,
+        originalDate: b.scheduledDate,
+        proposedDate: dateB,
+        originalDisposition: b.disposition,
+        proposedDisposition: b.disposition,
+      ),
+    ];
+    return _ready(
+      snapshot: snapshot,
+      requestCanonical: ProgrammeSchedulingUndoRequest(
+        operationId: operation.operationId,
+      ).toCanonicalMap(),
+      proposedProjection: snapshot.projection.replacing({
+        slotA: proposedA,
+        slotB: proposedB,
+      }),
+      changes: changes,
+      impacts: _undoImpacts(operation, preparedKeys: {
+        a.identity.programmedSessionKey,
+        b.identity.programmedSessionKey,
+      }),
+      operationType: ProgrammeSchedulingOperationType.undo,
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult _previewUndoPush(
+    ProgrammeSchedulingSnapshot snapshot,
+    ProgrammeSchedulingUndoableOperation operation,
+  ) {
+    final datesBefore = operation.priorSnapshot['dates_before'];
+    if (datesBefore is! List || datesBefore.isEmpty) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final replacements = <String, ScheduledProgrammeOccurrence>{};
+    final changes = <ProgrammeSchedulingOccurrenceChange>[];
+    final keys = <String>{};
+    for (final item in datesBefore) {
+      if (item is! Map) {
+        return ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+        );
+      }
+      final map = Map<String, Object?>.from(item);
+      final slotId = map['session_slot_id']?.toString();
+      final priorRaw = map['scheduled_date']?.toString();
+      if (slotId == null || priorRaw == null) {
+        return ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+        );
+      }
+      final current = snapshot.projection.bySlotId(slotId);
+      if (current == null) {
+        return ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.occurrenceNotFound,
+        );
+      }
+      final priorDate = _parseLocalDate(priorRaw);
+      if (priorDate == null) {
+        return ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+        );
+      }
+      replacements[slotId] = current.copyWith(scheduledDate: priorDate);
+      keys.add(current.identity.programmedSessionKey);
+      changes.add(
+        ProgrammeSchedulingOccurrenceChange(
+          identity: current.identity,
+          originalDate: current.scheduledDate,
+          proposedDate: priorDate,
+          originalDisposition: current.disposition,
+          proposedDisposition: current.disposition,
+        ),
+      );
+    }
+    return _ready(
+      snapshot: snapshot,
+      requestCanonical: ProgrammeSchedulingUndoRequest(
+        operationId: operation.operationId,
+      ).toCanonicalMap(),
+      proposedProjection: snapshot.projection.replacing(replacements),
+      changes: changes,
+      impacts: _undoImpacts(operation, preparedKeys: keys),
+      operationType: ProgrammeSchedulingOperationType.undo,
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult _previewUndoSkip(
+    ProgrammeSchedulingSnapshot snapshot,
+    ProgrammeSchedulingUndoableOperation operation,
+  ) {
+    final snap = operation.priorSnapshot;
+    final required = [
+      'session_slot_id',
+      'disposition_before',
+      'outcome_existed_before',
+      'outcome_status_before',
+      'cursor_before',
+      'assignment_status_before',
+      'assignment_completed_at_before',
+    ];
+    for (final key in required) {
+      if (!snap.containsKey(key)) {
+        return ProgrammeSchedulingPreviewResult.ineligible(
+          ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+          detail: 'Skip Undo snapshot missing $key.',
+        );
+      }
+    }
+    final slotId = snap['session_slot_id']!.toString();
+    final dispositionBefore = snap['disposition_before']!.toString();
+    final current = snapshot.projection.bySlotId(slotId);
+    if (current == null) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.occurrenceNotFound,
+      );
+    }
+    if (!current.isSkipped) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.undoUnavailable,
+        detail: 'Skip after-state disposition no longer matches.',
+      );
+    }
+    final restoredDisposition = ProgrammeScheduleDisposition.values.firstWhere(
+      (d) => d.name == dispositionBefore,
+      orElse: () => ProgrammeScheduleDisposition.scheduled,
+    );
+    if (dispositionBefore != restoredDisposition.name) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    }
+    final proposed = current.copyWith(disposition: restoredDisposition);
+    // Fingerprint parity with PostgreSQL Undo-Skip: cursorBefore is the live
+    // programme cursor; cursorAfter is the exact recorded pre-Skip cursor.
+    Map<String, Object?>? liveCursorBefore;
+    final liveCursorSlotId = snapshot.cursorSessionSlotId;
+    if (liveCursorSlotId != null) {
+      final live = snapshot.projection.bySlotId(liveCursorSlotId);
+      if (live != null) {
+        liveCursorBefore = ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: live.identity.sessionSlotId,
+          weekNumber: live.identity.weekNumber,
+          dayKey: live.identity.dayKey,
+          sessionOrder: live.identity.sessionOrder,
+        );
+      }
+    }
+    Map<String, Object?>? cursorAfterRestore;
+    final cursorBeforeSnap = snap['cursor_before'];
+    if (cursorBeforeSnap is Map) {
+      final c = Map<String, Object?>.from(cursorBeforeSnap);
+      final week = (c['week_number'] as num?)?.toInt() ??
+          int.parse(c['week_number'].toString());
+      final dayKey = c['day_key']!.toString();
+      final order = (c['session_order'] as num?)?.toInt() ??
+          int.parse(c['session_order'].toString());
+      final restoredOcc = snapshot.projection.occurrences.firstWhere(
+        (o) =>
+            o.identity.weekNumber == week &&
+            o.identity.dayKey == dayKey &&
+            o.identity.sessionOrder == order,
+        orElse: () => current,
+      );
+      cursorAfterRestore = ProgrammeSchedulingApplyFingerprint.cursorRow(
+        sessionSlotId: restoredOcc.identity.sessionSlotId,
+        weekNumber: week,
+        dayKey: dayKey,
+        sessionOrder: order,
+      );
+    }
+    return _ready(
+      snapshot: snapshot,
+      requestCanonical: ProgrammeSchedulingUndoRequest(
+        operationId: operation.operationId,
+      ).toCanonicalMap(),
+      proposedProjection: snapshot.projection.replacing({slotId: proposed}),
+      changes: [
+        ProgrammeSchedulingOccurrenceChange(
+          identity: current.identity,
+          originalDate: current.scheduledDate,
+          proposedDate: current.scheduledDate,
+          originalDisposition: current.disposition,
+          proposedDisposition: restoredDisposition,
+        ),
+      ],
+      impacts: [
+        ..._undoImpacts(operation, preparedKeys: {
+          current.identity.programmedSessionKey,
+        }),
+        ProgrammeSchedulingImpact(
+          kind: ProgrammeSchedulingImpactKind.cursorWouldAdvanceTo,
+          message:
+              'Undo restores the exact recorded programme cursor; no workout '
+              'completion is created or removed.',
+          sessionSlotId: slotId,
+        ),
+      ],
+      operationType: ProgrammeSchedulingOperationType.undo,
+      cursorBefore: liveCursorBefore,
+      cursorAfter: cursorAfterRestore,
+      includeCursor: true,
+    );
+  }
+
+  List<ProgrammeSchedulingImpact> _undoImpacts(
+    ProgrammeSchedulingUndoableOperation operation, {
+    required Set<String> preparedKeys,
+  }) {
+    return [
+      ProgrammeSchedulingImpact(
+        kind: ProgrammeSchedulingImpactKind.undoPolicyNote,
+        message:
+            'Reverses ${operation.originalType.name} from '
+            '${operation.operatedAt.toIso8601String()}. '
+            'Expires ${operation.undoExpiresAt?.toIso8601String() ?? 'n/a'}.',
+      ),
+      ProgrammeSchedulingImpact(
+        kind: ProgrammeSchedulingImpactKind.preparedOccurrenceAffected,
+        message:
+            'Prepared state for affected sessions will be cleared after '
+            'successful Undo.',
+        relatedSlotIds: preparedKeys.toList()..sort(),
+      ),
+    ];
+  }
+
   ProgrammeSchedulingPreviewResult _ready({
     required ProgrammeSchedulingSnapshot snapshot,
     required Map<String, Object?> requestCanonical,
@@ -652,6 +1042,11 @@ class ProgrammeSchedulingPreviewEngine {
     bool includeCursor = false,
   }) {
     final collidingDates = _collidingDates(proposedProjection);
+    // PostgreSQL binds schedulingHorizonEnd only for Move/Push when non-null.
+    final bindHorizon = operationType == ProgrammeSchedulingOperationType.move ||
+        operationType == ProgrammeSchedulingOperationType.push;
+    final horizonEnd =
+        bindHorizon ? snapshot.schedulingHorizonEnd?.toString() : null;
     // Apply fingerprint binds schedule-authoritative fields only (parity with
     // PostgreSQL). Impacts remain in the preview result for athlete review.
     final fingerprintPayload = includeCursor
@@ -663,6 +1058,7 @@ class ProgrammeSchedulingPreviewEngine {
             scheduleRevision: snapshot.projection.scheduleRevision,
             timezone: snapshot.timezone,
             policyVersion: policy.version,
+            schedulingHorizonEnd: horizonEnd,
             affected: changes
                 .map(
                   (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(
@@ -691,6 +1087,7 @@ class ProgrammeSchedulingPreviewEngine {
             scheduleRevision: snapshot.projection.scheduleRevision,
             timezone: snapshot.timezone,
             policyVersion: policy.version,
+            schedulingHorizonEnd: horizonEnd,
             affected: changes
                 .map(
                   (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(

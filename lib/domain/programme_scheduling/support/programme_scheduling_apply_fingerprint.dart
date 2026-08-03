@@ -28,6 +28,7 @@ class ProgrammeSchedulingApplyFingerprint {
     String policyVersion = ProgrammeSchedulingApplyFingerprint.policyVersion,
     Map<String, Object?>? cursorBefore,
     Object? cursorAfter = _cursorAbsent,
+    String? schedulingHorizonEnd,
   }) {
     final affectedSorted = List<Map<String, Object?>>.from(affected)
       ..sort((a, b) {
@@ -47,10 +48,15 @@ class ProgrammeSchedulingApplyFingerprint {
       'scheduleRevision': scheduleRevision,
       'timezone': timezone,
     };
-    // Skip-only authoritative cursor binding (null cursorAfter = terminal).
+    // Skip/Undo-skip authoritative cursor binding (null cursorAfter = terminal).
     if (!identical(cursorAfter, _cursorAbsent)) {
       map['cursorAfter'] = cursorAfter;
       map['cursorBefore'] = cursorBefore;
+    }
+    // Non-null horizon only — preserves null-horizon Move/Swap/Push/Skip vectors.
+    final horizon = schedulingHorizonEnd?.trim();
+    if (horizon != null && horizon.isNotEmpty) {
+      map['schedulingHorizonEnd'] = horizon;
     }
     return map;
   }

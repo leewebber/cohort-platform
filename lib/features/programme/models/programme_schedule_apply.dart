@@ -2,7 +2,7 @@ import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import 'programme_schedule_persistence.dart';
 
-/// Closed Move/Swap/Push/Skip command envelope for exact-preview apply.
+/// Closed Move/Swap/Push/Skip/Undo command envelope for exact-preview apply.
 sealed class ProgrammeScheduleApplyCommand {
   const ProgrammeScheduleApplyCommand({
     required this.assignmentId,
@@ -160,6 +160,37 @@ class ProgrammeScheduleSkipCommand extends ProgrammeScheduleApplyCommand {
   };
 }
 
+class ProgrammeScheduleUndoCommand extends ProgrammeScheduleApplyCommand {
+  const ProgrammeScheduleUndoCommand({
+    required super.assignmentId,
+    required super.programmeVersionId,
+    required super.packageContentHash,
+    required super.expectedScheduleRevision,
+    required super.previewFingerprint,
+    required super.idempotencyKey,
+    required this.operationId,
+    super.policyVersion,
+  });
+
+  final String operationId;
+
+  @override
+  String get operationType => 'undo';
+
+  @override
+  Map<String, Object?> toRpcPayload() => {
+    'operation_type': operationType,
+    'assignment_id': assignmentId,
+    'programme_version_id': programmeVersionId,
+    'package_content_hash': packageContentHash,
+    'expected_schedule_revision': expectedScheduleRevision,
+    'policy_version': policyVersion,
+    'preview_fingerprint': previewFingerprint,
+    'idempotency_key': idempotencyKey,
+    'operation_id': operationId,
+  };
+}
+
 enum ProgrammeScheduleApplyStatus {
   applied,
   alreadyApplied,
@@ -189,6 +220,13 @@ enum ProgrammeScheduleApplyStatus {
   persistenceUnavailable,
   authoritativeReloadRequired,
   projectionAbsent,
+  operationNotFound,
+  operationNotUndoable,
+  undoUnavailable,
+  undoExpired,
+  undoAlreadyConsumed,
+  incompleteInverseSnapshot,
+  undoAfterStateMismatch,
   conflict,
   failed,
 }
@@ -308,6 +346,20 @@ ProgrammeScheduleApplyStatus _statusFromRpc(String status, String? code) {
           return ProgrammeScheduleApplyStatus.invalidPushDistance;
         case 'swap_requires_distinct_occurrences':
           return ProgrammeScheduleApplyStatus.swapRequiresDistinctOccurrences;
+        case 'operation_not_found':
+          return ProgrammeScheduleApplyStatus.operationNotFound;
+        case 'operation_not_undoable':
+          return ProgrammeScheduleApplyStatus.operationNotUndoable;
+        case 'undo_unavailable':
+          return ProgrammeScheduleApplyStatus.undoUnavailable;
+        case 'undo_expired':
+          return ProgrammeScheduleApplyStatus.undoExpired;
+        case 'undo_already_consumed':
+          return ProgrammeScheduleApplyStatus.undoAlreadyConsumed;
+        case 'incomplete_inverse_snapshot':
+          return ProgrammeScheduleApplyStatus.incompleteInverseSnapshot;
+        case 'undo_after_state_mismatch':
+          return ProgrammeScheduleApplyStatus.undoAfterStateMismatch;
         default:
           return ProgrammeScheduleApplyStatus.assignmentIneligible;
       }

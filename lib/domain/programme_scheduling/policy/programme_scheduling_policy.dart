@@ -40,13 +40,14 @@ class ProgrammeSchedulingPolicy {
   /// Default undo eligibility window (modelled only in Sprint 1.7B).
   final int undoTtlAthleteLocalHours;
 
-  /// Default Phase 1: Move/Swap/Push/Skip are allowed when eligibility holds.
+  /// Default Phase 1: Move/Swap/Push/Skip/Undo are allowed when eligibility holds.
   bool isOperationDefaultAllowed(ProgrammeSchedulingOperationType type) {
     switch (type) {
       case ProgrammeSchedulingOperationType.move:
       case ProgrammeSchedulingOperationType.swap:
       case ProgrammeSchedulingOperationType.push:
       case ProgrammeSchedulingOperationType.skip:
+      case ProgrammeSchedulingOperationType.undo:
         return true;
     }
   }

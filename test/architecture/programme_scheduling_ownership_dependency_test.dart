@@ -115,11 +115,14 @@ void main() {
     ]) {
       expect(applyService.contains(token), isFalse, reason: token);
     }
-    expect(applyService.contains('Undo remains unapplied'), isTrue);
     expect(applyService.contains('previewPush'), isTrue);
     expect(applyService.contains('previewSkip'), isTrue);
+    expect(applyService.contains('previewUndo'), isTrue);
     expect(applyService.contains('pushCommandFromPreview'), isTrue);
     expect(applyService.contains('skipCommandFromPreview'), isTrue);
+    expect(applyService.contains('undoCommandFromPreview'), isTrue);
+    expect(applyService.contains('restoreSnapshot'), isFalse);
+    expect(applyService.contains('setCursor'), isFalse);
 
     final screen = File(
       '$root/lib/features/programme/screens/'
@@ -127,7 +130,7 @@ void main() {
     ).readAsStringSync();
     expect(screen.contains('Preview push'), isTrue);
     expect(screen.contains('Preview skip'), isTrue);
-    expect(screen.contains('Confirm undo'), isFalse);
+    expect(screen.contains('Preview undo'), isTrue);
     expect(screen.contains('ProgrammeSchedulingPushRequest'), isFalse);
     expect(screen.contains('previewPush'), isTrue);
     expect(screen.contains('previewSkip'), isTrue);
@@ -266,6 +269,25 @@ void main() {
     expect(
       File(
         '$root/supabase/tests/sql/gate_o_programme_schedule_push_skip.sql',
+      ).existsSync(),
+      isTrue,
+    );
+  });
+
+  test('1.7F migration adds Undo, horizon, and Gate P', () {
+    final sql = File(
+      '$root/supabase/migrations/'
+      '20260803180000_apply_programme_schedule_undo_horizon.sql',
+    ).readAsStringSync();
+    expect(sql.contains('scheduling_horizon_end'), isTrue);
+    expect(sql.contains("v_op NOT IN ('move', 'swap', 'push', 'skip', 'undo')"), isTrue);
+    expect(sql.contains('incomplete_inverse_snapshot'), isTrue);
+    expect(sql.contains('undo_consumed_at'), isTrue);
+    expect(sql.contains('undo_invalidated_at'), isTrue);
+    expect(sql.contains('horizon_exceeded'), isTrue);
+    expect(
+      File(
+        '$root/supabase/tests/sql/gate_p_programme_schedule_undo_horizon.sql',
       ).existsSync(),
       isTrue,
     );

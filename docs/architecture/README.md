@@ -48,11 +48,12 @@
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
 `fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete.
-Sprints 1.7A–1.7E (contract, preview, durable baseline, Move/Swap/Push/Skip
-exact-preview apply) are complete on `phase1-athlete-controlled-scheduling`
-(not pushed). Owners: `ProgrammeSchedulingPreviewEngine`,
+Sprints 1.7A–1.7F (contract, preview, durable baseline, Move/Swap/Push/Skip/Undo
+exact-preview apply, durable horizon, calendar UX) are complete on
+`phase1-athlete-controlled-scheduling` (not pushed). Owners:
+`ProgrammeSchedulingPreviewEngine`,
 `ensure_programme_schedule_projection` / `ProgrammeScheduleRestoreService`,
 `apply_programme_schedule_operation` / `ProgrammeScheduleApplyService`,
-`AthleteProgrammeScheduleScreen`. Undo and broader UI remain 1.7F. See
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
+`AthleteProgrammeScheduleScreen`. Staging rollout remains separately authorised.
+See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.

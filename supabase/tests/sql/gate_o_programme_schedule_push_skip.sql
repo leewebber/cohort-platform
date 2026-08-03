@@ -242,7 +242,7 @@ BEGIN
     NULL
   );
 
-  -- Undo unsupported without mutation.
+  -- Undo without operation_id is malformed and must not mutate (Undo owned by Gate P).
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.apply_programme_schedule_operation(
     jsonb_build_object(
@@ -257,9 +257,9 @@ BEGIN
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'O', 'undo_unsupported', 'unsupported_operation',
+    'O', 'undo_requires_operation_id', 'malformed_request',
     COALESCE(v_res->>'code', v_res->>'status'), NULL,
-    (v_res->>'code') = 'unsupported_operation',
+    (v_res->>'code') = 'malformed_request',
     v_res::text
   );
   SELECT schedule_revision INTO v_rev

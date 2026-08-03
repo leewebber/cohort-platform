@@ -521,6 +521,184 @@ void main() {
     });
   });
 
+  group('undo preview', () {
+    ProgrammeSchedulingUndoableOperation skipOp({
+      required ProgrammeSchedulingSnapshot afterSkip,
+      Map<String, Object?>? priorOverrides,
+      bool incomplete = false,
+    }) {
+      final skipped = afterSkip.projection.bySlotId('slot-1')!;
+      final prior = <String, Object?>{
+        'operation_type': 'skip',
+        'session_slot_id': 'slot-1',
+        'disposition_before': 'scheduled',
+        'outcome_existed_before': false,
+        'outcome_status_before': null,
+        'cursor_before': {
+          'week_number': skipped.identity.weekNumber,
+          'day_key': skipped.identity.dayKey,
+          'session_order': skipped.identity.sessionOrder,
+        },
+        'assignment_status_before': 'active',
+        'assignment_completed_at_before': null,
+        ...?priorOverrides,
+      };
+      return ProgrammeSchedulingUndoableOperation(
+        operationId: 'op-skip-1',
+        assignmentId: assignmentId,
+        originalType: ProgrammeSchedulingOperationType.skip,
+        resultRevision: afterSkip.projection.scheduleRevision,
+        baseRevision: afterSkip.projection.scheduleRevision - 1,
+        operatedAt: DateTime.utc(2026, 7, 10, 1),
+        undoExpiresAt: DateTime.utc(2026, 7, 13, 1),
+        priorSnapshot: prior,
+        incompleteSnapshot: incomplete,
+      );
+    }
+
+    test('undo skip restores disposition and binds live cursorBefore', () {
+      final base = snapshot();
+      final slot1 = base.projection.bySlotId('slot-1')!;
+      final slot2 = base.projection.bySlotId('slot-2')!;
+      final snap = ProgrammeSchedulingSnapshot(
+        assignmentId: assignmentId,
+        programmeVersionId: versionId,
+        packageContentHash: packageHash,
+        timezone: timezone,
+        startedAt: startedAt,
+        today: today,
+        assignmentStatus: ProgrammeSchedulingAssignmentStatus.active,
+        projection: base.projection.replacing({
+          'slot-1': slot1.copyWith(
+            disposition: ProgrammeScheduleDisposition.skipped,
+          ),
+        }),
+        cursorSessionSlotId: 'slot-2',
+      );
+      final result = engine.previewUndo(
+        snapshot: snap,
+        operation: skipOp(afterSkip: snap),
+      );
+      expect(result.isReady, isTrue);
+      expect(result.preview!.operationType, ProgrammeSchedulingOperationType.undo);
+      expect(result.preview!.changes.single.proposedDisposition,
+          ProgrammeScheduleDisposition.scheduled);
+      final payload = ProgrammeSchedulingApplyFingerprint.payload(
+        operation: ProgrammeSchedulingUndoRequest(operationId: 'op-skip-1')
+            .toCanonicalMap(),
+        assignmentId: assignmentId,
+        programmeVersionId: versionId,
+        packageContentHash: packageHash,
+        scheduleRevision: snap.projection.scheduleRevision,
+        timezone: timezone,
+        affected: [
+          ProgrammeSchedulingApplyFingerprint.affectedRow(
+            sessionSlotId: 'slot-1',
+            programmedSessionKey: 'psk-1',
+            originalDate: slot1.scheduledDate.toString(),
+            proposedDate: slot1.scheduledDate.toString(),
+            originalDisposition: 'skipped',
+            proposedDisposition: 'scheduled',
+            weekNumber: slot1.identity.weekNumber,
+            dayKey: slot1.identity.dayKey,
+            sessionOrder: slot1.identity.sessionOrder,
+            protocolId: slot1.identity.protocolId,
+          ),
+        ],
+        collidingDates: const [],
+        cursorBefore: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: 'slot-2',
+          weekNumber: slot2.identity.weekNumber,
+          dayKey: slot2.identity.dayKey,
+          sessionOrder: slot2.identity.sessionOrder,
+        ),
+        cursorAfter: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: 'slot-1',
+          weekNumber: slot1.identity.weekNumber,
+          dayKey: slot1.identity.dayKey,
+          sessionOrder: slot1.identity.sessionOrder,
+        ),
+      );
+      expect(
+        result.preview!.fingerprint,
+        ProgrammeSchedulingApplyFingerprint.compute(payload),
+      );
+    });
+
+    test('incomplete skip snapshot fails closed', () {
+      final snap = snapshot();
+      final op = skipOp(
+        afterSkip: snap,
+        incomplete: true,
+        priorOverrides: const {},
+      );
+      final incomplete = ProgrammeSchedulingUndoableOperation(
+        operationId: op.operationId,
+        assignmentId: op.assignmentId,
+        originalType: op.originalType,
+        resultRevision: op.resultRevision,
+        baseRevision: op.baseRevision,
+        operatedAt: op.operatedAt,
+        undoExpiresAt: op.undoExpiresAt,
+        priorSnapshot: {
+          'operation_type': 'skip',
+          'session_slot_id': 'slot-1',
+          'disposition_before': 'scheduled',
+        },
+        incompleteSnapshot: true,
+      );
+      final result = engine.previewUndo(snapshot: snap, operation: incomplete);
+      expect(
+        result.code,
+        ProgrammeSchedulingPreviewCode.incompleteInverseSnapshot,
+      );
+    });
+
+    test('non-null horizon does not alter undo fingerprint', () {
+      final base = snapshot();
+      final slot1 = base.projection.bySlotId('slot-1')!;
+      final slot2 = base.projection.bySlotId('slot-2')!;
+      final snap = ProgrammeSchedulingSnapshot(
+        assignmentId: assignmentId,
+        programmeVersionId: versionId,
+        packageContentHash: packageHash,
+        timezone: timezone,
+        startedAt: startedAt,
+        today: today,
+        assignmentStatus: ProgrammeSchedulingAssignmentStatus.active,
+        projection: base.projection.replacing({
+          'slot-1': slot1.copyWith(
+            disposition: ProgrammeScheduleDisposition.skipped,
+          ),
+        }),
+        schedulingHorizonEnd:
+            SessionOccurrenceDate(year: 2026, month: 8, day: 1),
+        cursorSessionSlotId: 'slot-2',
+      );
+      final withHorizon = engine.previewUndo(
+        snapshot: snap,
+        operation: skipOp(afterSkip: snap),
+      );
+      final withoutHorizon = engine.previewUndo(
+        snapshot: ProgrammeSchedulingSnapshot(
+          assignmentId: assignmentId,
+          programmeVersionId: versionId,
+          packageContentHash: packageHash,
+          timezone: timezone,
+          startedAt: startedAt,
+          today: today,
+          assignmentStatus: ProgrammeSchedulingAssignmentStatus.active,
+          projection: snap.projection,
+          cursorSessionSlotId: 'slot-2',
+        ),
+        operation: skipOp(afterSkip: snap),
+      );
+      expect(withHorizon.preview!.fingerprint,
+          withoutHorizon.preview!.fingerprint);
+      expect(slot2.identity.sessionSlotId, 'slot-2');
+    });
+  });
+
   group('policy and fingerprint', () {
     test('paused assignment rejected', () {
       final result = engine.preview(

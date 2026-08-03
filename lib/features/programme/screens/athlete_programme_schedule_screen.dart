@@ -14,13 +14,13 @@ import '../controllers/athlete_programme_schedule_controller.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/programme_schedule_apply_service.dart';
 import '../services/programme_schedule_apply_supabase_store.dart';
+import '../services/programme_schedule_operations_supabase_store.dart';
 import '../services/programme_schedule_projection_supabase_store.dart';
 import '../services/programme_schedule_restore_service.dart';
 
-/// Smallest athlete Move/Swap/Push/Skip scheduling surface (Sprint 1.7E).
+/// Assignment-scoped athlete schedule calendar (Sprint 1.7F).
 ///
-/// Ownership: programme feature hosts exact-preview confirm for Move/Swap/Push/Skip.
-/// Undo and calendar redesign remain Sprint 1.7F.
+/// Ownership: exact-preview Move/Swap/Push/Skip/Undo. Not a general calendar product.
 class AthleteProgrammeScheduleScreen extends StatefulWidget {
   const AthleteProgrammeScheduleScreen({
     super.key,
@@ -83,6 +83,7 @@ class _AthleteProgrammeScheduleScreenState
       restoreService: restore,
       applyService: apply,
       assignmentStore: const ProgrammeAssignmentSupabaseStore(),
+      operationsStore: const ProgrammeScheduleOperationsSupabaseStore(),
     );
   }
 
@@ -148,8 +149,10 @@ class _AthleteProgrammeScheduleScreenState
 
   @override
   Widget build(BuildContext context) {
+    final snap = _controller.snapshot;
+    final today = snap?.today.toString() ?? '—';
     return Scaffold(
-      appBar: AppBar(title: const Text('Reschedule')),
+      appBar: AppBar(title: const Text('Programme schedule')),
       body: SafeArea(
         child: _controller.isLoading
             ? const Center(child: CircularProgressIndicator())
@@ -162,18 +165,43 @@ class _AthleteProgrammeScheduleScreenState
                       style: CohortTextStyles.body.copyWith(
                         color: CohortColors.warning,
                       ),
+                      semanticsLabel: 'Error: ${_controller.errorMessage}',
+                    ),
+                    const SizedBox(height: CohortSpacing.md),
+                    TextButton(
+                      onPressed: _controller.load,
+                      child: const Text('Retry'),
                     ),
                     const SizedBox(height: CohortSpacing.md),
                   ],
                   Text(
-                    'Move or swap uncompleted sessions. Prescription and '
+                    'Today ($today) in your programme timezone. '
+                    'Preview exact changes before confirming. Prescription and '
                     'completion history stay unchanged.',
                     style: CohortTextStyles.muted,
                   ),
                   const SizedBox(height: CohortSpacing.xl),
-                  const SectionTitle('Sessions'),
+                  const SectionTitle('Calendar'),
                   const SizedBox(height: CohortSpacing.sm),
-                  ..._controller.uncompletedOccurrences.map(_occurrenceTile),
+                  ..._calendarSections(),
+                  if (_controller.undoableOperation != null) ...[
+                    const SizedBox(height: CohortSpacing.xl),
+                    const SectionTitle('Undo'),
+                    const SizedBox(height: CohortSpacing.sm),
+                    Text(
+                      'Reverse the latest '
+                      '${_controller.undoableOperation!.originalType.name} '
+                      '(expires '
+                      '${_controller.undoableOperation!.undoExpiresAt?.toLocal().toIso8601String() ?? 'n/a'}). '
+                      'Server revalidates eligibility on confirm.',
+                      style: CohortTextStyles.muted,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                    CohortButton(
+                      label: 'Preview undo',
+                      onPressed: () => _controller.previewUndo(),
+                    ),
+                  ],
                   const SizedBox(height: CohortSpacing.xl),
                   const SectionTitle('Move'),
                   const SizedBox(height: CohortSpacing.sm),
@@ -347,15 +375,78 @@ class _AthleteProgrammeScheduleScreenState
     );
   }
 
-  Widget _occurrenceTile(ScheduledProgrammeOccurrence occurrence) {
+  List<Widget> _calendarSections() {
+    final snap = _controller.snapshot;
+    if (snap == null || snap.projection.occurrences.isEmpty) {
+      return [
+        Text('No scheduled sessions yet.', style: CohortTextStyles.muted),
+      ];
+    }
+    final byDate = <String, List<ScheduledProgrammeOccurrence>>{};
+    for (final o in snap.projection.occurrences) {
+      byDate.putIfAbsent(o.scheduledDate.toString(), () => []).add(o);
+    }
+    final dates = byDate.keys.toList()..sort();
+    final widgets = <Widget>[];
+    for (final date in dates) {
+      final rows = byDate[date]!;
+      final collision = rows.length > 1;
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+          child: Text(
+            date + (date == snap.today.toString() ? ' · today' : ''),
+            style: CohortTextStyles.h2,
+          ),
+        ),
+      );
+      if (collision) {
+        widgets.add(
+          Text(
+            'Multiple sessions on this date (allowed).',
+            style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+          ),
+        );
+      }
+      for (final o in rows) {
+        widgets.add(_occurrenceTile(o, snap));
+      }
+      widgets.add(const SizedBox(height: CohortSpacing.md));
+    }
+    return widgets;
+  }
+
+  Widget _occurrenceTile(
+    ScheduledProgrammeOccurrence occurrence, [
+    ProgrammeSchedulingSnapshot? snap,
+  ]) {
+    final status = _statusLabel(occurrence, snap);
+    final isCursor =
+        snap?.cursorSessionSlotId == occurrence.identity.sessionSlotId;
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
       child: Text(
-        '${occurrence.scheduledDate} · W${occurrence.identity.weekNumber} '
-        '${occurrence.identity.dayKey} · ${occurrence.identity.protocolId}',
+        '${occurrence.identity.protocolId} · $status'
+        '${isCursor ? ' · current' : ''} · '
+        'W${occurrence.identity.weekNumber} ${occurrence.identity.dayKey}',
         style: CohortTextStyles.body,
       ),
     );
+  }
+
+  String _statusLabel(
+    ScheduledProgrammeOccurrence occurrence,
+    ProgrammeSchedulingSnapshot? snap,
+  ) {
+    if (occurrence.isCompleted) return 'completed';
+    if (occurrence.isSkipped) return 'skipped';
+    if (snap != null && occurrence.scheduledDate.isBefore(snap.today)) {
+      return 'overdue';
+    }
+    if (snap != null && occurrence.scheduledDate == snap.today) {
+      return 'due today';
+    }
+    return 'scheduled';
   }
 
   Widget _slotDropdown({

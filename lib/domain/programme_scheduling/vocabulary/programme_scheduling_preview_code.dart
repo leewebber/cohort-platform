@@ -17,4 +17,9 @@ enum ProgrammeSchedulingPreviewCode {
   crossAssignmentOrVersionSwap,
   unsupportedOrMalformedRequest,
   inconsistentProjection,
+  undoUnavailable,
+  undoExpired,
+  undoAlreadyConsumed,
+  incompleteInverseSnapshot,
+  staleScheduleRevision,
 }

@@ -37,6 +37,7 @@ class PersistedProgrammeScheduleProjection {
     required this.scheduleRevision,
     required this.schemaVersion,
     required this.occurrences,
+    this.schedulingHorizonEnd,
     this.createdAt,
     this.updatedAt,
   });
@@ -50,6 +51,9 @@ class PersistedProgrammeScheduleProjection {
   final int scheduleRevision;
   final String schemaVersion;
   final List<PersistedProgrammeScheduleOccurrence> occurrences;
+
+  /// Inclusive last permitted athlete-local date; null = explicitly unbounded.
+  final SessionOccurrenceDate? schedulingHorizonEnd;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -82,6 +86,7 @@ class PersistedProgrammeScheduleProjection {
       schemaVersion: map['schema_version']?.toString() ??
           'programme.schedule.projection.v1',
       occurrences: List.unmodifiable(occurrences),
+      schedulingHorizonEnd: _nullableDate(map['scheduling_horizon_end']),
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
     );
@@ -96,6 +101,7 @@ class PersistedProgrammeScheduleProjection {
     'started_at': startedAt.toString(),
     'schedule_revision': scheduleRevision,
     'schema_version': schemaVersion,
+    'scheduling_horizon_end': schedulingHorizonEnd?.toString(),
     'created_at': createdAt?.toIso8601String(),
     'updated_at': updatedAt?.toIso8601String(),
     'occurrences': occurrences.map((o) => o.toPersistenceMap()).toList(),
@@ -138,7 +144,7 @@ class PersistedProgrammeScheduleProjection {
       today: today,
       assignmentStatus: assignmentStatus,
       projection: toDomainProjection(),
-      schedulingHorizonEnd: schedulingHorizonEnd,
+      schedulingHorizonEnd: schedulingHorizonEnd ?? this.schedulingHorizonEnd,
       preparedProgrammedSessionKeys: preparedProgrammedSessionKeys,
       adaptedProgrammedSessionKeys: adaptedProgrammedSessionKeys,
       pendingAdaptationProposalKeys: pendingAdaptationProposalKeys,
@@ -346,6 +352,13 @@ SessionOccurrenceDate _reqDate(Object? value) {
     month: int.parse(match.group(2)!),
     day: int.parse(match.group(3)!),
   );
+}
+
+SessionOccurrenceDate? _nullableDate(Object? value) {
+  if (value == null) return null;
+  final text = value.toString().trim();
+  if (text.isEmpty || text.toLowerCase() == 'null') return null;
+  return _reqDate(text);
 }
 
 DateTime? _parseDateTime(Object? value) {

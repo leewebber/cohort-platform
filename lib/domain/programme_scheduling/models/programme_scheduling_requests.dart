@@ -82,3 +82,19 @@ class ProgrammeSchedulingSkipRequest extends ProgrammeSchedulingRequest {
     'sessionSlotId': sessionSlotId,
   };
 }
+
+class ProgrammeSchedulingUndoRequest extends ProgrammeSchedulingRequest {
+  const ProgrammeSchedulingUndoRequest({required this.operationId});
+
+  /// Durable `programme_schedule_operations.id` of the operation to reverse.
+  final String operationId;
+
+  @override
+  ProgrammeSchedulingOperationType get type =>
+      ProgrammeSchedulingOperationType.undo;
+
+  Map<String, Object?> toCanonicalMap() => {
+    'type': type.name,
+    'operationId': operationId,
+  };
+}

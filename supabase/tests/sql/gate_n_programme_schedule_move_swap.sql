@@ -228,7 +228,7 @@ BEGIN
     v_res::text
   );
 
-  -- Undo remains unsupported (Push/Skip apply authority is Gate O / Sprint 1.7E).
+  -- Undo without operation_id is malformed (Undo apply authority is Gate P / 1.7F).
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.apply_programme_schedule_operation(
     jsonb_build_object(
@@ -243,9 +243,9 @@ BEGIN
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'N', 'undo_unsupported', 'unsupported_operation',
+    'N', 'undo_requires_operation_id', 'malformed_request',
     COALESCE(v_res->>'code', v_res->>'status'), NULL,
-    (v_res->>'code') = 'unsupported_operation',
+    (v_res->>'code') = 'malformed_request',
     v_res::text
   );
   SELECT schedule_revision INTO v_rev

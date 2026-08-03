@@ -9,10 +9,9 @@ import 'athlete_programme_session_prepare_service.dart';
 import 'programme_schedule_apply_store.dart';
 import 'programme_schedule_restore_service.dart';
 
-/// Application boundary for confirmed Move/Swap/Push/Skip exact-preview apply.
+/// Application boundary for confirmed Move/Swap/Push/Skip/Undo exact-preview apply.
 ///
-/// Does not expose generic projection, disposition, or cursor writers.
-/// Undo remains unapplied (1.7F).
+/// Does not expose generic projection, disposition, cursor, or snapshot writers.
 class ProgrammeScheduleApplyService {
   ProgrammeScheduleApplyService({
     required ProgrammeScheduleApplyStore applyStore,
@@ -128,7 +127,8 @@ class ProgrammeScheduleApplyService {
     if (command is! ProgrammeScheduleMoveCommand &&
         command is! ProgrammeScheduleSwapCommand &&
         command is! ProgrammeSchedulePushCommand &&
-        command is! ProgrammeScheduleSkipCommand) {
+        command is! ProgrammeScheduleSkipCommand &&
+        command is! ProgrammeScheduleUndoCommand) {
       return const ProgrammeScheduleApplyResult(
         status: ProgrammeScheduleApplyStatus.unsupportedOperation,
         code: 'unsupported_operation',
@@ -232,5 +232,33 @@ class ProgrammeScheduleApplyService {
       snapshot: snapshot,
       request: ProgrammeSchedulingSkipRequest(sessionSlotId: sessionSlotId),
     );
+  }
+
+  ProgrammeScheduleUndoCommand? undoCommandFromPreview({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required ProgrammeSchedulingUndoableOperation operation,
+    required ProgrammeSchedulingPreview preview,
+    String? idempotencyKey,
+  }) {
+    if (preview.operationType != ProgrammeSchedulingOperationType.undo) {
+      return null;
+    }
+    return ProgrammeScheduleUndoCommand(
+      assignmentId: snapshot.assignmentId,
+      programmeVersionId: snapshot.programmeVersionId,
+      packageContentHash: snapshot.packageContentHash,
+      expectedScheduleRevision: snapshot.projection.scheduleRevision,
+      previewFingerprint: preview.fingerprint,
+      idempotencyKey: idempotencyKey ?? newIdempotencyKey(),
+      operationId: operation.operationId,
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult previewUndo({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required ProgrammeSchedulingUndoableOperation operation,
+  }) {
+    const engine = ProgrammeSchedulingPreviewEngine();
+    return engine.previewUndo(snapshot: snapshot, operation: operation);
   }
 }

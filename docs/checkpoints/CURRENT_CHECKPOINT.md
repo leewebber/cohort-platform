@@ -2,9 +2,9 @@
 
 **Recorded:** 2026-08-03
 **Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
-Sprint 1.7A–1.7E scheduling (contract, preview, durable projection,
-Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
-(not pushed)
+Sprint 1.7A–1.7F scheduling (contract, preview, durable projection,
+Move/Swap/Push/Skip/Undo exact-preview apply, durable horizon, calendar UX)
+complete on dedicated branch (not pushed)
 
 ## Merged main checkpoint
 
@@ -36,14 +36,16 @@ Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
 - Sprint 1.7E feature: `0a2b51b2af7eb793c4ffbc3358e18f5d80f7d5d2`
   exact-preview Push/Skip apply on the same RPC/service path; Skip atomically
   writes skipped disposition/outcome and advances programme cursor; Gate O
-- Next sprint: **1.7F — Undo + broader UI / hardening**
+- Sprint 1.7F feature: *(recorded after feature commit)*
+  one-level Undo via `apply_programme_schedule_operation`, durable nullable
+  `scheduling_horizon_end`, complete Skip inverse snapshots, calendar UX, Gate P
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 - Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
-  Scheduling authority: 1.7A–1.7E (through Push/Skip exact-preview apply);
-  Undo/broader UI remain 1.7F.
+  Scheduling authority: 1.7A–1.7F (through Undo + durable horizon + calendar UX).
+  Staging rollout remains separately authorised.
 
 ## Approved direction (summary)
 
@@ -53,11 +55,11 @@ Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
 4. Completion remains Sprint 1.5A-owned; skip is not completion.
 5. Adaptation remains limited to the current prepared executable session.
 6. No Coach Brain, Adaptive Progression, or adaptation-pipeline scheduling.
-7. Founder-approved Sprint 1.7 defaults: Move/Swap/Push/Skip default-allow via
-   central policy (no package permission schema fields); past-date catch-up
-   allowed from `started_at` through today; push horizon fail-closed; undo TTL
-   72 athlete-local hours (modelled only in 1.7B); paused assignments block
-   preview/mutation.
+7. Founder-approved Sprint 1.7 defaults: Move/Swap/Push/Skip/Undo default-allow
+   via central policy (no package permission schema fields); past-date catch-up
+   allowed from `started_at` through today; durable `scheduling_horizon_end`
+   (`NULL` = unbounded); undo TTL 72 elapsed hours via stored `undo_expires_at`;
+   paused assignments block preview/mutation.
 
 ## Preserved state
 
@@ -68,9 +70,8 @@ Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
 
 ## Exact next sequence
 
-1. After review of Sprint 1.7E, implement Sprint 1.7F Undo + broader UI /
-   hardening only.
-2. Staging rollout remains separately authorised.
+1. After review of Sprint 1.7F, staging rollout remains separately authorised.
+2. Do not begin another scheduling sprint without explicit authority.
 
 ## Resume checks
 

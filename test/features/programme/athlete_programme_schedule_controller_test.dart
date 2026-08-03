@@ -7,6 +7,7 @@ import 'package:cohort_platform/features/programme/models/programme_schedule_app
 import 'package:cohort_platform/features/programme/models/programme_schedule_persistence.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_apply_service.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_apply_store.dart';
+import 'package:cohort_platform/features/programme/services/programme_schedule_operations_store.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_projection_store.dart';
 import 'package:cohort_platform/features/programme/services/programme_schedule_restore_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -189,6 +190,57 @@ void main() {
     );
   });
 
+  test('undo preview binds pending undo command from latest operation', () async {
+    final local = AthleteLocalRepository(InMemoryKvStore());
+    final skipped = projection(revision: 2).copyWithSkippedSlot1();
+    final restore = ProgrammeScheduleRestoreService(
+      store: _EnsureStore(skipped),
+      localRepository: local,
+    );
+    final apply = ProgrammeScheduleApplyService(
+      applyStore: _RecordingApplyStore(),
+      restoreService: restore,
+      localRepository: local,
+    );
+    final ops = _FakeOpsStore(
+      ProgrammeSchedulingUndoableOperation(
+        operationId: 'op-1',
+        assignmentId: assignmentId,
+        originalType: ProgrammeSchedulingOperationType.skip,
+        resultRevision: 2,
+        baseRevision: 1,
+        operatedAt: DateTime.utc(2026, 7, 10),
+        undoExpiresAt: DateTime.utc(2099, 1, 1),
+        priorSnapshot: const {
+          'operation_type': 'skip',
+          'session_slot_id': 'slot-1',
+          'disposition_before': 'scheduled',
+          'outcome_existed_before': false,
+          'outcome_status_before': null,
+          'cursor_before': {
+            'week_number': 1,
+            'day_key': 'day_1',
+            'session_order': 0,
+          },
+          'assignment_status_before': 'active',
+          'assignment_completed_at_before': null,
+        },
+      ),
+    );
+    final controller = AthleteProgrammeScheduleController(
+      athleteId: athleteId,
+      assignmentId: assignmentId,
+      restoreService: restore,
+      applyService: apply,
+      operationsStore: ops,
+    );
+    await controller.load();
+    expect(controller.undoableOperation?.operationId, 'op-1');
+    await controller.previewUndo();
+    expect(controller.preview?.operationType, ProgrammeSchedulingOperationType.undo);
+    expect(controller.hasConfirmablePreview, isTrue);
+  });
+
   test('skip preview shows disposition and cursor consequence', () async {
     final local = AthleteLocalRepository(InMemoryKvStore());
     final restore = ProgrammeScheduleRestoreService(
@@ -244,6 +296,17 @@ class _EnsureStore implements ProgrammeScheduleProjectionStore {
   }
 }
 
+class _FakeOpsStore implements ProgrammeScheduleOperationsStore {
+  _FakeOpsStore(this.operation);
+  final ProgrammeSchedulingUndoableOperation? operation;
+
+  @override
+  Future<ProgrammeSchedulingUndoableOperation?> latestUndoableOperation({
+    required String assignmentId,
+  }) async =>
+      operation;
+}
+
 class _RecordingApplyStore implements ProgrammeScheduleApplyStore {
   _RecordingApplyStore({this.result});
 
@@ -291,6 +354,34 @@ extension on PersistedProgrammeScheduleProjection {
             day: 5,
           ),
           disposition: occurrences[0].disposition,
+        ),
+        occurrences[1],
+      ],
+    );
+  }
+
+  PersistedProgrammeScheduleProjection copyWithSkippedSlot1() {
+    return PersistedProgrammeScheduleProjection(
+      assignmentId: assignmentId,
+      athleteId: athleteId,
+      programmeVersionId: programmeVersionId,
+      packageContentHash: packageContentHash,
+      timezone: timezone,
+      startedAt: startedAt,
+      scheduleRevision: scheduleRevision,
+      schemaVersion: schemaVersion,
+      occurrences: [
+        PersistedProgrammeScheduleOccurrence(
+          sessionSlotId: occurrences[0].sessionSlotId,
+          programmeVersionId: occurrences[0].programmeVersionId,
+          packageContentHash: occurrences[0].packageContentHash,
+          weekNumber: occurrences[0].weekNumber,
+          dayKey: occurrences[0].dayKey,
+          sessionOrder: occurrences[0].sessionOrder,
+          protocolId: occurrences[0].protocolId,
+          programmedSessionKey: occurrences[0].programmedSessionKey,
+          scheduledDate: occurrences[0].scheduledDate,
+          disposition: ProgrammeScheduleDisposition.skipped,
         ),
         occurrences[1],
       ],
