@@ -36,7 +36,7 @@ complete on dedicated branch (not pushed)
 - Sprint 1.7E feature: `0a2b51b2af7eb793c4ffbc3358e18f5d80f7d5d2`
   exact-preview Push/Skip apply on the same RPC/service path; Skip atomically
   writes skipped disposition/outcome and advances programme cursor; Gate O
-- Sprint 1.7F feature: *(recorded after feature commit)*
+- Sprint 1.7F feature: `5555920e09351435bd340a9024449604d931618c`
   one-level Undo via `apply_programme_schedule_operation`, durable nullable
   `scheduling_horizon_end`, complete Skip inverse snapshots, calendar UX, Gate P
 - Binding scheduling contract:
