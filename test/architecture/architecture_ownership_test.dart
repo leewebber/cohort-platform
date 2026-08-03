@@ -46,6 +46,12 @@ void main() {
       expect(match, isNotEmpty, reason: 'ADR-$id');
     }
   });
+
+  test('Phase 1 programme adaptation authority contract exists', () {
+    final path =
+        '$root/docs/architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md';
+    expect(File(path).existsSync(), isTrue, reason: path);
+  });
 }
 
 String _repoRoot(Directory start) {

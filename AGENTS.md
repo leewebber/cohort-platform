@@ -14,25 +14,38 @@ Before changing the repository:
 4. Treat existing uncommitted changes as user-owned. Do not discard, clean,
    stage, or rewrite them unless explicitly authorised.
 
-The current Sprint 1.5A staging-verified implementation checkpoint is
-`4365568ea33555b9cf50130a6df6965d0abb2b53`. Sprint 1.5A and Self-Test 2 are
-closed, but their feature branch is not yet merged.
+Phase 1 Sprints 1.3–1.5A are merged into `main` at
+`fdae6dd37330980c3e775da8e651a51f86f5b99c` (includes staging-verified Sprint
+1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
+
+Current feature branch: `phase1-acceptance-gated-adaptation`. Active sprint:
+**1.6A — Acceptance-Gated Adaptation Authority Contract** (documentation /
+architecture only until later increments are authorised).
 
 ## Authority and product invariants
 
 - Authored programme prescription remains the prescription authority.
 - Adaptation is a proposal, not a second prescription authority.
+- Programme-backed adaptation reuses `SessionAdaptationPipeline` through a
+  Plan-Package-native adapter and must not depend on the legacy generative
+  Plan Library / Coach Brain product path.
+- Adaptation may apply at whole-session and individual-exercise granularity.
 - An adaptation must be shown for review and requires explicit athlete
   acceptance before it may alter prepared execution state.
-- Dismissal or keeping the planned session makes no durable adaptation change.
+- Acceptance mutates only the current prepared executable session.
+- Dismissal, keep original, cancel, reject, or ignore make no durable
+  adaptation change.
 - Do not automatically rewrite the programme, advance an athlete, change later
-  sessions, or apply post-completion progression.
+  sessions, or apply post-completion progression (closed for Phase 1).
+- Rescheduling (when / order) is a separate future authority (proposed Sprint
+  1.7) and must not be implemented through the adaptation acceptance path.
 - Do not invent coaching content. Reuse representative protocol and exercise
   data where it exists; otherwise use neutral labels and request direction.
 
 Binding detail lives in
-[`docs/architecture/Adaptation_Policy_v1.md`](docs/architecture/Adaptation_Policy_v1.md)
-and the authority documents linked by the current checkpoint.
+[`docs/architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](docs/architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
+and
+[`docs/architecture/Adaptation_Policy_v1.md`](docs/architecture/Adaptation_Policy_v1.md).
 
 ## Repository safety
 
@@ -60,6 +73,7 @@ flutter test
 flutter analyze
 flutter test test/architecture/ test/planning/ test/knowledge/
 flutter test test/programme/athlete_programme_completion_self_test_2_test.dart
+flutter test test/phase6/coaching_integrity_test.dart
 ./supabase/tests/run_local_db_gate.sh
 ```
 
@@ -75,8 +89,11 @@ record.
 
 The exact next sequence is:
 
-1. controlled merge checkpoint for the closed Sprint 1.5A feature branch;
-2. create a new feature branch for acceptance-gated adaptation architecture.
+1. Finish Sprint 1.6A architecture contract on
+   `phase1-acceptance-gated-adaptation` (no product implementation).
+2. Implement Sprint 1.6B propose/review after 1.6A review.
+3. Continue 1.6C–1.6E in small verifiable increments.
+4. Do not begin proposed Sprint 1.7 scheduling until separately approved.
 
-Do not combine adaptation work into the merge checkpoint, and do not begin it
-on the Sprint 1.5A feature branch.
+Do not implement adaptation product behaviour in 1.6A, and do not smuggle
+rescheduling through the adaptation acceptance path.

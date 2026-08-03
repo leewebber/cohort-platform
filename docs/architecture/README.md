@@ -12,6 +12,7 @@
 | [Sprint_1_4B_Staging_Self_Test_1.md](./Sprint_1_4B_Staging_Self_Test_1.md) | Phase 1 Sprint 1.4B — retained staging Self-Test 1 closure |
 | [Athlete_Programme_Completion_Advancement_v1.md](./Athlete_Programme_Completion_Advancement_v1.md) | Phase 1 Sprint 1.5A — atomic completion and authored cursor advancement |
 | [Sprint_1_5A_Staging_Self_Test_2.md](./Sprint_1_5A_Staging_Self_Test_2.md) | Phase 1 Sprint 1.5A — staging Self-Test 2 closure at `4365568` |
+| [Athlete_Programme_Acceptance_Gated_Adaptation_v1.md](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md) | Phase 1 Sprint 1.6A — programme-backed acceptance-gated adaptation authority |
 | [Planning_Engine_v1.md](./Planning_Engine_v1.md) | **Phase 3.5** — planning pipeline, contracts, ownership (canonical for Phase 4) |
 | [Architecture_Freeze_v1.md](./Architecture_Freeze_v1.md) | **Phase 4.5** — freeze, readiness, architecture tests, Phase 5 recommendation |
 | [../product/Workout_Player_MVP.md](../product/Workout_Player_MVP.md) | **Phase 5 Sprint 1** — athlete Workout Player vertical slice |
@@ -26,7 +27,7 @@
 | [../product/Cohort_Product_Constitution_v1.md](../product/Cohort_Product_Constitution_v1.md) | **Phase 6 Sprint 3** — athlete product surface principles |
 | [Coaching_Constitution_v1.md](./Coaching_Constitution_v1.md) | **Phase 6 Sprint 4** — coach authority & programme integrity |
 | [Session_Authority_Model_v1.md](./Session_Authority_Model_v1.md) | **Phase 6 Sprint 4** — programmed / prepared / completed |
-| [Adaptation_Policy_v1.md](./Adaptation_Policy_v1.md) | **Phase 6 Sprint 4** — explicit adaptation rules |
+| [Adaptation_Policy_v1.md](./Adaptation_Policy_v1.md) | **Phase 6 Sprint 4** — explicit adaptation rules (general; programme path refined by 1.6A) |
 | [Connected_Data_Privacy_v1.md](./Connected_Data_Privacy_v1.md) | **Phase 6 Sprint 4** — connected data & no-location policy |
 | [../planning/Planning_Engine_Implementation_v1.md](../planning/Planning_Engine_Implementation_v1.md) | Phase 4 Sprint 1 — `PlanningEngineService` merge policies |
 | [../planning/Session_Blueprint_Implementation_v1.md](../planning/Session_Blueprint_Implementation_v1.md) | Phase 4 Sprint 2 — `SessionBlueprint` generator |
@@ -44,6 +45,8 @@
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** See
+**Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
+`fdae6dd`. Active work is Sprint 1.6A on
+`phase1-acceptance-gated-adaptation`. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.
