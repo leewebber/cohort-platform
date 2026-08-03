@@ -19,7 +19,7 @@
 - Sprint 1.6B propose/review: `f7812771348dc8faf6d77fdb95e7567b9e16d9b3`
 - Sprint 1.6C tip: `86d335e0ad6c7e995b1f300283d9009fc26191c2`
 - Sprint 1.6D tip: `926b8d5e01166892626439a2aed56a4b26659286`
-- Sprint 1.6E tip: recorded on commit of this checkpoint
+- Sprint 1.6E tip: `bcc4b36a7f0849440bf7716f0c4bca7304ee559f`
 - Binding contract:
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Acceptance owner: `ProgrammeAdaptationAcceptanceService`
