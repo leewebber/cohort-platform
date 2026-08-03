@@ -17,7 +17,7 @@
 - Based on: `fdae6dd37330980c3e775da8e651a51f86f5b99c`
 - Sprint 1.6A contract: `daa4080286697dead686da35c5cbcd19c7c25385`
 - Sprint 1.6B propose/review: `f7812771348dc8faf6d77fdb95e7567b9e16d9b3`
-- Sprint 1.6C tip: recorded on commit of this checkpoint
+- Sprint 1.6C tip: `86d335e0ad6c7e995b1f300283d9009fc26191c2`
 - Next sprint: **1.6D — Pre-completion revert**
 - Binding contract:
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
