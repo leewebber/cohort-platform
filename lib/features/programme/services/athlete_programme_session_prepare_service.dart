@@ -401,4 +401,35 @@ class AthleteProgrammeSessionPrepareService {
   PreparedExecutionPackage? cachedPackageForKey(String programmedSessionKey) {
     return _memoryCache[programmedSessionKey];
   }
+
+  /// Clears local prepared execution for keys affected by a schedule Move/Swap.
+  ///
+  /// Prepared state is athlete-local only. Called after successful authoritative
+  /// apply using keys returned by the RPC. Does not regenerate prepare, invoke
+  /// adaptation, or revive consumed proposal IDs.
+  Future<void> clearPreparedForProgrammedSessionKeys({
+    required String athleteId,
+    required Iterable<String> programmedSessionKeys,
+  }) async {
+    final trimmedAthlete = athleteId.trim();
+    if (trimmedAthlete.isEmpty) return;
+    final keys = programmedSessionKeys
+        .map((k) => k.trim())
+        .where((k) => k.isNotEmpty)
+        .toSet();
+    if (keys.isEmpty) return;
+
+    for (final key in keys) {
+      _memoryCache.remove(key);
+    }
+
+    final repo = _localRepository;
+    if (repo == null) return;
+    final local = await _readLocal(trimmedAthlete);
+    if (local == null) return;
+    final localKey = local.programmedSessionKey?.trim() ?? '';
+    if (localKey.isNotEmpty && keys.contains(localKey)) {
+      await repo.clearGeneratedSession(trimmedAthlete);
+    }
+  }
 }

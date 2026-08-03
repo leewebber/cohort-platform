@@ -12,6 +12,7 @@ export 'policy/programme_scheduling_policy.dart';
 export 'policy/programme_scheduling_undo_policy_inputs.dart';
 export 'services/programme_scheduling_preview_engine.dart';
 export 'support/baseline_programme_schedule_projection.dart';
+export 'support/programme_scheduling_apply_fingerprint.dart';
 export 'support/programme_scheduling_preview_fingerprint.dart';
 export 'support/session_occurrence_date_arithmetic.dart';
 export 'value_objects/scheduled_occurrence_identity.dart';

@@ -563,7 +563,7 @@ Scheduling and adaptation remain distinct:
 | **1.7A** | Discovery + binding contract + architecture guards | This document; ownership tests; no product behaviour — **complete** |
 | **1.7B** | Domain model, identity, preview engine, policy/eligibility validation (compute-only) | Deterministic previews + fingerprints; no durable mutate — **complete** |
 | **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required — **complete** |
-| **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules |
+| **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules — **complete** |
 | **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green |
 | **1.7F** | Undo, Today/UI integration, hardening, authorised staging evidence if approved | Undo eligibility; milestone closeout |
 
@@ -597,18 +597,46 @@ Durable foundation delivered:
 - sole durable write RPC `ensure_programme_schedule_projection` (atomic
   idempotent baseline initialisation / reload);
 - fail-closed `apply_programme_schedule_operation` placeholder **not** granted
-  to authenticated athletes;
+  to authenticated athletes in 1.7C (replaced by Move/Swap apply in 1.7D);
 - SELECT-only RLS for athletes/coaches; no direct client mutation;
 - Dart owners: `ProgrammeScheduleProjectionSupabaseStore`,
   `ProgrammeScheduleRestoreService`, local cache via `AthleteLocalRepository`;
 - lifecycle: lazy ensure on first scheduling-state load (not Start Programme UI);
 - baseline revision `0`; completed/skipped dispositions mirrored from
   `programme_slot_outcomes` without rewriting completion evidence;
-- no Move/Swap/Push/Skip apply, no cursor/prepared/adaptation mutation.
+- no Move/Swap/Push/Skip apply in 1.7C, no cursor/prepared/adaptation mutation.
 
 Existing assignments obtain a baseline on first `ensure` after materialisation.
 Production backfill of remote/staging rows remains a separately authorised
 rollout step.
+
+### Sprint 1.7D delivery status
+
+Exact-preview Move/Swap apply delivered:
+
+- client command envelope identifies confirmed preview only (operation type,
+  assignment/occurrence identities, Move target date, expected revision,
+  provenance, policy version, preview fingerprint, idempotency key) — never a
+  client-supplied proposed projection or impact payload;
+- server reloads locked authoritative state, reconstructs Move/Swap result,
+  verifies fingerprint byte-parity with Dart
+  (`ProgrammeSchedulingApplyFingerprint` /
+  `cohort_scheduling_apply_fingerprint`), enforces revision CAS + idempotency;
+- successful apply updates only affected `scheduled_date` values, appends one
+  operation-log row (with prior snapshot + 72h undo expiry foundation), advances
+  both revision mirrors once, returns authoritative projection;
+- Push/Skip/Undo remain typed `unsupported_operation` without mutation;
+- prepared/adapted/pending clear is local-only after success using returned
+  `cleared_programmed_session_keys` (consumed proposal IDs preserved);
+- Dart owners: `ProgrammeScheduleApplyService` +
+  `ProgrammeScheduleApplySupabaseStore`; minimal UI:
+  `AthleteProgrammeScheduleScreen` (Move/Swap preview+confirm only);
+- Gate N proves ownership, RLS, CAS, idempotency, fingerprint conformance, and
+  cross-athlete denial.
+
+Sprint 1.7D does **not** apply Push/Skip, execute Undo, advance the programme
+cursor, create completion/actuals, invoke adaptation generation, or redesign the
+calendar. Those remain 1.7E–1.7F / separate owners.
 
 ---
 
@@ -710,3 +738,13 @@ local cache subordinated to server authority.
 Sprint 1.7C does **not** deliver Move/Swap/Push/Skip apply, schedule revision
 advancement from athlete operations, prepared clearing, cursor advancement,
 Undo behaviour, or athlete-facing scheduling UI. Those remain 1.7D–1.7F.
+
+## Sprint 1.7D boundary
+
+Sprint 1.7D delivers authoritative exact-preview Move and Swap apply, revision
+CAS, idempotent operation logging, required local prepared-state invalidation,
+cache refresh from the server result, and the smallest athlete confirm UI.
+
+Sprint 1.7D does **not** deliver Push/Skip apply (1.7E), Undo execution (1.7F),
+bulk rescheduling, coach scheduling, or broader calendar UX. Staging rollout
+remains separately authorised.

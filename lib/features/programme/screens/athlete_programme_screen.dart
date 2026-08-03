@@ -11,6 +11,7 @@ import '../controllers/athlete_programme_controllers.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
+import 'athlete_programme_schedule_screen.dart';
 import 'athlete_programme_selection_screen.dart';
 
 /// Athlete-facing programme overview — enrolment, Start Programme, prepare handoff.
@@ -233,6 +234,20 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                         'Today\'s session could not be prepared yet. Retry from Home.')
                   : 'Programme started. Today\'s authored session appears on Home.',
               style: CohortTextStyles.muted,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => AthleteProgrammeScheduleScreen(
+                      athleteId: widget.athleteId,
+                      assignmentId: assignment.id,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Reschedule sessions'),
             ),
           ],
         ],

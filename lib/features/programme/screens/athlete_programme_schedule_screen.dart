@@ -1,0 +1,370 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/persistence/athlete_local_repository.dart';
+import '../../../core/persistence/athlete_persistence.dart';
+import '../../../core/theme/colors.dart';
+import '../../../core/theme/spacing.dart';
+import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_button.dart';
+import '../../../core/widgets/section_title.dart';
+import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
+import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
+import '../controllers/athlete_programme_schedule_controller.dart';
+import '../services/athlete_catalogue_enrolment_services.dart';
+import '../services/programme_schedule_apply_service.dart';
+import '../services/programme_schedule_apply_supabase_store.dart';
+import '../services/programme_schedule_projection_supabase_store.dart';
+import '../services/programme_schedule_restore_service.dart';
+
+/// Smallest athlete Move/Swap scheduling surface (Sprint 1.7D).
+///
+/// Ownership: programme feature hosts exact-preview confirm for Move/Swap only.
+/// Later scheduling mutations and calendar redesign remain out of scope.
+class AthleteProgrammeScheduleScreen extends StatefulWidget {
+  const AthleteProgrammeScheduleScreen({
+    super.key,
+    required this.athleteId,
+    required this.assignmentId,
+    AthleteProgrammeScheduleController? controller,
+  }) : _controller = controller;
+
+  final String athleteId;
+  final String assignmentId;
+  final AthleteProgrammeScheduleController? _controller;
+
+  @override
+  State<AthleteProgrammeScheduleScreen> createState() =>
+      _AthleteProgrammeScheduleScreenState();
+}
+
+class _AthleteProgrammeScheduleScreenState
+    extends State<AthleteProgrammeScheduleScreen> {
+  late final AthleteProgrammeScheduleController _controller;
+  String? _moveSlotId;
+  String? _swapSlotA;
+  String? _swapSlotB;
+  DateTime? _moveTarget;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget._controller ?? _buildDefaultController();
+    _controller.addListener(_onChanged);
+    _controller.load();
+  }
+
+  AthleteProgrammeScheduleController _buildDefaultController() {
+    final AthleteLocalRepository? local =
+        AthletePersistence.isInitialized ? AthletePersistence.repository : null;
+    if (local == null) {
+      throw StateError(
+        'AthleteProgrammeScheduleScreen requires AthletePersistence.',
+      );
+    }
+    final restore = ProgrammeScheduleRestoreService(
+      store: const ProgrammeScheduleProjectionSupabaseStore(),
+      localRepository: local,
+    );
+    final apply = ProgrammeScheduleApplyService(
+      applyStore: const ProgrammeScheduleApplySupabaseStore(),
+      restoreService: restore,
+      localRepository: local,
+      prepareService: AthleteCatalogueEnrolmentServices.createPrepareService(
+        localRepository: local,
+      ),
+    );
+    return AthleteProgrammeScheduleController(
+      athleteId: widget.athleteId,
+      assignmentId: widget.assignmentId,
+      restoreService: restore,
+      applyService: apply,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    if (widget._controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _onChanged() {
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _pickMoveDate() async {
+    final snap = _controller.snapshot;
+    if (snap == null) return;
+    final initial = _moveTarget ?? DateTime.now();
+    final started = DateTime(
+      snap.startedAt.year,
+      snap.startedAt.month,
+      snap.startedAt.day,
+    );
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial.isBefore(started) ? started : initial,
+      firstDate: started,
+      lastDate: started.add(const Duration(days: 365 * 2)),
+    );
+    if (picked != null) {
+      setState(() => _moveTarget = picked);
+    }
+  }
+
+  Future<void> _runMovePreview() async {
+    final slot = _moveSlotId;
+    final target = _moveTarget;
+    if (slot == null || target == null) return;
+    await _controller.previewMove(
+      sessionSlotId: slot,
+      targetDate: SessionOccurrenceDate.fromDateTime(target),
+    );
+  }
+
+  Future<void> _runSwapPreview() async {
+    final a = _swapSlotA;
+    final b = _swapSlotB;
+    if (a == null || b == null) return;
+    await _controller.previewSwap(sessionSlotIdA: a, sessionSlotIdB: b);
+  }
+
+  Future<void> _confirm() async {
+    final result = await _controller.confirmPreview();
+    if (!mounted || result == null) return;
+    if (result.isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Schedule updated.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Reschedule')),
+      body: SafeArea(
+        child: _controller.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView(
+                padding: const EdgeInsets.all(CohortSpacing.lg),
+                children: [
+                  if (_controller.errorMessage != null) ...[
+                    Text(
+                      _controller.errorMessage!,
+                      style: CohortTextStyles.body.copyWith(
+                        color: CohortColors.warning,
+                      ),
+                    ),
+                    const SizedBox(height: CohortSpacing.md),
+                  ],
+                  Text(
+                    'Move or swap uncompleted sessions. Prescription and '
+                    'completion history stay unchanged.',
+                    style: CohortTextStyles.muted,
+                  ),
+                  const SizedBox(height: CohortSpacing.xl),
+                  const SectionTitle('Sessions'),
+                  const SizedBox(height: CohortSpacing.sm),
+                  ..._controller.uncompletedOccurrences.map(_occurrenceTile),
+                  const SizedBox(height: CohortSpacing.xl),
+                  const SectionTitle('Move'),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _slotDropdown(
+                    label: 'Session',
+                    value: _moveSlotId,
+                    onChanged: (v) => setState(() => _moveSlotId = v),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  TextButton(
+                    onPressed: _pickMoveDate,
+                    child: Text(
+                      _moveTarget == null
+                          ? 'Choose date'
+                          : 'Date: ${_moveTarget!.toIso8601String().substring(0, 10)}',
+                    ),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  IgnorePointer(
+                    ignoring: _moveSlotId == null || _moveTarget == null,
+                    child: Opacity(
+                      opacity:
+                          _moveSlotId == null || _moveTarget == null ? 0.5 : 1,
+                      child: CohortButton(
+                        label: 'Preview move',
+                        onPressed: _runMovePreview,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: CohortSpacing.xl),
+                  const SectionTitle('Swap'),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _slotDropdown(
+                    label: 'Session A',
+                    value: _swapSlotA,
+                    onChanged: (v) => setState(() => _swapSlotA = v),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _slotDropdown(
+                    label: 'Session B',
+                    value: _swapSlotB,
+                    onChanged: (v) => setState(() => _swapSlotB = v),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  IgnorePointer(
+                    ignoring: _swapSlotA == null || _swapSlotB == null,
+                    child: Opacity(
+                      opacity:
+                          _swapSlotA == null || _swapSlotB == null ? 0.5 : 1,
+                      child: CohortButton(
+                        label: 'Preview swap',
+                        onPressed: _runSwapPreview,
+                      ),
+                    ),
+                  ),
+                  if (_controller.preview != null) ...[
+                    const SizedBox(height: CohortSpacing.xl),
+                    const SectionTitle('Confirm preview'),
+                    const SizedBox(height: CohortSpacing.sm),
+                    _previewCard(_controller.preview!),
+                    const SizedBox(height: CohortSpacing.md),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: _controller.isConfirming
+                                ? null
+                                : _controller.cancelPreview,
+                            child: const Text('Cancel'),
+                          ),
+                        ),
+                        const SizedBox(width: CohortSpacing.sm),
+                        Expanded(
+                          child: IgnorePointer(
+                            ignoring: !_controller.hasConfirmablePreview,
+                            child: Opacity(
+                              opacity: _controller.hasConfirmablePreview
+                                  ? 1
+                                  : 0.5,
+                              child: CohortButton(
+                                label: _controller.isConfirming
+                                    ? 'Applying…'
+                                    : 'Confirm',
+                                onPressed: _confirm,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget _occurrenceTile(ScheduledProgrammeOccurrence occurrence) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+      child: Text(
+        '${occurrence.scheduledDate} · W${occurrence.identity.weekNumber} '
+        '${occurrence.identity.dayKey} · ${occurrence.identity.protocolId}',
+        style: CohortTextStyles.body,
+      ),
+    );
+  }
+
+  Widget _slotDropdown({
+    required String label,
+    required String? value,
+    required ValueChanged<String?> onChanged,
+  }) {
+    final items = _controller.uncompletedOccurrences
+        .map(
+          (o) => DropdownMenuItem(
+            value: o.identity.sessionSlotId,
+            child: Text(
+              '${o.scheduledDate} · ${o.identity.protocolId}',
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        )
+        .toList();
+    return InputDecorator(
+      decoration: InputDecoration(labelText: label),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          isExpanded: true,
+          value: value,
+          items: items,
+          onChanged: onChanged,
+          hint: const Text('Select'),
+        ),
+      ),
+    );
+  }
+
+  Widget _previewCard(ProgrammeSchedulingPreview preview) {
+    final clearsPrepared = preview.impacts.any(
+      (i) =>
+          i.kind == ProgrammeSchedulingImpactKind.preparedOccurrenceAffected ||
+          i.kind ==
+              ProgrammeSchedulingImpactKind.adaptedPreparedOccurrenceAffected ||
+          i.kind ==
+              ProgrammeSchedulingImpactKind
+                  .pendingAdaptationProposalWouldBeDiscarded,
+    );
+    final overdue = preview.impacts.any(
+      (i) => i.kind == ProgrammeSchedulingImpactKind.becomesOverdue,
+    );
+    return Container(
+      padding: const EdgeInsets.all(CohortSpacing.md),
+      color: CohortColors.surface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            preview.operationType.name.toUpperCase(),
+            style: CohortTextStyles.h2,
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          ...preview.changes.map(
+            (c) => Text(
+              '${c.identity.protocolId}: ${c.originalDate} → ${c.proposedDate}',
+              style: CohortTextStyles.body,
+            ),
+          ),
+          if (preview.collidingDates.isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              'Same-date sessions (allowed): '
+              '${preview.collidingDates.join(', ')}',
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.warning,
+              ),
+            ),
+          ],
+          const SizedBox(height: CohortSpacing.sm),
+          Text(
+            clearsPrepared
+                ? 'Prepared / adapted / pending state for affected sessions will be cleared.'
+                : 'No prepared-state clear required for this change.',
+            style: CohortTextStyles.muted,
+          ),
+          if (overdue)
+            Text(
+              'Past-date placement remains uncompleted and becomes overdue.',
+              style: CohortTextStyles.muted,
+            ),
+          Text(
+            'Prescription and completion history are unchanged.',
+            style: CohortTextStyles.muted,
+          ),
+        ],
+      ),
+    );
+  }
+}

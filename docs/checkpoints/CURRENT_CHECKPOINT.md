@@ -2,8 +2,8 @@
 
 **Recorded:** 2026-08-03
 **Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
-Sprint 1.7A–1.7C scheduling (contract, compute-only preview, durable projection
-foundation) complete on dedicated branch (not pushed)
+Sprint 1.7A–1.7D scheduling (contract, preview, durable projection, Move/Swap
+exact-preview apply) complete on dedicated branch (not pushed)
 
 ## Merged main checkpoint
 
@@ -28,14 +28,17 @@ foundation) complete on dedicated branch (not pushed)
 - Sprint 1.7C feature: `17a12ce4fcfe05bbf9ca7ea3158edc0b46f15693`
   durable projection via `ensure_programme_schedule_projection` +
   `ProgrammeScheduleRestoreService` (baseline init/restore only; no apply)
-- Next sprint: **1.7D — Move + Swap apply paths + UI confirm**
+- Sprint 1.7D feature: exact-preview Move/Swap apply via
+  `apply_programme_schedule_operation`, `ProgrammeScheduleApplyService`,
+  and `AthleteProgrammeScheduleScreen` (Push/Skip/Undo remain closed)
+- Next sprint: **1.7E — Push + Skip apply**
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 - Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
-  Scheduling authority: 1.7A–1.7C (contract + preview + durable baseline);
-  Move/Swap/Push/Skip apply and athlete UI remain later increments.
+  Scheduling authority: 1.7A–1.7D (through Move/Swap exact-preview apply);
+  Push/Skip apply remain 1.7E; Undo/broader UI remain 1.7F.
 
 ## Approved direction (summary)
 
@@ -60,9 +63,9 @@ foundation) complete on dedicated branch (not pushed)
 
 ## Exact next sequence
 
-1. After review of Sprint 1.7C, implement Sprint 1.7D Move/Swap apply only.
-2. Push/Skip apply remain 1.7E; Undo/UI/hardening remain 1.7F. No athlete-facing
-   scheduling behaviour before those increments.
+1. After review of Sprint 1.7D, implement Sprint 1.7E Push + Skip apply only.
+2. Undo and broader calendar UX remain 1.7F. Staging rollout remains separately
+   authorised.
 
 ## Resume checks
 

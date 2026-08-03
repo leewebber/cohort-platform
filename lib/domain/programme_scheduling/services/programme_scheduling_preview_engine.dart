@@ -5,7 +5,7 @@ import '../models/programme_scheduling_requests.dart';
 import '../models/programme_scheduling_snapshot.dart';
 import '../models/scheduled_programme_occurrence.dart';
 import '../policy/programme_scheduling_policy.dart';
-import '../support/programme_scheduling_preview_fingerprint.dart';
+import '../support/programme_scheduling_apply_fingerprint.dart';
 import '../support/session_occurrence_date_arithmetic.dart';
 import '../vocabulary/programme_schedule_disposition.dart';
 import '../vocabulary/programme_scheduling_operation_type.dart';
@@ -621,19 +621,35 @@ class ProgrammeSchedulingPreviewEngine {
     required ProgrammeSchedulingOperationType operationType,
   }) {
     final collidingDates = _collidingDates(proposedProjection);
-    final fingerprintPayload = <String, Object?>{
-      'operation': requestCanonical,
-      'assignmentId': snapshot.assignmentId,
-      'programmeVersionId': snapshot.programmeVersionId,
-      'packageContentHash': snapshot.packageContentHash,
-      'scheduleRevision': snapshot.projection.scheduleRevision,
-      'timezone': snapshot.timezone,
-      'policyVersion': policy.version,
-      'affected': changes.map((c) => c.toCanonicalMap()).toList(),
-      'impacts': impacts.map((i) => i.toCanonicalMap()).toList(),
-      'collidingDates': collidingDates.map((d) => d.toString()).toList(),
-    };
-    final fingerprint = ProgrammeSchedulingPreviewFingerprint.compute(
+    // Apply fingerprint binds schedule-authoritative fields only (parity with
+    // PostgreSQL). Impacts remain in the preview result for athlete review.
+    final fingerprintPayload = ProgrammeSchedulingApplyFingerprint.payload(
+      operation: requestCanonical,
+      assignmentId: snapshot.assignmentId,
+      programmeVersionId: snapshot.programmeVersionId,
+      packageContentHash: snapshot.packageContentHash,
+      scheduleRevision: snapshot.projection.scheduleRevision,
+      timezone: snapshot.timezone,
+      policyVersion: policy.version,
+      affected: changes
+          .map(
+            (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(
+              sessionSlotId: c.identity.sessionSlotId,
+              programmedSessionKey: c.identity.programmedSessionKey,
+              originalDate: c.originalDate.toString(),
+              proposedDate: c.proposedDate.toString(),
+              originalDisposition: c.originalDisposition.name,
+              proposedDisposition: c.proposedDisposition.name,
+              weekNumber: c.identity.weekNumber,
+              dayKey: c.identity.dayKey,
+              sessionOrder: c.identity.sessionOrder,
+              protocolId: c.identity.protocolId,
+            ),
+          )
+          .toList(),
+      collidingDates: collidingDates.map((d) => d.toString()).toList(),
+    );
+    final fingerprint = ProgrammeSchedulingApplyFingerprint.compute(
       fingerprintPayload,
     );
 

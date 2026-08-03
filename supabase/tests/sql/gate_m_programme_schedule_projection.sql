@@ -229,14 +229,16 @@ BEGIN
     'M', 'cross_athlete_select_hidden', '0', v_count::text, NULL, v_count = 0, NULL
   );
 
+  -- Sprint 1.7D grants Move/Swap apply to authenticated; Gate N owns apply proofs.
+  -- Gate M still proves no athlete operation rows were written by ensure/baseline.
   v_has_exec := has_function_privilege(
     'authenticated',
     'public.apply_programme_schedule_operation(jsonb)',
     'execute'
   );
   PERFORM sprint12_record(
-    'M', 'apply_not_granted_authenticated', 'false', v_has_exec::text, NULL,
-    v_has_exec IS NOT TRUE, NULL
+    'M', 'apply_execute_privilege_recorded', v_has_exec::text, v_has_exec::text, NULL,
+    TRUE, 'Gate N asserts Move/Swap grant and behaviour'
   );
 
   SELECT COUNT(*) INTO v_count

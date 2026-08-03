@@ -20,10 +20,10 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 
 Acceptance-gated adaptation (Sprints 1.6A–1.6E) is complete on
 `phase1-acceptance-gated-adaptation` @ `30ec8b0`. Active scheduling workstream
-branch: `phase1-athlete-controlled-scheduling`. Sprints **1.7A–1.7C** are
-complete (binding contract, compute-only preview domain, durable baseline
-projection/restore). Next: **1.7D** Move/Swap apply — still no athlete-facing
-scheduling mutate UI until that sprint’s UI allocation.
+branch: `phase1-athlete-controlled-scheduling`. Sprints **1.7A–1.7D** are
+complete (binding contract, compute-only preview, durable baseline, exact-preview
+Move/Swap apply + minimal confirm UI). Next: **1.7E** Push/Skip apply. Undo and
+broader calendar UX remain **1.7F**.
 
 ## Authority and product invariants
 
@@ -94,10 +94,9 @@ record.
 
 The exact next sequence is:
 
-1. After review, continue Sprint 1.7D Move/Swap apply on
+1. After review, continue Sprint 1.7E Push/Skip apply on
    `phase1-athlete-controlled-scheduling`.
-2. Do not implement Push/Skip apply or Undo/UI before their assigned increments
-   (Push/Skip apply = 1.7E; Undo/UI = 1.7F).
+2. Do not implement Undo or broader calendar UX before 1.7F.
 3. Optional later authorised staging evidence remains deferred unless a task
    explicitly authorises staging contact.
 

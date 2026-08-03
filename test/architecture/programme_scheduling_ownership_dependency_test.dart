@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Sprint 1.7A–1.7C architecture guards for athlete-controlled scheduling.
+/// Sprint 1.7A–1.7D architecture guards for athlete-controlled scheduling.
 void main() {
   final root = _repoRoot(Directory.current);
 
@@ -35,6 +35,8 @@ void main() {
       'CoachDecisionRouter',
       'ensure_programme_schedule_projection',
       'ProgrammeScheduleRestoreService',
+      'apply_programme_schedule_operation',
+      'ProgrammeScheduleApplyService',
     ];
     for (final path in owners) {
       final source = File('$root/$path').readAsStringSync();
@@ -69,41 +71,75 @@ void main() {
     }
   });
 
-  test('1.7C permits persistence adapter and restore service only', () {
+  test('1.7D permits designated Move/Swap apply owners only', () {
     expect(
       File(
         '$root/lib/features/programme/services/'
-        'programme_schedule_projection_supabase_store.dart',
+        'programme_schedule_apply_service.dart',
       ).existsSync(),
       isTrue,
     );
     expect(
       File(
         '$root/lib/features/programme/services/'
-        'programme_schedule_restore_service.dart',
+        'programme_schedule_apply_supabase_store.dart',
+      ).existsSync(),
+      isTrue,
+    );
+    expect(
+      File(
+        '$root/lib/features/programme/screens/'
+        'athlete_programme_schedule_screen.dart',
       ).existsSync(),
       isTrue,
     );
     expect(
       File(
         '$root/supabase/migrations/'
-        '20260803120000_add_programme_schedule_projection.sql',
+        '20260803140000_apply_programme_schedule_move_swap.sql',
       ).existsSync(),
       isTrue,
     );
+
+    final applyService = File(
+      '$root/lib/features/programme/services/'
+      'programme_schedule_apply_service.dart',
+    ).readAsStringSync();
+    for (final token in const [
+      'saveSchedule',
+      'replaceProjection',
+      'writeOccurrences',
+      'persistPreview',
+    ]) {
+      expect(applyService.contains(token), isFalse, reason: token);
+    }
+    expect(applyService.contains('Push/Skip remain unapplied'), isTrue);
+
+    final screen = File(
+      '$root/lib/features/programme/screens/'
+      'athlete_programme_schedule_screen.dart',
+    ).readAsStringSync();
+    expect(screen.contains('Preview push'), isFalse);
+    expect(screen.contains('Preview skip'), isFalse);
+    expect(screen.contains('Confirm undo'), isFalse);
+    expect(screen.contains('operation_type\': \'push'), isFalse);
+    expect(screen.contains('ProgrammeSchedulingPushRequest'), isFalse);
+    expect(screen.contains('ProgrammeSchedulingSkipRequest'), isFalse);
   });
 
-  test('no Move/Swap/Push/Skip apply service and no generic writer', () {
-    final candidates = [
+  test('no generic projection writer and no Push/Skip apply service', () {
+    final forbiddenPaths = [
       'lib/application/scheduling',
       'lib/features/scheduling',
       'lib/application/programme_scheduling',
       'lib/features/programme/services/athlete_programme_scheduling_service.dart',
       'lib/domain/programme_scheduling/services/programme_scheduling_apply_service.dart',
       'lib/domain/programme_scheduling/services/programme_scheduling_mutation_service.dart',
-      'lib/features/programme/services/programme_schedule_apply_service.dart',
+      'lib/features/programme/services/programme_schedule_push_apply_service.dart',
+      'lib/features/programme/services/programme_schedule_skip_apply_service.dart',
+      'lib/features/programme/services/programme_schedule_undo_service.dart',
     ];
-    for (final path in candidates) {
+    for (final path in forbiddenPaths) {
       final entity = File('$root/$path').existsSync()
           ? File('$root/$path')
           : Directory('$root/$path');
@@ -127,7 +163,7 @@ void main() {
     }
   });
 
-  test('only designated persistence adapter knows Supabase for scheduling', () {
+  test('only designated adapters know Supabase RPCs for scheduling', () {
     final domainFiles = Directory('$root/lib/domain/programme_scheduling')
         .listSync(recursive: true)
         .whereType<File>()
@@ -138,13 +174,36 @@ void main() {
       expect(source.contains('SupabaseService'), isFalse, reason: file.path);
     }
 
-    final adapter = File(
+    final ensureAdapter = File(
       '$root/lib/features/programme/services/'
       'programme_schedule_projection_supabase_store.dart',
     ).readAsStringSync();
-    expect(adapter.contains('SupabaseService'), isTrue);
-    expect(adapter.contains('ensure_programme_schedule_projection'), isTrue);
-    expect(adapter.contains('apply_programme_schedule_operation'), isFalse);
+    expect(ensureAdapter.contains('ensure_programme_schedule_projection'), isTrue);
+    expect(
+      ensureAdapter.contains('apply_programme_schedule_operation'),
+      isFalse,
+    );
+
+    final applyAdapter = File(
+      '$root/lib/features/programme/services/'
+      'programme_schedule_apply_supabase_store.dart',
+    ).readAsStringSync();
+    expect(applyAdapter.contains('SupabaseService'), isTrue);
+    expect(
+      applyAdapter.contains('apply_programme_schedule_operation'),
+      isTrue,
+    );
+    expect(
+      applyAdapter.contains('ensure_programme_schedule_projection'),
+      isFalse,
+    );
+
+    final applyService = File(
+      '$root/lib/features/programme/services/'
+      'programme_schedule_apply_service.dart',
+    ).readAsStringSync();
+    expect(applyService.contains('SupabaseService'), isFalse);
+    expect(applyService.contains('apply_programme_schedule_operation'), isFalse);
   });
 
   test('dates remain outside stable identity', () {
@@ -156,7 +215,7 @@ void main() {
     expect(source.contains('never part of identity'), isTrue);
   });
 
-  test('Plan Package models unchanged by scheduling persistence', () {
+  test('Plan Package models unchanged by scheduling apply', () {
     final domainFiles = Directory('$root/lib/domain/programme_scheduling')
         .listSync(recursive: true)
         .whereType<File>()
@@ -166,6 +225,23 @@ void main() {
       expect(source.contains('class PlanPackage'), isFalse, reason: file.path);
       expect(source.contains('schedulingPermission'), isFalse, reason: file.path);
     }
+  });
+
+  test('1.7D migration grants Move/Swap apply and keeps Push/Skip unsupported', () {
+    final sql = File(
+      '$root/supabase/migrations/'
+      '20260803140000_apply_programme_schedule_move_swap.sql',
+    ).readAsStringSync();
+    expect(
+      sql.contains(
+        'GRANT EXECUTE ON FUNCTION public.apply_programme_schedule_operation(JSONB) TO authenticated',
+      ),
+      isTrue,
+    );
+    expect(sql.contains("v_op IN ('push', 'skip', 'undo')"), isTrue);
+    expect(sql.contains('client_nominated_projection_forbidden'), isTrue);
+    expect(sql.contains('stale_preview_fingerprint'), isTrue);
+    expect(sql.contains('cohort_scheduling_apply_fingerprint'), isTrue);
   });
 }
 

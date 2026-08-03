@@ -13,7 +13,7 @@
 | [Athlete_Programme_Completion_Advancement_v1.md](./Athlete_Programme_Completion_Advancement_v1.md) | Phase 1 Sprint 1.5A — atomic completion and authored cursor advancement |
 | [Sprint_1_5A_Staging_Self_Test_2.md](./Sprint_1_5A_Staging_Self_Test_2.md) | Phase 1 Sprint 1.5A — staging Self-Test 2 closure at `4365568` |
 | [Athlete_Programme_Acceptance_Gated_Adaptation_v1.md](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md) | Phase 1 Sprint 1.6A — programme-backed acceptance-gated adaptation authority |
-| [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7 — athlete-controlled programme scheduling authority (1.7A contract; 1.7B compute-only preview domain) |
+| [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7 — athlete-controlled programme scheduling (1.7A–1.7D: contract, preview, durable projection, Move/Swap apply) |
 | [Planning_Engine_v1.md](./Planning_Engine_v1.md) | **Phase 3.5** — planning pipeline, contracts, ownership (canonical for Phase 4) |
 | [Architecture_Freeze_v1.md](./Architecture_Freeze_v1.md) | **Phase 4.5** — freeze, readiness, architecture tests, Phase 5 recommendation |
 | [../product/Workout_Player_MVP.md](../product/Workout_Player_MVP.md) | **Phase 5 Sprint 1** — athlete Workout Player vertical slice |
@@ -48,10 +48,11 @@
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
 `fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete.
-Sprints 1.7A–1.7C (contract, compute-only preview, durable baseline projection)
-are complete on `phase1-athlete-controlled-scheduling` (not pushed). Preview
-owner: `programme_scheduling_preview_engine.dart`. Persistence owner:
-`ensure_programme_schedule_projection` + `ProgrammeScheduleRestoreService`.
-Move/Swap apply remains 1.7D. See
+Sprints 1.7A–1.7D (contract, preview, durable baseline, Move/Swap exact-preview
+apply) are complete on `phase1-athlete-controlled-scheduling` (not pushed).
+Owners: `ProgrammeSchedulingPreviewEngine`,
+`ensure_programme_schedule_projection` / `ProgrammeScheduleRestoreService`,
+`apply_programme_schedule_operation` / `ProgrammeScheduleApplyService`,
+`AthleteProgrammeScheduleScreen`. Push/Skip apply remains 1.7E. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.
