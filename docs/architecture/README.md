@@ -13,6 +13,7 @@
 | [Athlete_Programme_Completion_Advancement_v1.md](./Athlete_Programme_Completion_Advancement_v1.md) | Phase 1 Sprint 1.5A — atomic completion and authored cursor advancement |
 | [Sprint_1_5A_Staging_Self_Test_2.md](./Sprint_1_5A_Staging_Self_Test_2.md) | Phase 1 Sprint 1.5A — staging Self-Test 2 closure at `4365568` |
 | [Athlete_Programme_Acceptance_Gated_Adaptation_v1.md](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md) | Phase 1 Sprint 1.6A — programme-backed acceptance-gated adaptation authority |
+| [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7A — athlete-controlled programme scheduling authority |
 | [Planning_Engine_v1.md](./Planning_Engine_v1.md) | **Phase 3.5** — planning pipeline, contracts, ownership (canonical for Phase 4) |
 | [Architecture_Freeze_v1.md](./Architecture_Freeze_v1.md) | **Phase 4.5** — freeze, readiness, architecture tests, Phase 5 recommendation |
 | [../product/Workout_Player_MVP.md](../product/Workout_Player_MVP.md) | **Phase 5 Sprint 1** — athlete Workout Player vertical slice |
@@ -46,8 +47,8 @@
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
-`fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete on
-`phase1-acceptance-gated-adaptation`. Proposed Sprint 1.7 scheduling remains
-deferred. See
+`fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete.
+Sprint 1.7A scheduling contract work proceeds on
+`phase1-athlete-controlled-scheduling`. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 before continuing implementation or merge work.

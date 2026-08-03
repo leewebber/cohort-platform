@@ -1,7 +1,8 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-03
-**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6E adaptation hardening complete
+**Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
+Sprint 1.7A scheduling binding contract complete on dedicated branch
 
 ## Merged main checkpoint
 
@@ -13,31 +14,29 @@
 
 ## Current feature work
 
-- Branch: `phase1-acceptance-gated-adaptation`
-- Based on: `fdae6dd37330980c3e775da8e651a51f86f5b99c`
-- Sprint 1.6A contract: `daa4080286697dead686da35c5cbcd19c7c25385`
-- Sprint 1.6B propose/review: `f7812771348dc8faf6d77fdb95e7567b9e16d9b3`
-- Sprint 1.6C tip: `86d335e0ad6c7e995b1f300283d9009fc26191c2`
-- Sprint 1.6D tip: `926b8d5e01166892626439a2aed56a4b26659286`
+- Active branch: `phase1-athlete-controlled-scheduling`
+- Branched from adaptation tip:
+  `30ec8b0a945b2dc9ad5acd43006addb8477edaea`
+- Preserved adaptation branch (do not rewrite):
+  `phase1-acceptance-gated-adaptation` @ `30ec8b0`
 - Sprint 1.6E tip: `bcc4b36a7f0849440bf7716f0c4bca7304ee559f`
-- Binding contract:
+- Sprint 1.7A tip: recorded on commit of this checkpoint
+- Next sprint: **1.7B — scheduling domain model, identity, preview and policy**
+- Binding scheduling contract:
+  [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
+- Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
-- Acceptance owner: `ProgrammeAdaptationAcceptanceService`
-- Reversion owner: `ProgrammeAdaptationReversionService`
-- Hardening (1.6E): local focused policy/no-safe cases + Coaching Recognition
-  fixtures; staging evidence deferred (not authorised in this increment).
-- Milestone status: **acceptance-gated adaptation (1.6A–1.6E) is contractually
-  complete** on this branch. Rescheduling remains proposed Sprint 1.7.
+- Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
+  Scheduling is a separate authority beginning at 1.7A (contract only).
 
-## Approved adaptation direction (summary)
+## Approved direction (summary)
 
-1. Authored Plan Package is the sole prescription authority.
-2. Propose/review via Plan-Package-native adapter → `SessionAdaptationPipeline`.
-3. Explicit Accept mutates only the current prepared executable session.
-4. Pre-completion revert reconstructs the authored prepare via bank/compiler path.
-5. Non-acceptance outcomes remain complete no-ops.
-6. Post-completion adaptation remains closed for Phase 1.
-7. Rescheduling remains a separate proposed Sprint 1.7 authority.
+1. Authored Plan Package remains sole prescription authority.
+2. Scheduling changes when/placement (and skip disposition), not prescription.
+3. Preview is compute-only; mutation requires explicit confirmation.
+4. Completion remains Sprint 1.5A-owned; skip is not completion.
+5. Adaptation remains limited to the current prepared executable session.
+6. No Coach Brain, Adaptive Progression, or adaptation-pipeline scheduling.
 
 ## Preserved state
 
@@ -48,9 +47,9 @@
 
 ## Exact next sequence
 
-1. Do not begin Sprint 1.7 scheduling until separately approved.
-2. Optional later: authorised staging evidence for adaptation, if separately
-   approved (outside the local 1.6E hardening delivered here).
+1. After review of Sprint 1.7A, implement Sprint 1.7B preview/domain model only.
+2. Do not implement durable mutate RPCs or athlete scheduling UI before their
+   assigned increments (1.7C+).
 
 ## Resume checks
 

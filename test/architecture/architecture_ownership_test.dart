@@ -53,6 +53,12 @@ void main() {
     expect(File(path).existsSync(), isTrue, reason: path);
   });
 
+  test('Phase 1 athlete-controlled scheduling authority contract exists', () {
+    final path =
+        '$root/docs/architecture/Athlete_Controlled_Programme_Scheduling_v1.md';
+    expect(File(path).existsSync(), isTrue, reason: path);
+  });
+
   test('Sprint 1.6B–1.6E programme adaptation modules and hardening fixtures exist',
       () {
     final required = [

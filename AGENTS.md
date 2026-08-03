@@ -18,10 +18,11 @@ Phase 1 Sprints 1.3–1.5A are merged into `main` at
 `fdae6dd37330980c3e775da8e651a51f86f5b99c` (includes staging-verified Sprint
 1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
 
-Current feature branch: `phase1-acceptance-gated-adaptation`. Sprints 1.6B–1.6E
-(propose/review, accept, revert, hardening) are complete. Acceptance-gated
-adaptation is contractually complete on this branch. Next authorised workstream
-is proposed Sprint **1.7 scheduling** only after separate approval.
+Acceptance-gated adaptation (Sprints 1.6A–1.6E) is complete on
+`phase1-acceptance-gated-adaptation` @ `30ec8b0`. Active scheduling workstream
+branch: `phase1-athlete-controlled-scheduling`. Sprint **1.7A** binding contract
+is complete (documentation and architecture guards only). Next: **1.7B**
+preview/domain model — still no athlete-facing scheduling mutate UI.
 
 ## Authority and product invariants
 
@@ -38,8 +39,10 @@ is proposed Sprint **1.7 scheduling** only after separate approval.
   adaptation change.
 - Do not automatically rewrite the programme, advance an athlete, change later
   sessions, or apply post-completion progression (closed for Phase 1).
-- Rescheduling (when / order) is a separate future authority (proposed Sprint
-  1.7) and must not be implemented through the adaptation acceptance path.
+- Rescheduling (when / placement / skip disposition) is a separate authority
+  under Sprint 1.7 and must not be implemented through the adaptation
+  acceptance path. Binding detail:
+  [`docs/architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](docs/architecture/Athlete_Controlled_Programme_Scheduling_v1.md).
 - Do not invent coaching content. Reuse representative protocol and exercise
   data where it exists; otherwise use neutral labels and request direction.
 
@@ -90,10 +93,13 @@ record.
 
 The exact next sequence is:
 
-1. Do not begin proposed Sprint 1.7 scheduling until separately approved.
-2. Optional later authorised staging evidence for adaptation remains deferred
-   unless a task explicitly authorises staging contact.
+1. After review, continue Sprint 1.7B preview/domain model on
+   `phase1-athlete-controlled-scheduling`.
+2. Do not implement durable scheduling mutate RPCs or athlete UI before their
+   assigned increments.
+3. Optional later authorised staging evidence remains deferred unless a task
+   explicitly authorises staging contact.
 
-Acceptance mutates only the current prepared executable session. Do not
-implement rescheduling, Adaptive Progression reauthoring, or future-session
-mutation.
+Acceptance mutates only the current prepared executable session. Scheduling must
+not rewrite Plan Packages, fabricate completion, or invoke Coach Brain /
+Adaptive Progression / the adaptation pipeline.
