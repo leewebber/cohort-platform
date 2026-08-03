@@ -22,8 +22,8 @@ on dedicated branch (not pushed)
   `phase1-acceptance-gated-adaptation` @ `30ec8b0`
 - Sprint 1.6E tip: `bcc4b36a7f0849440bf7716f0c4bca7304ee559f`
 - Sprint 1.7A tip: `c95c5e2f6594858918ea754eac16c428f66fef4a`
-- Sprint 1.7B: compute-only domain/policy/preview under
-  `lib/domain/programme_scheduling/` (owner:
+- Sprint 1.7B feature: `a11fe73353e337c77b482b03bcbb59e071f83bf5`
+  (`lib/domain/programme_scheduling/`, owner
   `ProgrammeSchedulingPreviewEngine`)
 - Next sprint: **1.7C — durable schedule projection, revision, operation log,
   atomic RPC skeleton, local restore**
