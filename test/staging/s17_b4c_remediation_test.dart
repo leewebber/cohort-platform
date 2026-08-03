@@ -117,7 +117,10 @@ void main() {
       expect(S17ResumeMode.unresolvedAfterB4b.contains('A'), isFalse);
       expect(S17ResumeMode.unresolvedAfterB4b.contains('B'), isFalse);
       expect(S17ResumeMode.unresolvedAfterB4b.contains('E'), isFalse);
-      expect(S17ResumeMode.prerequisiteCodes, contains('PREREQ_IDENTITY'));
+      expect(S17ResumeMode.prerequisiteCodes, contains('PREREQ_A'));
+      expect(S17ResumeMode.prerequisiteCodes, contains('PREREQ_B'));
+      expect(S17ResumeMode.prerequisiteCodes, contains('PREREQ_E'));
+      expect(S17ResumeMode.prerequisiteCodes, contains('PREREQ_PREP'));
     });
   });
 

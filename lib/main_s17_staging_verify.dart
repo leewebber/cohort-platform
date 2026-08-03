@@ -40,8 +40,10 @@ import 'models/training_session_status.dart';
 import 'staging/s17_adaptation_harness.dart';
 import 'staging/s17_completion_harness.dart';
 import 'staging/s17_occurrence_baseline.dart';
+import 'staging/s17_preparation_adapters.dart';
 import 'staging/s17_previous_performance_harness.dart';
 import 'staging/s17_resume_mode.dart';
+import 'staging/s17_schedule_preparation.dart';
 import 'staging/s17_staging_journey_matrix.dart';
 import 'staging/s17_staging_runtime_config.dart';
 
@@ -230,18 +232,26 @@ Future<void> main() async {
         .limit(1);
     final foreignEmpty = (foreign as List).isEmpty;
 
+    final identityOk = owns && foreignEmpty;
     setPrereq(
-      'PREREQ_IDENTITY',
-      owns && foreignEmpty ? S17JourneyResult.pass : S17JourneyResult.fail,
-      owns && foreignEmpty
+      'PREREQ_A',
+      identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+      identityOk
           ? 'Authenticated Athlete D; isolation holds'
           : 'Isolation/auth scope failed',
     );
-    if (!config.resumeMode || selected.contains('A')) {
+    setPrereq(
+      'PREREQ_IDENTITY',
+      identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+      identityOk
+          ? 'Authenticated Athlete D; isolation holds'
+          : 'Isolation/auth scope failed',
+    );
+    if (!config.resumeMode) {
       setResult(
         'A',
-        owns && foreignEmpty ? S17JourneyResult.pass : S17JourneyResult.fail,
-        owns && foreignEmpty
+        identityOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+        identityOk
             ? 'Authenticated; own assignment only'
             : 'Isolation/auth scope failed',
       );
@@ -266,7 +276,14 @@ Future<void> main() async {
         assignment?.programmeVersionId == config.versionId &&
         prepared1.package?.programmedSessionKey ==
             prepared2.package?.programmedSessionKey;
-    if (!config.resumeMode || selected.contains('B')) {
+    setPrereq(
+      'PREREQ_B',
+      preparedOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+      preparedOk
+          ? 'Prepared execution stable for assigned version'
+          : 'Prepared execution mismatch',
+    );
+    if (!config.resumeMode) {
       setResult(
         'B',
         preparedOk ? S17JourneyResult.pass : S17JourneyResult.fail,
@@ -306,17 +323,44 @@ Future<void> main() async {
             restored2.projection!.scheduleRevision &&
         restored1.projection!.occurrences.length ==
             restored2.projection!.occurrences.length;
-    setResult(
-      'E',
+    setPrereq(
+      'PREREQ_E',
       projectionOk ? S17JourneyResult.pass : S17JourneyResult.fail,
       projectionOk
           ? 'Projection deterministic across restore'
           : 'Projection unstable or missing',
     );
+    // Resume mode must never record journey E as PASS — A/B/E are PREREQ only.
+    if (!config.resumeMode) {
+      setResult(
+        'E',
+        projectionOk ? S17JourneyResult.pass : S17JourneyResult.fail,
+        projectionOk
+            ? 'Projection deterministic across restore'
+            : 'Projection unstable or missing',
+      );
+    }
 
+    var selectedJourneysUnlocked = false;
     if (!projectionOk || restored1.projection == null) {
-      for (final code in ['F', 'G', 'H', 'I', 'J']) {
-        setResult(code, S17JourneyResult.blocked, 'Projection unavailable');
+      setPrereq(
+        'PREREQ_PREP',
+        S17JourneyResult.fail,
+        'PREP_FAIL stage=projectionRestore Projection unavailable',
+      );
+      setPrereq(
+        'PREREQ_BASELINE',
+        S17JourneyResult.fail,
+        'BASELINE_FAIL projection unavailable',
+      );
+      for (final code in selected) {
+        if (['C', 'D', 'F', 'G', 'H', 'I', 'J', 'K'].contains(code)) {
+          setResult(
+            code,
+            S17JourneyResult.fail,
+            'Blocked: projection unavailable',
+          );
+        }
       }
     } else {
       final today = SessionOccurrenceDate.fromDateTime(DateTime.now().toUtc());
@@ -328,11 +372,9 @@ Future<void> main() async {
           .where((o) => o.isUncompleted)
           .toList();
       final baselineSnap = S17OccurrenceBaselineSnapshot(
-        authoredExecutableSlotCount: scheduled.length <= 1
-            ? (config.lineageCode ==
-                      S17OccurrenceBaseline.oneSlotCatalogueLineage
-                  ? 1
-                  : scheduled.length)
+        authoredExecutableSlotCount:
+            config.lineageCode == S17OccurrenceBaseline.oneSlotCatalogueLineage
+            ? 1
             : scheduled.length,
         projectedOccurrenceCount: snapshot.projection.occurrences.length,
         uncompletedOccurrenceCount: scheduled.length,
@@ -341,69 +383,85 @@ Future<void> main() async {
         lineageCode: config.lineageCode,
         schedulingHorizonEnd: snapshot.schedulingHorizonEnd?.toString(),
       );
-      var diagnosis = S17OccurrenceBaseline.diagnose(baselineSnap);
-      if (scheduled.length < 2 && diagnosis.canPrepareViaMultiSlotEnrolment) {
-        final catalog = AthleteProgrammeSwitchCatalogService(
-          catalogService: ProgrammeCatalogServiceImpl(
-            versionStore: versionStore,
-            coachId: CurrentUserSession.maybeInstance?.coachId ?? '',
-          ),
+
+      final enrolService = AthleteCatalogueEnrolmentService(
+        enrolmentStore: const AthleteCatalogueEnrolmentSupabaseStore(),
+        assignmentStore: assignmentStore,
+      );
+      final matService = AthletePlanMaterialisationService(
+        materialisationStore: const AthletePlanMaterialisationSupabaseStore(),
+        assignmentStore: assignmentStore,
+        legacyHasActivePlan: () => false,
+      );
+      final catalog = AthleteProgrammeSwitchCatalogService(
+        catalogService: ProgrammeCatalogServiceImpl(
+          versionStore: versionStore,
+          coachId: CurrentUserSession.maybeInstance?.coachId ?? '',
+        ),
+      );
+      final prepOrchestrator = S17SchedulePreparation(
+        catalogue: S17AthleteCatalogueLookupAdapter(
+          catalog: catalog,
+          versionStore: versionStore,
+        ),
+        enrolment: S17AthleteEnrolmentAdapter(enrolment: enrolService),
+        materialise: S17PlanMaterialiseAdapter(materialise: matService),
+        projection: S17ProjectionBaselineAdapter(restore: restore),
+        activeAssignment: S17ActiveAssignmentAdapter(store: assignmentStore),
+        packageSelection: S17PackageSelectionAdapter(
+          assignmentStore: assignmentStore,
+          versionStore: versionStore,
+        ),
+        preparedExecution: S17PreparedExecutionAdapter(prepare: prepare),
+      );
+      final prepResult = await prepOrchestrator.ensureScheduleOpsBaseline(
+        S17SchedulePreparationRequest(
+          athleteId: config.athleteId,
+          currentLineageCode: config.lineageCode,
+          currentVersionId: config.versionId,
+          currentAssignmentId: config.assignmentId,
+          targetSchedulingLineage: config.schedulingLineageCode,
+        ),
+        current: baselineSnap,
+      );
+      setPrereq(
+        'PREREQ_PREP',
+        prepResult.ok ? S17JourneyResult.pass : S17JourneyResult.fail,
+        prepResult.ok
+            ? 'stage=${prepResult.stage.name} ${prepResult.detail}'
+            : prepResult.classifiedDetail,
+      );
+      if (prepResult.ok &&
+          prepResult.assignmentId != null &&
+          prepResult.versionId != null &&
+          prepResult.lineageCode != null) {
+        config = config.copyWith(
+          assignmentId: prepResult.assignmentId!,
+          versionId: prepResult.versionId!,
+          lineageCode: prepResult.lineageCode!,
+          packageHash: prepResult.packageHash ?? config.packageHash,
         );
-        final entries = await catalog.listPublishedAssignableProgrammes();
-        final target = entries.cast<dynamic>().where(
-          (e) => e.lineageCode == config.schedulingLineageCode,
+        final restoredPrep = await restore.ensureAndRestore(
+          athleteId: config.athleteId,
+          programmeAssignmentId: config.assignmentId,
         );
-        if (target.isNotEmpty) {
-          final t = target.first;
-          final enrol = AthleteCatalogueEnrolmentService(
-            enrolmentStore: const AthleteCatalogueEnrolmentSupabaseStore(),
-            assignmentStore: assignmentStore,
+        if (restoredPrep.isSuccess && restoredPrep.projection != null) {
+          snapshot = restore.snapshotForPreview(
+            projection: restoredPrep.projection!,
+            today: today,
           );
-          final enrolled = await enrol.enrol(
-            programmeVersionId: t.versionId as String,
-            athleteId: config.athleteId,
-            replaceActive: true,
-          );
-          if (enrolled.isSuccess && enrolled.enrolmentId != null) {
-            final mat = AthletePlanMaterialisationService(
-              materialisationStore:
-                  const AthletePlanMaterialisationSupabaseStore(),
-              assignmentStore: assignmentStore,
-              legacyHasActivePlan: () => false,
-            );
-            await mat.startProgramme(
-              programmeAssignmentId: enrolled.enrolmentId!,
-              athleteId: config.athleteId,
-            );
-            final active = await assignmentStore.getActiveAssignment(
-              config.athleteId,
-            );
-            if (active != null) {
-              config = config.copyWith(
-                assignmentId: active.id,
-                versionId: active.programmeVersionId,
-                lineageCode:
-                    enrolled.lineageCode ?? config.schedulingLineageCode,
-              );
-              final restoredPrep = await restore.ensureAndRestore(
-                athleteId: config.athleteId,
-                programmeAssignmentId: config.assignmentId,
-              );
-              if (restoredPrep.isSuccess && restoredPrep.projection != null) {
-                snapshot = restore.snapshotForPreview(
-                  projection: restoredPrep.projection!,
-                  today: today,
-                );
-                scheduled = snapshot.projection.occurrences
-                    .where((o) => o.isUncompleted)
-                    .toList();
-              }
-            }
-          }
+          scheduled = snapshot.projection.occurrences
+              .where((o) => o.isUncompleted)
+              .toList();
         }
       }
+
       final baselineAfter = S17OccurrenceBaselineSnapshot(
-        authoredExecutableSlotCount: scheduled.length,
+        authoredExecutableSlotCount: prepResult.ok
+            ? (prepResult.uncompletedOccurrences >= 2
+                  ? prepResult.uncompletedOccurrences
+                  : scheduled.length)
+            : baselineSnap.authoredExecutableSlotCount,
         projectedOccurrenceCount: snapshot.projection.occurrences.length,
         uncompletedOccurrenceCount: scheduled.length,
         completedOrSkippedCount:
@@ -411,10 +469,10 @@ Future<void> main() async {
         lineageCode: config.lineageCode,
         schedulingHorizonEnd: snapshot.schedulingHorizonEnd?.toString(),
       );
-      diagnosis = S17OccurrenceBaseline.diagnose(baselineAfter);
-      final baselineFail = S17OccurrenceBaseline.failClosedReason(
-        baselineAfter,
-      );
+      final diagnosis = S17OccurrenceBaseline.diagnose(baselineAfter);
+      final baselineFail = prepResult.ok
+          ? S17OccurrenceBaseline.failClosedReason(baselineAfter)
+          : prepResult.classifiedDetail;
       setPrereq(
         'PREREQ_BASELINE',
         baselineFail == null ? S17JourneyResult.pass : S17JourneyResult.fail,
@@ -422,16 +480,19 @@ Future<void> main() async {
             'Baseline ready uncompleted=${baselineAfter.uncompletedOccurrenceCount}',
       );
       if (baselineFail != null) {
-        for (final code in ['F', 'G', 'H', 'I', 'J']) {
+        for (final code in ['C', 'D', 'F', 'G', 'H', 'I', 'J', 'K']) {
           if (!config.resumeMode || selected.contains(code)) {
             setResult(
               code,
               S17JourneyResult.fail,
-              'BASELINE_FAIL cause=${diagnosis.cause.name} ${diagnosis.detail}',
+              prepResult.ok
+                  ? 'BASELINE_FAIL cause=${diagnosis.cause.name} ${diagnosis.detail}'
+                  : prepResult.classifiedDetail,
             );
           }
         }
       } else {
+        selectedJourneysUnlocked = true;
         Future<ProgrammeSchedulingSnapshot?> reloadSnapshot() async {
           final r = await restore.ensureAndRestore(
             athleteId: config.athleteId,
@@ -693,9 +754,11 @@ Future<void> main() async {
     }
 
     // K → C dependency; D independent after prepare.
-    if (!config.resumeMode ||
-        selected.contains('K') ||
-        selected.contains('C')) {
+    // Never enter selected journeys when preparation/baseline postconditions fail.
+    if (selectedJourneysUnlocked &&
+        (!config.resumeMode ||
+            selected.contains('K') ||
+            selected.contains('C'))) {
       final preparedK = await prepare.prepareForAthlete(config.athleteId);
       if (!preparedK.isReady ||
           preparedK.package == null ||
@@ -869,7 +932,8 @@ Future<void> main() async {
       }
     }
 
-    if (!config.resumeMode || selected.contains('D')) {
+    if (selectedJourneysUnlocked &&
+        (!config.resumeMode || selected.contains('D'))) {
       final preparedD = await prepare.prepareForAthlete(config.athleteId);
       final fpBefore = preparedD.package == null
           ? 'none'

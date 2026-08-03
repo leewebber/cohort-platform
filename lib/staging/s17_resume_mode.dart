@@ -6,11 +6,15 @@ class S17ResumeMode {
   /// Journeys left unresolved after B4b (A/B/E already passed).
   static const unresolvedAfterB4b = ['C', 'D', 'F', 'G', 'H', 'I', 'J', 'K'];
 
-  /// Prerequisite identity checks (not journey mutations).
+  /// Prerequisite checks (not journey mutations). A/B/E are never journey PASS
+  /// in resume mode — only these PREREQ_* codes.
   static const prerequisiteCodes = [
-    'PREREQ_IDENTITY',
-    'PREREQ_ASSIGNMENT',
+    'PREREQ_A',
+    'PREREQ_B',
+    'PREREQ_E',
+    'PREREQ_PREP',
     'PREREQ_BASELINE',
+    'PREREQ_IDENTITY',
   ];
 
   /// Default execution order: prepare baseline, schedule ops, then K→C, then D.

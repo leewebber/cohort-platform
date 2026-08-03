@@ -1,10 +1,12 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4c local remediation complete. Hosted resume verification remains
-separately authorised (B4d).
+**Status:** B4d.1 local preparation remediation complete. A single B4d retry
+requires separate founder authorisation. Do not execute another live run from
+this document alone.
 
 **Harness tip (B4a):** `c9bf996`  
-**Remediation branch (local):** `codex/b4c-staging-harness-remediation`
+**B4c remediation:** `f58f55c` (`codex/b4c-staging-harness-remediation`)  
+**B4d.1 remediation branch (local):** `codex/b4d-preparation-remediation`
 
 ## B4b partial result
 
@@ -18,39 +20,68 @@ separately authorised (B4d).
 | F–J | BLOCKED | Fixture — `<2` uncompleted occurrences |
 | K | BLOCKED | Tooling — completion path not automated |
 
-Flutter also remained alive after JSON capture (runner termination defect).
+## B4d blocked result (hosted resume)
 
-## Diagnosed causes (B4c)
+Retained Athlete D marker: `s17_stage_20260803T065749Z_55ec68c6`
 
-### `<2` scheduled occurrences (F–J)
+| Item | Observed |
+|------|----------|
+| Intended preparation programme | `PROG-S15A-STAGING` |
+| Observed programme after B4d | `PROG-S13-ELIG` (version prefix `e9bd7e19…`) |
+| Uncompleted occurrences | 1 |
+| PREREQ_IDENTITY | PASS |
+| PREREQ_BASELINE | FAIL (`authoredProgrammeInsufficientSlots`) |
+| Selected journeys C/D/F–K | FAIL |
+| Journey E in resume report | Incorrectly recorded PASS (should be prerequisite-only) |
 
-**Root cause: authored programme insufficient slots (harness/fixture).**
+Multi-slot preparation **did not take effect**. Creator was never invoked.
+Production untouched. No cleanup authorised.
 
-`PROG-S13-ELIG` is the Self-Test 1 **one-slot** package. Ensure/restore
-correctly projects one occurrence. Horizon/date filtering did **not** exclude
-rows. This is not classified as a product scheduling defect.
+### Diagnosed first failing boundary (B4d.1)
 
-**Remediation:** Athlete D-owned preparation enrols/switches onto the published
-multi-slot catalogue lineage `PROG-S15A-STAGING` through athlete-authenticated
-catalogue APIs, then re-asserts ≥2 uncompleted occurrences. Fail closed if
-preparation cannot establish the baseline. Does **not** mutate published
-programmes or create another athlete.
+**Classification: harness/tooling defect.**
 
-### C / D / K
+B4c added `S17SchedulePreparation` with fail-closed stages, but
+`lib/main_s17_staging_verify.dart` used an **inline** enrol/switch path that:
 
-Previously intentionally non-automated. B4c adds headless automation through
-the same application services the athlete UI uses (completion submit, previous
-performance resolver, adaptation propose/accept/reject).
+1. Looked up `PROG-S15A-STAGING` in the athlete catalogue.
+2. On empty match, enrol failure, or ignored materialisation result, **silently
+   continued** on `PROG-S13-ELIG`.
+3. Reported only the downstream baseline failure — no preparation stage,
+   no enrol/switch classification, no assignment/package/materialisation
+   postconditions.
+4. Still entered C/D/K after baseline failure.
+5. Always wrote journey **E** as PASS, including in resume mode.
 
-### Runner hang
+Retained B4d evidence therefore cannot distinguish catalogue absence from
+enrol rejection; the harness omitted the failure. Staging catalogue presence of
+`PROG-S15A-STAGING` remains to be confirmed by a fail-closed retry (read-only
+Athlete D diagnostics were not used: private defines must not be opened under
+B4d.1, and no alternate read-only boundary was available without that file).
 
-B4c requires `S17_FLUTTER_COMPLETE exit=<n>` after JSON, then runner-owned
-graceful SIGTERM / forced SIGKILL. Missing sentinel → non-zero exit even if
-JSON was captured.
+## Required preparation postconditions (fail-closed)
+
+Preparation must stop before C/D/F–K unless every stage passes:
+
+| Stage | Postcondition |
+|-------|----------------|
+| Catalogue | Exact lineage `PROG-S15A-STAGING` visible and eligible |
+| Target identity | Version ≠ current one-slot; not `PROG-S13-ELIG` |
+| Enrol/switch | Response success classified; reject/malformed → fail |
+| Assignment | Active assignment lineage/version = intended programme |
+| Package | Materialised package hash belongs to intended version |
+| Materialisation | Start Programme success |
+| Prepared execution | Prepare resolves intended assignment/version |
+| Projection/restore | Reconstruction retains intended lineage |
+| Occurrences | ≥2 uncompleted |
+| Fallback guard | Never silently continue on `PROG-S13-ELIG` |
+
+Failures report `PREP_FAIL stage=<name> …` under `PREREQ_PREP` /
+`PREREQ_BASELINE`. Journey E must **not** appear as PASS in resume mode.
 
 ## Resume-only workflow (retained Athlete D)
 
-Do **not** rerun the live creator.
+Do **not** rerun the live creator. B4d.1 does **not** authorise a retry.
 
 Retained marker: `s17_stage_20260803T065749Z_55ec68c6`  
 Private defines file path only (never inspect/edit contents in chat).
@@ -60,9 +91,9 @@ Private defines file path only (never inspect/edit contents in chat).
 1. `CONFIRM_COHORT_STAGING=1`
 2. Private `flutter_dart_defines.json` mode `600`, outside Git, not a symlink
 3. Cohort Staging identity confirmed by runner guards
-4. Identity + assignment isolation prerequisites inside the Flutter entrypoint
+4. Identity + preparation postconditions inside the Flutter entrypoint
 
-### Dry-run resume (no Flutter)
+### Proposed dry-run resume (do not execute under B4d.1)
 
 ```bash
 CONFIRM_COHORT_STAGING=1 \
@@ -70,7 +101,7 @@ CONFIRM_COHORT_STAGING=1 \
   ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
 ```
 
-### Execute resume (B4d only)
+### Proposed single live resume (separate founder authority only)
 
 ```bash
 CONFIRM_COHORT_STAGING=1 \
@@ -84,8 +115,12 @@ Resume mode:
 * never invokes `create_s17_athlete_d_fixture.sh`
 * never searches for athletes by email/name/marker
 * authenticates only from the supplied private config
-* records `PREREQ_*` separately from journey results
+* records `PREREQ_A`, `PREREQ_B`, `PREREQ_E`, `PREREQ_PREP`, `PREREQ_BASELINE`
+  separately from journey results
+* never records journey E as PASS unless E was explicitly selected under
+  separate non-resume authority
 * default order F→G→H→I→J→K→C→D (K before C for prior-result dependency)
+* stops before C/D/F–K when any preparation postcondition fails
 
 ## Report / exit semantics
 
@@ -103,10 +138,10 @@ Resume mode:
 Retain until separately authorised:
 
 * Athlete D identity and private credential directory
-* B4b evidence under `/tmp/b4b_*`
-* B3a backup
+* B4b / B4d evidence under `/tmp/b4b_*`, `/tmp/b4d_*`, `/tmp/s17_flutter_staging_report_b4*.txt`
+* B3a backup (`/private/tmp/cohort_staging_p1_b3a_backup.JGk5Mbqd`) — do not open/restore/delete
 * staging operations worktree
-* B4a/B4c harness worktrees
+* B4a / B4c / B4d.1 harness worktrees
 
 Do not delete Athlete C. Production remains rejected (`otnhhdxs…` /
-Cohort Field Manual).
+Cohort Field Manual). No migration, schema, or deployment from this harness.
