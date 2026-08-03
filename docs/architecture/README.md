@@ -13,7 +13,7 @@
 | [Athlete_Programme_Completion_Advancement_v1.md](./Athlete_Programme_Completion_Advancement_v1.md) | Phase 1 Sprint 1.5A — atomic completion and authored cursor advancement |
 | [Sprint_1_5A_Staging_Self_Test_2.md](./Sprint_1_5A_Staging_Self_Test_2.md) | Phase 1 Sprint 1.5A — staging Self-Test 2 closure at `4365568` |
 | [Athlete_Programme_Acceptance_Gated_Adaptation_v1.md](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md) | Phase 1 Sprint 1.6A — programme-backed acceptance-gated adaptation authority |
-| [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7 — athlete-controlled programme scheduling (1.7A–1.7E: contract, preview, durable projection, Move/Swap/Push/Skip apply) |
+| [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md) | Phase 1 Sprint 1.7 — athlete-controlled programme scheduling (1.7A–1.7F complete: restore, Move/Swap/Push/Skip/Undo, durable horizon, calendar) |
 | [Planning_Engine_v1.md](./Planning_Engine_v1.md) | **Phase 3.5** — planning pipeline, contracts, ownership (canonical for Phase 4) |
 | [Architecture_Freeze_v1.md](./Architecture_Freeze_v1.md) | **Phase 4.5** — freeze, readiness, architecture tests, Phase 5 recommendation |
 | [../product/Workout_Player_MVP.md](../product/Workout_Player_MVP.md) | **Phase 5 Sprint 1** — athlete Workout Player vertical slice |
@@ -46,14 +46,16 @@
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** Phase 1 Sprints 1.3–1.5A are merged at
-`fdae6dd`. Sprints 1.6A–1.6E (acceptance-gated adaptation) are complete.
-Sprints 1.7A–1.7F (contract, preview, durable baseline, Move/Swap/Push/Skip/Undo
-exact-preview apply, durable horizon, calendar UX) are complete on
-`phase1-athlete-controlled-scheduling` (not pushed). Owners:
+**Current delivery checkpoint:** Phase 1 product Sprints **1.1–1.7** are
+implemented locally (1.1–1.5A on `main` @ `fdae6dd`; 1.6A–1.6E adaptation and
+1.7A–1.7F scheduling on the stacked tip). Scheduling includes restore,
+Move/Swap/Push/Skip, one-level Undo, durable nullable horizon, and
+assignment-scoped calendar UX. Owners:
 `ProgrammeSchedulingPreviewEngine`,
 `ensure_programme_schedule_projection` / `ProgrammeScheduleRestoreService`,
 `apply_programme_schedule_operation` / `ProgrammeScheduleApplyService`,
-`AthleteProgrammeScheduleScreen`. Staging rollout remains separately authorised.
-See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
-before continuing implementation or merge work.
+`AthleteProgrammeScheduleScreen`. Local integration closeout is the current
+delivery action; staging verification for 1.6 and 1.7 remains separately
+authorised. No Sprint 1.8 / next product phase is allocated. Historical Phase 5
+MVP numbering is not the current delivery sequence. See
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

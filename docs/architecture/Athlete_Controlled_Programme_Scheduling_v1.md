@@ -571,7 +571,7 @@ Scheduling and adaptation remain distinct:
 | **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required — **complete** |
 | **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules — **complete** |
 | **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green — **complete** |
-| **1.7F** | Undo, assignment calendar UX, durable horizon, hardening | Undo eligibility; milestone closeout |
+| **1.7F** | Undo, assignment calendar UX, durable horizon, hardening | Undo eligibility; milestone closeout — **complete** |
 
 Deviation note: Preview is intentionally front-loaded in 1.7B before persistence
 (1.7C) so eligibility rules are locked before RPCs exist. Move/Swap precede

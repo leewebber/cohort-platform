@@ -14,16 +14,14 @@ Before changing the repository:
 4. Treat existing uncommitted changes as user-owned. Do not discard, clean,
    stage, or rewrite them unless explicitly authorised.
 
-Phase 1 Sprints 1.3–1.5A are merged into `main` at
-`fdae6dd37330980c3e775da8e651a51f86f5b99c` (includes staging-verified Sprint
-1.5A checkpoint `4365568ea33555b9cf50130a6df6965d0abb2b53`).
-
-Acceptance-gated adaptation (Sprints 1.6A–1.6E) is complete on
-`phase1-acceptance-gated-adaptation` @ `30ec8b0`. Active scheduling workstream
-branch: `phase1-athlete-controlled-scheduling`. Sprints **1.7A–1.7F** are
-complete (binding contract, compute-only preview, durable baseline, exact-preview
-Move/Swap/Push/Skip/Undo apply, durable horizon, calendar UX). Staging rollout
-remains separately authorised.
+Phase 1 product Sprints **1.1–1.7** are implemented locally on the stacked tip
+that includes acceptance-gated adaptation (1.6A–1.6E) and athlete-controlled
+scheduling (1.7A–1.7F: restore, Move, Swap, Push, Skip, one-level Undo, durable
+nullable horizon, assignment calendar). Local integration closeout reconciles
+current docs and authorises a local fast-forward of `main` only (no push).
+Staging verification for 1.6 and 1.7 remains separately authorised and
+outstanding. No Sprint 1.8 or next product phase has been allocated. Historical
+Phase 5 MVP numbering must not be treated as the current delivery sequence.
 
 ## Authority and product invariants
 
@@ -94,12 +92,16 @@ record.
 
 The exact next sequence is:
 
-1. After review, continue Sprint 1.7F Undo + broader calendar UX / hardening on
-   `phase1-athlete-controlled-scheduling`.
-2. Do not begin staging rollout unless a task explicitly authorises staging
-   contact.
-3. Optional later authorised staging evidence remains deferred unless a task
+1. Fast-forward local `main` to the Phase 1 integration closeout tip when the
+   closeout task authorises it (do not push).
+2. Do not begin staging verification for Sprints 1.6 and 1.7 unless a task
    explicitly authorises staging contact.
+3. Production rollout and remote migration application remain separately
+   controlled.
+4. Do not allocate or begin Sprint 1.8 or another product phase without
+   explicit authority.
+5. Future package-authored bounded horizons require a separate authorised
+   contract/schema change.
 
 Acceptance mutates only the current prepared executable session. Scheduling must
 not rewrite Plan Packages, fabricate completion, or invoke Coach Brain /

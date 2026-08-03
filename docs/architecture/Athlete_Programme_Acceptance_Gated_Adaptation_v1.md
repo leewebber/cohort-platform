@@ -1,7 +1,9 @@
 # Athlete Programme Acceptance-Gated Adaptation v1 — Sprint 1.6A
 
 **Status:** Binding for Phase 1 programme-backed adaptation  
-**Sprint:** 1.6A–1.6E complete on feature branch; proposed Sprint 1.7 scheduling remains deferred  
+**Sprint:** 1.6A–1.6E complete on the Phase 1 stacked tip; athlete-controlled
+scheduling 1.7A–1.7F is complete under a separate contract (not deferred).
+Staging evidence for 1.6 remains separately authorised and outstanding.
 
 
 **Depends on:** Sprint 1.4B prepared session, Sprint 1.5A completion/advancement  
@@ -338,7 +340,7 @@ Adaptation and rescheduling are distinct authorities:
 | Concern | Changes | Path |
 |---------|---------|------|
 | **Adaptation** | *What* is performed in the current prepared session | Accept path in 1.6B–1.6E |
-| **Rescheduling** | *When*, and potentially in what *order*, authored sessions are performed | Proposed Sprint 1.7 |
+| **Rescheduling** | *When*, and potentially in what *order*, authored sessions are performed | Sprint 1.7 (complete; separate authority) |
 
 **None** of the following may be implemented through the adaptation acceptance
 path:
@@ -351,7 +353,7 @@ path:
 - undo a scheduling change  
 - preview scheduling consequences  
 
-See [Proposed Sprint 1.7](#proposed-sprint-17--athlete-controlled-scheduling).
+See [Sprint 1.7 — athlete-controlled scheduling](#sprint-17--athlete-controlled-scheduling-separate-authority).
 
 ---
 
@@ -379,37 +381,38 @@ See [Proposed Sprint 1.7](#proposed-sprint-17--athlete-controlled-scheduling).
 
 ---
 
-## Proposed Sprint 1.7 — athlete-controlled scheduling
+## Sprint 1.7 — athlete-controlled scheduling (separate authority)
 
-**Status:** Binding contract opened in Sprint **1.7A**; compute-only domain/preview delivered in Sprint **1.7B** —
-see [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md).
-Not part of adaptation implementation Sprints 1.6B–1.6E.
+**Status:** **Complete** for Phase 1 product delivery (Sprints **1.7A–1.7F**) on
+the stacked tip — see
+[Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md).
+Not part of adaptation implementation Sprints 1.6B–1.6E. Staging verification
+for scheduling remains separately authorised.
 
-Intended coverage:
+Delivered coverage (distinct from adaptation):
 
 - move one session to another day  
 - swap session days  
-- push one session forward  
-- push the remaining schedule forward  
-- explicitly skip a session  
-- undo a scheduling change before affected completion  
+- push one session / remaining uncompleted schedule forward  
+- explicitly skip a session (not completion)  
+- one-level undo of the latest eligible scheduling mutation  
 - preview consequences before confirmation  
+- durable nullable scheduling horizon; assignment-scoped calendar UX  
 
-### Initial scheduling principles (proposed; final approval in 1.7)
+### Scheduling principles (binding under the 1.7 contract)
 
 1. Athlete confirmation is mandatory.  
-2. Plan Package permissions govern whether moving, reordering, or skipping is
-   allowed.  
-3. Date movement and session-order movement are separate permissions.  
-4. Authored order remains fixed by default.  
+2. Phase 1 default-allows Move/Swap/Push/Skip via central policy (no Plan
+   Package permission schema fields in this milestone).  
+3. Date movement and session-order movement remain distinct concepts.  
+4. Authored package order remains fixed by default.  
 5. Skip is not completion and must never fabricate completed evidence.  
 6. Skipping/advancing requires its own lawful cursor transition and audit
    evidence.  
-7. Push-right must account for programme end date and collisions.  
+7. Push/Move honour durable `scheduling_horizon_end` when non-null.  
 8. Completed sessions remain immutable.  
 9. Scheduling changes must not change session content.  
-10. Scheduling operations must be reversible until affected completion, where
-    lawful.
+10. Scheduling operations are reversible via one-level Undo while eligible.
 
 Scheduling must never be smuggled through adaptation acceptance.
 
