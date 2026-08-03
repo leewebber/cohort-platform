@@ -486,6 +486,7 @@ void main() {
         today: today,
         assignmentStatus: ProgrammeSchedulingAssignmentStatus.active,
         projection: skipped,
+        cursorSessionSlotId: 'slot-2',
       );
       expect(
         engine
@@ -509,6 +510,14 @@ void main() {
             .code,
         ProgrammeSchedulingPreviewCode.occurrenceCompleted,
       );
+    });
+
+    test('non-current skip rejected when cursor is present', () {
+      final result = engine.preview(
+        snapshot: snapshot(),
+        request: const ProgrammeSchedulingSkipRequest(sessionSlotId: 'slot-2'),
+      );
+      expect(result.code, ProgrammeSchedulingPreviewCode.occurrenceNotCurrent);
     });
   });
 

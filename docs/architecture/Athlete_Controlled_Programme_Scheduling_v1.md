@@ -564,7 +564,7 @@ Scheduling and adaptation remain distinct:
 | **1.7B** | Domain model, identity, preview engine, policy/eligibility validation (compute-only) | Deterministic previews + fingerprints; no durable mutate — **complete** |
 | **1.7C** | Durable schedule projection, revision, operation log, atomic RPC skeleton, local restore | Persist/restore schedule; no full athlete UX required — **complete** |
 | **1.7D** | Move + Swap apply paths + UI confirm | Exact preview application; prepared clear rules — **complete** |
-| **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green |
+| **1.7E** | Push + Skip (+ scheduling cursor transition) | Push-right + skip-without-completion; Self-Test completion still green — **complete** |
 | **1.7F** | Undo, Today/UI integration, hardening, authorised staging evidence if approved | Undo eligibility; milestone closeout |
 
 Deviation note: Preview is intentionally front-loaded in 1.7B before persistence
@@ -637,6 +637,35 @@ Exact-preview Move/Swap apply delivered:
 Sprint 1.7D does **not** apply Push/Skip, execute Undo, advance the programme
 cursor, create completion/actuals, invoke adaptation generation, or redesign the
 calendar. Those remain 1.7E–1.7F / separate owners.
+
+### Sprint 1.7E delivery status
+
+Exact-preview Push/Skip apply delivered on the same closed apply path:
+
+- client command envelopes identify confirmed preview only (Push:
+  `session_slot_id` + `day_delta`; Skip: `session_slot_id`) — never client-
+  nominated affected rows, resulting disposition, or `cursor_after`;
+- server reconstructs Push/Skip from locked authoritative state, verifies the
+  shared apply fingerprint (`ProgrammeSchedulingApplyFingerprint` /
+  `cohort_scheduling_apply_fingerprint`), enforces revision CAS + idempotency;
+- Push shifts dates for the anchor and every later uncompleted occurrence;
+  dispositions, cursor, completions, and prescriptions remain unchanged;
+- Skip writes `programme_slot_outcomes.outcome_status = skipped`, sets
+  occurrence disposition `skipped`, and advances the programme cursor to the
+  next uncompleted authored occurrence (or marks the assignment completed when
+  none remain) in one transaction — never via
+  `complete_programme_session_and_advance`;
+- Skip targets the current programme cursor only (`occurrence_not_current`
+  otherwise); creates no completion evidence / actuals / previous performance;
+- prepared/adapted/pending clear remains local-only after success using returned
+  `cleared_programmed_session_keys` (consumed proposal IDs preserved);
+- Dart owners extended: `ProgrammeScheduleApplyService` +
+  `AthleteProgrammeScheduleScreen` (Move/Swap/Push/Skip); Undo remains closed;
+- Gate O proves Push/Skip ownership, RLS, CAS, idempotency, fingerprint
+  conformance, cursor/disposition protections, and cross-athlete denial.
+
+Sprint 1.7E does **not** execute Undo, redesign the calendar, open coach
+scheduling, or authorise staging rollout. Those remain 1.7F / separate owners.
 
 ---
 
@@ -748,3 +777,15 @@ cache refresh from the server result, and the smallest athlete confirm UI.
 Sprint 1.7D does **not** deliver Push/Skip apply (1.7E), Undo execution (1.7F),
 bulk rescheduling, coach scheduling, or broader calendar UX. Staging rollout
 remains separately authorised.
+
+## Sprint 1.7E boundary
+
+Sprint 1.7E delivers authoritative exact-preview Push and Skip apply on
+`apply_programme_schedule_operation`, including Skip’s atomic disposition +
+cursor transition, revision CAS, idempotent operation logging, required local
+prepared-state invalidation, cache refresh from the server result, and the
+smallest athlete Push/Skip confirm UI.
+
+Sprint 1.7E does **not** deliver Undo execution, broader calendar UX, coach
+scheduling, bulk rescheduling beyond Push, or staging rollout (1.7F /
+separately authorised).

@@ -161,6 +161,69 @@ void main() {
       {'2026-07-01', '2026-07-02'},
     );
   });
+
+  test('push preview lists entire affected date set', () async {
+    final local = AthleteLocalRepository(InMemoryKvStore());
+    final restore = ProgrammeScheduleRestoreService(
+      store: _EnsureStore(projection()),
+      localRepository: local,
+    );
+    final apply = ProgrammeScheduleApplyService(
+      applyStore: _RecordingApplyStore(),
+      restoreService: restore,
+      localRepository: local,
+    );
+    final controller = AthleteProgrammeScheduleController(
+      athleteId: athleteId,
+      assignmentId: assignmentId,
+      restoreService: restore,
+      applyService: apply,
+    );
+    await controller.load();
+    await controller.previewPush(fromSessionSlotId: 'slot-1', dayDelta: 2);
+    expect(controller.preview?.operationType, ProgrammeSchedulingOperationType.push);
+    expect(controller.preview?.changes, hasLength(2));
+    expect(
+      controller.preview!.changes.map((c) => c.proposedDate.toString()).toSet(),
+      {'2026-07-03', '2026-07-04'},
+    );
+  });
+
+  test('skip preview shows disposition and cursor consequence', () async {
+    final local = AthleteLocalRepository(InMemoryKvStore());
+    final restore = ProgrammeScheduleRestoreService(
+      store: _EnsureStore(projection()),
+      localRepository: local,
+    );
+    final apply = ProgrammeScheduleApplyService(
+      applyStore: _RecordingApplyStore(),
+      restoreService: restore,
+      localRepository: local,
+    );
+    final controller = AthleteProgrammeScheduleController(
+      athleteId: athleteId,
+      assignmentId: assignmentId,
+      restoreService: restore,
+      applyService: apply,
+    );
+    await controller.load();
+    // Without assignment store, cursor is unset so non-current check is off;
+    // skip of slot-1 still previews disposition + cursor impact.
+    await controller.previewSkip(sessionSlotId: 'slot-1');
+    expect(controller.preview?.operationType, ProgrammeSchedulingOperationType.skip);
+    expect(
+      controller.preview!.changes.single.proposedDisposition,
+      ProgrammeScheduleDisposition.skipped,
+    );
+    expect(
+      controller.preview!.impacts.any(
+        (i) =>
+            i.kind == ProgrammeSchedulingImpactKind.cursorWouldAdvanceTo &&
+            i.sessionSlotId == 'slot-2',
+      ),
+      isTrue,
+    );
+  });
 }
 
 class _EnsureStore implements ProgrammeScheduleProjectionStore {

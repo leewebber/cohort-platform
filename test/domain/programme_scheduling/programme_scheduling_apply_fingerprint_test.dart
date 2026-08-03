@@ -38,6 +38,165 @@ void main() {
       );
     });
 
+    test('Push conformance vector matches PostgreSQL Gate O hash', () {
+      final payload = ProgrammeSchedulingApplyFingerprint.payload(
+        operation: {
+          'type': 'push',
+          'fromSessionSlotId': '11111111-1111-4111-8111-111111111111',
+          'dayDelta': 2,
+        },
+        assignmentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        programmeVersionId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        packageContentHash: 'hash-conformance-push',
+        scheduleRevision: 0,
+        timezone: 'Pacific/Auckland',
+        affected: [
+          ProgrammeSchedulingApplyFingerprint.affectedRow(
+            sessionSlotId: '11111111-1111-4111-8111-111111111111',
+            programmedSessionKey: 'psk-push-1',
+            originalDate: '2026-07-01',
+            proposedDate: '2026-07-03',
+            originalDisposition: 'scheduled',
+            proposedDisposition: 'scheduled',
+            weekNumber: 1,
+            dayKey: 'day_1',
+            sessionOrder: 1,
+            protocolId: 'protocol-push-1',
+          ),
+        ],
+        collidingDates: const [],
+      );
+
+      expect(
+        ProgrammeSchedulingApplyFingerprint.compute(payload),
+        '4b2dfec57b1db700813029778f717734c0f6d7a0f12130274dfc11b09a973a3a',
+      );
+    });
+
+    test('Skip conformance vector matches PostgreSQL Gate O hash', () {
+      final payload = ProgrammeSchedulingApplyFingerprint.payload(
+        operation: {
+          'type': 'skip',
+          'sessionSlotId': '11111111-1111-4111-8111-111111111111',
+        },
+        assignmentId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+        programmeVersionId: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+        packageContentHash: 'hash-conformance-skip',
+        scheduleRevision: 0,
+        timezone: 'Pacific/Auckland',
+        affected: [
+          ProgrammeSchedulingApplyFingerprint.affectedRow(
+            sessionSlotId: '11111111-1111-4111-8111-111111111111',
+            programmedSessionKey: 'psk-skip-1',
+            originalDate: '2026-07-01',
+            proposedDate: '2026-07-01',
+            originalDisposition: 'scheduled',
+            proposedDisposition: 'skipped',
+            weekNumber: 1,
+            dayKey: 'day_1',
+            sessionOrder: 1,
+            protocolId: 'protocol-skip-1',
+          ),
+        ],
+        collidingDates: const [],
+        cursorBefore: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: '11111111-1111-4111-8111-111111111111',
+          weekNumber: 1,
+          dayKey: 'day_1',
+          sessionOrder: 1,
+        ),
+        cursorAfter: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: '22222222-2222-4222-8222-222222222222',
+          weekNumber: 1,
+          dayKey: 'day_2',
+          sessionOrder: 1,
+        ),
+      );
+
+      expect(
+        ProgrammeSchedulingApplyFingerprint.compute(payload),
+        '60ca198c39d2625ac882b4a7d6667e2a305be1b0abfa5bff2c759e4a96a4f162',
+      );
+    });
+
+    test('Skip cursor change invalidates fingerprint', () {
+      final base = ProgrammeSchedulingApplyFingerprint.payload(
+        operation: const {
+          'type': 'skip',
+          'sessionSlotId': 'slot-1',
+        },
+        assignmentId: 'a1',
+        programmeVersionId: 'v1',
+        packageContentHash: 'h1',
+        scheduleRevision: 1,
+        timezone: 'UTC',
+        affected: [
+          ProgrammeSchedulingApplyFingerprint.affectedRow(
+            sessionSlotId: 'slot-1',
+            programmedSessionKey: 'psk-1',
+            originalDate: '2026-07-01',
+            proposedDate: '2026-07-01',
+            originalDisposition: 'scheduled',
+            proposedDisposition: 'skipped',
+            weekNumber: 1,
+            dayKey: 'day_1',
+            sessionOrder: 0,
+            protocolId: 'p-1',
+          ),
+        ],
+        collidingDates: const [],
+        cursorBefore: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: 'slot-1',
+          weekNumber: 1,
+          dayKey: 'day_1',
+          sessionOrder: 0,
+        ),
+        cursorAfter: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: 'slot-2',
+          weekNumber: 1,
+          dayKey: 'day_2',
+          sessionOrder: 0,
+        ),
+      );
+      final changed = ProgrammeSchedulingApplyFingerprint.payload(
+        operation: const {
+          'type': 'skip',
+          'sessionSlotId': 'slot-1',
+        },
+        assignmentId: 'a1',
+        programmeVersionId: 'v1',
+        packageContentHash: 'h1',
+        scheduleRevision: 1,
+        timezone: 'UTC',
+        affected: [
+          ProgrammeSchedulingApplyFingerprint.affectedRow(
+            sessionSlotId: 'slot-1',
+            programmedSessionKey: 'psk-1',
+            originalDate: '2026-07-01',
+            proposedDate: '2026-07-01',
+            originalDisposition: 'scheduled',
+            proposedDisposition: 'skipped',
+            weekNumber: 1,
+            dayKey: 'day_1',
+            sessionOrder: 0,
+            protocolId: 'p-1',
+          ),
+        ],
+        collidingDates: const [],
+        cursorBefore: ProgrammeSchedulingApplyFingerprint.cursorRow(
+          sessionSlotId: 'slot-1',
+          weekNumber: 1,
+          dayKey: 'day_1',
+          sessionOrder: 0,
+        ),
+        cursorAfter: null,
+      );
+      expect(
+        ProgrammeSchedulingApplyFingerprint.compute(base),
+        isNot(ProgrammeSchedulingApplyFingerprint.compute(changed)),
+      );
+    });
+
     test('key order and collision sort are deterministic', () {
       final a = ProgrammeSchedulingApplyFingerprint.payload(
         operation: {

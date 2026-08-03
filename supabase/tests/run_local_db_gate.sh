@@ -164,7 +164,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_baseline_fidelity.sql
 
-echo "=== Load helpers + Gates C–I + J enrolment + K materialisation + L completion + M schedule + N move/swap ==="
+echo "=== Load helpers + Gates C–I + J–O (enrolment through push/skip) ==="
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
 docker cp "${TESTS_DIR}/sql/gates_c_to_i.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gates.sql"
 docker cp "${TESTS_DIR}/sql/gate_j_catalogue_enrolment.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_j.sql"
@@ -172,6 +172,7 @@ docker cp "${TESTS_DIR}/sql/gate_k_plan_materialisation.sql" "${SPRINT12_DB_CONT
 docker cp "${TESTS_DIR}/sql/gate_l_programme_completion_advancement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_l.sql"
 docker cp "${TESTS_DIR}/sql/gate_m_programme_schedule_projection.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_m.sql"
 docker cp "${TESTS_DIR}/sql/gate_n_programme_schedule_move_swap.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_n.sql"
+docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_o.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -180,7 +181,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_k.sql \
   -f /tmp/sprint12_gate_l.sql \
   -f /tmp/sprint12_gate_m.sql \
-  -f /tmp/sprint12_gate_n.sql
+  -f /tmp/sprint12_gate_n.sql \
+  -f /tmp/sprint12_gate_o.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -196,6 +198,7 @@ docker cp "${TESTS_DIR}/sql/gate_k_plan_materialisation.sql" "${SPRINT12_DB_CONT
 docker cp "${TESTS_DIR}/sql/gate_l_programme_completion_advancement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_l.sql"
 docker cp "${TESTS_DIR}/sql/gate_m_programme_schedule_projection.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_m.sql"
 docker cp "${TESTS_DIR}/sql/gate_n_programme_schedule_move_swap.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_n.sql"
+docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_o.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -204,7 +207,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_k.sql \
   -f /tmp/sprint12_gate_l.sql \
   -f /tmp/sprint12_gate_m.sql \
-  -f /tmp/sprint12_gate_n.sql
+  -f /tmp/sprint12_gate_n.sql \
+  -f /tmp/sprint12_gate_o.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e

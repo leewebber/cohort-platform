@@ -228,22 +228,22 @@ BEGIN
     v_res::text
   );
 
-  -- Push unsupported without mutation.
+  -- Undo remains unsupported (Push/Skip apply authority is Gate O / Sprint 1.7E).
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.apply_programme_schedule_operation(
     jsonb_build_object(
-      'operation_type', 'push',
+      'operation_type', 'undo',
       'assignment_id', v_enrol_a,
       'programme_version_id', v_version,
       'package_content_hash', v_hash,
       'expected_schedule_revision', 0,
       'preview_fingerprint', 'x',
-      'idempotency_key', 'gate-n-push'
+      'idempotency_key', 'gate-n-undo'
     )
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'N', 'push_unsupported', 'unsupported_operation',
+    'N', 'undo_unsupported', 'unsupported_operation',
     COALESCE(v_res->>'code', v_res->>'status'), NULL,
     (v_res->>'code') = 'unsupported_operation',
     v_res::text
@@ -251,28 +251,7 @@ BEGIN
   SELECT schedule_revision INTO v_rev
   FROM programme_schedule_projections WHERE assignment_id = v_enrol_a;
   PERFORM sprint12_record(
-    'N', 'push_no_revision', '0', v_rev::text, NULL, v_rev = 0, NULL
-  );
-
-  -- Skip unsupported.
-  PERFORM set_config('role', 'authenticated', true);
-  v_res := public.apply_programme_schedule_operation(
-    jsonb_build_object(
-      'operation_type', 'skip',
-      'assignment_id', v_enrol_a,
-      'programme_version_id', v_version,
-      'package_content_hash', v_hash,
-      'expected_schedule_revision', 0,
-      'preview_fingerprint', 'x',
-      'idempotency_key', 'gate-n-skip'
-    )
-  );
-  PERFORM set_config('role', 'postgres', true);
-  PERFORM sprint12_record(
-    'N', 'skip_unsupported', 'unsupported_operation',
-    COALESCE(v_res->>'code', v_res->>'status'), NULL,
-    (v_res->>'code') = 'unsupported_operation',
-    v_res::text
+    'N', 'undo_no_revision', '0', v_rev::text, NULL, v_rev = 0, NULL
   );
 
   SELECT scheduled_date INTO v_date

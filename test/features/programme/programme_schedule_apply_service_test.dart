@@ -215,6 +215,104 @@ void main() {
       expect(cached?.occurrences.first.scheduledDate.toString(), '2026-07-01');
     });
 
+    test('push/skip command envelopes exclude client-nominated mutation fields', () {
+      final push = ProgrammeSchedulePushCommand(
+        assignmentId: assignmentId,
+        programmeVersionId: versionId,
+        packageContentHash: packageHash,
+        expectedScheduleRevision: 3,
+        previewFingerprint: 'push-fp',
+        idempotencyKey: 'idem-push',
+        fromSessionSlotId: 'slot-1',
+        dayDelta: 2,
+      );
+      final pushPayload = push.toRpcPayload();
+      expect(pushPayload['operation_type'], 'push');
+      expect(pushPayload['session_slot_id'], 'slot-1');
+      expect(pushPayload['day_delta'], 2);
+      expect(pushPayload.containsKey('affected'), isFalse);
+      expect(pushPayload.containsKey('cursor_after'), isFalse);
+      expect(pushPayload.containsKey('projection'), isFalse);
+
+      final skip = ProgrammeScheduleSkipCommand(
+        assignmentId: assignmentId,
+        programmeVersionId: versionId,
+        packageContentHash: packageHash,
+        expectedScheduleRevision: 3,
+        previewFingerprint: 'skip-fp',
+        idempotencyKey: 'idem-skip',
+        sessionSlotId: 'slot-1',
+      );
+      final skipPayload = skip.toRpcPayload();
+      expect(skipPayload['operation_type'], 'skip');
+      expect(skipPayload['session_slot_id'], 'slot-1');
+      expect(skipPayload.containsKey('cursor_after'), isFalse);
+      expect(skipPayload.containsKey('resulting_disposition'), isFalse);
+      expect(skipPayload.containsKey('affected'), isFalse);
+    });
+
+    test('push/skip command builders bind preview fingerprint and revision', () {
+      final base = snapshotFrom(persisted(revision: 7));
+      final snap = ProgrammeSchedulingSnapshot(
+        assignmentId: base.assignmentId,
+        programmeVersionId: base.programmeVersionId,
+        packageContentHash: base.packageContentHash,
+        timezone: base.timezone,
+        startedAt: base.startedAt,
+        today: base.today,
+        assignmentStatus: base.assignmentStatus,
+        projection: base.projection,
+        cursorSessionSlotId: 'slot-1',
+      );
+      final service = ProgrammeScheduleApplyService(
+        applyStore: _FakeApplyStore(
+          const ProgrammeScheduleApplyResult(
+            status: ProgrammeScheduleApplyStatus.failed,
+          ),
+        ),
+        restoreService: ProgrammeScheduleRestoreService(
+          store: _FakeProjectionStore(),
+          localRepository: AthleteLocalRepository(InMemoryKvStore()),
+        ),
+        localRepository: AthleteLocalRepository(InMemoryKvStore()),
+      );
+      final pushPreview = const ProgrammeSchedulingPreviewEngine().preview(
+        snapshot: snap,
+        request: const ProgrammeSchedulingPushRequest(
+          fromSessionSlotId: 'slot-1',
+          dayDelta: 1,
+        ),
+      );
+      expect(pushPreview.isReady, isTrue);
+      final pushCommand = service.pushCommandFromPreview(
+        snapshot: snap,
+        request: const ProgrammeSchedulingPushRequest(
+          fromSessionSlotId: 'slot-1',
+          dayDelta: 1,
+        ),
+        preview: pushPreview.preview!,
+        idempotencyKey: 'push-key',
+      )!;
+      expect(pushCommand.expectedScheduleRevision, 7);
+      expect(pushCommand.previewFingerprint, pushPreview.preview!.fingerprint);
+      expect(pushCommand.dayDelta, 1);
+
+      final skipPreview = const ProgrammeSchedulingPreviewEngine().preview(
+        snapshot: snap,
+        request: const ProgrammeSchedulingSkipRequest(sessionSlotId: 'slot-1'),
+      );
+      expect(skipPreview.isReady, isTrue);
+      final skipCommand = service.skipCommandFromPreview(
+        snapshot: snap,
+        request: const ProgrammeSchedulingSkipRequest(sessionSlotId: 'slot-1'),
+        preview: skipPreview.preview!,
+        idempotencyKey: 'skip-key',
+      )!;
+      expect(skipCommand.expectedScheduleRevision, 7);
+      expect(skipCommand.previewFingerprint, skipPreview.preview!.fingerprint);
+      expect(skipCommand.sessionSlotId, 'slot-1');
+    });
+
     test('move/swap command builders bind preview fingerprint and revision', () {
       final snap = snapshotFrom(persisted(revision: 7));
       final service = ProgrammeScheduleApplyService(

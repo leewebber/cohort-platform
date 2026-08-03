@@ -9,10 +9,10 @@ import 'athlete_programme_session_prepare_service.dart';
 import 'programme_schedule_apply_store.dart';
 import 'programme_schedule_restore_service.dart';
 
-/// Application boundary for confirmed Move/Swap exact-preview apply.
+/// Application boundary for confirmed Move/Swap/Push/Skip exact-preview apply.
 ///
-/// Does not expose generic projection writers. Push/Skip remain unapplied
-/// (server returns typed unsupported; no client apply constructors for them).
+/// Does not expose generic projection, disposition, or cursor writers.
+/// Undo remains unapplied (1.7F).
 class ProgrammeScheduleApplyService {
   ProgrammeScheduleApplyService({
     required ProgrammeScheduleApplyStore applyStore,
@@ -79,13 +79,56 @@ class ProgrammeScheduleApplyService {
     );
   }
 
+  ProgrammeSchedulePushCommand? pushCommandFromPreview({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required ProgrammeSchedulingPushRequest request,
+    required ProgrammeSchedulingPreview preview,
+    String? idempotencyKey,
+  }) {
+    if (preview.operationType != ProgrammeSchedulingOperationType.push) {
+      return null;
+    }
+    return ProgrammeSchedulePushCommand(
+      assignmentId: snapshot.assignmentId,
+      programmeVersionId: snapshot.programmeVersionId,
+      packageContentHash: snapshot.packageContentHash,
+      expectedScheduleRevision: snapshot.projection.scheduleRevision,
+      previewFingerprint: preview.fingerprint,
+      idempotencyKey: idempotencyKey ?? newIdempotencyKey(),
+      fromSessionSlotId: request.fromSessionSlotId,
+      dayDelta: request.dayDelta,
+    );
+  }
+
+  ProgrammeScheduleSkipCommand? skipCommandFromPreview({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required ProgrammeSchedulingSkipRequest request,
+    required ProgrammeSchedulingPreview preview,
+    String? idempotencyKey,
+  }) {
+    if (preview.operationType != ProgrammeSchedulingOperationType.skip) {
+      return null;
+    }
+    return ProgrammeScheduleSkipCommand(
+      assignmentId: snapshot.assignmentId,
+      programmeVersionId: snapshot.programmeVersionId,
+      packageContentHash: snapshot.packageContentHash,
+      expectedScheduleRevision: snapshot.projection.scheduleRevision,
+      previewFingerprint: preview.fingerprint,
+      idempotencyKey: idempotencyKey ?? newIdempotencyKey(),
+      sessionSlotId: request.sessionSlotId,
+    );
+  }
+
   /// Confirms the exact preview. Retries must reuse [command.idempotencyKey].
   Future<ProgrammeScheduleApplyResult> confirmApply({
     required String athleteId,
     required ProgrammeScheduleApplyCommand command,
   }) async {
     if (command is! ProgrammeScheduleMoveCommand &&
-        command is! ProgrammeScheduleSwapCommand) {
+        command is! ProgrammeScheduleSwapCommand &&
+        command is! ProgrammeSchedulePushCommand &&
+        command is! ProgrammeScheduleSkipCommand) {
       return const ProgrammeScheduleApplyResult(
         status: ProgrammeScheduleApplyStatus.unsupportedOperation,
         code: 'unsupported_operation',
@@ -162,6 +205,32 @@ class ProgrammeScheduleApplyService {
         sessionSlotIdA: sessionSlotIdA,
         sessionSlotIdB: sessionSlotIdB,
       ),
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult previewPush({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required String fromSessionSlotId,
+    required int dayDelta,
+  }) {
+    const engine = ProgrammeSchedulingPreviewEngine();
+    return engine.preview(
+      snapshot: snapshot,
+      request: ProgrammeSchedulingPushRequest(
+        fromSessionSlotId: fromSessionSlotId,
+        dayDelta: dayDelta,
+      ),
+    );
+  }
+
+  ProgrammeSchedulingPreviewResult previewSkip({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required String sessionSlotId,
+  }) {
+    const engine = ProgrammeSchedulingPreviewEngine();
+    return engine.preview(
+      snapshot: snapshot,
+      request: ProgrammeSchedulingSkipRequest(sessionSlotId: sessionSlotId),
     );
   }
 }

@@ -2,7 +2,7 @@ import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import 'programme_schedule_persistence.dart';
 
-/// Closed Move/Swap command envelope for exact-preview apply (Sprint 1.7D).
+/// Closed Move/Swap/Push/Skip command envelope for exact-preview apply.
 sealed class ProgrammeScheduleApplyCommand {
   const ProgrammeScheduleApplyCommand({
     required this.assignmentId,
@@ -95,6 +95,71 @@ class ProgrammeScheduleSwapCommand extends ProgrammeScheduleApplyCommand {
   };
 }
 
+class ProgrammeSchedulePushCommand extends ProgrammeScheduleApplyCommand {
+  const ProgrammeSchedulePushCommand({
+    required super.assignmentId,
+    required super.programmeVersionId,
+    required super.packageContentHash,
+    required super.expectedScheduleRevision,
+    required super.previewFingerprint,
+    required super.idempotencyKey,
+    required this.fromSessionSlotId,
+    required this.dayDelta,
+    super.policyVersion,
+  });
+
+  final String fromSessionSlotId;
+  final int dayDelta;
+
+  @override
+  String get operationType => 'push';
+
+  @override
+  Map<String, Object?> toRpcPayload() => {
+    'operation_type': operationType,
+    'assignment_id': assignmentId,
+    'programme_version_id': programmeVersionId,
+    'package_content_hash': packageContentHash,
+    'expected_schedule_revision': expectedScheduleRevision,
+    'policy_version': policyVersion,
+    'preview_fingerprint': previewFingerprint,
+    'idempotency_key': idempotencyKey,
+    'session_slot_id': fromSessionSlotId,
+    'day_delta': dayDelta,
+  };
+}
+
+class ProgrammeScheduleSkipCommand extends ProgrammeScheduleApplyCommand {
+  const ProgrammeScheduleSkipCommand({
+    required super.assignmentId,
+    required super.programmeVersionId,
+    required super.packageContentHash,
+    required super.expectedScheduleRevision,
+    required super.previewFingerprint,
+    required super.idempotencyKey,
+    required this.sessionSlotId,
+    super.policyVersion,
+  });
+
+  final String sessionSlotId;
+
+  @override
+  String get operationType => 'skip';
+
+  @override
+  Map<String, Object?> toRpcPayload() => {
+    'operation_type': operationType,
+    'assignment_id': assignmentId,
+    'programme_version_id': programmeVersionId,
+    'package_content_hash': packageContentHash,
+    'expected_schedule_revision': expectedScheduleRevision,
+    'policy_version': policyVersion,
+    'preview_fingerprint': previewFingerprint,
+    'idempotency_key': idempotencyKey,
+    'session_slot_id': sessionSlotId,
+  };
+}
+
 enum ProgrammeScheduleApplyStatus {
   applied,
   alreadyApplied,
@@ -107,10 +172,12 @@ enum ProgrammeScheduleApplyStatus {
   provenanceMismatch,
   occurrenceCompleted,
   occurrenceAlreadySkipped,
+  occurrenceNotCurrent,
   inFlightExecution,
   invalidDate,
   beforeAssignmentStart,
   horizonExceeded,
+  invalidPushDistance,
   swapRequiresDistinctOccurrences,
   crossAssignmentOrVersionSwap,
   staleScheduleRevision,
@@ -138,6 +205,7 @@ class ProgrammeScheduleApplyResult {
     this.clearedProgrammedSessionKeys = const [],
     this.projection,
     this.undoExpiresAt,
+    this.cursorAfter,
   });
 
   final ProgrammeScheduleApplyStatus status;
@@ -150,6 +218,7 @@ class ProgrammeScheduleApplyResult {
   final List<String> clearedProgrammedSessionKeys;
   final PersistedProgrammeScheduleProjection? projection;
   final DateTime? undoExpiresAt;
+  final Map<String, dynamic>? cursorAfter;
 
   bool get isSuccess =>
       status == ProgrammeScheduleApplyStatus.applied ||
@@ -180,6 +249,14 @@ class ProgrammeScheduleApplyResult {
         if (text.isNotEmpty) cleared.add(text);
       }
     }
+    Map<String, dynamic>? cursorAfter;
+    final cursorRaw = map['cursor_after'];
+    if (cursorRaw is Map<String, dynamic>) {
+      cursorAfter = cursorRaw;
+    } else if (cursorRaw is Map) {
+      cursorAfter = Map<String, dynamic>.from(cursorRaw);
+    }
+
     return ProgrammeScheduleApplyResult(
       status: _statusFromRpc(statusRaw, code),
       code: code,
@@ -191,6 +268,7 @@ class ProgrammeScheduleApplyResult {
       clearedProgrammedSessionKeys: List.unmodifiable(cleared),
       projection: projection,
       undoExpiresAt: DateTime.tryParse(map['undo_expires_at']?.toString() ?? ''),
+      cursorAfter: cursorAfter,
     );
   }
 }
@@ -220,8 +298,14 @@ ProgrammeScheduleApplyStatus _statusFromRpc(String status, String? code) {
           return ProgrammeScheduleApplyStatus.occurrenceCompleted;
         case 'occurrence_already_skipped':
           return ProgrammeScheduleApplyStatus.occurrenceAlreadySkipped;
+        case 'occurrence_not_current':
+          return ProgrammeScheduleApplyStatus.occurrenceNotCurrent;
         case 'before_assignment_start':
           return ProgrammeScheduleApplyStatus.beforeAssignmentStart;
+        case 'horizon_exceeded':
+          return ProgrammeScheduleApplyStatus.horizonExceeded;
+        case 'invalid_push_distance':
+          return ProgrammeScheduleApplyStatus.invalidPushDistance;
         case 'swap_requires_distinct_occurrences':
           return ProgrammeScheduleApplyStatus.swapRequiresDistinctOccurrences;
         default:

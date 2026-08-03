@@ -2,8 +2,9 @@
 
 **Recorded:** 2026-08-03
 **Status:** Phase 1 Sprints 1.3–1.5A merged; Sprint 1.6A–1.6E complete;
-Sprint 1.7A–1.7D scheduling (contract, preview, durable projection, Move/Swap
-exact-preview apply) complete on dedicated branch (not pushed)
+Sprint 1.7A–1.7E scheduling (contract, preview, durable projection,
+Move/Swap/Push/Skip exact-preview apply) complete on dedicated branch
+(not pushed)
 
 ## Merged main checkpoint
 
@@ -31,15 +32,18 @@ exact-preview apply) complete on dedicated branch (not pushed)
 - Sprint 1.7D feature: `596f36ad5c27ca9bc4157d55367f7c24dbdea1ab`
   exact-preview Move/Swap apply via
   `apply_programme_schedule_operation`, `ProgrammeScheduleApplyService`,
-  and `AthleteProgrammeScheduleScreen` (Push/Skip/Undo remain closed)
-- Next sprint: **1.7E — Push + Skip apply**
+  and `AthleteProgrammeScheduleScreen`
+- Sprint 1.7E feature: *(pending commit)*
+  exact-preview Push/Skip apply on the same RPC/service path; Skip atomically
+  writes skipped disposition/outcome and advances programme cursor; Gate O
+- Next sprint: **1.7F — Undo + broader UI / hardening**
 - Binding scheduling contract:
   [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 - Adaptation contract (complete):
   [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - Milestone status: acceptance-gated adaptation (1.6A–1.6E) complete.
-  Scheduling authority: 1.7A–1.7D (through Move/Swap exact-preview apply);
-  Push/Skip apply remain 1.7E; Undo/broader UI remain 1.7F.
+  Scheduling authority: 1.7A–1.7E (through Push/Skip exact-preview apply);
+  Undo/broader UI remain 1.7F.
 
 ## Approved direction (summary)
 
@@ -64,9 +68,9 @@ exact-preview apply) complete on dedicated branch (not pushed)
 
 ## Exact next sequence
 
-1. After review of Sprint 1.7D, implement Sprint 1.7E Push + Skip apply only.
-2. Undo and broader calendar UX remain 1.7F. Staging rollout remains separately
-   authorised.
+1. After review of Sprint 1.7E, implement Sprint 1.7F Undo + broader UI /
+   hardening only.
+2. Staging rollout remains separately authorised.
 
 ## Resume checks
 

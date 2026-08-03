@@ -7,6 +7,7 @@ enum ProgrammeSchedulingPreviewCode {
   provenanceMismatch,
   occurrenceCompleted,
   occurrenceAlreadySkipped,
+  occurrenceNotCurrent,
   inFlightExecution,
   invalidDate,
   beforeAssignmentStart,

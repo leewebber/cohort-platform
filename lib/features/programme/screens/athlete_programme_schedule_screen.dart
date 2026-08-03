@@ -7,6 +7,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import '../controllers/athlete_programme_schedule_controller.dart';
@@ -16,10 +17,10 @@ import '../services/programme_schedule_apply_supabase_store.dart';
 import '../services/programme_schedule_projection_supabase_store.dart';
 import '../services/programme_schedule_restore_service.dart';
 
-/// Smallest athlete Move/Swap scheduling surface (Sprint 1.7D).
+/// Smallest athlete Move/Swap/Push/Skip scheduling surface (Sprint 1.7E).
 ///
-/// Ownership: programme feature hosts exact-preview confirm for Move/Swap only.
-/// Later scheduling mutations and calendar redesign remain out of scope.
+/// Ownership: programme feature hosts exact-preview confirm for Move/Swap/Push/Skip.
+/// Undo and calendar redesign remain Sprint 1.7F.
 class AthleteProgrammeScheduleScreen extends StatefulWidget {
   const AthleteProgrammeScheduleScreen({
     super.key,
@@ -44,6 +45,9 @@ class _AthleteProgrammeScheduleScreenState
   String? _swapSlotA;
   String? _swapSlotB;
   DateTime? _moveTarget;
+  String? _pushSlotId;
+  int _pushDayDelta = 1;
+  String? _skipSlotId;
 
   @override
   void initState() {
@@ -78,6 +82,7 @@ class _AthleteProgrammeScheduleScreenState
       assignmentId: widget.assignmentId,
       restoreService: restore,
       applyService: apply,
+      assignmentStore: const ProgrammeAssignmentSupabaseStore(),
     );
   }
 
@@ -224,6 +229,82 @@ class _AthleteProgrammeScheduleScreenState
                       ),
                     ),
                   ),
+                  const SizedBox(height: CohortSpacing.xl),
+                  const SectionTitle('Push'),
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Shifts the selected session and every later uncompleted '
+                    'session by the same number of calendar days.',
+                    style: CohortTextStyles.muted,
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _slotDropdown(
+                    label: 'From session',
+                    value: _pushSlotId,
+                    onChanged: (v) => setState(() => _pushSlotId = v),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  Row(
+                    children: [
+                      Text('Days: $_pushDayDelta', style: CohortTextStyles.body),
+                      Expanded(
+                        child: Slider(
+                          value: _pushDayDelta.toDouble(),
+                          min: 1,
+                          max: 14,
+                          divisions: 13,
+                          onChanged: (v) =>
+                              setState(() => _pushDayDelta = v.round()),
+                        ),
+                      ),
+                    ],
+                  ),
+                  IgnorePointer(
+                    ignoring: _pushSlotId == null,
+                    child: Opacity(
+                      opacity: _pushSlotId == null ? 0.5 : 1,
+                      child: CohortButton(
+                        label: 'Preview push',
+                        onPressed: () async {
+                          final slot = _pushSlotId;
+                          if (slot == null) return;
+                          await _controller.previewPush(
+                            fromSessionSlotId: slot,
+                            dayDelta: _pushDayDelta,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: CohortSpacing.xl),
+                  const SectionTitle('Skip'),
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Marks the current programme cursor session as skipped. '
+                    'This does not record a completed workout.',
+                    style: CohortTextStyles.muted,
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _slotDropdown(
+                    label: 'Current session',
+                    value: _skipSlotId,
+                    onChanged: (v) => setState(() => _skipSlotId = v),
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  IgnorePointer(
+                    ignoring: _skipSlotId == null,
+                    child: Opacity(
+                      opacity: _skipSlotId == null ? 0.5 : 1,
+                      child: CohortButton(
+                        label: 'Preview skip',
+                        onPressed: () async {
+                          final slot = _skipSlotId;
+                          if (slot == null) return;
+                          await _controller.previewSkip(sessionSlotId: slot);
+                        },
+                      ),
+                    ),
+                  ),
                   if (_controller.preview != null) ...[
                     const SizedBox(height: CohortSpacing.xl),
                     const SectionTitle('Confirm preview'),
@@ -360,11 +441,29 @@ class _AthleteProgrammeScheduleScreenState
               style: CohortTextStyles.muted,
             ),
           Text(
-            'Prescription and completion history are unchanged.',
+            preview.operationType == ProgrammeSchedulingOperationType.skip
+                ? 'Session remains in programme history as skipped; no '
+                    'performance evidence is created.'
+                : 'Prescription and completion history are unchanged.',
             style: CohortTextStyles.muted,
           ),
+          if (preview.operationType == ProgrammeSchedulingOperationType.skip)
+            Text(
+              _cursorImpactMessage(preview) ??
+                  'Cursor transition is shown in preview impacts.',
+              style: CohortTextStyles.muted,
+            ),
         ],
       ),
     );
+  }
+
+  String? _cursorImpactMessage(ProgrammeSchedulingPreview preview) {
+    for (final impact in preview.impacts) {
+      if (impact.kind == ProgrammeSchedulingImpactKind.cursorWouldAdvanceTo) {
+        return impact.message;
+      }
+    }
+    return null;
   }
 }

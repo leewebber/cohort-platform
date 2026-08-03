@@ -1,11 +1,13 @@
 import 'programme_scheduling_preview_fingerprint.dart';
 
-/// Cross-runtime apply fingerprint contract (Sprint 1.7D).
+/// Cross-runtime apply fingerprint contract (Sprint 1.7D/1.7E).
 ///
-/// Binds the schedule-authoritative preview fields that both Dart and
-/// PostgreSQL must hash identically. Free-text impact messages are excluded
-/// because prepared/adapted state is local-only and not server-authoritative;
-/// collisions remain included as deterministic date lists.
+/// Binds schedule-authoritative preview fields that both Dart and PostgreSQL
+/// must hash identically. Free-text impact messages remain excluded.
+///
+/// Move/Swap/Push share the base payload (operation, affected rows, collisions).
+/// Skip additionally binds authoritative cursor before/after. Cursor keys are
+/// omitted for non-Skip operations so existing Move/Swap vectors stay stable.
 ///
 /// Canonical JSON algorithm: [ProgrammeSchedulingPreviewFingerprint].
 class ProgrammeSchedulingApplyFingerprint {
@@ -13,7 +15,7 @@ class ProgrammeSchedulingApplyFingerprint {
 
   static const policyVersion = 'programme.scheduling.policy.v1';
 
-  /// Builds the canonical apply payload for Move/Swap confirmation.
+  /// Builds the canonical apply payload for Move/Swap/Push/Skip confirmation.
   static Map<String, Object?> payload({
     required Map<String, Object?> operation,
     required String assignmentId,
@@ -24,6 +26,8 @@ class ProgrammeSchedulingApplyFingerprint {
     required List<Map<String, Object?>> affected,
     required List<String> collidingDates,
     String policyVersion = ProgrammeSchedulingApplyFingerprint.policyVersion,
+    Map<String, Object?>? cursorBefore,
+    Object? cursorAfter = _cursorAbsent,
   }) {
     final affectedSorted = List<Map<String, Object?>>.from(affected)
       ..sort((a, b) {
@@ -32,7 +36,7 @@ class ProgrammeSchedulingApplyFingerprint {
         return ak.compareTo(bk);
       });
     final collisions = List<String>.from(collidingDates)..sort();
-    return {
+    final map = <String, Object?>{
       'affected': affectedSorted,
       'assignmentId': assignmentId,
       'collidingDates': collisions,
@@ -43,7 +47,15 @@ class ProgrammeSchedulingApplyFingerprint {
       'scheduleRevision': scheduleRevision,
       'timezone': timezone,
     };
+    // Skip-only authoritative cursor binding (null cursorAfter = terminal).
+    if (!identical(cursorAfter, _cursorAbsent)) {
+      map['cursorAfter'] = cursorAfter;
+      map['cursorBefore'] = cursorBefore;
+    }
+    return map;
   }
+
+  static const Object _cursorAbsent = Object();
 
   static String compute(Map<String, Object?> applyPayload) {
     return ProgrammeSchedulingPreviewFingerprint.compute(applyPayload);
@@ -70,6 +82,21 @@ class ProgrammeSchedulingApplyFingerprint {
       'proposedDate': proposedDate,
       'proposedDisposition': proposedDisposition,
       'protocolId': protocolId,
+      'sessionOrder': sessionOrder,
+      'sessionSlotId': sessionSlotId,
+      'weekNumber': weekNumber,
+    };
+  }
+
+  /// Cursor coordinate shape shared with PostgreSQL (Skip fingerprint).
+  static Map<String, Object?> cursorRow({
+    required String sessionSlotId,
+    required int weekNumber,
+    required String dayKey,
+    required int sessionOrder,
+  }) {
+    return {
+      'dayKey': dayKey,
       'sessionOrder': sessionOrder,
       'sessionSlotId': sessionSlotId,
       'weekNumber': weekNumber,

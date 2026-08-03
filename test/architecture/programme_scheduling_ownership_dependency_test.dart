@@ -110,24 +110,30 @@ void main() {
       'replaceProjection',
       'writeOccurrences',
       'persistPreview',
+      'setDisposition',
+      'setCursor',
     ]) {
       expect(applyService.contains(token), isFalse, reason: token);
     }
-    expect(applyService.contains('Push/Skip remain unapplied'), isTrue);
+    expect(applyService.contains('Undo remains unapplied'), isTrue);
+    expect(applyService.contains('previewPush'), isTrue);
+    expect(applyService.contains('previewSkip'), isTrue);
+    expect(applyService.contains('pushCommandFromPreview'), isTrue);
+    expect(applyService.contains('skipCommandFromPreview'), isTrue);
 
     final screen = File(
       '$root/lib/features/programme/screens/'
       'athlete_programme_schedule_screen.dart',
     ).readAsStringSync();
-    expect(screen.contains('Preview push'), isFalse);
-    expect(screen.contains('Preview skip'), isFalse);
+    expect(screen.contains('Preview push'), isTrue);
+    expect(screen.contains('Preview skip'), isTrue);
     expect(screen.contains('Confirm undo'), isFalse);
-    expect(screen.contains('operation_type\': \'push'), isFalse);
     expect(screen.contains('ProgrammeSchedulingPushRequest'), isFalse);
-    expect(screen.contains('ProgrammeSchedulingSkipRequest'), isFalse);
+    expect(screen.contains('previewPush'), isTrue);
+    expect(screen.contains('previewSkip'), isTrue);
   });
 
-  test('no generic projection writer and no Push/Skip apply service', () {
+  test('no generic projection writer and no separate Undo apply service', () {
     final forbiddenPaths = [
       'lib/application/scheduling',
       'lib/features/scheduling',
@@ -242,6 +248,27 @@ void main() {
     expect(sql.contains('client_nominated_projection_forbidden'), isTrue);
     expect(sql.contains('stale_preview_fingerprint'), isTrue);
     expect(sql.contains('cohort_scheduling_apply_fingerprint'), isTrue);
+  });
+
+  test('1.7E migration extends apply with Push/Skip and keeps Undo unsupported', () {
+    final sql = File(
+      '$root/supabase/migrations/'
+      '20260803160000_apply_programme_schedule_push_skip.sql',
+    ).readAsStringSync();
+    expect(sql.contains("v_op NOT IN ('move', 'swap', 'push', 'skip')"), isTrue);
+    expect(sql.contains("v_op = 'undo'"), isTrue);
+    expect(sql.contains('client_nominated_projection_forbidden'), isTrue);
+    expect(sql.contains("payload ? 'cursor_after'"), isTrue);
+    expect(sql.contains("payload ? 'resulting_disposition'"), isTrue);
+    expect(sql.contains('occurrence_not_current'), isTrue);
+    expect(sql.contains('cohort.allow_materialisation_write'), isTrue);
+    expect(sql.contains('programme_slot_outcomes'), isTrue);
+    expect(
+      File(
+        '$root/supabase/tests/sql/gate_o_programme_schedule_push_skip.sql',
+      ).existsSync(),
+      isTrue,
+    );
   });
 }
 

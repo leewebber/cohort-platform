@@ -373,6 +373,19 @@ class ProgrammeSchedulingPreviewEngine {
       );
     }
 
+    // Skip’s scheduling cursor transition is only defined for the current
+    // programme cursor (completion progress owner). Non-current targets fail
+    // closed when a cursor is present on the authoritative snapshot.
+    final cursorSlotId = snapshot.cursorSessionSlotId?.trim();
+    if (cursorSlotId != null &&
+        cursorSlotId.isNotEmpty &&
+        cursorSlotId != sessionSlotId) {
+      return ProgrammeSchedulingPreviewResult.ineligible(
+        ProgrammeSchedulingPreviewCode.occurrenceNotCurrent,
+        detail: 'Skip targets the current programme cursor occurrence only.',
+      );
+    }
+
     final proposed = source.copyWith(
       disposition: ProgrammeScheduleDisposition.skipped,
     );
@@ -461,6 +474,21 @@ class ProgrammeSchedulingPreviewEngine {
       changes: changes,
       impacts: impacts,
       operationType: ProgrammeSchedulingOperationType.skip,
+      cursorBefore: ProgrammeSchedulingApplyFingerprint.cursorRow(
+        sessionSlotId: source.identity.sessionSlotId,
+        weekNumber: source.identity.weekNumber,
+        dayKey: source.identity.dayKey,
+        sessionOrder: source.identity.sessionOrder,
+      ),
+      cursorAfter: nextDue == null
+          ? null
+          : ProgrammeSchedulingApplyFingerprint.cursorRow(
+              sessionSlotId: nextDue.identity.sessionSlotId,
+              weekNumber: nextDue.identity.weekNumber,
+              dayKey: nextDue.identity.dayKey,
+              sessionOrder: nextDue.identity.sessionOrder,
+            ),
+      includeCursor: true,
     );
   }
 
@@ -619,36 +647,68 @@ class ProgrammeSchedulingPreviewEngine {
     required List<ProgrammeSchedulingOccurrenceChange> changes,
     required List<ProgrammeSchedulingImpact> impacts,
     required ProgrammeSchedulingOperationType operationType,
+    Map<String, Object?>? cursorBefore,
+    Map<String, Object?>? cursorAfter,
+    bool includeCursor = false,
   }) {
     final collidingDates = _collidingDates(proposedProjection);
     // Apply fingerprint binds schedule-authoritative fields only (parity with
     // PostgreSQL). Impacts remain in the preview result for athlete review.
-    final fingerprintPayload = ProgrammeSchedulingApplyFingerprint.payload(
-      operation: requestCanonical,
-      assignmentId: snapshot.assignmentId,
-      programmeVersionId: snapshot.programmeVersionId,
-      packageContentHash: snapshot.packageContentHash,
-      scheduleRevision: snapshot.projection.scheduleRevision,
-      timezone: snapshot.timezone,
-      policyVersion: policy.version,
-      affected: changes
-          .map(
-            (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(
-              sessionSlotId: c.identity.sessionSlotId,
-              programmedSessionKey: c.identity.programmedSessionKey,
-              originalDate: c.originalDate.toString(),
-              proposedDate: c.proposedDate.toString(),
-              originalDisposition: c.originalDisposition.name,
-              proposedDisposition: c.proposedDisposition.name,
-              weekNumber: c.identity.weekNumber,
-              dayKey: c.identity.dayKey,
-              sessionOrder: c.identity.sessionOrder,
-              protocolId: c.identity.protocolId,
-            ),
+    final fingerprintPayload = includeCursor
+        ? ProgrammeSchedulingApplyFingerprint.payload(
+            operation: requestCanonical,
+            assignmentId: snapshot.assignmentId,
+            programmeVersionId: snapshot.programmeVersionId,
+            packageContentHash: snapshot.packageContentHash,
+            scheduleRevision: snapshot.projection.scheduleRevision,
+            timezone: snapshot.timezone,
+            policyVersion: policy.version,
+            affected: changes
+                .map(
+                  (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(
+                    sessionSlotId: c.identity.sessionSlotId,
+                    programmedSessionKey: c.identity.programmedSessionKey,
+                    originalDate: c.originalDate.toString(),
+                    proposedDate: c.proposedDate.toString(),
+                    originalDisposition: c.originalDisposition.name,
+                    proposedDisposition: c.proposedDisposition.name,
+                    weekNumber: c.identity.weekNumber,
+                    dayKey: c.identity.dayKey,
+                    sessionOrder: c.identity.sessionOrder,
+                    protocolId: c.identity.protocolId,
+                  ),
+                )
+                .toList(),
+            collidingDates: collidingDates.map((d) => d.toString()).toList(),
+            cursorBefore: cursorBefore,
+            cursorAfter: cursorAfter,
           )
-          .toList(),
-      collidingDates: collidingDates.map((d) => d.toString()).toList(),
-    );
+        : ProgrammeSchedulingApplyFingerprint.payload(
+            operation: requestCanonical,
+            assignmentId: snapshot.assignmentId,
+            programmeVersionId: snapshot.programmeVersionId,
+            packageContentHash: snapshot.packageContentHash,
+            scheduleRevision: snapshot.projection.scheduleRevision,
+            timezone: snapshot.timezone,
+            policyVersion: policy.version,
+            affected: changes
+                .map(
+                  (c) => ProgrammeSchedulingApplyFingerprint.affectedRow(
+                    sessionSlotId: c.identity.sessionSlotId,
+                    programmedSessionKey: c.identity.programmedSessionKey,
+                    originalDate: c.originalDate.toString(),
+                    proposedDate: c.proposedDate.toString(),
+                    originalDisposition: c.originalDisposition.name,
+                    proposedDisposition: c.proposedDisposition.name,
+                    weekNumber: c.identity.weekNumber,
+                    dayKey: c.identity.dayKey,
+                    sessionOrder: c.identity.sessionOrder,
+                    protocolId: c.identity.protocolId,
+                  ),
+                )
+                .toList(),
+            collidingDates: collidingDates.map((d) => d.toString()).toList(),
+          );
     final fingerprint = ProgrammeSchedulingApplyFingerprint.compute(
       fingerprintPayload,
     );
