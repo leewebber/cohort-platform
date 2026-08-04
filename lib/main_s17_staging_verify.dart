@@ -47,6 +47,7 @@ import 'staging/s17_preparation_adapters.dart';
 import 'staging/s17_previous_performance_harness.dart';
 import 'staging/s17_resume_mode.dart';
 import 'staging/s17_schedule_preparation.dart';
+import 'staging/s17_skip_diagnosis.dart';
 import 'staging/s17_staging_journey_matrix.dart';
 import 'staging/s17_staging_runtime_config.dart';
 
@@ -912,58 +913,176 @@ Future<void> main() async {
           }
         }
 
-        // I Skip — fresh skip source for J (B4d.5).
+        // I Skip — cursor-aligned selection + typed failure classes (B4d.6).
         if (runI && scheduleOpsContinue) {
-          snapshot = (await reloadSnapshot()) ?? snapshot;
-          final skipables = snapshot.projection.occurrences
-              .where((o) => o.isUncompleted)
+          final restoredForSkip = await restore.ensureAndRestore(
+            athleteId: config.athleteId,
+            programmeAssignmentId: config.assignmentId,
+          );
+          final activeForSkip = await assignmentStore.getActiveAssignment(
+            config.athleteId,
+          );
+          String? cursorSlotId;
+          if (restoredForSkip.isSuccess &&
+              restoredForSkip.projection != null &&
+              activeForSkip != null) {
+            cursorSlotId = S17SkipDiagnosis.resolveCursorSlotId(
+              occurrences: restoredForSkip.projection!.occurrences
+                  .map(
+                    (o) => S17SkipOccurrenceView(
+                      sessionSlotId: o.sessionSlotId,
+                      scheduledDate: o.scheduledDate,
+                      isUncompleted:
+                          o.disposition ==
+                          ProgrammeScheduleDisposition.scheduled,
+                      weekNumber: o.weekNumber,
+                      dayKey: o.dayKey,
+                      sessionOrder: o.sessionOrder,
+                    ),
+                  )
+                  .toList(),
+              week: activeForSkip.currentWeek,
+              dayKey: activeForSkip.currentDayKey,
+              sessionOrder: activeForSkip.currentSessionOrder,
+            );
+            snapshot = restore.snapshotForPreview(
+              projection: restoredForSkip.projection!,
+              today: today,
+              cursorSessionSlotId: cursorSlotId,
+            );
+          } else {
+            snapshot = (await reloadSnapshot()) ?? snapshot;
+          }
+          final skipViews = snapshot.projection.occurrences
+              .map(
+                (o) => S17SkipOccurrenceView(
+                  sessionSlotId: o.identity.sessionSlotId,
+                  scheduledDate: o.scheduledDate,
+                  isUncompleted: o.isUncompleted,
+                  weekNumber: o.identity.weekNumber,
+                  dayKey: o.identity.dayKey,
+                  sessionOrder: o.identity.sessionOrder,
+                ),
+              )
               .toList();
+          final selection = S17SkipDiagnosis.selectSkipSource(
+            occurrences: skipViews,
+            cursorSessionSlotId: cursorSlotId,
+            preferCursor: true,
+          );
           var skipOk = false;
           beforeSkipRev = snapshot.projection.scheduleRevision;
-          if (skipables.isNotEmpty) {
-            final slot = skipables.first.identity.sessionSlotId;
+          var attempt = S17SkipDiagnosis.classifyAttempt(
+            hasUncompleted: skipViews.any((o) => o.isUncompleted),
+            previewReached: false,
+            previewReady: false,
+            commandBuilt: false,
+            applyReached: false,
+            reconstructionOk: false,
+            revisionAdvanced: false,
+            occurrenceSkipped: false,
+            cursorBound: (cursorSlotId ?? '').trim().isNotEmpty,
+            selectedMatchesCursor: selection.selectedViaCursor,
+          );
+          if (selection.ok && selection.sessionSlotId != null) {
+            final slot = selection.sessionSlotId!;
             skipSourcePrefix = S17JourneyDiagnosis.redactPrefix(slot);
             beforeSkipRev = snapshot.projection.scheduleRevision;
             final skipPreview = apply.previewSkip(
               snapshot: snapshot,
               sessionSlotId: slot,
             );
-            if (skipPreview.isReady && skipPreview.preview != null) {
+            final previewReady =
+                skipPreview.isReady && skipPreview.preview != null;
+            var commandBuilt = false;
+            var applyReached = false;
+            bool? applySucceeded;
+            String? applyStatus;
+            String? applyCode;
+            var reconstructionOk = false;
+            var revisionAdvanced = false;
+            var occurrenceSkipped = false;
+            if (previewReady) {
               final cmd = apply.skipCommandFromPreview(
                 snapshot: snapshot,
                 request: ProgrammeSchedulingSkipRequest(sessionSlotId: slot),
                 preview: skipPreview.preview!,
               );
+              commandBuilt = cmd != null;
               if (cmd != null) {
                 final applied = await apply.confirmApply(
                   athleteId: config.athleteId,
                   command: cmd,
                 );
+                applyReached = true;
+                applySucceeded = applied.isSuccess;
+                applyStatus = applied.status.name;
+                applyCode = applied.code;
                 final after = await reloadSnapshot();
+                reconstructionOk = after != null;
+                if (after != null) {
+                  snapshot = after;
+                  revisionAdvanced =
+                      after.projection.scheduleRevision != beforeSkipRev;
+                  occurrenceSkipped =
+                      after.projection.bySlotId(slot)?.isSkipped == true;
+                }
                 skipOk =
                     applied.isSuccess &&
-                    after != null &&
-                    after.projection.scheduleRevision != beforeSkipRev;
-                if (after != null) snapshot = after;
+                    reconstructionOk &&
+                    revisionAdvanced &&
+                    occurrenceSkipped;
               }
             }
+            attempt = S17SkipDiagnosis.classifyAttempt(
+              hasUncompleted: true,
+              previewReached: true,
+              previewReady: previewReady,
+              previewCode: skipPreview.code.name,
+              commandBuilt: commandBuilt,
+              applyReached: applyReached,
+              applySucceeded: applySucceeded,
+              applyStatus: applyStatus,
+              applyCode: applyCode,
+              reconstructionOk: reconstructionOk,
+              revisionAdvanced: revisionAdvanced,
+              occurrenceSkipped: occurrenceSkipped,
+              cursorBound: (cursorSlotId ?? '').trim().isNotEmpty,
+              selectedMatchesCursor:
+                  (cursorSlotId ?? '').isEmpty || slot == cursorSlotId,
+            );
+          } else {
+            skipSourcePrefix = S17JourneyDiagnosis.redactPrefix(
+              selection.firstUncompletedSlotId ?? '',
+            );
+            attempt = S17SkipAttemptReport(
+              classification: selection.classification,
+              detail: selection.detail,
+              previewReached: false,
+              applyReached: false,
+            );
           }
           final latestAfterSkip = await ops.latestUndoableOperation(
             assignmentId: config.assignmentId,
           );
           iPassed = skipOk;
+          final failDetail = S17SkipDiagnosis.formatFailureDetail(
+            report: attempt,
+            sourcePrefix: skipSourcePrefix,
+          );
           setResult(
             'I',
             skipOk
                 ? S17JourneyResult.pass
-                : (skipables.isEmpty
-                      ? S17JourneyResult.blocked
-                      : S17JourneyResult.fail),
+                : (selection.ok
+                      ? S17JourneyResult.fail
+                      : S17JourneyResult.blocked),
             skipOk
                 ? 'Skip applied source=$skipSourcePrefix '
                       'pre_rev=$beforeSkipRev '
+                      'cursor=${S17JourneyDiagnosis.redactPrefix(cursorSlotId ?? '')} '
                       'latest_undo=${latestAfterSkip?.originalType.name ?? 'none'}'
-                : 'Skip failed or unavailable source=$skipSourcePrefix',
+                : failDetail,
           );
           if (!skipOk) {
             scheduleOpsContinue = false;

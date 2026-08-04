@@ -1,72 +1,61 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.5 targeted reverification of corrected G/H and isolated I→J.
-Another retry beyond the single authorised B4d.5 dry+live pair is **not**
-authorised.
+**Status:** B4d.6 diagnosed the B4d.5 post-Swap+Push Skip failure locally.
+No staging contact under B4d.6.
 
-**B4d.3 live-assignment bind:** `1607d7d`  
-**B4d.4 journey diagnosis:** `c4c655f`  
-**B4d.5 targeted reverification branch:** `codex/b4d5-targeted-reverification`
+**B4d.5 targeted reverification:** `bfe478a`  
+**B4d.6 skip diagnosis branch:** `codex/b4d6-skip-diagnosis`
 
-## B4d.4 conclusions (accepted)
-
-| Journey | Classification |
-|---------|----------------|
-| G | Harness/order contamination (same-date after F Move+1) |
-| H | Harness invalid probe wrong under NULL unbounded horizon |
-| I | Skip passed |
-| J | Residual Undo boundary (incomplete inverse vs revision) |
-| D | Expected `noSafeAdaptation` fixture eligibility — **do not run in B4d.5** |
-
-## B4d.5 targeted matrix
+## B4d.5 observed I failure
 
 ```text
-Selected: G,H,I,J
-Order:    G → H → I → J
+G PASS → H PASS → I FAIL ("Skip failed or unavailable") → J BLOCKED
+Source selected: first uncompleted after G/H (b49af2c9…)
 ```
 
-F, C, K, D must not execute. Adaptation must not execute.
+## B4d.6 causal diagnosis
 
-### Contracts
+| Finding | Result |
+|---------|--------|
+| Post-Swap+Push date geometry (2 slots) | A@D+2, B@D+1 — **no same-date collision** |
+| Domain Skip after date changes | Still preview-ready when target **is** cursor |
+| Domain Skip of non-current | `occurrenceNotCurrent` when cursor bound |
+| B4d.5 harness snapshot | **`cursorSessionSlotId` unbound (null)** |
+| B4d.5 selection | Always **first uncompleted**, not assignment cursor |
+| Client vs server | Null-cursor client may preview ready; server RPC still requires current cursor (`occurrence_not_current`) |
+| Reporting | All I failures collapsed to opaque string |
 
-* **G:** reload; distinct-date uncompleted pair; invalid (A,A) atomic; valid
-  swaps both dates; stop downstream if G does not PASS.
-* **H:** report bounded vs `UNBOUNDED_NULL_HORIZON`; valid +1 push; invalid
-  probe **`dayDelta <= 0` only** (never large positive under NULL horizon).
-* **I:** fresh Skip; record redacted source + pre-Skip revision + latest undo type.
-* **J:** reload; require latest undo == that Skip; typed failure classes:
-  `NO_UNDO_RECORD`, `LATEST_NOT_SKIP`, `INCOMPLETE_INVERSE_SNAPSHOT`,
-  `REVISION_MISMATCH`, `UNDO_REJECTED`, `UNDO_APPLIED_POSTCONDITION_FAILED`.
+**Primary classification:** `HARNESS_INELIGIBLE_SELECTION`  
+**Secondary:** `HARNESS_TYPED_RESULT_COLLAPSED`  
+**Evidence rider:** `INSUFFICIENT_PRESERVED_EVIDENCE` (B4d.5 did not retain preview/apply codes)
 
-### Preparation
+**Product Skip defect proven?** No — geometry alone does not make Skip ineligible.
 
-Resume binds live `PROG-S15A-STAGING`. Enrol/switch/`replaceActive` forbidden.
-If already materialised, **do not rematerialise** — reuse and validate only.
+**Hosted mutation after I FAIL?** Uncertain if apply was reached; opaque report. Treat Athlete D Skip/undo journal as **uncertain** until an evidence-rich run.
 
-## Dry-run / live (B4d.5 only)
+## Local harness remediation (B4d.6)
 
-```bash
-CONFIRM_COHORT_STAGING=1 \
-  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
-  S17_SELECTED_JOURNEYS=G,H,I,J \
-  ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
+* Resolve assignment cursor into schedule snapshot before Skip
+* Select Skip source via cursor (refuse silent first-uncompleted fallback when cursor is non-uncompleted)
+* Emit typed I failure detail: preview/apply reached, codes, classification
+* Characterization tests for G→H geometry + cursor vs first-uncompleted
 
-CONFIRM_COHORT_STAGING=1 \
-  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
-  S17_SELECTED_JOURNEYS=G,H,I,J \
-  ./tool/staging/run_s17_flutter_staging_verify.sh --resume
+Do **not** retry staging under B4d.6.
+
+## Next authority
+
+```text
+Harness defect (this diagnosis):
+  separately authorise one fresh I→J (or G,H,I,J) staging verification
+  using the cursor-aligned typed harness — no product Skip change
+
+If that run still fails with typed EXPECTED_SKIP_INELIGIBILITY /
+occurrence_not_current despite cursor alignment:
+  diagnose persisted cursor vs first-uncompleted divergence
+
+Journey D remains separate (adaptation-eligible fixture)
+
+B4e remains blocked
 ```
 
-Exactly one dry run and at most one live run. No retry.
-
-## Next authority (after B4d.5)
-
-| Result | Next |
-|--------|------|
-| G/H/I/J all PASS | B4d.6 adaptation-eligible fixture + Journey D only |
-| J = `INCOMPLETE_INVERSE_SNAPSHOT` | Local Skip inverse product remediation; no staging retry |
-| J revision/postcondition | Smallest local diagnosis of that typed boundary |
-| G or H FAIL | Diagnose corrected contract; no retry |
-
-B4e remains blocked until D and all required release journeys have passing
-staging evidence. Production remains rejected.
+Production remains rejected. Evidence under `/tmp/b4d5_*` retained.
