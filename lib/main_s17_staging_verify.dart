@@ -671,6 +671,7 @@ Future<void> main() async {
         var freshSkipSlotId = '';
         var freshSkipResultRev = -1;
         var freshSkipOpId = '';
+        var preICursorSlotId = '';
         final preIBaseline = <String, String>{};
 
         // F Move (optional — omitted for B4d.5 G,H,I,J targeting)
@@ -1003,6 +1004,7 @@ Future<void> main() async {
           if (selection.ok && selection.sessionSlotId != null) {
             final slot = selection.sessionSlotId!;
             freshSkipSlotId = slot;
+            preICursorSlotId = (cursorSlotId ?? slot).trim();
             skipSourcePrefix = S17JourneyDiagnosis.redactPrefix(slot);
             beforeSkipRev = snapshot.projection.scheduleRevision;
             final skipPreview = apply.previewSkip(
@@ -1340,19 +1342,80 @@ Future<void> main() async {
                       command: cmd,
                     );
                     final after = await reloadSnapshot();
-                    final revOk =
-                        after != null &&
-                        after.projection.scheduleRevision == beforeSkipRev;
-                    final stateOk =
-                        after != null &&
-                        after.projection.occurrences.every((o) {
-                          final expected =
-                              preIBaseline[o.identity.sessionSlotId];
-                          if (expected == null) return false;
-                          return '${o.scheduledDate}|${o.disposition.name}' ==
-                              expected;
-                        });
-                    undoOk = applied.isSuccess && revOk && stateOk;
+                    final reloadOk = after != null;
+                    final reconstructionOk = after != null;
+                    Map<String, String>? postJBaseline;
+                    String? postJCursorSlotId;
+                    String? observedAssignmentId;
+                    String? observedVersionId;
+                    String? observedLineage;
+                    if (after != null) {
+                      postJBaseline = {
+                        for (final o in after.projection.occurrences)
+                          o.identity.sessionSlotId:
+                              '${o.scheduledDate}|${o.disposition.name}',
+                      };
+                      observedAssignmentId = after.assignmentId;
+                      observedVersionId = after.programmeVersionId;
+                      observedLineage = config.lineageCode;
+                      final activeAfterUndo = await assignmentStore
+                          .getActiveAssignment(config.athleteId);
+                      if (activeAfterUndo != null) {
+                        observedAssignmentId = activeAfterUndo.id;
+                        observedVersionId = activeAfterUndo.programmeVersionId;
+                        observedLineage = activeAfterUndo.lineageCode;
+                        final postViews = after.projection.occurrences
+                            .map(
+                              (o) => S17SkipOccurrenceView(
+                                sessionSlotId: o.identity.sessionSlotId,
+                                scheduledDate: o.scheduledDate,
+                                isUncompleted: o.isUncompleted,
+                                weekNumber: o.identity.weekNumber,
+                                dayKey: o.identity.dayKey,
+                                sessionOrder: o.identity.sessionOrder,
+                              ),
+                            )
+                            .toList();
+                        final postCursor =
+                            S17UndoDiagnosis.resolveAuthoritativeLiveCursor(
+                              occurrences: postViews,
+                              assignmentPresent: true,
+                              week: activeAfterUndo.currentWeek,
+                              dayKey: activeAfterUndo.currentDayKey,
+                              sessionOrder: activeAfterUndo.currentSessionOrder,
+                            );
+                        postJCursorSlotId = postCursor.cursorSessionSlotId;
+                      }
+                    }
+                    final revisionEval =
+                        S17UndoDiagnosis.evaluateRevisionContract(
+                          preSkipRevision: beforeSkipRev,
+                          postSkipRevision: freshSkipResultRev,
+                          expectedApplyRevision: cmd.expectedScheduleRevision,
+                          applyResultRevision: applied.scheduleRevision,
+                          reloadedRevision: after?.projection.scheduleRevision,
+                        );
+                    final post =
+                        S17UndoDiagnosis.evaluatePostUndoPostconditions(
+                          applySucceeded: applied.isSuccess,
+                          reloadOk: reloadOk,
+                          reconstructionOk: reconstructionOk,
+                          revision: revisionEval,
+                          preIBaseline: preIBaseline,
+                          targetSlotId: freshSkipSlotId,
+                          preICursorSlotId: preICursorSlotId.isNotEmpty
+                              ? preICursorSlotId
+                              : freshSkipSlotId,
+                          postJCursorSlotId: postJCursorSlotId,
+                          expectedAssignmentId: config.assignmentId,
+                          expectedVersionId: config.versionId,
+                          expectedLineageCode: config.lineageCode,
+                          observedAssignmentId: observedAssignmentId,
+                          observedVersionId: observedVersionId,
+                          observedLineageCode: observedLineage,
+                          postJBaseline: postJBaseline,
+                        );
+                    undoOk = post.journeyJPass;
                     final evidence = S17UndoDiagnosis.classifyAttempt(
                       hasUndoRecord: true,
                       latestIsSkip: true,
@@ -1366,14 +1429,24 @@ Future<void> main() async {
                       applySucceeded: applied.isSuccess,
                       applyStatus: applied.status.name,
                       applyCode: applied.code,
-                      reloadOk: after != null,
-                      revisionRestored: revOk,
-                      stateRestored: stateOk,
+                      reloadOk: reloadOk,
+                      revisionRestored: post.revisionContractOk,
+                      stateRestored: post.completeRestorationOk,
                       snapshotCursorBound: jCursorBound,
                       commandExpectedRevision: cmd.expectedScheduleRevision,
                       authoritativeCurrentRevision: freshSkipResultRev,
                       sourceRevision: beforeSkipRev,
-                      resultingRevision: freshSkipResultRev,
+                      resultingRevision: revisionEval.contractResultRevision,
+                    );
+                    final aggregateDetail = post.formatDetail(
+                      typed: undoOk
+                          ? S17UndoDiagnosis.typedUndoApplied
+                          : S17UndoDiagnosis
+                                .typedApplySucceededPostconditionFailed,
+                      applyStatus: applied.status.name,
+                      applyCode: applied.code ?? 'none',
+                      applyInvoked: true,
+                      cursorBound: jCursorBound,
                     );
                     if (!applied.isSuccess) {
                       undoClass = S17JourneyDiagnosis.undoClassRejected;
@@ -1381,35 +1454,38 @@ Future<void> main() async {
                         evidence: evidence,
                         journeyClass: undoClass,
                       );
-                    } else if (!revOk) {
-                      undoClass = S17JourneyDiagnosis.undoClassRevisionMismatch;
+                    } else if (!reloadOk) {
+                      undoClass =
+                          S17JourneyDiagnosis.undoClassPostconditionFailed;
                       undoDetail =
-                          '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
-                          'expected_rev=$beforeSkipRev '
-                          'observed_rev=${after?.projection.scheduleRevision} '
-                          'apply_status=${applied.status.name} '
-                          'apply_code=${applied.code ?? 'none'} '
-                          'apply_invoked=true cursor_bound=$jCursorBound '
-                          'expected_revision=${cmd.expectedScheduleRevision}';
-                    } else if (!stateOk) {
+                          '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededReloadFailed} '
+                          '$aggregateDetail';
+                    } else if (!reconstructionOk) {
                       undoClass =
                           S17JourneyDiagnosis.undoClassPostconditionFailed;
                       undoDetail =
                           '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
-                          'apply_status=${applied.status.name} '
-                          'apply_code=${applied.code ?? 'none'} '
-                          'apply_invoked=true cursor_bound=$jCursorBound '
-                          'expected_revision=${cmd.expectedScheduleRevision} '
-                          'pre-I occurrence state not fully restored';
+                          'reconstruction_failed $aggregateDetail';
+                    } else if (!post.revisionContractOk &&
+                        post.completeRestorationOk) {
+                      undoClass = S17JourneyDiagnosis.undoClassRevisionMismatch;
+                      undoDetail =
+                          '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
+                          'failed=${post.failedPostconditions.join(',')} '
+                          '$aggregateDetail';
+                    } else if (!post.completeRestorationOk) {
+                      undoClass =
+                          S17JourneyDiagnosis.undoClassPostconditionFailed;
+                      undoDetail =
+                          '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
+                          'failed=${post.failedPostconditions.join(',')} '
+                          '$aggregateDetail';
                     } else {
                       undoDetail =
-                          'Undo restored precise pre-I state '
-                          'source=$skipSourcePrefix pre_rev=$beforeSkipRev '
+                          'Undo restored precise pre-I logical state '
+                          'source=$skipSourcePrefix '
                           'typed=${S17UndoDiagnosis.typedUndoApplied} '
-                          'status=${applied.status.name} '
-                          'code=${applied.code ?? 'none'} '
-                          'apply_invoked=true cursor_bound=$jCursorBound '
-                          'expected_revision=${cmd.expectedScheduleRevision}';
+                          '$aggregateDetail';
                     }
                   }
                 }

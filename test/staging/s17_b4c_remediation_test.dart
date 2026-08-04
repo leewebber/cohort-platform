@@ -321,19 +321,50 @@ void main() {
     });
 
     test('undo restores prior state; horizon leaves unchanged', () {
+      // beforeSkip rev=1 → post-Skip undo.before rev=2 → post-Undo rev=3
+      // with pre-Skip identities/dates restored (product N→N+1).
+      const postSkip = S17ScheduleOpSnapshot(
+        scheduleRevision: 2,
+        occurrenceCount: 3,
+        orderedSlotIds: ['a', 'b', 'c'],
+        orderedDatesIso: ['2026-08-01', '2026-08-02', '2026-08-03'],
+        uncompletedCount: 2,
+      );
+      const postUndo = S17ScheduleOpSnapshot(
+        scheduleRevision: 3,
+        occurrenceCount: 3,
+        orderedSlotIds: ['a', 'b', 'c'],
+        orderedDatesIso: ['2026-08-01', '2026-08-02', '2026-08-03'],
+        uncompletedCount: 3,
+      );
+      expect(
+        ops.evaluateUndo(
+          beforeSkip: before,
+          undo: const S17ScheduleOpOutcome(
+            applied: true,
+            before: postSkip,
+            after: postUndo,
+            invalidRejectedAtomically: true,
+            restoredTo: postUndo,
+          ),
+          horizonRejectedWithoutMutation: true,
+        ),
+        S17JourneyResult.pass,
+      );
+      // Legacy rewind (post-Undo revision == pre-Skip) must not PASS.
       expect(
         ops.evaluateUndo(
           beforeSkip: before,
           undo: S17ScheduleOpOutcome(
             applied: true,
-            before: before,
+            before: postSkip,
             after: before,
             invalidRejectedAtomically: true,
             restoredTo: before,
           ),
           horizonRejectedWithoutMutation: true,
         ),
-        S17JourneyResult.pass,
+        S17JourneyResult.fail,
       );
     });
   });

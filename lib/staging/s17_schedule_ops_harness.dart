@@ -101,13 +101,18 @@ class S17ScheduleOpsHarness {
     required S17ScheduleOpOutcome undo,
     required bool horizonRejectedWithoutMutation,
   }) {
-    final restored =
+    // Logical restoration returns pre-Skip identities/dates. Revision follows
+    // the product N→N+1 contract from the post-Skip (undo.before) revision —
+    // it must not rewind to beforeSkip.scheduleRevision.
+    final restoredLogical =
         undo.applied &&
         undo.restoredTo != null &&
-        undo.restoredTo!.scheduleRevision == beforeSkip.scheduleRevision &&
         undo.restoredTo!.sameIdentitiesAndDates(beforeSkip);
+    final revisionOk =
+        undo.restoredTo != null &&
+        undo.restoredTo!.scheduleRevision == undo.before.scheduleRevision + 1;
     final horizonOk = horizonRejectedWithoutMutation;
-    return (restored && horizonOk)
+    return (restoredLogical && revisionOk && horizonOk)
         ? S17JourneyResult.pass
         : S17JourneyResult.fail;
   }

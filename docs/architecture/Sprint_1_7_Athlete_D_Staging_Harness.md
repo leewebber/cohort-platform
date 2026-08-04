@@ -1,12 +1,66 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.12 local harness baseline-semantics remediation (no staging
-contact).
+**Status:** B4d.14 local Journey J Undo revision-contract + aggregate
+restoration-reporting remediation (no staging contact).
 
 **B4d.8 diagnosis SHA:** `bc972e6e3f97d6706370abc9e4a530fac9b5246b`  
-**B4d.9 branch:** `codex/b4d9-undo-cursor-bind`  
 **B4d.9 SHA:** `5f5ab26962b2e31cc30f898267e49a31780870d1`  
-**B4d.12 branch:** `codex/b4d12-baseline-labels`
+**B4d.12 SHA:** `f66f0b45cc25918bc6accb6c1fb20b8fb3a8ceca`  
+**B4d.14 branch:** `codex/b4d14-undo-revision-contract`
+
+## Undo revision and restoration (B4d.14)
+
+Undo restores logical schedule state through a **new** authoritative schedule
+revision. The product contract
+(`Athlete_Controlled_Programme_Scheduling_v1` +
+`apply_programme_schedule_undo`) advances revision as **N→N+1**, where N is the
+expected/current post-Skip revision used for Undo apply.
+
+The verifier must **not** require the post-Undo revision identifier to equal
+the pre-Skip revision identifier. Revision correctness and logical state
+restoration are independent required postconditions.
+
+### Revision rule
+
+```text
+expected apply revision == authoritative post-Skip revision
+apply result schedule_revision == expected apply revision + 1
+post-J reload schedule_revision == apply result schedule_revision
+```
+
+Legacy `post-J revision == pre-I revision` must not determine PASS.
+
+### Aggregate restoration reporting
+
+After successful reload and reconstruction, all restoration comparisons are
+evaluated and reported without first-failure short-circuiting:
+
+```text
+revision_contract_ok
+target_identity_restored
+target_disposition_restored
+target_date_restored
+target_reversible_state_restored
+cursor_restored
+unrelated_occurrences_unchanged
+assignment_identity_unchanged
+programme_version_identity_unchanged
+lineage_identity_unchanged
+complete_restoration_ok
+failed_postconditions
+expected_apply_revision
+apply_result_revision
+reloaded_revision
+```
+
+`J_STAGING_VERIFIED` requires positive Undo apply, successful reload and
+reconstruction, valid revision-contract behavior, and complete logical
+restoration. Apply success alone is insufficient.
+
+B4d.13 remains `I_STAGING_VERIFIED` with
+`J_STAGING_APPLIED_POSTCONDITION_FAILED`. B4d.14 does **not** convert B4d.13
+into Journey J staging PASS (`J_STAGING_VERIFIED = false` until a fresh
+staging chain).
 
 ## Baseline semantics (B4d.12)
 
@@ -39,26 +93,11 @@ S13 Self-Test 1 one-slot wording is emitted only when lineage is
 identity must not emit that wording merely because the current uncompleted
 count is one.
 
-Report fields (PREREQ_BASELINE detail / snapshot `toReportFields()`):
-
-```text
-authored_executable_slot_count
-authored_executable_slot_count_status
-current_uncompleted_executable_occurrence_count
-projected_occurrence_count
-completed_or_skipped_count
-lineage_code
-```
-
-B4d.12 is a local harness labeling/classification remediation. It is **not**
-Journey J staging evidence (`J_STAGING_VERIFIED = false`).
-
 ## B4d.8 accepted conclusions
 
 * Primary: `HARNESS_REQUEST_CONSTRUCTION` — J `reloadSnapshot()` omitted cursor
 * Secondary: `HARNESS_TYPED_RESULT_COLLAPSED`
 * Product Skip/Undo defects: not proven
-* Staging retry: unsafe until remediation
 
 ## B4d.9 remediation
 
@@ -73,8 +112,8 @@ Journey J now:
 5. Binds cursor into the Undo snapshot before preview/apply
 6. Uses the same snapshot for preview fingerprint and apply command
 
-Revision contract unchanged: Undo expected revision = post-Skip current
-(B4d.7-shaped: **6**).
+Undo expected revision = post-Skip current. Successful Undo then advances
+revision N→N+1 (B4d.14).
 
 ### Typed reporting (secondary)
 
@@ -85,11 +124,14 @@ Journey J detail preserves `status=`, `code=`, `apply_invoked=`,
 ## Next authority
 
 ```text
-Under a separate authority, run exactly one fresh cursor-aligned I→J staging
-evidence chain against the restored Athlete D baseline: one Skip, one immediate
-Undo, no retries, with complete typed restoration evidence.
-Do not combine that run with Journey D.
+Under a separate authority, first perform a non-mutating Athlete D preflight.
+If and only if the deterministic baseline still contains at least two suitable
+uncompleted executable S15A occurrences, run exactly one fresh contiguous I→J
+staging chain: one Skip, one immediate Undo, no retries, with complete aggregate
+restoration reporting.
+Do not repair, rematerialise, or mutate Athlete D during preflight.
+Do not combine this run with Journey D.
 ```
 
-Do not combine with Journey D. B4e remains blocked until J and D have valid
-staging evidence. Production rejected.
+B4e remains blocked until Journey J and Journey D both have valid staging
+evidence. Production rejected.

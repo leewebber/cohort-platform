@@ -851,6 +851,309 @@ class S17UndoDiagnosis {
   /// Secondary reporting weakness always present in B4d.7 J path.
   static const secondaryB4d7ReportingWeakness =
       classHarnessTypedResultCollapsed;
+
+  /// Product Undo revision contract:
+  /// `Athlete_Controlled_Programme_Scheduling_v1` +
+  /// `apply_programme_schedule_undo` (`v_result_rev := v_expected_rev + 1`).
+  ///
+  /// Undo restores logical schedule state through a **new** authoritative
+  /// schedule revision (`N→N+1`). The post-Undo revision identifier must not
+  /// be required to equal the pre-Skip revision.
+  static S17UndoRevisionContractEvaluation evaluateRevisionContract({
+    required int preSkipRevision,
+    required int postSkipRevision,
+    required int expectedApplyRevision,
+    int? applyResultRevision,
+    int? reloadedRevision,
+  }) {
+    final expectedApplyOk = expectedApplyRevision == postSkipRevision;
+    final resultingPresent = applyResultRevision != null;
+    final resultingMatchesContract =
+        resultingPresent && applyResultRevision == expectedApplyRevision + 1;
+    final reloadMatchesResult =
+        reloadedRevision != null &&
+        applyResultRevision != null &&
+        reloadedRevision == applyResultRevision;
+    // Guard against the legacy rewind postcondition being treated as success.
+    final legacyRewindWouldPass =
+        reloadedRevision != null && reloadedRevision == preSkipRevision;
+    final ok =
+        expectedApplyOk &&
+        resultingPresent &&
+        resultingMatchesContract &&
+        reloadMatchesResult;
+    return S17UndoRevisionContractEvaluation(
+      ok: ok,
+      expectedApplyOk: expectedApplyOk,
+      resultingRevisionPresent: resultingPresent,
+      resultingMatchesContract: resultingMatchesContract,
+      reloadMatchesResult: reloadMatchesResult,
+      legacyRewindWouldPass: legacyRewindWouldPass,
+      preSkipRevision: preSkipRevision,
+      postSkipRevision: postSkipRevision,
+      expectedApplyRevision: expectedApplyRevision,
+      applyResultRevision: applyResultRevision,
+      reloadedRevision: reloadedRevision,
+      contractResultRevision: expectedApplyRevision + 1,
+    );
+  }
+
+  /// Aggregate post-J restoration comparisons (non-short-circuiting).
+  ///
+  /// Null comparison fields mean unavailable/not evaluated (e.g. reload or
+  /// reconstruction failed). They do not count as restoration success.
+  static S17UndoPostconditionEvaluation evaluatePostUndoPostconditions({
+    required bool applySucceeded,
+    required bool reloadOk,
+    required bool reconstructionOk,
+    required S17UndoRevisionContractEvaluation revision,
+    required Map<String, String> preIBaseline,
+    required String targetSlotId,
+    required String? preICursorSlotId,
+    required String? postJCursorSlotId,
+    required String expectedAssignmentId,
+    required String expectedVersionId,
+    required String expectedLineageCode,
+    required String? observedAssignmentId,
+    required String? observedVersionId,
+    required String? observedLineageCode,
+    Map<String, String>? postJBaseline,
+  }) {
+    bool? targetIdentity;
+    bool? targetDisposition;
+    bool? targetDate;
+    bool? targetReversible;
+    bool? cursorRestored;
+    bool? unrelated;
+    bool? assignmentOk;
+    bool? versionOk;
+    bool? lineageOk;
+
+    if (reloadOk && reconstructionOk && postJBaseline != null) {
+      final expectedTarget = preIBaseline[targetSlotId];
+      final observedTarget = postJBaseline[targetSlotId];
+      targetIdentity = observedTarget != null && expectedTarget != null;
+      if (expectedTarget != null && observedTarget != null) {
+        final expParts = expectedTarget.split('|');
+        final obsParts = observedTarget.split('|');
+        final expDate = expParts.isNotEmpty ? expParts[0] : '';
+        final expDisp = expParts.length > 1 ? expParts[1] : '';
+        final obsDate = obsParts.isNotEmpty ? obsParts[0] : '';
+        final obsDisp = obsParts.length > 1 ? obsParts[1] : '';
+        targetDate = expDate == obsDate;
+        targetDisposition = expDisp == obsDisp;
+        targetReversible = expectedTarget == observedTarget;
+      } else {
+        targetDate = false;
+        targetDisposition = false;
+        targetReversible = false;
+      }
+
+      final preCursor = (preICursorSlotId ?? '').trim();
+      final postCursor = (postJCursorSlotId ?? '').trim();
+      cursorRestored =
+          preCursor.isNotEmpty &&
+          postCursor.isNotEmpty &&
+          preCursor == postCursor;
+
+      unrelated =
+          preIBaseline.keys.every((id) {
+            if (id == targetSlotId) return true;
+            return postJBaseline[id] == preIBaseline[id];
+          }) &&
+          postJBaseline.keys.every((id) => preIBaseline.containsKey(id));
+
+      assignmentOk =
+          observedAssignmentId != null &&
+          observedAssignmentId.trim() == expectedAssignmentId.trim();
+      versionOk =
+          observedVersionId != null &&
+          observedVersionId.trim() == expectedVersionId.trim();
+      lineageOk =
+          observedLineageCode != null &&
+          observedLineageCode.trim() == expectedLineageCode.trim();
+    }
+
+    final completeRestorationOk =
+        targetIdentity == true &&
+        targetDisposition == true &&
+        targetDate == true &&
+        targetReversible == true &&
+        cursorRestored == true &&
+        unrelated == true &&
+        assignmentOk == true &&
+        versionOk == true &&
+        lineageOk == true;
+
+    final journeyPass =
+        applySucceeded &&
+        reloadOk &&
+        reconstructionOk &&
+        revision.ok &&
+        completeRestorationOk;
+
+    return S17UndoPostconditionEvaluation(
+      applySucceeded: applySucceeded,
+      reloadOk: reloadOk,
+      reconstructionOk: reconstructionOk,
+      revision: revision,
+      targetIdentityRestored: targetIdentity,
+      targetDispositionRestored: targetDisposition,
+      targetDateRestored: targetDate,
+      targetReversibleStateRestored: targetReversible,
+      cursorRestored: cursorRestored,
+      unrelatedOccurrencesUnchanged: unrelated,
+      assignmentIdentityUnchanged: assignmentOk,
+      programmeVersionIdentityUnchanged: versionOk,
+      lineageIdentityUnchanged: lineageOk,
+      completeRestorationOk: completeRestorationOk,
+      journeyJPass: journeyPass,
+    );
+  }
+}
+
+/// Product Undo N→N+1 revision-contract evaluation (harness-only).
+class S17UndoRevisionContractEvaluation {
+  const S17UndoRevisionContractEvaluation({
+    required this.ok,
+    required this.expectedApplyOk,
+    required this.resultingRevisionPresent,
+    required this.resultingMatchesContract,
+    required this.reloadMatchesResult,
+    required this.legacyRewindWouldPass,
+    required this.preSkipRevision,
+    required this.postSkipRevision,
+    required this.expectedApplyRevision,
+    required this.applyResultRevision,
+    required this.reloadedRevision,
+    required this.contractResultRevision,
+  });
+
+  final bool ok;
+  final bool expectedApplyOk;
+  final bool resultingRevisionPresent;
+  final bool resultingMatchesContract;
+  final bool reloadMatchesResult;
+  final bool legacyRewindWouldPass;
+  final int preSkipRevision;
+  final int postSkipRevision;
+  final int expectedApplyRevision;
+  final int? applyResultRevision;
+  final int? reloadedRevision;
+  final int contractResultRevision;
+
+  Map<String, Object?> toReportFields() => {
+    'revision_contract_ok': ok,
+    'pre_skip_revision': preSkipRevision,
+    'post_skip_revision': postSkipRevision,
+    'expected_apply_revision': expectedApplyRevision,
+    'apply_result_revision': applyResultRevision,
+    'reloaded_revision': reloadedRevision,
+    'contract_result_revision': contractResultRevision,
+    'expected_apply_ok': expectedApplyOk,
+    'resulting_revision_present': resultingRevisionPresent,
+    'resulting_matches_contract': resultingMatchesContract,
+    'reload_matches_result': reloadMatchesResult,
+    'legacy_rewind_would_pass': legacyRewindWouldPass,
+  };
+}
+
+/// Aggregate Journey J post-Undo postconditions (non-short-circuiting).
+class S17UndoPostconditionEvaluation {
+  const S17UndoPostconditionEvaluation({
+    required this.applySucceeded,
+    required this.reloadOk,
+    required this.reconstructionOk,
+    required this.revision,
+    required this.targetIdentityRestored,
+    required this.targetDispositionRestored,
+    required this.targetDateRestored,
+    required this.targetReversibleStateRestored,
+    required this.cursorRestored,
+    required this.unrelatedOccurrencesUnchanged,
+    required this.assignmentIdentityUnchanged,
+    required this.programmeVersionIdentityUnchanged,
+    required this.lineageIdentityUnchanged,
+    required this.completeRestorationOk,
+    required this.journeyJPass,
+  });
+
+  final bool applySucceeded;
+  final bool reloadOk;
+  final bool reconstructionOk;
+  final S17UndoRevisionContractEvaluation revision;
+  final bool? targetIdentityRestored;
+  final bool? targetDispositionRestored;
+  final bool? targetDateRestored;
+  final bool? targetReversibleStateRestored;
+  final bool? cursorRestored;
+  final bool? unrelatedOccurrencesUnchanged;
+  final bool? assignmentIdentityUnchanged;
+  final bool? programmeVersionIdentityUnchanged;
+  final bool? lineageIdentityUnchanged;
+  final bool completeRestorationOk;
+  final bool journeyJPass;
+
+  /// `revisionRestored` compatibility alias for [classifyAttempt]: means
+  /// revision **contract** ok, not pre-Skip revision rewind.
+  bool get revisionContractOk => revision.ok;
+
+  List<String> get failedPostconditions {
+    final failed = <String>[];
+    if (!applySucceeded) failed.add('apply_succeeded');
+    if (!reloadOk) failed.add('reload_ok');
+    if (!reconstructionOk) failed.add('reconstruction_ok');
+    if (!revision.ok) failed.add('revision_contract_ok');
+    void addBool(String name, bool? v) {
+      if (v != true) failed.add(name);
+    }
+
+    addBool('target_identity_restored', targetIdentityRestored);
+    addBool('target_disposition_restored', targetDispositionRestored);
+    addBool('target_date_restored', targetDateRestored);
+    addBool('target_reversible_state_restored', targetReversibleStateRestored);
+    addBool('cursor_restored', cursorRestored);
+    addBool('unrelated_occurrences_unchanged', unrelatedOccurrencesUnchanged);
+    addBool('assignment_identity_unchanged', assignmentIdentityUnchanged);
+    addBool(
+      'programme_version_identity_unchanged',
+      programmeVersionIdentityUnchanged,
+    );
+    addBool('lineage_identity_unchanged', lineageIdentityUnchanged);
+    if (!completeRestorationOk) failed.add('complete_restoration_ok');
+    return failed;
+  }
+
+  Map<String, Object?> toReportFields() => {
+    ...revision.toReportFields(),
+    'target_identity_restored': targetIdentityRestored,
+    'target_disposition_restored': targetDispositionRestored,
+    'target_date_restored': targetDateRestored,
+    'target_reversible_state_restored': targetReversibleStateRestored,
+    'cursor_restored': cursorRestored,
+    'unrelated_occurrences_unchanged': unrelatedOccurrencesUnchanged,
+    'assignment_identity_unchanged': assignmentIdentityUnchanged,
+    'programme_version_identity_unchanged': programmeVersionIdentityUnchanged,
+    'lineage_identity_unchanged': lineageIdentityUnchanged,
+    'complete_restoration_ok': completeRestorationOk,
+    'failed_postconditions': failedPostconditions.join(','),
+  };
+
+  String formatDetail({
+    required String typed,
+    required String applyStatus,
+    required String applyCode,
+    required bool applyInvoked,
+    required bool cursorBound,
+  }) {
+    final fields = toReportFields().entries
+        .map((e) => '${e.key}=${e.value}')
+        .join(' ');
+    return 'typed=$typed '
+        'apply_status=$applyStatus apply_code=$applyCode '
+        'apply_invoked=$applyInvoked cursor_bound=$cursorBound '
+        '$fields';
+  }
 }
 
 /// Result of B4d.9 authoritative live-cursor resolution for Journey J.
