@@ -40,6 +40,7 @@ import 'models/training_session_status.dart';
 import 'staging/s17_adaptation_harness.dart';
 import 'staging/s17_completion_harness.dart';
 import 'staging/s17_isolation_prereq.dart';
+import 'staging/s17_journey_diagnosis.dart';
 import 'staging/s17_live_assignment_binding.dart';
 import 'staging/s17_occurrence_baseline.dart';
 import 'staging/s17_preparation_adapters.dart';
@@ -700,22 +701,33 @@ Future<void> main() async {
           'valid_move=$moveOk; invalid_rejected=${!invalidMove.isReady}',
         );
 
-        // G Swap
+        // G Swap — refresh after F; require distinct calendar dates (B4d.4).
         snapshot = (await reloadSnapshot()) ?? snapshot;
-        final swapables = snapshot.projection.occurrences
-            .where((o) => o.isUncompleted)
-            .toList();
+        final swapSelection = S17JourneyDiagnosis.selectDistinctDateSwapPair(
+          snapshot.projection.occurrences
+              .map(
+                (o) => S17OccurrenceDateView(
+                  sessionSlotId: o.identity.sessionSlotId,
+                  scheduledDate: o.scheduledDate,
+                  isUncompleted: o.isUncompleted,
+                ),
+              )
+              .toList(),
+        );
         var swapOk = false;
         var swapInvalidRejected = false;
-        if (swapables.length >= 2) {
-          final a = swapables[0].identity.sessionSlotId;
-          final b = swapables[1].identity.sessionSlotId;
-          final before = snapshot.projection.occurrences.length;
+        var swapPreviewCode = 'none';
+        if (swapSelection.ok && swapSelection.pair != null) {
+          final a = swapSelection.pair!.slotIdA;
+          final b = swapSelection.pair!.slotIdB;
+          final beforeRev = snapshot.projection.scheduleRevision;
+          final beforeCount = snapshot.projection.occurrences.length;
           final swapPreview = apply.previewSwap(
             snapshot: snapshot,
             sessionSlotIdA: a,
             sessionSlotIdB: b,
           );
+          swapPreviewCode = swapPreview.code.name;
           if (swapPreview.isReady && swapPreview.preview != null) {
             final cmd = apply.swapCommandFromPreview(
               snapshot: snapshot,
@@ -731,10 +743,18 @@ Future<void> main() async {
                 command: cmd,
               );
               final after = await reloadSnapshot();
+              final datesSwapped =
+                  after != null &&
+                  after.projection.bySlotId(a)?.scheduledDate ==
+                      swapSelection.pair!.dateB &&
+                  after.projection.bySlotId(b)?.scheduledDate ==
+                      swapSelection.pair!.dateA;
               swapOk =
                   applied.isSuccess &&
                   after != null &&
-                  after.projection.occurrences.length == before;
+                  after.projection.occurrences.length == beforeCount &&
+                  after.projection.scheduleRevision != beforeRev &&
+                  datesSwapped;
               if (after != null) snapshot = after;
             }
           }
@@ -745,25 +765,32 @@ Future<void> main() async {
           );
           swapInvalidRejected = !invalid.isReady;
         }
+        final gResult = !swapSelection.ok
+            ? (swapSelection.sameDateContamination
+                  ? S17JourneyResult.blocked
+                  : S17JourneyResult.blocked)
+            : (swapOk && swapInvalidRejected
+                  ? S17JourneyResult.pass
+                  : S17JourneyResult.fail);
         setResult(
           'G',
-          swapOk && swapInvalidRejected
-              ? S17JourneyResult.pass
-              : (swapables.length < 2
-                    ? S17JourneyResult.blocked
-                    : S17JourneyResult.fail),
-          'valid_swap=$swapOk; invalid_rejected=$swapInvalidRejected',
+          gResult,
+          'valid_swap=$swapOk; invalid_rejected=$swapInvalidRejected; '
+              'preview_code=$swapPreviewCode; ${swapSelection.detail}',
         );
 
-        // H Push
+        // H Push — valid push + contract-correct invalid probe (B4d.4).
+        // NULL horizon is unbounded; dayDelta:10000 is NOT an invalid horizon probe.
         snapshot = (await reloadSnapshot()) ?? snapshot;
         final pushables = snapshot.projection.occurrences
             .where((o) => o.isUncompleted)
             .toList();
         var pushOk = false;
         var pushInvalidRejected = false;
+        var horizonClass = 'none';
         if (pushables.isNotEmpty) {
-          final from = pushables.first.identity.sessionSlotId;
+          final fromOcc = pushables.first;
+          final from = fromOcc.identity.sessionSlotId;
           final before = snapshot.projection.occurrences.length;
           final pushPreview = apply.previewPush(
             snapshot: snapshot,
@@ -792,12 +819,29 @@ Future<void> main() async {
               if (after != null) snapshot = after;
             }
           }
-          final invalid = apply.previewPush(
+          final horizonProbe = S17JourneyDiagnosis.classifyInvalidPushProbe(
+            horizonEnd: snapshot.schedulingHorizonEnd,
+            fromDate: fromOcc.scheduledDate,
+            harnessLargeDelta: 10000,
+          );
+          horizonClass = horizonProbe.classification;
+          // Always-invalid distance probe (dayDelta<=0) proves atomic rejection.
+          final invalidDistance = apply.previewPush(
             snapshot: snapshot,
             fromSessionSlotId: from,
-            dayDelta: 10000,
+            dayDelta: horizonProbe.dayDeltaForInvalidProbe ?? 0,
           );
-          pushInvalidRejected = !invalid.isReady;
+          pushInvalidRejected = !invalidDistance.isReady;
+          // When a true out-of-horizon probe is available, require that too.
+          if (horizonProbe.classification == 'OUT_OF_HORIZON') {
+            final invalidHorizon = apply.previewPush(
+              snapshot: snapshot,
+              fromSessionSlotId: from,
+              dayDelta: 10000,
+            );
+            pushInvalidRejected =
+                pushInvalidRejected && !invalidHorizon.isReady;
+          }
         }
         setResult(
           'H',
@@ -806,7 +850,8 @@ Future<void> main() async {
               : (pushables.isEmpty
                     ? S17JourneyResult.blocked
                     : S17JourneyResult.fail),
-          'valid_push=$pushOk; invalid_rejected=$pushInvalidRejected',
+          'valid_push=$pushOk; invalid_rejected=$pushInvalidRejected; '
+              'horizon=$horizonClass',
         );
 
         // I Skip
@@ -853,32 +898,50 @@ Future<void> main() async {
           skipOk ? 'Skip applied' : 'Skip failed or unavailable',
         );
 
-        // J Undo
+        // J Undo — must target I's Skip after authoritative refresh (B4d.4).
+        snapshot = (await reloadSnapshot()) ?? snapshot;
         final undoable = await ops.latestUndoableOperation(
           assignmentId: config.assignmentId,
         );
+        final undoTarget = S17JourneyDiagnosis.requireSkipUndoTarget(
+          latestOperationType: undoable?.originalType.name,
+        );
         var undoOk = false;
-        if (undoable != null) {
-          final undoPreview = apply.previewUndo(
-            snapshot: snapshot,
-            operation: undoable,
-          );
-          if (undoPreview.isReady && undoPreview.preview != null) {
-            final cmd = apply.undoCommandFromPreview(
+        var undoDetail = undoTarget.detail;
+        if (undoTarget.ok && undoable != null) {
+          if (undoable.incompleteSnapshot) {
+            undoDetail =
+                'Skip undo ineligible: incomplete inverse snapshot '
+                '(${undoable.ineligibilityDetail ?? 'redacted'})';
+          } else {
+            final undoPreview = apply.previewUndo(
               snapshot: snapshot,
               operation: undoable,
-              preview: undoPreview.preview!,
             );
-            if (cmd != null) {
-              final applied = await apply.confirmApply(
-                athleteId: config.athleteId,
-                command: cmd,
+            undoDetail =
+                'skip_undo preview_code=${undoPreview.code.name}; '
+                '${undoTarget.detail}';
+            if (undoPreview.isReady && undoPreview.preview != null) {
+              final cmd = apply.undoCommandFromPreview(
+                snapshot: snapshot,
+                operation: undoable,
+                preview: undoPreview.preview!,
               );
-              final after = await reloadSnapshot();
-              undoOk =
-                  applied.isSuccess &&
-                  after != null &&
-                  after.projection.scheduleRevision == beforeSkipRev;
+              if (cmd != null) {
+                final applied = await apply.confirmApply(
+                  athleteId: config.athleteId,
+                  command: cmd,
+                );
+                final after = await reloadSnapshot();
+                undoOk =
+                    applied.isSuccess &&
+                    after != null &&
+                    after.projection.scheduleRevision == beforeSkipRev;
+                undoDetail = undoOk
+                    ? 'Undo restored Skip prior revision'
+                    : 'Undo applied/postcondition failed '
+                          'applied=${applied.isSuccess}';
+              }
             }
           }
         }
@@ -886,12 +949,10 @@ Future<void> main() async {
           'J',
           undoOk
               ? S17JourneyResult.pass
-              : (undoable == null
+              : (undoable == null || !undoTarget.ok
                     ? S17JourneyResult.blocked
                     : S17JourneyResult.fail),
-          undoOk
-              ? 'Undo restored prior revision'
-              : 'Undo unavailable or incomplete',
+          undoDetail,
         );
       }
     }
@@ -1099,6 +1160,10 @@ Future<void> main() async {
             : '${afterSuggest.package!.programmedSessionKey}|${afterSuggest.package!.acceptedAdaptation}';
         final adapt = const S17AdaptationHarness();
         if (!proposal.isAcceptable) {
+          final noProposal = S17JourneyDiagnosis.reportNonAcceptableProposal(
+            outcome: proposal.outcome,
+            noSafeReason: proposal.noSafeReason,
+          );
           final eval = adapt.evaluate(
             proposal: null,
             action: S17AdaptationAthleteAction.reject,
@@ -1107,6 +1172,7 @@ Future<void> main() async {
             fingerprintAfterAction: fpSuggest,
             acceptInvokedExplicitly: false,
             autoApplied: false,
+            noProposalSafeDetail: noProposal.safeDetail,
           );
           setResult('D', eval.result, eval.detail);
         } else {

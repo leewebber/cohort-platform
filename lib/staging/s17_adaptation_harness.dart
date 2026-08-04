@@ -41,6 +41,7 @@ class S17AdaptationHarness {
     required String fingerprintAfterAction,
     required bool acceptInvokedExplicitly,
     required bool autoApplied,
+    String? noProposalSafeDetail,
   }) {
     if (autoApplied) {
       return const S17AdaptationHarnessResult(
@@ -58,9 +59,14 @@ class S17AdaptationHarness {
     }
 
     if (proposal == null) {
-      return const S17AdaptationHarnessResult(
+      final detail =
+          (noProposalSafeDetail == null || noProposalSafeDetail.trim().isEmpty)
+          ? 'No adaptation proposal available under current constraints'
+          : noProposalSafeDetail.trim();
+      // Lack of an acceptable proposal is never PASS.
+      return S17AdaptationHarnessResult(
         result: S17JourneyResult.blocked,
-        detail: 'No adaptation proposal available under current constraints',
+        detail: detail,
       );
     }
 
