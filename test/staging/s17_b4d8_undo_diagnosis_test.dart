@@ -491,8 +491,11 @@ void main() {
         readyBound.preview!.fingerprint,
         isNot(readyNull.preview!.fingerprint),
       );
+      // B4d.9 remediates the omit path; null-cursor mismatch remains
+      // characterizable here for regression against the B4d.8 defect.
       final entry = File('lib/main_s17_staging_verify.dart').readAsStringSync();
-      expect(entry.contains('B4d.8: reloadSnapshot omits cursor'), isTrue);
+      expect(entry.contains('resolveAuthoritativeLiveCursor'), isTrue);
+      expect(entry.contains('B4d.9: reload live assignment'), isTrue);
     });
 
     test(

@@ -1,54 +1,47 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.8 local Undo apply-rejection diagnosis (no staging contact).
+**Status:** B4d.9 local Journey J live-cursor bind + typed Undo reporting
+remediation (no staging contact).
 
-**B4d.7 execution SHA:** `08625be2f8446a9fbee817489bf415ca6d9a996d`  
-**B4d.8 branch:** `codex/b4d8-undo-diagnosis`
+**B4d.8 diagnosis SHA:** `bc972e6e3f97d6706370abc9e4a530fac9b5246b`  
+**B4d.9 branch:** `codex/b4d9-undo-cursor-bind`
 
-## B4d.7 accepted facts
+## B4d.8 accepted conclusions
 
-* Selected `I,J`; order `I → J`; I PASS (cursor Skip, rev 5→6)
-* Fresh Skip correlated; J entered Undo apply
-* J FAIL `UNDO_REJECTED: apply unsuccessful` — RPC status/code **not preserved**
-* Hosted post-J mutation state: **uncertain**
+* Primary: `HARNESS_REQUEST_CONSTRUCTION` — J `reloadSnapshot()` omitted cursor
+* Secondary: `HARNESS_TYPED_RESULT_COLLAPSED`
+* Product Skip/Undo defects: not proven
+* Staging retry: unsafe until remediation
 
-## B4d.8 diagnosis (local)
+## B4d.9 remediation
 
-### Primary classification
+### Cursor bind (primary)
 
-`HARNESS_REQUEST_CONSTRUCTION`
+Journey J now:
 
-Journey J `reloadSnapshot()` builds the preview snapshot **without**
-`cursorSessionSlotId`. Undo-Skip fingerprints bind live `cursorBefore` from that
-field; PostgreSQL always binds the assignment cursor after Skip. Null client
-cursor → ready preview + `stale_preview_fingerprint` on apply.
+1. Reloads current assignment projection after I PASS
+2. Loads authoritative live assignment cursor coordinates
+3. Resolves to exactly one occurrence (`resolveAuthoritativeLiveCursor`)
+4. Fail-closes on missing / malformed / unresolvable / ambiguous / stale
+5. Binds cursor into the Undo snapshot before preview/apply
+6. Uses the same snapshot for preview fingerprint and apply command
 
-Product UI resolves cursor on snapshot load; product Undo defect is **not proven**.
+Revision contract unchanged: Undo expected revision = post-Skip current
+(B4d.7-shaped: **6**).
 
-### Secondary
+### Typed reporting (secondary)
 
-`HARNESS_TYPED_RESULT_COLLAPSED` — B4d.7 collapsed `applied.status` / `applied.code`
-into opaque `apply unsuccessful`.
-
-### Reporting-only correction (this branch)
-
-* `lib/staging/s17_undo_diagnosis.dart` — typed Undo evidence
-* Journey J detail preserves `status=` / `code=` / `cursor_bound=` / `typed=`
-* Characterization tests in `test/staging/s17_b4d8_undo_diagnosis_test.dart`
-
-### Proposed remediation (NOT implemented under B4d.8)
-
-Bind the live assignment cursor into the Journey J reload snapshot the same way
-Journey I and the product controller do, then regression-test null vs bound
-fingerprint parity. Do **not** retry staging during remediation.
+Journey J detail preserves `status=`, `code=`, `apply_invoked=`,
+`cursor_bound=`, `expected_revision=`, and typed classification. Opaque
+`apply unsuccessful` is not emitted when a typed result exists.
 
 ## Next authority
 
-| Diagnosis | Next |
-|-----------|------|
-| Harness request/revision defect | Locally remediate cursor bind on J reload; no staging retry |
-| After remediation | Separately authorize one fresh cursor-aligned Skip→Undo evidence run |
-| Journey D | Separate adaptation-eligible-fixture track |
-| B4e | Blocked until J and D have valid staging evidence |
+```text
+B4d.10: separately authorize exactly one fresh cursor-aligned I→J
+staging evidence run using the remediated harness, with one Skip,
+one immediate Undo, no retries, and typed status/code capture
+```
 
-Production rejected. No dry/live run under B4d.8.
+Do not combine with Journey D. B4e remains blocked until J and D have valid
+staging evidence. Production rejected.

@@ -1,7 +1,10 @@
+import '../domain/programme_scheduling/models/programme_scheduling_snapshot.dart';
+import '../domain/programme_scheduling/vocabulary/programme_schedule_disposition.dart';
 import '../features/programme/models/programme_schedule_apply.dart';
 import 's17_journey_diagnosis.dart';
+import 's17_skip_diagnosis.dart';
 
-/// Pure B4d.8 Undo diagnosis helpers — no hosted I/O.
+/// Pure B4d.8/B4d.9 Undo diagnosis helpers — no hosted I/O.
 ///
 /// Preserves the most specific safe typed repository/RPC status and code.
 /// Does not invent a more specific classification without evidence.
@@ -620,22 +623,194 @@ class S17UndoDiagnosis {
     final cls = journeyClass ?? S17JourneyDiagnosis.undoClassRejected;
     final status = evidence.applyStatus;
     final code = evidence.applyCode;
+    final rev = evidence.commandExpectedRevision;
+    final revPart = rev == null ? '' : ' expected_revision=$rev';
     if (evidence.applyReached &&
         (status == null || status.isEmpty) &&
         (code == null || code.isEmpty)) {
       return '$cls typed=$typedApplyStatusUnknown '
-          'apply_reached=true cursor_bound=${evidence.snapshotCursorBound} '
+          'apply_invoked=true apply_reached=true '
+          'cursor_bound=${evidence.snapshotCursorBound}$revPart '
           'boundary=${evidence.boundary} '
           'classification=${evidence.classification} '
           '(collapsed_apply_unsuccessful_without_rpc_code)';
     }
     return '$cls typed=${typedLabelFromApply(applyStatus: status, applyCode: code)} '
         'status=${status ?? 'unknown'} code=${code ?? 'none'} '
+        'apply_invoked=${evidence.applyReached} '
         'apply_reached=${evidence.applyReached} '
-        'cursor_bound=${evidence.snapshotCursorBound} '
+        'cursor_bound=${evidence.snapshotCursorBound}$revPart '
         'boundary=${evidence.boundary} '
         'classification=${evidence.classification}';
   }
+
+  // --- B4d.9 live-cursor bind (product-parity, staging-only) ---
+
+  static const cursorFailMissing = 'CURSOR_MISSING';
+  static const cursorFailMalformed = 'CURSOR_MALFORMED';
+  static const cursorFailUnresolvable = 'CURSOR_UNRESOLVABLE';
+  static const cursorFailAmbiguous = 'CURSOR_AMBIGUOUS';
+  static const cursorFailStale = 'CURSOR_STALE';
+  static const cursorFailClosedClass = 'UNDO_CURSOR_BIND_FAILED';
+
+  /// Resolve authoritative live assignment cursor coordinates to exactly one
+  /// occurrence — same coordinate→slot rule as the product controller /
+  /// Journey I (`S17SkipDiagnosis.resolveCursorSlotId`).
+  ///
+  /// Does not synthesize from first-uncompleted, undo-record slot, or
+  /// inverse `cursor_before` alone.
+  static S17UndoCursorBindResult resolveAuthoritativeLiveCursor({
+    required List<S17SkipOccurrenceView> occurrences,
+    required bool assignmentPresent,
+    int? week,
+    String? dayKey,
+    int? sessionOrder,
+    String? freshlySkippedSlotId,
+  }) {
+    if (!assignmentPresent) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailMissing,
+        detail: '$cursorFailClosedClass: $cursorFailMissing assignment',
+      );
+    }
+    final day = dayKey?.trim() ?? '';
+    if (week == null || day.isEmpty || sessionOrder == null) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailMalformed,
+        detail: '$cursorFailClosedClass: $cursorFailMalformed coordinates',
+      );
+    }
+    final matches = occurrences
+        .where(
+          (o) =>
+              o.weekNumber == week &&
+              o.dayKey == day &&
+              o.sessionOrder == sessionOrder,
+        )
+        .toList(growable: false);
+    if (matches.isEmpty) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailUnresolvable,
+        detail: '$cursorFailClosedClass: $cursorFailUnresolvable',
+      );
+    }
+    if (matches.length > 1) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailAmbiguous,
+        detail: '$cursorFailClosedClass: $cursorFailAmbiguous',
+      );
+    }
+    final slot = matches.single.sessionSlotId.trim();
+    if (slot.isEmpty) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailUnresolvable,
+        detail: '$cursorFailClosedClass: $cursorFailUnresolvable empty_slot',
+      );
+    }
+    final skipped = freshlySkippedSlotId?.trim() ?? '';
+    // Post-Skip cursor must have advanced off the skipped occurrence.
+    if (skipped.isNotEmpty && slot == skipped) {
+      return S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailStale,
+        detail:
+            '$cursorFailClosedClass: $cursorFailStale '
+            'still_on_skipped=${S17JourneyDiagnosis.redactPrefix(slot)}',
+        cursorSessionSlotId: slot,
+        week: week,
+        dayKey: day,
+        sessionOrder: sessionOrder,
+      );
+    }
+    // Product-parity single-slot resolve (byte-identical rule to Journey I).
+    final viaHelper = S17SkipDiagnosis.resolveCursorSlotId(
+      occurrences: occurrences,
+      week: week,
+      dayKey: day,
+      sessionOrder: sessionOrder,
+    );
+    if (viaHelper != slot) {
+      return const S17UndoCursorBindResult(
+        ok: false,
+        reason: cursorFailAmbiguous,
+        detail: '$cursorFailClosedClass: $cursorFailAmbiguous helper_mismatch',
+      );
+    }
+    return S17UndoCursorBindResult(
+      ok: true,
+      reason: 'CURSOR_BOUND',
+      detail:
+          'Live cursor bound slot=${S17JourneyDiagnosis.redactPrefix(slot)} '
+          'week=$week day=$day order=$sessionOrder',
+      cursorSessionSlotId: slot,
+      week: week,
+      dayKey: day,
+      sessionOrder: sessionOrder,
+    );
+  }
+
+  /// Bind a validated cursor into a scheduling snapshot (immutable copy).
+  static ProgrammeSchedulingSnapshot bindCursor({
+    required ProgrammeSchedulingSnapshot snapshot,
+    required String cursorSessionSlotId,
+  }) {
+    return ProgrammeSchedulingSnapshot(
+      assignmentId: snapshot.assignmentId,
+      programmeVersionId: snapshot.programmeVersionId,
+      packageContentHash: snapshot.packageContentHash,
+      timezone: snapshot.timezone,
+      startedAt: snapshot.startedAt,
+      today: snapshot.today,
+      assignmentStatus: snapshot.assignmentStatus,
+      projection: snapshot.projection,
+      schedulingHorizonEnd: snapshot.schedulingHorizonEnd,
+      preparedProgrammedSessionKeys: snapshot.preparedProgrammedSessionKeys,
+      adaptedProgrammedSessionKeys: snapshot.adaptedProgrammedSessionKeys,
+      pendingAdaptationProposalKeys: snapshot.pendingAdaptationProposalKeys,
+      consumedAdaptationProposalIds: snapshot.consumedAdaptationProposalIds,
+      cursorSessionSlotId: cursorSessionSlotId,
+      policyVersion: snapshot.policyVersion,
+    );
+  }
+
+  /// True when [proposedSlotId] illegally uses first-uncompleted instead of
+  /// the authoritative live cursor.
+  static bool isIllegalFirstUncompletedSubstitution({
+    required String authoritativeCursorSlotId,
+    required String? firstUncompletedSlotId,
+    required String? proposedSlotId,
+  }) {
+    final auth = authoritativeCursorSlotId.trim();
+    final first = firstUncompletedSlotId?.trim() ?? '';
+    final proposed = proposedSlotId?.trim() ?? '';
+    if (auth.isEmpty || proposed.isEmpty) return false;
+    if (proposed == auth) return false;
+    return first.isNotEmpty && proposed == first;
+  }
+
+  /// True when [proposedSlotId] illegally uses the undo-record prior slot
+  /// instead of the authoritative live post-Skip cursor.
+  static bool isIllegalUndoRecordSlotSubstitution({
+    required String authoritativeCursorSlotId,
+    required String? priorSnapshotSlotId,
+    required String? proposedSlotId,
+  }) {
+    final auth = authoritativeCursorSlotId.trim();
+    final prior = priorSnapshotSlotId?.trim() ?? '';
+    final proposed = proposedSlotId?.trim() ?? '';
+    if (auth.isEmpty || proposed.isEmpty) return false;
+    if (proposed == auth) return false;
+    return prior.isNotEmpty && proposed == prior;
+  }
+
+  /// Post-Skip expected disposition of the skipped occurrence.
+  static bool isPostSkipDisposition(ProgrammeScheduleDisposition d) =>
+      d == ProgrammeScheduleDisposition.skipped;
 
   /// Primary B4d.8 classification from preserved B4d.7 evidence + local proof.
   ///
@@ -676,4 +851,25 @@ class S17UndoDiagnosis {
   /// Secondary reporting weakness always present in B4d.7 J path.
   static const secondaryB4d7ReportingWeakness =
       classHarnessTypedResultCollapsed;
+}
+
+/// Result of B4d.9 authoritative live-cursor resolution for Journey J.
+class S17UndoCursorBindResult {
+  const S17UndoCursorBindResult({
+    required this.ok,
+    required this.reason,
+    required this.detail,
+    this.cursorSessionSlotId,
+    this.week,
+    this.dayKey,
+    this.sessionOrder,
+  });
+
+  final bool ok;
+  final String reason;
+  final String detail;
+  final String? cursorSessionSlotId;
+  final int? week;
+  final String? dayKey;
+  final int? sessionOrder;
 }
