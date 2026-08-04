@@ -48,7 +48,8 @@ class ProgrammeAdaptationProposalMapper {
         policyKinds: policyKinds,
         provenance: provenance,
         preservedIntent: preservedIntent,
-        noSafeReason: ProgrammeAdaptationNoSafeReason.notTraceableToPrescription,
+        noSafeReason:
+            ProgrammeAdaptationNoSafeReason.notTraceableToPrescription,
         message:
             'Cohort could not safely adapt this session because the proposed '
             'changes were not clearly derived from today’s authored '
@@ -58,17 +59,70 @@ class ProgrammeAdaptationProposalMapper {
 
     final planStatus = run.plan.status;
     final application = run.application;
+    // Evaluation may report noAdaptationRequired from session-level metadata
+    // while the planner still produced material exercise steps (equipment
+    // substitutions). Only treat as no-plan when the plan itself is empty /
+    // noPlanRequired.
     final noPlanOrNoAdaptation =
         planStatus == AdaptationPlanStatus.noPlanRequired ||
-        run.evaluation.outcome ==
-            AdaptationEvaluationOutcome.noAdaptationRequired ||
+        (run.evaluation.outcome ==
+                AdaptationEvaluationOutcome.noAdaptationRequired &&
+            run.plan.steps.isEmpty) ||
         application.status ==
             AdaptationPlanApplicationStatus.noAdaptationRequired;
 
     if (noPlanOrNoAdaptation) {
-      // The established pipeline currently plans material steps for time
-      // constraints. Other reason families must not invent workouts — return
-      // typed no-safe-adaptation when no lawful plan steps exist.
+      // Time: constraint already satisfied → noAdaptationRequired.
+      // Equipment: no equipment conflict → noAdaptationRequired.
+      // Other families without a lawful plan must not invent workouts.
+      if (request.reason == AdaptationReason.equipment) {
+        final noConflict = run.plan.planFindings.contains(
+          AdaptationPlanRationaleCode.noEquipmentConflict,
+        );
+        if (noConflict) {
+          return ProgrammeAdaptationProposal(
+            proposalId: _proposalId(identity, request, stamp),
+            outcome: ProgrammeAdaptationProposalOutcome.noAdaptationRequired,
+            reason: request.reason,
+            programmedSessionKey: identity.key,
+            assignmentId: identity.assignmentId,
+            programmeVersionId: identity.programmeVersionId,
+            packageContentHash: identity.packageContentHash,
+            protocolId: identity.protocolId,
+            preparedAt: identity.preparedAt,
+            proposedAt: stamp,
+            dayKey: identity.dayKey,
+            slotOrder: identity.slotOrder,
+            sessionChanges: const [],
+            exerciseChanges: const [],
+            preservedIntent: preservedIntent,
+            derivationExplanation:
+                'Equipment constraint satisfied against authored prescription. '
+                'No material change is required.',
+            athleteFacingMessage:
+                'Your available equipment already covers today’s prescribed '
+                'session. No adaptation is required.',
+            noSafeReason:
+                ProgrammeAdaptationNoSafeReason.constraintAlreadySatisfied,
+            policyKinds: policyKinds,
+            evaluationProvenance: provenance,
+            request: request,
+            originalPlanFingerprint: ProgrammeAdaptationFingerprints.plan(
+              package.plan,
+            ),
+          );
+        }
+        return _noSafe(
+          identity: identity,
+          request: request,
+          stamp: stamp,
+          policyKinds: policyKinds,
+          provenance: provenance,
+          preservedIntent: preservedIntent,
+          noSafeReason: ProgrammeAdaptationNoSafeReason.noApprovedSubstitution,
+          message: _noSafeMessage(request.reason, planStatus),
+        );
+      }
       if (request.reason != AdaptationReason.time) {
         return _noSafe(
           identity: identity,
@@ -276,7 +330,8 @@ class ProgrammeAdaptationProposalMapper {
   ) {
     final snapshot = run.application.snapshot;
     if (snapshot == null) {
-      return package.protocolId != null && package.protocolId!.trim().isNotEmpty;
+      return package.protocolId != null &&
+          package.protocolId!.trim().isNotEmpty;
     }
     final source = snapshot.sourceProtocolId.trim();
     final prepared = package.protocolId?.trim() ?? '';
@@ -348,9 +403,9 @@ class ProgrammeAdaptationProposalMapper {
             'rest ${before.restSeconds ?? '—'}s → ${after.restSeconds ?? '—'}s',
           );
         }
-        if (parts.isEmpty) {
-          parts.add('prescription adjusted');
-        }
+        // Prescription-unchanged adaptations (e.g. equipment swap) are
+        // surfaced from the appliedAdaptationAudit below.
+        if (parts.isEmpty) continue;
         changes.add(
           ProgrammeAdaptationMaterialChange(
             scope: ProgrammeAdaptationChangeScope.exercise,
@@ -412,12 +467,15 @@ class ProgrammeAdaptationProposalMapper {
       return ProgrammeAdaptationNoSafeReason.insufficientInformation;
     }
     if (status == AdaptationPlanStatus.unableToPlan) {
-      return reason == AdaptationReason.equipment ||
-              reason == AdaptationReason.environment
+      if (reason == AdaptationReason.equipment) {
+        return ProgrammeAdaptationNoSafeReason.noApprovedSubstitution;
+      }
+      return reason == AdaptationReason.environment
           ? ProgrammeAdaptationNoSafeReason.noLawfulExerciseSubstitute
           : ProgrammeAdaptationNoSafeReason.noLawfulSessionSolution;
     }
-    if (reason != AdaptationReason.time) {
+    if (reason != AdaptationReason.time &&
+        reason != AdaptationReason.equipment) {
       return ProgrammeAdaptationNoSafeReason.unsupportedConstraintFamily;
     }
     return ProgrammeAdaptationNoSafeReason.pipelineUnableToPlan;
@@ -431,7 +489,7 @@ class ProgrammeAdaptationProposalMapper {
     final detail = status == AdaptationPlanStatus.insufficientInformation
         ? 'There is not enough authored session metadata to adapt safely.'
         : 'A lawful adjustment that preserves the authored training intent '
-            'closely enough is not available for this $constraint constraint.';
+              'closely enough is not available for this $constraint constraint.';
     return 'Cohort could not safely adapt this session under your current '
         'constraint. $detail Your prescribed programme has not changed, and '
         'your current prepared session remains available.';

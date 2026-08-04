@@ -10,8 +10,9 @@ import 'session_adaptation_planner.dart';
 class AdaptationPlanValidator {
   const AdaptationPlanValidator();
 
+  /// Actions that remain unsupported for planning (swapExercise is allowed when
+  /// produced by the equipment substitution planner against curated rules).
   static const unsupportedPlanActionTypes = {
-    AdaptationActionType.swapExercise,
     AdaptationActionType.replaceBlock,
     AdaptationActionType.replaceSession,
     AdaptationActionType.removeExercise,

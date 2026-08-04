@@ -49,7 +49,7 @@ List<CoachDecisionHandler> kDefaultCoachDecisionHandlers({
 }) {
   return [
     SessionAdaptationCoachDecisionHandler(
-      pipeline: sessionAdaptationPipeline ?? const SessionAdaptationPipeline(),
+      pipeline: sessionAdaptationPipeline ?? SessionAdaptationPipeline(),
     ),
     const StubExerciseSubstitutionCoachDecisionHandler(),
     const StubPrescriptionScalingCoachDecisionHandler(),

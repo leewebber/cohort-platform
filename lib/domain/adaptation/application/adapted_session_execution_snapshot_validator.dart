@@ -146,9 +146,12 @@ class AdaptedSessionExecutionSnapshotValidator {
             ),
           );
         }
+        // Volume-unchanged adaptations are valid for equipment swaps and other
+        // non-volume plan steps when the exercise carries applied plan sequences.
         if (exercise.adapted &&
             exercise.executionPrescription.sets ==
-                exercise.originalPrescription.sets) {
+                exercise.originalPrescription.sets &&
+            exercise.appliedPlanStepSequences.isEmpty) {
           issues.add(
             const AdaptedSessionExecutionSnapshotIssue(
               code:
@@ -170,8 +173,7 @@ class AdaptedSessionExecutionSnapshotValidator {
     }
 
     for (final entry in snapshot.appliedAdaptationAudit) {
-      if (entry.actionType == AdaptationActionType.swapExercise ||
-          entry.actionType == AdaptationActionType.replaceBlock ||
+      if (entry.actionType == AdaptationActionType.replaceBlock ||
           entry.actionType == AdaptationActionType.replaceSession) {
         issues.add(
           const AdaptedSessionExecutionSnapshotIssue(

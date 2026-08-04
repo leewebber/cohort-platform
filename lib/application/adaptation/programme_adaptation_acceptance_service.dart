@@ -60,15 +60,19 @@ class ProgrammeAdaptationAcceptanceService {
     required AthleteProgrammeSessionPrepareService prepareService,
     PlanPackageSessionAdaptationAdapter? adapter,
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
+    ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
   }) : _prepareService = prepareService,
-       _adapter = adapter ?? const PlanPackageSessionAdaptationAdapter(),
+       _adapter = adapter ?? PlanPackageSessionAdaptationAdapter(),
        _loadProtocolDraft =
            loadProtocolDraft ??
-           ((protocolId) => ProtocolBuilderService().loadProtocol(protocolId));
+           ((protocolId) => ProtocolBuilderService().loadProtocol(protocolId)),
+       _loadAdaptationPermissions =
+           loadAdaptationPermissions ?? ((_) async => const []);
 
   final AthleteProgrammeSessionPrepareService _prepareService;
   final PlanPackageSessionAdaptationAdapter _adapter;
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
+  final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
   final Set<String> _consumedProposalIds = <String>{};
   bool _acceptInFlight = false;
 
@@ -172,10 +176,14 @@ class ProgrammeAdaptationAcceptanceService {
     // Freshness revalidation: re-run pipeline and require identical reviewed plan.
     try {
       final draft = await _loadProtocolDraft(currentPackage.protocolId!.trim());
+      final permissions = await _loadAdaptationPermissions(
+        currentPackage.programmeVersionId!.trim(),
+      );
       final run = _adapter.evaluate(
         package: currentPackage,
         request: proposal.request!,
         authoredDraft: draft,
+        adaptationPermissions: permissions,
       );
       final fresh = ProgrammeAdaptationProposalMapper.fromPipelineRun(
         package: currentPackage,

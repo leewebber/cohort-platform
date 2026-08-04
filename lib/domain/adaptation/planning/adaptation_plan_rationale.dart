@@ -19,4 +19,8 @@ enum AdaptationPlanRationaleCode {
   primaryIntentPreserved,
   primaryIntentAtRisk,
   blockPreservedUnchanged,
+  equipmentSubstitutionApplied,
+  noEquipmentConflict,
+  noApprovedSubstitution,
+  requiredEquipmentUnavailable,
 }

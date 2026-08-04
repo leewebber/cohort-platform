@@ -26,7 +26,8 @@ class ProgrammeAdaptationPlanApplier {
       for (final block in snapshot.omittedBlocks) block.sourceBlockLocalId,
     };
     final retainedByLocalId = {
-      for (final block in snapshot.retainedBlocks) block.sourceBlockLocalId: block,
+      for (final block in snapshot.retainedBlocks)
+        block.sourceBlockLocalId: block,
     };
 
     final blocks = <SessionExecutionBlock>[];
@@ -41,7 +42,16 @@ class ProgrammeAdaptationPlanApplier {
         blocks.add(base);
         continue;
       }
-      blocks.add(_applyRetainedBlock(base, retained));
+      final swapByOriginal = <String, String>{
+        for (final entry in snapshot.appliedAdaptationAudit)
+          if (entry.actionType == AdaptationActionType.swapExercise &&
+              entry.originalValueReference != null &&
+              entry.appliedValueReference != null)
+            entry.originalValueReference!: entry.appliedValueReference!,
+      };
+      blocks.add(
+        _applyRetainedBlock(base, retained, swapByOriginalId: swapByOriginal),
+      );
     }
 
     if (blocks.isEmpty) {
@@ -63,8 +73,9 @@ class ProgrammeAdaptationPlanApplier {
 
   SessionExecutionBlock _applyRetainedBlock(
     SessionExecutionBlock base,
-    BlockExecutionSnapshot retained,
-  ) {
+    BlockExecutionSnapshot retained, {
+    Map<String, String> swapByOriginalId = const {},
+  }) {
     final byLinkId = {
       for (final exercise in retained.exercises)
         exercise.exerciseLinkLocalId: exercise,
@@ -73,38 +84,52 @@ class ProgrammeAdaptationPlanApplier {
       for (final exercise in retained.exercises) exercise.exerciseId: exercise,
     };
 
-    final linked = base.linkedExercises.map((summary) {
-      ExerciseExecutionSnapshot? match;
-      // Prefer stable exercise id; link local ids are not on SessionExecutionExerciseSummary.
-      match = byExerciseId[summary.exerciseId];
-      if (match == null && byLinkId.length == 1 && base.linkedExercises.length == 1) {
-        match = byLinkId.values.first;
-      }
-      if (match == null || !match.adapted) return summary;
+    final linked = base.linkedExercises
+        .map((summary) {
+          ExerciseExecutionSnapshot? match;
+          // Prefer stable exercise id; link local ids are not on SessionExecutionExerciseSummary.
+          match = byExerciseId[summary.exerciseId];
+          final swappedTo = swapByOriginalId[summary.exerciseId];
+          if (match == null && swappedTo != null) {
+            match = byExerciseId[swappedTo];
+          }
+          if (match == null &&
+              byLinkId.length == 1 &&
+              base.linkedExercises.length == 1) {
+            match = byLinkId.values.first;
+          }
+          if (match == null || !match.adapted) return summary;
 
-      final execution = match.executionPrescription;
-      final original = summary.prescription;
-      if (original == null && execution.sets == null && execution.reps == null) {
-        return summary;
-      }
-      return SessionExecutionExerciseSummary(
-        exerciseId: summary.exerciseId,
-        displayName: summary.displayName,
-        displayLabelOverride: summary.displayLabelOverride,
-        exercise: summary.exercise,
-        prescription: StrengthExercisePrescription(
-          sets: execution.sets ?? original?.sets ?? 0,
-          reps: execution.reps != null
-              ? StrengthRepPrescription.exact(execution.reps!)
-              : (original?.reps ?? StrengthRepPrescription.exact(0)),
-          restSeconds: execution.restSeconds ?? original?.restSeconds,
-          tempo: original?.tempo,
-          load: original?.load,
-          coachCue: original?.coachCue,
-          groupId: original?.groupId,
-        ),
-      );
-    }).toList(growable: false);
+          final execution = match.executionPrescription;
+          final original = summary.prescription;
+          final exerciseIdChanged = match.exerciseId != summary.exerciseId;
+          if (!exerciseIdChanged &&
+              original == null &&
+              execution.sets == null &&
+              execution.reps == null) {
+            return summary;
+          }
+          return SessionExecutionExerciseSummary(
+            exerciseId: match.exerciseId,
+            displayName: exerciseIdChanged
+                ? match.exerciseId
+                : summary.displayName,
+            displayLabelOverride: summary.displayLabelOverride,
+            exercise: exerciseIdChanged ? null : summary.exercise,
+            prescription: StrengthExercisePrescription(
+              sets: execution.sets ?? original?.sets ?? 0,
+              reps: execution.reps != null
+                  ? StrengthRepPrescription.exact(execution.reps!)
+                  : (original?.reps ?? StrengthRepPrescription.exact(0)),
+              restSeconds: execution.restSeconds ?? original?.restSeconds,
+              tempo: original?.tempo,
+              load: original?.load,
+              coachCue: original?.coachCue,
+              groupId: original?.groupId,
+            ),
+          );
+        })
+        .toList(growable: false);
 
     return SessionExecutionBlock(
       blockId: base.blockId,

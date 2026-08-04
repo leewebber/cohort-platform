@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'application/adaptation/journey_d_equipment_adaptation_contract.dart';
 import 'application/adaptation/programme_adaptation_acceptance_service.dart';
 import 'application/adaptation/programme_adaptation_proposal_service.dart';
 import 'core/persistence/athlete_local_repository.dart';
@@ -1705,7 +1706,11 @@ Future<void> main() async {
         final proposalService = ProgrammeAdaptationProposalService();
         final proposal = await proposalService.propose(
           package: preparedD.package!,
-          request: const AdaptationRequest(reason: AdaptationReason.equipment),
+          request: const AdaptationRequest(
+            reason: AdaptationReason.equipment,
+            availableEquipment:
+                JourneyDEquipmentAdaptationContract.availableEquipment,
+          ),
         );
         final afterSuggest = await prepare.prepareForAthlete(config.athleteId);
         final fpSuggest = afterSuggest.package == null

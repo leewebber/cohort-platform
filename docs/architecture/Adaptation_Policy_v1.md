@@ -43,6 +43,26 @@ When permitted by policy flags:
 - substitute approved equipment / exercises  
 - convert to an approved modality equivalent  
 
+### Equipment adaptation (B4d.19)
+
+Day-of equipment adaptation requires a meaningful, normalized
+`availableEquipment` set on the athlete request. Availability is never assumed.
+
+A reviewable equipment proposal is produced only when:
+
+1. Required exercise equipment is missing from `availableEquipment`.
+2. A curated knowledge substitution rule names an explicit replacement
+   (`knowledge/reference/substitutions_reference.yaml`).
+3. The candidate’s required equipment is covered by `availableEquipment`.
+4. The active plan-package version permits
+   `substitute_approved_equipment` / `substitute_approved_exercise` with
+   `athlete_agreement_required=true`.
+5. `AdaptationPolicyGate` allows the change kinds for
+   `AdaptationReason.equipment`.
+
+Empty `adaptation_permissions` remains an explicit “no adaptations permitted”
+boundary. Substitutions are never invented from exercise names alone.
+
 ---
 
 ## Prohibited changes

@@ -35,6 +35,15 @@ enum ProgrammeAdaptationNoSafeReason {
   insufficientInformation,
   policyRejected,
   unsupportedConstraintFamily,
+
+  /// Equipment reason without a meaningful availableEquipment set.
+  availableEquipmentRequired,
+
+  /// Authored package does not permit the requested substitution kind.
+  substitutionNotPermitted,
+
+  /// Conflict exists but no curated approved substitution rule applies.
+  noApprovedSubstitution,
 }
 
 /// Granularity of a single material change in a proposal.

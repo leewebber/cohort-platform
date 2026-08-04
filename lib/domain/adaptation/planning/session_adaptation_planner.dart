@@ -1,3 +1,6 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
+import 'package:cohort_platform/knowledge/models/knowledge_ontology_models.dart';
+
 import '../contracts/block_adaptation_policy.dart';
 import '../evaluation/adaptation_constraint_context.dart';
 import '../evaluation/adaptation_evaluation_result.dart';
@@ -31,15 +34,20 @@ class ResolvedPlannedBlock {
   final AdaptationPolicySource policySource;
 }
 
-/// Deterministic time-constrained adaptation plan generator (no mutation).
+/// Deterministic time- and equipment-constrained adaptation plan generator.
+///
+/// Compute-only: never mutates the prepared session. Equipment substitutions
+/// require a [KnowledgeGraphReader] and use curated substitution rules only.
 class SessionAdaptationPlanner {
   const SessionAdaptationPlanner({
     this.evaluator = const SessionAdaptationReadOnlyEvaluator(),
     this.validator = const AdaptationPlanValidator(),
+    this.knowledge,
   });
 
   final SessionAdaptationReadOnlyEvaluator evaluator;
   final AdaptationPlanValidator validator;
+  final KnowledgeGraphReader? knowledge;
 
   AdaptationPlanResult plan({
     required PlannedSessionAdaptationInput session,
@@ -56,6 +64,14 @@ class SessionAdaptationPlanner {
       constraints: validatedConstraints,
       evaluation: resolvedEvaluation,
     );
+
+    // Equipment path is independent of time planning. Prefer equipment when
+    // the athlete supplied a meaningful available-equipment set and no time
+    // constraint is active (Journey D / day-of equipment requests).
+    if (validatedConstraints.hasEquipmentConstraint &&
+        !validatedConstraints.hasTimeConstraint) {
+      return _finalize(base, _buildEquipmentConstrainedPlan(base));
+    }
 
     if (!validatedConstraints.hasTimeConstraint) {
       return _finalize(base, _noPlanRequired(base));
@@ -158,6 +174,150 @@ class SessionAdaptationPlanner {
       forceNotApplicable: !validation.isValid,
     );
     return result;
+  }
+
+  /// Builds a plan of curated exercise swaps when required equipment is missing
+  /// and an author-approved substitution rule matches available equipment.
+  _MutablePlan _buildEquipmentConstrainedPlan(_PlanBuildContext base) {
+    final graph = knowledge;
+    if (graph == null) {
+      return _MutablePlan(
+        status: AdaptationPlanStatus.unableToPlan,
+        planFindings: [AdaptationPlanRationaleCode.noApprovedSubstitution],
+      );
+    }
+
+    final available = base.constraints.availableEquipment;
+    final steps = <AdaptationPlanStep>[];
+    var sequence = 1;
+    var hadConflict = false;
+
+    final blocks = List<PlannedBlockAdaptationInput>.from(base.session.blocks)
+      ..sort((a, b) => a.position.compareTo(b.position));
+
+    for (final block in blocks) {
+      final resolved = resolveBlock(block);
+      if (!resolved.effectivePolicy.canReplaceExercises) continue;
+
+      final prescriptions = List<PlannedExercisePrescriptionInput>.from(
+        block.exercisePrescriptions,
+      )..sort((a, b) => a.exerciseLinkLocalId.compareTo(b.exerciseLinkLocalId));
+
+      for (final rx in prescriptions) {
+        final source = graph.exerciseById(rx.exerciseId);
+        if (source == null) continue;
+
+        final required = source.requiredEquipmentIds.toSet();
+        if (required.isEmpty) continue;
+        if (required.every(available.contains)) continue;
+
+        hadConflict = true;
+        final missing = required.difference(available);
+        final rule = _selectSubstitutionRule(
+          graph: graph,
+          sourceExerciseId: source.id,
+          available: available,
+          missing: missing,
+        );
+        if (rule == null) {
+          return _MutablePlan(
+            status: AdaptationPlanStatus.unableToPlan,
+            planFindings: [
+              AdaptationPlanRationaleCode.requiredEquipmentUnavailable,
+              AdaptationPlanRationaleCode.noApprovedSubstitution,
+            ],
+          );
+        }
+
+        steps.add(
+          AdaptationPlanStep(
+            sequence: sequence++,
+            actionType: AdaptationActionType.swapExercise,
+            targetScope: AdaptationConstraintScope.exercisePlacement,
+            targetId: rx.exerciseLinkLocalId,
+            blockLocalId: block.localId,
+            blockPosition: block.position,
+            exerciseLinkLocalId: rx.exerciseLinkLocalId,
+            originalValueReference: rule.sourceExerciseId,
+            proposedValueReference: rule.candidateExerciseId,
+            rationaleCode:
+                AdaptationPlanRationaleCode.equipmentSubstitutionApplied,
+            requiredStep: true,
+            policySource: resolved.policySource,
+            effectOnFidelity: AdaptationFidelity.high,
+            expectedTimeSavingUnknown: true,
+          ),
+        );
+      }
+    }
+
+    // Plan confidence/fidelity must not exceed the evaluation's — the
+    // AdaptationPlanValidator rejects overconfident plans.
+    final evalConfidence = base.evaluation.adaptationConfidence;
+    final evalFidelity = base.evaluation.expectedFidelity;
+
+    if (!hadConflict) {
+      final draft = _MutablePlan(
+        status: AdaptationPlanStatus.noPlanRequired,
+        planFindings: [AdaptationPlanRationaleCode.noEquipmentConflict],
+      );
+      draft.exactDurationFeasibilityConfirmed = true;
+      draft.expectedFidelity = evalFidelity;
+      draft.adaptationConfidence = evalConfidence;
+      return draft;
+    }
+
+    if (steps.isEmpty) {
+      return _MutablePlan(
+        status: AdaptationPlanStatus.unableToPlan,
+        planFindings: [AdaptationPlanRationaleCode.noApprovedSubstitution],
+      );
+    }
+
+    final draft = _MutablePlan(
+      status: AdaptationPlanStatus.planGenerated,
+      planFindings: [
+        AdaptationPlanRationaleCode.equipmentSubstitutionApplied,
+        AdaptationPlanRationaleCode.primaryIntentPreserved,
+      ],
+    );
+    draft.steps.addAll(steps);
+    draft.expectedFidelity = evalFidelity;
+    draft.adaptationConfidence = evalConfidence;
+    draft.exactDurationFeasibilityConfirmed = true;
+    return draft;
+  }
+
+  /// Picks the first deterministic curated rule whose candidate is satisfiable
+  /// with [available] equipment and whose removed equipment explains [missing].
+  SubstitutionRuleKnowledge? _selectSubstitutionRule({
+    required KnowledgeGraphReader graph,
+    required String sourceExerciseId,
+    required Set<String> available,
+    required Set<String> missing,
+  }) {
+    final rules = List<SubstitutionRuleKnowledge>.from(
+      graph.substitutionsForSource(sourceExerciseId),
+    )..sort((a, b) => a.id.compareTo(b.id));
+
+    for (final rule in rules) {
+      final candidate = graph.exerciseById(rule.candidateExerciseId);
+      if (candidate == null) continue;
+
+      final removesConflict =
+          rule.equipmentRemovedIds.any(missing.contains) ||
+          missing.every((id) => !candidate.requiredEquipmentIds.contains(id));
+      if (!removesConflict) continue;
+
+      final candidateRequired = candidate.requiredEquipmentIds.toSet();
+      if (!candidateRequired.every(available.contains)) continue;
+
+      final added = rule.equipmentAddedIds.toSet();
+      if (!added.every(available.contains)) continue;
+
+      return rule;
+    }
+    return null;
   }
 
   _MutablePlan _noPlanRequired(_PlanBuildContext base) {

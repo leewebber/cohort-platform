@@ -162,11 +162,98 @@ class AdaptationPlanApplier {
         state,
         step,
       ),
+      AdaptationActionType.swapExercise => _applySwapExercise(
+        source,
+        state,
+        step,
+      ),
       _ => AdaptationPlanApplicationIssue(
         code: AdaptationPlanApplicationIssueCode.unsupportedActionType,
         planStepSequence: step.sequence,
       ),
     };
+  }
+
+  AdaptationPlanApplicationIssue? _applySwapExercise(
+    PlannedSessionAdaptationInput source,
+    _ApplicationState state,
+    AdaptationPlanStep step,
+  ) {
+    final blockId = step.blockLocalId;
+    if (blockId == null || !state.retained.containsKey(blockId)) {
+      return AdaptationPlanApplicationIssue(
+        code: AdaptationPlanApplicationIssueCode.unknownBlockTarget,
+        planStepSequence: step.sequence,
+      );
+    }
+
+    final blockState = state.retained[blockId]!;
+    final resolved = SessionAdaptationPlanner.resolveBlock(blockState.input);
+    if (step.policySource != blockState.policySource) {
+      return AdaptationPlanApplicationIssue(
+        code: AdaptationPlanApplicationIssueCode.policyMismatch,
+        planStepSequence: step.sequence,
+      );
+    }
+    if (!resolved.effectivePolicy.canReplaceExercises) {
+      return AdaptationPlanApplicationIssue(
+        code: AdaptationPlanApplicationIssueCode.policyMismatch,
+        planStepSequence: step.sequence,
+      );
+    }
+
+    final linkId = step.exerciseLinkLocalId ?? step.targetId;
+    final exercise = blockState.exercises[linkId];
+    if (exercise == null) {
+      return AdaptationPlanApplicationIssue(
+        code: AdaptationPlanApplicationIssueCode.unknownExerciseTarget,
+        planStepSequence: step.sequence,
+      );
+    }
+
+    final originalId = step.originalValueReference?.trim() ?? '';
+    final proposedId = step.proposedValueReference?.trim() ?? '';
+    if (originalId.isEmpty ||
+        proposedId.isEmpty ||
+        originalId == proposedId ||
+        exercise.exerciseId != originalId) {
+      return AdaptationPlanApplicationIssue(
+        code: AdaptationPlanApplicationIssueCode.unsupportedActionType,
+        planStepSequence: step.sequence,
+        detail: 'swap requires original→proposed exercise identity',
+      );
+    }
+
+    blockState.exercises[linkId] = _ExerciseState(
+      linkLocalId: linkId,
+      exerciseId: proposedId,
+      original: exercise.original,
+      execution: exercise.execution,
+      adapted: true,
+      stepSequences: [...exercise.stepSequences, step.sequence],
+    );
+    blockState.adapted = true;
+    blockState.stepSequences.add(step.sequence);
+
+    state.audit.add(
+      AdaptationStepAuditEntry(
+        planStepSequence: step.sequence,
+        actionType: step.actionType,
+        targetScopeDbValue: step.targetScope.dbValue,
+        targetId: step.targetId,
+        blockLocalId: blockId,
+        exerciseLinkLocalId: linkId,
+        rationaleCode: step.rationaleCode,
+        originalValueReference: originalId,
+        appliedValueReference: proposedId,
+        expectedTimeSavingMinutes: step.expectedTimeSavingMinutes,
+        expectedTimeSavingUnknown: step.expectedTimeSavingUnknown,
+        policySource: step.policySource,
+        effectOnFidelity: step.effectOnFidelity,
+        applicationStatus: AdaptationStepApplicationStatus.applied,
+      ),
+    );
+    return null;
   }
 
   AdaptationPlanApplicationIssue? _applyReduceVolume(

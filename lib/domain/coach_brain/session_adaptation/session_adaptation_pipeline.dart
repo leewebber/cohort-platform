@@ -1,12 +1,14 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 
 /// Orchestrates evaluate → plan → apply without altering domain behaviour.
 class SessionAdaptationPipeline {
-  const SessionAdaptationPipeline({
+  SessionAdaptationPipeline({
     this.evaluator = const SessionAdaptationReadOnlyEvaluator(),
-    this.planner = const SessionAdaptationPlanner(),
+    SessionAdaptationPlanner? planner,
     this.applier = const AdaptationPlanApplier(),
-  });
+    KnowledgeGraphReader? knowledge,
+  }) : planner = planner ?? SessionAdaptationPlanner(knowledge: knowledge);
 
   final SessionAdaptationReadOnlyEvaluator evaluator;
   final SessionAdaptationPlanner planner;

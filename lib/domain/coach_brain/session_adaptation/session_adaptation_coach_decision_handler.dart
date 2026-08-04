@@ -10,9 +10,8 @@ import 'session_adaptation_pipeline.dart';
 
 /// Thin adapter from Coach Brain to the adaptation evaluate → plan → apply pipeline.
 class SessionAdaptationCoachDecisionHandler extends CoachDecisionHandler {
-  const SessionAdaptationCoachDecisionHandler({
-    this.pipeline = const SessionAdaptationPipeline(),
-  });
+  SessionAdaptationCoachDecisionHandler({SessionAdaptationPipeline? pipeline})
+    : pipeline = pipeline ?? SessionAdaptationPipeline();
 
   final SessionAdaptationPipeline pipeline;
 

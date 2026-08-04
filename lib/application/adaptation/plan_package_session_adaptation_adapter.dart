@@ -1,13 +1,17 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/domain/coach_brain/session_adaptation/session_adaptation_pipeline.dart';
 import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
+import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
+import 'package:cohort_platform/models/adaptation_reason.dart';
 import 'package:cohort_platform/models/adaptation_request.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
 import 'adaptation_request_constraint_mapper.dart';
 import 'planned_session_adaptation_input_adapter.dart';
 import 'planned_session_protocol_metadata_merge.dart';
+import 'programme_adaptation_permission_gate.dart';
 
 /// Failure thrown when the prepared package cannot be adapted lawfully.
 class PlanPackageAdaptationAdapterException implements Exception {
@@ -26,9 +30,10 @@ class PlanPackageAdaptationAdapterException implements Exception {
 /// programme author, and not a progression service. Does not call the legacy
 /// decision router, Adaptive Progression, or Plan Library generation.
 class PlanPackageSessionAdaptationAdapter {
-  const PlanPackageSessionAdaptationAdapter({
-    this.pipeline = const SessionAdaptationPipeline(),
-  });
+  PlanPackageSessionAdaptationAdapter({
+    SessionAdaptationPipeline? pipeline,
+    KnowledgeGraphReader? knowledge,
+  }) : pipeline = pipeline ?? SessionAdaptationPipeline(knowledge: knowledge);
 
   final SessionAdaptationPipeline pipeline;
 
@@ -40,6 +45,8 @@ class PlanPackageSessionAdaptationAdapter {
     required PreparedExecutionPackage package,
     required AdaptationRequest request,
     required ProtocolDraft authoredDraft,
+    List<PlanPackageAdaptationPermission> adaptationPermissions = const [],
+    String? slotKey,
     Map<String, ExerciseAdaptationMetadataForEvaluation>? exerciseMetadataById,
   }) {
     _assertEligiblePackage(package);
@@ -48,6 +55,21 @@ class PlanPackageSessionAdaptationAdapter {
     const AdaptationPolicyGate().assertAllowed(
       AdaptationPolicyGate.kindsForDayOf(request.reason),
     );
+
+    if (request.reason == AdaptationReason.equipment) {
+      final permission = const ProgrammeAdaptationPermissionGate()
+          .allowEquipmentSubstitution(
+            permissions: adaptationPermissions,
+            slotKey: slotKey,
+          );
+      if (!permission.allowed) {
+        throw PlanPackageAdaptationAdapterException(
+          'substitution_not_permitted',
+          'Authored adaptation permissions do not permit equipment '
+              'substitution (${permission.denial?.name}).',
+        );
+      }
+    }
 
     final planned = package.plan.protocol != null
         ? PlannedSessionProtocolMetadataMerge.merge(
