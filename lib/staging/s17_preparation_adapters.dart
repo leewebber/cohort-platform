@@ -77,6 +77,24 @@ class S17AthleteCatalogueLookupAdapter implements S17CatalogueVersionLookup {
   }
 }
 
+/// Enrolment port that always refuses — used in B4d.3 resume to prove
+/// enrol/switch/replaceActive cannot run.
+class S17RefuseEnrolmentAdapter implements S17AthleteEnrolmentPort {
+  const S17RefuseEnrolmentAdapter();
+
+  @override
+  Future<S17EnrolmentOutcome> enrolOrSwitch({
+    required String athleteId,
+    required String versionId,
+  }) async {
+    return const S17EnrolmentOutcome(
+      ok: false,
+      rejected: true,
+      detail: 'REFUSED: enrol/switch/replaceActive forbidden in resume binding',
+    );
+  }
+}
+
 class S17AthleteEnrolmentAdapter implements S17AthleteEnrolmentPort {
   S17AthleteEnrolmentAdapter({
     required AthleteCatalogueEnrolmentService enrolment,

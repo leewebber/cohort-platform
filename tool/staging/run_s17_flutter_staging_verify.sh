@@ -166,6 +166,16 @@ PY
 if [[ "$DRY_RUN" -eq 1 ]]; then
   if [[ "$RESUME" -eq 1 ]]; then
     echo "DRY_RUN_OK: resume mode validated; creator not invoked; Flutter not launched."
+    echo "LIVE_ASSIGNMENT_BINDING=enabled"
+    echo "STALE_DEFINE_IDENTITIES=non_authoritative"
+    echo "TARGET_LINEAGE=PROG-S15A-STAGING"
+    echo "EXISTING_ENROLMENT_MATERIALISATION_PATH=selected"
+    echo "ENROL_SWITCH_REPLACE_ACTIVE=forbidden"
+    echo "TIMEZONE_CONTRACT=UTC_required"
+    echo "FAIL_CLOSED_PREPARATION=enabled"
+    echo "ATHLETE_DISCOVERY_ENUMERATION=forbidden"
+    echo "SELECTED_JOURNEYS=${SELECTED_JOURNEYS:-C,D,F,G,H,I,J,K}"
+    echo "HOSTED_WRITES=none"
   else
     echo "DRY_RUN_OK: runner identity and private config validated; Flutter not launched."
   fi

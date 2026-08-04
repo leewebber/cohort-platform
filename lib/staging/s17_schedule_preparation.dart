@@ -13,6 +13,7 @@ enum S17PreparationStage {
   catalogueUnavailable,
   catalogueIneligible,
   incorrectTarget,
+  existingEnrolment,
   enrolSwitch,
   enrolRejected,
   enrolMalformed,
@@ -35,6 +36,9 @@ class S17SchedulePreparationRequest {
     required this.currentAssignmentId,
     this.targetSchedulingLineage =
         S17OccurrenceBaseline.multiSlotSchedulingLineage,
+    this.resumeExistingEnrolmentOnly = false,
+    this.currentIsMaterialised = false,
+    this.authoredExecutableSlotCountHint = 0,
   });
 
   final String athleteId;
@@ -42,6 +46,12 @@ class S17SchedulePreparationRequest {
   final String currentVersionId;
   final String currentAssignmentId;
   final String targetSchedulingLineage;
+
+  /// When true (B4d.3 resume), never enrol/switch/replaceActive — materialise
+  /// the existing live S15A enrolment only.
+  final bool resumeExistingEnrolmentOnly;
+  final bool currentIsMaterialised;
+  final int authoredExecutableSlotCountHint;
 }
 
 class S17SchedulePreparationResult {
@@ -268,6 +278,10 @@ class S17SchedulePreparation {
             'REFUSED: target lineage must be the approved multi-slot programme '
             '(not ${S17OccurrenceBaseline.oneSlotCatalogueLineage})',
       );
+    }
+
+    if (request.resumeExistingEnrolmentOnly) {
+      return _prepareExistingEnrolmentOnly(request, current: current);
     }
 
     final fail = S17OccurrenceBaseline.failClosedReason(current);
@@ -543,6 +557,223 @@ class S17SchedulePreparation {
       versionId: enrolled.versionId,
       lineageCode: target.lineageCode,
       packageHash: target.packageHash,
+      uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+      projectedOccurrences: baseline.projectedOccurrenceCount,
+    );
+  }
+
+  /// B4d.3 resume: materialise existing live S15A enrolment; never enrol/switch.
+  Future<S17SchedulePreparationResult> _prepareExistingEnrolmentOnly(
+    S17SchedulePreparationRequest request, {
+    required S17OccurrenceBaselineSnapshot current,
+  }) async {
+    final targetLineage = request.targetSchedulingLineage.trim();
+    final liveLineage = request.currentLineageCode.trim();
+    final liveAssignment = request.currentAssignmentId.trim();
+    final liveVersion = request.currentVersionId.trim();
+
+    if (liveLineage == S17OccurrenceBaseline.oneSlotCatalogueLineage) {
+      return const S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.silentFallbackGuard,
+        detail: 'REFUSED: resume cannot use PROG-S13-ELIG',
+      );
+    }
+    if (liveLineage != targetLineage ||
+        targetLineage != S17OccurrenceBaseline.multiSlotSchedulingLineage) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.incorrectTarget,
+        detail:
+            'REFUSED: resume requires live lineage '
+            '${S17OccurrenceBaseline.multiSlotSchedulingLineage}; got $liveLineage',
+      );
+    }
+    if (liveAssignment.isEmpty || liveVersion.isEmpty) {
+      return const S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.existingEnrolment,
+        detail: 'REFUSED: live assignment/version missing',
+      );
+    }
+
+    final fail = S17OccurrenceBaseline.failClosedReason(current);
+    if (fail == null && request.currentIsMaterialised) {
+      return S17SchedulePreparationResult(
+        ok: true,
+        stage: S17PreparationStage.alreadyReady,
+        detail:
+            'Existing S15A enrolment already materialised with ≥2 uncompleted',
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: liveLineage,
+        uncompletedOccurrences: current.uncompletedOccurrenceCount,
+        projectedOccurrences: current.projectedOccurrenceCount,
+        skippedBecauseAlreadyReady: true,
+      );
+    }
+
+    // Catalogue metadata only (read) — never enrol/switch.
+    final target = await _catalogue.findPublishedByLineage(targetLineage);
+    if (target == null) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.catalogueUnavailable,
+        detail:
+            'REFUSED: published scheduling lineage $targetLineage '
+            'not found in athlete catalogue',
+      );
+    }
+    if (target.versionId.trim() != liveVersion) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.incorrectTarget,
+        detail:
+            'REFUSED: catalogue version does not match live S15A assignment version',
+      );
+    }
+    if (target.executableSlotCount <
+        S17OccurrenceBaseline.requiredUncompletedForScheduleOps) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.catalogueIneligible,
+        detail:
+            'REFUSED: target lineage has only ${target.executableSlotCount} slots',
+      );
+    }
+
+    final activePort = _activeAssignment;
+    if (activePort != null) {
+      final active = await activePort.getActive(request.athleteId);
+      if (active == null ||
+          active.assignmentId.trim() != liveAssignment ||
+          active.versionId.trim() != liveVersion ||
+          active.lineageCode.trim() != targetLineage) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.assignmentPostcondition,
+          detail:
+              'REFUSED: active assignment drifted from bound live S15A enrolment',
+          assignmentId: active?.assignmentId,
+          versionId: active?.versionId,
+          lineageCode: active?.lineageCode,
+        );
+      }
+    }
+
+    // Explicitly do not call enrolment — resumeExistingEnrolmentOnly.
+    final materialised = await _materialise.materialise(
+      athleteId: request.athleteId,
+      assignmentId: liveAssignment,
+    );
+    if (!materialised.ok) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.materialisation,
+        detail:
+            'Materialisation failed for existing S15A enrolment; '
+            '${materialised.classifiedDetail}',
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: liveLineage,
+      );
+    }
+
+    final packagePort = _packageSelection;
+    String packageHash = target.packageHash;
+    if (packagePort != null) {
+      final pkg = await packagePort.resolveForAssignment(
+        athleteId: request.athleteId,
+        assignmentId: liveAssignment,
+      );
+      if (pkg == null ||
+          pkg.packageHash.trim().isEmpty ||
+          pkg.versionId.trim() != liveVersion ||
+          pkg.lineageCode.trim() != targetLineage) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.packageSelection,
+          detail:
+              'Selected plan-package missing or not belonging to $targetLineage',
+          assignmentId: liveAssignment,
+          versionId: liveVersion,
+          lineageCode: liveLineage,
+        );
+      }
+      packageHash = pkg.packageHash;
+    }
+
+    final preparedPort = _preparedExecution;
+    if (preparedPort != null) {
+      final ready = await preparedPort.isReadyForAssignment(
+        athleteId: request.athleteId,
+        assignmentId: liveAssignment,
+        expectedVersionId: liveVersion,
+      );
+      if (!ready) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.preparedExecution,
+          detail: 'Prepared execution not ready for live S15A assignment',
+          assignmentId: liveAssignment,
+          versionId: liveVersion,
+          lineageCode: liveLineage,
+          packageHash: packageHash,
+        );
+      }
+    }
+
+    final authored = request.authoredExecutableSlotCountHint > 0
+        ? request.authoredExecutableSlotCountHint
+        : target.executableSlotCount;
+    final baseline = await _projection.loadBaseline(
+      athleteId: request.athleteId,
+      assignmentId: liveAssignment,
+      lineageCode: liveLineage,
+      authoredExecutableSlotCount: authored,
+    );
+    if (baseline.lineageCode.trim() != targetLineage ||
+        baseline.lineageCode.trim() ==
+            S17OccurrenceBaseline.oneSlotCatalogueLineage) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.reconstruction,
+        detail:
+            'Reconstruction retained lineage=${baseline.lineageCode}; '
+            'expected $targetLineage',
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: baseline.lineageCode,
+        packageHash: packageHash,
+        uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+        projectedOccurrences: baseline.projectedOccurrenceCount,
+      );
+    }
+    final afterFail = S17OccurrenceBaseline.failClosedReason(baseline);
+    if (afterFail != null) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.uncompletedOccurrences,
+        detail: afterFail,
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: liveLineage,
+        packageHash: packageHash,
+        uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+        projectedOccurrences: baseline.projectedOccurrenceCount,
+      );
+    }
+
+    return S17SchedulePreparationResult(
+      ok: true,
+      stage: S17PreparationStage.ready,
+      detail:
+          'Prepared existing S15A enrolment (enrol/switch skipped); '
+          'uncompleted=${baseline.uncompletedOccurrenceCount}',
+      assignmentId: liveAssignment,
+      versionId: liveVersion,
+      lineageCode: liveLineage,
+      packageHash: packageHash,
       uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
       projectedOccurrences: baseline.projectedOccurrenceCount,
     );
