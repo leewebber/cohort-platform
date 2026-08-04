@@ -50,6 +50,7 @@ import 'staging/s17_schedule_preparation.dart';
 import 'staging/s17_skip_diagnosis.dart';
 import 'staging/s17_staging_journey_matrix.dart';
 import 'staging/s17_staging_runtime_config.dart';
+import 'staging/s17_undo_diagnosis.dart';
 
 /// Cohort Staging Athlete D verification for Phase 1.6 / Sprint 1.7.
 ///
@@ -1151,23 +1152,44 @@ Future<void> main() async {
               'Blocked: J requires fresh I Skip in the same run',
             );
           } else {
+            // B4d.8: reloadSnapshot omits cursor — product UI resolves it.
+            // Preserve that fact in typed Undo evidence (do not invent cursor).
             snapshot = (await reloadSnapshot()) ?? snapshot;
+            final jCursorBound = (snapshot.cursorSessionSlotId ?? '')
+                .trim()
+                .isNotEmpty;
             final undoable = await ops.latestUndoableOperation(
               assignmentId: config.assignmentId,
             );
             final priorSlot =
                 undoable?.priorSnapshot['session_slot_id']?.toString() ??
                 undoable?.priorSnapshot['sessionSlotId']?.toString();
-            final undoTarget = S17JourneyDiagnosis.requireFreshSkipUndoTarget(
-              latestOperationType: undoable?.originalType.name,
-              latestOperationId: undoable?.operationId,
-              latestBaseRevision: undoable?.baseRevision,
-              latestResultRevision: undoable?.resultRevision,
-              expectedBaseRevision: beforeSkipRev,
-              expectedResultRevision: freshSkipResultRev,
-              expectedSkippedSlotId: freshSkipSlotId,
-              priorSnapshotSlotId: priorSlot,
-            );
+            // B4d.7 fresh-Skip correlation (assignment check layered via B4d.8).
+            final undoTarget = (() {
+              final assignmentCheck = S17UndoDiagnosis.correlateFreshSkip(
+                latestOperationType: undoable?.originalType.name,
+                latestOperationId: undoable?.operationId,
+                latestBaseRevision: undoable?.baseRevision,
+                latestResultRevision: undoable?.resultRevision,
+                expectedBaseRevision: beforeSkipRev,
+                expectedResultRevision: freshSkipResultRev,
+                expectedSkippedSlotId: freshSkipSlotId,
+                priorSnapshotSlotId: priorSlot,
+                expectedAssignmentId: config.assignmentId,
+                recordAssignmentId: undoable?.assignmentId,
+              );
+              if (!assignmentCheck.ok) return assignmentCheck;
+              return S17JourneyDiagnosis.requireFreshSkipUndoTarget(
+                latestOperationType: undoable?.originalType.name,
+                latestOperationId: undoable?.operationId,
+                latestBaseRevision: undoable?.baseRevision,
+                latestResultRevision: undoable?.resultRevision,
+                expectedBaseRevision: beforeSkipRev,
+                expectedResultRevision: freshSkipResultRev,
+                expectedSkippedSlotId: freshSkipSlotId,
+                priorSnapshotSlotId: priorSlot,
+              );
+            })();
             var undoOk = false;
             var undoClass = S17JourneyDiagnosis.undoClassUnknown;
             var undoDetail = undoTarget.detail;
@@ -1178,18 +1200,41 @@ Future<void> main() async {
                         ? S17JourneyDiagnosis.undoClassLatestNotSkip
                         : S17JourneyDiagnosis
                               .undoClassLatestSkipIdentityMismatch);
-            } else if (undoable!.incompleteSnapshot) {
+            } else if (undoable!.incompleteSnapshot ||
+                !S17SkipInverseSchema.isComplete(undoable.priorSnapshot)) {
               undoClass = S17JourneyDiagnosis.undoClassIncompleteInverse;
+              final missing = S17SkipInverseSchema.missingFields(
+                undoable.priorSnapshot,
+              );
               undoDetail =
-                  '$undoClass: ${undoable.ineligibilityDetail ?? 'redacted'}';
+                  '$undoClass missing=${missing.isEmpty ? 'flagged' : missing.join(',')}';
             } else {
               final undoPreview = apply.previewUndo(
                 snapshot: snapshot,
                 operation: undoable,
               );
               if (!undoPreview.isReady || undoPreview.preview == null) {
+                final evidence = S17UndoDiagnosis.classifyAttempt(
+                  hasUndoRecord: true,
+                  latestIsSkip: true,
+                  freshSkipCorrelated: true,
+                  inverseDecodable: true,
+                  inverseComplete: true,
+                  previewReached: true,
+                  previewReady: false,
+                  previewCode: undoPreview.code.name,
+                  commandBuilt: false,
+                  applyReached: false,
+                  reloadOk: false,
+                  revisionRestored: false,
+                  stateRestored: false,
+                  snapshotCursorBound: jCursorBound,
+                );
                 undoClass = S17JourneyDiagnosis.undoClassRejected;
-                undoDetail = '$undoClass preview_code=${undoPreview.code.name}';
+                undoDetail = S17UndoDiagnosis.formatFailureDetail(
+                  evidence: evidence,
+                  journeyClass: undoClass,
+                );
               } else {
                 final cmd = apply.undoCommandFromPreview(
                   snapshot: snapshot,
@@ -1197,8 +1242,26 @@ Future<void> main() async {
                   preview: undoPreview.preview!,
                 );
                 if (cmd == null) {
+                  final evidence = S17UndoDiagnosis.classifyAttempt(
+                    hasUndoRecord: true,
+                    latestIsSkip: true,
+                    freshSkipCorrelated: true,
+                    inverseDecodable: true,
+                    inverseComplete: true,
+                    previewReached: true,
+                    previewReady: true,
+                    commandBuilt: false,
+                    applyReached: false,
+                    reloadOk: false,
+                    revisionRestored: false,
+                    stateRestored: false,
+                    snapshotCursorBound: jCursorBound,
+                  );
                   undoClass = S17JourneyDiagnosis.undoClassRejected;
-                  undoDetail = '$undoClass: undo command unavailable';
+                  undoDetail = S17UndoDiagnosis.formatFailureDetail(
+                    evidence: evidence,
+                    journeyClass: undoClass,
+                  );
                 } else {
                   final applied = await apply.confirmApply(
                     athleteId: config.athleteId,
@@ -1217,23 +1280,58 @@ Future<void> main() async {
                             expected;
                       });
                   undoOk = applied.isSuccess && revOk && stateOk;
+                  final evidence = S17UndoDiagnosis.classifyAttempt(
+                    hasUndoRecord: true,
+                    latestIsSkip: true,
+                    freshSkipCorrelated: true,
+                    inverseDecodable: true,
+                    inverseComplete: true,
+                    previewReached: true,
+                    previewReady: true,
+                    commandBuilt: true,
+                    applyReached: true,
+                    applySucceeded: applied.isSuccess,
+                    applyStatus: applied.status.name,
+                    applyCode: applied.code,
+                    reloadOk: after != null,
+                    revisionRestored: revOk,
+                    stateRestored: stateOk,
+                    snapshotCursorBound: jCursorBound,
+                    commandExpectedRevision: cmd.expectedScheduleRevision,
+                    authoritativeCurrentRevision: freshSkipResultRev,
+                    sourceRevision: beforeSkipRev,
+                    resultingRevision: freshSkipResultRev,
+                  );
                   if (!applied.isSuccess) {
                     undoClass = S17JourneyDiagnosis.undoClassRejected;
-                    undoDetail = '$undoClass: apply unsuccessful';
+                    undoDetail = S17UndoDiagnosis.formatFailureDetail(
+                      evidence: evidence,
+                      journeyClass: undoClass,
+                    );
                   } else if (!revOk) {
                     undoClass = S17JourneyDiagnosis.undoClassRevisionMismatch;
                     undoDetail =
-                        '$undoClass expected_rev=$beforeSkipRev '
-                        'observed_rev=${after?.projection.scheduleRevision}';
+                        '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
+                        'expected_rev=$beforeSkipRev '
+                        'observed_rev=${after?.projection.scheduleRevision} '
+                        'apply_status=${applied.status.name} '
+                        'apply_code=${applied.code ?? 'none'}';
                   } else if (!stateOk) {
                     undoClass =
                         S17JourneyDiagnosis.undoClassPostconditionFailed;
                     undoDetail =
-                        '$undoClass: pre-I occurrence state not fully restored';
+                        '$undoClass typed=${S17UndoDiagnosis.typedApplySucceededPostconditionFailed} '
+                        'apply_status=${applied.status.name} '
+                        'apply_code=${applied.code ?? 'none'} '
+                        'pre-I occurrence state not fully restored';
                   } else {
                     undoDetail =
                         'Undo restored precise pre-I state '
-                        'source=$skipSourcePrefix pre_rev=$beforeSkipRev';
+                        'source=$skipSourcePrefix pre_rev=$beforeSkipRev '
+                        'typed=${S17UndoDiagnosis.typedUndoApplied} '
+                        'status=${applied.status.name} '
+                        'code=${applied.code ?? 'none'} '
+                        'cursor_bound=$jCursorBound';
                   }
                 }
               }

@@ -1,58 +1,54 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.7 cursor-aligned Skip→Undo staging reverification.
-Exactly one dry run + one live run for `I,J` only.
+**Status:** B4d.8 local Undo apply-rejection diagnosis (no staging contact).
 
-**B4d.6 skip diagnosis:** `ade38b8`  
-**B4d.7 branch:** `codex/b4d7-cursor-skip-undo`
+**B4d.7 execution SHA:** `08625be2f8446a9fbee817489bf415ca6d9a996d`  
+**B4d.8 branch:** `codex/b4d8-undo-diagnosis`
 
-## B4d.6 accepted conclusions
+## B4d.7 accepted facts
 
-* Primary: `HARNESS_INELIGIBLE_SELECTION` (first-uncompleted + null cursor)
-* Secondary: typed-result collapse
-* Product Skip defect: not proven
-* Local remediation: cursor into snapshot, prefer cursor, typed I failures
+* Selected `I,J`; order `I → J`; I PASS (cursor Skip, rev 5→6)
+* Fresh Skip correlated; J entered Undo apply
+* J FAIL `UNDO_REJECTED: apply unsuccessful` — RPC status/code **not preserved**
+* Hosted post-J mutation state: **uncertain**
 
-## B4d.7 matrix
+## B4d.8 diagnosis (local)
 
-```text
-Selected: I,J
-Order:    I → J
-```
+### Primary classification
 
-G/H/D/C/F/K must not execute.
+`HARNESS_REQUEST_CONSTRUCTION`
 
-### Contracts
+Journey J `reloadSnapshot()` builds the preview snapshot **without**
+`cursorSessionSlotId`. Undo-Skip fingerprints bind live `cursorBefore` from that
+field; PostgreSQL always binds the assignment cursor after Skip. Null client
+cursor → ready preview + `stale_preview_fingerprint` on apply.
 
-* **I:** reload; require non-null cursor; select cursor occurrence only;
-  refuse first-uncompleted fallback; typed preview/apply; pass only if exact
-  cursor occurrence is skipped and unrelated occurrences unchanged.
-* **J:** only if I PASS; latest undo must be the **fresh** B4d.7 Skip
-  (type + base/result revision + slot); restore **complete** pre-I state.
+Product UI resolves cursor on snapshot load; product Undo defect is **not proven**.
 
-### Dry-run / live
+### Secondary
 
-```bash
-CONFIRM_COHORT_STAGING=1 \
-  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
-  S17_SELECTED_JOURNEYS=I,J \
-  ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
+`HARNESS_TYPED_RESULT_COLLAPSED` — B4d.7 collapsed `applied.status` / `applied.code`
+into opaque `apply unsuccessful`.
 
-CONFIRM_COHORT_STAGING=1 \
-  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
-  S17_SELECTED_JOURNEYS=I,J \
-  ./tool/staging/run_s17_flutter_staging_verify.sh --resume
-```
+### Reporting-only correction (this branch)
 
-Exactly one dry + at most one live. No retry. No product Skip/Undo change.
+* `lib/staging/s17_undo_diagnosis.dart` — typed Undo evidence
+* Journey J detail preserves `status=` / `code=` / `cursor_bound=` / `typed=`
+* Characterization tests in `test/staging/s17_b4d8_undo_diagnosis_test.dart`
+
+### Proposed remediation (NOT implemented under B4d.8)
+
+Bind the live assignment cursor into the Journey J reload snapshot the same way
+Journey I and the product controller do, then regression-test null vs bound
+fingerprint parity. Do **not** retry staging during remediation.
 
 ## Next authority
 
-| Result | Next |
-|--------|------|
-| I+J PASS | B4d.8 adaptation-eligible fixture + Journey D |
-| I typed product failure | Local diagnosis/remediation; no staging retry |
-| J typed failure after I PASS | Local Undo diagnosis; no staging retry |
-| Cursor absent/ineligible | Separately authorised deterministic-state prep |
+| Diagnosis | Next |
+|-----------|------|
+| Harness request/revision defect | Locally remediate cursor bind on J reload; no staging retry |
+| After remediation | Separately authorize one fresh cursor-aligned Skip→Undo evidence run |
+| Journey D | Separate adaptation-eligible-fixture track |
+| B4e | Blocked until J and D have valid staging evidence |
 
-B4e remains blocked. Production rejected.
+Production rejected. No dry/live run under B4d.8.
