@@ -412,7 +412,7 @@ void main() {
       expect(entry.contains('S17JourneyDiagnosis'), isTrue);
       expect(entry.contains('selectDistinctDateSwapPair'), isTrue);
       expect(entry.contains('classifyInvalidPushProbe'), isTrue);
-      expect(entry.contains('requireSkipUndoTarget'), isTrue);
+      expect(entry.contains('requireFreshSkipUndoTarget'), isTrue);
       expect(entry.contains('reportNonAcceptableProposal'), isTrue);
     });
 

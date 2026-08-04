@@ -177,11 +177,16 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
     echo "ATHLETE_DISCOVERY_ENUMERATION=forbidden"
     echo "SELECTED_JOURNEYS=${SELECTED_JOURNEYS:-C,D,F,G,H,I,J,K}"
     case "${SELECTED_JOURNEYS:-}" in
+      I,J|i,j) echo "EXECUTION_ORDER=I,J" ;;
       G,H,I,J|g,h,i,j) echo "EXECUTION_ORDER=G,H,I,J" ;;
       *) echo "EXECUTION_ORDER=derived_from_selection" ;;
     esac
     echo "G_DISTINCT_DATE_SELECTION=required"
     echo "H_INVALID_PROBE=dayDelta<=0"
+    echo "CURSOR_RESOLUTION=required"
+    echo "FIRST_UNCOMPLETED_FALLBACK=forbidden_when_differs_from_cursor"
+    echo "TYPED_SKIP_REPORTING=enabled"
+    echo "SKIPPED_DISPOSITION_POSTCONDITION=enabled"
     echo "I_J_FRESH_SKIP_DEPENDENCY=required"
     echo "D_ADAPTATION_EXECUTION=forbidden"
     echo "HOSTED_WRITES=none"

@@ -282,12 +282,81 @@ class S17JourneyDiagnosis {
   /// Typed Undo failure classes for B4d.5 (safe, redacted).
   static const undoClassNoRecord = 'NO_UNDO_RECORD';
   static const undoClassLatestNotSkip = 'LATEST_NOT_SKIP';
+  static const undoClassLatestSkipIdentityMismatch =
+      'LATEST_SKIP_IDENTITY_MISMATCH';
   static const undoClassIncompleteInverse = 'INCOMPLETE_INVERSE_SNAPSHOT';
   static const undoClassRevisionMismatch = 'REVISION_MISMATCH';
   static const undoClassRejected = 'UNDO_REJECTED';
   static const undoClassPostconditionFailed =
       'UNDO_APPLIED_POSTCONDITION_FAILED';
   static const undoClassUnknown = 'UNKNOWN_SAFE_FAILURE';
+
+  /// Correlate latest undoable Skip to the fresh B4d.7 I Skip.
+  static S17UndoTargetCheck requireFreshSkipUndoTarget({
+    required String? latestOperationType,
+    required String? latestOperationId,
+    required int? latestBaseRevision,
+    required int? latestResultRevision,
+    required int expectedBaseRevision,
+    required int expectedResultRevision,
+    required String expectedSkippedSlotId,
+    String? priorSnapshotSlotId,
+  }) {
+    final typeCheck = requireSkipUndoTarget(
+      latestOperationType: latestOperationType,
+    );
+    if (!typeCheck.ok) return typeCheck;
+    final opId = latestOperationId?.trim() ?? '';
+    if (opId.isEmpty) {
+      return const S17UndoTargetCheck(
+        ok: false,
+        detail: 'LATEST_SKIP_IDENTITY_MISMATCH: missing operation id',
+        expectedOperationType: 'skip',
+        observedOperationType: 'skip',
+      );
+    }
+    if (latestBaseRevision != expectedBaseRevision ||
+        latestResultRevision != expectedResultRevision) {
+      return S17UndoTargetCheck(
+        ok: false,
+        detail:
+            'LATEST_SKIP_IDENTITY_MISMATCH: revision correlation failed '
+            'base=${latestBaseRevision ?? -1}/$expectedBaseRevision '
+            'result=${latestResultRevision ?? -1}/$expectedResultRevision',
+        expectedOperationType: 'skip',
+        observedOperationType: 'skip',
+      );
+    }
+    final priorSlot = priorSnapshotSlotId?.trim() ?? '';
+    if (priorSlot.isNotEmpty && priorSlot != expectedSkippedSlotId.trim()) {
+      return S17UndoTargetCheck(
+        ok: false,
+        detail:
+            'LATEST_SKIP_IDENTITY_MISMATCH: skip slot '
+            '${redactPrefix(priorSlot)} != expected '
+            '${redactPrefix(expectedSkippedSlotId)}',
+        expectedOperationType: 'skip',
+        observedOperationType: 'skip',
+      );
+    }
+    return S17UndoTargetCheck(
+      ok: true,
+      detail:
+          'Fresh Skip undo target correlated op=${redactPrefix(opId)} '
+          'slot=${redactPrefix(expectedSkippedSlotId)}',
+      expectedOperationType: 'skip',
+      observedOperationType: 'skip',
+    );
+  }
+
+  /// B4d.7 targeted matrix.
+  static const cursorSkipUndoJourneys = ['I', 'J'];
+
+  static bool isExactCursorSkipUndoSelection(Iterable<String> selected) {
+    final set = selected.map((e) => e.toUpperCase()).toSet();
+    return set.length == cursorSkipUndoJourneys.length &&
+        cursorSkipUndoJourneys.every(set.contains);
+  }
 
   static String classifyUndoFailure({
     required bool hasUndoRecord,

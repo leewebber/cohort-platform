@@ -59,6 +59,15 @@ void main() {
       expect(cursorAligned.sessionSlotId, '48a1ce94-second');
       expect(cursorAligned.selectedViaCursor, isTrue);
       expect(cursorAligned.firstUncompletedSlotId, 'b49af2c9-first');
+
+      // B4d.7: preferCursor with null cursor fails closed.
+      final nullCursor = S17SkipDiagnosis.selectSkipSource(
+        occurrences: occs,
+        cursorSessionSlotId: null,
+        preferCursor: true,
+      );
+      expect(nullCursor.ok, isFalse);
+      expect(nullCursor.detail, contains('refusing first-uncompleted'));
     });
 
     test('5–8. post-Swap+Push geometry; skip still domain-ready for cursor', () {

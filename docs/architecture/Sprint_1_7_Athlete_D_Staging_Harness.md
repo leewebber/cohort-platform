@@ -1,61 +1,58 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.6 diagnosed the B4d.5 post-Swap+Push Skip failure locally.
-No staging contact under B4d.6.
+**Status:** B4d.7 cursor-aligned Skip→Undo staging reverification.
+Exactly one dry run + one live run for `I,J` only.
 
-**B4d.5 targeted reverification:** `bfe478a`  
-**B4d.6 skip diagnosis branch:** `codex/b4d6-skip-diagnosis`
+**B4d.6 skip diagnosis:** `ade38b8`  
+**B4d.7 branch:** `codex/b4d7-cursor-skip-undo`
 
-## B4d.5 observed I failure
+## B4d.6 accepted conclusions
+
+* Primary: `HARNESS_INELIGIBLE_SELECTION` (first-uncompleted + null cursor)
+* Secondary: typed-result collapse
+* Product Skip defect: not proven
+* Local remediation: cursor into snapshot, prefer cursor, typed I failures
+
+## B4d.7 matrix
 
 ```text
-G PASS → H PASS → I FAIL ("Skip failed or unavailable") → J BLOCKED
-Source selected: first uncompleted after G/H (b49af2c9…)
+Selected: I,J
+Order:    I → J
 ```
 
-## B4d.6 causal diagnosis
+G/H/D/C/F/K must not execute.
 
-| Finding | Result |
-|---------|--------|
-| Post-Swap+Push date geometry (2 slots) | A@D+2, B@D+1 — **no same-date collision** |
-| Domain Skip after date changes | Still preview-ready when target **is** cursor |
-| Domain Skip of non-current | `occurrenceNotCurrent` when cursor bound |
-| B4d.5 harness snapshot | **`cursorSessionSlotId` unbound (null)** |
-| B4d.5 selection | Always **first uncompleted**, not assignment cursor |
-| Client vs server | Null-cursor client may preview ready; server RPC still requires current cursor (`occurrence_not_current`) |
-| Reporting | All I failures collapsed to opaque string |
+### Contracts
 
-**Primary classification:** `HARNESS_INELIGIBLE_SELECTION`  
-**Secondary:** `HARNESS_TYPED_RESULT_COLLAPSED`  
-**Evidence rider:** `INSUFFICIENT_PRESERVED_EVIDENCE` (B4d.5 did not retain preview/apply codes)
+* **I:** reload; require non-null cursor; select cursor occurrence only;
+  refuse first-uncompleted fallback; typed preview/apply; pass only if exact
+  cursor occurrence is skipped and unrelated occurrences unchanged.
+* **J:** only if I PASS; latest undo must be the **fresh** B4d.7 Skip
+  (type + base/result revision + slot); restore **complete** pre-I state.
 
-**Product Skip defect proven?** No — geometry alone does not make Skip ineligible.
+### Dry-run / live
 
-**Hosted mutation after I FAIL?** Uncertain if apply was reached; opaque report. Treat Athlete D Skip/undo journal as **uncertain** until an evidence-rich run.
+```bash
+CONFIRM_COHORT_STAGING=1 \
+  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  S17_SELECTED_JOURNEYS=I,J \
+  ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
 
-## Local harness remediation (B4d.6)
+CONFIRM_COHORT_STAGING=1 \
+  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  S17_SELECTED_JOURNEYS=I,J \
+  ./tool/staging/run_s17_flutter_staging_verify.sh --resume
+```
 
-* Resolve assignment cursor into schedule snapshot before Skip
-* Select Skip source via cursor (refuse silent first-uncompleted fallback when cursor is non-uncompleted)
-* Emit typed I failure detail: preview/apply reached, codes, classification
-* Characterization tests for G→H geometry + cursor vs first-uncompleted
-
-Do **not** retry staging under B4d.6.
+Exactly one dry + at most one live. No retry. No product Skip/Undo change.
 
 ## Next authority
 
-```text
-Harness defect (this diagnosis):
-  separately authorise one fresh I→J (or G,H,I,J) staging verification
-  using the cursor-aligned typed harness — no product Skip change
+| Result | Next |
+|--------|------|
+| I+J PASS | B4d.8 adaptation-eligible fixture + Journey D |
+| I typed product failure | Local diagnosis/remediation; no staging retry |
+| J typed failure after I PASS | Local Undo diagnosis; no staging retry |
+| Cursor absent/ineligible | Separately authorised deterministic-state prep |
 
-If that run still fails with typed EXPECTED_SKIP_INELIGIBILITY /
-occurrence_not_current despite cursor alignment:
-  diagnose persisted cursor vs first-uncompleted divergence
-
-Journey D remains separate (adaptation-eligible fixture)
-
-B4e remains blocked
-```
-
-Production remains rejected. Evidence under `/tmp/b4d5_*` retained.
+B4e remains blocked. Production rejected.

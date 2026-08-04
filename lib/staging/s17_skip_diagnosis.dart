@@ -116,7 +116,18 @@ class S17SkipDiagnosis {
     }
     final first = uncompleted.first.sessionSlotId;
     final cursor = cursorSessionSlotId?.trim() ?? '';
-    if (preferCursor && cursor.isNotEmpty) {
+    // B4d.7: when preferCursor, null/unresolvable cursor fails closed —
+    // first-uncompleted must never override a missing cursor.
+    if (preferCursor) {
+      if (cursor.isEmpty) {
+        return S17SkipSourceSelection(
+          ok: false,
+          detail:
+              'Cursor null/unresolvable; refusing first-uncompleted fallback',
+          classification: classHarnessIneligibleSelection,
+          firstUncompletedSlotId: first,
+        );
+      }
       final cursorOcc = uncompleted
           .where((o) => o.sessionSlotId == cursor)
           .toList(growable: false);
@@ -144,7 +155,7 @@ class S17SkipDiagnosis {
         selectedViaCursor: true,
       );
     }
-    // Legacy B4d.5 behaviour — first uncompleted, cursor unbound.
+    // Legacy B4d.5 characterisation path only (preferCursor: false).
     return S17SkipSourceSelection(
       ok: true,
       detail:

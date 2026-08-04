@@ -662,6 +662,10 @@ Future<void> main() async {
         var beforeSkipRev = working.projection.scheduleRevision;
         var skipSourcePrefix = '';
         var iPassed = false;
+        var freshSkipSlotId = '';
+        var freshSkipResultRev = -1;
+        var freshSkipOpId = '';
+        final preIBaseline = <String, String>{};
 
         // F Move (optional — omitted for B4d.5 G,H,I,J targeting)
         if (runF && scheduleOpsContinue) {
@@ -913,7 +917,7 @@ Future<void> main() async {
           }
         }
 
-        // I Skip — cursor-aligned selection + typed failure classes (B4d.6).
+        // I Skip — cursor-required + typed evidence (B4d.7).
         if (runI && scheduleOpsContinue) {
           final restoredForSkip = await restore.ensureAndRestore(
             athleteId: config.athleteId,
@@ -965,6 +969,12 @@ Future<void> main() async {
                 ),
               )
               .toList();
+          // Capture complete pre-I baseline before any Skip mutation.
+          preIBaseline.clear();
+          for (final o in snapshot.projection.occurrences) {
+            preIBaseline[o.identity.sessionSlotId] =
+                '${o.scheduledDate}|${o.disposition.name}';
+          }
           final selection = S17SkipDiagnosis.selectSkipSource(
             occurrences: skipViews,
             cursorSessionSlotId: cursorSlotId,
@@ -986,6 +996,7 @@ Future<void> main() async {
           );
           if (selection.ok && selection.sessionSlotId != null) {
             final slot = selection.sessionSlotId!;
+            freshSkipSlotId = slot;
             skipSourcePrefix = S17JourneyDiagnosis.redactPrefix(slot);
             beforeSkipRev = snapshot.projection.scheduleRevision;
             final skipPreview = apply.previewSkip(
@@ -1002,6 +1013,7 @@ Future<void> main() async {
             var reconstructionOk = false;
             var revisionAdvanced = false;
             var occurrenceSkipped = false;
+            var unrelatedUnchanged = false;
             if (previewReady) {
               final cmd = apply.skipCommandFromPreview(
                 snapshot: snapshot,
@@ -1026,12 +1038,21 @@ Future<void> main() async {
                       after.projection.scheduleRevision != beforeSkipRev;
                   occurrenceSkipped =
                       after.projection.bySlotId(slot)?.isSkipped == true;
+                  unrelatedUnchanged = after.projection.occurrences.every((o) {
+                    final id = o.identity.sessionSlotId;
+                    if (id == slot) return true;
+                    final expected = preIBaseline[id];
+                    if (expected == null) return false;
+                    return '${o.scheduledDate}|${o.disposition.name}' ==
+                        expected;
+                  });
                 }
                 skipOk =
                     applied.isSuccess &&
                     reconstructionOk &&
                     revisionAdvanced &&
-                    occurrenceSkipped;
+                    occurrenceSkipped &&
+                    unrelatedUnchanged;
               }
             }
             attempt = S17SkipDiagnosis.classifyAttempt(
@@ -1051,9 +1072,21 @@ Future<void> main() async {
               selectedMatchesCursor:
                   (cursorSlotId ?? '').isEmpty || slot == cursorSlotId,
             );
+            if (skipOk && !unrelatedUnchanged) {
+              attempt = const S17SkipAttemptReport(
+                classification:
+                    S17SkipDiagnosis.classHarnessPostconditionMismatch,
+                detail: 'Skip applied but unrelated occurrences changed',
+                previewReached: true,
+                applyReached: true,
+                mutationMayHavePersisted: true,
+                undoRecordMayExist: true,
+              );
+              skipOk = false;
+            }
           } else {
             skipSourcePrefix = S17JourneyDiagnosis.redactPrefix(
-              selection.firstUncompletedSlotId ?? '',
+              selection.firstUncompletedSlotId ?? cursorSlotId ?? '',
             );
             attempt = S17SkipAttemptReport(
               classification: selection.classification,
@@ -1065,6 +1098,10 @@ Future<void> main() async {
           final latestAfterSkip = await ops.latestUndoableOperation(
             assignmentId: config.assignmentId,
           );
+          if (skipOk && latestAfterSkip != null) {
+            freshSkipOpId = latestAfterSkip.operationId;
+            freshSkipResultRev = latestAfterSkip.resultRevision;
+          }
           iPassed = skipOk;
           final failDetail = S17SkipDiagnosis.formatFailureDetail(
             report: attempt,
@@ -1080,8 +1117,11 @@ Future<void> main() async {
             skipOk
                 ? 'Skip applied source=$skipSourcePrefix '
                       'pre_rev=$beforeSkipRev '
+                      'result_rev=$freshSkipResultRev '
                       'cursor=${S17JourneyDiagnosis.redactPrefix(cursorSlotId ?? '')} '
-                      'latest_undo=${latestAfterSkip?.originalType.name ?? 'none'}'
+                      'latest_undo=${latestAfterSkip?.originalType.name ?? 'none'} '
+                      'op=${S17JourneyDiagnosis.redactPrefix(freshSkipOpId)} '
+                      'first_uncompleted_override=false'
                 : failDetail,
           );
           if (!skipOk) {
@@ -1096,7 +1136,7 @@ Future<void> main() async {
           }
         }
 
-        // J Undo — exact Skip from I; typed failure classes (B4d.5).
+        // J Undo — exact fresh B4d.7 Skip only; full pre-I restore (B4d.7).
         if (runJ && scheduleOpsContinue) {
           if (!iPassed && runI) {
             setResult(
@@ -1115,8 +1155,18 @@ Future<void> main() async {
             final undoable = await ops.latestUndoableOperation(
               assignmentId: config.assignmentId,
             );
-            final undoTarget = S17JourneyDiagnosis.requireSkipUndoTarget(
+            final priorSlot =
+                undoable?.priorSnapshot['session_slot_id']?.toString() ??
+                undoable?.priorSnapshot['sessionSlotId']?.toString();
+            final undoTarget = S17JourneyDiagnosis.requireFreshSkipUndoTarget(
               latestOperationType: undoable?.originalType.name,
+              latestOperationId: undoable?.operationId,
+              latestBaseRevision: undoable?.baseRevision,
+              latestResultRevision: undoable?.resultRevision,
+              expectedBaseRevision: beforeSkipRev,
+              expectedResultRevision: freshSkipResultRev,
+              expectedSkippedSlotId: freshSkipSlotId,
+              priorSnapshotSlotId: priorSlot,
             );
             var undoOk = false;
             var undoClass = S17JourneyDiagnosis.undoClassUnknown;
@@ -1124,7 +1174,10 @@ Future<void> main() async {
             if (!undoTarget.ok) {
               undoClass = undoable == null
                   ? S17JourneyDiagnosis.undoClassNoRecord
-                  : S17JourneyDiagnosis.undoClassLatestNotSkip;
+                  : (undoTarget.detail.startsWith('LATEST_NOT_SKIP')
+                        ? S17JourneyDiagnosis.undoClassLatestNotSkip
+                        : S17JourneyDiagnosis
+                              .undoClassLatestSkipIdentityMismatch);
             } else if (undoable!.incompleteSnapshot) {
               undoClass = S17JourneyDiagnosis.undoClassIncompleteInverse;
               undoDetail =
@@ -1155,27 +1208,31 @@ Future<void> main() async {
                   final revOk =
                       after != null &&
                       after.projection.scheduleRevision == beforeSkipRev;
-                  undoOk = applied.isSuccess && revOk;
+                  final stateOk =
+                      after != null &&
+                      after.projection.occurrences.every((o) {
+                        final expected = preIBaseline[o.identity.sessionSlotId];
+                        if (expected == null) return false;
+                        return '${o.scheduledDate}|${o.disposition.name}' ==
+                            expected;
+                      });
+                  undoOk = applied.isSuccess && revOk && stateOk;
                   if (!applied.isSuccess) {
                     undoClass = S17JourneyDiagnosis.undoClassRejected;
                     undoDetail = '$undoClass: apply unsuccessful';
                   } else if (!revOk) {
-                    undoClass = S17JourneyDiagnosis.classifyUndoFailure(
-                      hasUndoRecord: true,
-                      latestIsSkip: true,
-                      incompleteInverse: false,
-                      previewReady: true,
-                      applySucceeded: true,
-                      postconditionOk: false,
-                      expectedRevision: beforeSkipRev,
-                      observedRevision: after?.projection.scheduleRevision,
-                    );
+                    undoClass = S17JourneyDiagnosis.undoClassRevisionMismatch;
                     undoDetail =
                         '$undoClass expected_rev=$beforeSkipRev '
                         'observed_rev=${after?.projection.scheduleRevision}';
+                  } else if (!stateOk) {
+                    undoClass =
+                        S17JourneyDiagnosis.undoClassPostconditionFailed;
+                    undoDetail =
+                        '$undoClass: pre-I occurrence state not fully restored';
                   } else {
                     undoDetail =
-                        'Undo restored Skip prior revision '
+                        'Undo restored precise pre-I state '
                         'source=$skipSourcePrefix pre_rev=$beforeSkipRev';
                   }
                 }
@@ -1187,10 +1244,13 @@ Future<void> main() async {
                   ? S17JourneyResult.pass
                   : (undoClass == S17JourneyDiagnosis.undoClassNoRecord ||
                             undoClass ==
-                                S17JourneyDiagnosis.undoClassLatestNotSkip
+                                S17JourneyDiagnosis.undoClassLatestNotSkip ||
+                            undoClass ==
+                                S17JourneyDiagnosis
+                                    .undoClassLatestSkipIdentityMismatch
                         ? S17JourneyResult.blocked
                         : S17JourneyResult.fail),
-              undoOk ? undoDetail : undoDetail,
+              undoOk ? undoDetail : '$undoClass $undoDetail',
             );
           }
         }
