@@ -479,11 +479,14 @@ Future<void> main() async {
           : snapshot.projection.occurrences
                 .where((o) => o.isUncompleted)
                 .toList();
+      // Authored slot count is known only for the Self-Test 1 one-slot
+      // catalogue lineage. Never populate it from current uncompleted
+      // occurrence state (B4d.10 / B4d.12 harness baseline semantics).
       final baselineSnap = S17OccurrenceBaselineSnapshot(
         authoredExecutableSlotCount:
             config.lineageCode == S17OccurrenceBaseline.oneSlotCatalogueLineage
             ? 1
-            : (scheduled.isEmpty ? 0 : scheduled.length),
+            : null,
         projectedOccurrenceCount: snapshot?.projection.occurrences.length ?? 0,
         uncompletedOccurrenceCount: scheduled.length,
         completedOrSkippedCount: snapshot == null
@@ -600,11 +603,7 @@ Future<void> main() async {
 
       final snapForBaseline = snapshot;
       final baselineAfter = S17OccurrenceBaselineSnapshot(
-        authoredExecutableSlotCount: prepResult.ok
-            ? (prepResult.uncompletedOccurrences >= 2
-                  ? prepResult.uncompletedOccurrences
-                  : scheduled.length)
-            : baselineSnap.authoredExecutableSlotCount,
+        authoredExecutableSlotCount: baselineSnap.authoredExecutableSlotCount,
         projectedOccurrenceCount:
             snapForBaseline?.projection.occurrences.length ?? 0,
         uncompletedOccurrenceCount: scheduled.length,
@@ -620,11 +619,17 @@ Future<void> main() async {
           : (snapForBaseline == null
                 ? 'BASELINE_FAIL projection missing after preparation'
                 : S17OccurrenceBaseline.failClosedReason(baselineAfter));
+      final baselineReport = baselineAfter
+          .toReportFields()
+          .entries
+          .map((e) => '${e.key}=${e.value}')
+          .join(' ');
       setPrereq(
         'PREREQ_BASELINE',
         baselineFail == null ? S17JourneyResult.pass : S17JourneyResult.fail,
-        baselineFail ??
-            'Baseline ready uncompleted=${baselineAfter.uncompletedOccurrenceCount}',
+        baselineFail == null
+            ? 'Baseline ready $baselineReport'
+            : '$baselineFail $baselineReport',
       );
       if (baselineFail != null) {
         for (final code in ['C', 'D', 'F', 'G', 'H', 'I', 'J', 'K']) {

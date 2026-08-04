@@ -234,7 +234,7 @@ abstract class S17ProjectionBaselinePort {
     required String athleteId,
     required String assignmentId,
     required String lineageCode,
-    required int authoredExecutableSlotCount,
+    int? authoredExecutableSlotCount,
   });
 }
 
@@ -853,16 +853,15 @@ class S17SchedulePreparation {
       }
     }
 
-    final authored = request.authoredExecutableSlotCountHint > 0
+    // Never invent authored slot count from projected/uncompleted occurrences.
+    final int? authored = request.authoredExecutableSlotCountHint > 0
         ? request.authoredExecutableSlotCountHint
         : current.authoredExecutableSlotCount;
     final baseline = await _projection.loadBaseline(
       athleteId: request.athleteId,
       assignmentId: liveAssignment,
       lineageCode: liveLineage,
-      authoredExecutableSlotCount: authored > 0
-          ? authored
-          : current.projectedOccurrenceCount,
+      authoredExecutableSlotCount: authored,
     );
     if (baseline.lineageCode.trim() != targetLineage ||
         baseline.lineageCode.trim() ==

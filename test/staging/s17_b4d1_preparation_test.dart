@@ -521,7 +521,7 @@ class _FakeProjection implements S17ProjectionBaselinePort {
     required String athleteId,
     required String assignmentId,
     required String lineageCode,
-    required int authoredExecutableSlotCount,
+    int? authoredExecutableSlotCount,
   }) async {
     return S17OccurrenceBaselineSnapshot(
       authoredExecutableSlotCount: authored,

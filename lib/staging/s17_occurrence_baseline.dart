@@ -1,13 +1,26 @@
-/// Diagnosis and fail-closed baseline for schedule-operation journeys (F–J).
-///
-/// B4b root cause: PROG-S13-ELIG is the Self-Test 1 one-slot package, so
-/// ensure/restore correctly yields a single uncompleted occurrence. Horizon
-/// and date filtering are not the cause.
+// Diagnosis and fail-closed baseline for schedule-operation journeys (F–J).
+//
+// Authored executable slot count and current uncompleted executable
+// occurrence count are different values. The I→J baseline gate evaluates
+// current assignment state. A baseline insufficiency does not prove an
+// authored programme insufficiency.
+//
+// B4b root cause (when authored count is known): PROG-S13-ELIG is the
+// Self-Test 1 one-slot package. Horizon and date filtering are not the cause.
 
 /// Classifies why fewer than [requiredUncompleted] occurrences are available.
 enum S17OccurrenceBlockerCause {
-  /// Authored programme has fewer executable slots than required (B4b root cause).
+  /// Authored programme has fewer executable slots than required.
+  ///
+  /// Only when [S17OccurrenceBaselineSnapshot.authoredExecutableSlotCount]
+  /// is known from an authoritative authored-plan source.
   authoredProgrammeInsufficientSlots,
+
+  /// Current assignment has fewer uncompleted executable occurrences than
+  /// required for deterministic I→J (Skip then Undo) verification.
+  ///
+  /// Does not assert authored programme structure.
+  currentBaselineInsufficientExecutableOccurrences,
 
   /// Authored slots suffice but materialised/projected occurrences do not.
   materialisationInsufficient,
@@ -25,9 +38,12 @@ enum S17OccurrenceBlockerCause {
   productDefect,
 }
 
+/// Status of the authored-slot field when no authoritative plan source exists.
+enum S17AuthoredExecutableSlotCountStatus { evaluated, notEvaluated }
+
 class S17OccurrenceBaselineSnapshot {
   const S17OccurrenceBaselineSnapshot({
-    required this.authoredExecutableSlotCount,
+    this.authoredExecutableSlotCount,
     required this.projectedOccurrenceCount,
     required this.uncompletedOccurrenceCount,
     required this.completedOrSkippedCount,
@@ -35,15 +51,45 @@ class S17OccurrenceBaselineSnapshot {
     this.schedulingHorizonEnd,
   });
 
-  final int authoredExecutableSlotCount;
+  /// Executable slots from an authoritative authored plan/package source.
+  ///
+  /// Null means not evaluated — never populate from current occurrence state.
+  final int? authoredExecutableSlotCount;
+
   final int projectedOccurrenceCount;
+
+  /// Current uncompleted executable occurrences on the live assignment.
+  ///
+  /// This is the value the I→J preparation gate evaluates.
   final int uncompletedOccurrenceCount;
+
   final int completedOrSkippedCount;
   final String lineageCode;
   final String? schedulingHorizonEnd;
 
+  /// Repository-native alias for report/JSON clarity.
+  int get currentUncompletedExecutableOccurrenceCount =>
+      uncompletedOccurrenceCount;
+
+  S17AuthoredExecutableSlotCountStatus get authoredExecutableSlotCountStatus =>
+      authoredExecutableSlotCount == null
+      ? S17AuthoredExecutableSlotCountStatus.notEvaluated
+      : S17AuthoredExecutableSlotCountStatus.evaluated;
+
   bool get hasNullHorizon =>
       schedulingHorizonEnd == null || schedulingHorizonEnd!.trim().isEmpty;
+
+  /// Redacted report fields for journey detail / JSON (no private ids).
+  Map<String, Object?> toReportFields() => {
+    'authored_executable_slot_count': authoredExecutableSlotCount,
+    'authored_executable_slot_count_status':
+        authoredExecutableSlotCountStatus.name,
+    'current_uncompleted_executable_occurrence_count':
+        currentUncompletedExecutableOccurrenceCount,
+    'projected_occurrence_count': projectedOccurrenceCount,
+    'completed_or_skipped_count': completedOrSkippedCount,
+    'lineage_code': lineageCode,
+  };
 }
 
 class S17OccurrenceBaselineDiagnosis {
@@ -99,26 +145,26 @@ class S17OccurrenceBaseline {
       );
     }
 
-    if (snap.authoredExecutableSlotCount < requiredUncompleted) {
-      final isKnownOneSlot =
-          snap.lineageCode == oneSlotCatalogueLineage ||
-          snap.authoredExecutableSlotCount == 1;
+    final authored = snap.authoredExecutableSlotCount;
+
+    // Genuine authored insufficiency — only when authored count is known.
+    if (authored != null && authored < requiredUncompleted) {
+      final isKnownOneSlot = snap.lineageCode == oneSlotCatalogueLineage;
       return S17OccurrenceBaselineDiagnosis(
         cause: S17OccurrenceBlockerCause.authoredProgrammeInsufficientSlots,
         detail:
-            'Authored executable slots=${snap.authoredExecutableSlotCount} '
+            'Authored executable slots=$authored '
             'lineage=${snap.lineageCode}; need ≥$requiredUncompleted. '
             '${isKnownOneSlot ? 'PROG-S13-ELIG is the Self-Test 1 one-slot package.' : ''}',
         canPrepareViaMultiSlotEnrolment: isKnownOneSlot,
       );
     }
 
-    if (snap.projectedOccurrenceCount < snap.authoredExecutableSlotCount) {
+    if (authored != null && snap.projectedOccurrenceCount < authored) {
       return S17OccurrenceBaselineDiagnosis(
         cause: S17OccurrenceBlockerCause.materialisationInsufficient,
         detail:
-            'Projected ${snap.projectedOccurrenceCount} < authored '
-            '${snap.authoredExecutableSlotCount}',
+            'Projected ${snap.projectedOccurrenceCount} < authored $authored',
         canPrepareViaMultiSlotEnrolment: false,
       );
     }
@@ -133,7 +179,23 @@ class S17OccurrenceBaseline {
       );
     }
 
-    if (snap.authoredExecutableSlotCount >= requiredUncompleted &&
+    // I→J preparation gate: current live baseline, not authored structure.
+    if (snap.uncompletedOccurrenceCount < requiredUncompleted) {
+      return S17OccurrenceBaselineDiagnosis(
+        cause: S17OccurrenceBlockerCause
+            .currentBaselineInsufficientExecutableOccurrences,
+        detail:
+            'Current uncompleted executable occurrences='
+            '${snap.currentUncompletedExecutableOccurrenceCount} '
+            'lineage=${snap.lineageCode}; need ≥$requiredUncompleted. '
+            'This is a current-baseline insufficiency, not an authored '
+            'programme slot-count proof.',
+        canPrepareViaMultiSlotEnrolment: false,
+      );
+    }
+
+    if (authored != null &&
+        authored >= requiredUncompleted &&
         snap.projectedOccurrenceCount < requiredUncompleted) {
       return const S17OccurrenceBaselineDiagnosis(
         cause: S17OccurrenceBlockerCause.productDefect,
@@ -148,7 +210,7 @@ class S17OccurrenceBaseline {
       detail:
           'Uncompleted=${snap.uncompletedOccurrenceCount} '
           'projected=${snap.projectedOccurrenceCount} '
-          'authored=${snap.authoredExecutableSlotCount}',
+          'authored=${authored ?? 'not_evaluated'}',
       canPrepareViaMultiSlotEnrolment:
           snap.lineageCode == oneSlotCatalogueLineage,
     );
