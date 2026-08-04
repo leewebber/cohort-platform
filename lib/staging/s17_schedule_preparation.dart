@@ -597,19 +597,15 @@ class S17SchedulePreparation {
       );
     }
 
-    final fail = S17OccurrenceBaseline.failClosedReason(current);
-    if (fail == null && request.currentIsMaterialised) {
-      return S17SchedulePreparationResult(
-        ok: true,
-        stage: S17PreparationStage.alreadyReady,
-        detail:
-            'Existing S15A enrolment already materialised with ≥2 uncompleted',
-        assignmentId: liveAssignment,
-        versionId: liveVersion,
-        lineageCode: liveLineage,
-        uncompletedOccurrences: current.uncompletedOccurrenceCount,
-        projectedOccurrences: current.projectedOccurrenceCount,
-        skippedBecauseAlreadyReady: true,
+    // B4d.5: never rematerialise an already-materialised assignment.
+    if (request.currentIsMaterialised) {
+      return _finishExistingMaterialisedEnrolment(
+        request,
+        current: current,
+        liveAssignment: liveAssignment,
+        liveVersion: liveVersion,
+        liveLineage: liveLineage,
+        targetLineage: targetLineage,
       );
     }
 
@@ -776,6 +772,143 @@ class S17SchedulePreparation {
       packageHash: packageHash,
       uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
       projectedOccurrences: baseline.projectedOccurrenceCount,
+    );
+  }
+
+  /// Already materialised: validate package/prepared/projection only — never
+  /// call materialise again (B4d.5).
+  Future<S17SchedulePreparationResult> _finishExistingMaterialisedEnrolment(
+    S17SchedulePreparationRequest request, {
+    required S17OccurrenceBaselineSnapshot current,
+    required String liveAssignment,
+    required String liveVersion,
+    required String liveLineage,
+    required String targetLineage,
+  }) async {
+    final activePort = _activeAssignment;
+    if (activePort != null) {
+      final active = await activePort.getActive(request.athleteId);
+      if (active == null ||
+          active.assignmentId.trim() != liveAssignment ||
+          active.versionId.trim() != liveVersion ||
+          active.lineageCode.trim() != targetLineage ||
+          !active.isMaterialised) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.assignmentPostcondition,
+          detail:
+              'REFUSED: materialised S15A assignment postcondition failed '
+              '(no rematerialisation)',
+          assignmentId: active?.assignmentId,
+          versionId: active?.versionId,
+          lineageCode: active?.lineageCode,
+        );
+      }
+    }
+
+    final packagePort = _packageSelection;
+    String? packageHash;
+    if (packagePort != null) {
+      final pkg = await packagePort.resolveForAssignment(
+        athleteId: request.athleteId,
+        assignmentId: liveAssignment,
+      );
+      if (pkg == null ||
+          pkg.packageHash.trim().isEmpty ||
+          pkg.versionId.trim() != liveVersion ||
+          pkg.lineageCode.trim() != targetLineage) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.packageSelection,
+          detail:
+              'Selected plan-package missing or not belonging to $targetLineage '
+              '(no rematerialisation)',
+          assignmentId: liveAssignment,
+          versionId: liveVersion,
+          lineageCode: liveLineage,
+        );
+      }
+      packageHash = pkg.packageHash;
+    }
+
+    final preparedPort = _preparedExecution;
+    if (preparedPort != null) {
+      final ready = await preparedPort.isReadyForAssignment(
+        athleteId: request.athleteId,
+        assignmentId: liveAssignment,
+        expectedVersionId: liveVersion,
+      );
+      if (!ready) {
+        return S17SchedulePreparationResult(
+          ok: false,
+          stage: S17PreparationStage.preparedExecution,
+          detail:
+              'Prepared execution not ready for materialised S15A assignment '
+              '(no rematerialisation)',
+          assignmentId: liveAssignment,
+          versionId: liveVersion,
+          lineageCode: liveLineage,
+          packageHash: packageHash,
+        );
+      }
+    }
+
+    final authored = request.authoredExecutableSlotCountHint > 0
+        ? request.authoredExecutableSlotCountHint
+        : current.authoredExecutableSlotCount;
+    final baseline = await _projection.loadBaseline(
+      athleteId: request.athleteId,
+      assignmentId: liveAssignment,
+      lineageCode: liveLineage,
+      authoredExecutableSlotCount: authored > 0
+          ? authored
+          : current.projectedOccurrenceCount,
+    );
+    if (baseline.lineageCode.trim() != targetLineage ||
+        baseline.lineageCode.trim() ==
+            S17OccurrenceBaseline.oneSlotCatalogueLineage) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.reconstruction,
+        detail:
+            'Reconstruction retained lineage=${baseline.lineageCode}; '
+            'expected $targetLineage (no rematerialisation)',
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: baseline.lineageCode,
+        packageHash: packageHash,
+        uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+        projectedOccurrences: baseline.projectedOccurrenceCount,
+      );
+    }
+    final afterFail = S17OccurrenceBaseline.failClosedReason(baseline);
+    if (afterFail != null) {
+      return S17SchedulePreparationResult(
+        ok: false,
+        stage: S17PreparationStage.uncompletedOccurrences,
+        detail: '$afterFail (no rematerialisation)',
+        assignmentId: liveAssignment,
+        versionId: liveVersion,
+        lineageCode: liveLineage,
+        packageHash: packageHash,
+        uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+        projectedOccurrences: baseline.projectedOccurrenceCount,
+      );
+    }
+
+    return S17SchedulePreparationResult(
+      ok: true,
+      stage: S17PreparationStage.alreadyReady,
+      detail:
+          'Reused materialised S15A enrolment (materialisation skipped); '
+          'uncompleted=${baseline.uncompletedOccurrenceCount}',
+      assignmentId: liveAssignment,
+      versionId: liveVersion,
+      lineageCode: liveLineage,
+      packageHash: packageHash,
+      uncompletedOccurrences: baseline.uncompletedOccurrenceCount,
+      projectedOccurrences: baseline.projectedOccurrenceCount,
+      skippedBecauseAlreadyReady: true,
     );
   }
 }

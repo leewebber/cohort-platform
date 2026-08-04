@@ -352,10 +352,16 @@ void main() {
         latestOperationType: 'push',
       );
       expect(stolen.ok, isFalse);
-      expect(stolen.detail, contains('contamination'));
+      expect(stolen.detail, contains('LATEST_NOT_SKIP'));
       expect(
         S17JourneyDiagnosis.requireSkipUndoTarget(latestOperationType: null).ok,
         isFalse,
+      );
+      expect(
+        S17JourneyDiagnosis.requireSkipUndoTarget(
+          latestOperationType: null,
+        ).detail,
+        contains('NO_UNDO_RECORD'),
       );
     });
   });
@@ -416,12 +422,13 @@ void main() {
         final entry = File(
           'lib/main_s17_staging_verify.dart',
         ).readAsStringSync();
-        expect(entry.contains("setResult(\n          'F'"), isTrue);
-        expect(entry.contains("setResult(\n          'I'"), isTrue);
+        expect(entry.contains("setResult(\n            'F'"), isTrue);
+        expect(entry.contains("setResult(\n            'I'"), isTrue);
         expect(entry.contains("setResult('K'"), isTrue);
         expect(entry.contains("setResult(\n            'C'"), isTrue);
         expect(entry.contains('S17LiveAssignmentBinding'), isTrue);
         expect(entry.contains('S17_FLUTTER_COMPLETE exit='), isTrue);
+        expect(entry.contains("selected.contains('F')"), isTrue);
       },
     );
   });

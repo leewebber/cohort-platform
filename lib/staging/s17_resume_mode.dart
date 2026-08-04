@@ -19,6 +19,7 @@ class S17ResumeMode {
 
   /// Default execution order: prepare baseline, schedule ops, then K→C, then D.
   /// K may create the prior result C needs; final report still labels independently.
+  /// B4d.5 may select only G,H,I,J → execution order G→H→I→J (F omitted).
   static const defaultExecutionOrder = ['F', 'G', 'H', 'I', 'J', 'K', 'C', 'D'];
 
   static List<String> parseSelectedJourneys(String? raw) {

@@ -1,110 +1,72 @@
 # Sprint 1.7 Athlete D Staging Harness
 
-**Status:** B4d.4 diagnosed D/G/H/J non-passes after B4d.3 preparation success.
-Another B4d dry/live retry is **not** authorised by B4d.4.
+**Status:** B4d.5 targeted reverification of corrected G/H and isolated I→J.
+Another retry beyond the single authorised B4d.5 dry+live pair is **not**
+authorised.
 
-**Harness tip (B4a):** `c9bf996`  
-**B4c remediation:** `f58f55c`  
-**B4d.1 remediation:** `4ae9ba1`  
-**B4d.2 diagnosis:** `9e175f3`  
 **B4d.3 live-assignment bind:** `1607d7d`  
-**B4d.4 journey diagnosis branch:** `codex/b4d4-journey-diagnosis`
+**B4d.4 journey diagnosis:** `c4c655f`  
+**B4d.5 targeted reverification branch:** `codex/b4d5-targeted-reverification`
 
-## B4d.3 preparation success (accepted)
+## B4d.4 conclusions (accepted)
 
-| Item | Result |
-|------|--------|
-| Live-assignment binding | PASS → `PROG-S15A-STAGING` |
-| Stale S13 defines | superseded |
-| Enrol/switch/replaceActive | skipped |
-| Materialisation + prepared execution | PASS |
-| Baseline | uncompleted=3 |
-| Selected matrix | `C,D,F,G,H,I,J,K` |
-| Observed | C/F/I/K PASS · D BLOCKED · G/H/J FAIL |
+| Journey | Classification |
+|---------|----------------|
+| G | Harness/order contamination (same-date after F Move+1) |
+| H | Harness invalid probe wrong under NULL unbounded horizon |
+| I | Skip passed |
+| J | Residual Undo boundary (incomplete inverse vs revision) |
+| D | Expected `noSafeAdaptation` fixture eligibility — **do not run in B4d.5** |
 
-## Exact execution order (not matrix letter order)
+## B4d.5 targeted matrix
 
 ```text
-Prepare/baseline → F → G → H → I → J → K → C → D
+Selected: G,H,I,J
+Order:    G → H → I → J
 ```
 
-F–J mutate **one shared schedule**. That is intentional for Skip→Undo (I→J) and
-acceptable for sequential schedule ops, but B4d.3’s G/H probes were
-**accidentally order-contaminated** by prior mutations and wrong invalid probes.
+F, C, K, D must not execute. Adaptation must not execute.
 
-| Journey | Independence |
-|---------|--------------|
-| F | Shared schedule start |
-| G | Accidentally order-dependent on F (same-date after Move+1) |
-| H | Valid half OK; invalid half used wrong probe under NULL horizon |
-| I → J | Intentionally sequential (Skip establishes undoable) |
-| K → C | Intentionally sequential (completion may seed previous performance) |
-| D | Independent of schedule dates; eligibility/fixture limited |
+### Contracts
 
-## Journey D — proposal eligibility
+* **G:** reload; distinct-date uncompleted pair; invalid (A,A) atomic; valid
+  swaps both dates; stop downstream if G does not PASS.
+* **H:** report bounded vs `UNBOUNDED_NULL_HORIZON`; valid +1 push; invalid
+  probe **`dayDelta <= 0` only** (never large positive under NULL horizon).
+* **I:** fresh Skip; record redacted source + pre-Skip revision + latest undo type.
+* **J:** reload; require latest undo == that Skip; typed failure classes:
+  `NO_UNDO_RECORD`, `LATEST_NOT_SKIP`, `INCOMPLETE_INVERSE_SNAPSHOT`,
+  `REVISION_MISMATCH`, `UNDO_REJECTED`, `UNDO_APPLIED_POSTCONDITION_FAILED`.
 
-D BLOCKED when `propose(equipment)` returns a non-acceptable outcome
-(typically `noSafeAdaptation`). That is **expected policy / fixture eligibility**,
-not a silent failure and not PASS.
+### Preparation
 
-Harness must report the safe outcome/reason and must never classify lack of
-proposal as PASS. Meaningful reject+accept coverage requires a positively
-eligible reviewable proposal for the prepared S15A session (lawful equipment
-substitute metadata). Do not weaken `AdaptationPolicyGate` to force a proposal.
+Resume binds live `PROG-S15A-STAGING`. Enrol/switch/`replaceActive` forbidden.
+If already materialised, **do not rematerialise** — reuse and validate only.
 
-## Journey G — invalid vs valid halves
+## Dry-run / live (B4d.5 only)
 
-| Half | B4d.3 | Cause |
-|------|-------|--------|
-| Invalid swap (A,A) | rejected | Product correct |
-| Valid swap (first two uncompleted) | FAIL | After F Move+1, first two share a date; product rejects same-date swap (`noChange`) |
+```bash
+CONFIRM_COHORT_STAGING=1 \
+  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  S17_SELECTED_JOURNEYS=G,H,I,J \
+  ./tool/staging/run_s17_flutter_staging_verify.sh --resume --dry-run
 
-Classification: **harness defect / accidental order-dependency**, not a swap RPC
-defect. Remediation: refresh occurrences and select a **distinct-date** pair;
-require both-side date postconditions + revision change. If no distinct-date pair
-exists → BLOCKED with contamination detail.
+CONFIRM_COHORT_STAGING=1 \
+  S17_DART_DEFINES_FILE=<private>/flutter_dart_defines.json \
+  S17_SELECTED_JOURNEYS=G,H,I,J \
+  ./tool/staging/run_s17_flutter_staging_verify.sh --resume
+```
 
-## Journey H — valid vs horizon-invalid halves
+Exactly one dry run and at most one live run. No retry.
 
-| Half | B4d.3 | Cause |
-|------|-------|--------|
-| Valid push (+1) | applied | Product correct |
-| Invalid `dayDelta:10000` | `invalid_rejected=false` | `scheduling_horizon_end` is **NULL = unbounded**; large delta is allowed |
+## Next authority (after B4d.5)
 
-Horizon contract: non-null end is **inclusive** (`isAfter` rejects). NULL means
-unbounded. B4d.3 did **not** prove a product horizon defect.
+| Result | Next |
+|--------|------|
+| G/H/I/J all PASS | B4d.6 adaptation-eligible fixture + Journey D only |
+| J = `INCOMPLETE_INVERSE_SNAPSHOT` | Local Skip inverse product remediation; no staging retry |
+| J revision/postcondition | Smallest local diagnosis of that typed boundary |
+| G or H FAIL | Diagnose corrected contract; no retry |
 
-Harness remediation: use `dayDelta<=0` for always-invalid atomic rejection;
-only probe `horizonExceeded` when a non-null horizon makes the target truly
-out of range. Distinguish `UNBOUNDED_NULL_HORIZON` from accepted invalid push.
-
-## Journey I → J — Skip → Undo
-
-I PASS proves Skip applied. J must undo **that Skip**, not an earlier F/G/H
-operation. `latestUndoableOperation` is assignment-scoped by revision.
-
-J FAIL with I PASS is usually: incomplete Skip inverse snapshot, preview
-ineligibility, or postcondition/revision mismatch — report typed detail. If
-latest operation type ≠ `skip`, classify as undo-stack contamination (BLOCKED).
-
-## Prohibition on retry
-
-B4d.4 does **not** authorise another dry or live B4d run, preparation,
-materialisation, or Athlete D mutation. Preserve evidence. Product patches are
-separately authorised.
-
-## Evidence retention
-
-Retain Athlete D private config, B4b–B4d.3 artifacts under `/tmp/b4*`, B3a
-backup (do not open/restore/delete), and diagnosis worktrees. Production remains
-rejected.
-
-## Separately authorised next actions (by classification)
-
-| Classification | Next step |
-|----------------|-----------|
-| Harness defect (G selection, H invalid probe, D reason capture, J target check) | Authorise harness-only verification after B4d.4 local commit |
-| Fixture/eligibility (D noSafe) | Authorise deterministic adaptation-eligible fixture / precondition |
-| Incomplete Skip inverse (if proven on staging read) | Product/RPC remediation with characterization test |
-| True horizon defect (only if non-null horizon accepted out-of-range) | Product policy remediation |
-| B4e | Only after selected journeys PASS under a separately authorised run |
+B4e remains blocked until D and all required release journeys have passing
+staging evidence. Production remains rejected.

@@ -170,11 +170,20 @@ if [[ "$DRY_RUN" -eq 1 ]]; then
     echo "STALE_DEFINE_IDENTITIES=non_authoritative"
     echo "TARGET_LINEAGE=PROG-S15A-STAGING"
     echo "EXISTING_ENROLMENT_MATERIALISATION_PATH=selected"
+    echo "MATERIALISATION_REUSE_ONLY=enabled"
     echo "ENROL_SWITCH_REPLACE_ACTIVE=forbidden"
     echo "TIMEZONE_CONTRACT=UTC_required"
     echo "FAIL_CLOSED_PREPARATION=enabled"
     echo "ATHLETE_DISCOVERY_ENUMERATION=forbidden"
     echo "SELECTED_JOURNEYS=${SELECTED_JOURNEYS:-C,D,F,G,H,I,J,K}"
+    case "${SELECTED_JOURNEYS:-}" in
+      G,H,I,J|g,h,i,j) echo "EXECUTION_ORDER=G,H,I,J" ;;
+      *) echo "EXECUTION_ORDER=derived_from_selection" ;;
+    esac
+    echo "G_DISTINCT_DATE_SELECTION=required"
+    echo "H_INVALID_PROBE=dayDelta<=0"
+    echo "I_J_FRESH_SKIP_DEPENDENCY=required"
+    echo "D_ADAPTATION_EXECUTION=forbidden"
     echo "HOSTED_WRITES=none"
   else
     echo "DRY_RUN_OK: runner identity and private config validated; Flutter not launched."

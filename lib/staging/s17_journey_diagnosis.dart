@@ -257,7 +257,7 @@ class S17JourneyDiagnosis {
     if (observed == null || observed.isEmpty) {
       return const S17UndoTargetCheck(
         ok: false,
-        detail: 'Undo unavailable: no latest undoable operation after Skip',
+        detail: 'NO_UNDO_RECORD: no latest undoable operation after Skip',
         expectedOperationType: expected,
       );
     }
@@ -265,8 +265,8 @@ class S17JourneyDiagnosis {
       return S17UndoTargetCheck(
         ok: false,
         detail:
-            'Undo target contamination: latest=$observed expected=$expected '
-            '(prior journey stole undo stack)',
+            'LATEST_NOT_SKIP: latest=$observed expected=$expected '
+            '(refusing to test older/different operation)',
         expectedOperationType: expected,
         observedOperationType: observed,
       );
@@ -277,6 +277,58 @@ class S17JourneyDiagnosis {
       expectedOperationType: expected,
       observedOperationType: expected,
     );
+  }
+
+  /// Typed Undo failure classes for B4d.5 (safe, redacted).
+  static const undoClassNoRecord = 'NO_UNDO_RECORD';
+  static const undoClassLatestNotSkip = 'LATEST_NOT_SKIP';
+  static const undoClassIncompleteInverse = 'INCOMPLETE_INVERSE_SNAPSHOT';
+  static const undoClassRevisionMismatch = 'REVISION_MISMATCH';
+  static const undoClassRejected = 'UNDO_REJECTED';
+  static const undoClassPostconditionFailed =
+      'UNDO_APPLIED_POSTCONDITION_FAILED';
+  static const undoClassUnknown = 'UNKNOWN_SAFE_FAILURE';
+
+  static String classifyUndoFailure({
+    required bool hasUndoRecord,
+    required bool latestIsSkip,
+    required bool incompleteInverse,
+    required bool previewReady,
+    required bool applySucceeded,
+    required bool postconditionOk,
+    int? expectedRevision,
+    int? observedRevision,
+  }) {
+    if (!hasUndoRecord) return undoClassNoRecord;
+    if (!latestIsSkip) return undoClassLatestNotSkip;
+    if (incompleteInverse) return undoClassIncompleteInverse;
+    if (!previewReady) return undoClassRejected;
+    if (!applySucceeded) return undoClassRejected;
+    if (!postconditionOk) {
+      if (expectedRevision != null &&
+          observedRevision != null &&
+          expectedRevision != observedRevision) {
+        return undoClassRevisionMismatch;
+      }
+      return undoClassPostconditionFailed;
+    }
+    return undoClassUnknown;
+  }
+
+  /// B4d.5 targeted matrix.
+  static const targetedReverificationJourneys = ['G', 'H', 'I', 'J'];
+
+  static bool isExactTargetedSelection(Iterable<String> selected) {
+    final set = selected.map((e) => e.toUpperCase()).toSet();
+    return set.length == targetedReverificationJourneys.length &&
+        targetedReverificationJourneys.every(set.contains);
+  }
+
+  static List<String> targetedExecutionOrder(Iterable<String> selected) {
+    final set = selected.map((e) => e.toUpperCase()).toSet();
+    return targetedReverificationJourneys
+        .where(set.contains)
+        .toList(growable: false);
   }
 
   static String redactPrefix(String value) {
