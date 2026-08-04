@@ -1,0 +1,32 @@
+{
+  "contract": "B4d.19/B4d.20 Journey D equipment adaptation",
+  "available_equipment": [
+    "cohort.equipment.kettlebell",
+    "cohort.equipment.bodyweight",
+    "cohort.equipment.dumbbell"
+  ],
+  "omitted_required_equipment": [
+    "cohort.equipment.barbell",
+    "cohort.equipment.squat_rack"
+  ],
+  "current_protocol": {
+    "protocol_id": "PROT-S17-JD-ADAPT-CURRENT",
+    "exercise_id": "cohort.exercise.back_squat",
+    "replacement_exercise_id": "cohort.exercise.goblet_squat",
+    "substitution_rule_id": "cohort.substitution.back_squat_to_goblet_squat",
+    "can_replace_exercises": true
+  },
+  "later_protocol": {
+    "protocol_id": "PROT-S17-JD-ADAPT-LATER",
+    "exercise_id": "cohort.exercise.push_up",
+    "role": "unaffected_occurrence_baseline"
+  },
+  "lineage_code": "PROG-S17-JD-ADAPT",
+  "reserved_identities_rejected": [
+    "PROG-S15A-STAGING",
+    "PROG-S13-ELIG",
+    "Athlete C",
+    "Athlete D",
+    "e9bd7e19-6eb9-4f7e-abf6-d08ac4368748"
+  ]
+}

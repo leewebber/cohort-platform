@@ -1,0 +1,85 @@
+# B4d.20 Journey D adaptation fixture package (local compile / future staging import).
+# Fixture-only. Not customer or production catalogue content.
+# Current slot W1D1S1 → protocol with cohort.exercise.back_squat (equipment conflict).
+# Later slot W1D2S1 → baseline occurrence (invariant comparison).
+
+package_schema_version: 1
+
+programme:
+  lineage_code: PROG-S17-JD-ADAPT
+  version_number: 1
+  name: S17 Journey D Adaptation Fixture
+  description: Staging-only fixture for Phase 1 Journey D equipment adaptation.
+  library_scope: cohort_global
+  owner_type: global
+  coaching_intent: Deterministic equipment-substitution verification under athlete agreement.
+  duration_weeks: 1
+  sessions_per_week: 2
+  primary_goal: strength
+
+sessions:
+  - session_key: SES-JD-ADAPT-CURRENT
+    protocol_id: PROT-S17-JD-ADAPT-CURRENT
+    session_lineage_id: SL-S17-JD-ADAPT-CURRENT
+    revision_number: 1
+    title: Journey D Current Equipment Session
+  - session_key: SES-JD-ADAPT-LATER
+    protocol_id: PROT-S17-JD-ADAPT-LATER
+    session_lineage_id: SL-S17-JD-ADAPT-LATER
+    revision_number: 1
+    title: Journey D Later Baseline Session
+
+phases: []
+
+weeks:
+  - week_number: 1
+    title: Adaptation verification week
+    intent: build
+    coach_note: Two ordered executable occurrences for Journey D.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-JD-ADAPT-CURRENT
+            completion_expectation: required
+            progression:
+              prescription_summary: 3x5 back squat pattern
+              volume_note: Current occurrence for equipment adaptation
+              intensity_note: Submaximal authored load
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D2S1
+            session_order: 1
+            session_key: SES-JD-ADAPT-LATER
+            completion_expectation: required
+            progression:
+              prescription_summary: Later baseline occurrence
+              volume_note: Unaffected invariant comparison baseline
+              intensity_note: Authored baseline
+
+adaptation_permissions:
+  - id: ADP-JD-EQUIP-CURRENT
+    change_kind: substitute_approved_equipment
+    target_ref: W1D1S1
+    athlete_agreement_required: true
+    scope_note: Equipment substitution for Journey D current occurrence only.
+  - id: ADP-JD-EQUIP-PROGRAMME
+    change_kind: substitute_approved_exercise
+    target_ref: programme
+    athlete_agreement_required: true
+    scope_note: Approved exercise substitution kind allowed by AdaptationPolicyGate for equipment reason.
+
+protected_invariants: []
+
+assessments: []
+
+performance_evidence_requirements: []
+
+comparison_identities: []
