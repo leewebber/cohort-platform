@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cohort_platform/features/authored_plan_package/authored_plan_package.dart';
 
+import 'journey_d_bounded_http.dart';
 import 'journey_d_live_ports.dart';
 import 'journey_d_protocol_publication.dart';
 
@@ -24,6 +24,13 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
     final auth = await _get(
       '/auth/v1/admin/users?email=${Uri.encodeQueryComponent(email)}',
     );
+    if (auth.timedOut) {
+      return auth.dispatched
+          ? JourneyDLiveStageOutcome.unknown(
+              'auth_preflight_timed_out_dispatched',
+            )
+          : JourneyDLiveStageOutcome.timedOut('auth_preflight_timed_out');
+    }
     if (auth.statusCode != 200) {
       return JourneyDLiveStageOutcome.unknown(
         'auth_preflight_http_${auth.statusCode}',
@@ -49,6 +56,13 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
       '${Uri.encodeQueryComponent(lineageCode)}',
       preferCount: true,
     );
+    if (lin.timedOut) {
+      return lin.dispatched
+          ? JourneyDLiveStageOutcome.unknown(
+              'lineage_preflight_timed_out_dispatched',
+            )
+          : JourneyDLiveStageOutcome.timedOut('lineage_preflight_timed_out');
+    }
     if (lin.statusCode != 200) {
       return JourneyDLiveStageOutcome.unknown(
         'lineage_preflight_http_${lin.statusCode}',
@@ -74,24 +88,37 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
   }
 
   Future<_HttpResp> _get(String path, {bool preferCount = false}) async {
-    final client = HttpClient();
     try {
-      final req = await client.getUrl(Uri.parse('$apiUrl$path'));
-      req.headers.set('apikey', serviceKey);
-      req.headers.set('Authorization', 'Bearer $serviceKey');
-      if (preferCount) {
-        req.headers.set('Prefer', 'count=exact');
-        req.headers.set('Range', '0-0');
-      }
-      final resp = await req.close().timeout(const Duration(seconds: 45));
-      final body = await resp.transform(utf8.decoder).join();
+      final headers = <String, String>{
+        'apikey': serviceKey,
+        'Authorization': 'Bearer $serviceKey',
+        if (preferCount) 'Prefer': 'count=exact',
+        if (preferCount) 'Range': '0-0',
+      };
+      final resp = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 45),
+      ).get(Uri.parse('$apiUrl$path'), headers: headers);
       return _HttpResp(
         statusCode: resp.statusCode,
-        body: body,
-        contentRange: resp.headers.value('content-range'),
+        body: resp.body,
+        contentRange: resp.contentRange,
+        dispatched: resp.dispatched,
       );
-    } finally {
-      client.close(force: true);
+    } on JourneyDHttpTimeoutException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.toString(),
+        dispatched: e.dispatched,
+        timedOut: true,
+      );
+    } on JourneyDHttpTransportException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.detail,
+        dispatched: e.dispatched,
+      );
     }
   }
 
@@ -137,6 +164,16 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
         'roles': ['athlete'],
       },
     }, key: serviceKey);
+    if (created.timedOut) {
+      return JourneyDLiveAthleteResult(
+        state: created.dispatched
+            ? JourneyDPublicationStageState.unknown
+            : JourneyDPublicationStageState.timedOut,
+        detail: created.dispatched
+            ? 'auth_create_timed_out_dispatched'
+            : 'auth_create_timed_out',
+      );
+    }
     if (created.statusCode != 200 && created.statusCode != 201) {
       return JourneyDLiveAthleteResult(
         state: JourneyDPublicationStageState.failed,
@@ -211,19 +248,39 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
     required String key,
     String? prefer,
   }) async {
-    final client = HttpClient();
     try {
-      final req = await client.postUrl(Uri.parse('$apiUrl$path'));
-      req.headers.set('apikey', key);
-      req.headers.set('Authorization', 'Bearer $key');
-      req.headers.set('Content-Type', 'application/json');
-      if (prefer != null) req.headers.set('Prefer', prefer);
-      req.add(utf8.encode(jsonEncode(body)));
-      final resp = await req.close().timeout(const Duration(seconds: 60));
-      final text = await resp.transform(utf8.decoder).join();
-      return _HttpResp(statusCode: resp.statusCode, body: text);
-    } finally {
-      client.close(force: true);
+      final resp = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 60),
+      ).post(
+        Uri.parse('$apiUrl$path'),
+        headers: {
+          'apikey': key,
+          'Authorization': 'Bearer $key',
+          'Content-Type': 'application/json',
+          if (prefer != null) 'Prefer': prefer,
+        },
+        body: body,
+      );
+      return _HttpResp(
+        statusCode: resp.statusCode,
+        body: resp.body,
+        dispatched: resp.dispatched,
+      );
+    } on JourneyDHttpTimeoutException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.toString(),
+        dispatched: e.dispatched,
+        timedOut: true,
+      );
+    } on JourneyDHttpTransportException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.detail,
+        dispatched: e.dispatched,
+      );
     }
   }
 
@@ -232,18 +289,38 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
     Map<String, Object?> body, {
     required String key,
   }) async {
-    final client = HttpClient();
     try {
-      final req = await client.patchUrl(Uri.parse('$apiUrl$path'));
-      req.headers.set('apikey', key);
-      req.headers.set('Authorization', 'Bearer $key');
-      req.headers.set('Content-Type', 'application/json');
-      req.add(utf8.encode(jsonEncode(body)));
-      final resp = await req.close().timeout(const Duration(seconds: 60));
-      final text = await resp.transform(utf8.decoder).join();
-      return _HttpResp(statusCode: resp.statusCode, body: text);
-    } finally {
-      client.close(force: true);
+      final resp = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 60),
+      ).patch(
+        Uri.parse('$apiUrl$path'),
+        headers: {
+          'apikey': key,
+          'Authorization': 'Bearer $key',
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
+      return _HttpResp(
+        statusCode: resp.statusCode,
+        body: resp.body,
+        dispatched: resp.dispatched,
+      );
+    } on JourneyDHttpTimeoutException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.toString(),
+        dispatched: e.dispatched,
+        timedOut: true,
+      );
+    } on JourneyDHttpTransportException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.detail,
+        dispatched: e.dispatched,
+      );
     }
   }
 }
@@ -288,6 +365,11 @@ class JourneyDHostedProgrammeLifecycle
     final resp = await _rpc('import_authored_plan_package', {
       'payload': payload,
     });
+    if (resp.timedOut) {
+      return resp.dispatched
+          ? JourneyDLiveStageOutcome.unknown('import_timed_out_dispatched')
+          : JourneyDLiveStageOutcome.failed('import_timed_out');
+    }
     if (resp.statusCode != 200) {
       return JourneyDLiveStageOutcome.failed('import_http_${resp.statusCode}');
     }
@@ -338,18 +420,38 @@ class JourneyDHostedProgrammeLifecycle
   }
 
   Future<_HttpResp> _rpc(String name, Map<String, Object?> params) async {
-    final client = HttpClient();
     try {
-      final req = await client.postUrl(Uri.parse('$apiUrl/rest/v1/rpc/$name'));
-      req.headers.set('apikey', serviceKey);
-      req.headers.set('Authorization', 'Bearer $serviceKey');
-      req.headers.set('Content-Type', 'application/json');
-      req.add(utf8.encode(jsonEncode(params)));
-      final resp = await req.close().timeout(const Duration(seconds: 90));
-      final text = await resp.transform(utf8.decoder).join();
-      return _HttpResp(statusCode: resp.statusCode, body: text);
-    } finally {
-      client.close(force: true);
+      final resp = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 90),
+      ).post(
+        Uri.parse('$apiUrl/rest/v1/rpc/$name'),
+        headers: {
+          'apikey': serviceKey,
+          'Authorization': 'Bearer $serviceKey',
+          'Content-Type': 'application/json',
+        },
+        body: params,
+      );
+      return _HttpResp(
+        statusCode: resp.statusCode,
+        body: resp.body,
+        dispatched: resp.dispatched,
+      );
+    } on JourneyDHttpTimeoutException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.toString(),
+        dispatched: e.dispatched,
+        timedOut: true,
+      );
+    } on JourneyDHttpTransportException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.detail,
+        dispatched: e.dispatched,
+      );
     }
   }
 }
@@ -425,18 +527,38 @@ class JourneyDHostedEnrolment implements JourneyDLiveEnrolment {
     Map<String, Object?> params, {
     required String token,
   }) async {
-    final client = HttpClient();
     try {
-      final req = await client.postUrl(Uri.parse('$apiUrl/rest/v1/rpc/$name'));
-      req.headers.set('apikey', anonKey);
-      req.headers.set('Authorization', 'Bearer $token');
-      req.headers.set('Content-Type', 'application/json');
-      req.add(utf8.encode(jsonEncode(params)));
-      final resp = await req.close().timeout(const Duration(seconds: 90));
-      final text = await resp.transform(utf8.decoder).join();
-      return _HttpResp(statusCode: resp.statusCode, body: text);
-    } finally {
-      client.close(force: true);
+      final resp = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 90),
+      ).post(
+        Uri.parse('$apiUrl/rest/v1/rpc/$name'),
+        headers: {
+          'apikey': anonKey,
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: params,
+      );
+      return _HttpResp(
+        statusCode: resp.statusCode,
+        body: resp.body,
+        dispatched: resp.dispatched,
+      );
+    } on JourneyDHttpTimeoutException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.toString(),
+        dispatched: e.dispatched,
+        timedOut: true,
+      );
+    } on JourneyDHttpTransportException catch (e) {
+      return _HttpResp(
+        statusCode: 0,
+        body: '',
+        detail: e.detail,
+        dispatched: e.dispatched,
+      );
     }
   }
 }
@@ -455,43 +577,52 @@ class JourneyDHostedMaterialisation implements JourneyDLiveMaterialisation {
     if (token == null) {
       return JourneyDLiveStageOutcome.failed('missing_athlete_token');
     }
-    final client = HttpClient();
+    late final _HttpResp resp;
     try {
-      final req = await client.postUrl(
+      final bounded = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 90),
+      ).post(
         Uri.parse(
           '$apiUrl/rest/v1/rpc/materialise_athlete_plan_from_enrolment',
         ),
+        headers: {
+          'apikey': anonKey,
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: {
+          'p_programme_assignment_id': programmeAssignmentId,
+          'p_timezone': 'UTC',
+        },
       );
-      req.headers.set('apikey', anonKey);
-      req.headers.set('Authorization', 'Bearer $token');
-      req.headers.set('Content-Type', 'application/json');
-      req.add(
-        utf8.encode(
-          jsonEncode({
-            'p_programme_assignment_id': programmeAssignmentId,
-            'p_timezone': 'UTC',
-          }),
-        ),
+      resp = _HttpResp(
+        statusCode: bounded.statusCode,
+        body: bounded.body,
+        dispatched: bounded.dispatched,
       );
-      final resp = await req.close().timeout(const Duration(seconds: 90));
-      final text = await resp.transform(utf8.decoder).join();
-      if (resp.statusCode != 200) {
-        return JourneyDLiveStageOutcome.failed(
-          'materialise_http_${resp.statusCode}',
-        );
-      }
-      final map = jsonDecode(text);
-      if (map is! Map) {
-        return JourneyDLiveStageOutcome.unknown('materialise_ambiguous');
-      }
-      final status = map['status']?.toString();
-      if (status != 'materialised' && status != 'already_materialised') {
-        return JourneyDLiveStageOutcome.failed('materialise_status:$status');
-      }
-      return JourneyDLiveStageOutcome.applied(detail: 'materialised');
-    } finally {
-      client.close(force: true);
+    } on JourneyDHttpTimeoutException catch (e) {
+      return e.dispatched
+          ? JourneyDLiveStageOutcome.unknown(
+              'materialise_timed_out_dispatched',
+            )
+          : JourneyDLiveStageOutcome.failed('materialise_timed_out');
+    } on JourneyDHttpTransportException catch (e) {
+      return JourneyDLiveStageOutcome.failed('materialise_${e.detail}');
     }
+    if (resp.statusCode != 200) {
+      return JourneyDLiveStageOutcome.failed(
+        'materialise_http_${resp.statusCode}',
+      );
+    }
+    final map = jsonDecode(resp.body);
+    if (map is! Map) {
+      return JourneyDLiveStageOutcome.unknown('materialise_ambiguous');
+    }
+    final status = map['status']?.toString();
+    if (status != 'materialised' && status != 'already_materialised') {
+      return JourneyDLiveStageOutcome.failed('materialise_status:$status');
+    }
+    return JourneyDLiveStageOutcome.applied(detail: 'materialised');
   }
 }
 
@@ -500,8 +631,14 @@ class _HttpResp {
     required this.statusCode,
     required this.body,
     this.contentRange,
+    this.detail = '',
+    this.dispatched = true,
+    this.timedOut = false,
   });
   final int statusCode;
   final String body;
   final String? contentRange;
+  final String detail;
+  final bool dispatched;
+  final bool timedOut;
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cohort_platform/features/authored_plan_package/authored_plan_package.dart';
 
 import 'journey_d_live_ports.dart';
@@ -23,6 +25,8 @@ class JourneyDLiveFixtureCreator {
     this.expectedPreRebindHash =
         '156dfe8cf262e43f4e7e47cab070a37f466d3271fe26b29ca80e5c5e49e8a7d7',
     this.lineageCode = 'PROG-S17-JD-ADAPT',
+    this.onLedgerChanged,
+    this.stageTimeout = const Duration(seconds: 120),
   });
 
   final JourneyDLivePreflight preflight;
@@ -34,6 +38,12 @@ class JourneyDLiveFixtureCreator {
   final JourneyDImportGate importGate;
   final String expectedPreRebindHash;
   final String lineageCode;
+
+  /// Optional durable progress sink (atomic writer owned by caller).
+  final void Function(List<JourneyDLiveLedgerStage> stages)? onLedgerChanged;
+
+  /// Per-stage deadline for mutating/network stages.
+  final Duration stageTimeout;
 
   static const stageOrder = <String>[
     'validate_environment',
@@ -139,6 +149,12 @@ class JourneyDLiveFixtureCreator {
       );
     }
 
+    void emit() {
+      onLedgerChanged?.call(
+        List.unmodifiable(stageOrder.map((n) => stages[n]!)),
+      );
+    }
+
     void mark(
       String name,
       JourneyDPublicationStageState state, {
@@ -148,9 +164,27 @@ class JourneyDLiveFixtureCreator {
       if (state == JourneyDPublicationStageState.applied) {
         lastApplied = name;
       } else if (state == JourneyDPublicationStageState.failed ||
-          state == JourneyDPublicationStageState.unknown) {
+          state == JourneyDPublicationStageState.unknown ||
+          state == JourneyDPublicationStageState.timedOut) {
         firstFailedOrUnknown ??= name;
         furtherProhibited = true;
+      }
+      emit();
+    }
+
+    Future<T> withStageTimeout<T>(
+      String name,
+      Future<T> Function() run, {
+      required T Function(bool dispatchedLikely) onTimeout,
+    }) async {
+      mark(name, JourneyDPublicationStageState.inProgress, detail: 'started');
+      try {
+        return await run().timeout(stageTimeout);
+      } on TimeoutException {
+        // Outer stage deadline elapsed. Prefer outcome_uncertain once a
+        // mutating stage may have dispatched; definite timed_out otherwise.
+        final mutating = mutatingStages.contains(name);
+        return onTimeout(mutating);
       }
     }
 
@@ -238,9 +272,13 @@ class JourneyDLiveFixtureCreator {
       JourneyDPublicationStageState.applied,
     );
 
-    final unique = await preflight.checkUnique(
-      marker: marker,
-      lineageCode: lineageCode,
+    final unique = await withStageTimeout(
+      'check_marker_uniqueness_readonly',
+      () => preflight.checkUnique(marker: marker, lineageCode: lineageCode),
+      onTimeout: (_) => const JourneyDLiveStageOutcome(
+        state: JourneyDPublicationStageState.timedOut,
+        detail: 'check_marker_uniqueness_readonly_timed_out',
+      ),
     );
     mark(
       'check_marker_uniqueness_readonly',
@@ -249,30 +287,79 @@ class JourneyDLiveFixtureCreator {
     );
     if (!unique.isApplied) {
       blockRemaining('check_marker_uniqueness_readonly');
-      return finish(classification: 'B4D21D1_PREFLIGHT_COLLISION');
+      final timed =
+          unique.state == JourneyDPublicationStageState.timedOut ||
+          unique.detail.contains('timed_out');
+      final uncertain =
+          unique.state == JourneyDPublicationStageState.unknown ||
+          unique.detail.contains('dispatched');
+      return finish(
+        classification: uncertain
+            ? 'B4D21D1_PREFLIGHT_OUTCOME_UNCERTAIN'
+            : timed
+            ? 'B4D21D1_PREFLIGHT_TIMED_OUT'
+            : 'B4D21D1_PREFLIGHT_COLLISION',
+      );
     }
 
     final email = '$marker.athlete.jd@example.invalid';
-    final athlete = await athleteFactory.create(
-      marker: marker,
-      email: email,
-      displayName: 'S17 Journey D Adaptation Athlete',
+    final athlete = await withStageTimeout(
+      'create_synthetic_athlete',
+      () => athleteFactory.create(
+        marker: marker,
+        email: email,
+        displayName: 'S17 Journey D Adaptation Athlete',
+      ),
+      onTimeout: (mutating) => JourneyDLiveAthleteResult(
+        state: mutating
+            ? JourneyDPublicationStageState.unknown
+            : JourneyDPublicationStageState.timedOut,
+        detail: mutating
+            ? 'create_synthetic_athlete_timed_out_dispatched'
+            : 'create_synthetic_athlete_timed_out',
+      ),
     );
     mark('create_synthetic_athlete', athlete.state, detail: athlete.detail);
     if (athlete.isApplied) hostedWrites += 1;
     if (!athlete.isApplied) {
       blockRemaining('create_synthetic_athlete');
-      return finish(classification: 'B4D21D1_ATHLETE_CREATE_FAILED');
+      final uncertain =
+          athlete.state == JourneyDPublicationStageState.unknown ||
+          athlete.detail.contains('dispatched');
+      return finish(
+        classification: uncertain
+            ? 'B4D21D1_ATHLETE_CREATE_OUTCOME_UNCERTAIN'
+            : 'B4D21D1_ATHLETE_CREATE_FAILED',
+      );
     }
     privateAthleteId = athlete.privateUserId;
     privatePassword = athlete.privatePassword;
     privateEmail = athlete.privateEmail ?? email;
 
     // Publication + typed rebind (canonical publisher only).
-    rebindResult = await rebindPipeline.run(
-      protocolIntentJson: protocolIntentJson,
-      originalPackage: compile.manifest!,
+    mark(
+      'publish_fixture_protocol_current',
+      JourneyDPublicationStageState.inProgress,
+      detail: 'started',
     );
+    try {
+      rebindResult = await rebindPipeline
+          .run(
+            protocolIntentJson: protocolIntentJson,
+            originalPackage: compile.manifest!,
+          )
+          .timeout(stageTimeout * 2);
+    } on TimeoutException {
+      mark(
+        'publish_fixture_protocol_current',
+        JourneyDPublicationStageState.unknown,
+        detail: 'publication_or_rebind_timed_out_dispatched',
+      );
+      blockRemaining('publish_fixture_protocol_current');
+      return finish(
+        classification: 'B4D21D1_PUBLICATION_OUTCOME_UNCERTAIN',
+      );
+    }
     // Count publisher invocations that were actually attempted (not blocked).
     publishDraftInvocations = 0;
     for (final r in rebindResult.publicationResults) {
@@ -492,21 +579,25 @@ class JourneyDLiveLedgerStage {
 
   Map<String, Object?> toJson() => {
     'name': name,
-    'status': _statusWire(status),
+    'status': statusWire(status),
     'mutating': mutating,
     'detail': detail,
   };
 
-  static String _statusWire(JourneyDPublicationStageState s) {
+  static String statusWire(JourneyDPublicationStageState s) {
     switch (s) {
       case JourneyDPublicationStageState.notStarted:
         return 'not_started';
+      case JourneyDPublicationStageState.inProgress:
+        return 'in_progress';
       case JourneyDPublicationStageState.applied:
-        return 'applied';
+        return 'succeeded';
       case JourneyDPublicationStageState.failed:
         return 'failed';
+      case JourneyDPublicationStageState.timedOut:
+        return 'timed_out';
       case JourneyDPublicationStageState.unknown:
-        return 'unknown';
+        return 'outcome_uncertain';
     }
   }
 }

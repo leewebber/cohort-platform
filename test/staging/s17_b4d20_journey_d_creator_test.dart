@@ -548,7 +548,7 @@ ambiguous_stop(ledger, "import_programme_version_and_permissions", "timeout")
 assert ledger.further_mutation_prohibited is True
 for s in ledger.stages:
     if s.name=="import_programme_version_and_permissions":
-        assert s.status=="unknown"
+        assert s.status=="outcome_uncertain"
 print("AMBIGUOUS_OK")
 ''');
         expect(

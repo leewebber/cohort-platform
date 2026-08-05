@@ -124,6 +124,12 @@ class JourneyDLiveStageOutcome {
         detail: detail,
       );
 
+  static JourneyDLiveStageOutcome timedOut(String detail) =>
+      JourneyDLiveStageOutcome(
+        state: JourneyDPublicationStageState.timedOut,
+        detail: detail,
+      );
+
   static JourneyDLiveStageOutcome unknown(String detail) =>
       JourneyDLiveStageOutcome(
         state: JourneyDPublicationStageState.unknown,

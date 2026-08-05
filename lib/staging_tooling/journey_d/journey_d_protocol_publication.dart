@@ -33,7 +33,14 @@ class JourneyDProtocolPublicationIntent {
 }
 
 /// Stage state for a single protocol publication / rebind operation.
-enum JourneyDPublicationStageState { notStarted, applied, failed, unknown }
+enum JourneyDPublicationStageState {
+  notStarted,
+  inProgress,
+  applied,
+  failed,
+  timedOut,
+  unknown,
+}
 
 /// Typed publication result for one fixture protocol.
 class JourneyDProtocolPublicationResult {

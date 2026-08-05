@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_supabase_store.dart';
 import 'package:cohort_platform/data/repositories/programme_version_supabase_store.dart';
-import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
 import 'package:cohort_platform/features/authored_plan_package/plan_package_manifest.dart';
 import 'package:cohort_platform/features/authored_plan_package/plan_package_schema.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_authored_slot_resolver.dart';
@@ -15,6 +13,7 @@ import 'package:cohort_platform/features/auth/services/current_user_session.dart
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'journey_d_bounded_http.dart';
 import 'journey_d_execute_workflow.dart';
 
 /// Hosted ports for Journey D execute (Cohort Staging only).
@@ -314,21 +313,20 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
         !path.contains(Uri.encodeComponent(requirePredicate))) {
       throw StateError('query_not_predicate_bound');
     }
-    final client = HttpClient();
-    try {
-      final req = await client.getUrl(Uri.parse('$apiUrl$path'));
-      req.headers.set('apikey', key);
-      req.headers.set('Authorization', 'Bearer $key');
-      if (preferCount) req.headers.set('Prefer', 'count=exact');
-      final resp = await req.close().timeout(const Duration(seconds: 60));
-      final text = await resp.transform(utf8.decoder).join();
-      if (resp.statusCode != 200) {
-        throw StateError('http_${resp.statusCode}');
-      }
-      return jsonDecode(text);
-    } finally {
-      client.close(force: true);
+    final resp = await JourneyDBoundedHttp(
+      defaultTimeout: const Duration(seconds: 60),
+    ).get(
+      Uri.parse('$apiUrl$path'),
+      headers: {
+        'apikey': key,
+        'Authorization': 'Bearer $key',
+        if (preferCount) 'Prefer': 'count=exact',
+      },
+    );
+    if (resp.statusCode != 200) {
+      throw StateError('http_${resp.statusCode}');
     }
+    return jsonDecode(resp.body);
   }
 
   Future<_HttpResp> _putJson(
@@ -336,19 +334,18 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
     Map<String, Object?> body, {
     required String key,
   }) async {
-    final client = HttpClient();
-    try {
-      final req = await client.putUrl(Uri.parse('$apiUrl$path'));
-      req.headers.set('apikey', key);
-      req.headers.set('Authorization', 'Bearer $key');
-      req.headers.set('Content-Type', 'application/json');
-      req.add(utf8.encode(jsonEncode(body)));
-      final resp = await req.close().timeout(const Duration(seconds: 60));
-      final text = await resp.transform(utf8.decoder).join();
-      return _HttpResp(statusCode: resp.statusCode, body: text);
-    } finally {
-      client.close(force: true);
-    }
+    final resp = await JourneyDBoundedHttp(
+      defaultTimeout: const Duration(seconds: 60),
+    ).put(
+      Uri.parse('$apiUrl$path'),
+      headers: {
+        'apikey': key,
+        'Authorization': 'Bearer $key',
+        'Content-Type': 'application/json',
+      },
+      body: body,
+    );
+    return _HttpResp(statusCode: resp.statusCode, body: resp.body);
   }
 
   List<Map<String, dynamic>> _asList(Object? body) {

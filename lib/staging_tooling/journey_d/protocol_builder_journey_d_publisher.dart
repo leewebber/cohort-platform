@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cohort_platform/data/repositories/session_lineage_store.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/admin/services/protocol_builder_service.dart';
@@ -17,11 +19,13 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
   ProtocolBuilderJourneyDPublisher({
     required ProtocolBuilderService protocolBuilderService,
     required SessionLineageStore sessionLineageStore,
+    this.publishTimeout = const Duration(seconds: 90),
   }) : _protocolBuilderService = protocolBuilderService,
        _sessionLineageStore = sessionLineageStore;
 
   final ProtocolBuilderService _protocolBuilderService;
   final SessionLineageStore _sessionLineageStore;
+  final Duration publishTimeout;
 
   /// Marker programme version id for fixture-only drafts (not a hosted lookup).
   static const fixtureProgrammeVersionPlaceholder =
@@ -33,7 +37,9 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
   ) async {
     try {
       final draft = _draftFor(intent);
-      final save = await _protocolBuilderService.publishDraft(draft);
+      final save = await _protocolBuilderService
+          .publishDraft(draft)
+          .timeout(publishTimeout);
       if (!save.published || save.protocolId != intent.protocolId) {
         return JourneyDProtocolPublicationResult(
           intent: intent,
@@ -43,9 +49,9 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
         );
       }
 
-      final identity = await _sessionLineageStore.getRevisionIdentity(
-        intent.protocolId,
-      );
+      final identity = await _sessionLineageStore
+          .getRevisionIdentity(intent.protocolId)
+          .timeout(publishTimeout);
       if (identity == null || identity.sessionLineageId.trim().isEmpty) {
         return JourneyDProtocolPublicationResult(
           intent: intent,
@@ -61,6 +67,14 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
         returnedSessionLineageId: identity.sessionLineageId,
         returnedRevisionNumber: identity.revisionNumber,
         detail: 'ProtocolBuilderService.publishDraft',
+      );
+    } on TimeoutException {
+      // publishDraft may have already mutated — never report as definite miss.
+      return JourneyDProtocolPublicationResult(
+        intent: intent,
+        state: JourneyDPublicationStageState.unknown,
+        detail: 'publishDraft_timed_out_dispatched',
+        furtherMutationProhibited: true,
       );
     } on Object catch (error) {
       return JourneyDProtocolPublicationResult(

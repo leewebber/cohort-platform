@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +12,8 @@ import 'journey_d_credential_handoff.dart';
 import 'journey_d_hosted_live_ports.dart';
 import 'journey_d_live_fixture_creator.dart';
 import 'journey_d_non_test_runtime.dart';
+import 'journey_d_progress_ledger.dart';
+import 'journey_d_protocol_publication.dart';
 import 'journey_d_rebind_pipeline.dart';
 import 'protocol_builder_journey_d_publisher.dart';
 
@@ -137,13 +140,39 @@ Future<int> runJourneyDLiveEntrypoint({
 
   final apiEnvPath = request['api_env_path'] as String? ?? '/tmp/s13b_api.env';
   final creds = _loadEnv(File(apiEnvPath));
-  final url = (creds['S13_API_URL'] ?? creds['SUPABASE_URL'] ?? '').trim();
-  final anon = (creds['S13_ANON_KEY'] ?? creds['SUPABASE_ANON_KEY'] ?? '')
+  var url = (creds['S13_API_URL'] ?? creds['SUPABASE_URL'] ?? '').trim();
+  var anon = (creds['S13_ANON_KEY'] ?? creds['SUPABASE_ANON_KEY'] ?? '')
       .trim();
-  final service =
+  var service =
       (creds['S13_SERVICE_KEY'] ?? creds['SUPABASE_SERVICE_ROLE_KEY'] ?? '')
           .trim();
-  if (url.isEmpty || anon.isEmpty || service.isEmpty) {
+  final loopbackCreate = env['S17_JD_LOOPBACK_CREATE'] == '1';
+  if (loopbackCreate) {
+    final loopBase = (env['S17_JD_LOOPBACK_BASE_URL'] ?? '').trim();
+    final loopUri = Uri.tryParse(loopBase);
+    if (loopUri == null ||
+        loopUri.scheme != 'http' ||
+        (loopUri.host != '127.0.0.1' && loopUri.host != 'localhost') ||
+        loopBase.contains('otnhhdxs') ||
+        loopBase.contains('tsbadngz')) {
+      _write(outPath, {
+        'ok': false,
+        'classification': 'JOURNEY_D_SCOPE_BLOCKED',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'detail': 'loopback_create_requires_http_127_0_0_1',
+        'reached_main': true,
+        'ports_mode': 'hosted',
+      });
+      return 2;
+    }
+    url = loopBase;
+    // Local loopback keys are non-secret fixtures.
+    anon = (env['S17_JD_LOOPBACK_API_KEY'] ?? 'loopback-proof-key').trim();
+    service = anon;
+  } else if (url.isEmpty || anon.isEmpty || service.isEmpty) {
     _write(outPath, {
       'ok': false,
       'classification': 'B4D21D1_HOSTED_CONFIG_MISSING',
@@ -157,31 +186,33 @@ Future<int> runJourneyDLiveEntrypoint({
     });
     return 2;
   }
-  if (url.contains('otnhhdxs')) {
-    _write(outPath, {
-      'ok': false,
-      'classification': 'B4D21D1_PRODUCTION_URL_REFUSED',
-      'marker': marker,
-      'fixture_marker': marker,
-      'hosted_writes_executed': 0,
-      'publish_draft_invocations': 0,
-      'reached_main': true,
-      'ports_mode': 'hosted',
-    });
-    return 2;
-  }
-  if (!url.contains('tsbadngz')) {
-    _write(outPath, {
-      'ok': false,
-      'classification': 'B4D21D1_NON_STAGING_URL_REFUSED',
-      'marker': marker,
-      'fixture_marker': marker,
-      'hosted_writes_executed': 0,
-      'publish_draft_invocations': 0,
-      'reached_main': true,
-      'ports_mode': 'hosted',
-    });
-    return 2;
+  if (!loopbackCreate) {
+    if (url.contains('otnhhdxs')) {
+      _write(outPath, {
+        'ok': false,
+        'classification': 'B4D21D1_PRODUCTION_URL_REFUSED',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'reached_main': true,
+        'ports_mode': 'hosted',
+      });
+      return 2;
+    }
+    if (!url.contains('tsbadngz')) {
+      _write(outPath, {
+        'ok': false,
+        'classification': 'B4D21D1_NON_STAGING_URL_REFUSED',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'reached_main': true,
+        'ports_mode': 'hosted',
+      });
+      return 2;
+    }
   }
 
   // After target allowlisting: refuse test binding before any hosted client.
@@ -203,15 +234,69 @@ Future<int> runJourneyDLiveEntrypoint({
     return 2;
   }
 
-  await JourneyDNonTestRuntime.initializeSupabase(
-    url: url,
-    anonOrServiceKey: service,
-  );
+  final progressPath =
+      (env['S17_JD_PROGRESS_FILE'] ?? '$outPath.progress.json').trim();
+  final progress = JourneyDProgressLedger(file: File(progressPath));
+  progress.write({
+    'terminal': false,
+    'surface': 'live',
+    'marker': marker,
+    'fixture_marker': marker,
+    'current_stage': 'initialize_supabase',
+    'current_status': 'in_progress',
+    'hosted_writes_executed': 0,
+    'loopback_create': loopbackCreate,
+  });
+
+  // Loopback create exercises hosted HTTP ports only; Supabase client init
+  // against a stalling loopback would mask JourneyDBoundedHttp deadlines.
+  if (!loopbackCreate) {
+    try {
+      await JourneyDNonTestRuntime.initializeSupabase(
+        url: url,
+        anonOrServiceKey: service,
+      ).timeout(const Duration(seconds: 30));
+    } on TimeoutException {
+      final terminal = {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_TIMED_OUT',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'detail': 'Supabase.initialize_timed_out',
+        'reached_main': true,
+        'ports_mode': 'hosted',
+        'progress_file': progressPath,
+      };
+      progress.write({
+        ...terminal,
+        'terminal': true,
+        'current_status': 'timed_out',
+      });
+      _write(outPath, terminal);
+      return 2;
+    }
+  } else {
+    progress.write({
+      'terminal': false,
+      'surface': 'live',
+      'marker': marker,
+      'fixture_marker': marker,
+      'current_stage': 'initialize_supabase',
+      'current_status': 'succeeded',
+      'detail': 'skipped_for_loopback_create',
+      'hosted_writes_executed': 0,
+      'loopback_create': true,
+    });
+  }
 
   final publisher = ProtocolBuilderJourneyDPublisher(
     protocolBuilderService: ProtocolBuilderService(),
     sessionLineageStore: const SessionLineageSupabaseStore(),
   );
+  final stageTimeoutSec =
+      int.tryParse(env['S17_JD_STAGE_TIMEOUT_SEC'] ?? '') ?? 120;
   final creator = JourneyDLiveFixtureCreator(
     preflight: JourneyDHostedHttpPreflight(apiUrl: url, serviceKey: service),
     athleteFactory: JourneyDHostedHttpAthleteFactory(
@@ -226,24 +311,86 @@ Future<int> runJourneyDLiveEntrypoint({
     ),
     enrolment: JourneyDHostedEnrolment(apiUrl: url, anonKey: anon),
     materialisation: JourneyDHostedMaterialisation(apiUrl: url, anonKey: anon),
+    stageTimeout: Duration(seconds: stageTimeoutSec.clamp(5, 180)),
+    onLedgerChanged: (stages) {
+      final current = stages.reversed.firstWhere(
+        (s) => s.status != JourneyDPublicationStageState.notStarted,
+        orElse: () => stages.first,
+      );
+      progress.write({
+        'terminal': false,
+        'surface': 'live',
+        'marker': marker,
+        'fixture_marker': marker,
+        'current_stage': current.name,
+        'current_status': JourneyDLiveLedgerStage.statusWire(current.status),
+        'detail': current.detail,
+        'hosted_writes_executed': stages
+            .where(
+              (s) =>
+                  s.mutating &&
+                  s.status == JourneyDPublicationStageState.applied,
+            )
+            .length,
+        'stages': stages.map((s) => s.toJson()).toList(),
+        'loopback_create': loopbackCreate,
+      });
+    },
   );
 
-  final result = await creator.run(
-    marker: marker,
-    protocolIntentJson: intentJson,
-    packageYaml: packageYaml,
-    stagingConfirmed: true,
-    liveAuthorized: true,
-  );
+  late final JourneyDLiveCreateResult result;
+  try {
+    result = await creator
+        .run(
+          marker: marker,
+          protocolIntentJson: intentJson,
+          packageYaml: packageYaml,
+          stagingConfirmed: true,
+          liveAuthorized: true,
+        )
+        .timeout(const Duration(seconds: 480));
+  } on TimeoutException {
+    final terminal = {
+      'ok': false,
+      'classification': 'B4D21D1_CREATE_OVERALL_TIMED_OUT',
+      'marker': marker,
+      'fixture_marker': marker,
+      'hosted_writes_executed': 0,
+      'publish_draft_invocations': 0,
+      'detail': 'creator_run_exceeded_480s',
+      'reached_main': true,
+      'ports_mode': 'hosted',
+      'mutation_backend': loopbackCreate ? 'loopback' : 'hosted',
+      'further_mutation_prohibited': true,
+      'progress_file': progressPath,
+    };
+    progress.write({
+      ...terminal,
+      'terminal': true,
+      'current_status': 'outcome_uncertain',
+    });
+    _write(outPath, terminal);
+    JourneyDHostedSession.instance.clearSecrets();
+    return 2;
+  }
+
   final credentialWritten = _maybeWriteCredential(env: env, result: result);
   JourneyDHostedSession.instance.clearSecrets();
-  _write(outPath, {
+  final terminal = {
     ...result.toJson(),
     'reached_main': true,
     'ports_mode': 'hosted',
-    'mutation_backend': 'hosted',
+    'mutation_backend': loopbackCreate ? 'loopback' : 'hosted',
     'credential_handoff_written': credentialWritten,
+    'progress_file': progressPath,
+  };
+  progress.write({
+    ...terminal,
+    'terminal': true,
+    'current_stage': result.lastAppliedStage ?? result.firstFailedOrUnknownStage,
+    'current_status': result.ok ? 'succeeded' : 'failed',
   });
+  _write(outPath, terminal);
   return result.ok ? 0 : 2;
 }
 

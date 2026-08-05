@@ -148,7 +148,9 @@ SYMBOLIC_LINEAGES = (
 class StageRecord:
     name: str
     canonical_interface: str
-    status: str = "not_started"  # not_started|applied|failed|unknown
+    status: str = "not_started"
+    # Wire: not_started|in_progress|succeeded|failed|timed_out|outcome_uncertain
+    # Legacy internal alias: applied → succeeded, unknown → outcome_uncertain
     mutating: bool = False
     detail: str = ""
 
@@ -297,7 +299,7 @@ def fail_closed(ledger: WriteLedger, failed_stage: str, detail: str) -> WriteLed
 
 
 def ambiguous_stop(ledger: WriteLedger, stage_name: str, detail: str) -> WriteLedger:
-    mark_stage(ledger, stage_name, "unknown", detail)
+    mark_stage(ledger, stage_name, "outcome_uncertain", detail)
     seen = False
     for stage in ledger.stages:
         if stage.name == stage_name:
@@ -747,6 +749,7 @@ def run_live_create(
     # Flutter executable (--no-pub). Fake-only local tests may use flutter test.
     import subprocess
     import tempfile
+    from subprocess import TimeoutExpired
 
     _ensure_flutter_packages_prepared(root)
 
@@ -761,9 +764,23 @@ def run_live_create(
         "staging_ref_prefix": staging["ref_prefix"],
         "mutation_backend": "hosted",
     }
-    with tempfile.TemporaryDirectory(prefix="cohort_s17_jd_live.") as tmp:
-        req_path = Path(tmp) / "live_request.json"
-        out_path = Path(tmp) / "live_result.json"
+    # Prefer durable private dir (survives containment timeout). Nested temp
+    # is only a fallback for unit tests that omit S17_JD_FLUTTER_LOG_DIR.
+    log_dir_env = os.environ.get("S17_JD_FLUTTER_LOG_DIR", "").strip()
+    durable_ctx = None
+    if log_dir_env:
+        log_dir = Path(log_dir_env)
+        log_dir.mkdir(parents=True, exist_ok=True)
+        work_dir = log_dir
+    else:
+        durable_ctx = tempfile.TemporaryDirectory(prefix="cohort_s17_jd_live.")
+        work_dir = Path(durable_ctx.name)
+        log_dir = work_dir
+
+    try:
+        req_path = work_dir / "live_request.json"
+        out_path = work_dir / "live_result.json"
+        progress_path = work_dir / "live_progress.json"
         req_path.write_text(json.dumps(request))
         runner = root / "tool/staging/run_s17_journey_d_live_dart.sh"
         if not runner.is_file():
@@ -773,29 +790,67 @@ def run_live_create(
         env = os.environ.copy()
         env["S17_JD_LIVE_REQUEST_FILE"] = str(req_path)
         env["S17_JD_LIVE_RESULT_FILE"] = str(out_path)
+        env["S17_JD_PROGRESS_FILE"] = str(progress_path)
+        env["S17_JD_FLUTTER_LOG_DIR"] = str(log_dir)
         env["S17_ROOT"] = str(root)
-        # Private credential handoff path (optional; set by create shell).
-        # Never printed; contents never copied into result JSON.
         cred_out = os.environ.get("S17_JD_CREDENTIAL_OUT_FILE", "").strip()
         if cred_out:
             env["S17_JD_CREDENTIAL_OUT_FILE"] = cred_out
-        log_dir = Path(
-            os.environ.get("S17_JD_FLUTTER_LOG_DIR", "").strip() or tmp
-        )
-        log_dir.mkdir(parents=True, exist_ok=True)
         stdout_log = log_dir / "flutter_live_stdout.txt"
         stderr_log = log_dir / "flutter_live_stderr.txt"
-        completed = subprocess.run(
-            ["bash", str(runner)],
-            cwd=str(root),
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=600,
-        )
+        # Outer containment only. Stage deadlines must finish earlier.
+        outer_timeout = int(os.environ.get("S17_JD_PYTHON_OUTER_TIMEOUT_SEC", "560"))
+        try:
+            completed = subprocess.run(
+                ["bash", str(runner)],
+                cwd=str(root),
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=outer_timeout,
+            )
+        except TimeoutExpired as te:
+            stdout_log.write_text(te.stdout or "")
+            stderr_log.write_text(te.stderr or "")
+            payload = {
+                "ok": False,
+                "classification": "B4D21D1_CREATE_OUTCOME_UNCERTAIN",
+                "fixture_marker": explicit,
+                "marker": explicit,
+                "detail": f"python_outer_timeout_{outer_timeout}s",
+                "hosted_writes_executed": 0,
+                "further_mutation_prohibited": True,
+                "progress_file": str(progress_path),
+                "flutter_stdout_log": str(stdout_log),
+                "flutter_stderr_log": str(stderr_log),
+                "mutation_backend": "hosted",
+                "new_marker_called": False,
+                "rebind_path": REBIND_PATH_STATUS,
+                "flutter_no_pub": True,
+            }
+            if progress_path.is_file():
+                try:
+                    prog = json.loads(progress_path.read_text())
+                    payload["current_stage"] = prog.get("current_stage")
+                    payload["current_status"] = prog.get("current_status")
+                    payload["hosted_writes_executed"] = prog.get(
+                        "hosted_writes_executed", 0
+                    )
+                    if isinstance(prog.get("stages"), list):
+                        payload["stages"] = prog["stages"]
+                    if prog.get("current_status") in (
+                        "not_started",
+                        "timed_out",
+                    ) and not prog.get("request_dispatched"):
+                        payload["classification"] = "B4D21D1_CREATE_TIMED_OUT"
+                except Exception:
+                    pass
+            if not out_path.is_file():
+                out_path.write_text(json.dumps(payload, indent=2))
+            return payload
+
         stdout_log.write_text(completed.stdout or "")
         stderr_log.write_text(completed.stderr or "")
-        # Guard: live harness must not begin dependency resolution.
         combined = (completed.stdout or "") + "\n" + (completed.stderr or "")
         if "Resolving dependencies..." in combined:
             raise StagingGuardError(
@@ -804,7 +859,6 @@ def run_live_create(
             )
         if completed.returncode != 0 and not out_path.is_file():
             detail = (completed.stderr or completed.stdout or "").strip()
-            # Keep a longer diagnostic window; full logs are on disk.
             raise StagingGuardError(
                 "REFUSED: hosted live dart entrypoint failed "
                 f"exit={completed.returncode} logs={stdout_log}: "
@@ -822,7 +876,11 @@ def run_live_create(
         result["flutter_no_pub"] = True
         result["flutter_stdout_log"] = str(stdout_log)
         result["flutter_stderr_log"] = str(stderr_log)
+        result["progress_file"] = str(progress_path)
         return result
+    finally:
+        if durable_ctx is not None:
+            durable_ctx.cleanup()
 
 
 def _ensure_flutter_packages_prepared(root: Path) -> None:
