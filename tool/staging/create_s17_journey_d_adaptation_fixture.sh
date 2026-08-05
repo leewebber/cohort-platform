@@ -59,6 +59,9 @@ Environment:
   S17_JD_LIVE_MUTATION_BACKEND
               hosted (default) | synthetic_ok | synthetic_fail:<stage>
               Tests must use synthetic_*; never contact staging from unit tests.
+  S17_JD_LIVE_PORTS / S17_JD_ALLOW_FAKE_PORTS
+              Hosted Dart entry uses Flutter test runtime (not plain dart run).
+              Fake ports require S17_JD_LIVE_PORTS=fake and S17_JD_ALLOW_FAKE_PORTS=1.
 EOF
 }
 

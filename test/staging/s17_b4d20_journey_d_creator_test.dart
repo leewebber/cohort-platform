@@ -602,12 +602,14 @@ print("NO_REPAIR_OK")
       expect(out, contains('"mutation": false'));
       expect(out, contains('"propose_reject_accept": false'));
       expect(out, contains('"journey_execution": false'));
+      // Hosted mode exists (B4d.21d.3) but requires an explicit read-only guard.
       final hosted = await Process.run('bash', [
         '-c',
-        'cd "$root" && "$diagnose" s17_jd_adapt_20260804T120000Z_aabbccdd --hosted',
+        'cd "$root" && env -u S17_JD_HOSTED_READONLY '
+            '"$diagnose" s17_jd_adapt_20260804T120000Z_aabbccdd --hosted',
       ]);
       expect(hosted.exitCode, 2);
-      expect(hosted.stderr.toString(), contains('not authorised'));
+      expect(hosted.stderr.toString(), contains('S17_JD_HOSTED_READONLY'));
     });
 
     test(

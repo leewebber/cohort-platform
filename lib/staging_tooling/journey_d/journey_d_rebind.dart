@@ -6,6 +6,7 @@ library;
 export 'fake_journey_d_live_ports.dart';
 export 'fake_journey_d_protocol_publisher.dart';
 export 'journey_d_hosted_live_ports.dart';
+export 'journey_d_live_entrypoint.dart';
 export 'journey_d_live_fixture_creator.dart';
 export 'journey_d_live_ports.dart';
 export 'journey_d_protocol_publication.dart';
