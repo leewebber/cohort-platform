@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -256,10 +257,53 @@ Future<int> runJourneyDExecuteEntrypoint({
       return 2;
     }
 
-    await JourneyDNonTestRuntime.initializeSupabase(
-      url: url,
-      anonOrServiceKey: anon,
-    );
+    try {
+      await JourneyDNonTestRuntime.initializeSupabase(
+        url: url,
+        anonOrServiceKey: anon,
+      ).timeout(const Duration(seconds: 30));
+    } on JourneyDSupabaseInitException catch (e, st) {
+      final redacted = JourneyDNonTestRuntime.redactException(e, st);
+      _write(outPath, {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_FAILED',
+        'detail': e.code,
+        'init_detail': e.detail,
+        'marker': marker,
+        'journey_d_executed': false,
+        'credential_consumed': true,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'failed',
+        ...redacted,
+      });
+      return 2;
+    } on TimeoutException {
+      _write(outPath, {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_TIMED_OUT',
+        'detail': 'Supabase.initialize_timed_out',
+        'marker': marker,
+        'journey_d_executed': false,
+        'credential_consumed': true,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'timed_out',
+      });
+      return 2;
+    } catch (e, st) {
+      final redacted = JourneyDNonTestRuntime.redactException(e, st);
+      _write(outPath, {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_FAILED',
+        'detail': 'initialize_supabase_exception',
+        'marker': marker,
+        'journey_d_executed': false,
+        'credential_consumed': true,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'failed',
+        ...redacted,
+      });
+      return 2;
+    }
 
     final ports =
         portsOverride ??

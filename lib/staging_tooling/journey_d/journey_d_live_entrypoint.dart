@@ -47,6 +47,10 @@ Future<int> runJourneyDLiveEntrypoint({
     );
   }
 
+  if (env['S17_JD_INIT_PROOF'] == '1') {
+    return _runSupabaseInitProof(env: env, outPath: outPath);
+  }
+
   Map<String, dynamic> request;
   try {
     request =
@@ -256,6 +260,16 @@ Future<int> runJourneyDLiveEntrypoint({
         url: url,
         anonOrServiceKey: service,
       ).timeout(const Duration(seconds: 30));
+      progress.write({
+        'terminal': false,
+        'surface': 'live',
+        'marker': marker,
+        'fixture_marker': marker,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'succeeded',
+        'hosted_writes_executed': 0,
+        'loopback_create': false,
+      });
     } on TimeoutException {
       final terminal = {
         'ok': false,
@@ -268,12 +282,56 @@ Future<int> runJourneyDLiveEntrypoint({
         'reached_main': true,
         'ports_mode': 'hosted',
         'progress_file': progressPath,
-      };
-      progress.write({
-        ...terminal,
-        'terminal': true,
+        'current_stage': 'initialize_supabase',
         'current_status': 'timed_out',
-      });
+      };
+      progress.write({...terminal, 'terminal': true});
+      _write(outPath, terminal);
+      return 2;
+    } on JourneyDSupabaseInitException catch (e, st) {
+      final redacted = JourneyDNonTestRuntime.redactException(e, st);
+      final terminal = {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_FAILED',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'detail': e.code,
+        'init_detail': e.detail,
+        'reached_main': true,
+        'ports_mode': 'hosted',
+        'progress_file': progressPath,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'failed',
+        'further_mutation_prohibited': true,
+        ...redacted,
+      };
+      progress.write({...terminal, 'terminal': true});
+      _write(outPath, terminal);
+      return 2;
+    } catch (e, st) {
+      // Pre-network / debug assertion failures (e.g. historic Supabase.instance
+      // pre-init access) are definite source/runtime failures, not hosted
+      // uncertainty.
+      final redacted = JourneyDNonTestRuntime.redactException(e, st);
+      final terminal = {
+        'ok': false,
+        'classification': 'B4D21D1_SUPABASE_INIT_FAILED',
+        'marker': marker,
+        'fixture_marker': marker,
+        'hosted_writes_executed': 0,
+        'publish_draft_invocations': 0,
+        'detail': 'initialize_supabase_exception',
+        'reached_main': true,
+        'ports_mode': 'hosted',
+        'progress_file': progressPath,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'failed',
+        'further_mutation_prohibited': true,
+        ...redacted,
+      };
+      progress.write({...terminal, 'terminal': true});
       _write(outPath, terminal);
       return 2;
     }
@@ -448,6 +506,124 @@ Future<JourneyDLiveCreateResult> _runWithFakePorts({
     stagingConfirmed: true,
     liveAuthorized: true,
   );
+}
+
+/// Local-only Supabase init proof (no staging/production contact).
+///
+/// Uses a loopback-shaped https URL host that is never dialed for mutation.
+/// recoverSession with EmptyLocalStorage completes without hosted auth traffic.
+Future<int> _runSupabaseInitProof({
+  required Map<String, String> env,
+  required String outPath,
+}) async {
+  final progressPath =
+      (env['S17_JD_PROGRESS_FILE'] ?? '$outPath.progress.json').trim();
+  final progress = JourneyDProgressLedger(file: File(progressPath));
+  progress.write({
+    'terminal': false,
+    'surface': 'live',
+    'current_stage': 'initialize_supabase',
+    'current_status': 'in_progress',
+    'init_proof': true,
+  });
+
+  // Non-secret local key; URL host is loopback-only (never tsbadngz/otnhhdxs).
+  const url = 'http://127.0.0.1:9';
+  const key = 'local-init-proof-key';
+
+  try {
+    // Missing config fails before client construction.
+    try {
+      JourneyDNonTestRuntime.validateSupabaseConfig(url: '', anonOrServiceKey: key);
+      _write(outPath, {
+        'ok': false,
+        'classification': 'JOURNEY_D_CONTRACT_BLOCKED',
+        'detail': 'expected_config_missing_to_throw',
+      });
+      return 2;
+    } on JourneyDSupabaseInitException catch (e) {
+      if (e.code != 'config_missing') rethrow;
+    }
+
+    try {
+      JourneyDNonTestRuntime.validateSupabaseConfig(
+        url: 'https://otnhhdxs.example.supabase.co',
+        anonOrServiceKey: key,
+      );
+      _write(outPath, {
+        'ok': false,
+        'classification': 'JOURNEY_D_CONTRACT_BLOCKED',
+        'detail': 'expected_production_refuse',
+      });
+      return 2;
+    } on JourneyDSupabaseInitException catch (e) {
+      if (e.code != 'config_production_refused') rethrow;
+    }
+
+    await JourneyDNonTestRuntime.initializeSupabase(url: url, anonOrServiceKey: key);
+    // Idempotent same-host second call.
+    await JourneyDNonTestRuntime.initializeSupabase(url: url, anonOrServiceKey: key);
+
+    var conflictOk = false;
+    try {
+      await JourneyDNonTestRuntime.initializeSupabase(
+        url: 'http://127.0.0.1:10',
+        anonOrServiceKey: key,
+      );
+    } on JourneyDSupabaseInitException catch (e) {
+      conflictOk = e.code == 'conflicting_initialization';
+    }
+    if (!conflictOk) {
+      progress.write({
+        'terminal': true,
+        'current_stage': 'initialize_supabase',
+        'current_status': 'failed',
+        'detail': 'expected_conflicting_initialization',
+      });
+      _write(outPath, {
+        'ok': false,
+        'classification': 'JOURNEY_D_CONTRACT_BLOCKED',
+        'detail': 'expected_conflicting_initialization',
+        'current_status': 'failed',
+      });
+      return 2;
+    }
+
+    progress.write({
+      'terminal': true,
+      'current_stage': 'initialize_supabase',
+      'current_status': 'succeeded',
+      'init_proof': true,
+      'owned_initialized': JourneyDNonTestRuntime.isOwnedInitialized,
+    });
+    _write(outPath, {
+      'ok': true,
+      'classification': 'JOURNEY_D_SUPABASE_INIT_PROOF_OK',
+      'current_stage': 'initialize_supabase',
+      'current_status': 'succeeded',
+      'owned_initialized': JourneyDNonTestRuntime.isOwnedInitialized,
+      'test_binding_present': JourneyDNonTestRuntime.isTestBinding,
+      'production_excluded': true,
+      'loopback_only': true,
+    });
+    return 0;
+  } catch (e, st) {
+    final redacted = JourneyDNonTestRuntime.redactException(e, st);
+    progress.write({
+      'terminal': true,
+      'current_stage': 'initialize_supabase',
+      'current_status': 'failed',
+      ...redacted,
+    });
+    _write(outPath, {
+      'ok': false,
+      'classification': 'B4D21D1_SUPABASE_INIT_FAILED',
+      'current_stage': 'initialize_supabase',
+      'current_status': 'failed',
+      ...redacted,
+    });
+    return 2;
+  }
 }
 
 Map<String, String> _loadEnv(File file) {

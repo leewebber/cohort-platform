@@ -34,6 +34,9 @@ PORTS_MODE="${S17_JD_LIVE_PORTS:-hosted}"
 
 if [[ "${S17_JD_LOOPBACK_PROOF:-}" == "1" ]]; then
   :
+elif [[ "${S17_JD_INIT_PROOF:-}" == "1" ]]; then
+  # Local-only Supabase init proof (no staging contact / no live create).
+  :
 elif [[ "$PORTS_MODE" == "fake" && "${S17_JD_ALLOW_FAKE_PORTS:-}" == "1" ]]; then
   :
 elif [[ "${CONFIRM_COHORT_STAGING:-}" != "1" || "${S17_JD_LIVE_CREATE:-}" != "1" ]]; then
