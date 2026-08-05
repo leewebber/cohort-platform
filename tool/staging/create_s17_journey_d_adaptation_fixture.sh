@@ -117,6 +117,7 @@ fi
 if [[ -z "$MODE" ]]; then
   MODE="dry_run"
 fi
+export S17_JD_CREATE_MODE="$MODE"
 
 s17_require_confirmation
 s17_require_commands python3
@@ -134,10 +135,12 @@ sys.path.insert(0, str(root / "tool/staging/lib"))
 from s17_journey_d_fixture import (
     StagingGuardError,
     reject_reserved_identity,
+    reject_retired_live_marker,
     validate_marker,
 )
 
 marker = os.environ.get("S17_JD_FIXTURE_MARKER", "")
+mode = os.environ.get("S17_JD_CREATE_MODE", "")
 try:
     if not marker:
         raise StagingGuardError(
@@ -145,6 +148,9 @@ try:
         )
     validate_marker(marker)
     reject_reserved_identity(marker)
+    # Poisoned markers are refused for live create only.
+    if mode == "live" or os.environ.get("S17_JD_LIVE_CREATE", "").strip() == "1":
+        reject_retired_live_marker(marker)
 except StagingGuardError as e:
     print(str(e), file=sys.stderr)
     raise SystemExit(2)

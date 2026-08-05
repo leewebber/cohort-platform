@@ -4,6 +4,7 @@ import 'package:cohort_platform/features/admin/services/protocol_builder_service
 import 'package:cohort_platform/features/authored_plan_package/authored_plan_package.dart';
 import 'package:cohort_platform/models/protocol_draft.dart';
 
+import 'journey_d_fixture_identity.dart';
 import 'journey_d_live_ports.dart';
 import 'journey_d_protocol_publication.dart';
 import 'journey_d_publication_plan_builder.dart';
@@ -458,7 +459,7 @@ class JourneyDLiveFixtureCreator {
       );
     }
 
-    final email = '$marker.athlete.jd@example.invalid';
+    final email = journeyDFixtureEmail(marker);
     final athlete = await withStageTimeout(
       'create_synthetic_athlete',
       () => athleteFactory.create(

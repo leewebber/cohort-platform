@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cohort_platform/features/authored_plan_package/authored_plan_package.dart';
 
 import 'journey_d_bounded_http.dart';
+import 'journey_d_fixture_identity.dart';
 import 'journey_d_live_ports.dart';
 import 'journey_d_protocol_publication.dart';
 import 'journey_d_write_accounting.dart';
@@ -21,7 +22,7 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
     required String marker,
     required String lineageCode,
   }) async {
-    final email = '$marker.athlete.jd@example.invalid';
+    final email = journeyDFixtureEmail(marker);
     // GoTrue admin listUsers filters via `filter`, not `email`.
     // `?email=` is ignored and returns an unfiltered page — false UNIQUE.
     final auth = await _get(
@@ -150,6 +151,17 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
     required String email,
     required String displayName,
   }) async {
+    // Exact identity lock: create must use the same email as uniqueness/verify.
+    final expected = journeyDFixtureEmail(marker);
+    if (email != expected) {
+      return JourneyDLiveAthleteResult(
+        state: JourneyDPublicationStageState.failed,
+        detail: 'auth_create_email_identity_mismatch',
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+        ),
+      );
+    }
     final password =
         'Jd${DateTime.now().microsecondsSinceEpoch}!aA1${marker.hashCode.abs()}';
     // Process-local only until private credential handoff write.

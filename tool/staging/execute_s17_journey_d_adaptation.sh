@@ -97,10 +97,16 @@ import os, sys
 from pathlib import Path
 root = Path(os.environ["S17_ROOT"])
 sys.path.insert(0, str(root / "tool/staging/lib"))
-from s17_journey_d_fixture import StagingGuardError, reject_reserved_identity, validate_marker
+from s17_journey_d_fixture import (
+    StagingGuardError,
+    reject_reserved_identity,
+    reject_retired_live_marker,
+    validate_marker,
+)
 try:
     validate_marker(os.environ["S17_JD_FIXTURE_MARKER"])
     reject_reserved_identity(os.environ["S17_JD_FIXTURE_MARKER"])
+    reject_retired_live_marker(os.environ["S17_JD_FIXTURE_MARKER"])
 except StagingGuardError as e:
     print(str(e), file=sys.stderr)
     raise SystemExit(2)

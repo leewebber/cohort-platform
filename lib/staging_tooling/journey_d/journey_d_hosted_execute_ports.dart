@@ -15,6 +15,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'journey_d_bounded_http.dart';
 import 'journey_d_execute_workflow.dart';
+import 'journey_d_fixture_identity.dart';
 
 /// Hosted ports for Journey D execute (Cohort Staging only).
 class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
@@ -51,7 +52,7 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
     required String assignmentId,
     required String versionId,
   }) async {
-    final email = '$marker.athlete.jd@example.invalid';
+    final email = journeyDFixtureEmail(marker);
     final users = await _getJson(
       // GoTrue admin listUsers filters via `filter`, not `email`.
       '/auth/v1/admin/users?filter=${Uri.encodeComponent(email)}',

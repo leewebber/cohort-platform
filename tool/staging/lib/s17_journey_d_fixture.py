@@ -52,6 +52,13 @@ RESERVED_SUBSTRINGS = (
     "e9bd7e19-6eb9-4f7e-abf6-d08ac4368748",
 )
 
+# Poisoned live fixture identities — leave hosted Auth untouched; never reuse.
+RETIRED_LIVE_MARKERS = frozenset(
+    {
+        "s17_jd_adapt_20260805T012428Z_933d9364",
+    }
+)
+
 AVAILABLE_EQUIPMENT = [
     "cohort.equipment.kettlebell",
     "cohort.equipment.bodyweight",
@@ -182,11 +189,30 @@ def new_marker() -> str:
     return f"s17_jd_adapt_{stamp}_{secrets.token_hex(4)}"
 
 
+def jd_fixture_email(marker: str) -> str:
+    """Canonical synthetic Auth email for a Journey D fixture marker."""
+    return f"{(marker or '').strip()}.athlete.jd@example.invalid"
+
+
+def jd_normalized_fixture_email(marker: str) -> str:
+    """Normalized form used for Auth create/lookup exact comparison."""
+    return jd_fixture_email(marker).lower()
+
+
 def validate_marker(marker: str) -> None:
     if not JD_MARKER_RE.match(marker or ""):
         raise StagingGuardError("REFUSED: invalid Journey D fixture marker")
     if marker.startswith(RESERVED_MARKERS_PREFIXES):
         raise StagingGuardError("REFUSED: reserved Athlete D marker prefix")
+
+
+def reject_retired_live_marker(marker: str) -> None:
+    """Refuse poisoned markers on live create/execute (not local fake tests)."""
+    if (marker or "").strip() in RETIRED_LIVE_MARKERS:
+        raise StagingGuardError(
+            "REFUSED: retired/poisoned Journey D fixture marker "
+            "(choose a fresh s17_jd_adapt_* identity)"
+        )
 
 
 def validate_jd_email(email: str, marker: str) -> None:
@@ -196,6 +222,11 @@ def validate_jd_email(email: str, marker: str) -> None:
         )
     if not email.startswith(marker):
         raise StagingGuardError("REFUSED: Journey D email must embed fixture marker")
+    expected = jd_fixture_email(marker)
+    if email != expected:
+        raise StagingGuardError(
+            "REFUSED: Journey D email must match canonical fixture derivation"
+        )
 
 
 def reject_reserved_identity(value: str) -> None:
@@ -331,7 +362,7 @@ def build_intended_write_manifest(
     mode: str,
     live_authorized: bool,
 ) -> dict[str, Any]:
-    email = f"{marker}.athlete.jd@example.invalid"
+    email = jd_fixture_email(marker)
     return {
         "status": "dry_run_ok" if mode == "dry_run" else "live_plan",
         "mode": mode,
@@ -480,7 +511,7 @@ def run_dry_run(
     validate_marker(marker)
     reject_reserved_identity(marker)
     reject_reserved_identity(LINEAGE_CODE)
-    email = f"{marker}.athlete.jd@example.invalid"
+    email = jd_fixture_email(marker)
     validate_jd_email(email, marker)
 
     if existing_markers and marker in existing_markers:
@@ -654,7 +685,7 @@ def _synthetic_live_result(
             "marker": marker,
             "lineage_code": LINEAGE_CODE,
             "athlete_id": "a1111111-1111-4111-8111-111111111111",
-            "email": f"{marker}.athlete.jd@example.invalid",
+            "email": jd_fixture_email(marker),
             "password": f"SyntheticJd!aA1-{marker[-8:]}",
             "assignment_id": "d4444444-4444-4444-8444-444444444444",
             "version_id": "c3333333-3333-4333-8333-333333333333",
@@ -721,7 +752,7 @@ def run_live_create(
     load_package_yaml_text(root)
     load_protocol_intent(root)
 
-    email = f"{explicit}.athlete.jd@example.invalid"
+    email = jd_fixture_email(explicit)
     validate_jd_email(email, explicit)
 
     mode = _mutation_backend_mode()

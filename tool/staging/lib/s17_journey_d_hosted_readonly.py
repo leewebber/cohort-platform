@@ -24,6 +24,7 @@ from s17_journey_d_fixture import (
     SOURCE_EXERCISE,
     SYMBOLIC_LINEAGES,
     StagingGuardError,
+    jd_fixture_email,
     load_package_yaml_text,
     load_protocol_intent,
     reject_reserved_identity,
@@ -405,7 +406,7 @@ def run_hosted_readonly(
 
     package_text = load_package_yaml_text(root)
     intent = load_protocol_intent(root)
-    email = f"{marker}.athlete.jd@example.invalid"
+    email = jd_fixture_email(marker)
     result["email_redacted"] = redact_email(email)
 
     intent_blob = json.dumps(intent)
