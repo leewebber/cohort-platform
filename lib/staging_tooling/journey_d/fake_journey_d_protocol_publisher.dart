@@ -1,6 +1,7 @@
 import 'package:cohort_platform/core/utils/database_uuid.dart';
 
 import 'journey_d_protocol_publication.dart';
+import 'journey_d_write_accounting.dart';
 
 /// Local-only fake of [JourneyDProtocolPublisher] for B4d.21b tests.
 ///
@@ -44,6 +45,11 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.failed,
         detail: 'fake_publication_failed',
         furtherMutationProhibited: true,
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+        ),
       );
     }
     if (ambiguousProtocolIds.contains(intent.protocolId)) {
@@ -52,6 +58,11 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.unknown,
         detail: 'fake_publication_ambiguous',
         furtherMutationProhibited: true,
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          outcomeUncertain: true,
+        ),
       );
     }
 
@@ -63,6 +74,12 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         returnedSessionLineageId: malformed,
         returnedRevisionNumber: intent.revisionNumber,
         detail: 'fake_malformed_lineage',
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+          mutationConfirmed: true,
+        ),
       );
     }
 
@@ -73,6 +90,9 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.failed,
         detail: 'fake_missing_lineage_mapping',
         furtherMutationProhibited: true,
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+        ),
       );
     }
     if (!DatabaseUuid.isValidDatabaseUuid(lineage)) {
@@ -81,6 +101,11 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.failed,
         detail: 'fake_configured_non_uuid',
         furtherMutationProhibited: true,
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+        ),
       );
     }
 
@@ -95,6 +120,11 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.failed,
         detail: 'fake_wrong_protocol_identity:$claimedProtocol',
         furtherMutationProhibited: true,
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+        ),
       );
     }
 
@@ -107,6 +137,13 @@ class FakeJourneyDProtocolPublisher implements JourneyDProtocolPublisher {
       returnedSessionLineageId: lineage,
       returnedRevisionNumber: revision,
       detail: 'fake_publishDraft_ok',
+      writeAccounting: const JourneyDWriteAccounting(
+        invocationAttempted: true,
+        requestDispatched: true,
+        responseReceived: true,
+        mutationConfirmed: true,
+        objectObservedPostAttempt: true,
+      ),
     );
   }
 }

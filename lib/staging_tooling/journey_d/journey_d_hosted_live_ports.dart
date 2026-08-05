@@ -5,6 +5,7 @@ import 'package:cohort_platform/features/authored_plan_package/authored_plan_pac
 import 'journey_d_bounded_http.dart';
 import 'journey_d_live_ports.dart';
 import 'journey_d_protocol_publication.dart';
+import 'journey_d_write_accounting.dart';
 
 /// Staging HTTP ports for Journey D live creation (no production-linked CLI).
 ///
@@ -172,12 +173,22 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
         detail: created.dispatched
             ? 'auth_create_timed_out_dispatched'
             : 'auth_create_timed_out',
+        writeAccounting: JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: created.dispatched,
+          outcomeUncertain: created.dispatched,
+        ),
       );
     }
     if (created.statusCode != 200 && created.statusCode != 201) {
       return JourneyDLiveAthleteResult(
         state: JourneyDPublicationStageState.failed,
         detail: 'auth_create_http_${created.statusCode}',
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+        ),
       );
     }
     final body = jsonDecode(created.body);
@@ -185,6 +196,12 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
       return const JourneyDLiveAthleteResult(
         state: JourneyDPublicationStageState.unknown,
         detail: 'auth_create_ambiguous_body',
+        writeAccounting: JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+          outcomeUncertain: true,
+        ),
       );
     }
     final userId = body['id'].toString();
@@ -210,6 +227,14 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
           state: JourneyDPublicationStageState.failed,
           userIdRedacted: '${userId.substring(0, 8)}…',
           detail: 'profile_create_failed',
+          writeAccounting: const JourneyDWriteAccounting(
+            invocationAttempted: true,
+            requestDispatched: true,
+            responseReceived: true,
+            // Auth user id was returned; profile write failed.
+            mutationConfirmed: true,
+            outcomeUncertain: true,
+          ),
         );
       }
     }
@@ -222,6 +247,13 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
         state: JourneyDPublicationStageState.failed,
         userIdRedacted: '${userId.substring(0, 8)}…',
         detail: 'athlete_login_failed',
+        writeAccounting: const JourneyDWriteAccounting(
+          invocationAttempted: true,
+          requestDispatched: true,
+          responseReceived: true,
+          mutationConfirmed: true,
+          outcomeUncertain: true,
+        ),
       );
     }
     final loginBody = jsonDecode(login.body);
@@ -235,10 +267,19 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
       state: JourneyDPublicationStageState.applied,
       userIdRedacted: '${userId.substring(0, 8)}…',
       accessTokenPresent: token is String,
-      detail: 'athlete_created',
+      detail: 'athlete_created_response_received',
       privateUserId: userId,
       privatePassword: password,
       privateEmail: email,
+      // Response proved an id; creator does not re-GET the user. Post-create
+      // verifiers must set object_observed_post_attempt separately.
+      writeAccounting: const JourneyDWriteAccounting(
+        invocationAttempted: true,
+        requestDispatched: true,
+        responseReceived: true,
+        mutationConfirmed: true,
+        objectObservedPostAttempt: false,
+      ),
     );
   }
 

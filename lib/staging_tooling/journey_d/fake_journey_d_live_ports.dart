@@ -1,5 +1,6 @@
 import 'journey_d_live_ports.dart';
 import 'journey_d_protocol_publication.dart';
+import 'journey_d_write_accounting.dart';
 
 /// Synthetic test doubles for [JourneyDLiveFixtureCreator]. Never hosted.
 class FakeJourneyDLivePreflight implements JourneyDLivePreflight {
@@ -47,6 +48,13 @@ class FakeJourneyDLiveAthleteFactory implements JourneyDLiveAthleteFactory {
           privateUserId: 'a1111111-1111-4111-8111-111111111111',
           privatePassword: 'FakeJdCredential!aA1-$marker',
           privateEmail: email,
+          writeAccounting: const JourneyDWriteAccounting(
+            invocationAttempted: true,
+            requestDispatched: true,
+            responseReceived: true,
+            mutationConfirmed: true,
+            objectObservedPostAttempt: false,
+          ),
         );
   }
 }

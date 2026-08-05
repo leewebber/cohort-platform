@@ -488,6 +488,10 @@ class ProtocolBuilderService {
     }
   }
 
+  /// Mutation-free publishability check used by live fixture preflight and
+  /// [_persistDraft]. Same invariants as production publish — no weaker copy.
+  void validateDraft(ProtocolDraft draft) => _validateDraft(draft);
+
   void _validateDraft(ProtocolDraft draft) {
     final messages = <String>[];
 

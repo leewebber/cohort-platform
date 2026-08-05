@@ -1,6 +1,7 @@
 import 'journey_d_protocol_publication.dart';
 import 'journey_d_rebind_pipeline.dart';
 import 'journey_d_session_lineage_rebinder.dart';
+import 'journey_d_write_accounting.dart';
 
 /// Exact fixture-collision preflight (marker / identity / lineage).
 abstract class JourneyDLivePreflight {
@@ -29,6 +30,7 @@ class JourneyDLiveAthleteResult {
     this.privateUserId,
     this.privatePassword,
     this.privateEmail,
+    this.writeAccounting = JourneyDWriteAccounting.none,
   });
 
   final JourneyDPublicationStageState state;
@@ -40,6 +42,7 @@ class JourneyDLiveAthleteResult {
   final String? privateUserId;
   final String? privatePassword;
   final String? privateEmail;
+  final JourneyDWriteAccounting writeAccounting;
 
   bool get isApplied => state == JourneyDPublicationStageState.applied;
 }

@@ -109,6 +109,7 @@ class JourneyDRebindPipeline {
         returnedRevisionNumber: published.returnedRevisionNumber,
         detail: published.detail,
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
     if (published.state == JourneyDPublicationStageState.failed) {
@@ -117,6 +118,7 @@ class JourneyDRebindPipeline {
         state: JourneyDPublicationStageState.failed,
         detail: published.detail,
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
     if (published.state != JourneyDPublicationStageState.applied) {
@@ -125,6 +127,7 @@ class JourneyDRebindPipeline {
         state: JourneyDPublicationStageState.unknown,
         detail: 'unexpected_publication_state:${published.state.name}',
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
 
@@ -135,6 +138,7 @@ class JourneyDRebindPipeline {
         state: JourneyDPublicationStageState.failed,
         detail: 'missing_returned_session_lineage_id',
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
     if (!DatabaseUuid.isValidDatabaseUuid(lineage)) {
@@ -144,6 +148,7 @@ class JourneyDRebindPipeline {
         returnedSessionLineageId: lineage,
         detail: 'malformed_or_non_uuid_session_lineage_id',
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
     if (JourneyDSessionLineageRebinder.symbolicLineagePattern.hasMatch(
@@ -156,6 +161,7 @@ class JourneyDRebindPipeline {
         returnedSessionLineageId: lineage,
         detail: 'returned_lineage_still_symbolic',
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
     if (published.returnedRevisionNumber != null &&
@@ -167,6 +173,7 @@ class JourneyDRebindPipeline {
         returnedRevisionNumber: published.returnedRevisionNumber,
         detail: 'unexpected_revision_number',
         furtherMutationProhibited: true,
+        writeAccounting: published.writeAccounting,
       );
     }
 
@@ -177,6 +184,7 @@ class JourneyDRebindPipeline {
       returnedRevisionNumber:
           published.returnedRevisionNumber ?? published.intent.revisionNumber,
       detail: published.detail,
+      writeAccounting: published.writeAccounting,
     );
   }
 

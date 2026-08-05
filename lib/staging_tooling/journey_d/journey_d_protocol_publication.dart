@@ -1,5 +1,7 @@
 import 'package:cohort_platform/core/utils/database_uuid.dart';
 
+import 'journey_d_write_accounting.dart';
+
 /// One fixture protocol that must be published before package import (B4d.21b).
 class JourneyDProtocolPublicationIntent {
   const JourneyDProtocolPublicationIntent({
@@ -51,6 +53,7 @@ class JourneyDProtocolPublicationResult {
     this.returnedRevisionNumber,
     this.detail = '',
     this.furtherMutationProhibited = false,
+    this.writeAccounting = JourneyDWriteAccounting.none,
   });
 
   final JourneyDProtocolPublicationIntent intent;
@@ -59,6 +62,7 @@ class JourneyDProtocolPublicationResult {
   final int? returnedRevisionNumber;
   final String detail;
   final bool furtherMutationProhibited;
+  final JourneyDWriteAccounting writeAccounting;
 
   bool get isApplied => state == JourneyDPublicationStageState.applied;
 
@@ -75,6 +79,7 @@ class JourneyDProtocolPublicationResult {
     'returned_revision_number': returnedRevisionNumber,
     'detail': detail,
     'further_mutation_prohibited': furtherMutationProhibited,
+    'write_accounting': writeAccounting.toJson(),
   };
 
   static String? _redactUuid(String? value) {

@@ -13,4 +13,5 @@ export 'journey_d_protocol_publication.dart';
 export 'journey_d_publication_plan_builder.dart';
 export 'journey_d_rebind_pipeline.dart';
 export 'journey_d_session_lineage_rebinder.dart';
+export 'journey_d_write_accounting.dart';
 export 'protocol_builder_journey_d_publisher.dart';
