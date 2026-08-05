@@ -743,9 +743,11 @@ def run_live_create(
             f"REFUSED: unknown S17_JD_LIVE_MUTATION_BACKEND={mode!r}"
         )
 
-    # Hosted path: invoke repository-owned Dart live entrypoint once.
+    # Hosted path: prepare packages from lockfile, then invoke --no-pub harness.
     import subprocess
     import tempfile
+
+    _ensure_flutter_packages_prepared(root)
 
     request = {
         "marker": explicit,
@@ -776,6 +778,12 @@ def run_live_create(
         cred_out = os.environ.get("S17_JD_CREDENTIAL_OUT_FILE", "").strip()
         if cred_out:
             env["S17_JD_CREDENTIAL_OUT_FILE"] = cred_out
+        log_dir = Path(
+            os.environ.get("S17_JD_FLUTTER_LOG_DIR", "").strip() or tmp
+        )
+        log_dir.mkdir(parents=True, exist_ok=True)
+        stdout_log = log_dir / "flutter_live_stdout.txt"
+        stderr_log = log_dir / "flutter_live_stderr.txt"
         completed = subprocess.run(
             ["bash", str(runner)],
             cwd=str(root),
@@ -784,11 +792,22 @@ def run_live_create(
             text=True,
             timeout=600,
         )
+        stdout_log.write_text(completed.stdout or "")
+        stderr_log.write_text(completed.stderr or "")
+        # Guard: live harness must not begin dependency resolution.
+        combined = (completed.stdout or "") + "\n" + (completed.stderr or "")
+        if "Resolving dependencies..." in combined:
+            raise StagingGuardError(
+                "REFUSED: live Flutter harness began dependency resolution "
+                f"(--no-pub required). logs={stdout_log}"
+            )
         if completed.returncode != 0 and not out_path.is_file():
             detail = (completed.stderr or completed.stdout or "").strip()
+            # Keep a longer diagnostic window; full logs are on disk.
             raise StagingGuardError(
-                "REFUSED: hosted live dart entrypoint failed: "
-                + (detail[:400] if detail else f"exit={completed.returncode}")
+                "REFUSED: hosted live dart entrypoint failed "
+                f"exit={completed.returncode} logs={stdout_log}: "
+                + (detail[-800:] if detail else "no_output")
             )
         if not out_path.is_file():
             raise StagingGuardError(
@@ -799,7 +818,45 @@ def run_live_create(
         result.setdefault("fixture_marker", explicit)
         result.setdefault("new_marker_called", False)
         result.setdefault("rebind_path", REBIND_PATH_STATUS)
+        result["flutter_no_pub"] = True
+        result["flutter_stdout_log"] = str(stdout_log)
+        result["flutter_stderr_log"] = str(stderr_log)
         return result
+
+
+def _ensure_flutter_packages_prepared(root: Path) -> None:
+    """Prepare Flutter packages from the committed lockfile before live invoke.
+
+    Runs outside the --no-pub live harness. Failure refuses before hosted
+    mutation contact from the Dart entrypoint.
+    """
+    import subprocess
+
+    gate = root / "tool/staging/lib/s17_jd_flutter_package_gate.sh"
+    if not gate.is_file():
+        raise StagingGuardError(
+            "REFUSED: missing tool/staging/lib/s17_jd_flutter_package_gate.sh"
+        )
+    script = f"""
+set -euo pipefail
+export S17_ROOT="{root}"
+# shellcheck disable=SC1091
+source "{gate}"
+s17_jd_flutter_package_prepare
+"""
+    completed = subprocess.run(
+        ["bash", "-c", script],
+        cwd=str(root),
+        capture_output=True,
+        text=True,
+        timeout=300,
+    )
+    if completed.returncode != 0:
+        detail = (completed.stderr or completed.stdout or "").strip()
+        raise StagingGuardError(
+            "REFUSED: Flutter package preparation failed before live invoke: "
+            + (detail[-600:] if detail else f"exit={completed.returncode}")
+        )
 
 
 def post_create_verifier_checklist() -> list[str]:

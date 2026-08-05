@@ -174,6 +174,12 @@ PY
 export S17_JD_EXECUTE_REQUEST_FILE="$REQ_FILE"
 export S17_JD_EXECUTE_RESULT_FILE="$RESULT_FILE"
 export S17_JD_CREDENTIAL_FILE="$CREDENTIAL_FILE"
+export S17_JD_FLUTTER_LOG_DIR="$PRIVATE_DIR"
+
+# Prepare packages from lockfile before --no-pub execute harness.
+# shellcheck disable=SC1091
+source "${ROOT}/tool/staging/lib/s17_jd_flutter_package_gate.sh"
+s17_jd_flutter_package_prepare
 
 set +e
 bash "${ROOT}/tool/staging/run_s17_journey_d_execute_dart.sh"

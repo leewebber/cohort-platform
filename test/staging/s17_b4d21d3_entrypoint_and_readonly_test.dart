@@ -75,6 +75,8 @@ void main() {
     test('2-5 repaired launcher reaches main and fake orchestration', () async {
       final launcherSrc = File(launcher).readAsStringSync();
       expect(launcherSrc, contains('flutter test'));
+      expect(launcherSrc, contains('--no-pub'));
+      expect(launcherSrc, contains('s17_jd_flutter_package_require'));
       expect(launcherSrc, isNot(contains('exec dart run')));
 
       final files = req();

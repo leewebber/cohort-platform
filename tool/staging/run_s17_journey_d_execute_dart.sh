@@ -8,6 +8,7 @@
 #   S17_JD_CREDENTIAL_FILE
 #
 # Runtime: Flutter test harness (Flutter-bound graph; plain dart run crashes).
+# Package resolution is forbidden here — uses --no-pub after package gate.
 
 set -euo pipefail
 
@@ -16,6 +17,9 @@ if [[ -z "$ROOT" ]]; then
   ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 fi
 cd "$ROOT"
+export S17_ROOT="$ROOT"
+# shellcheck disable=SC1091
+source "${ROOT}/tool/staging/lib/s17_jd_flutter_package_gate.sh"
 
 if [[ -z "${S17_JD_EXECUTE_REQUEST_FILE:-}" || -z "${S17_JD_EXECUTE_RESULT_FILE:-}" ]]; then
   echo "REFUSED: S17_JD_EXECUTE_REQUEST_FILE and S17_JD_EXECUTE_RESULT_FILE required" >&2
@@ -35,6 +39,9 @@ if ! command -v flutter >/dev/null 2>&1; then
   exit 2
 fi
 
+s17_jd_flutter_package_require
+
 exec flutter test \
+  --no-pub \
   --reporter expanded \
   test/staging/execute_s17_journey_d_harness_test.dart

@@ -178,6 +178,8 @@ RESULT_FILE="${PRIVATE_DIR}/result.json"
 # Private credential handoff (mode 0600). Never print contents.
 CREDENTIAL_FILE="${PRIVATE_DIR}/athlete_credential.json"
 export S17_JD_CREDENTIAL_OUT_FILE="$CREDENTIAL_FILE"
+# Persist full Flutter harness logs outside the deleted live temp dir.
+export S17_JD_FLUTTER_LOG_DIR="$PRIVATE_DIR"
 
 if [[ "$MODE" == "live" ]]; then
   python3 - <<PY
