@@ -48,6 +48,18 @@ class MutationAttemptError(StagingGuardError):
     """Raised if a non-GET HTTP method is attempted."""
 
 
+# PostgREST success for Prefer: count=exact + Range may be 200 or 206.
+_REST_OK = {200, 206}
+_DEFAULT_HTTP_TIMEOUT_SEC = 45
+
+# Hosted performance_protocols columns (protocol_id is PK; no surrogate id;
+# lifecycle_status — not "status"). Wrong select columns yield HTTP 400 and
+# historically forced current/later_protocol_lookup into unverified.
+_PROTOCOL_SELECT = (
+    "protocol_id,session_lineage_id,revision_number,lifecycle_status"
+)
+
+
 @dataclass
 class ReadOnlyHttpClient:
     """Structurally read-only HTTP client (GET only)."""
@@ -56,6 +68,7 @@ class ReadOnlyHttpClient:
     api_key: str
     get_impl: Callable[[str, dict[str, str]], tuple[int, str, dict[str, str]]] | None = None
     calls: list[dict[str, Any]] = field(default_factory=list)
+    timeout_sec: int = _DEFAULT_HTTP_TIMEOUT_SEC
 
     def get(
         self,
@@ -87,12 +100,18 @@ class ReadOnlyHttpClient:
             headers["Prefer"] = "count=exact"
             headers["Range"] = "0-0"
         url = self.base_url.rstrip("/") + path
-        self.calls.append({"method": "GET", "path": path})
+        self.calls.append(
+            {
+                "method": "GET",
+                "route_class": _route_class(path),
+                "prefer_count": prefer_count,
+            }
+        )
         if self.get_impl is not None:
             return self.get_impl(path, headers)
         req = Request(url, headers=headers, method="GET")
         try:
-            with urllib.request.urlopen(req, timeout=45) as resp:
+            with urllib.request.urlopen(req, timeout=self.timeout_sec) as resp:
                 body = resp.read().decode()
                 hdrs = {k.lower(): v for k, v in resp.headers.items()}
                 return resp.status, body, hdrs
@@ -100,6 +119,130 @@ class ReadOnlyHttpClient:
             body = e.read().decode() if e.fp else ""
             hdrs = {k.lower(): v for k, v in (e.headers.items() if e.headers else [])}
             return e.code, body, hdrs
+        except urllib.error.URLError as e:
+            return 0, "", {"x-transport-error": type(e.reason).__name__}
+        except TimeoutError:
+            return 0, "", {"x-transport-error": "TimeoutError"}
+
+    def post(self, *args: Any, **kwargs: Any) -> None:
+        raise MutationAttemptError("REFUSED: POST unreachable in read-only verifier")
+
+    def patch(self, *args: Any, **kwargs: Any) -> None:
+        raise MutationAttemptError("REFUSED: PATCH unreachable in read-only verifier")
+
+    def put(self, *args: Any, **kwargs: Any) -> None:
+        raise MutationAttemptError("REFUSED: PUT unreachable in read-only verifier")
+
+    def delete(self, *args: Any, **kwargs: Any) -> None:
+        raise MutationAttemptError("REFUSED: DELETE unreachable in read-only verifier")
+
+
+def _route_class(path: str) -> str:
+    """Redacted route class for evidence (no emails, ids, or query values)."""
+    if path.startswith("/auth/v1/admin/users"):
+        if re.search(
+            r"/auth/v1/admin/users/"
+            r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
+            path,
+        ):
+            return "/auth/v1/admin/users/{id}"
+        return "/auth/v1/admin/users"
+    if path.startswith("/rest/v1/"):
+        bare = path.split("?", 1)[0]
+        table = bare[len("/rest/v1/") :].split("/")[0]
+        return f"/rest/v1/{table}"
+    return "/unknown"
+
+
+def classify_counted_rest_lookup(
+    *,
+    status: int,
+    body: str,
+    headers: dict[str, str],
+    visibility_proven: bool,
+    require_content_range: bool = True,
+) -> dict[str, Any]:
+    """Classify a Prefer:count=exact REST lookup fail-closed.
+
+    States: absent | present | duplicated | lookup_failed | visibility_unproven | uncertain
+    """
+    evidence: dict[str, Any] = {
+        "http_status": status,
+        "body_complete": False,
+        "count": None,
+        "state": "uncertain",
+        "visibility_proven": visibility_proven,
+        "detail": "",
+    }
+    if status in (401, 403):
+        evidence["state"] = "visibility_unproven"
+        evidence["detail"] = "unauthorized_or_forbidden"
+        return evidence
+    if status == 404:
+        # Table missing is not conclusive fixture absence under this verifier.
+        evidence["state"] = "lookup_failed"
+        evidence["detail"] = "not_found"
+        return evidence
+    if status == 0 or headers.get("x-transport-error"):
+        evidence["state"] = "lookup_failed"
+        evidence["detail"] = f"transport_{headers.get('x-transport-error') or 'error'}"
+        return evidence
+    if status in (408, 429, 500, 502, 503, 504):
+        evidence["state"] = "lookup_failed"
+        evidence["detail"] = f"transient_or_server_{status}"
+        return evidence
+    if status == 400:
+        evidence["state"] = "lookup_failed"
+        evidence["detail"] = "bad_request_or_unknown_column"
+        return evidence
+    if status not in _REST_OK:
+        evidence["state"] = "lookup_failed"
+        evidence["detail"] = f"non_2xx_{status}"
+        return evidence
+
+    # Validate body is complete JSON list (truncated/malformed → uncertain).
+    try:
+        data = json.loads(body) if body is not None else None
+    except json.JSONDecodeError:
+        evidence["state"] = "uncertain"
+        evidence["detail"] = "malformed_json"
+        return evidence
+    if not isinstance(data, list):
+        evidence["state"] = "uncertain"
+        evidence["detail"] = "unexpected_body_shape"
+        return evidence
+    evidence["body_complete"] = True
+
+    cr = headers.get("content-range") or headers.get("Content-Range") or ""
+    count = _count_from_range(headers, body)
+    if require_content_range and "/" not in cr:
+        # Without Content-Range, Range:0-0 body length can under-count.
+        evidence["state"] = "uncertain"
+        evidence["detail"] = "missing_content_range"
+        evidence["count"] = count
+        return evidence
+    if count is None:
+        evidence["state"] = "uncertain"
+        evidence["detail"] = "count_unparseable"
+        return evidence
+    evidence["count"] = count
+
+    if not visibility_proven:
+        # Empty under RLS-ambiguous actor cannot prove absence.
+        evidence["state"] = "visibility_unproven"
+        evidence["detail"] = "actor_lacks_proven_full_visibility"
+        return evidence
+
+    if count == 0:
+        evidence["state"] = "absent"
+        evidence["detail"] = "authorized_empty"
+    elif count == 1:
+        evidence["state"] = "present"
+        evidence["detail"] = "authorized_one"
+    else:
+        evidence["state"] = "duplicated"
+        evidence["detail"] = "authorized_many"
+    return evidence
 
     def post(self, *args: Any, **kwargs: Any) -> None:
         raise MutationAttemptError("REFUSED: POST unreachable in read-only verifier")
@@ -205,6 +348,11 @@ def empty_result(marker: str) -> dict[str, Any]:
         "unrelated_objects_attributable": False,
         "fixture_state": "uncertain",
         "fixture_eligible": False,
+        "fixture_objects_found": 0,
+        "all_required_lookups": "unverified",
+        "current_protocol_lookup": "unverified",
+        "later_protocol_lookup": "unverified",
+        "lookups": {},
         "unverified_claims": [],
         "retry": False,
         "resume": False,
@@ -285,18 +433,32 @@ def run_hosted_readonly(
     result["production_excluded"] = True
     result["api_host_staging"] = True
 
+    # Conclusive absence requires an actor that bypasses RLS (service role).
+    # Anon-only reads remain visibility_unproven for empty collections.
+    visibility_proven = bool(service)
     read_key = service or anon
     if not read_key:
         raise StagingGuardError("REFUSED: missing API key for read-only verification")
+    result["verification_actor"] = "service_role" if service else "anon_key"
+    result["visibility_proven"] = visibility_proven
 
     http = client or ReadOnlyHttpClient(base_url=url, api_key=read_key)
     unverified: list[str] = []
 
     if fixture_snapshot is not None:
-        # Local fake path — no network.
-        snap = fixture_snapshot
+        # Local fake path — no network. Snapshot may declare lookup states.
+        snap = dict(fixture_snapshot)
+        if "lookups" not in snap:
+            # Default injected snapshots used by unit tests: treat protocol
+            # lookups as verified from counts when no explicit lookup map.
+            snap["lookups"] = _lookups_from_protocol_counts(snap)
     else:
-        snap = _fetch_snapshot(http, marker=marker, email=email)
+        snap = _fetch_snapshot(
+            http,
+            marker=marker,
+            email=email,
+            visibility_proven=visibility_proven,
+        )
 
     result["identity_count"] = int(snap.get("identity_count", 0))
     result["profile_count"] = int(snap.get("profile_count", 0))
@@ -330,6 +492,26 @@ def run_hosted_readonly(
     )
     unverified.extend(snap.get("unverified_claims") or [])
 
+    lookups = snap.get("lookups") or {}
+    result["lookups"] = {
+        k: {
+            "state": v.get("state"),
+            "http_status": v.get("http_status"),
+            "count": v.get("count"),
+            "detail": v.get("detail"),
+            "visibility_proven": v.get("visibility_proven"),
+            "body_complete": v.get("body_complete"),
+            "route_class": v.get("route_class"),
+            "identity": v.get("identity"),
+        }
+        for k, v in lookups.items()
+        if isinstance(v, dict)
+    }
+    cur_lookup = (lookups.get("current_protocol_lookup") or {}).get("state", "unverified")
+    lat_lookup = (lookups.get("later_protocol_lookup") or {}).get("state", "unverified")
+    result["current_protocol_lookup"] = cur_lookup
+    result["later_protocol_lookup"] = lat_lookup
+
     # Redact any accidental full identifiers from snapshot.
     if "user_id" in snap:
         result["user_id_redacted"] = redact_uuid(str(snap["user_id"]))
@@ -346,17 +528,44 @@ def run_hosted_readonly(
         + result["assignment_count"]
         + result["occurrence_count"]
     )
+    result["fixture_objects_found"] = totals
 
-    if unverified:
+    protocol_lookups_verified = cur_lookup in {
+        "absent",
+        "present",
+        "duplicated",
+    } and lat_lookup in {"absent", "present", "duplicated"}
+    if cur_lookup in {"lookup_failed", "visibility_unproven", "uncertain", "unverified"}:
+        if "current_protocol_lookup" not in unverified:
+            unverified.append("current_protocol_lookup")
+    if lat_lookup in {"lookup_failed", "visibility_unproven", "uncertain", "unverified"}:
+        if "later_protocol_lookup" not in unverified:
+            unverified.append("later_protocol_lookup")
+
+    if result["duplicates_found"] or cur_lookup == "duplicated" or lat_lookup == "duplicated":
+        result["duplicates_found"] = True
+        result["fixture_state"] = "duplicated"
+    elif unverified or not protocol_lookups_verified:
         result["fixture_state"] = "uncertain"
     elif totals == 0:
-        result["fixture_state"] = "absent"
+        # Absence requires both protocol lookups conclusively absent.
+        if cur_lookup == "absent" and lat_lookup == "absent":
+            result["fixture_state"] = "absent"
+        else:
+            result["fixture_state"] = "uncertain"
+            if cur_lookup != "absent" and "current_protocol_lookup" not in unverified:
+                unverified.append("current_protocol_lookup")
+            if lat_lookup != "absent" and "later_protocol_lookup" not in unverified:
+                unverified.append("later_protocol_lookup")
     elif _is_complete(result):
         result["fixture_state"] = "complete"
     else:
         result["fixture_state"] = "partial"
 
     result["unverified_claims"] = unverified
+    result["all_required_lookups"] = (
+        "verified" if not unverified and protocol_lookups_verified else "unverified"
+    )
     base_complete = (
         result["fixture_state"] == "complete"
         and not result["duplicates_found"]
@@ -436,11 +645,59 @@ def _is_complete(r: dict[str, Any]) -> bool:
     )
 
 
+def _lookups_from_protocol_counts(snap: dict[str, Any]) -> dict[str, Any]:
+    """Synthesize verified protocol lookup map from injected count snapshots."""
+    out: dict[str, Any] = {}
+    for role, key in (
+        ("current", "current_protocol_count"),
+        ("later", "later_protocol_count"),
+    ):
+        count = int(snap.get(key, 0) or 0)
+        if count == 0:
+            state = "absent"
+        elif count == 1:
+            state = "present"
+        else:
+            state = "duplicated"
+        out[f"{role}_protocol_lookup"] = {
+            "state": state,
+            "http_status": 200,
+            "count": count,
+            "detail": "injected_snapshot",
+            "visibility_proven": True,
+            "body_complete": True,
+            "route_class": "/rest/v1/performance_protocols",
+            "identity": CURRENT_PROTOCOL_ID if role == "current" else LATER_PROTOCOL_ID,
+        }
+    # Preserve explicit unverified protocol claims from injected snapshots.
+    for claim in snap.get("unverified_claims") or []:
+        if claim in ("current_protocol_lookup", "later_protocol_lookup"):
+            out[claim] = {
+                "state": "uncertain",
+                "http_status": None,
+                "count": None,
+                "detail": "injected_unverified",
+                "visibility_proven": False,
+                "body_complete": False,
+                "route_class": "/rest/v1/performance_protocols",
+                "identity": (
+                    CURRENT_PROTOCOL_ID
+                    if claim.startswith("current")
+                    else LATER_PROTOCOL_ID
+                ),
+            }
+    return out
+
+
 def _fetch_snapshot(
-    http: ReadOnlyHttpClient, *, marker: str, email: str
+    http: ReadOnlyHttpClient,
+    *,
+    marker: str,
+    email: str,
+    visibility_proven: bool,
 ) -> dict[str, Any]:
     """Exact-filter hosted reads only."""
-    snap: dict[str, Any] = {"unverified_claims": []}
+    snap: dict[str, Any] = {"unverified_claims": [], "lookups": {}}
     enc_email = urllib.parse.quote(email, safe="")
     enc_marker = urllib.parse.quote(marker, safe="")
     enc_lineage = urllib.parse.quote(LINEAGE_CODE, safe="")
@@ -532,23 +789,39 @@ def _fetch_snapshot(
         snap["profile_count"] = 0
         snap["identity_profile_link_valid"] = False
 
-    # Protocols by exact protocol_id.
+    # Protocols by exact protocol_id (schema-correct columns only).
     for role, pid, enc in (
         ("current", CURRENT_PROTOCOL_ID, enc_current),
         ("later", LATER_PROTOCOL_ID, enc_later),
     ):
+        lookup_name = f"{role}_protocol_lookup"
         status, body, headers = http.get(
-            f"/rest/v1/performance_protocols?select=id,protocol_id,session_lineage_id,revision_number,status"
+            f"/rest/v1/performance_protocols?select={_PROTOCOL_SELECT}"
             f"&protocol_id=eq.{enc}",
             require_predicate=f"protocol_id=eq.{pid}",
             prefer_count=True,
         )
-        rows = _parse_list(body)
-        count = _count_from_range(headers, body)
-        if status != 200 or count is None:
-            snap["unverified_claims"].append(f"{role}_protocol_lookup")
+        classified = classify_counted_rest_lookup(
+            status=status,
+            body=body,
+            headers=headers,
+            visibility_proven=visibility_proven,
+            require_content_range=True,
+        )
+        classified["route_class"] = "/rest/v1/performance_protocols"
+        classified["identity"] = pid
+        snap["lookups"][lookup_name] = classified
+        if classified["state"] in {
+            "lookup_failed",
+            "visibility_unproven",
+            "uncertain",
+        }:
+            snap["unverified_claims"].append(lookup_name)
             count = 0
-            rows = []
+            rows: list[dict[str, Any]] = []
+        else:
+            count = int(classified["count"] or 0)
+            rows = _parse_list(body) if classified["state"] in {"present", "duplicated"} else []
         snap[f"{role}_protocol_count"] = count
         snap[f"{role}_revision_count"] = count
         snap[f"{role}_rows"] = rows
@@ -589,7 +862,7 @@ def _fetch_snapshot(
     )
     lineages = _parse_list(body)
     lin_count = _count_from_range(headers, body)
-    if status != 200 or lin_count is None:
+    if status not in _REST_OK or lin_count is None:
         snap["unverified_claims"].append("programme_lineage_lookup")
         lin_count = 0
         lineages = []
@@ -608,7 +881,7 @@ def _fetch_snapshot(
         )
         versions = _parse_list(body)
         version_count = _count_from_range(headers, body) or 0
-        if status != 200:
+        if status not in _REST_OK:
             snap["unverified_claims"].append("programme_version_lookup")
             version_count = 0
             versions = []
@@ -643,7 +916,7 @@ def _fetch_snapshot(
         )
         assignments = _parse_list(body)
         assignment_count = _count_from_range(headers, body) or 0
-        if status != 200:
+        if status not in _REST_OK:
             snap["unverified_claims"].append("assignment_lookup")
             assignment_count = 0
             assignments = []
@@ -658,7 +931,7 @@ def _fetch_snapshot(
             )
             occ = _parse_list(body)
             occurrence_count = _count_from_range(headers, body) or 0
-            if status != 200:
+            if status not in _REST_OK:
                 snap["unverified_claims"].append("occurrence_lookup")
                 occurrence_count = 0
                 occ = []
