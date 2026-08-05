@@ -81,13 +81,18 @@ class ReadOnlyHttpClient:
             raise StagingGuardError(
                 f"REFUSED: query missing exact fixture predicate {require_predicate!r}"
             )
-        # Block broad list endpoints without eq/ filter or exact-id Auth path.
+        # Block broad list endpoints without eq/filter or exact-id Auth path.
+        # GoTrue admin listUsers scopes by `filter=`; `email=` is ignored by Auth.
         auth_user_id = re.search(
             r"/auth/v1/admin/users/"
             r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
             path,
         )
-        if "eq." not in path and "email=" not in path and not auth_user_id:
+        if (
+            "eq." not in path
+            and "filter=" not in path
+            and not auth_user_id
+        ):
             raise StagingGuardError(
                 "REFUSED: broad or missing fixture-scoped predicate"
             )
@@ -705,7 +710,9 @@ def _fetch_snapshot(
     enc_later = urllib.parse.quote(LATER_PROTOCOL_ID, safe="")
 
     # Auth identity by exact email (marker is the email local-part prefix).
-    auth_path = f"/auth/v1/admin/users?email={enc_email}"
+    # GoTrue admin listUsers filters via `filter`, not `email`.
+    # `?email=` is ignored and yields false identity_count=0.
+    auth_path = f"/auth/v1/admin/users?filter={enc_email}"
     if marker not in auth_path and urllib.parse.quote(marker, safe="") not in auth_path:
         raise StagingGuardError("REFUSED: auth query not marker-bound")
     status, body, headers = http.get(auth_path, require_predicate=marker)

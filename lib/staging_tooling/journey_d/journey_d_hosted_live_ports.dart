@@ -22,8 +22,10 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
     required String lineageCode,
   }) async {
     final email = '$marker.athlete.jd@example.invalid';
+    // GoTrue admin listUsers filters via `filter`, not `email`.
+    // `?email=` is ignored and returns an unfiltered page — false UNIQUE.
     final auth = await _get(
-      '/auth/v1/admin/users?email=${Uri.encodeQueryComponent(email)}',
+      '/auth/v1/admin/users?filter=${Uri.encodeQueryComponent(email)}',
     );
     if (auth.timedOut) {
       return auth.dispatched
@@ -183,7 +185,7 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
     if (created.statusCode != 200 && created.statusCode != 201) {
       return JourneyDLiveAthleteResult(
         state: JourneyDPublicationStageState.failed,
-        detail: 'auth_create_http_${created.statusCode}',
+        detail: authCreateFailureDetail(created.statusCode, created.body),
         writeAccounting: const JourneyDWriteAccounting(
           invocationAttempted: true,
           requestDispatched: true,
@@ -665,6 +667,70 @@ class JourneyDHostedMaterialisation implements JourneyDLiveMaterialisation {
     }
     return JourneyDLiveStageOutcome.applied(detail: 'materialised');
   }
+}
+
+/// Redacted Auth Admin create failure detail for durable ledgers.
+///
+/// Preserves GoTrue `error_code` / `msg` so HTTP 422 cannot consume another
+/// creator allowance without an identifiable Auth cause.
+String authCreateFailureDetail(int statusCode, String body) {
+  final parsed = _parseAuthErrorBody(body);
+  final code = parsed.$1;
+  final message = parsed.$2;
+  final parts = <String>['auth_create_http_$statusCode'];
+  if (code != null && code.isNotEmpty) {
+    parts.add(code);
+  }
+  if (message != null && message.isNotEmpty) {
+    parts.add(message);
+  }
+  return parts.join(':');
+}
+
+/// True when Auth create failure indicates an existing Auth email identity.
+bool authCreateFailureIsEmailCollision(String detail) {
+  final lower = detail.toLowerCase();
+  return lower.contains('email_exists') ||
+      lower.contains('user_already_exists') ||
+      lower.contains('already registered') ||
+      lower.contains('already been registered');
+}
+
+(String?, String?) _parseAuthErrorBody(String body) {
+  if (body.trim().isEmpty) return (null, null);
+  try {
+    final decoded = jsonDecode(body);
+    if (decoded is! Map) return (null, null);
+    final map = Map<String, dynamic>.from(decoded);
+    final code = (map['error_code'] ?? map['code'] ?? map['error'])?.toString();
+    final message = (map['msg'] ?? map['message'] ?? map['error_description'])
+        ?.toString();
+    return (
+      code == null ? null : _redactAuthText(code),
+      message == null ? null : _redactAuthText(message),
+    );
+  } on Object {
+    return (null, null);
+  }
+}
+
+String _redactAuthText(String value) {
+  var out = value.trim();
+  out = out.replaceAll(
+    RegExp(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'),
+    '***email***',
+  );
+  out = out.replaceAll(
+    RegExp(
+      r'[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-'
+      r'[0-9a-fA-F]{4}-[0-9a-fA-F]{12}',
+    ),
+    '***id***',
+  );
+  if (out.length > 160) {
+    out = '${out.substring(0, 160)}…';
+  }
+  return out;
 }
 
 class _HttpResp {

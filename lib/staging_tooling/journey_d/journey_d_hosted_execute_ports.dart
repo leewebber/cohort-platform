@@ -53,7 +53,8 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
   }) async {
     final email = '$marker.athlete.jd@example.invalid';
     final users = await _getJson(
-      '/auth/v1/admin/users?email=${Uri.encodeComponent(email)}',
+      // GoTrue admin listUsers filters via `filter`, not `email`.
+      '/auth/v1/admin/users?filter=${Uri.encodeComponent(email)}',
       key: serviceKey,
       requirePredicate: marker,
     );

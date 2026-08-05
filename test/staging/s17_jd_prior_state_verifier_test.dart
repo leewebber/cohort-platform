@@ -99,7 +99,12 @@ def empty_world(path, headers):
         return 200, '{"users":[]}', {}
     return 200, "[]", {"content-range": "*/0"}
 
-client = ReadOnlyHttpClient(base_url=base, api_key="test_service", get_impl=empty_world)
+seen_paths = []
+def empty_world_tracked(path, headers):
+    seen_paths.append(path)
+    return empty_world(path, headers)
+
+client = ReadOnlyHttpClient(base_url=base, api_key="test_service", get_impl=empty_world_tracked)
 result = run_hosted_readonly(
     root=root, projects_raw=projects, marker=marker, api_env_path=api, client=client,
 )
@@ -109,6 +114,13 @@ assert result["all_required_lookups"] == "verified", result
 assert result["current_protocol_lookup"] == "absent", result
 assert result["later_protocol_lookup"] == "absent", result
 assert result["visibility_proven"] is True
+# GoTrue admin listUsers requires filter=; email= is ignored.
+auth_paths = [p for p in seen_paths if p.startswith("/auth/v1/admin/users")]
+assert auth_paths, seen_paths
+auth_q = auth_paths[0].split("?", 1)[-1]
+parts = auth_q.split("&")
+assert any(part.startswith("filter=") for part in parts), auth_paths[0]
+assert not any(part.startswith("email=") for part in parts), auth_paths[0]
 blob = json.dumps(result)
 assert "test_service" not in blob
 assert "password" not in blob.lower()
