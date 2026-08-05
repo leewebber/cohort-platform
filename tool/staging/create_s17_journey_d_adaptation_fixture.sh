@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Create / dry-run Cohort Staging Journey D adaptation fixture (B4d.20 tooling).
+# Create / dry-run Cohort Staging Journey D adaptation fixture (B4d.20/B4d.21c.1 tooling).
 #
 # Fail-closed:
 #   CONFIRM_COHORT_STAGING=1 required
@@ -11,6 +11,7 @@
 # Modes:
 #   --dry-run   (default) identity + package contract + write manifest; no hosted write
 #   --live      requires S17_JD_LIVE_CREATE=1; B4d.20 refuses hosted mutation (tooling only)
+#   --marker <fixture-marker>  optional explicit marker (validated before target resolution)
 #   --help
 #
 # Never reuses Athlete C/D, S15A, or S13. Never executes Journey D.
@@ -25,11 +26,13 @@ source "${ROOT}/tool/staging/lib/s17_common.sh"
 
 MODE="dry_run"
 SHOW_HELP=0
+MARKER_SET=0
+EXPLICIT_MARKER=""
 
 usage() {
   cat <<'EOF'
 Usage:
-  CONFIRM_COHORT_STAGING=1 ./tool/staging/create_s17_journey_d_adaptation_fixture.sh [--dry-run]
+  CONFIRM_COHORT_STAGING=1 ./tool/staging/create_s17_journey_d_adaptation_fixture.sh [--dry-run] [--marker <fixture-marker>]
   CONFIRM_COHORT_STAGING=1 S17_JD_LIVE_CREATE=1 \
     ./tool/staging/create_s17_journey_d_adaptation_fixture.sh --live
 
@@ -38,6 +41,9 @@ the B4d.19 equipment contract (back_squat → goblet_squat).
 
 Options:
   --dry-run   Zero hosted writes; emit redacted intended-write manifest (default)
+  --marker <fixture-marker>
+              Bind an explicit fixture marker (validated before target resolution).
+              When omitted, dry-run generates a fresh marker.
   --live      Requires S17_JD_LIVE_CREATE=1; B4d.20 tooling refuses actual mutation
   --help      Show this help
 
@@ -52,6 +58,21 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --dry-run) MODE="dry_run"; shift ;;
     --live) MODE="live"; shift ;;
+    --marker)
+      if [[ "$MARKER_SET" -eq 1 ]]; then
+        echo "REFUSED: --marker may be supplied only once" >&2
+        usage >&2
+        exit 2
+      fi
+      if [[ $# -lt 2 || -z "${2:-}" || "${2:0:2}" == "--" ]]; then
+        echo "REFUSED: --marker requires exactly one non-empty value" >&2
+        usage >&2
+        exit 2
+      fi
+      EXPLICIT_MARKER="$2"
+      MARKER_SET=1
+      shift 2
+      ;;
     --help|-h) SHOW_HELP=1; shift ;;
     *)
       echo "REFUSED: unknown flag $1" >&2
@@ -68,6 +89,39 @@ fi
 
 s17_require_confirmation
 s17_require_commands python3
+
+# Validate explicit marker as data before any target resolution or hosted contact.
+# Forward only via environment (never interpolate into executable Python source).
+if [[ "$MARKER_SET" -eq 1 ]]; then
+  export S17_JD_FIXTURE_MARKER="$EXPLICIT_MARKER"
+  python3 - <<'PY'
+import os
+import sys
+from pathlib import Path
+
+root = Path(os.environ["S17_ROOT"])
+sys.path.insert(0, str(root / "tool/staging/lib"))
+from s17_journey_d_fixture import (
+    StagingGuardError,
+    reject_reserved_identity,
+    validate_marker,
+)
+
+marker = os.environ.get("S17_JD_FIXTURE_MARKER", "")
+try:
+    if not marker:
+        raise StagingGuardError(
+            "REFUSED: --marker requires exactly one non-empty value"
+        )
+    validate_marker(marker)
+    reject_reserved_identity(marker)
+except StagingGuardError as e:
+    print(str(e), file=sys.stderr)
+    raise SystemExit(2)
+PY
+else
+  unset S17_JD_FIXTURE_MARKER || true
+fi
 
 # Never default to a hosted management target. B4d.20 is local tooling only.
 if [[ -z "${S17_PROJECTS_JSON_FILE:-}" ]]; then
@@ -88,6 +142,8 @@ LEDGER_FILE="${PRIVATE_DIR}/write_ledger.json"
 RESULT_FILE="${PRIVATE_DIR}/result.json"
 
 if [[ "$MODE" == "live" ]]; then
+  # Live pathway still refuses hosted mutation (B4d.20 gate). Explicit --marker is
+  # validated above but is not yet consumed by live creation (live remains refused).
   python3 - <<PY
 import json, os, sys
 from pathlib import Path
@@ -108,7 +164,7 @@ except StagingGuardError as e:
 PY
 fi
 
-# Dry-run path (default)
+# Dry-run path (default). Marker is read from env as data — not interpolated.
 python3 - <<PY
 import json, os, sys
 from pathlib import Path
@@ -126,8 +182,12 @@ projects_raw = Path(fixture).read_text()
 # Prove parse before run
 parse_projects_json(projects_raw)
 
+dry_kwargs = {"root": root, "projects_raw": projects_raw}
+if "S17_JD_FIXTURE_MARKER" in os.environ:
+    dry_kwargs["marker"] = os.environ["S17_JD_FIXTURE_MARKER"]
+
 try:
-    result = run_dry_run(root=root, projects_raw=projects_raw)
+    result = run_dry_run(**dry_kwargs)
 except StagingGuardError as e:
     print(str(e), file=sys.stderr)
     Path("${RESULT_FILE}").write_text(json.dumps({
