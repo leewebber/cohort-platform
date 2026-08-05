@@ -135,6 +135,9 @@ MUTATING_STAGES = {
 }
 
 REBIND_PATH_STATUS = "REBIND_PATH_READY"
+EXPECTED_PRE_REBIND_HASH = (
+    "156dfe8cf262e43f4e7e47cab070a37f466d3271fe26b29ca80e5c5e49e8a7d7"
+)
 SYMBOLIC_LINEAGES = (
     "SL-S17-JD-ADAPT-CURRENT",
     "SL-S17-JD-ADAPT-LATER",
@@ -551,14 +554,224 @@ def refuse_live_without_flag() -> None:
         )
 
 
+def require_explicit_live_marker(marker: str | None) -> str:
+    """Live mode must consume exactly one caller-supplied marker (never new_marker)."""
+    if marker is None or not str(marker).strip():
+        raise StagingGuardError(
+            "REFUSED: --live requires --marker <fixture-marker>"
+        )
+    explicit = str(marker).strip()
+    validate_marker(explicit)
+    reject_reserved_identity(explicit)
+    return explicit
+
+
 def run_live_gate_check() -> None:
-    """Live mutation is not implemented in B4d.20 — only the authorization gate."""
+    """Legacy gate used by older callers — prefer [run_live_create]."""
     ensure_confirmation()
     refuse_live_without_flag()
-    raise StagingGuardError(
-        "REFUSED: B4d.20 implements creator tooling only; live hosted creation "
-        "requires a separately authorised B4d.21 invocation"
+
+
+def _mutation_backend_mode() -> str:
+    return os.environ.get("S17_JD_LIVE_MUTATION_BACKEND", "hosted").strip() or "hosted"
+
+
+def _synthetic_live_result(
+    *,
+    marker: str,
+    staging: dict[str, Any],
+    fail_at: str | None = None,
+) -> dict[str, Any]:
+    """Local-only synthetic mutation outcomes for creator tests. Never hosted."""
+    ledger = build_empty_ledger(marker, "live", live_authorized=True)
+    mark_stage(ledger, "validate_environment", "applied", "staging allowlist ok")
+    mark_stage(ledger, "validate_inputs_and_marker", "applied", marker)
+    mark_stage(
+        ledger,
+        "compile_validate_package_local",
+        "applied",
+        f"pre_rebind_hash={EXPECTED_PRE_REBIND_HASH}",
     )
+    mark_stage(ledger, "resolve_substitution_local", "applied")
+    mark_stage(ledger, "emit_intended_write_manifest", "applied")
+    mark_stage(
+        ledger,
+        "check_marker_uniqueness_readonly",
+        "applied",
+        "UNIQUE_synthetic",
+    )
+
+    mutating_seq = [
+        "create_synthetic_athlete",
+        "publish_fixture_protocol_current",
+        "publish_fixture_protocol_later",
+        "rebind_validate_package_for_import",
+        "import_programme_version_and_permissions",
+        "publish_approve_staging_fixture_version",
+        "enrol_assignment",
+        "materialise_schedule",
+    ]
+    synthetic_mutations = 0
+    publish_draft_invocations = 0
+    for name in mutating_seq:
+        if fail_at == name:
+            fail_closed(ledger, name, f"synthetic_fail:{name}")
+            break
+        mark_stage(ledger, name, "applied", "synthetic_ok")
+        if name != "rebind_validate_package_for_import":
+            synthetic_mutations += 1
+        if name in (
+            "publish_fixture_protocol_current",
+            "publish_fixture_protocol_later",
+        ):
+            publish_draft_invocations += 1
+    else:
+        mark_stage(ledger, "stop_prepare_ready", "applied")
+        mark_stage(
+            ledger,
+            "stop_without_journey_d",
+            "applied",
+            "Journey D execution unreachable from creator",
+        )
+
+    ok = fail_at is None and not ledger.further_mutation_prohibited
+    manifest = build_intended_write_manifest(
+        marker=marker,
+        staging=staging,
+        mode="live",
+        live_authorized=True,
+    )
+    return {
+        "ok": ok,
+        "classification": (
+            "B4D21D1_LIVE_CREATE_OK_SYNTHETIC" if ok else "B4D21D1_LIVE_CREATE_FAILED_SYNTHETIC"
+        ),
+        "rebind_path": REBIND_PATH_STATUS,
+        "publish_draft_invoked": publish_draft_invocations > 0,
+        "publish_draft_invocations": publish_draft_invocations,
+        "fabricated_hosted_uuids": False,
+        "synthetic_mutations": synthetic_mutations,
+        "hosted_writes_executed": 0,
+        "hosted_contact": False,
+        "mutation_backend": "synthetic",
+        "fixture_marker": marker,
+        "manifest": manifest,
+        "ledger": ledger.to_dict(),
+        "operation_counts": planned_operation_counts(ledger),
+        "staging_ref_prefix": staging["ref_prefix"],
+        "retry": False,
+        "resume": False,
+        "cleanup": False,
+        "compensation": False,
+        "deletion": False,
+        "repair": False,
+        "journey_d_executed": False,
+        "new_marker_called": False,
+    }
+
+
+def run_live_create(
+    *,
+    root: Path,
+    projects_raw: str,
+    marker: str | None,
+    preflight: Any | None = None,
+    mutation_runner: Any | None = None,
+) -> dict[str, Any]:
+    """Guarded live creation entry: consumes exact [marker], never new_marker().
+
+    Default mutation backend is ``hosted`` (dart live entrypoint). Local tests
+    must set ``S17_JD_LIVE_MUTATION_BACKEND=synthetic_ok`` (or synthetic_fail:STAGE)
+    so no hosted contact occurs.
+    """
+    ensure_confirmation()
+    refuse_live_without_flag()
+    explicit = require_explicit_live_marker(marker)
+    # Explicit marker path — never generate a replacement.
+    if explicit != marker.strip():
+        raise StagingGuardError("REFUSED: marker normalised unexpectedly")
+
+    projects = parse_projects_json(projects_raw)
+    staging = select_staging_project(projects)
+    load_package_yaml_text(root)
+    load_protocol_intent(root)
+
+    email = f"{explicit}.athlete.jd@example.invalid"
+    validate_jd_email(email, explicit)
+
+    mode = _mutation_backend_mode()
+    if mutation_runner is not None:
+        return mutation_runner(
+            root=root,
+            staging=staging,
+            marker=explicit,
+            preflight=preflight,
+        )
+
+    if mode == "synthetic_ok":
+        return _synthetic_live_result(marker=explicit, staging=staging)
+    if mode.startswith("synthetic_fail:"):
+        fail_at = mode.split(":", 1)[1]
+        return _synthetic_live_result(
+            marker=explicit, staging=staging, fail_at=fail_at
+        )
+    if mode != "hosted":
+        raise StagingGuardError(
+            f"REFUSED: unknown S17_JD_LIVE_MUTATION_BACKEND={mode!r}"
+        )
+
+    # Hosted path: invoke repository-owned Dart live entrypoint once.
+    import subprocess
+    import tempfile
+
+    request = {
+        "marker": explicit,
+        "root": str(root),
+        "package_rel": PACKAGE_REL,
+        "protocol_intent_rel": PROTOCOL_INTENT_REL,
+        "expected_pre_rebind_hash": EXPECTED_PRE_REBIND_HASH,
+        "lineage_code": LINEAGE_CODE,
+        "api_env_path": os.environ.get("S17_API_ENV", "/tmp/s13b_api.env"),
+        "staging_ref_prefix": staging["ref_prefix"],
+        "mutation_backend": "hosted",
+    }
+    with tempfile.TemporaryDirectory(prefix="cohort_s17_jd_live.") as tmp:
+        req_path = Path(tmp) / "live_request.json"
+        out_path = Path(tmp) / "live_result.json"
+        req_path.write_text(json.dumps(request))
+        runner = root / "tool/staging/run_s17_journey_d_live_dart.sh"
+        if not runner.is_file():
+            raise StagingGuardError(
+                "REFUSED: missing tool/staging/run_s17_journey_d_live_dart.sh"
+            )
+        env = os.environ.copy()
+        env["S17_JD_LIVE_REQUEST_FILE"] = str(req_path)
+        env["S17_JD_LIVE_RESULT_FILE"] = str(out_path)
+        env["S17_ROOT"] = str(root)
+        completed = subprocess.run(
+            ["bash", str(runner)],
+            cwd=str(root),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        if completed.returncode != 0 and not out_path.is_file():
+            detail = (completed.stderr or completed.stdout or "").strip()
+            raise StagingGuardError(
+                "REFUSED: hosted live dart entrypoint failed: "
+                + (detail[:400] if detail else f"exit={completed.returncode}")
+            )
+        if not out_path.is_file():
+            raise StagingGuardError(
+                "REFUSED: hosted live dart entrypoint produced no result file"
+            )
+        result = json.loads(out_path.read_text())
+        result.setdefault("mutation_backend", "hosted")
+        result.setdefault("fixture_marker", explicit)
+        result.setdefault("new_marker_called", False)
+        result.setdefault("rebind_path", REBIND_PATH_STATUS)
+        return result
 
 
 def post_create_verifier_checklist() -> list[str]:

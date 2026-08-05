@@ -304,11 +304,21 @@ print("MUTATING_NOT_STARTED_OK")
 
       final liveFlag = await runCreator(
         args: '--live --marker $stableMarker',
-        env: const {'S17_JD_LIVE_CREATE': '1'},
+        env: const {
+          'S17_JD_LIVE_CREATE': '1',
+          'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',
+        },
       );
-      expect(liveFlag.exitCode, 2);
-      expect(liveFlag.stderr.toString(), contains('B4d.20'));
-      expect(liveFlag.stderr.toString(), contains('separately authorised'));
+      expect(
+        liveFlag.exitCode,
+        0,
+        reason: '${liveFlag.stdout}\n${liveFlag.stderr}',
+      );
+      expect(liveFlag.stdout.toString(), contains('HOSTED_WRITES_EXECUTED=0'));
+      expect(
+        liveFlag.stdout.toString(),
+        contains('MUTATION_BACKEND=synthetic'),
+      );
     });
 
     test('15 Journey D remains unreachable', () async {

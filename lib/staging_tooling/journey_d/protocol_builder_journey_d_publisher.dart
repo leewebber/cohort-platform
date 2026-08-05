@@ -15,9 +15,10 @@ import 'journey_d_protocol_publication.dart';
 /// callers must enforce Cohort Staging + explicit live flags before invoking.
 class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
   ProtocolBuilderJourneyDPublisher({
-    required this._protocolBuilderService,
-    required this._sessionLineageStore,
-  });
+    required ProtocolBuilderService protocolBuilderService,
+    required SessionLineageStore sessionLineageStore,
+  }) : _protocolBuilderService = protocolBuilderService,
+       _sessionLineageStore = sessionLineageStore;
 
   final ProtocolBuilderService _protocolBuilderService;
   final SessionLineageStore _sessionLineageStore;

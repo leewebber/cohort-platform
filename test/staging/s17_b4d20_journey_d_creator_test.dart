@@ -165,17 +165,21 @@ except StagingGuardError as e:
       final result = await runCreator(modeFlag: '--live');
       expect(result.exitCode, 2);
       final err = result.stderr.toString();
-      expect(err, contains('S17_JD_LIVE_CREATE'));
+      // Live now also requires --marker; either guard may surface first.
+      expect(
+        err.contains('S17_JD_LIVE_CREATE') || err.contains('--marker'),
+        isTrue,
+        reason: err,
+      );
     });
 
-    test('7b live with flag still refuses hosted mutation in B4d.20', () async {
+    test('7b live with flag still requires --marker', () async {
       final result = await runCreator(
         modeFlag: '--live',
         env: const {'S17_JD_LIVE_CREATE': '1'},
       );
       expect(result.exitCode, 2);
-      expect(result.stderr.toString(), contains('B4d.20'));
-      expect(result.stderr.toString(), contains('separately authorised'));
+      expect(result.stderr.toString(), contains('--marker'));
     });
   });
 
