@@ -58,15 +58,19 @@ void main() {
     Map<String, String> env = const {},
     bool includeProjectsFile = true,
   }) {
-    final envPrefix = [
-      'CONFIRM_COHORT_STAGING=1',
-      if (includeProjectsFile)
-        'S17_PROJECTS_JSON_FILE="${projectsFixture.path}"',
-      ...env.entries.map((e) => '${e.key}=${e.value}'),
-    ].join(' ');
+    final extraEnv = env.entries.map((e) => '${e.key}=${e.value}').join(' ');
+    if (includeProjectsFile) {
+      return Process.run('bash', [
+        '-c',
+        'cd "$root" && CONFIRM_COHORT_STAGING=1 '
+            'S17_PROJECTS_JSON_FILE="${projectsFixture.path}" '
+            '$extraEnv "$creator" $modeFlag',
+      ]);
+    }
     return Process.run('bash', [
       '-c',
-      'cd "$root" && $envPrefix "$creator" $modeFlag',
+      'cd "$root" && env -u S17_PROJECTS_JSON_FILE '
+          'CONFIRM_COHORT_STAGING=1 $extraEnv "$creator" $modeFlag',
     ]);
   }
 
@@ -232,6 +236,10 @@ print("RESERVED_REFUSED")
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
       expect(result.stdout.toString(), contains('"athletes_targeted":1'));
       expect(result.stdout.toString(), contains('"programmes_targeted":1'));
+      expect(
+        result.stdout.toString(),
+        contains('REBIND_PATH=REBIND_PATH_READY'),
+      );
       final py = await runPython('''
 from pathlib import Path
 raw=open(r"${projectsFixture.path}").read()
@@ -489,7 +497,9 @@ assert STAGE_ORDER == [
     "emit_intended_write_manifest",
     "check_marker_uniqueness_readonly",
     "create_synthetic_athlete",
-    "create_published_session_revisions",
+    "publish_fixture_protocol_current",
+    "publish_fixture_protocol_later",
+    "rebind_validate_package_for_import",
     "import_programme_version_and_permissions",
     "publish_approve_staging_fixture_version",
     "enrol_assignment",
@@ -498,6 +508,7 @@ assert STAGE_ORDER == [
     "post_create_readonly_eligibility",
     "stop_without_journey_d",
 ]
+assert REBIND_PATH_STATUS == "REBIND_PATH_READY"
 print("ORDER_OK")
 ''');
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');

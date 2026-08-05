@@ -69,7 +69,9 @@ STAGE_ORDER = [
     "emit_intended_write_manifest",
     "check_marker_uniqueness_readonly",
     "create_synthetic_athlete",
-    "create_published_session_revisions",
+    "publish_fixture_protocol_current",
+    "publish_fixture_protocol_later",
+    "rebind_validate_package_for_import",
     "import_programme_version_and_permissions",
     "publish_approve_staging_fixture_version",
     "enrol_assignment",
@@ -82,6 +84,7 @@ STAGE_ORDER = [
 # Canonical interfaces for each future mutation/local stage.
 # Protocol content is NOT created by import_authored_plan_package - that RPC
 # resolves already-published session revisions. Improvised SQL is forbidden.
+# B4d.21b: executable rebind path lives in lib/staging_tooling/journey_d/.
 STAGE_INTERFACES = {
     "validate_environment": "s17_staging_guard.select_staging_project",
     "validate_inputs_and_marker": "s17_journey_d_fixture.validate_marker",
@@ -90,14 +93,23 @@ STAGE_INTERFACES = {
     "emit_intended_write_manifest": "s17_journey_d_fixture.build_manifest",
     "check_marker_uniqueness_readonly": "read-only staging probe (live only)",
     "create_synthetic_athlete": "Supabase Auth Admin API createUser + athlete profile",
-    "create_published_session_revisions": (
+    "publish_fixture_protocol_current": (
+        "ProtocolBuilderJourneyDPublisher → "
         "ProtocolBuilderService.publishDraft "
-        "(fixture-only PROT-S17-JD-ADAPT-* with back_squat / push_up); "
-        "rebind package session_lineage_id to created UUIDs before import"
+        "(PROT-S17-JD-ADAPT-CURRENT)"
+    ),
+    "publish_fixture_protocol_later": (
+        "ProtocolBuilderJourneyDPublisher → "
+        "ProtocolBuilderService.publishDraft "
+        "(PROT-S17-JD-ADAPT-LATER)"
+    ),
+    "rebind_validate_package_for_import": (
+        "JourneyDRebindPipeline typed session_lineage_id rebind + "
+        "PlanPackageValidator + PlanPackageCanonicaliser + SHA-256"
     ),
     "import_programme_version_and_permissions": (
         "rpc import_authored_plan_package "
-        "(programme/version/permissions/slots; sessions must already exist)"
+        "(validated rebound package only; symbolic lineages refused)"
     ),
     "publish_approve_staging_fixture_version": (
         "rpc publish_cohort_global_programme_version + "
@@ -113,12 +125,20 @@ STAGE_INTERFACES = {
 
 MUTATING_STAGES = {
     "create_synthetic_athlete",
-    "create_published_session_revisions",
+    "publish_fixture_protocol_current",
+    "publish_fixture_protocol_later",
+    "rebind_validate_package_for_import",
     "import_programme_version_and_permissions",
     "publish_approve_staging_fixture_version",
     "enrol_assignment",
     "materialise_schedule",
 }
+
+REBIND_PATH_STATUS = "REBIND_PATH_READY"
+SYMBOLIC_LINEAGES = (
+    "SL-S17-JD-ADAPT-CURRENT",
+    "SL-S17-JD-ADAPT-LATER",
+)
 
 
 @dataclass
@@ -197,6 +217,14 @@ def load_protocol_intent(root: Path) -> dict[str, Any]:
         raise StagingGuardError("REFUSED: available_equipment contract mismatch")
     if data["lineage_code"] != LINEAGE_CODE:
         raise StagingGuardError("REFUSED: lineage_code mismatch")
+    protocols = data.get("protocols")
+    if not isinstance(protocols, list) or len(protocols) < 2:
+        raise StagingGuardError("REFUSED: protocol intent protocols must be non-empty")
+    symbolic = [p.get("symbolic_session_lineage_id") for p in protocols]
+    if symbolic != list(SYMBOLIC_LINEAGES):
+        raise StagingGuardError("REFUSED: symbolic lineage plan mismatch")
+    if any(not str(p.get("protocol_id", "")).startswith("PROT-S17-JD-ADAPT-") for p in protocols):
+        raise StagingGuardError("REFUSED: non-fixture protocol in intent")
     return data
 
 
@@ -213,6 +241,11 @@ def load_package_yaml_text(root: Path) -> str:
         raise StagingGuardError("REFUSED: package missing athlete agreement")
     if "W1D1S1" not in text or "W1D2S1" not in text:
         raise StagingGuardError("REFUSED: package must contain current + later slots")
+    for symbolic in SYMBOLIC_LINEAGES:
+        if symbolic not in text:
+            raise StagingGuardError(
+                f"REFUSED: package missing symbolic lineage {symbolic}"
+            )
     if any(x in text for x in ("PROG-S15A", "PROG-S13-ELIG", "Athlete C", "Athlete D")):
         raise StagingGuardError("REFUSED: package references reserved fixture identity")
     return text
@@ -331,20 +364,49 @@ def build_intended_write_manifest(
                 "stage": "create_synthetic_athlete",
                 "interface": STAGE_INTERFACES["create_synthetic_athlete"],
                 "objects": ["auth_user", "athlete_profile"],
+                "planned_count": 1,
             },
             {
-                "stage": "create_published_session_revisions",
-                "interface": STAGE_INTERFACES["create_published_session_revisions"],
+                "stage": "publish_fixture_protocol_current",
+                "interface": STAGE_INTERFACES["publish_fixture_protocol_current"],
                 "objects": [
-                    "session_lineages",
-                    "performance_protocols",
+                    "session_lineage",
+                    "performance_protocol",
                     "protocol_steps",
                     "session_blocks",
                 ],
-                "exercises": {
-                    "current": SOURCE_EXERCISE,
-                    "later_baseline": "cohort.exercise.push_up",
-                },
+                "protocol_id": "PROT-S17-JD-ADAPT-CURRENT",
+                "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-CURRENT",
+                "planned_count": 1,
+                "depends_on": ["create_synthetic_athlete"],
+            },
+            {
+                "stage": "publish_fixture_protocol_later",
+                "interface": STAGE_INTERFACES["publish_fixture_protocol_later"],
+                "objects": [
+                    "session_lineage",
+                    "performance_protocol",
+                    "protocol_steps",
+                    "session_blocks",
+                ],
+                "protocol_id": "PROT-S17-JD-ADAPT-LATER",
+                "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-LATER",
+                "planned_count": 1,
+                "depends_on": ["publish_fixture_protocol_current"],
+            },
+            {
+                "stage": "rebind_validate_package_for_import",
+                "interface": STAGE_INTERFACES["rebind_validate_package_for_import"],
+                "objects": ["rebound_plan_package"],
+                "planned_count": 1,
+                "depends_on": [
+                    "publish_fixture_protocol_current",
+                    "publish_fixture_protocol_later",
+                ],
+                "note": (
+                    "Typed rebind of sessions[].session_lineage_id only; "
+                    "symbolic lineages must not reach import."
+                ),
             },
             {
                 "stage": "import_programme_version_and_permissions",
@@ -355,11 +417,15 @@ def build_intended_write_manifest(
                     "programme_version_adaptation_permissions",
                     "programme_version_weeks_days_slots",
                 ],
+                "planned_count": 1,
+                "depends_on": ["rebind_validate_package_for_import"],
+                "requires_validated_rebound_package": True,
             },
             {
                 "stage": "publish_approve_staging_fixture_version",
                 "interface": STAGE_INTERFACES["publish_approve_staging_fixture_version"],
                 "objects": ["staging_fixture_publication_only"],
+                "planned_count": 1,
                 "note": (
                     "Staging-project publish/approve solely to enable catalogue "
                     "enrol RPC; never production/customer catalogue. "
@@ -370,14 +436,18 @@ def build_intended_write_manifest(
                 "stage": "enrol_assignment",
                 "interface": STAGE_INTERFACES["enrol_assignment"],
                 "objects": ["programme_assignment"],
+                "planned_count": 1,
             },
             {
                 "stage": "materialise_schedule",
                 "interface": STAGE_INTERFACES["materialise_schedule"],
                 "objects": ["materialised_occurrences"],
+                "planned_count": 1,
             },
         ],
         "operation_order": list(STAGE_ORDER),
+        "rebind_path": REBIND_PATH_STATUS,
+        "symbolic_lineages": list(SYMBOLIC_LINEAGES),
         "journeys_enabled": [],
         "journey_d_execution": "disabled",
         "retry": False,
@@ -443,7 +513,8 @@ def run_dry_run(
         "applied",
         "dry-run: uniqueness deferred to live pre-write probe",
     )
-    # All mutating stages remain not_started.
+    # All mutating stages remain not_started — including publish/rebind.
+    # Dry-run must never call ProtocolBuilderService.publishDraft.
     mark_stage(
         ledger,
         "stop_without_journey_d",
@@ -461,6 +532,9 @@ def run_dry_run(
     return {
         "ok": True,
         "classification": "B4D20_DRY_RUN_OK",
+        "rebind_path": REBIND_PATH_STATUS,
+        "publish_draft_invoked": False,
+        "fabricated_hosted_uuids": False,
         "manifest": manifest,
         "ledger": ledger.to_dict(),
         "operation_counts": counts,

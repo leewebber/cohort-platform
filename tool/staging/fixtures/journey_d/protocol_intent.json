@@ -9,17 +9,46 @@
     "cohort.equipment.barbell",
     "cohort.equipment.squat_rack"
   ],
+  "protocols": [
+    {
+      "order": 1,
+      "role": "current_equipment_conflict",
+      "protocol_id": "PROT-S17-JD-ADAPT-CURRENT",
+      "session_key": "SES-JD-ADAPT-CURRENT",
+      "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-CURRENT",
+      "revision_number": 1,
+      "exercise_id": "cohort.exercise.back_squat",
+      "replacement_exercise_id": "cohort.exercise.goblet_squat",
+      "substitution_rule_id": "cohort.substitution.back_squat_to_goblet_squat",
+      "can_replace_exercises": true
+    },
+    {
+      "order": 2,
+      "role": "unaffected_occurrence_baseline",
+      "protocol_id": "PROT-S17-JD-ADAPT-LATER",
+      "session_key": "SES-JD-ADAPT-LATER",
+      "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-LATER",
+      "revision_number": 1,
+      "exercise_id": "cohort.exercise.push_up"
+    }
+  ],
   "current_protocol": {
     "protocol_id": "PROT-S17-JD-ADAPT-CURRENT",
     "exercise_id": "cohort.exercise.back_squat",
     "replacement_exercise_id": "cohort.exercise.goblet_squat",
     "substitution_rule_id": "cohort.substitution.back_squat_to_goblet_squat",
-    "can_replace_exercises": true
+    "can_replace_exercises": true,
+    "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-CURRENT",
+    "session_key": "SES-JD-ADAPT-CURRENT",
+    "revision_number": 1
   },
   "later_protocol": {
     "protocol_id": "PROT-S17-JD-ADAPT-LATER",
     "exercise_id": "cohort.exercise.push_up",
-    "role": "unaffected_occurrence_baseline"
+    "role": "unaffected_occurrence_baseline",
+    "symbolic_session_lineage_id": "SL-S17-JD-ADAPT-LATER",
+    "session_key": "SES-JD-ADAPT-LATER",
+    "revision_number": 1
   },
   "lineage_code": "PROG-S17-JD-ADAPT",
   "reserved_identities_rejected": [
