@@ -5,10 +5,11 @@
 # Requires:
 #   S17_JD_EXECUTE_REQUEST_FILE
 #   S17_JD_EXECUTE_RESULT_FILE
-#   S17_JD_CREDENTIAL_FILE
+#   S17_JD_CREDENTIAL_FILE (except loopback proof)
 #
-# Runtime: Flutter test harness (Flutter-bound graph; plain dart run crashes).
-# Package resolution is forbidden here — uses --no-pub after package gate.
+# Runtime:
+#   hosted / default → non-test Flutter executable (`flutter run --no-pub`)
+#   fake + allow     → flutter test --no-pub (local contract only)
 
 set -euo pipefail
 
@@ -20,18 +21,29 @@ cd "$ROOT"
 export S17_ROOT="$ROOT"
 # shellcheck disable=SC1091
 source "${ROOT}/tool/staging/lib/s17_jd_flutter_package_gate.sh"
+# shellcheck disable=SC1091
+source "${ROOT}/tool/staging/lib/s17_jd_nontest_launch.sh"
 
 if [[ -z "${S17_JD_EXECUTE_REQUEST_FILE:-}" || -z "${S17_JD_EXECUTE_RESULT_FILE:-}" ]]; then
   echo "REFUSED: S17_JD_EXECUTE_REQUEST_FILE and S17_JD_EXECUTE_RESULT_FILE required" >&2
   exit 2
 fi
-if [[ -z "${S17_JD_CREDENTIAL_FILE:-}" ]]; then
-  echo "REFUSED: S17_JD_CREDENTIAL_FILE required" >&2
-  exit 2
-fi
-if [[ "${CONFIRM_COHORT_STAGING:-}" != "1" || "${S17_JD_EXECUTE:-}" != "1" ]]; then
-  echo "REFUSED: CONFIRM_COHORT_STAGING=1 and S17_JD_EXECUTE=1 required" >&2
-  exit 2
+
+PORTS_MODE="${S17_JD_EXECUTE_PORTS:-hosted}"
+
+if [[ "${S17_JD_LOOPBACK_PROOF:-}" == "1" ]]; then
+  :
+elif [[ "$PORTS_MODE" == "fake" && "${S17_JD_ALLOW_FAKE_PORTS:-}" == "1" ]]; then
+  :
+else
+  if [[ -z "${S17_JD_CREDENTIAL_FILE:-}" ]]; then
+    echo "REFUSED: S17_JD_CREDENTIAL_FILE required" >&2
+    exit 2
+  fi
+  if [[ "${CONFIRM_COHORT_STAGING:-}" != "1" || "${S17_JD_EXECUTE:-}" != "1" ]]; then
+    echo "REFUSED: CONFIRM_COHORT_STAGING=1 and S17_JD_EXECUTE=1 required" >&2
+    exit 2
+  fi
 fi
 
 if ! command -v flutter >/dev/null 2>&1; then
@@ -41,7 +53,16 @@ fi
 
 s17_jd_flutter_package_require
 
-exec flutter test \
-  --no-pub \
-  --reporter expanded \
-  test/staging/execute_s17_journey_d_harness_test.dart
+if [[ "$PORTS_MODE" == "fake" && "${S17_JD_ALLOW_FAKE_PORTS:-}" == "1" && "${S17_JD_LOOPBACK_PROOF:-}" != "1" ]]; then
+  echo "JD_RUNTIME=flutter_test_fake_only"
+  exec flutter test \
+    --no-pub \
+    --reporter expanded \
+    test/staging/execute_s17_journey_d_harness_test.dart
+fi
+
+echo "JD_RUNTIME=flutter_run_nontest"
+s17_jd_nontest_flutter_run \
+  "lib/staging_tooling/journey_d/journey_d_execute_main.dart" \
+  "S17_JD_EXECUTE_RESULT_FILE" \
+  "execute"

@@ -4,20 +4,21 @@ import 'dart:io';
 import 'package:cohort_platform/data/repositories/session_lineage_supabase_store.dart';
 import 'package:cohort_platform/features/admin/services/protocol_builder_service.dart';
 import 'package:flutter/widgets.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'fake_journey_d_live_ports.dart';
 import 'fake_journey_d_protocol_publisher.dart';
 import 'journey_d_credential_handoff.dart';
 import 'journey_d_hosted_live_ports.dart';
 import 'journey_d_live_fixture_creator.dart';
+import 'journey_d_non_test_runtime.dart';
 import 'journey_d_rebind_pipeline.dart';
 import 'protocol_builder_journey_d_publisher.dart';
 
-/// Supported Journey D live entrypoint body (B4d.21d.3).
+/// Supported Journey D live entrypoint body.
 ///
-/// Must be launched through the Flutter test runtime via
-/// `tool/staging/run_s17_journey_d_live_dart.sh`. Plain `dart run` cannot
+/// Must be launched through the non-test Flutter executable via
+/// `tool/staging/run_s17_journey_d_live_dart.sh` (`flutter run --no-pub`).
+/// Hosted mode refuses [TestWidgetsFlutterBinding]. Plain `dart run` cannot
 /// compile this Flutter-bound graph (FFI NativeCallable crash).
 ///
 /// Port selection:
@@ -33,6 +34,14 @@ Future<int> runJourneyDLiveEntrypoint({
   if (reqPath == null || outPath == null) {
     stderr.writeln('REFUSED: live request/result env missing');
     return 2;
+  }
+
+  if (env[JourneyDNonTestRuntime.loopbackProofEnv] == '1') {
+    return JourneyDNonTestRuntime.runLoopbackHttpProof(
+      env: env,
+      resultPath: outPath,
+      surface: 'live',
+    );
   }
 
   Map<String, dynamic> request;
@@ -175,7 +184,29 @@ Future<int> runJourneyDLiveEntrypoint({
     return 2;
   }
 
-  await Supabase.initialize(url: url, anonKey: service);
+  // After target allowlisting: refuse test binding before any hosted client.
+  try {
+    JourneyDNonTestRuntime.refuseTestBinding(surface: 'journey_d_live_hosted');
+  } on StateError catch (e) {
+    _write(outPath, {
+      'ok': false,
+      'classification': 'JOURNEY_D_VALIDATION_SOURCE_BLOCKED',
+      'marker': marker,
+      'fixture_marker': marker,
+      'hosted_writes_executed': 0,
+      'publish_draft_invocations': 0,
+      'detail': e.message,
+      'test_binding_present': true,
+      'reached_main': true,
+      'ports_mode': 'hosted',
+    });
+    return 2;
+  }
+
+  await JourneyDNonTestRuntime.initializeSupabase(
+    url: url,
+    anonOrServiceKey: service,
+  );
 
   final publisher = ProtocolBuilderJourneyDPublisher(
     protocolBuilderService: ProtocolBuilderService(),

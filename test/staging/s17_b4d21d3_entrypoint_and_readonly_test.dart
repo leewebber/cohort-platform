@@ -75,6 +75,8 @@ void main() {
     test('2-5 repaired launcher reaches main and fake orchestration', () async {
       final launcherSrc = File(launcher).readAsStringSync();
       expect(launcherSrc, contains('flutter test'));
+      expect(launcherSrc, contains('flutter run'));
+      expect(launcherSrc, contains('journey_d_live_main.dart'));
       expect(launcherSrc, contains('--no-pub'));
       expect(launcherSrc, contains('s17_jd_flutter_package_require'));
       expect(launcherSrc, isNot(contains('exec dart run')));
@@ -95,6 +97,7 @@ void main() {
         workingDirectory: root,
       );
       expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
+      expect('${r.stdout}\n${r.stderr}', contains('JD_RUNTIME=flutter_test_fake_only'));
       final out =
           jsonDecode(File(files['S17_JD_LIVE_RESULT_FILE']!).readAsStringSync())
               as Map<String, dynamic>;

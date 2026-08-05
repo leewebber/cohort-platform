@@ -61,6 +61,9 @@ void main() {
         final src = File(path).readAsStringSync();
         expect(src, contains('--no-pub'));
         expect(src, contains('s17_jd_flutter_package_require'));
+        expect(src, contains('flutter run'));
+        expect(src, contains('flutter_run_nontest'));
+        expect(src, contains('flutter_test_fake_only'));
         // Launchers must not invoke pub get as a command (comments may mention it).
         expect(src, isNot(contains('\nflutter pub get')));
         expect(src, isNot(contains('flutter pub get\n')));

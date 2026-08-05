@@ -1,23 +1,29 @@
+import 'dart:io';
+
 import 'package:cohort_platform/staging_tooling/journey_d/journey_d_live_entrypoint.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Supported Journey D live entrypoint launcher (B4d.21d.3).
+/// Fake-only Journey D live harness.
 ///
-/// Invoked by `tool/staging/run_s17_journey_d_live_dart.sh` via `flutter test`.
-/// Plain `dart run` cannot compile the Flutter-bound live graph.
+/// Invoked by `tool/staging/run_s17_journey_d_live_dart.sh` only when
+/// `S17_JD_LIVE_PORTS=fake` and `S17_JD_ALLOW_FAKE_PORTS=1`. Hosted live
+/// traffic must use the non-test executable (`journey_d_live_main.dart`).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
-    'journey_d_live_entrypoint_harness',
+    'journey_d_live_entrypoint_fake_harness',
     () async {
+      final ports = Platform.environment['S17_JD_LIVE_PORTS'] ?? '';
+      final allow = Platform.environment['S17_JD_ALLOW_FAKE_PORTS'] ?? '';
+      expect(ports, 'fake');
+      expect(allow, '1');
       final code = await runJourneyDLiveEntrypoint(ensureFlutterBinding: false);
-      // Propagate non-zero to the shell: failing the test yields exit != 0.
       expect(
         code,
         0,
         reason:
-            'Journey D live entrypoint returned $code '
+            'Journey D fake live entrypoint returned $code '
             '(see S17_JD_LIVE_RESULT_FILE)',
       );
     },

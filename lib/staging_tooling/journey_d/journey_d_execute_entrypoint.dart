@@ -11,16 +11,17 @@ import 'package:cohort_platform/features/programme/services/athlete_programme_au
 import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
 import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
 import 'package:flutter/widgets.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'journey_d_credential_handoff.dart';
 import 'journey_d_execute_workflow.dart';
 import 'journey_d_hosted_execute_ports.dart';
+import 'journey_d_non_test_runtime.dart';
 
 /// Dedicated Journey D execute entry for `s17_jd_adapt_*` / PROG-S17-JD-ADAPT.
 ///
-/// Must be launched via Flutter test harness (same FFI constraint as creator).
-/// Consumes private credential only after eligibility passes.
+/// Must be launched via the non-test Flutter executable
+/// (`tool/staging/run_s17_journey_d_execute_dart.sh`). Hosted mode refuses
+/// Flutter test bindings. Consumes private credential only after eligibility.
 Future<int> runJourneyDExecuteEntrypoint({
   Map<String, String>? environment,
   bool ensureFlutterBinding = true,
@@ -38,6 +39,14 @@ Future<int> runJourneyDExecuteEntrypoint({
       ? null
       : File(credPath.trim());
   var shredded = false;
+
+  if (outPath != null && env[JourneyDNonTestRuntime.loopbackProofEnv] == '1') {
+    return JourneyDNonTestRuntime.runLoopbackHttpProof(
+      env: env,
+      resultPath: outPath,
+      surface: 'execute',
+    );
+  }
 
   void shredCred() {
     if (credFile != null && !shredded) {
@@ -230,7 +239,27 @@ Future<int> runJourneyDExecuteEntrypoint({
       return 2;
     }
 
-    await Supabase.initialize(url: url, anonKey: anon);
+    try {
+      JourneyDNonTestRuntime.refuseTestBinding(
+        surface: 'journey_d_execute_hosted',
+      );
+    } on StateError catch (e) {
+      _write(outPath, {
+        'ok': false,
+        'classification': 'JOURNEY_D_VALIDATION_SOURCE_BLOCKED',
+        'detail': e.message,
+        'marker': marker,
+        'journey_d_executed': false,
+        'credential_consumed': true,
+        'test_binding_present': true,
+      });
+      return 2;
+    }
+
+    await JourneyDNonTestRuntime.initializeSupabase(
+      url: url,
+      anonOrServiceKey: anon,
+    );
 
     final ports =
         portsOverride ??

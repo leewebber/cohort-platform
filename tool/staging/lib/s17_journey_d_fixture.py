@@ -743,7 +743,8 @@ def run_live_create(
             f"REFUSED: unknown S17_JD_LIVE_MUTATION_BACKEND={mode!r}"
         )
 
-    # Hosted path: prepare packages from lockfile, then invoke --no-pub harness.
+    # Hosted path: prepare packages from lockfile, then invoke non-test
+    # Flutter executable (--no-pub). Fake-only local tests may use flutter test.
     import subprocess
     import tempfile
 
