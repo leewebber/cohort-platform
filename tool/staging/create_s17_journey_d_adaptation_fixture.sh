@@ -175,6 +175,9 @@ s17_assert_outside_worktrees "$PRIVATE_DIR"
 MANIFEST_FILE="${PRIVATE_DIR}/redacted_manifest.json"
 LEDGER_FILE="${PRIVATE_DIR}/write_ledger.json"
 RESULT_FILE="${PRIVATE_DIR}/result.json"
+# Private credential handoff (mode 0600). Never print contents.
+CREDENTIAL_FILE="${PRIVATE_DIR}/athlete_credential.json"
+export S17_JD_CREDENTIAL_OUT_FILE="$CREDENTIAL_FILE"
 
 if [[ "$MODE" == "live" ]]; then
   python3 - <<PY
@@ -212,6 +215,10 @@ except StagingGuardError as e:
     }, indent=2))
     raise SystemExit(2)
 
+# Strip any accidental secret keys before persisting redacted result.
+for secret_key in ("password", "athlete_password", "email", "access_token"):
+    result.pop(secret_key, None)
+
 Path("${MANIFEST_FILE}").write_text(json.dumps(result.get("manifest", {}), indent=2))
 Path("${MANIFEST_FILE}").chmod(0o600)
 Path("${LEDGER_FILE}").write_text(json.dumps(result.get("ledger", {}), indent=2))
@@ -219,6 +226,9 @@ Path("${LEDGER_FILE}").chmod(0o600)
 Path("${RESULT_FILE}").write_text(json.dumps(result, indent=2))
 Path("${RESULT_FILE}").chmod(0o600)
 
+cred_path = Path(os.environ.get("S17_JD_CREDENTIAL_OUT_FILE", ""))
+cred_present = cred_path.is_file() and bool(result.get("credential_handoff_written"))
+# Never print credential contents or full email.
 print("LIVE_CREATE_" + ("OK" if result.get("ok") else "FAILED"))
 print("FIXTURE_MARKER=" + str(result.get("fixture_marker") or marker))
 print("MUTATION_BACKEND=" + str(result.get("mutation_backend", "unknown")))
@@ -228,9 +238,15 @@ print("PUBLISH_DRAFT_INVOCATIONS=" + str(result.get("publish_draft_invocations",
 print("REBIND_PATH=" + str(result.get("rebind_path", "REBIND_PATH_UNKNOWN")))
 print("JOURNEY_D_EXECUTED=" + str(result.get("journey_d_executed", False)).lower())
 print("CLASSIFICATION=" + str(result.get("classification", "")))
+print("CREDENTIAL_HANDOFF_PRESENT=" + ("true" if cred_present else "false"))
+print("CREDENTIAL_HANDOFF_PATH=" + (str(cred_path) if cred_present else ""))
+print("PRIVATE_DIR=${PRIVATE_DIR}")
 print("REDACTED_MANIFEST=${MANIFEST_FILE}")
 print("WRITE_LEDGER=${LEDGER_FILE}")
 if not result.get("ok"):
+    raise SystemExit(2)
+if result.get("ok") and not cred_present:
+    print("REFUSED: live create succeeded but private credential handoff missing", file=sys.stderr)
     raise SystemExit(2)
 PY
   exit 0

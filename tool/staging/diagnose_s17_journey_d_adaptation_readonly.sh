@@ -20,6 +20,8 @@ MARKER="${1:-}"
 MODE=""
 SAW_LOCAL=0
 SAW_HOSTED=0
+SAW_OUTCOME=0
+HOSTED_SUBMODE="eligibility"
 
 usage() {
   cat <<'EOF'
@@ -28,13 +30,17 @@ Usage:
   CONFIRM_COHORT_STAGING=1 S17_JD_HOSTED_READONLY=1 \
     S17_PROJECTS_JSON_FILE=<projects-file> S17_API_ENV=<api-env> \
     ./tool/staging/diagnose_s17_journey_d_adaptation_readonly.sh <fixture_marker> --hosted
+  CONFIRM_COHORT_STAGING=1 S17_JD_HOSTED_READONLY=1 \
+    S17_PROJECTS_JSON_FILE=<projects-file> S17_API_ENV=<api-env> \
+    ./tool/staging/diagnose_s17_journey_d_adaptation_readonly.sh <fixture_marker> --outcome
 
 Modes:
   --local-contract  Verify package + protocol intent assets only (default)
   --hosted          Fixture-scoped hosted read-only eligibility verification
+  --outcome         Fixture-scoped hosted read-only post-Journey D outcome verification
   --help            Show this help
 
-Environment (hosted):
+Environment (hosted/outcome):
   CONFIRM_COHORT_STAGING=1   Required
   S17_JD_HOSTED_READONLY=1   Required separate read-only confirmation guard
   S17_PROJECTS_JSON_FILE     Required projects list
@@ -52,8 +58,8 @@ shift || true
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --local-contract)
-      if [[ "$SAW_HOSTED" -eq 1 ]]; then
-        echo "REFUSED: --local-contract and --hosted cannot be combined" >&2
+      if [[ "$SAW_HOSTED" -eq 1 || "$SAW_OUTCOME" -eq 1 ]]; then
+        echo "REFUSED: --local-contract cannot combine with --hosted/--outcome" >&2
         exit 2
       fi
       SAW_LOCAL=1
@@ -61,12 +67,23 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --hosted)
-      if [[ "$SAW_LOCAL" -eq 1 ]]; then
-        echo "REFUSED: --local-contract and --hosted cannot be combined" >&2
+      if [[ "$SAW_LOCAL" -eq 1 || "$SAW_OUTCOME" -eq 1 ]]; then
+        echo "REFUSED: --hosted cannot combine with --local-contract/--outcome" >&2
         exit 2
       fi
       SAW_HOSTED=1
       MODE="hosted"
+      HOSTED_SUBMODE="eligibility"
+      shift
+      ;;
+    --outcome)
+      if [[ "$SAW_LOCAL" -eq 1 || "$SAW_HOSTED" -eq 1 ]]; then
+        echo "REFUSED: --outcome cannot combine with --local-contract/--hosted" >&2
+        exit 2
+      fi
+      SAW_OUTCOME=1
+      MODE="hosted"
+      HOSTED_SUBMODE="outcome"
       shift
       ;;
     --help|-h)
@@ -205,6 +222,7 @@ try:
         projects_raw=projects_raw,
         marker=marker,
         api_env_path=api_env,
+        mode="${HOSTED_SUBMODE}",
     )
 except StagingGuardError as e:
     print(str(e), file=sys.stderr)
@@ -214,6 +232,8 @@ print(json.dumps(result, indent=2))
 print("JD_READONLY_HOSTED_OK")
 print("FIXTURE_STATE=" + str(result.get("fixture_state")))
 print("FIXTURE_ELIGIBLE=" + str(result.get("fixture_eligible")).lower())
+print("OUTCOME_VERIFIED=" + str(result.get("outcome_verified", False)).lower())
+print("JOURNEY_D_EXECUTION_COUNT=" + str(result.get("journey_d_execution_count", 0)))
 print("MUTATION=" + str(result.get("mutation")).lower())
 print("LINKED_CLI_USED=" + str(result.get("linked_cli_used")).lower())
 if not result.get("ok"):

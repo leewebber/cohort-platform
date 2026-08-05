@@ -26,16 +26,9 @@ class FakeJourneyDLivePreflight implements JourneyDLivePreflight {
 
 class FakeJourneyDLiveAthleteFactory implements JourneyDLiveAthleteFactory {
   FakeJourneyDLiveAthleteFactory({JourneyDLiveAthleteResult? result})
-    : result =
-          result ??
-          const JourneyDLiveAthleteResult(
-            state: JourneyDPublicationStageState.applied,
-            userIdRedacted: 'a1111111…',
-            accessTokenPresent: true,
-            detail: 'synthetic_athlete',
-          );
+    : result = result;
 
-  JourneyDLiveAthleteResult result;
+  JourneyDLiveAthleteResult? result;
   int calls = 0;
 
   @override
@@ -45,7 +38,16 @@ class FakeJourneyDLiveAthleteFactory implements JourneyDLiveAthleteFactory {
     required String displayName,
   }) async {
     calls += 1;
-    return result;
+    return result ??
+        JourneyDLiveAthleteResult(
+          state: JourneyDPublicationStageState.applied,
+          userIdRedacted: 'a1111111…',
+          accessTokenPresent: true,
+          detail: 'synthetic_athlete',
+          privateUserId: 'a1111111-1111-4111-8111-111111111111',
+          privatePassword: 'FakeJdCredential!aA1-$marker',
+          privateEmail: email,
+        );
   }
 }
 

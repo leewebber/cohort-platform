@@ -641,6 +641,28 @@ def _synthetic_live_result(
         mode="live",
         live_authorized=True,
     )
+    credential_written = False
+    cred_out = os.environ.get("S17_JD_CREDENTIAL_OUT_FILE", "").strip()
+    if ok and cred_out:
+        # Local synthetic handoff only — never hosted. Mode 0600.
+        cred_path = Path(cred_out)
+        cred_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "schema": "s17_jd_credential_v1",
+            "marker": marker,
+            "lineage_code": LINEAGE_CODE,
+            "athlete_id": "a1111111-1111-4111-8111-111111111111",
+            "email": f"{marker}.athlete.jd@example.invalid",
+            "password": f"SyntheticJd!aA1-{marker[-8:]}",
+            "assignment_id": "d4444444-4444-4444-8444-444444444444",
+            "version_id": "c3333333-3333-4333-8333-333333333333",
+            "nonce": secrets.token_hex(16),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "consumed": False,
+        }
+        cred_path.write_text(json.dumps(payload, indent=2))
+        os.chmod(cred_path, 0o600)
+        credential_written = True
     return {
         "ok": ok,
         "classification": (
@@ -667,6 +689,7 @@ def _synthetic_live_result(
         "repair": False,
         "journey_d_executed": False,
         "new_marker_called": False,
+        "credential_handoff_written": credential_written,
     }
 
 
@@ -748,6 +771,11 @@ def run_live_create(
         env["S17_JD_LIVE_REQUEST_FILE"] = str(req_path)
         env["S17_JD_LIVE_RESULT_FILE"] = str(out_path)
         env["S17_ROOT"] = str(root)
+        # Private credential handoff path (optional; set by create shell).
+        # Never printed; contents never copied into result JSON.
+        cred_out = os.environ.get("S17_JD_CREDENTIAL_OUT_FILE", "").strip()
+        if cred_out:
+            env["S17_JD_CREDENTIAL_OUT_FILE"] = cred_out
         completed = subprocess.run(
             ["bash", str(runner)],
             cwd=str(root),

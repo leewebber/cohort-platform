@@ -122,6 +122,9 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
   }) async {
     final password =
         'Jd${DateTime.now().microsecondsSinceEpoch}!aA1${marker.hashCode.abs()}';
+    // Process-local only until private credential handoff write.
+    JourneyDHostedSession.instance.athletePassword = password;
+    JourneyDHostedSession.instance.athleteEmail = email;
     final created = await _post('/auth/v1/admin/users', {
       'email': email,
       'password': password,
@@ -186,7 +189,7 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
     }
     final loginBody = jsonDecode(login.body);
     final token = loginBody is Map ? loginBody['access_token'] : null;
-    // Stash password+token in process env for later enrol (same process only).
+    // Stash token + identity for enrol/materialise and private credential handoff.
     if (token is String) {
       JourneyDHostedSession.instance.athleteAccessToken = token;
       JourneyDHostedSession.instance.athleteUserId = userId;
@@ -196,6 +199,9 @@ class JourneyDHostedHttpAthleteFactory implements JourneyDLiveAthleteFactory {
       userIdRedacted: '${userId.substring(0, 8)}…',
       accessTokenPresent: token is String,
       detail: 'athlete_created',
+      privateUserId: userId,
+      privatePassword: password,
+      privateEmail: email,
     );
   }
 
@@ -248,6 +254,15 @@ class JourneyDHostedSession {
   static final instance = JourneyDHostedSession._();
   String? athleteAccessToken;
   String? athleteUserId;
+  String? athletePassword;
+  String? athleteEmail;
+  String? assignmentId;
+  String? versionId;
+
+  void clearSecrets() {
+    athleteAccessToken = null;
+    athletePassword = null;
+  }
 }
 
 class JourneyDHostedProgrammeLifecycle

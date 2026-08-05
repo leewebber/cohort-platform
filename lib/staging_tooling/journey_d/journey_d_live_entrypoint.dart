@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'fake_journey_d_live_ports.dart';
 import 'fake_journey_d_protocol_publisher.dart';
+import 'journey_d_credential_handoff.dart';
 import 'journey_d_hosted_live_ports.dart';
 import 'journey_d_live_fixture_creator.dart';
 import 'journey_d_rebind_pipeline.dart';
@@ -100,6 +101,10 @@ Future<int> runJourneyDLiveEntrypoint({
     json['reached_main'] = true;
     json['mutation_backend'] = 'fake_local';
     json['fixture_marker'] = marker;
+    json['credential_handoff_written'] = _maybeWriteCredential(
+      env: env,
+      result: result,
+    );
     _write(outPath, json);
     return result.ok ? 0 : 2;
   }
@@ -199,13 +204,42 @@ Future<int> runJourneyDLiveEntrypoint({
     stagingConfirmed: true,
     liveAuthorized: true,
   );
+  final credentialWritten = _maybeWriteCredential(env: env, result: result);
+  JourneyDHostedSession.instance.clearSecrets();
   _write(outPath, {
     ...result.toJson(),
     'reached_main': true,
     'ports_mode': 'hosted',
     'mutation_backend': 'hosted',
+    'credential_handoff_written': credentialWritten,
   });
   return result.ok ? 0 : 2;
+}
+
+/// Writes private credential artifact when `S17_JD_CREDENTIAL_OUT_FILE` is set.
+/// Never logs password or full email. Returns whether a file was written.
+bool _maybeWriteCredential({
+  required Map<String, String> env,
+  required JourneyDLiveCreateResult result,
+}) {
+  final out = env['S17_JD_CREDENTIAL_OUT_FILE']?.trim() ?? '';
+  if (out.isEmpty || !result.ok) return false;
+  final seed = result.credentialSeed;
+  if (seed == null) return false;
+  try {
+    JourneyDCredentialHandoff().writeFresh(
+      file: File(out),
+      marker: seed.marker,
+      athleteId: seed.athleteId,
+      email: seed.email,
+      password: seed.password,
+      assignmentId: seed.assignmentId,
+      versionId: seed.versionId,
+    );
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 Future<JourneyDLiveCreateResult> _runWithFakePorts({

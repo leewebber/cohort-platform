@@ -87,11 +87,31 @@ class JourneyDLiveFixtureCreator {
     String? firstFailedOrUnknown;
     JourneyDRebindPipelineResult? rebindResult;
     String? versionId;
+    String? assignmentId;
     String? assignmentIdRedacted;
     String? reboundHash;
+    String? privateAthleteId;
+    String? privatePassword;
+    String? privateEmail;
     var ok = false;
 
     JourneyDLiveCreateResult finish({required String classification}) {
+      JourneyDLiveCredentialSeed? seed;
+      if (ok &&
+          privateAthleteId != null &&
+          privatePassword != null &&
+          privateEmail != null &&
+          assignmentId != null &&
+          versionId != null) {
+        seed = JourneyDLiveCredentialSeed(
+          marker: marker,
+          athleteId: privateAthleteId!,
+          email: privateEmail!,
+          password: privatePassword!,
+          assignmentId: assignmentId!,
+          versionId: versionId!,
+        );
+      }
       return JourneyDLiveCreateResult(
         ok: ok,
         classification: classification,
@@ -115,6 +135,7 @@ class JourneyDLiveFixtureCreator {
         repair: false,
         journeyDExecuted: false,
         adaptationInvoked: false,
+        credentialSeed: seed,
       );
     }
 
@@ -243,6 +264,9 @@ class JourneyDLiveFixtureCreator {
       blockRemaining('create_synthetic_athlete');
       return finish(classification: 'B4D21D1_ATHLETE_CREATE_FAILED');
     }
+    privateAthleteId = athlete.privateUserId;
+    privatePassword = athlete.privatePassword;
+    privateEmail = athlete.privateEmail ?? email;
 
     // Publication + typed rebind (canonical publisher only).
     rebindResult = await rebindPipeline.run(
@@ -399,15 +423,25 @@ class JourneyDLiveFixtureCreator {
     mark('enrol_assignment', enrolled.state, detail: enrolled.detail);
     if (enrolled.isApplied) {
       hostedWrites += 1;
+      assignmentId = enrolled.assignmentId;
       assignmentIdRedacted = enrolled.assignmentIdRedacted;
     }
     if (!enrolled.isApplied) {
       blockRemaining('enrol_assignment');
       return finish(classification: 'B4D21D1_ENROL_FAILED');
     }
+    if (assignmentId == null || assignmentId!.isEmpty) {
+      mark(
+        'materialise_schedule',
+        JourneyDPublicationStageState.unknown,
+        detail: 'enrol_applied_without_assignment_id',
+      );
+      blockRemaining('materialise_schedule');
+      return finish(classification: 'B4D21D1_ENROL_ASSIGNMENT_UNKNOWN');
+    }
 
     final materialised = await materialisation.materialise(
-      programmeAssignmentId: enrolled.assignmentId!,
+      programmeAssignmentId: assignmentId!,
     );
     mark(
       'materialise_schedule',
@@ -477,6 +511,25 @@ class JourneyDLiveLedgerStage {
   }
 }
 
+/// In-process credential seed — never serialized by [JourneyDLiveCreateResult.toJson].
+class JourneyDLiveCredentialSeed {
+  const JourneyDLiveCredentialSeed({
+    required this.marker,
+    required this.athleteId,
+    required this.email,
+    required this.password,
+    required this.assignmentId,
+    required this.versionId,
+  });
+
+  final String marker;
+  final String athleteId;
+  final String email;
+  final String password;
+  final String assignmentId;
+  final String versionId;
+}
+
 class JourneyDLiveCreateResult {
   const JourneyDLiveCreateResult({
     required this.ok,
@@ -499,6 +552,7 @@ class JourneyDLiveCreateResult {
     required this.repair,
     required this.journeyDExecuted,
     required this.adaptationInvoked,
+    this.credentialSeed,
   });
 
   final bool ok;
@@ -521,6 +575,9 @@ class JourneyDLiveCreateResult {
   final bool repair;
   final bool journeyDExecuted;
   final bool adaptationInvoked;
+
+  /// Private — omitted from [toJson].
+  final JourneyDLiveCredentialSeed? credentialSeed;
 
   Map<String, Object?> toJson() => {
     'ok': ok,
@@ -546,6 +603,7 @@ class JourneyDLiveCreateResult {
     'repair': repair,
     'journey_d_executed': journeyDExecuted,
     'adaptation_invoked': adaptationInvoked,
+    'credential_handoff_ready': credentialSeed != null,
     'rebind_path': 'REBIND_PATH_READY',
     'mutation_backend': 'hosted',
   };

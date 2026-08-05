@@ -26,12 +26,20 @@ class JourneyDLiveAthleteResult {
     this.userIdRedacted,
     this.accessTokenPresent = false,
     this.detail = '',
+    this.privateUserId,
+    this.privatePassword,
+    this.privateEmail,
   });
 
   final JourneyDPublicationStageState state;
   final String? userIdRedacted;
   final bool accessTokenPresent;
   final String detail;
+
+  /// In-process handoff only — never serialize to result JSON / evidence.
+  final String? privateUserId;
+  final String? privatePassword;
+  final String? privateEmail;
 
   bool get isApplied => state == JourneyDPublicationStageState.applied;
 }

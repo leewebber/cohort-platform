@@ -68,8 +68,13 @@ class ReadOnlyHttpClient:
             raise StagingGuardError(
                 f"REFUSED: query missing exact fixture predicate {require_predicate!r}"
             )
-        # Block broad list endpoints without eq/ filter.
-        if "eq." not in path and "email=" not in path:
+        # Block broad list endpoints without eq/ filter or exact-id Auth path.
+        auth_user_id = re.search(
+            r"/auth/v1/admin/users/"
+            r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            path,
+        )
+        if "eq." not in path and "email=" not in path and not auth_user_id:
             raise StagingGuardError(
                 "REFUSED: broad or missing fixture-scoped predicate"
             )
@@ -219,8 +224,13 @@ def run_hosted_readonly(
     api_env_path: Path,
     client: ReadOnlyHttpClient | None = None,
     fixture_snapshot: dict[str, Any] | None = None,
+    mode: str = "eligibility",
 ) -> dict[str, Any]:
-    """Run fixture-scoped hosted read-only eligibility verification.
+    """Run fixture-scoped hosted read-only verification.
+
+    mode:
+      eligibility — pre-Journey D (requires adaptation/execution counts == 0)
+      outcome — post-Journey D (requires exactly one Journey D execution)
 
     [fixture_snapshot] injects fake query answers for local tests (never hosted).
     """
@@ -228,10 +238,13 @@ def run_hosted_readonly(
     require_hosted_readonly_guard()
     validate_marker(marker)
     reject_reserved_identity(marker)
+    if mode not in {"eligibility", "outcome"}:
+        raise StagingGuardError("REFUSED: hosted mode must be eligibility or outcome")
 
     projects = parse_projects_json(projects_raw)
     staging = select_staging_project(projects)
     result = empty_result(marker)
+    result["mode"] = mode
     result["staging_ref_prefix"] = staging["ref_prefix"]
     result["staging_name"] = staging.get("name")
     result["staging_region"] = staging.get("region")
@@ -344,14 +357,12 @@ def run_hosted_readonly(
         result["fixture_state"] = "partial"
 
     result["unverified_claims"] = unverified
-    result["fixture_eligible"] = (
+    base_complete = (
         result["fixture_state"] == "complete"
         and not result["duplicates_found"]
         and not result["unrelated_objects_attributable"]
         and not unverified
         and result["symbolic_lineage_count"] == 0
-        and result["adaptation_state_count"] == 0
-        and result["journey_d_execution_count"] == 0
         and result["journey_i_execution_count"] == 0
         and result["journey_j_execution_count"] == 0
         and result["equipment_conflict_valid"]
@@ -362,7 +373,45 @@ def run_hosted_readonly(
         and result["target_verified"]
         and result["production_excluded"]
     )
-    result["ok"] = True  # verifier ran; eligibility is separate
+    if mode == "eligibility":
+        result["fixture_eligible"] = (
+            base_complete
+            and result["adaptation_state_count"] == 0
+            and result["journey_d_execution_count"] == 0
+        )
+        result["outcome_verified"] = False
+    else:
+        # Post-execution outcome: exactly one Journey D, approved swap evidence.
+        meta = snap.get("journey_d_metadata") or {}
+        result["swap_exercise"] = meta.get("action") == "swapExercise"
+        result["source_exercise_id"] = meta.get("source_exercise_id")
+        result["replacement_exercise_id"] = meta.get("replacement_exercise_id")
+        result["substitution_rule_id"] = meta.get("substitution_rule_id")
+        result["athlete_agreement_recorded"] = bool(
+            meta.get("athlete_agreement_recorded")
+        )
+        result["permissions_passed"] = bool(meta.get("permissions_passed"))
+        result["intended_occurrence_key"] = meta.get("intended_occurrence_key")
+        result["programme_source_mutated"] = bool(
+            meta.get("programme_source_mutated", False)
+        )
+        result["outcome_verified"] = (
+            base_complete
+            and result["journey_d_execution_count"] == 1
+            and result["swap_exercise"] is True
+            and result["source_exercise_id"] == SOURCE_EXERCISE
+            and result["replacement_exercise_id"] == REPLACEMENT_EXERCISE
+            and result["substitution_rule_id"]
+            == "cohort.substitution.back_squat_to_goblet_squat"
+            and result["athlete_agreement_recorded"] is True
+            and result["permissions_passed"] is True
+            and result["intended_occurrence_key"] == "SES-JD-ADAPT-CURRENT"
+            and result["programme_source_mutated"] is False
+            and result["later_push_up_intact"] is True
+        )
+        # Eligibility is false after adaptation — outcome uses outcome_verified.
+        result["fixture_eligible"] = False
+    result["ok"] = True  # verifier ran; eligibility/outcome are separate
     result["http_calls"] = getattr(http, "calls", [])
     return result
 
@@ -410,6 +459,59 @@ def _fetch_snapshot(
     if status != 200:
         snap["unverified_claims"].append("identity_lookup")
         snap["identity_count"] = 0
+    # Journey execution counts from fixture-bound Auth user_metadata only.
+    if user_id and len(exact) == 1:
+        meta = exact[0].get("user_metadata") or {}
+        if not isinstance(meta, dict) or "journey_d_execution_count" not in meta:
+            # List endpoint may omit metadata — fetch exact user by id.
+            st2, body2, _ = http.get(
+                f"/auth/v1/admin/users/{urllib.parse.quote(str(user_id), safe='')}",
+                require_predicate=str(user_id),
+            )
+            if st2 == 200:
+                try:
+                    full = json.loads(body2)
+                except json.JSONDecodeError:
+                    full = {}
+                if isinstance(full, dict):
+                    meta = full.get("user_metadata") or meta or {}
+            else:
+                snap["unverified_claims"].append("user_metadata_lookup")
+        if not isinstance(meta, dict):
+            meta = {}
+        run_id = str(meta.get("run_id") or "")
+        if run_id and run_id != marker:
+            snap["unverified_claims"].append("user_metadata_run_id_mismatch")
+        snap["journey_d_metadata"] = {
+            "action": meta.get("action"),
+            "source_exercise_id": meta.get("source_exercise_id"),
+            "replacement_exercise_id": meta.get("replacement_exercise_id"),
+            "substitution_rule_id": meta.get("substitution_rule_id"),
+            "athlete_agreement_recorded": meta.get("athlete_agreement_recorded"),
+            "permissions_passed": meta.get("permissions_passed"),
+            "intended_occurrence_key": meta.get("intended_occurrence_key"),
+            "programme_source_mutated": meta.get("programme_source_mutated", False),
+            "later_push_up_intact": meta.get("later_push_up_intact"),
+        }
+        try:
+            snap["journey_d_execution_count"] = int(
+                meta.get("journey_d_execution_count") or 0
+            )
+        except (TypeError, ValueError):
+            snap["journey_d_execution_count"] = 0
+            snap["unverified_claims"].append("journey_d_execution_count")
+        try:
+            snap["journey_i_execution_count"] = int(
+                meta.get("journey_i_execution_count") or 0
+            )
+        except (TypeError, ValueError):
+            snap["journey_i_execution_count"] = 0
+        try:
+            snap["journey_j_execution_count"] = int(
+                meta.get("journey_j_execution_count") or 0
+            )
+        except (TypeError, ValueError):
+            snap["journey_j_execution_count"] = 0
 
     # Profile by exact user id (only if known).
     if user_id:
