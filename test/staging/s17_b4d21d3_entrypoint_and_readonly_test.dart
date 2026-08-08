@@ -401,12 +401,15 @@ print("VERIFIER_MATRIX_OK")
 
   group('no hosted contact', () {
     test('shell live with synthetic backend still zero hosted', () async {
+      // Non-retired marker so refuse-list does not short-circuit before
+      // synthetic backend proof (retired markers exit 2 with zero writes).
+      const syntheticMarker = 's17_jd_adapt_20260808T000000Z_abcd1234';
       final r = await Process.run('bash', [
         '-c',
         'cd "$root" && CONFIRM_COHORT_STAGING=1 S17_JD_LIVE_CREATE=1 '
             'S17_JD_LIVE_MUTATION_BACKEND=synthetic_ok '
             'S17_PROJECTS_JSON_FILE="${projectsFixture.path}" '
-            '"$creator" --live --marker $stableMarker',
+            '"$creator" --live --marker $syntheticMarker',
       ]);
       expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
       expect(r.stdout.toString(), contains('HOSTED_WRITES_EXECUTED=0'));

@@ -42,9 +42,12 @@ void main() {
     final pyReadonly = File(
       '$root/tool/staging/lib/s17_journey_d_hosted_readonly.py',
     ).readAsStringSync();
-    expect(livePorts, contains('journeyDFixtureEmail(marker)'));
+    // Creator still derives the canonical mixed-case form for Auth create;
+    // uniqueness/execute/verify compare via normalized (Auth-stored) email.
     expect(creator, contains('journeyDFixtureEmail(marker)'));
-    expect(execute, contains('journeyDFixtureEmail(marker)'));
+    expect(livePorts, contains('journeyDNormalizedFixtureEmail(marker)'));
+    expect(execute, contains('journeyDNormalizedFixtureEmail(marker)'));
+    expect(pyReadonly, contains('jd_normalized_fixture_email'));
     expect(pyReadonly, contains('jd_fixture_email(marker)'));
     expect(livePorts, isNot(contains("\$marker.athlete.jd@example.invalid")));
     expect(creator, isNot(contains("\$marker.athlete.jd@example.invalid")));

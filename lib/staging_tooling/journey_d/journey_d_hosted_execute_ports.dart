@@ -52,17 +52,18 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
     required String assignmentId,
     required String versionId,
   }) async {
-    final email = journeyDFixtureEmail(marker);
+    // Auth stores emails lowercased — filter/compare with normalized form.
+    final email = journeyDNormalizedFixtureEmail(marker);
     final users = await _getJson(
       // GoTrue admin listUsers filters via `filter`, not `email`.
       '/auth/v1/admin/users?filter=${Uri.encodeComponent(email)}',
       key: serviceKey,
-      requirePredicate: marker,
+      requirePredicate: marker.toLowerCase(),
     );
     final list = _asList(users);
     final exact = [
       for (final u in list)
-        if ((u['email'] ?? '') == email) u,
+        if ((u['email'] ?? '').toString().trim().toLowerCase() == email) u,
     ];
     if (exact.isEmpty) {
       throw JourneyDExecuteAmbiguity('fixture_identity_missing');
@@ -96,11 +97,13 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
       throw JourneyDExecuteAmbiguity('fixture_assignment_mismatch');
     }
 
+    // Canonical occurrence schema: assignment_id + protocol_id + authored order.
     final occ = await _getJson(
-      '/rest/v1/programme_schedule_occurrences?select=id,session_key,sequence'
-      '&programme_assignment_id=eq.${Uri.encodeComponent(assignmentId)}',
+      '/rest/v1/programme_schedule_occurrences'
+      '?select=id,protocol_id,week_number,day_key,session_order,programmed_session_key'
+      '&assignment_id=eq.${Uri.encodeComponent(assignmentId)}',
       key: serviceKey,
-      requirePredicate: 'programme_assignment_id=eq.$assignmentId',
+      requirePredicate: 'assignment_id=eq.$assignmentId',
       preferCount: true,
     );
     final occList = _asList(occ);
@@ -111,11 +114,11 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
             : 'fixture_occurrences_ambiguous',
       );
     }
-    final keys = [
-      for (final o in occList) (o['session_key'] ?? '').toString(),
+    final protocols = [
+      for (final o in occList) (o['protocol_id'] ?? '').toString(),
     ];
-    if (!keys.contains(kJourneyDIntendedSessionKey) ||
-        !keys.contains(kJourneyDLaterSessionKey)) {
+    if (!protocols.contains(kJourneyDIntendedProtocolId) ||
+        !protocols.contains(kJourneyDLaterProtocolId)) {
       throw JourneyDExecuteAmbiguity('fixture_occurrence_keys_unexpected');
     }
 

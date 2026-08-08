@@ -25,6 +25,7 @@ from s17_journey_d_fixture import (
     SYMBOLIC_LINEAGES,
     StagingGuardError,
     jd_fixture_email,
+    jd_normalized_fixture_email,
     load_package_yaml_text,
     load_protocol_intent,
     reject_reserved_identity,
@@ -704,21 +705,31 @@ def _fetch_snapshot(
 ) -> dict[str, Any]:
     """Exact-filter hosted reads only."""
     snap: dict[str, Any] = {"unverified_claims": [], "lookups": {}}
-    enc_email = urllib.parse.quote(email, safe="")
+    # `email` arg is the creator-facing form; Auth lookups use normalized form.
+    _ = email
     enc_marker = urllib.parse.quote(marker, safe="")
     enc_lineage = urllib.parse.quote(LINEAGE_CODE, safe="")
     enc_current = urllib.parse.quote(CURRENT_PROTOCOL_ID, safe="")
     enc_later = urllib.parse.quote(LATER_PROTOCOL_ID, safe="")
 
-    # Auth identity by exact email (marker is the email local-part prefix).
+    # Auth identity by marker-derived email.
     # GoTrue admin listUsers filters via `filter`, not `email`.
     # `?email=` is ignored and yields false identity_count=0.
-    auth_path = f"/auth/v1/admin/users?filter={enc_email}"
-    if marker not in auth_path and urllib.parse.quote(marker, safe="") not in auth_path:
+    # Auth stores emails lowercased — filter and compare with normalized form.
+    normalized_email = jd_normalized_fixture_email(marker)
+    enc_normalized = urllib.parse.quote(normalized_email, safe="")
+    auth_path = f"/auth/v1/admin/users?filter={enc_normalized}"
+    # Normalized email embeds lowercased marker stamp (T/Z → t/z).
+    marker_l = marker.lower()
+    if marker_l not in auth_path and marker_l not in urllib.parse.unquote(auth_path):
         raise StagingGuardError("REFUSED: auth query not marker-bound")
-    status, body, headers = http.get(auth_path, require_predicate=marker)
+    status, body, headers = http.get(auth_path, require_predicate=marker_l)
     users = _parse_list(body)
-    exact = [u for u in users if (u.get("email") or "") == email]
+    exact = [
+        u
+        for u in users
+        if (u.get("email") or "").strip().lower() == normalized_email
+    ]
     snap["identity_count"] = len(exact)
     user_id = exact[0]["id"] if len(exact) == 1 else None
     if status != 200:
@@ -880,11 +891,13 @@ def _fetch_snapshot(
     version_count = 0
     programme_state_valid = False
     if lineage_id:
+        # Canonical schema: programme_versions.lineage_id + lifecycle_status.
+        # Wrong FK/column names return HTTP 400 and false version absence.
         status, body, headers = http.get(
-            f"/rest/v1/programme_versions?select=id,version_number,status,lifecycle_state"
-            f"&programme_lineage_id=eq.{urllib.parse.quote(str(lineage_id), safe='')}"
+            f"/rest/v1/programme_versions?select=id,version_number,lifecycle_status,approved_for_global"
+            f"&lineage_id=eq.{urllib.parse.quote(str(lineage_id), safe='')}"
             f"&version_number=eq.1",
-            require_predicate=f"programme_lineage_id=eq.{lineage_id}",
+            require_predicate=f"lineage_id=eq.{lineage_id}",
             prefer_count=True,
         )
         versions = _parse_list(body)
@@ -894,11 +907,7 @@ def _fetch_snapshot(
             version_count = 0
             versions = []
         if version_count == 1 and versions:
-            st = str(
-                versions[0].get("status")
-                or versions[0].get("lifecycle_state")
-                or ""
-            ).lower()
+            st = str(versions[0].get("lifecycle_status") or "").lower()
             programme_state_valid = st in {
                 "published",
                 "approved",
@@ -931,10 +940,13 @@ def _fetch_snapshot(
         if assignment_count == 1 and assignments:
             aid = assignments[0]["id"]
             snap["assignment_id"] = aid
+            # Canonical schema: assignment_id + protocol_id + authored order.
+            # (Not programme_assignment_id / session_key / sequence — those 400.)
             status, body, headers = http.get(
-                f"/rest/v1/programme_schedule_occurrences?select=id,session_key,sequence"
-                f"&programme_assignment_id=eq.{urllib.parse.quote(str(aid), safe='')}",
-                require_predicate=f"programme_assignment_id=eq.{aid}",
+                f"/rest/v1/programme_schedule_occurrences"
+                f"?select=id,protocol_id,week_number,day_key,session_order,programmed_session_key"
+                f"&assignment_id=eq.{urllib.parse.quote(str(aid), safe='')}",
+                require_predicate=f"assignment_id=eq.{aid}",
                 prefer_count=True,
             )
             occ = _parse_list(body)
@@ -943,18 +955,24 @@ def _fetch_snapshot(
                 snap["unverified_claims"].append("occurrence_lookup")
                 occurrence_count = 0
                 occ = []
-            keys = [str(o.get("session_key") or "") for o in occ]
-            # CURRENT before LATER by known session keys when present.
+            protocols = [str(o.get("protocol_id") or "") for o in occ]
             if occurrence_count == 2:
-                if "SES-JD-ADAPT-CURRENT" in keys and "SES-JD-ADAPT-LATER" in keys:
-                    occurrence_order_valid = keys.index(
-                        "SES-JD-ADAPT-CURRENT"
-                    ) < keys.index("SES-JD-ADAPT-LATER")
-                else:
-                    # sequence field fallback
-                    seqs = [o.get("sequence") for o in occ]
-                    occurrence_order_valid = seqs == sorted(
-                        seqs, key=lambda x: (x is None, x)
+                has_current = CURRENT_PROTOCOL_ID in protocols
+                has_later = LATER_PROTOCOL_ID in protocols
+                if has_current and has_later:
+                    ordered = sorted(
+                        occ,
+                        key=lambda o: (
+                            int(o.get("week_number") or 0),
+                            str(o.get("day_key") or ""),
+                            int(o.get("session_order") or 0),
+                        ),
+                    )
+                    occurrence_order_valid = (
+                        str(ordered[0].get("protocol_id") or "")
+                        == CURRENT_PROTOCOL_ID
+                        and str(ordered[1].get("protocol_id") or "")
+                        == LATER_PROTOCOL_ID
                     )
     elif totals_nonzero_partial(snap):
         # Partial fixture without linkage — leave counts zero for missing stages.

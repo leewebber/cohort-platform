@@ -22,7 +22,8 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
     required String marker,
     required String lineageCode,
   }) async {
-    final email = journeyDFixtureEmail(marker);
+    // Auth stores emails lowercased — filter/compare with normalized form.
+    final email = journeyDNormalizedFixtureEmail(marker);
     // GoTrue admin listUsers filters via `filter`, not `email`.
     // `?email=` is ignored and returns an unfiltered page — false UNIQUE.
     final auth = await _get(
@@ -42,17 +43,19 @@ class JourneyDHostedHttpPreflight implements JourneyDLivePreflight {
     }
     final authBody = jsonDecode(auth.body);
     var authHits = 0;
+    bool matchesEmail(dynamic raw) =>
+        (raw ?? '').toString().trim().toLowerCase() == email;
     if (authBody is Map && authBody['users'] is List) {
       authHits = (authBody['users'] as List)
           .whereType<Map>()
-          .where((u) => (u['email'] ?? '') == email)
+          .where((u) => matchesEmail(u['email']))
           .length;
-    } else if (authBody is Map && authBody['email'] == email) {
+    } else if (authBody is Map && matchesEmail(authBody['email'])) {
       authHits = 1;
     } else if (authBody is List) {
       authHits = authBody
           .whereType<Map>()
-          .where((u) => (u['email'] ?? '') == email)
+          .where((u) => matchesEmail(u['email']))
           .length;
     }
     final lin = await _get(
