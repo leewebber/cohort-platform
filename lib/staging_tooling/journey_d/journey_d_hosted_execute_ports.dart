@@ -281,11 +281,12 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
       key: serviceKey,
       requirePredicate: evidence.athleteId,
     );
-    if (getUser is! Map) {
+    final userMap = _adminUserMap(getUser);
+    if (userMap == null) {
       throw StateError('evidence_user_lookup_failed');
     }
     final existingMeta = Map<String, dynamic>.from(
-      (getUser['user_metadata'] as Map?)?.map(
+      (userMap['user_metadata'] as Map?)?.map(
             (k, v) => MapEntry(k.toString(), v),
           ) ??
           const {},
@@ -303,10 +304,29 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
       {'user_metadata': existingMeta},
       key: serviceKey,
     );
-    if (resp.statusCode != 200) {
+    // GoTrue admin user update returns 200 or 201 on this staging project
+    // (password remint already treats both as success).
+    if (!_isGoTrueUserWriteSuccess(resp.statusCode)) {
       throw StateError('evidence_write_http_${resp.statusCode}');
     }
   }
+
+  /// GoTrue may return the user object directly or nested under `user`.
+  static Map<String, dynamic>? _adminUserMap(Object? body) {
+    if (body is! Map) return null;
+    final top = body.map((k, v) => MapEntry(k.toString(), v));
+    if (top['user_metadata'] != null || top['id'] != null) {
+      return top;
+    }
+    final nested = top['user'];
+    if (nested is Map) {
+      return nested.map((k, v) => MapEntry(k.toString(), v));
+    }
+    return null;
+  }
+
+  static bool _isGoTrueUserWriteSuccess(int statusCode) =>
+      statusCode == 200 || statusCode == 201;
 
   Future<Object?> _getJson(
     String path, {

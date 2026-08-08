@@ -166,6 +166,13 @@ class JourneyDExecuteResult {
     this.credentialConsumed = false,
     this.credentialShredded = false,
     this.hostedWritesExecuted = 0,
+    this.executionStage,
+    this.exceptionType,
+    this.exceptionMessage,
+    this.agreementAccepted = false,
+    this.applicationInvoked = false,
+    this.exceptionLocation,
+    this.identityHints = const {},
   });
 
   final bool ok;
@@ -189,6 +196,27 @@ class JourneyDExecuteResult {
   final bool credentialConsumed;
   final bool credentialShredded;
   final int hostedWritesExecuted;
+
+  /// Named stage active when a closure-blocking exception escaped.
+  final String? executionStage;
+
+  /// Sanitised exception type name (e.g. `StateError`).
+  final String? exceptionType;
+
+  /// Sanitised exception message (no secrets / emails / tokens).
+  final String? exceptionMessage;
+
+  /// True when athlete agreement accept returned success in this run.
+  final bool agreementAccepted;
+
+  /// True when prepared-package application (accept persist) completed.
+  final bool applicationInvoked;
+
+  /// First in-repo stack frame location for local diagnosis (sanitised).
+  final String? exceptionLocation;
+
+  /// Non-secret object identity prefixes useful for staging diagnosis.
+  final Map<String, String> identityHints;
 
   Map<String, Object?> toJson() => {
     'ok': ok,
@@ -214,6 +242,13 @@ class JourneyDExecuteResult {
     'credential_consumed': credentialConsumed,
     'credential_shredded': credentialShredded,
     'hosted_writes_executed': hostedWritesExecuted,
+    'execution_stage': executionStage,
+    'exception_type': exceptionType,
+    'exception_message': exceptionMessage,
+    'exception_location': exceptionLocation,
+    'agreement_accepted': agreementAccepted,
+    'application_invoked': applicationInvoked,
+    'identity_hints': identityHints,
     'detail': detail,
     'retry': false,
     'resume': false,
@@ -278,7 +313,17 @@ class JourneyDExecuteWorkflow {
       );
     }
 
+    var stage = 'resolve_fixture';
+    var agreementAccepted = false;
+    var applicationInvoked = false;
+    var hostedWrites = 0;
+    final identityHints = <String, String>{
+      'athlete_id_prefix': _idPrefix(credential.athleteId),
+      'assignment_id_prefix': _idPrefix(credential.assignmentId),
+      'version_id_prefix': _idPrefix(credential.versionId),
+    };
     try {
+      stage = 'resolve_fixture';
       final resolution = await ports.resolveFixture(
         marker: marker,
         athleteId: credential.athleteId,
@@ -291,6 +336,8 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_SCOPE_BLOCKED',
           detail: 'intended_occurrence_mismatch',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
       if (resolution.laterOccurrenceKey != kJourneyDLaterSessionKey) {
@@ -299,19 +346,24 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_SCOPE_BLOCKED',
           detail: 'later_occurrence_mismatch',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
 
+      stage = 'authenticate';
       await ports.authenticate(
         email: credential.email,
         password: credential.password,
         expectedAthleteId: credential.athleteId,
       );
 
+      stage = 'prepare_intended';
       final prepared = await ports.prepareIntended(
         athleteId: credential.athleteId,
       );
       final protocolId = (prepared.package.protocolId ?? '').trim();
+      identityHints['protocol_id'] = protocolId;
       final key = prepared.package.programmedSessionKey.value;
       final okIntended =
           protocolId == kJourneyDIntendedProtocolId ||
@@ -325,6 +377,8 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_SCOPE_BLOCKED',
           detail: 'prepared_not_intended_occurrence',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
       if (protocolId == kJourneyDLaterProtocolId ||
@@ -335,9 +389,12 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_SCOPE_BLOCKED',
           detail: 'later_or_unrelated_occurrence_selected',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
 
+      stage = 'load_permissions';
       final permissions = await ports.loadPermissions(
         versionId: credential.versionId,
       );
@@ -348,6 +405,8 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_CONTRACT_BLOCKED',
           detail: 'athlete_agreement_required_permissions_missing',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
       final permissionsPassed = permissions.any(
@@ -361,9 +420,12 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_CONTRACT_BLOCKED',
           detail: 'substitution_permissions_absent',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
 
+      stage = 'propose_recommendation';
       final proposalService =
           _proposalService ??
           ProgrammeAdaptationProposalService(
@@ -377,6 +439,9 @@ class JourneyDExecuteWorkflow {
               JourneyDEquipmentAdaptationContract.availableEquipment,
         ),
       );
+      identityHints['proposal_id_prefix'] = proposal.proposalId.length >= 8
+          ? proposal.proposalId.substring(0, 8)
+          : proposal.proposalId;
 
       if (!proposal.isAcceptable) {
         return _fail(
@@ -384,6 +449,8 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_EXECUTION_FAILED',
           detail: 'proposal_not_acceptable:${proposal.outcome.name}',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
 
@@ -393,10 +460,14 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_EXECUTION_FAILED',
           detail: 'approved_back_squat_to_goblet_swap_missing',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
 
       // Athlete agreement is mandatory — accept is the explicit agreement act.
+      // Accept also applies the reviewed plan to the prepared package (local).
+      stage = 'athlete_agreement_accept';
       final acceptance =
           (_acceptanceFactory?.call(prepareService)) ??
           ProgrammeAdaptationAcceptanceService(
@@ -415,9 +486,14 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_EXECUTION_FAILED',
           detail: 'athlete_agreement_accept_failed:${acceptRes.errorCode}',
           credentialConsumed: true,
+          executionStage: stage,
+          identityHints: identityHints,
         );
       }
+      agreementAccepted = true;
+      applicationInvoked = true;
 
+      stage = 'later_push_up_integrity';
       final laterOk = await ports.laterPushUpIntact(
         marker: marker,
         assignmentId: credential.assignmentId,
@@ -428,9 +504,14 @@ class JourneyDExecuteWorkflow {
           classification: 'JOURNEY_D_EXECUTION_UNCERTAIN',
           detail: 'later_push_up_integrity_failed',
           credentialConsumed: true,
+          executionStage: stage,
+          agreementAccepted: agreementAccepted,
+          applicationInvoked: applicationInvoked,
+          identityHints: identityHints,
         );
       }
 
+      stage = 'record_execution_evidence';
       final evidence = JourneyDExecuteEvidence(
         marker: marker,
         athleteId: credential.athleteId,
@@ -450,6 +531,7 @@ class JourneyDExecuteWorkflow {
         executedAtUtc: DateTime.now().toUtc(),
       );
       await ports.recordExecutionEvidence(evidence: evidence);
+      hostedWrites = 1;
 
       return JourneyDExecuteResult(
         ok: true,
@@ -475,7 +557,11 @@ class JourneyDExecuteWorkflow {
             ? '${proposal.proposalId.substring(0, 8)}…'
             : '…',
         credentialConsumed: true,
-        hostedWritesExecuted: 1,
+        hostedWritesExecuted: hostedWrites,
+        executionStage: 'complete',
+        agreementAccepted: true,
+        applicationInvoked: true,
+        identityHints: identityHints,
       );
     } on JourneyDExecuteAmbiguity catch (e) {
       return _fail(
@@ -483,13 +569,30 @@ class JourneyDExecuteWorkflow {
         classification: 'JOURNEY_D_SCOPE_BLOCKED',
         detail: e.code,
         credentialConsumed: true,
+        executionStage: stage,
+        agreementAccepted: agreementAccepted,
+        applicationInvoked: applicationInvoked,
+        hostedWritesExecuted: hostedWrites,
+        identityHints: identityHints,
       );
-    } catch (e) {
+    } catch (e, st) {
+      final safeType = e.runtimeType.toString();
+      final safeMessage = sanitizeJourneyDExceptionMessage(e);
+      final location = sanitizeJourneyDExceptionLocation(st);
       return _fail(
         marker: marker,
         classification: 'JOURNEY_D_EXECUTION_FAILED',
-        detail: 'unhandled:${e.runtimeType}',
+        detail:
+            'unhandled:stage=$stage:$safeType:${safeMessage.isEmpty ? 'no_message' : safeMessage}',
         credentialConsumed: true,
+        executionStage: stage,
+        exceptionType: safeType,
+        exceptionMessage: safeMessage,
+        exceptionLocation: location,
+        agreementAccepted: agreementAccepted,
+        applicationInvoked: applicationInvoked,
+        hostedWritesExecuted: hostedWrites,
+        identityHints: identityHints,
       );
     }
   }
@@ -522,6 +625,14 @@ class JourneyDExecuteWorkflow {
     required String classification,
     required String detail,
     required bool credentialConsumed,
+    String? executionStage,
+    String? exceptionType,
+    String? exceptionMessage,
+    String? exceptionLocation,
+    bool agreementAccepted = false,
+    bool applicationInvoked = false,
+    int hostedWritesExecuted = 0,
+    Map<String, String> identityHints = const {},
   }) {
     return JourneyDExecuteResult(
       ok: false,
@@ -535,6 +646,7 @@ class JourneyDExecuteWorkflow {
       sourceExerciseId: null,
       replacementExerciseId: null,
       substitutionRuleId: null,
+      // Hosted agreement evidence is recorded only after successful evidence write.
       athleteAgreementRecorded: false,
       permissionsPassed: false,
       intendedOccurrenceAdapted: false,
@@ -542,8 +654,76 @@ class JourneyDExecuteWorkflow {
       programmeSourceMutated: false,
       detail: detail,
       credentialConsumed: credentialConsumed,
+      hostedWritesExecuted: hostedWritesExecuted,
+      executionStage: executionStage,
+      exceptionType: exceptionType,
+      exceptionMessage: exceptionMessage,
+      exceptionLocation: exceptionLocation,
+      agreementAccepted: agreementAccepted,
+      applicationInvoked: applicationInvoked,
+      identityHints: identityHints,
     );
   }
+
+  static String _idPrefix(String id) {
+    final t = id.trim();
+    if (t.isEmpty) return '';
+    return t.length >= 8 ? '${t.substring(0, 8)}…' : t;
+  }
+}
+
+/// Sanitises exception text for Journey D closure evidence (no secrets).
+String sanitizeJourneyDExceptionMessage(Object error) {
+  var raw = error is StateError
+      ? error.message
+      : error.toString().replaceFirst(RegExp(r'^[^:]+:\s*'), '');
+  raw = raw
+      .replaceAll(
+        RegExp(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'),
+        '<email>',
+      )
+      .replaceAll(
+        RegExp(r'bearer\s+[A-Za-z0-9._-]+', caseSensitive: false),
+        'bearer <redacted>',
+      )
+      .replaceAll(
+        RegExp(
+          r'(password|service[_-]?role|apikey|token)\s*[:=]\s*\S+',
+          caseSensitive: false,
+        ),
+        '<credential=<redacted>>',
+      )
+      .replaceAll(
+        RegExp(r'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'),
+        '<jwt>',
+      );
+  if (raw.length > 240) {
+    raw = '${raw.substring(0, 240)}…';
+  }
+  return raw.trim();
+}
+
+/// First in-repo stack frame for local diagnosis (paths only, no secrets).
+String? sanitizeJourneyDExceptionLocation(StackTrace stackTrace) {
+  for (final line in stackTrace.toString().split('\n')) {
+    final trimmed = line.trim();
+    if (trimmed.contains('journey_d_') ||
+        trimmed.contains('programme_adaptation_') ||
+        trimmed.contains('package:cohort_platform/')) {
+      var safe = trimmed
+          .replaceAll(
+            RegExp(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}'),
+            '<email>',
+          )
+          .replaceAll(
+            RegExp(r'eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'),
+            '<jwt>',
+          );
+      if (safe.length > 200) safe = '${safe.substring(0, 200)}…';
+      return safe;
+    }
+  }
+  return null;
 }
 
 class JourneyDExecuteAmbiguity implements Exception {
@@ -564,6 +744,8 @@ class FakeJourneyDExecutePorts implements JourneyDExecutePorts {
     this.rejectAuth = false,
     this.ambiguous = false,
     this.missing = false,
+    this.throwStateErrorAtStage,
+    this.stateErrorMessage = 'injected_state_error',
   });
 
   JourneyDFixtureResolution resolution;
@@ -574,6 +756,13 @@ class FakeJourneyDExecutePorts implements JourneyDExecutePorts {
   bool rejectAuth;
   bool ambiguous;
   bool missing;
+
+  /// When set, throws [StateError] entering that ports stage.
+  ///
+  /// Supported: `authenticate`, `later_push_up_integrity`,
+  /// `record_execution_evidence`.
+  final String? throwStateErrorAtStage;
+  final String stateErrorMessage;
   int resolveCalls = 0;
   int prepareCalls = 0;
   int evidenceCalls = 0;
@@ -617,8 +806,10 @@ class FakeJourneyDExecutePorts implements JourneyDExecutePorts {
     authCalls += 1;
     lastAuthEmail = email;
     _lastPassword = password;
-    if (rejectAuth) {
-      throw StateError('auth_rejected');
+    if (rejectAuth || throwStateErrorAtStage == 'authenticate') {
+      throw StateError(
+        rejectAuth ? 'auth_rejected' : stateErrorMessage,
+      );
     }
   }
 
@@ -642,6 +833,9 @@ class FakeJourneyDExecutePorts implements JourneyDExecutePorts {
     required String marker,
     required String assignmentId,
   }) async {
+    if (throwStateErrorAtStage == 'later_push_up_integrity') {
+      throw StateError(stateErrorMessage);
+    }
     return laterIntact;
   }
 
@@ -649,6 +843,9 @@ class FakeJourneyDExecutePorts implements JourneyDExecutePorts {
   Future<void> recordExecutionEvidence({
     required JourneyDExecuteEvidence evidence,
   }) async {
+    if (throwStateErrorAtStage == 'record_execution_evidence') {
+      throw StateError(stateErrorMessage);
+    }
     evidenceCalls += 1;
     lastEvidence = evidence;
   }
