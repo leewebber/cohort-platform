@@ -635,6 +635,7 @@ class JourneyDHostedMaterialisation implements JourneyDLiveMaterialisation {
     if (token == null) {
       return JourneyDLiveStageOutcome.failed('missing_athlete_token');
     }
+    // 1.4A pin: sets materialised_at / cursor. Does NOT write occurrences.
     late final _HttpResp resp;
     try {
       final bounded = await JourneyDBoundedHttp(
@@ -676,12 +677,109 @@ class JourneyDHostedMaterialisation implements JourneyDLiveMaterialisation {
     if (map is! Map) {
       return JourneyDLiveStageOutcome.unknown('materialise_ambiguous');
     }
-    final status = map['status']?.toString();
-    if (status != 'materialised' && status != 'already_materialised') {
-      return JourneyDLiveStageOutcome.failed('materialise_status:$status');
+    final pinStatus = map['status']?.toString();
+    if (pinStatus != 'materialised' && pinStatus != 'already_materialised') {
+      return JourneyDLiveStageOutcome.failed('materialise_status:$pinStatus');
     }
-    return JourneyDLiveStageOutcome.applied(detail: 'materialised');
+
+    // 1.7C ensure: durable programme_schedule_occurrences for the assignment.
+    late final _HttpResp ensureResp;
+    try {
+      final bounded = await JourneyDBoundedHttp(
+        defaultTimeout: const Duration(seconds: 90),
+      ).post(
+        Uri.parse(
+          '$apiUrl/rest/v1/rpc/ensure_programme_schedule_projection',
+        ),
+        headers: {
+          'apikey': anonKey,
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: {'p_programme_assignment_id': programmeAssignmentId},
+      );
+      ensureResp = _HttpResp(
+        statusCode: bounded.statusCode,
+        body: bounded.body,
+        dispatched: bounded.dispatched,
+      );
+    } on JourneyDHttpTimeoutException catch (e) {
+      return e.dispatched
+          ? JourneyDLiveStageOutcome.unknown('ensure_timed_out_dispatched')
+          : JourneyDLiveStageOutcome.failed('ensure_timed_out');
+    } on JourneyDHttpTransportException catch (e) {
+      return JourneyDLiveStageOutcome.failed('ensure_${e.detail}');
+    }
+    if (ensureResp.statusCode != 200) {
+      return JourneyDLiveStageOutcome.failed(
+        'ensure_http_${ensureResp.statusCode}',
+      );
+    }
+    Object? ensureDecoded;
+    try {
+      ensureDecoded = jsonDecode(ensureResp.body);
+    } on FormatException {
+      return JourneyDLiveStageOutcome.unknown('ensure_ambiguous');
+    }
+    return classifyJourneyDEnsureProjectionResult(
+      ensureDecoded,
+      pinStatus: pinStatus!,
+    );
   }
+}
+
+/// Classify [ensure_programme_schedule_projection] for Journey D fixture.
+///
+/// Pin success alone must not be reported as schedule materialisation when
+/// required CURRENT/LATER occurrence rows were not persisted.
+JourneyDLiveStageOutcome classifyJourneyDEnsureProjectionResult(
+  Object? decoded, {
+  required String pinStatus,
+}) {
+  if (decoded is! Map) {
+    return JourneyDLiveStageOutcome.unknown('ensure_ambiguous');
+  }
+  final map = Map<String, dynamic>.from(decoded);
+  final ensureStatus = map['status']?.toString() ?? '';
+  if (ensureStatus != 'initialised' && ensureStatus != 'already_exists') {
+    final code = map['code']?.toString() ?? 'unknown';
+    return JourneyDLiveStageOutcome.failed(
+      'ensure_status:$ensureStatus:$code',
+    );
+  }
+  final proj = map['projection'];
+  final occRaw = proj is Map ? proj['occurrences'] : null;
+  final list = occRaw is List ? occRaw : const [];
+  final protocols = <String>[
+    for (final o in list)
+      if (o is Map) (o['protocol_id'] ?? '').toString(),
+  ];
+  final count = list.length;
+  if (count == 0) {
+    return JourneyDLiveStageOutcome.failed(
+      'ensure_zero_occurrences:pin=$pinStatus',
+    );
+  }
+  const current = 'PROT-S17-JD-ADAPT-CURRENT';
+  const later = 'PROT-S17-JD-ADAPT-LATER';
+  if (count != 2 ||
+      !protocols.contains(current) ||
+      !protocols.contains(later)) {
+    return JourneyDLiveStageOutcome.failed(
+      'ensure_occurrence_mismatch:count=$count',
+    );
+  }
+  final ids = <String>[
+    for (final o in list)
+      if (o is Map) (o['id'] ?? '').toString(),
+  ].where((id) => id.isNotEmpty).toList();
+  final idEvidence = ids.isEmpty
+      ? 'occurrence_ids=none'
+      : 'occurrence_ids=${ids.map((id) => '${id.length >= 8 ? id.substring(0, 8) : id}…').join(',')}';
+  return JourneyDLiveStageOutcome.applied(
+    detail:
+        'materialised;ensure=$ensureStatus;occurrence_count=$count;$idEvidence',
+  );
 }
 
 /// Redacted Auth Admin create failure detail for durable ledgers.

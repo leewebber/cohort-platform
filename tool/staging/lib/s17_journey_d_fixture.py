@@ -124,7 +124,11 @@ STAGE_INTERFACES = {
         "(staging fixture only — required for catalogue enrol RPC)"
     ),
     "enrol_assignment": "rpc enrol_athlete_in_catalogue_programme_version",
-    "materialise_schedule": "rpc materialise_athlete_plan_from_enrolment",
+    "materialise_schedule": (
+        "rpc materialise_athlete_plan_from_enrolment (pin) + "
+        "rpc ensure_programme_schedule_projection (occurrences); "
+        "fail closed if occurrence_count != 2"
+    ),
     "stop_prepare_ready": "local stop — no further mutation",
     "post_create_readonly_eligibility": "diagnose_s17_journey_d_adaptation_readonly.sh",
     "stop_without_journey_d": "hard stop — Journey D unreachable",
