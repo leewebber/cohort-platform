@@ -1,3 +1,4 @@
+import 'package:cohort_platform/application/ports/knowledge_graph_reader.dart';
 import 'package:cohort_platform/features/adaptation/models/accepted_adaptation_decision.dart';
 import 'package:cohort_platform/features/adaptation/models/programme_adaptation_proposal.dart';
 import 'package:cohort_platform/features/adaptation/services/adaptation_policy_gate.dart';
@@ -61,18 +62,29 @@ class ProgrammeAdaptationAcceptanceService {
     PlanPackageSessionAdaptationAdapter? adapter,
     ProgrammeProtocolDraftLoader? loadProtocolDraft,
     ProgrammeAdaptationPermissionLoader? loadAdaptationPermissions,
+    ProgrammeKnowledgeLoader? loadKnowledge,
+    KnowledgeGraphReader? knowledge,
   }) : _prepareService = prepareService,
-       _adapter = adapter ?? PlanPackageSessionAdaptationAdapter(),
+       _adapterOverride = adapter,
        _loadProtocolDraft =
            loadProtocolDraft ??
            ((protocolId) => ProtocolBuilderService().loadProtocol(protocolId)),
        _loadAdaptationPermissions =
-           loadAdaptationPermissions ?? ((_) async => const []);
+           loadAdaptationPermissions ?? ((_) async => const []),
+       _loadKnowledge =
+           loadKnowledge ??
+           (knowledge != null
+               ? () async => knowledge
+               : ProgrammeAdaptationProposalService.defaultKnowledgeLoader);
 
   final AthleteProgrammeSessionPrepareService _prepareService;
-  final PlanPackageSessionAdaptationAdapter _adapter;
+  /// When null, freshness revalidation builds an adapter with curated knowledge
+  /// — the same graph propose used. A knowledge-less default historically made
+  /// equipment accept return [freshness_invalid] after a valid proposal.
+  final PlanPackageSessionAdaptationAdapter? _adapterOverride;
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
   final ProgrammeAdaptationPermissionLoader _loadAdaptationPermissions;
+  final ProgrammeKnowledgeLoader _loadKnowledge;
   final Set<String> _consumedProposalIds = <String>{};
   bool _acceptInFlight = false;
 
@@ -179,7 +191,15 @@ class ProgrammeAdaptationAcceptanceService {
       final permissions = await _loadAdaptationPermissions(
         currentPackage.programmeVersionId!.trim(),
       );
-      final run = _adapter.evaluate(
+      // Must use the same knowledge-backed adapter path as propose. Without
+      // knowledge, equipment substitutions cannot resolve and freshness fails
+      // closed even though the reviewed proposal was acceptable.
+      final adapter =
+          _adapterOverride ??
+          PlanPackageSessionAdaptationAdapter(
+            knowledge: await _loadKnowledge(),
+          );
+      final run = adapter.evaluate(
         package: currentPackage,
         request: proposal.request!,
         authoredDraft: draft,

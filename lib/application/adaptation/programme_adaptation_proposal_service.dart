@@ -46,7 +46,7 @@ class ProgrammeAdaptationProposalService {
            loadKnowledge ??
            (knowledge != null
                ? () async => knowledge
-               : _defaultKnowledgeLoader),
+               : defaultKnowledgeLoader),
        _adapterOverride = adapter;
 
   final ProgrammeProtocolDraftLoader _loadProtocolDraft;
@@ -204,7 +204,8 @@ class ProgrammeAdaptationProposalService {
     };
   }
 
-  static Future<KnowledgeGraphReader> _defaultKnowledgeLoader() async {
+  /// Shared curated knowledge loader (propose + accept freshness revalidation).
+  static Future<KnowledgeGraphReader> defaultKnowledgeLoader() async {
     if (_cachedKnowledge != null) return _cachedKnowledge!;
     final root = await CoachBrainWorkoutPlanService.resolveKnowledgeRoot();
     final bundle = await const YamlKnowledgeOntologyLoader().loadFromDirectory(

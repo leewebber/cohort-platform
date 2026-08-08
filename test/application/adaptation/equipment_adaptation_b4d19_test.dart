@@ -580,6 +580,142 @@ void main() {
       expect(package.acceptedAdaptation, before);
     });
   });
+
+  group('B4d.19 freshness knowledge parity (Journey D staging defect)', () {
+    late AthleteProgrammeSessionPrepareService prepareService;
+    late ProgrammeExecutionContext executionContext;
+
+    setUp(() async {
+      final kv = InMemoryKvStore();
+      final tables = InMemoryProgrammeTables();
+      prepareService = AthleteProgrammeSessionPrepareService(
+        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+        slotResolver: AthleteProgrammeAuthoredSlotResolver(
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        ),
+        sessionLoader: _FixedLoader(package.plan),
+        localRepository: AthleteLocalRepository(kv),
+      );
+      executionContext = ProgrammeExecutionContext(
+        assignmentId: package.assignmentId!,
+        programmeVersionId: package.programmeVersionId!,
+        sessionSlotId: 'slot.fresh.1',
+        weekNumber: 1,
+        dayKey: package.dayKey!,
+        sessionOrder: package.slotOrder!,
+        plannedProtocolId: package.protocolId!,
+        effectiveProtocolId: package.protocolId!,
+        programmeName: 'Freshness Fixture',
+        packageContentHash: package.packageContentHash,
+        programmedSessionKey: package.programmedSessionKey.value,
+      );
+      await prepareService.replacePreparedPackage(
+        athleteId: 'athlete.fresh.1',
+        package: package,
+        executionContext: executionContext,
+      );
+    });
+
+    test(
+      'knowledge-less accept freshness reproduces freshness_invalid',
+      () async {
+        final proposal = await service().propose(
+          package: package,
+          request: const AdaptationRequest(
+            reason: AdaptationReason.equipment,
+            availableEquipment:
+                JourneyDEquipmentAdaptationContract.availableEquipment,
+          ),
+          proposedAt: DateTime.utc(2026, 8, 8, 7, 18),
+        );
+        expect(proposal.isAcceptable, isTrue);
+
+        // Staging defect: accept used PlanPackageSessionAdaptationAdapter()
+        // without curated knowledge after propose used knowledge.
+        final broken = ProgrammeAdaptationAcceptanceService(
+          prepareService: prepareService,
+          loadProtocolDraft: (_) async => draft,
+          loadAdaptationPermissions: (_) async => permissions,
+          adapter: PlanPackageSessionAdaptationAdapter(),
+        );
+        final failed = await broken.accept(
+          athleteId: 'athlete.fresh.1',
+          currentPackage: package,
+          proposal: proposal,
+          executionContext: executionContext,
+          acceptedAt: DateTime.utc(2026, 8, 8, 7, 18, 5),
+        );
+        expect(failed.success, isFalse);
+        expect(failed.errorCode, 'freshness_invalid');
+      },
+    );
+
+    test(
+      'knowledge-backed accept freshness accepts the same recommendation',
+      () async {
+        final proposal = await service().propose(
+          package: package,
+          request: const AdaptationRequest(
+            reason: AdaptationReason.equipment,
+            availableEquipment:
+                JourneyDEquipmentAdaptationContract.availableEquipment,
+          ),
+          proposedAt: DateTime.utc(2026, 8, 8, 7, 18),
+        );
+        expect(proposal.isAcceptable, isTrue);
+
+        final acceptance = ProgrammeAdaptationAcceptanceService(
+          prepareService: prepareService,
+          loadProtocolDraft: (_) async => draft,
+          loadAdaptationPermissions: (_) async => permissions,
+          knowledge: knowledge,
+        );
+        final ok = await acceptance.accept(
+          athleteId: 'athlete.fresh.1',
+          currentPackage: package,
+          proposal: proposal,
+          executionContext: executionContext,
+          acceptedAt: DateTime.utc(2026, 8, 8, 7, 18, 5),
+        );
+        expect(ok.success, isTrue, reason: '${ok.errorCode}');
+        expect(ok.decision?.proposalId, proposal.proposalId);
+      },
+    );
+
+    test('knowledge-less mismatch path still fails closed', () async {
+      final proposal = await service().propose(
+        package: package,
+        request: const AdaptationRequest(
+          reason: AdaptationReason.equipment,
+          availableEquipment:
+              JourneyDEquipmentAdaptationContract.availableEquipment,
+        ),
+      );
+      expect(proposal.isAcceptable, isTrue);
+
+      final acceptance = ProgrammeAdaptationAcceptanceService(
+        prepareService: prepareService,
+        loadProtocolDraft: (_) async => draft,
+        loadAdaptationPermissions: (_) async => permissions,
+        adapter: PlanPackageSessionAdaptationAdapter(),
+      );
+      final failed = await acceptance.accept(
+        athleteId: 'athlete.fresh.1',
+        currentPackage: package,
+        proposal: proposal,
+        executionContext: executionContext,
+      );
+      expect(failed.success, isFalse);
+      expect(
+        failed.errorCode,
+        anyOf(
+          'freshness_invalid',
+          'proposal_mismatch',
+          'material_change_mismatch',
+        ),
+      );
+    });
+  });
 }
 
 ProtocolDraft buildEquipmentPlanningSession({
