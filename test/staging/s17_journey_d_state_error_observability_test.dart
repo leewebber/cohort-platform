@@ -180,9 +180,10 @@ void main() {
     test(
       'StateError at later integrity retains stage after agreement',
       () async {
+        // Exact post-freshness staging message from broken protocol select.
         final ports = basePorts(
           throwStateErrorAtStage: 'later_push_up_integrity',
-          stateErrorMessage: 'http_503',
+          stateErrorMessage: 'http_400',
         );
         final result = await workflowFor(ports).run(
           marker: marker,
@@ -193,7 +194,11 @@ void main() {
         expect(result.ok, isFalse, reason: result.detail);
         expect(result.executionStage, 'later_push_up_integrity');
         expect(result.exceptionType, 'StateError');
-        expect(result.exceptionMessage, 'http_503');
+        expect(result.exceptionMessage, 'http_400');
+        expect(
+          result.detail,
+          'unhandled:stage=later_push_up_integrity:StateError:http_400',
+        );
         expect(result.agreementAccepted, isTrue);
         expect(result.applicationInvoked, isTrue);
         expect(result.athleteAgreementRecorded, isFalse);
@@ -229,6 +234,168 @@ void main() {
         expect(result.identityHints['athlete_id_prefix'], startsWith('9404925f'));
       },
     );
+  });
+
+  group('laterPushUpIntact schema contract (staging-shaped)', () {
+    test(
+      'selecting performance_protocols.id reproduces http_400 StateError',
+      () async {
+        // Exact staging defect: PostgREST 400
+        // "column performance_protocols.id does not exist".
+        final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+        server.listen((request) async {
+          final path = request.uri.path;
+          final qs = request.uri.query;
+          if (path.contains('performance_protocols') &&
+              qs.contains('select=protocol_id,id')) {
+            request.response.statusCode = 400;
+            request.response.write(
+              jsonEncode({
+                'code': '42703',
+                'message':
+                    'column performance_protocols.id does not exist',
+              }),
+            );
+          } else {
+            request.response.statusCode = 500;
+            request.response.write('{"error":"unexpected"}');
+          }
+          await request.response.close();
+        });
+        addTearDown(() async => server.close(force: true));
+
+        // Reproduce the throwing statement used by the broken query path.
+        final uri = Uri.parse(
+          'http://127.0.0.1:${server.port}/rest/v1/performance_protocols'
+          '?select=protocol_id,id,session_lineage_id'
+          '&protocol_id=eq.$kJourneyDLaterProtocolId',
+        );
+        final client = HttpClient();
+        addTearDown(client.close);
+        final req = await client.getUrl(uri);
+        final resp = await req.close();
+        final body = await resp.transform(utf8.decoder).join();
+        expect(resp.statusCode, 400);
+        expect(body, contains('performance_protocols.id'));
+        expect(
+          () {
+            if (resp.statusCode != 200) {
+              throw StateError('http_${resp.statusCode}');
+            }
+          },
+          throwsA(
+            isA<StateError>().having((e) => e.message, 'message', 'http_400'),
+          ),
+        );
+      },
+    );
+
+    test(
+      'repaired laterPushUpIntact finds push_up via session_blocks',
+      () async {
+        final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+        server.listen((request) async {
+          final path = request.uri.path;
+          final qs = request.uri.query;
+          // Refuse the broken select shape if it reappears.
+          if (qs.contains('select=protocol_id,id')) {
+            request.response.statusCode = 400;
+            request.response.write(
+              '{"message":"column performance_protocols.id does not exist"}',
+            );
+          } else if (path.contains('session_blocks')) {
+            request.response.statusCode = 200;
+            request.response.headers.contentType = ContentType.json;
+            request.response.write(
+              jsonEncode([
+                {
+                  'block_id': 'block-later-1',
+                  'session_id': kJourneyDLaterProtocolId,
+                },
+              ]),
+            );
+          } else if (path.contains('session_block_exercises')) {
+            request.response.statusCode = 200;
+            request.response.headers.contentType = ContentType.json;
+            request.response.write(
+              jsonEncode([
+                {'exercise_id': kJourneyDLaterExerciseId},
+              ]),
+            );
+          } else {
+            request.response.statusCode = 404;
+            request.response.write('{"error":"unexpected"}');
+          }
+          await request.response.close();
+        });
+        addTearDown(() async => server.close(force: true));
+
+        final ports = HostedJourneyDExecutePorts(
+          apiUrl: 'http://127.0.0.1:${server.port}',
+          serviceKey: 'test-service-key',
+          anonKey: 'test-anon-key',
+        );
+        final ok = await ports.laterPushUpIntact(
+          marker: marker,
+          assignmentId: assignmentId,
+        );
+        expect(ok, isTrue);
+      },
+    );
+
+    test('missing later push_up still fails closed', () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      server.listen((request) async {
+        final path = request.uri.path;
+        if (path.contains('session_blocks')) {
+          request.response.statusCode = 200;
+          request.response.headers.contentType = ContentType.json;
+          request.response.write(
+            jsonEncode([
+              {
+                'block_id': 'block-later-1',
+                'session_id': kJourneyDLaterProtocolId,
+              },
+            ]),
+          );
+        } else if (path.contains('session_block_exercises')) {
+          request.response.statusCode = 200;
+          request.response.headers.contentType = ContentType.json;
+          request.response.write(
+            jsonEncode([
+              {'exercise_id': 'cohort.exercise.other'},
+            ]),
+          );
+        } else if (path.contains('performance_protocols')) {
+          request.response.statusCode = 200;
+          request.response.headers.contentType = ContentType.json;
+          request.response.write(
+            jsonEncode([
+              {
+                'protocol_id': kJourneyDLaterProtocolId,
+                'exercises': null,
+                'main_session': null,
+              },
+            ]),
+          );
+        } else {
+          request.response.statusCode = 404;
+        }
+        await request.response.close();
+      });
+      addTearDown(() async => server.close(force: true));
+
+      final ports = HostedJourneyDExecutePorts(
+        apiUrl: 'http://127.0.0.1:${server.port}',
+        serviceKey: 'test-service-key',
+        anonKey: 'test-anon-key',
+      );
+      final ok = await ports.laterPushUpIntact(
+        marker: marker,
+        assignmentId: assignmentId,
+      );
+      expect(ok, isFalse);
+    });
   });
 
   group('evidence write GoTrue 201 (staging-shaped)', () {

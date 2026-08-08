@@ -210,36 +210,19 @@ class HostedJourneyDExecutePorts implements JourneyDExecutePorts {
     required String assignmentId,
   }) async {
     // Programme source protocol must still reference push_up for LATER.
-    final protocols = await _getJson(
-      '/rest/v1/performance_protocols?select=protocol_id,id,session_lineage_id'
-      '&protocol_id=eq.${Uri.encodeComponent(kJourneyDLaterProtocolId)}',
-      key: serviceKey,
-      requirePredicate: 'protocol_id=eq.$kJourneyDLaterProtocolId',
-    );
-    final plist = _asList(protocols);
-    if (plist.length != 1) return false;
-    final sessionId =
-        plist.first['id']?.toString() ??
-        plist.first['protocol_id']?.toString() ??
-        '';
-    // session_blocks.session_id references protocol identity used at publish.
+    //
+    // Staging `performance_protocols` has no `id` column. Selecting
+    // `protocol_id,id,...` returns PostgREST 400 and threw
+    // StateError('http_400') after athlete agreement accept succeeded —
+    // the post-freshness Journey D blocker. Published blocks use
+    // session_id = protocol_id.
     final blocks = await _getJson(
       '/rest/v1/session_blocks?select=block_id,session_id'
-      '&session_id=eq.${Uri.encodeComponent(sessionId)}',
+      '&session_id=eq.${Uri.encodeComponent(kJourneyDLaterProtocolId)}',
       key: serviceKey,
-      requirePredicate: 'session_id=eq.$sessionId',
+      requirePredicate: 'session_id=eq.$kJourneyDLaterProtocolId',
     );
     var blockList = _asList(blocks);
-    if (blockList.isEmpty) {
-      // Fallback: session_id may equal protocol_id string.
-      final blocks2 = await _getJson(
-        '/rest/v1/session_blocks?select=block_id,session_id'
-        '&session_id=eq.${Uri.encodeComponent(kJourneyDLaterProtocolId)}',
-        key: serviceKey,
-        requirePredicate: 'session_id=eq.$kJourneyDLaterProtocolId',
-      );
-      blockList = _asList(blocks2);
-    }
     if (blockList.isEmpty) {
       // Soft check: exercises jsonb on protocol row if present in OpenAPI.
       final full = await _getJson(
