@@ -21,9 +21,20 @@ import '../../session_builder/services/session_block_validation.dart';
 
 /// Thrown when a draft fails validation or cannot be saved.
 class ProtocolBuilderException implements Exception {
-  const ProtocolBuilderException(this.message);
+  const ProtocolBuilderException(
+    this.message, {
+    this.postgrestCode,
+    this.postgrestMessage,
+  });
 
+  /// User-facing message (unchanged for Coach Studio UI).
   final String message;
+
+  /// Redactable PostgREST `code` when persistence failed (staging diagnostics).
+  final String? postgrestCode;
+
+  /// Redactable PostgREST `message` when persistence failed (staging diagnostics).
+  final String? postgrestMessage;
 
   @override
   String toString() => message;
@@ -320,7 +331,7 @@ class ProtocolBuilderService {
         blocks: orderedBlocks,
       );
     } on PostgrestException catch (error) {
-      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+      throw _exceptionForPostgrest(error);
     } catch (error) {
       throw ProtocolBuilderException(_failureMessageFor(resultKind));
     }
@@ -381,7 +392,7 @@ class ProtocolBuilderService {
     } on ProtocolBuilderException {
       rethrow;
     } on PostgrestException catch (error) {
-      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+      throw _exceptionForPostgrest(error);
     }
   }
 
@@ -425,7 +436,7 @@ class ProtocolBuilderService {
     } on ProtocolBuilderException {
       rethrow;
     } on PostgrestException catch (error) {
-      throw ProtocolBuilderException(_friendlyDatabaseMessage(error));
+      throw _exceptionForPostgrest(error);
     }
   }
 
@@ -640,6 +651,14 @@ class ProtocolBuilderService {
       return false;
     }
     return null;
+  }
+
+  ProtocolBuilderException _exceptionForPostgrest(PostgrestException error) {
+    return ProtocolBuilderException(
+      _friendlyDatabaseMessage(error),
+      postgrestCode: error.code,
+      postgrestMessage: error.message,
+    );
   }
 
   String _friendlyDatabaseMessage(PostgrestException error) {

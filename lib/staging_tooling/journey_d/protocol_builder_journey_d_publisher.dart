@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cohort_platform/core/utils/database_uuid.dart';
 import 'package:cohort_platform/data/repositories/session_lineage_store.dart';
 import 'package:cohort_platform/domain/adaptation/adaptation_domain.dart';
 import 'package:cohort_platform/features/admin/services/protocol_builder_service.dart';
@@ -8,6 +9,7 @@ import 'package:cohort_platform/models/protocol_draft.dart';
 import 'package:cohort_platform/models/session_block_exercise_link.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
+import 'package:cohort_platform/models/training_content_vocabulary.dart';
 
 import 'journey_d_protocol_publication.dart';
 import 'journey_d_write_accounting.dart';
@@ -28,8 +30,11 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
   final SessionLineageStore _sessionLineageStore;
   final Duration publishTimeout;
 
-  /// Marker programme version id for fixture-only drafts (not a hosted lookup).
-  static const fixtureProgrammeVersionPlaceholder =
+  /// Retired non-UUID local marker previously written to `programme_version_id`.
+  ///
+  /// Hosted column is UUID; persisting this string yields PostgREST `22P02` and
+  /// the generic builder save message. Must never appear in upsert payloads.
+  static const retiredNonUuidProgrammeVersionPlaceholder =
       's17-jd-adapt-fixture-programme-version';
 
   /// Canonical Journey D fixture session format for ProtocolBuilder drafts.
@@ -37,14 +42,21 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
 
   /// Builds the production ProtocolDraft for a fixture publication intent.
   ///
-  /// Used by mutation-free preflight and by [publish] so both paths share one
-  /// translation.
+  /// Matches Protocol Builder Cohort Protocol defaults: no programme_version_id
+  /// until programme import binds sessions. Used by mutation-free preflight and
+  /// by [publish] so both paths share one translation.
   static ProtocolDraft draftFor(JourneyDProtocolPublicationIntent intent) {
-    final base = programmeSession(
+    final base = ProtocolDraft(
       protocolId: intent.protocolId,
       name: 'S17 Journey D ${intent.role}',
-      programmeVersionId: fixtureProgrammeVersionPlaceholder,
+      steps: const [],
+      // Standalone published revision — not programme_only (that requires a
+      // real programme_versions UUID that does not exist pre-import).
+      contentKind: TrainingContentKind.cohortProtocol,
+      authoringScope: TrainingAuthoringScope.cohortGlobal,
+      endorsementStatus: TrainingEndorsementStatus.cohortEndorsed,
       ownerId: null,
+      programmeVersionId: null,
       sessionFormat: fixtureSessionFormat,
       durationMin: 45,
       primarySessionIntent: SessionIntent.lowerBodyStrength,
@@ -88,6 +100,17 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
   /// Mutation-free validation through the production builder invariants.
   void validateDraftLocally(ProtocolDraft draft) {
     _protocolBuilderService.validateDraft(draft);
+    final programmeVersionId = draft.programmeVersionId?.trim();
+    if (programmeVersionId != null &&
+        programmeVersionId.isNotEmpty &&
+        !DatabaseUuid.isValidDatabaseUuid(programmeVersionId)) {
+      throw ProtocolBuilderException(
+        'Programme version id must be a UUID when set.',
+        postgrestCode: '22P02',
+        postgrestMessage:
+            'invalid input syntax for type uuid: "$programmeVersionId"',
+      );
+    }
   }
 
   @override
@@ -105,7 +128,7 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
         state: JourneyDPublicationStageState.failed,
         detail: _redactBuilderDetail(
           'builder_validation',
-          error.message,
+          _formatBuilderError(error),
         ),
         furtherMutationProhibited: true,
         writeAccounting: JourneyDWriteAccounting.preNetworkSourceFailure,
@@ -180,17 +203,19 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
       );
     } on ProtocolBuilderException catch (error) {
       // Validation already passed; this is adapter/persistence after dispatch.
+      // PostgREST responded (error body) — retain redacted code/message.
       return JourneyDProtocolPublicationResult(
         intent: intent,
         state: JourneyDPublicationStageState.unknown,
         detail: _redactBuilderDetail(
           'publishDraft_adapter_error',
-          error.message,
+          _formatBuilderError(error),
         ),
         furtherMutationProhibited: true,
         writeAccounting: JourneyDWriteAccounting(
           invocationAttempted: true,
           requestDispatched: true,
+          responseReceived: true,
           outcomeUncertain: true,
         ),
       );
@@ -207,6 +232,20 @@ class ProtocolBuilderJourneyDPublisher implements JourneyDProtocolPublisher {
         ),
       );
     }
+  }
+
+  static String _formatBuilderError(ProtocolBuilderException error) {
+    final parts = <String>[];
+    final code = error.postgrestCode?.trim();
+    if (code != null && code.isNotEmpty) {
+      parts.add('code=$code');
+    }
+    final pgMessage = error.postgrestMessage?.trim();
+    if (pgMessage != null && pgMessage.isNotEmpty) {
+      parts.add(pgMessage);
+    }
+    parts.add(error.message);
+    return parts.join(' | ');
   }
 
   static String _redactBuilderDetail(String prefix, String message) {

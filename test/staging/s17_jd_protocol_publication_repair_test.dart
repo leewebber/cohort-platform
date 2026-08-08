@@ -57,8 +57,8 @@ void main() {
     final base = programmeSession(
       protocolId: intent.protocolId,
       name: 'S17 Journey D ${intent.role}',
-      programmeVersionId:
-          ProtocolBuilderJourneyDPublisher.fixtureProgrammeVersionPlaceholder,
+      programmeVersionId: ProtocolBuilderJourneyDPublisher
+          .retiredNonUuidProgrammeVersionPlaceholder,
       ownerId: null,
       durationMin: 45,
       primarySessionIntent: SessionIntent.lowerBodyStrength,
@@ -179,7 +179,10 @@ void main() {
 
       final adapterFail = _RecordingBuilderService(
         publishError: const ProtocolBuilderException(
-          'We could not publish your protocol right now. Please try again.',
+          'We could not save your protocol right now. Please try again.',
+          postgrestCode: '22P02',
+          postgrestMessage:
+              'invalid input syntax for type uuid: "s17-jd-adapt-fixture-programme-version"',
         ),
       );
       final pub2 = ProtocolBuilderJourneyDPublisher(
@@ -189,7 +192,14 @@ void main() {
       final r2 = await pub2.publish(currentIntent);
       expect(r2.state, JourneyDPublicationStageState.unknown);
       expect(r2.detail, contains('publishDraft_adapter_error:'));
+      expect(r2.detail, contains('code=22P02'));
+      expect(r2.detail, contains('invalid input syntax for type uuid'));
+      expect(
+        r2.detail,
+        contains('We could not save your protocol right now. Please try again.'),
+      );
       expect(r2.writeAccounting.requestDispatched, isTrue);
+      expect(r2.writeAccounting.responseReceived, isTrue);
       expect(r2.writeAccounting.outcomeUncertain, isTrue);
       expect(adapterFail.publishCalls, 1);
     });
