@@ -48,15 +48,11 @@
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 product Sprints **1.1–1.7** are
-implemented locally (1.1–1.5A on `main` @ `fdae6dd`; 1.6A–1.6E adaptation and
-1.7A–1.7F scheduling on the stacked tip). Scheduling includes restore,
+**closed** (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete` at
+reviewed harness HEAD `7ba8455`). Scheduling includes restore,
 Move/Swap/Push/Skip, one-level Undo, durable nullable horizon, and
-assignment-scoped calendar UX. Owners:
-`ProgrammeSchedulingPreviewEngine`,
-`ensure_programme_schedule_projection` / `ProgrammeScheduleRestoreService`,
-`apply_programme_schedule_operation` / `ProgrammeScheduleApplyService`,
-`AthleteProgrammeScheduleScreen`. Local integration closeout is the current
-delivery action; staging verification for 1.6 and 1.7 remains separately
-authorised. No Sprint 1.8 / next product phase is allocated. Historical Phase 5
+assignment-scoped calendar UX. Journey D and Journey I→J staging evidence are
+verified. Next authorised stage: Phase 2 — Architecture Consolidation. No
+Sprint 1.8 / other product phase is allocated. Historical Phase 5
 MVP numbering is not the current delivery sequence. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

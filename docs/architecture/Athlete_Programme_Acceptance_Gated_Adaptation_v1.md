@@ -1,9 +1,11 @@
 # Athlete Programme Acceptance-Gated Adaptation v1 — Sprint 1.6A
 
 **Status:** Binding for Phase 1 programme-backed adaptation  
-**Sprint:** 1.6A–1.6E complete on the Phase 1 stacked tip; athlete-controlled
-scheduling 1.7A–1.7F is complete under a separate contract (not deferred).
-Staging evidence for 1.6 remains separately authorised and outstanding.
+**Sprint:** 1.6A–1.6E complete; athlete-controlled scheduling 1.7A–1.7F is
+complete under a separate contract. Authorised Journey D staging evidence is
+verified (`outcome_verified=true` at harness HEAD `7ba8455`; Phase 1 closed
+under B4e). Persistence remains local prepared-package only (no new server
+adaptation table in 1.6).
 
 
 **Depends on:** Sprint 1.4B prepared session, Sprint 1.5A completion/advancement  
@@ -377,7 +379,7 @@ See [Sprint 1.7 — athlete-controlled scheduling](#sprint-17--athlete-controlle
 | **1.6B** | Plan-Package-native adapter + propose/review against prepared authored session; no durable write on dismiss | Decision / no-safe-adaptation surfaces on programme path; dismiss leaves package unchanged |
 | **1.6C** | Explicit accept replaces local prepared `SessionExecutionPlan` + stores accepted decision; restore after relaunch | **Implemented** — `ProgrammeAdaptationAcceptanceService`; Accept mutates only current prepared package; relaunch restores accepted state for same key |
 | **1.6D** | Pre-completion revert; completion remains 1.5A-atomic and adaptation-agnostic for cursor | **Implemented** — `ProgrammeAdaptationReversionService`; clears active accepted decision; reconstructs authored plan via prepare bank path; Self-Test 2 completion/advance still green |
-| **1.6E** | Hardening: policy/no-safe cases, Coaching Recognition fixtures, authorised staging evidence if approved | **Implemented locally** — focused policy/no-safe + Coaching Recognition fixtures; staging evidence deferred (not authorised); no post-completion or rescheduling |
+| **1.6E** | Hardening: policy/no-safe cases, Coaching Recognition fixtures, authorised staging evidence if approved | **Complete** — local hardening plus authorised Journey D staging evidence (`s17_jd_adapt_20260808T065203Z_cbe6b6cf`, HEAD `7ba8455`); no post-completion or rescheduling |
 
 ---
 
@@ -386,8 +388,9 @@ See [Sprint 1.7 — athlete-controlled scheduling](#sprint-17--athlete-controlle
 **Status:** **Complete** for Phase 1 product delivery (Sprints **1.7A–1.7F**) on
 the stacked tip — see
 [Athlete_Controlled_Programme_Scheduling_v1.md](./Athlete_Controlled_Programme_Scheduling_v1.md).
-Not part of adaptation implementation Sprints 1.6B–1.6E. Staging verification
-for scheduling remains separately authorised.
+Not part of adaptation implementation Sprints 1.6B–1.6E. Scheduling staging
+evidence (Athlete D matrix including I→J) is closed under Release Gate B4e
+with Journey D.
 
 Delivered coverage (distinct from adaptation):
 
