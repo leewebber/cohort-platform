@@ -78,6 +78,7 @@ class ReadOnlyHttpClient:
         *,
         prefer_count: bool = False,
         require_predicate: str | None = None,
+        range_header: str = "0-0",
     ) -> tuple[int, str, dict[str, str]]:
         if require_predicate is not None and require_predicate not in path:
             raise StagingGuardError(
@@ -105,7 +106,10 @@ class ReadOnlyHttpClient:
         }
         if prefer_count:
             headers["Prefer"] = "count=exact"
-            headers["Range"] = "0-0"
+            # Default Range 0-0 is a count probe (body may be a single row).
+            # Callers that need body fields for every counted row must widen
+            # range_header (e.g. occurrences: "0-1" for the CURRENT/LATER pair).
+            headers["Range"] = range_header
         url = self.base_url.rstrip("/") + path
         self.calls.append(
             {
@@ -316,6 +320,50 @@ def _parse_list(body: str) -> list[dict[str, Any]]:
     if isinstance(data, dict) and isinstance(data.get("users"), list):
         return [x for x in data["users"] if isinstance(x, dict)]
     return []
+
+
+def _day_key_ordinal(day_key: Any) -> int | None:
+    """Numeric day ordinal from persisted day_key (day_N). None if malformed."""
+    m = re.match(r"^day_([1-9][0-9]*)$", str(day_key or ""))
+    return int(m.group(1)) if m else None
+
+
+def journey_d_occurrence_order_valid(occurrences: list[dict[str, Any]]) -> bool:
+    """True when persisted CURRENT/day_1 resolves before LATER/day_2.
+
+    Uses authored schedule fields (week_number, day_key ordinal, session_order),
+    never incidental JSON array order. Matches production projection ordering:
+    week ASC, day_N numeric ASC, session_order ASC.
+    """
+    if len(occurrences) != 2:
+        return False
+    by_protocol: dict[str, dict[str, Any]] = {}
+    for row in occurrences:
+        pid = str(row.get("protocol_id") or "")
+        if pid in by_protocol:
+            return False
+        by_protocol[pid] = row
+    current = by_protocol.get(CURRENT_PROTOCOL_ID)
+    later = by_protocol.get(LATER_PROTOCOL_ID)
+    if current is None or later is None:
+        return False
+    if str(current.get("day_key") or "") != "day_1":
+        return False
+    if str(later.get("day_key") or "") != "day_2":
+        return False
+    cur_day = _day_key_ordinal(current.get("day_key"))
+    lat_day = _day_key_ordinal(later.get("day_key"))
+    if cur_day is None or lat_day is None:
+        return False
+
+    def sort_key(row: dict[str, Any]) -> tuple[int, int, int]:
+        return (
+            int(row.get("week_number") or 0),
+            _day_key_ordinal(row.get("day_key")) or 0,
+            int(row.get("session_order") or 0),
+        )
+
+    return sort_key(current) < sort_key(later)
 
 
 def empty_result(marker: str) -> dict[str, Any]:
@@ -942,12 +990,17 @@ def _fetch_snapshot(
             snap["assignment_id"] = aid
             # Canonical schema: assignment_id + protocol_id + authored order.
             # (Not programme_assignment_id / session_key / sequence — those 400.)
+            # Range 0-1: Prefer count=exact still yields Content-Range total, but
+            # default Range 0-0 returns only one body row — historically false
+            # occurrence_order_valid despite occurrence_count=2.
             status, body, headers = http.get(
                 f"/rest/v1/programme_schedule_occurrences"
                 f"?select=id,protocol_id,week_number,day_key,session_order,programmed_session_key"
-                f"&assignment_id=eq.{urllib.parse.quote(str(aid), safe='')}",
+                f"&assignment_id=eq.{urllib.parse.quote(str(aid), safe='')}"
+                f"&order=week_number.asc,day_key.asc,session_order.asc",
                 require_predicate=f"assignment_id=eq.{aid}",
                 prefer_count=True,
+                range_header="0-1",
             )
             occ = _parse_list(body)
             occurrence_count = _count_from_range(headers, body) or 0
@@ -955,25 +1008,12 @@ def _fetch_snapshot(
                 snap["unverified_claims"].append("occurrence_lookup")
                 occurrence_count = 0
                 occ = []
-            protocols = [str(o.get("protocol_id") or "") for o in occ]
             if occurrence_count == 2:
-                has_current = CURRENT_PROTOCOL_ID in protocols
-                has_later = LATER_PROTOCOL_ID in protocols
-                if has_current and has_later:
-                    ordered = sorted(
-                        occ,
-                        key=lambda o: (
-                            int(o.get("week_number") or 0),
-                            str(o.get("day_key") or ""),
-                            int(o.get("session_order") or 0),
-                        ),
-                    )
-                    occurrence_order_valid = (
-                        str(ordered[0].get("protocol_id") or "")
-                        == CURRENT_PROTOCOL_ID
-                        and str(ordered[1].get("protocol_id") or "")
-                        == LATER_PROTOCOL_ID
-                    )
+                # Require both authored rows in the body (not count alone).
+                if len(occ) != 2:
+                    occurrence_order_valid = False
+                else:
+                    occurrence_order_valid = journey_d_occurrence_order_valid(occ)
     elif totals_nonzero_partial(snap):
         # Partial fixture without linkage — leave counts zero for missing stages.
         pass

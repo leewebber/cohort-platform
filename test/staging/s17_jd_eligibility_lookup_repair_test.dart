@@ -95,6 +95,8 @@ def fake(path, headers):
         assert "assignment_id=eq." in path, path
         assert "programme_assignment_id=" not in path, path
         assert "protocol_id" in path, path
+        assert "order=" in path, path
+        assert (headers.get("Range") or headers.get("range")) == "0-1", headers
         # Forbid legacy select columns (allow programmed_session_key).
         assert "select=id,session_key,sequence" not in path
         assert "&sequence=" not in path
