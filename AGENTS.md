@@ -19,21 +19,21 @@ Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
 operational athlete authority. Phase 3 — Exercise Database has **started**.
-Phase 3.1A–3.1E and Phase 3.1F Part 1 are **accepted/committed**. Phase 3.1F
-Part 1b founder mapping matrix is **complete and advisory** (127 published
-`EX-*` from read-only `exercises_v2` export); do **not** implement mappings or
-create canonical exercises until Lee explicitly approves the matrix. Fixture
-`EX-900x` ids are **not** production. Phase 3.1 is **not** complete. Binding:
+Phase 3.1A–3.1E and Phase 3.1F are **accepted/committed** (`PHASE_3_1F_COMPLETE=true`).
+Local founder-approved catalogue additions (`EX-128`–`EX-132`) and all 21
+transitional → `EX-*` identity mappings exist; hosted apply and live consumer
+migration are **not** authorised. Fixture `EX-900x` ids are **not** production.
+Phase 3.1 is **not** complete pending rollout. Binding:
+[`docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md),
 [`docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md),
-[`docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md`](docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md),
 freeze:
 [`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md).
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
 Do not reopen Phase 1 staging or fixture work. Do not migrate live exercise
-consumers, change schema, rewrite historical evidence, map identities by name
-similarity, publish unapproved identity mappings, treat relationship adjacency
-as substitution/comparison authority, or start Phase 3.2 until authorised.
+consumers, push hosted catalogue mutations, change schema, rewrite historical
+evidence, map identities by name similarity, treat relationship adjacency as
+substitution/comparison authority, or start Phase 3.2 until authorised.
 
 ## Authority and product invariants
 

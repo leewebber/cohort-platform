@@ -1,44 +1,46 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-09  
-**Status:** Phase 3.1F Part 1b — founder mapping matrix **complete (advisory)**.
-Awaiting Lee’s compact decisions before Part 2. No mappings implemented.
+**Status:** Phase 3.1F **COMPLETE** (founder-accepted Part 2). Phase 3.1 remains
+incomplete pending separately authorised hosted catalogue deployment and
+first-consumer migration. Phase 3.2 not started.
 
 ```text
 PHASE_2_CLOSED=true
 CANONICAL_ARCHITECTURE_FROZEN=true
 PHASE_3_STARTED=true
-PHASE_3_1E_RELATIONSHIP_GRAPH_COMPLETE=true
-PHASE_3_1F_PART_1_COMMITTED=true
-PHASE_3_1F_PART_1_COMMIT=216a9be2d06dd5be11862c3a8fda0062dde12e0e
-AUTHORITATIVE_CANONICAL_CATALOGUE_AVAILABLE=true
-AUTHORITATIVE_CANONICAL_CATALOGUE_COUNT=127
-FOUNDER_MAPPING_MATRIX_COMPLETE=true
-PROPOSED_MAPPING_COUNT=14
-PRODUCTION_MAPPINGS_IMPLEMENTED=false
-CANONICAL_EXERCISES_CREATED=false
+PHASE_3_1F_PART_2_ACCEPTED=true
+PHASE_3_1F_PART_2_COMPLETE=true
+PHASE_3_1F_COMPLETE=true
+PHASE_3_1_COMPLETE=false
+PHASE_3_2_STARTED=false
+NEW_CANONICAL_EXERCISES_CREATED=5
+IMPLEMENTED_MAPPING_COUNT=21
+ALL_TRANSITIONAL_IDS_RESOLVE_EXACTLY_ONCE=true
 HEURISTIC_IDENTITY_MATCHING_USED=false
+MAPPING_IMPLIES_SUBSTITUTION=false
+MAPPING_IMPLIES_COMPARABILITY=false
+COMPARISON_PROTOCOL_REMAINS_SOLE_POSITIVE_AUTHORITY=true
+HISTORICAL_EVIDENCE_REWRITTEN=false
+HOSTED_ENVIRONMENT_CONTACTED=false
 HOSTED_MUTATION_PERFORMED=false
 LIVE_CONSUMERS_MIGRATED=false
 PRODUCT_BEHAVIOUR_CHANGED=false
 SCHEMA_CHANGED=false
-PHASE_3_1F_COMPLETE=false
-PHASE_3_1_COMPLETE=false
-PHASE_3_2_STARTED=false
+MANUAL_TESTING_APPLICABILITY=deferred
 ```
 
 | Milestone | Commit |
 |-----------|--------|
-| Phase 3.1A | `5d05e66d6616090afe7408a2eb7ed14e6db94e2b` |
-| Phase 3.1B | `b9952b69340d3150e6b62e06951aa2c5d90a1e38` |
-| Phase 3.1C | `957a63d9809e8291b8715e3743feccb93a798eee` |
-| Phase 3.1D | `38f27ca478779903fc1d93bca5368daed87388f2` |
 | Phase 3.1E | `b03faa9d656d2a4fc3005d79205796f0abe07f56` |
 | Phase 3.1F Part 1 | `216a9be2d06dd5be11862c3a8fda0062dde12e0e` |
+| Phase 3.1F Part 1b | `a53ba7c789a5ed8a7c716780a0ed6319cb910e07` |
+| Phase 3.1F Part 2 | *(recorded at commit)* |
 
-**Binding:** [`Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](../architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md)
+**Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
-**Next:** Founder review of the 21-item matrix, then **Phase 3.1F Part 2** only for
-approved mappings / authorised new canonical definitions.
+**Next:** Founder review of the rollout plan, then narrowly authorised hosted
+canonical-catalogue deployment. First-consumer implementation remains separately
+authorised.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

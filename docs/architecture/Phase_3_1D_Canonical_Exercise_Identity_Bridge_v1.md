@@ -169,6 +169,14 @@ Transitional catalogue is **not** deleted.
 Bridge uses in-memory mapping sets only. Production persistence still requires
 an authorised schema sprint. Do not improvise storage.
 
+**Phase 3.1F Part 2 update:** Founder-approved production mapping seed lives at
+`lib/domain/exercise_knowledge/seed/founder_approved_identity_mappings_phase_3_1f.dart`
+(21 published mappings). Local catalogue additions `EX-128`–`EX-132` are in
+`supabase/migrations/20260809160000_founder_exercise_library_phase_3_1f_part2.sql`
+(hosted apply separately authorised). See
+[`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md).
+Live consumers remain unwired.
+
 ---
 
 ## 15. Identity inventory (deterministic, local)

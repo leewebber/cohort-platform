@@ -4,10 +4,12 @@
 /// Transitional `cohort.exercise.*` ids resolve only through the explicit bridge.
 /// Does not own programme prescription, completion evidence, or adaptation
 /// application. Live consumers are not migrated in Phase 3.1B–3.1D.
-/// Production persistence is deferred (no schema migration).
+/// Phase 3.1F Part 2 authors local catalogue seed + identity mappings;
+/// hosted apply and live-consumer migration remain separately authorised.
 library;
 
 export 'adapters/canonicalised_exercise_knowledge_adapter.dart';
+export 'seed/founder_approved_identity_mappings_phase_3_1f.dart';
 export 'graph/comparability_firewall.dart';
 export 'graph/exercise_relationship_graph.dart';
 export 'graph/relationship_eligibility.dart';
