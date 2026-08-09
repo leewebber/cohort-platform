@@ -49,6 +49,7 @@ REQUIRED_PATHS=(
   test/architecture/architecture_dependency_test.dart
   test/architecture/programme_scheduling_ownership_dependency_test.dart
   test/architecture/phase2_consolidation_safety_tripwires_test.dart
+  test/features/home/athlete_home_runtime_authority_test.dart
   test/phase6/coaching_integrity_test.dart
   test/application/adaptation/programme_adaptation_acceptance_service_test.dart
   test/application/adaptation/programme_adaptation_proposal_service_test.dart
@@ -77,7 +78,8 @@ run_group "architectural_boundaries" \
   test/architecture/architecture_dependency_test.dart \
   test/architecture/architecture_ownership_test.dart \
   test/architecture/programme_scheduling_ownership_dependency_test.dart \
-  test/architecture/phase2_consolidation_safety_tripwires_test.dart
+  test/architecture/phase2_consolidation_safety_tripwires_test.dart \
+  test/features/home/athlete_home_runtime_authority_test.dart
 
 run_group "coaching_integrity" \
   test/phase6/coaching_integrity_test.dart

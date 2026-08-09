@@ -11,10 +11,13 @@ void main() {
 
   group('Home dual-path authority freeze', () {
     test(
-      'materialised programme Home path uses ProgrammeAdaptFlow, not HomeAdaptFlow',
+      'Home consumes canonical runtime authority; programme excludes HomeAdaptFlow',
       () {
         final home = File('$root/lib/features/home/home_screen.dart')
             .readAsStringSync();
+        final authority = File(
+          '$root/lib/features/home/services/athlete_home_runtime_authority.dart',
+        ).readAsStringSync();
         final today = File(
           '$root/lib/features/home/widgets/athlete_programme_today_section.dart',
         ).readAsStringSync();
@@ -22,24 +25,43 @@ void main() {
           '$root/lib/features/home/services/programme_adapt_flow.dart',
         ).readAsStringSync();
 
-        // Dual path remains temporarily: Plan Library active plan vs materialised.
-        expect(home.contains('hasActivePlan'), isTrue);
-        expect(home.contains('HomeAdaptFlow'), isTrue);
-        expect(home.contains('AthleteProgrammeTodaySection'), isTrue);
+        // Phase 2.4: one typed decision owns classification.
+        expect(home.contains('AthleteHomeRuntimeAuthorityResolver'), isTrue);
+        expect(home.contains('AthleteHomeRuntimeAuthority'), isTrue);
+        expect(authority.contains('legacyPlanCompatibility'), isTrue);
+        expect(authority.contains('AthleteHomeRuntimeAuthority.programme'), isTrue);
 
-        // Materialised branch must not open the Coach Brain / Plan Library adapt flow.
-        final materialisedBranch = _sectionBetween(
+        // Programme branch must not open Coach Brain / Plan Library adapt.
+        final programmeBranch = _sectionBetween(
           home,
-          'else if (materialisedGate) ...[',
-          '] else',
+          'case AthleteHomeRuntimeAuthority.programme:',
+          'case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:',
         );
         expect(
-          materialisedBranch.contains('AthleteProgrammeTodaySection'),
+          programmeBranch.contains('AthleteProgrammeTodaySection'),
           isTrue,
         );
-        expect(materialisedBranch.contains('_openAdapt'), isFalse);
-        expect(materialisedBranch.contains('HomeAdaptFlow'), isFalse);
-        expect(materialisedBranch.contains('DailyBriefingSection'), isFalse);
+        expect(programmeBranch.contains('_openLegacyAdapt'), isFalse);
+        expect(programmeBranch.contains('HomeAdaptFlow'), isFalse);
+        expect(programmeBranch.contains('DailyBriefingSection'), isFalse);
+
+        final legacyBranch = _sectionBetween(
+          home,
+          'case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:',
+          'case AthleteHomeRuntimeAuthority.loading:',
+        );
+        expect(legacyBranch.contains('DailyBriefingSection'), isTrue);
+        expect(legacyBranch.contains('_openLegacyAdapt'), isTrue);
+        expect(legacyBranch.contains('AthleteProgrammeTodaySection'), isFalse);
+
+        // Loading/unavailable must not activate legacy adapt.
+        final loadingBranch = _sectionBetween(
+          home,
+          'case AthleteHomeRuntimeAuthority.loading:',
+          'case AthleteHomeRuntimeAuthority.unavailable:',
+        );
+        expect(loadingBranch.contains('DailyBriefingSection'), isFalse);
+        expect(loadingBranch.contains('_openLegacyAdapt'), isFalse);
 
         // Programme today owns Adapt via ProgrammeAdaptFlow only.
         expect(today.contains('ProgrammeAdaptFlow'), isTrue);

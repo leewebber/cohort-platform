@@ -96,14 +96,16 @@ analyze has no new errors
 
 ---
 
-## Architectural drift tripwires (Phase 2.3)
+## Architectural drift tripwires (Phase 2.3 / 2.4)
 
 Implemented in
 `test/architecture/phase2_consolidation_safety_tripwires_test.dart`:
 
-1. **Home dual-path freeze** — materialised programme Home branch must use
-   `AthleteProgrammeTodaySection` / `ProgrammeAdaptFlow`, not `HomeAdaptFlow`
-   / Coach Brain day-of.
+1. **Home dual-path freeze** — Home consumes
+   `AthleteHomeRuntimeAuthorityResolver`; `programme` authority exposes
+   `AthleteProgrammeTodaySection` / `ProgrammeAdaptFlow` only; legacy
+   compatibility and loading/unavailable must not activate `HomeAdaptFlow`
+   for programme athletes.
 2. **Staging harness isolation** — `lib/features`, `lib/application`,
    `lib/domain`, `lib/planning`, `lib/core` must not import `staging_tooling`
    or product `staging/` harness modules; Journey D entrypoints remain under

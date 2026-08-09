@@ -10,14 +10,26 @@ PHASE_2_STARTED=true
 PHASE_2_1_INVENTORY_COMPLETE=true
 PHASE_2_2_COMPLETE=true
 PHASE_2_3_COMPLETE=true
+PHASE_2_4_COMPLETE=true
 CONSOLIDATION_SAFETY_GATE_ESTABLISHED=true
-PRODUCT_BEHAVIOUR_CHANGED=false
+CANONICAL_RUNTIME_AUTHORITY_ESTABLISHED=true
+HOME_FIRST_CALLER_MIGRATED=true
+LEGACY_RUNTIME_DELETED=false
+APPROVED_BEHAVIOUR_PRESERVED=true
 ```
 
-Phase 1 closed at `e034ea9`. Phase 2.1 inventory complete. Phase 2.2
-authority/suite clearance complete. Phase 2.3 freezes Phase 1 protected
-invariants into the consolidation safety gate — docs/tests/tooling only;
-product behaviour unchanged.
+Phase 1 closed at `e034ea9`. Phase 2.1–2.3 complete. Phase 2.4 establishes
+canonical Home runtime authority and migrates `HomeScreen` as the first caller.
+
+**Canonical runtime authority**
+
+| Runtime | Status |
+|---------|--------|
+| Programme Athlete runtime | Canonical |
+| Plan Library / Coach Brain | Legacy compatibility only |
+
+Decision owner: `AthleteHomeRuntimeAuthorityResolver`  
+Contract: [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
 
 **Authoritative consolidation safety gate:**
 
@@ -25,14 +37,11 @@ product behaviour unchanged.
 ./tool/testing/run_phase2_consolidation_safety_gate.sh
 ```
 
-Manifest and policy:
+Manifest:
 [`../architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](../architecture/Phase_2_Consolidation_Safety_Gate_v1.md)
-(INV-01 … INV-20). Every later Phase 2 consolidation sprint must pass this
-gate. A green gate is necessary but does not alone prove code is dead or safe
-to delete.
 
-Next authorised task: **Phase 2.4 — Canonical Runtime Authority Decision and
-First Caller Migration**.
+Next authorised task: **Phase 2.5 — Remaining Runtime Caller Inventory and
+Compatibility-Path Retirement Decision**.
 
 ## Delivery sequence (authoritative)
 
@@ -43,45 +52,29 @@ First Caller Migration**.
 | Phase 2.1 — Architecture Inventory and Consolidation Plan | **COMPLETE** |
 | Phase 2.2 — Architecture Authority Reset and Full-Suite Debt Clearance | **COMPLETE** |
 | Phase 2.3 — Phase 1 Invariant Freeze and Consolidation Safety Gate | **COMPLETE** |
-| Phase 2.4 — Canonical Runtime Authority Decision and First Caller Migration | Next |
+| Phase 2.4 — Canonical Runtime Authority Decision and First Caller Migration | **COMPLETE** |
+| Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path Retirement Decision | Next |
 
 Programme-athlete adaptation authority remains Sprint 1.6
 (`ProgrammeAdaptFlow` / `ProgrammeAdaptation*Service`). Historical
-“Coach Brain sole day-of” claims in the July 2026 architecture-alignment
-report are **not** authoritative for materialised programme athletes.
+“Coach Brain sole day-of” claims are **not** authoritative for materialised
+programme athletes. Legacy Plan Library runtime is retained but not deleted.
 
-## Test topology (Phase 2.3)
+## Test topology
 
-| Group | Command | Notes |
-|-------|---------|-------|
-| **DEFAULT** | `flutter test` | Authoritative green suite; skips `harness` + `diagnosis` via `dart_test.yaml` |
-| **SAFETY GATE** | `./tool/testing/run_phase2_consolidation_safety_gate.sh` | Mandatory Phase 1 invariant freeze for consolidation |
-| **HARNESS** | `./tool/testing/run_phase2_harness_tests.sh` | Fake-port Journey D entrypoints (separate) |
-| **DIAGNOSIS** | `./tool/testing/run_phase2_diagnosis_tests.sh` | Nontest Flutter launcher proofs; `8-12` stall-stage ENV-BLOCKED / tooling debt |
-
-Remaining diagnosis tooling debt (`8-12` nontest stall-stage) does not reopen
-Phase 1 and is not a Phase 2.3 blocker.
-
-## Phase 1 closure (retained)
-
-Closing product/harness HEAD reviewed for B4e: `7ba8455`  
-Phase 1 docs closure commit: `e034ea9`
-
-```text
-PHASE_1_GO=true
-PHASE_1_CLOSED=true
-B4e=complete
-```
+| Group | Command |
+|-------|---------|
+| **DEFAULT** | `flutter test` |
+| **SAFETY GATE** | `./tool/testing/run_phase2_consolidation_safety_gate.sh` |
+| **HARNESS** | `./tool/testing/run_phase2_harness_tests.sh` |
+| **DIAGNOSIS** | `./tool/testing/run_phase2_diagnosis_tests.sh` (`8-12` ENV-BLOCKED tooling debt) |
 
 ## Binding contracts
 
+- [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
 - [`../architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](../architecture/Phase_2_Consolidation_Safety_Gate_v1.md)
 - [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
 - [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
-- [`../architecture/Sprint_1_7_Athlete_D_Staging_Harness.md`](../architecture/Sprint_1_7_Athlete_D_Staging_Harness.md)
-
-Historical (not current Phase 2 authority):
-[`../architecture/Phase_2_Architecture_Consolidation_Completion.md`](../architecture/Phase_2_Architecture_Consolidation_Completion.md)
 
 ## Preserved state
 
@@ -89,11 +82,12 @@ Historical (not current Phase 2 authority):
 - Leave `supabase/.temp/*` untouched and uncommitted.
 - Do not push without explicit authority.
 - Do not contact staging or production unless explicitly authorised.
-- Do not begin architectural migration or deletion until Phase 2.4+.
+- Do not delete the Plan Library / Coach Brain compatibility path until Phase 2.5+ authorises retirement.
+- Do not migrate remaining independent callers until Phase 2.5+.
 
 ## Exact next sequence
 
-1. **Phase 2.4 — Canonical Runtime Authority Decision and First Caller Migration**
+1. **Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path Retirement Decision**
 2. Later Phase 2 consolidation sprints (each must pass the safety gate)
 3. Production rollout remains separately controlled
 

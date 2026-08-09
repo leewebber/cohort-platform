@@ -16,12 +16,16 @@ import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
+import 'services/athlete_home_runtime_authority.dart';
 import 'services/home_adapt_flow.dart';
 import 'widgets/athlete_programme_today_section.dart';
 
 /// Athlete Home — entirely focused on today.
 ///
-/// Founder/coach/knowledge cards are absent. Navigation lives in [AthleteAppShell].
+/// Runtime authority is classified by
+/// [AthleteHomeRuntimeAuthorityResolver] (Phase 2.4). Programme Athlete
+/// runtime is canonical; Plan Library / Coach Brain is compatibility-only.
+/// Navigation lives in [AthleteAppShell].
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
@@ -31,6 +35,8 @@ class HomeScreen extends StatefulWidget {
     this.assignmentStore,
     this.prepareService,
     this.athleteIdOverride,
+    this.runtimeAuthorityResolver =
+        const AthleteHomeRuntimeAuthorityResolver(),
   });
 
   final AuthController? authController;
@@ -50,15 +56,21 @@ class HomeScreen extends StatefulWidget {
   /// Optional athlete id (staging/tests). Defaults to session profile.
   final String? athleteIdOverride;
 
+  /// Canonical Home runtime-authority decision (injectable for tests).
+  final AthleteHomeRuntimeAuthorityResolver runtimeAuthorityResolver;
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _adaptFlow = HomeAdaptFlow();
+  final _legacyAdaptFlow = HomeAdaptFlow();
   late final HomeTodaySessionRefreshController _refreshController =
       widget.refreshController ?? HomeTodaySessionRefreshController();
+
+  /// `null` = loading/unknown; `true`/`false` = resolved materialisation.
   bool? _hasMaterialisedProgramme;
+  bool _programmeEvidenceUnavailable = false;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -76,6 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ProgrammeAssignmentStore get _assignmentStore =>
       widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
 
+  AthleteHomeRuntimeAuthority get _runtimeAuthority {
+    return widget.runtimeAuthorityResolver.resolve(
+      materialisedProgramme: _hasMaterialisedProgramme,
+      legacyActivePlan: AthleteProfileSession.hasActivePlan,
+      programmeEvidenceUnavailable: _programmeEvidenceUnavailable,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,11 +107,16 @@ class _HomeScreenState extends State<HomeScreen> {
       final assignment = await _assignmentStore.getActiveAssignment(_athleteId);
       if (!mounted) return;
       setState(() {
+        _programmeEvidenceUnavailable = false;
         _hasMaterialisedProgramme = assignment?.isMaterialised ?? false;
       });
     } catch (_) {
       if (!mounted) return;
-      setState(() => _hasMaterialisedProgramme = false);
+      // Fail closed: do not treat as "no programme" (which could unlock legacy).
+      setState(() {
+        _programmeEvidenceUnavailable = true;
+        _hasMaterialisedProgramme = null;
+      });
     }
   }
 
@@ -113,12 +138,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> _openAdapt() => _adaptFlow.open(context, athleteId: _athleteId);
+  Future<void> _openLegacyAdapt() =>
+      _legacyAdaptFlow.open(context, athleteId: _athleteId);
 
   @override
   Widget build(BuildContext context) {
-    final hasActivePlan = AthleteProfileSession.hasActivePlan;
-    final materialisedGate = _hasMaterialisedProgramme;
+    final authority = _runtimeAuthority;
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
@@ -132,36 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               _HomeBrandHeader(displayName: _displayName),
               const SizedBox(height: CohortSpacing.lg),
-              if (hasActivePlan) ...[
-                DailyBriefingSection(
-                  onSessionReturned: (_) {
-                    if (mounted) setState(() {});
-                  },
-                ),
-                const SizedBox(height: CohortSpacing.xl),
-                Text('NEED TO ADAPT?', style: CohortTextStyles.sectionLabel),
-                const SizedBox(height: CohortSpacing.md),
-                CohortCard(
-                  onTap: _openAdapt,
-                  child: const _AdaptationPromptRow(),
-                ),
-              ] else if (materialisedGate == null) ...[
-                const Text('TODAY', style: CohortTextStyles.sectionLabel),
-                const SizedBox(height: CohortSpacing.md),
-                const Text(
-                  'Checking programme…',
-                  style: CohortTextStyles.muted,
-                ),
-              ] else if (materialisedGate) ...[
-                AthleteProgrammeTodaySection(
-                  athleteId: _athleteId,
-                  refreshController: _refreshController,
-                  prepareService:
-                      widget.prepareService ??
-                      AthleteCatalogueEnrolmentServices.createPrepareService(),
-                ),
-              ] else
-                ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),
+              ..._todayForAuthority(authority),
               const SizedBox(height: CohortSpacing.lg),
               Center(
                 child: TextButton(
@@ -185,6 +181,57 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  List<Widget> _todayForAuthority(AthleteHomeRuntimeAuthority authority) {
+    switch (authority) {
+      case AthleteHomeRuntimeAuthority.programme:
+        return [
+          AthleteProgrammeTodaySection(
+            athleteId: _athleteId,
+            refreshController: _refreshController,
+            prepareService: widget.prepareService ??
+                AthleteCatalogueEnrolmentServices.createPrepareService(),
+          ),
+        ];
+      case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:
+        return [
+          DailyBriefingSection(
+            onSessionReturned: (_) {
+              if (mounted) setState(() {});
+            },
+          ),
+          const SizedBox(height: CohortSpacing.xl),
+          Text('NEED TO ADAPT?', style: CohortTextStyles.sectionLabel),
+          const SizedBox(height: CohortSpacing.md),
+          CohortCard(
+            onTap: _openLegacyAdapt,
+            child: const _AdaptationPromptRow(),
+          ),
+        ];
+      case AthleteHomeRuntimeAuthority.loading:
+        return const [
+          Text('TODAY', style: CohortTextStyles.sectionLabel),
+          SizedBox(height: CohortSpacing.md),
+          Text(
+            'Checking programme…',
+            style: CohortTextStyles.muted,
+          ),
+        ];
+      case AthleteHomeRuntimeAuthority.unavailable:
+        return const [
+          Text('TODAY', style: CohortTextStyles.sectionLabel),
+          SizedBox(height: CohortSpacing.md),
+          Text(
+            'Unable to confirm programme.',
+            style: CohortTextStyles.muted,
+          ),
+        ];
+      case AthleteHomeRuntimeAuthority.none:
+        return [
+          ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),
+        ];
+    }
   }
 }
 

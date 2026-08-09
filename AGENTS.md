@@ -16,11 +16,13 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1 inventory, Phase 2.2
-authority/suite clearance, and Phase 2.3 consolidation safety gate are
-complete. Every later consolidation sprint must pass
-`./tool/testing/run_phase2_consolidation_safety_gate.sh` (see
-[`docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md)).
+Architecture Consolidation is **current**. Phase 2.1–2.4 are complete
+(inventory, suite clearance, consolidation safety gate, Home runtime
+authority). Programme Athlete runtime is **canonical**; Plan Library /
+Coach Brain is **legacy compatibility only** (see
+[`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md)).
+Every later consolidation sprint must pass
+`./tool/testing/run_phase2_consolidation_safety_gate.sh`.
 Do not reopen Phase 1 staging or fixture work. No Sprint 1.8 or other product
 phase has been allocated. Historical Phase 5 MVP numbering must not be treated
 as the current delivery sequence. The July 2026 “Phase 2 completion” document
@@ -29,6 +31,10 @@ is historical pre–Phase 1 alignment — not current Phase 2 authority.
 ## Authority and product invariants
 
 - Authored programme prescription remains the prescription authority.
+- Home runtime authority is classified by
+  `AthleteHomeRuntimeAuthorityResolver`: materialised programme athletes use
+  Programme Athlete runtime exclusively; Plan Library / Coach Brain remains
+  temporary compatibility only when there is no materialised programme.
 - Adaptation is a proposal, not a second prescription authority.
 - Programme-backed adaptation reuses `SessionAdaptationPipeline` through a
   Plan-Package-native adapter and must not depend on the legacy generative
@@ -106,8 +112,8 @@ record.
 
 The exact next sequence is:
 
-1. **Phase 2.4 — Canonical Runtime Authority Decision and First Caller
-   Migration** (next authorised Phase 2 sprint).
+1. **Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path
+   Retirement Decision** (next authorised Phase 2 sprint).
 2. Later Phase 2 consolidation sprints per the Phase 2.1 plan — each must
    pass the consolidation safety gate.
 3. Production rollout and remote migration application remain separately
