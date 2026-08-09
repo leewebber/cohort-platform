@@ -1,0 +1,131 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+
+/// Phase 3.1B — Exercise Knowledge Authority boundary protections.
+///
+/// Proves contracts exist under the canonical domain package, use EX-* only,
+/// and are not yet wired into live production consumers.
+void main() {
+  final root = _repoRoot(Directory.current);
+  final domainDir = Directory('$root/lib/domain/exercise_knowledge');
+
+  test('Exercise Knowledge Authority domain package exists', () {
+    expect(domainDir.existsSync(), isTrue);
+    expect(
+      File('${domainDir.path}/exercise_knowledge_domain.dart').existsSync(),
+      isTrue,
+    );
+  });
+
+  test('canonical identity in new contracts is EX-* only', () {
+    final idSource = File(
+      '${domainDir.path}/value_objects/exercise_id.dart',
+    ).readAsStringSync();
+    expect(idSource.contains(r'^EX-\d+$'), isTrue);
+    expect(idSource.contains('cohort.exercise'), isTrue);
+    expect(
+      idSource.contains('Transitional knowledge id is not a canonical'),
+      isTrue,
+    );
+    // No third identity system introduced in the value object.
+    expect(idSource.contains('ExerciseUuid'), isFalse);
+    expect(idSource.contains('exercise_uuid'), isFalse);
+    expect(idSource.contains('platform_exercise_slug'), isFalse);
+  });
+
+  test('ExerciseDefinition forbids prescription and evidence fields', () {
+    final def = File(
+      '${domainDir.path}/models/exercise_definition.dart',
+    ).readAsStringSync();
+    expect(RegExp(r'\bfinal\s+\w+\s+sets\b').hasMatch(def), isFalse);
+    expect(RegExp(r'\bfinal\s+\w+\s+reps\b').hasMatch(def), isFalse);
+    expect(RegExp(r'\bfinal\s+\w+\s+tempo\b').hasMatch(def), isFalse);
+    expect(def.contains('athleteResult'), isFalse);
+    expect(def.contains('completedLoad'), isFalse);
+    expect(def.contains("'sets'"), isFalse);
+    expect(def.contains("'reps'"), isFalse);
+    expect(
+      def.contains('Does **not** store sets, reps, load, tempo'),
+      isTrue,
+    );
+  });
+
+  test('authority does not implement adaptation application or progression', () {
+    for (final entity in domainDir.listSync(recursive: true)) {
+      if (entity is! File || !entity.path.endsWith('.dart')) continue;
+      final source = entity.readAsStringSync();
+      const forbidden = [
+        'applyAdaptation',
+        'selectSubstitution',
+        'ProgressCalculator',
+        'computeProgression',
+        'bypassAthleteAgreement',
+        'PreviousPerformanceService',
+        'CompletionEvidence',
+      ];
+      for (final token in forbidden) {
+        expect(
+          source.contains(token),
+          isFalse,
+          reason: '${entity.path} must not contain $token',
+        );
+      }
+    }
+  });
+
+  test('no live lib consumer imports exercise_knowledge yet', () {
+    final lib = Directory('$root/lib');
+    final offenders = <String>[];
+    for (final entity in lib.listSync(recursive: true)) {
+      if (entity is! File || !entity.path.endsWith('.dart')) continue;
+      final rel = entity.path.substring(root.length + 1);
+      if (rel.startsWith('lib/domain/exercise_knowledge/')) continue;
+      final source = entity.readAsStringSync();
+      if (source.contains('domain/exercise_knowledge') ||
+          source.contains('exercise_knowledge_domain')) {
+        offenders.add(rel);
+      }
+    }
+    expect(
+      offenders,
+      isEmpty,
+      reason:
+          'Phase 3.1B must not migrate live consumers. Offenders: $offenders',
+    );
+  });
+
+  test('transitional cohort.exercise.* knowledge paths remain present', () {
+    expect(
+      File('$root/knowledge/reference/exercises_reference.yaml').existsSync(),
+      isTrue,
+    );
+    expect(Directory('$root/lib/knowledge').existsSync(), isTrue);
+    final yaml = File('$root/knowledge/reference/exercises_reference.yaml')
+        .readAsStringSync();
+    expect(yaml.contains('cohort.exercise.'), isTrue);
+  });
+
+  test('relationship types never imply comparability by default', () {
+    final source = File(
+      '${domainDir.path}/vocabulary/exercise_relationship_type.dart',
+    ).readAsStringSync();
+    expect(
+      source.contains('impliesComparabilityByDefault => false'),
+      isTrue,
+    );
+    expect(source.contains('directly_comparable_variant'), isTrue);
+  });
+}
+
+String _repoRoot(Directory start) {
+  var dir = start;
+  while (true) {
+    if (File('${dir.path}/pubspec.yaml').existsSync()) return dir.path;
+    final parent = dir.parent;
+    if (parent.path == dir.path) {
+      throw StateError('Could not locate repo root from ${start.path}');
+    }
+    dir = parent;
+  }
+}
