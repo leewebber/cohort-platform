@@ -35,7 +35,7 @@ MANUAL_TESTING_APPLICABILITY=deferred
 | Phase 3.1E | `b03faa9d656d2a4fc3005d79205796f0abe07f56` |
 | Phase 3.1F Part 1 | `216a9be2d06dd5be11862c3a8fda0062dde12e0e` |
 | Phase 3.1F Part 1b | `a53ba7c789a5ed8a7c716780a0ed6319cb910e07` |
-| Phase 3.1F Part 2 | *(recorded at commit)* |
+| Phase 3.1F Part 2 | `fe92a42da6f13dbfc4a06d4a2e9a2aa7d700c3bc` |
 
 **Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
