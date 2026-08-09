@@ -19,11 +19,11 @@ Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
 operational athlete authority. Phase 3 — Exercise Database has **started**.
-Phase 3.1A–3.1E are **accepted/committed**. Phase 3.1F Part 1 identity-mapping
-review is **blocked** pending an authoritative complete `exercises_v2` export;
-do **not** guess production mappings from names or Wave 1 partial seeds;
-fixture `EX-900x` ids are **not** production. Phase 3.1 is **not** complete.
-Binding:
+Phase 3.1A–3.1E and Phase 3.1F Part 1 are **accepted/committed**. Phase 3.1F
+Part 1b founder mapping matrix is **complete and advisory** (127 published
+`EX-*` from read-only `exercises_v2` export); do **not** implement mappings or
+create canonical exercises until Lee explicitly approves the matrix. Fixture
+`EX-900x` ids are **not** production. Phase 3.1 is **not** complete. Binding:
 [`docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md),
 [`docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md`](docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md),
 freeze:

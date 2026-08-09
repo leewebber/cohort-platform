@@ -1,10 +1,9 @@
 # Architecture documentation index
 
-**Phase 2 is CLOSED. Phase 3 — Exercise Database has started (3.1A–3.1E
-committed; 3.1F Part 1 review stopped pending authoritative catalogue export).**
+**Phase 2 is CLOSED. Phase 3 — Exercise Database has started (3.1A–3.1E and
+3.1F Part 1 committed; Part 1b founder matrix complete — advisory only).**
 Start from
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md),
-[`Phase_3_1E_Exercise_Relationship_Graph_v1.md`](./Phase_3_1E_Exercise_Relationship_Graph_v1.md),
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
 [`Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](./Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md).
 
@@ -22,7 +21,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md](./Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md) | Phase 3.1C — Exercise Knowledge repository / publication boundary |
 | [Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md](./Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md) | Phase 3.1D — Canonical exercise identity bridge (`cohort.exercise.*` → `EX-*`) |
 | [Phase_3_1E_Exercise_Relationship_Graph_v1.md](./Phase_3_1E_Exercise_Relationship_Graph_v1.md) | Phase 3.1E — Structured Exercise Relationship Graph |
-| [Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md](./Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md) | Phase 3.1F Part 1 — Founder identity-mapping review (catalogue-blocked) |
+| [Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md](./Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md) | Phase 3.1F Part 1/1b — Founder identity-mapping review + decision matrix |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
 | [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |
 | [Athlete_Catalogue_Enrolment_v1.md](./Athlete_Catalogue_Enrolment_v1.md) | Phase 1 Sprint 1.3 — non-commercial athlete catalogue enrolment |
@@ -67,8 +66,8 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 is
-**CLOSED**. Phase 3.1A–3.1E are **committed**. Phase 3.1F Part 1 catalogue
-review is **blocked** pending an authoritative `exercises_v2` export. Phase 3.1
-is **not** complete. See
+**CLOSED**. Phase 3.1A–3.1E and 3.1F Part 1 are **committed**. Part 1b founder
+mapping matrix is **complete (advisory)**; Part 2 awaits Lee’s decisions.
+Phase 3.1 is **not** complete. See
 [`Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](./Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md)
 and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

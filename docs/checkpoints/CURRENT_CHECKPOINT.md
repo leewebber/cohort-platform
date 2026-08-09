@@ -1,23 +1,28 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-09  
-**Status:** Phase 3.1F Part 1 **STOPPED** — authoritative complete local
-`EX-*` catalogue unavailable. No identity mappings proposed or published.
+**Status:** Phase 3.1F Part 1b — founder mapping matrix **complete (advisory)**.
+Awaiting Lee’s compact decisions before Part 2. No mappings implemented.
 
 ```text
 PHASE_2_CLOSED=true
 CANONICAL_ARCHITECTURE_FROZEN=true
 PHASE_3_STARTED=true
 PHASE_3_1E_RELATIONSHIP_GRAPH_COMPLETE=true
-PHASE_3_1F_PART1_REVIEW_COMPLETE=true
-PHASE_3_1F_PART1_STOPPED_CATALOGUE_UNAVAILABLE=true
-PROPOSED_MAPPINGS_PUBLISHED=false
-PROPOSED_MAPPINGS_OPERATIONAL=false
+PHASE_3_1F_PART_1_COMMITTED=true
+PHASE_3_1F_PART_1_COMMIT=216a9be2d06dd5be11862c3a8fda0062dde12e0e
+AUTHORITATIVE_CANONICAL_CATALOGUE_AVAILABLE=true
+AUTHORITATIVE_CANONICAL_CATALOGUE_COUNT=127
+FOUNDER_MAPPING_MATRIX_COMPLETE=true
+PROPOSED_MAPPING_COUNT=14
+PRODUCTION_MAPPINGS_IMPLEMENTED=false
+CANONICAL_EXERCISES_CREATED=false
 HEURISTIC_IDENTITY_MATCHING_USED=false
+HOSTED_MUTATION_PERFORMED=false
 LIVE_CONSUMERS_MIGRATED=false
 PRODUCT_BEHAVIOUR_CHANGED=false
 SCHEMA_CHANGED=false
-HOSTED_ENVIRONMENT_CONTACTED=false
+PHASE_3_1F_COMPLETE=false
 PHASE_3_1_COMPLETE=false
 PHASE_3_2_STARTED=false
 ```
@@ -29,13 +34,11 @@ PHASE_3_2_STARTED=false
 | Phase 3.1C | `957a63d9809e8291b8715e3743feccb93a798eee` |
 | Phase 3.1D | `38f27ca478779903fc1d93bca5368daed87388f2` |
 | Phase 3.1E | `b03faa9d656d2a4fc3005d79205796f0abe07f56` |
+| Phase 3.1F Part 1 | `216a9be2d06dd5be11862c3a8fda0062dde12e0e` |
 
 **Binding:** [`Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](../architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md)
 
-**Unblock:** Authorise read-only export of published `exercises_v2` (see Part 1 §4),
-then complete Sections E–H (Part 1b) before Part 2 implementation.
+**Next:** Founder review of the 21-item matrix, then **Phase 3.1F Part 2** only for
+approved mappings / authorised new canonical definitions.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`
-
-Next: **Phase 3.1F Part 1b** (catalogue snapshot + complete review matrix) **or**
-founder-authorised export, then **Part 2** for approved mappings only.

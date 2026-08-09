@@ -1,0 +1,26 @@
+{
+  "purpose": "Phase 3.1F Part 1b review-only catalogue export",
+  "table": "public.exercises_v2",
+  "scope": "published IS TRUE",
+  "query_hash_sha256_16": "cdf8558e6e5b11f1",
+  "environment_name": "Cohort Field Manual",
+  "environment_region": "eu-west-1",
+  "access_mode": "supabase db query --linked SELECT-only",
+  "row_count": 127,
+  "min_exercise_id": "EX-001",
+  "max_exercise_id": "EX-127",
+  "id_range_contiguous": true,
+  "malformed_id_count": 0,
+  "duplicate_id_count": 0,
+  "ex9xxx_fixture_count": 0,
+  "publication_summary_all_rows": [
+    {
+      "n": 127,
+      "published": true
+    }
+  ],
+  "source_authority_classification": "AUTHORITATIVE_COMPLETE",
+  "artifact_classification": "REVIEW_ONLY_NOT_RUNTIME_SEED",
+  "contains_connection_secrets": false,
+  "hosted_mutation_performed": false
+}

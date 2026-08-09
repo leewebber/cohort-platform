@@ -12,10 +12,11 @@ void main() {
     );
     expect(doc.existsSync(), isTrue);
     final text = doc.readAsStringSync();
-    expect(text.contains('BLOCKED_AUTHORITATIVE_CATALOGUE_UNAVAILABLE'), isTrue);
-    expect(text.contains('AUTHORITATIVE_CANONICAL_CATALOGUE_AVAILABLE=false'), isTrue);
+    // Part 1b unblocked the catalogue; Part 1 non-operational guarantees remain.
+    expect(text.contains('AUTHORITATIVE_CANONICAL_CATALOGUE_AVAILABLE=true'), isTrue);
     expect(text.contains('PRODUCTION_MAPPINGS_IMPLEMENTED=false'), isTrue);
     expect(text.contains('HEURISTIC_IDENTITY_MATCHING_USED=false'), isTrue);
+    expect(text.contains('HOSTED_MUTATION_PERFORMED=false'), isTrue);
   });
 
   test('no DRAFT_NOT_APPROVED mapping manifest is loaded by lib/', () {

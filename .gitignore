@@ -44,3 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Phase 3.1F Part 1b — hosted catalogue review exports (do not commit raw production-derived dumps)
+docs/architecture/reviews/exercises_v2_published_export_*.json
+!docs/architecture/reviews/exercises_v2_published_export_*.meta.json
