@@ -24,6 +24,8 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1E_Exercise_Relationship_Graph_v1.md](./Phase_3_1E_Exercise_Relationship_Graph_v1.md) | Phase 3.1E — Structured Exercise Relationship Graph |
 | [Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md](./Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md) | Phase 3.1F Part 1/1b — Founder identity-mapping review + decision matrix |
 | [Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md) | Phase 3.1F Part 2 — Founder-approved canonicals + 21 identity mappings |
+| [Phase_3_1F_Pending_Migration_Reconciliation_v1.md](./Phase_3_1F_Pending_Migration_Reconciliation_v1.md) | Phase 3.1F — Pending migration reconciliation (Option C) |
+| [Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md](./Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md) | Phase 3.1F — Hosted catalogue deployment STOP checkpoint |
 | [Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md](./Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md) | Phase 3.1F — Hosted deploy + first-consumer rollout plan (accepted) |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
 | [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |
