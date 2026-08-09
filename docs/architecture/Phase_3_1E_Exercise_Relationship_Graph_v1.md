@@ -1,7 +1,8 @@
 # Phase 3.1E — Structured Exercise Relationship Graph
 
-**Status:** COMPLETE (**commit pending in this close-out**)  
+**Status:** COMPLETE and **COMMITTED**  
 **Recorded:** 2026-08-09  
+**Commit:** `b03faa9d656d2a4fc3005d79205796f0abe07f56`  
 **Baseline (post–3.1D commit):** `38f27ca478779903fc1d93bca5368daed87388f2`  
 **Bridge:** [`Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md`](./Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md)
 
