@@ -9,24 +9,32 @@ import '../athlete_profile/services/athlete_profile_session.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/current_user_session.dart';
 import '../home/home_screen.dart';
-import '../plans/screens/plan_library_screen.dart';
+import '../programme/controllers/athlete_programme_controllers.dart';
+import '../programme/screens/athlete_programme_screen.dart';
 import '../progress/screens/progress_screen.dart';
 import 'screens/athlete_profile_screen.dart';
 
 /// Athlete application shell — exactly four destinations.
 ///
 /// Founder/coach tools are absent from this widget tree.
+///
+/// Phase 2.6: the Plans tab mounts the canonical [AthleteProgrammeScreen], not
+/// Plan Library. New legacy Plan Library starts are closed at this boundary.
 class AthleteAppShell extends StatefulWidget {
   const AthleteAppShell({
     super.key,
     this.authController,
     this.pendingWorkoutProgress,
     this.planDefinitionMissing = false,
+    this.programmeScreenController,
   });
 
   final AuthController? authController;
   final WorkoutProgressSnapshot? pendingWorkoutProgress;
   final bool planDefinitionMissing;
+
+  /// Optional programme tab controller (tests / local wiring).
+  final AthleteProgrammeScreenController? programmeScreenController;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -84,7 +92,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           title: Text('Plan unavailable', style: CohortTextStyles.h2),
           content: Text(
             'Your active Plan could not be restored. '
-            'Browse Plans to continue training.',
+            'Browse programmes to continue training.',
             style: CohortTextStyles.body,
           ),
           actions: [
@@ -93,7 +101,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
                 Navigator.of(context).pop();
                 setState(() => _index = 1);
               },
-              child: const Text('Browse Plans'),
+              child: const Text('Browse Programmes'),
             ),
           ],
         ),
@@ -166,7 +174,13 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             authController: widget.authController,
             embeddedInShell: true,
           ),
-          PlanLibraryScreen(athleteId: _athleteId, embeddedInShell: true),
+          // Phase 2.6: athlete Plans tab is canonical programme catalogue entry.
+          // Plan Library start UI is no longer mounted here (RETIRE decision).
+          AthleteProgrammeScreen(
+            athleteId: _athleteId,
+            embeddedInShell: true,
+            controller: widget.programmeScreenController,
+          ),
           ProgressScreen(
             embeddedInShell: true,
             onChoosePlan: () => setState(() => _index = 1),

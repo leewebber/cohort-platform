@@ -11,6 +11,18 @@ LEGACY_RUNTIME_DELETED=false
 CALLER_MIGRATION_EXECUTED=false
 ```
 
+**Implementation status (Phase 2.6):**
+```text
+NEW_LEGACY_STARTS_CLOSED=true
+ATHLETE_SHELL_CANONICAL_CATALOGUE_ENTRY=true
+EXISTING_LEGACY_STATE_SUPPORT=true
+ONBOARDING_LEGACY_START=false
+```
+Athlete shell Plans tab now mounts `AthleteProgrammeScreen` instead of
+`PlanLibraryScreen`. `PlanStartService` is no longer callable from the athlete
+shell. Existing local `hasActivePlan` compatibility remains until later sprints.
+Founder/staging Plan Library mounts are intentionally out of Phase 2.6 scope.
+
 `RETIRE` authorises subsequent tightly scoped migration sprints. It does **not**
 authorise deletion in Phase 2.5.
 

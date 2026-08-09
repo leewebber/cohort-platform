@@ -20,11 +20,16 @@ class AthleteProgrammeScreen extends StatefulWidget {
     super.key,
     required this.athleteId,
     this.refreshController,
+    this.embeddedInShell = false,
     AthleteProgrammeScreenController? controller,
   }) : _controller = controller;
 
   final String athleteId;
   final HomeTodaySessionRefreshController? refreshController;
+
+  /// When true, successful start/switch must not pop the route (shell owns nav).
+  final bool embeddedInShell;
+
   final AthleteProgrammeScreenController? _controller;
 
   @override
@@ -67,7 +72,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
     if (switched == true && mounted) {
       await _controller.load();
-      if (mounted) {
+      if (mounted && !widget.embeddedInShell) {
         Navigator.of(context).pop(true);
       }
     }
@@ -89,7 +94,9 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           ),
         ),
       );
-      if (mounted && Navigator.of(context).canPop()) {
+      if (mounted &&
+          !widget.embeddedInShell &&
+          Navigator.of(context).canPop()) {
         Navigator.of(context).pop(true);
       }
       return;
@@ -121,7 +128,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Programme')),
+      appBar: AppBar(
+        title: const Text('Programme'),
+        automaticallyImplyLeading: !widget.embeddedInShell,
+      ),
       body: SafeArea(
         child: _controller.isLoading
             ? const Center(child: CircularProgressIndicator())
