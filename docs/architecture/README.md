@@ -28,6 +28,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md](./Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md) | Phase 3.1F — Hosted catalogue deployment STOP checkpoint |
 | [Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md](./Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md) | Phase 1.2–1.7 — Cohort Staging uplift plan (accepted; schema already present) |
 | [Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md](./Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md) | Phase 1.2–1.7 — Staging Athlete E manual verification (STOPPED; accepted) |
+| [Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md](./Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md) | Phase 1.2–1.7 — Staging verification prerequisites (logical backup + Athlete E bootstrap) |
 | [Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md](./Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md) | Phase 3.1F — Hosted deploy + first-consumer rollout plan (accepted) |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
 | [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |

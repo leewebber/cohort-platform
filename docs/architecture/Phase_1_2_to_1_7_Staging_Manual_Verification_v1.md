@@ -49,6 +49,11 @@ PHASE_3_2_STARTED=false
 This report does **not** claim Staging acceptance. No Athlete E namespace was created.
 No hosted mutation was performed.
 
+**Follow-on (prerequisite resolution, separate document):**  
+[`Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md`](./Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md)
+records the accepted logical recovery artifact and Athlete E bootstrap design.
+That follow-on does **not** execute T1–T12 or create hosted Athlete E.
+
 ---
 
 ## 1. Founder authorisation
