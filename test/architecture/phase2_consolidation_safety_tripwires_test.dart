@@ -186,6 +186,52 @@ void main() {
         expect(source.contains('SessionAdaptationPipeline'), isFalse);
       },
     );
+
+    test(
+      'Phase 2.7 programme completion never gates AdaptiveProgression on hasActivePlan',
+      () {
+        final complete = File(
+          '$root/lib/features/workout_player/screens/workout_complete_screen.dart',
+        ).readAsStringSync();
+        expect(complete.contains('isProgrammeBacked'), isTrue);
+        expect(
+          complete.contains('shouldRunLegacyAdaptiveProgression'),
+          isTrue,
+        );
+        expect(
+          complete.contains(
+            'shouldRunLegacyAdaptiveProgression =\n'
+            '        !isProgrammeBacked && AthleteProfileSession.hasActivePlan',
+          ),
+          isTrue,
+        );
+        // Legacy-only: AdaptiveProgression must not run for programme-backed.
+        expect(
+          RegExp(
+            r'final shouldAdapt = AthleteProfileSession\.hasActivePlan;',
+          ).hasMatch(complete),
+          isFalse,
+        );
+      },
+    );
+  });
+
+  group('Phase 2.7 progress / briefing authority freeze', () {
+    test('Progress tab uses AthleteProgressSummaryBuilder authority', () {
+      final progress = File(
+        '$root/lib/features/progress/screens/progress_screen.dart',
+      ).readAsStringSync();
+      final builder = File(
+        '$root/lib/features/progress/services/athlete_progress_summary_builder.dart',
+      ).readAsStringSync();
+      expect(progress.contains('AthleteProgressSummaryBuilder'), isTrue);
+      expect(builder.contains('ProgrammeProgressSummaryService'), isTrue);
+      expect(builder.contains('AthleteHomeRuntimeAuthorityResolver'), isTrue);
+      expect(
+        builder.contains('never fall back to Plan Library'),
+        isTrue,
+      );
+    });
   });
 }
 

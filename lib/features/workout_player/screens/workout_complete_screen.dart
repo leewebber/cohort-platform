@@ -99,13 +99,21 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
       debugPrint('[WorkoutComplete] bookkeeping failed: $error');
     }
 
+    // Phase 2.7: programme-backed completion never consults hasActivePlan for
+    // authority and never invokes AdaptiveProgression (legacy Plan Library).
+    final isProgrammeBacked =
+        widget.programmeContext?.isProgrammeBacked ?? false;
+    final shouldRunLegacyAdaptiveProgression =
+        !isProgrammeBacked && AthleteProfileSession.hasActivePlan;
+
     final coordinator =
         widget.progressionCoordinator ?? AdaptiveProgressionCoordinator();
     final sessionCompletion = coordinator.buildCompletion(
       result: result,
       athleteId: widget.athleteId,
     );
-    if (!AthleteProfileSession.hasActivePlan) {
+    // Legacy adapt path records completion inside runAfterCompletion.
+    if (!shouldRunLegacyAdaptiveProgression) {
       SessionCompletionStore.add(sessionCompletion);
     }
 
@@ -119,8 +127,7 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
         .derive(executionResults);
     PreviousPerformanceStore.recordAll(derived);
 
-    final shouldAdapt = AthleteProfileSession.hasActivePlan;
-    if (shouldAdapt) {
+    if (shouldRunLegacyAdaptiveProgression) {
       try {
         setState(() => _adaptStatus = _AdaptStatus.analysing);
         await Future<void>.delayed(const Duration(milliseconds: 450));
@@ -162,7 +169,7 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
         await AthletePersistence.hydrator.discardWorkoutProgress(
           widget.athleteId,
         );
-        if (!shouldAdapt) {
+        if (!shouldRunLegacyAdaptiveProgression) {
           await AthletePersistence.persistBoundSession();
         }
       } catch (error) {

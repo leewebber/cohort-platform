@@ -5,44 +5,138 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../adaptive_progression/models/capability_timeline.dart';
+import '../../athlete_profile/services/athlete_profile_session.dart';
+import '../../auth/services/current_user_session.dart';
 import '../models/progress_summary.dart';
+import '../services/athlete_progress_summary_builder.dart';
 import '../services/capability_radar_projection_service.dart';
 import '../services/progress_summary_service.dart';
 import '../widgets/capability_radar_chart.dart';
 
-class ProgressScreen extends StatelessWidget {
+class ProgressScreen extends StatefulWidget {
   const ProgressScreen({
     super.key,
     this.summary,
     this.summaryService = const ProgressSummaryService(),
+    this.progressBuilder,
     this.radarService = const CapabilityRadarProjectionService(),
     this.embeddedInShell = false,
+    this.athleteIdOverride,
     this.onChoosePlan,
     this.onStartToday,
   });
 
+  /// Sync override for tests / precomputed summaries.
   final ProgressSummary? summary;
+
+  /// Legacy Plan Library summary service (pure-legacy compatibility only).
   final ProgressSummaryService summaryService;
+
+  /// Canonical authority-aware builder (Phase 2.7). When null and [summary] is
+  /// null, a default builder is constructed.
+  final AthleteProgressSummaryBuilder? progressBuilder;
+
   final CapabilityRadarProjectionService radarService;
   final bool embeddedInShell;
+  final String? athleteIdOverride;
   final VoidCallback? onChoosePlan;
   final VoidCallback? onStartToday;
 
   @override
+  State<ProgressScreen> createState() => _ProgressScreenState();
+}
+
+class _ProgressScreenState extends State<ProgressScreen> {
+  ProgressSummary? _resolved;
+  bool _loading = false;
+
+  String get _athleteId {
+    final override = widget.athleteIdOverride?.trim();
+    if (override != null && override.isNotEmpty) return override;
+    return AthleteProfileSession.profile?.athleteId ??
+        CurrentUserSession.maybeInstance?.athleteId ??
+        'athlete.local';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _bootstrap();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProgressScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.summary != oldWidget.summary) {
+      _bootstrap();
+    }
+  }
+
+  Future<void> _bootstrap() async {
+    final injected = widget.summary;
+    if (injected != null) {
+      setState(() {
+        _resolved = injected;
+        _loading = false;
+      });
+      return;
+    }
+
+    setState(() => _loading = true);
+    final builder = widget.progressBuilder ??
+        AthleteProgressSummaryBuilder(
+          legacySummaryService: widget.summaryService,
+        );
+    try {
+      final summary = await builder.build(athleteId: _athleteId);
+      if (!mounted) return;
+      setState(() {
+        _resolved = summary;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _resolved = AthleteProgressSummaryBuilder.emptySummary();
+        _loading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final resolved = summary ?? summaryService.build();
-    final radar = radarService.project(
+    if (_loading || _resolved == null) {
+      return Scaffold(
+        backgroundColor: CohortColors.background,
+        appBar: widget.embeddedInShell
+            ? null
+            : AppBar(
+                backgroundColor: CohortColors.background,
+                elevation: 0,
+                title: const Text('PROGRESS', style: CohortTextStyles.eyebrow),
+                centerTitle: false,
+              ),
+        body: const SafeArea(
+          child: Center(
+            child: Text('Loading progress…', style: CohortTextStyles.muted),
+          ),
+        ),
+      );
+    }
+
+    final resolved = _resolved!;
+    final radar = widget.radarService.project(
       timeline: resolved.timeline,
       compliance: resolved.compliance,
     );
-    final metrics = radarService.metricCards(
+    final metrics = widget.radarService.metricCards(
       timeline: resolved.timeline,
       compliance: resolved.compliance,
     );
 
     return Scaffold(
       backgroundColor: CohortColors.background,
-      appBar: embeddedInShell
+      appBar: widget.embeddedInShell
           ? null
           : AppBar(
               backgroundColor: CohortColors.background,
@@ -60,8 +154,8 @@ class ProgressScreen extends StatelessWidget {
             : _EmptyProgress(
                 radar: radar,
                 hasPlan: resolved.hasActivePlan,
-                onChoosePlan: onChoosePlan,
-                onStartToday: onStartToday,
+                onChoosePlan: widget.onChoosePlan,
+                onStartToday: widget.onStartToday,
               ),
       ),
     );

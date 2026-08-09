@@ -11,17 +11,24 @@ LEGACY_RUNTIME_DELETED=false
 CALLER_MIGRATION_EXECUTED=false
 ```
 
-**Implementation status (Phase 2.6):**
+**Implementation status (Phase 2.6 + 2.7):**
 ```text
 NEW_LEGACY_STARTS_CLOSED=true
 ATHLETE_SHELL_CANONICAL_CATALOGUE_ENTRY=true
+CANONICAL_COMPLETION_AUTHORITY=true
+CANONICAL_PROGRESS_AUTHORITY=true
+CANONICAL_HOME_BRIEFING_INDEPENDENCE=true
+CANONICAL_LEGACY_SIDE_EFFECTS_REMOVED=true
 EXISTING_LEGACY_STATE_SUPPORT=true
+HOME_LEGACY_ENTRY_RETIRED=false
 ONBOARDING_LEGACY_START=false
 ```
-Athlete shell Plans tab now mounts `AthleteProgrammeScreen` instead of
-`PlanLibraryScreen`. `PlanStartService` is no longer callable from the athlete
-shell. Existing local `hasActivePlan` compatibility remains until later sprints.
-Founder/staging Plan Library mounts are intentionally out of Phase 2.6 scope.
+Athlete shell Plans tab mounts `AthleteProgrammeScreen`. Programme-backed
+`WorkoutCompleteScreen` never invokes `AdaptiveProgression`. Progress tab uses
+`AthleteProgressSummaryBuilder` → `ProgrammeProgressSummaryService` for
+materialised programme athletes. Home programme branch remains DailyBriefing-
+independent (Phase 2.4). Pure-legacy Home / complete / progress paths retained
+until Phase 2.8+. Founder/staging Plan Library mounts remain out of scope.
 
 `RETIRE` authorises subsequent tightly scoped migration sprints. It does **not**
 authorise deletion in Phase 2.5.
