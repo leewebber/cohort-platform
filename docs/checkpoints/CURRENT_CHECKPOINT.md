@@ -39,8 +39,10 @@ MANUAL_TESTING_APPLICABILITY=deferred
 
 **Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
-**Next:** Founder review of the rollout plan, then narrowly authorised hosted
-canonical-catalogue deployment. First-consumer implementation remains separately
-authorised.
+**Next:** Hosted catalogue Stage 1 deployment remains blocked until migration
+isolation can apply only
+`20260809160000_founder_exercise_library_phase_3_1f_part2.sql` (other pending
+remote migrations must not ride along). First-consumer
+`founder_programme_yaml_import` remains separately authorised.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`
