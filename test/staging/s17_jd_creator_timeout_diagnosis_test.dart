@@ -160,7 +160,8 @@ void main() {
     expect(text, isNot(contains('tok')));
   });
 
-  test('8-12 loopback create via supported launcher: stall terminates with stage',
+  test(
+      '8-12 loopback create via supported launcher: stall terminates with stage',
       () async {
     final prep = await Process.run('bash', [
       '-c',
@@ -256,7 +257,10 @@ void main() {
     // No lingering flutter child from this launcher pid tree expectation:
     // process should have exited (Process.run returned).
     expect(r.pid, isNonZero);
-  }, timeout: const Timeout(Duration(minutes: 3)));
+      },
+      timeout: const Timeout(Duration(minutes: 3)),
+      tags: ['diagnosis'],
+    );
 
   test('9 missing result persistence path still gets launcher terminal write',
       () async {
@@ -322,52 +326,58 @@ void main() {
     expect(code2, 2);
   });
 
-  test('13 execute loopback proof still works', () async {
-    final prep = await Process.run('bash', [
-      '-c',
-      'set -euo pipefail; export S17_ROOT="$root"; '
-          'source "$gate"; s17_jd_flutter_package_prepare',
-    ], workingDirectory: root);
-    expect(prep.exitCode, 0);
+  test(
+    '13 execute loopback proof still works',
+    () async {
+      final prep = await Process.run('bash', [
+        '-c',
+        'set -euo pipefail; export S17_ROOT="$root"; '
+            'source "$gate"; s17_jd_flutter_package_prepare',
+      ], workingDirectory: root);
+      expect(prep.exitCode, 0);
 
-    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
-    addTearDown(() async => server.close(force: true));
-    unawaited(
-      server.forEach((req) async {
-        await req.drain<void>();
-        final fail = req.uri.path.contains('fail');
-        req.response.statusCode = fail ? 503 : (req.method == 'POST' ? 201 : 200);
-        req.response.write(fail ? '{"ok":false}' : '{"ok":true}');
-        await req.response.close();
-      }),
-    );
-    final out = File('${tmp.path}/exec_out.json');
-    final req = File('${tmp.path}/exec_req.json');
-    req.writeAsStringSync(jsonEncode({'marker': stableMarker}));
-    final r = await Process.run(
-      execLauncher,
-      [],
-      environment: {
-        ...Platform.environment,
-        'S17_ROOT': root,
-        'S17_JD_LOOPBACK_PROOF': '1',
-        'S17_JD_LOOPBACK_BASE_URL': 'http://127.0.0.1:${server.port}',
-        'S17_JD_LOOPBACK_API_KEY': 'k',
-        'S17_JD_EXECUTE_REQUEST_FILE': req.path,
-        'S17_JD_EXECUTE_RESULT_FILE': out.path,
-        'S17_JD_CREDENTIAL_FILE': '${tmp.path}/cred.json',
-        'S17_JD_FLUTTER_LOG_DIR': tmp.path,
-        'S17_JD_NONTEST_TIMEOUT_SEC': '120',
-        'S17_JD_FLUTTER_DEVICE':
-            Platform.environment['S17_JD_FLUTTER_DEVICE'] ?? 'macos',
-      },
-      workingDirectory: root,
-    );
-    expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
-    final json = jsonDecode(out.readAsStringSync()) as Map<String, dynamic>;
-    expect(json['ok'], isTrue);
-    expect(json['test_binding_present'], isFalse);
-  }, timeout: const Timeout(Duration(minutes: 3)));
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      addTearDown(() async => server.close(force: true));
+      unawaited(
+        server.forEach((req) async {
+          await req.drain<void>();
+          final fail = req.uri.path.contains('fail');
+          req.response.statusCode =
+              fail ? 503 : (req.method == 'POST' ? 201 : 200);
+          req.response.write(fail ? '{"ok":false}' : '{"ok":true}');
+          await req.response.close();
+        }),
+      );
+      final out = File('${tmp.path}/exec_out.json');
+      final req = File('${tmp.path}/exec_req.json');
+      req.writeAsStringSync(jsonEncode({'marker': stableMarker}));
+      final r = await Process.run(
+        execLauncher,
+        [],
+        environment: {
+          ...Platform.environment,
+          'S17_ROOT': root,
+          'S17_JD_LOOPBACK_PROOF': '1',
+          'S17_JD_LOOPBACK_BASE_URL': 'http://127.0.0.1:${server.port}',
+          'S17_JD_LOOPBACK_API_KEY': 'k',
+          'S17_JD_EXECUTE_REQUEST_FILE': req.path,
+          'S17_JD_EXECUTE_RESULT_FILE': out.path,
+          'S17_JD_CREDENTIAL_FILE': '${tmp.path}/cred.json',
+          'S17_JD_FLUTTER_LOG_DIR': tmp.path,
+          'S17_JD_NONTEST_TIMEOUT_SEC': '120',
+          'S17_JD_FLUTTER_DEVICE':
+              Platform.environment['S17_JD_FLUTTER_DEVICE'] ?? 'macos',
+        },
+        workingDirectory: root,
+      );
+      expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
+      final json = jsonDecode(out.readAsStringSync()) as Map<String, dynamic>;
+      expect(json['ok'], isTrue);
+      expect(json['test_binding_present'], isFalse);
+    },
+    timeout: const Timeout(Duration(minutes: 3)),
+    tags: ['diagnosis'],
+  );
 
   test('14 production/staging targets not used by loopback create mode', () {
     final src = File(

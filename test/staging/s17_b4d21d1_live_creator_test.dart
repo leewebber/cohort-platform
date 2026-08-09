@@ -18,7 +18,16 @@ void main() {
   );
   final creator =
       '$root/tool/staging/create_s17_journey_d_adaptation_fixture.sh';
-  const stableMarker = 's17_jd_adapt_20260805T012428Z_933d9364';
+  /// Retired/poisoned live identity (Phase 1 fail-closed refuse list).
+  const retiredMarker = 's17_jd_adapt_20260805T012428Z_933d9364';
+
+  /// Non-retired synthetic marker for live paths that must pass the refuse list
+  /// and exercise subsequent guards / fake orchestration.
+  const syntheticLiveMarker = 's17_jd_adapt_20260809T120000Z_a1b2c3d4';
+
+  /// Dry-run / local Dart fake orchestrator may still use the retired string as
+  /// a local test marker (refuse applies to live shell/create only).
+  const stableMarker = retiredMarker;
   const expectedHash =
       '156dfe8cf262e43f4e7e47cab070a37f466d3271fe26b29ca80e5c5e49e8a7d7';
   const currentUuid = 'a1111111-1111-4111-8111-111111111111';
@@ -102,16 +111,33 @@ void main() {
       expect(r.stderr.toString(), contains('--live requires --marker'));
     });
 
-    test('3 exact stable marker accepted unchanged (synthetic)', () async {
+    test('3 retired/poisoned marker refused on live before synthetic create',
+        () async {
       final r = await runCreator(
-        args: '--live --marker $stableMarker',
+        args: '--live --marker $retiredMarker',
+        env: const {
+          'S17_JD_LIVE_CREATE': '1',
+          'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',
+        },
+      );
+      expect(r.exitCode, 2, reason: '${r.stdout}\n${r.stderr}');
+      expect('${r.stderr}${r.stdout}', contains('retired/poisoned'));
+      expect(r.stdout.toString(), isNot(contains('LIVE_CREATE_OK')));
+    });
+
+    test('3b non-retired marker accepted unchanged (synthetic)', () async {
+      final r = await runCreator(
+        args: '--live --marker $syntheticLiveMarker',
         env: const {
           'S17_JD_LIVE_CREATE': '1',
           'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',
         },
       );
       expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
-      expect(r.stdout.toString(), contains('FIXTURE_MARKER=$stableMarker'));
+      expect(
+        r.stdout.toString(),
+        contains('FIXTURE_MARKER=$syntheticLiveMarker'),
+      );
       expect(r.stdout.toString(), contains('MUTATION_BACKEND=synthetic'));
       expect(r.stdout.toString(), contains('HOSTED_WRITES_EXECUTED=0'));
       expect(r.stdout.toString(), contains('JOURNEY_D_EXECUTED=false'));
@@ -136,8 +162,8 @@ def wrapped():
     return orig()
 m.new_marker=wrapped
 raw=open(r"${projectsFixture.path}").read()
-r=run_live_create(root=Path(r"$root"), projects_raw=raw, marker="$stableMarker")
-assert r["fixture_marker"]=="$stableMarker"
+r=run_live_create(root=Path(r"$root"), projects_raw=raw, marker="$syntheticLiveMarker")
+assert r["fixture_marker"]=="$syntheticLiveMarker"
 assert calls["n"]==0
 assert r["new_marker_called"] is False
 assert r["hosted_writes_executed"]==0
@@ -222,8 +248,17 @@ print("NEW_MARKER_NOT_CALLED")
     });
 
     test('15 both live confirmation guards required', () async {
+      // Poisoned markers refuse before later guards — assert that precedence.
+      final retiredFirst = await runCreator(
+        args: '--live --marker $retiredMarker',
+        env: const {'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok'},
+      );
+      expect(retiredFirst.exitCode, 2);
+      expect('${retiredFirst.stderr}', contains('retired/poisoned'));
+
+      // Non-retired marker reaches the LIVE_CREATE / CONFIRM guards.
       final noLive = await runCreator(
-        args: '--live --marker $stableMarker',
+        args: '--live --marker $syntheticLiveMarker',
         env: const {'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok'},
       );
       expect(noLive.exitCode, 2);
@@ -234,7 +269,7 @@ print("NEW_MARKER_NOT_CALLED")
         'cd "$root" && env -u CONFIRM_COHORT_STAGING S17_JD_LIVE_CREATE=1 '
             'S17_JD_LIVE_MUTATION_BACKEND=synthetic_ok '
             'S17_PROJECTS_JSON_FILE="${projectsFixture.path}" '
-            '"$creator" --live --marker $stableMarker',
+            '"$creator" --live --marker $syntheticLiveMarker',
       ]);
       expect(noConfirm.exitCode, 2);
       expect(noConfirm.stderr.toString(), contains('CONFIRM_COHORT_STAGING'));
@@ -242,7 +277,7 @@ print("NEW_MARKER_NOT_CALLED")
 
     test('16 missing projects configuration fails closed', () async {
       final r = await runCreator(
-        args: '--live --marker $stableMarker',
+        args: '--live --marker $syntheticLiveMarker',
         env: const {
           'S17_JD_LIVE_CREATE': '1',
           'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',

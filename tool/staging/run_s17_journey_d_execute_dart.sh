@@ -55,9 +55,12 @@ s17_jd_flutter_package_require
 
 if [[ "$PORTS_MODE" == "fake" && "${S17_JD_ALLOW_FAKE_PORTS:-}" == "1" && "${S17_JD_LOOPBACK_PROOF:-}" != "1" ]]; then
   echo "JD_RUNTIME=flutter_test_fake_only"
+  # Harness suite is tagged and skipped by default (dart_test.yaml).
   exec flutter test \
     --no-pub \
     --reporter expanded \
+    --tags harness \
+    --run-skipped \
     test/staging/execute_s17_journey_d_harness_test.dart
 fi
 

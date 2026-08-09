@@ -7,7 +7,8 @@ import '../../support/adaptation_application_test_support.dart';
 import '../../support/adaptation_planning_test_support.dart';
 
 void main() {
-  const handler = SessionAdaptationCoachDecisionHandler();
+  // Constructor is non-const (optional pipeline injection); keep test aligned.
+  final handler = SessionAdaptationCoachDecisionHandler();
 
   late ProtocolDraft timedDraft;
   late PlannedSessionAdaptationInput timedInput;

@@ -1,0 +1,26 @@
+# Phase 2.2 test topology — default suite excludes environment-gated groups.
+#
+# Tags:
+#   harness    — Journey D fake-port entrypoint tests (require env + request files)
+#   diagnosis  — nontest Flutter launcher / tooling diagnosis tests
+#
+# Default (authoritative green suite):
+#   flutter test
+#
+# Explicit non-default groups:
+#   ./tool/testing/run_phase2_harness_tests.sh
+#   ./tool/testing/run_phase2_diagnosis_tests.sh
+#
+# Or manually:
+#   flutter test --tags harness --run-skipped …
+#   flutter test --tags diagnosis --run-skipped …
+
+tags:
+  harness:
+    skip: >-
+      Environment-gated Journey D fake harness. Run:
+      ./tool/testing/run_phase2_harness_tests.sh
+  diagnosis:
+    skip: >-
+      Environment-gated nontest Flutter diagnosis. Run:
+      ./tool/testing/run_phase2_diagnosis_tests.sh

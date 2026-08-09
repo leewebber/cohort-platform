@@ -14,7 +14,14 @@ void main() {
   );
   final creator =
       '$root/tool/staging/create_s17_journey_d_adaptation_fixture.sh';
-  const stableMarker = 's17_jd_adapt_20260805T012428Z_933d9364';
+  /// Retired/poisoned live identity (Phase 1 fail-closed refuse list).
+  const retiredMarker = 's17_jd_adapt_20260805T012428Z_933d9364';
+
+  /// Non-retired marker for live paths that must pass the refuse list.
+  const syntheticLiveMarker = 's17_jd_adapt_20260809T120000Z_a1b2c3d4';
+
+  /// Dry-run may still use the retired string as a local test marker.
+  const stableMarker = retiredMarker;
   const expectedPreRebindHash =
       '156dfe8cf262e43f4e7e47cab070a37f466d3271fe26b29ca80e5c5e49e8a7d7';
 
@@ -286,7 +293,15 @@ print("MUTATING_NOT_STARTED_OK")
     });
 
     test('13 marker binding cannot enable live mode', () async {
-      final result = await runCreator(args: '--live --marker $stableMarker');
+      // Retired marker refuses on live before later guards.
+      final retired = await runCreator(args: '--live --marker $retiredMarker');
+      expect(retired.exitCode, 2);
+      expect(retired.stderr.toString(), contains('retired/poisoned'));
+
+      // Non-retired marker reaches the LIVE_CREATE guard.
+      final result = await runCreator(
+        args: '--live --marker $syntheticLiveMarker',
+      );
       expect(result.exitCode, 2);
       expect(result.stderr.toString(), contains('S17_JD_LIVE_CREATE'));
       expect(result.stdout.toString(), isNot(contains('DRY_RUN_OK')));
@@ -302,8 +317,19 @@ print("MUTATING_NOT_STARTED_OK")
       expect(noConfirm.exitCode, 2);
       expect(noConfirm.stderr.toString(), contains('CONFIRM_COHORT_STAGING'));
 
+      // Live + retired refuses (poisoned precedence).
+      final retiredLive = await runCreator(
+        args: '--live --marker $retiredMarker',
+        env: const {
+          'S17_JD_LIVE_CREATE': '1',
+          'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',
+        },
+      );
+      expect(retiredLive.exitCode, 2);
+      expect(retiredLive.stderr.toString(), contains('retired/poisoned'));
+
       final liveFlag = await runCreator(
-        args: '--live --marker $stableMarker',
+        args: '--live --marker $syntheticLiveMarker',
         env: const {
           'S17_JD_LIVE_CREATE': '1',
           'S17_JD_LIVE_MUTATION_BACKEND': 'synthetic_ok',

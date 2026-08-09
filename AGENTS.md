@@ -14,14 +14,14 @@ Before changing the repository:
 4. Treat existing uncommitted changes as user-owned. Do not discard, clean,
    stage, or rewrite them unless explicitly authorised.
 
-Phase 1 product Sprints **1.1–1.7** are **closed**
-(`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Local product
-delivery plus Release Gate B4 staging evidence (including Journey D and
-Journey I→J) were reviewed at harness HEAD `7ba8455`. No further Phase 1
-validation, staging, fixture or hardening task is required. Next authorised
-project stage: **Phase 2 — Architecture Consolidation**. No Sprint 1.8 or
-other product phase has been allocated. Historical Phase 5 MVP numbering must
-not be treated as the current delivery sequence.
+Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
+(`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
+Architecture Consolidation is **current**. Phase 2.1 inventory and Phase 2.2
+authority/suite clearance are complete. Do not reopen Phase 1 staging or
+fixture work. No Sprint 1.8 or other product phase has been allocated.
+Historical Phase 5 MVP numbering must not be treated as the current delivery
+sequence. The July 2026 “Phase 2 completion” document is historical
+pre–Phase 1 alignment — not current Phase 2 authority.
 
 ## Authority and product invariants
 
@@ -69,10 +69,18 @@ and
 ## Verification
 
 Use the narrowest relevant checks first, then broaden in proportion to the
-change. Existing repository verification entry points include:
+change. Test topology (Phase 2.2):
+
+| Group | Command |
+|-------|---------|
+| **DEFAULT** (authoritative green suite) | `flutter test` |
+| **HARNESS** (fake-port Journey D) | `./tool/testing/run_phase2_harness_tests.sh` |
+| **DIAGNOSIS** (nontest Flutter launcher) | `./tool/testing/run_phase2_diagnosis_tests.sh` |
+
+`dart_test.yaml` skips tags `harness` and `diagnosis` in the default suite.
+Existing repository verification entry points also include:
 
 ```bash
-flutter test
 flutter analyze
 flutter test test/architecture/ test/planning/ test/knowledge/
 flutter test test/programme/athlete_programme_completion_self_test_2_test.dart
@@ -92,14 +100,16 @@ record.
 
 The exact next sequence is:
 
-1. **Phase 2 — Architecture Consolidation** when separately authorised.
-2. Production rollout and remote migration application remain separately
+1. **Phase 2.3 — Phase 1 Invariant Freeze and Consolidation Safety Gate**
+   (next authorised Phase 2 sprint).
+2. Later Phase 2 consolidation sprints per the Phase 2.1 plan.
+3. Production rollout and remote migration application remain separately
    controlled.
-3. Do not allocate or begin Sprint 1.8 or another product phase without
+4. Do not allocate or begin Sprint 1.8 or another product phase without
    explicit authority.
-4. Future package-authored bounded horizons require a separate authorised
+5. Future package-authored bounded horizons require a separate authorised
    contract/schema change.
-5. Do not reopen Phase 1 staging or fixture work unless a new authority
+6. Do not reopen Phase 1 staging or fixture work unless a new authority
    explicitly allocates it.
 
 Acceptance mutates only the current prepared executable session. Scheduling must

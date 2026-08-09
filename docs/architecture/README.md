@@ -1,6 +1,13 @@
 # Architecture documentation index
 
-**Phase 2 (Architecture Consolidation)** closed on branch `refactor/architecture-alignment`. Start here for orientation.
+**Current Phase 2 — Architecture Consolidation** is the post–Phase 1 effort
+authorised after `e034ea9`. Start from
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
+
+The July 2026 document
+[Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md)
+is **historical pre–Phase 1 architecture alignment** (then also labeled
+“Phase 2”). It is not authoritative for the current programme path.
 
 | Document | Purpose |
 |----------|---------|
@@ -33,7 +40,7 @@
 | [Connected_Data_Privacy_v1.md](./Connected_Data_Privacy_v1.md) | **Phase 6 Sprint 4** — connected data & no-location policy |
 | [../planning/Planning_Engine_Implementation_v1.md](../planning/Planning_Engine_Implementation_v1.md) | Phase 4 Sprint 1 — `PlanningEngineService` merge policies |
 | [../planning/Session_Blueprint_Implementation_v1.md](../planning/Session_Blueprint_Implementation_v1.md) | Phase 4 Sprint 2 — `SessionBlueprint` generator |
-| [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md) | Sprint 10 closure report — verification, adapters, limitations, DoD |
+| [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md) | **Historical** pre–Phase 1 architecture alignment (2026-07-29); not current Phase 2 authority |
 | [adrs/](./adrs/) | Standalone architecture decision records (ADR-017+) |
 
 **Companion product docs** (under `07 Documentation/`):
@@ -47,12 +54,9 @@
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** Phase 1 product Sprints **1.1–1.7** are
-**closed** (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete` at
-reviewed harness HEAD `7ba8455`). Scheduling includes restore,
-Move/Swap/Push/Skip, one-level Undo, durable nullable horizon, and
-assignment-scoped calendar UX. Journey D and Journey I→J staging evidence are
-verified. Next authorised stage: Phase 2 — Architecture Consolidation. No
-Sprint 1.8 / other product phase is allocated. Historical Phase 5
-MVP numbering is not the current delivery sequence. See
+**Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
+Architecture Consolidation is **CURRENT**. Phase 2.1 inventory is complete;
+Phase 2.2 clears documentation authority and full-suite test debt. Programme
+athletes follow the Sprint 1.6 acceptance-gated path, not historical Coach Brain
+“sole day-of” claims. See
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

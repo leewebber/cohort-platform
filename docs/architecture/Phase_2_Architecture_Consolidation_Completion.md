@@ -1,18 +1,43 @@
-# Phase 2 — Architecture Consolidation — Completion Report
+# Historical — Pre–Phase 1 Architecture Alignment Completion Report
 
-**Sprint:** 10 (verification and closure)  
+> **NOT AUTHORITATIVE for the current Phase 2.**
+>
+> This document is **preserved project history**. It describes the earlier
+> architecture-alignment effort on branch `refactor/architecture-alignment`
+> (2026-07-29, then labeled “Phase 2 / Sprint 10”).
+>
+> **Current delivery sequence (authoritative):**
+>
+> - **Phase 1 — Core Domain Architecture** = CLOSED at `e034ea9`
+> - **Phase 2 — Architecture Consolidation** = CURRENT (post–Phase 1)
+> - Programme-athlete adaptation authority is the Sprint 1.6 acceptance-gated
+>   path (`ProgrammeAdaptFlow` / `ProgrammeAdaptation*Service`), not the
+>   historical “Coach Brain sole day-of” claim below.
+>
+> See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
+> and [`Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](./Athlete_Programme_Acceptance_Gated_Adaptation_v1.md).
+
+**Historical label (do not reuse):** “Phase 2 — Architecture Consolidation —
+Completion Report” (pre–Phase 1 alignment)
+
+**Sprint:** 10 (verification and closure) — historical numbering  
 **Branch:** `refactor/architecture-alignment`  
 **Date:** 2026-07-29
 
 ---
 
-## 1. Phase objective
+## 1. Phase objective (historical)
 
 Consolidate athlete programme execution around a single domain lifecycle:
 
 **Programme → SessionOccurrence → Coach Brain / SessionAdaptationPipeline → WorkoutPlayer → WorkoutExecutionRecord → M8 persistence adapters → programme post-completion adaptation**
 
 Without changing Supabase schema, athlete-visible UX, or introducing new product features.
+
+**Supersession note:** After Phase 1 closure, materialised programme athletes use
+`AthleteProgrammeTodaySection` + `ProgrammeAdaptFlow`. Coach Brain day-of remains
+a legacy / Plan Library path only and must not override the Phase 1 programme
+contract.
 
 ---
 

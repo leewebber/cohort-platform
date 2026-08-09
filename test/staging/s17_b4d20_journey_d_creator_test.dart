@@ -602,14 +602,27 @@ print("NO_REPAIR_OK")
       expect(out, contains('"mutation": false'));
       expect(out, contains('"propose_reject_accept": false'));
       expect(out, contains('"journey_execution": false'));
-      // Hosted mode exists (B4d.21d.3) but requires an explicit read-only guard.
-      final hosted = await Process.run('bash', [
+      // Hosted mode: staging confirm precedes the hosted-readonly guard.
+      final noConfirm = await Process.run('bash', [
         '-c',
-        'cd "$root" && env -u S17_JD_HOSTED_READONLY '
+        'cd "$root" && env -u CONFIRM_COHORT_STAGING -u S17_JD_HOSTED_READONLY '
             '"$diagnose" s17_jd_adapt_20260804T120000Z_aabbccdd --hosted',
       ]);
-      expect(hosted.exitCode, 2);
-      expect(hosted.stderr.toString(), contains('S17_JD_HOSTED_READONLY'));
+      expect(noConfirm.exitCode, 2);
+      expect(noConfirm.stderr.toString(), contains('CONFIRM_COHORT_STAGING'));
+
+      // With staging confirm + local projects fixture, missing hosted-readonly
+      // guard fails closed (local JSON only; no hosted mutation).
+      final noReadonly = await Process.run('bash', [
+        '-c',
+        'cd "$root" && CONFIRM_COHORT_STAGING=1 '
+            'S17_PROJECTS_JSON_FILE="$root/test/staging/fixtures/s17_projects_list.json" '
+            'env -u S17_JD_HOSTED_READONLY '
+            '"$diagnose" s17_jd_adapt_20260804T120000Z_aabbccdd --hosted',
+      ]);
+      expect(noReadonly.exitCode, 2);
+      expect(noReadonly.stderr.toString(), contains('S17_JD_HOSTED_READONLY'));
+      expect(noReadonly.stdout.toString(), isNot(contains('JD_READONLY_HOSTED_OK')));
     });
 
     test(

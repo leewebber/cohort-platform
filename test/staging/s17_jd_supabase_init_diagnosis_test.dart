@@ -106,7 +106,9 @@ void main() {
     expect(text, contains('<email>'));
   });
 
-  test('5-9 nontest init proof via supported launcher (debug build)', () async {
+  test(
+    '5-9 nontest init proof via supported launcher (debug build)',
+    () async {
     final prep = await Process.run('bash', [
       '-c',
       'set -euo pipefail; export S17_ROOT="$root"; '
@@ -152,9 +154,14 @@ void main() {
     expect(jsonEncode(json).toLowerCase(), isNot(contains('password')));
     expect(jsonEncode(json), isNot(contains('otnhhdxs')));
     expect(jsonEncode(json), isNot(contains('tsbadngz')));
-  }, timeout: const Timeout(Duration(minutes: 3)));
+    },
+    timeout: const Timeout(Duration(minutes: 3)),
+    tags: ['diagnosis'],
+  );
 
-  test('10 execute loopback proof still works', () async {
+  test(
+    '10 execute loopback proof still works',
+    () async {
     final prep = await Process.run('bash', [
       '-c',
       'set -euo pipefail; export S17_ROOT="$root"; '
@@ -197,7 +204,10 @@ void main() {
     expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
     final json = jsonDecode(out.readAsStringSync()) as Map<String, dynamic>;
     expect(json['ok'], isTrue);
-  }, timeout: const Timeout(Duration(minutes: 3)));
+    },
+    timeout: const Timeout(Duration(minutes: 3)),
+    tags: ['diagnosis'],
+  );
 
   test('11 live cannot silent-fake; production denied in init validator', () {
     expect(
