@@ -1,8 +1,9 @@
 # Architecture documentation index
 
-**Current Phase 2 — Architecture Consolidation** is the post–Phase 1 effort
-authorised after `e034ea9`. Start from
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
+**Phase 2 — Architecture Consolidation is CLOSED.** Start from
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
+and the binding freeze
+[`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md).
 
 The July 2026 document
 [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md)
@@ -11,6 +12,8 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 
 | Document | Purpose |
 |----------|---------|
+| [Canonical_Programme_Architecture_Freeze_v1.md](./Canonical_Programme_Architecture_Freeze_v1.md) | **Binding** — frozen programme athlete architecture (Phase 2.10) |
+| [Phase_2_Closure_v1.md](./Phase_2_Closure_v1.md) | Phase 2 closure record (2.1–2.10) |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
 | [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |
 | [Athlete_Catalogue_Enrolment_v1.md](./Athlete_Catalogue_Enrolment_v1.md) | Phase 1 Sprint 1.3 — non-commercial athlete catalogue enrolment |
@@ -55,14 +58,11 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
-Architecture Consolidation is **CURRENT**. Phase 2.1–2.8 are complete. Programme
-Athlete runtime is canonical; athlete-shell new Plan Library starts are closed;
-Home legacy entry is retired; remaining legacy code is isolated for Phase 2.9
-deletion. Plan Library / Coach Brain athlete runtime remains **`RETIRE`**
-(not deleted):
-[`Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](./Phase_2_Compatibility_Path_Retirement_Decision_v1.md).
-Home authority:
-[`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md).
-Consolidation gate:
-[`Phase_2_Consolidation_Safety_Gate_v1.md`](./Phase_2_Consolidation_Safety_Gate_v1.md).
-See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
+Architecture Consolidation is **CLOSED**. Canonical programme architecture is
+**frozen**. Executable legacy runtime is deleted; passive PlanAssignment /
+`hasActivePlan` compatibility remains inert. Phase 3 is **not started**.
+See [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md),
+[`Phase_2_Closure_v1.md`](./Phase_2_Closure_v1.md),
+[`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md),
+[`Phase_2_Consolidation_Safety_Gate_v1.md`](./Phase_2_Consolidation_Safety_Gate_v1.md),
+and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

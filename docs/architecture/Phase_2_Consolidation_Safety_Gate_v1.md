@@ -1,19 +1,23 @@
 # Phase 2 Consolidation Safety Gate v1
 
-**Status:** Binding for Phase 2 consolidation (Phase 2.3+)  
+**Status:** Binding for Phase 1 invariants + Phase 2 frozen architecture (Phase 2.3+)  
 **Established:** Phase 2.3 — Phase 1 Invariant Freeze and Consolidation Safety Gate  
+**Phase 2.10:** Remains mandatory after Phase 2 closure for any architecture-affecting change.  
 **Authoritative command:**
 
 ```bash
 ./tool/testing/run_phase2_consolidation_safety_gate.sh
 ```
 
-This gate freezes the Phase 1 behavioural contract as executable evidence. It
-must remain independent of hosted staging/production, fail closed when required
-evidence is absent, and stay suitable for repeated local use.
+This gate freezes the Phase 1 behavioural contract and Phase 2.4–2.10
+consolidation tripwires as executable evidence. It must remain independent of
+hosted staging/production, fail closed when required evidence is absent, and
+stay suitable for repeated local use.
 
-A green gate is **necessary** before consolidation, migration, or deletion work.
-It does **not alone** prove that a legacy path is dead or safe to delete.
+A green gate is **necessary** before architecture-affecting work. It does
+**not alone** prove that a legacy path is dead or safe to delete — Phase 2.10
+closure evidence is recorded in
+[`Phase_2_Closure_v1.md`](./Phase_2_Closure_v1.md).
 
 ---
 

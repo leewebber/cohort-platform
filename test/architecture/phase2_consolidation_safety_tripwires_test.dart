@@ -271,6 +271,64 @@ void main() {
       expect(founder.contains('PlanLibraryScreen'), isFalse);
     });
   });
+
+  group('Phase 2.10 consolidation closure freeze', () {
+    test('Home resolver never takes hasActivePlan or PlanAssignment inputs', () {
+      final authority = File(
+        '$root/lib/features/home/services/athlete_home_runtime_authority.dart',
+      ).readAsStringSync();
+      expect(authority.contains('hasActivePlan'), isTrue); // docs only
+      expect(
+        RegExp(r'resolve\([\s\S]*hasActivePlan').hasMatch(authority),
+        isFalse,
+      );
+      expect(authority.contains('materialisedProgramme'), isTrue);
+      expect(
+        authority.contains('programmeEvidenceUnavailable'),
+        isTrue,
+      );
+    });
+
+    test('AthleteGeneratedTodaySection orphan deleted; ChoosePlan retained', () {
+      final today = File(
+        '$root/lib/features/athlete_profile/widgets/'
+        'athlete_generated_today_section.dart',
+      ).readAsStringSync();
+      expect(today.contains('class AthleteGeneratedTodaySection'), isFalse);
+      expect(today.contains('class AthleteOnboardingEntryCard'), isFalse);
+      expect(today.contains('class ChoosePlanEntryCard'), isTrue);
+      final home = File(
+        '$root/lib/features/home/home_screen.dart',
+      ).readAsStringSync();
+      expect(home.contains('ChoosePlanEntryCard'), isTrue);
+      expect(home.contains('AthleteGeneratedTodaySection'), isFalse);
+    });
+
+    test('canonical freeze and Phase 2 closure documents exist', () {
+      expect(
+        File(
+          '$root/docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md',
+        ).existsSync(),
+        isTrue,
+      );
+      expect(
+        File('$root/docs/architecture/Phase_2_Closure_v1.md').existsSync(),
+        isTrue,
+      );
+      final freeze = File(
+        '$root/docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md',
+      ).readAsStringSync();
+      expect(freeze.contains('CANONICAL_ARCHITECTURE_FROZEN=true'), isTrue);
+      expect(
+        freeze.contains('ONE_OPERATIONAL_AUTHORITY_PER_RESPONSIBILITY=true'),
+        isTrue,
+      );
+      expect(
+        freeze.contains('PASSIVE_LEGACY_STATE_SELECTS_RUNTIME=false'),
+        isTrue,
+      );
+    });
+  });
 }
 
 String _sectionBetween(String source, String start, String end) {

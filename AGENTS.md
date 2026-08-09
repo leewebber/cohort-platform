@@ -16,23 +16,20 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1–2.9 are complete.
-Programme Athlete runtime is **canonical**. Plan Library / Coach Brain athlete
-runtime decision is **`RETIRE`**. Legacy runtime implementations are **deleted**
-(`LEGACY_RUNTIME_CODE_DELETED=true`): DailyBriefing, HomeAdaptFlow,
-AdaptiveProgression coordinator, ProgressSummaryService, Plan Library screens,
-and PlanStartService. Passive PlanAssignment / `hasActivePlan` decode may remain
-but must not select runtime authority. See
-[`docs/architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md`](docs/architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md),
-[`docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
-and
-[`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md).
-Every later consolidation sprint must pass
+Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
+`CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
+operational athlete authority. Executable legacy Plan Library / DailyBriefing /
+AdaptiveProgression runtime is deleted. Passive PlanAssignment / `hasActivePlan`
+decode may remain but must not select runtime authority. Binding freeze:
+[`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md)
+and closure:
+[`docs/architecture/Phase_2_Closure_v1.md`](docs/architecture/Phase_2_Closure_v1.md).
+Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
-Do not reopen Phase 1 staging or fixture work. No Sprint 1.8 or other product
-phase has been allocated. Historical Phase 5 MVP numbering must not be treated
-as the current delivery sequence. The July 2026 “Phase 2 completion” document
-is historical pre–Phase 1 alignment — not current Phase 2 authority.
+Do not reopen Phase 1 staging or fixture work. Phase 3 is **not started**.
+Historical Phase 5 MVP numbering must not be treated as the current delivery
+sequence. The July 2026 “Phase 2 completion” document is historical pre–Phase 1
+alignment — not current Phase 2 authority.
 
 ## Authority and product invariants
 

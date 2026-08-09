@@ -1,9 +1,10 @@
-/// Canonical Home runtime-authority classification (Phase 2.4 / 2.8).
+/// Canonical Home runtime-authority classification (Phase 2.4 / 2.8 / 2.10).
 ///
 /// Programme Athlete runtime is the sole canonical authority for materialised
 /// programme athletes. Plan Library / Coach Brain Home entry is **retired**
-/// (Phase 2.8): legacy `hasActivePlan` / PlanAssignment no longer select Home
-/// runtime. Persisted legacy data may remain until Phase 2.9 deletion.
+/// (Phase 2.8) and implementations **deleted** (Phase 2.9). Legacy
+/// `hasActivePlan` / PlanAssignment never select Home runtime. Persisted
+/// legacy data may remain as passive compatibility only (Phase 2.10 freeze).
 ///
 /// Pure decision — no UI side effects, no hosted I/O, does not invoke flows.
 enum AthleteHomeRuntimeAuthority {

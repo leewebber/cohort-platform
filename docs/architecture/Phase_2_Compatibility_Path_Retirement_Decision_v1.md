@@ -350,7 +350,7 @@ A green safety gate alone does not prove code is dead.
 | **2.7** | Migrate completion / progress / briefing consumers off `hasActivePlan` | `WorkoutCompleteScreen` adapt gate; Progress tab → programme summary; remove AdaptiveProgression from programme athletes |
 | **2.8** | Retire Home legacy runtime entry points | Remove `legacyPlanCompatibility` Home branch, `DailyBriefingSection` Home mount, `HomeAdaptFlow` product entry |
 | **2.9** | Orphaned Coach Brain / Plan Library service cleanup | **COMPLETE** — see [`Phase_2_9_Legacy_Runtime_Deletion_v1.md`](./Phase_2_9_Legacy_Runtime_Deletion_v1.md) |
-| **2.10** | Verify consolidation closure / freeze canonical architecture | Full suite + safety gate + residual reachability proof |
+| **2.10** | Verify consolidation closure / freeze canonical architecture | **COMPLETE** — see [`Phase_2_Closure_v1.md`](./Phase_2_Closure_v1.md) and [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md) |
 | **Phase 2 final gate** | Full suite + safety gate + analyzer + reachability proof | No hosted journeys unless separately authorised |
 
 Persistence/schema dormancy cleanup remains a later, separately authorised step.

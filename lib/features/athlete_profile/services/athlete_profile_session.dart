@@ -19,6 +19,8 @@ class AthleteProfileSession {
   static PlanDefinition? get activePlan => _activePlan;
   static PlanAssignment? get activeAssignment => _assignment;
 
+  /// Passive compatibility only (Phase 2.10). Must not select Home, Progress,
+  /// completion, or programme-assignment authority.
   static bool get hasActivePlan =>
       _assignment != null &&
       _assignment!.isActive &&

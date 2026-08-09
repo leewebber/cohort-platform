@@ -4,78 +4,11 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
-import '../../../core/widgets/today_session_card.dart';
-import '../../workout_player/models/workout_player_result.dart';
-import '../../workout_player/services/workout_player_launcher.dart';
-import '../services/athlete_profile_session.dart';
 
-/// Home "Today" card driven by active PlanAssignment + Coach Brain session.
-class AthleteGeneratedTodaySection extends StatelessWidget {
-  const AthleteGeneratedTodaySection({super.key, this.onSessionReturned});
-
-  final ValueChanged<WorkoutPlayerResult?>? onSessionReturned;
-
-  @override
-  Widget build(BuildContext context) {
-    final profile = AthleteProfileSession.profile;
-    final programme = AthleteProfileSession.programme;
-    final plan = AthleteProfileSession.activePlan;
-    final assignment = AthleteProfileSession.activeAssignment;
-    if (profile == null || programme == null) {
-      return const SizedBox.shrink();
-    }
-
-    final duration = programme.durationMinutes;
-    final durationLabel = duration == null
-        ? 'Duration TBD'
-        : '$duration min estimated';
-
-    final weekLabel =
-        assignment?.weekDayLabel ??
-        '${profile.trainingDaysPerWeek} days / week';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (plan != null && assignment != null) ...[
-          Text('ACTIVE PLAN', style: CohortTextStyles.sectionLabel),
-          const SizedBox(height: CohortSpacing.sm),
-          Text(plan.name, style: CohortTextStyles.h2),
-          const SizedBox(height: CohortSpacing.xs),
-          Text(
-            '${assignment.currentPhase} · ${assignment.weekDayLabel}',
-            style: CohortTextStyles.body,
-          ),
-          const SizedBox(height: CohortSpacing.xl),
-        ],
-        TodaySessionCard(
-          title: programme.sessionTitle,
-          subtitle: 'Today\'s Session · ${programme.goalLabel}',
-          programmeName: plan?.name ?? programme.programmeName,
-          weekLabel: weekLabel,
-          duration: durationLabel,
-          sessionGoal: 'Goal: ${plan?.goalLabel ?? profile.primaryGoal.label}',
-          progressLabel: profile.displayName,
-          status: 'Planned Session',
-          statusDetail: plan != null
-              ? 'Active plan · personalised for today.'
-              : 'Built for you by Cohort.',
-          buttonLabel: "EXECUTE TODAY'S TRAINING",
-          onPressed: () async {
-            final result = await WorkoutPlayerLauncher().launchWithPlan(
-              context: context,
-              athleteId: profile.athleteId,
-              plan: programme.planBundle,
-            );
-            onSessionReturned?.call(result);
-          },
-        ),
-      ],
-    );
-  }
-}
-
-/// Empty state when the athlete has no active plan.
+/// Established no-programme Home entry — opens the canonical programme catalogue.
+///
+/// Historical filename retained (`athlete_generated_today_section.dart`). The
+/// legacy generated-plan Today widget was deleted in Phase 2.10.
 class ChoosePlanEntryCard extends StatelessWidget {
   const ChoosePlanEntryCard({super.key, required this.onChoosePlan});
 
@@ -111,17 +44,5 @@ class ChoosePlanEntryCard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-/// Legacy onboarding entry (profile without plan).
-class AthleteOnboardingEntryCard extends StatelessWidget {
-  const AthleteOnboardingEntryCard({super.key, required this.onStart});
-
-  final VoidCallback onStart;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoosePlanEntryCard(onChoosePlan: onStart);
   }
 }

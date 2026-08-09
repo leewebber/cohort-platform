@@ -345,6 +345,9 @@ void main() {
         expect(replay.success, isFalse);
         expect(replay.errorCode, 'proposal_consumed');
 
+        // Proposal ids include millisecond stamps; wait so a fresh propose
+        // cannot collide with the consumed first proposal id.
+        await Future<void>.delayed(const Duration(milliseconds: 2));
         final fresh = await proposalService.propose(
           package: reverted.package!,
           request: const AdaptationRequest(

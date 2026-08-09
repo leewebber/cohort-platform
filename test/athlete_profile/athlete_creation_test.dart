@@ -6,23 +6,13 @@ import 'package:cohort_platform/features/athlete_profile/onboarding/athlete_onbo
 import 'package:cohort_platform/features/athlete_profile/services/athlete_planning_input_builder.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_programme_generation_service.dart';
-import 'package:cohort_platform/features/athlete_profile/widgets/athlete_generated_today_section.dart';
-import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
-import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 import 'package:cohort_platform/features/workout_player/services/coach_brain_workout_plan_service.dart';
-import 'package:cohort_platform/knowledge/gap_analysis/capability_evidence_models.dart';
 import 'package:cohort_platform/knowledge/gap_analysis/capability_gap_analysis_service.dart';
 import 'package:cohort_platform/knowledge/io/yaml_knowledge_ontology_loader.dart';
 import 'package:cohort_platform/knowledge/read/in_memory_knowledge_graph_reader.dart';
 import 'package:cohort_platform/knowledge/training_intent/training_intent_from_gaps_service.dart';
-import 'package:cohort_platform/models/session_block_type.dart';
-import 'package:cohort_platform/models/strength_exercise_prescription.dart';
-import 'package:cohort_platform/models/workout_format.dart';
 import 'package:cohort_platform/planning/exercise_policy/deterministic_exercise_policy_engine.dart';
-import 'package:cohort_platform/planning/models/planning_goal_context.dart';
-import 'package:cohort_platform/planning/models/planning_input.dart';
 import 'package:cohort_platform/planning/orchestration/coach_brain_service.dart';
-import 'package:cohort_platform/planning/orchestration/models/planning_context.dart';
 import 'package:cohort_platform/planning/planning_engine_service.dart';
 import 'package:cohort_platform/planning/prescription/deterministic_prescription_engine.dart';
 import 'package:cohort_platform/planning/session_blueprint/deterministic_session_blueprint_generator.dart';
@@ -176,94 +166,6 @@ void main() {
       expect(find.text('Fat Loss'), findsOneWidget);
     });
 
-    testWidgets('generated today section shows athlete programme', (
-      tester,
-    ) async {
-      final now = DateTime.utc(2026, 7, 29);
-      final plan = SessionExecutionPlan(
-        sessionId: 'home.plan',
-        sessionTitle: 'Personal Strength Session',
-        durationMin: 45,
-        blocks: [
-          SessionExecutionBlock(
-            blockId: 'b1',
-            title: 'Primary',
-            blockType: SessionBlockType.strength,
-            content: '',
-            workoutFormat: WorkoutFormat.none,
-            position: 1,
-            linkedExercises: [
-              SessionExecutionExerciseSummary(
-                exerciseId: 'ex.1',
-                displayName: 'Goblet Squat',
-                prescription: StrengthExercisePrescription(
-                  sets: 3,
-                  reps: StrengthRepPrescription.exact(8),
-                ),
-              ),
-            ],
-          ),
-        ],
-      );
-      final context = PlanningContext(
-        orchestrationId: 'orch.home',
-        startedAt: now,
-        completedAt: now,
-        orchestrationStatus: OrchestrationStatus.complete,
-        input: PlanningInput(
-          athleteId: 'athlete.home',
-          goalContext: const PlanningGoalContext(
-            goalId: 'cohort.goal.general_fat_loss',
-          ),
-          capabilityEvidence: const AthleteCapabilityEvidenceProfile(items: []),
-          knowledgeOntologyVersion: '1.3.0',
-          asOf: now,
-        ),
-        sessionExecutionPlan: plan,
-      );
-
-      AthleteProfileSession.bind(
-        profile: AthleteProfile(
-          athleteId: 'athlete.home',
-          displayName: 'Casey',
-          primaryGoal: AthleteGoalCatalog.byId('fat_loss'),
-          availableEquipment: const ['cohort.equipment.bodyweight'],
-          environmentId: 'cohort.environment.home',
-          trainingDaysPerWeek: 3,
-          preferredSessionDurationMinutes: 45,
-          experienceLevel: AthleteExperienceLevel.intermediate,
-          assessmentComplete: true,
-          createdAt: now,
-          updatedAt: now,
-        ),
-        programme: AthleteGeneratedProgramme(
-          planBundle: CoachBrainWorkoutPlan(
-            planningContext: context,
-            plan: plan,
-            brief: const WorkoutSessionBrief(
-              sessionName: 'Personal Strength Session',
-              estimatedDurationMinutes: 45,
-              trainingIntent: 'Strength',
-            ),
-          ),
-          programmeName: 'Fat Loss Programme',
-          phaseLabel: 'General Preparation',
-        ),
-      );
-
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(body: AthleteGeneratedTodaySection()),
-        ),
-      );
-      await tester.pump();
-
-      expect(find.byType(AthleteGeneratedTodaySection), findsOneWidget);
-      expect(find.textContaining('Casey'), findsWidgets);
-      expect(find.text('EXECUTE TODAY\'S TRAINING'), findsOneWidget);
-      expect(find.textContaining('FAT LOSS PROGRAMME'), findsOneWidget);
-      expect(find.textContaining('PERSONAL STRENGTH SESSION'), findsOneWidget);
-    });
   });
 }
 

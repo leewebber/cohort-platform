@@ -1,4 +1,4 @@
-# Athlete Home Runtime Authority v1 — Phase 2.4 / 2.8 / 2.9
+# Athlete Home Runtime Authority v1 — Phase 2.4 / 2.8 / 2.9 / 2.10
 
 **Status:** Binding for Home runtime classification (Phase 2.4+)  
 **First migrated caller:** `HomeScreen`  
@@ -8,8 +8,10 @@
 `legacyPlanCompatibility` removed; `hasActivePlan` no longer selects Home
 runtime.  
 **Phase 2.9 amendment:** DailyBriefing / HomeAdaptFlow implementations deleted;
-legacy Plan Library / PlanStartService deleted. See
-[`Phase_2_9_Legacy_Runtime_Deletion_v1.md`](./Phase_2_9_Legacy_Runtime_Deletion_v1.md).
+legacy Plan Library / PlanStartService deleted.  
+**Phase 2.10 amendment:** Architecture frozen; `AthleteGeneratedTodaySection`
+orphan deleted; `ChoosePlanEntryCard` remains the no-programme catalogue entry.
+See [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md).
 
 ## Authority statement
 
@@ -59,15 +61,17 @@ Phase 2.4 briefly selected `legacyPlanCompatibility` when
 | `loading` | “Checking programme…”; neither adapt flow |
 | `unavailable` | “Unable to confirm programme.”; neither adapt flow |
 
-## Remaining legacy surfaces (Phase 2.9)
+## Remaining legacy surfaces (Phase 2.10)
 
 | Location | Notes |
 |----------|-------|
-| DailyBriefing / HomeAdaptFlow / AdaptiveProgression coordinator / ProgressSummaryService / Plan Library screens / PlanStartService | **Deleted** |
+| DailyBriefing / HomeAdaptFlow / AdaptiveProgression coordinator / ProgressSummaryService / Plan Library screens / PlanStartService / AthleteGeneratedTodaySection | **Deleted** |
 | `SessionCompletion` / capability timeline stores | Shared-neutral; path under `adaptive_progression/models` retained |
 | `PlanAssignment` / `hasActivePlan` | Passive data compatibility only — ignored for Home/Progress/complete authority |
 | `AthletePlanMaterialisationService` | MATERIALISATION_BRIDGE — `legacyHasActivePlan` preflight removed |
 | `AthleteProgrammeGenerationService` | Onboarding dependency — retained |
+| `ChoosePlanEntryCard` | Canonical no-programme entry (historical file path retained) |
+| `HomeTodaySessionSection` | Unmounted; deferred orphan UI cleanup |
 
 ## Binding companions
 

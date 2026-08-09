@@ -1,7 +1,7 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-09  
-**Status:** Phase 2 — Architecture Consolidation **in progress** (2.9 complete).
+**Status:** Phase 2 — Architecture Consolidation **CLOSED**.
 
 ```text
 PHASE_1_CLOSED=true
@@ -16,83 +16,86 @@ PHASE_2_6_COMPLETE=true
 PHASE_2_7_COMPLETE=true
 PHASE_2_8_COMPLETE=true
 PHASE_2_9_COMPLETE=true
-CONSOLIDATION_SAFETY_GATE_ESTABLISHED=true
-CANONICAL_RUNTIME_AUTHORITY_ESTABLISHED=true
+PHASE_2_10_COMPLETE=true
+PHASE_2_CLOSED=true
+CANONICAL_ARCHITECTURE_FROZEN=true
+ONE_OPERATIONAL_AUTHORITY_PER_RESPONSIBILITY=true
 LEGACY_RUNTIME_DECISION=RETIRE
 NEW_LEGACY_STARTS_CLOSED=true
 HOME_LEGACY_ENTRY_RETIRED=true
 LEGACY_COMPLETION_PATH_RETIRED=true
 NORMAL_ATHLETE_LEGACY_RUNTIME_REACHABLE=false
 FOUNDER_STAGING_LEGACY_RUNTIME_REACHABLE=false
-LEGACY_RUNTIME_CODE_DELETED=true
-DAILY_BRIEFING_DELETED=true
-HOME_ADAPT_FLOW_DELETED=true
-ADAPTIVE_PROGRESSION_DELETED=true
-LEGACY_PROGRESS_SUMMARY_DELETED=true
-LEGACY_PLAN_LIBRARY_DELETED=true
-PLAN_START_SERVICE_DELETED=true
+ONBOARDING_LEGACY_RUNTIME_REACHABLE=false
+EXECUTABLE_LEGACY_RUNTIME_CODE_DELETED=true
 LEGACY_PERSISTENCE_CODE_DELETED=partial
 PASSIVE_LEGACY_DATA_COMPATIBILITY_RETAINED=true
+PASSIVE_LEGACY_STATE_SELECTS_RUNTIME=false
 LEGACY_DATA_DELETED=false
 LEGACY_SCHEMA_CHANGED=false
 EXISTING_LEGACY_STATE_MUTATED=false
 CANONICAL_PROGRAMME_SEMANTICS_CHANGED=false
+CANONICAL_HOME_SEMANTICS_CHANGED=false
 CANONICAL_COMPLETION_SEMANTICS_CHANGED=false
 CANONICAL_PROGRESS_SEMANTICS_CHANGED=false
 CANONICAL_ADAPTATION_SEMANTICS_CHANGED=false
+CANONICAL_AUTHORING_BEHAVIOUR_CHANGED=false
 MATERIALISATION_BEHAVIOUR_CHANGED=false
 ONBOARDING_BEHAVIOUR_CHANGED=false
+PHASE_3_STARTED=false
 ```
 
-Phase 2.9 deletes unreachable legacy runtime implementations after Phase 2.8
-unmounted Home entry. AdaptiveProgression, DailyBriefing, HomeAdaptFlow, legacy
-ProgressSummaryService, Plan Library screens, and PlanStartService are removed.
-Persisted legacy PlanAssignment / `hasActivePlan` remain as passive compatibility
-only — not runtime authority, not cleared, not migrated.
+Phase 2.10 verified consolidation closure and froze the canonical programme
+architecture. Executable legacy runtime code remains deleted. Passive
+PlanAssignment / `hasActivePlan` compatibility may decode stored values but
+cannot select runtime authority.
 
-**Decision / authority:**
-- [`../architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md`](../architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md)
-- [`../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
+**Binding authority:**
+- [`../architecture/Canonical_Programme_Architecture_Freeze_v1.md`](../architecture/Canonical_Programme_Architecture_Freeze_v1.md)
+- [`../architecture/Phase_2_Closure_v1.md`](../architecture/Phase_2_Closure_v1.md)
 - [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
+- [`../architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](../architecture/Phase_2_Consolidation_Safety_Gate_v1.md)
 
-## Post-change runtime (Phase 2.9)
+## Operational runtime
 
 ```text
-Home → programme | none | loading | unavailable (no DailyBriefing)
-Complete → canonical completion + shared SessionCompletion; AdaptiveProgression absent
-Progress → AthleteProgressSummaryBuilder / programme evidence only
+Home → programme | none | loading | unavailable
+Complete → canonical + shared SessionCompletion (no AdaptiveProgression)
+Progress → AthleteProgressSummaryBuilder / programme evidence
 Plans tab → AthleteProgrammeScreen catalogue
-Founder → no PlanLibraryScreen
+Founder → canonical Plan Package / programme tooling (no legacy Plan Library)
 ```
 
-**Safety gate:**
+**Safety gate (still required before architecture-affecting work):**
 
 ```bash
 ./tool/testing/run_phase2_consolidation_safety_gate.sh
 ```
 
-Next authorised task: **Phase 2.10 — Verify Consolidation Closure and Freeze
-the Canonical Architecture**.
+Next authorised task (not started): **Phase 3.1 — Exercise Database Discovery
+and Domain Design**.
 
-## Delivery sequence (authoritative)
+## Delivery sequence
 
 | Stage | Status |
 |-------|--------|
-| Phase 2.8 — Retire Home Legacy Runtime Entry | **COMPLETE** |
-| Phase 2.9 — Delete Unreachable Legacy Runtime and Persistence | **COMPLETE** |
-| Phase 2.10 — Verify Consolidation Closure | Next |
+| Phase 2.9 — Delete Unreachable Legacy Runtime | **COMPLETE** |
+| Phase 2.10 — Verify Closure and Freeze Architecture | **COMPLETE** |
+| Phase 2 closed | **YES** |
+| Phase 3 | **NOT STARTED** |
 
-## Retained survivors (not deleted)
+## Retained survivors (not runtime authority)
 
 | Survivor | Classification |
 |----------|----------------|
-| PlanAssignment + local repository + hydrator | RETAIN_PASSIVE_DATA_COMPATIBILITY |
+| PlanAssignment + hydrator / local keys | RETAIN_PASSIVE_DATA_COMPATIBILITY |
 | AthleteProfileSession.hasActivePlan | RETAIN_PASSIVE_DATA_COMPATIBILITY |
-| SessionCompletion / CapabilityTimeline models+stores | RETAIN_SHARED_NEUTRAL |
+| SessionCompletion / CapabilityTimeline models | RETAIN_SHARED_NEUTRAL |
 | AthleteProgrammeGenerationService | RETAIN_ONBOARDING_DEPENDENCY |
 | AthletePlanMaterialisationService | RETAIN_MATERIALISATION_BRIDGE |
 | CoachBrainWorkoutPlan / WorkoutPlayerLauncher | RETAIN_SHARED_NEUTRAL |
-| Canonical catalogue / authoring / Plan Package | RETAIN_CANONICAL |
+| ChoosePlanEntryCard (historical file path) | RETAIN_CANONICAL + HISTORICAL_NAME |
+| HomeTodaySessionSection (unmounted) | Deferred orphan UI cleanup |
 
 ## Preserved state
 
@@ -100,6 +103,7 @@ the Canonical Architecture**.
 - Leave `supabase/.temp/*` untouched.
 - Do not push without explicit authority.
 - No staging/production contact unless authorised.
+- Do not begin Phase 3 without separate authorisation.
 
 ## Resume checks
 
