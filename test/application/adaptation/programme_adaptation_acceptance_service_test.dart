@@ -198,6 +198,47 @@ void main() {
       expect(result.errorCode, 'stale_plan');
     });
 
+    test('stale identity fails closed on accept', () async {
+      final proposal = await reviewable();
+      final mismatched = ProgrammeAdaptationProposal(
+        proposalId: proposal.proposalId,
+        outcome: proposal.outcome,
+        reason: proposal.reason,
+        programmedSessionKey: proposal.programmedSessionKey,
+        assignmentId: 'assignment.other',
+        programmeVersionId: proposal.programmeVersionId,
+        packageContentHash: proposal.packageContentHash,
+        protocolId: proposal.protocolId,
+        preparedAt: proposal.preparedAt,
+        proposedAt: proposal.proposedAt,
+        sessionChanges: proposal.sessionChanges,
+        exerciseChanges: proposal.exerciseChanges,
+        preservedIntent: proposal.preservedIntent,
+        derivationExplanation: proposal.derivationExplanation,
+        athleteFacingMessage: proposal.athleteFacingMessage,
+        dayKey: proposal.dayKey,
+        slotOrder: proposal.slotOrder,
+        noSafeReason: proposal.noSafeReason,
+        policyKinds: proposal.policyKinds,
+        evaluationProvenance: proposal.evaluationProvenance,
+        request: proposal.request,
+        originalPlanFingerprint: proposal.originalPlanFingerprint,
+        reviewedExecutablePlan: proposal.reviewedExecutablePlan,
+        snapshotId: proposal.snapshotId,
+        reviewedPlanFingerprint: proposal.reviewedPlanFingerprint,
+      );
+
+      final result = await acceptanceService.accept(
+        athleteId: 'athlete.1',
+        currentPackage: package,
+        proposal: mismatched,
+        executionContext: executionContext,
+      );
+      expect(result.success, isFalse);
+      expect(result.errorCode, 'stale_identity');
+      expect(package.acceptedAdaptation, isNull);
+    });
+
     test('consumed proposal cannot be reapplied', () async {
       final proposal = await reviewable();
       final first = await acceptanceService.accept(

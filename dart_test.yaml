@@ -7,6 +7,9 @@
 # Default (authoritative green suite):
 #   flutter test
 #
+# Consolidation safety gate (mandatory for Phase 2 consolidation):
+#   ./tool/testing/run_phase2_consolidation_safety_gate.sh
+#
 # Explicit non-default groups:
 #   ./tool/testing/run_phase2_harness_tests.sh
 #   ./tool/testing/run_phase2_diagnosis_tests.sh

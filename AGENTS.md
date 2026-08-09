@@ -16,12 +16,15 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1 inventory and Phase 2.2
-authority/suite clearance are complete. Do not reopen Phase 1 staging or
-fixture work. No Sprint 1.8 or other product phase has been allocated.
-Historical Phase 5 MVP numbering must not be treated as the current delivery
-sequence. The July 2026 “Phase 2 completion” document is historical
-pre–Phase 1 alignment — not current Phase 2 authority.
+Architecture Consolidation is **current**. Phase 2.1 inventory, Phase 2.2
+authority/suite clearance, and Phase 2.3 consolidation safety gate are
+complete. Every later consolidation sprint must pass
+`./tool/testing/run_phase2_consolidation_safety_gate.sh` (see
+[`docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](docs/architecture/Phase_2_Consolidation_Safety_Gate_v1.md)).
+Do not reopen Phase 1 staging or fixture work. No Sprint 1.8 or other product
+phase has been allocated. Historical Phase 5 MVP numbering must not be treated
+as the current delivery sequence. The July 2026 “Phase 2 completion” document
+is historical pre–Phase 1 alignment — not current Phase 2 authority.
 
 ## Authority and product invariants
 
@@ -69,16 +72,19 @@ and
 ## Verification
 
 Use the narrowest relevant checks first, then broaden in proportion to the
-change. Test topology (Phase 2.2):
+change. Test topology (Phase 2.3):
 
 | Group | Command |
 |-------|---------|
 | **DEFAULT** (authoritative green suite) | `flutter test` |
+| **SAFETY GATE** (Phase 1 invariant freeze) | `./tool/testing/run_phase2_consolidation_safety_gate.sh` |
 | **HARNESS** (fake-port Journey D) | `./tool/testing/run_phase2_harness_tests.sh` |
 | **DIAGNOSIS** (nontest Flutter launcher) | `./tool/testing/run_phase2_diagnosis_tests.sh` |
 
 `dart_test.yaml` skips tags `harness` and `diagnosis` in the default suite.
-Existing repository verification entry points also include:
+The consolidation safety gate is mandatory before consolidation commits,
+legacy removal, and Phase 2 closure. Existing repository verification entry
+points also include:
 
 ```bash
 flutter analyze
@@ -100,9 +106,10 @@ record.
 
 The exact next sequence is:
 
-1. **Phase 2.3 — Phase 1 Invariant Freeze and Consolidation Safety Gate**
-   (next authorised Phase 2 sprint).
-2. Later Phase 2 consolidation sprints per the Phase 2.1 plan.
+1. **Phase 2.4 — Canonical Runtime Authority Decision and First Caller
+   Migration** (next authorised Phase 2 sprint).
+2. Later Phase 2 consolidation sprints per the Phase 2.1 plan — each must
+   pass the consolidation safety gate.
 3. Production rollout and remote migration application remain separately
    controlled.
 4. Do not allocate or begin Sprint 1.8 or another product phase without

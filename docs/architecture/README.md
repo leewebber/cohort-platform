@@ -55,8 +55,9 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
-Architecture Consolidation is **CURRENT**. Phase 2.1 inventory is complete;
-Phase 2.2 clears documentation authority and full-suite test debt. Programme
+Architecture Consolidation is **CURRENT**. Phase 2.1–2.3 are complete
+(inventory, authority/suite clearance, consolidation safety gate). Programme
 athletes follow the Sprint 1.6 acceptance-gated path, not historical Coach Brain
-“sole day-of” claims. See
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
+“sole day-of” claims. Consolidation gate:
+[`Phase_2_Consolidation_Safety_Gate_v1.md`](./Phase_2_Consolidation_Safety_Gate_v1.md).
+See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
