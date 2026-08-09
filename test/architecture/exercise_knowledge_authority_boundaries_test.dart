@@ -148,12 +148,40 @@ void main() {
     expect(publication.contains('founder_authority_required'), isTrue);
   });
 
-  test('transitional bridge port is deferred and non-authoritative', () {
+  test('identity bridge is one-way into EX-* and non-authoritative for transitional', () {
     final bridge = File(
       '${domainDir.path}/ports/transitional_exercise_id_bridge.dart',
     ).readAsStringSync();
     expect(bridge.contains('TransitionalExerciseIdBridge'), isTrue);
-    expect(bridge.contains('does **not** implement'), isTrue);
+    expect(bridge.contains('One-way bridge'), isTrue);
+    expect(bridge.contains('Does not resolve search aliases'), isTrue);
+    expect(bridge.contains('supabase'), isFalse);
+
+    final impl = File(
+      '${domainDir.path}/in_memory/in_memory_transitional_exercise_id_bridge.dart',
+    ).readAsStringSync();
+    expect(impl.contains('package:supabase'), isFalse);
+    expect(impl.contains('applyAdaptation'), isFalse);
+    expect(impl.contains('selectSubstitution'), isFalse);
+
+    final mapping = File(
+      '${domainDir.path}/models/exercise_identity_mapping.dart',
+    ).readAsStringSync();
+    expect(mapping.contains('Does **not** imply substitution'), isTrue);
+
+    final adapter = File(
+      '${domainDir.path}/adapters/canonicalised_exercise_knowledge_adapter.dart',
+    ).readAsStringSync();
+    expect(adapter.contains('grantsComparability => false'), isTrue);
+    expect(adapter.contains('grantsSubstitutionPermission => false'), isTrue);
+  });
+
+  test('heuristic name identity matching is rejected by mapping validator', () {
+    final validator = File(
+      '${domainDir.path}/validation/exercise_identity_mapping_validator.dart',
+    ).readAsStringSync();
+    expect(validator.contains('heuristic_mapping_provenance'), isTrue);
+    expect(validator.contains('name_match'), isTrue);
   });
 }
 

@@ -1,7 +1,8 @@
 # Phase 3.1C — Exercise Knowledge Repository Boundary
 
-**Status:** COMPLETE (repository boundary + in-memory impl; **uncommitted pending review**)  
+**Status:** COMPLETE and **COMMITTED**  
 **Recorded:** 2026-08-09  
+**Commit:** `957a63d9809e8291b8715e3743feccb93a798eee`  
 **Baseline (post–3.1B commit):** `b9952b69340d3150e6b62e06951aa2c5d90a1e38`  
 **Contracts:** [`Phase_3_1B_Exercise_Knowledge_Contracts_v1.md`](./Phase_3_1B_Exercise_Knowledge_Contracts_v1.md)
 
