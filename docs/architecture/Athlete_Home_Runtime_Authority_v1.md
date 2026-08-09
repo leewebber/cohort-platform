@@ -18,7 +18,9 @@ Athlete runtime as other athletes. Do not create a “founder-only” Coach Brai
 runtime.
 
 Legacy Plan Library implementation deletion is **not** authorised by Phase 2.4
-(`LEGACY_RUNTIME_DELETED=false`).
+(`LEGACY_RUNTIME_DELETED=false`). Phase 2.5 decided
+`LEGACY_RUNTIME_DECISION=RETIRE` — see
+[`Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](./Phase_2_Compatibility_Path_Retirement_Decision_v1.md).
 
 ## Decision table
 

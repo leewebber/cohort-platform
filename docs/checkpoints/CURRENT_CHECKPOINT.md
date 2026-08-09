@@ -11,37 +11,34 @@ PHASE_2_1_INVENTORY_COMPLETE=true
 PHASE_2_2_COMPLETE=true
 PHASE_2_3_COMPLETE=true
 PHASE_2_4_COMPLETE=true
+PHASE_2_5_COMPLETE=true
 CONSOLIDATION_SAFETY_GATE_ESTABLISHED=true
 CANONICAL_RUNTIME_AUTHORITY_ESTABLISHED=true
 HOME_FIRST_CALLER_MIGRATED=true
+LEGACY_RUNTIME_DECISION=RETIRE
 LEGACY_RUNTIME_DELETED=false
-APPROVED_BEHAVIOUR_PRESERVED=true
+CALLER_MIGRATION_EXECUTED=false
+PRODUCT_BEHAVIOUR_CHANGED=false
 ```
 
-Phase 1 closed at `e034ea9`. Phase 2.1–2.3 complete. Phase 2.4 establishes
-canonical Home runtime authority and migrates `HomeScreen` as the first caller.
+Phase 2.5 completes the remaining-caller inventory and issues
+`LEGACY_RUNTIME_DECISION=RETIRE`. No runtime migration or deletion was executed
+in Phase 2.5.
 
-**Canonical runtime authority**
+**Decision document:**
+[`../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
 
-| Runtime | Status |
-|---------|--------|
-| Programme Athlete runtime | Canonical |
-| Plan Library / Coach Brain | Legacy compatibility only |
+**Canonical runtime authority (Phase 2.4):**
+[`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
 
-Decision owner: `AthleteHomeRuntimeAuthorityResolver`  
-Contract: [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
-
-**Authoritative consolidation safety gate:**
+**Consolidation safety gate:**
 
 ```bash
 ./tool/testing/run_phase2_consolidation_safety_gate.sh
 ```
 
-Manifest:
-[`../architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](../architecture/Phase_2_Consolidation_Safety_Gate_v1.md)
-
-Next authorised task: **Phase 2.5 — Remaining Runtime Caller Inventory and
-Compatibility-Path Retirement Decision**.
+Next authorised task: **Phase 2.6 — Stop New Legacy Starts and Align Athlete
+Shell Catalogue Entry**.
 
 ## Delivery sequence (authoritative)
 
@@ -53,12 +50,15 @@ Compatibility-Path Retirement Decision**.
 | Phase 2.2 — Architecture Authority Reset and Full-Suite Debt Clearance | **COMPLETE** |
 | Phase 2.3 — Phase 1 Invariant Freeze and Consolidation Safety Gate | **COMPLETE** |
 | Phase 2.4 — Canonical Runtime Authority Decision and First Caller Migration | **COMPLETE** |
-| Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path Retirement Decision | Next |
+| Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path Retirement Decision | **COMPLETE** (`RETIRE`) |
+| Phase 2.6 — Stop New Legacy Starts and Align Athlete Shell Catalogue Entry | Next |
 
-Programme-athlete adaptation authority remains Sprint 1.6
-(`ProgrammeAdaptFlow` / `ProgrammeAdaptation*Service`). Historical
-“Coach Brain sole day-of” claims are **not** authoritative for materialised
-programme athletes. Legacy Plan Library runtime is retained but not deleted.
+Programme Athlete runtime is canonical. Plan Library / Coach Brain athlete
+runtime is marked for retirement via later migration sprints — not deleted yet.
+
+Materialisation (`AthletePlanMaterialisationService`) is a
+**MATERIALISATION_BRIDGE** into the canonical programme system — not a competing
+runtime to delete for naming reasons.
 
 ## Test topology
 
@@ -71,10 +71,10 @@ programme athletes. Legacy Plan Library runtime is retained but not deleted.
 
 ## Binding contracts
 
+- [`../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
 - [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
 - [`../architecture/Phase_2_Consolidation_Safety_Gate_v1.md`](../architecture/Phase_2_Consolidation_Safety_Gate_v1.md)
 - [`../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md`](../architecture/Athlete_Programme_Acceptance_Gated_Adaptation_v1.md)
-- [`../architecture/Athlete_Controlled_Programme_Scheduling_v1.md`](../architecture/Athlete_Controlled_Programme_Scheduling_v1.md)
 
 ## Preserved state
 
@@ -82,14 +82,16 @@ programme athletes. Legacy Plan Library runtime is retained but not deleted.
 - Leave `supabase/.temp/*` untouched and uncommitted.
 - Do not push without explicit authority.
 - Do not contact staging or production unless explicitly authorised.
-- Do not delete the Plan Library / Coach Brain compatibility path until Phase 2.5+ authorises retirement.
-- Do not migrate remaining independent callers until Phase 2.5+.
+- Do not delete Plan Library / Coach Brain until callers are migrated and
+  deletion prerequisites in the Phase 2.5 decision document are met.
+- Runtime retirement ≠ persistence/schema deletion.
 
 ## Exact next sequence
 
-1. **Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path Retirement Decision**
-2. Later Phase 2 consolidation sprints (each must pass the safety gate)
-3. Production rollout remains separately controlled
+1. **Phase 2.6 — Stop New Legacy Starts and Align Athlete Shell Catalogue Entry**
+2. Phase 2.7–2.10 per the Phase 2.5 ordered plan
+3. Phase 2 final gate
+4. Production rollout remains separately controlled
 
 ## Resume checks
 

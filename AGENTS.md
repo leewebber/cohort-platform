@@ -16,11 +16,12 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1–2.4 are complete
-(inventory, suite clearance, consolidation safety gate, Home runtime
-authority). Programme Athlete runtime is **canonical**; Plan Library /
-Coach Brain is **legacy compatibility only** (see
-[`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md)).
+Architecture Consolidation is **current**. Phase 2.1–2.5 are complete.
+Programme Athlete runtime is **canonical**. Plan Library / Coach Brain athlete
+runtime decision is **`RETIRE`** (migration pending; not deleted) — see
+[`docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
+and
+[`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md).
 Every later consolidation sprint must pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
 Do not reopen Phase 1 staging or fixture work. No Sprint 1.8 or other product
@@ -112,10 +113,10 @@ record.
 
 The exact next sequence is:
 
-1. **Phase 2.5 — Remaining Runtime Caller Inventory and Compatibility-Path
-   Retirement Decision** (next authorised Phase 2 sprint).
-2. Later Phase 2 consolidation sprints per the Phase 2.1 plan — each must
-   pass the consolidation safety gate.
+1. **Phase 2.6 — Stop New Legacy Starts and Align Athlete Shell Catalogue
+   Entry** (next authorised Phase 2 sprint).
+2. Later Phase 2 consolidation sprints per the Phase 2.5 retirement plan —
+   each must pass the consolidation safety gate.
 3. Production rollout and remote migration application remain separately
    controlled.
 4. Do not allocate or begin Sprint 1.8 or another product phase without

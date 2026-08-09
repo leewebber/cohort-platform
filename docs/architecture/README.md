@@ -55,9 +55,12 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
-Architecture Consolidation is **CURRENT**. Phase 2.1–2.4 are complete. Programme
-Athlete runtime is canonical; Plan Library / Coach Brain is compatibility-only
-([`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md)).
+Architecture Consolidation is **CURRENT**. Phase 2.1–2.5 are complete. Programme
+Athlete runtime is canonical; Plan Library / Coach Brain athlete runtime is
+marked **`RETIRE`** (migration pending):
+[`Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](./Phase_2_Compatibility_Path_Retirement_Decision_v1.md).
+Home authority:
+[`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md).
 Consolidation gate:
 [`Phase_2_Consolidation_Safety_Gate_v1.md`](./Phase_2_Consolidation_Safety_Gate_v1.md).
 See [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
