@@ -18,18 +18,21 @@ Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
 Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
-operational athlete authority. Executable legacy Plan Library / DailyBriefing /
-AdaptiveProgression runtime is deleted. Passive PlanAssignment / `hasActivePlan`
-decode may remain but must not select runtime authority. Binding freeze:
-[`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md)
-and closure:
-[`docs/architecture/Phase_2_Closure_v1.md`](docs/architecture/Phase_2_Closure_v1.md).
+operational athlete authority. Phase 3 — Exercise Database has **started**.
+Phase 3.1A discovery is complete; Phase 3.1 implementation has **not** started.
+Binding freeze:
+[`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md),
+closure:
+[`docs/architecture/Phase_2_Closure_v1.md`](docs/architecture/Phase_2_Closure_v1.md),
+discovery:
+[`docs/architecture/Phase_3_1A_Exercise_Database_Discovery_v1.md`](docs/architecture/Phase_3_1A_Exercise_Database_Discovery_v1.md).
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
-Do not reopen Phase 1 staging or fixture work. Phase 3 is **not started**.
-Historical Phase 5 MVP numbering must not be treated as the current delivery
-sequence. The July 2026 “Phase 2 completion” document is historical pre–Phase 1
-alignment — not current Phase 2 authority.
+Do not reopen Phase 1 staging or fixture work. Do not implement the Exercise
+Database until Phase 3.1B contracts are approved and a later sprint authorises
+code. Historical Phase 5 MVP numbering must not be treated as the current
+delivery sequence. The July 2026 “Phase 2 completion” document is historical
+pre–Phase 1 alignment — not current Phase 2 authority.
 
 ## Authority and product invariants
 

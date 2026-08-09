@@ -1,9 +1,12 @@
 # Architecture documentation index
 
-**Phase 2 — Architecture Consolidation is CLOSED.** Start from
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
-and the binding freeze
-[`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md).
+**Phase 2 is CLOSED. Phase 3 — Exercise Database has started (3.1A discovery
+complete).** Start from
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md),
+the binding freeze
+[`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md),
+and
+[`Phase_3_1A_Exercise_Database_Discovery_v1.md`](./Phase_3_1A_Exercise_Database_Discovery_v1.md).
 
 The July 2026 document
 [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md)
@@ -14,6 +17,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 |----------|---------|
 | [Canonical_Programme_Architecture_Freeze_v1.md](./Canonical_Programme_Architecture_Freeze_v1.md) | **Binding** — frozen programme athlete architecture (Phase 2.10) |
 | [Phase_2_Closure_v1.md](./Phase_2_Closure_v1.md) | Phase 2 closure record (2.1–2.10) |
+| [Phase_3_1A_Exercise_Database_Discovery_v1.md](./Phase_3_1A_Exercise_Database_Discovery_v1.md) | Phase 3.1A — Exercise Database discovery (no implementation) |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
 | [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |
 | [Athlete_Catalogue_Enrolment_v1.md](./Athlete_Catalogue_Enrolment_v1.md) | Phase 1 Sprint 1.3 — non-commercial athlete catalogue enrolment |
@@ -57,12 +61,10 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
-Architecture Consolidation is **CLOSED**. Canonical programme architecture is
-**frozen**. Executable legacy runtime is deleted; passive PlanAssignment /
-`hasActivePlan` compatibility remains inert. Phase 3 is **not started**.
-See [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md),
+**Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 is
+**CLOSED**. Canonical programme architecture is **frozen**. Phase 3.1A Exercise
+Database discovery is **complete**; Phase 3.1 implementation is **not started**.
+See [`Phase_3_1A_Exercise_Database_Discovery_v1.md`](./Phase_3_1A_Exercise_Database_Discovery_v1.md),
+[`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md),
 [`Phase_2_Closure_v1.md`](./Phase_2_Closure_v1.md),
-[`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md),
-[`Phase_2_Consolidation_Safety_Gate_v1.md`](./Phase_2_Consolidation_Safety_Gate_v1.md),
 and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
