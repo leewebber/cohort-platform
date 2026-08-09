@@ -1,6 +1,5 @@
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../models/programme_assignment.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../models/athlete_catalogue_enrolment.dart';
 import '../models/athlete_plan_materialisation.dart';
 import 'athlete_plan_materialisation_store.dart';
@@ -9,43 +8,25 @@ import 'athlete_plan_materialisation_store.dart';
 ///
 /// Materialises an enrolled exact-version assignment. Does not prepare
 /// sessions, touch Home/today, or invoke Coach Brain.
+///
+/// Phase 2.9: does not consult legacy `hasActivePlan` — Plan Library runtime
+/// is retired and must not block canonical materialisation.
 class AthletePlanMaterialisationService {
   const AthletePlanMaterialisationService({
     required AthletePlanMaterialisationStore materialisationStore,
     ProgrammeAssignmentStore? assignmentStore,
-    bool Function()? legacyHasActivePlan,
   }) : _materialisationStore = materialisationStore,
-       _assignmentStore = assignmentStore,
-       _legacyHasActivePlan =
-           legacyHasActivePlan ?? _defaultLegacyHasActivePlan;
+       _assignmentStore = assignmentStore;
 
   final AthletePlanMaterialisationStore _materialisationStore;
   final ProgrammeAssignmentStore? _assignmentStore;
-  final bool Function() _legacyHasActivePlan;
-
-  static bool _defaultLegacyHasActivePlan() =>
-      AthleteProfileSession.hasActivePlan;
 
   /// Explicit Start Programme for [programmeAssignmentId].
-  ///
-  /// Blocks when the local session reports a legacy Plan Library active plan.
-  /// That check is client-only compatibility protection — not a database
-  /// invariant.
   Future<AthletePlanMaterialisationResult> startProgramme({
     required String programmeAssignmentId,
     required String athleteId,
     String? timezone,
   }) async {
-    if (_legacyHasActivePlan()) {
-      return const AthletePlanMaterialisationResult(
-        status: AthletePlanMaterialisationStatus.legacyPlanConflict,
-        code: 'legacy_plan_library_active',
-        message:
-            'You already have an active plan on this device. '
-            'Switching programmes is not available yet.',
-      );
-    }
-
     final trimmedAssignment = programmeAssignmentId.trim();
     final trimmedAthlete = athleteId.trim();
 

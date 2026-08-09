@@ -14,7 +14,6 @@ import '../coach_operations/screens/coach_home_dashboard_screen.dart';
 import '../coach_studio/coach_studio_access.dart';
 import '../exercises/exercise_library/exercise_library_screen.dart';
 import '../internal_tools/internal_tools_screen.dart';
-import '../plans/screens/plan_library_screen.dart';
 import '../protocols/protocol_library_screen.dart';
 import 'athlete_app_shell.dart';
 
@@ -195,20 +194,6 @@ class _FounderOverview extends StatelessWidget {
           child: const _Row(
             title: 'Coach Studio',
             subtitle: 'Plans, protocols, and authoring tools.',
-          ),
-        ),
-        const SizedBox(height: CohortSpacing.md),
-        CohortCard(
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => PlanLibraryScreen(athleteId: athleteId),
-              ),
-            );
-          },
-          child: const _Row(
-            title: 'Plan authoring entry',
-            subtitle: 'Browse and inspect plan products.',
           ),
         ),
         const SizedBox(height: CohortSpacing.md),

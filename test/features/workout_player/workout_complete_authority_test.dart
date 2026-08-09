@@ -1,5 +1,4 @@
 import 'package:cohort_platform/features/adaptive_progression/models/session_completion.dart';
-import 'package:cohort_platform/features/adaptive_progression/services/adaptive_progression_coordinator.dart';
 import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
@@ -27,13 +26,12 @@ void main() {
     SessionCompletionStore.clear();
   });
 
-  group('Phase 2.7 WorkoutCompleteScreen authority', () {
+  group('Phase 2.9 WorkoutCompleteScreen AdaptiveProgression retired', () {
     testWidgets(
-      'programme-backed completion skips AdaptiveProgression even with hasActivePlan',
+      'programme-backed completion records shared completion without legacy mutation',
       (tester) async {
         _bindLegacyActivePlan();
         final assignmentBefore = AthleteProfileSession.activeAssignment!;
-        final spy = _SpyProgressionCoordinator();
         final completion = _RecordingCompletionService();
 
         await tester.pumpWidget(
@@ -44,7 +42,6 @@ void main() {
               trainingSessionId: 42,
               programmeContext: _programmeContext(),
               completionService: completion,
-              progressionCoordinator: spy,
             ),
           ),
         );
@@ -54,7 +51,7 @@ void main() {
 
         expect(completion.calls, 1);
         expect(completion.lastProgrammeBacked, isTrue);
-        expect(spy.runAfterCompletionCalls, 0);
+        expect(SessionCompletionStore.all, isNotEmpty);
         expect(
           AthleteProfileSession.activeAssignment?.assignmentId,
           assignmentBefore.assignmentId,
@@ -64,44 +61,15 @@ void main() {
           assignmentBefore.currentDay,
         );
         expect(AthleteProfileSession.hasActivePlan, isTrue);
-        expect(SessionCompletionStore.all, isNotEmpty);
-      },
-    );
-
-    testWidgets(
-      'programme-only completion uses WorkoutCompletionService and never AdaptiveProgression',
-      (tester) async {
-        final spy = _SpyProgressionCoordinator();
-        final completion = _RecordingCompletionService();
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: WorkoutCompleteScreen(
-              state: _completeState(),
-              athleteId: 'athlete.local',
-              trainingSessionId: 7,
-              programmeContext: _programmeContext(),
-              completionService: completion,
-              progressionCoordinator: spy,
-            ),
-          ),
-        );
-        await tester.pump();
-        await tester.tap(find.text('FINISH'));
-        await tester.pumpAndSettle();
-
-        expect(AthleteProfileSession.hasActivePlan, isFalse);
-        expect(completion.calls, 1);
-        expect(spy.runAfterCompletionCalls, 0);
         expect(find.text('Preparing your next programmed session…'), findsNothing);
       },
     );
 
     testWidgets(
-      'pure legacy hasActivePlan still invokes AdaptiveProgression',
+      'no-programme-context completion never mutates PlanAssignment',
       (tester) async {
         _bindLegacyActivePlan();
-        final spy = _SpyProgressionCoordinator();
+        final assignmentBefore = AthleteProfileSession.activeAssignment!;
         final completion = _RecordingCompletionService();
 
         await tester.pumpWidget(
@@ -110,22 +78,29 @@ void main() {
               state: _completeState(),
               athleteId: 'athlete.local',
               completionService: completion,
-              progressionCoordinator: spy,
             ),
           ),
         );
         await tester.pump();
         await tester.tap(find.text('FINISH'));
-        // Adapt transition uses delays; pump through them.
-        await tester.pump(const Duration(milliseconds: 500));
-        await tester.pump(const Duration(milliseconds: 700));
         await tester.pumpAndSettle();
 
         expect(completion.calls, 1);
         expect(completion.lastProgrammeBacked, isFalse);
-        expect(spy.runAfterCompletionCalls, 1);
+        expect(SessionCompletionStore.all, isNotEmpty);
+        expect(
+          AthleteProfileSession.activeAssignment?.assignmentId,
+          assignmentBefore.assignmentId,
+        );
+        expect(
+          AthleteProfileSession.activeAssignment?.currentDay,
+          assignmentBefore.currentDay,
+        );
+        expect(AthleteProfileSession.hasActivePlan, isTrue);
+        expect(find.text('Preparing your next programmed session…'), findsNothing);
       },
     );
+
   });
 }
 
@@ -229,32 +204,6 @@ void _bindLegacyActivePlan() {
     activePlan: plan,
     assignment: assignment,
   );
-}
-
-class _SpyProgressionCoordinator extends AdaptiveProgressionCoordinator {
-  int runAfterCompletionCalls = 0;
-
-  @override
-  Future<AdaptiveProgressionResult> runAfterCompletion({
-    required WorkoutPlayerResult result,
-    required String athleteId,
-    DateTime? now,
-  }) async {
-    runAfterCompletionCalls += 1;
-    final completion = buildCompletion(
-      result: result,
-      athleteId: athleteId,
-      now: now,
-    );
-    SessionCompletionStore.add(completion);
-    return AdaptiveProgressionResult(
-      completion: completion,
-      profile: AthleteProfileSession.profile!,
-      assignment: AthleteProfileSession.activeAssignment!,
-      programme: AthleteProfileSession.programme!,
-      plan: AthleteProfileSession.activePlan!,
-    );
-  }
 }
 
 class _RecordingCompletionService extends WorkoutCompletionService {

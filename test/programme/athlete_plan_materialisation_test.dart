@@ -159,29 +159,6 @@ void main() {
   });
 
   group('AthletePlanMaterialisationService', () {
-    test('blocks when legacy hasActivePlan preflight is true', () async {
-      final store = _RecordingMaterialisationStore(
-        const AthletePlanMaterialisationResult(
-          status: AthletePlanMaterialisationStatus.materialised,
-        ),
-      );
-      final service = AthletePlanMaterialisationService(
-        materialisationStore: store,
-        legacyHasActivePlan: () => true,
-      );
-
-      final result = await service.startProgramme(
-        programmeAssignmentId: 'enrol-1',
-        athleteId: 'athlete-1',
-        timezone: 'UTC',
-      );
-
-      expect(
-        result.status,
-        AthletePlanMaterialisationStatus.legacyPlanConflict,
-      );
-      expect(store.calls, 0);
-    });
 
     test('calls RPC with assignment id and exact handoff fields', () async {
       final store = _RecordingMaterialisationStore(
@@ -196,7 +173,6 @@ void main() {
       );
       final service = AthletePlanMaterialisationService(
         materialisationStore: store,
-        legacyHasActivePlan: () => false,
       );
 
       final result = await service.startProgramme(
@@ -223,7 +199,6 @@ void main() {
       final service = AthletePlanMaterialisationService(
         materialisationStore: store,
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-        legacyHasActivePlan: () => false,
       );
 
       final result = await service.startProgramme(
@@ -265,7 +240,6 @@ void main() {
         materialisationService: AthletePlanMaterialisationService(
           materialisationStore: delayed,
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-          legacyHasActivePlan: () => false,
         ),
       );
       await controller.load();
@@ -293,7 +267,6 @@ void main() {
         versionStore: InMemoryProgrammeVersionStore(tables),
         materialisationService: AthletePlanMaterialisationService(
           materialisationStore: store,
-          legacyHasActivePlan: () => false,
         ),
       );
       await controller.load();
@@ -329,7 +302,6 @@ void main() {
         materialisationService: AthletePlanMaterialisationService(
           materialisationStore: store,
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-          legacyHasActivePlan: () => false,
         ),
       );
 

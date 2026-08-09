@@ -198,35 +198,26 @@ void main() {
     );
 
     test(
-      'Phase 2.7 programme completion never gates AdaptiveProgression on hasActivePlan',
+      'Phase 2.9 AdaptiveProgression deleted from WorkoutCompleteScreen',
       () {
         final complete = File(
           '$root/lib/features/workout_player/screens/workout_complete_screen.dart',
         ).readAsStringSync();
-        expect(complete.contains('isProgrammeBacked'), isTrue);
+        expect(complete.contains('AdaptiveProgressionCoordinator'), isFalse);
+        expect(complete.contains('runAfterCompletion'), isFalse);
+        expect(complete.contains('AthleteProfileSession.hasActivePlan'), isFalse);
+        expect(complete.contains('SessionCompletionStore'), isTrue);
         expect(
-          complete.contains('shouldRunLegacyAdaptiveProgression'),
-          isTrue,
-        );
-        expect(
-          complete.contains(
-            'shouldRunLegacyAdaptiveProgression =\n'
-            '        !isProgrammeBacked && AthleteProfileSession.hasActivePlan',
-          ),
-          isTrue,
-        );
-        // Legacy-only: AdaptiveProgression must not run for programme-backed.
-        expect(
-          RegExp(
-            r'final shouldAdapt = AthleteProfileSession\.hasActivePlan;',
-          ).hasMatch(complete),
+          File(
+            '$root/lib/features/adaptive_progression/services/adaptive_progression_coordinator.dart',
+          ).existsSync(),
           isFalse,
         );
       },
     );
   });
 
-  group('Phase 2.7 progress / briefing authority freeze', () {
+  group('Phase 2.9 legacy runtime deletion freeze', () {
     test('Progress tab uses AthleteProgressSummaryBuilder authority', () {
       final progress = File(
         '$root/lib/features/progress/screens/progress_screen.dart',
@@ -238,9 +229,46 @@ void main() {
       expect(builder.contains('ProgrammeProgressSummaryService'), isTrue);
       expect(builder.contains('AthleteHomeRuntimeAuthorityResolver'), isTrue);
       expect(
-        builder.contains('never fall back to Plan Library'),
-        isTrue,
+        File(
+          '$root/lib/features/progress/services/progress_summary_service.dart',
+        ).existsSync(),
+        isFalse,
       );
+    });
+
+    test('DailyBriefing, HomeAdaptFlow, Plan Library start deleted', () {
+      expect(
+        Directory('$root/lib/features/daily_briefing').existsSync(),
+        isFalse,
+      );
+      expect(
+        File(
+          '$root/lib/features/home/services/home_adapt_flow.dart',
+        ).existsSync(),
+        isFalse,
+      );
+      expect(
+        File(
+          '$root/lib/features/plans/services/plan_start_service.dart',
+        ).existsSync(),
+        isFalse,
+      );
+      expect(
+        File(
+          '$root/lib/features/plans/screens/plan_library_screen.dart',
+        ).existsSync(),
+        isFalse,
+      );
+      expect(
+        File(
+          '$root/lib/features/plans/screens/plan_detail_screen.dart',
+        ).existsSync(),
+        isFalse,
+      );
+      final founder = File(
+        '$root/lib/features/app_shell/founder_workspace_shell.dart',
+      ).readAsStringSync();
+      expect(founder.contains('PlanLibraryScreen'), isFalse);
     });
   });
 }

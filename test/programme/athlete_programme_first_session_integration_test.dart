@@ -801,7 +801,6 @@ void main() {
         materialisationService: AthletePlanMaterialisationService(
           materialisationStore: materialisationStore,
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-          legacyHasActivePlan: () => false,
         ),
         prepareService: prepare,
       );

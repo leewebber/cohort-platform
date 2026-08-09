@@ -170,26 +170,10 @@ Future<void> main() async {
       controller.activeAssignment?.id,
     );
 
-    final legacyService = AthletePlanMaterialisationService(
-      materialisationStore: const AthletePlanMaterialisationSupabaseStore(),
-      assignmentStore: const ProgrammeAssignmentSupabaseStore(),
-      legacyHasActivePlan: () => true,
-    );
-    final legacy = await legacyService.startProgramme(
-      programmeAssignmentId:
-          assignment?.id ?? 'dcb723e3-f0b1-4606-85d7-b446813b38d2',
-      athleteId: athleteId,
-      timezone: 'UTC',
-    );
     add(
-      'legacy_has_active_plan_preflight',
-      legacy.status == AthletePlanMaterialisationStatus.legacyPlanConflict,
-      legacy.code,
-    );
-    add(
-      'legacy_guidance_mentions_switching',
-      (legacy.message ?? '').toLowerCase().contains('switching'),
-      legacy.message,
+      'legacy_has_active_plan_preflight_retired',
+      true,
+      'Phase 2.9: materialisation no longer reads hasActivePlan',
     );
 
     add('programme_screen_type_available', true, 'AthleteProgrammeScreen');

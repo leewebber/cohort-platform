@@ -5,7 +5,6 @@ import 'package:cohort_platform/core/services/supabase_service.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_supabase_store.dart';
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
-import 'package:cohort_platform/features/plans/screens/plan_library_screen.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/models/athlete_plan_materialisation.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
@@ -93,12 +92,11 @@ void main() {
     });
 
     test('types remain distinct', () {
-      expect(PlanLibraryScreen, isNotNull);
       expect(AthleteProgrammeScreen, isNotNull);
     });
 
     testWidgets(
-      'reconciles materialised programme; legacy preflight; no prepare/commerce',
+      'reconciles materialised programme; no prepare/commerce',
       (tester) async {
         if (!enabled) return;
 
@@ -133,21 +131,23 @@ void main() {
         expect(controller.activeAssignment?.isMaterialised, isTrue);
         expect(controller.activeAssignment?.id, assignment.id);
 
-        final legacyService = AthletePlanMaterialisationService(
+        // Phase 2.9: legacy hasActivePlan preflight retired — materialisation
+        // service no longer accepts legacyHasActivePlan.
+        final reconcile = AthletePlanMaterialisationService(
           materialisationStore: const AthletePlanMaterialisationSupabaseStore(),
           assignmentStore: const ProgrammeAssignmentSupabaseStore(),
-          legacyHasActivePlan: () => true,
         );
-        final legacy = await legacyService.startProgramme(
+        final reconciled = await reconcile.startProgramme(
           programmeAssignmentId: assignment.id,
           athleteId: athleteA['user_id'] as String,
           timezone: 'UTC',
         );
         expect(
-          legacy.status,
-          AthletePlanMaterialisationStatus.legacyPlanConflict,
+          reconciled.status ==
+                  AthletePlanMaterialisationStatus.alreadyMaterialised ||
+              reconciled.isSuccess,
+          isTrue,
         );
-        expect(legacy.message!.toLowerCase(), contains('switching'));
 
         await tester.pumpWidget(
           MaterialApp(

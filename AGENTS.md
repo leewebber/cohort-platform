@@ -16,13 +16,14 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1–2.8 are complete.
+Architecture Consolidation is **current**. Phase 2.1–2.9 are complete.
 Programme Athlete runtime is **canonical**. Plan Library / Coach Brain athlete
-runtime decision is **`RETIRE`**. Athlete-shell new legacy starts are **closed**.
-Home legacy entry is **retired** (`HOME_LEGACY_ENTRY_RETIRED=true`):
-`hasActivePlan` does not select Home runtime; DailyBriefing / HomeAdaptFlow are
-unreachable from normal athlete Home. Legacy implementations remain until
-Phase 2.9 deletion. See
+runtime decision is **`RETIRE`**. Legacy runtime implementations are **deleted**
+(`LEGACY_RUNTIME_CODE_DELETED=true`): DailyBriefing, HomeAdaptFlow,
+AdaptiveProgression coordinator, ProgressSummaryService, Plan Library screens,
+and PlanStartService. Passive PlanAssignment / `hasActivePlan` decode may remain
+but must not select runtime authority. See
+[`docs/architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md`](docs/architecture/Phase_2_9_Legacy_Runtime_Deletion_v1.md),
 [`docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
 and
 [`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md).
@@ -38,8 +39,8 @@ is historical pre–Phase 1 alignment — not current Phase 2 authority.
 - Authored programme prescription remains the prescription authority.
 - Home runtime authority is classified by
   `AthleteHomeRuntimeAuthorityResolver`: materialised programme athletes use
-  Programme Athlete runtime exclusively; Plan Library / Coach Brain remains
-  temporary compatibility only when there is no materialised programme.
+  Programme Athlete runtime exclusively; no-programme / loading / unavailable
+  never mount Plan Library / Coach Brain Home runtime (deleted in Phase 2.9).
 - Adaptation is a proposal, not a second prescription authority.
 - Programme-backed adaptation reuses `SessionAdaptationPipeline` through a
   Plan-Package-native adapter and must not depend on the legacy generative

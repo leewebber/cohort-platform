@@ -349,8 +349,8 @@ A green safety gate alone does not prove code is dead.
 | **2.6** | Stop new legacy runtime creation + consolidate Home today/prepare authority boundary | Replace Athlete shell Plans tab start with Programme catalogue (or hide Plan start); keep materialisation bridge; document device conflict handling |
 | **2.7** | Migrate completion / progress / briefing consumers off `hasActivePlan` | `WorkoutCompleteScreen` adapt gate; Progress tab → programme summary; remove AdaptiveProgression from programme athletes |
 | **2.8** | Retire Home legacy runtime entry points | Remove `legacyPlanCompatibility` Home branch, `DailyBriefingSection` Home mount, `HomeAdaptFlow` product entry |
-| **2.9** | Orphaned Coach Brain / Plan Library service cleanup | `PlanStartService`, generation/resolver athlete runtime, AdaptiveProgression coordinator (after callers gone); PROVEN_UNREACHABLE UI cleanup |
-| **2.10** | Naming / package / docs consolidation | SHARED_NEUTRAL renames (e.g. `CoachBrainWorkoutPlan` DTO), doc cross-refs; no semantic change |
+| **2.9** | Orphaned Coach Brain / Plan Library service cleanup | **COMPLETE** — see [`Phase_2_9_Legacy_Runtime_Deletion_v1.md`](./Phase_2_9_Legacy_Runtime_Deletion_v1.md) |
+| **2.10** | Verify consolidation closure / freeze canonical architecture | Full suite + safety gate + residual reachability proof |
 | **Phase 2 final gate** | Full suite + safety gate + analyzer + reachability proof | No hosted journeys unless separately authorised |
 
 Persistence/schema dormancy cleanup remains a later, separately authorised step.

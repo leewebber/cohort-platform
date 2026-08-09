@@ -25,8 +25,8 @@ import '../services/home_today_session_services.dart';
 /// Quarantined for athlete Home (Sprint 2+ / Sprint 3).
 ///
 /// Classification: **quarantine** — retained for founder/Supabase programme-assignment
-/// Adapt path (`HomeAdaptFlow` / programme schedule). Athlete Home uses
-/// `DailyBriefingSection` instead. Do not reintroduce on athlete Home.
+/// Quarantined / product-unmounted. Athlete Home uses
+/// `AthleteProgrammeTodaySection`. Do not reintroduce legacy Home paths.
 /// Remove when the founder programme home path is deleted.
 class HomeTodaySessionSection extends StatefulWidget {
   const HomeTodaySessionSection({

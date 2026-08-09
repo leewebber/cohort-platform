@@ -504,7 +504,6 @@ Future<void> main() async {
       final matService = AthletePlanMaterialisationService(
         materialisationStore: const AthletePlanMaterialisationSupabaseStore(),
         assignmentStore: assignmentStore,
-        legacyHasActivePlan: () => false,
       );
       final catalog = AthleteProgrammeSwitchCatalogService(
         catalogService: ProgrammeCatalogServiceImpl(

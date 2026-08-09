@@ -1,4 +1,4 @@
-# Athlete Home Runtime Authority v1 — Phase 2.4 / 2.8
+# Athlete Home Runtime Authority v1 — Phase 2.4 / 2.8 / 2.9
 
 **Status:** Binding for Home runtime classification (Phase 2.4+)  
 **First migrated caller:** `HomeScreen`  
@@ -6,24 +6,26 @@
 (`lib/features/home/services/athlete_home_runtime_authority.dart`)  
 **Phase 2.8 amendment:** Legacy Plan Library Home entry retired —
 `legacyPlanCompatibility` removed; `hasActivePlan` no longer selects Home
-runtime.
+runtime.  
+**Phase 2.9 amendment:** DailyBriefing / HomeAdaptFlow implementations deleted;
+legacy Plan Library / PlanStartService deleted. See
+[`Phase_2_9_Legacy_Runtime_Deletion_v1.md`](./Phase_2_9_Legacy_Runtime_Deletion_v1.md).
 
 ## Authority statement
 
 | Runtime | Status |
 |---------|--------|
 | **Programme Athlete runtime** (`ProgrammeAdaptFlow` / materialised programme today) | **Canonical** |
-| **Plan Library / Coach Brain runtime** (`HomeAdaptFlow` / daily briefing) | **Retired from Home entry (Phase 2.8)** — implementations retained until Phase 2.9 |
+| **Plan Library / Coach Brain runtime** (`HomeAdaptFlow` / daily briefing) | **Deleted (Phase 2.9)** after Home entry retirement in 2.8 |
 | Founder programme authoring | Separate concern — not a founder-only athlete runtime |
 
 Founders ultimately execute authored programmes through the same Programme
 Athlete runtime as other athletes. Do not create a “founder-only” Coach Brain
 runtime.
 
-Legacy Plan Library implementation deletion is **not** authorised by Phase 2.8
-(`LEGACY_RUNTIME_DELETED=false`). Phase 2.5 decided
-`LEGACY_RUNTIME_DECISION=RETIRE` — see
-[`Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](./Phase_2_Compatibility_Path_Retirement_Decision_v1.md).
+Phase 2.5 decided `LEGACY_RUNTIME_DECISION=RETIRE`. Phase 2.9 executes
+`LEGACY_RUNTIME_CODE_DELETED=true` for unreachable implementations.
+Persisted legacy data remains (`LEGACY_DATA_DELETED=false`).
 
 ## Decision table (Phase 2.8)
 
@@ -57,18 +59,15 @@ Phase 2.4 briefly selected `legacyPlanCompatibility` when
 | `loading` | “Checking programme…”; neither adapt flow |
 | `unavailable` | “Unable to confirm programme.”; neither adapt flow |
 
-## Remaining legacy surfaces (not Home authority)
-
-These may still exist in the repository but **do not** grant Home runtime:
+## Remaining legacy surfaces (Phase 2.9)
 
 | Location | Notes |
 |----------|-------|
-| `DailyBriefingSection` / `DailyBriefingService` | ORPHANED from athlete Home; Phase 2.9 delete-ready |
-| `HomeAdaptFlow` | ORPHANED from athlete Home; Phase 2.9 delete-ready |
-| `WorkoutCompleteScreen` | Pure-legacy AdaptiveProgression only when `!programmeBacked && hasActivePlan` |
-| `AthletePlanMaterialisationService` | MATERIALISATION_BRIDGE — may still preflight on `hasActivePlan` |
-| `ProgressSummaryService` | Unit/historical; Progress tab uses programme builder |
-| Plan Library screens / `PlanStartService` | Founder/staging or direct routes; not athlete shell |
+| DailyBriefing / HomeAdaptFlow / AdaptiveProgression coordinator / ProgressSummaryService / Plan Library screens / PlanStartService | **Deleted** |
+| `SessionCompletion` / capability timeline stores | Shared-neutral; path under `adaptive_progression/models` retained |
+| `PlanAssignment` / `hasActivePlan` | Passive data compatibility only — ignored for Home/Progress/complete authority |
+| `AthletePlanMaterialisationService` | MATERIALISATION_BRIDGE — `legacyHasActivePlan` preflight removed |
+| `AthleteProgrammeGenerationService` | Onboarding dependency — retained |
 
 ## Binding companions
 

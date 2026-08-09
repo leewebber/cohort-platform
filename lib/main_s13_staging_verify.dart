@@ -5,7 +5,6 @@ import 'core/services/supabase_service.dart';
 import 'features/app_shell/athlete_app_shell.dart';
 import 'features/auth/models/user_profile.dart';
 import 'features/auth/services/current_user_session.dart';
-import 'features/plans/screens/plan_library_screen.dart';
 import 'features/programme/models/athlete_catalogue_enrolment.dart';
 import 'features/programme/screens/athlete_programme_selection_screen.dart';
 import 'features/programme/services/athlete_catalogue_enrolment_services.dart';
@@ -135,7 +134,7 @@ Future<void> main() async {
       true,
       'AthleteProgrammeSelectionScreen',
     );
-    add('plan_library_type_available', true, 'PlanLibraryScreen');
+    add('plan_library_type_retired', true, 'PlanLibraryScreen deleted Phase 2.9');
     add('shell_type_available', true, 'AthleteAppShell');
 
     runApp(
@@ -348,8 +347,8 @@ class _VerifyHostState extends State<_VerifyHost> {
     _add('plans_tab_tapped', plansTapped);
     await Future<void>.delayed(const Duration(seconds: 2));
     _add(
-      'plans_tab_opens_plan_library_surface',
-      plansTapped && (_hasText('Plans') || _hasText('Plan')),
+      'plans_tab_opens_programme_catalogue_surface',
+      plansTapped && (_hasText('Programme') || _hasText('programmes') || _hasText('Plans')),
     );
 
     // Direct opens for selection vs Plan Library separation.
@@ -360,13 +359,7 @@ class _VerifyHostState extends State<_VerifyHost> {
     );
     _add('selection_screen_opened', true);
 
-    await _openAndClose(
-      PlanLibraryScreen(
-        athleteId: CurrentUserSession.requireInstance.athleteId,
-        embeddedInShell: true,
-      ),
-    );
-    _add('plan_library_screen_opened_separately', true);
+    _add('plan_library_screen_retired', true, 'PlanLibraryScreen deleted Phase 2.9');
 
     final assertions = (widget.report['assertions'] as List)
         .cast<Map<String, dynamic>>();

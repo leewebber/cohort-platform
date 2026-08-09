@@ -6,7 +6,6 @@ import 'package:cohort_platform/data/repositories/programme_assignment_store.dar
 import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/athlete_profile/widgets/athlete_generated_today_section.dart';
-import 'package:cohort_platform/features/daily_briefing/widgets/daily_briefing_section.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/services/athlete_home_runtime_authority.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
@@ -131,8 +130,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
-      expect(find.byType(DailyBriefingSection), findsNothing);
-      expect(find.text('NEED TO ADAPT?'), findsNothing);
+            expect(find.text('NEED TO ADAPT?'), findsNothing);
       expect(find.text('Choose a programme'), findsNothing);
     });
 
@@ -154,8 +152,7 @@ void main() {
 
         expect(find.text('Choose a programme'), findsOneWidget);
         expect(find.byType(ChoosePlanEntryCard), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
         expect(AthleteProfileSession.hasActivePlan, isTrue);
         expect(
@@ -187,8 +184,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.text('ADAPT'), findsNothing);
         expect(AthleteProfileSession.hasActivePlan, isTrue);
       },
@@ -208,8 +204,7 @@ void main() {
 
       expect(find.text('Choose a programme'), findsOneWidget);
       expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
-      expect(find.byType(DailyBriefingSection), findsNothing);
-      expect(find.text('NEED TO ADAPT?'), findsNothing);
+            expect(find.text('NEED TO ADAPT?'), findsNothing);
     });
 
     testWidgets(
@@ -226,8 +221,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(find.text('Choose a programme'), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-
+        
         _bindLegacyActivePlan();
         await tester.pumpWidget(
           MaterialApp(
@@ -239,8 +233,7 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(find.text('Choose a programme'), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
       },
     );
 
@@ -260,16 +253,14 @@ void main() {
         await tester.pump();
 
         expect(find.text('Checking programme…'), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
 
         pending.complete(null);
         await tester.pumpAndSettle();
         // Phase 2.8: resolves to no-programme, not DailyBriefing.
         expect(find.text('Choose a programme'), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
       },
     );
 
@@ -288,15 +279,14 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Unable to confirm programme.'), findsOneWidget);
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.text('NEED TO ADAPT?'), findsNothing);
+                expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
         expect(find.text('Choose a programme'), findsNothing);
       },
     );
 
     testWidgets(
-      'Home source does not mount DailyBriefing or HomeAdaptFlow',
+      'Home source does not mount retired legacy Home entry',
       (tester) async {
         // Structural: HomeScreen must not reference retired legacy entry widgets
         // beyond imports removed — behavioural proofs above are authoritative.
@@ -310,8 +300,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        expect(find.byType(DailyBriefingSection), findsNothing);
-        expect(find.textContaining('HomeAdaptFlow'), findsNothing);
+                expect(find.textContaining('HomeAdaptFlow'), findsNothing);
       },
     );
   });

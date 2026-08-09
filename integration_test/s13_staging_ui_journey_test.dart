@@ -6,7 +6,6 @@ import 'package:cohort_platform/features/app_shell/athlete_app_shell.dart';
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
-import 'package:cohort_platform/features/plans/screens/plan_library_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +141,8 @@ void main() {
           await tester.pump(const Duration(seconds: 3));
         }
 
-        expect(find.byType(PlanLibraryScreen), findsNothing);
+        // Phase 2.9: PlanLibraryScreen deleted — catalogue only.
+        expect(find.text('Choose your plan'), findsNothing);
 
         // Eligible fixture visible; negatives not listed by name.
         expect(find.textContaining('PROG-S13-ELIG'), findsWidgets);
@@ -203,13 +203,13 @@ void main() {
           isTrue,
         );
 
-        // Plans tab remains Plan Library.
+        // Plans tab is canonical programme (Phase 2.6+); Plan Library deleted.
         await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
         await tester.pump(const Duration(seconds: 1));
         await tester.tap(find.text('Plans'));
         await tester.pump(const Duration(seconds: 2));
-        expect(find.byType(PlanLibraryScreen), findsOneWidget);
-        expect(find.byType(AthleteProgrammeSelectionScreen), findsNothing);
+        expect(find.byType(AthleteProgrammeScreen), findsOneWidget);
+        expect(find.text('Choose your plan'), findsNothing);
 
         // Home still has Programme entry and is not Plan Library.
         await tester.tap(find.text('Home'));

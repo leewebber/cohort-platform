@@ -8,8 +8,6 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../adaptive_progression/models/session_completion.dart';
-import '../../adaptive_progression/services/adaptive_progression_coordinator.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../models/previous_performance_snapshot.dart';
 import '../models/workout_player_result.dart';
@@ -25,7 +23,6 @@ class WorkoutCompleteScreen extends StatefulWidget {
     this.trainingSessionId,
     this.programmeContext,
     this.completionService,
-    this.progressionCoordinator,
   });
 
   final WorkoutPlayerState state;
@@ -33,7 +30,6 @@ class WorkoutCompleteScreen extends StatefulWidget {
   final int? trainingSessionId;
   final ProgrammeExecutionContext? programmeContext;
   final WorkoutCompletionService? completionService;
-  final AdaptiveProgressionCoordinator? progressionCoordinator;
 
   @override
   State<WorkoutCompleteScreen> createState() => _WorkoutCompleteScreenState();
@@ -43,8 +39,6 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
   late final TextEditingController _notesController;
   int? _rpe;
   bool _finishing = false;
-  _AdaptStatus _adaptStatus = _AdaptStatus.idle;
-  String? _adaptError;
 
   @override
   void initState() {
@@ -67,12 +61,26 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
     return '${minutes}m ${seconds.toString().padLeft(2, '0')}s';
   }
 
+  SessionCompletion _buildCompletion(WorkoutPlayerResult result) {
+    final stamp = DateTime.now().toUtc();
+    return SessionCompletion(
+      completionId:
+          'completion.${widget.athleteId}.${stamp.millisecondsSinceEpoch}',
+      athleteId: widget.athleteId,
+      sessionId: widget.state.plan.sessionId,
+      sessionName: widget.state.brief.sessionName,
+      completedAt: stamp,
+      duration: result.duration,
+      exercisesCompleted: result.exercisesCompleted,
+      totalExercises: result.totalExercises,
+      sessionRpe: result.sessionRpe,
+      notes: result.notes,
+    );
+  }
+
   Future<void> _finish() async {
     if (_finishing) return;
-    setState(() {
-      _finishing = true;
-      _adaptError = null;
-    });
+    setState(() => _finishing = true);
 
     final result = WorkoutPlayerResult(
       completed: true,
@@ -99,23 +107,11 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
       debugPrint('[WorkoutComplete] bookkeeping failed: $error');
     }
 
-    // Phase 2.7: programme-backed completion never consults hasActivePlan for
-    // authority and never invokes AdaptiveProgression (legacy Plan Library).
-    final isProgrammeBacked =
-        widget.programmeContext?.isProgrammeBacked ?? false;
-    final shouldRunLegacyAdaptiveProgression =
-        !isProgrammeBacked && AthleteProfileSession.hasActivePlan;
-
-    final coordinator =
-        widget.progressionCoordinator ?? AdaptiveProgressionCoordinator();
-    final sessionCompletion = coordinator.buildCompletion(
-      result: result,
-      athleteId: widget.athleteId,
-    );
-    // Legacy adapt path records completion inside runAfterCompletion.
-    if (!shouldRunLegacyAdaptiveProgression) {
-      SessionCompletionStore.add(sessionCompletion);
-    }
+    // Phase 2.9: AdaptiveProgression retired. Shared completion + previous
+    // performance evidence are recorded for all workouts; legacy schedule
+    // mutation never runs.
+    final sessionCompletion = _buildCompletion(result);
+    SessionCompletionStore.add(sessionCompletion);
 
     const capture = WorkoutExecutionCapture();
     final executionResults = capture.captureCompletedSteps(
@@ -126,33 +122,6 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
     final derived = const PreviousPerformanceFromResults()
         .derive(executionResults);
     PreviousPerformanceStore.recordAll(derived);
-
-    if (shouldRunLegacyAdaptiveProgression) {
-      try {
-        setState(() => _adaptStatus = _AdaptStatus.analysing);
-        await Future<void>.delayed(const Duration(milliseconds: 450));
-        if (!mounted) return;
-
-        setState(() => _adaptStatus = _AdaptStatus.updating);
-        await coordinator.runAfterCompletion(
-          result: result,
-          athleteId: widget.athleteId,
-        );
-
-        if (!mounted) return;
-        setState(() => _adaptStatus = _AdaptStatus.ready);
-        await Future<void>.delayed(const Duration(milliseconds: 650));
-      } catch (error) {
-        debugPrint('[WorkoutComplete] adaptive progression failed: $error');
-        if (!mounted) return;
-        setState(() {
-          _adaptStatus = _AdaptStatus.idle;
-          _adaptError = 'Could not update your plan. Your session is still saved.';
-          _finishing = false;
-        });
-        return;
-      }
-    }
 
     if (AthletePersistence.isInitialized) {
       try {
@@ -169,9 +138,7 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
         await AthletePersistence.hydrator.discardWorkoutProgress(
           widget.athleteId,
         );
-        if (!shouldRunLegacyAdaptiveProgression) {
-          await AthletePersistence.persistBoundSession();
-        }
+        await AthletePersistence.persistBoundSession();
       } catch (error) {
         debugPrint('[WorkoutComplete] local persist failed: $error');
       }
@@ -184,7 +151,6 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
   @override
   Widget build(BuildContext context) {
     final state = widget.state;
-    final adapting = _adaptStatus != _AdaptStatus.idle;
 
     return Scaffold(
       backgroundColor: CohortColors.background,
@@ -206,165 +172,108 @@ class _WorkoutCompleteScreenState extends State<WorkoutCompleteScreen> {
                   CohortSpacing.xl,
                   CohortSpacing.xl,
                 ),
-                child: adapting
-                    ? _AdaptTransition(status: _adaptStatus)
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Workout Complete',
-                            style: CohortTextStyles.h1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Workout Complete',
+                      style: CohortTextStyles.h1,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                    Text(
+                      state.brief.sessionName,
+                      style: CohortTextStyles.body,
+                    ),
+                    const SizedBox(height: CohortSpacing.xl),
+                    WorkoutMetaRow(
+                      label: 'Duration',
+                      value: _formatDuration(state.elapsed),
+                    ),
+                    WorkoutMetaRow(
+                      label: 'Exercises completed',
+                      value:
+                          '${state.completedExerciseCount} of ${state.totalExercises}',
+                    ),
+                    const SizedBox(height: CohortSpacing.md),
+                    Text(
+                      'SESSION RPE',
+                      style: CohortTextStyles.sectionLabel,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                    Wrap(
+                      spacing: CohortSpacing.sm,
+                      runSpacing: CohortSpacing.sm,
+                      children: List.generate(10, (index) {
+                        final value = index + 1;
+                        final selected = _rpe == value;
+                        return ChoiceChip(
+                          label: Text('$value'),
+                          selected: selected,
+                          onSelected: _finishing
+                              ? null
+                              : (_) => setState(() => _rpe = value),
+                          selectedColor: CohortColors.phosphorDeep,
+                          labelStyle: TextStyle(
+                            color: selected
+                                ? const Color(0xFF0C0E0B)
+                                : CohortColors.textPrimary,
+                            fontWeight: FontWeight.w700,
                           ),
-                          const SizedBox(height: CohortSpacing.sm),
-                          Text(
-                            state.brief.sessionName,
-                            style: CohortTextStyles.body,
-                          ),
-                          const SizedBox(height: CohortSpacing.xl),
-                          WorkoutMetaRow(
-                            label: 'Duration',
-                            value: _formatDuration(state.elapsed),
-                          ),
-                          WorkoutMetaRow(
-                            label: 'Exercises completed',
-                            value:
-                                '${state.completedExerciseCount} of ${state.totalExercises}',
-                          ),
-                          const SizedBox(height: CohortSpacing.md),
-                          Text(
-                            'SESSION RPE',
-                            style: CohortTextStyles.sectionLabel,
-                          ),
-                          const SizedBox(height: CohortSpacing.sm),
-                          Wrap(
-                            spacing: CohortSpacing.sm,
-                            runSpacing: CohortSpacing.sm,
-                            children: List.generate(10, (index) {
-                              final value = index + 1;
-                              final selected = _rpe == value;
-                              return ChoiceChip(
-                                label: Text('$value'),
-                                selected: selected,
-                                onSelected: _finishing
-                                    ? null
-                                    : (_) => setState(() => _rpe = value),
-                                selectedColor: CohortColors.phosphorDeep,
-                                labelStyle: TextStyle(
-                                  color: selected
-                                      ? const Color(0xFF0C0E0B)
-                                      : CohortColors.textPrimary,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                                backgroundColor: CohortColors.surfaceRaised,
-                              );
-                            }),
-                          ),
-                          const SizedBox(height: CohortSpacing.xl),
-                          Text(
-                            'NOTES (OPTIONAL)',
-                            style: CohortTextStyles.sectionLabel,
-                          ),
-                          const SizedBox(height: CohortSpacing.sm),
-                          TextField(
-                            controller: _notesController,
-                            enabled: !_finishing,
-                            maxLines: 3,
-                            style: CohortTextStyles.body.copyWith(
-                              color: CohortColors.textPrimary,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'How did the session feel?',
-                              hintStyle: CohortTextStyles.body,
-                              filled: true,
-                              fillColor: CohortColors.surfaceRaised,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: CohortColors.border,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                  color: CohortColors.border,
-                                ),
-                              ),
-                            ),
-                          ),
-                          if (_adaptError != null) ...[
-                            const SizedBox(height: CohortSpacing.lg),
-                            Text(
-                              _adaptError!,
-                              style: CohortTextStyles.small.copyWith(
-                                color: CohortColors.danger,
-                              ),
-                            ),
-                          ],
-                        ],
+                          backgroundColor: CohortColors.surfaceRaised,
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: CohortSpacing.xl),
+                    Text(
+                      'NOTES (OPTIONAL)',
+                      style: CohortTextStyles.sectionLabel,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                    TextField(
+                      controller: _notesController,
+                      enabled: !_finishing,
+                      maxLines: 3,
+                      style: CohortTextStyles.body.copyWith(
+                        color: CohortColors.textPrimary,
                       ),
+                      decoration: InputDecoration(
+                        hintText: 'How did the session feel?',
+                        hintStyle: CohortTextStyles.body,
+                        filled: true,
+                        fillColor: CohortColors.surfaceRaised,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: CohortColors.border,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: CohortColors.border,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            if (!adapting)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  CohortSpacing.xl,
-                  CohortSpacing.md,
-                  CohortSpacing.xl,
-                  CohortSpacing.xl,
-                ),
-                child: CohortButton(
-                  label: _finishing ? 'FINISHING...' : 'FINISH',
-                  showTrailingArrow: true,
-                  onPressed: _finishing ? () {} : _finish,
-                ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                CohortSpacing.xl,
+                CohortSpacing.md,
+                CohortSpacing.xl,
+                CohortSpacing.xl,
               ),
+              child: CohortButton(
+                label: _finishing ? 'FINISHING...' : 'FINISH',
+                showTrailingArrow: true,
+                onPressed: _finishing ? () {} : _finish,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-enum _AdaptStatus { idle, analysing, updating, ready }
-
-class _AdaptTransition extends StatelessWidget {
-  const _AdaptTransition({required this.status});
-
-  final _AdaptStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final message = switch (status) {
-      _AdaptStatus.analysing => 'Saving today\'s session…',
-      _AdaptStatus.updating => 'Preparing your next programmed session…',
-      _AdaptStatus.ready => 'Next programmed session is ready.',
-      _AdaptStatus.idle => '',
-    };
-
-    return Padding(
-      padding: const EdgeInsets.only(top: CohortSpacing.xxl),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('COHORT', style: CohortTextStyles.eyebrow),
-          const SizedBox(height: CohortSpacing.lg),
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 280),
-            child: Text(
-              message,
-              key: ValueKey(message),
-              style: CohortTextStyles.h1,
-            ),
-          ),
-          const SizedBox(height: CohortSpacing.md),
-          Text(
-            status == _AdaptStatus.ready
-                ? 'Your next coach-authored session is waiting on Home.'
-                : 'Calendar advances to the next programmed day — loads and '
-                    'exercises are not changed automatically.',
-            style: CohortTextStyles.body,
-          ),
-        ],
       ),
     );
   }

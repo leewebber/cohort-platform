@@ -5,7 +5,6 @@ import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
 import 'package:cohort_platform/features/plans/models/plan_assignment.dart';
-import 'package:cohort_platform/features/plans/screens/plan_library_screen.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_selection_screen.dart';
@@ -43,8 +42,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AthleteProgrammeScreen), findsOneWidget);
-      expect(find.byType(PlanLibraryScreen), findsNothing);
-      expect(find.text('Choose your plan'), findsNothing);
+            expect(find.text('Choose your plan'), findsNothing);
       expect(find.text('START PLAN'), findsNothing);
       expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
       expect(find.text('View programmes'), findsOneWidget);
@@ -65,8 +63,7 @@ void main() {
         await tester.tap(find.text('Plans'));
         await tester.pumpAndSettle();
 
-        expect(find.byType(PlanLibraryScreen), findsNothing);
-        expect(AthleteProfileSession.hasActivePlan, isFalse);
+                expect(AthleteProfileSession.hasActivePlan, isFalse);
         expect(AthleteProfileSession.activeAssignment, isNull);
         expect(AthleteProfileSession.activePlan, isNull);
       },
@@ -90,8 +87,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(AthleteProgrammeSelectionScreen), findsOneWidget);
-        expect(find.byType(PlanLibraryScreen), findsNothing);
-        expect(find.text('Choose your plan'), findsNothing);
+                expect(find.text('Choose your plan'), findsNothing);
       },
     );
 
@@ -112,8 +108,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Programme data is unavailable.'), findsOneWidget);
-        expect(find.byType(PlanLibraryScreen), findsNothing);
-        expect(find.text('Choose your plan'), findsNothing);
+                expect(find.text('Choose your plan'), findsNothing);
         expect(find.text('START PLAN'), findsNothing);
       },
     );
@@ -136,8 +131,7 @@ void main() {
           find.textContaining('not enrolled in a programme'),
           findsOneWidget,
         );
-        expect(find.byType(PlanLibraryScreen), findsNothing);
-        expect(find.text('Choose your plan'), findsNothing);
+                expect(find.text('Choose your plan'), findsNothing);
       },
     );
 
@@ -169,8 +163,7 @@ void main() {
         );
         expect(AthleteProfileSession.activePlan?.planId, planBefore?.planId);
         // Catalogue entry must not rewrite legacy session bind.
-        expect(find.byType(PlanLibraryScreen), findsNothing);
-      },
+              },
     );
 
     test(
