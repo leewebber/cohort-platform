@@ -337,6 +337,34 @@ class ExerciseKnowledgeValidator {
     ];
   }
 
+  /// Governed search aliases must be unique across the catalogue when present.
+  List<ExerciseKnowledgeValidationIssue> validateGovernedAliases(
+    List<ExerciseDefinition> definitions,
+  ) {
+    final issues = <ExerciseKnowledgeValidationIssue>[];
+    final seen = <String, String>{};
+    for (final def in definitions) {
+      for (final alias in def.aliases) {
+        final key = alias.trim().toLowerCase();
+        if (key.isEmpty) continue;
+        final prior = seen[key];
+        if (prior != null && prior != def.id.value) {
+          issues.add(
+            ExerciseKnowledgeValidationIssue(
+              path: 'definitions[${def.id.value}].aliases',
+              message:
+                  'Alias "$alias" collides with definition $prior.',
+              code: 'duplicate_governed_alias',
+            ),
+          );
+        } else {
+          seen[key] = def.id.value;
+        }
+      }
+    }
+    return issues;
+  }
+
   /// Aggregate validation across definitions, relationships, and protocols.
   List<ExerciseKnowledgeValidationIssue> validateCatalogue({
     required List<ExerciseDefinition> definitions,
@@ -360,6 +388,7 @@ class ExerciseKnowledgeValidator {
       knownIds.add(def.id.value);
       issues.addAll(validateDefinition(def));
     }
+    issues.addAll(validateGovernedAliases(definitions));
 
     final protocolIds = <String>{};
     for (final protocol in comparisonProtocols) {

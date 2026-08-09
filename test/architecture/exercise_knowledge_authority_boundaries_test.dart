@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// Phase 3.1B — Exercise Knowledge Authority boundary protections.
+/// Phase 3.1B/3.1C — Exercise Knowledge Authority boundary protections.
 ///
-/// Proves contracts exist under the canonical domain package, use EX-* only,
-/// and are not yet wired into live production consumers.
+/// Proves contracts and repository boundary exist under the canonical domain
+/// package, use EX-* only, and are not yet wired into live production consumers.
 void main() {
   final root = _repoRoot(Directory.current);
   final domainDir = Directory('$root/lib/domain/exercise_knowledge');
@@ -115,6 +115,45 @@ void main() {
       isTrue,
     );
     expect(source.contains('directly_comparable_variant'), isTrue);
+  });
+
+  test('repository port exists without Supabase or display-name identity', () {
+    final port = File(
+      '${domainDir.path}/ports/exercise_knowledge_repository.dart',
+    ).readAsStringSync();
+    expect(port.contains('abstract interface class ExerciseKnowledgeRepository'),
+        isTrue);
+    expect(port.contains('supabase'), isFalse);
+    expect(port.contains('Supabase'), isFalse);
+    expect(port.contains('resolveByDisplayName'), isFalse);
+    expect(port.contains('getByName'), isFalse);
+
+    final memory = File(
+      '${domainDir.path}/in_memory/in_memory_exercise_knowledge_repository.dart',
+    ).readAsStringSync();
+    expect(memory.contains('supabase'), isFalse);
+    expect(memory.contains('package:supabase'), isFalse);
+  });
+
+  test('draft cannot be operational; publication requires founder', () {
+    final lookup = File(
+      '${domainDir.path}/models/exercise_definition_lookup.dart',
+    ).readAsStringSync();
+    expect(lookup.contains('isRuntimeAuthoritative'), isTrue);
+
+    final publication = File(
+      '${domainDir.path}/services/exercise_knowledge_publication_service.dart',
+    ).readAsStringSync();
+    expect(publication.contains("founderOwner = 'founder'"), isTrue);
+    expect(publication.contains('founder_authority_required'), isTrue);
+  });
+
+  test('transitional bridge port is deferred and non-authoritative', () {
+    final bridge = File(
+      '${domainDir.path}/ports/transitional_exercise_id_bridge.dart',
+    ).readAsStringSync();
+    expect(bridge.contains('TransitionalExerciseIdBridge'), isTrue);
+    expect(bridge.contains('does **not** implement'), isTrue);
   });
 }
 

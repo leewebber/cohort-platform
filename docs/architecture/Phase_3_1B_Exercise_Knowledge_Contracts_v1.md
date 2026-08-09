@@ -1,7 +1,8 @@
 # Phase 3.1B — Canonical Exercise Domain Contracts
 
-**Status:** COMPLETE (contracts + validation + fixtures; **uncommitted pending review**)  
+**Status:** COMPLETE and **COMMITTED**  
 **Recorded:** 2026-08-09  
+**Commit:** `b9952b69340d3150e6b62e06951aa2c5d90a1e38`  
 **Baseline (post–3.1A docs commit):** `5d05e66d6616090afe7408a2eb7ed14e6db94e2b`  
 **Discovery:** [`Phase_3_1A_Exercise_Database_Discovery_v1.md`](./Phase_3_1A_Exercise_Database_Discovery_v1.md)  
 **Binding freeze:** [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md)
