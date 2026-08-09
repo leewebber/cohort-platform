@@ -6,7 +6,6 @@ import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
 import 'package:cohort_platform/features/plans/models/plan_assignment.dart';
 import 'package:cohort_platform/features/progress/screens/progress_screen.dart';
 import 'package:cohort_platform/features/progress/services/athlete_progress_summary_builder.dart';
-import 'package:cohort_platform/features/progress/services/progress_summary_service.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 import 'package:cohort_platform/features/workout_player/services/coach_brain_workout_plan_service.dart';
@@ -49,10 +48,7 @@ void main() {
       // SessionCompletionStore polluted to prove it is ignored.
       AthleteProfileSession.clear();
 
-      final summary = await builder.build(
-        athleteId: 'lee',
-        legacyActivePlan: false,
-      );
+      final summary = await builder.build(athleteId: 'lee');
 
       expect(summary.hasActivePlan, isTrue);
       expect(summary.planName, 'PROG-TEST');
@@ -74,10 +70,7 @@ void main() {
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
       );
 
-      final summary = await builder.build(
-        athleteId: 'lee',
-        legacyActivePlan: true,
-      );
+      final summary = await builder.build(athleteId: 'lee');
 
       expect(summary.sessionsCompleted, 2);
       expect(summary.planName, isNot('Fat Loss Foundation'));
@@ -96,10 +89,7 @@ void main() {
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
       );
 
-      final summary = await builder.build(
-        athleteId: 'lee',
-        legacyActivePlan: true,
-      );
+      final summary = await builder.build(athleteId: 'lee');
 
       expect(summary.sessionsCompleted, 1);
       expect(AthleteProfileSession.hasActivePlan, isTrue);
@@ -113,17 +103,14 @@ void main() {
         assignmentStore: const _ThrowingAssignmentStore(),
       );
 
-      final summary = await builder.build(
-        athleteId: 'lee',
-        legacyActivePlan: true,
-      );
+      final summary = await builder.build(athleteId: 'lee');
 
       expect(summary.hasActivePlan, isFalse);
       expect(summary.sessionsCompleted, 0);
       expect(summary.planName, isNull);
     });
 
-    test('pure legacy still uses ProgressSummaryService', () async {
+    test('pure legacy Progress resolves to empty/neutral (Phase 2.8)', () async {
       final tables = InMemoryProgrammeTables();
       _bindLegacyActivePlan(sessionsInStore: 2);
 
@@ -131,17 +118,14 @@ void main() {
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: InMemoryProgrammeVersionStore(tables),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
-        legacySummaryService: const ProgressSummaryService(),
       );
 
-      final summary = await builder.build(
-        athleteId: 'athlete.local',
-        legacyActivePlan: true,
-      );
+      final summary = await builder.build(athleteId: 'athlete.local');
 
-      expect(summary.hasActivePlan, isTrue);
-      expect(summary.planName, 'Fat Loss Foundation');
-      expect(summary.sessionsCompleted, 2);
+      expect(summary.hasActivePlan, isFalse);
+      expect(summary.sessionsCompleted, 0);
+      expect(summary.planName, isNull);
+      expect(AthleteProfileSession.hasActivePlan, isTrue);
     });
 
     test('opening builder does not mutate legacy assignment', () async {
@@ -154,7 +138,7 @@ void main() {
         versionStore: InMemoryProgrammeVersionStore(tables),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
       );
-      await builder.build(athleteId: 'lee', legacyActivePlan: true);
+      await builder.build(athleteId: 'lee');
 
       expect(
         AthleteProfileSession.activeAssignment?.assignmentId,

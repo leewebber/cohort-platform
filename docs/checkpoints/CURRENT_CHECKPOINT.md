@@ -14,6 +14,7 @@ PHASE_2_4_COMPLETE=true
 PHASE_2_5_COMPLETE=true
 PHASE_2_6_COMPLETE=true
 PHASE_2_7_COMPLETE=true
+PHASE_2_8_COMPLETE=true
 CONSOLIDATION_SAFETY_GATE_ESTABLISHED=true
 CANONICAL_RUNTIME_AUTHORITY_ESTABLISHED=true
 LEGACY_RUNTIME_DECISION=RETIRE
@@ -23,49 +24,47 @@ CANONICAL_COMPLETION_AUTHORITY=true
 CANONICAL_PROGRESS_AUTHORITY=true
 CANONICAL_HOME_BRIEFING_INDEPENDENCE=true
 CANONICAL_LEGACY_SIDE_EFFECTS_REMOVED=true
-EXISTING_LEGACY_STATE_SUPPORT=true
-HOME_LEGACY_ENTRY_RETIRED=false
+HOME_LEGACY_ENTRY_RETIRED=true
+NORMAL_ATHLETE_LEGACY_RUNTIME_REACHABLE=false
+LEGACY_STATE_SELECTS_RUNTIME_AUTHORITY=false
+LEGACY_HOME_COMPATIBILITY_SUPPORT=false
+REMAINING_LEGACY_CODE_ISOLATED=true
 LEGACY_RUNTIME_DELETED=false
 LEGACY_DATA_DELETED=false
-CANONICAL_PROGRAMME_SEMANTICS_CHANGED=false
 EXISTING_LEGACY_STATE_MUTATED=false
+CANONICAL_PROGRAMME_SEMANTICS_CHANGED=false
 ```
 
-Phase 2.7 migrates completion, progress and Home briefing **callers** off
-inappropriate legacy Plan Library / Coach Brain side effects for canonical
-programme athletes, while retaining pure-legacy compatibility where still
-required.
+Phase 2.8 retires the pure-legacy Home runtime entry. Home authority is
+programme-evidence only. Legacy `hasActivePlan` / PlanAssignment no longer
+select DailyBriefing or HomeAdaptFlow. Legacy-only athletes see the established
+no-programme Home (`ChoosePlanEntryCard` → canonical catalogue). Persisted
+legacy data is untouched. Deep service deletion is Phase 2.9.
 
 **Decision / authority:**
 - [`../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](../architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
 - [`../architecture/Athlete_Home_Runtime_Authority_v1.md`](../architecture/Athlete_Home_Runtime_Authority_v1.md)
 
-## Pre-change caller graph (summary)
+## Pre-change Home authority (Phase 2.4–2.7)
 
 ```text
-WorkoutCompleteScreen
-  → WorkoutCompletionService (+ programme progression when context set)
-  → AdaptiveProgression when hasActivePlan  *** removed for programme-backed ***
-
-ProgressScreen
-  → ProgressSummaryService (Plan Library / SessionCompletionStore)
-  *** programme athletes now → AthleteProgressSummaryBuilder
-      → ProgrammeProgressSummaryService ***
-
-Home programme branch (Phase 2.4)
-  → AthleteProgrammeTodaySection only (already no DailyBriefing)
-  *** confirmed / tripwired; pure-legacy still may use DailyBriefing ***
+materialised programme → AthleteProgrammeTodaySection
+legacy only (hasActivePlan) → DailyBriefingSection + HomeAdaptFlow
+neither → ChoosePlanEntryCard
+loading / unavailable → fail-closed / catalogue (legacy gated)
 ```
 
-## Post-change authority
+## Post-change Home authority (Phase 2.8)
 
-| Athlete state | Completion | Progress | Home briefing |
-|---------------|------------|----------|---------------|
-| Programme only / both-present | `WorkoutCompletionService` + programme progression; AdaptiveProgression **off** | Canonical programme slot outcomes only | Programme today; DailyBriefing **off** |
-| Pure legacy `hasActivePlan` | AdaptiveProgression retained | `ProgressSummaryService` retained | DailyBriefing + HomeAdaptFlow retained |
-| Unavailable programme evidence | N/A | Empty/neutral; **no** legacy fallback | Unavailable; **no** legacy fallback |
+```text
+materialised programme → AthleteProgrammeTodaySection
+no materialised programme (with or without legacy) → ChoosePlanEntryCard
+loading → Checking programme…
+unavailable → Unable to confirm programme.
+```
 
-**Onboarding:** `ONBOARDING_LEGACY_START=false` (unchanged from Phase 2.6).
+**Onboarding:** `ONBOARDING_LEGACY_START=false` — generate does not create
+`hasActivePlan`; even if legacy state exists, Home ignores it for authority.
 
 **Safety gate:**
 
@@ -73,46 +72,48 @@ Home programme branch (Phase 2.4)
 ./tool/testing/run_phase2_consolidation_safety_gate.sh
 ```
 
-Next authorised task: **Phase 2.8 — Retire the Home Legacy Runtime Entry and
-Isolate Remaining Legacy Code**.
+Next authorised task: **Phase 2.9 — Delete Unreachable Legacy Runtime and
+Persistence Code**.
 
 ## Delivery sequence (authoritative)
 
 | Stage | Status |
 |-------|--------|
-| Phase 2.6 — Stop New Legacy Starts | **COMPLETE** |
-| Phase 2.7 — Migrate Completion, Progress and Briefing Dependencies | **COMPLETE** |
-| Phase 2.8 — Retire Home Legacy Runtime Entry | Next |
+| Phase 2.7 — Migrate Completion, Progress and Briefing | **COMPLETE** |
+| Phase 2.8 — Retire Home Legacy Runtime Entry | **COMPLETE** |
+| Phase 2.9 — Delete Unreachable Legacy Runtime and Persistence | Next |
 
-## Remaining legacy surface after Phase 2.7
+## Remaining legacy surface after Phase 2.8
 
-| Survivor | Classification | Planned retirement |
-|----------|----------------|--------------------|
-| HomeAdaptFlow / DailyBriefing (pure legacy Home) | PURE_LEGACY_COMPATIBILITY_RUNTIME | Phase 2.8 |
-| AdaptiveProgression (pure legacy complete only) | PURE_LEGACY_COMPATIBILITY_RUNTIME | Phase 2.8/2.9 after Home+complete entries gone |
-| ProgressSummaryService (pure legacy Progress) | PURE_LEGACY_COMPATIBILITY_RUNTIME | Phase 2.8/2.9 |
-| PlanStartService / PlanLibraryScreen | ORPHANED_PRODUCTION_CODE (athlete shell); founder/staging may still open | Phase 2.9 |
-| PlanAssignment local persistence | PURE_LEGACY_COMPATIBILITY_RUNTIME | Phase 2.9 data cleanup |
-| Coach Brain generation services | PURE_LEGACY_COMPATIBILITY_RUNTIME + onboarding generate | Phase 2.8/2.9 |
-| AthletePlanMaterialisationService | MATERIALISATION_BRIDGE | Retain |
-| CoachBrainWorkoutPlan DTO / WorkoutPlayerLauncher | SHARED_NEUTRAL | Retain |
-| HomeTodaySessionSection / AthleteGeneratedTodaySection | ORPHANED_PRODUCTION_CODE | Phase 2.9 |
+| Survivor | Classification | delete-ready | Planned |
+|----------|----------------|--------------|---------|
+| DailyBriefingSection / DailyBriefingService | ORPHANED_PRODUCTION_CODE | true | 2.9 |
+| HomeAdaptFlow | ORPHANED_PRODUCTION_CODE | true | 2.9 |
+| AdaptiveProgression (pure-legacy complete) | UNREACHABLE_LEGACY_RUNTIME for Home; still reachable from pure-legacy complete | false (complete path) | 2.9 after complete isolation |
+| ProgressSummaryService | ORPHANED_PRODUCTION_CODE (Progress tab) / TEST_ONLY consumers | true for Progress tab | 2.9 |
+| PlanStartService / PlanLibraryScreen | DIRECT_NON_SHELL_ENTRY (founder/staging) | false | 2.9 / tooling decision |
+| PlanAssignment local persistence | UNREACHABLE for Home authority | false (data) | 2.9 data cleanup |
+| AthleteProfileSession.hasActivePlan | SHARED session signal; ignored by Home | false | 2.9 |
+| AthleteProgrammeGenerationService | ONBOARDING_DEPENDENCY + legacy complete | false | separate onboarding decision |
+| AthletePlanMaterialisationService | MATERIALISATION_BRIDGE | false | retain |
+| CoachBrainWorkoutPlan / WorkoutPlayerLauncher | SHARED_NEUTRAL | false | retain |
+
+## Phase 2.9 prerequisites
+
+1. Prove DailyBriefing / HomeAdaptFlow have zero production athlete callers.
+2. Classify pure-legacy WorkoutComplete AdaptiveProgression as delete-ready or migrate.
+3. Classify Plan Library founder/staging ownership before deleting PlanStartService.
+4. Decide whether local PlanAssignment / hasActivePlan keys may be cleared.
+5. No schema/Supabase deletion without separate authority.
+6. Consolidation safety gate green after deletion.
 
 ## Preserved state
 
-- Do not delete Coach Brain / Plan Library implementations yet.
-- Do not retire Home legacy entry in this sprint (`HOME_LEGACY_ENTRY_RETIRED=false`).
+- Do not delete Coach Brain / Plan Library / DailyBriefing implementations yet.
 - Do not clear `hasActivePlan` or delete local legacy data.
 - Leave `supabase/.temp/*` untouched.
 - Do not push without explicit authority.
 - No staging/production contact unless authorised.
-
-## Phase 2.8 prerequisites
-
-1. Home `legacyPlanCompatibility` branch retirement decision + replacement empty/neutral UX.
-2. Proof pure-legacy athletes no longer require DailyBriefing / HomeAdaptFlow product entry.
-3. Completion/progress pure-legacy paths inventoried as delete-ready or still required.
-4. Consolidation safety gate green after entry retirement.
 
 ## Resume checks
 

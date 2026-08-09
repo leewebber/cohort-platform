@@ -8,6 +8,7 @@ import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
+import '../support/in_memory_programme_stores.dart';
 import 'package:cohort_platform/features/plans/models/plan_assignment.dart';
 import 'package:cohort_platform/features/plans/models/plan_definition.dart';
 import 'package:cohort_platform/features/plans/screens/plan_library_screen.dart';
@@ -269,13 +270,24 @@ void main() {
           isAthlete: true,
         ),
       );
-      await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
+      // Phase 2.8: inject local assignment store so missing Supabase does not
+      // surface as unavailable; empty store ⇒ established no-programme Home.
+      final tables = InMemoryProgrammeTables();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: HomeScreen(
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Choose a programme'), findsOneWidget);
       expect(find.text('VIEW PROGRAMMES'), findsOneWidget);
       expect(find.widgetWithText(TextButton, 'Programme'), findsOneWidget);
       expect(find.text("EXECUTE TODAY'S TRAINING"), findsNothing);
+      expect(find.textContaining('Daily Briefing'), findsNothing);
+      expect(find.text('NEED TO ADAPT?'), findsNothing);
     });
 
     testWidgets('active plan shows phase week day and today session', (

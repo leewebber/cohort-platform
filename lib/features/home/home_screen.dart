@@ -4,12 +4,10 @@ import '../../core/theme/cohort_lighting.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
-import '../../core/widgets/cohort_card.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
-import '../daily_briefing/widgets/daily_briefing_section.dart';
 import '../../data/repositories/programme_assignment_store.dart';
 import '../../data/repositories/programme_assignment_supabase_store.dart';
 import '../programme/screens/athlete_programme_screen.dart';
@@ -17,14 +15,14 @@ import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/athlete_home_runtime_authority.dart';
-import 'services/home_adapt_flow.dart';
 import 'widgets/athlete_programme_today_section.dart';
 
 /// Athlete Home — entirely focused on today.
 ///
 /// Runtime authority is classified by
-/// [AthleteHomeRuntimeAuthorityResolver] (Phase 2.4). Programme Athlete
-/// runtime is canonical; Plan Library / Coach Brain is compatibility-only.
+/// [AthleteHomeRuntimeAuthorityResolver] (Phase 2.4 / 2.8). Programme Athlete
+/// runtime is canonical. Plan Library / Coach Brain Home entry is retired —
+/// legacy `hasActivePlan` does not select Home runtime.
 /// Navigation lives in [AthleteAppShell].
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -64,7 +62,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _legacyAdaptFlow = HomeAdaptFlow();
   late final HomeTodaySessionRefreshController _refreshController =
       widget.refreshController ?? HomeTodaySessionRefreshController();
 
@@ -91,7 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
   AthleteHomeRuntimeAuthority get _runtimeAuthority {
     return widget.runtimeAuthorityResolver.resolve(
       materialisedProgramme: _hasMaterialisedProgramme,
-      legacyActivePlan: AthleteProfileSession.hasActivePlan,
       programmeEvidenceUnavailable: _programmeEvidenceUnavailable,
     );
   }
@@ -112,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } catch (_) {
       if (!mounted) return;
-      // Fail closed: do not treat as "no programme" (which could unlock legacy).
+      // Fail closed: do not invent programme runtime from bad evidence.
       setState(() {
         _programmeEvidenceUnavailable = true;
         _hasMaterialisedProgramme = null;
@@ -137,9 +133,6 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     }
   }
-
-  Future<void> _openLegacyAdapt() =>
-      _legacyAdaptFlow.open(context, athleteId: _athleteId);
 
   @override
   Widget build(BuildContext context) {
@@ -192,21 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
             refreshController: _refreshController,
             prepareService: widget.prepareService ??
                 AthleteCatalogueEnrolmentServices.createPrepareService(),
-          ),
-        ];
-      case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:
-        return [
-          DailyBriefingSection(
-            onSessionReturned: (_) {
-              if (mounted) setState(() {});
-            },
-          ),
-          const SizedBox(height: CohortSpacing.xl),
-          Text('NEED TO ADAPT?', style: CohortTextStyles.sectionLabel),
-          const SizedBox(height: CohortSpacing.md),
-          CohortCard(
-            onTap: _openLegacyAdapt,
-            child: const _AdaptationPromptRow(),
           ),
         ];
       case AthleteHomeRuntimeAuthority.loading:
@@ -280,49 +258,6 @@ class _HomeBrandHeader extends StatelessWidget {
             letterSpacing: 0.4,
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _AdaptationPromptRow extends StatelessWidget {
-  const _AdaptationPromptRow();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: CohortColors.background.withValues(alpha: 0.55),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: CohortColors.edgeHighlight.withValues(alpha: 0.22),
-            ),
-          ),
-          child: Icon(
-            Icons.psychology_outlined,
-            color: CohortColors.phosphor,
-            size: 22,
-          ),
-        ),
-        const SizedBox(width: CohortSpacing.md),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Need to Adapt?', style: CohortTextStyles.cardTitle),
-              const SizedBox(height: CohortSpacing.sm),
-              Text(
-                'Recovery, environment, equipment, or time.',
-                style: CohortTextStyles.small,
-              ),
-            ],
-          ),
-        ),
-        Text('ADAPT', style: CohortTextStyles.eyebrow),
       ],
     );
   }

@@ -16,13 +16,13 @@ Before changing the repository:
 
 Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **current**. Phase 2.1–2.7 are complete.
+Architecture Consolidation is **current**. Phase 2.1–2.8 are complete.
 Programme Athlete runtime is **canonical**. Plan Library / Coach Brain athlete
-runtime decision is **`RETIRE`**. Athlete-shell new legacy starts are **closed**;
-completion/progress/Home briefing for programme athletes no longer invoke
-AdaptiveProgression, Plan-Library progress authority, or DailyBriefing.
-Existing local `hasActivePlan` compatibility remains for pure-legacy state only.
-See
+runtime decision is **`RETIRE`**. Athlete-shell new legacy starts are **closed**.
+Home legacy entry is **retired** (`HOME_LEGACY_ENTRY_RETIRED=true`):
+`hasActivePlan` does not select Home runtime; DailyBriefing / HomeAdaptFlow are
+unreachable from normal athlete Home. Legacy implementations remain until
+Phase 2.9 deletion. See
 [`docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](docs/architecture/Phase_2_Compatibility_Path_Retirement_Decision_v1.md)
 and
 [`docs/architecture/Athlete_Home_Runtime_Authority_v1.md`](docs/architecture/Athlete_Home_Runtime_Authority_v1.md).
@@ -117,8 +117,8 @@ record.
 
 The exact next sequence is:
 
-1. **Phase 2.8 — Retire the Home Legacy Runtime Entry and Isolate Remaining
-   Legacy Code** (next authorised Phase 2 sprint).
+1. **Phase 2.9 — Delete Unreachable Legacy Runtime and Persistence Code**
+   (next authorised Phase 2 sprint).
 2. Later Phase 2 consolidation sprints per the Phase 2.5 retirement plan —
    each must pass the consolidation safety gate.
 3. Production rollout and remote migration application remain separately

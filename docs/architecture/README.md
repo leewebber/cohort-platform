@@ -55,10 +55,11 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
 **Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 —
-Architecture Consolidation is **CURRENT**. Phase 2.1–2.7 are complete. Programme
+Architecture Consolidation is **CURRENT**. Phase 2.1–2.8 are complete. Programme
 Athlete runtime is canonical; athlete-shell new Plan Library starts are closed;
-programme completion/progress/Home briefing no longer take legacy side effects;
-Plan Library / Coach Brain athlete runtime remains **`RETIRE`** (not deleted):
+Home legacy entry is retired; remaining legacy code is isolated for Phase 2.9
+deletion. Plan Library / Coach Brain athlete runtime remains **`RETIRE`**
+(not deleted):
 [`Phase_2_Compatibility_Path_Retirement_Decision_v1.md`](./Phase_2_Compatibility_Path_Retirement_Decision_v1.md).
 Home authority:
 [`Athlete_Home_Runtime_Authority_v1.md`](./Athlete_Home_Runtime_Authority_v1.md).

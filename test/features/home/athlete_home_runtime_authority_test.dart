@@ -5,6 +5,7 @@ import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_store.dart';
 import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
+import 'package:cohort_platform/features/athlete_profile/widgets/athlete_generated_today_section.dart';
 import 'package:cohort_platform/features/daily_briefing/widgets/daily_briefing_section.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/services/athlete_home_runtime_authority.dart';
@@ -33,100 +34,86 @@ void main() {
 
   tearDown(AthleteProfileSession.clear);
 
-  group('AthleteHomeRuntimeAuthorityResolver matrix', () {
+  group('AthleteHomeRuntimeAuthorityResolver matrix (Phase 2.8)', () {
     test('valid materialised programme only → programme', () {
-      final a = resolver.resolve(
-        materialisedProgramme: true,
-        legacyActivePlan: false,
-      );
+      final a = resolver.resolve(materialisedProgramme: true);
       expect(a, AthleteHomeRuntimeAuthority.programme);
       expect(a.exposesProgrammeRuntime, isTrue);
-      expect(a.exposesLegacyPlanCompatibilityRuntime, isFalse);
+      expect(a.activatesAnyAdaptFlow, isTrue);
       expect(a.isMutuallyExclusiveAdaptAuthority, isTrue);
     });
 
-    test('legacy active plan only → compatibility', () {
-      final a = resolver.resolve(
-        materialisedProgramme: false,
-        legacyActivePlan: true,
-      );
-      expect(a, AthleteHomeRuntimeAuthority.legacyPlanCompatibility);
+    test('legacy active plan only → none (legacy Home retired)', () {
+      // Legacy inputs are no longer accepted by the resolver.
+      final a = resolver.resolve(materialisedProgramme: false);
+      expect(a, AthleteHomeRuntimeAuthority.none);
       expect(a.exposesProgrammeRuntime, isFalse);
-      expect(a.exposesLegacyPlanCompatibilityRuntime, isTrue);
+      expect(a.activatesAnyAdaptFlow, isFalse);
     });
 
     test('both present → programme exclusively', () {
-      final a = resolver.resolve(
-        materialisedProgramme: true,
-        legacyActivePlan: true,
-      );
+      final a = resolver.resolve(materialisedProgramme: true);
       expect(a, AthleteHomeRuntimeAuthority.programme);
-      expect(a.exposesLegacyPlanCompatibilityRuntime, isFalse);
       expect(a.activatesAnyAdaptFlow, isTrue);
       expect(a.isMutuallyExclusiveAdaptAuthority, isTrue);
     });
 
     test('neither present → none', () {
-      final a = resolver.resolve(
-        materialisedProgramme: false,
-        legacyActivePlan: false,
-      );
+      final a = resolver.resolve(materialisedProgramme: false);
       expect(a, AthleteHomeRuntimeAuthority.none);
       expect(a.activatesAnyAdaptFlow, isFalse);
     });
 
-    test('loading/unknown does not prematurely select legacy', () {
-      final a = resolver.resolve(
-        materialisedProgramme: null,
-        legacyActivePlan: true,
-      );
+    test('loading/unknown never activates programme or legacy', () {
+      final a = resolver.resolve(materialisedProgramme: null);
       expect(a, AthleteHomeRuntimeAuthority.loading);
-      expect(a.exposesLegacyPlanCompatibilityRuntime, isFalse);
       expect(a.exposesProgrammeRuntime, isFalse);
+      expect(a.activatesAnyAdaptFlow, isFalse);
     });
 
-    test('invalid programme evidence does not fallback to legacy', () {
-      final withLegacy = resolver.resolve(
+    test('invalid programme evidence fails closed regardless of legacy state',
+        () {
+      final unavailable = resolver.resolve(
         materialisedProgramme: false,
-        legacyActivePlan: true,
         programmeEvidenceUnavailable: true,
       );
-      expect(withLegacy, AthleteHomeRuntimeAuthority.unavailable);
-      expect(withLegacy.exposesLegacyPlanCompatibilityRuntime, isFalse);
-      expect(withLegacy.exposesProgrammeRuntime, isFalse);
-
-      final withoutLegacy = resolver.resolve(
-        materialisedProgramme: false,
-        legacyActivePlan: false,
-        programmeEvidenceUnavailable: true,
-      );
-      expect(withoutLegacy, AthleteHomeRuntimeAuthority.none);
-      expect(withoutLegacy.exposesLegacyPlanCompatibilityRuntime, isFalse);
+      expect(unavailable, AthleteHomeRuntimeAuthority.unavailable);
+      expect(unavailable.exposesProgrammeRuntime, isFalse);
+      expect(unavailable.activatesAnyAdaptFlow, isFalse);
     });
 
     test('decision is deterministic and mutually exclusive', () {
-      AthleteHomeRuntimeAuthority once() => resolver.resolve(
-            materialisedProgramme: true,
-            legacyActivePlan: true,
-          );
+      AthleteHomeRuntimeAuthority once() =>
+          resolver.resolve(materialisedProgramme: true);
       expect(once(), once());
       expect(once(), AthleteHomeRuntimeAuthority.programme);
       for (final materialised in const [true, false, null]) {
-        for (final legacy in const [true, false]) {
-          for (final unavailable in const [true, false]) {
-            final a = resolver.resolve(
-              materialisedProgramme: materialised,
-              legacyActivePlan: legacy,
-              programmeEvidenceUnavailable: unavailable,
-            );
-            expect(a.isMutuallyExclusiveAdaptAuthority, isTrue);
-          }
+        for (final unavailable in const [true, false]) {
+          final a = resolver.resolve(
+            materialisedProgramme: materialised,
+            programmeEvidenceUnavailable: unavailable,
+          );
+          expect(a.isMutuallyExclusiveAdaptAuthority, isTrue);
+          expect(
+            a == AthleteHomeRuntimeAuthority.programme ||
+                a == AthleteHomeRuntimeAuthority.none ||
+                a == AthleteHomeRuntimeAuthority.loading ||
+                a == AthleteHomeRuntimeAuthority.unavailable,
+            isTrue,
+          );
         }
       }
     });
+
+    test('legacyPlanCompatibility enum case is retired', () {
+      final source = AthleteHomeRuntimeAuthority.values
+          .map((e) => e.name)
+          .toList(growable: false);
+      expect(source, isNot(contains('legacyPlanCompatibility')));
+    });
   });
 
-  group('HomeScreen authority routing', () {
+  group('HomeScreen authority routing (Phase 2.8)', () {
     testWidgets('programme authority exposes programme today only', (
       tester,
     ) async {
@@ -149,26 +136,38 @@ void main() {
       expect(find.text('Choose a programme'), findsNothing);
     });
 
-    testWidgets('legacy compatibility exposes HomeAdaptFlow entry only', (
-      tester,
-    ) async {
-      _bindLegacyActivePlan();
-      final tables = InMemoryProgrammeTables();
-      await tester.pumpWidget(
-        MaterialApp(
-          home: HomeScreen(
-            embeddedInShell: true,
-            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+    testWidgets(
+      'legacy-only → established no-programme Home; zero legacy runtime',
+      (tester) async {
+        _bindLegacyActivePlan();
+        final assignmentBefore = AthleteProfileSession.activeAssignment!;
+        final tables = InMemoryProgrammeTables();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byType(DailyBriefingSection), findsOneWidget);
-      expect(find.text('NEED TO ADAPT?'), findsOneWidget);
-      expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
-      expect(find.text('Choose a programme'), findsNothing);
-    });
+        expect(find.text('Choose a programme'), findsOneWidget);
+        expect(find.byType(ChoosePlanEntryCard), findsOneWidget);
+        expect(find.byType(DailyBriefingSection), findsNothing);
+        expect(find.text('NEED TO ADAPT?'), findsNothing);
+        expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
+        expect(AthleteProfileSession.hasActivePlan, isTrue);
+        expect(
+          AthleteProfileSession.activeAssignment?.assignmentId,
+          assignmentBefore.assignmentId,
+        );
+        expect(
+          AthleteProfileSession.activeAssignment?.currentDay,
+          assignmentBefore.currentDay,
+        );
+      },
+    );
 
     testWidgets(
       'both present → programme exclusively; legacy adapt not exposed',
@@ -191,6 +190,7 @@ void main() {
         expect(find.byType(DailyBriefingSection), findsNothing);
         expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.text('ADAPT'), findsNothing);
+        expect(AthleteProfileSession.hasActivePlan, isTrue);
       },
     );
 
@@ -211,6 +211,38 @@ void main() {
       expect(find.byType(DailyBriefingSection), findsNothing);
       expect(find.text('NEED TO ADAPT?'), findsNothing);
     });
+
+    testWidgets(
+      'legacy-only and no-legacy no-programme are observationally equivalent',
+      (tester) async {
+        final tables = InMemoryProgrammeTables();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Choose a programme'), findsOneWidget);
+        expect(find.byType(DailyBriefingSection), findsNothing);
+
+        _bindLegacyActivePlan();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Choose a programme'), findsOneWidget);
+        expect(find.byType(DailyBriefingSection), findsNothing);
+        expect(find.text('NEED TO ADAPT?'), findsNothing);
+      },
+    );
 
     testWidgets(
       'loading with legacy plan does not activate legacy path',
@@ -234,8 +266,10 @@ void main() {
 
         pending.complete(null);
         await tester.pumpAndSettle();
-        expect(find.byType(DailyBriefingSection), findsOneWidget);
-        expect(find.text('NEED TO ADAPT?'), findsOneWidget);
+        // Phase 2.8: resolves to no-programme, not DailyBriefing.
+        expect(find.text('Choose a programme'), findsOneWidget);
+        expect(find.byType(DailyBriefingSection), findsNothing);
+        expect(find.text('NEED TO ADAPT?'), findsNothing);
       },
     );
 
@@ -258,6 +292,26 @@ void main() {
         expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
         expect(find.text('Choose a programme'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'Home source does not mount DailyBriefing or HomeAdaptFlow',
+      (tester) async {
+        // Structural: HomeScreen must not reference retired legacy entry widgets
+        // beyond imports removed — behavioural proofs above are authoritative.
+        final tables = InMemoryProgrammeTables();
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byType(DailyBriefingSection), findsNothing);
+        expect(find.textContaining('HomeAdaptFlow'), findsNothing);
       },
     );
   });

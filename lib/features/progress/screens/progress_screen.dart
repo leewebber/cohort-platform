@@ -10,14 +10,12 @@ import '../../auth/services/current_user_session.dart';
 import '../models/progress_summary.dart';
 import '../services/athlete_progress_summary_builder.dart';
 import '../services/capability_radar_projection_service.dart';
-import '../services/progress_summary_service.dart';
 import '../widgets/capability_radar_chart.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({
     super.key,
     this.summary,
-    this.summaryService = const ProgressSummaryService(),
     this.progressBuilder,
     this.radarService = const CapabilityRadarProjectionService(),
     this.embeddedInShell = false,
@@ -29,11 +27,8 @@ class ProgressScreen extends StatefulWidget {
   /// Sync override for tests / precomputed summaries.
   final ProgressSummary? summary;
 
-  /// Legacy Plan Library summary service (pure-legacy compatibility only).
-  final ProgressSummaryService summaryService;
-
-  /// Canonical authority-aware builder (Phase 2.7). When null and [summary] is
-  /// null, a default builder is constructed.
+  /// Canonical authority-aware builder (Phase 2.7 / 2.8). When null and
+  /// [summary] is null, a default builder is constructed.
   final AthleteProgressSummaryBuilder? progressBuilder;
 
   final CapabilityRadarProjectionService radarService;
@@ -83,10 +78,7 @@ class _ProgressScreenState extends State<ProgressScreen> {
     }
 
     setState(() => _loading = true);
-    final builder = widget.progressBuilder ??
-        AthleteProgressSummaryBuilder(
-          legacySummaryService: widget.summaryService,
-        );
+    final builder = widget.progressBuilder ?? AthleteProgressSummaryBuilder();
     try {
       final summary = await builder.build(athleteId: _athleteId);
       if (!mounted) return;

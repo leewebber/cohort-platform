@@ -11,7 +11,7 @@ void main() {
 
   group('Home dual-path authority freeze', () {
     test(
-      'Home consumes canonical runtime authority; programme excludes HomeAdaptFlow',
+      'Home consumes canonical runtime authority; legacy Home entry retired',
       () {
         final home = File('$root/lib/features/home/home_screen.dart')
             .readAsStringSync();
@@ -25,43 +25,53 @@ void main() {
           '$root/lib/features/home/services/programme_adapt_flow.dart',
         ).readAsStringSync();
 
-        // Phase 2.4: one typed decision owns classification.
+        // Phase 2.4/2.8: one typed decision owns classification.
         expect(home.contains('AthleteHomeRuntimeAuthorityResolver'), isTrue);
         expect(home.contains('AthleteHomeRuntimeAuthority'), isTrue);
-        expect(authority.contains('legacyPlanCompatibility'), isTrue);
         expect(authority.contains('AthleteHomeRuntimeAuthority.programme'), isTrue);
+        expect(authority.contains('legacyPlanCompatibility'), isFalse);
+        expect(authority.contains('legacyActivePlan'), isFalse);
+        // Home must not read session hasActivePlan for authority (comments OK).
+        expect(home.contains('AthleteProfileSession.hasActivePlan'), isFalse);
+        expect(
+          RegExp(r'legacyActivePlan\s*:').hasMatch(home),
+          isFalse,
+        );
+
+        // Phase 2.8: Home must not mount retired legacy entry.
+        expect(home.contains('DailyBriefingSection'), isFalse);
+        expect(home.contains('DailyBriefingService'), isFalse);
+        expect(home.contains('HomeAdaptFlow'), isFalse);
+        expect(home.contains('_openLegacyAdapt'), isFalse);
+        expect(home.contains('NEED TO ADAPT?'), isFalse);
 
         // Programme branch must not open Coach Brain / Plan Library adapt.
         final programmeBranch = _sectionBetween(
           home,
           'case AthleteHomeRuntimeAuthority.programme:',
-          'case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:',
+          'case AthleteHomeRuntimeAuthority.loading:',
         );
         expect(
           programmeBranch.contains('AthleteProgrammeTodaySection'),
           isTrue,
         );
-        expect(programmeBranch.contains('_openLegacyAdapt'), isFalse);
-        expect(programmeBranch.contains('HomeAdaptFlow'), isFalse);
         expect(programmeBranch.contains('DailyBriefingSection'), isFalse);
 
-        final legacyBranch = _sectionBetween(
-          home,
-          'case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:',
-          'case AthleteHomeRuntimeAuthority.loading:',
-        );
-        expect(legacyBranch.contains('DailyBriefingSection'), isTrue);
-        expect(legacyBranch.contains('_openLegacyAdapt'), isTrue);
-        expect(legacyBranch.contains('AthleteProgrammeTodaySection'), isFalse);
-
-        // Loading/unavailable must not activate legacy adapt.
+        // Loading/unavailable/none must not activate legacy adapt.
         final loadingBranch = _sectionBetween(
           home,
           'case AthleteHomeRuntimeAuthority.loading:',
           'case AthleteHomeRuntimeAuthority.unavailable:',
         );
         expect(loadingBranch.contains('DailyBriefingSection'), isFalse);
-        expect(loadingBranch.contains('_openLegacyAdapt'), isFalse);
+
+        final noneBranch = _sectionBetween(
+          home,
+          'case AthleteHomeRuntimeAuthority.none:',
+          '}',
+        );
+        expect(noneBranch.contains('ChoosePlanEntryCard'), isTrue);
+        expect(noneBranch.contains('DailyBriefingSection'), isFalse);
 
         // Programme today owns Adapt via ProgrammeAdaptFlow only.
         expect(today.contains('ProgrammeAdaptFlow'), isTrue);

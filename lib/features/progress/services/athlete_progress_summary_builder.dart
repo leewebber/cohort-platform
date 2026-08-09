@@ -5,25 +5,22 @@ import '../../../data/repositories/programme_slot_outcome_supabase_store.dart';
 import '../../../data/repositories/programme_version_store.dart';
 import '../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../models/programme_assignment.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../home/services/athlete_home_runtime_authority.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/services/programme_progress_summary_service.dart';
 import '../models/progress_summary.dart';
-import 'progress_summary_service.dart';
 
-/// Resolves athlete Progress-tab authority (Phase 2.7).
+/// Resolves athlete Progress-tab authority (Phase 2.7 / 2.8).
 ///
 /// Materialised programme athletes receive [ProgrammeProgressSummaryService]
-/// evidence only. Legacy Plan Library summary is used only for pure-legacy
-/// compatibility. Both-present and programme errors never fall back to legacy.
+/// evidence only. Legacy Plan Library state does not select Progress authority
+/// (Phase 2.8 Home retirement alignment). Errors never fall back to legacy.
 class AthleteProgressSummaryBuilder {
   AthleteProgressSummaryBuilder({
     ProgrammeAssignmentStore? assignmentStore,
     ProgrammeVersionStore? versionStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
     ProgrammeProgressSummaryService? programmeProgressService,
-    ProgressSummaryService? legacySummaryService,
     AthleteHomeRuntimeAuthorityResolver? authorityResolver,
   })  : _assignmentStore =
             assignmentStore ?? const ProgrammeAssignmentSupabaseStore(),
@@ -32,7 +29,6 @@ class AthleteProgressSummaryBuilder {
             slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
         _programmeProgress =
             programmeProgressService ?? const ProgrammeProgressSummaryService(),
-        _legacySummary = legacySummaryService ?? const ProgressSummaryService(),
         _authorityResolver =
             authorityResolver ?? const AthleteHomeRuntimeAuthorityResolver();
 
@@ -40,14 +36,11 @@ class AthleteProgressSummaryBuilder {
   final ProgrammeVersionStore _versionStore;
   final ProgrammeSlotOutcomeStore _slotOutcomeStore;
   final ProgrammeProgressSummaryService _programmeProgress;
-  final ProgressSummaryService _legacySummary;
   final AthleteHomeRuntimeAuthorityResolver _authorityResolver;
 
   Future<ProgressSummary> build({
     required String athleteId,
-    bool? legacyActivePlan,
   }) async {
-    final legacy = legacyActivePlan ?? AthleteProfileSession.hasActivePlan;
     bool? materialised;
     var unavailable = false;
     ProgrammeAssignment? assignment;
@@ -62,15 +55,12 @@ class AthleteProgressSummaryBuilder {
 
     final authority = _authorityResolver.resolve(
       materialisedProgramme: materialised,
-      legacyActivePlan: legacy,
       programmeEvidenceUnavailable: unavailable,
     );
 
     switch (authority) {
       case AthleteHomeRuntimeAuthority.programme:
         return _buildProgramme(assignment!);
-      case AthleteHomeRuntimeAuthority.legacyPlanCompatibility:
-        return _legacySummary.build();
       case AthleteHomeRuntimeAuthority.loading:
       case AthleteHomeRuntimeAuthority.unavailable:
       case AthleteHomeRuntimeAuthority.none:
