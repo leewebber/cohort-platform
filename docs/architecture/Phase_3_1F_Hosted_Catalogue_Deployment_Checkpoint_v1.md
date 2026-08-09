@@ -6,11 +6,13 @@ deferral continues pending founder review of the nine-migration reconciliation
 **Rollout-plan commit:** `e8e45796ff658b5af8b71aee1f7a92996919d1d7`  
 **Part 2 implementation:** `fe92a42da6f13dbfc4a06d4a2e9a2aa7d700c3bc`  
 **Authorised migration:** `20260809160000_founder_exercise_library_phase_3_1f_part2.sql`  
-**Reconciliation (read-only, uncommitted):**  
-[`Phase_3_1F_Pending_Migration_Reconciliation_v1.md`](./Phase_3_1F_Pending_Migration_Reconciliation_v1.md)  
+**Reconciliation (read-only, committed):**  
+[`Phase_3_1F_Pending_Migration_Reconciliation_v1.md`](./Phase_3_1F_Pending_Migration_Reconciliation_v1.md)
+at `e348f9cf3d99a5c807c367670c0a336e924cef88`  
 — all nine earlier pending migrations are ledger-absent **and** effect-`ABSENT` on
 Cohort Field Manual; recommended next path **A1** under separate authorisation;
-Phase 3.1F seed remains blocked.
+Phase 3.1F seed remains blocked. Staging schema already represents the nine
+(see [`Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md`](./Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md)).
 
 ```text
 ROLLOUT_PLAN_ACCEPTED=true

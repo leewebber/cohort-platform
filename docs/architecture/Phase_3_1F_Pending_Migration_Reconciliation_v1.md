@@ -1,7 +1,8 @@
 # Phase 3.1F — Pending Migration Reconciliation (Read-Only)
 
-**Status:** COMPLETE for Option C audit — **uncommitted** for founder review  
+**Status:** COMPLETE for Option C audit — **accepted and committed**  
 **Recorded:** 2026-08-09  
+**Committed:** `e348f9cf3d99a5c807c367670c0a336e924cef88`  
 **Temporary founder decision:** Option **C** — defer Stage 1 catalogue seed until the nine
 earlier pending migrations are reconciled  
 **Hosted project:** Cohort Field Manual (`eu-west-1`)  
@@ -26,7 +27,8 @@ CANONICAL_ROWS_INSERTED=0
 AUTHORITATIVE_CANONICAL_CATALOGUE_COUNT=127
 AUTHORITATIVE_CANONICAL_ID_RANGE=EX-001..EX-127
 RECOMMENDED_RECONCILIATION_OUTCOME=A1
-RECONCILIATION_REPORT_COMMITTED=false
+RECONCILIATION_REPORT_COMMITTED=true
+RECONCILIATION_REPORT_COMMIT=e348f9cf3d99a5c807c367670c0a336e924cef88
 ```
 
 ---
