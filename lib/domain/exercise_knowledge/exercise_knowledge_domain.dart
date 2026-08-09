@@ -8,6 +8,9 @@
 library;
 
 export 'adapters/canonicalised_exercise_knowledge_adapter.dart';
+export 'graph/comparability_firewall.dart';
+export 'graph/exercise_relationship_graph.dart';
+export 'graph/relationship_eligibility.dart';
 export 'in_memory/in_memory_exercise_knowledge_repository.dart';
 export 'in_memory/in_memory_transitional_exercise_id_bridge.dart';
 export 'models/alias_resolution.dart';
@@ -37,6 +40,7 @@ export 'vocabulary/exercise_impact_level.dart';
 export 'vocabulary/exercise_laterality.dart';
 export 'vocabulary/exercise_lifecycle_status.dart';
 export 'vocabulary/exercise_modality.dart';
+export 'vocabulary/exercise_relationship_semantics.dart';
 export 'vocabulary/exercise_relationship_type.dart';
 export 'vocabulary/exercise_technical_complexity.dart';
 export 'vocabulary/performance_dimension.dart';

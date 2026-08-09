@@ -1,8 +1,12 @@
 # Phase 3.1D — Canonical Exercise Identity Bridge
 
-**Status:** COMPLETE (bridge + adapter + fixtures; **uncommitted pending review**)  
+**Status:** COMPLETE and **COMMITTED**  
 **Recorded:** 2026-08-09  
+**Commit:** `38f27ca478779903fc1d93bca5368daed87388f2`  
 **Baseline (post–3.1C commit):** `957a63d9809e8291b8715e3743feccb93a798eee`  
+**Fixture correction before commit:** retired mapping uses
+`cohort.exercise.back_squat_legacy → EX-9001` (same back squat), not a false
+`pull_up → back squat` identity.  
 **Repository boundary:** [`Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md`](./Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md)
 
 ```text

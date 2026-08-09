@@ -19,25 +19,23 @@ Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
 operational athlete authority. Phase 3 — Exercise Database has **started**.
-Phase 3.1A–3.1C are **accepted/committed**. Phase 3.1D identity bridge is
-**complete** pending review commit; live consumers are **not** migrated;
-heuristic name matching is **forbidden**; Phase 3.1 is **not** complete.
-Binding freeze:
+Phase 3.1A–3.1D are **accepted/committed**. Phase 3.1E relationship graph is
+**complete** pending review commit; relationships do **not** select
+substitutions or imply comparability; live consumers are **not** migrated;
+Phase 3.1 is **not** complete. Binding freeze:
 [`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md),
-closure:
-[`docs/architecture/Phase_2_Closure_v1.md`](docs/architecture/Phase_2_Closure_v1.md),
-repository:
-[`docs/architecture/Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md`](docs/architecture/Phase_3_1C_Exercise_Knowledge_Repository_Boundary_v1.md),
 bridge:
-[`docs/architecture/Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md`](docs/architecture/Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md).
+[`docs/architecture/Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md`](docs/architecture/Phase_3_1D_Canonical_Exercise_Identity_Bridge_v1.md),
+graph:
+[`docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md`](docs/architecture/Phase_3_1E_Exercise_Relationship_Graph_v1.md).
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
 Do not reopen Phase 1 staging or fixture work. Do not migrate live exercise
 consumers, change schema, rewrite historical evidence, map identities by name
-similarity, or start Phase 3.2 until authorised. Historical Phase 5 MVP
-numbering must not be treated as the current delivery sequence. The July 2026
-“Phase 2 completion” document is historical pre–Phase 1 alignment — not
-current Phase 2 authority.
+similarity, treat relationship adjacency as substitution/comparison authority,
+or start Phase 3.2 until authorised. Historical Phase 5 MVP numbering must not
+be treated as the current delivery sequence. The July 2026 “Phase 2 completion”
+document is historical pre–Phase 1 alignment — not current Phase 2 authority.
 
 ## Authority and product invariants
 

@@ -183,6 +183,46 @@ void main() {
     expect(validator.contains('heuristic_mapping_provenance'), isTrue);
     expect(validator.contains('name_match'), isTrue);
   });
+
+  test('relationship graph is derived read model without selection authority', () {
+    final graph = File(
+      '${domainDir.path}/graph/exercise_relationship_graph.dart',
+    ).readAsStringSync();
+    expect(graph.contains('Derived read-model graph'), isTrue);
+    expect(graph.contains('selectSubstitution'), isFalse);
+    expect(graph.contains('applyAdaptation'), isFalse);
+    expect(graph.contains('supabase'), isFalse);
+    expect(graph.contains('package:supabase'), isFalse);
+
+    final eligibility = File(
+      '${domainDir.path}/graph/relationship_eligibility.dart',
+    ).readAsStringSync();
+    expect(eligibility.contains('isSelected => false'), isTrue);
+    expect(eligibility.contains('may be considered'), isTrue);
+
+    final firewall = File(
+      '${domainDir.path}/graph/comparability_firewall.dart',
+    ).readAsStringSync();
+    expect(firewall.contains('adjacencyImpliesComparability'), isTrue);
+    expect(firewall.contains('traversalImpliesComparability'), isTrue);
+    expect(
+      firewall.contains('sameExerciseComparisonRequiresGraphEdge'),
+      isTrue,
+    );
+    expect(
+      firewall.contains('Not** a competing comparison authority'),
+      isTrue,
+    );
+    // Must not independently resolve full comparability.
+    expect(firewall.contains('areDirectlyComparable'), isFalse);
+    expect(firewall.contains('protocolAppliesTo'), isFalse);
+
+    final semantics = File(
+      '${domainDir.path}/vocabulary/exercise_relationship_semantics.dart',
+    ).readAsStringSync();
+    expect(semantics.contains('isExplicitlySymmetric => false'), isTrue);
+    expect(semantics.contains('inverseMustBeAuthoredSeparately => true'), isTrue);
+  });
 }
 
 String _repoRoot(Directory start) {
