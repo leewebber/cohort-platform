@@ -1,9 +1,11 @@
 # Current repository checkpoint
 
-**Recorded:** 2026-08-09  
+**Recorded:** 2026-08-10
 **Status:** Phase 3.1F **COMPLETE** (founder-accepted Part 2). Phase 3.1 remains
 incomplete pending separately authorised hosted catalogue deployment and
-first-consumer migration. Phase 3.2 not started.
+first-consumer migration. The Cohort Field Manual Phase 1.2–1.7 nine-migration
+uplift is applied, verified and founder-accepted as permanent evidence. Phase
+3.2 not started.
 
 ```text
 PHASE_2_CLOSED=true
@@ -22,11 +24,16 @@ MAPPING_IMPLIES_SUBSTITUTION=false
 MAPPING_IMPLIES_COMPARABILITY=false
 COMPARISON_PROTOCOL_REMAINS_SOLE_POSITIVE_AUTHORITY=true
 HISTORICAL_EVIDENCE_REWRITTEN=false
-HOSTED_ENVIRONMENT_CONTACTED=false
-HOSTED_MUTATION_PERFORMED=false
+FIELD_MANUAL_UPLIFT_APPLIED=true
+FIELD_MANUAL_UPLIFT_VERIFIED=true
+FIELD_MANUAL_MIGRATIONS_APPLIED=9
+HOSTED_ENVIRONMENT_CONTACTED=true
+HOSTED_MUTATION_PERFORMED=true
 LIVE_CONSUMERS_MIGRATED=false
 PRODUCT_BEHAVIOUR_CHANGED=false
-SCHEMA_CHANGED=false
+SCHEMA_CHANGED=true
+PHASE_3_1F_SEED_APPLIED=false
+PHASE_3_1F_ROWS_PRESENT=false
 MANUAL_TESTING_APPLICABILITY=deferred
 ```
 
@@ -39,10 +46,9 @@ MANUAL_TESTING_APPLICABILITY=deferred
 
 **Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
-**Next:** Hosted catalogue Stage 1 deployment remains blocked until migration
-isolation can apply only
-`20260809160000_founder_exercise_library_phase_3_1f_part2.sql` (other pending
-remote migrations must not ride along). First-consumer
+**Next:** A separate founder decision may authorise Hosted catalogue Stage 1,
+isolating only
+`20260809160000_founder_exercise_library_phase_3_1f_part2.sql`. First-consumer
 `founder_programme_yaml_import` remains separately authorised.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`
