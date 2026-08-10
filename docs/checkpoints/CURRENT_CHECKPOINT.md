@@ -2,9 +2,10 @@
 
 **Recorded:** 2026-08-10
 **Status:** Phase 3.1F **COMPLETE** (founder-accepted Part 2). Phase 3.1 remains
-incomplete pending a separately authorised first-consumer migration. The Cohort
-Field Manual Phase 1.2–1.7 nine-migration uplift and Phase 3.1F five-row
-catalogue seed are applied and verified. Phase 3.2 not started.
+incomplete. The first Plan Package consumer is implemented locally through a
+shared pure-Dart compiler and trusted founder-only Dart runtime, but is not
+deployed. The Cohort Field Manual uplift and Phase 3.1F five-row catalogue seed
+remain applied and verified. Phase 3.2 not started.
 
 ```text
 PHASE_2_CLOSED=true
@@ -30,6 +31,12 @@ FIELD_MANUAL_MIGRATION_LEDGER_COUNT=44
 HOSTED_ENVIRONMENT_CONTACTED=true
 HOSTED_MUTATION_PERFORMED=true
 LIVE_CONSUMERS_MIGRATED=false
+FIRST_CONSUMER_IMPLEMENTED=true
+SHARED_PLAN_PACKAGE_COMPILER_EXTRACTED=true
+TRUSTED_FOUNDER_IMPORT_RUNTIME_IMPLEMENTED=true
+TRUSTED_FOUNDER_IMPORT_RUNTIME_DEPLOYED=false
+TRUSTED_RUNTIME_HOSTED_PROJECTS_CONTACTED=0
+TRUSTED_RUNTIME_HOSTED_PROJECTS_MUTATED=0
 PRODUCT_BEHAVIOUR_CHANGED=false
 SCHEMA_CHANGED=true
 PHASE_3_1F_SEED_APPLIED=true
@@ -48,7 +55,9 @@ MANUAL_TESTING_APPLICABILITY=deferred
 
 **Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
-**Next:** A separate founder decision may authorise the bounded implementation
-of `founder_programme_yaml_import` as the first real Plan Package consumer.
+**Next:** A separate founder decision may authorise bounded deployment
+readiness and an isolated deployment operation for the trusted founder Plan
+Package import runtime. Do not begin product-UI Gate 2, close Phase 3.1 or start
+Phase 3.2 automatically.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

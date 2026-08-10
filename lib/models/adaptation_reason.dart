@@ -1,1 +1,1 @@
-enum AdaptationReason { recovery, environment, equipment, time }
+export 'package:cohort_plan_package/adaptation_reason.dart';

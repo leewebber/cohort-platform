@@ -1,8 +1,11 @@
 import '../../../models/programme_slot_outcome.dart';
+import 'package:cohort_plan_package/adaptation_evaluation_type.dart';
 import '../../../models/programme_vocabulary.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
 import '../../programme/models/programme_template.dart';
+
+export 'package:cohort_plan_package/adaptation_evaluation_type.dart';
 
 /// A programme slot scheduled after the current cursor position.
 class FutureProgrammeSlotRef {
@@ -258,8 +261,6 @@ class PostCompletionAdaptationEvaluator {
     return '${value.toStringAsFixed(1)} kg';
   }
 }
-
-enum AdaptationEvaluationType { loadProgression, protocolSubstitution }
 
 class AdaptationEvaluation {
   const AdaptationEvaluation({

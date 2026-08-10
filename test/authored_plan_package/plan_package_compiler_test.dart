@@ -9,7 +9,7 @@ void main() {
 
   setUpAll(() {
     fixtureYaml = File(
-      'test/fixtures/authored_plan_package/minimal_plan_package.yaml',
+      'packages/cohort_plan_package/test/fixtures/minimal_plan_package.yaml',
     ).readAsStringSync();
   });
 

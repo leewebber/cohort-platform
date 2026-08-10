@@ -73,6 +73,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
+  cohort_plan_package:
+    dependency: "direct main"
+    description:
+      path: "packages/cohort_plan_package"
+      relative: true
+    source: path
+    version: "1.0.0"
   collection:
     dependency: transitive
     description:

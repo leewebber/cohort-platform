@@ -1,7 +1,7 @@
 # Authored Plan Package v1 — Sprint 1.1 foundation
 
-**Status:** Binding for compiler foundation  
-**Scope:** Parse → validate → canonicalise → SHA-256 (no persistence)
+**Status:** Binding for compiler and trusted import boundary
+**Scope:** Parse → validate → canonicalise → SHA-256 → trusted draft import
 
 ---
 
@@ -60,6 +60,42 @@ Import execution is granted only to `service_role`. Flutter/client code must
 never embed service-role credentials. Ordinary authenticated users cannot read
 Cohort Global drafts or published-but-unapproved globals.
 
+## Trusted founder import runtime (Phase 3.1 first consumer)
+
+The compiler has one pure-Dart implementation in
+`packages/cohort_plan_package/`. Flutter preserves its existing import paths by
+re-exporting that package; there is no second compiler.
+
+The platform-neutral Shelf runtime in `server/trusted_plan_package_import/`
+provides exactly:
+
+```text
+POST /v1/founder/plan-packages/import
+```
+
+It verifies the bearer token through Supabase Auth, applies Cohort's established
+server-side founder email allowlist to the verified email, compiles bounded raw
+YAML, derives provenance from the verified user ID, and calls only
+`public.import_authored_plan_package(JSONB)` with server-held service-role
+authority. Invalid packages make no RPC call. Success is accepted only as a
+draft with `approved_for_global=false`; publication, catalogue approval,
+athlete assignment and athlete-plan materialisation remain separate and are not
+performed by this endpoint.
+
+Configuration is injected through `SUPABASE_URL`, `SUPABASE_ANON_KEY`,
+`SUPABASE_SERVICE_ROLE_KEY` and `FOUNDER_EMAIL_ALLOWLIST`, with optional bind,
+port and request-size values. Missing or malformed required configuration fails
+closed. No values or environment file are committed.
+
+The RPC, grants, RLS and package schema v1 are unchanged. Schema v1 still has no
+exercise identities: the first consumer imports only its supported protocol,
+session-lineage, revision, schedule, adaptation, invariant, assessment,
+evidence and comparison contracts. The legacy founder importer is unchanged.
+
+This runtime was implemented and tested locally without hosted contact or
+deployment. Deployment readiness and isolated deployment require a separate
+founder decision.
+
 ## Athlete catalogue enrolment (Sprint 1.3)
 
 After catalogue approval, athletes enrol via the Sprint 1.3 contract documented in
@@ -69,4 +105,7 @@ implement payment, subscription, or athlete-plan materialisation.
 
 ## Module
 
-`lib/features/authored_plan_package/`
+- shared compiler and pure import contracts: `packages/cohort_plan_package/`
+- Flutter compatibility exports and client-side preview adapters:
+  `lib/features/authored_plan_package/`
+- trusted founder import runtime: `server/trusted_plan_package_import/`

@@ -1,8 +1,9 @@
 # Architecture documentation index
 
 **Phase 2 is CLOSED. Phase 3 — Exercise Database: Phase 3.1F is COMPLETE
-(founder-accepted local mappings + catalogue seed). Phase 3.1 rollout
-(hosted deploy + first consumer) remains separately authorised.**
+(founder-accepted local mappings + catalogue seed). The first Plan Package
+consumer is implemented locally; deployment remains separately authorised.
+Phase 3.1 is not closed.**
 Start from
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
@@ -34,7 +35,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_1_2_to_1_7_Field_Manual_Uplift_Verification_v1.md](./Phase_1_2_to_1_7_Field_Manual_Uplift_Verification_v1.md) | Phase 1.2–1.7 — Cohort Field Manual nine-migration uplift verification (complete; founder-accepted permanent evidence) |
 | [Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md](./Phase_3_1F_Canonical_Deployment_and_First_Consumer_Plan_v1.md) | Phase 3.1F — Hosted deploy + first-consumer rollout plan (accepted) |
 | [Architecture_Blueprint_v2.md](./Architecture_Blueprint_v2.md) | Primary technical reference — layers, pipelines, ports, ADR index |
-| [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Phase 1 Sprint 1.1–1.2 — Authored Plan Package compile/import/catalogue |
+| [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md) | Authored Plan Package compiler, trusted founder import runtime and draft lifecycle |
 | [Athlete_Catalogue_Enrolment_v1.md](./Athlete_Catalogue_Enrolment_v1.md) | Phase 1 Sprint 1.3 — non-commercial athlete catalogue enrolment |
 | [Athlete_Plan_Materialisation_v1.md](./Athlete_Plan_Materialisation_v1.md) | Phase 1 Sprint 1.4A — exact authored plan materialisation and cursor authority |
 | [Athlete_First_Prepared_Session_v1.md](./Athlete_First_Prepared_Session_v1.md) | Phase 1 Sprint 1.4B — deterministic first prepared session |

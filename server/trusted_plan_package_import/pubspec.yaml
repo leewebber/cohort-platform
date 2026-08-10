@@ -1,0 +1,17 @@
+name: trusted_plan_package_import
+description: Trusted founder-only Plan Package YAML import HTTP runtime.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  cohort_plan_package:
+    path: ../../packages/cohort_plan_package
+  http: ^1.6.0
+  shelf: ^1.4.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
