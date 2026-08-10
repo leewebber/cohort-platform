@@ -1,0 +1,88 @@
+# Gate 1 Athlete E fixture package — Staging-only, not production catalogue.
+package_schema_version: 1
+
+programme:
+  lineage_code: PROG-S17E-GATE1
+  # v1 reserved by zero-hash draft from an earlier malformed-hash probe; do not repair.
+  version_number: 2
+  name: S17E Gate1 Athlete E Fixture
+  description: Staging-only three-slot package for Phase 1.2–1.7 Gate 1 backend/RPC verification.
+  library_scope: cohort_global
+  owner_type: global
+  coaching_intent: Isolated Athlete E Gate 1 contract verification.
+  duration_weeks: 1
+  sessions_per_week: 3
+  primary_goal: strength
+
+sessions:
+  # Symbolic lineages are compiled then rebound to published Staging UUIDs
+  # (PROT-S15A-STAGING-*) before import — same pattern as Journey D rebind.
+  - session_key: SES-S17E-G1-A
+    protocol_id: PROT-S15A-STAGING-1
+    session_lineage_id: SL-S17E-G1-A
+    revision_number: 1
+    title: Gate1 Session A
+  - session_key: SES-S17E-G1-B
+    protocol_id: PROT-S15A-STAGING-2
+    session_lineage_id: SL-S17E-G1-B
+    revision_number: 1
+    title: Gate1 Session B
+  - session_key: SES-S17E-G1-C
+    protocol_id: PROT-S15A-STAGING-3
+    session_lineage_id: SL-S17E-G1-C
+    revision_number: 1
+    title: Gate1 Session C
+
+phases: []
+
+weeks:
+  - week_number: 1
+    title: Gate1 week
+    intent: build
+    coach_note: Three ordered slots for schedule contracts.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-S17E-G1-A
+            completion_expectation: required
+            progression:
+              prescription_summary: Gate1 slot A
+              volume_note: Authored
+              intensity_note: Authored
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D2S1
+            session_order: 1
+            session_key: SES-S17E-G1-B
+            completion_expectation: required
+            progression:
+              prescription_summary: Gate1 slot B
+              volume_note: Authored
+              intensity_note: Authored
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        intent: build
+        slots:
+          - slot_key: W1D3S1
+            session_order: 1
+            session_key: SES-S17E-G1-C
+            completion_expectation: required
+            progression:
+              prescription_summary: Gate1 slot C
+              volume_note: Authored
+              intensity_note: Authored
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []
