@@ -2,10 +2,9 @@
 
 **Recorded:** 2026-08-10
 **Status:** Phase 3.1F **COMPLETE** (founder-accepted Part 2). Phase 3.1 remains
-incomplete pending separately authorised hosted catalogue deployment and
-first-consumer migration. The Cohort Field Manual Phase 1.2–1.7 nine-migration
-uplift is applied, verified and founder-accepted as permanent evidence. Phase
-3.2 not started.
+incomplete pending a separately authorised first-consumer migration. The Cohort
+Field Manual Phase 1.2–1.7 nine-migration uplift and Phase 3.1F five-row
+catalogue seed are applied and verified. Phase 3.2 not started.
 
 ```text
 PHASE_2_CLOSED=true
@@ -27,13 +26,16 @@ HISTORICAL_EVIDENCE_REWRITTEN=false
 FIELD_MANUAL_UPLIFT_APPLIED=true
 FIELD_MANUAL_UPLIFT_VERIFIED=true
 FIELD_MANUAL_MIGRATIONS_APPLIED=9
+FIELD_MANUAL_MIGRATION_LEDGER_COUNT=44
 HOSTED_ENVIRONMENT_CONTACTED=true
 HOSTED_MUTATION_PERFORMED=true
 LIVE_CONSUMERS_MIGRATED=false
 PRODUCT_BEHAVIOUR_CHANGED=false
 SCHEMA_CHANGED=true
-PHASE_3_1F_SEED_APPLIED=false
-PHASE_3_1F_ROWS_PRESENT=false
+PHASE_3_1F_SEED_APPLIED=true
+PHASE_3_1F_SEED_VERIFIED=true
+PHASE_3_1F_ROWS_PRESENT=true
+FIELD_MANUAL_CATALOGUE_COUNT=132
 MANUAL_TESTING_APPLICABILITY=deferred
 ```
 
@@ -46,9 +48,7 @@ MANUAL_TESTING_APPLICABILITY=deferred
 
 **Binding:** [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](../architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 
-**Next:** A separate founder decision may authorise Hosted catalogue Stage 1,
-isolating only
-`20260809160000_founder_exercise_library_phase_3_1f_part2.sql`. First-consumer
-`founder_programme_yaml_import` remains separately authorised.
+**Next:** A separate founder decision may authorise the bounded implementation
+of `founder_programme_yaml_import` as the first real Plan Package consumer.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

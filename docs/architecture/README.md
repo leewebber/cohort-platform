@@ -26,6 +26,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md) | Phase 3.1F Part 2 — Founder-approved canonicals + 21 identity mappings |
 | [Phase_3_1F_Pending_Migration_Reconciliation_v1.md](./Phase_3_1F_Pending_Migration_Reconciliation_v1.md) | Phase 3.1F — Pending migration reconciliation (Option C) |
 | [Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md](./Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md) | Phase 3.1F — Hosted catalogue deployment STOP checkpoint |
+| [Phase_3_1F_Field_Manual_Seed_Verification_v1.md](./Phase_3_1F_Field_Manual_Seed_Verification_v1.md) | Phase 3.1F — Cohort Field Manual five-row exercise seed verification (complete) |
 | [Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md](./Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md) | Phase 1.2–1.7 — Cohort Staging uplift plan (accepted; schema already present) |
 | [Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md](./Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md) | Phase 1.2–1.7 — Staging Athlete E manual verification (STOPPED; accepted) |
 | [Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md](./Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md) | Phase 1.2–1.7 — Staging verification prerequisites (logical backup + Athlete E bootstrap) |
