@@ -1,4 +1,6 @@
 class TrustedImportServerConfig {
+  static const productionSupabaseHost = 'otnhhdxstdnwccehacku.supabase.co';
+
   const TrustedImportServerConfig({
     required this.supabaseUrl,
     required this.supabaseAnonKey,
@@ -33,10 +35,16 @@ class TrustedImportServerConfig {
         !url.hasScheme ||
         url.host.isEmpty ||
         url.userInfo.isNotEmpty ||
+        url.path != '' && url.path != '/' ||
+        url.hasQuery ||
+        url.hasFragment ||
         (url.scheme != 'https' &&
             !(url.scheme == 'http' &&
                 (url.host == 'localhost' || url.host == '127.0.0.1')))) {
       throw StateError('SUPABASE_URL is malformed.');
+    }
+    if (url.scheme == 'https' && url.host != productionSupabaseHost) {
+      throw StateError('SUPABASE_URL does not identify Cohort Field Manual.');
     }
 
     final founderEmails = requireValue('FOUNDER_EMAIL_ALLOWLIST')

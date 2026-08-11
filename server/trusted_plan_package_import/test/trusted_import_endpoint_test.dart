@@ -121,6 +121,73 @@ void main() {
   }
 
   group('trusted endpoint authority and request boundary', () {
+    test('health route is unauthenticated and dependency-free', () async {
+      final auth = _FakeAuth(principal: principal);
+      final rpc = _RecordingRpc();
+      final logs = <String>[];
+      final runtime = TrustedRuntimeHandler(
+        importHandler: endpoint(auth: auth, rpc: rpc).call,
+        logSink: logs.add,
+        requestIdFactory: () => 'generated-request-id',
+      );
+
+      final response = await runtime.call(
+        Request('GET', Uri.parse('http://localhost/healthz')),
+      );
+
+      expect(response.statusCode, 200);
+      expect(await jsonBody(response), {'status': 'ok'});
+      expect(response.headers['x-request-id'], 'generated-request-id');
+      expect(auth.calls, 0);
+      expect(rpc.payloads, isEmpty);
+      expect(jsonDecode(logs.single), containsPair('route', 'health'));
+    });
+
+    test('health route rejects unsupported methods', () async {
+      final runtime = TrustedRuntimeHandler(
+        importHandler: endpoint().call,
+        logSink: (_) {},
+      );
+
+      final response = await runtime.call(
+        Request('POST', Uri.parse('http://localhost/healthz')),
+      );
+
+      expect(response.statusCode, 405);
+      expect(response.headers['allow'], 'GET');
+    });
+
+    test('structured request log excludes headers and body', () async {
+      final logs = <String>[];
+      final runtime = TrustedRuntimeHandler(
+        importHandler: endpoint().call,
+        logSink: logs.add,
+      );
+
+      final response = await runtime.call(
+        request(
+          body: 'sensitive-yaml-marker',
+          authorization: 'Bearer sensitive-token-marker',
+        ).change(
+          headers: {
+            ...request().headers,
+            'authorization': 'Bearer sensitive-token-marker',
+            'x-request-id': 'safe-request-123',
+          },
+        ),
+      );
+      final encodedLog = logs.single;
+      final event = jsonDecode(encodedLog) as Map<String, dynamic>;
+
+      expect(response.headers['x-request-id'], 'safe-request-123');
+      expect(event['request_id'], 'safe-request-123');
+      expect(event['route'], 'founder_plan_package_import');
+      expect(event['status_class'], matches(RegExp(r'^[1-5]xx$')));
+      expect(event['duration_ms'], isA<int>());
+      expect(encodedLog, isNot(contains('sensitive-token-marker')));
+      expect(encodedLog, isNot(contains('sensitive-yaml-marker')));
+    });
+
     test('rejects unsupported methods before authentication', () async {
       final auth = _FakeAuth(principal: principal);
       final rpc = _RecordingRpc();
@@ -448,6 +515,34 @@ void main() {
       expect(
         () => TrustedImportServerConfig.fromEnvironment({
           'SUPABASE_URL': 'not-a-url',
+          'SUPABASE_ANON_KEY': 'placeholder',
+          'SUPABASE_SERVICE_ROLE_KEY': 'placeholder',
+          'FOUNDER_EMAIL_ALLOWLIST': 'founder@cohort.test',
+        }),
+        throwsStateError,
+      );
+    });
+
+    test('production configuration is pinned to Cohort Field Manual', () {
+      final config = TrustedImportServerConfig.fromEnvironment({
+        'SUPABASE_URL':
+            'https://${TrustedImportServerConfig.productionSupabaseHost}',
+        'SUPABASE_ANON_KEY': 'placeholder',
+        'SUPABASE_SERVICE_ROLE_KEY': 'placeholder',
+        'FOUNDER_EMAIL_ALLOWLIST': 'founder@cohort.test',
+        'PORT': '8080',
+        'BIND_ADDRESS': '0.0.0.0',
+      });
+
+      expect(
+        config.supabaseUrl.host,
+        TrustedImportServerConfig.productionSupabaseHost,
+      );
+      expect(config.port, 8080);
+      expect(config.bindAddress, '0.0.0.0');
+      expect(
+        () => TrustedImportServerConfig.fromEnvironment({
+          'SUPABASE_URL': 'https://another-project.supabase.co',
           'SUPABASE_ANON_KEY': 'placeholder',
           'SUPABASE_SERVICE_ROLE_KEY': 'placeholder',
           'FOUNDER_EMAIL_ALLOWLIST': 'founder@cohort.test',

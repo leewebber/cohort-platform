@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -24,13 +26,40 @@ Future<void> main() async {
     ),
     maxYamlBytes: config.maxYamlBytes,
   );
+  final runtime = TrustedRuntimeHandler(
+    importHandler: endpoint.call,
+    logSink: stdout.writeln,
+  );
 
   final server = await shelf_io.serve(
-    endpoint.call,
+    runtime.call,
     config.bindAddress,
     config.port,
   );
   stdout.writeln(
-    'Trusted Plan Package import runtime listening on port ${server.port}.',
+    jsonEncode({
+      'severity': 'INFO',
+      'event': 'runtime_ready',
+      'port': server.port,
+    }),
   );
+
+  final shutdown = Completer<void>();
+  void requestShutdown(ProcessSignal _) {
+    if (!shutdown.isCompleted) shutdown.complete();
+  }
+
+  final signalSubscriptions = <StreamSubscription<ProcessSignal>>[
+    ProcessSignal.sigterm.watch().listen(requestShutdown),
+    ProcessSignal.sigint.watch().listen(requestShutdown),
+  ];
+
+  await shutdown.future;
+  stdout.writeln(jsonEncode({'severity': 'INFO', 'event': 'runtime_shutdown'}));
+  await server.close(force: false);
+  authClient.close();
+  rpcClient.close();
+  for (final subscription in signalSubscriptions) {
+    await subscription.cancel();
+  }
 }

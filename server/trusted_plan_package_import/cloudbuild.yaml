@@ -1,0 +1,21 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file
+      - server/trusted_plan_package_import/Dockerfile
+      - --build-arg
+      - SOURCE_COMMIT=${_SOURCE_COMMIT}
+      - --tag
+      - ${_IMAGE_URI}
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_IMAGE_URI}
+
+images:
+  - ${_IMAGE_URI}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
