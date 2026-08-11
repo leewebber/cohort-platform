@@ -57,6 +57,8 @@ void main() {
       expect(script, contains('--min=0'));
       expect(script, contains('--max=2'));
       expect(script, contains('--concurrency=4'));
+      expect(script, contains('--memory=512Mi'));
+      expect(script, isNot(contains('--memory=256Mi')));
       expect(script, contains('FOUNDER_ALLOWLIST_SECRET_VERSION=\'1\''));
       expect(script, contains('SERVICE_ROLE_SECRET_VERSION=\'1\''));
     },

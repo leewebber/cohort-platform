@@ -94,7 +94,7 @@ fi
   --execution-environment=gen2 \
   --port=8080 \
   --cpu=1 \
-  --memory=256Mi \
+  --memory=512Mi \
   --concurrency=4 \
   --timeout=30s \
   --min=0 \

@@ -35,6 +35,10 @@ tags the image with that full commit, resolves the pushed digest, and deploys
 that digest. `SUPABASE_ANON_KEY` must be injected into the script process
 without placing its value in source, shell history or logs.
 
+The approved Cloud Run Gen2 resource profile is 1 CPU, 512 MiB memory,
+concurrency 4, a 30-second timeout, zero minimum instances and two maximum
+instances.
+
 Automatic deployment, custom domains and CI/CD are intentionally absent.
 
 ## Smoke checks
