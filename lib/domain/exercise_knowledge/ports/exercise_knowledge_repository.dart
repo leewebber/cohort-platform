@@ -1,9 +1,13 @@
 import '../models/alias_resolution.dart';
+import '../models/coaching_content.dart';
 import '../models/comparison_protocol.dart';
 import '../models/exercise_catalogue_snapshot.dart';
 import '../models/exercise_definition.dart';
 import '../models/exercise_definition_lookup.dart';
+import '../models/exercise_movement_knowledge.dart';
 import '../models/exercise_relationship.dart';
+import '../models/movement_standard.dart';
+import '../models/video_reference.dart';
 import '../value_objects/exercise_id.dart';
 
 /// Domain port for canonical Exercise Knowledge retrieval and draft storage.
@@ -60,6 +64,28 @@ abstract interface class ExerciseKnowledgeRepository {
     String? version,
   });
 
+  List<MovementStandard> movementStandardsForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  });
+
+  List<CoachingContent> coachingContentsForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  });
+
+  List<VideoReference> videoReferencesForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  });
+
+  /// Operational text plus playable media. Missing/unavailable media never
+  /// removes otherwise valid textual guidance.
+  ExerciseMovementKnowledge operationalMovementKnowledge(ExerciseId id);
+
   /// Full authoring snapshot (all lifecycles) with deterministic ordering.
   ExerciseCatalogueSnapshot authoringSnapshot({String? catalogueVersion});
 
@@ -77,4 +103,10 @@ abstract interface class ExerciseKnowledgeRepository {
 
   /// Upsert a comparison protocol into the working set (authoring).
   void upsertComparisonProtocol(ComparisonProtocol protocol);
+
+  void upsertMovementStandard(MovementStandard standard);
+
+  void upsertCoachingContent(CoachingContent content);
+
+  void upsertVideoReference(VideoReference reference);
 }

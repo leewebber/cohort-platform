@@ -3,6 +3,7 @@ import 'package:cohort_platform/domain/adaptation/vocabulary/training_environmen
 import 'package:cohort_platform/domain/exercise_knowledge/exercise_knowledge_domain.dart';
 
 import 'exercise_knowledge_fixtures.dart';
+import 'exercise_movement_content_fixtures.dart';
 
 /// Graph contract fixtures — hotel / limited-equipment examples (not production).
 class ExerciseRelationshipGraphFixtures {
@@ -116,6 +117,9 @@ class ExerciseRelationshipGraphFixtures {
         barbellRdlToDbRdl,
       ],
       comparisonProtocols: ExerciseKnowledgeFixtures.allProtocols,
+      movementStandards: [
+        ExerciseMovementContentFixtures.movementStandard,
+      ],
     );
   }
 

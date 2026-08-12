@@ -1,7 +1,11 @@
 import '../models/exercise_catalogue_snapshot.dart';
+import '../models/coaching_content.dart';
 import '../models/exercise_definition.dart';
 import '../models/exercise_definition_lookup.dart';
 import '../models/exercise_relationship.dart';
+import '../models/knowledge_content_common.dart';
+import '../models/movement_standard.dart';
+import '../models/video_reference.dart';
 import '../ports/exercise_knowledge_repository.dart';
 import '../validation/exercise_knowledge_validation_issue.dart';
 import '../validation/exercise_knowledge_validator.dart';
@@ -36,6 +40,7 @@ class ExerciseKnowledgePublicationService {
     required ExerciseKnowledgeRepository repository,
     required ExerciseCatalogueSnapshot draftSnapshot,
     required String actingOwner,
+    KnowledgeActorId? reviewerId,
     DateTime? publishedAt,
   }) {
     if (actingOwner.trim() != founderOwner) {
@@ -55,10 +60,12 @@ class ExerciseKnowledgePublicationService {
 
     final at = (publishedAt ?? DateTime.now()).toUtc();
     final existing = {
-      for (final d in repository
-          .listDefinitions(visibility: ExerciseKnowledgeVisibility.authoring))
+      for (final d in repository.listDefinitions(
+        visibility: ExerciseKnowledgeVisibility.authoring,
+      ))
         d.id.value: d,
     };
+    final existingSnapshot = repository.authoringSnapshot();
 
     final publishedDefs = <ExerciseDefinition>[];
     final issues = <ExerciseKnowledgeValidationIssue>[];
@@ -79,8 +86,7 @@ class ExerciseKnowledgePublicationService {
       if (prior != null &&
           prior.lifecycleStatus == ExerciseLifecycleStatus.published) {
         // Identity cannot silently change: same id + same version must match.
-        if (prior.version == def.version &&
-            !_definitionCoreEqual(prior, def)) {
+        if (prior.version == def.version && !_definitionCoreEqual(prior, def)) {
           issues.add(
             ExerciseKnowledgeValidationIssue(
               path: 'definitions[${def.id.value}]',
@@ -145,24 +151,54 @@ class ExerciseKnowledgePublicationService {
       return ExerciseKnowledgePublicationResult.rejected(issues);
     }
 
-    final publishedRels = draftSnapshot.relationships.map((rel) {
-      if (rel.lifecycleStatus == ExerciseLifecycleStatus.retired) return rel;
-      return ExerciseRelationship(
-        id: rel.id,
-        sourceExerciseId: rel.sourceExerciseId,
-        targetExerciseId: rel.targetExerciseId,
-        relationshipType: rel.relationshipType,
-        substitutionConstraint: rel.substitutionConstraint,
-        comparisonProtocolId: rel.comparisonProtocolId,
-        preservesIntentNotes: rel.preservesIntentNotes,
-        explanationRefId: rel.explanationRefId,
-        lifecycleStatus: ExerciseLifecycleStatus.published,
-        version: rel.version,
-        owner: founderOwner,
-        publishedAt: rel.publishedAt ?? at,
-        retiredAt: rel.retiredAt,
-      );
-    }).toList(growable: false);
+    final publishedStandards = _publishStandards(
+      draftSnapshot.movementStandards,
+      existingSnapshot.movementStandards,
+      reviewerId,
+      at,
+      issues,
+    );
+    final publishedCoaching = _publishCoaching(
+      draftSnapshot.coachingContents,
+      existingSnapshot.coachingContents,
+      reviewerId,
+      at,
+      issues,
+    );
+    final publishedVideos = _publishVideos(
+      draftSnapshot.videoReferences,
+      existingSnapshot.videoReferences,
+      reviewerId,
+      at,
+      issues,
+    );
+
+    if (issues.isNotEmpty) {
+      return ExerciseKnowledgePublicationResult.rejected(issues);
+    }
+
+    final publishedRels = draftSnapshot.relationships
+        .map((rel) {
+          if (rel.lifecycleStatus == ExerciseLifecycleStatus.retired) {
+            return rel;
+          }
+          return ExerciseRelationship(
+            id: rel.id,
+            sourceExerciseId: rel.sourceExerciseId,
+            targetExerciseId: rel.targetExerciseId,
+            relationshipType: rel.relationshipType,
+            substitutionConstraint: rel.substitutionConstraint,
+            comparisonProtocolId: rel.comparisonProtocolId,
+            preservesIntentNotes: rel.preservesIntentNotes,
+            explanationRefId: rel.explanationRefId,
+            lifecycleStatus: ExerciseLifecycleStatus.published,
+            version: rel.version,
+            owner: founderOwner,
+            publishedAt: rel.publishedAt ?? at,
+            retiredAt: rel.retiredAt,
+          );
+        })
+        .toList(growable: false);
 
     final published = ExerciseCatalogueSnapshot(
       catalogueVersion: draftSnapshot.catalogueVersion,
@@ -170,6 +206,9 @@ class ExerciseKnowledgePublicationService {
       definitions: publishedDefs,
       relationships: publishedRels,
       comparisonProtocols: draftSnapshot.comparisonProtocols,
+      movementStandards: publishedStandards,
+      coachingContents: publishedCoaching,
+      videoReferences: publishedVideos,
     );
 
     final finalCheck = loader.load(published.toJson());
@@ -258,6 +297,104 @@ class ExerciseKnowledgePublicationService {
   }
 }
 
+List<MovementStandard> _publishStandards(
+  List<MovementStandard> drafts,
+  List<MovementStandard> existing,
+  KnowledgeActorId? reviewer,
+  DateTime at,
+  List<ExerciseKnowledgeValidationIssue> issues,
+) => _publishContent(
+  drafts,
+  existing,
+  reviewer,
+  at,
+  issues,
+  (record, actor, publishedAt) =>
+      record.publish(reviewerId: actor, publishedAt: publishedAt),
+);
+
+List<CoachingContent> _publishCoaching(
+  List<CoachingContent> drafts,
+  List<CoachingContent> existing,
+  KnowledgeActorId? reviewer,
+  DateTime at,
+  List<ExerciseKnowledgeValidationIssue> issues,
+) => _publishContent(
+  drafts,
+  existing,
+  reviewer,
+  at,
+  issues,
+  (record, actor, publishedAt) =>
+      record.publish(reviewerId: actor, publishedAt: publishedAt),
+);
+
+List<VideoReference> _publishVideos(
+  List<VideoReference> drafts,
+  List<VideoReference> existing,
+  KnowledgeActorId? reviewer,
+  DateTime at,
+  List<ExerciseKnowledgeValidationIssue> issues,
+) => _publishContent(
+  drafts,
+  existing,
+  reviewer,
+  at,
+  issues,
+  (record, actor, publishedAt) =>
+      record.publish(reviewerId: actor, publishedAt: publishedAt),
+);
+
+List<T> _publishContent<T extends ExerciseKnowledgeContentRecord>(
+  List<T> drafts,
+  List<T> existing,
+  KnowledgeActorId? reviewer,
+  DateTime at,
+  List<ExerciseKnowledgeValidationIssue> issues,
+  T Function(T record, KnowledgeActorId reviewer, DateTime at) publish,
+) {
+  final existingByVersion = {
+    for (final record in existing)
+      '${record.id.value}:${record.version}': record,
+  };
+  final result = <T>[];
+  for (final record in drafts) {
+    final path =
+        '${record.contentKind.wireValue}s[${record.id.value}:${record.version}]';
+    final prior = existingByVersion['${record.id.value}:${record.version}'];
+    if (prior != null &&
+        prior.lifecycleStatus == ExerciseLifecycleStatus.published &&
+        !_contentCoreEqual(prior, record)) {
+      issues.add(
+        ExerciseKnowledgeValidationIssue(
+          path: path,
+          message:
+              'Published content cannot change silently; use a new content version.',
+          code: 'silent_published_content_mutation',
+        ),
+      );
+      continue;
+    }
+    if (record.lifecycleStatus == ExerciseLifecycleStatus.retired ||
+        record.lifecycleStatus == ExerciseLifecycleStatus.published) {
+      result.add(record);
+      continue;
+    }
+    if (reviewer == null) {
+      issues.add(
+        ExerciseKnowledgeValidationIssue(
+          path: '$path.reviewer',
+          message: 'Publishing movement content requires an explicit reviewer.',
+          code: 'content_reviewer_required',
+        ),
+      );
+      continue;
+    }
+    result.add(publish(record, reviewer, at));
+  }
+  return List.unmodifiable(result);
+}
+
 class ExerciseKnowledgePublicationResult {
   const ExerciseKnowledgePublicationResult._({
     required this.isAccepted,
@@ -267,19 +404,14 @@ class ExerciseKnowledgePublicationResult {
 
   factory ExerciseKnowledgePublicationResult.accepted(
     ExerciseCatalogueSnapshot snapshot,
-  ) =>
-      ExerciseKnowledgePublicationResult._(
-        isAccepted: true,
-        snapshot: snapshot,
-      );
+  ) => ExerciseKnowledgePublicationResult._(
+    isAccepted: true,
+    snapshot: snapshot,
+  );
 
   factory ExerciseKnowledgePublicationResult.rejected(
     List<ExerciseKnowledgeValidationIssue> issues,
-  ) =>
-      ExerciseKnowledgePublicationResult._(
-        isAccepted: false,
-        issues: issues,
-      );
+  ) => ExerciseKnowledgePublicationResult._(isAccepted: false, issues: issues);
 
   final bool isAccepted;
   final ExerciseCatalogueSnapshot? snapshot;
@@ -295,6 +427,23 @@ bool _definitionCoreEqual(ExerciseDefinition a, ExerciseDefinition b) {
   final bj = Map<String, Object?>.from(b.toJson())
     ..remove('published_at')
     ..remove('retired_at')
+    ..remove('lifecycle_status');
+  return aj.toString() == bj.toString();
+}
+
+bool _contentCoreEqual(
+  ExerciseKnowledgeContentRecord a,
+  ExerciseKnowledgeContentRecord b,
+) {
+  final aj = Map<String, Object?>.from(a.toJson())
+    ..remove('reviewer')
+    ..remove('reviewed_at')
+    ..remove('published_at')
+    ..remove('lifecycle_status');
+  final bj = Map<String, Object?>.from(b.toJson())
+    ..remove('reviewer')
+    ..remove('reviewed_at')
+    ..remove('published_at')
     ..remove('lifecycle_status');
   return aj.toString() == bj.toString();
 }

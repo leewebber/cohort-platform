@@ -1,9 +1,14 @@
 import '../models/alias_resolution.dart';
+import '../models/coaching_content.dart';
 import '../models/comparison_protocol.dart';
 import '../models/exercise_catalogue_snapshot.dart';
 import '../models/exercise_definition.dart';
 import '../models/exercise_definition_lookup.dart';
+import '../models/exercise_movement_knowledge.dart';
 import '../models/exercise_relationship.dart';
+import '../models/knowledge_content_common.dart';
+import '../models/movement_standard.dart';
+import '../models/video_reference.dart';
 import '../ports/exercise_knowledge_repository.dart';
 import '../value_objects/exercise_id.dart';
 
@@ -26,6 +31,9 @@ class InMemoryExerciseKnowledgeRepository
   final Map<String, ExerciseDefinition> _definitions = {};
   final Map<String, ExerciseRelationship> _relationships = {};
   final Map<String, ComparisonProtocol> _protocols = {};
+  final Map<String, MovementStandard> _movementStandards = {};
+  final Map<String, CoachingContent> _coachingContents = {};
+  final Map<String, VideoReference> _videoReferences = {};
   String _catalogueVersion = '0';
 
   @override
@@ -33,6 +41,9 @@ class InMemoryExerciseKnowledgeRepository
     _definitions.clear();
     _relationships.clear();
     _protocols.clear();
+    _movementStandards.clear();
+    _coachingContents.clear();
+    _videoReferences.clear();
     _catalogueVersion = snapshot.catalogueVersion;
     for (final def in snapshot.definitions) {
       _definitions[def.id.value] = def;
@@ -42,6 +53,15 @@ class InMemoryExerciseKnowledgeRepository
     }
     for (final protocol in snapshot.comparisonProtocols) {
       _protocols[protocol.id] = protocol;
+    }
+    for (final standard in snapshot.movementStandards) {
+      _movementStandards[_contentKey(standard)] = standard;
+    }
+    for (final content in snapshot.coachingContents) {
+      _coachingContents[_contentKey(content)] = content;
+    }
+    for (final reference in snapshot.videoReferences) {
+      _videoReferences[_contentKey(reference)] = reference;
     }
   }
 
@@ -58,6 +78,21 @@ class InMemoryExerciseKnowledgeRepository
   @override
   void upsertComparisonProtocol(ComparisonProtocol protocol) {
     _protocols[protocol.id] = protocol;
+  }
+
+  @override
+  void upsertMovementStandard(MovementStandard standard) {
+    _movementStandards[_contentKey(standard)] = standard;
+  }
+
+  @override
+  void upsertCoachingContent(CoachingContent content) {
+    _coachingContents[_contentKey(content)] = content;
+  }
+
+  @override
+  void upsertVideoReference(VideoReference reference) {
+    _videoReferences[_contentKey(reference)] = reference;
   }
 
   @override
@@ -81,9 +116,7 @@ class InMemoryExerciseKnowledgeRepository
         ExerciseKnowledgeVisibility.historical,
   }) {
     final unique = ids.toSet().toList()..sort();
-    return [
-      for (final id in unique) getDefinition(id, visibility: visibility),
-    ];
+    return [for (final id in unique) getDefinition(id, visibility: visibility)];
   }
 
   @override
@@ -110,10 +143,7 @@ class InMemoryExerciseKnowledgeRepository
 
     final matches = <ExerciseId>[];
     for (final def in _definitions.values) {
-      final names = <String>[
-        def.canonicalName,
-        ...def.aliases,
-      ];
+      final names = <String>[def.canonicalName, ...def.aliases];
       for (final name in names) {
         if (name.trim().toLowerCase() == needle) {
           matches.add(def.id);
@@ -173,18 +203,77 @@ class InMemoryExerciseKnowledgeRepository
   }
 
   @override
+  List<MovementStandard> movementStandardsForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  }) => _forExercise(_movementStandards.values, id, visibility);
+
+  @override
+  List<CoachingContent> coachingContentsForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  }) => _forExercise(_coachingContents.values, id, visibility);
+
+  @override
+  List<VideoReference> videoReferencesForExercise(
+    ExerciseId id, {
+    ExerciseKnowledgeVisibility visibility =
+        ExerciseKnowledgeVisibility.operational,
+  }) => _forExercise(_videoReferences.values, id, visibility);
+
+  @override
+  ExerciseMovementKnowledge operationalMovementKnowledge(ExerciseId id) {
+    return ExerciseMovementKnowledge(
+      exerciseId: id,
+      movementStandards: movementStandardsForExercise(id),
+      coachingContents: coachingContentsForExercise(id),
+      playableVideos: videoReferencesForExercise(
+        id,
+      ).where((reference) => reference.isPlayable).toList(growable: false),
+    );
+  }
+
+  @override
   ExerciseCatalogueSnapshot authoringSnapshot({String? catalogueVersion}) {
     return ExerciseCatalogueSnapshot(
       catalogueVersion: catalogueVersion ?? _catalogueVersion,
       definitions: _definitions.values.toList(growable: false),
       relationships: _relationships.values.toList(growable: false),
       comparisonProtocols: _protocols.values.toList(growable: false),
+      movementStandards: _movementStandards.values.toList(growable: false),
+      coachingContents: _coachingContents.values.toList(growable: false),
+      videoReferences: _videoReferences.values.toList(growable: false),
     );
   }
 
   @override
   ExerciseCatalogueSnapshot operationalSnapshot({String? catalogueVersion}) {
-    return authoringSnapshot(catalogueVersion: catalogueVersion)
-        .operationalView();
+    return authoringSnapshot(
+      catalogueVersion: catalogueVersion,
+    ).operationalView();
   }
+}
+
+String _contentKey(ExerciseKnowledgeContentRecord record) =>
+    '${record.id.value}:${record.version}';
+
+List<T> _forExercise<T extends ExerciseKnowledgeContentRecord>(
+  Iterable<T> records,
+  ExerciseId exerciseId,
+  ExerciseKnowledgeVisibility visibility,
+) {
+  final result = records
+      .where(
+        (record) =>
+            record.exerciseId == exerciseId &&
+            visibility.includes(record.lifecycleStatus),
+      )
+      .toList(growable: true);
+  result.sort((a, b) {
+    final byId = a.id.value.compareTo(b.id.value);
+    return byId != 0 ? byId : a.version.compareTo(b.version);
+  });
+  return List.unmodifiable(result);
 }

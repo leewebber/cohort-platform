@@ -43,6 +43,9 @@ class ExerciseRelationshipGraph {
         definitions: snapshot.definitions,
         relationships: snapshot.relationships,
         comparisonProtocols: snapshot.comparisonProtocols,
+        movementStandards: snapshot.movementStandards,
+        coachingContents: snapshot.coachingContents,
+        videoReferences: snapshot.videoReferences,
       ),
     );
 

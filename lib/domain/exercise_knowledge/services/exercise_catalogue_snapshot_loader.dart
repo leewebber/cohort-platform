@@ -42,6 +42,9 @@ class ExerciseCatalogueSnapshotLoader {
         definitions: snapshot.definitions,
         relationships: snapshot.relationships,
         comparisonProtocols: snapshot.comparisonProtocols,
+        movementStandards: snapshot.movementStandards,
+        coachingContents: snapshot.coachingContents,
+        videoReferences: snapshot.videoReferences,
       ),
     );
 
@@ -59,13 +62,13 @@ class ExerciseCatalogueLoadResult {
     this.issues = const [],
   });
 
-  factory ExerciseCatalogueLoadResult.valid(ExerciseCatalogueSnapshot snapshot) =>
-      ExerciseCatalogueLoadResult._(isValid: true, snapshot: snapshot);
+  factory ExerciseCatalogueLoadResult.valid(
+    ExerciseCatalogueSnapshot snapshot,
+  ) => ExerciseCatalogueLoadResult._(isValid: true, snapshot: snapshot);
 
   factory ExerciseCatalogueLoadResult.invalid(
     List<ExerciseKnowledgeValidationIssue> issues,
-  ) =>
-      ExerciseCatalogueLoadResult._(isValid: false, issues: issues);
+  ) => ExerciseCatalogueLoadResult._(isValid: false, issues: issues);
 
   final bool isValid;
   final ExerciseCatalogueSnapshot? snapshot;

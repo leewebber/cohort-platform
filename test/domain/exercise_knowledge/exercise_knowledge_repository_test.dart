@@ -2,6 +2,7 @@ import 'package:cohort_platform/domain/exercise_knowledge/exercise_knowledge_dom
 import 'package:flutter_test/flutter_test.dart';
 
 import 'exercise_knowledge_fixtures.dart';
+import 'exercise_movement_content_fixtures.dart';
 
 void main() {
   late InMemoryExerciseKnowledgeRepository repo;
@@ -17,6 +18,9 @@ void main() {
       relationships:
           relationships ?? ExerciseKnowledgeFixtures.validRelationships,
       comparisonProtocols: ExerciseKnowledgeFixtures.allProtocols,
+      movementStandards: [
+        ExerciseMovementContentFixtures.movementStandard,
+      ],
     );
   }
 
@@ -281,7 +285,7 @@ void main() {
               environments: d.environments,
               coachingContentRefs: d.coachingContentRefs,
               mediaRefs: d.mediaRefs,
-              movementStandardRefs: d.movementStandardRefs,
+              movementStandardRefs: const [],
               sportStandardRefs: d.sportStandardRefs,
               transitionalAliasIds: d.transitionalAliasIds,
               lifecycleStatus: ExerciseLifecycleStatus.draft,

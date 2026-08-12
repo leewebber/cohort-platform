@@ -2,6 +2,7 @@ import 'package:cohort_platform/domain/exercise_knowledge/exercise_knowledge_dom
 import 'package:flutter_test/flutter_test.dart';
 
 import 'exercise_knowledge_fixtures.dart';
+import 'exercise_movement_content_fixtures.dart';
 
 void main() {
   const validator = ExerciseKnowledgeValidator();
@@ -12,6 +13,9 @@ void main() {
         definitions: ExerciseKnowledgeFixtures.allDefinitions,
         relationships: ExerciseKnowledgeFixtures.validRelationships,
         comparisonProtocols: ExerciseKnowledgeFixtures.allProtocols,
+        movementStandards: [
+          ExerciseMovementContentFixtures.movementStandard,
+        ],
       );
       expect(issues, isEmpty);
     });

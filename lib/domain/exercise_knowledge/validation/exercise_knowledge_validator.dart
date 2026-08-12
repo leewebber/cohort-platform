@@ -1,11 +1,15 @@
 import '../models/comparison_protocol.dart';
+import '../models/coaching_content.dart';
 import '../models/exercise_definition.dart';
 import '../models/exercise_relationship.dart';
+import '../models/movement_standard.dart';
+import '../models/video_reference.dart';
 import '../value_objects/exercise_id.dart';
 import '../vocabulary/exercise_lifecycle_status.dart';
 import '../vocabulary/exercise_relationship_type.dart';
 import '../vocabulary/performance_dimension.dart';
 import 'exercise_knowledge_validation_issue.dart';
+import 'exercise_movement_content_validator.dart';
 
 /// Deterministic validation for Exercise Knowledge Authority aggregates.
 ///
@@ -145,7 +149,8 @@ class ExerciseKnowledgeValidator {
       issues.add(
         ExerciseKnowledgeValidationIssue(
           path: '$path.equipment',
-          message: 'Equipment token cannot be both required and optional: $both',
+          message:
+              'Equipment token cannot be both required and optional: $both',
           code: 'impossible_equipment_combination',
         ),
       );
@@ -331,7 +336,8 @@ class ExerciseKnowledgeValidator {
     return [
       ExerciseKnowledgeValidationIssue(
         path: path,
-        message: 'Invalid lifecycle transition: ${from.wireValue} → ${to.wireValue}',
+        message:
+            'Invalid lifecycle transition: ${from.wireValue} → ${to.wireValue}',
         code: 'invalid_lifecycle_transition',
       ),
     ];
@@ -352,8 +358,7 @@ class ExerciseKnowledgeValidator {
           issues.add(
             ExerciseKnowledgeValidationIssue(
               path: 'definitions[${def.id.value}].aliases',
-              message:
-                  'Alias "$alias" collides with definition $prior.',
+              message: 'Alias "$alias" collides with definition $prior.',
               code: 'duplicate_governed_alias',
             ),
           );
@@ -370,6 +375,9 @@ class ExerciseKnowledgeValidator {
     required List<ExerciseDefinition> definitions,
     required List<ExerciseRelationship> relationships,
     required List<ComparisonProtocol> comparisonProtocols,
+    List<MovementStandard> movementStandards = const [],
+    List<CoachingContent> coachingContents = const [],
+    List<VideoReference> videoReferences = const [],
   }) {
     final issues = <ExerciseKnowledgeValidationIssue>[];
     final knownIds = <String>{};
@@ -435,6 +443,15 @@ class ExerciseKnowledgeValidator {
         ),
       );
     }
+
+    issues.addAll(
+      const ExerciseMovementContentValidator().validate(
+        definitions: definitions,
+        movementStandards: movementStandards,
+        coachingContents: coachingContents,
+        videoReferences: videoReferences,
+      ),
+    );
 
     return issues;
   }
