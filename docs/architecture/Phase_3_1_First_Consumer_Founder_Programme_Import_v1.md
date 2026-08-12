@@ -1,6 +1,7 @@
 # Phase 3.1 first consumer — founder programme YAML import
 
-**Status:** locally implemented and verified; founder acceptance pending.
+**Status:** complete and founder-accepted at implementation commit
+`fb724d2f7a854bd4a36cbb45c884adcb82222765`. Phase 3.1 is complete.
 
 ## Consumer and composition
 
@@ -91,11 +92,18 @@ The implementation checkpoint requires:
 - full analysis no greater than the accepted 423-issue baseline, with no
   error-level diagnostics.
 
-The 423-issue baseline-tolerant exception applies only to this implementation
-checkpoint. It does not resolve the baseline or carry forward.
+The 423-issue baseline-tolerant exception applied only to this implementation
+checkpoint and is now consumed. It does not resolve the repository warning
+baseline, carry forward, or authorise another baseline-tolerant change.
 
 On 2026-08-12 all listed behavior and regression suites passed, including the
 full Flutter suite and all six Phase 2 safety groups. Changed-file analysis
 reported zero issues. Full analysis reported 415 issues, below the recorded
 pre-implementation baseline of 423, with no error-level diagnostics and no
 changed file represented.
+
+Founder acceptance confirms all 21 mappings, canonical-target validation, and
+the all-identities-before-writes boundary. It does not make the historical
+132-row review export runtime authority, connect Exercise Knowledge to a
+consumer, change Plan Package v1, authorise hosted verification/deployment,
+authorise Product-UI Gate 2 or athlete UI, or allocate Phase 3.2E/F/G.

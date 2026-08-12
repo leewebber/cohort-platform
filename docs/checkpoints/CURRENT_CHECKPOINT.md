@@ -1,11 +1,10 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-12
-**Status:** Phase 3.1 local foundation and the verified 132-row hosted canonical
-catalogue are complete. Its selected first consumer,
-`founder_programme_yaml_import`, now consumes the transitional-ID bridge and has
-passed its local implementation gates. Phase 3.1 remains incomplete pending
-separate founder acceptance of the implementation checkpoint. The trusted
+**Status:** Phase 3.1 is complete and founder-accepted. Its selected first
+consumer, `founder_programme_yaml_import`, consumes the transitional-ID bridge;
+implementation commit `fb724d2f7a854bd4a36cbb45c884adcb82222765` is accepted.
+The trusted
 Plan Package import runtime remains a distinct local, undeployed consumer:
 Plan Package v1 contains no exercise identities and does not close Phase 3.1.
 Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted at `6321dfc`.
@@ -32,7 +31,12 @@ STATIC_ANALYSIS_FINAL_ISSUES=415
 STATIC_ANALYSIS_BASELINE_INCREASED=false
 PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_COMPLETE=true
 PHASE_3_1_FIRST_CONSUMER_COMPLETE=true
-PHASE_3_1_COMPLETE=false
+PHASE_3_1_FIRST_CONSUMER_FOUNDER_ACCEPTED=true
+PHASE_3_1_FOUNDER_ACCEPTED=true
+PHASE_3_1_COMPLETE=true
+PHASE_3_1_ACCEPTED_IMPLEMENTATION_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
+PHASE_3_1_ACCEPTANCE_CHECKPOINT_AUTHORISED=true
+PHASE_3_1_ACCEPTANCE_CHECKPOINT_COMPLETE=true
 TRANSITIONAL_EXERCISE_ID_FIELD_IMPLEMENTED=true
 FOUNDER_APPROVED_MAPPINGS_VERIFIED=21
 CANONICAL_TARGET_VALIDATION_IMPLEMENTED=true
@@ -92,20 +96,22 @@ MANUAL_TESTING_APPLICABILITY=deferred
 PRODUCT_UI_GATE_2_VERIFIED=false
 VIDEO_PROVIDER_SELECTED=false
 STATIC_ANALYSIS_BASELINE_RESOLVED=false
-PHASE_3_1_FOUNDER_ACCEPTED=false
+STATIC_ANALYSIS_ACCEPTED_CHECKPOINT_ISSUES=415
+PHASE_3_1_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_AUTHORISED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_COMPLETE=true
-NEXT_TASK_RECOMMENDED=PHASE_3_1_FIRST_CONSUMER_FOUNDER_ACCEPTANCE
-NEXT_TASK_STATUS=FOUNDER_DECISION_REQUIRED
+NEXT_TASK_RECOMMENDED=POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER
+NEXT_TASK_STATUS=PROPOSED_NOT_AUTHORISED
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 DATABASE_MIGRATIONS_ADDED=false
 ATHLETE_UI_CHANGED=false
 CLOUD_RUN_CONTACTED=false
 SUPABASE_CONTACTED=false
 HOSTED_MUTATIONS=0
-FILES_CHANGED=20
+FILES_CHANGED=4
 COMMITS_CREATED=1
-PHASE_3_1_FIRST_CONSUMER_COMMIT=none
+PHASE_3_1_FIRST_CONSUMER_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
+PHASE_3_1_ACCEPTANCE_COMMIT=none
 ```
 
 | Milestone | Commit |
@@ -114,6 +120,7 @@ PHASE_3_1_FIRST_CONSUMER_COMMIT=none
 | Phase 3.1F Part 1 | `216a9be2d06dd5be11862c3a8fda0062dde12e0e` |
 | Phase 3.1F Part 1b | `a53ba7c789a5ed8a7c716780a0ed6319cb910e07` |
 | Phase 3.1F Part 2 | `fe92a42da6f13dbfc4a06d4a2e9a2aa7d700c3bc` |
+| Phase 3.1 first consumer | `fb724d2f7a854bd4a36cbb45c884adcb82222765` |
 | Phase 3.2B | `367a11c1c0200e94774233f25b72ca74fd914deb` |
 | Phase 3.2D | `6321dfcd820c11697fcecf02a124e2be720e3280` |
 
@@ -124,10 +131,32 @@ Movement-content authority is recorded in
 and
 [`Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md`](../architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md).
 
-**Next recommended task — founder decision required:**
-`PHASE_3_1_FIRST_CONSUMER_FOUNDER_ACCEPTANCE`. Review and accept or reject the
-committed local implementation checkpoint. Phase 3.1 remains incomplete until
-that decision.
+The accepted first-consumer authority path is:
+
+`founder YAML` → explicit `transitional_exercise_id` → repository-owned
+transitional-ID bridge → caller-supplied authoritative published Exercise
+Definition → canonical `EX-*` identity → immutable resolved programme →
+persistence only after complete validation.
+
+All 21 accepted mappings were verified. Any identity failure prevents every
+write. Canonical Exercise Definition identity, transitional mapping authority,
+programme prescription, Exercise Knowledge, and Plan Package v1 remain
+distinct authorities.
+
+Phase 3.1 closure does not make the historical 132-row review export runtime
+authority, connect Exercise Knowledge to a consumer, modify Plan Package v1,
+authorise hosted verification or deployment, authorise Product-UI Gate 2 or
+athlete UI, or allocate Phase 3.2E/F/G. The accepted implementation observed
+415 analysis issues against the pre-implementation count of 423. The repository
+warning baseline remains unresolved; the bounded Phase 3.1 exception is
+consumed and grants no authority to a later change.
+
+**Next recommended task — `PROPOSED_NOT_AUTHORISED`:**
+`POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER`. This future read-only
+authority review may compare repository-supported candidates for a narrow
+Exercise Knowledge projection/consumer, Coaching Glossary work, Session
+Template work, an architecture-consolidation dependency, or another
+repository-defined task. It must not assume or invent Phase 3.2E/F/G labels.
 
 Do not change Plan Package v1, contact a hosted system, allocate Phase 3.2E/F/G,
 begin Product-UI Gate 2, add movement-knowledge persistence/media/UI, or treat

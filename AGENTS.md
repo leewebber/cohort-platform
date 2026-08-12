@@ -23,10 +23,11 @@ operational athlete authority.
 Phase 3.1A–3.1F local Exercise Database work is accepted. The 132-row
 `public.exercises_v2` catalogue, including `EX-128`–`EX-132`, is applied and
 verified on Cohort Field Manual. All 21 transitional → `EX-*` mappings exist.
-Phase 3.1 remains incomplete: its selected first consumer is
-`founder_programme_yaml_import` through the transitional-ID bridge. That
-consumer is locally implemented and verified, but its implementation checkpoint
-still requires separate founder acceptance. The trusted Plan Package import
+Phase 3.1 is complete and founder-accepted. Its selected first consumer,
+`founder_programme_yaml_import`, resolves explicit transitional exercise IDs
+through the repository bridge to caller-supplied published canonical Exercise
+Definitions before any write. The accepted implementation checkpoint is
+`fb724d2f7a854bd4a36cbb45c884adcb82222765`. The trusted Plan Package import
 runtime does not close Phase 3.1 because Plan Package v1 has no exercise
 identities. Fixture `EX-900x` ids are not production. Binding:
 [`docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md),
@@ -39,8 +40,9 @@ versioned, immutable eight-exercise text-only pilot are complete. The pilot is
 local/in-memory and has no production consumer, persistence, media, or athlete
 UI. Phase 3.2C means the completed Exercise Knowledge audit and founder review.
 Phase 3.2E/F/G are unallocated. The repository-wide 423-warning analysis
-baseline remains unresolved; the Phase 3.2D exception applied only to
-`6321dfc`.
+baseline remains unresolved. The accepted Phase 3.1 checkpoint observed 415
+issues; its bounded baseline-tolerant exception is consumed and does not
+authorise another baseline-tolerant change.
 
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
@@ -132,10 +134,10 @@ record.
 
 ## Current delivery sequence
 
-The exactly one recommended next task is founder acceptance of the committed
-`PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION` checkpoint. Do not treat the local
-implementation as founder-accepted or mark Phase 3.1 complete before that
-decision.
+The exactly one recommended next task is
+`POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER`, currently
+**PROPOSED_NOT_AUTHORISED**. It is a future read-only repository-authority
+review; no implementation phase or Phase 3.2E/F/G label is allocated.
 
 Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
 the next numerical phase, change Plan Package v1 to manufacture an exercise-ID

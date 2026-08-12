@@ -2,11 +2,11 @@
 
 **Phase 2 is CLOSED. Phase 3.1A–3.1F local Exercise Database work and the
 verified 132-row hosted catalogue are complete. Its selected identity-bridge
-consumer, `founder_programme_yaml_import`, is locally implemented and verified;
-founder acceptance of the implementation checkpoint is pending, so Phase 3.1
-remains open. The trusted Plan Package import runtime is separate and does not
-close Phase 3.1 because Plan Package v1 contains no exercise identities. Phase
-3.2B–3.2D are complete; Phase 3.2D is founder-accepted.**
+consumer, `founder_programme_yaml_import`, is complete and founder-accepted at
+`fb724d2f7a854bd4a36cbb45c884adcb82222765`; Phase 3.1 is complete. The trusted
+Plan Package import runtime is separate and Plan Package v1 contains no
+exercise identities. Phase 3.2B–3.2D are complete and Phase 3.2E/F/G remain
+unallocated.**
 Start from
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
@@ -31,7 +31,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1F_Pending_Migration_Reconciliation_v1.md](./Phase_3_1F_Pending_Migration_Reconciliation_v1.md) | Phase 3.1F — Pending migration reconciliation (Option C) |
 | [Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md](./Phase_3_1F_Hosted_Catalogue_Deployment_Checkpoint_v1.md) | Phase 3.1F — Hosted catalogue deployment STOP checkpoint |
 | [Phase_3_1F_Field_Manual_Seed_Verification_v1.md](./Phase_3_1F_Field_Manual_Seed_Verification_v1.md) | Phase 3.1F — Cohort Field Manual five-row exercise seed verification (complete) |
-| [Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md](./Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md) | Phase 3.1 first consumer — bridge-aware founder programme YAML import (locally verified; founder acceptance pending) |
+| [Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md](./Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md) | Phase 3.1 first consumer — bridge-aware founder programme YAML import (complete and founder-accepted) |
 | [Phase_3_2B_Canonical_Movement_Knowledge_Contracts_v1.md](./Phase_3_2B_Canonical_Movement_Knowledge_Contracts_v1.md) | Phase 3.2B — Canonical movement-content contracts and local publication gate |
 | [Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md](./Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md) | Phase 3.2D — Founder-approved eight-exercise text-only movement-knowledge pilot |
 | [Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md](./Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md) | Phase 1.2–1.7 — Cohort Staging uplift plan (accepted; schema already present) |
