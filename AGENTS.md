@@ -46,8 +46,9 @@ baseline-tolerant gate is authorised only for the selected Exercise Knowledge
 text-guidance application read projection. It requires a fresh pre-edit count,
 zero repository errors, zero changed-file diagnostics, and no issue-count
 increase; it does not establish a reusable baseline. That local projection
-implementation is now complete with the exception consumed, but remains
-unaccepted pending a separate founder checkpoint.
+implementation is complete and founder-accepted at
+`9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`; the exception is consumed and
+does not carry forward.
 
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
@@ -143,8 +144,10 @@ The founder-accepted allocation dossier selected:
 `EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`.
 The bounded local implementation now provides a UI-neutral application read
 projection over published `MovementStandard` and `CoachingContent`. It is
-complete but not founder-accepted. The exactly one recommended next task is
-`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTANCE_CHECKPOINT`.
+complete and founder-accepted. The exactly one recommended next task is the
+read-only
+`POST_EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_PROJECTION_NEXT_TASK_ALLOCATION_DOSSIER`.
+No downstream implementation or Phase 3.2E/F/G objective is authorised.
 
 Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
 the next numerical phase, change Plan Package v1 to manufacture an exercise-ID

@@ -8,8 +8,8 @@ Plan Package import runtime is separate and Plan Package v1 contains no
 exercise identities. Phase 3.2B–3.2D are complete and Phase 3.2E/F/G remain
 unallocated. The founder-accepted allocation dossier selects a bounded local
 Exercise Knowledge text-guidance application read projection as the next
-technical task. Its local implementation is complete and awaits separate
-founder acceptance.**
+technical task. Its local implementation is complete and founder-accepted at
+`9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`.**
 Start from
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
@@ -37,7 +37,7 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 | [Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md](./Phase_3_1_First_Consumer_Founder_Programme_Import_v1.md) | Phase 3.1 first consumer — bridge-aware founder programme YAML import (complete and founder-accepted) |
 | [Phase_3_2B_Canonical_Movement_Knowledge_Contracts_v1.md](./Phase_3_2B_Canonical_Movement_Knowledge_Contracts_v1.md) | Phase 3.2B — Canonical movement-content contracts and local publication gate |
 | [Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md](./Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md) | Phase 3.2D — Founder-approved eight-exercise text-only movement-knowledge pilot |
-| [Exercise_Knowledge_Application_Read_Projection_v1.md](./Exercise_Knowledge_Application_Read_Projection_v1.md) | UI-neutral application projection of published MovementStandard and CoachingContent text; founder acceptance pending |
+| [Exercise_Knowledge_Application_Read_Projection_v1.md](./Exercise_Knowledge_Application_Read_Projection_v1.md) | UI-neutral application projection of published MovementStandard and CoachingContent text (complete and founder-accepted) |
 | [Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md](./Phase_1_2_to_1_7_Staging_Uplift_Plan_v1.md) | Phase 1.2–1.7 — Cohort Staging uplift plan (accepted; schema already present) |
 | [Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md](./Phase_1_2_to_1_7_Staging_Manual_Verification_v1.md) | Phase 1.2–1.7 — Staging Athlete E manual verification (STOPPED; accepted) |
 | [Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md](./Phase_1_2_to_1_7_Staging_Verification_Prerequisites_v1.md) | Phase 1.2–1.7 — Staging verification prerequisites (logical backup + Athlete E bootstrap) |
@@ -94,8 +94,10 @@ Knowledge audit/founder review, and Phase 3.2D is complete at `6321dfc`.
 Phase 3.2E/F/G remain unallocated. The selected next technical task is
 `EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`,
 a bounded local, UI-neutral read projection over published MovementStandard
-and CoachingContent. Its implementation is complete and awaits founder
-acceptance. Product-UI Gate 2, production composition, video, persistence,
-live-consumer rollout, and hosted operations remain separately controlled. See
+and CoachingContent. Its implementation is complete and founder-accepted.
+Product-UI Gate 2, production composition, video, persistence, live-consumer
+rollout, and hosted operations remain separately controlled. The next step
+requires a fresh read-only repository-authority allocation dossier; no
+downstream implementation or Phase 3.2E/F/G objective is authorised. See
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

@@ -11,7 +11,8 @@ Plan Package v1 contains no exercise identities and does not close Phase 3.1.
 Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted at `6321dfc`.
 The accepted allocation dossier's bounded local Exercise Knowledge
 text-guidance application read projection is implemented and locally verified.
-It remains unaccepted pending a separate founder checkpoint.
+The implementation is founder-accepted at
+`9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`.
 
 ```text
 PHASE_2_CLOSED=true
@@ -104,7 +105,7 @@ STATIC_ANALYSIS_BASELINE_RESOLVED=false
 STATIC_ANALYSIS_ACCEPTED_CHECKPOINT_ISSUES=415
 PHASE_3_1_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
 NEW_STATIC_ANALYSIS_EXCEPTION_REQUIRED=true
-NEW_STATIC_ANALYSIS_EXCEPTION_AUTHORISED=true
+NEW_STATIC_ANALYSIS_EXCEPTION_AUTHORISED=false
 STATIC_ANALYSIS_PRE_IMPLEMENTATION_ISSUES=415
 STATIC_ANALYSIS_POST_IMPLEMENTATION_ISSUES=415
 STATIC_ANALYSIS_POST_IMPLEMENTATION_ERRORS=0
@@ -121,10 +122,11 @@ RECOMMENDED_NEXT_CANDIDATE_SELECTED=true
 RECOMMENDED_NEXT_CANDIDATE_IMPLEMENTATION_READY=true
 EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_AUTHORISED=true
 EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_COMPLETE=true
-EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTED=false
-EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_COMMIT=none
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTED=true
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_COMMIT=9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_ACCEPTANCE_COMMIT=none
 NEXT_PHASE_ALLOCATED=false
-NEXT_TASK_RECOMMENDED=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTANCE_CHECKPOINT
+NEXT_TASK_RECOMMENDED=POST_EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_PROJECTION_NEXT_TASK_ALLOCATION_DOSSIER
 NEXT_TASK_STATUS=PROPOSED_NOT_AUTHORISED
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 DATABASE_MIGRATIONS_ADDED=false
@@ -132,7 +134,7 @@ ATHLETE_UI_CHANGED=false
 CLOUD_RUN_CONTACTED=false
 SUPABASE_CONTACTED=false
 HOSTED_MUTATIONS=0
-FILES_CHANGED=10
+FILES_CHANGED=4
 COMMITS_CREATED=1
 PHASE_3_1_FIRST_CONSUMER_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
 PHASE_3_1_ACCEPTANCE_COMMIT=5dc3cbdea3b454ff9d791563b20c977dfd6938a2
@@ -189,7 +191,9 @@ No production composition, feature/UI consumer, Workout Player hydration,
 persistence, Supabase integration, hosted publication, video projection, or
 new Exercise Knowledge content was added. Product-UI Gate 2 remains
 unauthorised and unverified. Phase 3.2E/F/G remain unallocated. The
-implementation is complete but not founder-accepted.
+implementation is complete and founder-accepted at
+`9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`, while remaining UI-neutral and
+unwired to any production or feature consumer.
 
 Canonical Exercise Definitions remain the sole canonical identity authority;
 Exercise Knowledge cannot create or replace identity. A knowledge projection
@@ -209,9 +213,11 @@ The fresh pre-edit and final counts were both 415 with zero errors and zero
 changed-file diagnostics; this task-scoped exception is consumed.
 
 **Next recommended task — `PROPOSED_NOT_AUTHORISED`:**
-`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTANCE_CHECKPOINT`.
-It may accept or reject the bounded implementation checkpoint. It cannot add a
-production consumer, UI, persistence, video projection, hosted integration, or
-Phase 3.2E/F/G allocation.
+`POST_EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_PROJECTION_NEXT_TASK_ALLOCATION_DOSSIER`.
+This future read-only repository-authority and product-sequencing review must
+compare repository-supported candidates without assuming another Exercise
+Knowledge consumer, production composition, VideoReference work, Product-UI
+Gate 2, or a Phase 3.2E/F/G allocation. No downstream implementation is
+authorised.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

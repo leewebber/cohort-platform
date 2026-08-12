@@ -1,7 +1,8 @@
 # Exercise Knowledge Application Read Projection v1
 
-**Status:** Implementation complete; founder acceptance pending
+**Status:** Complete and founder-accepted
 **Scope:** Local, UI-neutral published text-guidance projection
+**Accepted implementation:** `9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`
 
 ## Application boundary
 
