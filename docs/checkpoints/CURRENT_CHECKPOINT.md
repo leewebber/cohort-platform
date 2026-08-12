@@ -9,9 +9,9 @@ The Phase 3.1 acceptance checkpoint is
 runtime remains a distinct local, undeployed consumer:
 Plan Package v1 contains no exercise identities and does not close Phase 3.1.
 Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted at `6321dfc`.
-The allocation dossier is accepted and selects a bounded local Exercise
-Knowledge text-guidance application read projection as the next technical task.
-Its implementation remains separately unauthorised.
+The accepted allocation dossier's bounded local Exercise Knowledge
+text-guidance application read projection is implemented and locally verified.
+It remains unaccepted pending a separate founder checkpoint.
 
 ```text
 PHASE_2_CLOSED=true
@@ -52,7 +52,7 @@ PLAN_PACKAGE_IMPORT_CLOSES_PHASE_3_1=false
 PLAN_PACKAGE_V1_CHANGED=false
 PLAN_PACKAGE_GOLDEN_HASH_CHANGED=false
 EXERCISE_KNOWLEDGE_CHANGED=false
-EXERCISE_KNOWLEDGE_CONSUMER_STARTED=false
+EXERCISE_KNOWLEDGE_CONSUMER_STARTED=true
 PHASE_3_2_STARTED=true
 PHASE_3_2B_COMPLETE=true
 PHASE_3_2B_ACCEPTED_COMMIT=367a11c1c0200e94774233f25b72ca74fd914deb
@@ -105,6 +105,11 @@ STATIC_ANALYSIS_ACCEPTED_CHECKPOINT_ISSUES=415
 PHASE_3_1_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
 NEW_STATIC_ANALYSIS_EXCEPTION_REQUIRED=true
 NEW_STATIC_ANALYSIS_EXCEPTION_AUTHORISED=true
+STATIC_ANALYSIS_PRE_IMPLEMENTATION_ISSUES=415
+STATIC_ANALYSIS_POST_IMPLEMENTATION_ISSUES=415
+STATIC_ANALYSIS_POST_IMPLEMENTATION_ERRORS=0
+CHANGED_DART_FILE_DIAGNOSTICS=0
+TASK_SCOPED_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_AUTHORISED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_COMPLETE=true
 POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER_AUTHORISED=true
@@ -114,20 +119,24 @@ RECOMMENDED_NEXT_CANDIDATE=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PRO
 RECOMMENDED_NEXT_CANDIDATE_TYPE=BOUNDED_LOCAL_IMPLEMENTATION
 RECOMMENDED_NEXT_CANDIDATE_SELECTED=true
 RECOMMENDED_NEXT_CANDIDATE_IMPLEMENTATION_READY=true
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_AUTHORISED=true
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_COMPLETE=true
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTED=false
+EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION_COMMIT=none
 NEXT_PHASE_ALLOCATED=false
-NEXT_TASK_RECOMMENDED=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION
-NEXT_TASK_STATUS=SELECTED_IMPLEMENTATION_NOT_AUTHORISED
+NEXT_TASK_RECOMMENDED=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTANCE_CHECKPOINT
+NEXT_TASK_STATUS=PROPOSED_NOT_AUTHORISED
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 DATABASE_MIGRATIONS_ADDED=false
 ATHLETE_UI_CHANGED=false
 CLOUD_RUN_CONTACTED=false
 SUPABASE_CONTACTED=false
 HOSTED_MUTATIONS=0
-FILES_CHANGED=3
+FILES_CHANGED=10
 COMMITS_CREATED=1
 PHASE_3_1_FIRST_CONSUMER_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
 PHASE_3_1_ACCEPTANCE_COMMIT=5dc3cbdea3b454ff9d791563b20c977dfd6938a2
-AUTHORITY_RECONCILIATION_COMMIT=none
+AUTHORITY_RECONCILIATION_COMMIT=78088b93c15d8e9e3b71a71494cfa0e1ff2f32c6
 ```
 
 | Milestone | Commit |
@@ -167,21 +176,20 @@ athlete UI, or allocate Phase 3.2E/F/G. The accepted implementation observed
 warning baseline remains unresolved; the bounded Phase 3.1 exception is
 consumed and grants no authority to a later change.
 
-The founder-accepted allocation dossier selects
+The founder-accepted allocation dossier selected
 `EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`
-as a bounded local implementation. It may later add a UI-neutral application
-query boundary over published `MovementStandard` and `CoachingContent`. It
-remains separate from canonical identity, transitional mappings, founder YAML
-import, programme prescription and structure, programmed-session resolution,
-Workout Player, athlete evidence and actuals, adaptations, comparisons,
-substitutions, and Plan Package v1.
+as a bounded local implementation. The completed, UI-neutral application query
+boundary projects published `MovementStandard` and `CoachingContent` for a
+caller-supplied canonical `EX-*` identity. It remains separate from canonical
+identity, transitional mappings, founder YAML import, programme prescription
+and structure, programmed-session resolution, Workout Player, athlete evidence
+and actuals, adaptations, comparisons, substitutions, and Plan Package v1.
 
 No production composition, feature/UI consumer, Workout Player hydration,
 persistence, Supabase integration, hosted publication, video projection, or
-new Exercise Knowledge content is authorised. Product-UI Gate 2 remains
-unauthorised and unverified. Phase 3.2E/F/G remain unallocated. The selected
-implementation may be separately authorised only against the successfully
-committed authority-reconciliation checkpoint.
+new Exercise Knowledge content was added. Product-UI Gate 2 remains
+unauthorised and unverified. Phase 3.2E/F/G remain unallocated. The
+implementation is complete but not founder-accepted.
 
 Canonical Exercise Definitions remain the sole canonical identity authority;
 Exercise Knowledge cannot create or replace identity. A knowledge projection
@@ -197,5 +205,13 @@ zero diagnostics in every changed Dart file, and no increase from the fresh
 pre-edit issue count. Suppressions, exclusions, and analysis-configuration
 changes are forbidden. The exception applies only to the selected projection
 implementation, does not make 415 a new baseline, and does not carry forward.
+The fresh pre-edit and final counts were both 415 with zero errors and zero
+changed-file diagnostics; this task-scoped exception is consumed.
+
+**Next recommended task — `PROPOSED_NOT_AUTHORISED`:**
+`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_FOUNDER_ACCEPTANCE_CHECKPOINT`.
+It may accept or reject the bounded implementation checkpoint. It cannot add a
+production consumer, UI, persistence, video projection, hosted integration, or
+Phase 3.2E/F/G allocation.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

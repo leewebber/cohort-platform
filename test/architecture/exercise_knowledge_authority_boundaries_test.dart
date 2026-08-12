@@ -5,7 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 /// Phase 3.1B/3.1C — Exercise Knowledge Authority boundary protections.
 ///
 /// Proves contracts and repository boundary exist under the canonical domain
-/// package, use EX-* only, and are not yet wired into live production consumers.
+/// package, use EX-* only, and expose only the authorised application read
+/// projection outside the domain package.
 void main() {
   final root = _repoRoot(Directory.current);
   final domainDir = Directory('$root/lib/domain/exercise_knowledge');
@@ -74,25 +75,88 @@ void main() {
     }
   });
 
-  test('no live lib consumer imports exercise_knowledge yet', () {
-    final lib = Directory('$root/lib');
+  test(
+    'only the authorised application projection imports exercise knowledge',
+    () {
+      final lib = Directory('$root/lib');
+      final offenders = <String>[];
+      for (final entity in lib.listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        final rel = entity.path.substring(root.length + 1);
+        if (rel.startsWith('lib/domain/exercise_knowledge/')) continue;
+        if (rel.startsWith('lib/application/exercise_knowledge/')) continue;
+        final source = entity.readAsStringSync();
+        if (source.contains('domain/exercise_knowledge') ||
+            source.contains('exercise_knowledge_domain')) {
+          offenders.add(rel);
+        }
+      }
+      expect(
+        offenders,
+        isEmpty,
+        reason:
+            'Exercise Knowledge must not enter feature or production consumers. '
+            'Offenders: $offenders',
+      );
+    },
+  );
+
+  test(
+    'application projection remains text-only, local, and authority-neutral',
+    () {
+      final applicationDir = Directory(
+        '$root/lib/application/exercise_knowledge',
+      );
+      expect(applicationDir.existsSync(), isTrue);
+
+      final offenders = <String>[];
+      const forbidden = [
+        'video_reference.dart',
+        'package:supabase',
+        '/features/',
+        'workout_player',
+        'plan_package',
+        'TransitionalExerciseIdBridge',
+        'applyAdaptation',
+        'selectSubstitution',
+        'CompletionEvidence',
+        'PreviousPerformanceService',
+      ];
+      for (final entity in applicationDir.listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        final source = entity.readAsStringSync();
+        for (final token in forbidden) {
+          if (source.contains(token)) {
+            offenders.add(
+              '${entity.path.substring(root.length + 1)} contains $token',
+            );
+          }
+        }
+      }
+      expect(offenders, isEmpty, reason: offenders.join('\n'));
+    },
+  );
+
+  test('Plan Package and features do not consume Exercise Knowledge', () {
     final offenders = <String>[];
-    for (final entity in lib.listSync(recursive: true)) {
-      if (entity is! File || !entity.path.endsWith('.dart')) continue;
-      final rel = entity.path.substring(root.length + 1);
-      if (rel.startsWith('lib/domain/exercise_knowledge/')) continue;
-      final source = entity.readAsStringSync();
-      if (source.contains('domain/exercise_knowledge') ||
-          source.contains('exercise_knowledge_domain')) {
-        offenders.add(rel);
+    for (final path in [
+      '$root/packages/cohort_plan_package',
+      '$root/server/trusted_plan_package_import',
+      '$root/lib/features',
+    ]) {
+      final directory = Directory(path);
+      if (!directory.existsSync()) continue;
+      for (final entity in directory.listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        final source = entity.readAsStringSync();
+        if (source.contains('domain/exercise_knowledge') ||
+            source.contains('exercise_knowledge_domain') ||
+            source.contains('application/exercise_knowledge')) {
+          offenders.add(entity.path.substring(root.length + 1));
+        }
       }
     }
-    expect(
-      offenders,
-      isEmpty,
-      reason:
-          'Phase 3.1B must not migrate live consumers. Offenders: $offenders',
-    );
+    expect(offenders, isEmpty, reason: offenders.join('\n'));
   });
 
   test('transitional cohort.exercise.* knowledge paths remain present', () {

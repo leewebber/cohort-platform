@@ -648,7 +648,7 @@ void main() {
       },
     );
 
-    test('no application or UI consumer imports new content contracts', () {
+    test('only authorised application projection imports text contracts', () {
       const contractImports = [
         'models/movement_standard.dart',
         'models/coaching_content.dart',
@@ -658,7 +658,8 @@ void main() {
       for (final entity in Directory('lib').listSync(recursive: true)) {
         if (entity is! File ||
             !entity.path.endsWith('.dart') ||
-            entity.path.contains('/domain/exercise_knowledge/')) {
+            entity.path.contains('/domain/exercise_knowledge/') ||
+            entity.path.contains('/application/exercise_knowledge/')) {
           continue;
         }
         final source = entity.readAsStringSync();
