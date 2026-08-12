@@ -10,6 +10,7 @@ library;
 
 export 'adapters/canonicalised_exercise_knowledge_adapter.dart';
 export 'seed/founder_approved_identity_mappings_phase_3_1f.dart';
+export 'seed/founder_approved_movement_knowledge_phase_3_2d.dart';
 export 'graph/comparability_firewall.dart';
 export 'graph/exercise_relationship_graph.dart';
 export 'graph/relationship_eligibility.dart';
