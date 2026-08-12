@@ -18,22 +18,36 @@ Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
 (`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
 Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
-operational athlete authority. Phase 3 — Exercise Database has **started**.
-Phase 3.1A–3.1E and Phase 3.1F are **accepted/committed** (`PHASE_3_1F_COMPLETE=true`).
-Local founder-approved catalogue additions (`EX-128`–`EX-132`) and all 21
-transitional → `EX-*` identity mappings exist; hosted apply and live consumer
-migration are **not** authorised. Fixture `EX-900x` ids are **not** production.
-Phase 3.1 is **not** complete pending rollout. Binding:
+operational athlete authority.
+
+Phase 3.1A–3.1F local Exercise Database work is accepted. The 132-row
+`public.exercises_v2` catalogue, including `EX-128`–`EX-132`, is applied and
+verified on Cohort Field Manual. All 21 transitional → `EX-*` mappings exist.
+Phase 3.1 remains incomplete: its selected first consumer is
+`founder_programme_yaml_import` through the transitional-ID bridge, and that
+consumer is not implemented or verified. The trusted Plan Package import
+runtime does not close Phase 3.1 because Plan Package v1 has no exercise
+identities. Fixture `EX-900x` ids are not production. Binding:
 [`docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md),
 [`docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md`](docs/architecture/Phase_3_1F_Part1_Founder_Identity_Mapping_Review_v1.md),
 freeze:
 [`docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md`](docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md).
+
+Phase 3.2B movement-content contracts and Phase 3.2D's founder-approved,
+versioned, immutable eight-exercise text-only pilot are complete. The pilot is
+local/in-memory and has no production consumer, persistence, media, or athlete
+UI. Phase 3.2C means the completed Exercise Knowledge audit and founder review.
+Phase 3.2E/F/G are unallocated. The repository-wide 423-warning analysis
+baseline remains unresolved; the Phase 3.2D exception applied only to
+`6321dfc`.
+
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
 Do not reopen Phase 1 staging or fixture work. Do not migrate live exercise
 consumers, push hosted catalogue mutations, change schema, rewrite historical
 evidence, map identities by name similarity, treat relationship adjacency as
-substitution/comparison authority, or start Phase 3.2 until authorised.
+substitution/comparison authority, or begin another phase without explicit
+authority.
 
 ## Authority and product invariants
 
@@ -117,20 +131,19 @@ record.
 
 ## Current delivery sequence
 
-The exact next sequence is:
+The exactly one recommended next task is
+`PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER`, currently
+**PROPOSED_NOT_AUTHORISED**. It may inspect the existing founder YAML importer,
+identity bridge, catalogue authority, failure modes, and deployment
+dependencies, but it may not implement or deploy the consumer without a later
+founder decision.
 
-1. **Phase 2.9 — Delete Unreachable Legacy Runtime and Persistence Code**
-   (next authorised Phase 2 sprint).
-2. Later Phase 2 consolidation sprints per the Phase 2.5 retirement plan —
-   each must pass the consolidation safety gate.
-3. Production rollout and remote migration application remain separately
-   controlled.
-4. Do not allocate or begin Sprint 1.8 or another product phase without
-   explicit authority.
-5. Future package-authored bounded horizons require a separate authorised
-   contract/schema change.
-6. Do not reopen Phase 1 staging or fixture work unless a new authority
-   explicitly allocates it.
+Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
+the next numerical phase, change Plan Package v1 to manufacture an exercise-ID
+dependency, begin Product-UI Gate 2, add Exercise Knowledge persistence/media/UI,
+or contact hosted systems without separate explicit authority. Future
+package-authored bounded horizons still require a separately authorised
+contract/schema change.
 
 Acceptance mutates only the current prepared executable session. Scheduling must
 not rewrite Plan Packages, fabricate completion, or invoke Coach Brain /

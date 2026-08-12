@@ -1,9 +1,11 @@
 # Architecture documentation index
 
-**Phase 2 is CLOSED. Phase 3 — Exercise Database: Phase 3.1F is COMPLETE
-(founder-accepted local mappings + catalogue seed). The first Plan Package
-consumer is implemented locally; deployment remains separately authorised.
-Phase 3.1 is not closed.**
+**Phase 2 is CLOSED. Phase 3.1A–3.1F local Exercise Database work and the
+verified 132-row hosted catalogue are complete. Phase 3.1 remains open because
+its selected identity-bridge consumer, `founder_programme_yaml_import`, is not
+implemented or verified. The trusted Plan Package import runtime is separate
+and does not close Phase 3.1 because Plan Package v1 contains no exercise
+identities. Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted.**
 Start from
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
@@ -79,9 +81,14 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** Phase 1 is **CLOSED** at `e034ea9`. Phase 2 is
-**CLOSED**. Phase 3.1F is **COMPLETE** (founder-accepted). Hosted catalogue
-deployment and first-consumer migration are **not** started. Phase 3.1 is
-**not** complete. See
+**Current delivery checkpoint:** Phase 1 and Phase 2 are **CLOSED**. Phase 3.1
+local foundations and hosted catalogue deployment are complete; Phase 3.1
+remains incomplete pending the separately authorised
+`founder_programme_yaml_import` identity-bridge consumer. Phase 3.2C means the
+completed Exercise Knowledge audit/founder review, and Phase 3.2D is complete
+at `6321dfc`. Phase 3.2E/F/G are unallocated. Coaching Glossary and Session
+Templates are not automatically authorised numerical next phases. Product-UI
+Gate 2, video, persistence, live-consumer rollout, and hosted operations remain
+separately controlled. See
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).

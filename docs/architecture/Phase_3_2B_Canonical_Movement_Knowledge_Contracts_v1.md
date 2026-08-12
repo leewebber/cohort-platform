@@ -81,4 +81,6 @@ Deferred under separate authority:
 - Supabase schema, migrations, persistence, RLS, and hosted publication;
 - athlete or authoring UI, Exercise Detail, Workout Player, and Product-UI
   Gate 2;
-- production-consumer migration and Phase 3.2C.
+- production-consumer migration (still unallocated). The earlier future use of
+  “Phase 3.2C” for this concept is superseded: Phase 3.2C now means the
+  completed Exercise Knowledge audit and founder content review.
