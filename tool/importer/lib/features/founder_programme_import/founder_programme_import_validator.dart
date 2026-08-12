@@ -2,20 +2,36 @@ import 'package:founder_importer/data/repositories/programme_version_store.dart'
 import 'package:founder_importer/features/programme_builder/services/programme_builder_compiler.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_schema.dart';
+import 'package:founder_importer/features/founder_programme_import/founder_programme_identity_resolution.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_prescription_mapper.dart';
+
+class FounderProgrammeImportValidationResult {
+  FounderProgrammeImportValidationResult({
+    required List<String> globalErrors,
+    required this.identityPlan,
+  }) : globalErrors = List.unmodifiable(globalErrors);
+
+  final List<String> globalErrors;
+  final FounderProgrammeResolvedIdentityPlan identityPlan;
+
+  List<String> get validationErrors => List.unmodifiable([
+    ...globalErrors,
+    ...identityPlan.issues.map((issue) => issue.formattedMessage),
+  ]);
+
+  bool get isValid => globalErrors.isEmpty && identityPlan.isResolved;
+}
 
 class FounderProgrammeImportValidator {
   const FounderProgrammeImportValidator({
-    ProgrammeBuilderCompiler compiler = const ProgrammeBuilderCompiler(),
-    FounderProgrammePrescriptionMapper prescriptionMapper =
-        const FounderProgrammePrescriptionMapper(),
-  }) : _compiler = compiler,
-       _prescriptionMapper = prescriptionMapper;
+    this.compiler = const ProgrammeBuilderCompiler(),
+    this.prescriptionMapper = const FounderProgrammePrescriptionMapper(),
+  });
 
-  final ProgrammeBuilderCompiler _compiler;
-  final FounderProgrammePrescriptionMapper _prescriptionMapper;
+  final ProgrammeBuilderCompiler compiler;
+  final FounderProgrammePrescriptionMapper prescriptionMapper;
 
-  Future<List<String>> validate({
+  Future<FounderProgrammeImportValidationResult> validate({
     required FounderProgrammeYamlDocument document,
     required FounderProgrammeExerciseResolver exerciseResolver,
     required ProgrammeVersionStore versionStore,
@@ -36,7 +52,7 @@ class FounderProgrammeImportValidator {
       );
     }
 
-    if (!_compiler.isValidLineageCode(programme.code)) {
+    if (!compiler.isValidLineageCode(programme.code)) {
       errors.add('programme.code is not a valid lineage code.');
     }
 
@@ -158,16 +174,8 @@ class FounderProgrammeImportValidator {
                 );
               }
 
-              final exerciseError = exerciseResolver.validationError(
-                exercise,
-                exercisePath,
-              );
-              if (exerciseError != null) {
-                errors.add(exerciseError);
-              }
-
               errors.addAll(
-                _prescriptionMapper
+                prescriptionMapper
                     .validatePrescription(exercise.prescription)
                     .map((message) => '$exercisePath $message'),
               );
@@ -214,7 +222,10 @@ class FounderProgrammeImportValidator {
       }
     }
 
-    return errors;
+    return FounderProgrammeImportValidationResult(
+      globalErrors: errors,
+      identityPlan: exerciseResolver.resolveDocument(document),
+    );
   }
 
   bool _isValidImportKey(String value) {

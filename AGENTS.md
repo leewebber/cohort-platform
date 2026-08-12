@@ -24,8 +24,9 @@ Phase 3.1A–3.1F local Exercise Database work is accepted. The 132-row
 `public.exercises_v2` catalogue, including `EX-128`–`EX-132`, is applied and
 verified on Cohort Field Manual. All 21 transitional → `EX-*` mappings exist.
 Phase 3.1 remains incomplete: its selected first consumer is
-`founder_programme_yaml_import` through the transitional-ID bridge, and that
-consumer is not implemented or verified. The trusted Plan Package import
+`founder_programme_yaml_import` through the transitional-ID bridge. That
+consumer is locally implemented and verified, but its implementation checkpoint
+still requires separate founder acceptance. The trusted Plan Package import
 runtime does not close Phase 3.1 because Plan Package v1 has no exercise
 identities. Fixture `EX-900x` ids are not production. Binding:
 [`docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md),
@@ -131,12 +132,10 @@ record.
 
 ## Current delivery sequence
 
-The exactly one recommended next task is
-`PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER`, currently
-**PROPOSED_NOT_AUTHORISED**. It may inspect the existing founder YAML importer,
-identity bridge, catalogue authority, failure modes, and deployment
-dependencies, but it may not implement or deploy the consumer without a later
-founder decision.
+The exactly one recommended next task is founder acceptance of the committed
+`PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION` checkpoint. Do not treat the local
+implementation as founder-accepted or mark Phase 3.1 complete before that
+decision.
 
 Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
 the next numerical phase, change Plan Package v1 to manufacture an exercise-ID

@@ -90,7 +90,7 @@ void main() {
       final tables = InMemoryProgrammeTables();
       final store = InMemoryProgrammeVersionStore(tables);
       const validator = FounderProgrammeImportValidator();
-      final errors = await validator.validate(
+      final result = await validator.validate(
         document: document,
         exerciseResolver: FounderProgrammeExerciseResolver.fromCatalogue(
           founderImportTestExercises(),
@@ -98,7 +98,7 @@ void main() {
         versionStore: store,
       );
 
-      expect(errors, contains('schema_version must be 1.'));
+      expect(result.validationErrors, contains('schema_version must be 1.'));
     });
 
     test('rejects unknown exercise slug', () async {
@@ -106,7 +106,7 @@ void main() {
       final document = parser.parse(founderImportSampleYaml);
 
       const validator = FounderProgrammeImportValidator();
-      final errors = await validator.validate(
+      final result = await validator.validate(
         document: document,
         exerciseResolver: FounderProgrammeExerciseResolver.fromCatalogue(
           const [],
@@ -114,7 +114,10 @@ void main() {
         versionStore: InMemoryProgrammeVersionStore(InMemoryProgrammeTables()),
       );
 
-      expect(errors.any((error) => error.contains('goblet-squat')), isTrue);
+      expect(
+        result.validationErrors.any((error) => error.contains('goblet-squat')),
+        isTrue,
+      );
     });
   });
 

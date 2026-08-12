@@ -2,9 +2,10 @@
 
 **Recorded:** 2026-08-12
 **Status:** Phase 3.1 local foundation and the verified 132-row hosted canonical
-catalogue are complete. Phase 3.1 remains incomplete because its selected first
-consumer, `founder_programme_yaml_import`, has not consumed the transitional-ID
-bridge and passed its separately authorised verification gates. The trusted
+catalogue are complete. Its selected first consumer,
+`founder_programme_yaml_import`, now consumes the transitional-ID bridge and has
+passed its local implementation gates. Phase 3.1 remains incomplete pending
+separate founder acceptance of the implementation checkpoint. The trusted
 Plan Package import runtime remains a distinct local, undeployed consumer:
 Plan Package v1 contains no exercise identities and does not close Phase 3.1.
 Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted at `6321dfc`.
@@ -20,9 +21,29 @@ PHASE_3_1_LOCAL_FOUNDATION_COMPLETE=true
 PHASE_3_1_HOSTED_CATALOGUE_SEED_COMPLETE=true
 PHASE_3_1_HOSTED_CATALOGUE_ROWS=132
 PHASE_3_1_FIRST_CONSUMER=founder_programme_yaml_import
-PHASE_3_1_FIRST_CONSUMER_COMPLETE=false
+PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER_FOUNDER_ACCEPTED=true
+PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_AUTHORISED=true
+D1_STATIC_ANALYSIS_GATE=BOUNDED_BASELINE_TOLERANT
+PHASE_3_1_BASELINE_TOLERANT_ANALYSIS_APPROVED=true
+STATIC_ANALYSIS_GATE_PASSED=true
+STATIC_ANALYSIS_CHANGED_FILES_ISSUES=0
+STATIC_ANALYSIS_BASELINE_ISSUES=423
+STATIC_ANALYSIS_FINAL_ISSUES=415
+STATIC_ANALYSIS_BASELINE_INCREASED=false
+PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_COMPLETE=true
+PHASE_3_1_FIRST_CONSUMER_COMPLETE=true
 PHASE_3_1_COMPLETE=false
+TRANSITIONAL_EXERCISE_ID_FIELD_IMPLEMENTED=true
+FOUNDER_APPROVED_MAPPINGS_VERIFIED=21
+CANONICAL_TARGET_VALIDATION_IMPLEMENTED=true
+IDENTITY_FAILURES_PREVENT_ALL_WRITES=true
+LEGACY_SLUG_NAME_BEHAVIOUR_PRESERVED=true
+PARALLEL_EXERCISE_CATALOGUE_CREATED=false
 PLAN_PACKAGE_IMPORT_CLOSES_PHASE_3_1=false
+PLAN_PACKAGE_V1_CHANGED=false
+PLAN_PACKAGE_GOLDEN_HASH_CHANGED=false
+EXERCISE_KNOWLEDGE_CHANGED=false
+EXERCISE_KNOWLEDGE_CONSUMER_STARTED=false
 PHASE_3_2_STARTED=true
 PHASE_3_2B_COMPLETE=true
 PHASE_3_2B_ACCEPTED_COMMIT=367a11c1c0200e94774233f25b72ca74fd914deb
@@ -55,7 +76,7 @@ FIELD_MANUAL_MIGRATION_LEDGER_COUNT=44
 HOSTED_ENVIRONMENT_CONTACTED=true
 HOSTED_MUTATION_PERFORMED=true
 LIVE_CONSUMERS_MIGRATED=false
-FIRST_CONSUMER_IMPLEMENTED=false
+FIRST_CONSUMER_IMPLEMENTED=true
 SHARED_PLAN_PACKAGE_COMPILER_EXTRACTED=true
 TRUSTED_FOUNDER_IMPORT_RUNTIME_IMPLEMENTED=true
 TRUSTED_FOUNDER_IMPORT_RUNTIME_DEPLOYED=false
@@ -70,22 +91,21 @@ FIELD_MANUAL_CATALOGUE_COUNT=132
 MANUAL_TESTING_APPLICABILITY=deferred
 PRODUCT_UI_GATE_2_VERIFIED=false
 VIDEO_PROVIDER_SELECTED=false
-STATIC_ANALYSIS_BASELINE_ISSUES=423
 STATIC_ANALYSIS_BASELINE_RESOLVED=false
+PHASE_3_1_FOUNDER_ACCEPTED=false
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_AUTHORISED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_COMPLETE=true
-NEXT_TASK_RECOMMENDED=PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER
-NEXT_TASK_STATUS=PROPOSED_NOT_AUTHORISED
+NEXT_TASK_RECOMMENDED=PHASE_3_1_FIRST_CONSUMER_FOUNDER_ACCEPTANCE
+NEXT_TASK_STATUS=FOUNDER_DECISION_REQUIRED
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 DATABASE_MIGRATIONS_ADDED=false
 ATHLETE_UI_CHANGED=false
-PLAN_PACKAGE_V1_CHANGED=false
 CLOUD_RUN_CONTACTED=false
 SUPABASE_CONTACTED=false
 HOSTED_MUTATIONS=0
-FILES_CHANGED=4
+FILES_CHANGED=20
 COMMITS_CREATED=1
-AUTHORITY_RECONCILIATION_COMMIT=none
+PHASE_3_1_FIRST_CONSUMER_COMMIT=none
 ```
 
 | Milestone | Commit |
@@ -104,15 +124,14 @@ Movement-content authority is recorded in
 and
 [`Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md`](../architecture/Phase_3_2D_Approved_Movement_Knowledge_Pilot_v1.md).
 
-**Next recommended task — `PROPOSED_NOT_AUTHORISED`:**
-`PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER`. Its future purpose is to
-inspect `founder_programme_yaml_import`, the existing transitional-ID bridge,
-canonical catalogue authority, failure modes, and any separately governed
-deployment prerequisites, then propose a bounded implementation brief.
+**Next recommended task — founder decision required:**
+`PHASE_3_1_FIRST_CONSUMER_FOUNDER_ACCEPTANCE`. Review and accept or reject the
+committed local implementation checkpoint. Phase 3.1 remains incomplete until
+that decision.
 
-Do not implement the consumer, change Plan Package v1, contact a hosted system,
-allocate Phase 3.2E/F/G, begin Product-UI Gate 2, add movement-knowledge
-persistence/media/UI, or treat Coaching Glossary or Session Templates as an
-automatically authorised next phase.
+Do not change Plan Package v1, contact a hosted system, allocate Phase 3.2E/F/G,
+begin Product-UI Gate 2, add movement-knowledge persistence/media/UI, or treat
+Coaching Glossary or Session Templates as an automatically authorised next
+phase.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

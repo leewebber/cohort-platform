@@ -15,6 +15,7 @@ import 'package:founder_importer/models/training_content_vocabulary.dart';
 import 'package:founder_importer/models/workout_format.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_dry_run_result.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_exception.dart';
+import 'package:founder_importer/features/founder_programme_import/founder_programme_identity_resolution.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_result.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_validator.dart';
@@ -23,7 +24,7 @@ import 'package:founder_importer/features/founder_programme_import/founder_progr
 import 'package:founder_importer/features/founder_programme_import/founder_programme_yaml_parser.dart';
 
 class FounderProgrammeImportService {
-  FounderProgrammeImportService({
+  factory FounderProgrammeImportService({
     required ProgrammeVersionStore versionStore,
     required FounderProgrammeProtocolWriter protocolWriter,
     required FounderProgrammeExerciseResolver exerciseResolver,
@@ -32,12 +33,25 @@ class FounderProgrammeImportService {
         const FounderProgrammeImportValidator(),
     FounderProgrammePrescriptionMapper prescriptionMapper =
         const FounderProgrammePrescriptionMapper(),
-  }) : _versionStore = versionStore,
-       _protocolWriter = protocolWriter,
-       _exerciseResolver = exerciseResolver,
-       _parser = parser,
-       _validator = validator,
-       _prescriptionMapper = prescriptionMapper;
+  }) {
+    return FounderProgrammeImportService._(
+      versionStore,
+      protocolWriter,
+      exerciseResolver,
+      parser,
+      validator,
+      prescriptionMapper,
+    );
+  }
+
+  FounderProgrammeImportService._(
+    this._versionStore,
+    this._protocolWriter,
+    this._exerciseResolver,
+    this._parser,
+    this._validator,
+    this._prescriptionMapper,
+  );
 
   final ProgrammeVersionStore _versionStore;
   final FounderProgrammeProtocolWriter _protocolWriter;
@@ -52,13 +66,20 @@ class FounderProgrammeImportService {
     final document = _parser.parse(yamlSource);
     final programme = document.programme;
 
-    final validationErrors = await _validator.validate(
+    final validation = await _validator.validate(
       document: document,
       exerciseResolver: _exerciseResolver,
       versionStore: _versionStore,
     );
 
-    final unresolvedExerciseSlugs = _collectUnresolvedExerciseSlugs(document);
+    final validationErrors = validation.validationErrors;
+    final unresolvedExerciseSlugs =
+        validation.identityPlan.issues
+            .map((issue) => issue.rawReference)
+            .where((reference) => reference.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
     final warnings = <String>[];
     final existingLineage = await _versionStore.getLineageByImportKey(
       programme.importKey,
@@ -101,11 +122,12 @@ class FounderProgrammeImportService {
   }) async {
     final document = _parser.parse(yamlSource);
 
-    final validationErrors = await _validator.validate(
+    final validation = await _validator.validate(
       document: document,
       exerciseResolver: _exerciseResolver,
       versionStore: _versionStore,
     );
+    final validationErrors = validation.validationErrors;
     if (validationErrors.isNotEmpty) {
       throw FounderProgrammeImportException(
         'Programme import validation failed.',
@@ -233,6 +255,11 @@ class FounderProgrammeImportService {
               session: session,
               coachId: coachId,
               programmeVersionId: version.id,
+              identityPlan: validation.identityPlan,
+              importKey: programme.importKey,
+              weekNumber: week.weekNumber,
+              dayNumber: day.dayNumber,
+              sessionOrder: sessionOrder,
             );
             await _protocolWriter.saveDraft(draft);
             sessionCount++;
@@ -293,6 +320,11 @@ class FounderProgrammeImportService {
     required FounderProgrammeYamlSession session,
     required String coachId,
     required String programmeVersionId,
+    required FounderProgrammeResolvedIdentityPlan identityPlan,
+    required String importKey,
+    required int weekNumber,
+    required int dayNumber,
+    required int sessionOrder,
   }) {
     final blocks = session.blocks
         .map(
@@ -308,7 +340,16 @@ class FounderProgrammeImportService {
                 .map(
                   (exercise) => SessionBlockExerciseLink(
                     localId: DatabaseUuid.newV4(),
-                    exerciseId: _exerciseResolver.resolveExerciseId(exercise)!,
+                    exerciseId: identityPlan.canonicalIdAt(
+                      FounderProgrammeExerciseLocation(
+                        importKey: importKey,
+                        weekNumber: weekNumber,
+                        dayNumber: dayNumber,
+                        sessionOrder: sessionOrder,
+                        blockOrder: block.order,
+                        exerciseOrder: exercise.order,
+                      ),
+                    ),
                     position: exercise.order,
                     prescription: _prescriptionMapper.mapPrescription(
                       exercise.prescription,
@@ -347,35 +388,6 @@ class FounderProgrammeImportService {
   }) {
     final slug = importKey.trim().toLowerCase();
     return '$slug-w$weekNumber-d$dayNumber-s$sessionOrder';
-  }
-
-  List<String> _collectUnresolvedExerciseSlugs(
-    FounderProgrammeYamlDocument document,
-  ) {
-    final unresolved = <String>{};
-    for (final week in document.weeks) {
-      for (final day in week.days) {
-        for (final session in day.sessions) {
-          for (final block in session.blocks) {
-            for (final exercise in block.exercises) {
-              if (_exerciseResolver.resolveExerciseId(exercise) != null) {
-                continue;
-              }
-              final slug = exercise.exerciseSlug?.trim();
-              if (slug != null && slug.isNotEmpty) {
-                unresolved.add(slug);
-                continue;
-              }
-              final name = exercise.exerciseName?.trim();
-              if (name != null && name.isNotEmpty) {
-                unresolved.add(name);
-              }
-            }
-          }
-        }
-      }
-    }
-    return unresolved.toList()..sort();
   }
 
   static int _inferSessionsPerWeek(FounderProgrammeYamlDocument document) {

@@ -1,5 +1,6 @@
 import 'package:founder_importer/models/exercise.dart';
 import 'package:founder_importer/models/strength_exercise_prescription.dart';
+import 'package:founder_importer/features/founder_programme_import/founder_programme_identity_resolution.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
 
 /// Maps importer YAML prescription maps to [StrengthExercisePrescription].
@@ -172,16 +173,26 @@ class FounderProgrammePrescriptionMapper {
 
 /// Resolves YAML exercise references to catalogue rows (slug, then exact name).
 class FounderProgrammeExerciseResolver {
-  FounderProgrammeExerciseResolver(this._catalogue);
+  FounderProgrammeExerciseResolver._(
+    this._catalogue,
+    this._transitionalIdentityResolver,
+  );
 
   final List<Exercise> _catalogue;
+  final FounderProgrammeTransitionalIdentityResolver?
+  _transitionalIdentityResolver;
 
   factory FounderProgrammeExerciseResolver.fromCatalogue(
-    List<Exercise> exercises,
-  ) {
-    return FounderProgrammeExerciseResolver(exercises);
+    List<Exercise> exercises, {
+    FounderProgrammeTransitionalIdentityResolver? transitionalIdentityResolver,
+  }) {
+    return FounderProgrammeExerciseResolver._(
+      exercises,
+      transitionalIdentityResolver,
+    );
   }
 
+  /// Legacy slug/name resolution for YAML without a transitional identity.
   String? resolveExerciseId(FounderProgrammeYamlExercise exercise) {
     final slug = exercise.exerciseSlug?.trim();
     if (slug != null && slug.isNotEmpty) {
@@ -200,6 +211,180 @@ class FounderProgrammeExerciseResolver {
       if (byName.length == 1) return byName.first.exerciseId;
     }
 
+    return null;
+  }
+
+  FounderProgrammeResolvedIdentityPlan resolveDocument(
+    FounderProgrammeYamlDocument document,
+  ) {
+    final canonicalIds = <FounderProgrammeExerciseLocation, String>{};
+    final issues = <FounderProgrammeIdentityIssue>[];
+    final importKey = document.programme.importKey;
+
+    for (final week in document.weeks) {
+      for (final day in week.days) {
+        for (
+          var sessionIndex = 0;
+          sessionIndex < day.sessions.length;
+          sessionIndex++
+        ) {
+          final session = day.sessions[sessionIndex];
+          for (
+            var blockIndex = 0;
+            blockIndex < session.blocks.length;
+            blockIndex++
+          ) {
+            final block = session.blocks[blockIndex];
+            for (final exercise in block.exercises) {
+              final location = FounderProgrammeExerciseLocation(
+                importKey: importKey,
+                weekNumber: week.weekNumber,
+                dayNumber: day.dayNumber,
+                sessionOrder: sessionIndex + 1,
+                blockOrder: block.order,
+                exerciseOrder: exercise.order,
+              );
+              final issue = _resolveAt(
+                exercise: exercise,
+                location: location,
+                canonicalIds: canonicalIds,
+              );
+              if (issue != null) issues.add(issue);
+            }
+          }
+        }
+      }
+    }
+
+    return FounderProgrammeResolvedIdentityPlan(
+      canonicalIds: canonicalIds,
+      issues: issues,
+    );
+  }
+
+  FounderProgrammeIdentityIssue? _resolveAt({
+    required FounderProgrammeYamlExercise exercise,
+    required FounderProgrammeExerciseLocation location,
+    required Map<FounderProgrammeExerciseLocation, String> canonicalIds,
+  }) {
+    final transitional = exercise.transitionalExerciseId?.trim();
+    final slug = exercise.exerciseSlug?.trim();
+    final name = exercise.exerciseName?.trim();
+
+    if (transitional != null && transitional.isNotEmpty) {
+      if (slug != null && slug.isNotEmpty) {
+        return FounderProgrammeIdentityIssue(
+          location: location,
+          rawReference: transitional,
+          code: 'conflicting_authored_reference',
+          message:
+              'transitional_exercise_id cannot be combined with exercise_slug.',
+        );
+      }
+
+      final resolver = _transitionalIdentityResolver;
+      if (resolver == null) {
+        return FounderProgrammeIdentityIssue(
+          location: location,
+          rawReference: transitional,
+          code: 'unmapped_transitional_exercise_id',
+          message: 'No transitional identity resolver is configured.',
+        );
+      }
+
+      final resolution = resolver.resolve(transitional);
+      switch (resolution.kind) {
+        case FounderProgrammeTransitionalResolutionKind.invalid:
+          return FounderProgrammeIdentityIssue(
+            location: location,
+            rawReference: transitional,
+            code: 'invalid_transitional_exercise_id',
+            message:
+                'transitional_exercise_id must use cohort.exercise.<snake_case>.',
+          );
+        case FounderProgrammeTransitionalResolutionKind.unmapped:
+          return FounderProgrammeIdentityIssue(
+            location: location,
+            rawReference: transitional,
+            code: 'unmapped_transitional_exercise_id',
+            message: 'No published founder-approved mapping exists.',
+          );
+        case FounderProgrammeTransitionalResolutionKind.conflict:
+          return FounderProgrammeIdentityIssue(
+            location: location,
+            rawReference: transitional,
+            code: 'conflicting_transitional_mapping',
+            message:
+                'The transitional identity has multiple canonical targets.',
+            canonicalCandidates: resolution.canonicalCandidates,
+          );
+        case FounderProgrammeTransitionalResolutionKind.retired:
+          return FounderProgrammeIdentityIssue(
+            location: location,
+            rawReference: transitional,
+            code: 'retired_transitional_mapping',
+            message:
+                'The transitional identity is retired and unavailable for new imports.',
+          );
+        case FounderProgrammeTransitionalResolutionKind.resolved:
+          final canonicalId = resolution.canonicalId!;
+          final matches = _catalogue
+              .where((row) => row.exerciseId.trim() == canonicalId)
+              .toList(growable: false);
+          if (matches.isEmpty) {
+            return FounderProgrammeIdentityIssue(
+              location: location,
+              rawReference: transitional,
+              code: 'missing_canonical_target',
+              message:
+                  'Resolved canonical target $canonicalId is absent from the supplied catalogue.',
+            );
+          }
+          if (matches.length > 1) {
+            return FounderProgrammeIdentityIssue(
+              location: location,
+              rawReference: transitional,
+              code: 'conflicting_canonical_target',
+              message:
+                  'Resolved canonical target $canonicalId occurs more than once in the supplied catalogue.',
+              canonicalCandidates: [canonicalId],
+            );
+          }
+          if (!matches.single.published) {
+            return FounderProgrammeIdentityIssue(
+              location: location,
+              rawReference: transitional,
+              code: 'canonical_target_not_published',
+              message:
+                  'Resolved canonical target $canonicalId is not published.',
+            );
+          }
+          canonicalIds[location] = canonicalId;
+          return null;
+      }
+    }
+
+    if ((slug == null || slug.isEmpty) && (name == null || name.isEmpty)) {
+      return FounderProgrammeIdentityIssue(
+        location: location,
+        rawReference: '',
+        code: 'missing_exercise_reference',
+        message:
+            'Exercise must include transitional_exercise_id, exercise_slug, or exercise_name.',
+      );
+    }
+
+    final legacyId = resolveExerciseId(exercise);
+    if (legacyId == null) {
+      return FounderProgrammeIdentityIssue(
+        location: location,
+        rawReference: (slug != null && slug.isNotEmpty) ? slug : name ?? '',
+        code: 'legacy_exercise_reference_unresolved',
+        message:
+            'Legacy exercise slug/name did not resolve exactly once in the supplied catalogue.',
+      );
+    }
+    canonicalIds[location] = legacyId;
     return null;
   }
 

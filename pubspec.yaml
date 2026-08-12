@@ -43,6 +43,7 @@ dependencies:
   founder_importer:
     path: tool/importer
   shared_preferences: ^2.5.5
+  supabase: ^2.13.4
 
 dev_dependencies:
   flutter_test:

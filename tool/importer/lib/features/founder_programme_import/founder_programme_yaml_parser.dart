@@ -169,6 +169,7 @@ class FounderProgrammeYamlParser {
     }
 
     return FounderProgrammeYamlExercise(
+      transitionalExerciseId: _optionalString(map, 'transitional_exercise_id'),
       exerciseSlug: _optionalString(map, 'exercise_slug'),
       exerciseName: _optionalString(map, 'exercise_name'),
       order: _requireInt(map, 'order'),

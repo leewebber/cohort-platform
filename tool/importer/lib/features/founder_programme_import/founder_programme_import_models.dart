@@ -93,6 +93,7 @@ class FounderProgrammeYamlBlock {
 
 class FounderProgrammeYamlExercise {
   const FounderProgrammeYamlExercise({
+    this.transitionalExerciseId,
     this.exerciseSlug,
     this.exerciseName,
     required this.order,
@@ -100,6 +101,7 @@ class FounderProgrammeYamlExercise {
     this.notes,
   });
 
+  final String? transitionalExerciseId;
   final String? exerciseSlug;
   final String? exerciseName;
   final int order;

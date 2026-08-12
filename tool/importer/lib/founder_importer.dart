@@ -3,6 +3,7 @@ library;
 
 export 'features/founder_programme_import/founder_programme_import_dry_run_result.dart';
 export 'features/founder_programme_import/founder_programme_import_exception.dart';
+export 'features/founder_programme_import/founder_programme_identity_resolution.dart';
 export 'features/founder_programme_import/founder_programme_import_result.dart';
 export 'features/founder_programme_import/founder_programme_import_service.dart';
 export 'features/founder_programme_import/founder_programme_prescription_mapper.dart';
