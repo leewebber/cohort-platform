@@ -4,10 +4,14 @@
 **Status:** Phase 3.1 is complete and founder-accepted. Its selected first
 consumer, `founder_programme_yaml_import`, consumes the transitional-ID bridge;
 implementation commit `fb724d2f7a854bd4a36cbb45c884adcb82222765` is accepted.
-The trusted
-Plan Package import runtime remains a distinct local, undeployed consumer:
+The Phase 3.1 acceptance checkpoint is
+`5dc3cbdea3b454ff9d791563b20c977dfd6938a2`. The trusted Plan Package import
+runtime remains a distinct local, undeployed consumer:
 Plan Package v1 contains no exercise identities and does not close Phase 3.1.
 Phase 3.2B–3.2D are complete; Phase 3.2D is founder-accepted at `6321dfc`.
+The allocation dossier is accepted and selects a bounded local Exercise
+Knowledge text-guidance application read projection as the next technical task.
+Its implementation remains separately unauthorised.
 
 ```text
 PHASE_2_CLOSED=true
@@ -22,7 +26,7 @@ PHASE_3_1_HOSTED_CATALOGUE_ROWS=132
 PHASE_3_1_FIRST_CONSUMER=founder_programme_yaml_import
 PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_DOSSIER_FOUNDER_ACCEPTED=true
 PHASE_3_1_FIRST_CONSUMER_IMPLEMENTATION_AUTHORISED=true
-D1_STATIC_ANALYSIS_GATE=BOUNDED_BASELINE_TOLERANT
+D1_STATIC_ANALYSIS_GATE=TASK_SCOPED_BOUNDED_BASELINE_TOLERANT
 PHASE_3_1_BASELINE_TOLERANT_ANALYSIS_APPROVED=true
 STATIC_ANALYSIS_GATE_PASSED=true
 STATIC_ANALYSIS_CHANGED_FILES_ISSUES=0
@@ -37,6 +41,7 @@ PHASE_3_1_COMPLETE=true
 PHASE_3_1_ACCEPTED_IMPLEMENTATION_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
 PHASE_3_1_ACCEPTANCE_CHECKPOINT_AUTHORISED=true
 PHASE_3_1_ACCEPTANCE_CHECKPOINT_COMPLETE=true
+PHASE_3_1_AUTHORITY_RECONCILED=true
 TRANSITIONAL_EXERCISE_ID_FIELD_IMPLEMENTED=true
 FOUNDER_APPROVED_MAPPINGS_VERIFIED=21
 CANONICAL_TARGET_VALIDATION_IMPLEMENTED=true
@@ -98,20 +103,31 @@ VIDEO_PROVIDER_SELECTED=false
 STATIC_ANALYSIS_BASELINE_RESOLVED=false
 STATIC_ANALYSIS_ACCEPTED_CHECKPOINT_ISSUES=415
 PHASE_3_1_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
+NEW_STATIC_ANALYSIS_EXCEPTION_REQUIRED=true
+NEW_STATIC_ANALYSIS_EXCEPTION_AUTHORISED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_AUTHORISED=true
 POST_3_2D_AUTHORITY_CHECKPOINT_RECONCILIATION_COMPLETE=true
-NEXT_TASK_RECOMMENDED=POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER
-NEXT_TASK_STATUS=PROPOSED_NOT_AUTHORISED
+POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER_AUTHORISED=true
+POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER_COMPLETE=true
+POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER_FOUNDER_ACCEPTED=true
+RECOMMENDED_NEXT_CANDIDATE=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION
+RECOMMENDED_NEXT_CANDIDATE_TYPE=BOUNDED_LOCAL_IMPLEMENTATION
+RECOMMENDED_NEXT_CANDIDATE_SELECTED=true
+RECOMMENDED_NEXT_CANDIDATE_IMPLEMENTATION_READY=true
+NEXT_PHASE_ALLOCATED=false
+NEXT_TASK_RECOMMENDED=EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION
+NEXT_TASK_STATUS=SELECTED_IMPLEMENTATION_NOT_AUTHORISED
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 DATABASE_MIGRATIONS_ADDED=false
 ATHLETE_UI_CHANGED=false
 CLOUD_RUN_CONTACTED=false
 SUPABASE_CONTACTED=false
 HOSTED_MUTATIONS=0
-FILES_CHANGED=4
+FILES_CHANGED=3
 COMMITS_CREATED=1
 PHASE_3_1_FIRST_CONSUMER_COMMIT=fb724d2f7a854bd4a36cbb45c884adcb82222765
-PHASE_3_1_ACCEPTANCE_COMMIT=none
+PHASE_3_1_ACCEPTANCE_COMMIT=5dc3cbdea3b454ff9d791563b20c977dfd6938a2
+AUTHORITY_RECONCILIATION_COMMIT=none
 ```
 
 | Milestone | Commit |
@@ -151,16 +167,35 @@ athlete UI, or allocate Phase 3.2E/F/G. The accepted implementation observed
 warning baseline remains unresolved; the bounded Phase 3.1 exception is
 consumed and grants no authority to a later change.
 
-**Next recommended task — `PROPOSED_NOT_AUTHORISED`:**
-`POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER`. This future read-only
-authority review may compare repository-supported candidates for a narrow
-Exercise Knowledge projection/consumer, Coaching Glossary work, Session
-Template work, an architecture-consolidation dependency, or another
-repository-defined task. It must not assume or invent Phase 3.2E/F/G labels.
+The founder-accepted allocation dossier selects
+`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`
+as a bounded local implementation. It may later add a UI-neutral application
+query boundary over published `MovementStandard` and `CoachingContent`. It
+remains separate from canonical identity, transitional mappings, founder YAML
+import, programme prescription and structure, programmed-session resolution,
+Workout Player, athlete evidence and actuals, adaptations, comparisons,
+substitutions, and Plan Package v1.
 
-Do not change Plan Package v1, contact a hosted system, allocate Phase 3.2E/F/G,
-begin Product-UI Gate 2, add movement-knowledge persistence/media/UI, or treat
-Coaching Glossary or Session Templates as an automatically authorised next
-phase.
+No production composition, feature/UI consumer, Workout Player hydration,
+persistence, Supabase integration, hosted publication, video projection, or
+new Exercise Knowledge content is authorised. Product-UI Gate 2 remains
+unauthorised and unverified. Phase 3.2E/F/G remain unallocated. The selected
+implementation may be separately authorised only against the successfully
+committed authority-reconciliation checkpoint.
+
+Canonical Exercise Definitions remain the sole canonical identity authority;
+Exercise Knowledge cannot create or replace identity. A knowledge projection
+cannot change programme prescription, overwrite athlete actuals, approve
+adaptations, redefine comparisons, or authorise substitutions from movement
+relationships. Plan Package v1 cannot gain exercise identity or knowledge
+fields. This checkpoint authorises no athlete UI, persistence, hosted mutation,
+or invented coaching content.
+
+Its task-scoped static-analysis gate requires a fresh full `flutter analyze`
+measurement before editing, zero pre-existing and final repository errors,
+zero diagnostics in every changed Dart file, and no increase from the fresh
+pre-edit issue count. Suppressions, exclusions, and analysis-configuration
+changes are forbidden. The exception applies only to the selected projection
+implementation, does not make 415 a new baseline, and does not carry forward.
 
 **Safety gate:** `./tool/testing/run_phase2_consolidation_safety_gate.sh`

@@ -41,8 +41,11 @@ local/in-memory and has no production consumer, persistence, media, or athlete
 UI. Phase 3.2C means the completed Exercise Knowledge audit and founder review.
 Phase 3.2E/F/G are unallocated. The repository-wide 423-warning analysis
 baseline remains unresolved. The accepted Phase 3.1 checkpoint observed 415
-issues; its bounded baseline-tolerant exception is consumed and does not
-authorise another baseline-tolerant change.
+issues; its bounded exception is consumed. A new task-scoped bounded
+baseline-tolerant gate is authorised only for the selected Exercise Knowledge
+text-guidance application read projection. It requires a fresh pre-edit count,
+zero repository errors, zero changed-file diagnostics, and no issue-count
+increase; it does not establish a reusable baseline.
 
 Architecture-affecting work must still pass
 `./tool/testing/run_phase2_consolidation_safety_gate.sh`.
@@ -134,17 +137,21 @@ record.
 
 ## Current delivery sequence
 
-The exactly one recommended next task is
-`POST_PHASE_3_1_AND_3_2D_NEXT_PHASE_ALLOCATION_DOSSIER`, currently
-**PROPOSED_NOT_AUTHORISED**. It is a future read-only repository-authority
-review; no implementation phase or Phase 3.2E/F/G label is allocated.
+The founder-accepted allocation dossier selects exactly one next technical
+task:
+`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`.
+It is a bounded local implementation for a UI-neutral application read
+projection over published `MovementStandard` and `CoachingContent`.
+Implementation remains unauthorised until separately approved against the
+committed authority-reconciliation checkpoint.
 
 Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
 the next numerical phase, change Plan Package v1 to manufacture an exercise-ID
-dependency, begin Product-UI Gate 2, add Exercise Knowledge persistence/media/UI,
-or contact hosted systems without separate explicit authority. Future
-package-authored bounded horizons still require a separately authorised
-contract/schema change.
+dependency, begin Product-UI Gate 2, add Exercise Knowledge
+persistence/media/UI, compose the selected projection into production, or
+contact hosted systems without separate explicit authority. The projection
+must not change identity, prescription, actuals, adaptation, comparison,
+substitution, Plan Package, or coaching content.
 
 Acceptance mutates only the current prepared executable session. Scheduling must
 not rewrite Plan Packages, fabricate completion, or invoke Coach Brain /

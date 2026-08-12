@@ -6,7 +6,9 @@ consumer, `founder_programme_yaml_import`, is complete and founder-accepted at
 `fb724d2f7a854bd4a36cbb45c884adcb82222765`; Phase 3.1 is complete. The trusted
 Plan Package import runtime is separate and Plan Package v1 contains no
 exercise identities. Phase 3.2B–3.2D are complete and Phase 3.2E/F/G remain
-unallocated.**
+unallocated. The founder-accepted allocation dossier selects a bounded local
+Exercise Knowledge text-guidance application read projection as the next
+technical task; implementation remains separately unauthorised.**
 Start from
 [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
 and
@@ -83,14 +85,15 @@ is **historical pre–Phase 1 architecture alignment** (then also labeled
 
 **Historical:** Pre–Phase 2A behaviour (e.g. `AdaptationDecisionService`) is noted in those docs where relevant; it is not the current architecture.
 
-**Current delivery checkpoint:** Phase 1 and Phase 2 are **CLOSED**. Phase 3.1
-local foundations and hosted catalogue deployment are complete; Phase 3.1
-remains incomplete pending the separately authorised
-`founder_programme_yaml_import` identity-bridge consumer. Phase 3.2C means the
-completed Exercise Knowledge audit/founder review, and Phase 3.2D is complete
-at `6321dfc`. Phase 3.2E/F/G are unallocated. Coaching Glossary and Session
-Templates are not automatically authorised numerical next phases. Product-UI
-Gate 2, video, persistence, live-consumer rollout, and hosted operations remain
-separately controlled. See
+**Current delivery checkpoint:** Phase 1, Phase 2, and Phase 3.1 are
+**CLOSED**. Phase 3.1 is founder-accepted at implementation commit `fb724d2`
+and acceptance commit `5dc3cbd`. Phase 3.2C means the completed Exercise
+Knowledge audit/founder review, and Phase 3.2D is complete at `6321dfc`.
+Phase 3.2E/F/G remain unallocated. The selected next technical task is
+`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`,
+a bounded local, UI-neutral read projection over published MovementStandard
+and CoachingContent. Its implementation is not yet authorised. Product-UI Gate
+2, production composition, video, persistence, live-consumer rollout, and
+hosted operations remain separately controlled. See
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
 and [`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
