@@ -41,6 +41,8 @@ class AthleteProgrammeCompletionService {
   final AthleteLocalRepository? _localRepository;
   final PerformanceRecordMapper _mapper;
 
+  static final RegExp _canonicalPackageHash = RegExp(r'^[0-9a-f]{64}$');
+
   static T _provided<T>(T value) => value;
 
   String buildIdempotencyKey({
@@ -125,11 +127,11 @@ class AthleteProgrammeCompletionService {
       );
     }
 
-    final hash = programmeContext.packageContentHash?.trim();
+    final hash = programmeContext.packageContentHash;
     final key =
         (frozenLogicalKey ?? buildLogicalCompletionKey(programmeContext))
             .trim();
-    if (hash == null || hash.isEmpty || key.isEmpty) {
+    if (hash == null || !_canonicalPackageHash.hasMatch(hash) || key.isEmpty) {
       return AthleteProgrammeCompletionResult(
         status: AthleteProgrammeCompletionStatus.preparedProvenanceMismatch,
         code: 'prepared_provenance_mismatch',

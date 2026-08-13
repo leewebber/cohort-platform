@@ -170,7 +170,8 @@ ProgrammeExecutionContext _programmeContext() {
     sessionOrder: 1,
     plannedProtocolId: 'protocol-1',
     effectiveProtocolId: 'protocol-1',
-    packageContentHash: 'hash-1',
+    packageContentHash:
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
     programmedSessionKey: 'prog:assignment-1@version-1:w1:day_1:s1:protocol-1',
   );
 }

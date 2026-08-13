@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/repositories/programme_slot_outcome_store.dart';
-import '../../../data/repositories/programme_slot_outcome_supabase_store.dart';
-import '../../../data/repositories/training_session_repository.dart';
 import '../../../models/block_performance_capture_mode.dart';
-import '../../../models/programme_slot_outcome.dart';
-import '../../../models/programme_vocabulary.dart';
 import '../../../models/training_session.dart';
 import '../../../models/training_session_status.dart';
 import '../../../models/workout_format.dart';
@@ -13,15 +8,23 @@ import '../../programme/models/athlete_programme_prepared_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../models/prepared_execution_package.dart';
 import '../models/session_execution_plan.dart';
-import 'programme_session_progression_coordinator.dart';
+import 'programme_training_session_start_store.dart';
+import 'programme_training_session_start_supabase_store.dart';
 import 'session_execution_launcher.dart';
 
 enum ProgrammeSessionExecutionFailureCode {
   invalidPreparedIdentity,
+  missingPreparedProvenance,
+  missingExecutionProvenance,
+  malformedPreparedProvenance,
+  malformedExecutionProvenance,
+  preparedProvenanceMismatch,
   unsupportedAuthoredBlock,
   completedOccurrence,
   missingTrainingSession,
   trainingSessionMismatch,
+  startAuthorizationFailed,
+  startAuthorityMismatch,
   startPersistenceFailed,
 }
 
@@ -41,28 +44,17 @@ class ProgrammeSessionExecutionException implements Exception {
 /// link. Reopening the same authored slot therefore resumes the same session.
 class ProgrammeSessionExecutionLauncher {
   ProgrammeSessionExecutionLauncher({
-    TrainingSessionRepository? trainingSessionRepository,
-    ProgrammeSlotOutcomeStore? slotOutcomeStore,
-    ProgrammeSessionProgressionCoordinator? progressionCoordinator,
+    ProgrammeTrainingSessionStartStore? startStore,
     SessionExecutionLauncher? sessionExecutionLauncher,
-  }) : _trainingSessions =
-           trainingSessionRepository ?? const TrainingSessionRepository(),
-       _slotOutcomes =
-           slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
-       _progression =
-           progressionCoordinator ?? ProgrammeSessionProgressionCoordinator(),
+  }) : _startStore =
+           startStore ?? const ProgrammeTrainingSessionStartSupabaseStore(),
        _sessionExecution =
            sessionExecutionLauncher ?? SessionExecutionLauncher();
 
-  final TrainingSessionRepository _trainingSessions;
-  final ProgrammeSlotOutcomeStore _slotOutcomes;
-  final ProgrammeSessionProgressionCoordinator _progression;
+  final ProgrammeTrainingSessionStartStore _startStore;
   final SessionExecutionLauncher _sessionExecution;
 
-  /// Retains an unlinked create across a retry in the same app process.
-  ///
-  /// Durable success is still established only by [ProgrammeSlotOutcome].
-  final Map<String, int> _pendingTrainingSessionIds = {};
+  static final RegExp _canonicalPackageHash = RegExp(r'^[0-9a-f]{64}$');
 
   Future<void> launch({
     required BuildContext context,
@@ -88,6 +80,7 @@ class ProgrammeSessionExecutionLauncher {
     final trainingSession = await createOrResumeTrainingSession(
       athleteId: athleteId,
       programmeContext: programmeContext,
+      package: package,
     );
 
     if (!context.mounted) return;
@@ -104,91 +97,59 @@ class ProgrammeSessionExecutionLauncher {
   Future<TrainingSession> createOrResumeTrainingSession({
     required String athleteId,
     required ProgrammeExecutionContext programmeContext,
+    required PreparedExecutionPackage package,
   }) async {
-    final occurrenceKey = _occurrenceKey(programmeContext);
-    final existingOutcome = await _slotOutcomes.getForSlot(
-      assignmentId: programmeContext.assignmentId,
-      sessionSlotId: programmeContext.sessionSlotId,
+    _validatePreparedIdentity(
+      athleteId: athleteId,
+      package: package,
+      programmeContext: programmeContext,
     );
-    final linkedSessionId = existingOutcome?.trainingSessionId;
 
-    if (existingOutcome?.isTerminal == true) {
-      throw const ProgrammeSessionExecutionException(
-        ProgrammeSessionExecutionFailureCode.completedOccurrence,
-        'This authored programme session has already been completed.',
-      );
-    }
-
-    if (linkedSessionId != null) {
-      final linked = await _trainingSessions.getSessionById(linkedSessionId);
-      if (linked == null) {
-        throw const ProgrammeSessionExecutionException(
-          ProgrammeSessionExecutionFailureCode.missingTrainingSession,
-          'The in-progress programme session could not be restored.',
-        );
-      }
-      _validateTrainingSession(
-        linked,
-        athleteId: athleteId,
-        programmeContext: programmeContext,
-      );
-      return linked;
-    }
-
-    TrainingSession session;
-    final pendingId = _pendingTrainingSessionIds[occurrenceKey];
-    if (pendingId != null) {
-      final pending = await _trainingSessions.getSessionById(pendingId);
-      if (pending == null) {
-        throw const ProgrammeSessionExecutionException(
-          ProgrammeSessionExecutionFailureCode.missingTrainingSession,
-          'The pending programme session could not be restored.',
-        );
-      }
-      _validateTrainingSession(
-        pending,
-        athleteId: athleteId,
-        programmeContext: programmeContext,
-      );
-      session = pending;
-    } else {
-      session = await _trainingSessions.createSession(
-        athleteId: athleteId,
-        protocolId: programmeContext.effectiveProtocolId,
-        status: TrainingSessionStatus.inProgress,
-        programmeId: programmeContext.programmeVersionId,
-        weekNumber: programmeContext.weekNumber,
-        day: programmeContext.dayKey,
-      );
-      _pendingTrainingSessionIds[occurrenceKey] = session.id;
-    }
-
-    ProgrammeSlotOutcome? persistedOutcome;
+    Map<String, dynamic> response;
     try {
-      final start = await _progression.markSessionStartedIfProgrammeBacked(
-        athleteId: athleteId,
-        programmeContext: programmeContext,
-        trainingSessionId: session.id,
-      );
-      persistedOutcome = start?.outcome;
+      response = await _startStore.createOrResume(<String, dynamic>{
+        'assignment_id': programmeContext.assignmentId,
+        'session_slot_id': programmeContext.sessionSlotId,
+        'programme_version_id': programmeContext.programmeVersionId,
+        'materialised_package_content_hash':
+            programmeContext.packageContentHash,
+        'programmed_session_key': programmeContext.programmedSessionKey,
+        'planned_protocol_id': programmeContext.plannedProtocolId,
+        'effective_protocol_id': programmeContext.effectiveProtocolId,
+        'expected_week': programmeContext.weekNumber,
+        'expected_day_key': programmeContext.dayKey,
+        'expected_slot_order': programmeContext.sessionOrder,
+      });
+    } on ProgrammeSessionExecutionException {
+      rethrow;
     } catch (_) {
-      persistedOutcome = await _slotOutcomes.getForSlot(
-        assignmentId: programmeContext.assignmentId,
-        sessionSlotId: programmeContext.sessionSlotId,
-      );
-    }
-
-    if (persistedOutcome?.outcomeStatus !=
-            ProgrammeSlotOutcomeStatus.inProgress ||
-        persistedOutcome?.trainingSessionId != session.id) {
       throw const ProgrammeSessionExecutionException(
         ProgrammeSessionExecutionFailureCode.startPersistenceFailed,
-        'Cohort could not establish the in-progress programme session. Retry to resume the same attempt.',
+        'Cohort could not atomically create or resume this programme session. Retry the same authored session.',
       );
     }
 
-    _pendingTrainingSessionIds.remove(occurrenceKey);
-    return session;
+    final status = response['status']?.toString();
+    if (status == 'created' || status == 'resumed') {
+      final sessionJson = response['training_session'];
+      if (sessionJson is! Map) {
+        throw const ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.missingTrainingSession,
+          'The authoritative start response did not contain a training session.',
+        );
+      }
+      final session = TrainingSession.fromMap(
+        Map<String, dynamic>.from(sessionJson),
+      );
+      _validateTrainingSession(
+        session,
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+      );
+      return session;
+    }
+
+    _throwStartFailure(response);
   }
 
   void _validatePreparedIdentity({
@@ -197,14 +158,52 @@ class ProgrammeSessionExecutionLauncher {
     required ProgrammeExecutionContext programmeContext,
   }) {
     final programmedKey = programmeContext.programmedSessionKey?.trim();
+    final lineageCode = programmeContext.lineageCode?.trim();
+    final expectedHash = programmeContext.packageContentHash;
+    final preparedHash = package.packageContentHash;
+
+    if (expectedHash == null || expectedHash.isEmpty) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.missingExecutionProvenance,
+        'The authored execution context is missing package provenance. Re-prepare this session and retry.',
+      );
+    }
+    if (!_canonicalPackageHash.hasMatch(expectedHash)) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.malformedExecutionProvenance,
+        'The authored execution context has invalid package provenance. Re-prepare this session and retry.',
+      );
+    }
+    if (preparedHash == null || preparedHash.isEmpty) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.missingPreparedProvenance,
+        'The prepared session is missing package provenance. Re-prepare it and retry.',
+      );
+    }
+    if (!_canonicalPackageHash.hasMatch(preparedHash)) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.malformedPreparedProvenance,
+        'The prepared session has invalid package provenance. Re-prepare it and retry.',
+      );
+    }
+    if (preparedHash != expectedHash) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.preparedProvenanceMismatch,
+        'The prepared session does not match the authored package. Re-prepare it and retry.',
+      );
+    }
+
     if (athleteId.trim().isEmpty ||
         !programmeContext.isProgrammeBacked ||
-        programmeContext.packageContentHash?.trim().isEmpty != false ||
         programmedKey == null ||
         programmedKey.isEmpty ||
+        lineageCode == null ||
+        lineageCode.isEmpty ||
         package.programmedSessionKey.value != programmedKey ||
         package.assignmentId != programmeContext.assignmentId ||
         package.programmeVersionId != programmeContext.programmeVersionId ||
+        package.dayKey != programmeContext.dayKey ||
+        package.slotOrder != programmeContext.sessionOrder ||
         package.protocolId != programmeContext.effectiveProtocolId ||
         !package.plan.hasExecutableBlocks) {
       throw const ProgrammeSessionExecutionException(
@@ -212,6 +211,37 @@ class ProgrammeSessionExecutionLauncher {
         'The prepared session no longer matches programme authority.',
       );
     }
+  }
+
+  Never _throwStartFailure(Map<String, dynamic> response) {
+    final code = response['code']?.toString();
+    final failureCode = switch (code) {
+      'completed_occurrence' =>
+        ProgrammeSessionExecutionFailureCode.completedOccurrence,
+      'missing_training_session' =>
+        ProgrammeSessionExecutionFailureCode.missingTrainingSession,
+      'training_session_mismatch' =>
+        ProgrammeSessionExecutionFailureCode.trainingSessionMismatch,
+      'authentication_required' ||
+      'athlete_role_required' ||
+      'cross_athlete_assignment' =>
+        ProgrammeSessionExecutionFailureCode.startAuthorizationFailed,
+      'assignment_missing' ||
+      'assignment_inactive' ||
+      'assignment_not_materialised' ||
+      'exact_version_missing' ||
+      'package_hash_mismatch' ||
+      'stale_cursor' ||
+      'authored_slot_mismatch' ||
+      'programme_key_mismatch' ||
+      'occurrence_identity_conflict' =>
+        ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+      _ => ProgrammeSessionExecutionFailureCode.startPersistenceFailed,
+    };
+    throw ProgrammeSessionExecutionException(
+      failureCode,
+      'Cohort could not start this exact authored session (${code ?? 'unknown_start_failure'}). Re-prepare or retry without changing the session.',
+    );
   }
 
   void _validateSupportedPlan(SessionExecutionPlan plan) {
@@ -235,10 +265,14 @@ class ProgrammeSessionExecutionLauncher {
     required String athleteId,
     required ProgrammeExecutionContext programmeContext,
   }) {
+    final lineageCode = programmeContext.lineageCode?.trim();
+    final programmeMatches =
+        session.programmeId == lineageCode ||
+        session.programmeId == programmeContext.programmeVersionId;
     if (session.status != TrainingSessionStatus.inProgress ||
         session.athleteId != athleteId.trim() ||
         session.protocolId != programmeContext.effectiveProtocolId ||
-        session.programmeId != programmeContext.programmeVersionId ||
+        !programmeMatches ||
         session.weekNumber != programmeContext.weekNumber ||
         session.day != programmeContext.dayKey) {
       throw const ProgrammeSessionExecutionException(
@@ -246,10 +280,5 @@ class ProgrammeSessionExecutionLauncher {
         'The stored training session does not match this authored occurrence.',
       );
     }
-  }
-
-  String _occurrenceKey(ProgrammeExecutionContext context) {
-    return '${context.assignmentId}:${context.sessionSlotId}:'
-        '${context.programmedSessionKey ?? ''}';
   }
 }

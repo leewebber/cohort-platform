@@ -1,45 +1,33 @@
-import 'package:cohort_platform/data/repositories/programme_slot_outcome_delete_result.dart';
-import 'package:cohort_platform/data/repositories/programme_slot_outcome_store.dart';
-import 'package:cohort_platform/data/repositories/training_session_repository.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/plans/models/programmed_session_key.dart';
 import 'package:cohort_platform/features/programme/models/athlete_programme_prepared_session.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
-import 'package:cohort_platform/features/programme/models/programme_progression_result.dart';
-import 'package:cohort_platform/features/programme/models/resolved_today_session.dart';
-import 'package:cohort_platform/features/programme/services/programme_progression_service.dart';
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/workout_session_launch_context.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
-import 'package:cohort_platform/features/session/services/programme_session_progression_coordinator.dart';
+import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
 import 'package:cohort_platform/features/session/services/session_execution_launcher.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
-import 'package:cohort_platform/models/programme_slot_outcome.dart';
-import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
-import 'package:cohort_platform/models/training_session.dart';
-import 'package:cohort_platform/models/training_session_completion_context.dart';
-import 'package:cohort_platform/models/training_session_status.dart';
 import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+const _hashA =
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+const _hashB =
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+
 void main() {
   testWidgets(
-    'Home creates once, resumes occurrence, and launches block-aware route with stable id',
+    'Home atomically creates then resumes one stable training session',
     (tester) async {
-      final sessions = _FakeTrainingSessionRepository();
-      final outcomes = _InMemorySlotOutcomeStore();
-      final progression = _FakeProgressionService(outcomes);
+      final starts = _InMemoryAtomicStartStore();
       final activeLauncher = _RecordingSessionExecutionLauncher();
       final launcher = ProgrammeSessionExecutionLauncher(
-        trainingSessionRepository: sessions,
-        slotOutcomeStore: outcomes,
-        progressionCoordinator: ProgrammeSessionProgressionCoordinator(
-          progressionService: progression,
-        ),
+        startStore: starts,
         sessionExecutionLauncher: activeLauncher,
       );
       final prepared = _prepared();
@@ -59,36 +47,177 @@ void main() {
 
       await tester.tap(find.text('Begin'));
       await tester.pumpAndSettle();
-
-      expect(sessions.createCount, 1);
-      expect(activeLauncher.trainingSessionIds, [1]);
-      expect(activeLauncher.plans.single.blocks.length, 3);
-      expect(
-        outcomes.outcome?.outcomeStatus,
-        ProgrammeSlotOutcomeStatus.inProgress,
-      );
-
       await tester.tap(find.text('Begin'));
       await tester.pumpAndSettle();
 
-      expect(sessions.createCount, 1);
+      expect(starts.calls, hasLength(2));
+      expect(starts.createdCount, 1);
       expect(activeLauncher.trainingSessionIds, [1, 1]);
+      expect(activeLauncher.plans.first.blocks.length, 3);
+      expect(starts.calls[1], starts.calls[0]);
+    },
+  );
+
+  testWidgets('unsupported authored format fails visibly before atomic start', (
+    tester,
+  ) async {
+    final starts = _InMemoryAtomicStartStore();
+    final launcher = ProgrammeSessionExecutionLauncher(
+      startStore: starts,
+      sessionExecutionLauncher: _RecordingSessionExecutionLauncher(),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AthleteProgrammeTodaySection(
+            athleteId: 'athlete-1',
+            executionLauncher: launcher,
+            prepareOverride: (_) async => _prepared(unsupported: true),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Begin'));
+    await tester.pumpAndSettle();
+
+    expect(starts.calls, isEmpty);
+    expect(find.textContaining('unsupportedAuthoredBlock'), findsOneWidget);
+    expect(find.text('Retry'), findsOneWidget);
+  });
+
+  test(
+    'matching package provenance permits atomic create and resume',
+    () async {
+      final starts = _InMemoryAtomicStartStore();
+      final launcher = ProgrammeSessionExecutionLauncher(startStore: starts);
+      final prepared = _prepared();
+
+      final first = await launcher.createOrResumeTrainingSession(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      );
+      final second = await launcher.createOrResumeTrainingSession(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      );
+
+      expect(first.id, 1);
+      expect(first.programmeId, 'lineage-1');
+      expect(second.id, 1);
+      expect(starts.createdCount, 1);
+    },
+  );
+
+  test('restart uses the same authoritative session identity', () async {
+    final starts = _InMemoryAtomicStartStore();
+    final prepared = _prepared();
+    final firstLauncher = ProgrammeSessionExecutionLauncher(startStore: starts);
+    final restartedLauncher = ProgrammeSessionExecutionLauncher(
+      startStore: starts,
+    );
+
+    final first = await firstLauncher.createOrResumeTrainingSession(
+      athleteId: 'athlete-1',
+      programmeContext: prepared.executionContext!,
+      package: prepared.package!,
+    );
+    final restored = await restartedLauncher.createOrResumeTrainingSession(
+      athleteId: 'athlete-1',
+      programmeContext: prepared.executionContext!,
+      package: prepared.package!,
+    );
+
+    expect(restored.id, first.id);
+    expect(starts.createdCount, 1);
+  });
+
+  test('missing prepared hash fails closed before persistence', () async {
+    await _expectProvenanceFailure(
+      prepared: _prepared(packageHash: null),
+      expectedCode:
+          ProgrammeSessionExecutionFailureCode.missingPreparedProvenance,
+    );
+  });
+
+  test('missing execution hash fails closed before persistence', () async {
+    await _expectProvenanceFailure(
+      prepared: _prepared(contextHash: null),
+      expectedCode:
+          ProgrammeSessionExecutionFailureCode.missingExecutionProvenance,
+    );
+  });
+
+  test('malformed prepared hash fails closed before persistence', () async {
+    await _expectProvenanceFailure(
+      prepared: _prepared(packageHash: 'not-a-canonical-hash'),
+      expectedCode:
+          ProgrammeSessionExecutionFailureCode.malformedPreparedProvenance,
+    );
+  });
+
+  test('malformed execution hash fails closed before persistence', () async {
+    await _expectProvenanceFailure(
+      prepared: _prepared(contextHash: 'ABCDEF'),
+      expectedCode:
+          ProgrammeSessionExecutionFailureCode.malformedExecutionProvenance,
+    );
+  });
+
+  test('mismatched hashes fail closed before persistence', () async {
+    await _expectProvenanceFailure(
+      prepared: _prepared(packageHash: _hashB),
+      expectedCode:
+          ProgrammeSessionExecutionFailureCode.preparedProvenanceMismatch,
+    );
+  });
+
+  test(
+    'correct re-preparation permits retry after provenance mismatch',
+    () async {
+      final starts = _InMemoryAtomicStartStore();
+      final launcher = ProgrammeSessionExecutionLauncher(startStore: starts);
+      final stale = _prepared(packageHash: _hashB);
+
+      await expectLater(
+        launcher.createOrResumeTrainingSession(
+          athleteId: 'athlete-1',
+          programmeContext: stale.executionContext!,
+          package: stale.package!,
+        ),
+        throwsA(
+          isA<ProgrammeSessionExecutionException>().having(
+            (error) => error.code,
+            'code',
+            ProgrammeSessionExecutionFailureCode.preparedProvenanceMismatch,
+          ),
+        ),
+      );
+
+      final corrected = _prepared();
+      final session = await launcher.createOrResumeTrainingSession(
+        athleteId: 'athlete-1',
+        programmeContext: corrected.executionContext!,
+        package: corrected.package!,
+      );
+
+      expect(session.id, 1);
+      expect(starts.calls, hasLength(1));
     },
   );
 
   testWidgets(
-    'unsupported authored format fails visibly before session create',
+    'provenance mismatch is typed, visible, retryable, and never launches',
     (tester) async {
-      final sessions = _FakeTrainingSessionRepository();
+      final starts = _InMemoryAtomicStartStore();
+      final activeLauncher = _RecordingSessionExecutionLauncher();
       final launcher = ProgrammeSessionExecutionLauncher(
-        trainingSessionRepository: sessions,
-        slotOutcomeStore: _InMemorySlotOutcomeStore(),
-        progressionCoordinator: ProgrammeSessionProgressionCoordinator(
-          progressionService: _FakeProgressionService(
-            _InMemorySlotOutcomeStore(),
-          ),
-        ),
-        sessionExecutionLauncher: _RecordingSessionExecutionLauncher(),
+        startStore: starts,
+        sessionExecutionLauncher: activeLauncher,
       );
 
       await tester.pumpWidget(
@@ -97,62 +226,79 @@ void main() {
             body: AthleteProgrammeTodaySection(
               athleteId: 'athlete-1',
               executionLauncher: launcher,
-              prepareOverride: (_) async => _prepared(unsupported: true),
+              prepareOverride: (_) async => _prepared(packageHash: _hashB),
             ),
           ),
         ),
       );
       await tester.pumpAndSettle();
-
       await tester.tap(find.text('Begin'));
       await tester.pumpAndSettle();
 
-      expect(sessions.createCount, 0);
-      expect(find.textContaining('unsupportedAuthoredBlock'), findsOneWidget);
+      expect(find.textContaining('preparedProvenanceMismatch'), findsOneWidget);
       expect(find.text('Retry'), findsOneWidget);
+      expect(starts.calls, isEmpty);
+      expect(activeLauncher.trainingSessionIds, isEmpty);
     },
   );
 
-  test('start persistence retry reuses pending training session', () async {
-    final sessions = _FakeTrainingSessionRepository();
-    final outcomes = _InMemorySlotOutcomeStore();
-    final progression = _FakeProgressionService(outcomes)..failNext = true;
-    final launcher = ProgrammeSessionExecutionLauncher(
-      trainingSessionRepository: sessions,
-      slotOutcomeStore: outcomes,
-      progressionCoordinator: ProgrammeSessionProgressionCoordinator(
-        progressionService: progression,
-      ),
-      sessionExecutionLauncher: _RecordingSessionExecutionLauncher(),
+  test('authoritative start failures remain typed', () async {
+    final starts = _InMemoryAtomicStartStore(
+      forcedResponse: const {
+        'status': 'authorization_failure',
+        'code': 'cross_athlete_assignment',
+      },
     );
+    final launcher = ProgrammeSessionExecutionLauncher(startStore: starts);
+    final prepared = _prepared();
 
     await expectLater(
       launcher.createOrResumeTrainingSession(
         athleteId: 'athlete-1',
-        programmeContext: _context(),
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
       ),
       throwsA(
         isA<ProgrammeSessionExecutionException>().having(
           (error) => error.code,
           'code',
-          ProgrammeSessionExecutionFailureCode.startPersistenceFailed,
+          ProgrammeSessionExecutionFailureCode.startAuthorizationFailed,
         ),
       ),
     );
-
-    final resumed = await launcher.createOrResumeTrainingSession(
-      athleteId: 'athlete-1',
-      programmeContext: _context(),
-    );
-
-    expect(resumed.id, 1);
-    expect(sessions.createCount, 1);
-    expect(outcomes.outcome?.trainingSessionId, 1);
   });
 }
 
-AthleteProgrammePrepareResult _prepared({bool unsupported = false}) {
-  final context = _context();
+Future<void> _expectProvenanceFailure({
+  required AthleteProgrammePrepareResult prepared,
+  required ProgrammeSessionExecutionFailureCode expectedCode,
+}) async {
+  final starts = _InMemoryAtomicStartStore();
+  final launcher = ProgrammeSessionExecutionLauncher(startStore: starts);
+
+  await expectLater(
+    launcher.createOrResumeTrainingSession(
+      athleteId: 'athlete-1',
+      programmeContext: prepared.executionContext!,
+      package: prepared.package!,
+    ),
+    throwsA(
+      isA<ProgrammeSessionExecutionException>().having(
+        (error) => error.code,
+        'code',
+        expectedCode,
+      ),
+    ),
+  );
+  expect(starts.calls, isEmpty);
+}
+
+AthleteProgrammePrepareResult _prepared({
+  String? packageHash = _hashA,
+  String? contextHash = _hashA,
+  bool unsupported = false,
+}) {
+  final context = _context(packageHash: contextHash);
   final plan = SessionExecutionPlan(
     sessionId: 'protocol-1',
     sessionTitle: 'Authored session',
@@ -199,7 +345,7 @@ AthleteProgrammePrepareResult _prepared({bool unsupported = false}) {
     preparedAt: DateTime.utc(2026, 8, 13),
     assignmentId: context.assignmentId,
     programmeVersionId: context.programmeVersionId,
-    packageContentHash: context.packageContentHash,
+    packageContentHash: packageHash,
     dayKey: context.dayKey,
     slotOrder: context.sessionOrder,
     protocolId: context.effectiveProtocolId,
@@ -212,7 +358,7 @@ AthleteProgrammePrepareResult _prepared({bool unsupported = false}) {
   );
 }
 
-ProgrammeExecutionContext _context() {
+ProgrammeExecutionContext _context({String? packageHash = _hashA}) {
   const key = ProgrammedSessionKey(
     planId: 'lineage-1',
     planVersion: 'version-1',
@@ -222,7 +368,7 @@ ProgrammeExecutionContext _context() {
     slotOrder: 1,
     protocolId: 'protocol-1',
     programmeAssignmentId: 'assignment-1',
-    packageContentHash: 'hash-1',
+    packageContentHash: _hashA,
   );
   return ProgrammeExecutionContext(
     assignmentId: 'assignment-1',
@@ -233,183 +379,48 @@ ProgrammeExecutionContext _context() {
     sessionOrder: 1,
     plannedProtocolId: 'protocol-1',
     effectiveProtocolId: 'protocol-1',
+    lineageCode: 'lineage-1',
     programmeName: 'Programme',
-    packageContentHash: 'hash-1',
+    packageContentHash: packageHash,
     programmedSessionKey: key.value,
   );
 }
 
-class _FakeTrainingSessionRepository extends TrainingSessionRepository {
-  int createCount = 0;
-  final Map<int, TrainingSession> sessions = {};
+class _InMemoryAtomicStartStore implements ProgrammeTrainingSessionStartStore {
+  _InMemoryAtomicStartStore({this.forcedResponse});
+
+  final Map<String, dynamic>? forcedResponse;
+  final calls = <Map<String, dynamic>>[];
+  final Map<String, int> _ids = {};
+  int createdCount = 0;
 
   @override
-  Future<TrainingSession> createSession({
-    required String athleteId,
-    required String protocolId,
-    TrainingSessionStatus status = TrainingSessionStatus.planned,
-    String? programmeId,
-    int? weekNumber,
-    String? day,
-    DateTime? startedAt,
-    DateTime? completedAt,
-  }) async {
-    createCount += 1;
-    final session = TrainingSession(
-      id: createCount,
-      athleteId: athleteId,
-      protocolId: protocolId,
-      status: status,
-      programmeId: programmeId,
-      weekNumber: weekNumber,
-      day: day,
-      startedAt: startedAt ?? DateTime.utc(2026, 8, 13, 9),
-      completedAt: completedAt,
-    );
-    sessions[session.id] = session;
-    return session;
-  }
-
-  @override
-  Future<TrainingSession?> getSessionById(int id) async => sessions[id];
-
-  @override
-  Future<TrainingSession?> completeSession(
-    int id, {
-    TrainingSessionCompletionContext? completion,
-  }) async => sessions[id];
-}
-
-class _InMemorySlotOutcomeStore implements ProgrammeSlotOutcomeStore {
-  ProgrammeSlotOutcome? outcome;
-
-  @override
-  Future<ProgrammeSlotOutcome?> getForSlot({
-    required String assignmentId,
-    required String sessionSlotId,
-  }) async {
-    final current = outcome;
-    if (current?.assignmentId != assignmentId ||
-        current?.sessionSlotId != sessionSlotId) {
-      return null;
-    }
-    return current;
-  }
-
-  @override
-  Future<ProgrammeSlotOutcome> upsert(ProgrammeSlotOutcome value) async {
-    outcome = value;
-    return value;
-  }
-
-  @override
-  Future<List<ProgrammeSlotOutcome>> listForAssignment(
-    String assignmentId,
+  Future<Map<String, dynamic>> createOrResume(
+    Map<String, dynamic> payload,
   ) async {
-    return outcome?.assignmentId == assignmentId ? [outcome!] : [];
-  }
-
-  @override
-  Future<List<ProgrammeSlotOutcome>> listForDay({
-    required String assignmentId,
-    required int weekNumber,
-    required String dayKey,
-  }) async {
-    return outcome?.assignmentId == assignmentId &&
-            outcome?.weekNumber == weekNumber &&
-            outcome?.dayKey == dayKey
-        ? [outcome!]
-        : [];
-  }
-
-  @override
-  Future<ProgrammeSlotOutcomeDeleteResult> deleteOutcomesForAssignment({
-    required String assignmentId,
-  }) async {
-    final deleted = outcome?.assignmentId == assignmentId ? 1 : 0;
-    outcome = null;
-    return ProgrammeSlotOutcomeDeleteResult(
-      deletedCount: deleted,
-      deletedIds: deleted == 0 ? const [] : const ['outcome-1'],
-    );
-  }
-}
-
-class _FakeProgressionService implements ProgrammeProgressionService {
-  _FakeProgressionService(this.store);
-
-  final _InMemorySlotOutcomeStore store;
-  bool failNext = false;
-
-  @override
-  Future<ProgrammeProgressionResult> markSessionStarted({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    int? trainingSessionId,
-  }) async {
-    if (failNext) {
-      failNext = false;
-      throw StateError('start response unavailable');
+    calls.add(Map<String, dynamic>.from(payload));
+    if (forcedResponse case final response?) {
+      return Map<String, dynamic>.from(response);
     }
-    final outcome = ProgrammeSlotOutcome(
-      id: 'outcome-1',
-      assignmentId: resolution.assignmentId!,
-      sessionSlotId: resolution.slotId!,
-      weekNumber: resolution.weekNumber!,
-      dayKey: resolution.dayKey!,
-      sessionOrder: resolution.slotOrder!,
-      outcomeStatus: ProgrammeSlotOutcomeStatus.inProgress,
-      trainingSessionId: trainingSessionId,
-    );
-    await store.upsert(outcome);
-    return ProgrammeProgressionResult.partialSuccess(
-      outcome: outcome,
-      warnings: const [],
-    );
+    final key = '${payload['assignment_id']}:${payload['session_slot_id']}';
+    final existing = _ids[key];
+    final id = existing ?? ++createdCount;
+    _ids[key] = id;
+    return {
+      'status': existing == null ? 'created' : 'resumed',
+      'code': existing == null ? 'session_created' : 'existing_session',
+      'training_session': {
+        'id': id,
+        'athlete_id': 'athlete-1',
+        'protocol_id': payload['effective_protocol_id'],
+        'status': 'in_progress',
+        'programme_id': 'lineage-1',
+        'week_number': payload['expected_week'],
+        'day': payload['expected_day_key'],
+        'started_at': DateTime.utc(2026, 8, 13, 9).toIso8601String(),
+      },
+    };
   }
-
-  @override
-  Future<ProgrammeProgressionResult> completeSession({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    int? trainingSessionId,
-    String? resolutionNote,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<ProgrammeProgressionResult> completeSessionPartial({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    int? trainingSessionId,
-    String? resolutionNote,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<ProgrammeProgressionResult> replaceSession({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    required String replacementProtocolId,
-    int? trainingSessionId,
-    String? resolutionNote,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<ProgrammeProgressionResult> resolveAfterOutcome({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    required ProgrammeSlotOutcomeStatus outcomeStatus,
-    int? trainingSessionId,
-    String? replacementProtocolId,
-    String? resolutionNote,
-    bool advanceCursor = true,
-  }) => throw UnimplementedError();
-
-  @override
-  Future<ProgrammeProgressionResult> skipSession({
-    required String athleteId,
-    required ResolvedTodaySession resolution,
-    String? resolutionNote,
-  }) => throw UnimplementedError();
 }
 
 class _RecordingSessionExecutionLauncher extends SessionExecutionLauncher {

@@ -105,6 +105,31 @@ void main() {
 
   group('AthleteProgrammeCompletionService', () {
     test(
+      'malformed package hash fails before completion persistence',
+      () async {
+        final tables = InMemoryProgrammeTables()..assignments.add(assignment());
+        final store = _FakeCompletionStore(
+          (_) => throw StateError('RPC must not be reached'),
+        );
+
+        final result = await service(store: store, tables: tables).submit(
+          controller: completedController(),
+          programmeContext: context().copyWith(
+            packageContentHash: 'not-a-canonical-sha256',
+          ),
+          trainingSessionId: 9001,
+          idempotencyKey: 'malformed-provenance',
+        );
+
+        expect(
+          result.status,
+          AthleteProgrammeCompletionStatus.preparedProvenanceMismatch,
+        );
+        expect(store.calls, isEmpty);
+      },
+    );
+
+    test(
       'commits, maps the result, and clears local prepared session',
       () async {
         final tables = InMemoryProgrammeTables()..assignments.add(assignment());

@@ -46,16 +46,18 @@ class ActiveSessionScreen extends StatefulWidget {
 }
 
 class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
-  late SessionExecutionController _controller = widget.controller;
-  late PerformanceCaptureController _performanceController =
+  late final SessionExecutionController _controller = widget.controller;
+  late final PerformanceCaptureController _performanceController =
       widget.performanceController;
-  final _saveCoordinator = PerformanceRecordSaveCoordinator();
+  late final PerformanceRecordSaveCoordinator _saveCoordinator;
   PerformanceSaveState _saveState = PerformanceSaveState.idle;
   String? _saveError;
 
   @override
   void initState() {
     super.initState();
+    _saveCoordinator =
+        widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
     _persistDraft();
   }
 
@@ -154,6 +156,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
       if (finishAnyway != true) return;
     }
 
+    if (!mounted) return;
     final trainingSessionId = widget.trainingSessionId;
     if (trainingSessionId == null || widget.athleteId == null) {
       _controller.completeSession(allowIncomplete: endedEarly);
@@ -171,7 +174,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           athleteId: widget.athleteId!,
           programmeContext: widget.programmeContext,
           programmeProgress: widget.programmeProgress,
-          saveCoordinator: widget.saveCoordinator ?? _saveCoordinator,
+          saveCoordinator: _saveCoordinator,
           homeWorkoutExecution:
               widget.workoutLaunchContext?.homeWorkoutExecution,
         ),

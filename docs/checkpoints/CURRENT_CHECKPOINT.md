@@ -1,19 +1,33 @@
 # Current repository checkpoint
 
 **Recorded:** 2026-08-13
-**Status:** `PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE`
-is complete and locally verified. Programme Home now creates or resumes one
-authored occurrence through the block-aware execution route, athlete-entered
-actuals are required for completion, and programme-backed completion fails
-closed behind the existing atomic RPC authority. The macOS debug app built and
-started safely with the local unconfigured environment; direct visual
-foreground inspection and a real-account journey were unavailable and were not
-claimed. Lee dogfood readiness remains false pending the separately authorised
-real-programme verification.
+**Status:** `PROGRAMME_SESSION_ATOMIC_RESUME_AND_EXECUTION_PROVENANCE_CORRECTION`
+is complete and locally verified. The retained vertical-slice base
+`6ee30d7ec9ba5e9a77dd2f4fed2d6c15ec3534c8` was not independently dogfood-safe:
+its application-side create/link sequence was neither atomic nor concurrency
+safe, and it did not compare prepared package provenance with execution-context
+provenance. That premature checkpoint is superseded by this correction.
+
+Programme Home now uses one authenticated transactional create-or-resume RPC.
+The RPC validates exact assignment/version/cursor/slot authority, serialises
+concurrent starts, and atomically creates and links one stable training session.
+Canonical package hashes are compared exactly before create, resume, restore,
+or Active Session launch; missing, malformed, or mismatched provenance fails
+closed with typed retryable athlete-visible errors. The disposable local
+Supabase gate, concurrency test, focused regressions, Phase 2 safety gate, full
+Flutter suite, and static-analysis gate pass. No hosted system was contacted.
+Lee remains not dogfood-ready until real-programme verification succeeds.
 
 ```text
 PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE_AUTHORISED=true
 PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE_COMPLETE=true
+PROGRAMME_ATHLETE_VERTICAL_SLICE_BASE_COMMIT=6ee30d7ec9ba5e9a77dd2f4fed2d6c15ec3534c8
+PROGRAMME_SESSION_ATOMIC_RESUME_AND_EXECUTION_PROVENANCE_CORRECTION_AUTHORISED=true
+PROGRAMME_SESSION_ATOMIC_RESUME_AND_EXECUTION_PROVENANCE_CORRECTION_COMPLETE=true
+ATOMIC_TRAINING_SESSION_CREATE_AND_LINK_VERIFIED=true
+CONCURRENT_SESSION_DEDUPLICATION_VERIFIED=true
+PREPARED_PACKAGE_PROVENANCE_VERIFIED=true
+PROVENANCE_MISMATCH_FAILS_CLOSED=true
 ATHLETE_PROGRAMME_HOME_EXECUTION_WIRED=true
 BLOCK_AWARE_ACTUALS_CAPTURE_WIRED=true
 AUTHORITATIVE_PROGRAMME_COMPLETION_WIRED=true
@@ -26,14 +40,13 @@ LEE_DOGFOOD_READY=false
 FAMILY_BETA_READY=false
 ATHLETE_UI_CHANGED=true
 PRODUCT_UI_GATE_2_VERIFIED=false
-DATABASE_MIGRATIONS_ADDED=false
+DATABASE_MIGRATIONS_ADDED=true
 PLAN_PACKAGE_V1_CHANGED=false
 EXERCISE_KNOWLEDGE_CHANGED=false
-SUPABASE_CONTACTED=false
-CLOUD_RUN_CONTACTED=false
+HOSTED_SYSTEMS_CONTACTED=false
 HOSTED_MUTATIONS=0
-STATIC_ANALYSIS_PRE_IMPLEMENTATION_ISSUES=415
-STATIC_ANALYSIS_POST_IMPLEMENTATION_ISSUES=410
+STATIC_ANALYSIS_PRE_IMPLEMENTATION_ISSUES=410
+STATIC_ANALYSIS_POST_IMPLEMENTATION_ISSUES=407
 STATIC_ANALYSIS_POST_IMPLEMENTATION_ERRORS=0
 CHANGED_DART_FILE_DIAGNOSTICS=0
 TASK_SCOPED_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
