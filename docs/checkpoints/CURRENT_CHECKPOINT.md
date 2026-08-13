@@ -1,7 +1,47 @@
 # Current repository checkpoint
 
-**Recorded:** 2026-08-12
-**Status:** Phase 3.1 is complete and founder-accepted. Its selected first
+**Recorded:** 2026-08-13
+**Status:** `PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE`
+is complete and locally verified. Programme Home now creates or resumes one
+authored occurrence through the block-aware execution route, athlete-entered
+actuals are required for completion, and programme-backed completion fails
+closed behind the existing atomic RPC authority. The macOS debug app built and
+started safely with the local unconfigured environment; direct visual
+foreground inspection and a real-account journey were unavailable and were not
+claimed. Lee dogfood readiness remains false pending the separately authorised
+real-programme verification.
+
+```text
+PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE_AUTHORISED=true
+PROGRAMME_ATHLETE_REAL_WORKOUT_EXECUTION_AND_ATOMIC_COMPLETION_VERTICAL_SLICE_COMPLETE=true
+ATHLETE_PROGRAMME_HOME_EXECUTION_WIRED=true
+BLOCK_AWARE_ACTUALS_CAPTURE_WIRED=true
+AUTHORITATIVE_PROGRAMME_COMPLETION_WIRED=true
+COMPLETION_FAILURE_FAILS_CLOSED=true
+PROGRAMME_ADVANCEMENT_AFTER_RESTART_VERIFIED=true
+PREVIOUS_PERFORMANCE_FROM_ATHLETE_ACTUALS_VERIFIED=true
+SAFE_UNCONFIGURED_STARTUP_VERIFIED=true
+LOCAL_APP_RUN_COMPLETED=true
+LEE_DOGFOOD_READY=false
+FAMILY_BETA_READY=false
+ATHLETE_UI_CHANGED=true
+PRODUCT_UI_GATE_2_VERIFIED=false
+DATABASE_MIGRATIONS_ADDED=false
+PLAN_PACKAGE_V1_CHANGED=false
+EXERCISE_KNOWLEDGE_CHANGED=false
+SUPABASE_CONTACTED=false
+CLOUD_RUN_CONTACTED=false
+HOSTED_MUTATIONS=0
+STATIC_ANALYSIS_PRE_IMPLEMENTATION_ISSUES=415
+STATIC_ANALYSIS_POST_IMPLEMENTATION_ISSUES=410
+STATIC_ANALYSIS_POST_IMPLEMENTATION_ERRORS=0
+CHANGED_DART_FILE_DIAGNOSTICS=0
+TASK_SCOPED_BASELINE_TOLERANT_EXCEPTION_CONSUMED=true
+NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
+NEXT_TASK_RECOMMENDED=LEE_REAL_PROGRAMME_DOGFOOD_VERIFICATION
+```
+
+The prior authority remains: Phase 3.1 is complete and founder-accepted. Its selected first
 consumer, `founder_programme_yaml_import`, consumes the transitional-ID bridge;
 implementation commit `fb724d2f7a854bd4a36cbb45c884adcb82222765` is accepted.
 The Phase 3.1 acceptance checkpoint is

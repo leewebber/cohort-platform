@@ -1,6 +1,7 @@
 import '../../../models/workout_format.dart';
 import '../models/active_performance_draft.dart';
 import '../models/performance_result_data.dart';
+import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record_status.dart';
 
@@ -78,8 +79,8 @@ class PerformanceValidationService {
       }
     } else if (resultData is ForTimeResultData) {
       if (resultData.completed &&
-          resultData.elapsedSeconds != null &&
-          resultData.elapsedSeconds! <= 0) {
+          (resultData.elapsedSeconds == null ||
+              resultData.elapsedSeconds! <= 0)) {
         errors['$prefix.elapsedSeconds'] =
             'Elapsed time must be greater than zero.';
       }
@@ -129,6 +130,40 @@ class PerformanceValidationService {
       if (resultData.numericValue != null &&
           (resultData.label == null || resultData.label!.isEmpty)) {
         errors['$prefix.label'] = 'Enter a label for the custom metric.';
+      }
+    }
+
+    if (block.status == TrainingBlockResultStatus.completed) {
+      if (resultData is AmrapResultData && !resultData.entered) {
+        errors['$prefix.amrap'] =
+            'Enter performed rounds or reps before completing this block.';
+      } else if (resultData is IntervalResultData && !resultData.entered) {
+        errors['$prefix.intervals'] =
+            'Enter completed intervals before completing this block.';
+      } else if (resultData is RoundsResultData && !resultData.entered) {
+        errors['$prefix.rounds'] =
+            'Enter performed rounds or reps before completing this block.';
+      } else if (block.captureMode == BlockCaptureMode.strength) {
+        for (final exercise in block.exerciseResults) {
+          final completedActual = exercise.sets.any(
+            (set) => set.completed && set.reps != null,
+          );
+          if (!completedActual) {
+            errors['$prefix.exercise:${exercise.sourceExerciseId}'] =
+                'Enter and complete at least one performed set with actual reps.';
+          }
+        }
+      } else if (resultData is EnduranceResultData &&
+          resultData.distance == null &&
+          resultData.durationSeconds == null) {
+        errors['$prefix.endurance'] =
+            'Enter performed distance or duration before completing this block.';
+      } else if (resultData is CustomMetricResultData &&
+          (resultData.label == null ||
+              resultData.label!.isEmpty ||
+              resultData.numericValue == null)) {
+        errors['$prefix.customMetric'] =
+            'Enter the performed metric and value before completing this block.';
       }
     }
 

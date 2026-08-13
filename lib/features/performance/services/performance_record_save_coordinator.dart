@@ -88,6 +88,12 @@ class PerformanceRecordSaveCoordinator {
 
     // Sprint 1.5A programme path: one atomic RPC for completion + cursor.
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
+      if (controller.resolveCompletionStatus() !=
+          TrainingSessionRecordStatus.completed) {
+        throw PerformanceRecordStoreException(
+          'Complete every required programme block before saving and finishing.',
+        );
+      }
       return _completeProgrammeBacked(
         controller: controller,
         trainingSessionId: trainingSessionId,

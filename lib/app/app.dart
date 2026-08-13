@@ -6,26 +6,33 @@ import 'configuration_error_screen.dart';
 import 'theme.dart';
 
 class CohortPlatformApp extends StatefulWidget {
-  const CohortPlatformApp({super.key, this.configurationError});
+  const CohortPlatformApp({
+    super.key,
+    this.configurationError,
+    this.authController,
+  });
 
   final String? configurationError;
+  final AuthController? authController;
 
   @override
   State<CohortPlatformApp> createState() => _CohortPlatformAppState();
 }
 
 class _CohortPlatformAppState extends State<CohortPlatformApp> {
-  late final AuthController _authController;
+  AuthController? _authController;
 
   @override
   void initState() {
     super.initState();
-    _authController = AuthController();
+    if (widget.configurationError == null) {
+      _authController = widget.authController ?? AuthController();
+    }
   }
 
   @override
   void dispose() {
-    _authController.dispose();
+    _authController?.dispose();
     super.dispose();
   }
 
@@ -36,7 +43,7 @@ class _CohortPlatformAppState extends State<CohortPlatformApp> {
       debugShowCheckedModeBanner: false,
       theme: cohortTheme,
       home: widget.configurationError == null
-          ? AuthGate(controller: _authController)
+          ? AuthGate(controller: _authController!)
           : ConfigurationErrorScreen(message: widget.configurationError!),
     );
   }

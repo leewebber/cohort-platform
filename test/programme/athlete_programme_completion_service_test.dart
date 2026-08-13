@@ -5,12 +5,17 @@ import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/core/persistence/session_execution_plan_codec.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/programme/models/athlete_programme_completion.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_service.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_completion_store.dart';
+import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 import 'package:cohort_platform/models/programme_assignment.dart';
+import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../support/in_memory_programme_stores.dart';
@@ -250,6 +255,33 @@ void main() {
       },
     );
 
+    test(
+      'response-loss retry replays frozen payload and preserves actuals',
+      () async {
+        final tables = InMemoryProgrammeTables()..assignments.add(assignment());
+        var attempt = 0;
+        final store = _FakeCompletionStore((_) {
+          attempt++;
+          if (attempt == 1) throw StateError('response lost');
+          return committedResponse(assignment(dayKey: 'day_2'));
+        });
+
+        final result = await service(store: store, tables: tables).submit(
+          controller: completedController(),
+          programmeContext: context(),
+          trainingSessionId: 9001,
+          idempotencyKey: 'frozen-response-loss',
+        );
+
+        expect(result.status, AthleteProgrammeCompletionStatus.committed);
+        expect(store.calls, hasLength(2));
+        expect(store.calls[1], store.calls[0]);
+        expect(result.record, isNotNull);
+        expect(result.record!.blockResults, isNotEmpty);
+        expect(result.record!.status, TrainingSessionRecordStatus.completed);
+      },
+    );
+
     test('builds programme-shaped logical completion keys', () {
       final completion = AthleteProgrammeCompletionService(
         store: _FakeCompletionStore((_) => throw UnimplementedError()),
@@ -281,6 +313,57 @@ void main() {
       expect(
         completion.fingerprintActuals(record),
         completion.fingerprintActuals(record),
+      );
+    });
+
+    test('fingerprints circuit result actuals distinctly', () {
+      const plan = SessionExecutionPlan(
+        sessionId: 'circuit-session',
+        sessionTitle: 'Circuit session',
+        blocks: [
+          SessionExecutionBlock(
+            blockId: 'circuit',
+            title: 'Circuit',
+            blockType: SessionBlockType.conditioning,
+            content: 'Authored circuit',
+            workoutFormat: WorkoutFormat.rounds,
+            position: 1,
+          ),
+        ],
+      );
+      PerformanceCaptureController controllerWithRounds(int rounds) {
+        return PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: plan,
+            athleteId: 'founder-test-athlete',
+            trainingSessionId: 9001,
+          )
+          ..updateBlockResultData(
+            'circuit',
+            RoundsResultData(roundsCompleted: rounds, entered: true),
+          )
+          ..markBlockComplete('circuit');
+      }
+
+      final completion = AthleteProgrammeCompletionService(
+        store: _FakeCompletionStore((_) => throw UnimplementedError()),
+        assignmentStore: InMemoryProgrammeAssignmentStore(
+          InMemoryProgrammeTables(),
+        ),
+      );
+      final first = const PerformanceRecordMapper().fromDraft(
+        controllerWithRounds(
+          3,
+        ).buildPersistableDraft(status: TrainingSessionRecordStatus.completed),
+      );
+      final second = const PerformanceRecordMapper().fromDraft(
+        controllerWithRounds(
+          4,
+        ).buildPersistableDraft(status: TrainingSessionRecordStatus.completed),
+      );
+
+      expect(
+        completion.fingerprintActuals(first),
+        isNot(completion.fingerprintActuals(second)),
       );
     });
   });

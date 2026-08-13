@@ -8,6 +8,7 @@ import '../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../models/programme_vocabulary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/mappers/performance_record_mapper.dart';
+import '../../performance/models/training_block_result_status.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
 import '../../performance/repositories/performance_record_store.dart';
@@ -30,15 +31,17 @@ class AthleteProgrammeCompletionService {
   }) : _store = store ?? const AthleteProgrammeCompletionSupabaseStore(),
        _assignmentStore =
            assignmentStore ?? const ProgrammeAssignmentSupabaseStore(),
-       _performanceStore = performanceStore,
-       _localRepository = localRepository,
-       _mapper = mapper;
+       _performanceStore = _provided(performanceStore),
+       _localRepository = _provided(localRepository),
+       _mapper = _provided(mapper);
 
   final AthleteProgrammeCompletionStore _store;
   final ProgrammeAssignmentStore _assignmentStore;
   final PerformanceRecordStore? _performanceStore;
   final AthleteLocalRepository? _localRepository;
   final PerformanceRecordMapper _mapper;
+
+  static T _provided<T>(T value) => value;
 
   String buildIdempotencyKey({
     required String logicalCompletionKey,
@@ -72,10 +75,15 @@ class AthleteProgrammeCompletionService {
         for (final b in record.blockResults)
           {
             'id': b.blockResultId,
+            'status': b.status.dbValue,
+            'result_data': b.resultData?.toJson(),
+            'note': b.athleteNote,
+            'duration_seconds': b.durationSeconds,
             'exercises': [
               for (final e in b.exerciseResults)
                 {
                   'id': e.exerciseResultId,
+                  'note': e.athleteNote,
                   'sets': [
                     for (final s in e.setResults)
                       {
@@ -163,32 +171,43 @@ class AthleteProgrammeCompletionService {
       'completion_record': record.toUpsertMap(),
     };
 
-    Map<String, dynamic> response;
+    AthleteProgrammeCompletionResult result;
     try {
-      response = await _store.completeAndAdvance(payload);
+      final response = await _store.completeAndAdvance(payload);
+      result = AthleteProgrammeCompletionResult.fromRpc(response);
     } catch (error) {
-      final reconciled = await reconcileAfterUncertainSubmit(
-        programmeContext: programmeContext,
-        logicalCompletionKey: key,
-        idempotencyKey: idempotencyKey,
-      );
-      if (reconciled.isSuccess) return reconciled;
-      return AthleteProgrammeCompletionResult(
-        status: AthleteProgrammeCompletionStatus.networkUncertain,
-        code: 'network_uncertain',
-        message: error.toString(),
-        logicalCompletionKey: key,
-        programmedSessionKey: key,
-        idempotencyKey: idempotencyKey,
-      );
+      // Replay the exact frozen payload first. If the first response was lost,
+      // the RPC reconciles by idempotency/logical identity and returns the
+      // committed record without minting another completion.
+      final replay = await retrySamePayload(payload);
+      if (replay.isSuccess) {
+        result = replay;
+      } else {
+        final reconciled = await reconcileAfterUncertainSubmit(
+          programmeContext: programmeContext,
+          logicalCompletionKey: key,
+          idempotencyKey: idempotencyKey,
+          recordId: record.recordId,
+        );
+        if (reconciled.isSuccess) return reconciled;
+        return AthleteProgrammeCompletionResult(
+          status: AthleteProgrammeCompletionStatus.networkUncertain,
+          code: 'network_uncertain',
+          message: error.toString(),
+          logicalCompletionKey: key,
+          programmedSessionKey: key,
+          idempotencyKey: idempotencyKey,
+        );
+      }
     }
 
-    var result = AthleteProgrammeCompletionResult.fromRpc(response);
     result = AthleteProgrammeCompletionResult(
       status: result.status,
       code: result.code,
       message: result.message,
-      record: result.record ?? record,
+      // The frozen local record contains the same authoritative payload plus
+      // its hydrated block/exercise/set actuals.
+      record: record,
       assignment: result.assignment,
       logicalCompletionKey: key,
       programmedSessionKey: key,
@@ -254,6 +273,7 @@ class AthleteProgrammeCompletionService {
     required ProgrammeExecutionContext programmeContext,
     required String logicalCompletionKey,
     required String idempotencyKey,
+    String? recordId,
   }) async {
     final assignment = await _assignmentStore.getById(
       programmeContext.assignmentId,
@@ -273,9 +293,26 @@ class AthleteProgrammeCompletionService {
         assignment.status.dbValue == 'completed';
 
     if (cursorMoved) {
+      final reconciledRecord = recordId == null
+          ? null
+          : await _performanceStore?.getById(recordId);
+      if (_performanceStore != null &&
+          (reconciledRecord == null ||
+              reconciledRecord.status ==
+                  TrainingSessionRecordStatus.inProgress)) {
+        return AthleteProgrammeCompletionResult(
+          status: AthleteProgrammeCompletionStatus.recovering,
+          code: 'completion_record_still_reconciling',
+          assignment: assignment,
+          logicalCompletionKey: logicalCompletionKey,
+          programmedSessionKey: logicalCompletionKey,
+          idempotencyKey: idempotencyKey,
+        );
+      }
       return AthleteProgrammeCompletionResult(
         status: AthleteProgrammeCompletionStatus.alreadyCommitted,
         code: 'reconciled_after_uncertain',
+        record: reconciledRecord,
         assignment: assignment,
         logicalCompletionKey: logicalCompletionKey,
         programmedSessionKey: logicalCompletionKey,

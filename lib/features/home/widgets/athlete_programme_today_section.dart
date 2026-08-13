@@ -12,7 +12,7 @@ import '../../../core/widgets/today_session_card.dart';
 import '../../programme/models/athlete_programme_prepared_session.dart';
 import '../../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
-import '../../workout_player/services/workout_player_launcher.dart';
+import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
 import '../services/programme_adapt_flow.dart';
 
@@ -26,7 +26,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     required this.athleteId,
     this.refreshController,
     this.prepareService,
-    this.launcher,
+    this.executionLauncher,
     this.adaptFlow,
     this.reversionService,
     this.prepareOverride,
@@ -35,7 +35,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
   final String athleteId;
   final HomeTodaySessionRefreshController? refreshController;
   final AthleteProgrammeSessionPrepareService? prepareService;
-  final WorkoutPlayerLauncher? launcher;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ProgrammeAdaptFlow? adaptFlow;
   final ProgrammeAdaptationReversionService? reversionService;
 
@@ -53,8 +53,8 @@ class _AthleteProgrammeTodaySectionState
   late final AthleteProgrammeSessionPrepareService _prepare =
       widget.prepareService ??
       AthleteCatalogueEnrolmentServices.createPrepareService();
-  late final WorkoutPlayerLauncher _launcher =
-      widget.launcher ?? WorkoutPlayerLauncher();
+  late final ProgrammeSessionExecutionLauncher _executionLauncher =
+      widget.executionLauncher ?? ProgrammeSessionExecutionLauncher();
   late final ProgrammeAdaptFlow _adaptFlow =
       widget.adaptFlow ??
       ProgrammeAdaptFlow(
@@ -72,6 +72,7 @@ class _AthleteProgrammeTodaySectionState
   bool _adapting = false;
   bool _reverting = false;
   String? _error;
+  String? _openError;
 
   @override
   void initState() {
@@ -119,18 +120,36 @@ class _AthleteProgrammeTodaySectionState
     final result = _result;
     final package = result?.package;
     if (result == null || package == null || _opening) return;
-    setState(() => _opening = true);
+    setState(() {
+      _opening = true;
+      _openError = null;
+    });
+    var returnedFromExecution = false;
     try {
-      await _launcher.launchWithPlan(
+      await _executionLauncher.launch(
         context: context,
         athleteId: widget.athleteId,
-        plan: _prepare.toOpenablePlan(package),
-        programmeContext: result.executionContext,
+        prepared: result,
       );
+      returnedFromExecution = true;
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _openError = error is ProgrammeSessionExecutionException
+            ? '${error.code.name}: ${error.message}'
+            : AthleteSafeErrorPresenter.message(
+                error,
+                fallback:
+                    'Cohort could not open this authored session. Retry to resume the same attempt.',
+                logTag: 'AthleteProgrammeTodaySection.open',
+              );
+      });
     } finally {
       if (mounted) {
         setState(() => _opening = false);
-        await _load(source: 'session_return');
+        if (returnedFromExecution) {
+          await _load(source: 'session_return');
+        }
       }
     }
   }
@@ -171,7 +190,9 @@ class _AthleteProgrammeTodaySectionState
         package: package,
         executionContext: result?.executionContext,
       );
-      if (flowResult.accepted && flowResult.acceptedPackage != null && mounted) {
+      if (flowResult.accepted &&
+          flowResult.acceptedPackage != null &&
+          mounted) {
         setState(() {
           _result = AthleteProgrammePrepareResult(
             status: AthleteProgrammePrepareStatus.restored,
@@ -222,7 +243,7 @@ class _AthleteProgrammeTodaySectionState
             content: Text(
               revertResult.message ??
                   'Cohort could not restore the original session. Your '
-                  'adapted prepared session is unchanged.',
+                      'adapted prepared session is unchanged.',
             ),
             actions: [
               TextButton(
@@ -335,11 +356,19 @@ class _AthleteProgrammeTodaySectionState
               : 'Prepared Session',
           statusDetail: package.hasAcceptedAdaptation
               ? 'Accepted adaptation applies only to this prepared session. '
-                  'Programme and later sessions unchanged.'
+                    'Programme and later sessions unchanged.'
               : 'Authored programme · exact version. Submit completion to advance.',
-          buttonLabel: _opening ? 'Opening…' : 'Begin',
+          buttonLabel: _opening
+              ? 'Opening…'
+              : _openError == null
+              ? 'Begin'
+              : 'Retry',
           onPressed: _opening || _adapting || _reverting ? null : _open,
         ),
+        if (_openError != null) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text(_openError!, style: CohortTextStyles.body),
+        ],
         if (_canAdapt || _adapting) ...[
           const SizedBox(height: CohortSpacing.md),
           Align(

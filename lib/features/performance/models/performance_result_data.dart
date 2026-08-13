@@ -89,10 +89,16 @@ class StrengthResultData extends PerformanceResultData {
 }
 
 class AmrapResultData extends PerformanceResultData {
-  const AmrapResultData({this.rounds = 0, this.extraReps = 0, this.note});
+  const AmrapResultData({
+    this.rounds = 0,
+    this.extraReps = 0,
+    this.entered = false,
+    this.note,
+  });
 
   final int rounds;
   final int extraReps;
+  final bool entered;
   final String? note;
 
   @override
@@ -103,6 +109,7 @@ class AmrapResultData extends PerformanceResultData {
     'resultType': resultType.dbValue,
     'rounds': rounds,
     'extraReps': extraReps,
+    'entered': entered,
     if (note != null) 'note': note,
   };
 
@@ -110,14 +117,23 @@ class AmrapResultData extends PerformanceResultData {
     return AmrapResultData(
       rounds: _int(json['rounds']),
       extraReps: _int(json['extraReps']),
+      entered: json['entered'] == true,
       note: _trim(json['note']),
     );
   }
 
-  AmrapResultData copyWith({int? rounds, int? extraReps, String? note}) {
+  AmrapResultData copyWith({
+    int? rounds,
+    int? extraReps,
+    bool? entered,
+    String? note,
+  }) {
     return AmrapResultData(
       rounds: rounds ?? this.rounds,
       extraReps: extraReps ?? this.extraReps,
+      entered:
+          entered ??
+          (rounds != null || extraReps != null ? true : this.entered),
       note: note ?? this.note,
     );
   }
@@ -184,6 +200,7 @@ class IntervalResultData extends PerformanceResultData {
     this.totalIntervals,
     this.totalDistance,
     this.distanceUnit,
+    this.entered = false,
     this.note,
   });
 
@@ -191,6 +208,7 @@ class IntervalResultData extends PerformanceResultData {
   final int? totalIntervals;
   final double? totalDistance;
   final String? distanceUnit;
+  final bool entered;
   final String? note;
 
   @override
@@ -203,6 +221,7 @@ class IntervalResultData extends PerformanceResultData {
     if (totalIntervals != null) 'totalIntervals': totalIntervals,
     if (totalDistance != null) 'totalDistance': totalDistance,
     if (distanceUnit != null) 'distanceUnit': distanceUnit,
+    'entered': entered,
     if (note != null) 'note': note,
   };
 
@@ -212,6 +231,7 @@ class IntervalResultData extends PerformanceResultData {
       totalIntervals: _nullableInt(json['totalIntervals']),
       totalDistance: _nullableDouble(json['totalDistance']),
       distanceUnit: _trim(json['distanceUnit']),
+      entered: json['entered'] == true,
       note: _trim(json['note']),
     );
   }
@@ -221,6 +241,7 @@ class IntervalResultData extends PerformanceResultData {
     int? totalIntervals,
     double? totalDistance,
     String? distanceUnit,
+    bool? entered,
     String? note,
   }) {
     return IntervalResultData(
@@ -228,6 +249,13 @@ class IntervalResultData extends PerformanceResultData {
       totalIntervals: totalIntervals ?? this.totalIntervals,
       totalDistance: totalDistance ?? this.totalDistance,
       distanceUnit: distanceUnit ?? this.distanceUnit,
+      entered:
+          entered ??
+          (intervalsCompleted != null ||
+                  totalDistance != null ||
+                  distanceUnit != null
+              ? true
+              : this.entered),
       note: note ?? this.note,
     );
   }
@@ -379,12 +407,14 @@ class RoundsResultData extends PerformanceResultData {
     this.roundsCompleted = 0,
     this.extraReps = 0,
     this.elapsedSeconds,
+    this.entered = false,
     this.note,
   });
 
   final int roundsCompleted;
   final int extraReps;
   final int? elapsedSeconds;
+  final bool entered;
   final String? note;
 
   @override
@@ -396,6 +426,7 @@ class RoundsResultData extends PerformanceResultData {
     'roundsCompleted': roundsCompleted,
     'extraReps': extraReps,
     if (elapsedSeconds != null) 'elapsedSeconds': elapsedSeconds,
+    'entered': entered,
     if (note != null) 'note': note,
   };
 
@@ -404,6 +435,7 @@ class RoundsResultData extends PerformanceResultData {
       roundsCompleted: _int(json['roundsCompleted']),
       extraReps: _int(json['extraReps']),
       elapsedSeconds: _nullableInt(json['elapsedSeconds']),
+      entered: json['entered'] == true,
       note: _trim(json['note']),
     );
   }
@@ -412,12 +444,20 @@ class RoundsResultData extends PerformanceResultData {
     int? roundsCompleted,
     int? extraReps,
     int? elapsedSeconds,
+    bool? entered,
     String? note,
   }) {
     return RoundsResultData(
       roundsCompleted: roundsCompleted ?? this.roundsCompleted,
       extraReps: extraReps ?? this.extraReps,
       elapsedSeconds: elapsedSeconds ?? this.elapsedSeconds,
+      entered:
+          entered ??
+          (roundsCompleted != null ||
+                  extraReps != null ||
+                  elapsedSeconds != null
+              ? true
+              : this.entered),
       note: note ?? this.note,
     );
   }

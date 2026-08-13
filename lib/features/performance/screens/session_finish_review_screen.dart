@@ -45,7 +45,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
 }
 
 class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
-  late PerformanceCaptureController _performanceController =
+  late final PerformanceCaptureController _performanceController =
       widget.performanceController;
   final _noteController = TextEditingController();
   PerformanceSaveState _saveState = PerformanceSaveState.idle;
@@ -90,7 +90,8 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           widget.homeWorkoutExecution ?? launchContext?.homeWorkoutExecution;
       final workoutPlayer = widget.executionController.workoutPlayer;
 
-      if (homeExecution != null &&
+      if (widget.programmeContext?.isProgrammeBacked != true &&
+          homeExecution != null &&
           launchContext != null &&
           workoutPlayer != null) {
         final outcomes = WorkoutExecutionOutcomeMapper.fromDraft(
@@ -130,16 +131,6 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         idempotencyKey: _frozenIdempotencyKey,
       );
 
-      if (usedDomainCompletion) {
-        widget.executionController.applyDomainCompletionProjection(
-          finishedAt: finishedAt,
-        );
-      } else {
-        widget.executionController.completeSession(
-          allowIncomplete: status != TrainingSessionRecordStatus.completed,
-        );
-      }
-
       if (!mounted) return;
 
       final programmeCompletion = result.programmeCompletion;
@@ -165,6 +156,16 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
           _errorMessage = UserFacingErrorMessages.sessionProgressionWarning();
         });
         return;
+      }
+
+      if (usedDomainCompletion) {
+        widget.executionController.applyDomainCompletionProjection(
+          finishedAt: finishedAt,
+        );
+      } else {
+        widget.executionController.completeSession(
+          allowIncomplete: status != TrainingSessionRecordStatus.completed,
+        );
       }
 
       setState(() => _saveState = PerformanceSaveState.saved);
