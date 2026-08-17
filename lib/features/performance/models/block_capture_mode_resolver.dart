@@ -11,6 +11,11 @@ class BlockCaptureModeResolver {
   static BlockCaptureMode resolveForBlock(SessionExecutionBlock block) {
     final explicit = _explicitCaptureMode(block.performanceCaptureMode);
     if (explicit != null) return explicit;
+    if (block.linkedExercises.any(
+      (exercise) => exercise.prescription?.performanceCapture != null,
+    )) {
+      return BlockCaptureMode.strength;
+    }
 
     return resolve(
       blockType: block.blockType,

@@ -15,6 +15,7 @@ import '../../performance/widgets/performance_capture_widgets.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
 import '../models/workout_session_launch_context.dart';
+import '../services/session_finish_eligibility.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 import '../widgets/athlete/athlete_session_components.dart';
 import 'block_timer_screen.dart';
@@ -52,6 +53,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   late final PerformanceRecordSaveCoordinator _saveCoordinator;
   PerformanceSaveState _saveState = PerformanceSaveState.idle;
   String? _saveError;
+  Future<void>? _saveInFlight;
+  int _saveRevision = 0;
+  int _savedRevision = 0;
+  bool _lastSaveSucceeded = true;
+  bool _isLeaving = false;
 
   @override
   void initState() {
@@ -61,17 +67,46 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     _persistDraft();
   }
 
-  Future<void> _persistDraft() async {
-    if (widget.trainingSessionId == null || widget.athleteId == null) return;
+  Future<bool> _persistDraft() {
+    if (widget.trainingSessionId == null || widget.athleteId == null) {
+      return Future.value(true);
+    }
+    _saveRevision++;
+    return _ensureLatestDraftSaved();
+  }
+
+  Future<bool> _ensureLatestDraftSaved() async {
+    while (_savedRevision < _saveRevision) {
+      final running = _saveInFlight;
+      if (running != null) {
+        await running;
+      } else {
+        final requestedRevision = _saveRevision;
+        final operation = _runSave(requestedRevision);
+        _saveInFlight = operation;
+        await operation;
+        if (identical(_saveInFlight, operation)) {
+          _saveInFlight = null;
+        }
+      }
+      if (!_lastSaveSucceeded) return false;
+    }
+    return true;
+  }
+
+  Future<void> _runSave(int requestedRevision) async {
     setState(() {
       _saveState = PerformanceSaveState.saving;
       _saveError = null;
     });
     try {
       await _saveCoordinator.saveDraft(controller: _performanceController);
+      _savedRevision = requestedRevision;
+      _lastSaveSucceeded = true;
       if (!mounted) return;
       setState(() => _saveState = PerformanceSaveState.saved);
     } catch (error) {
+      _lastSaveSucceeded = false;
       if (!mounted) return;
       setState(() {
         _saveState = PerformanceSaveState.error;
@@ -81,6 +116,44 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           logTag: 'session_draft_save',
         );
       });
+    }
+  }
+
+  Future<void> _returnToHome() async {
+    if (_isLeaving) return;
+    _isLeaving = true;
+    try {
+      while (mounted) {
+        if (await _persistDraft()) {
+          if (mounted) Navigator.of(context).pop();
+          return;
+        }
+        if (!mounted) return;
+        final retry = await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('Could not save session'),
+            content: Text(
+              _saveError ??
+                  'Your session remains open. Retry saving before returning Home.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Stay'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        );
+        if (retry != true) return;
+      }
+    } finally {
+      _isLeaving = false;
     }
   }
 
@@ -130,36 +203,16 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
 
   Future<void> _finishSession() async {
     final state = _controller.state;
-    final endedEarly = state.incompleteCount > 0;
-
-    if (endedEarly) {
-      final finishAnyway = await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Finish with incomplete blocks?'),
-          content: Text(
-            '${state.incompleteCount} block${state.incompleteCount == 1 ? '' : 's'} '
-            'are not marked complete.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Keep training'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Review and finish'),
-            ),
-          ],
-        ),
-      );
-      if (finishAnyway != true) return;
-    }
+    final eligibility = const SessionFinishEligibilityEvaluator().evaluate(
+      incompleteBlockCount: state.incompleteCount,
+      performanceDraft: _performanceController.draft,
+    );
+    if (!eligibility.canFinish) return;
 
     if (!mounted) return;
     final trainingSessionId = widget.trainingSessionId;
     if (trainingSessionId == null || widget.athleteId == null) {
-      _controller.completeSession(allowIncomplete: endedEarly);
+      _controller.completeSession();
       if (!mounted) return;
       Navigator.pop(context);
       return;
@@ -183,8 +236,22 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   }
 
   void _syncBlockComplete(String blockId) {
-    _controller.markBlockComplete(blockId);
     _performanceController.markBlockComplete(blockId);
+    final validation = _performanceController.validateForCompletion();
+    final blockErrors = validation.fieldErrors.entries
+        .where((entry) => entry.key.startsWith('block:$blockId'))
+        .map((entry) => entry.value)
+        .toList(growable: false);
+    final blockError = blockErrors.isEmpty ? null : blockErrors.first;
+    if (blockError != null) {
+      _performanceController.reopenBlock(blockId);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(blockError)));
+      _refresh();
+      return;
+    }
+    _controller.markBlockComplete(blockId);
     _performanceController.setActiveBlock(
       _controller.state.activeBlock?.blockId,
     );
@@ -205,143 +272,175 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     final activeIndex = state.activeBlockIndex;
     final isSingleBlock = state.totalBlocks <= 1;
 
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AthleteSessionHeader(
-                title: state.plan.sessionTitle,
-                subtitle: state.plan.programmeContextLabel,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              PerformanceSaveIndicator(
-                state: _saveState,
-                errorMessage: _saveError,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              SessionProgressIndicator(
-                current: activeIndex + 1,
-                total: state.totalBlocks,
-                completed: state.completedCount,
-              ),
-              const SizedBox(height: CohortSpacing.lg),
-              for (
-                var index = 0;
-                index < state.plan.blocks.length;
-                index++
-              ) ...[
-                if (index > 0) const SizedBox(height: CohortSpacing.md),
-                Builder(
-                  builder: (context) {
-                    final block = state.plan.blocks[index];
-                    final isActive = index == activeIndex;
-                    final isExpanded =
-                        isActive || state.isBlockExpanded(block.blockId);
-                    final blockDraft = isActive
-                        ? _blockDraft(block.blockId)
-                        : null;
+    final finishEligibility = const SessionFinishEligibilityEvaluator()
+        .evaluate(
+          incompleteBlockCount: state.incompleteCount,
+          performanceDraft: _performanceController.draft,
+        );
 
-                    return AthleteBlockCard(
-                      block: block,
-                      isExpanded: isExpanded,
-                      isActive: isActive,
-                      isComplete: state.isBlockComplete(block.blockId),
-                      onToggleExpanded: () {
-                        if (isActive) return;
-                        _controller.toggleBlockExpanded(block.blockId);
-                        _refresh();
-                      },
-                      onMarkComplete: () => _syncBlockComplete(block.blockId),
-                      onReopen: () => _syncBlockReopen(block.blockId),
-                      onLaunchTimer: block.hasTimer
-                          ? () => _launchTimer(block)
-                          : null,
-                      onOpenExercise: _openExercise,
-                      showActions: isActive,
-                      showBlockNavigation: !isSingleBlock && isActive,
-                      onPrevious: !isSingleBlock && activeIndex > 0
-                          ? () {
-                              _controller.goToPreviousBlock();
-                              _performanceController.setActiveBlock(
-                                _controller.state.activeBlock?.blockId,
-                              );
-                              _persistDraft();
-                              _refresh();
-                            }
-                          : null,
-                      onNext:
-                          !isSingleBlock && activeIndex < state.totalBlocks - 1
-                          ? () {
-                              _controller.goToNextBlock();
-                              _performanceController.setActiveBlock(
-                                _controller.state.activeBlock?.blockId,
-                              );
-                              _persistDraft();
-                              _refresh();
-                            }
-                          : null,
-                      performanceSection:
-                          blockDraft == null ||
-                              !BlockResultEditor.showsCaptureFields(blockDraft)
-                          ? null
-                          : BlockResultEditor(
-                              blockDraft: blockDraft,
-                              linkedExercises: block.linkedExercises,
-                              onResultChanged: (result) {
-                                _performanceController.updateBlockResultData(
-                                  block.blockId,
-                                  result,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) await _returnToHome();
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton.icon(
+                  key: const ValueKey('active-session-back-to-home'),
+                  onPressed: _isLeaving ? null : _returnToHome,
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  label: const Text('Back to Home'),
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                AthleteSessionHeader(
+                  title: state.plan.sessionTitle,
+                  subtitle: state.plan.programmeContextLabel,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                PerformanceSaveIndicator(
+                  state: _saveState,
+                  errorMessage: _saveError,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                SessionProgressIndicator(
+                  current: activeIndex + 1,
+                  total: state.totalBlocks,
+                  completed: state.completedCount,
+                ),
+                const SizedBox(height: CohortSpacing.lg),
+                for (
+                  var index = 0;
+                  index < state.plan.blocks.length;
+                  index++
+                ) ...[
+                  if (index > 0) const SizedBox(height: CohortSpacing.md),
+                  Builder(
+                    builder: (context) {
+                      final block = state.plan.blocks[index];
+                      final isActive = index == activeIndex;
+                      final isExpanded =
+                          isActive || state.isBlockExpanded(block.blockId);
+                      final blockDraft = isActive
+                          ? _blockDraft(block.blockId)
+                          : null;
+
+                      return AthleteBlockCard(
+                        block: block,
+                        isExpanded: isExpanded,
+                        isActive: isActive,
+                        isComplete: state.isBlockComplete(block.blockId),
+                        onToggleExpanded: () {
+                          if (isActive) return;
+                          _controller.toggleBlockExpanded(block.blockId);
+                          _refresh();
+                        },
+                        onMarkComplete: () => _syncBlockComplete(block.blockId),
+                        onReopen: () => _syncBlockReopen(block.blockId),
+                        onLaunchTimer: block.hasTimer
+                            ? () => _launchTimer(block)
+                            : null,
+                        onOpenExercise: _openExercise,
+                        showActions: isActive,
+                        showBlockNavigation: !isSingleBlock && isActive,
+                        onPrevious: !isSingleBlock && activeIndex > 0
+                            ? () {
+                                _controller.goToPreviousBlock();
+                                _performanceController.setActiveBlock(
+                                  _controller.state.activeBlock?.blockId,
                                 );
                                 _persistDraft();
                                 _refresh();
-                              },
-                              onAddSet: (exerciseId) {
-                                _performanceController.addSet(
-                                  block.blockId,
-                                  exerciseId,
+                              }
+                            : null,
+                        onNext:
+                            !isSingleBlock &&
+                                activeIndex < state.totalBlocks - 1
+                            ? () {
+                                _controller.goToNextBlock();
+                                _performanceController.setActiveBlock(
+                                  _controller.state.activeBlock?.blockId,
                                 );
                                 _persistDraft();
                                 _refresh();
-                              },
-                              onUpdateSet: (exerciseId, setResultId, update) {
-                                _performanceController.updateSet(
-                                  block.blockId,
-                                  exerciseId,
-                                  setResultId,
-                                  update,
-                                );
-                                _persistDraft();
-                                _refresh();
-                              },
-                              onDuplicateSet: (exerciseId, setResultId) {
-                                _performanceController.duplicateSet(
-                                  block.blockId,
-                                  exerciseId,
-                                  setResultId,
-                                );
-                                _persistDraft();
-                                _refresh();
-                              },
-                              onRemoveSet: (exerciseId, setResultId) {
-                                _performanceController.removeSet(
-                                  block.blockId,
-                                  exerciseId,
-                                  setResultId,
-                                );
-                                _persistDraft();
-                                _refresh();
-                              },
-                            ),
-                    );
-                  },
+                              }
+                            : null,
+                        performanceSection:
+                            blockDraft == null ||
+                                !BlockResultEditor.showsCaptureFields(
+                                  blockDraft,
+                                )
+                            ? null
+                            : BlockResultEditor(
+                                blockDraft: blockDraft,
+                                linkedExercises: block.linkedExercises,
+                                onResultChanged: (result) {
+                                  _performanceController.updateBlockResultData(
+                                    block.blockId,
+                                    result,
+                                  );
+                                  _persistDraft();
+                                  _refresh();
+                                },
+                                onAddSet: (exerciseId) {
+                                  _performanceController.addSet(
+                                    block.blockId,
+                                    exerciseId,
+                                  );
+                                  _persistDraft();
+                                  _refresh();
+                                },
+                                onUpdateSet: (exerciseId, setResultId, update) {
+                                  _performanceController.updateSet(
+                                    block.blockId,
+                                    exerciseId,
+                                    setResultId,
+                                    update,
+                                  );
+                                  _persistDraft();
+                                  _refresh();
+                                },
+                                onDuplicateSet: (exerciseId, setResultId) {
+                                  _performanceController.duplicateSet(
+                                    block.blockId,
+                                    exerciseId,
+                                    setResultId,
+                                  );
+                                  _persistDraft();
+                                  _refresh();
+                                },
+                                onRemoveSet: (exerciseId, setResultId) {
+                                  _performanceController.removeSet(
+                                    block.blockId,
+                                    exerciseId,
+                                    setResultId,
+                                  );
+                                  _persistDraft();
+                                  _refresh();
+                                },
+                              ),
+                      );
+                    },
+                  ),
+                ],
+                const SizedBox(height: CohortSpacing.xl),
+                CohortButton(
+                  label: 'Finish Session',
+                  onPressed: finishEligibility.canFinish
+                      ? _finishSession
+                      : null,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  finishEligibility.reason,
+                  key: const ValueKey('finish-session-reason'),
                 ),
               ],
-              const SizedBox(height: CohortSpacing.xl),
-              CohortButton(label: 'Finish Session', onPressed: _finishSession),
-            ],
+            ),
           ),
         ),
       ),

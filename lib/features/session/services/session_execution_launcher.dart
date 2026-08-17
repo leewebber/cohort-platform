@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../adaptation/services/adaptation_prescription_service.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
+import '../../performance/models/training_block_result_status.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
@@ -113,7 +114,7 @@ class SessionExecutionLauncher {
       workoutLaunchContext: workoutLaunchContext,
     );
 
-    final continueSession =
+    var continueSession =
         restored?.sessionStatus == SessionExecutionStatus.inProgress;
 
     PerformanceCaptureController performanceController;
@@ -126,6 +127,19 @@ class SessionExecutionLauncher {
       performanceController = _saveCoordinator.restoreControllerFromRecord(
         existingRecord,
       );
+      if (restored == null) {
+        final durableDraft = performanceController.draft;
+        controller.restoreFromDurableDraft(
+          completedBlockIds: durableDraft.blockDrafts
+              .where(
+                (block) => block.status == TrainingBlockResultStatus.completed,
+              )
+              .map((block) => block.sourceBlockId)
+              .toSet(),
+          activeBlockId: durableDraft.activeBlockId,
+        );
+      }
+      continueSession = true;
     } else {
       performanceController =
           PerformanceCaptureController.initializeFromExecutionPlan(

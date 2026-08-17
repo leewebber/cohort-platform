@@ -355,6 +355,9 @@ class FounderProgrammeImportService {
                       exercise.prescription,
                     ),
                     displayLabelOverride: exercise.exerciseName,
+                    executionGroupKey: exercise.executionGroup?.key,
+                    executionGroupLabel: exercise.executionGroup?.label,
+                    executionGroupRounds: exercise.executionGroup?.rounds,
                   ),
                 )
                 .toList(growable: false),

@@ -16,6 +16,9 @@ class FounderProgrammePrescriptionMapper {
     final restSeconds = _parseInt(yaml['rest_seconds']);
     final tempo = yaml['tempo']?.toString();
     final coachCue = yaml['notes']?.toString();
+    final performanceCapture = _mapPerformanceCapture(
+      yaml['performance_capture'],
+    );
 
     final prescription = StrengthExercisePrescription(
       sets: sets,
@@ -24,6 +27,7 @@ class FounderProgrammePrescriptionMapper {
       restSeconds: restSeconds,
       tempo: tempo,
       coachCue: coachCue,
+      performanceCapture: performanceCapture,
     );
 
     if (!prescription.hasStructuredData) return null;
@@ -156,6 +160,20 @@ class FounderProgrammePrescriptionMapper {
     }
 
     return null;
+  }
+
+  ExercisePerformanceCapture? _mapPerformanceCapture(dynamic raw) {
+    if (raw is! Map) return null;
+    final map = Map<String, dynamic>.from(raw);
+    final capture = ExercisePerformanceCapture(
+      loadUnit: map['load_unit']?.toString(),
+      loadLabel: map['load_label']?.toString(),
+      distanceUnit: map['distance_unit']?.toString(),
+      durationOptional: map['duration_optional'] == true,
+    );
+    return capture.toJson().length == 1 && !capture.durationOptional
+        ? null
+        : capture;
   }
 
   static int? _parseInt(dynamic value) {

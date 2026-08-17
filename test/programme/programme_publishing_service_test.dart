@@ -88,5 +88,43 @@ void main() {
       expect(published.id, 'version-1');
       expect(published.isPublished, isTrue);
     });
+
+    test('unapproved published version can still be archived', () async {
+      final published = await publishing.publishDraft(
+        versionId: 'version-1',
+        publishedByCoachId: 'coach-1',
+      );
+      expect(published.approvedForGlobal, isFalse);
+
+      final archived = await publishing.archiveVersion('version-1');
+
+      expect(archived.lifecycleStatus, ProgrammeLifecycleStatus.archived);
+      expect(archived.archivedAt, isNotNull);
+    });
+
+    test(
+      'approved version requires atomic catalogue replacement authority',
+      () async {
+        tables.versions[0] = draftVersion().copyWith(
+          lifecycleStatus: ProgrammeLifecycleStatus.published,
+          approvedForGlobal: true,
+          publishedAt: DateTime.utc(2026, 8, 13),
+        );
+
+        expect(
+          () => publishing.archiveVersion('version-1'),
+          throwsA(
+            isA<ProgrammeStoreException>().having(
+              (error) => error.message,
+              'message',
+              contains('atomic catalogue replacement'),
+            ),
+          ),
+        );
+        final unchanged = await store.getVersionById('version-1');
+        expect(unchanged?.lifecycleStatus, ProgrammeLifecycleStatus.published);
+        expect(unchanged?.approvedForGlobal, isTrue);
+      },
+    );
   });
 }

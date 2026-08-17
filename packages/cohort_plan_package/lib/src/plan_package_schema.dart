@@ -14,6 +14,35 @@ class PlanPackageSchema {
   /// Stable identifier pattern for package-local keys and comparison IDs.
   static final RegExp identityPattern = RegExp(r'^[A-Za-z][A-Za-z0-9._:-]*$');
 
+  /// Canonical persisted UUID shape accepted for Session Lineage authority.
+  ///
+  /// This is deliberately narrower than [identityPattern]: package-local keys
+  /// retain their existing letter-leading rule, while `session_lineage_id`
+  /// may also carry the exact lowercase UUID stored by `session_lineages.id`.
+  static final RegExp canonicalSessionLineageUuidPattern = RegExp(
+    r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+  );
+
+  static final RegExp _uuidLikePattern = RegExp(r'^\{?[0-9A-Fa-f-]+\}?$');
+
+  /// Whether [value] is an existing symbolic Session Lineage identity or an
+  /// exact canonical lowercase persisted UUID.
+  ///
+  /// UUID-like values are fail-closed: uppercase, compact, braced, partial,
+  /// or otherwise malformed UUID representations are not treated as legacy
+  /// symbolic identities.
+  static bool isValidSessionLineageIdentity(String value) {
+    if (canonicalSessionLineageUuidPattern.hasMatch(value)) return true;
+
+    final looksUuidLike =
+        _uuidLikePattern.hasMatch(value) &&
+        (value.length >= 24 || value.contains('{') || value.contains('}')) &&
+        (value.contains('-') || value.length == 32);
+    if (looksUuidLike) return false;
+
+    return identityPattern.hasMatch(value);
+  }
+
   /// Programme lineage codes (e.g. `PROG-FIXTURE-01`).
   static final RegExp lineageCodePattern = RegExp(
     r'^[A-Za-z][A-Za-z0-9._:-]*$',

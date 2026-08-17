@@ -60,6 +60,26 @@ Import execution is granted only to `service_role`. Flutter/client code must
 never embed service-role credentials. Ordinary authenticated users cannot read
 Cohort Global drafts or published-but-unapproved globals.
 
+### Catalogue version replacement
+
+A programme lineage may expose at most one catalogue-eligible Cohort Global
+version. Initial approval remains a service-role-only gate and fails closed if
+another published, unarchived version in the lineage is already globally
+approved.
+
+Replacing an approved immutable version uses
+`replace_approved_cohort_global_programme_version`. The RPC serialises lifecycle
+changes on the programme lineage, requires a valid published package replacement
+from that same lineage, atomically archives and unapproves the retiring version,
+and approves the replacement. Exact retries return idempotent success. Any
+failure rolls the complete replacement back, while the retired package,
+assignments, and session history remain resolvable by their exact identities.
+
+The database additionally enforces one catalogue-eligible version per lineage
+with a partial unique index. Approved versions must not be archived through the
+general draft/publish service; retirement and approval revocation are one
+catalogue lifecycle operation.
+
 ## Trusted founder import runtime (Phase 3.1 first consumer)
 
 The compiler has one pure-Dart implementation in

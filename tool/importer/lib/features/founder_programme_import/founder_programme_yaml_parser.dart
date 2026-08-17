@@ -168,6 +168,27 @@ class FounderProgrammeYamlParser {
       prescription = _toStringKeyMap(prescriptionRaw);
     }
 
+    final executionGroupRaw = map['execution_group'];
+    FounderProgrammeYamlExecutionGroup? executionGroup;
+    if (executionGroupRaw != null) {
+      if (executionGroupRaw is! Map) {
+        throw FounderProgrammeImportException(
+          'exercise.execution_group must be a map when provided.',
+        );
+      }
+      final executionGroupMap = _toStringKeyMap(executionGroupRaw);
+      executionGroup = FounderProgrammeYamlExecutionGroup(
+        key: _requireString(executionGroupMap, 'key'),
+        label: _requireString(executionGroupMap, 'label'),
+        rounds: _requireInt(executionGroupMap, 'rounds'),
+      );
+      if (executionGroup.rounds <= 0) {
+        throw FounderProgrammeImportException(
+          'exercise.execution_group.rounds must be greater than zero.',
+        );
+      }
+    }
+
     return FounderProgrammeYamlExercise(
       transitionalExerciseId: _optionalString(map, 'transitional_exercise_id'),
       exerciseSlug: _optionalString(map, 'exercise_slug'),
@@ -175,6 +196,7 @@ class FounderProgrammeYamlParser {
       order: _requireInt(map, 'order'),
       prescription: prescription,
       notes: _optionalString(map, 'notes'),
+      executionGroup: executionGroup,
     );
   }
 

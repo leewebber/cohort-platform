@@ -45,6 +45,10 @@ void main() {
     expect(store.contains('import_authored_plan_package'), isTrue);
     expect(store.contains('publish_cohort_global_programme_version'), isTrue);
     expect(store.contains('approve_cohort_global_programme_version'), isTrue);
+    expect(
+      store.contains('replace_approved_cohort_global_programme_version'),
+      isTrue,
+    );
   });
 
   test('compiler foundation remains free of import RPC side effects', () {
@@ -53,6 +57,25 @@ void main() {
     ).readAsStringSync();
     expect(compiler.contains('import_authored_plan_package'), isFalse);
     expect(compiler.contains('Supabase'), isFalse);
+  });
+
+  test('approved catalogue retirement stays on atomic authority', () {
+    final approvalService = File(
+      '$root/lib/features/authored_plan_package/import/'
+      'plan_package_catalogue_approval_service.dart',
+    ).readAsStringSync();
+    final publishingService = File(
+      '$root/lib/features/programme/services/'
+      'programme_publishing_service_impl.dart',
+    ).readAsStringSync();
+
+    expect(approvalService, contains('replaceApprovedVersion'));
+    expect(approvalService, contains('replaceApprovedCohortGlobalVersion'));
+    expect(
+      publishingService,
+      contains('Approved catalogue versions must be retired through atomic '),
+    );
+    expect(publishingService, contains("'catalogue replacement'"));
   });
 }
 

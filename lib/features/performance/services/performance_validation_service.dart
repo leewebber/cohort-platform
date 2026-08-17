@@ -143,10 +143,39 @@ class PerformanceValidationService {
       } else if (resultData is RoundsResultData && !resultData.entered) {
         errors['$prefix.rounds'] =
             'Enter performed rounds or reps before completing this block.';
+      } else if (block.captureMode == BlockCaptureMode.completion &&
+          block.exerciseResults.any((exercise) => exercise.sets.isNotEmpty)) {
+        for (final exercise in block.exerciseResults) {
+          if (exercise.sets.any((set) => !set.completed)) {
+            errors['$prefix.exercise:${exercise.sourceExerciseId}'] =
+                'Acknowledge every required warm-up movement before completing this block.';
+          }
+        }
       } else if (block.captureMode == BlockCaptureMode.strength) {
         for (final exercise in block.exerciseResults) {
+          final isDistanceCapture = exercise.sets.any(
+            (set) => set.distanceUnit?.trim().isNotEmpty == true,
+          );
+          if (isDistanceCapture) {
+            final incompleteActual =
+                exercise.sets.isEmpty ||
+                exercise.sets.any(
+                  (set) =>
+                      !set.completed ||
+                      set.load == null ||
+                      set.load! <= 0 ||
+                      set.distance == null ||
+                      set.distance! <= 0,
+                );
+            if (incompleteActual) {
+              errors['$prefix.exercise:${exercise.sourceExerciseId}'] =
+                  'Complete every prescribed carry set with load per hand and distance.';
+            }
+            continue;
+          }
           final completedActual = exercise.sets.any(
-            (set) => set.completed && set.reps != null,
+            (set) =>
+                set.completed && (set.reps != null || set.distance != null),
           );
           if (!completedActual) {
             errors['$prefix.exercise:${exercise.sourceExerciseId}'] =

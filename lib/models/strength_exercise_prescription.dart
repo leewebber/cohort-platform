@@ -11,6 +11,7 @@ class StrengthExercisePrescription {
     this.tempo,
     this.coachCue,
     this.groupId,
+    this.performanceCapture,
   });
 
   final int sets;
@@ -20,6 +21,7 @@ class StrengthExercisePrescription {
   final String? tempo;
   final String? coachCue;
   final String? groupId;
+  final ExercisePerformanceCapture? performanceCapture;
 
   bool get hasStructuredData =>
       sets > 0 || reps.hasValue || load?.hasValue == true;
@@ -32,11 +34,13 @@ class StrengthExercisePrescription {
     String? tempo,
     String? coachCue,
     String? groupId,
+    ExercisePerformanceCapture? performanceCapture,
     bool clearLoad = false,
     bool clearRestSeconds = false,
     bool clearTempo = false,
     bool clearCoachCue = false,
     bool clearGroupId = false,
+    bool clearPerformanceCapture = false,
   }) {
     return StrengthExercisePrescription(
       sets: sets ?? this.sets,
@@ -46,6 +50,9 @@ class StrengthExercisePrescription {
       tempo: clearTempo ? null : (tempo ?? this.tempo),
       coachCue: clearCoachCue ? null : (coachCue ?? this.coachCue),
       groupId: clearGroupId ? null : (groupId ?? this.groupId),
+      performanceCapture: clearPerformanceCapture
+          ? null
+          : (performanceCapture ?? this.performanceCapture),
     );
   }
 
@@ -58,6 +65,8 @@ class StrengthExercisePrescription {
       if (_nonEmpty(tempo) != null) 'tempo': tempo!.trim(),
       if (_nonEmpty(coachCue) != null) 'coach_cue': coachCue!.trim(),
       if (_nonEmpty(groupId) != null) 'group_id': groupId!.trim(),
+      if (performanceCapture != null)
+        'performance_capture': performanceCapture!.toJson(),
     };
   }
 
@@ -83,6 +92,7 @@ class StrengthExercisePrescription {
       tempo: json['tempo']?.toString(),
       coachCue: json['coach_cue']?.toString(),
       groupId: json['group_id']?.toString(),
+      performanceCapture: _captureFromJson(json['performance_capture']),
     );
   }
 
@@ -109,6 +119,51 @@ class StrengthExercisePrescription {
     if (value == null) return null;
     if (value is int) return value;
     return int.tryParse(value.toString());
+  }
+
+  static ExercisePerformanceCapture? _captureFromJson(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return ExercisePerformanceCapture.fromJson(value);
+    }
+    if (value is Map) {
+      return ExercisePerformanceCapture.fromJson(
+        Map<String, dynamic>.from(value),
+      );
+    }
+    return null;
+  }
+}
+
+/// Optional authored metadata describing which athlete actuals an exercise
+/// collects. Targets remain in the prescription and are never seeded here.
+class ExercisePerformanceCapture {
+  const ExercisePerformanceCapture({
+    this.loadUnit,
+    this.loadLabel,
+    this.distanceUnit,
+    this.durationOptional = false,
+  });
+
+  final String? loadUnit;
+  final String? loadLabel;
+  final String? distanceUnit;
+  final bool durationOptional;
+
+  Map<String, dynamic> toJson() => {
+    if (loadUnit?.trim().isNotEmpty == true) 'load_unit': loadUnit!.trim(),
+    if (loadLabel?.trim().isNotEmpty == true) 'load_label': loadLabel!.trim(),
+    if (distanceUnit?.trim().isNotEmpty == true)
+      'distance_unit': distanceUnit!.trim(),
+    'duration_optional': durationOptional,
+  };
+
+  factory ExercisePerformanceCapture.fromJson(Map<String, dynamic> json) {
+    return ExercisePerformanceCapture(
+      loadUnit: json['load_unit']?.toString(),
+      loadLabel: json['load_label']?.toString(),
+      distanceUnit: json['distance_unit']?.toString(),
+      durationOptional: json['duration_optional'] == true,
+    );
   }
 }
 

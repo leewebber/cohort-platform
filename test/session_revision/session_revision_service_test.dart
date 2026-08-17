@@ -1,4 +1,3 @@
-import 'package:cohort_platform/features/session_builder/services/protocol_draft_block_resolver.dart';
 import 'package:cohort_platform/features/session_revision/models/session_revision_action_decision.dart';
 import 'package:cohort_platform/features/session_revision/services/session_revision_clone.dart';
 import 'package:cohort_platform/features/session_revision/services/session_revision_service.dart';
@@ -48,6 +47,11 @@ void main() {
         cloned.blocks.first.linkedExercises.first.localId,
         isNot(source.blocks.first.linkedExercises.first.localId),
       );
+      expect(
+        cloned.blocks.first.linkedExercises.first.executionGroupKey,
+        'warm-up-circuit',
+      );
+      expect(cloned.blocks.first.linkedExercises.first.executionGroupRounds, 2);
     });
   });
 
@@ -237,6 +241,9 @@ ProtocolDraft _publishedRevisionDraft({
             localId: 'link-1',
             exerciseId: 'SQ-001',
             position: 1,
+            executionGroupKey: 'warm-up-circuit',
+            executionGroupLabel: 'Warm-Up Circuit',
+            executionGroupRounds: 2,
           ),
         ],
       ),

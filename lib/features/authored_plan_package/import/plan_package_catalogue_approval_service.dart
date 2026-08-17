@@ -1,3 +1,4 @@
+import 'plan_package_catalogue_replacement_result.dart';
 import 'plan_package_import_store.dart';
 
 /// Separate catalogue-approval gate for published Cohort Global versions.
@@ -15,6 +16,20 @@ class PlanPackageCatalogueApprovalService {
   }) {
     return _lifecycleStore.approveCohortGlobalVersion(
       versionId: versionId,
+      actor: actor,
+    );
+  }
+
+  /// Atomically retires one approved immutable version and approves its valid
+  /// published replacement from the same lineage.
+  Future<PlanPackageCatalogueReplacementResult> replaceApprovedVersion({
+    required String retiringVersionId,
+    required String replacementVersionId,
+    required String actor,
+  }) {
+    return _lifecycleStore.replaceApprovedCohortGlobalVersion(
+      retiringVersionId: retiringVersionId,
+      replacementVersionId: replacementVersionId,
       actor: actor,
     );
   }

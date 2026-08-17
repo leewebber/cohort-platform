@@ -175,6 +175,7 @@ docker cp "${TESTS_DIR}/sql/gate_n_programme_schedule_move_swap.sql" "${SPRINT12
 docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_o.sql"
 docker cp "${TESTS_DIR}/sql/gate_p_programme_schedule_undo_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_p.sql"
 docker cp "${TESTS_DIR}/sql/gate_q_programme_training_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_q.sql"
+docker cp "${TESTS_DIR}/sql/gate_r_catalogue_version_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_r.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -186,7 +187,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_n.sql \
   -f /tmp/sprint12_gate_o.sql \
   -f /tmp/sprint12_gate_p.sql \
-  -f /tmp/sprint12_gate_q.sql
+  -f /tmp/sprint12_gate_q.sql \
+  -f /tmp/sprint12_gate_r.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -205,6 +207,7 @@ docker cp "${TESTS_DIR}/sql/gate_n_programme_schedule_move_swap.sql" "${SPRINT12
 docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_o.sql"
 docker cp "${TESTS_DIR}/sql/gate_p_programme_schedule_undo_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_p.sql"
 docker cp "${TESTS_DIR}/sql/gate_q_programme_training_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_q.sql"
+docker cp "${TESTS_DIR}/sql/gate_r_catalogue_version_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_r.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -216,7 +219,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_n.sql \
   -f /tmp/sprint12_gate_o.sql \
   -f /tmp/sprint12_gate_p.sql \
-  -f /tmp/sprint12_gate_q.sql
+  -f /tmp/sprint12_gate_q.sql \
+  -f /tmp/sprint12_gate_r.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e
@@ -244,6 +248,9 @@ echo "Gate G isolated negative control PASSED (exit=${GNEG_EC})"
 
 echo "=== Gate Q atomic session-start concurrency ==="
 bash "${TESTS_DIR}/concurrency/gate_q_programme_training_session_start.sh"
+
+echo "=== Gate R atomic catalogue-replacement concurrency ==="
+bash "${TESTS_DIR}/concurrency/gate_r_catalogue_version_replacement.sh"
 
 echo "=== PostgREST catalogue privilege controls (anon negative + auth positive) ==="
 # Use status from disposable workdir only.

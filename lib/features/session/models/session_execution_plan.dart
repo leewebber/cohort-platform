@@ -16,6 +16,9 @@ class SessionExecutionExerciseSummary {
     this.displayLabelOverride,
     this.exercise,
     this.prescription,
+    this.executionGroupKey,
+    this.executionGroupLabel,
+    this.executionGroupRounds,
   });
 
   final String exerciseId;
@@ -23,10 +26,19 @@ class SessionExecutionExerciseSummary {
   final String? displayLabelOverride;
   final Exercise? exercise;
   final StrengthExercisePrescription? prescription;
+  final String? executionGroupKey;
+  final String? executionGroupLabel;
+  final int? executionGroupRounds;
 
   /// Athlete-facing label with resolver fallbacks.
   String get athleteLabel =>
       AthleteExerciseLabelResolver.fromExecutionSummary(this);
+
+  bool get hasExecutionGroup =>
+      executionGroupKey?.trim().isNotEmpty == true &&
+      executionGroupLabel?.trim().isNotEmpty == true &&
+      executionGroupRounds != null &&
+      executionGroupRounds! > 0;
 }
 
 class SessionExecutionBlock {
@@ -91,6 +103,9 @@ class SessionExecutionBlock {
             displayLabelOverride: link.displayLabelOverride,
             exercise: exercisesById[link.exerciseId],
             prescription: link.prescription,
+            executionGroupKey: link.executionGroupKey,
+            executionGroupLabel: link.executionGroupLabel,
+            executionGroupRounds: link.executionGroupRounds,
           ),
         )
         .toList(growable: false);

@@ -6,6 +6,8 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../../core/widgets/cohort_button.dart';
 import '../../../../core/widgets/cohort_card.dart';
 import '../../../../models/session_block_type.dart';
+import '../../../../models/strength_exercise_prescription.dart';
+import '../../../../models/strength_prescription_formatter.dart';
 import '../../models/session_execution_plan.dart';
 import '../strength_prescription_display.dart';
 import 'athlete_session_components.dart';
@@ -101,50 +103,11 @@ class AthleteBlockCard extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.sm),
                 TimerSummaryText(summary: block.timerSummary!),
               ],
-              if (block.linkedExercises.any(
-                (exercise) => exercise.prescription?.hasStructuredData == true,
-              )) ...[
+              if (block.linkedExercises.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.md),
-                StrengthPrescriptionList(exercises: block.linkedExercises),
-              ] else if (block.linkedExercises.isNotEmpty) ...[
-                const SizedBox(height: CohortSpacing.md),
-                Text('Exercises', style: CohortTextStyles.eyebrow),
-                const SizedBox(height: CohortSpacing.sm),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final exercise in block.linkedExercises)
-                      Semantics(
-                        button: true,
-                        label: 'Open exercise ${exercise.athleteLabel}',
-                        child: InkWell(
-                          onTap: () => onOpenExercise(exercise),
-                          borderRadius: BorderRadius.circular(4),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: CohortSpacing.xs,
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '• ',
-                                  style: CohortTextStyles.body.copyWith(
-                                    color: CohortColors.textSecondary,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    exercise.athleteLabel,
-                                    style: CohortTextStyles.body,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+                _ExecutionExerciseList(
+                  exercises: block.linkedExercises,
+                  onOpenExercise: onOpenExercise,
                 ),
               ],
               if (block.coachNotes != null &&
@@ -200,6 +163,180 @@ class AthleteBlockCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _ExecutionExerciseList extends StatelessWidget {
+  const _ExecutionExerciseList({
+    required this.exercises,
+    required this.onOpenExercise,
+  });
+
+  final List<SessionExecutionExerciseSummary> exercises;
+  final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final ungrouped = exercises
+        .where((exercise) => !exercise.hasExecutionGroup)
+        .toList(growable: false);
+    final grouped = <String, List<SessionExecutionExerciseSummary>>{};
+    for (final exercise in exercises.where((item) => item.hasExecutionGroup)) {
+      grouped.putIfAbsent(exercise.executionGroupKey!, () => []).add(exercise);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (ungrouped.isNotEmpty) ...[
+          Text('Prelude', style: CohortTextStyles.eyebrow),
+          const SizedBox(height: CohortSpacing.sm),
+          for (final exercise in ungrouped)
+            _ExecutionExerciseRow(
+              exercise: exercise,
+              onOpenExercise: onOpenExercise,
+            ),
+        ],
+        for (final entry in grouped.entries) ...[
+          if (ungrouped.isNotEmpty || entry.key != grouped.keys.first)
+            const SizedBox(height: CohortSpacing.md),
+          Text(
+            '${entry.value.first.executionGroupLabel} · '
+            '${entry.value.first.executionGroupRounds} rounds',
+            style: CohortTextStyles.eyebrow,
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          for (var index = 0; index < entry.value.length; index++)
+            _ExecutionExerciseRow(
+              exercise: entry.value[index],
+              order: index + 1,
+              onOpenExercise: onOpenExercise,
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _ExecutionExerciseRow extends StatelessWidget {
+  const _ExecutionExerciseRow({
+    required this.exercise,
+    required this.onOpenExercise,
+    this.order,
+  });
+
+  final SessionExecutionExerciseSummary exercise;
+  final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
+  final int? order;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (order != null)
+            Padding(
+              padding: const EdgeInsets.only(
+                top: CohortSpacing.xs,
+                right: CohortSpacing.sm,
+              ),
+              child: Text('$order.', style: CohortTextStyles.small),
+            ),
+          Expanded(
+            child: InkWell(
+              onTap: () => onOpenExercise(exercise),
+              borderRadius: BorderRadius.circular(4),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: CohortSpacing.xs),
+                child: StrengthPrescriptionDisplay.fromSummary(
+                  summary: exercise,
+                ),
+              ),
+            ),
+          ),
+          Semantics(
+            button: true,
+            label: 'Exercise info for ${exercise.athleteLabel}',
+            child: IconButton(
+              tooltip: 'Exercise info',
+              icon: const Icon(Icons.info_outline),
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => _ExerciseInfoSheet(exercise: exercise),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExerciseInfoSheet extends StatelessWidget {
+  const _ExerciseInfoSheet({required this.exercise});
+
+  final SessionExecutionExerciseSummary exercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = exercise.exercise;
+    final prescription = exercise.prescription;
+    final sections = <(String, String)>[
+      if (_text(model?.purpose) case final value?) ('Description', value),
+      if (_text(model?.execution) case final value?) ('Standard', value),
+      if (_text(model?.coachingCues) case final value?) ('Cues', value),
+      if (StrengthPrescriptionFormatter.formatRest(prescription?.restSeconds)
+          case final value?)
+        ('Rest', value.replaceFirst('Rest ', '')),
+      if (_effort(prescription?.load) case final value?) ('Effort', value),
+    ];
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: CohortSpacing.lg,
+          right: CohortSpacing.lg,
+          top: CohortSpacing.lg,
+          bottom: MediaQuery.viewInsetsOf(context).bottom + CohortSpacing.xl,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(exercise.athleteLabel, style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.lg),
+            if (sections.isEmpty)
+              Text(
+                'No additional exercise guidance is available.',
+                style: CohortTextStyles.body,
+              )
+            else
+              for (final section in sections) ...[
+                Text(section.$1, style: CohortTextStyles.eyebrow),
+                const SizedBox(height: CohortSpacing.xs),
+                Text(section.$2, style: CohortTextStyles.body),
+                const SizedBox(height: CohortSpacing.md),
+              ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String? _text(String? value) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  static String? _effort(StrengthLoadPrescription? load) {
+    if (load == null) return null;
+    return switch (load.type) {
+      StrengthLoadType.rpe when load.rpe != null => 'RPE ${load.rpe}',
+      StrengthLoadType.rir when load.rir != null => '${load.rir} RIR',
+      _ => null,
+    };
   }
 }
 

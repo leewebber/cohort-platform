@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'plan_package_catalogue_replacement_result.dart';
 import 'plan_package_import_models.dart';
 import 'plan_package_import_store.dart';
 
@@ -17,6 +18,8 @@ class PlanPackageImportSupabaseStore
   static const importRpcName = 'import_authored_plan_package';
   static const publishRpcName = 'publish_cohort_global_programme_version';
   static const approveRpcName = 'approve_cohort_global_programme_version';
+  static const replaceApprovedRpcName =
+      'replace_approved_cohort_global_programme_version';
 
   @override
   Future<PlanPackageImportResult> importPackage(
@@ -52,6 +55,36 @@ class PlanPackageImportSupabaseStore
       params: {'p_version_id': versionId, 'p_actor': actor},
     );
     return _asStringKeyedMap(response);
+  }
+
+  @override
+  Future<PlanPackageCatalogueReplacementResult>
+  replaceApprovedCohortGlobalVersion({
+    required String retiringVersionId,
+    required String replacementVersionId,
+    required String actor,
+  }) async {
+    try {
+      final response = await _client.rpc(
+        replaceApprovedRpcName,
+        params: {
+          'p_retiring_version_id': retiringVersionId,
+          'p_replacement_version_id': replacementVersionId,
+          'p_actor': actor,
+        },
+      );
+      return PlanPackageCatalogueReplacementResult.fromRpcMap(
+        _asStringKeyedMap(response),
+      );
+    } on PostgrestException catch (error) {
+      if (error.code == '42501') {
+        return const PlanPackageCatalogueReplacementResult(
+          status: PlanPackageCatalogueReplacementStatus.unauthorized,
+          code: 'service_role_required',
+        );
+      }
+      rethrow;
+    }
   }
 
   Map<String, dynamic> _asStringKeyedMap(Object? response) {

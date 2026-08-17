@@ -141,6 +141,9 @@ class SessionBlock {
             position: entry.value.position,
             displayLabelOverride: entry.value.displayLabelOverride,
             prescription: entry.value.prescription,
+            executionGroupKey: entry.value.executionGroupKey,
+            executionGroupLabel: entry.value.executionGroupLabel,
+            executionGroupRounds: entry.value.executionGroupRounds,
           ),
         )
         .toList(growable: false);

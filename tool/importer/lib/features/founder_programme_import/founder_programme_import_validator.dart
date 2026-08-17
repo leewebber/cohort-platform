@@ -160,6 +160,8 @@ class FounderProgrammeImportValidator {
             }
 
             final exerciseOrders = <int>{};
+            final executionGroups =
+                <String, FounderProgrammeYamlExecutionGroup>{};
             for (
               var exerciseIndex = 0;
               exerciseIndex < block.exercises.length;
@@ -179,6 +181,20 @@ class FounderProgrammeImportValidator {
                     .validatePrescription(exercise.prescription)
                     .map((message) => '$exercisePath $message'),
               );
+
+              final group = exercise.executionGroup;
+              if (group != null) {
+                final first = executionGroups[group.key];
+                if (first == null) {
+                  executionGroups[group.key] = group;
+                } else if (first.label != group.label ||
+                    first.rounds != group.rounds) {
+                  errors.add(
+                    '$exercisePath execution_group "${group.key}" must use '
+                    'one label and round count within a block.',
+                  );
+                }
+              }
             }
           }
         }

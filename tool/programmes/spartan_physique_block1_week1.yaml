@@ -32,12 +32,44 @@ weeks:
               - title: Warm Up
                 block_type: warm_up
                 order: 1
-                coach_notes: >
-                  Easy Bike 5 min easy — gradually increase cadence and body temperature.
-                  Band Pull Apart 2×20, 30s rest. Scapular Push-up 2×12–15, 30s rest.
                 exercises:
-                  - exercise_slug: dead-hang
+                  - exercise_slug: easy-bike
                     order: 1
+                    prescription:
+                      sets: 1
+                      reps:
+                        type: duration
+                        text: 5 minutes
+                      notes: Gradually increase cadence and body temperature.
+                  - exercise_slug: band-pull-apart
+                    order: 2
+                    execution_group:
+                      key: upper-strength-warm-up-circuit
+                      label: Warm-Up Circuit
+                      rounds: 2
+                    prescription:
+                      sets: 2
+                      reps: 20
+                      rest_seconds: 30
+                  - exercise_slug: scapular-push-up
+                    order: 3
+                    execution_group:
+                      key: upper-strength-warm-up-circuit
+                      label: Warm-Up Circuit
+                      rounds: 2
+                    prescription:
+                      sets: 2
+                      reps:
+                        type: range
+                        min: 12
+                        max: 15
+                      rest_seconds: 30
+                  - exercise_slug: dead-hang
+                    order: 4
+                    execution_group:
+                      key: upper-strength-warm-up-circuit
+                      label: Warm-Up Circuit
+                      rounds: 2
                     prescription:
                       sets: 2
                       reps:
@@ -141,6 +173,11 @@ weeks:
                         text: 40 metres
                       rest_seconds: 75
                       notes: Heavy, tall posture, short controlled steps.
+                      performance_capture:
+                        load_unit: kg
+                        load_label: Load per hand
+                        distance_unit: m
+                        duration_optional: true
 
       - day_number: 2
         display_name: Tuesday

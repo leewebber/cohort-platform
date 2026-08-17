@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_service.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_prescription_mapper.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_protocol_writer.dart';
-import 'package:founder_importer/features/founder_programme_import/founder_programme_yaml_parser.dart';
 import 'package:founder_importer/models/exercise.dart';
 import 'package:founder_importer/models/protocol_draft.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,6 +80,9 @@ List<Exercise> _spartanWeek1Catalogue() {
     ex('EX-042', 'Hammer Curl', 'hammer-curl'),
     ex('EX-021', 'Plank', 'plank'),
     ex('EX-062', 'Full Body Mobility Flow', 'full-body-mobility-flow'),
+    ex('EX-133', 'Easy Bike', 'easy-bike'),
+    ex('EX-134', 'Band Pull Apart', 'band-pull-apart'),
+    ex('EX-135', 'Scapular Push-Up', 'scapular-push-up'),
   ];
 
   final slugPattern = RegExp(r"'([a-z0-9-]+)',\s*true,");

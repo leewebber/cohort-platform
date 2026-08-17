@@ -1,3 +1,4 @@
+import '../../../core/presentation/athlete_duration_formatter.dart';
 import '../../session/models/session_execution_plan.dart';
 
 /// Flattened exercise step for the athlete Workout Player.
@@ -63,7 +64,9 @@ class WorkoutPlayerExerciseStep {
 
   String? get restGuidance {
     final rest = exercise.prescription?.restSeconds;
-    if (rest != null && rest > 0) return '${rest}s rest';
+    if (rest != null && rest > 0) {
+      return '${AthleteDurationFormatter.formatSeconds(rest)} rest';
+    }
     return exercise.exercise?.restGuidance?.trim();
   }
 

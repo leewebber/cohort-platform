@@ -1,0 +1,180 @@
+# Canonical Plan Package v1 for the founder-authored Spartan Physique Block 1.
+# The referenced protocol revisions retain the complete training prescription.
+
+package_schema_version: 1
+
+programme:
+  lineage_code: SPARTAN-PHYSIQUE
+  version_number: 3
+  name: Spartan Physique Block 1
+  description: >-
+    Block 1 Week 1 — build a lean, strong, athletic Spartan physique with upper-body
+    relative strength, single-leg and posterior-chain work, aerobic base, and consistent
+    bodyweight and core training.
+  library_scope: cohort_global
+  owner_type: global
+  coaching_intent: >-
+    Prioritise upper-body relative strength and muscular development while maintaining
+    posterior-chain and unilateral leg work, aerobic capacity, and core stability.
+  duration_weeks: 1
+  sessions_per_week: 6
+  primary_goal: >-
+    Prioritise upper-body relative strength and muscular development while maintaining
+    posterior-chain and unilateral leg work, aerobic capacity, and core stability.
+
+sessions:
+  - session_key: SES-SPARTAN-W1D1
+    protocol_id: founder-spartan-physique-v1-w1-d1-s1-rev-2
+    session_lineage_id: 0dce1a80-bc64-4727-8442-a555dc21b0ed
+    revision_number: 2
+    title: Upper Strength
+  - session_key: SES-SPARTAN-W1D2
+    protocol_id: founder-spartan-physique-v1-w1-d2-s1
+    session_lineage_id: f816b3d7-26d5-4f43-8018-0c586a689f1e
+    revision_number: 1
+    title: Aerobic Base
+  - session_key: SES-SPARTAN-W1D3
+    protocol_id: founder-spartan-physique-v1-w1-d3-s1
+    session_lineage_id: 3e4c65d0-0f63-42d2-95f2-b46a55e79947
+    revision_number: 1
+    title: Lower Strength
+  - session_key: SES-SPARTAN-W1D4
+    protocol_id: founder-spartan-physique-v1-w1-d4-s1
+    session_lineage_id: 5f07e1ac-b60e-4dc2-bde3-1829a17c921d
+    revision_number: 1
+    title: Tempo Engine
+  - session_key: SES-SPARTAN-W1D5
+    protocol_id: founder-spartan-physique-v1-w1-d5-s1
+    session_lineage_id: 0e1f1ed1-6275-4bc5-8d1c-731d1c91bcde
+    revision_number: 1
+    title: Upper Hypertrophy
+  - session_key: SES-SPARTAN-W1D6
+    protocol_id: founder-spartan-physique-v1-w1-d6-s1
+    session_lineage_id: 2c20d13c-f103-44ac-b896-b1ab62f11f88
+    revision_number: 1
+    title: Long Warrior Run
+
+phases: []
+
+weeks:
+  - week_number: 1
+    title: Week 1
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D1
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Upper Strength
+            coach_note: >-
+              Prioritise movement quality over load. Do not train compound lifts to failure.
+              Keep 1-2 reps in reserve. Log load and completed reps for all strength exercises.
+            progression:
+              prescription_summary: >-
+                Upper Strength | Warm Up: easy-bike (sets=1, duration=5 minutes), Warm-Up Circuit 2 rounds: band-pull-apart (sets=2, reps=20, rest=30s), scapular-push-up (sets=2, reps=12-15, rest=30s), dead-hang (sets=2, duration=20-30 seconds, rest=30s) | Primary Lift: weighted-pull-up (sets=5, reps=5, effort=2 RIR, rest=150s) | Strength: incline-dumbbell-press (sets=4, reps=6-8, effort=2 RIR, rest=120s), chest-supported-row (sets=4, reps=8, effort=2 RIR, rest=105s), weighted-dip (sets=3, reps=6-8, effort=2 RIR, rest=120s) | Accessory: lateral-raise (sets=4, reps=15, rest=52s), face-pull (sets=3, reps=15, rest=52s) | Arms: hammer-curl (sets=3, reps=10, rest=60s), rope-triceps-pushdown (sets=3, reps=10, rest=60s) | Carry: farmer-carry (sets=4, distance=40 metres, load=kg per hand, rest=75s)
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        slots:
+          - slot_key: W1D2S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D2
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Aerobic Base
+            coach_note: Build aerobic capacity while accumulating low-fatigue bodyweight and core work.
+            progression:
+              prescription_summary: >-
+                Aerobic Base | Warm Up: full-body-mobility-flow (sets=1, reps=1) | Main Running Block: easy-run (sets=1, duration=50 minutes, effort=4 RPE) | Bodyweight Strength: pull-up (sets=3, reps=AMRAP, effort=2 RIR, rest=90s), push-up (sets=3, reps=20, rest=60s) | Core: hanging-leg-raise (sets=3, reps=12, rest=60s), plank (sets=3, duration=60 seconds, rest=45s) | Mobility: full-body-mobility-flow (sets=1, duration=10-15 minutes)
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        slots:
+          - slot_key: W1D3S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D3
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Lower Strength
+            coach_note: >-
+              Unilateral strength is a priority. Keep hips level and knee tracking controlled.
+              Do not shorten range of motion to increase load.
+            progression:
+              prescription_summary: >-
+                Lower Strength | Warm Up: bulgarian-split-squat (sets=2, reps=8, load=bodyweight, rest=30s) | Primary Lift: romanian-deadlift (sets=5, reps=5, effort=2 RIR, rest=150s) | Strength: bulgarian-split-squat (sets=4, reps=8, effort=2 RIR, rest=105s), walking-lunge (sets=3, reps=20, rest=90s) | Accessory: standing-calf-raise (sets=4, reps=15, rest=60s), tibialis-raise (sets=3, reps=15, rest=52s) | Core: copenhagen-plank (sets=3, duration=30 seconds each side, rest=45s) | Carry: suitcase-carry (sets=3, distance=40 metres each side, rest=60s)
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        slots:
+          - slot_key: W1D4S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D4
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Tempo Engine
+            coach_note: Improve sustained running speed and threshold control without maximal VO2 work.
+            progression:
+              prescription_summary: >-
+                Tempo Engine | Warm Up: easy-run (sets=1, duration=10 minutes easy) | Main Running Block: threshold-run (sets=6, duration=4 min work / 2 min easy jog recovery, effort=7 RPE) | Bodyweight Strength: dip (sets=3, reps=15, rest=75s), pull-up (sets=3, reps=8, rest=75s) | Core: hollow-hold (sets=3, duration=40 seconds, rest=45s), side-plank (sets=3, duration=40 seconds each side, rest=45s) | Cooldown / Mobility: full-body-mobility-flow (sets=1, duration=5-10 minutes)
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        slots:
+          - slot_key: W1D5S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D5
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Upper Hypertrophy
+            coach_note: >-
+              Hypertrophy-focused session — controlled eccentrics, sufficient rest to maintain output.
+              Not a conditioning circuit.
+            progression:
+              prescription_summary: >-
+                Upper Hypertrophy | Warm Up: full-body-mobility-flow (sets=1, reps=1) | Primary Lift: weighted-chin-up (sets=4, reps=8, effort=2 RIR, rest=120s) | Strength: incline-dumbbell-press (sets=4, reps=10, effort=2 RIR, rest=105s), cable-row (sets=4, reps=10, effort=2 RIR, rest=90s), dumbbell-strict-press (sets=3, reps=10, effort=2 RIR, rest=90s) | Accessory: lateral-raise (sets=4, reps=15, rest=52s), reverse-fly (sets=4, reps=15, rest=52s) | Arms: incline-dumbbell-curl (sets=3, reps=12, rest=60s), rope-triceps-pushdown (sets=3, reps=12, rest=60s) | Core: ab-wheel-rollout (sets=4, reps=10, rest=60s)
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        slots:
+          - slot_key: W1D6S1
+            session_order: 1
+            session_key: SES-SPARTAN-W1D6
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Long Warrior Run
+            coach_note: >-
+              Develop aerobic durability; finish with Spartan-themed bodyweight work without
+              compromising recovery.
+            progression:
+              prescription_summary: >-
+                Long Warrior Run | Warm Up: easy-run (sets=1, duration=5 minutes easy jog after walking) | Main Running Block: easy-run (sets=1, duration=75 minutes, effort=4 RPE) | Warrior Circuit: walking-lunge (sets=3, reps=20), pull-up (sets=3, reps=8), push-up (sets=3, reps=20), hanging-knee-raise (sets=3, reps=15) | Cooldown: full-body-mobility-flow (sets=1, duration=10 minutes)
+      - day_key: day_7
+        day_order: 7
+        day_type: rest
+        title: Sunday
+        coach_note: >-
+          Recovery is part of the programme. Do not add a hard training session.
+          Optional — easy walk; GOWOD or equivalent mobility; dead hangs; light stretching.
+          All activity should leave the athlete feeling better than before.
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []

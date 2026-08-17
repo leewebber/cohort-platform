@@ -1,14 +1,10 @@
 import '../../../core/utils/database_uuid.dart';
 import '../../../models/block_performance_capture_mode.dart';
-import '../../../models/session_block_type.dart';
-import '../../../models/workout_format.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/active_performance_draft.dart';
 import '../models/block_capture_mode_resolver.dart';
-import '../models/performance_result_data.dart';
-import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 
@@ -124,13 +120,8 @@ class PerformanceSnapshotBuilder {
                 .asMap()
                 .entries
                 .map(
-                  (entry) => ExercisePerformanceDraft(
-                    exerciseResultId: DatabaseUuid.newV4(),
-                    sourceExerciseId: entry.value.exerciseId,
-                    exerciseSnapshot: exerciseSnapshotFromSummary(
-                      entry.value,
-                      position: entry.key + 1,
-                    ),
+                  (entry) => _initialExerciseDraft(
+                    entry.value,
                     position: entry.key + 1,
                   ),
                 )
@@ -138,5 +129,40 @@ class PerformanceSnapshotBuilder {
           );
         })
         .toList(growable: false);
+  }
+
+  ExercisePerformanceDraft _initialExerciseDraft(
+    SessionExecutionExerciseSummary summary, {
+    required int position,
+  }) {
+    final prescription = summary.prescription;
+    final capture = prescription?.performanceCapture;
+    final rowCount = prescription == null || prescription.sets <= 0
+        ? 0
+        : prescription.sets;
+
+    return ExercisePerformanceDraft(
+      exerciseResultId: DatabaseUuid.newV4(),
+      sourceExerciseId: summary.exerciseId,
+      exerciseSnapshot: exerciseSnapshotFromSummary(
+        summary,
+        position: position,
+      ),
+      position: position,
+      sets: List.generate(
+        rowCount,
+        (index) => SetPerformanceDraft.empty(
+          setNumber: index + 1,
+          position: index + 1,
+          loadUnit: capture?.loadUnit?.trim().isNotEmpty == true
+              ? capture!.loadUnit!.trim()
+              : 'kg',
+          distanceUnit: capture?.distanceUnit?.trim().isNotEmpty == true
+              ? capture!.distanceUnit!.trim()
+              : null,
+        ),
+        growable: false,
+      ),
+    );
   }
 }

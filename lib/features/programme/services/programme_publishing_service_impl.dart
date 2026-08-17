@@ -6,8 +6,13 @@ import 'programme_publishing_service.dart';
 
 /// Draft → published lifecycle backed by [ProgrammeVersionStore].
 class ProgrammePublishingServiceImpl implements ProgrammePublishingService {
-  ProgrammePublishingServiceImpl({required ProgrammeVersionStore versionStore})
-    : _versionStore = versionStore;
+  factory ProgrammePublishingServiceImpl({
+    required ProgrammeVersionStore versionStore,
+  }) {
+    return ProgrammePublishingServiceImpl._(versionStore);
+  }
+
+  ProgrammePublishingServiceImpl._(this._versionStore);
 
   final ProgrammeVersionStore _versionStore;
 
@@ -44,6 +49,12 @@ class ProgrammePublishingServiceImpl implements ProgrammePublishingService {
 
     if (version.lifecycleStatus != ProgrammeLifecycleStatus.published) {
       throw ProgrammeStoreException('Only published versions can be archived');
+    }
+    if (version.approvedForGlobal) {
+      throw ProgrammeStoreException(
+        'Approved catalogue versions must be retired through atomic '
+        'catalogue replacement',
+      );
     }
 
     final now = DateTime.now().toUtc();

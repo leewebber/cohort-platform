@@ -99,6 +99,7 @@ class FounderProgrammeYamlExercise {
     required this.order,
     this.prescription,
     this.notes,
+    this.executionGroup,
   });
 
   final String? transitionalExerciseId;
@@ -107,4 +108,17 @@ class FounderProgrammeYamlExercise {
   final int order;
   final Map<String, dynamic>? prescription;
   final String? notes;
+  final FounderProgrammeYamlExecutionGroup? executionGroup;
+}
+
+class FounderProgrammeYamlExecutionGroup {
+  const FounderProgrammeYamlExecutionGroup({
+    required this.key,
+    required this.label,
+    required this.rounds,
+  });
+
+  final String key;
+  final String label;
+  final int rounds;
 }

@@ -1,4 +1,5 @@
 import 'plan_package_import_models.dart';
+import 'plan_package_catalogue_replacement_result.dart';
 
 /// Persistence port for the service-role-only import RPC.
 ///
@@ -18,6 +19,13 @@ abstract class PlanPackageLifecycleStore {
 
   Future<Map<String, dynamic>> approveCohortGlobalVersion({
     required String versionId,
+    required String actor,
+  });
+
+  Future<PlanPackageCatalogueReplacementResult>
+  replaceApprovedCohortGlobalVersion({
+    required String retiringVersionId,
+    required String replacementVersionId,
     required String actor,
   });
 }

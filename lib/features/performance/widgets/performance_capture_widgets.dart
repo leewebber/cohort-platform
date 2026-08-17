@@ -4,8 +4,12 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../models/strength_exercise_prescription.dart';
+import '../../../models/strength_prescription_formatter.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
+import '../../workout_player/models/previous_performance_snapshot.dart';
+import '../../workout_player/services/previous_performance_resolver.dart';
 import '../models/active_performance_draft.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
@@ -134,7 +138,8 @@ class BlockResultEditor extends StatelessWidget {
   final List<SessionExecutionExerciseSummary> linkedExercises;
 
   static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
-    return _captureModeFor(blockDraft) != BlockCaptureMode.completion;
+    return _captureModeFor(blockDraft) != BlockCaptureMode.completion ||
+        blockDraft.exerciseResults.any((exercise) => exercise.sets.isNotEmpty);
   }
 
   static BlockCaptureMode _captureModeFor(BlockPerformanceDraft blockDraft) {
@@ -265,9 +270,10 @@ class _ResultEditorBody extends StatelessWidget {
         );
       case BlockCaptureMode.completion:
       case BlockCaptureMode.auto:
-        return _CompletionEditor(
-          result: blockDraft.resultData,
-          onChanged: onResultChanged,
+        return _ExerciseAcknowledgementEditor(
+          blockDraft: blockDraft,
+          linkedExercises: linkedExercises,
+          onUpdateSet: onUpdateSet,
         );
     }
   }
@@ -417,7 +423,7 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
           ),
         ),
         DropdownButtonFormField<String>(
-          value: _units.contains(result.distanceUnit)
+          initialValue: _units.contains(result.distanceUnit)
               ? result.distanceUnit
               : 'km',
           decoration: const InputDecoration(labelText: 'Distance unit'),
@@ -453,33 +459,6 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
           onChanged: (value) => widget.onChanged(
             result.copyWith(note: value.trim().isEmpty ? null : value.trim()),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class _DistanceEditor extends StatelessWidget {
-  const _DistanceEditor({required this.result, required this.onChanged});
-  final DistanceResultData result;
-  final ValueChanged<PerformanceResultData> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        PerformanceNumericField(
-          label: 'Distance (${result.distanceUnit})',
-          value: result.distance?.toString() ?? '',
-          allowDecimal: true,
-          onChanged: (value) =>
-              onChanged(result.copyWith(distance: double.tryParse(value))),
-        ),
-        PerformanceNumericField(
-          label: 'Duration (seconds)',
-          value: result.durationSeconds?.toString() ?? '',
-          onChanged: (value) =>
-              onChanged(result.copyWith(durationSeconds: int.tryParse(value))),
         ),
       ],
     );
@@ -542,15 +521,76 @@ class _CustomMetricEditor extends StatelessWidget {
   }
 }
 
-class _CompletionEditor extends StatelessWidget {
-  const _CompletionEditor({required this.result, required this.onChanged});
+class _ExerciseAcknowledgementEditor extends StatelessWidget {
+  const _ExerciseAcknowledgementEditor({
+    required this.blockDraft,
+    required this.linkedExercises,
+    required this.onUpdateSet,
+  });
 
-  final PerformanceResultData result;
-  final ValueChanged<PerformanceResultData> onChanged;
+  final BlockPerformanceDraft blockDraft;
+  final List<SessionExecutionExerciseSummary> linkedExercises;
+  final void Function(
+    String exerciseId,
+    String setResultId,
+    SetPerformanceDraft Function(SetPerformanceDraft) update,
+  )
+  onUpdateSet;
+
+  SessionExecutionExerciseSummary? _summaryFor(String exerciseId) {
+    for (final summary in linkedExercises) {
+      if (summary.exerciseId == exerciseId) return summary;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final exercise in blockDraft.exerciseResults) ...[
+          Builder(
+            builder: (context) {
+              final summary = _summaryFor(exercise.sourceExerciseId);
+              final label = AthleteExerciseLabelResolver.fromExerciseDraft(
+                exercise,
+                executionSummary: summary,
+              );
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: CohortTextStyles.cardTitle),
+                  const SizedBox(height: CohortSpacing.sm),
+                  _ExerciseTargetComparison(summary: summary),
+                  const SizedBox(height: CohortSpacing.sm),
+                  for (final row in exercise.sets)
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: Text(
+                        summary?.hasExecutionGroup == true
+                            ? 'Round ${row.setNumber}'
+                            : exercise.sets.length == 1
+                            ? 'Completed'
+                            : 'Set ${row.setNumber}',
+                      ),
+                      value: row.completed,
+                      onChanged: (value) => onUpdateSet(
+                        exercise.sourceExerciseId,
+                        row.setResultId,
+                        (current) =>
+                            current.copyWith(completed: value ?? false),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: CohortSpacing.md),
+        ],
+      ],
+    );
   }
 }
 
@@ -598,48 +638,20 @@ class _StrengthEditor extends StatelessWidget {
         for (final exercise in blockDraft.exerciseResults) ...[
           Text(_exerciseLabel(exercise), style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.sm),
+          _ExerciseTargetComparison(
+            summary: _summaryFor(exercise.sourceExerciseId),
+          ),
+          const SizedBox(height: CohortSpacing.sm),
           for (final set in exercise.sets)
             Padding(
               padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: PerformanceNumericField(
-                      key: ValueKey('${set.setResultId}-reps'),
-                      label: 'Set ${set.setNumber} reps',
-                      value: set.reps?.toString() ?? '',
-                      onChanged: (value) => onUpdateSet(
-                        exercise.sourceExerciseId,
-                        set.setResultId,
-                        (current) =>
-                            current.copyWith(reps: int.tryParse(value)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: CohortSpacing.sm),
-                  Expanded(
-                    child: PerformanceNumericField(
-                      key: ValueKey('${set.setResultId}-load'),
-                      label: 'Load (${set.loadUnit})',
-                      value: set.load?.toString() ?? '',
-                      allowDecimal: true,
-                      onChanged: (value) => onUpdateSet(
-                        exercise.sourceExerciseId,
-                        set.setResultId,
-                        (current) =>
-                            current.copyWith(load: double.tryParse(value)),
-                      ),
-                    ),
-                  ),
-                  Checkbox(
-                    value: set.completed,
-                    onChanged: (value) => onUpdateSet(
-                      exercise.sourceExerciseId,
-                      set.setResultId,
-                      (current) => current.copyWith(completed: value ?? false),
-                    ),
-                  ),
-                ],
+              child: _ExerciseActualRow(
+                exerciseId: exercise.sourceExerciseId,
+                set: set,
+                capture: _summaryFor(
+                  exercise.sourceExerciseId,
+                )?.prescription?.performanceCapture,
+                onUpdateSet: onUpdateSet,
               ),
             ),
           CohortButton(
@@ -650,6 +662,217 @@ class _StrengthEditor extends StatelessWidget {
         ],
       ],
     );
+  }
+}
+
+class _ExerciseTargetComparison extends StatelessWidget {
+  const _ExerciseTargetComparison({required this.summary});
+
+  final SessionExecutionExerciseSummary? summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final prescription = summary?.prescription;
+    final previous = summary == null
+        ? null
+        : const PreviousPerformanceResolver().resolveLatest(
+            exerciseId: summary!.exerciseId,
+            requiredType: PreviousPerformanceSessionType.strength,
+          );
+    final previousParts = previous == null
+        ? const <String>[]
+        : <String>[
+            ?_text(previous.repSummary),
+            ?_text(previous.loadSummary),
+            ?_text(previous.distanceSummary),
+            ?_text(previous.durationSummary),
+            if (previous.rpe case final value?) 'RPE $value',
+          ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Today', style: CohortTextStyles.eyebrow),
+        Text(
+          prescription == null
+              ? 'No authored target available.'
+              : [
+                  StrengthPrescriptionFormatter.summaryLine(prescription),
+                  if (StrengthPrescriptionFormatter.detailLine(
+                    prescription,
+                  ).isNotEmpty)
+                    StrengthPrescriptionFormatter.detailLine(prescription),
+                ].join(' · '),
+          style: CohortTextStyles.small,
+        ),
+        const SizedBox(height: CohortSpacing.xs),
+        Text('Last time', style: CohortTextStyles.eyebrow),
+        Text(
+          previousParts.isEmpty
+              ? 'No previous performance'
+              : previousParts.join(' · '),
+          style: CohortTextStyles.small,
+        ),
+      ],
+    );
+  }
+
+  static String? _text(String? value) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+}
+
+class _ExerciseActualRow extends StatelessWidget {
+  const _ExerciseActualRow({
+    required this.exerciseId,
+    required this.set,
+    required this.capture,
+    required this.onUpdateSet,
+  });
+
+  final String exerciseId;
+  final SetPerformanceDraft set;
+  final ExercisePerformanceCapture? capture;
+  final void Function(
+    String exerciseId,
+    String setResultId,
+    SetPerformanceDraft Function(SetPerformanceDraft) update,
+  )
+  onUpdateSet;
+
+  @override
+  Widget build(BuildContext context) {
+    if (capture != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Set ${set.setNumber}', style: CohortTextStyles.small),
+          Row(
+            children: [
+              Expanded(
+                child: PerformanceNumericField(
+                  key: ValueKey('${set.setResultId}-load'),
+                  label:
+                      '${_label(capture!.loadLabel, 'Load')} (${set.loadUnit})',
+                  value: set.load?.toString() ?? '',
+                  allowDecimal: true,
+                  onChanged: (value) {
+                    final parsed = double.tryParse(value);
+                    onUpdateSet(
+                      exerciseId,
+                      set.setResultId,
+                      (current) => current.copyWith(
+                        load: parsed,
+                        clearLoad: parsed == null,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: CohortSpacing.sm),
+              Expanded(
+                child: PerformanceNumericField(
+                  key: ValueKey('${set.setResultId}-distance'),
+                  label:
+                      'Completed distance (${set.distanceUnit ?? capture!.distanceUnit ?? 'm'})',
+                  value: set.distance?.toString() ?? '',
+                  allowDecimal: true,
+                  onChanged: (value) {
+                    final parsed = double.tryParse(value);
+                    onUpdateSet(
+                      exerciseId,
+                      set.setResultId,
+                      (current) => current.copyWith(
+                        distance: parsed,
+                        clearDistance: parsed == null,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          if (capture!.durationOptional)
+            EnduranceDurationField(
+              key: ValueKey('${set.setResultId}-duration'),
+              label: 'Duration (optional)',
+              durationSeconds: set.durationSeconds,
+              onDurationSecondsChanged: (seconds) => onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) => current.copyWith(
+                  durationSeconds: seconds,
+                  clearDurationSeconds: seconds == null,
+                ),
+              ),
+            ),
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            controlAffinity: ListTileControlAffinity.leading,
+            title: const Text('Completed'),
+            value: set.completed,
+            onChanged: (value) => onUpdateSet(
+              exerciseId,
+              set.setResultId,
+              (current) => current.copyWith(completed: value ?? false),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Row(
+      children: [
+        Expanded(
+          child: PerformanceNumericField(
+            key: ValueKey('${set.setResultId}-reps'),
+            label: 'Set ${set.setNumber} reps',
+            value: set.reps?.toString() ?? '',
+            onChanged: (value) {
+              final parsed = int.tryParse(value);
+              onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) =>
+                    current.copyWith(reps: parsed, clearReps: parsed == null),
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: CohortSpacing.sm),
+        Expanded(
+          child: PerformanceNumericField(
+            key: ValueKey('${set.setResultId}-load'),
+            label: 'Load (${set.loadUnit})',
+            value: set.load?.toString() ?? '',
+            allowDecimal: true,
+            onChanged: (value) {
+              final parsed = double.tryParse(value);
+              onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) =>
+                    current.copyWith(load: parsed, clearLoad: parsed == null),
+              );
+            },
+          ),
+        ),
+        Checkbox(
+          value: set.completed,
+          onChanged: (value) => onUpdateSet(
+            exerciseId,
+            set.setResultId,
+            (current) => current.copyWith(completed: value ?? false),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static String _label(String? value, String fallback) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? fallback : trimmed;
   }
 }
 

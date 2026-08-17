@@ -305,7 +305,7 @@ class PlanPackageYamlParser {
 
     final sessionKey = _requireIdentity(map, 'session_key', path, issues);
     final protocolId = _requireIdentity(map, 'protocol_id', path, issues);
-    final sessionLineageId = _requireIdentity(
+    final sessionLineageId = _requireSessionLineageIdentity(
       map,
       'session_lineage_id',
       path,
@@ -699,7 +699,7 @@ class PlanPackageYamlParser {
     _rejectUnknownKeys(map, path, _comparisonKeys, issues);
 
     final id = _requireIdentity(map, 'id', path, issues);
-    final sessionLineageId = _requireIdentity(
+    final sessionLineageId = _requireSessionLineageIdentity(
       map,
       'session_lineage_id',
       path,
@@ -1153,6 +1153,30 @@ class PlanPackageYamlParser {
       return null;
     }
     return value;
+  }
+
+  String? _requireSessionLineageIdentity(
+    Map<String, Object?> map,
+    String key,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    final raw = map[key];
+    if (raw is! String || raw.isEmpty) {
+      return _requireNonEmptyString(map, key, path, issues);
+    }
+    if (raw != raw.trim() ||
+        !PlanPackageSchema.isValidSessionLineageIdentity(raw)) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.$key',
+          code: 'invalid_identifier',
+          message: 'Field "$key" is not a valid identity ("$raw").',
+        ),
+      );
+      return null;
+    }
+    return raw;
   }
 
   String? _optionalIdentity(

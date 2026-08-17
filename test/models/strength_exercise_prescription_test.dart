@@ -92,7 +92,7 @@ void main() {
       );
       expect(
         StrengthPrescriptionFormatter.detailLine(prescription),
-        'Rest 2:00',
+        'Rest 2 min',
       );
     });
   });

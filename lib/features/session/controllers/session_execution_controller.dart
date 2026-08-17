@@ -88,6 +88,58 @@ class SessionExecutionController {
     _persist();
   }
 
+  /// Reconciles durable performance progress when process-local session memory
+  /// is absent. Durable athlete actuals remain authoritative across cold opens.
+  void restoreFromDurableDraft({
+    required Set<String> completedBlockIds,
+    String? activeBlockId,
+  }) {
+    final validIds = _plan.blocks.map((block) => block.blockId).toSet();
+    final completed = completedBlockIds.intersection(validIds);
+    var activeIndex = activeBlockId == null
+        ? -1
+        : _plan.blocks.indexWhere((block) => block.blockId == activeBlockId);
+    if (activeIndex < 0 ||
+        completed.contains(_plan.blocks[activeIndex].blockId)) {
+      activeIndex = _plan.blocks.indexWhere(
+        (block) =>
+            block.hasAthleteVisibleContent &&
+            !completed.contains(block.blockId),
+      );
+    }
+    if (activeIndex < 0) activeIndex = 0;
+    final activeId = _plan.blocks.isEmpty
+        ? null
+        : _plan.blocks[activeIndex].blockId;
+
+    if (_runtime != null) {
+      final activated = _runtime!.player.activate(recordedAt: DateTime.now());
+      _runtime!.applyTransition(activated);
+      _runtime!.completedBlockIds
+        ..clear()
+        ..addAll(completed);
+      if (_plan.blocks.isNotEmpty) {
+        _runtime!.syncPlayerToBlockIndex(activeIndex);
+      }
+      if (activeId != null) {
+        _runtime!.expandedBlockIds
+          ..clear()
+          ..add(activeId);
+      }
+      _persist();
+      return;
+    }
+
+    _legacyState = _legacyState.copyWith(
+      activeBlockIndex: activeIndex,
+      completedBlockIds: completed,
+      expandedBlockIds: {?activeId},
+      sessionStatus: SessionExecutionStatus.inProgress,
+      startedAt: _legacyState.startedAt ?? DateTime.now(),
+    );
+    _persist();
+  }
+
   void goToBlock(int index) {
     if (_runtime != null) {
       if (index < 0 || index >= _plan.blocks.length) return;

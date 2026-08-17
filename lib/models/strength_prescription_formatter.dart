@@ -1,3 +1,4 @@
+import '../core/presentation/athlete_duration_formatter.dart';
 import 'strength_exercise_prescription.dart';
 
 /// Athlete- and coach-facing formatting for structured strength prescriptions.
@@ -29,11 +30,7 @@ class StrengthPrescriptionFormatter {
 
   static String? formatRest(int? restSeconds) {
     if (restSeconds == null || restSeconds <= 0) return null;
-    if (restSeconds >= 60 && restSeconds % 60 == 0) {
-      final minutes = restSeconds ~/ 60;
-      return 'Rest ${minutes}:00';
-    }
-    return 'Rest ${restSeconds}s';
+    return 'Rest ${AthleteDurationFormatter.formatSeconds(restSeconds)}';
   }
 
   static String? formatTempo(String? tempo) {
@@ -45,15 +42,15 @@ class StrengthPrescriptionFormatter {
   static String summaryLine(StrengthExercisePrescription prescription) {
     final parts = <String>[
       formatSetsReps(prescription),
-      if (formatLoad(prescription.load) case final load?) load,
+      ?formatLoad(prescription.load),
     ];
     return parts.join(' · ');
   }
 
   static String detailLine(StrengthExercisePrescription prescription) {
     final parts = <String>[
-      if (formatRest(prescription.restSeconds) case final rest?) rest,
-      if (formatTempo(prescription.tempo) case final tempo?) tempo,
+      ?formatRest(prescription.restSeconds),
+      ?formatTempo(prescription.tempo),
     ];
     return parts.join(' · ');
   }

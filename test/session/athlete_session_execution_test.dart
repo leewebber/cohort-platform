@@ -3,6 +3,8 @@ import 'package:cohort_platform/features/session/models/session_execution_plan.d
 import 'package:cohort_platform/features/session/models/session_execution_status.dart';
 import 'package:cohort_platform/features/session/services/block_timer_controller.dart';
 import 'package:cohort_platform/features/session/services/protocol_step_to_block_converter.dart';
+import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/session/services/session_finish_eligibility.dart';
 import 'package:cohort_platform/models/protocol_step.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/timer_configuration.dart';
@@ -78,6 +80,44 @@ void main() {
 
       expect(controller.state.completedBlockIds, isEmpty);
       expect(controller.state.activeBlockIndex, 1);
+    });
+
+    test('cold restore reconciles durable completed and active blocks', () {
+      final controller = SessionExecutionController(
+        plan: _samplePlan(),
+        sessionKey: 'test-restore:session-1',
+        memoryStore: AthleteSessionMemoryStore.instance,
+      );
+
+      controller.restoreFromDurableDraft(
+        completedBlockIds: {'block-1'},
+        activeBlockId: 'block-2',
+      );
+
+      expect(controller.state.sessionStatus, SessionExecutionStatus.inProgress);
+      expect(controller.state.completedBlockIds, {'block-1'});
+      expect(controller.state.activeBlock?.blockId, 'block-2');
+      expect(controller.state.expandedBlockIds, {'block-2'});
+    });
+  });
+
+  group('SessionFinishEligibilityEvaluator', () {
+    test('disables finish at zero of two blocks with a useful reason', () {
+      final plan = _samplePlan();
+      final performance =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: plan,
+            athleteId: 'athlete',
+            trainingSessionId: 1,
+          );
+
+      final result = const SessionFinishEligibilityEvaluator().evaluate(
+        incompleteBlockCount: 2,
+        performanceDraft: performance.draft,
+      );
+
+      expect(result.canFinish, isFalse);
+      expect(result.reason, 'Complete 2 remaining blocks');
     });
   });
 

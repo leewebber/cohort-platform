@@ -47,17 +47,23 @@ class SetPerformanceDraft {
     bool? completed,
     int? rpe,
     String? note,
+    bool clearReps = false,
+    bool clearLoad = false,
+    bool clearDistance = false,
+    bool clearDurationSeconds = false,
   }) {
     return SetPerformanceDraft(
       setResultId: setResultId ?? this.setResultId,
       setNumber: setNumber ?? this.setNumber,
       position: position ?? this.position,
-      reps: reps ?? this.reps,
-      load: load ?? this.load,
+      reps: clearReps ? null : (reps ?? this.reps),
+      load: clearLoad ? null : (load ?? this.load),
       loadUnit: loadUnit ?? this.loadUnit,
-      distance: distance ?? this.distance,
+      distance: clearDistance ? null : (distance ?? this.distance),
       distanceUnit: distanceUnit ?? this.distanceUnit,
-      durationSeconds: durationSeconds ?? this.durationSeconds,
+      durationSeconds: clearDurationSeconds
+          ? null
+          : (durationSeconds ?? this.durationSeconds),
       completed: completed ?? this.completed,
       rpe: rpe ?? this.rpe,
       note: note ?? this.note,
@@ -67,11 +73,15 @@ class SetPerformanceDraft {
   factory SetPerformanceDraft.empty({
     required int setNumber,
     required int position,
+    String loadUnit = 'kg',
+    String? distanceUnit,
   }) {
     return SetPerformanceDraft(
       setResultId: DatabaseUuid.newV4(),
       setNumber: setNumber,
       position: position,
+      loadUnit: loadUnit,
+      distanceUnit: distanceUnit,
     );
   }
 }

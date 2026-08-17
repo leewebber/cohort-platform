@@ -83,6 +83,49 @@ void main() {
   });
 
   test(
+    'leaving Active Session saves before navigation and never completes',
+    () {
+      final source = File(
+        'lib/features/session/screens/active_session_screen.dart',
+      ).readAsStringSync();
+      final leaveHandler = source.indexOf('Future<void> _returnToHome()');
+      final save = source.indexOf('await _persistDraft()', leaveHandler);
+      final pop = source.indexOf('Navigator.of(context).pop()', leaveHandler);
+
+      expect(source, contains('PopScope('));
+      expect(leaveHandler, greaterThan(-1));
+      expect(save, greaterThan(leaveHandler));
+      expect(pop, greaterThan(save));
+      expect(
+        source.substring(leaveHandler, source.indexOf('void _refresh()')),
+        isNot(contains('completeSession')),
+      );
+    },
+  );
+
+  test('Finish remains eligibility-gated before review authority', () {
+    final source = File(
+      'lib/features/session/screens/active_session_screen.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('SessionFinishEligibilityEvaluator'));
+    expect(source, contains('onPressed: finishEligibility.canFinish'));
+    expect(source, contains('? _finishSession'));
+    expect(source, isNot(contains('allowIncomplete:')));
+    expect(source, isNot(contains('Finish with incomplete blocks?')));
+  });
+
+  test('structured warm-up grouping never parses coach notes at runtime', () {
+    final source = File(
+      'lib/features/session/widgets/athlete/athlete_block_card.dart',
+    ).readAsStringSync();
+
+    expect(source, contains('executionGroup'));
+    expect(source, isNot(contains('coachNotes.split')));
+    expect(source, isNot(contains('RegExp')));
+  });
+
+  test(
     'programme completion checks authority before local success projection',
     () {
       final source = File(
