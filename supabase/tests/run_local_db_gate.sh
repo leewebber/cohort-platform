@@ -164,7 +164,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_baseline_fidelity.sql
 
-echo "=== Load helpers + Gates C–I + J–Q (through atomic session start) ==="
+echo "=== Load helpers + Gates C–I + J–R + S materialised replacement ==="
 docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
 docker cp "${TESTS_DIR}/sql/gates_c_to_i.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gates.sql"
 docker cp "${TESTS_DIR}/sql/gate_j_catalogue_enrolment.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_j.sql"
@@ -176,6 +176,7 @@ docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12
 docker cp "${TESTS_DIR}/sql/gate_p_programme_schedule_undo_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_p.sql"
 docker cp "${TESTS_DIR}/sql/gate_q_programme_training_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_q.sql"
 docker cp "${TESTS_DIR}/sql/gate_r_catalogue_version_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_r.sql"
+docker cp "${TESTS_DIR}/sql/gate_s_materialised_assignment_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_s.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -188,7 +189,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_o.sql \
   -f /tmp/sprint12_gate_p.sql \
   -f /tmp/sprint12_gate_q.sql \
-  -f /tmp/sprint12_gate_r.sql
+  -f /tmp/sprint12_gate_r.sql \
+  -f /tmp/sprint12_gate_s.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -208,6 +210,7 @@ docker cp "${TESTS_DIR}/sql/gate_o_programme_schedule_push_skip.sql" "${SPRINT12
 docker cp "${TESTS_DIR}/sql/gate_p_programme_schedule_undo_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_p.sql"
 docker cp "${TESTS_DIR}/sql/gate_q_programme_training_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_q.sql"
 docker cp "${TESTS_DIR}/sql/gate_r_catalogue_version_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_r.sql"
+docker cp "${TESTS_DIR}/sql/gate_s_materialised_assignment_replacement.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_s.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -220,7 +223,8 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" \
   -f /tmp/sprint12_gate_o.sql \
   -f /tmp/sprint12_gate_p.sql \
   -f /tmp/sprint12_gate_q.sql \
-  -f /tmp/sprint12_gate_r.sql
+  -f /tmp/sprint12_gate_r.sql \
+  -f /tmp/sprint12_gate_s.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e
