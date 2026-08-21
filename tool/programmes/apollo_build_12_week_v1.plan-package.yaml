@@ -1,0 +1,2052 @@
+# Canonical Plan Package v1 for founder-authored internal Apollo dogfood content.
+# Executable prescription remains exclusively in the referenced committed protocols.
+
+package_schema_version: 1
+
+programme:
+  lineage_code: APOLLO-BUILD-12-WEEK
+  version_number: 1
+  name: Apollo Build — 12-Week Initial Block
+  description: >-
+    Founder-authored internal dogfood package for the complete Apollo Build initial
+    block. It schedules the committed executable protocols without creating a hosted
+    programme version or duplicating their prescriptions.
+  library_scope: organisation
+  owner_type: organisation
+  coaching_intent: >-
+    Build an Apollo physique while retaining athletic capability, developing the
+    Racehorse posterior chain, improving aerobic capacity, and arriving fresh.
+  duration_weeks: 12
+  sessions_per_week: 7
+  primary_goal: Concurrent strength, hypertrophy, athleticism and cardiovascular development.
+
+sessions:
+  - session_key: SES-APOLLO-W01-MON
+    protocol_id: APOLLO-W1-MON-R1
+    session_lineage_id: a1100001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W01-TUE
+    protocol_id: APOLLO-W1-TUE-R1
+    session_lineage_id: a1100002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W01-WED
+    protocol_id: APOLLO-W1-WED-R1
+    session_lineage_id: a1100003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W01-THU
+    protocol_id: APOLLO-W1-THU-R1
+    session_lineage_id: a1100004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W01-FRI
+    protocol_id: APOLLO-W1-FRI-R1
+    session_lineage_id: a1100005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W01-SAT
+    protocol_id: APOLLO-W1-SAT-R1
+    session_lineage_id: a1100006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W01-SUN
+    protocol_id: APOLLO-W1-SUN-R1
+    session_lineage_id: a1100007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W02-MON
+    protocol_id: APOLLO-W2-MON-R1
+    session_lineage_id: a1200001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W02-TUE
+    protocol_id: APOLLO-W2-TUE-R1
+    session_lineage_id: a1200002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W02-WED
+    protocol_id: APOLLO-W2-WED-R1
+    session_lineage_id: a1200003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W02-THU
+    protocol_id: APOLLO-W2-THU-R1
+    session_lineage_id: a1200004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W02-FRI
+    protocol_id: APOLLO-W2-FRI-R1
+    session_lineage_id: a1200005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W02-SAT
+    protocol_id: APOLLO-W2-SAT-R1
+    session_lineage_id: a1200006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W02-SUN
+    protocol_id: APOLLO-W2-SUN-R1
+    session_lineage_id: a1200007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W03-MON
+    protocol_id: APOLLO-W3-MON-R1
+    session_lineage_id: a1300001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W03-TUE
+    protocol_id: APOLLO-W3-TUE-R1
+    session_lineage_id: a1300002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W03-WED
+    protocol_id: APOLLO-W3-WED-R1
+    session_lineage_id: a1300003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W03-THU
+    protocol_id: APOLLO-W3-THU-R1
+    session_lineage_id: a1300004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W03-FRI
+    protocol_id: APOLLO-W3-FRI-R1
+    session_lineage_id: a1300005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W03-SAT
+    protocol_id: APOLLO-W3-SAT-R1
+    session_lineage_id: a1300006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W03-SUN
+    protocol_id: APOLLO-W3-SUN-R1
+    session_lineage_id: a1300007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W04-MON
+    protocol_id: APOLLO-W4-MON-R1
+    session_lineage_id: a1400001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W04-TUE
+    protocol_id: APOLLO-W4-TUE-R1
+    session_lineage_id: a1400002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W04-WED
+    protocol_id: APOLLO-W4-WED-R1
+    session_lineage_id: a1400003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W04-THU
+    protocol_id: APOLLO-W4-THU-R1
+    session_lineage_id: a1400004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W04-FRI
+    protocol_id: APOLLO-W4-FRI-R1
+    session_lineage_id: a1400005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W04-SAT
+    protocol_id: APOLLO-W4-SAT-R1
+    session_lineage_id: a1400006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W04-SUN
+    protocol_id: APOLLO-W4-SUN-R1
+    session_lineage_id: a1400007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W05-MON
+    protocol_id: APOLLO-W5-MON-R1
+    session_lineage_id: a1500001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W05-TUE
+    protocol_id: APOLLO-W5-TUE-R1
+    session_lineage_id: a1500002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W05-WED
+    protocol_id: APOLLO-W5-WED-R1
+    session_lineage_id: a1500003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W05-THU
+    protocol_id: APOLLO-W5-THU-R1
+    session_lineage_id: a1500004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W05-FRI
+    protocol_id: APOLLO-W5-FRI-R1
+    session_lineage_id: a1500005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W05-SAT
+    protocol_id: APOLLO-W5-SAT-R1
+    session_lineage_id: a1500006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W05-SUN
+    protocol_id: APOLLO-W5-SUN-R1
+    session_lineage_id: a1500007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W06-MON
+    protocol_id: APOLLO-W6-MON-R1
+    session_lineage_id: a1600001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W06-TUE
+    protocol_id: APOLLO-W6-TUE-R1
+    session_lineage_id: a1600002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W06-WED
+    protocol_id: APOLLO-W6-WED-R1
+    session_lineage_id: a1600003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W06-THU
+    protocol_id: APOLLO-W6-THU-R1
+    session_lineage_id: a1600004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W06-FRI
+    protocol_id: APOLLO-W6-FRI-R1
+    session_lineage_id: a1600005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W06-SAT
+    protocol_id: APOLLO-W6-SAT-R1
+    session_lineage_id: a1600006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W06-SUN
+    protocol_id: APOLLO-W6-SUN-R1
+    session_lineage_id: a1600007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W07-MON
+    protocol_id: APOLLO-W7-MON-R1
+    session_lineage_id: a1700001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W07-TUE
+    protocol_id: APOLLO-W7-TUE-R1
+    session_lineage_id: a1700002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W07-WED
+    protocol_id: APOLLO-W7-WED-R1
+    session_lineage_id: a1700003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W07-THU
+    protocol_id: APOLLO-W7-THU-R1
+    session_lineage_id: a1700004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W07-FRI
+    protocol_id: APOLLO-W7-FRI-R1
+    session_lineage_id: a1700005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W07-SAT
+    protocol_id: APOLLO-W7-SAT-R1
+    session_lineage_id: a1700006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W07-SUN
+    protocol_id: APOLLO-W7-SUN-R1
+    session_lineage_id: a1700007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W08-MON
+    protocol_id: APOLLO-W8-MON-R1
+    session_lineage_id: a1800001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W08-TUE
+    protocol_id: APOLLO-W8-TUE-R1
+    session_lineage_id: a1800002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W08-WED
+    protocol_id: APOLLO-W8-WED-R1
+    session_lineage_id: a1800003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W08-THU
+    protocol_id: APOLLO-W8-THU-R1
+    session_lineage_id: a1800004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W08-FRI
+    protocol_id: APOLLO-W8-FRI-R1
+    session_lineage_id: a1800005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W08-SAT
+    protocol_id: APOLLO-W8-SAT-R1
+    session_lineage_id: a1800006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W08-SUN
+    protocol_id: APOLLO-W8-SUN-R1
+    session_lineage_id: a1800007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W09-MON
+    protocol_id: APOLLO-W9-MON-R1
+    session_lineage_id: a1900001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W09-TUE
+    protocol_id: APOLLO-W9-TUE-R1
+    session_lineage_id: a1900002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W09-WED
+    protocol_id: APOLLO-W9-WED-R1
+    session_lineage_id: a1900003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W09-THU
+    protocol_id: APOLLO-W9-THU-R1
+    session_lineage_id: a1900004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W09-FRI
+    protocol_id: APOLLO-W9-FRI-R1
+    session_lineage_id: a1900005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W09-SAT
+    protocol_id: APOLLO-W9-SAT-R1
+    session_lineage_id: a1900006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W09-SUN
+    protocol_id: APOLLO-W9-SUN-R1
+    session_lineage_id: a1900007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W10-MON
+    protocol_id: APOLLO-W10-MON-R1
+    session_lineage_id: a2000001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W10-TUE
+    protocol_id: APOLLO-W10-TUE-R1
+    session_lineage_id: a2000002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W10-WED
+    protocol_id: APOLLO-W10-WED-R1
+    session_lineage_id: a2000003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W10-THU
+    protocol_id: APOLLO-W10-THU-R1
+    session_lineage_id: a2000004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W10-FRI
+    protocol_id: APOLLO-W10-FRI-R1
+    session_lineage_id: a2000005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W10-SAT
+    protocol_id: APOLLO-W10-SAT-R1
+    session_lineage_id: a2000006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W10-SUN
+    protocol_id: APOLLO-W10-SUN-R1
+    session_lineage_id: a2000007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W11-MON
+    protocol_id: APOLLO-W11-MON-R1
+    session_lineage_id: a2100001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Apollo Strength
+  - session_key: SES-APOLLO-W11-TUE
+    protocol_id: APOLLO-W11-TUE-R1
+    session_lineage_id: a2100002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base
+  - session_key: SES-APOLLO-W11-WED
+    protocol_id: APOLLO-W11-WED-R1
+    session_lineage_id: a2100003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Racehorse Strength
+  - session_key: SES-APOLLO-W11-THU
+    protocol_id: APOLLO-W11-THU-R1
+    session_lineage_id: a2100004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Apollo Engine
+  - session_key: SES-APOLLO-W11-FRI
+    protocol_id: APOLLO-W11-FRI-R1
+    session_lineage_id: a2100005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Sculpt
+  - session_key: SES-APOLLO-W11-SAT
+    protocol_id: APOLLO-W11-SAT-R1
+    session_lineage_id: a2100006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Athletic
+  - session_key: SES-APOLLO-W11-SUN
+    protocol_id: APOLLO-W11-SUN-R1
+    session_lineage_id: a2100007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Long
+  - session_key: SES-APOLLO-W12-MON
+    protocol_id: APOLLO-W12-MON-R1
+    session_lineage_id: a2200001-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Final Apollo Strength
+  - session_key: SES-APOLLO-W12-TUE
+    protocol_id: APOLLO-W12-TUE-R1
+    session_lineage_id: a2200002-0000-4000-8000-000000000002
+    revision_number: 1
+    title: Apollo Base Assessment
+  - session_key: SES-APOLLO-W12-WED
+    protocol_id: APOLLO-W12-WED-R1
+    session_lineage_id: a2200003-0000-4000-8000-000000000003
+    revision_number: 1
+    title: Final Racehorse
+  - session_key: SES-APOLLO-W12-THU
+    protocol_id: APOLLO-W12-THU-R1
+    session_lineage_id: a2200004-0000-4000-8000-000000000004
+    revision_number: 1
+    title: Recovery
+  - session_key: SES-APOLLO-W12-FRI
+    protocol_id: APOLLO-W12-FRI-R1
+    session_lineage_id: a2200005-0000-4000-8000-000000000005
+    revision_number: 1
+    title: Apollo Primer
+  - session_key: SES-APOLLO-W12-SAT
+    protocol_id: APOLLO-W12-SAT-R1
+    session_lineage_id: a2200006-0000-4000-8000-000000000006
+    revision_number: 1
+    title: Apollo Assessment
+  - session_key: SES-APOLLO-W12-SUN
+    protocol_id: APOLLO-W12-SUN-R1
+    session_lineage_id: a2200007-0000-4000-8000-000000000007
+    revision_number: 1
+    title: Apollo Arrival
+
+phases:
+  - phase_key: PHASE-FOUNDATION
+    phase_order: 1
+    title: Foundation
+    intent: build
+    coach_note: Establish movement quality, workload, aerobic structure and progression.
+  - phase_key: PHASE-SCULPT-DEVELOP
+    phase_order: 2
+    title: Sculpt & Develop
+    intent: build
+    coach_note: Increase intensity, selective hypertrophy, posterior-chain stimulus and athletic conditioning.
+  - phase_key: PHASE-REVEAL-ARRIVE
+    phase_order: 3
+    title: Reveal & Arrive
+    intent: build
+    coach_note: Preserve priority muscle, sharpen running performance and arrive fresh and athletic.
+
+weeks:
+  - week_number: 1
+    phase_key: PHASE-FOUNDATION
+    title: Foundation — Establish
+    intent: build
+    coach_note: Establish movements, workload, aerobic structure and progression.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W01-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W1-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W01-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W1-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W01-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W1-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W01-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W1-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W01-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W1-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W01-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W1-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W01-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W01-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W1-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W1-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 2
+    phase_key: PHASE-FOUNDATION
+    title: Foundation — Accumulate
+    intent: build
+    coach_note: Accumulate the Foundation workload while preserving execution quality.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W02-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W2-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W02-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W2-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W02-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W2-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W02-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W2-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W02-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W2-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W02-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W2-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W02-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W02-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W2-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W2-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 3
+    phase_key: PHASE-FOUNDATION
+    title: Foundation — Overload
+    intent: build
+    coach_note: Apply the authored Foundation overload without changing protocol authority.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W03-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W3-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W03-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W3-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W03-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W3-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W03-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W3-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W03-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W3-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W03-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W3-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W03-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W03-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W3-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W3-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 4
+    phase_key: PHASE-FOUNDATION
+    title: Foundation — Reduced Fatigue
+    intent: deload
+    coach_note: "Reduced-fatigue week: retain the authored Week 4 reduction and approximately 3 RIR resistance intent."
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: deload
+        coach_note: Upper-body strength and Apollo-priority hypertrophy. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W4-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: deload
+        coach_note: Aerobic base, trunk strength and mobility. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W4-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: deload
+        coach_note: Lower-body strength and posterior-chain emphasis. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W4-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: deload
+        coach_note: Running quality, pacing and recovery execution. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W4-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: deload
+        coach_note: Upper-body hypertrophy with bodyweight strength retained. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W4-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: deload
+        coach_note: Power, athletic strength and approved conditioning structure. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W4-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: deload
+        coach_note: Aerobic endurance and recovery-compatible development. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W04-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W04-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W4-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W4-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 5
+    phase_key: PHASE-SCULPT-DEVELOP
+    title: Sculpt & Develop — Rebuild
+    intent: build
+    coach_note: Rebuild Phase II intensity, posterior-chain stimulus and athletic conditioning.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W05-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W5-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W05-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W5-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W05-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W5-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W05-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W5-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W05-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W5-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W05-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W5-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W05-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W05-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W5-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W5-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 6
+    phase_key: PHASE-SCULPT-DEVELOP
+    title: Sculpt & Develop — Accumulate
+    intent: build
+    coach_note: Accumulate Phase II workload with the authored progression.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W06-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W6-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W06-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W6-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W06-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W6-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W06-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W6-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W06-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W6-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W06-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W6-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W06-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W06-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W6-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W6-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 7
+    phase_key: PHASE-SCULPT-DEVELOP
+    title: Sculpt & Develop — Overload
+    intent: build
+    coach_note: Apply Phase II overload while preserving no-compound-failure execution.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W07-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W7-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W07-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W7-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W07-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W7-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W07-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W7-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W07-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W7-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W07-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W7-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W07-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W07-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W7-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W7-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 8
+    phase_key: PHASE-SCULPT-DEVELOP
+    title: Sculpt & Develop — Reduced Fatigue
+    intent: deload
+    coach_note: "Reduced-fatigue week: retain the authored Week 8 60–70% volume reduction and 2–3 RIR intent."
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: deload
+        coach_note: Upper-body strength and Apollo-priority hypertrophy. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W8-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: deload
+        coach_note: Aerobic base, trunk strength and mobility. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W8-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: deload
+        coach_note: Lower-body strength and posterior-chain emphasis. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W8-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: deload
+        coach_note: Running quality, pacing and recovery execution. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W8-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: deload
+        coach_note: Upper-body hypertrophy with bodyweight strength retained. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W8-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: deload
+        coach_note: Power, athletic strength and approved conditioning structure. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W8-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: deload
+        coach_note: Aerobic endurance and recovery-compatible development. This is an authored reduced-fatigue week.
+        slots:
+          - slot_key: APOLLO-W08-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W08-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W8-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W8-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 9
+    phase_key: PHASE-REVEAL-ARRIVE
+    title: Reveal & Arrive — Rebuild & Assess
+    intent: build
+    coach_note: Rebuild priority muscle and assess threshold and conditioning execution.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W09-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W9-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W09-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W9-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W09-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W9-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W09-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W9-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W09-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W9-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W09-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W9-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W09-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W09-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W9-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W9-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 10
+    phase_key: PHASE-REVEAL-ARRIVE
+    title: Reveal & Arrive — Develop
+    intent: build
+    coach_note: Develop strength, threshold and structured conditioning quality.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W10-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W10-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W10-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W10-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W10-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W10-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W10-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W10-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W10-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W10-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W10-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W10-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W10-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W10-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W10-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W10-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 11
+    phase_key: PHASE-REVEAL-ARRIVE
+    title: Reveal & Arrive — Peak Apollo Performance
+    intent: build
+    coach_note: Peak Apollo performance with exact authored strength and VO2 work.
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: build
+        coach_note: Upper-body strength and Apollo-priority hypertrophy.
+        slots:
+          - slot_key: APOLLO-W11-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W11-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: build
+        coach_note: Aerobic base, trunk strength and mobility.
+        slots:
+          - slot_key: APOLLO-W11-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base
+            coach_note: Executable authority remains in APOLLO-W11-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: build
+        coach_note: Lower-body strength and posterior-chain emphasis.
+        slots:
+          - slot_key: APOLLO-W11-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Racehorse Strength
+            coach_note: Executable authority remains in APOLLO-W11-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: build
+        coach_note: Running quality, pacing and recovery execution.
+        slots:
+          - slot_key: APOLLO-W11-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Engine
+            coach_note: Executable authority remains in APOLLO-W11-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: build
+        coach_note: Upper-body hypertrophy with bodyweight strength retained.
+        slots:
+          - slot_key: APOLLO-W11-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Sculpt
+            coach_note: Executable authority remains in APOLLO-W11-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: build
+        coach_note: Power, athletic strength and approved conditioning structure.
+        slots:
+          - slot_key: APOLLO-W11-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Athletic
+            coach_note: Executable authority remains in APOLLO-W11-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: build
+        coach_note: Aerobic endurance and recovery-compatible development.
+        slots:
+          - slot_key: APOLLO-W11-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W11-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Long
+            coach_note: Executable authority remains in APOLLO-W11-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W11-SUN-R1; this Plan Package does not duplicate prescription detail.
+  - week_number: 12
+    phase_key: PHASE-REVEAL-ARRIVE
+    title: Reveal & Arrive — Arrive & Assess
+    intent: test
+    coach_note: "Assessment and recovery week: preserve final benchmarks, recovery, primer, and arrival intent."
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: Monday
+        intent: test
+        coach_note: Final upper-body benchmark assessment with clean weighted-pull-up 3RM standards.
+        slots:
+          - slot_key: APOLLO-W12-MON-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-MON
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Final Apollo Strength
+            coach_note: Executable authority remains in APOLLO-W12-MON-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-MON-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_2
+        day_order: 2
+        day_type: training
+        title: Tuesday
+        intent: test
+        coach_note: Zone 2 assessment with explicit Week 1 pace, HR and distance comparison.
+        slots:
+          - slot_key: APOLLO-W12-TUE-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-TUE
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Base Assessment
+            coach_note: Executable authority remains in APOLLO-W12-TUE-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-TUE-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_3
+        day_order: 3
+        day_type: training
+        title: Wednesday
+        intent: test
+        coach_note: Final lower-body benchmark and controlled assistance work.
+        slots:
+          - slot_key: APOLLO-W12-WED-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-WED
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Final Racehorse
+            coach_note: Executable authority remains in APOLLO-W12-WED-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-WED-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_4
+        day_order: 4
+        day_type: training
+        title: Thursday
+        intent: test
+        coach_note: Very easy selectable-mode aerobic recovery plus mobility; no quality running.
+        slots:
+          - slot_key: APOLLO-W12-THU-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-THU
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Recovery
+            coach_note: Executable authority remains in APOLLO-W12-THU-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-THU-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_5
+        day_order: 5
+        day_type: training
+        title: Friday
+        intent: test
+        coach_note: Blood flow, tension and readiness primer; no soreness target.
+        slots:
+          - slot_key: APOLLO-W12-FRI-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-FRI
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Primer
+            coach_note: Executable authority remains in APOLLO-W12-FRI-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-FRI-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_6
+        day_order: 6
+        day_type: training
+        title: Saturday
+        intent: test
+        coach_note: Standing broad jump, max strict pull-ups and 5 km assessment; no additional conditioning.
+        slots:
+          - slot_key: APOLLO-W12-SAT-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-SAT
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Assessment
+            coach_note: Executable authority remains in APOLLO-W12-SAT-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-SAT-R1; this Plan Package does not duplicate prescription detail.
+      - day_key: day_7
+        day_order: 7
+        day_type: training
+        title: Sunday
+        intent: test
+        coach_note: Easy outdoor walk and mobility only; no long run, lifting or calorie-burning mission.
+        slots:
+          - slot_key: APOLLO-W12-SUN-S1
+            session_order: 1
+            session_key: SES-APOLLO-W12-SUN
+            time_of_day: any
+            is_optional: false
+            completion_expectation: required
+            display_title: Apollo Arrival
+            coach_note: Executable authority remains in APOLLO-W12-SUN-R1.
+            progression:
+              prescription_summary: >-
+                Refer to committed executable protocol APOLLO-W12-SUN-R1; this Plan Package does not duplicate prescription detail.
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []
