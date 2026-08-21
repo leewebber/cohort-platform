@@ -182,6 +182,7 @@ docker cp "${TESTS_DIR}/sql/gate_u_apollo_week2_executable_protocols.sql" "${SPR
 docker cp "${TESTS_DIR}/sql/gate_v_apollo_week3_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_v.sql"
 docker cp "${TESTS_DIR}/sql/gate_w_apollo_week4_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_w.sql"
 docker cp "${TESTS_DIR}/sql/gate_x_apollo_week5_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_x.sql"
+docker cp "${TESTS_DIR}/sql/gate_y_apollo_week6_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_y.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -201,6 +202,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_v.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_w.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_x.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_y.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -226,6 +228,7 @@ docker cp "${TESTS_DIR}/sql/gate_u_apollo_week2_executable_protocols.sql" "${SPR
 docker cp "${TESTS_DIR}/sql/gate_v_apollo_week3_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_v.sql"
 docker cp "${TESTS_DIR}/sql/gate_w_apollo_week4_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_w.sql"
 docker cp "${TESTS_DIR}/sql/gate_x_apollo_week5_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_x.sql"
+docker cp "${TESTS_DIR}/sql/gate_y_apollo_week6_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_y.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -245,6 +248,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_v.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_w.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_x.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_y.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e
