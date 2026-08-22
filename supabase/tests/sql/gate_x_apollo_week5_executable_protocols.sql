@@ -7,7 +7,7 @@ BEGIN
  PERFORM sprint12_assert_eq('X','seven_week5_protocols','7',v_count::text);
  SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W1-%-R1' OR protocol_id LIKE 'APOLLO-W2-%-R1' OR protocol_id LIKE 'APOLLO-W3-%-R1' OR protocol_id LIKE 'APOLLO-W4-%-R1' OR protocol_id LIKE 'APOLLO-W5-%-R1';
  PERFORM sprint12_assert_eq('X','thirty_five_apollo_protocols','35',v_count::text);
- SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W5-%-R1' AND authoring_scope='organisation' AND organisation_id='apollo-dogfood' AND lifecycle_status='draft';
+ SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W5-%-R1' AND authoring_scope='organisation' AND organisation_id='apollo-dogfood' AND lifecycle_status='published' AND published='true' AND published_at IS NOT NULL;
  PERFORM sprint12_assert_eq('X','deterministic_protocol_identities','7',v_count::text);
  SELECT count(*) INTO v_count FROM session_block_exercises e JOIN session_blocks b ON b.block_id=e.block_id LEFT JOIN exercises_v2 x ON x.exercise_id=e.exercise_id WHERE b.session_id LIKE 'APOLLO-W5-%-R1' AND x.exercise_id IS NULL;
  PERFORM sprint12_assert_eq('X','no_dangling_exercise_references','0',v_count::text);

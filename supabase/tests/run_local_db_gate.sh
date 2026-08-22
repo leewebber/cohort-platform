@@ -15,6 +15,7 @@ MODE="${1:-full}"
 SPRINT12_WORKDIR=""
 SPRINT12_PROJECT_ID=""
 SPRINT12_DB_CONTAINER=""
+SPRINT12_APOLLO_PAYLOAD=""
 STARTED=0
 
 cleanup() {
@@ -155,6 +156,9 @@ echo "=== Fresh reset (no seed; local only) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
 supabase db reset --local --no-seed --yes --workdir "${SPRINT12_WORKDIR}"
 
+SPRINT12_APOLLO_PAYLOAD="${SPRINT12_WORKDIR}/apollo-import-payload.json"
+dart run supabase/tests/bin/emit_apollo_import_payload.dart "${SPRINT12_APOLLO_PAYLOAD}"
+
 echo "=== Lint (before helpers) ==="
 supabase db lint --local --level error --fail-on error --workdir "${SPRINT12_WORKDIR}"
 
@@ -189,6 +193,8 @@ docker cp "${TESTS_DIR}/sql/gate_ab_apollo_week9_executable_protocols.sql" "${SP
 docker cp "${TESTS_DIR}/sql/gate_ac_apollo_week10_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ac.sql"
 docker cp "${TESTS_DIR}/sql/gate_ad_apollo_week11_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ad.sql"
 docker cp "${TESTS_DIR}/sql/gate_ae_apollo_week12_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ae.sql"
+docker cp "${TESTS_DIR}/sql/gate_af_apollo_import_replacement_materialisation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_af.sql"
+docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -215,10 +221,12 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ac.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ad.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ae.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_af.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
 supabase db reset --local --no-seed --yes --workdir "${SPRINT12_WORKDIR}"
+dart run supabase/tests/bin/emit_apollo_import_payload.dart "${SPRINT12_APOLLO_PAYLOAD}"
 docker cp "${TESTS_DIR}/sql/baseline_fidelity.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_baseline_fidelity.sql"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -247,6 +255,8 @@ docker cp "${TESTS_DIR}/sql/gate_ab_apollo_week9_executable_protocols.sql" "${SP
 docker cp "${TESTS_DIR}/sql/gate_ac_apollo_week10_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ac.sql"
 docker cp "${TESTS_DIR}/sql/gate_ad_apollo_week11_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ad.sql"
 docker cp "${TESTS_DIR}/sql/gate_ae_apollo_week12_executable_protocols.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ae.sql"
+docker cp "${TESTS_DIR}/sql/gate_af_apollo_import_replacement_materialisation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_af.sql"
+docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
   -f /tmp/sprint12_helpers.sql \
@@ -273,6 +283,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ac.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ad.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ae.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_af.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e

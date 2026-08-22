@@ -7,7 +7,7 @@ BEGIN
  PERFORM sprint12_assert_eq('U','seven_week2_protocols','7',v_count::text);
  SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W1-%-R1' OR protocol_id LIKE 'APOLLO-W2-%-R1';
  PERFORM sprint12_assert_eq('U','fourteen_week1_week2_protocols','14',v_count::text);
- SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W2-%-R1' AND authoring_scope='organisation' AND organisation_id='apollo-dogfood' AND lifecycle_status='draft';
+ SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W2-%-R1' AND authoring_scope='organisation' AND organisation_id='apollo-dogfood' AND lifecycle_status='published' AND published='true' AND published_at IS NOT NULL;
  PERFORM sprint12_assert_eq('U','deterministic_protocol_identities','7',v_count::text);
  SELECT count(*) INTO v_count FROM session_blocks WHERE session_id LIKE 'APOLLO-W2-%-R1';
  PERFORM sprint12_assert_eq('U','ordered_blocks','19',v_count::text);
