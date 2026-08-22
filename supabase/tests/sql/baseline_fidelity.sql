@@ -282,9 +282,12 @@ BEGIN
   END LOOP;
 
   -- -------------------------------------------------------------------------
-  -- RLS disabled + zero policies on all five
+  -- Preserve the hosted RLS-disabled contract for the unrelated baseline
+  -- tables. Assigned-athlete execution reads are separately protected by one
+  -- restrictive policy on each resolver table; a broad grant without those
+  -- policies would expose draft or unrelated protocol content.
   -- -------------------------------------------------------------------------
-  FOREACH t IN ARRAY tables LOOP
+  FOREACH t IN ARRAY ARRAY['training_sessions', 'athlete_state'] LOOP
     SELECT c.relrowsecurity INTO v_bool
     FROM pg_class c
     JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -298,6 +301,29 @@ BEGIN
     WHERE schemaname='public' AND tablename = t;
     PERFORM sprint12_baseline_record(
       'policies_zero_' || t, '0', v_count::text, v_count = 0, NULL
+    );
+  END LOOP;
+
+  FOREACH t IN ARRAY ARRAY[
+    'performance_protocols',
+    'protocol_steps',
+    'session_blocks',
+    'session_block_exercises',
+    'exercises_v2'
+  ] LOOP
+    SELECT c.relrowsecurity INTO v_bool
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname='public' AND c.relname = t AND c.relkind='r';
+    PERFORM sprint12_baseline_record(
+      'rls_enabled_' || t, 'true', v_bool::text, v_bool IS TRUE, NULL
+    );
+
+    SELECT count(*) INTO v_count
+    FROM pg_policies
+    WHERE schemaname='public' AND tablename = t;
+    PERFORM sprint12_baseline_record(
+      'assigned_read_policy_count_' || t, '1', v_count::text, v_count = 1, NULL
     );
   END LOOP;
 
