@@ -24,7 +24,7 @@ BEGIN
  SELECT count(*) INTO v_count FROM session_blocks WHERE session_id LIKE 'APOLLO-W1-%-R1' OR session_id LIKE 'APOLLO-W2-%-R1';
  PERFORM sprint12_assert_eq('V','week1_week2_block_counts_unchanged','38',v_count::text);
  SELECT count(*) INTO v_count FROM session_block_exercises e JOIN session_blocks b ON b.block_id=e.block_id WHERE b.session_id LIKE 'APOLLO-W1-%-R1' OR b.session_id LIKE 'APOLLO-W2-%-R1';
- PERFORM sprint12_assert_eq('V','week1_week2_exercise_row_counts_unchanged','78',v_count::text);
+ PERFORM sprint12_assert_eq('V','week1_week2_exercise_row_counts_unchanged','83',v_count::text);
  BEGIN
    INSERT INTO performance_protocols(protocol_id,name) VALUES ('APOLLO-W3-MON-R1','conflicting deterministic Apollo identity');
    PERFORM sprint12_record('V','conflicting_identity_fails_closed','unique violation','no exception',NULL,FALSE);

@@ -37,14 +37,14 @@ BEGIN
   END IF;
   IF (SELECT count(*) FROM session_block_exercises e
       JOIN session_blocks b ON b.block_id = e.block_id
-      WHERE b.session_id LIKE 'APOLLO-W1-%-R1') <> 39 THEN
+      WHERE b.session_id LIKE 'APOLLO-W1-%-R1') <> 44 THEN
     RAISE EXCEPTION 'AI did not resolve all Week 1 block exercises';
   END IF;
   IF (SELECT count(*) FROM exercises_v2 WHERE exercise_id IN (
       SELECT e.exercise_id FROM session_block_exercises e
       JOIN session_blocks b ON b.block_id = e.block_id
       WHERE b.session_id = 'APOLLO-W1-MON-R1'
-    )) <> 10 THEN
+    )) <> 15 THEN
     RAISE EXCEPTION 'AI Monday canonical exercise details unavailable';
   END IF;
   IF NOT EXISTS (SELECT 1 FROM session_blocks
@@ -74,7 +74,7 @@ ROLLBACK;
 
 SELECT sprint12_record('AI','assigned_week1_protocols','7','7',NULL,TRUE,NULL);
 SELECT sprint12_record('AI','assigned_week1_blocks','19','19',NULL,TRUE,NULL);
-SELECT sprint12_record('AI','assigned_week1_block_exercises','39','39',NULL,TRUE,NULL);
+SELECT sprint12_record('AI','assigned_week1_block_exercises','44','44',NULL,TRUE,NULL);
 SELECT sprint12_record('AI','monday_exercise_details_and_order','available','available',NULL,TRUE,NULL);
 SELECT sprint12_record('AI','thursday_interval_timer','5x180s_plus_120s','5x180s_plus_120s',NULL,TRUE,NULL);
 SELECT sprint12_record('AI','saturday_alternating_emom','480s_alternating','480s_alternating',NULL,TRUE,NULL);

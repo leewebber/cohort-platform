@@ -75,6 +75,66 @@ void main() {
     expect(block.linkedExercises.last.executionGroupRounds, 2);
   });
 
+  test('Apollo warm-up movements retain ordered canonical identities', () {
+    final block = _apolloWarmUpBlock();
+
+    expect(block.linkedExercises.map((exercise) => exercise.exerciseId), [
+      'EX-150',
+      'EX-151',
+      'EX-152',
+      'EX-153',
+      'EX-154',
+    ]);
+    expect(block.linkedExercises.map((exercise) => exercise.athleteLabel), [
+      'Thoracic extension over foam roller',
+      'Open-book rotation',
+      'Serratus wall slide + reach',
+      'Wall Y/lower-trap raise',
+      'Single-arm cable/band row with reach',
+    ]);
+    expect(block.linkedExercises[3].prescription?.coachCue, 'Very light.');
+    expect(
+      block.linkedExercises.every((exercise) => exercise.exercise != null),
+      isTrue,
+    );
+  });
+
+  test('missing or malformed optional warm-up metadata remains safe', () {
+    final link = SessionBlockExerciseLink.fromRow(const {
+      'id': 'warm-up-link',
+      'exercise_id': 'EX-150',
+      'position': 1,
+      'prescription': '[not an object]',
+    });
+
+    expect(link.displayLabelOverride, isNull);
+    expect(link.prescription, isNull);
+
+    final block = SessionExecutionBlock.fromSessionBlock(
+      SessionBlock(
+        localId: 'safe-warm-up',
+        blockType: SessionBlockType.warmUp,
+        title: 'Warm Up',
+        content: '',
+        workoutFormat: WorkoutFormat.none,
+        position: 1,
+        linkedExercises: [link],
+      ),
+      exercisesById: const {
+        'EX-150': Exercise(
+          exerciseId: 'EX-150',
+          name: 'Thoracic Extension Over Foam Roller',
+          published: true,
+        ),
+      },
+    );
+
+    expect(
+      block.linkedExercises.single.athleteLabel,
+      'Thoracic Extension Over Foam Roller',
+    );
+  });
+
   test('initial drafts seed authored blank rows without target actuals', () {
     final warmUp = _warmUpBlock();
     final carry = _carryBlock();
@@ -286,6 +346,169 @@ void main() {
     expect(find.text('Cues'), findsOneWidget);
     expect(find.text('Keep the ribs down.'), findsOneWidget);
   });
+
+  testWidgets(
+    'Apollo warm-up renders each movement, dosage, cue, and info action',
+    (tester) async {
+      SessionExecutionExerciseSummary? opened;
+      final block = _apolloWarmUpBlock();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: AthleteBlockCard(
+              block: block,
+              isExpanded: true,
+              isActive: true,
+              isComplete: false,
+              onToggleExpanded: () {},
+              onMarkComplete: () {},
+              onReopen: () {},
+              onLaunchTimer: null,
+              onOpenExercise: (exercise) => opened = exercise,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Apollo Shoulder Balance Warm-Up'), findsOneWidget);
+      expect(find.text('Warm-up'), findsOneWidget);
+      expect(find.text('Thoracic extension over foam roller'), findsOneWidget);
+      expect(find.text('Open-book rotation'), findsOneWidget);
+      expect(find.text('Serratus wall slide + reach'), findsOneWidget);
+      expect(find.text('Wall Y/lower-trap raise'), findsOneWidget);
+      expect(find.text('Single-arm cable/band row with reach'), findsOneWidget);
+      expect(find.text('1 × 5 slow reps at 2-3 positions'), findsOneWidget);
+      expect(find.text('1 × 6/side'), findsOneWidget);
+      expect(find.text('2 × 8'), findsOneWidget);
+      expect(find.text('2 × 8–10'), findsOneWidget);
+      expect(find.text('2 × 10/side'), findsOneWidget);
+      expect(find.text('Very light.'), findsOneWidget);
+      expect(
+        find.bySemanticsLabel(
+          'Exercise info for Thoracic extension over foam roller',
+        ),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text('Open-book rotation'));
+      expect(opened?.exerciseId, 'EX-151');
+      expect(opened?.exercise?.exerciseId, 'EX-151');
+    },
+  );
+}
+
+SessionExecutionBlock _apolloWarmUpBlock() {
+  const links = [
+    SessionBlockExerciseLink(
+      localId: 'apollo-warm-up-1',
+      exerciseId: 'EX-150',
+      position: 1,
+      displayLabelOverride: 'Thoracic extension over foam roller',
+      prescription: StrengthExercisePrescription(
+        sets: 1,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.freeText,
+          text: '5 slow reps at 2-3 positions',
+        ),
+      ),
+    ),
+    SessionBlockExerciseLink(
+      localId: 'apollo-warm-up-2',
+      exerciseId: 'EX-151',
+      position: 2,
+      displayLabelOverride: 'Open-book rotation',
+      prescription: StrengthExercisePrescription(
+        sets: 1,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.freeText,
+          text: '6/side',
+        ),
+      ),
+    ),
+    SessionBlockExerciseLink(
+      localId: 'apollo-warm-up-3',
+      exerciseId: 'EX-152',
+      position: 3,
+      displayLabelOverride: 'Serratus wall slide + reach',
+      prescription: StrengthExercisePrescription(
+        sets: 2,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.exact,
+          exactReps: 8,
+        ),
+      ),
+    ),
+    SessionBlockExerciseLink(
+      localId: 'apollo-warm-up-4',
+      exerciseId: 'EX-153',
+      position: 4,
+      displayLabelOverride: 'Wall Y/lower-trap raise',
+      prescription: StrengthExercisePrescription(
+        sets: 2,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.range,
+          minReps: 8,
+          maxReps: 10,
+        ),
+        coachCue: 'Very light.',
+      ),
+    ),
+    SessionBlockExerciseLink(
+      localId: 'apollo-warm-up-5',
+      exerciseId: 'EX-154',
+      position: 5,
+      displayLabelOverride: 'Single-arm cable/band row with reach',
+      prescription: StrengthExercisePrescription(
+        sets: 2,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.freeText,
+          text: '10/side',
+        ),
+      ),
+    ),
+  ];
+
+  const exercises = {
+    'EX-150': Exercise(
+      exerciseId: 'EX-150',
+      name: 'Thoracic Extension Over Foam Roller',
+      published: true,
+    ),
+    'EX-151': Exercise(
+      exerciseId: 'EX-151',
+      name: 'Open-Book Thoracic Rotation',
+      published: true,
+    ),
+    'EX-152': Exercise(
+      exerciseId: 'EX-152',
+      name: 'Serratus Wall Slide + Reach',
+      published: true,
+    ),
+    'EX-153': Exercise(
+      exerciseId: 'EX-153',
+      name: 'Wall Y / Lower-Trap Raise',
+      published: true,
+    ),
+    'EX-154': Exercise(
+      exerciseId: 'EX-154',
+      name: 'Single-Arm Cable/Band Row with Reach',
+      published: true,
+    ),
+  };
+
+  return SessionExecutionBlock.fromSessionBlock(
+    const SessionBlock(
+      localId: 'apollo-warm-up',
+      blockType: SessionBlockType.warmUp,
+      title: 'Apollo Shoulder Balance Warm-Up',
+      content: '',
+      workoutFormat: WorkoutFormat.none,
+      position: 1,
+      linkedExercises: links,
+    ),
+    exercisesById: exercises,
+  );
 }
 
 SessionExecutionBlock _warmUpBlock({Exercise? circuitExercise}) {
