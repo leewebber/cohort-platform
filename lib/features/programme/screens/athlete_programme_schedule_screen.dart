@@ -11,6 +11,7 @@ import '../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import '../controllers/athlete_programme_schedule_controller.dart';
+import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/programme_schedule_apply_service.dart';
 import '../services/programme_schedule_apply_supabase_store.dart';
@@ -26,8 +27,8 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
     super.key,
     required this.athleteId,
     required this.assignmentId,
-    AthleteProgrammeScheduleController? controller,
-  }) : _controller = controller;
+    this._controller,
+  });
 
   final String athleteId;
   final String assignmentId;
@@ -428,7 +429,8 @@ class _AthleteProgrammeScheduleScreenState
       child: Text(
         '${occurrence.identity.protocolId} · $status'
         '${isCursor ? ' · current' : ''} · '
-        'W${occurrence.identity.weekNumber} ${occurrence.identity.dayKey}',
+        'W${occurrence.identity.weekNumber} '
+        '${ProgrammeDayLabelFormatter.format(dayKey: occurrence.identity.dayKey)}',
         style: CohortTextStyles.body,
       ),
     );

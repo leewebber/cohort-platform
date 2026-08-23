@@ -10,6 +10,7 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/programme_adaptation_revert_sheet.dart';
 import '../../../core/widgets/today_session_card.dart';
 import '../../programme/models/athlete_programme_prepared_session.dart';
+import '../../programme/presentation/programme_day_label_formatter.dart';
 import '../../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
@@ -337,7 +338,9 @@ class _AthleteProgrammeTodaySectionState
     final weekLabel = ctx == null
         ? 'Week ${package.programmedSessionKey.week}'
         : 'Week ${ctx.weekNumber}';
-    final subtitle = ctx?.dayKey ?? package.dayKey ?? 'day_1';
+    final subtitle = ProgrammeDayLabelFormatter.format(
+      dayKey: ctx?.dayKey ?? package.dayKey ?? 'day_1',
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
