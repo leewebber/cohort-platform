@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Structured strength prescription for an exercise inside a Session block (Sprint 10).
 ///
 /// V1 applies one prescription across all working sets. Set-by-set programming is
@@ -71,23 +73,10 @@ class StrengthExercisePrescription {
   }
 
   factory StrengthExercisePrescription.fromJson(Map<String, dynamic> json) {
-    final repsRaw = json['reps'];
-    final loadRaw = json['load'];
-
     return StrengthExercisePrescription(
       sets: _parseInt(json['sets']) ?? 0,
-      reps: repsRaw is Map<String, dynamic>
-          ? StrengthRepPrescription.fromJson(repsRaw)
-          : StrengthRepPrescription.fromJson(
-              Map<String, dynamic>.from(repsRaw as Map? ?? const {}),
-            ),
-      load: loadRaw == null
-          ? null
-          : loadRaw is Map<String, dynamic>
-          ? StrengthLoadPrescription.fromJson(loadRaw)
-          : StrengthLoadPrescription.fromJson(
-              Map<String, dynamic>.from(loadRaw as Map),
-            ),
+      reps: _decodeReps(json['reps']),
+      load: _decodeLoad(json['load']),
       restSeconds: _parseInt(json['rest_seconds']),
       tempo: json['tempo']?.toString(),
       coachCue: json['coach_cue']?.toString(),
@@ -120,6 +109,100 @@ class StrengthExercisePrescription {
     if (value is int) return value;
     return int.tryParse(value.toString());
   }
+
+  /// Supports both the typed editor contract and the compact persisted
+  /// prescription form used by existing authored protocols.
+  static StrengthRepPrescription _decodeReps(dynamic value) {
+    if (value == null) {
+      return StrengthRepPrescription.fromJson(const {});
+    }
+
+    final object = _decodeJsonObject(value, field: 'reps');
+    if (object != null) return StrengthRepPrescription.fromJson(object);
+
+    if (value is num) {
+      final exact = value.toInt();
+      if (value != exact || exact <= 0) {
+        throw FormatException('Invalid numeric reps value: $value');
+      }
+      return StrengthRepPrescription.exact(exact);
+    }
+
+    if (value is String) {
+      final text = value.trim();
+      if (_compactRepText.hasMatch(text)) {
+        return StrengthRepPrescription(
+          type: StrengthRepType.freeText,
+          text: text,
+        );
+      }
+      throw FormatException('Invalid compact reps text: $value');
+    }
+
+    throw FormatException('reps must be an object, number, or compact text.');
+  }
+
+  static StrengthLoadPrescription? _decodeLoad(dynamic value) {
+    if (value == null) return null;
+
+    final object = _decodeJsonObject(value, field: 'load');
+    if (object != null) return StrengthLoadPrescription.fromJson(object);
+
+    if (value is num && value > 0) {
+      return StrengthLoadPrescription(
+        type: StrengthLoadType.fixedKg,
+        kg: value.toDouble(),
+      );
+    }
+
+    if (value is String) {
+      final text = value.trim();
+      if (_compactLoadText.hasMatch(text)) {
+        return StrengthLoadPrescription(
+          type: StrengthLoadType.freeText,
+          text: text,
+        );
+      }
+      throw FormatException('Invalid compact load text: $value');
+    }
+
+    throw FormatException('load must be an object, positive number, or text.');
+  }
+
+  /// A JSON-encoded object is accepted only where a transport has stringified
+  /// the documented object representation. JSON arrays and scalars remain
+  /// invalid; ordinary compact text is handled by its field-specific decoder.
+  static Map<String, dynamic>? _decodeJsonObject(
+    dynamic value, {
+    required String field,
+  }) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    if (value is! String) return null;
+
+    final text = value.trim();
+    if (text.isEmpty) {
+      throw FormatException('$field must not be empty.');
+    }
+    if (!text.startsWith('{') && !text.startsWith('[')) return null;
+
+    dynamic decoded;
+    try {
+      decoded = jsonDecode(text);
+    } on FormatException catch (error) {
+      throw FormatException('Invalid JSON object for $field: ${error.message}');
+    }
+    if (decoded is! Map) {
+      throw FormatException('$field JSON value must be an object.');
+    }
+    return Map<String, dynamic>.from(decoded);
+  }
+
+  static final RegExp _compactRepText = RegExp(
+    r'^\d+(?:\s*-\s*\d+)?(?:\s+steps/leg|/(?:side|leg))?$',
+  );
+
+  static final RegExp _compactLoadText = RegExp(r'^[a-z][a-z0-9_-]{0,79}$');
 
   static ExercisePerformanceCapture? _captureFromJson(dynamic value) {
     if (value is Map<String, dynamic>) {

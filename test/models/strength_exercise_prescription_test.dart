@@ -52,6 +52,63 @@ void main() {
       expect(restored.load?.rir, 2);
     });
 
+    test('decodes compact persisted programme prescription text', () {
+      final restored = StrengthExercisePrescription.fromJson(const {
+        'sets': 4,
+        'reps': '5-6',
+        'rir': '1-2',
+        'rest_seconds': '150-180',
+      });
+
+      expect(restored.sets, 4);
+      expect(restored.reps.type, StrengthRepType.freeText);
+      expect(restored.reps.text, '5-6');
+      expect(restored.restSeconds, isNull);
+    });
+
+    test(
+      'accepts a JSON-encoded typed object but rejects malformed values',
+      () {
+        final restored = StrengthExercisePrescription.fromJson(const {
+          'sets': 3,
+          'reps': '{"type":"exact","exact_reps":8}',
+        });
+        expect(restored.reps.exactReps, 8);
+
+        expect(
+          () => StrengthExercisePrescription.fromJson(const {
+            'sets': 3,
+            'reps': '{"type":',
+          }),
+          throwsA(isA<FormatException>()),
+        );
+        expect(
+          () => StrengthExercisePrescription.fromJson(const {
+            'sets': 3,
+            'reps': '[1, 2]',
+          }),
+          throwsA(isA<FormatException>()),
+        );
+        expect(
+          () => StrengthExercisePrescription.fromJson(const {
+            'sets': 3,
+            'reps': true,
+          }),
+          throwsA(isA<FormatException>()),
+        );
+      },
+    );
+
+    test('null reps retains the existing empty structured contract', () {
+      final restored = StrengthExercisePrescription.fromJson(const {
+        'sets': 0,
+        'reps': null,
+      });
+
+      expect(restored.reps.type, StrengthRepType.exact);
+      expect(restored.reps.exactReps, isNull);
+    });
+
     test('duplicate exercise link generates new identity', () {
       const link = SessionBlockExerciseLink(
         localId: 'link-1',
