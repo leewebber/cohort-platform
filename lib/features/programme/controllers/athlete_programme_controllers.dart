@@ -16,21 +16,17 @@ import '../services/athlete_programme_switch_catalog_service.dart';
 class AthleteProgrammeScreenController extends ChangeNotifier {
   AthleteProgrammeScreenController({
     required String athleteId,
-    ProgrammeAssignmentStore? assignmentStore,
-    ProgrammeVersionStore? versionStore,
-    AthletePlanMaterialisationService? materialisationService,
-    AthleteProgrammeSessionPrepareService? prepareService,
-  }) : _athleteId = athleteId.trim(),
-       _assignmentStore = assignmentStore,
-       _versionStore = versionStore,
-       _materialisationService = materialisationService,
-       _prepareService = prepareService;
+    this.assignmentStore,
+    this.versionStore,
+    this.materialisationService,
+    this.prepareService,
+  }) : _athleteId = athleteId.trim();
 
   final String _athleteId;
-  final ProgrammeAssignmentStore? _assignmentStore;
-  final ProgrammeVersionStore? _versionStore;
-  final AthletePlanMaterialisationService? _materialisationService;
-  final AthleteProgrammeSessionPrepareService? _prepareService;
+  final ProgrammeAssignmentStore? assignmentStore;
+  final ProgrammeVersionStore? versionStore;
+  final AthletePlanMaterialisationService? materialisationService;
+  final AthleteProgrammeSessionPrepareService? prepareService;
 
   bool _loading = true;
   bool _starting = false;
@@ -59,9 +55,9 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
 
-    final assignmentStore = _assignmentStore;
-    final versionStore = _versionStore;
-    if (assignmentStore == null || versionStore == null) {
+    final assignments = assignmentStore;
+    final versions = versionStore;
+    if (assignments == null || versions == null) {
       _errorMessage = 'Programme data is unavailable.';
       _loading = false;
       notifyListeners();
@@ -69,12 +65,10 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     }
 
     try {
-      final assignment = await assignmentStore.getActiveAssignment(_athleteId);
+      final assignment = await assignments.getActiveAssignment(_athleteId);
       ProgrammeVersion? version;
       if (assignment != null) {
-        version = await versionStore.getVersionById(
-          assignment.programmeVersionId,
-        );
+        version = await versions.getVersionById(assignment.programmeVersionId);
       }
       _assignment = assignment;
       _version = version;
@@ -89,9 +83,10 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
   /// Explicit Start Programme — materialises, then prepares the current session.
   Future<AthletePlanMaterialisationResult?> startProgramme({
     String? timezone,
+    DateTime? startDate,
   }) async {
     final assignment = _assignment;
-    final service = _materialisationService;
+    final service = materialisationService;
     if (assignment == null || service == null || _starting) return null;
     if (!assignment.canStartProgramme) {
       if (assignment.isMaterialised) {
@@ -130,6 +125,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
       programmeAssignmentId: assignment.id,
       athleteId: _athleteId,
       timezone: timezone ?? assignment.timezone,
+      startDate: startDate ?? assignment.startedAt,
     );
     _lastMaterialisationResult = result;
 
@@ -149,7 +145,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
 
   /// Idempotent prepare/restore for the materialised assignment cursor.
   Future<AthleteProgrammePrepareResult?> prepareCurrentSession() async {
-    final prepare = _prepareService;
+    final prepare = prepareService;
     final assignment = _assignment;
     if (prepare == null || assignment == null || !assignment.isMaterialised) {
       return null;
@@ -172,18 +168,15 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
 class AthleteProgrammeSelectionController extends ChangeNotifier {
   AthleteProgrammeSelectionController({
     required String athleteId,
-    required AthleteProgrammeSwitchCatalogService catalogService,
-    required AthleteCatalogueEnrolmentService enrolmentService,
-    ProgrammeAssignmentStore? assignmentStore,
-  }) : _athleteId = athleteId.trim(),
-       _catalogService = catalogService,
-       _enrolmentService = enrolmentService,
-       _assignmentStore = assignmentStore;
+    required this.catalogService,
+    required this.enrolmentService,
+    this.assignmentStore,
+  }) : _athleteId = athleteId.trim();
 
   final String _athleteId;
-  final AthleteProgrammeSwitchCatalogService _catalogService;
-  final AthleteCatalogueEnrolmentService _enrolmentService;
-  final ProgrammeAssignmentStore? _assignmentStore;
+  final AthleteProgrammeSwitchCatalogService catalogService;
+  final AthleteCatalogueEnrolmentService enrolmentService;
+  final ProgrammeAssignmentStore? assignmentStore;
 
   bool _loading = true;
   bool _submitting = false;
@@ -208,12 +201,12 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final assignmentStore = _assignmentStore;
-      if (assignmentStore != null) {
-        final active = await assignmentStore.getActiveAssignment(_athleteId);
+      final assignments = assignmentStore;
+      if (assignments != null) {
+        final active = await assignments.getActiveAssignment(_athleteId);
         _activeVersionId = active?.programmeVersionId;
       }
-      _programmes = await _catalogService.listPublishedAssignableProgrammes();
+      _programmes = await catalogService.listPublishedAssignableProgrammes();
     } catch (error) {
       _errorMessage = error.toString();
     }
@@ -259,7 +252,7 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     notifyListeners();
 
     final hasActive = _activeVersionId != null && _activeVersionId!.isNotEmpty;
-    final result = await _enrolmentService.enrol(
+    final result = await enrolmentService.enrol(
       athleteId: _athleteId,
       programmeVersionId: selected.versionId,
       timezone: timezone,

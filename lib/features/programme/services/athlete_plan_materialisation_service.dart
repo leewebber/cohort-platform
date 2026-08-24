@@ -13,26 +13,27 @@ import 'athlete_plan_materialisation_store.dart';
 /// is retired and must not block canonical materialisation.
 class AthletePlanMaterialisationService {
   const AthletePlanMaterialisationService({
-    required AthletePlanMaterialisationStore materialisationStore,
-    ProgrammeAssignmentStore? assignmentStore,
-  }) : _materialisationStore = materialisationStore,
-       _assignmentStore = assignmentStore;
+    required this.materialisationStore,
+    this.assignmentStore,
+  });
 
-  final AthletePlanMaterialisationStore _materialisationStore;
-  final ProgrammeAssignmentStore? _assignmentStore;
+  final AthletePlanMaterialisationStore materialisationStore;
+  final ProgrammeAssignmentStore? assignmentStore;
 
   /// Explicit Start Programme for [programmeAssignmentId].
   Future<AthletePlanMaterialisationResult> startProgramme({
     required String programmeAssignmentId,
     required String athleteId,
     String? timezone,
+    DateTime? startDate,
   }) async {
     final trimmedAssignment = programmeAssignmentId.trim();
     final trimmedAthlete = athleteId.trim();
 
-    final result = await _materialisationStore.materialise(
+    final result = await materialisationStore.materialise(
       programmeAssignmentId: trimmedAssignment,
       timezone: timezone,
+      startDate: startDate,
     );
 
     if (result.isSuccess) {
@@ -66,7 +67,7 @@ class AthletePlanMaterialisationService {
     required String athleteId,
     required String programmeAssignmentId,
   }) async {
-    final store = _assignmentStore;
+    final store = assignmentStore;
     if (store == null || athleteId.isEmpty || programmeAssignmentId.isEmpty) {
       return null;
     }

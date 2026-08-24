@@ -25,6 +25,7 @@ class _RecordingMaterialisationStore
   Future<AthletePlanMaterialisationResult> materialise({
     required String programmeAssignmentId,
     String? timezone,
+    DateTime? startDate,
   }) async {
     calls++;
     lastAssignmentId = programmeAssignmentId;
@@ -61,6 +62,7 @@ ProgrammeAssignment _enrolled({
   ).copyWith(
     lineageCode: 'PROG-S14A',
     startedAt: DateTime.utc(2026, 7, 1),
+    timezone: 'Atlantic/Canary',
     materialisedAt: materialisedAt,
     materialisationSource: materialisedAt == null
         ? null
@@ -159,7 +161,6 @@ void main() {
   });
 
   group('AthletePlanMaterialisationService', () {
-
     test('calls RPC with assignment id and exact handoff fields', () async {
       final store = _RecordingMaterialisationStore(
         AthletePlanMaterialisationResult.fromRpcMap({
@@ -316,13 +317,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Start Programme'), findsOneWidget);
-      expect(
-        find.textContaining('begins this programme today'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('Choose a start date'), findsOneWidget);
       expect(find.textContaining('Enrolled · Not started'), findsOneWidget);
 
       await tester.tap(find.text('Start Programme'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Start programme'));
       await tester.pumpAndSettle();
 
       expect(store.calls, 1);
@@ -345,12 +347,14 @@ class _DelayedMaterialisationStore implements AthletePlanMaterialisationStore {
   Future<AthletePlanMaterialisationResult> materialise({
     required String programmeAssignmentId,
     String? timezone,
+    DateTime? startDate,
   }) async {
     onCall();
     await Future<void>.delayed(const Duration(milliseconds: 30));
     return inner.materialise(
       programmeAssignmentId: programmeAssignmentId,
       timezone: timezone,
+      startDate: startDate,
     );
   }
 }

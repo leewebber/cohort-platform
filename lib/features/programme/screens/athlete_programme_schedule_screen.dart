@@ -6,18 +6,26 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import '../controllers/athlete_programme_schedule_controller.dart';
+import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
+import '../services/athlete_programme_session_prepare_service.dart';
+import '../services/fixed_programme_occurrence_projection_store.dart';
+import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../services/programme_schedule_apply_service.dart';
 import '../services/programme_schedule_apply_supabase_store.dart';
 import '../services/programme_schedule_operations_supabase_store.dart';
 import '../services/programme_schedule_projection_supabase_store.dart';
 import '../services/programme_schedule_restore_service.dart';
+import '../widgets/fixed_programme_week_view.dart';
+import '../../session/services/programme_session_execution_launcher.dart';
 
 /// Assignment-scoped athlete schedule calendar (Sprint 1.7F).
 ///
@@ -27,12 +35,20 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
     super.key,
     required this.athleteId,
     required this.assignmentId,
-    this._controller,
+    this.controller,
+    this.fixedOccurrenceStore,
+    this.assignmentStore,
+    this.prepareService,
+    this.executionLauncher,
   });
 
   final String athleteId;
   final String assignmentId;
-  final AthleteProgrammeScheduleController? _controller;
+  final AthleteProgrammeScheduleController? controller;
+  final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
+  final ProgrammeAssignmentStore? assignmentStore;
+  final AthleteProgrammeSessionPrepareService? prepareService;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
 
   @override
   State<AthleteProgrammeScheduleScreen> createState() =>
@@ -42,6 +58,10 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
 class _AthleteProgrammeScheduleScreenState
     extends State<AthleteProgrammeScheduleScreen> {
   late final AthleteProgrammeScheduleController _controller;
+  bool _legacyControllerReady = false;
+  FixedProgrammeCalendarProjection? _fixedCalendar;
+  bool _fixedLoading = true;
+  String? _fixedError;
   String? _moveSlotId;
   String? _swapSlotA;
   String? _swapSlotB;
@@ -53,14 +73,59 @@ class _AthleteProgrammeScheduleScreenState
   @override
   void initState() {
     super.initState();
-    _controller = widget._controller ?? _buildDefaultController();
-    _controller.addListener(_onChanged);
-    _controller.load();
+    final suppliedController = widget.controller;
+    if (suppliedController != null) {
+      _controller = suppliedController;
+      _controller.addListener(_onChanged);
+      _legacyControllerReady = true;
+    }
+    if (suppliedController != null && widget.fixedOccurrenceStore == null) {
+      _fixedLoading = false;
+      _controller.load();
+    } else {
+      _loadAuthoritativeCalendar();
+    }
+  }
+
+  Future<void> _loadAuthoritativeCalendar() async {
+    try {
+      final projection =
+          await (widget.fixedOccurrenceStore ??
+                  const FixedProgrammeOccurrenceProjectionSupabaseStore())
+              .resolveActive();
+      if (!mounted) return;
+      if (projection != null) {
+        if (projection.assignmentId != widget.assignmentId) {
+          throw StateError(
+            'The active fixed schedule does not match this assignment.',
+          );
+        }
+        setState(() {
+          _fixedCalendar = projection;
+          _fixedLoading = false;
+        });
+        return;
+      }
+      setState(() => _fixedLoading = false);
+      if (!_legacyControllerReady) {
+        _controller = _buildDefaultController();
+        _controller.addListener(_onChanged);
+        _legacyControllerReady = true;
+      }
+      await _controller.load();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _fixedError = error.toString();
+        _fixedLoading = false;
+      });
+    }
   }
 
   AthleteProgrammeScheduleController _buildDefaultController() {
-    final AthleteLocalRepository? local =
-        AthletePersistence.isInitialized ? AthletePersistence.repository : null;
+    final AthleteLocalRepository? local = AthletePersistence.isInitialized
+        ? AthletePersistence.repository
+        : null;
     if (local == null) {
       throw StateError(
         'AthleteProgrammeScheduleScreen requires AthletePersistence.',
@@ -90,9 +155,11 @@ class _AthleteProgrammeScheduleScreenState
 
   @override
   void dispose() {
-    _controller.removeListener(_onChanged);
-    if (widget._controller == null) {
-      _controller.dispose();
+    if (_legacyControllerReady) {
+      _controller.removeListener(_onChanged);
+      if (widget.controller == null) {
+        _controller.dispose();
+      }
     }
     super.dispose();
   }
@@ -142,14 +209,59 @@ class _AthleteProgrammeScheduleScreenState
     final result = await _controller.confirmPreview();
     if (!mounted || result == null) return;
     if (result.isSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Schedule updated.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Schedule updated.')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_fixedLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Programme calendar')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_fixedError != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Programme calendar')),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: CohortCard(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Programme calendar unavailable',
+                    style: CohortTextStyles.h2,
+                  ),
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(_fixedError!, style: CohortTextStyles.body),
+                  const SizedBox(height: CohortSpacing.md),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _fixedLoading = true;
+                        _fixedError = null;
+                      });
+                      _loadAuthoritativeCalendar();
+                    },
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    final fixedCalendar = _fixedCalendar;
+    if (fixedCalendar != null) {
+      return _buildFixedCalendar(fixedCalendar);
+    }
     final snap = _controller.snapshot;
     final today = snap?.today.toString() ?? '—';
     return Scaffold(
@@ -224,8 +336,9 @@ class _AthleteProgrammeScheduleScreenState
                   IgnorePointer(
                     ignoring: _moveSlotId == null || _moveTarget == null,
                     child: Opacity(
-                      opacity:
-                          _moveSlotId == null || _moveTarget == null ? 0.5 : 1,
+                      opacity: _moveSlotId == null || _moveTarget == null
+                          ? 0.5
+                          : 1,
                       child: CohortButton(
                         label: 'Preview move',
                         onPressed: _runMovePreview,
@@ -250,8 +363,9 @@ class _AthleteProgrammeScheduleScreenState
                   IgnorePointer(
                     ignoring: _swapSlotA == null || _swapSlotB == null,
                     child: Opacity(
-                      opacity:
-                          _swapSlotA == null || _swapSlotB == null ? 0.5 : 1,
+                      opacity: _swapSlotA == null || _swapSlotB == null
+                          ? 0.5
+                          : 1,
                       child: CohortButton(
                         label: 'Preview swap',
                         onPressed: _runSwapPreview,
@@ -275,7 +389,10 @@ class _AthleteProgrammeScheduleScreenState
                   const SizedBox(height: CohortSpacing.sm),
                   Row(
                     children: [
-                      Text('Days: $_pushDayDelta', style: CohortTextStyles.body),
+                      Text(
+                        'Days: $_pushDayDelta',
+                        style: CohortTextStyles.body,
+                      ),
                       Expanded(
                         child: Slider(
                           value: _pushDayDelta.toDouble(),
@@ -374,6 +491,143 @@ class _AthleteProgrammeScheduleScreenState
               ),
       ),
     );
+  }
+
+  Widget _buildFixedCalendar(FixedProgrammeCalendarProjection projection) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Programme calendar')),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(CohortSpacing.lg),
+          children: [
+            Text(projection.programmeName, style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              '${projection.weekStart} to ${projection.weekEnd} · '
+              '${projection.timezone}',
+              style: CohortTextStyles.muted,
+            ),
+            if (projection.startsInFuture) ...[
+              const SizedBox(height: CohortSpacing.md),
+              CohortCard(
+                child: Text(
+                  'Programme begins on ${projection.startDate}. '
+                  'Future sessions cannot be started early.',
+                  style: CohortTextStyles.body,
+                ),
+              ),
+            ],
+            const SizedBox(height: CohortSpacing.xl),
+            const SectionTitle('This Week'),
+            const SizedBox(height: CohortSpacing.md),
+            FixedProgrammeWeekView(
+              projection: projection,
+              onOccurrenceTap: _openFixedOccurrence,
+            ),
+            if (projection.overdue.isNotEmpty) ...[
+              const SizedBox(height: CohortSpacing.xl),
+              const SectionTitle('Resume overdue'),
+              const SizedBox(height: CohortSpacing.md),
+              for (final occurrence in projection.overdue) ...[
+                CohortCard(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          '${occurrence.sessionTitle}\n'
+                          '${occurrence.scheduledDate} · '
+                          '${occurrence.state.displayLabel}',
+                          style: CohortTextStyles.body,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () => _openFixedOccurrence(occurrence),
+                        child: const Text('Resume'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openFixedOccurrence(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final canExecute = occurrence.isToday || occurrence.isResumable;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(occurrence.sessionTitle),
+        content: Text(
+          '${occurrence.scheduledDate} · ${occurrence.state.displayLabel}\n'
+          'Week ${occurrence.weekNumber}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+          if (canExecute)
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                await _executeFixedOccurrence(occurrence);
+              },
+              child: Text(occurrence.isResumable ? 'Resume' : 'Begin'),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _executeFixedOccurrence(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final assignments =
+        widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
+    final assignment = await assignments.getById(widget.assignmentId);
+    if (assignment == null || !assignment.isFixedSchedule) {
+      _showFixedError('The fixed programme assignment is unavailable.');
+      return;
+    }
+    final prepare =
+        widget.prepareService ??
+        AthleteCatalogueEnrolmentServices.createPrepareService();
+    final prepared = await prepare.prepareFixedOccurrence(
+      assignment,
+      occurrence,
+    );
+    if (!mounted) return;
+    if (!prepared.isReady) {
+      _showFixedError(
+        prepared.message ?? 'This occurrence could not be prepared.',
+      );
+      return;
+    }
+    try {
+      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
+          .launch(
+            context: context,
+            athleteId: widget.athleteId,
+            prepared: prepared,
+          );
+      await _loadAuthoritativeCalendar();
+    } catch (error) {
+      if (mounted) _showFixedError(error.toString());
+    }
+  }
+
+  void _showFixedError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   List<Widget> _calendarSections() {
@@ -536,7 +790,7 @@ class _AthleteProgrammeScheduleScreenState
           Text(
             preview.operationType == ProgrammeSchedulingOperationType.skip
                 ? 'Session remains in programme history as skipped; no '
-                    'performance evidence is created.'
+                      'performance evidence is created.'
                 : 'Prescription and completion history are unchanged.',
             style: CohortTextStyles.muted,
           ),

@@ -4,15 +4,22 @@ import '../../core/theme/cohort_lighting.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
+import '../../core/widgets/cohort_card.dart';
+import '../../data/repositories/programme_assignment_store.dart';
+import '../../data/repositories/programme_assignment_supabase_store.dart';
+import '../../models/programme_assignment.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
-import '../../data/repositories/programme_assignment_store.dart';
-import '../../data/repositories/programme_assignment_supabase_store.dart';
+import '../programme/models/fixed_programme_occurrence_projection.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
+import '../programme/services/fixed_programme_occurrence_projection_store.dart';
+import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/widgets/fixed_programme_week_view.dart';
+import '../session/services/programme_session_execution_launcher.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/athlete_home_runtime_authority.dart';
 import 'widgets/athlete_programme_today_section.dart';
@@ -33,8 +40,9 @@ class HomeScreen extends StatefulWidget {
     this.assignmentStore,
     this.prepareService,
     this.athleteIdOverride,
-    this.runtimeAuthorityResolver =
-        const AthleteHomeRuntimeAuthorityResolver(),
+    this.runtimeAuthorityResolver = const AthleteHomeRuntimeAuthorityResolver(),
+    this.fixedOccurrenceStore,
+    this.executionLauncher,
   });
 
   final AuthController? authController;
@@ -56,6 +64,8 @@ class HomeScreen extends StatefulWidget {
 
   /// Canonical Home runtime-authority decision (injectable for tests).
   final AthleteHomeRuntimeAuthorityResolver runtimeAuthorityResolver;
+  final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -68,6 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
   /// `null` = loading/unknown; `true`/`false` = resolved materialisation.
   bool? _hasMaterialisedProgramme;
   bool _programmeEvidenceUnavailable = false;
+  FixedProgrammeCalendarProjection? _calendar;
+  ProgrammeAssignment? _assignment;
+  String? _calendarError;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -84,6 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ProgrammeAssignmentStore get _assignmentStore =>
       widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
+
+  AthleteProgrammeSessionPrepareService get _prepareService =>
+      widget.prepareService ??
+      AthleteCatalogueEnrolmentServices.createPrepareService();
 
   AthleteHomeRuntimeAuthority get _runtimeAuthority {
     return widget.runtimeAuthorityResolver.resolve(
@@ -105,13 +122,29 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _programmeEvidenceUnavailable = false;
         _hasMaterialisedProgramme = assignment?.isMaterialised ?? false;
+        _assignment = assignment;
+        _calendar = null;
+        _calendarError = null;
       });
-    } catch (_) {
+      if (assignment?.isFixedSchedule == true) {
+        final calendar =
+            await (widget.fixedOccurrenceStore ??
+                    const FixedProgrammeOccurrenceProjectionSupabaseStore())
+                .resolveActive();
+        if (calendar == null || calendar.assignmentId != assignment!.id) {
+          throw StateError(
+            'Fixed schedule projection is incomplete for this assignment.',
+          );
+        }
+        if (mounted) setState(() => _calendar = calendar);
+      }
+    } catch (error) {
       if (!mounted) return;
       // Fail closed: do not invent programme runtime from bad evidence.
       setState(() {
         _programmeEvidenceUnavailable = true;
         _hasMaterialisedProgramme = null;
+        _calendarError = error.toString();
       });
     }
   }
@@ -151,24 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
               _HomeBrandHeader(displayName: _displayName),
               const SizedBox(height: CohortSpacing.lg),
               ..._todayForAuthority(authority),
-              const SizedBox(height: CohortSpacing.lg),
-              Center(
-                child: TextButton(
-                  onPressed: _openProgrammeCatalogue,
-                  style: TextButton.styleFrom(
-                    foregroundColor: CohortColors.textMuted,
-                    textStyle: CohortTextStyles.muted,
-                  ),
-                  child: const Text('Programme'),
-                ),
-              ),
-              const SizedBox(height: CohortSpacing.xl),
-              const Center(
-                child: Text(
-                  'Build physical capability.',
-                  style: CohortTextStyles.muted,
-                ),
-              ),
             ],
           ),
         ),
@@ -179,37 +194,224 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _todayForAuthority(AthleteHomeRuntimeAuthority authority) {
     switch (authority) {
       case AthleteHomeRuntimeAuthority.programme:
+        final assignment = _assignment;
+        if (assignment?.isFixedSchedule == true) {
+          return _fixedProgrammeHome(assignment!);
+        }
         return [
           AthleteProgrammeTodaySection(
             athleteId: _athleteId,
             refreshController: _refreshController,
-            prepareService: widget.prepareService ??
-                AthleteCatalogueEnrolmentServices.createPrepareService(),
+            prepareService: _prepareService,
           ),
         ];
       case AthleteHomeRuntimeAuthority.loading:
         return const [
           Text('TODAY', style: CohortTextStyles.sectionLabel),
           SizedBox(height: CohortSpacing.md),
-          Text(
-            'Checking programme…',
-            style: CohortTextStyles.muted,
-          ),
+          Text('Checking programme…', style: CohortTextStyles.muted),
         ];
       case AthleteHomeRuntimeAuthority.unavailable:
-        return const [
-          Text('TODAY', style: CohortTextStyles.sectionLabel),
-          SizedBox(height: CohortSpacing.md),
-          Text(
+        return [
+          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          const SizedBox(height: CohortSpacing.md),
+          const Text(
             'Unable to confirm programme.',
             style: CohortTextStyles.muted,
           ),
+          const SizedBox(height: CohortSpacing.sm),
+          TextButton(
+            onPressed: _openProgrammeCatalogue,
+            child: const Text('VIEW PROGRAMMES'),
+          ),
         ];
       case AthleteHomeRuntimeAuthority.none:
-        return [
-          ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue),
-        ];
+        return [ChoosePlanEntryCard(onChoosePlan: _openProgrammeCatalogue)];
     }
+  }
+
+  List<Widget> _fixedProgrammeHome(ProgrammeAssignment assignment) {
+    final calendar = _calendar;
+    if (calendar == null) {
+      return [
+        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.md),
+        CohortCard(
+          child: Text(
+            _calendarError ?? 'Loading your programme calendar…',
+            style: CohortTextStyles.body,
+          ),
+        ),
+      ];
+    }
+
+    final todayOccurrence = calendar.todayOccurrence;
+    final todayDay = calendar.currentWeek.firstWhere(
+      (day) => day.date == calendar.today,
+    );
+    final widgets = <Widget>[];
+    if (calendar.startsInFuture) {
+      widgets.addAll([
+        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.md),
+        CohortCard(
+          child: Text(
+            '${calendar.programmeName} begins on ${calendar.startDate} '
+            'in ${calendar.timezone}.',
+            style: CohortTextStyles.body,
+          ),
+        ),
+      ]);
+    } else if (todayOccurrence == null ||
+        todayDay.state == FixedProgrammeOccurrenceState.rest) {
+      widgets.addAll(const [
+        Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        SizedBox(height: CohortSpacing.md),
+        CohortCard(child: Text('Rest day', style: CohortTextStyles.body)),
+      ]);
+    } else if (todayOccurrence.state ==
+        FixedProgrammeOccurrenceState.completed) {
+      widgets.addAll([
+        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.md),
+        CohortCard(
+          child: Text(
+            '${todayOccurrence.sessionTitle} · Completed',
+            style: CohortTextStyles.body,
+          ),
+        ),
+      ]);
+    } else {
+      widgets.add(
+        AthleteProgrammeTodaySection(
+          athleteId: _athleteId,
+          refreshController: _refreshController,
+          prepareService: _prepareService,
+          executionLauncher: widget.executionLauncher,
+          fixedAssignment: assignment,
+          fixedOccurrence: todayOccurrence,
+        ),
+      );
+    }
+
+    for (final overdue in calendar.overdue) {
+      widgets.addAll([
+        const SizedBox(height: CohortSpacing.md),
+        CohortCard(
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${overdue.sessionTitle} · ${overdue.scheduledDate}\n'
+                  'In Progress Overdue',
+                  style: CohortTextStyles.body,
+                ),
+              ),
+              TextButton(
+                onPressed: () => _openOccurrenceDetails(overdue),
+                child: const Text('Resume'),
+              ),
+            ],
+          ),
+        ),
+      ]);
+    }
+
+    var programmeWeek = todayOccurrence?.weekNumber;
+    for (final day in calendar.currentWeek) {
+      programmeWeek ??= day.occurrence?.weekNumber;
+    }
+    programmeWeek ??= 1;
+    widgets.addAll([
+      const SizedBox(height: CohortSpacing.xl),
+      Text('THIS WEEK', style: CohortTextStyles.sectionLabel),
+      const SizedBox(height: CohortSpacing.md),
+      FixedProgrammeWeekView(
+        projection: calendar,
+        onOccurrenceTap: _openOccurrenceDetails,
+      ),
+      const SizedBox(height: CohortSpacing.xl),
+      Text('CURRENT PROGRAMME', style: CohortTextStyles.sectionLabel),
+      const SizedBox(height: CohortSpacing.md),
+      CohortCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                '${calendar.programmeName}\nWeek $programmeWeek',
+                style: CohortTextStyles.body,
+              ),
+            ),
+            TextButton(
+              onPressed: _openProgrammeCatalogue,
+              child: const Text('View Programme / Calendar'),
+            ),
+          ],
+        ),
+      ),
+    ]);
+    return widgets;
+  }
+
+  Future<void> _openOccurrenceDetails(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final canExecute = occurrence.isToday || occurrence.isResumable;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(occurrence.sessionTitle),
+        content: Text(
+          '${occurrence.scheduledDate} · ${occurrence.state.displayLabel}\n'
+          'Week ${occurrence.weekNumber}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Close'),
+          ),
+          if (canExecute)
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                await _executeOccurrence(occurrence);
+              },
+              child: Text(occurrence.isResumable ? 'Resume' : 'Begin'),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _executeOccurrence(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final assignment = _assignment;
+    if (assignment == null) return;
+    final prepared = await _prepareService.prepareFixedOccurrence(
+      assignment,
+      occurrence,
+    );
+    if (!mounted) return;
+    if (!prepared.isReady) {
+      _showExecutionError(
+        prepared.message ?? 'This occurrence could not be prepared.',
+      );
+      return;
+    }
+    try {
+      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
+          .launch(context: context, athleteId: _athleteId, prepared: prepared);
+      await _refreshMaterialisedGate();
+    } catch (error) {
+      if (mounted) _showExecutionError(error.toString());
+    }
+  }
+
+  void _showExecutionError(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }
 

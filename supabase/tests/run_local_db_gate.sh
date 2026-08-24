@@ -199,6 +199,7 @@ docker cp "${TESTS_DIR}/sql/gate_ah_authenticated_assigned_programme_reads.sql" 
 docker cp "${TESTS_DIR}/sql/gate_ai_authenticated_assigned_protocol_reads.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ai.sql"
 docker cp "${TESTS_DIR}/sql/gate_aj_authenticated_assigned_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_aj.sql"
 docker cp "${TESTS_DIR}/sql/gate_ak_apollo_structured_warmup.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ak.sql"
+docker cp "${TESTS_DIR}/sql/gate_al_apollo_calendar_driven_schedule.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_al.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -232,6 +233,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ai.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_aj.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ak.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_al.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -271,6 +273,7 @@ docker cp "${TESTS_DIR}/sql/gate_ah_authenticated_assigned_programme_reads.sql" 
 docker cp "${TESTS_DIR}/sql/gate_ai_authenticated_assigned_protocol_reads.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ai.sql"
 docker cp "${TESTS_DIR}/sql/gate_aj_authenticated_assigned_session_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_aj.sql"
 docker cp "${TESTS_DIR}/sql/gate_ak_apollo_structured_warmup.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ak.sql"
+docker cp "${TESTS_DIR}/sql/gate_al_apollo_calendar_driven_schedule.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_al.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -304,6 +307,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ai.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_aj.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ak.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_al.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e

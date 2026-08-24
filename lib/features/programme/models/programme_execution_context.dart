@@ -19,6 +19,7 @@ class ProgrammeExecutionContext {
     this.programmeName,
     this.packageContentHash,
     this.programmedSessionKey,
+    this.occurrenceId,
   });
 
   final String assignmentId;
@@ -37,6 +38,9 @@ class ProgrammeExecutionContext {
 
   /// Programme-shaped key for the prepared authored slot.
   final String? programmedSessionKey;
+
+  /// Durable fixed-calendar occurrence identity; null selects legacy cursor compatibility.
+  final String? occurrenceId;
 
   bool get isProgrammeBacked =>
       assignmentId.isNotEmpty && sessionSlotId.isNotEmpty;
@@ -101,6 +105,7 @@ class ProgrammeExecutionContext {
   ProgrammeExecutionContext copyWith({
     String? packageContentHash,
     String? programmedSessionKey,
+    String? occurrenceId,
   }) {
     return ProgrammeExecutionContext(
       assignmentId: assignmentId,
@@ -115,6 +120,7 @@ class ProgrammeExecutionContext {
       programmeName: programmeName,
       packageContentHash: packageContentHash ?? this.packageContentHash,
       programmedSessionKey: programmedSessionKey ?? this.programmedSessionKey,
+      occurrenceId: occurrenceId ?? this.occurrenceId,
     );
   }
 }

@@ -21,8 +21,8 @@ class AthleteProgrammeScreen extends StatefulWidget {
     required this.athleteId,
     this.refreshController,
     this.embeddedInShell = false,
-    AthleteProgrammeScreenController? controller,
-  }) : _controller = controller;
+    this.controller,
+  });
 
   final String athleteId;
   final HomeTodaySessionRefreshController? refreshController;
@@ -30,7 +30,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
   /// When true, successful start/switch must not pop the route (shell owns nav).
   final bool embeddedInShell;
 
-  final AthleteProgrammeScreenController? _controller;
+  final AthleteProgrammeScreenController? controller;
 
   @override
   State<AthleteProgrammeScreen> createState() => _AthleteProgrammeScreenState();
@@ -38,7 +38,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
 
 class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   late final AthleteProgrammeScreenController _controller =
-      widget._controller ??
+      widget.controller ??
       AthleteCatalogueEnrolmentServices.createProgrammeScreenController(
         athleteId: widget.athleteId,
       );
@@ -80,7 +80,50 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
   Future<void> _startProgramme() async {
     if (_controller.isStarting) return;
-    final result = await _controller.startProgramme();
+    final assignment = _controller.activeAssignment;
+    if (assignment == null) return;
+    final now = DateTime.now();
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: DateTime(now.year, now.month, now.day),
+      firstDate: DateTime(now.year, now.month, now.day),
+      lastDate: DateTime(now.year + 2, now.month, now.day),
+      helpText: 'Choose programme start date',
+    );
+    if (selected == null || !mounted) return;
+    final timezone = assignment.timezone?.trim();
+    if (timezone == null || timezone.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Choose a valid programme timezone before starting.'),
+        ),
+      );
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm programme start'),
+        content: Text(
+          'Your programme will start on ${selected.toIso8601String().substring(0, 10)} in $timezone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Start programme'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    final result = await _controller.startProgramme(
+      timezone: timezone,
+      startDate: selected,
+    );
     if (!mounted || result == null) return;
 
     if (result.isSuccess) {
@@ -214,7 +257,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           if (assignment.isEnrolledOnly) ...[
             const SizedBox(height: CohortSpacing.md),
             Text(
-              'Start Programme begins this programme today. '
+              'Choose a start date and confirm your programme timezone. '
               'It does not purchase access or open a workout session.',
               style: CohortTextStyles.muted,
             ),
@@ -257,7 +300,11 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                   ),
                 );
               },
-              child: const Text('Reschedule sessions'),
+              child: Text(
+                assignment.isFixedSchedule
+                    ? 'View Programme Calendar'
+                    : 'Manage schedule',
+              ),
             ),
           ],
         ],

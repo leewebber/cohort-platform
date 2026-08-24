@@ -14,8 +14,11 @@ import '../../../planning/orchestration/models/planning_context.dart';
 import '../../../knowledge/gap_analysis/capability_evidence_models.dart';
 import '../errors/programme_schedule_exception.dart';
 import '../models/athlete_programme_prepared_session.dart';
+import '../models/fixed_programme_occurrence_projection.dart';
 import '../models/programme_execution_context.dart';
 import 'athlete_programme_authored_slot_resolver.dart';
+import 'fixed_programme_occurrence_projection_store.dart';
+import 'fixed_programme_occurrence_projection_supabase_store.dart';
 
 /// Sprint 1.4B: materialised assignment → deterministic PreparedExecutionPackage.
 ///
@@ -23,19 +26,20 @@ import 'athlete_programme_authored_slot_resolver.dart';
 /// advance the cursor, or create completions.
 class AthleteProgrammeSessionPrepareService {
   AthleteProgrammeSessionPrepareService({
-    required ProgrammeAssignmentStore assignmentStore,
-    required AthleteProgrammeAuthoredSlotResolver slotResolver,
-    required SessionExecutionLoader sessionLoader,
-    AthleteLocalRepository? localRepository,
-  }) : _assignmentStore = assignmentStore,
-       _slotResolver = slotResolver,
-       _sessionLoader = sessionLoader,
-       _localRepository = localRepository;
+    required this.assignmentStore,
+    required this.slotResolver,
+    required this.sessionLoader,
+    this.localRepository,
+    FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore,
+  }) : fixedOccurrenceStore =
+           fixedOccurrenceStore ??
+           const FixedProgrammeOccurrenceProjectionSupabaseStore();
 
-  final ProgrammeAssignmentStore _assignmentStore;
-  final AthleteProgrammeAuthoredSlotResolver _slotResolver;
-  final SessionExecutionLoader _sessionLoader;
-  final AthleteLocalRepository? _localRepository;
+  final ProgrammeAssignmentStore assignmentStore;
+  final AthleteProgrammeAuthoredSlotResolver slotResolver;
+  final SessionExecutionLoader sessionLoader;
+  final AthleteLocalRepository? localRepository;
+  final FixedProgrammeOccurrenceProjectionStore fixedOccurrenceStore;
 
   /// In-process idempotency cache keyed by programmed session key value.
   final Map<String, PreparedExecutionPackage> _memoryCache = {};
@@ -53,7 +57,7 @@ class AthleteProgrammeSessionPrepareService {
       );
     }
 
-    final assignment = await _assignmentStore.getActiveAssignment(trimmed);
+    final assignment = await assignmentStore.getActiveAssignment(trimmed);
     if (assignment == null) {
       return const AthleteProgrammePrepareResult(
         status: AthleteProgrammePrepareStatus.notMaterialised,
@@ -84,89 +88,13 @@ class AthleteProgrammeSessionPrepareService {
     }
 
     try {
-      final resolved = await _slotResolver.resolve(assignment);
-      final key = resolved.programmedSessionKey;
-
-      final cached = _memoryCache[key.value];
-      if (cached != null && _packageMatchesAuthority(cached, resolved)) {
-        return AthleteProgrammePrepareResult(
-          status: AthleteProgrammePrepareStatus.restored,
-          package: cached,
-          executionContext: resolved.executionContext,
-          programmedSessionKey: key,
-        );
-      }
-
-      final local = await _readLocal(assignment.athleteId);
-      if (local != null) {
-        final restored = _packageFromRecord(local);
-        if (restored != null &&
-            _recordMatchesAuthority(local, resolved) &&
-            restored.plan.hasExecutableBlocks) {
-          _memoryCache[key.value] = restored;
-          return AthleteProgrammePrepareResult(
-            status: AthleteProgrammePrepareStatus.restored,
-            package: restored,
-            executionContext: resolved.executionContext,
-            programmedSessionKey: key,
-          );
-        }
-        if (!allowReconstruct) {
-          return const AthleteProgrammePrepareResult(
-            status: AthleteProgrammePrepareStatus.failure,
-            code: 'restore_rejected',
-            message: 'Stored preparation provenance is invalid.',
-          );
-        }
-      }
-
-      final loaded = await _sessionLoader.load(
-        protocolId: resolved.executionContext.effectiveProtocolId,
-        displayTitle: resolved.slot.displayTitle ?? resolved.version.name,
-        programmeContextLabel: resolved.version.name,
-      );
-      if (!loaded.plan.hasExecutableBlocks) {
-        return const AthleteProgrammePrepareResult(
-          status: AthleteProgrammePrepareStatus.unresolvableSlot,
-          code: 'empty_execution_plan',
-          message: 'Authored session could not be compiled.',
-        );
-      }
-
-      final brief = WorkoutSessionBrief(
-        sessionName: loaded.plan.sessionTitle,
-        objective: resolved.slot.displayTitle,
-        estimatedDurationMinutes: loaded.plan.durationMin,
-        coachNotes: loaded.plan.coachNotes,
-      );
-      final preparedAt = DateTime.now().toUtc();
-      final package = PreparedExecutionPackage(
-        programmedSessionKey: key,
-        plan: loaded.plan,
-        brief: brief,
-        preparedAt: preparedAt,
-        planId: assignment.lineageCode,
-        planVersion: assignment.programmeVersionId,
-        assignmentId: assignment.id,
-        programmeVersionId: assignment.programmeVersionId,
-        packageContentHash: assignment.materialisedPackageContentHash,
-        dayKey: assignment.currentDayKey,
-        slotOrder: assignment.currentSessionOrder,
-        protocolId: resolved.executionContext.effectiveProtocolId,
-        coachBrainPlan: null,
-      );
-
-      _memoryCache[key.value] = package;
-      await _persist(assignment.athleteId, package, resolved.executionContext);
-
-      final hadInvalidLocal = local != null;
-      return AthleteProgrammePrepareResult(
-        status: hadInvalidLocal
-            ? AthleteProgrammePrepareStatus.reconstructed
-            : AthleteProgrammePrepareStatus.prepared,
-        package: package,
-        executionContext: resolved.executionContext,
-        programmedSessionKey: key,
+      final fixedOccurrence = assignment.isFixedSchedule
+          ? await _resolveFixedTodayOccurrence(assignment)
+          : null;
+      return await _prepareResolvedOccurrence(
+        assignment,
+        fixedOccurrence: fixedOccurrence,
+        allowReconstruct: allowReconstruct,
       );
     } on ProgrammeScheduleException catch (error) {
       return AthleteProgrammePrepareResult(
@@ -181,6 +109,194 @@ class AthleteProgrammeSessionPrepareService {
         message: error.toString(),
       );
     }
+  }
+
+  /// Prepares one server-projected fixed occurrence.
+  ///
+  /// Only the calendar Today occurrence or an already-started resumable
+  /// occurrence is executable in Slice 1. The caller cannot use this method to
+  /// make a planned or missed occurrence eligible.
+  Future<AthleteProgrammePrepareResult> prepareFixedOccurrence(
+    ProgrammeAssignment assignment,
+    FixedProgrammeOccurrenceProjection occurrence, {
+    bool allowReconstruct = true,
+  }) async {
+    if (!assignment.isFixedSchedule) {
+      return const AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.failure,
+        code: 'fixed_schedule_required',
+        message: 'This occurrence is not part of a fixed programme schedule.',
+      );
+    }
+    if (!assignment.isActive || !assignment.isMaterialised) {
+      return const AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.inactive,
+        code: 'fixed_assignment_ineligible',
+        message: 'This programme assignment is not executable.',
+      );
+    }
+    if (occurrence.assignmentId != assignment.id ||
+        (!occurrence.isToday && !occurrence.isResumable)) {
+      return const AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.failure,
+        code: 'fixed_occurrence_not_executable',
+        message: 'This programme occurrence cannot be started today.',
+      );
+    }
+    try {
+      return await _prepareResolvedOccurrence(
+        assignment,
+        fixedOccurrence: occurrence,
+        allowReconstruct: allowReconstruct,
+      );
+    } on ProgrammeScheduleException catch (error) {
+      return AthleteProgrammePrepareResult(
+        status: _statusForScheduleError(error.code),
+        code: error.code.name,
+        message: error.message,
+      );
+    } catch (error) {
+      return AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.failure,
+        code: 'prepare_failed',
+        message: error.toString(),
+      );
+    }
+  }
+
+  Future<AthleteProgrammePrepareResult> _prepareResolvedOccurrence(
+    ProgrammeAssignment assignment, {
+    required FixedProgrammeOccurrenceProjection? fixedOccurrence,
+    required bool allowReconstruct,
+  }) async {
+    final resolutionAssignment = fixedOccurrence == null
+        ? assignment
+        : assignment.copyWith(
+            currentWeek: fixedOccurrence.weekNumber,
+            currentDayKey: fixedOccurrence.dayKey,
+            currentSessionOrder: fixedOccurrence.sessionOrder,
+          );
+    final resolved = await slotResolver.resolve(
+      resolutionAssignment,
+      scheduleDate: fixedOccurrence == null
+          ? null
+          : DateTime.parse(fixedOccurrence.scheduledDate),
+    );
+    if (fixedOccurrence != null &&
+        (resolved.slot.id != fixedOccurrence.sessionSlotId ||
+            resolved.assignment.programmeVersionId !=
+                fixedOccurrence.programmeVersionId ||
+            resolved.executionContext.plannedProtocolId !=
+                fixedOccurrence.protocolId ||
+            resolved.programmedSessionKey.value !=
+                fixedOccurrence.programmedSessionKey)) {
+      throw StateError(
+        'Fixed schedule occurrence does not match immutable authored linkage.',
+      );
+    }
+    final resolvedWithOccurrence = fixedOccurrence == null
+        ? resolved
+        : AuthoredProgrammeSlotResolution(
+            assignment: resolved.assignment,
+            version: resolved.version,
+            tree: resolved.tree,
+            slot: resolved.slot,
+            scheduleDate: resolved.scheduleDate,
+            programmedSessionKey: resolved.programmedSessionKey,
+            executionContext: resolved.executionContext.copyWith(
+              occurrenceId: fixedOccurrence.occurrenceId,
+            ),
+          );
+    final key = resolvedWithOccurrence.programmedSessionKey;
+
+    final cached = _memoryCache[key.value];
+    if (cached != null &&
+        _packageMatchesAuthority(cached, resolvedWithOccurrence)) {
+      return AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.restored,
+        package: cached,
+        executionContext: resolvedWithOccurrence.executionContext,
+        programmedSessionKey: key,
+      );
+    }
+
+    final local = await _readLocal(assignment.athleteId);
+    if (local != null) {
+      final restored = _packageFromRecord(local);
+      if (restored != null &&
+          _recordMatchesAuthority(local, resolvedWithOccurrence) &&
+          restored.plan.hasExecutableBlocks) {
+        _memoryCache[key.value] = restored;
+        return AthleteProgrammePrepareResult(
+          status: AthleteProgrammePrepareStatus.restored,
+          package: restored,
+          executionContext: resolvedWithOccurrence.executionContext,
+          programmedSessionKey: key,
+        );
+      }
+      if (!allowReconstruct) {
+        return const AthleteProgrammePrepareResult(
+          status: AthleteProgrammePrepareStatus.failure,
+          code: 'restore_rejected',
+          message: 'Stored preparation provenance is invalid.',
+        );
+      }
+    }
+
+    final loaded = await sessionLoader.load(
+      protocolId: resolvedWithOccurrence.executionContext.effectiveProtocolId,
+      displayTitle:
+          resolvedWithOccurrence.slot.displayTitle ??
+          resolvedWithOccurrence.version.name,
+      programmeContextLabel: resolvedWithOccurrence.version.name,
+    );
+    if (!loaded.plan.hasExecutableBlocks) {
+      return const AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.unresolvableSlot,
+        code: 'empty_execution_plan',
+        message: 'Authored session could not be compiled.',
+      );
+    }
+
+    final brief = WorkoutSessionBrief(
+      sessionName: loaded.plan.sessionTitle,
+      objective: resolvedWithOccurrence.slot.displayTitle,
+      estimatedDurationMinutes: loaded.plan.durationMin,
+      coachNotes: loaded.plan.coachNotes,
+    );
+    final preparedAt = DateTime.now().toUtc();
+    final package = PreparedExecutionPackage(
+      programmedSessionKey: key,
+      plan: loaded.plan,
+      brief: brief,
+      preparedAt: preparedAt,
+      planId: assignment.lineageCode,
+      planVersion: assignment.programmeVersionId,
+      assignmentId: assignment.id,
+      programmeVersionId: assignment.programmeVersionId,
+      packageContentHash: assignment.materialisedPackageContentHash,
+      dayKey: resolvedWithOccurrence.assignment.currentDayKey,
+      slotOrder: resolvedWithOccurrence.assignment.currentSessionOrder,
+      protocolId: resolvedWithOccurrence.executionContext.effectiveProtocolId,
+      coachBrainPlan: null,
+    );
+
+    _memoryCache[key.value] = package;
+    await _persist(
+      assignment.athleteId,
+      package,
+      resolvedWithOccurrence.executionContext,
+    );
+
+    final hadInvalidLocal = local != null;
+    return AthleteProgrammePrepareResult(
+      status: hadInvalidLocal
+          ? AthleteProgrammePrepareStatus.reconstructed
+          : AthleteProgrammePrepareStatus.prepared,
+      package: package,
+      executionContext: resolvedWithOccurrence.executionContext,
+      programmedSessionKey: key,
+    );
   }
 
   /// Wraps a prepared package for Workout Overview without Coach Brain resolve.
@@ -235,6 +351,29 @@ class AthleteProgrammeSessionPrepareService {
         AthleteProgrammePrepareStatus.unresolvableSlot,
       _ => AthleteProgrammePrepareStatus.failure,
     };
+  }
+
+  Future<FixedProgrammeOccurrenceProjection> _resolveFixedTodayOccurrence(
+    ProgrammeAssignment assignment,
+  ) async {
+    final projection = await fixedOccurrenceStore.resolveActive();
+    if (projection == null || projection.assignmentId != assignment.id) {
+      throw StateError(
+        'Fixed schedule projection is missing for this assignment.',
+      );
+    }
+    final occurrence = projection.todayOccurrence;
+    if (occurrence == null) {
+      throw StateError(
+        'No executable fixed-schedule occurrence is available today.',
+      );
+    }
+    if (occurrence.assignmentId != assignment.id ||
+        occurrence.scheduledDate != projection.today ||
+        (!occurrence.isToday && !occurrence.isResumable)) {
+      throw StateError('Fixed schedule occurrence integrity check failed.');
+    }
+    return occurrence;
   }
 
   bool _packageMatchesAuthority(
@@ -317,7 +456,7 @@ class AthleteProgrammeSessionPrepareService {
   }
 
   Future<GeneratedSessionRecord?> _readLocal(String athleteId) async {
-    final repo = _localRepository;
+    final repo = localRepository;
     if (repo == null) return null;
     try {
       return await repo.readGeneratedSession(athleteId);
@@ -331,7 +470,7 @@ class AthleteProgrammeSessionPrepareService {
     PreparedExecutionPackage package,
     ProgrammeExecutionContext context,
   ) async {
-    final repo = _localRepository;
+    final repo = localRepository;
     if (repo == null) return;
     final record = GeneratedSessionRecord(
       athleteId: athleteId,
@@ -388,7 +527,7 @@ class AthleteProgrammeSessionPrepareService {
   }) async {
     final protocolId = package.protocolId?.trim();
     if (protocolId == null || protocolId.isEmpty) return null;
-    final loaded = await _sessionLoader.load(
+    final loaded = await sessionLoader.load(
       protocolId: protocolId,
       displayTitle: package.brief.sessionName,
       programmeContextLabel: programmeContextLabel,
@@ -423,7 +562,7 @@ class AthleteProgrammeSessionPrepareService {
       _memoryCache.remove(key);
     }
 
-    final repo = _localRepository;
+    final repo = localRepository;
     if (repo == null) return;
     final local = await _readLocal(trimmedAthlete);
     if (local == null) return;

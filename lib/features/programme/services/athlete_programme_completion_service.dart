@@ -155,6 +155,8 @@ class AthleteProgrammeCompletionService {
     final actualsFp = frozenActualsFingerprint ?? fingerprintActuals(record);
 
     final payload = <String, dynamic>{
+      if (programmeContext.occurrenceId != null)
+        'occurrence_id': programmeContext.occurrenceId,
       'assignment_id': programmeContext.assignmentId,
       'session_slot_id': programmeContext.sessionSlotId,
       'programme_version_id': programmeContext.programmeVersionId,

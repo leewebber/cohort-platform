@@ -825,5 +825,6 @@ class _InlineMaterialisationStore implements AthletePlanMaterialisationStore {
   Future<AthletePlanMaterialisationResult> materialise({
     required String programmeAssignmentId,
     String? timezone,
+    DateTime? startDate,
   }) => _fn(programmeAssignmentId);
 }

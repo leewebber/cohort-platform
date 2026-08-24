@@ -1,4 +1,3 @@
-
 import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_planning_input_builder.dart';
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
@@ -163,7 +162,6 @@ void main() {
     });
   });
 
-
   group('Home empty state (Phase 2.8/2.9)', () {
     testWidgets('empty state invites catalogue programmes', (tester) async {
       CurrentUserSession.bind(
@@ -186,7 +184,7 @@ void main() {
 
       expect(find.text('Choose a programme'), findsOneWidget);
       expect(find.text('VIEW PROGRAMMES'), findsOneWidget);
-      expect(find.widgetWithText(TextButton, 'Programme'), findsOneWidget);
+      expect(find.widgetWithText(TextButton, 'Programme'), findsNothing);
       expect(find.text("EXECUTE TODAY'S TRAINING"), findsNothing);
       expect(find.textContaining('Daily Briefing'), findsNothing);
       expect(find.text('NEED TO ADAPT?'), findsNothing);

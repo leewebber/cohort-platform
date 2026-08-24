@@ -7,9 +7,12 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/programme_adaptation_revert_sheet.dart';
 import '../../../core/widgets/today_session_card.dart';
+import '../../../models/programme_assignment.dart';
 import '../../programme/models/athlete_programme_prepared_session.dart';
+import '../../programme/models/fixed_programme_occurrence_projection.dart';
 import '../../programme/presentation/programme_day_label_formatter.dart';
 import '../../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
@@ -31,6 +34,8 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     this.adaptFlow,
     this.reversionService,
     this.prepareOverride,
+    this.fixedAssignment,
+    this.fixedOccurrence,
   });
 
   final String athleteId;
@@ -39,6 +44,8 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ProgrammeAdaptFlow? adaptFlow;
   final ProgrammeAdaptationReversionService? reversionService;
+  final ProgrammeAssignment? fixedAssignment;
+  final FixedProgrammeOccurrenceProjection? fixedOccurrence;
 
   /// Test seam: when set, used instead of [prepareService] for load.
   final Future<AthleteProgrammePrepareResult> Function(String athleteId)?
@@ -104,8 +111,15 @@ class _AthleteProgrammeTodaySectionState
       _loading = true;
       _error = null;
     });
+    final fixedAssignment = widget.fixedAssignment;
+    final fixedOccurrence = widget.fixedOccurrence;
     final result = widget.prepareOverride != null
         ? await widget.prepareOverride!(widget.athleteId)
+        : fixedAssignment != null && fixedOccurrence != null
+        ? await _prepare.prepareFixedOccurrence(
+            fixedAssignment,
+            fixedOccurrence,
+          )
         : await _prepare.prepareForAthlete(widget.athleteId);
     if (!mounted) return;
     setState(() {
@@ -306,7 +320,7 @@ class _AthleteProgrammeTodaySectionState
       return const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('TODAY', style: CohortTextStyles.sectionLabel),
+          Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
           SizedBox(height: CohortSpacing.md),
           Text('Preparing today\'s session…', style: CohortTextStyles.muted),
         ],
@@ -318,7 +332,7 @@ class _AthleteProgrammeTodaySectionState
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
           const SizedBox(height: CohortSpacing.md),
           Text(
             _error ?? 'Today\'s session could not be prepared.',
@@ -335,6 +349,7 @@ class _AthleteProgrammeTodaySectionState
 
     final package = result.package!;
     final ctx = result.executionContext;
+    final fixedOccurrence = widget.fixedOccurrence;
     final weekLabel = ctx == null
         ? 'Week ${package.programmedSessionKey.week}'
         : 'Week ${ctx.weekNumber}';
@@ -356,7 +371,7 @@ class _AthleteProgrammeTodaySectionState
               : null,
           status: package.hasAcceptedAdaptation
               ? 'Adapted Prepared Session'
-              : 'Prepared Session',
+              : fixedOccurrence?.state.displayLabel ?? 'Prepared Session',
           statusDetail: package.hasAcceptedAdaptation
               ? 'Accepted adaptation applies only to this prepared session. '
                     'Programme and later sessions unchanged.'
@@ -364,7 +379,9 @@ class _AthleteProgrammeTodaySectionState
           buttonLabel: _opening
               ? 'Opening…'
               : _openError == null
-              ? 'Begin'
+              ? fixedOccurrence?.isResumable == true
+                    ? 'Resume'
+                    : 'Begin'
               : 'Retry',
           onPressed: _opening || _adapting || _reverting ? null : _open,
         ),
@@ -373,18 +390,34 @@ class _AthleteProgrammeTodaySectionState
           Text(_openError!, style: CohortTextStyles.body),
         ],
         if (_canAdapt || _adapting) ...[
-          const SizedBox(height: CohortSpacing.md),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              onPressed: _adapting ? null : _adapt,
-              child: Text(
-                _adapting ? 'Preparing adaptation…' : 'Adapt Session',
-                style: CohortTextStyles.body.copyWith(
-                  color: CohortColors.textPrimary,
-                  fontWeight: FontWeight.w600,
+          const SizedBox(height: CohortSpacing.sm),
+          CohortCard(
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Adapt Today', style: CohortTextStyles.body),
+                      SizedBox(height: CohortSpacing.xs),
+                      Text(
+                        'Review an adjustment for this prepared session.',
+                        style: CohortTextStyles.small,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                TextButton(
+                  onPressed: _adapting ? null : _adapt,
+                  child: Text(
+                    _adapting ? 'Preparing…' : 'Adapt Session',
+                    style: CohortTextStyles.body.copyWith(
+                      color: CohortColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

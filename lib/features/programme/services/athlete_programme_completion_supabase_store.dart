@@ -11,8 +11,11 @@ class AthleteProgrammeCompletionSupabaseStore
   Future<Map<String, dynamic>> completeAndAdvance(
     Map<String, dynamic> payload,
   ) async {
+    final occurrenceId = payload['occurrence_id']?.toString().trim();
     final response = await SupabaseService.client.rpc(
-      rpcName,
+      occurrenceId == null || occurrenceId.isEmpty
+          ? rpcName
+          : 'complete_fixed_programme_occurrence_and_advance',
       params: {'payload': payload},
     );
     if (response is Map) {

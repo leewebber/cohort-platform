@@ -6,12 +6,13 @@ class AthletePlanMaterialisationSupabaseStore
     implements AthletePlanMaterialisationStore {
   const AthletePlanMaterialisationSupabaseStore();
 
-  static const _rpcName = 'materialise_athlete_plan_from_enrolment';
+  static const _rpcName = 'start_fixed_programme_from_enrolment';
 
   @override
   Future<AthletePlanMaterialisationResult> materialise({
     required String programmeAssignmentId,
     String? timezone,
+    DateTime? startDate,
   }) async {
     final trimmed = programmeAssignmentId.trim();
     if (trimmed.isEmpty) {
@@ -25,7 +26,11 @@ class AthletePlanMaterialisationSupabaseStore
     try {
       final response = await SupabaseService.client.rpc(
         _rpcName,
-        params: {'p_programme_assignment_id': trimmed, 'p_timezone': timezone},
+        params: {
+          'p_programme_assignment_id': trimmed,
+          'p_timezone': timezone,
+          'p_start_date': _dateOnly(startDate),
+        },
       );
 
       if (response is Map<String, dynamic>) {
@@ -48,6 +53,11 @@ class AthletePlanMaterialisationSupabaseStore
         message: _mapError(error),
       );
     }
+  }
+
+  String? _dateOnly(DateTime? value) {
+    if (value == null) return null;
+    return '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';
   }
 
   String _mapError(Object error) {

@@ -4,5 +4,6 @@ abstract class AthletePlanMaterialisationStore {
   Future<AthletePlanMaterialisationResult> materialise({
     required String programmeAssignmentId,
     String? timezone,
+    DateTime? startDate,
   });
 }

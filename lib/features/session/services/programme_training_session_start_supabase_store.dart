@@ -11,6 +11,15 @@ class ProgrammeTrainingSessionStartSupabaseStore
   Future<Map<String, dynamic>> createOrResume(
     Map<String, dynamic> payload,
   ) async {
+    final occurrenceId = payload['occurrence_id']?.toString().trim();
+    if (occurrenceId != null && occurrenceId.isNotEmpty) {
+      final response = await SupabaseService.client.rpc(
+        'create_or_resume_fixed_programme_occurrence_session',
+        params: {'p_occurrence_id': occurrenceId},
+      );
+      if (response is Map) return Map<String, dynamic>.from(response);
+      throw StateError('Unexpected fixed programme occurrence start response');
+    }
     final response = await SupabaseService.client.rpc(
       rpcName,
       params: {'payload': payload},

@@ -2,8 +2,9 @@ import 'programme_vocabulary.dart';
 
 /// Athlete enrolment on a published programme version.
 ///
-/// Source of truth for cursor position and Today's Session resolution after
-/// materialisation. Before [materialisedAt], the row is enrolment-only:
+/// Source of truth for enrolment/materialisation and legacy cursor history.
+/// Fixed schedules resolve Today from materialised schedule occurrences.
+/// Before [materialisedAt], the row is enrolment-only:
 /// [startedAt] from catalogue enrolment is inert as an execution anchor.
 /// `athlete_state` is a denormalised projection — see `AthleteStateSyncService`.
 /// See `42_Programme_Engine_Schema.md`.
@@ -21,6 +22,7 @@ class ProgrammeAssignment {
     this.completedAt,
     this.pausedAt,
     this.timezone,
+    this.scheduleMode = 'legacy_cursor',
     this.supersededByAssignmentId,
     this.lastProgressedTrainingSessionId,
     this.enrolmentSource,
@@ -64,6 +66,9 @@ class ProgrammeAssignment {
 
   /// IANA timezone for weekday derivation.
   final String? timezone;
+
+  final String scheduleMode;
+  bool get isFixedSchedule => scheduleMode == 'fixed_schedule';
 
   /// Set when this assignment is superseded by reassignment.
   final String? supersededByAssignmentId;
@@ -139,6 +144,7 @@ class ProgrammeAssignment {
       completedAt: _parseDateTime(map['completed_at']),
       pausedAt: _parseDateTime(map['paused_at']),
       timezone: _trimString(map['timezone']),
+      scheduleMode: _trimString(map['schedule_mode']) ?? 'legacy_cursor',
       supersededByAssignmentId: _trimString(map['superseded_by_assignment_id']),
       lastProgressedTrainingSessionId: _nullableInt(
         map['last_progressed_training_session_id'],
@@ -173,6 +179,7 @@ class ProgrammeAssignment {
       if (completedAt != null) 'completed_at': completedAt!.toIso8601String(),
       if (pausedAt != null) 'paused_at': pausedAt!.toIso8601String(),
       if (timezone != null) 'timezone': timezone,
+      'schedule_mode': scheduleMode,
       if (supersededByAssignmentId != null)
         'superseded_by_assignment_id': supersededByAssignmentId,
       if (lastProgressedTrainingSessionId != null)
@@ -197,6 +204,7 @@ class ProgrammeAssignment {
     DateTime? completedAt,
     DateTime? pausedAt,
     String? timezone,
+    String? scheduleMode,
     String? supersededByAssignmentId,
     int? lastProgressedTrainingSessionId,
     String? enrolmentSource,
@@ -230,6 +238,7 @@ class ProgrammeAssignment {
       completedAt: clearCompletedAt ? null : (completedAt ?? this.completedAt),
       pausedAt: clearPausedAt ? null : (pausedAt ?? this.pausedAt),
       timezone: clearTimezone ? null : (timezone ?? this.timezone),
+      scheduleMode: scheduleMode ?? this.scheduleMode,
       supersededByAssignmentId: clearSupersededByAssignmentId
           ? null
           : (supersededByAssignmentId ?? this.supersededByAssignmentId),

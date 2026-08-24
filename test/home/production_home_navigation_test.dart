@@ -72,10 +72,11 @@ void main() {
       }
 
       expect(
-        find.widgetWithText(TextButton, 'Programme'),
+        find.text('VIEW PROGRAMMES'),
         findsOneWidget,
         reason: 'Home must expose catalogue enrolment entry',
       );
+      expect(find.widgetWithText(TextButton, 'Programme'), findsNothing);
     });
 
     testWidgets(

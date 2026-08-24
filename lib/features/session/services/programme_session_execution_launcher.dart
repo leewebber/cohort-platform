@@ -108,6 +108,8 @@ class ProgrammeSessionExecutionLauncher {
     Map<String, dynamic> response;
     try {
       response = await _startStore.createOrResume(<String, dynamic>{
+        if (programmeContext.occurrenceId != null)
+          'occurrence_id': programmeContext.occurrenceId,
         'assignment_id': programmeContext.assignmentId,
         'session_slot_id': programmeContext.sessionSlotId,
         'programme_version_id': programmeContext.programmeVersionId,
@@ -224,7 +226,8 @@ class ProgrammeSessionExecutionLauncher {
         ProgrammeSessionExecutionFailureCode.trainingSessionMismatch,
       'authentication_required' ||
       'athlete_role_required' ||
-      'cross_athlete_assignment' =>
+      'cross_athlete_assignment' ||
+      'cross_athlete_occurrence' =>
         ProgrammeSessionExecutionFailureCode.startAuthorizationFailed,
       'assignment_missing' ||
       'assignment_inactive' ||
@@ -234,7 +237,14 @@ class ProgrammeSessionExecutionLauncher {
       'stale_cursor' ||
       'authored_slot_mismatch' ||
       'programme_key_mismatch' ||
-      'occurrence_identity_conflict' =>
+      'occurrence_identity_conflict' ||
+      'occurrence_missing' ||
+      'occurrence_lineage_mismatch' ||
+      'occurrence_session_integrity_failure' ||
+      'fixed_assignment_ineligible' ||
+      'fixed_occurrence_ineligible' ||
+      'future_occurrence' ||
+      'missed_occurrence' =>
         ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
       _ => ProgrammeSessionExecutionFailureCode.startPersistenceFailed,
     };
