@@ -13,6 +13,8 @@ import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../programme/models/fixed_programme_occurrence_projection.dart';
+import '../programme/presentation/athlete_programme_lifecycle_presentation.dart';
+import '../programme/screens/athlete_programme_schedule_screen.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
@@ -245,27 +247,43 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
     }
 
+    final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+      calendar,
+    );
     final todayOccurrence = calendar.todayOccurrence;
     final todayDay = calendar.currentWeek.firstWhere(
       (day) => day.date == calendar.today,
     );
     final widgets = <Widget>[];
-    if (calendar.startsInFuture) {
+    if (lifecycle.isUpcoming) {
       widgets.addAll([
-        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        const Text('UPCOMING PROGRAMME', style: CohortTextStyles.sectionLabel),
         const SizedBox(height: CohortSpacing.md),
         CohortCard(
-          child: Text(
-            '${calendar.programmeName} begins on ${calendar.startDate} '
-            'in ${calendar.timezone}.',
-            style: CohortTextStyles.body,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(lifecycle.programmeName, style: CohortTextStyles.h2),
+              const SizedBox(height: CohortSpacing.sm),
+              Text(
+                'Starts ${lifecycle.startDateLabel}',
+                style: CohortTextStyles.body,
+              ),
+              const SizedBox(height: CohortSpacing.xs),
+              Text(lifecycle.supportingLine, style: CohortTextStyles.muted),
+              const SizedBox(height: CohortSpacing.md),
+              TextButton(
+                onPressed: _openProgrammeCalendar,
+                child: const Text('View first week'),
+              ),
+            ],
           ),
         ),
       ]);
     } else if (todayOccurrence == null ||
         todayDay.state == FixedProgrammeOccurrenceState.rest) {
       widgets.addAll(const [
-        Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        Text('TODAY', style: CohortTextStyles.sectionLabel),
         SizedBox(height: CohortSpacing.md),
         CohortCard(child: Text('Rest day', style: CohortTextStyles.body)),
       ]);
@@ -302,7 +320,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Expanded(
                 child: Text(
-                  '${overdue.sessionTitle} · ${overdue.scheduledDate}\n'
+                  '${overdue.sessionTitle} · '
+                  '${AthleteProgrammeDateFormatter.dayMonth(DateTime.parse(overdue.scheduledDate))}\n'
                   'In Progress Overdue',
                   style: CohortTextStyles.body,
                 ),
@@ -317,18 +336,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ]);
     }
 
-    var programmeWeek = todayOccurrence?.weekNumber;
-    for (final day in calendar.currentWeek) {
-      programmeWeek ??= day.occurrence?.weekNumber;
-    }
-    programmeWeek ??= 1;
     widgets.addAll([
       const SizedBox(height: CohortSpacing.xl),
-      Text('THIS WEEK', style: CohortTextStyles.sectionLabel),
-      const SizedBox(height: CohortSpacing.md),
       FixedProgrammeWeekView(
-        projection: calendar,
+        presentation: lifecycle.week,
         onOccurrenceTap: _openOccurrenceDetails,
+        onViewCalendar: _openProgrammeCalendar,
       ),
       const SizedBox(height: CohortSpacing.xl),
       Text('CURRENT PROGRAMME', style: CohortTextStyles.sectionLabel),
@@ -338,19 +351,37 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Expanded(
               child: Text(
-                '${calendar.programmeName}\nWeek $programmeWeek',
+                '${lifecycle.programmeName}\n${lifecycle.statusLabel}',
                 style: CohortTextStyles.body,
               ),
             ),
             TextButton(
-              onPressed: _openProgrammeCatalogue,
-              child: const Text('View Programme / Calendar'),
+              onPressed: _openProgrammeCalendar,
+              child: const Text('View Calendar'),
             ),
           ],
         ),
       ),
     ]);
     return widgets;
+  }
+
+  Future<void> _openProgrammeCalendar() async {
+    final assignment = _assignment;
+    if (assignment == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => AthleteProgrammeScheduleScreen(
+          athleteId: _athleteId,
+          assignmentId: assignment.id,
+          fixedOccurrenceStore: widget.fixedOccurrenceStore,
+          assignmentStore: widget.assignmentStore,
+          prepareService: widget.prepareService,
+          executionLauncher: widget.executionLauncher,
+        ),
+      ),
+    );
+    if (mounted) await _refreshMaterialisedGate();
   }
 
   Future<void> _openOccurrenceDetails(
@@ -362,7 +393,8 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (dialogContext) => AlertDialog(
         title: Text(occurrence.sessionTitle),
         content: Text(
-          '${occurrence.scheduledDate} · ${occurrence.state.displayLabel}\n'
+          '${AthleteProgrammeDateFormatter.longDate(DateTime.parse(occurrence.scheduledDate))} · '
+          '${occurrence.state.displayLabel}\n'
           'Week ${occurrence.weekNumber}',
         ),
         actions: [

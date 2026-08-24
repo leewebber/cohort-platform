@@ -6,11 +6,16 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../../models/programme_assignment.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
 import '../models/athlete_plan_materialisation.dart';
+import '../models/fixed_programme_occurrence_projection.dart';
+import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
+import '../services/fixed_programme_occurrence_projection_store.dart';
+import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
 import 'athlete_programme_schedule_screen.dart';
 import 'athlete_programme_selection_screen.dart';
 
@@ -22,6 +27,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
     this.refreshController,
     this.embeddedInShell = false,
     this.controller,
+    this.fixedOccurrenceStore,
   });
 
   final String athleteId;
@@ -31,6 +37,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
   final bool embeddedInShell;
 
   final AthleteProgrammeScreenController? controller;
+  final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
 
   @override
   State<AthleteProgrammeScreen> createState() => _AthleteProgrammeScreenState();
@@ -42,12 +49,15 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       AthleteCatalogueEnrolmentServices.createProgrammeScreenController(
         athleteId: widget.athleteId,
       );
+  FixedProgrammeCalendarProjection? _fixedCalendar;
+  bool _fixedCalendarLoading = false;
+  String? _fixedCalendarError;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(_onChanged);
-    _controller.load();
+    _loadProgramme();
   }
 
   @override
@@ -58,6 +68,58 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
   void _onChanged() {
     if (mounted) setState(() {});
+  }
+
+  Future<void> _loadProgramme() async {
+    await _controller.load();
+    await _loadFixedCalendar();
+  }
+
+  Future<void> _loadFixedCalendar() async {
+    final assignment = _controller.activeAssignment;
+    if (assignment == null ||
+        !assignment.isMaterialised ||
+        !assignment.isFixedSchedule) {
+      if (mounted) {
+        setState(() {
+          _fixedCalendar = null;
+          _fixedCalendarLoading = false;
+          _fixedCalendarError = null;
+        });
+      }
+      return;
+    }
+    if (mounted) {
+      setState(() {
+        _fixedCalendarLoading = true;
+        _fixedCalendarError = null;
+      });
+    }
+    try {
+      final projection =
+          await (widget.fixedOccurrenceStore ??
+                  const FixedProgrammeOccurrenceProjectionSupabaseStore())
+              .resolveActive();
+      if (projection == null || projection.assignmentId != assignment.id) {
+        throw StateError(
+          'The fixed programme calendar is unavailable for this assignment.',
+        );
+      }
+      if (mounted) {
+        setState(() {
+          _fixedCalendar = projection;
+          _fixedCalendarLoading = false;
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          _fixedCalendar = null;
+          _fixedCalendarLoading = false;
+          _fixedCalendarError = error.toString();
+        });
+      }
+    }
   }
 
   Future<void> _openStartNewProgramme() async {
@@ -71,7 +133,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     );
 
     if (switched == true && mounted) {
-      await _controller.load();
+      await _loadProgramme();
       if (mounted && !widget.embeddedInShell) {
         Navigator.of(context).pop(true);
       }
@@ -127,11 +189,20 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     if (!mounted || result == null) return;
 
     if (result.isSuccess) {
+      await _loadFixedCalendar();
+      if (!mounted) return;
+      final lifecycle = _fixedCalendar == null
+          ? null
+          : AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+              _fixedCalendar!,
+            );
       widget.refreshController?.requestRefresh(source: 'start_programme');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            result.isIdempotentAlreadyMaterialised
+            lifecycle?.isUpcoming == true
+                ? 'Programme scheduled. ${lifecycle!.statusLabel}.'
+                : result.isIdempotentAlreadyMaterialised
                 ? 'This programme is already started. Check Home for today\'s session.'
                 : 'Programme started. Today\'s session is available on Home.',
           ),
@@ -195,18 +266,6 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                     const SectionTitle('Current programme'),
                     const SizedBox(height: CohortSpacing.md),
                     _buildCurrentProgrammeCard(),
-                    const SizedBox(height: CohortSpacing.xxl),
-                    const SizedBox(height: CohortSpacing.xl),
-                    Center(
-                      child: TextButton(
-                        onPressed: _openStartNewProgramme,
-                        style: TextButton.styleFrom(
-                          foregroundColor: CohortColors.textMuted,
-                          textStyle: CohortTextStyles.muted,
-                        ),
-                        child: const Text('View programmes'),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -219,10 +278,21 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     final version = _controller.activeVersion;
 
     if (assignment == null) {
-      return const CohortCard(
-        child: Text(
-          'You are not enrolled in a programme yet. Choose a programme to get access.',
-          style: CohortTextStyles.body,
+      return CohortCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'You are not enrolled in a programme yet.',
+              style: CohortTextStyles.body,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            CohortButton(
+              label: 'View programmes',
+              variant: CohortButtonVariant.secondary,
+              onPressed: _openStartNewProgramme,
+            ),
+          ],
         ),
       );
     }
@@ -250,10 +320,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
             Text('$sessions sessions per week', style: CohortTextStyles.small),
           ],
           const SizedBox(height: CohortSpacing.md),
-          Text(
-            AthletePlanMaterialisationLabels.statusLabel(assignment),
-            style: CohortTextStyles.small,
-          ),
+          _buildLifecycleStatus(assignment),
           if (assignment.isEnrolledOnly) ...[
             const SizedBox(height: CohortSpacing.md),
             Text(
@@ -276,7 +343,44 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
             ),
           ],
           if (assignment.isMaterialised) ...[
-            const SizedBox(height: CohortSpacing.sm),
+            const SizedBox(height: CohortSpacing.md),
+            TextButton(
+              onPressed: () => _openCalendar(assignment),
+              child: Text(
+                assignment.isFixedSchedule
+                    ? 'View Programme Calendar'
+                    : 'Manage schedule',
+              ),
+            ),
+            if (assignment.isFixedSchedule &&
+                _fixedCalendar?.startsInFuture == true)
+              TextButton(
+                onPressed: () => _openCalendar(assignment),
+                child: const Text('Preview Week 1'),
+              ),
+          ],
+          const SizedBox(height: CohortSpacing.md),
+          CohortButton(
+            label: 'Browse programmes',
+            variant: CohortButtonVariant.secondary,
+            onPressed: _openStartNewProgramme,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLifecycleStatus(ProgrammeAssignment assignment) {
+    if (!assignment.isFixedSchedule || !assignment.isMaterialised) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AthletePlanMaterialisationLabels.statusLabel(assignment),
+            style: CohortTextStyles.small,
+          ),
+          if (assignment.isMaterialised) ...[
+            const SizedBox(height: CohortSpacing.xs),
             Text(
               _controller.lastPrepareResult?.isReady == true
                   ? 'Programme started. Today\'s authored session is ready on Home.'
@@ -288,27 +392,58 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                   : 'Programme started. Today\'s authored session appears on Home.',
               style: CohortTextStyles.muted,
             ),
-            const SizedBox(height: CohortSpacing.md),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (_) => AthleteProgrammeScheduleScreen(
-                      athleteId: widget.athleteId,
-                      assignmentId: assignment.id,
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                assignment.isFixedSchedule
-                    ? 'View Programme Calendar'
-                    : 'Manage schedule',
-              ),
-            ),
           ],
         ],
+      );
+    }
+    if (_fixedCalendarLoading) {
+      return const Text(
+        'Loading programme calendar…',
+        style: CohortTextStyles.muted,
+      );
+    }
+    if (_fixedCalendarError != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Programme calendar unavailable.',
+            style: CohortTextStyles.muted,
+          ),
+          TextButton(onPressed: _loadFixedCalendar, child: const Text('Retry')),
+        ],
+      );
+    }
+    final calendar = _fixedCalendar;
+    if (calendar == null) {
+      return const Text(
+        'Programme calendar unavailable.',
+        style: CohortTextStyles.muted,
+      );
+    }
+    final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+      calendar,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(lifecycle.statusLabel, style: CohortTextStyles.small),
+        const SizedBox(height: CohortSpacing.xs),
+        Text(lifecycle.supportingLine, style: CohortTextStyles.muted),
+      ],
+    );
+  }
+
+  Future<void> _openCalendar(ProgrammeAssignment assignment) async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => AthleteProgrammeScheduleScreen(
+          athleteId: widget.athleteId,
+          assignmentId: assignment.id,
+          fixedOccurrenceStore: widget.fixedOccurrenceStore,
+        ),
       ),
     );
+    if (mounted) await _loadFixedCalendar();
   }
 }

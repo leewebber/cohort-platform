@@ -2,7 +2,6 @@ import 'package:cohort_platform/features/home/controllers/home_today_session_ref
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/models/athlete_programme_switch_result.dart';
 import 'package:cohort_platform/features/programme/models/programme_assignment_operation_result.dart';
-import 'package:cohort_platform/features/programme/models/programme_catalog_entry.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
@@ -421,7 +420,7 @@ void main() {
   });
 
   group('AthleteProgrammeScreen widget', () {
-    testWidgets('View programmes visible when athlete has active enrolment', (
+    testWidgets('deliberate browse action visible with active enrolment', (
       tester,
     ) async {
       final tables = InMemoryProgrammeTables()
@@ -450,12 +449,13 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('View programmes'), findsOneWidget);
+      expect(find.text('Browse programmes'), findsOneWidget);
+      expect(find.text('View programmes'), findsNothing);
       expect(find.text('Foundation'), findsOneWidget);
       expect(find.textContaining('Enrolled ·'), findsOneWidget);
     });
 
-    testWidgets('View programmes available without active enrolment', (
+    testWidgets('deliberate browse action available without active enrolment', (
       tester,
     ) async {
       final controller = AthleteProgrammeScreenController(

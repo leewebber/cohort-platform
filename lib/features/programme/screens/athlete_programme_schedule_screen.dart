@@ -14,6 +14,7 @@ import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import '../controllers/athlete_programme_schedule_controller.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
@@ -494,6 +495,9 @@ class _AthleteProgrammeScheduleScreenState
   }
 
   Widget _buildFixedCalendar(FixedProgrammeCalendarProjection projection) {
+    final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+      projection,
+    );
     return Scaffold(
       appBar: AppBar(title: const Text('Programme calendar')),
       body: SafeArea(
@@ -502,26 +506,30 @@ class _AthleteProgrammeScheduleScreenState
           children: [
             Text(projection.programmeName, style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.xs),
-            Text(
-              '${projection.weekStart} to ${projection.weekEnd} · '
-              '${projection.timezone}',
-              style: CohortTextStyles.muted,
-            ),
-            if (projection.startsInFuture) ...[
+            Text(lifecycle.week.dateRangeLabel, style: CohortTextStyles.muted),
+            if (lifecycle.isUpcoming) ...[
               const SizedBox(height: CohortSpacing.md),
               CohortCard(
-                child: Text(
-                  'Programme begins on ${projection.startDate}. '
-                  'Future sessions cannot be started early.',
-                  style: CohortTextStyles.body,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Starts ${lifecycle.startDateLabel}',
+                      style: CohortTextStyles.cardTitle,
+                    ),
+                    const SizedBox(height: CohortSpacing.xs),
+                    Text(
+                      'Preview your first week now. Sessions unlock on their '
+                      'scheduled programme dates.',
+                      style: CohortTextStyles.body,
+                    ),
+                  ],
                 ),
               ),
             ],
             const SizedBox(height: CohortSpacing.xl),
-            const SectionTitle('This Week'),
-            const SizedBox(height: CohortSpacing.md),
             FixedProgrammeWeekView(
-              projection: projection,
+              presentation: lifecycle.week,
               onOccurrenceTap: _openFixedOccurrence,
             ),
             if (projection.overdue.isNotEmpty) ...[
@@ -535,7 +543,7 @@ class _AthleteProgrammeScheduleScreenState
                       Expanded(
                         child: Text(
                           '${occurrence.sessionTitle}\n'
-                          '${occurrence.scheduledDate} · '
+                          '${AthleteProgrammeDateFormatter.dayMonth(DateTime.parse(occurrence.scheduledDate))} · '
                           '${occurrence.state.displayLabel}',
                           style: CohortTextStyles.body,
                         ),
@@ -565,7 +573,8 @@ class _AthleteProgrammeScheduleScreenState
       builder: (dialogContext) => AlertDialog(
         title: Text(occurrence.sessionTitle),
         content: Text(
-          '${occurrence.scheduledDate} · ${occurrence.state.displayLabel}\n'
+          '${AthleteProgrammeDateFormatter.longDate(DateTime.parse(occurrence.scheduledDate))} · '
+          '${occurrence.state.displayLabel}\n'
           'Week ${occurrence.weekNumber}',
         ),
         actions: [
