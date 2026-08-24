@@ -14,11 +14,11 @@ BEGIN
   FROM public.session_block_exercises
   WHERE block_id = 'b1100001-0000-4000-8000-000000000001'::UUID
     AND (position, exercise_id, display_label_override, prescription) IN (
-      (1, 'EX-150', 'Thoracic extension over foam roller', '{"sets":1,"reps":"5 slow reps at 2-3 positions"}'::JSONB),
-      (2, 'EX-151', 'Open-book rotation', '{"sets":1,"reps":"6/side"}'::JSONB),
-      (3, 'EX-152', 'Serratus wall slide + reach', '{"sets":2,"reps":8}'::JSONB),
-      (4, 'EX-153', 'Wall Y/lower-trap raise', '{"sets":2,"reps":"8-10","coach_cue":"Very light."}'::JSONB),
-      (5, 'EX-154', 'Single-arm cable/band row with reach', '{"sets":2,"reps":"10/side"}'::JSONB)
+      (1, 'EX-150', 'Thoracic extension over foam roller', '{"sets":1,"reps":{"type":"exact","exact_reps":5},"tempo":"slow","coach_cue":"Use 2–3 positions."}'::JSONB),
+      (2, 'EX-151', 'Open-book rotation', '{"sets":1,"reps":{"type":"exact","exact_reps":6},"per_side":true,"coach_cue":"Complete each side."}'::JSONB),
+      (3, 'EX-152', 'Serratus wall slide + reach', '{"sets":2,"reps":{"type":"exact","exact_reps":8}}'::JSONB),
+      (4, 'EX-153', 'Wall Y/lower-trap raise', '{"sets":2,"reps":{"type":"range","min_reps":8,"max_reps":10},"load":{"type":"freeText","text":"Very light"}}'::JSONB),
+      (5, 'EX-154', 'Single-arm cable/band row with reach', '{"sets":2,"reps":{"type":"exact","exact_reps":10},"per_side":true,"coach_cue":"Complete each side."}'::JSONB)
     );
   PERFORM sprint12_assert_eq('AK', 'monday_warmup_prescription_order_and_dosage', '5', v_count::TEXT);
 
