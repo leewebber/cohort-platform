@@ -3,21 +3,30 @@ import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
+import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_schedule_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
+import 'package:cohort_platform/features/programme/screens/scheduled_programme_session_preview_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_authored_slot_resolver.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
 import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
+import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
+import 'package:cohort_platform/features/exercises/exercise_detail/exercise_detail_screen.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
 import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
 import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
+import 'package:cohort_platform/features/session/services/session_execution_launcher.dart';
+import 'package:cohort_platform/models/exercise.dart';
 import 'package:cohort_platform/models/programme_assignment.dart';
 import 'package:cohort_platform/models/programme_version.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
+import 'package:cohort_platform/models/protocol.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -85,6 +94,168 @@ class _EchoLoader extends SessionExecutionLoader {
         ],
       ),
     );
+  }
+}
+
+class _PreviewLoader extends SessionExecutionLoader {
+  int calls = 0;
+  String? lastProtocolId;
+
+  @override
+  Future<SessionExecutionLoadResult> load({
+    required String protocolId,
+    String? displayTitle,
+    String? programmeContextLabel,
+    Map<String, String> prescriptionLoadOverrides = const {},
+  }) async {
+    calls++;
+    lastProtocolId = protocolId;
+    return SessionExecutionLoadResult(
+      plan: SessionExecutionPlan(
+        sessionId: protocolId,
+        sessionTitle: 'Strength Foundation',
+        programmeContextLabel: programmeContextLabel,
+        durationMin: 60,
+        coachNotes: 'Move with control and preserve quality.',
+        protocol: Protocol(
+          protocolId: protocolId,
+          name: 'Strength Foundation',
+          sessionType: 'Strength',
+          goal: 'Full-body strength',
+          durationMin: 60,
+        ),
+        blocks: [
+          SessionExecutionBlock(
+            blockId: 'warm-up',
+            title: 'Structured warm-up',
+            blockType: SessionBlockType.warmUp,
+            content: 'Prepare the thoracic spine and shoulder girdle.',
+            workoutFormat: WorkoutFormat.none,
+            position: 1,
+            coachNotes: 'Use smooth, controlled repetitions.',
+            linkedExercises: _warmUpExercises(),
+          ),
+          const SessionExecutionBlock(
+            blockId: 'main-strength',
+            title: 'Main strength',
+            blockType: SessionBlockType.strength,
+            content: 'Build quality strength through the full range.',
+            workoutFormat: WorkoutFormat.emom,
+            position: 2,
+            timerSummary: '12 min · 60s intervals',
+            linkedExercises: [
+              SessionExecutionExerciseSummary(
+                exerciseId: 'EX-001',
+                displayName: 'Goblet Squat',
+                prescription: StrengthExercisePrescription(
+                  sets: 3,
+                  reps: StrengthRepPrescription(
+                    type: StrengthRepType.range,
+                    minReps: 8,
+                    maxReps: 10,
+                  ),
+                  restSeconds: 90,
+                  tempo: '3-1-1',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  static List<SessionExecutionExerciseSummary> _warmUpExercises() {
+    return [
+      _exercise(
+        id: 'EX-150',
+        name: 'Thoracic Extension Over Foam Roller',
+        sets: 1,
+        reps: const {'type': 'exact', 'exact_reps': 5},
+        tempo: 'slow',
+        cue: 'Use 2–3 positions.',
+      ),
+      _exercise(
+        id: 'EX-151',
+        name: 'Open-Book Rotation',
+        sets: 1,
+        reps: const {'type': 'exact', 'exact_reps': 6},
+        cue: 'Complete each side.',
+      ),
+      _exercise(
+        id: 'EX-152',
+        name: 'Serratus Wall Slide and Reach',
+        sets: 2,
+        reps: const {'type': 'exact', 'exact_reps': 8},
+      ),
+      _exercise(
+        id: 'EX-153',
+        name: 'Wall Y / Lower-Trap Raise',
+        sets: 2,
+        reps: const {'type': 'range', 'min_reps': 8, 'max_reps': 10},
+        load: const {'type': 'freeText', 'text': 'Very light'},
+      ),
+      _exercise(
+        id: 'EX-154',
+        name: 'Single-Arm Cable/Band Row With Reach',
+        sets: 2,
+        reps: const {'type': 'exact', 'exact_reps': 10},
+        cue: 'Complete each side.',
+      ),
+    ];
+  }
+
+  static SessionExecutionExerciseSummary _exercise({
+    required String id,
+    required String name,
+    required int sets,
+    required Map<String, dynamic> reps,
+    Map<String, dynamic>? load,
+    String? tempo,
+    String? cue,
+  }) {
+    return SessionExecutionExerciseSummary(
+      exerciseId: id,
+      displayName: name,
+      exercise: Exercise(
+        exerciseId: id,
+        name: name,
+        published: true,
+        movementPattern: 'Mobility',
+        equipment: 'Minimal',
+        bodyRegion: 'Upper body',
+        technicalComplexity: 'Low',
+        purpose: 'Prepare for the authored session.',
+        execution: 'Move through a controlled range.',
+        coachingCues: cue,
+      ),
+      prescription: StrengthExercisePrescription.fromJson({
+        'sets': sets,
+        'reps': reps,
+        'load': ?load,
+        'tempo': ?tempo,
+        'coach_cue': ?cue,
+      }),
+    );
+  }
+}
+
+class _NoopSessionExecutionLauncher extends SessionExecutionLauncher {
+  int calls = 0;
+  String? lastOccurrenceId;
+
+  @override
+  Future<void> launchActiveSessionWithPlan({
+    required BuildContext context,
+    required SessionExecutionPlan plan,
+    required String protocolId,
+    required int trainingSessionId,
+    required String athleteId,
+    ProgrammeExecutionContext? programmeContext,
+    ProgrammeProgressSummary? programmeProgress,
+  }) async {
+    calls++;
+    lastOccurrenceId = programmeContext?.occurrenceId;
   }
 }
 
@@ -474,6 +645,10 @@ void main() {
       );
       final store = _ProjectionStore(projection);
       final tables = await _tablesWith(assignment);
+      final previewLoader = _PreviewLoader();
+      final previewService = ScheduledProgrammeSessionPreviewService(
+        loader: previewLoader,
+      );
       final prepare = _prepareService(
         tables: tables,
         loader: _EchoLoader(),
@@ -509,6 +684,7 @@ void main() {
             athleteId: 'athlete.local',
             assignmentId: assignment.id,
             fixedOccurrenceStore: store,
+            previewService: previewService,
           ),
         ),
       );
@@ -533,6 +709,22 @@ void main() {
       );
       final store = _ProjectionStore(projection);
       final tables = await _tablesWith(assignment);
+      final previewLoader = _PreviewLoader();
+      final previewService = ScheduledProgrammeSessionPreviewService(
+        loader: previewLoader,
+      );
+      final prepareLoader = _EchoLoader();
+      final startStore = _StartStore();
+      final executionView = _NoopSessionExecutionLauncher();
+      final prepare = _prepareService(
+        tables: tables,
+        loader: prepareLoader,
+        projectionStore: store,
+      );
+      final execution = ProgrammeSessionExecutionLauncher(
+        startStore: startStore,
+        sessionExecutionLauncher: executionView,
+      );
 
       await tester.pumpWidget(
         MaterialApp(
@@ -540,6 +732,9 @@ void main() {
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             fixedOccurrenceStore: store,
+            prepareService: prepare,
+            executionLauncher: execution,
+            previewService: previewService,
           ),
         ),
       );
@@ -562,6 +757,23 @@ void main() {
       expect(find.textContaining('Atlantic/Canary'), findsNothing);
       expect(find.textContaining('day_1'), findsNothing);
       expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
+      await tester.tap(
+        find.byKey(const ValueKey('programme-week-day-2026-09-01')),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.byType(ScheduledProgrammeSessionPreviewScreen),
+        findsOneWidget,
+      );
+      expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
+      expect(find.text('Begin'), findsNothing);
+      expect(startStore.calls, isEmpty);
+      expect(executionView.calls, 0);
+      expect(prepareLoader.calls, 0);
+      expect(tables.outcomes, isEmpty);
+      expect(assignment.currentDayKey, 'day_1');
+      await tester.tap(find.byTooltip('Back'));
+      await tester.pumpAndSettle();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -569,6 +781,7 @@ void main() {
             athleteId: 'athlete.local',
             assignmentId: assignment.id,
             fixedOccurrenceStore: store,
+            previewService: previewService,
           ),
         ),
       );
@@ -583,13 +796,22 @@ void main() {
         find.byKey(const ValueKey('programme-week-day-2026-09-01')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Apollo Monday'), findsOneWidget);
+      expect(find.text('Session preview'), findsOneWidget);
+      expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
       expect(
-        find.text('Tuesday, 1 September · Planned\nWeek 1'),
+        find.text('Week 1 · Day 1 · Tuesday, 1 September'),
         findsOneWidget,
       );
+      expect(find.text('Strength Foundation'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Available 1 September'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Available 1 September'), findsOneWidget);
       expect(find.textContaining('2026-09-01'), findsNothing);
       expect(find.text('Begin'), findsNothing);
+      expect(previewLoader.calls, 2);
     });
 
     testWidgets(
@@ -602,6 +824,7 @@ void main() {
           occurrences: _firstWeekOccurrences(assignment: assignment),
         );
         final store = _ProjectionStore(projection);
+        final previewLoader = _PreviewLoader();
         final tables = await _tablesWith(assignment);
         final controller = AthleteProgrammeScreenController(
           athleteId: 'athlete.local',
@@ -615,6 +838,9 @@ void main() {
               athleteId: 'athlete.local',
               controller: controller,
               fixedOccurrenceStore: store,
+              previewService: ScheduledProgrammeSessionPreviewService(
+                loader: previewLoader,
+              ),
             ),
           ),
         );
@@ -636,6 +862,14 @@ void main() {
         expect(find.textContaining('session appears on Home'), findsNothing);
         expect(find.textContaining('2026-09-01'), findsNothing);
         expect(find.textContaining('Atlantic/Canary'), findsNothing);
+        expect(find.text('FIRST WEEK'), findsOneWidget);
+        await tester.tap(
+          find.byKey(const ValueKey('programme-week-day-2026-09-01')),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
+        expect(find.text('Strength Foundation'), findsOneWidget);
+        expect(previewLoader.calls, 1);
       },
     );
 
@@ -759,6 +993,391 @@ void main() {
       expect(tapSize.width, greaterThanOrEqualTo(48));
       expect(tapSize.height, greaterThanOrEqualTo(48));
       expect(find.text('Planned'), findsNWidgets(7));
+    });
+  });
+
+  group('assigned scheduled-session read-only preview', () {
+    test(
+      'resolves APOLLO-W1-MON-R1 only through authoritative occurrence linkage',
+      () async {
+        final assignment = _assignment();
+        final occurrence = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000301',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'APOLLO-W1-MON-R1',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.planned,
+        );
+        final calendar = _calendar(
+          assignment: assignment,
+          today: '2026-08-24',
+          occurrences: [occurrence],
+        );
+        final day = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+          calendar,
+        ).week.days.first;
+        final loader = _PreviewLoader();
+        final service = ScheduledProgrammeSessionPreviewService(loader: loader);
+
+        final preview = await service.load(calendar: calendar, day: day);
+
+        expect(preview.occurrence?.occurrenceId, occurrence.occurrenceId);
+        expect(loader.lastProtocolId, 'APOLLO-W1-MON-R1');
+        expect(preview.plan?.sessionTitle, 'Strength Foundation');
+        expect(preview.plan?.blocks, hasLength(2));
+
+        final substituted = _occurrence(
+          assignment: assignment,
+          id: occurrence.occurrenceId,
+          slotId: occurrence.sessionSlotId,
+          protocolId: 'SUBSTITUTED-PROTOCOL',
+          dayKey: occurrence.dayKey,
+          date: occurrence.scheduledDate,
+          state: occurrence.state,
+        );
+        final substitutedDay = AthleteProgrammeWeekDayPresentation(
+          date: DateTime(2026, 9, 1),
+          state: substituted.state,
+          occurrence: substituted,
+        );
+        await expectLater(
+          service.load(calendar: calendar, day: substitutedDay),
+          throwsA(isA<StateError>()),
+        );
+        expect(loader.calls, 1);
+      },
+    );
+
+    testWidgets(
+      'future preview renders all structured warm-up content and exercise detail',
+      (tester) async {
+        tester.view.physicalSize = const Size(390, 844);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final assignment = _assignment(athleteId: 'athlete.local');
+        final occurrence = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000301',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'APOLLO-W1-MON-R1',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.planned,
+        );
+        final calendar = _calendar(
+          assignment: assignment,
+          today: '2026-08-24',
+          occurrences: [occurrence],
+        );
+        final day = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+          calendar,
+        ).week.days.first;
+        final loader = _PreviewLoader();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ScheduledProgrammeSessionPreviewScreen(
+              athleteId: 'athlete.local',
+              calendar: calendar,
+              day: day,
+              previewService: ScheduledProgrammeSessionPreviewService(
+                loader: loader,
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
+        expect(
+          find.text('Week 1 · Day 1 · Tuesday, 1 September'),
+          findsOneWidget,
+        );
+        await tester.scrollUntilVisible(
+          find.text('Type · Strength'),
+          240,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(find.text('Type · Strength'), findsOneWidget);
+        expect(find.text('Focus · Full-body strength'), findsOneWidget);
+        expect(find.text('60 min estimated'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+        expect(find.textContaining('APOLLO-W1-MON-R1'), findsNothing);
+        expect(find.textContaining('day_1'), findsNothing);
+
+        for (final movement in const [
+          'Thoracic Extension Over Foam Roller',
+          'Open-Book Rotation',
+          'Serratus Wall Slide and Reach',
+          'Wall Y / Lower-Trap Raise',
+          'Single-Arm Cable/Band Row With Reach',
+        ]) {
+          await tester.scrollUntilVisible(
+            find.text(movement),
+            240,
+            scrollable: find.byType(Scrollable).first,
+          );
+          expect(find.text(movement), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        }
+        await tester.scrollUntilVisible(
+          find.text('Available 1 September'),
+          500,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(find.text('Available 1 September'), findsOneWidget);
+
+        await tester.scrollUntilVisible(
+          find.bySemanticsLabel(
+            'Exercise info for Thoracic Extension Over Foam Roller',
+          ),
+          -300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.ensureVisible(
+          find.bySemanticsLabel(
+            'Exercise info for Thoracic Extension Over Foam Roller',
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.bySemanticsLabel(
+            'Exercise info for Thoracic Extension Over Foam Roller',
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byType(ExerciseDetailScreen), findsOneWidget);
+        expect(
+          find.text('Thoracic Extension Over Foam Roller'),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets('Today Begin is occurrence-bound and preview itself is inert', (
+      tester,
+    ) async {
+      final assignment = _assignment();
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000201',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.today,
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-01',
+        occurrences: [occurrence],
+      );
+      final day = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+        calendar,
+      ).week.days.firstWhere((candidate) => candidate.occurrence != null);
+      final tables = await _tablesWith(assignment);
+      final prepareLoader = _EchoLoader();
+      final prepare = _prepareService(
+        tables: tables,
+        loader: prepareLoader,
+        projectionStore: _ProjectionStore(calendar),
+      );
+      final startStore = _StartStore();
+      final activeLauncher = _NoopSessionExecutionLauncher();
+      final execution = ProgrammeSessionExecutionLauncher(
+        startStore: startStore,
+        sessionExecutionLauncher: activeLauncher,
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => openScheduledProgrammeSessionPreview(
+                context: context,
+                athleteId: 'athlete-1',
+                calendar: calendar,
+                day: day,
+                previewService: ScheduledProgrammeSessionPreviewService(
+                  loader: _PreviewLoader(),
+                ),
+                assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+                prepareService: prepare,
+                executionLauncher: execution,
+              ),
+              child: const Text('Open preview'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Open preview'));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Begin'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(find.text('Begin'));
+      await tester.pumpAndSettle();
+      expect(find.text('Begin'), findsOneWidget);
+      expect(startStore.calls, isEmpty);
+      expect(prepareLoader.calls, 0);
+      expect(activeLauncher.calls, 0);
+      expect(tables.outcomes, isEmpty);
+
+      await tester.tap(find.text('Begin'));
+      await tester.pumpAndSettle();
+
+      expect(startStore.calls, hasLength(1));
+      expect(startStore.calls.single['occurrence_id'], occurrence.occurrenceId);
+      expect(activeLauncher.calls, 1);
+      expect(activeLauncher.lastOccurrenceId, occurrence.occurrenceId);
+      expect(tables.outcomes, isEmpty);
+      expect(assignment.currentDayKey, 'day_1');
+    });
+
+    testWidgets('overdue Resume remains occurrence-bound', (tester) async {
+      final assignment = _assignment();
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000201',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.inProgressOverdue,
+        trainingSessionId: 91,
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [occurrence],
+      );
+      final day = AthleteProgrammeWeekDayPresentation(
+        date: DateTime(2026, 9, 1),
+        state: occurrence.state,
+        occurrence: occurrence,
+      );
+      final tables = await _tablesWith(assignment);
+      final startStore = _StartStore();
+      final activeLauncher = _NoopSessionExecutionLauncher();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ScheduledProgrammeSessionPreviewScreen(
+            athleteId: 'athlete-1',
+            calendar: calendar,
+            day: day,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _PreviewLoader(),
+            ),
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            prepareService: _prepareService(
+              tables: tables,
+              loader: _EchoLoader(),
+              projectionStore: _ProjectionStore(calendar),
+            ),
+            executionLauncher: ProgrammeSessionExecutionLauncher(
+              startStore: startStore,
+              sessionExecutionLauncher: activeLauncher,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Resume'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(find.text('Resume'));
+      await tester.pumpAndSettle();
+      expect(find.text('Resume'), findsOneWidget);
+      expect(startStore.calls, isEmpty);
+      await tester.tap(find.text('Resume'));
+      await tester.pumpAndSettle();
+      expect(startStore.calls, hasLength(1));
+      expect(startStore.calls.single['occurrence_id'], occurrence.occurrenceId);
+      expect(activeLauncher.lastOccurrenceId, occurrence.occurrenceId);
+    });
+
+    testWidgets('Missed, Completed and Rest never offer execution', (
+      tester,
+    ) async {
+      final assignment = _assignment(athleteId: 'athlete.local');
+      for (final state in const [
+        FixedProgrammeOccurrenceState.missed,
+        FixedProgrammeOccurrenceState.completed,
+      ]) {
+        final occurrence = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000401',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'APOLLO-W1-MON-R1',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: state,
+        );
+        final calendar = _calendar(
+          assignment: assignment,
+          today: '2026-09-02',
+          occurrences: [occurrence],
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ScheduledProgrammeSessionPreviewScreen(
+              key: ValueKey(state),
+              athleteId: 'athlete.local',
+              calendar: calendar,
+              day: AthleteProgrammeWeekDayPresentation(
+                date: DateTime(2026, 9, 1),
+                state: state,
+                occurrence: occurrence,
+              ),
+              previewService: ScheduledProgrammeSessionPreviewService(
+                loader: _PreviewLoader(),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text(state.displayLabel), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+        expect(find.text('Resume'), findsNothing);
+      }
+
+      final restCalendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-06',
+        occurrences: const [],
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ScheduledProgrammeSessionPreviewScreen(
+            athleteId: 'athlete.local',
+            calendar: restCalendar,
+            day: AthleteProgrammeWeekDayPresentation(
+              date: DateTime(2026, 9, 6),
+              state: FixedProgrammeOccurrenceState.rest,
+            ),
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _PreviewLoader(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Rest day'), findsWidgets);
+      expect(find.text('Begin'), findsNothing);
+      expect(find.text('Resume'), findsNothing);
+      expect(tester.takeException(), isNull);
     });
   });
 

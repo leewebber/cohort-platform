@@ -25,6 +25,7 @@ class AthleteBlockCard extends StatelessWidget {
     required this.onLaunchTimer,
     required this.onOpenExercise,
     this.showActions = true,
+    this.exerciseInfoOpensDetail = false,
     this.performanceSection,
     this.showBlockNavigation = false,
     this.onPrevious,
@@ -41,6 +42,7 @@ class AthleteBlockCard extends StatelessWidget {
   final VoidCallback? onLaunchTimer;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
   final bool showActions;
+  final bool exerciseInfoOpensDetail;
   final Widget? performanceSection;
   final bool showBlockNavigation;
   final VoidCallback? onPrevious;
@@ -108,6 +110,7 @@ class AthleteBlockCard extends StatelessWidget {
                 _ExecutionExerciseList(
                   exercises: block.linkedExercises,
                   onOpenExercise: onOpenExercise,
+                  exerciseInfoOpensDetail: exerciseInfoOpensDetail,
                 ),
               ],
               if (block.coachNotes != null &&
@@ -170,10 +173,12 @@ class _ExecutionExerciseList extends StatelessWidget {
   const _ExecutionExerciseList({
     required this.exercises,
     required this.onOpenExercise,
+    required this.exerciseInfoOpensDetail,
   });
 
   final List<SessionExecutionExerciseSummary> exercises;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
+  final bool exerciseInfoOpensDetail;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +200,7 @@ class _ExecutionExerciseList extends StatelessWidget {
             _ExecutionExerciseRow(
               exercise: exercise,
               onOpenExercise: onOpenExercise,
+              exerciseInfoOpensDetail: exerciseInfoOpensDetail,
             ),
         ],
         for (final entry in grouped.entries) ...[
@@ -211,6 +217,7 @@ class _ExecutionExerciseList extends StatelessWidget {
               exercise: entry.value[index],
               order: index + 1,
               onOpenExercise: onOpenExercise,
+              exerciseInfoOpensDetail: exerciseInfoOpensDetail,
             ),
         ],
       ],
@@ -222,11 +229,13 @@ class _ExecutionExerciseRow extends StatelessWidget {
   const _ExecutionExerciseRow({
     required this.exercise,
     required this.onOpenExercise,
+    required this.exerciseInfoOpensDetail,
     this.order,
   });
 
   final SessionExecutionExerciseSummary exercise;
   final ValueChanged<SessionExecutionExerciseSummary> onOpenExercise;
+  final bool exerciseInfoOpensDetail;
   final int? order;
 
   @override
@@ -262,11 +271,13 @@ class _ExecutionExerciseRow extends StatelessWidget {
             child: IconButton(
               tooltip: 'Exercise info',
               icon: const Icon(Icons.info_outline),
-              onPressed: () => showModalBottomSheet<void>(
-                context: context,
-                isScrollControlled: true,
-                builder: (_) => _ExerciseInfoSheet(exercise: exercise),
-              ),
+              onPressed: exerciseInfoOpensDetail
+                  ? () => onOpenExercise(exercise)
+                  : () => showModalBottomSheet<void>(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) => _ExerciseInfoSheet(exercise: exercise),
+                    ),
             ),
           ),
         ],

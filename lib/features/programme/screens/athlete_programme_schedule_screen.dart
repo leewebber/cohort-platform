@@ -25,8 +25,10 @@ import '../services/programme_schedule_apply_supabase_store.dart';
 import '../services/programme_schedule_operations_supabase_store.dart';
 import '../services/programme_schedule_projection_supabase_store.dart';
 import '../services/programme_schedule_restore_service.dart';
+import '../services/scheduled_programme_session_preview_service.dart';
 import '../widgets/fixed_programme_week_view.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
+import 'scheduled_programme_session_preview_screen.dart';
 
 /// Assignment-scoped athlete schedule calendar (Sprint 1.7F).
 ///
@@ -41,6 +43,7 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
     this.assignmentStore,
     this.prepareService,
     this.executionLauncher,
+    this.previewService,
   });
 
   final String athleteId;
@@ -50,6 +53,7 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
   final ProgrammeAssignmentStore? assignmentStore;
   final AthleteProgrammeSessionPrepareService? prepareService;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final ScheduledProgrammeSessionPreviewService? previewService;
 
   @override
   State<AthleteProgrammeScheduleScreen> createState() =>
@@ -530,7 +534,7 @@ class _AthleteProgrammeScheduleScreenState
             const SizedBox(height: CohortSpacing.xl),
             FixedProgrammeWeekView(
               presentation: lifecycle.week,
-              onOccurrenceTap: _openFixedOccurrence,
+              onDayTap: _openFixedDay,
             ),
             if (projection.overdue.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.xl),
@@ -549,7 +553,13 @@ class _AthleteProgrammeScheduleScreenState
                         ),
                       ),
                       TextButton(
-                        onPressed: () => _openFixedOccurrence(occurrence),
+                        onPressed: () => _openFixedDay(
+                          AthleteProgrammeWeekDayPresentation(
+                            date: DateTime.parse(occurrence.scheduledDate),
+                            state: occurrence.state,
+                            occurrence: occurrence,
+                          ),
+                        ),
                         child: const Text('Resume'),
                       ),
                     ],
@@ -564,79 +574,20 @@ class _AthleteProgrammeScheduleScreenState
     );
   }
 
-  Future<void> _openFixedOccurrence(
-    FixedProgrammeOccurrenceProjection occurrence,
-  ) async {
-    final canExecute = occurrence.isToday || occurrence.isResumable;
-    await showDialog<void>(
+  Future<void> _openFixedDay(AthleteProgrammeWeekDayPresentation day) async {
+    final projection = _fixedCalendar;
+    if (projection == null) return;
+    final changed = await openScheduledProgrammeSessionPreview(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(occurrence.sessionTitle),
-        content: Text(
-          '${AthleteProgrammeDateFormatter.longDate(DateTime.parse(occurrence.scheduledDate))} · '
-          '${occurrence.state.displayLabel}\n'
-          'Week ${occurrence.weekNumber}',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
-          ),
-          if (canExecute)
-            TextButton(
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
-                await _executeFixedOccurrence(occurrence);
-              },
-              child: Text(occurrence.isResumable ? 'Resume' : 'Begin'),
-            ),
-        ],
-      ),
+      athleteId: widget.athleteId,
+      calendar: projection,
+      day: day,
+      previewService: widget.previewService,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+      executionLauncher: widget.executionLauncher,
     );
-  }
-
-  Future<void> _executeFixedOccurrence(
-    FixedProgrammeOccurrenceProjection occurrence,
-  ) async {
-    final assignments =
-        widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
-    final assignment = await assignments.getById(widget.assignmentId);
-    if (assignment == null || !assignment.isFixedSchedule) {
-      _showFixedError('The fixed programme assignment is unavailable.');
-      return;
-    }
-    final prepare =
-        widget.prepareService ??
-        AthleteCatalogueEnrolmentServices.createPrepareService();
-    final prepared = await prepare.prepareFixedOccurrence(
-      assignment,
-      occurrence,
-    );
-    if (!mounted) return;
-    if (!prepared.isReady) {
-      _showFixedError(
-        prepared.message ?? 'This occurrence could not be prepared.',
-      );
-      return;
-    }
-    try {
-      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
-          .launch(
-            context: context,
-            athleteId: widget.athleteId,
-            prepared: prepared,
-          );
-      await _loadAuthoritativeCalendar();
-    } catch (error) {
-      if (mounted) _showFixedError(error.toString());
-    }
-  }
-
-  void _showFixedError(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    if (changed == true && mounted) await _loadAuthoritativeCalendar();
   }
 
   List<Widget> _calendarSections() {

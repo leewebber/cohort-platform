@@ -16,8 +16,11 @@ import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../services/scheduled_programme_session_preview_service.dart';
+import '../widgets/fixed_programme_week_view.dart';
 import 'athlete_programme_schedule_screen.dart';
 import 'athlete_programme_selection_screen.dart';
+import 'scheduled_programme_session_preview_screen.dart';
 
 /// Athlete-facing programme overview — enrolment, Start Programme, prepare handoff.
 class AthleteProgrammeScreen extends StatefulWidget {
@@ -28,6 +31,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
     this.embeddedInShell = false,
     this.controller,
     this.fixedOccurrenceStore,
+    this.previewService,
   });
 
   final String athleteId;
@@ -38,6 +42,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
 
   final AthleteProgrammeScreenController? controller;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
+  final ScheduledProgrammeSessionPreviewService? previewService;
 
   @override
   State<AthleteProgrammeScreen> createState() => _AthleteProgrammeScreenState();
@@ -321,6 +326,17 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           ],
           const SizedBox(height: CohortSpacing.md),
           _buildLifecycleStatus(assignment),
+          if (assignment.isFixedSchedule && _fixedCalendar != null) ...[
+            const SizedBox(height: CohortSpacing.md),
+            FixedProgrammeWeekView(
+              presentation:
+                  AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+                    _fixedCalendar!,
+                  ).week,
+              onDayTap: _openFixedDay,
+              onViewCalendar: () => _openCalendar(assignment),
+            ),
+          ],
           if (assignment.isEnrolledOnly) ...[
             const SizedBox(height: CohortSpacing.md),
             Text(
@@ -441,9 +457,23 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           athleteId: widget.athleteId,
           assignmentId: assignment.id,
           fixedOccurrenceStore: widget.fixedOccurrenceStore,
+          previewService: widget.previewService,
         ),
       ),
     );
     if (mounted) await _loadFixedCalendar();
+  }
+
+  Future<void> _openFixedDay(AthleteProgrammeWeekDayPresentation day) async {
+    final calendar = _fixedCalendar;
+    if (calendar == null) return;
+    final changed = await openScheduledProgrammeSessionPreview(
+      context: context,
+      athleteId: widget.athleteId,
+      calendar: calendar,
+      day: day,
+      previewService: widget.previewService,
+    );
+    if (changed == true && mounted) await _loadFixedCalendar();
   }
 }

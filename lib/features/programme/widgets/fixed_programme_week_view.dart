@@ -10,12 +10,12 @@ class FixedProgrammeWeekView extends StatelessWidget {
   const FixedProgrammeWeekView({
     super.key,
     required this.presentation,
-    this.onOccurrenceTap,
+    this.onDayTap,
     this.onViewCalendar,
   });
 
   final AthleteProgrammeWeekPresentation presentation;
-  final ValueChanged<FixedProgrammeOccurrenceProjection>? onOccurrenceTap;
+  final ValueChanged<AthleteProgrammeWeekDayPresentation>? onDayTap;
   final VoidCallback? onViewCalendar;
 
   @override
@@ -64,10 +64,7 @@ class FixedProgrammeWeekView extends StatelessWidget {
                   for (final day in presentation.days)
                     SizedBox(
                       width: width,
-                      child: _FixedProgrammeDayCell(
-                        day: day,
-                        onTap: onOccurrenceTap,
-                      ),
+                      child: _FixedProgrammeDayCell(day: day, onTap: onDayTap),
                     ),
                 ],
               );
@@ -83,12 +80,12 @@ class _FixedProgrammeDayCell extends StatelessWidget {
   const _FixedProgrammeDayCell({required this.day, this.onTap});
 
   final AthleteProgrammeWeekDayPresentation day;
-  final ValueChanged<FixedProgrammeOccurrenceProjection>? onTap;
+  final ValueChanged<AthleteProgrammeWeekDayPresentation>? onTap;
 
   @override
   Widget build(BuildContext context) {
     final occurrence = day.occurrence;
-    final canTap = occurrence != null && onTap != null;
+    final canTap = !day.isOutsideProgramme && onTap != null;
     final content = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 64),
       child: DecoratedBox(
@@ -133,7 +130,7 @@ class _FixedProgrammeDayCell extends StatelessWidget {
           '${occurrence == null ? '' : ', ${occurrence.sessionTitle}'}',
       child: canTap
           ? InkWell(
-              onTap: () => onTap!(occurrence),
+              onTap: () => onTap!(day),
               borderRadius: BorderRadius.circular(10),
               child: content,
             )

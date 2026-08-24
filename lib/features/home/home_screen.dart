@@ -16,10 +16,12 @@ import '../programme/models/fixed_programme_occurrence_projection.dart';
 import '../programme/presentation/athlete_programme_lifecycle_presentation.dart';
 import '../programme/screens/athlete_programme_schedule_screen.dart';
 import '../programme/screens/athlete_programme_screen.dart';
+import '../programme/screens/scheduled_programme_session_preview_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../programme/widgets/fixed_programme_week_view.dart';
 import '../session/services/programme_session_execution_launcher.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
@@ -45,6 +47,7 @@ class HomeScreen extends StatefulWidget {
     this.runtimeAuthorityResolver = const AthleteHomeRuntimeAuthorityResolver(),
     this.fixedOccurrenceStore,
     this.executionLauncher,
+    this.previewService,
   });
 
   final AuthController? authController;
@@ -68,6 +71,7 @@ class HomeScreen extends StatefulWidget {
   final AthleteHomeRuntimeAuthorityResolver runtimeAuthorityResolver;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final ScheduledProgrammeSessionPreviewService? previewService;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -327,7 +331,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () => _openOccurrenceDetails(overdue),
+                onPressed: () => _openScheduledDay(
+                  AthleteProgrammeWeekDayPresentation(
+                    date: DateTime.parse(overdue.scheduledDate),
+                    state: overdue.state,
+                    occurrence: overdue,
+                  ),
+                ),
                 child: const Text('Resume'),
               ),
             ],
@@ -340,7 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
       const SizedBox(height: CohortSpacing.xl),
       FixedProgrammeWeekView(
         presentation: lifecycle.week,
-        onOccurrenceTap: _openOccurrenceDetails,
+        onDayTap: _openScheduledDay,
         onViewCalendar: _openProgrammeCalendar,
       ),
       const SizedBox(height: CohortSpacing.xl),
@@ -378,72 +388,29 @@ class _HomeScreenState extends State<HomeScreen> {
           assignmentStore: widget.assignmentStore,
           prepareService: widget.prepareService,
           executionLauncher: widget.executionLauncher,
+          previewService: widget.previewService,
         ),
       ),
     );
     if (mounted) await _refreshMaterialisedGate();
   }
 
-  Future<void> _openOccurrenceDetails(
-    FixedProgrammeOccurrenceProjection occurrence,
+  Future<void> _openScheduledDay(
+    AthleteProgrammeWeekDayPresentation day,
   ) async {
-    final canExecute = occurrence.isToday || occurrence.isResumable;
-    await showDialog<void>(
+    final calendar = _calendar;
+    if (calendar == null) return;
+    final changed = await openScheduledProgrammeSessionPreview(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(occurrence.sessionTitle),
-        content: Text(
-          '${AthleteProgrammeDateFormatter.longDate(DateTime.parse(occurrence.scheduledDate))} · '
-          '${occurrence.state.displayLabel}\n'
-          'Week ${occurrence.weekNumber}',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Close'),
-          ),
-          if (canExecute)
-            TextButton(
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
-                await _executeOccurrence(occurrence);
-              },
-              child: Text(occurrence.isResumable ? 'Resume' : 'Begin'),
-            ),
-        ],
-      ),
+      athleteId: _athleteId,
+      calendar: calendar,
+      day: day,
+      previewService: widget.previewService,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+      executionLauncher: widget.executionLauncher,
     );
-  }
-
-  Future<void> _executeOccurrence(
-    FixedProgrammeOccurrenceProjection occurrence,
-  ) async {
-    final assignment = _assignment;
-    if (assignment == null) return;
-    final prepared = await _prepareService.prepareFixedOccurrence(
-      assignment,
-      occurrence,
-    );
-    if (!mounted) return;
-    if (!prepared.isReady) {
-      _showExecutionError(
-        prepared.message ?? 'This occurrence could not be prepared.',
-      );
-      return;
-    }
-    try {
-      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
-          .launch(context: context, athleteId: _athleteId, prepared: prepared);
-      await _refreshMaterialisedGate();
-    } catch (error) {
-      if (mounted) _showExecutionError(error.toString());
-    }
-  }
-
-  void _showExecutionError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    if (changed == true && mounted) await _refreshMaterialisedGate();
   }
 }
 
