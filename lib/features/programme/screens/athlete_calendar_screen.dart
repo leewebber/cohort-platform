@@ -20,11 +20,13 @@ class AthleteCalendarScreen extends StatefulWidget {
     required this.athleteId,
     this.fixedOccurrenceStore,
     this.previewService,
+    this.onOpenProgrammes,
   });
 
   final String athleteId;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final VoidCallback? onOpenProgrammes;
 
   @override
   State<AthleteCalendarScreen> createState() => _AthleteCalendarScreenState();
@@ -35,6 +37,7 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   DateTime? _weekStart;
   FixedProgrammeOccurrenceProjection? _selected;
   String? _error;
+  _CalendarLoadState _loadState = _CalendarLoadState.loading;
 
   @override
   void initState() {
@@ -43,21 +46,39 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   }
 
   Future<void> _load() async {
+    if (mounted) {
+      setState(() {
+        _loadState = _CalendarLoadState.loading;
+        _error = null;
+      });
+    }
     try {
       final calendar =
           await (widget.fixedOccurrenceStore ??
                   const FixedProgrammeOccurrenceProjectionSupabaseStore())
-              .resolveActive();
-      if (!mounted) return;
+              .resolveActive()
+              .timeout(const Duration(seconds: 12));
+      if (!mounted) {
+        return;
+      }
       setState(() {
         _calendar = calendar;
-        _weekStart ??= _monday(
-          DateTime.parse(calendar?.weekStart ?? _isoToday()),
-        );
+        _loadState = calendar == null
+            ? _CalendarLoadState.empty
+            : _CalendarLoadState.loaded;
+        if (calendar != null) {
+          _weekStart ??= _monday(DateTime.parse(calendar.weekStart));
+        }
         _error = null;
       });
     } catch (error) {
-      if (mounted) setState(() => _error = error.toString());
+      if (mounted) {
+        setState(() {
+          _calendar = null;
+          _loadState = _CalendarLoadState.error;
+          _error = 'Your programme schedule could not be loaded.';
+        });
+      }
     }
   }
 
@@ -67,12 +88,16 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Calendar')),
       body: SafeArea(
-        child: calendar == null
-            ? _emptyState()
+        child: _loadState == _CalendarLoadState.loading
+            ? const Center(child: CircularProgressIndicator())
+            : _loadState == _CalendarLoadState.empty
+            ? _noAssignmentState()
+            : _loadState == _CalendarLoadState.error
+            ? _errorState()
             : ListView(
                 padding: const EdgeInsets.all(CohortSpacing.lg),
                 children: [
-                  Text(calendar.programmeName, style: CohortTextStyles.h2),
+                  Text(calendar!.programmeName, style: CohortTextStyles.h2),
                   const SizedBox(height: CohortSpacing.xs),
                   Text('Training schedule', style: CohortTextStyles.muted),
                   const SizedBox(height: CohortSpacing.md),
@@ -92,14 +117,51 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     );
   }
 
-  Widget _emptyState() {
-    if (_error != null) {
-      return Center(
-        child: Text('Calendar unavailable', style: CohortTextStyles.h2),
-      );
-    }
-    return const Center(child: CircularProgressIndicator());
-  }
+  Widget _noAssignmentState() => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(CohortSpacing.lg),
+      child: CohortCard(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('No programme scheduled', style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              'Choose a programme to see your training schedule here.',
+              style: CohortTextStyles.body,
+            ),
+            if (widget.onOpenProgrammes != null) ...[
+              const SizedBox(height: CohortSpacing.md),
+              TextButton(
+                onPressed: widget.onOpenProgrammes,
+                child: const Text('Programmes'),
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
+
+  Widget _errorState() => Center(
+    child: Padding(
+      padding: const EdgeInsets.all(CohortSpacing.lg),
+      child: CohortCard(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Calendar unavailable', style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.sm),
+            Text(_error!, style: CohortTextStyles.body),
+            const SizedBox(height: CohortSpacing.md),
+            TextButton(onPressed: _load, child: const Text('Retry')),
+          ],
+        ),
+      ),
+    ),
+  );
 
   Widget _weekControls(FixedProgrammeCalendarProjection calendar) {
     final week = _weekStart!;
@@ -208,5 +270,6 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
 
   DateTime _monday(DateTime date) =>
       date.subtract(Duration(days: date.weekday - 1));
-  String _isoToday() => DateTime.now().toIso8601String().substring(0, 10);
 }
+
+enum _CalendarLoadState { loading, loaded, empty, error }

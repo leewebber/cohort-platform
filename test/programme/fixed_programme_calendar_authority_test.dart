@@ -52,6 +52,22 @@ class _ProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
   }
 }
 
+class _SequenceProjectionStore
+    implements FixedProgrammeOccurrenceProjectionStore {
+  _SequenceProjectionStore(this.results);
+
+  final List<Object?> results;
+  int calls = 0;
+
+  @override
+  Future<FixedProgrammeCalendarProjection?> resolveActive() async {
+    final result =
+        results[calls < results.length ? calls++ : results.length - 1];
+    if (result is Error) throw result;
+    return result as FixedProgrammeCalendarProjection?;
+  }
+}
+
 class _ThrowingProjectionStore
     implements FixedProgrammeOccurrenceProjectionStore {
   @override
@@ -1527,6 +1543,55 @@ void main() {
     await tester.tap(find.text('View Calendar').first);
     expect(openedCalendar, isTrue);
   });
+
+  testWidgets(
+    'Calendar replaces a completed absent projection with no-programme state',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteCalendarScreen(
+            athleteId: 'athlete.local',
+            fixedOccurrenceStore: _ProjectionStore(null),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('No programme scheduled'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.text('Rest'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Calendar error is human-readable and Retry observes completion',
+    (tester) async {
+      final assignment = _assignment();
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-08-25',
+        occurrences: _firstWeekOccurrences(assignment: assignment),
+      );
+      final store = _SequenceProjectionStore([
+        StateError('transport'),
+        calendar,
+      ]);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteCalendarScreen(
+            athleteId: 'athlete.local',
+            fixedOccurrenceStore: store,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Calendar unavailable'), findsOneWidget);
+      expect(find.text('transport'), findsNothing);
+      await tester.tap(find.text('Retry'));
+      await tester.pumpAndSettle();
+      expect(find.text(calendar.programmeName), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    },
+  );
 
   test('shared lifecycle formatter omits fixed cursor before start', () {
     final assignment = _assignment();

@@ -13,6 +13,7 @@ import '../programme/controllers/athlete_programme_controllers.dart';
 import '../programme/screens/athlete_calendar_screen.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
+import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../progress/screens/progress_screen.dart';
 import 'screens/athlete_profile_screen.dart';
 
@@ -75,6 +76,10 @@ class AthleteAppShell extends StatefulWidget {
 class _AthleteAppShellState extends State<AthleteAppShell> {
   int _index = 0;
   bool _recoveryPromptShown = false;
+
+  FixedProgrammeOccurrenceProjectionStore get _fixedOccurrenceStore =>
+      widget.fixedOccurrenceStore ??
+      const FixedProgrammeOccurrenceProjectionSupabaseStore();
 
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
@@ -182,12 +187,13 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           HomeScreen(
             authController: widget.authController,
             embeddedInShell: true,
-            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+            fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
           AthleteCalendarScreen(
             athleteId: _athleteId,
-            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+            fixedOccurrenceStore: _fixedOccurrenceStore,
+            onOpenProgrammes: () => setState(() => _index = 2),
           ),
           // Phase 2.6: athlete Programmes tab is canonical programme catalogue entry.
           // Plan Library start UI is no longer mounted here (RETIRE decision).
@@ -195,7 +201,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             athleteId: _athleteId,
             embeddedInShell: true,
             controller: widget.programmeScreenController,
-            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+            fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
           ProgressScreen(
