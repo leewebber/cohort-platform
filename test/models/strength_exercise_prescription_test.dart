@@ -5,6 +5,26 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('StrengthExercisePrescription', () {
+    test('per-side dosage round-trips and formats explicitly', () {
+      const prescription = StrengthExercisePrescription(
+        sets: 2,
+        reps: StrengthRepPrescription(
+          type: StrengthRepType.exact,
+          exactReps: 8,
+        ),
+        perSide: true,
+      );
+
+      final restored = StrengthExercisePrescription.fromJson(
+        prescription.toJson(),
+      );
+
+      expect(restored.perSide, isTrue);
+      expect(
+        StrengthPrescriptionFormatter.formatSetsReps(restored),
+        '2 × 8 / side',
+      );
+    });
     test('exact rep prescription round trip', () {
       const prescription = StrengthExercisePrescription(
         sets: 5,

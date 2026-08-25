@@ -194,7 +194,7 @@ class _ExecutionExerciseList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (ungrouped.isNotEmpty) ...[
-          Text('Prelude', style: CohortTextStyles.eyebrow),
+          Text('Exercises', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.sm),
           for (final exercise in ungrouped)
             _ExecutionExerciseRow(

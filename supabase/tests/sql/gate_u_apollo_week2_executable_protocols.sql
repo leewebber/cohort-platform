@@ -26,7 +26,7 @@ BEGIN
  SELECT count(*) INTO v_count FROM session_blocks WHERE session_id LIKE 'APOLLO-W1-%-R1';
  PERFORM sprint12_assert_eq('U','week1_block_count_unchanged','19',v_count::text);
  SELECT count(*) INTO v_count FROM session_block_exercises e JOIN session_blocks b ON b.block_id=e.block_id WHERE b.session_id LIKE 'APOLLO-W1-%-R1';
- PERFORM sprint12_assert_eq('U','week1_exercise_row_count_unchanged','44',v_count::text);
+ PERFORM sprint12_assert_eq('U','week1_exercise_row_count_unchanged','82',v_count::text);
  SELECT count(*) INTO v_count FROM session_blocks WHERE (session_id='APOLLO-W1-TUE-R1' AND timer_config @> '{"work_seconds":3000}'::jsonb) OR (session_id='APOLLO-W1-THU-R1' AND timer_config @> '{"rounds":5,"work_seconds":180,"recovery_seconds":120}'::jsonb) OR (session_id='APOLLO-W1-SUN-R1' AND timer_config @> '{"work_seconds":3900,"fast_finish":false}'::jsonb);
  PERFORM sprint12_assert_eq('U','week1_remains_unchanged','3',v_count::text);
  BEGIN

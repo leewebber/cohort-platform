@@ -12,6 +12,7 @@ class StrengthExercisePrescription {
     this.restSeconds,
     this.tempo,
     this.coachCue,
+    this.perSide = false,
     this.groupId,
     this.performanceCapture,
   });
@@ -22,6 +23,7 @@ class StrengthExercisePrescription {
   final int? restSeconds;
   final String? tempo;
   final String? coachCue;
+  final bool perSide;
   final String? groupId;
   final ExercisePerformanceCapture? performanceCapture;
 
@@ -35,6 +37,7 @@ class StrengthExercisePrescription {
     int? restSeconds,
     String? tempo,
     String? coachCue,
+    bool? perSide,
     String? groupId,
     ExercisePerformanceCapture? performanceCapture,
     bool clearLoad = false,
@@ -51,6 +54,7 @@ class StrengthExercisePrescription {
       restSeconds: clearRestSeconds ? null : (restSeconds ?? this.restSeconds),
       tempo: clearTempo ? null : (tempo ?? this.tempo),
       coachCue: clearCoachCue ? null : (coachCue ?? this.coachCue),
+      perSide: perSide ?? this.perSide,
       groupId: clearGroupId ? null : (groupId ?? this.groupId),
       performanceCapture: clearPerformanceCapture
           ? null
@@ -66,6 +70,7 @@ class StrengthExercisePrescription {
       if (restSeconds != null) 'rest_seconds': restSeconds,
       if (_nonEmpty(tempo) != null) 'tempo': tempo!.trim(),
       if (_nonEmpty(coachCue) != null) 'coach_cue': coachCue!.trim(),
+      if (perSide) 'per_side': true,
       if (_nonEmpty(groupId) != null) 'group_id': groupId!.trim(),
       if (performanceCapture != null)
         'performance_capture': performanceCapture!.toJson(),
@@ -80,6 +85,7 @@ class StrengthExercisePrescription {
       restSeconds: _parseInt(json['rest_seconds']),
       tempo: json['tempo']?.toString(),
       coachCue: json['coach_cue']?.toString(),
+      perSide: json['per_side'] == true,
       groupId: json['group_id']?.toString(),
       performanceCapture: _captureFromJson(json['performance_capture']),
     );

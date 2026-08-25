@@ -106,7 +106,13 @@ void main() {
         links.map((link) {
           return StrengthPrescriptionFormatter.summaryLine(link.prescription!);
         }),
-        ['1 × 5', '1 × 6', '2 × 8', '2 × 8–10 · Very light', '2 × 10'],
+        [
+          '1 × 5',
+          '1 × 6 / side',
+          '2 × 8',
+          '2 × 8–10 · Very light',
+          '2 × 10 / side',
+        ],
       );
     },
   );

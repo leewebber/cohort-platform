@@ -12,6 +12,7 @@ import '../../../models/exercise.dart';
 import '../../coach_studio/governance/services/coach_studio_governance_services.dart';
 import '../../coach_studio/governance/widgets/exercise_usage_panel.dart';
 import '../../exercise_relationship/services/exercise_relationship_service.dart';
+import '../../workout_player/widgets/workout_player_widgets.dart';
 import '../exercise_history/exercise_history_screen.dart';
 
 class ExerciseDetailScreen extends StatelessWidget {
@@ -42,64 +43,43 @@ class ExerciseDetailScreen extends StatelessWidget {
 
               const SizedBox(height: CohortSpacing.md),
 
-              SectionTitle(exercise.movementPattern ?? 'Exercise'),
-
-              const SizedBox(height: CohortSpacing.sm),
-
               Text(exercise.name, style: CohortTextStyles.h1),
 
-              const SizedBox(height: CohortSpacing.lg),
-
-              MetadataRow(
-                icon: Icons.fitness_center_outlined,
-                text: exercise.equipment,
-              ),
-              MetadataRow(
-                icon: Icons.accessibility_new_outlined,
-                text: exercise.bodyRegion,
-              ),
-              MetadataRow(
-                icon: Icons.speed_outlined,
-                text: exercise.technicalComplexity,
-              ),
-
-              if (_canOpenHistory) ...[
-                const SizedBox(height: CohortSpacing.xl),
-                CohortButton(
-                  label: 'View exercise history',
-                  onPressed: () => _openExerciseHistory(context),
+              if (_hasText(exercise.movementPattern)) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  exercise.movementPattern!,
+                  style: CohortTextStyles.sectionLabel,
                 ),
               ],
 
-              if (AthleteContentPolicy.showExerciseUsagePanel) ...[
+              if (_mediaUrl case final mediaUrl?) ...[
                 const SizedBox(height: CohortSpacing.xl),
-                ExerciseUsagePanel(
-                  exerciseId: exercise.exerciseId,
-                  loadUsage: (exerciseId) =>
-                      _relationshipService.tryGetUsageForExercise(exerciseId),
-                ),
+                ExerciseMediaSlot(mediaUrl: mediaUrl),
               ],
 
               const SizedBox(height: CohortSpacing.xl),
 
               if (_hasText(exercise.purpose))
                 _SectionCard(
-                  title: 'Purpose',
+                  title: 'Why this exercise matters',
                   child: Text(exercise.purpose!, style: CohortTextStyles.body),
                 ),
 
-              if (_hasText(exercise.setup))
+              if (_hasText(exercise.setup) || _hasText(exercise.execution))
                 _SectionCard(
-                  title: 'Setup',
-                  child: Text(exercise.setup!, style: CohortTextStyles.body),
-                ),
-
-              if (_hasText(exercise.execution))
-                _SectionCard(
-                  title: 'Execution',
-                  child: Text(
-                    exercise.execution!,
-                    style: CohortTextStyles.body,
+                  title: 'How to perform it',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_hasText(exercise.setup))
+                        Text(exercise.setup!, style: CohortTextStyles.body),
+                      if (_hasText(exercise.setup) &&
+                          _hasText(exercise.execution))
+                        const SizedBox(height: CohortSpacing.sm),
+                      if (_hasText(exercise.execution))
+                        Text(exercise.execution!, style: CohortTextStyles.body),
+                    ],
                   ),
                 ),
 
@@ -122,6 +102,19 @@ class ExerciseDetailScreen extends StatelessWidget {
                 ),
 
               const SizedBox(height: CohortSpacing.xl),
+
+              MetadataRow(
+                icon: Icons.fitness_center_outlined,
+                text: exercise.equipment,
+              ),
+              MetadataRow(
+                icon: Icons.accessibility_new_outlined,
+                text: exercise.bodyRegion,
+              ),
+              MetadataRow(
+                icon: Icons.speed_outlined,
+                text: exercise.technicalComplexity,
+              ),
 
               const SectionTitle('Attributes'),
 
@@ -175,6 +168,23 @@ class ExerciseDetailScreen extends StatelessWidget {
                 ),
               ],
 
+              if (_canOpenHistory) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                CohortButton(
+                  label: 'View exercise history',
+                  onPressed: () => _openExerciseHistory(context),
+                ),
+              ],
+
+              if (AthleteContentPolicy.showExerciseUsagePanel) ...[
+                const SizedBox(height: CohortSpacing.xl),
+                ExerciseUsagePanel(
+                  exerciseId: exercise.exerciseId,
+                  loadUsage: (exerciseId) =>
+                      _relationshipService.tryGetUsageForExercise(exerciseId),
+                ),
+              ],
+
               const SizedBox(height: CohortSpacing.xxl),
             ],
           ),
@@ -185,6 +195,12 @@ class ExerciseDetailScreen extends StatelessWidget {
 
   bool _hasText(String? value) {
     return value != null && value.trim().isNotEmpty;
+  }
+
+  String? get _mediaUrl {
+    if (_hasText(exercise.videoUrl)) return exercise.videoUrl!.trim();
+    if (_hasText(exercise.imageUrl)) return exercise.imageUrl!.trim();
+    return null;
   }
 
   ExerciseRelationshipService get _relationshipService =>

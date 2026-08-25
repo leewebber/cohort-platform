@@ -7,7 +7,9 @@ class StrengthPrescriptionFormatter {
 
   static String formatSetsReps(StrengthExercisePrescription prescription) {
     final setsLabel = prescription.sets > 0 ? '${prescription.sets}' : '—';
-    final repsLabel = formatReps(prescription.reps);
+    final repsLabel =
+        '${formatReps(prescription.reps)}'
+        '${prescription.perSide ? ' / side' : ''}';
     return '$setsLabel × $repsLabel';
   }
 

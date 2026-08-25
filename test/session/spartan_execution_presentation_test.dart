@@ -92,7 +92,7 @@ void main() {
       'Wall Y/lower-trap raise',
       'Single-arm cable/band row with reach',
     ]);
-    expect(block.linkedExercises[3].prescription?.coachCue, 'Very light.');
+    expect(block.linkedExercises[3].prescription?.load?.text, 'Very light');
     expect(
       block.linkedExercises.every((exercise) => exercise.exercise != null),
       isTrue,
@@ -330,7 +330,8 @@ void main() {
       ),
     );
 
-    expect(find.text('Prelude'), findsOneWidget);
+    expect(find.text('Exercises'), findsOneWidget);
+    expect(find.text('Prelude'), findsNothing);
     expect(find.text('Warm-Up Circuit · 2 rounds'), findsOneWidget);
     expect(find.text('1.'), findsOneWidget);
 
@@ -356,16 +357,18 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: AthleteBlockCard(
-              block: block,
-              isExpanded: true,
-              isActive: true,
-              isComplete: false,
-              onToggleExpanded: () {},
-              onMarkComplete: () {},
-              onReopen: () {},
-              onLaunchTimer: null,
-              onOpenExercise: (exercise) => opened = exercise,
+            body: SingleChildScrollView(
+              child: AthleteBlockCard(
+                block: block,
+                isExpanded: true,
+                isActive: true,
+                isComplete: false,
+                onToggleExpanded: () {},
+                onMarkComplete: () {},
+                onReopen: () {},
+                onLaunchTimer: null,
+                onOpenExercise: (exercise) => opened = exercise,
+              ),
             ),
           ),
         ),
@@ -378,12 +381,13 @@ void main() {
       expect(find.text('Serratus wall slide + reach'), findsOneWidget);
       expect(find.text('Wall Y/lower-trap raise'), findsOneWidget);
       expect(find.text('Single-arm cable/band row with reach'), findsOneWidget);
-      expect(find.text('1 × 5 slow reps at 2-3 positions'), findsOneWidget);
-      expect(find.text('1 × 6/side'), findsOneWidget);
+      expect(find.text('1 × 5'), findsOneWidget);
+      expect(find.text('1 × 6 / side'), findsOneWidget);
       expect(find.text('2 × 8'), findsOneWidget);
-      expect(find.text('2 × 8–10'), findsOneWidget);
-      expect(find.text('2 × 10/side'), findsOneWidget);
-      expect(find.text('Very light.'), findsOneWidget);
+      expect(find.textContaining('2 × 8–10'), findsOneWidget);
+      expect(find.text('2 × 10 / side'), findsOneWidget);
+      expect(find.textContaining('Very light'), findsOneWidget);
+      expect(find.text('Use 2–3 positions.'), findsOneWidget);
       expect(
         find.bySemanticsLabel(
           'Exercise info for Thoracic extension over foam roller',
@@ -408,9 +412,11 @@ SessionExecutionBlock _apolloWarmUpBlock() {
       prescription: StrengthExercisePrescription(
         sets: 1,
         reps: StrengthRepPrescription(
-          type: StrengthRepType.freeText,
-          text: '5 slow reps at 2-3 positions',
+          type: StrengthRepType.exact,
+          exactReps: 5,
         ),
+        tempo: 'slow',
+        coachCue: 'Use 2–3 positions.',
       ),
     ),
     SessionBlockExerciseLink(
@@ -421,9 +427,10 @@ SessionExecutionBlock _apolloWarmUpBlock() {
       prescription: StrengthExercisePrescription(
         sets: 1,
         reps: StrengthRepPrescription(
-          type: StrengthRepType.freeText,
-          text: '6/side',
+          type: StrengthRepType.exact,
+          exactReps: 6,
         ),
+        perSide: true,
       ),
     ),
     SessionBlockExerciseLink(
@@ -451,7 +458,10 @@ SessionExecutionBlock _apolloWarmUpBlock() {
           minReps: 8,
           maxReps: 10,
         ),
-        coachCue: 'Very light.',
+        load: StrengthLoadPrescription(
+          type: StrengthLoadType.freeText,
+          text: 'Very light',
+        ),
       ),
     ),
     SessionBlockExerciseLink(
@@ -462,9 +472,10 @@ SessionExecutionBlock _apolloWarmUpBlock() {
       prescription: StrengthExercisePrescription(
         sets: 2,
         reps: StrengthRepPrescription(
-          type: StrengthRepType.freeText,
-          text: '10/side',
+          type: StrengthRepType.exact,
+          exactReps: 10,
         ),
+        perSide: true,
       ),
     ),
   ];

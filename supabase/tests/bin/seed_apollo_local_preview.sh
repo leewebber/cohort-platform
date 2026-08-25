@@ -38,8 +38,8 @@ esac
 
 supabase start \
   --workdir "$WORKDIR" \
-  --exclude edge-runtime,imgproxy,inbucket,realtime,storage,studio,vector \
-  --ignore-health-check
+  --exclude edge-runtime,imgproxy,mailpit,realtime,storage-api,studio,vector \
+  --ignore-health-check >/dev/null
 supabase db reset --local --no-seed --yes --workdir "$WORKDIR"
 
 STATUS_JSON="$(supabase status -o json --workdir "$WORKDIR")"

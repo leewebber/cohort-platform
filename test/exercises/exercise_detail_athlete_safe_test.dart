@@ -10,6 +10,12 @@ void main() {
     name: 'Back Squat',
     published: true,
     category: 'Strength',
+    movementPattern: 'Squat',
+    equipment: 'Barbell',
+    purpose: 'Builds lower-body strength.',
+    setup: 'Set the bar securely across the upper back.',
+    execution: 'Squat with control, then stand tall.',
+    coachingCues: 'Keep the whole foot grounded.',
     progression: 'https://notion.so/regression-doc',
     regression: 'Goblet squat',
   );
@@ -29,5 +35,47 @@ void main() {
     expect(find.text('Scaling'), findsNothing);
     expect(find.text('Programming'), findsNothing);
     expect(AthleteContentPolicy.showExerciseUsagePanel, isFalse);
+    expect(
+      find.text('WHY THIS EXERCISE MATTERS', skipOffstage: false),
+      findsOneWidget,
+    );
+    expect(find.text('HOW TO PERFORM IT', skipOffstage: false), findsOneWidget);
+    expect(find.text('COACHING CUES', skipOffstage: false), findsOneWidget);
+
+    final athleteText = tester
+        .widgetList<Text>(find.byType(Text, skipOffstage: false))
+        .map((widget) => widget.data)
+        .whereType<String>()
+        .toList(growable: false);
+    expect(
+      athleteText.indexOf('Back Squat'),
+      lessThan(athleteText.indexOf('WHY THIS EXERCISE MATTERS')),
+    );
+    expect(
+      athleteText.indexOf('WHY THIS EXERCISE MATTERS'),
+      lessThan(athleteText.indexOf('ATTRIBUTES')),
+    );
+    expect(
+      athleteText.indexOf('ATTRIBUTES'),
+      lessThan(athleteText.indexOf('View exercise history')),
+    );
+  });
+
+  testWidgets('purpose section is safely omitted when no guidance exists', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: ExerciseDetailScreen(
+          exercise: Exercise(
+            exerciseId: 'ex-2',
+            name: 'Unspecified movement',
+            published: true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('WHY THIS EXERCISE MATTERS'), findsNothing);
   });
 }

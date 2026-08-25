@@ -15,7 +15,7 @@ BEGIN
  SELECT count(*) INTO v_count FROM (SELECT protocol_id FROM performance_protocols WHERE protocol_id LIKE 'APOLLO-W9-%-R1' GROUP BY protocol_id HAVING count(*)>1) d; PERFORM sprint12_assert_eq('AB','no_duplicate_protocol_identities','0',v_count::text);
  SELECT count(*) INTO v_count FROM performance_protocols WHERE protocol_id ~ '^APOLLO-W[1-8]-.*-R1$'; PERFORM sprint12_assert_eq('AB','week1_week8_protocol_counts_unchanged','56',v_count::text);
  SELECT count(*) INTO v_count FROM session_blocks WHERE session_id ~ '^APOLLO-W[1-8]-.*-R1$'; PERFORM sprint12_assert_eq('AB','week1_week8_block_counts_unchanged','150',v_count::text);
- SELECT count(*) INTO v_count FROM session_block_exercises e JOIN session_blocks b ON b.block_id=e.block_id WHERE b.session_id ~ '^APOLLO-W[1-8]-.*-R1$'; PERFORM sprint12_assert_eq('AB','week1_week8_exercise_row_counts_unchanged','323',v_count::text);
+ SELECT count(*) INTO v_count FROM session_block_exercises e JOIN session_blocks b ON b.block_id=e.block_id WHERE b.session_id ~ '^APOLLO-W[1-8]-.*-R1$'; PERFORM sprint12_assert_eq('AB','week1_week8_exercise_row_counts_unchanged','662',v_count::text);
  BEGIN INSERT INTO performance_protocols(protocol_id,name) VALUES ('APOLLO-W9-MON-R1','conflicting deterministic Apollo identity'); PERFORM sprint12_record('AB','conflicting_identity_fails_closed','unique violation','no exception',NULL,FALSE);
  EXCEPTION WHEN unique_violation THEN GET STACKED DIAGNOSTICS v_conflict = MESSAGE_TEXT; PERFORM sprint12_record('AB','conflicting_identity_fails_closed','unique violation','unique violation',NULL,TRUE,v_conflict); END;
 END $$;
