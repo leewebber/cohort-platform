@@ -8,6 +8,10 @@ import '../../../core/widgets/section_title.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../exercises/exercise_detail/exercise_detail_screen.dart';
+import '../../performance/models/training_session_record.dart';
+import '../../performance/repositories/performance_record_store.dart';
+import '../../performance/repositories/supabase_performance_record_store.dart';
+import '../../performance/services/performance_result_summary_formatter.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../../session/widgets/athlete/athlete_block_card.dart';
@@ -54,6 +58,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
     this.assignmentStore,
     this.prepareService,
     this.executionLauncher,
+    this.performanceRecordStore,
   });
 
   final String athleteId;
@@ -63,6 +68,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
   final ProgrammeAssignmentStore? assignmentStore;
   final AthleteProgrammeSessionPrepareService? prepareService;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final PerformanceRecordStore? performanceRecordStore;
 
   @override
   State<ScheduledProgrammeSessionPreviewScreen> createState() =>
@@ -76,11 +82,12 @@ class _ScheduledProgrammeSessionPreviewScreenState
   late final Future<ScheduledProgrammeSessionPreview> _preview = _previewService
       .load(calendar: widget.calendar, day: widget.day);
   bool _isOpeningSession = false;
+  final Map<int, Future<TrainingSessionRecord?>> _completedRecords = {};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Session preview')),
+      appBar: AppBar(title: const Text('Session')),
       body: SafeArea(
         child: FutureBuilder<ScheduledProgrammeSessionPreview>(
           future: _preview,
@@ -92,7 +99,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
               return Padding(
                 padding: const EdgeInsets.all(CohortSpacing.lg),
                 child: AthleteFeedbackState(
-                  title: 'Session preview unavailable',
+                  title: 'Session unavailable',
                   message:
                       'This assigned session could not be loaded safely. Please go back and refresh your calendar.',
                   actionLabel: 'Go back',
@@ -108,6 +115,31 @@ class _ScheduledProgrammeSessionPreviewScreenState
   }
 
   Widget _buildPreview(ScheduledProgrammeSessionPreview preview) {
+    final trainingSessionId = preview.occurrence?.trainingSessionId;
+    if (preview.occurrence?.state == FixedProgrammeOccurrenceState.completed &&
+        trainingSessionId != null) {
+      return FutureBuilder<TrainingSessionRecord?>(
+        future: _completedRecords.putIfAbsent(
+          trainingSessionId,
+          () =>
+              (widget.performanceRecordStore ??
+                      SupabasePerformanceRecordStore())
+                  .getTerminalForTrainingSession(
+                    athleteId: widget.athleteId,
+                    trainingSessionId: trainingSessionId,
+                  ),
+        ),
+        builder: (context, snapshot) =>
+            _buildSessionContent(preview, record: snapshot.data),
+      );
+    }
+    return _buildSessionContent(preview);
+  }
+
+  Widget _buildSessionContent(
+    ScheduledProgrammeSessionPreview preview, {
+    TrainingSessionRecord? record,
+  }) {
     final occurrence = preview.occurrence;
     final plan = preview.plan;
     return ListView(
@@ -126,10 +158,10 @@ class _ScheduledProgrammeSessionPreviewScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Rest day', style: CohortTextStyles.h2),
+                Text('No session scheduled', style: CohortTextStyles.h2),
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
-                  'No training session is prescribed for this programme date.',
+                  'There is no assigned session for this programme date.',
                   style: CohortTextStyles.body,
                 ),
               ],
@@ -160,6 +192,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
               onOpenExercise: _openExercise,
               showActions: false,
               exerciseInfoOpensDetail: true,
+              recordedResultSummary: _recordedResultFor(record, block.blockId),
             ),
             const SizedBox(height: CohortSpacing.md),
           ],
@@ -167,6 +200,16 @@ class _ScheduledProgrammeSessionPreviewScreenState
         ],
       ],
     );
+  }
+
+  String? _recordedResultFor(TrainingSessionRecord? record, String blockId) {
+    if (record == null) return null;
+    for (final block in record.blockResults) {
+      if (block.sourceBlockId == blockId) {
+        return PerformanceResultSummaryFormatter.formatBlock(block);
+      }
+    }
+    return null;
   }
 
   Widget _statusCard(ScheduledProgrammeSessionPreview preview) {

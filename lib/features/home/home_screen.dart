@@ -48,6 +48,7 @@ class HomeScreen extends StatefulWidget {
     this.fixedOccurrenceStore,
     this.executionLauncher,
     this.previewService,
+    this.onOpenCalendar,
   });
 
   final AuthController? authController;
@@ -72,6 +73,7 @@ class HomeScreen extends StatefulWidget {
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final VoidCallback? onOpenCalendar;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -289,7 +291,12 @@ class _HomeScreenState extends State<HomeScreen> {
       widgets.addAll(const [
         Text('TODAY', style: CohortTextStyles.sectionLabel),
         SizedBox(height: CohortSpacing.md),
-        CohortCard(child: Text('Rest day', style: CohortTextStyles.body)),
+        CohortCard(
+          child: Text(
+            'No session scheduled today.',
+            style: CohortTextStyles.body,
+          ),
+        ),
       ]);
     } else if (todayOccurrence.state ==
         FixedProgrammeOccurrenceState.completed) {
@@ -377,6 +384,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _openProgrammeCalendar() async {
+    final shellCalendar = widget.onOpenCalendar;
+    if (shellCalendar != null) {
+      shellCalendar();
+      return;
+    }
     final assignment = _assignment;
     if (assignment == null) return;
     await Navigator.of(context).push<void>(
@@ -399,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AthleteProgrammeWeekDayPresentation day,
   ) async {
     final calendar = _calendar;
-    if (calendar == null) return;
+    if (calendar == null || day.occurrence == null) return;
     final changed = await openScheduledProgrammeSessionPreview(
       context: context,
       athleteId: _athleteId,

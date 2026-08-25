@@ -85,14 +85,22 @@ class _FixedProgrammeDayCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final occurrence = day.occurrence;
-    final canTap = !day.isOutsideProgramme && onTap != null;
+    final isEmpty = !day.isOutsideProgramme && occurrence == null;
+    final canTap =
+        !day.isOutsideProgramme && occurrence != null && onTap != null;
     final content = ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 64),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: _dayColor.withValues(alpha: 0.09),
+          color: isEmpty
+              ? Colors.transparent
+              : _dayColor.withValues(alpha: 0.09),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: _dayColor.withValues(alpha: 0.28)),
+          border: Border.all(
+            color: isEmpty
+                ? Colors.transparent
+                : _dayColor.withValues(alpha: 0.28),
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -105,15 +113,17 @@ class _FixedProgrammeDayCell extends StatelessWidget {
               Text(day.weekdayLabel, style: CohortTextStyles.tileLabel),
               const SizedBox(height: 2),
               Text(day.dateLabel, style: CohortTextStyles.tileValue),
-              const SizedBox(height: 3),
-              Text(
-                day.isOutsideProgramme
-                    ? 'Not active'
-                    : _compactStateLabel(day.state),
-                style: CohortTextStyles.tileLabel.copyWith(color: _dayColor),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+              if (!isEmpty) ...[
+                const SizedBox(height: 3),
+                Text(
+                  day.isOutsideProgramme
+                      ? 'Not active'
+                      : _compactStateLabel(day.state),
+                  style: CohortTextStyles.tileLabel.copyWith(color: _dayColor),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
         ),
@@ -126,7 +136,8 @@ class _FixedProgrammeDayCell extends StatelessWidget {
       button: canTap,
       enabled: canTap,
       label:
-          '${day.weekdayLabel} ${day.dateLabel}, ${day.stateLabel}'
+          '${day.weekdayLabel} ${day.dateLabel}'
+          '${isEmpty ? ', no session scheduled' : ', ${day.stateLabel}'}'
           '${occurrence == null ? '' : ', ${occurrence.sessionTitle}'}',
       child: canTap
           ? InkWell(

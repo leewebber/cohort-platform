@@ -101,12 +101,13 @@ void main() {
       },
     );
 
-    testWidgets('athlete shell exposes four destinations', (tester) async {
+    testWidgets('athlete shell exposes five destinations', (tester) async {
       await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
       await tester.pumpAndSettle();
 
       expect(find.text('Home'), findsWidgets);
-      expect(find.text('Plans'), findsOneWidget);
+      expect(find.text('Calendar'), findsOneWidget);
+      expect(find.text('Programmes'), findsOneWidget);
       expect(find.text('Progress'), findsOneWidget);
       expect(find.text('Profile'), findsOneWidget);
       expect(find.text('Sessions'), findsNothing);

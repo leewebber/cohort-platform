@@ -32,6 +32,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
     this.controller,
     this.fixedOccurrenceStore,
     this.previewService,
+    this.onOpenCalendar,
   });
 
   final String athleteId;
@@ -43,6 +44,7 @@ class AthleteProgrammeScreen extends StatefulWidget {
   final AthleteProgrammeScreenController? controller;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final VoidCallback? onOpenCalendar;
 
   @override
   State<AthleteProgrammeScreen> createState() => _AthleteProgrammeScreenState();
@@ -368,12 +370,6 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                     : 'Manage schedule',
               ),
             ),
-            if (assignment.isFixedSchedule &&
-                _fixedCalendar?.startsInFuture == true)
-              TextButton(
-                onPressed: () => _openCalendar(assignment),
-                child: const Text('Preview Week 1'),
-              ),
           ],
           const SizedBox(height: CohortSpacing.md),
           CohortButton(
@@ -451,6 +447,11 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   }
 
   Future<void> _openCalendar(ProgrammeAssignment assignment) async {
+    final shellCalendar = widget.onOpenCalendar;
+    if (shellCalendar != null) {
+      shellCalendar();
+      return;
+    }
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => AthleteProgrammeScheduleScreen(
@@ -466,7 +467,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
   Future<void> _openFixedDay(AthleteProgrammeWeekDayPresentation day) async {
     final calendar = _fixedCalendar;
-    if (calendar == null) return;
+    if (calendar == null || day.occurrence == null) return;
     final changed = await openScheduledProgrammeSessionPreview(
       context: context,
       athleteId: widget.athleteId,

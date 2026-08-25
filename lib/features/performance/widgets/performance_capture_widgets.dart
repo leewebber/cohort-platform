@@ -121,6 +121,7 @@ class BlockResultEditor extends StatelessWidget {
     required this.onRemoveSet,
     this.onApplyElapsedSeconds,
     this.linkedExercises = const [],
+    this.onOpenExercise,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -136,10 +137,20 @@ class BlockResultEditor extends StatelessWidget {
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
   final List<SessionExecutionExerciseSummary> linkedExercises;
+  final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
 
   static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
     return _captureModeFor(blockDraft) != BlockCaptureMode.completion ||
         blockDraft.exerciseResults.any((exercise) => exercise.sets.isNotEmpty);
+  }
+
+  /// These capture modes render each linked movement themselves. The active
+  /// block must not render a second summary list above them.
+  static bool rendersExerciseRows(BlockPerformanceDraft blockDraft) {
+    final mode = _captureModeFor(blockDraft);
+    return (mode == BlockCaptureMode.strength ||
+            mode == BlockCaptureMode.completion) &&
+        blockDraft.exerciseResults.isNotEmpty;
   }
 
   static BlockCaptureMode _captureModeFor(BlockPerformanceDraft blockDraft) {
@@ -169,8 +180,6 @@ class BlockResultEditor extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Performance', style: CohortTextStyles.eyebrow),
-        const SizedBox(height: CohortSpacing.sm),
         _ResultEditorBody(
           blockDraft: blockDraft,
           linkedExercises: linkedExercises,
@@ -180,6 +189,7 @@ class BlockResultEditor extends StatelessWidget {
           onDuplicateSet: onDuplicateSet,
           onRemoveSet: onRemoveSet,
           onApplyElapsedSeconds: onApplyElapsedSeconds,
+          onOpenExercise: onOpenExercise,
         ),
       ],
     );
@@ -196,6 +206,7 @@ class _ResultEditorBody extends StatelessWidget {
     required this.onDuplicateSet,
     required this.onRemoveSet,
     this.onApplyElapsedSeconds,
+    this.onOpenExercise,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -211,6 +222,7 @@ class _ResultEditorBody extends StatelessWidget {
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
+  final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +236,7 @@ class _ResultEditorBody extends StatelessWidget {
           onUpdateSet: onUpdateSet,
           onDuplicateSet: onDuplicateSet,
           onRemoveSet: onRemoveSet,
+          onOpenExercise: onOpenExercise,
         );
       case BlockCaptureMode.amrap:
         return _AmrapEditor(
@@ -274,6 +287,7 @@ class _ResultEditorBody extends StatelessWidget {
           blockDraft: blockDraft,
           linkedExercises: linkedExercises,
           onUpdateSet: onUpdateSet,
+          onOpenExercise: onOpenExercise,
         );
     }
   }
@@ -526,6 +540,7 @@ class _ExerciseAcknowledgementEditor extends StatelessWidget {
     required this.blockDraft,
     required this.linkedExercises,
     required this.onUpdateSet,
+    this.onOpenExercise,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -536,6 +551,7 @@ class _ExerciseAcknowledgementEditor extends StatelessWidget {
     SetPerformanceDraft Function(SetPerformanceDraft) update,
   )
   onUpdateSet;
+  final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
 
   SessionExecutionExerciseSummary? _summaryFor(String exerciseId) {
     for (final summary in linkedExercises) {
@@ -560,7 +576,11 @@ class _ExerciseAcknowledgementEditor extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: CohortTextStyles.cardTitle),
+                  _PerformanceExerciseTitle(
+                    label: label,
+                    summary: summary,
+                    onOpenExercise: onOpenExercise,
+                  ),
                   const SizedBox(height: CohortSpacing.sm),
                   _ExerciseTargetComparison(summary: summary),
                   const SizedBox(height: CohortSpacing.sm),
@@ -602,6 +622,7 @@ class _StrengthEditor extends StatelessWidget {
     required this.onUpdateSet,
     required this.onDuplicateSet,
     required this.onRemoveSet,
+    this.onOpenExercise,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -615,6 +636,7 @@ class _StrengthEditor extends StatelessWidget {
   onUpdateSet;
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
+  final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
 
   SessionExecutionExerciseSummary? _summaryFor(String exerciseId) {
     for (final summary in linkedExercises) {
@@ -636,7 +658,11 @@ class _StrengthEditor extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final exercise in blockDraft.exerciseResults) ...[
-          Text(_exerciseLabel(exercise), style: CohortTextStyles.cardTitle),
+          _PerformanceExerciseTitle(
+            label: _exerciseLabel(exercise),
+            summary: _summaryFor(exercise.sourceExerciseId),
+            onOpenExercise: onOpenExercise,
+          ),
           const SizedBox(height: CohortSpacing.sm),
           _ExerciseTargetComparison(
             summary: _summaryFor(exercise.sourceExerciseId),
@@ -660,6 +686,37 @@ class _StrengthEditor extends StatelessWidget {
           ),
           const SizedBox(height: CohortSpacing.md),
         ],
+      ],
+    );
+  }
+}
+
+class _PerformanceExerciseTitle extends StatelessWidget {
+  const _PerformanceExerciseTitle({
+    required this.label,
+    required this.summary,
+    required this.onOpenExercise,
+  });
+
+  final String label;
+  final SessionExecutionExerciseSummary? summary;
+  final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
+
+  @override
+  Widget build(BuildContext context) {
+    final canOpen = summary != null && onOpenExercise != null;
+    return Row(
+      children: [
+        Expanded(child: Text(label, style: CohortTextStyles.cardTitle)),
+        Semantics(
+          button: canOpen,
+          label: 'Exercise info for $label',
+          child: IconButton(
+            tooltip: 'Exercise info',
+            icon: const Icon(Icons.info_outline),
+            onPressed: canOpen ? () => onOpenExercise!(summary!) : null,
+          ),
+        ),
       ],
     );
   }

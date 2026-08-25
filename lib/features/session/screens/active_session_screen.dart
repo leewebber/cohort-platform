@@ -328,6 +328,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                       final blockDraft = isActive
                           ? _blockDraft(block.blockId)
                           : null;
+                      final performanceReplacesExerciseList =
+                          blockDraft != null &&
+                          BlockResultEditor.rendersExerciseRows(blockDraft);
 
                       return AthleteBlockCard(
                         block: block,
@@ -345,6 +348,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                             ? () => _launchTimer(block)
                             : null,
                         onOpenExercise: _openExercise,
+                        exerciseInfoOpensDetail: true,
+                        performanceReplacesExerciseList:
+                            performanceReplacesExerciseList,
                         showActions: isActive,
                         showBlockNavigation: !isSingleBlock && isActive,
                         onPrevious: !isSingleBlock && activeIndex > 0
@@ -422,6 +428,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                                   _persistDraft();
                                   _refresh();
                                 },
+                                onOpenExercise: _openExercise,
                               ),
                       );
                     },

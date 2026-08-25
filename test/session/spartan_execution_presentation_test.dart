@@ -349,6 +349,190 @@ void main() {
   });
 
   testWidgets(
+    'active warm-up rows combine prescription, information, and completion once',
+    (tester) async {
+      final block = _apolloWarmUpBlock();
+      final draft = const PerformanceSnapshotBuilder()
+          .buildInitialBlockDrafts(
+            SessionExecutionPlan(
+              sessionId: 'apollo',
+              sessionTitle: 'Apollo',
+              blocks: [block],
+            ),
+          )
+          .single;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: AthleteBlockCard(
+                block: block,
+                isExpanded: true,
+                isActive: true,
+                isComplete: false,
+                onToggleExpanded: () {},
+                onMarkComplete: () {},
+                onReopen: () {},
+                onLaunchTimer: null,
+                onOpenExercise: (_) {},
+                exerciseInfoOpensDetail: true,
+                performanceReplacesExerciseList:
+                    BlockResultEditor.rendersExerciseRows(draft),
+                performanceSection: BlockResultEditor(
+                  blockDraft: draft,
+                  linkedExercises: block.linkedExercises,
+                  onResultChanged: (_) {},
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                  onOpenExercise: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      for (final label in const [
+        'Thoracic extension over foam roller',
+        'Open-book rotation',
+        'Serratus wall slide + reach',
+        'Wall Y/lower-trap raise',
+        'Single-arm cable/band row with reach',
+      ]) {
+        expect(find.text(label), findsOneWidget);
+        expect(
+          find.bySemanticsLabel('Exercise info for $label'),
+          findsOneWidget,
+        );
+      }
+      expect(find.text('Exercises'), findsNothing);
+      expect(find.text('Performance'), findsNothing);
+      expect(find.byType(Checkbox), findsNWidgets(8));
+    },
+  );
+
+  testWidgets(
+    'active strength row combines target, history, inputs, and add set',
+    (tester) async {
+      final block = _carryBlock();
+      final draft = const PerformanceSnapshotBuilder()
+          .buildInitialBlockDrafts(
+            SessionExecutionPlan(
+              sessionId: 'spartan',
+              sessionTitle: 'Spartan',
+              blocks: [block],
+            ),
+          )
+          .single;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: AthleteBlockCard(
+                block: block,
+                isExpanded: true,
+                isActive: true,
+                isComplete: false,
+                onToggleExpanded: () {},
+                onMarkComplete: () {},
+                onReopen: () {},
+                onLaunchTimer: null,
+                onOpenExercise: (_) {},
+                performanceReplacesExerciseList:
+                    BlockResultEditor.rendersExerciseRows(draft),
+                performanceSection: BlockResultEditor(
+                  blockDraft: draft,
+                  linkedExercises: block.linkedExercises,
+                  onResultChanged: (_) {},
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                  onOpenExercise: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Farmer Carry'), findsOneWidget);
+      expect(find.text('4 × 40 metres · Rest 1 min 15 sec'), findsOneWidget);
+      expect(find.text('Last time'), findsOneWidget);
+      expect(find.text('Add set'), findsOneWidget);
+      expect(find.text('Exercises'), findsNothing);
+      expect(find.text('Performance'), findsNothing);
+    },
+  );
+
+  testWidgets('scheduled rows render once without logging controls', (
+    tester,
+  ) async {
+    final block = _apolloWarmUpBlock();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AthleteBlockCard(
+            block: block,
+            isExpanded: true,
+            isActive: false,
+            isComplete: false,
+            onToggleExpanded: () {},
+            onMarkComplete: () {},
+            onReopen: () {},
+            onLaunchTimer: null,
+            onOpenExercise: (_) {},
+            exerciseInfoOpensDetail: true,
+            showActions: false,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Thoracic extension over foam roller'), findsOneWidget);
+    expect(find.text('Open-book rotation'), findsOneWidget);
+    expect(find.text('Completed'), findsNothing);
+    expect(find.text('Add set'), findsNothing);
+  });
+
+  testWidgets('completed rows show the recorded result without a restart', (
+    tester,
+  ) async {
+    final block = _carryBlock();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: AthleteBlockCard(
+            block: block,
+            isExpanded: true,
+            isActive: false,
+            isComplete: true,
+            onToggleExpanded: () {},
+            onMarkComplete: () {},
+            onReopen: () {},
+            onLaunchTimer: null,
+            onOpenExercise: (_) {},
+            exerciseInfoOpensDetail: true,
+            showActions: false,
+            recordedResultSummary: '4 sets logged · 40 kg',
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Farmer Carry'), findsOneWidget);
+    expect(find.text('Recorded'), findsOneWidget);
+    expect(find.text('4 sets logged · 40 kg'), findsOneWidget);
+    expect(find.text('Begin'), findsNothing);
+    expect(find.text('Resume'), findsNothing);
+  });
+
+  testWidgets(
     'Apollo warm-up renders each movement, dosage, cue, and info action',
     (tester) async {
       SessionExecutionExerciseSummary? opened;

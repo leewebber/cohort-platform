@@ -523,8 +523,8 @@ class _AthleteProgrammeScheduleScreenState
                     ),
                     const SizedBox(height: CohortSpacing.xs),
                     Text(
-                      'Preview your first week now. Sessions unlock on their '
-                      'scheduled programme dates.',
+                      'Your assigned sessions are available to view now. They '
+                      'unlock on their scheduled programme dates.',
                       style: CohortTextStyles.body,
                     ),
                   ],
@@ -576,7 +576,7 @@ class _AthleteProgrammeScheduleScreenState
 
   Future<void> _openFixedDay(AthleteProgrammeWeekDayPresentation day) async {
     final projection = _fixedCalendar;
-    if (projection == null) return;
+    if (projection == null || day.occurrence == null) return;
     final changed = await openScheduledProgrammeSessionPreview(
       context: context,
       athleteId: widget.athleteId,

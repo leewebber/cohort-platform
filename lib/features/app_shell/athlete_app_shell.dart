@@ -10,15 +10,17 @@ import '../auth/controllers/auth_controller.dart';
 import '../auth/services/current_user_session.dart';
 import '../home/home_screen.dart';
 import '../programme/controllers/athlete_programme_controllers.dart';
+import '../programme/screens/athlete_calendar_screen.dart';
 import '../programme/screens/athlete_programme_screen.dart';
+import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../progress/screens/progress_screen.dart';
 import 'screens/athlete_profile_screen.dart';
 
-/// Athlete application shell — exactly four destinations.
+/// Athlete application shell — the athlete's five primary destinations.
 ///
 /// Founder/coach tools are absent from this widget tree.
 ///
-/// Phase 2.6: the Plans tab mounts the canonical [AthleteProgrammeScreen], not
+/// Phase 2.6: the Programmes tab mounts the canonical [AthleteProgrammeScreen], not
 /// Plan Library. New legacy Plan Library starts are closed at this boundary.
 class AthleteAppShell extends StatefulWidget {
   const AthleteAppShell({
@@ -27,6 +29,7 @@ class AthleteAppShell extends StatefulWidget {
     this.pendingWorkoutProgress,
     this.planDefinitionMissing = false,
     this.programmeScreenController,
+    this.fixedOccurrenceStore,
   });
 
   final AuthController? authController;
@@ -35,6 +38,7 @@ class AthleteAppShell extends StatefulWidget {
 
   /// Optional programme tab controller (tests / local wiring).
   final AthleteProgrammeScreenController? programmeScreenController;
+  final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -43,9 +47,14 @@ class AthleteAppShell extends StatefulWidget {
       selectedIcon: Icons.home_rounded,
     ),
     CohortAthleteNavDestination(
-      label: 'Plans',
+      label: 'Calendar',
       icon: Icons.calendar_view_week_outlined,
       selectedIcon: Icons.calendar_view_week_rounded,
+    ),
+    CohortAthleteNavDestination(
+      label: 'Programmes',
+      icon: Icons.folder_outlined,
+      selectedIcon: Icons.folder_rounded,
     ),
     CohortAthleteNavDestination(
       label: 'Progress',
@@ -99,7 +108,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                setState(() => _index = 1);
+                setState(() => _index = 2);
               },
               child: const Text('Browse Programmes'),
             ),
@@ -173,17 +182,25 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           HomeScreen(
             authController: widget.authController,
             embeddedInShell: true,
+            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+            onOpenCalendar: () => setState(() => _index = 1),
           ),
-          // Phase 2.6: athlete Plans tab is canonical programme catalogue entry.
+          AthleteCalendarScreen(
+            athleteId: _athleteId,
+            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+          ),
+          // Phase 2.6: athlete Programmes tab is canonical programme catalogue entry.
           // Plan Library start UI is no longer mounted here (RETIRE decision).
           AthleteProgrammeScreen(
             athleteId: _athleteId,
             embeddedInShell: true,
             controller: widget.programmeScreenController,
+            fixedOccurrenceStore: widget.fixedOccurrenceStore,
+            onOpenCalendar: () => setState(() => _index = 1),
           ),
           ProgressScreen(
             embeddedInShell: true,
-            onChoosePlan: () => setState(() => _index = 1),
+            onChoosePlan: () => setState(() => _index = 2),
             onStartToday: () => setState(() => _index = 0),
           ),
           AthleteProfileScreen(authController: widget.authController),

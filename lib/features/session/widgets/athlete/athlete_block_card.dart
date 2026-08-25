@@ -27,6 +27,8 @@ class AthleteBlockCard extends StatelessWidget {
     this.showActions = true,
     this.exerciseInfoOpensDetail = false,
     this.performanceSection,
+    this.performanceReplacesExerciseList = false,
+    this.recordedResultSummary,
     this.showBlockNavigation = false,
     this.onPrevious,
     this.onNext,
@@ -44,6 +46,14 @@ class AthleteBlockCard extends StatelessWidget {
   final bool showActions;
   final bool exerciseInfoOpensDetail;
   final Widget? performanceSection;
+
+  /// Active per-exercise controls include the movement and prescription, so
+  /// rendering the structured summary list as well would duplicate each row.
+  final bool performanceReplacesExerciseList;
+
+  /// A completed occurrence may attach its recorded block result without
+  /// rendering a second exercise list.
+  final String? recordedResultSummary;
   final bool showBlockNavigation;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
@@ -105,7 +115,8 @@ class AthleteBlockCard extends StatelessWidget {
                 const SizedBox(height: CohortSpacing.sm),
                 TimerSummaryText(summary: block.timerSummary!),
               ],
-              if (block.linkedExercises.isNotEmpty) ...[
+              if (block.linkedExercises.isNotEmpty &&
+                  !performanceReplacesExerciseList) ...[
                 const SizedBox(height: CohortSpacing.md),
                 _ExecutionExerciseList(
                   exercises: block.linkedExercises,
@@ -123,6 +134,12 @@ class AthleteBlockCard extends StatelessWidget {
               if (performanceSection != null) ...[
                 const SizedBox(height: CohortSpacing.lg),
                 performanceSection!,
+              ],
+              if (recordedResultSummary?.trim().isNotEmpty == true) ...[
+                const SizedBox(height: CohortSpacing.md),
+                Text('Recorded', style: CohortTextStyles.eyebrow),
+                const SizedBox(height: CohortSpacing.xs),
+                Text(recordedResultSummary!, style: CohortTextStyles.body),
               ],
               if (showBlockNavigation) ...[
                 const SizedBox(height: CohortSpacing.md),

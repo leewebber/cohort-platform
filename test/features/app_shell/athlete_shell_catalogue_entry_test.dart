@@ -26,7 +26,7 @@ void main() {
   tearDown(AthleteProfileSession.clear);
 
   group('Phase 2.6 athlete shell catalogue entry', () {
-    testWidgets('Plans tab opens canonical AthleteProgrammeScreen', (
+    testWidgets('Programmes tab opens canonical AthleteProgrammeScreen', (
       tester,
     ) async {
       final tables = InMemoryProgrammeTables();
@@ -38,18 +38,18 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Plans'));
+      await tester.tap(find.text('Programmes'));
       await tester.pumpAndSettle();
 
       expect(find.byType(AthleteProgrammeScreen), findsOneWidget);
-            expect(find.text('Choose your plan'), findsNothing);
+      expect(find.text('Choose your plan'), findsNothing);
       expect(find.text('START PLAN'), findsNothing);
       expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
       expect(find.text('View programmes'), findsOneWidget);
     });
 
     testWidgets(
-      'shell Plans entry cannot mount Plan Library or create hasActivePlan',
+      'shell Programmes entry cannot mount Plan Library or create hasActivePlan',
       (tester) async {
         expect(AthleteProfileSession.hasActivePlan, isFalse);
         final tables = InMemoryProgrammeTables();
@@ -60,10 +60,10 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Plans'));
+        await tester.tap(find.text('Programmes'));
         await tester.pumpAndSettle();
 
-                expect(AthleteProfileSession.hasActivePlan, isFalse);
+        expect(AthleteProfileSession.hasActivePlan, isFalse);
         expect(AthleteProfileSession.activeAssignment, isNull);
         expect(AthleteProfileSession.activePlan, isNull);
       },
@@ -80,14 +80,14 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Plans'));
+        await tester.tap(find.text('Programmes'));
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('View programmes'));
         await tester.pumpAndSettle();
 
         expect(find.byType(AthleteProgrammeSelectionScreen), findsOneWidget);
-                expect(find.text('Choose your plan'), findsNothing);
+        expect(find.text('Choose your plan'), findsNothing);
       },
     );
 
@@ -104,11 +104,11 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Plans'));
+        await tester.tap(find.text('Programmes'));
         await tester.pumpAndSettle();
 
         expect(find.text('Programme data is unavailable.'), findsOneWidget);
-                expect(find.text('Choose your plan'), findsNothing);
+        expect(find.text('Choose your plan'), findsNothing);
         expect(find.text('START PLAN'), findsNothing);
       },
     );
@@ -124,14 +124,14 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Plans'));
+        await tester.tap(find.text('Programmes'));
         await tester.pumpAndSettle();
 
         expect(
           find.textContaining('not enrolled in a programme'),
           findsOneWidget,
         );
-                expect(find.text('Choose your plan'), findsNothing);
+        expect(find.text('Choose your plan'), findsNothing);
       },
     );
 
@@ -151,7 +151,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Plans'));
+        await tester.tap(find.text('Programmes'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Home'));
         await tester.pumpAndSettle();
@@ -163,7 +163,7 @@ void main() {
         );
         expect(AthleteProfileSession.activePlan?.planId, planBefore?.planId);
         // Catalogue entry must not rewrite legacy session bind.
-              },
+      },
     );
 
     test(
@@ -181,6 +181,28 @@ void main() {
         expect(shell.contains('startPlan('), isFalse);
       },
     );
+  });
+
+  testWidgets('Calendar is a direct fifth destination', (tester) async {
+    final tables = InMemoryProgrammeTables();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteAppShell(programmeScreenController: _controller(tables)),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(AthleteAppShell.destinations.map((item) => item.label), [
+      'Home',
+      'Calendar',
+      'Programmes',
+      'Progress',
+      'Profile',
+    ]);
+    await tester.tap(find.text('Calendar'));
+    await tester.pumpAndSettle();
+    expect(find.text('Calendar'), findsWidgets);
+    expect(find.text('Plans'), findsNothing);
   });
 }
 
@@ -246,8 +268,9 @@ void _bindLegacyActivePlan() {
             goalContext: const PlanningGoalContext(
               goalId: 'cohort.goal.general_fat_loss',
             ),
-            capabilityEvidence:
-                const AthleteCapabilityEvidenceProfile(items: []),
+            capabilityEvidence: const AthleteCapabilityEvidenceProfile(
+              items: [],
+            ),
             knowledgeOntologyVersion: '1.3.0',
             asOf: now,
           ),

@@ -8,12 +8,14 @@ import 'package:cohort_platform/features/programme/models/programme_progress_sum
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_schedule_screen.dart';
+import 'package:cohort_platform/features/programme/screens/athlete_calendar_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
 import 'package:cohort_platform/features/programme/screens/scheduled_programme_session_preview_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_authored_slot_resolver.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
 import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
 import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
+import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_view.dart';
 import 'package:cohort_platform/features/exercises/exercise_detail/exercise_detail_screen.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
@@ -674,7 +676,7 @@ void main() {
       expect(find.text('Missed'), findsOneWidget);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
-      expect(find.text('Rest'), findsNWidgets(4));
+      expect(find.text('Rest'), findsNothing);
       expect(find.text('Programme'), findsNothing);
       expect(find.text('Build physical capability.'), findsNothing);
 
@@ -694,7 +696,7 @@ void main() {
       expect(find.text('Missed'), findsOneWidget);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
-      expect(find.text('Rest'), findsNWidgets(4));
+      expect(find.text('Rest'), findsNothing);
     });
 
     testWidgets('Aug 24 future start is human upcoming and has no false Rest', (
@@ -796,7 +798,7 @@ void main() {
         find.byKey(const ValueKey('programme-week-day-2026-09-01')),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Session preview'), findsOneWidget);
+      expect(find.text('Session'), findsOneWidget);
       expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
       expect(
         find.text('Week 1 · Day 1 · Tuesday, 1 September'),
@@ -854,7 +856,7 @@ void main() {
         expect(find.text('12 weeks'), findsOneWidget);
         expect(find.text('7 sessions per week'), findsOneWidget);
         expect(find.text('View Programme Calendar'), findsOneWidget);
-        expect(find.text('Preview Week 1'), findsOneWidget);
+        expect(find.text('Preview Week 1'), findsNothing);
         expect(find.text('Browse programmes'), findsOneWidget);
         expect(find.text('View programmes'), findsNothing);
         expect(find.textContaining('Started'), findsNothing);
@@ -873,7 +875,7 @@ void main() {
       },
     );
 
-    testWidgets('active Sep 1 and authored Rest use lifecycle-safe headings', (
+    testWidgets('active Sep 1 and an empty date use lifecycle-safe headings', (
       tester,
     ) async {
       final assignment = _assignment(athleteId: 'athlete.local');
@@ -953,9 +955,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('TODAY'), findsOneWidget);
-      expect(find.text('Rest day'), findsOneWidget);
+      expect(find.text('No session scheduled today.'), findsOneWidget);
       expect(find.text("TODAY'S TRAINING"), findsNothing);
-      expect(find.text('Rest'), findsOneWidget);
+      expect(find.text('Rest'), findsNothing);
     });
 
     testWidgets('compact week is accessible at 320 logical pixels', (
@@ -993,6 +995,62 @@ void main() {
       expect(tapSize.width, greaterThanOrEqualTo(48));
       expect(tapSize.height, greaterThanOrEqualTo(48));
       expect(find.text('Planned'), findsNWidgets(7));
+    });
+
+    testWidgets('empty calendar dates are inert and never labelled Rest', (
+      tester,
+    ) async {
+      var opens = 0;
+      final assigned = _occurrence(
+        assignment: _assignment(),
+        id: '00000000-0000-4000-8000-000000000702',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'APOLLO-W1-MON-R1',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.planned,
+      );
+      final week = AthleteProgrammeWeekPresentation(
+        heading: 'THIS WEEK',
+        dateRangeLabel: '1–7 September',
+        days: [
+          AthleteProgrammeWeekDayPresentation(
+            date: DateTime(2026, 9, 1),
+            state: assigned.state,
+            occurrence: assigned,
+          ),
+          ...List.generate(
+            6,
+            (index) => AthleteProgrammeWeekDayPresentation(
+              date: DateTime(2026, 9, index + 2),
+              state: FixedProgrammeOccurrenceState.rest,
+            ),
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FixedProgrammeWeekView(
+              presentation: week,
+              onDayTap: (_) => opens++,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey('programme-week-day-2026-09-02')),
+      );
+      await tester.pump();
+      expect(opens, 0);
+      expect(find.text('Rest'), findsNothing);
+
+      await tester.tap(
+        find.byKey(const ValueKey('programme-week-day-2026-09-01')),
+      );
+      expect(opens, 1);
     });
   });
 
@@ -1308,7 +1366,7 @@ void main() {
       expect(activeLauncher.lastOccurrenceId, occurrence.occurrenceId);
     });
 
-    testWidgets('Missed, Completed and Rest never offer execution', (
+    testWidgets('Missed, Completed and empty dates never offer execution', (
       tester,
     ) async {
       final assignment = _assignment(athleteId: 'athlete.local');
@@ -1374,11 +1432,100 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Rest day'), findsWidgets);
+      expect(find.text('No session scheduled'), findsWidgets);
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Resume'), findsNothing);
       expect(tester.takeException(), isNull);
     });
+  });
+
+  testWidgets(
+    'athlete-wide Calendar retains all 84 assignment occurrences and opens an assigned session',
+    (tester) async {
+      final assignment = _assignment();
+      final start = DateTime.utc(2026, 9, 1);
+      final occurrences = List.generate(84, (index) {
+        final date = start.add(Duration(days: index));
+        return _occurrence(
+          assignment: assignment,
+          id: 'occurrence-$index',
+          slotId: 'slot-$index',
+          protocolId: 'APOLLO-${index + 1}',
+          dayKey: 'day_${(index % 7) + 1}',
+          date: date.toIso8601String().substring(0, 10),
+          state: FixedProgrammeOccurrenceState.planned,
+        );
+      });
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-08-25',
+        occurrences: occurrences,
+      );
+      final store = _ProjectionStore(calendar);
+
+      expect(calendar.occurrences, hasLength(84));
+      expect(
+        calendar.occurrences.every(
+          (item) =>
+              item.assignmentId == assignment.id &&
+              item.programmeVersionId == assignment.programmeVersionId,
+        ),
+        isTrue,
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteCalendarScreen(
+            athleteId: 'athlete.local',
+            fixedOccurrenceStore: store,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _PreviewLoader(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Calendar'), findsOneWidget);
+      expect(find.text('Rest'), findsNothing);
+      await tester.tap(find.byTooltip('Next week'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('programme-week-day-2026-09-01')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Session'), findsOneWidget);
+      expect(find.textContaining('Scheduled for'), findsOneWidget);
+      expect(find.text('Begin'), findsNothing);
+    },
+  );
+
+  testWidgets('Home calendar action delegates to the unified Calendar tab', (
+    tester,
+  ) async {
+    final assignment = _assignment(athleteId: 'athlete.local');
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-08-25',
+      occurrences: _firstWeekOccurrences(assignment: assignment),
+    );
+    var openedCalendar = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HomeScreen(
+          embeddedInShell: true,
+          assignmentStore: InMemoryProgrammeAssignmentStore(
+            await _tablesWith(assignment),
+          ),
+          fixedOccurrenceStore: _ProjectionStore(calendar),
+          onOpenCalendar: () => openedCalendar = true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('View Calendar').first);
+    expect(openedCalendar, isTrue);
   });
 
   test('shared lifecycle formatter omits fixed cursor before start', () {
