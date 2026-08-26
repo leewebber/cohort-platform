@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
@@ -21,12 +23,17 @@ class AthleteCalendarScreen extends StatefulWidget {
     this.fixedOccurrenceStore,
     this.previewService,
     this.onOpenProgrammes,
+    this.authRefreshListenable,
   });
 
   final String athleteId;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ScheduledProgrammeSessionPreviewService? previewService;
   final VoidCallback? onOpenProgrammes;
+
+  /// The shell notifies this screen when authentication/bootstrap state
+  /// changes, so an early no-assignment response is never retained.
+  final Listenable? authRefreshListenable;
 
   @override
   State<AthleteCalendarScreen> createState() => _AthleteCalendarScreenState();
@@ -42,8 +49,29 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   @override
   void initState() {
     super.initState();
+    widget.authRefreshListenable?.addListener(_reloadForAuthentication);
     _load();
   }
+
+  @override
+  void didUpdateWidget(covariant AthleteCalendarScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.authRefreshListenable != widget.authRefreshListenable) {
+      oldWidget.authRefreshListenable?.removeListener(_reloadForAuthentication);
+      widget.authRefreshListenable?.addListener(_reloadForAuthentication);
+    }
+    if (oldWidget.athleteId != widget.athleteId) {
+      unawaited(_load());
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.authRefreshListenable?.removeListener(_reloadForAuthentication);
+    super.dispose();
+  }
+
+  void _reloadForAuthentication() => unawaited(_load());
 
   Future<void> _load() async {
     if (mounted) {

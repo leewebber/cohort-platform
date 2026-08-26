@@ -16,7 +16,13 @@ class FixedProgrammeOccurrenceProjectionSupabaseStore
     final map = Map<String, dynamic>.from(raw);
     final status = map['status']?.toString();
     if (status == 'absent') {
-      return null;
+      final code = map['code']?.toString();
+      if (code == 'no_active_assignment') {
+        return null;
+      }
+      throw FixedProgrammeCalendarUnavailableException(
+        code ?? 'unknown_absence',
+      );
     }
     if (status != 'ok') {
       throw StateError(

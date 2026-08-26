@@ -63,7 +63,9 @@ class _SequenceProjectionStore
   Future<FixedProgrammeCalendarProjection?> resolveActive() async {
     final result =
         results[calls < results.length ? calls++ : results.length - 1];
-    if (result is Error) throw result;
+    if (result is! FixedProgrammeCalendarProjection && result != null) {
+      throw result;
+    }
     return result as FixedProgrammeCalendarProjection?;
   }
 }
@@ -1561,6 +1563,60 @@ void main() {
       expect(find.text('Rest'), findsNothing);
     },
   );
+
+  testWidgets(
+    'Calendar treats an active programme without an occurrence schedule as unavailable',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteCalendarScreen(
+            athleteId: 'athlete.local',
+            fixedOccurrenceStore: _SequenceProjectionStore([
+              const FixedProgrammeCalendarUnavailableException(
+                'legacy_cursor_assignment',
+              ),
+            ]),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Calendar unavailable'), findsOneWidget);
+      expect(find.text('No programme scheduled'), findsNothing);
+      expect(find.text('Retry'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Calendar reloads after delayed authentication restoration', (
+    tester,
+  ) async {
+    final assignment = _assignment();
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-08-25',
+      occurrences: _firstWeekOccurrences(assignment: assignment),
+    );
+    final authChanges = ValueNotifier<int>(0);
+    final store = _SequenceProjectionStore([null, calendar]);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteCalendarScreen(
+          athleteId: 'athlete.local',
+          fixedOccurrenceStore: store,
+          authRefreshListenable: authChanges,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('No programme scheduled'), findsOneWidget);
+
+    authChanges.value++;
+    await tester.pumpAndSettle();
+    expect(find.text(calendar.programmeName), findsOneWidget);
+    expect(find.text('No programme scheduled'), findsNothing);
+    expect(store.calls, 2);
+    authChanges.dispose();
+  });
 
   testWidgets(
     'Calendar error is human-readable and Retry observes completion',

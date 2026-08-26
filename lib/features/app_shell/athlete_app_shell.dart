@@ -194,6 +194,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             athleteId: _athleteId,
             fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenProgrammes: () => setState(() => _index = 2),
+            authRefreshListenable: widget.authController,
           ),
           // Phase 2.6: athlete Programmes tab is canonical programme catalogue entry.
           // Plan Library start UI is no longer mounted here (RETIRE decision).
