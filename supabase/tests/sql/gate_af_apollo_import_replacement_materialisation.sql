@@ -78,7 +78,7 @@ BEGIN
   PERFORM set_config('role', 'postgres', true);
 
   INSERT INTO auth.users (instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,created_at,updated_at,raw_app_meta_data,raw_user_meta_data,is_super_admin,confirmation_token,recovery_token,email_change_token_new,email_change)
-  VALUES ('00000000-0000-0000-0000-000000000000',v_athlete,'authenticated','authenticated','apollo-local-athlete@example.invalid',crypt('x',gen_salt('bf')),NOW(),NOW(),NOW(),'{"provider":"email","providers":["email"]}','{}',FALSE,'','','','')
+  VALUES ('00000000-0000-0000-0000-000000000000',v_athlete,'authenticated','authenticated','apollo-gate-af-athlete@example.invalid',crypt('x',gen_salt('bf')),NOW(),NOW(),NOW(),'{"provider":"email","providers":["email"]}','{}',FALSE,'','','','')
   ON CONFLICT (id) DO NOTHING;
   INSERT INTO profiles (id,display_name,is_athlete,is_coach) VALUES (v_athlete,'Apollo local athlete',TRUE,FALSE)
   ON CONFLICT (id) DO UPDATE SET is_athlete=TRUE,is_coach=FALSE;
