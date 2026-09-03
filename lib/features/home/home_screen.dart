@@ -79,7 +79,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final HomeTodaySessionRefreshController _refreshController =
       widget.refreshController ?? HomeTodaySessionRefreshController();
 
@@ -120,7 +120,21 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _refreshMaterialisedGate();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshMaterialisedGate();
+    }
   }
 
   Future<void> _refreshMaterialisedGate() async {
@@ -319,6 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
           executionLauncher: widget.executionLauncher,
           fixedAssignment: assignment,
           fixedOccurrence: todayOccurrence,
+          onExecutionReturned: _refreshMaterialisedGate,
         ),
       );
     }

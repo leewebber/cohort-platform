@@ -8,6 +8,7 @@ import 'package:cohort_platform/features/session/models/session_execution_plan.d
 import 'package:cohort_platform/features/session/models/session_execution_status.dart';
 import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/strength_exercise_prescription.dart';
 import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -91,19 +92,106 @@ void main() {
     );
     expect(button.onTap, isNotNull);
   });
+
+  testWidgets(
+    'incomplete warm-up permits main logging but still blocks block and session completion',
+    (tester) async {
+      final harness = _Harness(
+        saveCoordinator: _RecordingSaveCoordinator(),
+        plan: _warmUpAndMainPlan(),
+      );
+      await tester.pumpWidget(harness);
+      await tester.tap(find.text('Open session'));
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.text('Next >'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Next >'));
+      await tester.pumpAndSettle();
+
+      expect(harness.execution.state.activeBlock?.blockId, 'main-work');
+      expect(harness.execution.state.completedBlockIds, isEmpty);
+      expect(find.byType(TextField), findsWidgets);
+      expect(find.byType(Checkbox), findsWidgets);
+
+      await tester.ensureVisible(find.byType(TextField).first);
+      await tester.enterText(find.byType(TextField).first, '8');
+      await tester.ensureVisible(find.byType(Checkbox).first);
+      await tester.tap(find.byType(Checkbox).first);
+      await tester.scrollUntilVisible(
+        find.text('Mark block complete'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Mark block complete'));
+      await tester.pumpAndSettle();
+
+      expect(harness.execution.state.completedBlockIds, {'main-work'});
+      expect(harness.execution.state.activeBlock?.blockId, 'warm-up');
+      expect(find.text('Complete 1 remaining block'), findsOneWidget);
+
+      await tester.scrollUntilVisible(
+        find.text('Mark block complete'),
+        -250,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Mark block complete'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text(
+          'Acknowledge every required warm-up movement before completing this block.',
+        ),
+        findsOneWidget,
+      );
+      expect(harness.execution.state.completedBlockIds, {'main-work'});
+
+      final warmUp = harness.performanceController.draft.blockDraftFor(
+        'warm-up',
+      )!;
+      for (final exercise in warmUp.exerciseResults) {
+        for (final set in exercise.sets) {
+          harness.performanceController.updateSet(
+            'warm-up',
+            exercise.sourceExerciseId,
+            set.setResultId,
+            (current) => current.copyWith(completed: true),
+          );
+        }
+      }
+      await tester.tap(find.text('Mark block complete'));
+      await tester.pumpAndSettle();
+
+      expect(harness.execution.state.completedBlockIds, {
+        'warm-up',
+        'main-work',
+      });
+      expect(find.text('Ready to finish'), findsOneWidget);
+    },
+  );
 }
 
 class _Harness extends StatelessWidget {
-  _Harness({required this.saveCoordinator})
-    : plan = _plan(),
+  _Harness({required this.saveCoordinator, SessionExecutionPlan? plan})
+    : plan = plan ?? _plan(),
       execution = SessionExecutionController(
-        plan: _plan(),
-        sessionKey: 'active-session-navigation-test',
+        plan: plan ?? _plan(),
+        sessionKey:
+            'active-session-navigation-test:${plan?.sessionId ?? 'default'}',
       )..startSession();
 
   final _RecordingSaveCoordinator saveCoordinator;
   final SessionExecutionPlan plan;
   final SessionExecutionController execution;
+
+  late final PerformanceCaptureController performanceController =
+      PerformanceCaptureController.initializeFromExecutionPlan(
+        plan: plan,
+        athleteId: 'athlete',
+        trainingSessionId: 7,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -119,12 +207,7 @@ class _Harness extends StatelessWidget {
                     MaterialPageRoute<void>(
                       builder: (_) => ActiveSessionScreen(
                         controller: execution,
-                        performanceController:
-                            PerformanceCaptureController.initializeFromExecutionPlan(
-                              plan: plan,
-                              athleteId: 'athlete',
-                              trainingSessionId: 7,
-                            ),
+                        performanceController: performanceController,
                         trainingSessionId: 7,
                         athleteId: 'athlete',
                         saveCoordinator: saveCoordinator,
@@ -172,6 +255,57 @@ SessionExecutionPlan _plan() {
         content: 'Structured warm-up',
         workoutFormat: WorkoutFormat.none,
         position: 1,
+      ),
+    ],
+  );
+}
+
+SessionExecutionPlan _warmUpAndMainPlan() {
+  return const SessionExecutionPlan(
+    sessionId: 'session-sequencing',
+    sessionTitle: 'Sequenced Session',
+    blocks: [
+      SessionExecutionBlock(
+        blockId: 'warm-up',
+        title: 'Warm-up',
+        blockType: SessionBlockType.warmUp,
+        content: 'Required preparation',
+        workoutFormat: WorkoutFormat.none,
+        position: 1,
+        linkedExercises: [
+          SessionExecutionExerciseSummary(
+            exerciseId: 'warm-up-movement',
+            displayName: 'Required warm-up movement',
+            prescription: StrengthExercisePrescription(
+              sets: 1,
+              reps: StrengthRepPrescription(
+                type: StrengthRepType.exact,
+                exactReps: 5,
+              ),
+            ),
+          ),
+        ],
+      ),
+      SessionExecutionBlock(
+        blockId: 'main-work',
+        title: 'Main work',
+        blockType: SessionBlockType.strength,
+        content: 'Main workout',
+        workoutFormat: WorkoutFormat.none,
+        position: 2,
+        linkedExercises: [
+          SessionExecutionExerciseSummary(
+            exerciseId: 'main-movement',
+            displayName: 'Main movement',
+            prescription: StrengthExercisePrescription(
+              sets: 1,
+              reps: StrengthRepPrescription(
+                type: StrengthRepType.exact,
+                exactReps: 8,
+              ),
+            ),
+          ),
+        ],
       ),
     ],
   );

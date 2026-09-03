@@ -36,6 +36,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     this.prepareOverride,
     this.fixedAssignment,
     this.fixedOccurrence,
+    this.onExecutionReturned,
   });
 
   final String athleteId;
@@ -46,6 +47,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
   final ProgrammeAdaptationReversionService? reversionService;
   final ProgrammeAssignment? fixedAssignment;
   final FixedProgrammeOccurrenceProjection? fixedOccurrence;
+  final Future<void> Function()? onExecutionReturned;
 
   /// Test seam: when set, used instead of [prepareService] for load.
   final Future<AthleteProgrammePrepareResult> Function(String athleteId)?
@@ -163,7 +165,8 @@ class _AthleteProgrammeTodaySectionState
       if (mounted) {
         setState(() => _opening = false);
         if (returnedFromExecution) {
-          await _load(source: 'session_return');
+          await widget.onExecutionReturned?.call();
+          if (mounted) await _load(source: 'session_return');
         }
       }
     }

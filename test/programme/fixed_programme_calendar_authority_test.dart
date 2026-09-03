@@ -636,6 +636,147 @@ void main() {
   });
 
   group('fixed Home and Plans projection parity', () {
+    testWidgets(
+      'Home refreshes Begin to Resume after execution returns without duplicating the session',
+      (tester) async {
+        final assignment = _assignment();
+        final today = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000201',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.today,
+        );
+        final inProgress = _occurrence(
+          assignment: assignment,
+          id: today.occurrenceId,
+          slotId: today.sessionSlotId,
+          protocolId: today.protocolId,
+          dayKey: today.dayKey,
+          date: today.scheduledDate,
+          state: FixedProgrammeOccurrenceState.inProgress,
+          trainingSessionId: 91,
+        );
+        final store = _SequenceProjectionStore([
+          _calendar(
+            assignment: assignment,
+            today: today.scheduledDate,
+            occurrences: [today],
+          ),
+          _calendar(
+            assignment: assignment,
+            today: today.scheduledDate,
+            occurrences: [inProgress],
+          ),
+        ]);
+        final tables = await _tablesWith(assignment);
+        final startStore = _StartStore();
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              athleteIdOverride: 'athlete-1',
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+              fixedOccurrenceStore: store,
+              prepareService: _prepareService(
+                tables: tables,
+                loader: _EchoLoader(),
+                projectionStore: store,
+              ),
+              executionLauncher: ProgrammeSessionExecutionLauncher(
+                startStore: startStore,
+                sessionExecutionLauncher: _NoopSessionExecutionLauncher(),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('Begin'), findsOneWidget);
+        await tester.tap(find.text('Begin'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Resume'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+        expect(startStore.calls, hasLength(1));
+        expect(store.calls, 2);
+
+        await tester.tap(find.text('Resume'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Resume'), findsOneWidget);
+        expect(startStore.calls, hasLength(2));
+        expect(startStore.calls.first['occurrence_id'], today.occurrenceId);
+        expect(startStore.calls.last['occurrence_id'], today.occurrenceId);
+      },
+    );
+
+    testWidgets('Home refreshes fixed occurrence authority when app resumes', (
+      tester,
+    ) async {
+      final assignment = _assignment(athleteId: 'athlete.local');
+      final today = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000201',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.today,
+      );
+      final inProgress = _occurrence(
+        assignment: assignment,
+        id: today.occurrenceId,
+        slotId: today.sessionSlotId,
+        protocolId: today.protocolId,
+        dayKey: today.dayKey,
+        date: today.scheduledDate,
+        state: FixedProgrammeOccurrenceState.inProgress,
+        trainingSessionId: 91,
+      );
+      final store = _SequenceProjectionStore([
+        _calendar(
+          assignment: assignment,
+          today: today.scheduledDate,
+          occurrences: [today],
+        ),
+        _calendar(
+          assignment: assignment,
+          today: today.scheduledDate,
+          occurrences: [inProgress],
+        ),
+      ]);
+      final tables = await _tablesWith(assignment);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: HomeScreen(
+            embeddedInShell: true,
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            fixedOccurrenceStore: store,
+            prepareService: _prepareService(
+              tables: tables,
+              loader: _EchoLoader(),
+              projectionStore: store,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Begin'), findsOneWidget);
+
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Resume'), findsOneWidget);
+      expect(find.text('Begin'), findsNothing);
+      expect(store.calls, 2);
+    });
+
     testWidgets('Home and Plans render the same seven authoritative states', (
       tester,
     ) async {

@@ -25,7 +25,16 @@ DECLARE
   v_count INT;
   v_state TEXT;
   v_original DATE;
+  v_start_date DATE := public.cohort_resolve_athlete_local_date(
+    'Atlantic/Canary'
+  );
+  v_day_2_date DATE := v_start_date + 1;
+  v_day_3_date DATE := v_start_date + 2;
+  v_week_start DATE;
+  v_week_end DATE;
 BEGIN
+  v_week_start := v_day_2_date - (EXTRACT(ISODOW FROM v_day_2_date)::INT - 1);
+  v_week_end := v_week_start + 6;
   SELECT v.id, v.package_content_hash
   INTO v_version, v_hash
   FROM programme_versions v
@@ -68,16 +77,16 @@ BEGIN
   v_assignment_a := (v_result->>'enrolment_id')::UUID;
   v_result := public.start_fixed_programme_from_enrolment(
     v_assignment_a,
-    DATE '2026-09-01',
+    v_start_date,
     'Atlantic/Canary'
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'AL', 'selected_start_preserved', '2026-09-01/Atlantic/Canary',
+    'AL', 'selected_start_preserved', v_start_date::TEXT || '/Atlantic/Canary',
     (v_result->>'started_at') || '/' || (v_result->>'timezone'),
     NULL,
     (v_result->>'status') = 'materialised'
-      AND (v_result->>'started_at') = '2026-09-01'
+      AND (v_result->>'started_at') = v_start_date::TEXT
       AND (v_result->>'timezone') = 'Atlantic/Canary',
     v_result::TEXT
   );
@@ -96,18 +105,18 @@ BEGIN
 
   SELECT id INTO v_day1_a
   FROM programme_schedule_occurrences
-  WHERE assignment_id = v_assignment_a AND scheduled_date = DATE '2026-09-01';
+  WHERE assignment_id = v_assignment_a AND scheduled_date = v_start_date;
   SELECT id INTO v_day2_a
   FROM programme_schedule_occurrences
-  WHERE assignment_id = v_assignment_a AND scheduled_date = DATE '2026-09-02';
+  WHERE assignment_id = v_assignment_a AND scheduled_date = v_day_2_date;
   SELECT id INTO v_day3_a
   FROM programme_schedule_occurrences
-  WHERE assignment_id = v_assignment_a AND scheduled_date = DATE '2026-09-03';
+  WHERE assignment_id = v_assignment_a AND scheduled_date = v_day_3_date;
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::TEXT, true);
   v_projection := public.cohort_resolve_fixed_programme_calendar_at(
     v_assignment_a,
-    TIMESTAMPTZ '2026-08-31 12:00:00+00'
+    (v_start_date - 1)::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'before_start_upcoming', 'PLANNED',
@@ -122,7 +131,7 @@ BEGIN
   );
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day1_a,
-    TIMESTAMPTZ '2026-08-31 12:00:00+00'
+    (v_start_date - 1)::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'future_day1_denied', 'future_occurrence', v_result->>'code',
@@ -131,7 +140,7 @@ BEGIN
 
   v_projection := public.cohort_resolve_fixed_programme_calendar_at(
     v_assignment_a,
-    TIMESTAMPTZ '2026-09-01 12:00:00+00'
+    v_start_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'sep1_day1_today', 'TODAY/APOLLO-W1-MON-R1',
@@ -146,7 +155,7 @@ BEGIN
 
   v_projection := public.cohort_resolve_fixed_programme_calendar_at(
     v_assignment_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'sep2_missed_day1_today_day2', 'MISSED/TODAY',
@@ -163,18 +172,19 @@ BEGIN
     jsonb_array_length(v_projection->'current_week')::TEXT
   );
   PERFORM sprint12_record(
-    'AL', 'week_projection_ordered_iso', '2026-08-31..2026-09-06',
+    'AL', 'week_projection_ordered_iso',
+    v_week_start::TEXT || '..' || v_week_end::TEXT,
     (v_projection->'current_week'->0->>'date') || '..' ||
       (v_projection->'current_week'->6->>'date'),
     NULL,
-    v_projection->'current_week'->0->>'date' = '2026-08-31'
-      AND v_projection->'current_week'->6->>'date' = '2026-09-06',
+    v_projection->'current_week'->0->>'date' = v_week_start::TEXT
+      AND v_projection->'current_week'->6->>'date' = v_week_end::TEXT,
     NULL
   );
 
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day1_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'missed_day1_cannot_start', 'missed_occurrence', v_result->>'code',
@@ -182,7 +192,7 @@ BEGIN
   );
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day3_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'future_day3_denied', 'future_occurrence', v_result->>'code',
@@ -191,7 +201,7 @@ BEGIN
 
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day2_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   v_session_a := (v_result->'training_session'->>'id')::BIGINT;
   PERFORM sprint12_record(
@@ -206,7 +216,7 @@ BEGIN
   );
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day2_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'occurrence_start_retry_idempotent', v_session_a::TEXT,
@@ -229,7 +239,7 @@ BEGIN
   v_assignment_b := (v_result->>'enrolment_id')::UUID;
   v_result := public.start_fixed_programme_from_enrolment(
     v_assignment_b,
-    DATE '2026-09-01',
+    v_start_date,
     'Atlantic/Canary'
   );
   PERFORM set_config('role', 'postgres', true);
@@ -237,20 +247,20 @@ BEGIN
   SELECT id, programmed_session_key, original_scheduled_date
   INTO v_day1_b, v_key_b, v_original
   FROM programme_schedule_occurrences
-  WHERE assignment_id = v_assignment_b AND scheduled_date = DATE '2026-09-01';
+  WHERE assignment_id = v_assignment_b AND scheduled_date = v_start_date;
   SELECT id INTO v_day2_b
   FROM programme_schedule_occurrences
-  WHERE assignment_id = v_assignment_b AND scheduled_date = DATE '2026-09-02';
+  WHERE assignment_id = v_assignment_b AND scheduled_date = v_day_2_date;
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete_b::TEXT, true);
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day1_b,
-    TIMESTAMPTZ '2026-09-01 12:00:00+00'
+    v_start_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   v_session_b := (v_result->'training_session'->>'id')::BIGINT;
   v_projection := public.cohort_resolve_fixed_programme_calendar_at(
     v_assignment_b,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'overdue_day1_and_today_day2', 'IN_PROGRESS_OVERDUE/TODAY',
@@ -265,7 +275,7 @@ BEGIN
 
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day1_b,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'overdue_resume_same_session', v_session_b::TEXT,
@@ -312,7 +322,10 @@ BEGIN
   );
   SELECT original_scheduled_date INTO v_original
   FROM programme_schedule_occurrences WHERE id = v_day1_b;
-  PERFORM sprint12_assert_eq('AL', 'late_completion_original_date', '2026-09-01', v_original::TEXT);
+  PERFORM sprint12_assert_eq(
+    'AL', 'late_completion_original_date', v_start_date::TEXT,
+    v_original::TEXT
+  );
   SELECT COUNT(*) INTO v_count
   FROM training_session_records
   WHERE record_id = v_record_b
@@ -323,7 +336,7 @@ BEGIN
 
   v_projection := public.cohort_resolve_fixed_programme_calendar_at(
     v_assignment_b,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
     'AL', 'late_day1_completed_day2_still_today', 'COMPLETED/TODAY',
@@ -380,7 +393,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_result := public.start_fixed_programme_from_enrolment(
     v_assignment_a,
-    DATE '2026-09-01',
+    v_start_date,
     'Atlantic/Canary'
   );
   PERFORM set_config('role', 'postgres', true);
@@ -391,7 +404,7 @@ BEGIN
   );
   v_result := public.cohort_reconcile_fixed_programme_schedule_at(
     v_assignment_a,
-    TIMESTAMPTZ '2026-09-02 12:00:00+00'
+    v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_assert_eq('AL', 'reconcile_retry_changes_zero', '0', v_result->>'missed_count');
 

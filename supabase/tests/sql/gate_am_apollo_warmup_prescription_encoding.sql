@@ -9,6 +9,9 @@ DECLARE
   v_result JSONB;
   v_count INTEGER;
   v_value TEXT;
+  v_start_date DATE := public.cohort_resolve_athlete_local_date(
+    'Atlantic/Canary'
+  );
 BEGIN
   SELECT v.id INTO v_version
   FROM programme_versions v
@@ -160,7 +163,7 @@ BEGIN
   );
   v_assignment := (v_result->>'enrolment_id')::UUID;
   v_result := public.start_fixed_programme_from_enrolment(
-    v_assignment, DATE '2026-09-01', 'Atlantic/Canary'
+    v_assignment, v_start_date, 'Atlantic/Canary'
   );
   PERFORM set_config('role', 'postgres', true);
 
