@@ -12,6 +12,7 @@ import '../../performance/models/training_session_record.dart';
 import '../../performance/repositories/performance_record_store.dart';
 import '../../performance/repositories/supabase_performance_record_store.dart';
 import '../../performance/services/performance_result_summary_formatter.dart';
+import '../../performance/widgets/completed_session_result_view.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../../session/widgets/athlete/athlete_block_card.dart';
@@ -85,6 +86,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
       .load(calendar: widget.calendar, day: widget.day);
   bool _isOpeningSession = false;
   final Map<int, Future<TrainingSessionRecord?>> _completedRecords = {};
+  Future<List<TrainingSessionRecord>>? _history;
 
   @override
   Widget build(BuildContext context) {
@@ -120,19 +122,30 @@ class _ScheduledProgrammeSessionPreviewScreenState
     final trainingSessionId = preview.occurrence?.trainingSessionId;
     if (preview.occurrence?.state == FixedProgrammeOccurrenceState.completed &&
         trainingSessionId != null) {
-      return FutureBuilder<TrainingSessionRecord?>(
-        future: _completedRecords.putIfAbsent(
-          trainingSessionId,
-          () =>
-              (widget.performanceRecordStore ??
-                      SupabasePerformanceRecordStore())
-                  .getTerminalForTrainingSession(
-                    athleteId: widget.athleteId,
-                    trainingSessionId: trainingSessionId,
-                  ),
-        ),
-        builder: (context, snapshot) =>
-            _buildSessionContent(preview, record: snapshot.data),
+      final store =
+          widget.performanceRecordStore ?? SupabasePerformanceRecordStore();
+      _history ??= store.listHistory(athleteId: widget.athleteId);
+      return FutureBuilder<List<Object?>>(
+        future: Future.wait([
+          _completedRecords.putIfAbsent(
+            trainingSessionId,
+            () => store.getTerminalForTrainingSession(
+              athleteId: widget.athleteId,
+              trainingSessionId: trainingSessionId,
+            ),
+          ),
+          _history!,
+        ]),
+        builder: (context, snapshot) {
+          final record = snapshot.data?[0] as TrainingSessionRecord?;
+          final history =
+              (snapshot.data?[1] as List<TrainingSessionRecord>?) ?? const [];
+          return _buildSessionContent(
+            preview,
+            record: record,
+            history: history,
+          );
+        },
       );
     }
     return _buildSessionContent(preview);
@@ -141,8 +154,18 @@ class _ScheduledProgrammeSessionPreviewScreenState
   Widget _buildSessionContent(
     ScheduledProgrammeSessionPreview preview, {
     TrainingSessionRecord? record,
+    List<TrainingSessionRecord> history = const [],
   }) {
     final occurrence = preview.occurrence;
+    if (occurrence?.state == FixedProgrammeOccurrenceState.completed &&
+        record != null) {
+      return CompletedSessionResultView(
+        record: record,
+        athleteHistory: history,
+        programmePosition: _programmePosition(preview),
+        statusMessage: _statusMessage(preview),
+      );
+    }
     final plan = preview.plan;
     return ListView(
       padding: const EdgeInsets.all(CohortSpacing.lg),

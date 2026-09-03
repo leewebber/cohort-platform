@@ -1,5 +1,55 @@
 import '../../../models/session_block_type.dart';
+import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/workout_format.dart';
+
+/// How an exercise should persist and display load.
+enum StrengthActualLoadKind {
+  external,
+  bodyweight,
+  none;
+
+  String get dbValue => name;
+
+  static StrengthActualLoadKind fromDb(String? value) {
+    return switch (value) {
+      'external' => StrengthActualLoadKind.external,
+      'bodyweight' => StrengthActualLoadKind.bodyweight,
+      'none' => StrengthActualLoadKind.none,
+      _ => StrengthActualLoadKind.none,
+    };
+  }
+
+  static StrengthActualLoadKind fromPrescription({
+    required SessionBlockType blockType,
+    StrengthExercisePrescription? prescription,
+  }) {
+    final load = prescription?.load;
+    if (load?.type == StrengthLoadType.bodyweight) {
+      return StrengthActualLoadKind.bodyweight;
+    }
+    if (load?.type == StrengthLoadType.fixedKg ||
+        load?.type == StrengthLoadType.percent1rm ||
+        load?.type == StrengthLoadType.athleteSelected ||
+        load?.type == StrengthLoadType.rpe ||
+        load?.type == StrengthLoadType.rir) {
+      return StrengthActualLoadKind.external;
+    }
+    final capture = prescription?.performanceCapture;
+    if (capture?.loadUnit?.trim().isNotEmpty == true ||
+        capture?.loadLabel?.trim().isNotEmpty == true) {
+      return StrengthActualLoadKind.external;
+    }
+    if (blockType == SessionBlockType.strength ||
+        blockType == SessionBlockType.accessory) {
+      return load == null
+          ? StrengthActualLoadKind.external
+          : StrengthActualLoadKind.none;
+    }
+    return StrengthActualLoadKind.none;
+  }
+
+  bool get expectsExternalLoad => this == StrengthActualLoadKind.external;
+}
 
 class ExercisePerformanceSnapshot {
   const ExercisePerformanceSnapshot({
@@ -7,12 +57,14 @@ class ExercisePerformanceSnapshot {
     required this.displayName,
     required this.position,
     this.labelOverride,
+    this.loadKind = StrengthActualLoadKind.none,
   });
 
   final String sourceExerciseId;
   final String displayName;
   final int position;
   final String? labelOverride;
+  final StrengthActualLoadKind loadKind;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -20,6 +72,7 @@ class ExercisePerformanceSnapshot {
     'displayName': displayName,
     'position': position,
     if (labelOverride != null) 'labelOverride': labelOverride,
+    'loadKind': loadKind.dbValue,
   };
 
   factory ExercisePerformanceSnapshot.fromJson(Map<String, dynamic> json) {
@@ -30,6 +83,7 @@ class ExercisePerformanceSnapshot {
           ? json['position'] as int
           : int.tryParse(json['position']?.toString() ?? '') ?? 0,
       labelOverride: _trim(json['labelOverride']),
+      loadKind: StrengthActualLoadKind.fromDb(json['loadKind']?.toString()),
     );
   }
 

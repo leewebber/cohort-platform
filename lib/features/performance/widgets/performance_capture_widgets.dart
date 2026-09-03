@@ -11,6 +11,7 @@ import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../workout_player/services/previous_performance_resolver.dart';
 import '../models/active_performance_draft.dart';
+import '../models/performance_snapshot.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
@@ -677,6 +678,7 @@ class _StrengthEditor extends StatelessWidget {
                 capture: _summaryFor(
                   exercise.sourceExerciseId,
                 )?.prescription?.performanceCapture,
+                loadKind: exercise.exerciseSnapshot.loadKind,
                 onUpdateSet: onUpdateSet,
               ),
             ),
@@ -785,12 +787,14 @@ class _ExerciseActualRow extends StatelessWidget {
     required this.exerciseId,
     required this.set,
     required this.capture,
+    required this.loadKind,
     required this.onUpdateSet,
   });
 
   final String exerciseId;
   final SetPerformanceDraft set;
   final ExercisePerformanceCapture? capture;
+  final StrengthActualLoadKind loadKind;
   final void Function(
     String exerciseId,
     String setResultId,
@@ -897,24 +901,29 @@ class _ExerciseActualRow extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(width: CohortSpacing.sm),
-        Expanded(
-          child: PerformanceNumericField(
-            key: ValueKey('${set.setResultId}-load'),
-            label: 'Load (${set.loadUnit})',
-            value: set.load?.toString() ?? '',
-            allowDecimal: true,
-            onChanged: (value) {
-              final parsed = double.tryParse(value);
-              onUpdateSet(
-                exerciseId,
-                set.setResultId,
-                (current) =>
-                    current.copyWith(load: parsed, clearLoad: parsed == null),
-              );
-            },
+        if (loadKind.expectsExternalLoad) ...[
+          const SizedBox(width: CohortSpacing.sm),
+          Expanded(
+            child: PerformanceNumericField(
+              key: ValueKey('${set.setResultId}-load'),
+              label: 'Load (${set.loadUnit ?? 'kg'})',
+              value: set.load?.toString() ?? '',
+              allowDecimal: true,
+              onChanged: (value) {
+                final parsed = double.tryParse(value);
+                onUpdateSet(
+                  exerciseId,
+                  set.setResultId,
+                  (current) =>
+                      current.copyWith(load: parsed, clearLoad: parsed == null),
+                );
+              },
+            ),
           ),
-        ),
+        ] else if (loadKind == StrengthActualLoadKind.bodyweight) ...[
+          const SizedBox(width: CohortSpacing.sm),
+          const Expanded(child: Text('Bodyweight')),
+        ],
         Checkbox(
           value: set.completed,
           onChanged: (value) => onUpdateSet(

@@ -100,6 +100,13 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     );
     if (existingTerminal != null) return existingTerminal;
 
+    // Persist set-level actuals while the record is still writable. The
+    // completion RPC only upserts the session row; RLS rejects set writes
+    // after status leaves in_progress.
+    await saveDraft(
+      draft.copyWith(status: TrainingSessionRecordStatus.inProgress),
+    );
+
     try {
       final response = await SupabaseService.client.rpc(
         'complete_training_session_record',

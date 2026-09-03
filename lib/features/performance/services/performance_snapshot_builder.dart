@@ -1,5 +1,6 @@
 import '../../../core/utils/database_uuid.dart';
 import '../../../models/block_performance_capture_mode.dart';
+import '../../../models/session_block_type.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../session/models/session_execution_plan.dart';
@@ -14,12 +15,17 @@ class PerformanceSnapshotBuilder {
   ExercisePerformanceSnapshot exerciseSnapshotFromSummary(
     SessionExecutionExerciseSummary summary, {
     required int position,
+    SessionBlockType blockType = SessionBlockType.custom,
   }) {
     return ExercisePerformanceSnapshot(
       sourceExerciseId: summary.exerciseId,
       displayName: AthleteExerciseLabelResolver.fromExecutionSummary(summary),
       labelOverride: summary.displayLabelOverride,
       position: position,
+      loadKind: StrengthActualLoadKind.fromPrescription(
+        blockType: blockType,
+        prescription: summary.prescription,
+      ),
     );
   }
 
@@ -63,6 +69,7 @@ class PerformanceSnapshotBuilder {
                     (entry) => exerciseSnapshotFromSummary(
                       entry.value,
                       position: entry.key + 1,
+                      blockType: block.blockType,
                     ),
                   )
                   .toList(growable: false),
@@ -94,6 +101,7 @@ class PerformanceSnapshotBuilder {
                   (entry) => exerciseSnapshotFromSummary(
                     entry.value,
                     position: entry.key + 1,
+                    blockType: block.blockType,
                   ),
                 )
                 .toList(growable: false),
@@ -123,6 +131,7 @@ class PerformanceSnapshotBuilder {
                   (entry) => _initialExerciseDraft(
                     entry.value,
                     position: entry.key + 1,
+                    blockType: block.blockType,
                   ),
                 )
                 .toList(growable: false),
@@ -134,9 +143,14 @@ class PerformanceSnapshotBuilder {
   ExercisePerformanceDraft _initialExerciseDraft(
     SessionExecutionExerciseSummary summary, {
     required int position,
+    required SessionBlockType blockType,
   }) {
     final prescription = summary.prescription;
     final capture = prescription?.performanceCapture;
+    final loadKind = StrengthActualLoadKind.fromPrescription(
+      blockType: blockType,
+      prescription: prescription,
+    );
     final rowCount = prescription == null || prescription.sets <= 0
         ? 0
         : prescription.sets;
@@ -147,6 +161,7 @@ class PerformanceSnapshotBuilder {
       exerciseSnapshot: exerciseSnapshotFromSummary(
         summary,
         position: position,
+        blockType: blockType,
       ),
       position: position,
       sets: List.generate(
@@ -154,9 +169,11 @@ class PerformanceSnapshotBuilder {
         (index) => SetPerformanceDraft.empty(
           setNumber: index + 1,
           position: index + 1,
-          loadUnit: capture?.loadUnit?.trim().isNotEmpty == true
-              ? capture!.loadUnit!.trim()
-              : 'kg',
+          loadUnit: loadKind.expectsExternalLoad
+              ? (capture?.loadUnit?.trim().isNotEmpty == true
+                    ? capture!.loadUnit!.trim()
+                    : 'kg')
+              : null,
           distanceUnit: capture?.distanceUnit?.trim().isNotEmpty == true
               ? capture!.distanceUnit!.trim()
               : null,

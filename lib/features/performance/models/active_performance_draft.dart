@@ -12,7 +12,7 @@ class SetPerformanceDraft {
     required this.position,
     this.reps,
     this.load,
-    this.loadUnit = 'kg',
+    this.loadUnit,
     this.distance,
     this.distanceUnit,
     this.durationSeconds,
@@ -26,7 +26,7 @@ class SetPerformanceDraft {
   final int position;
   final int? reps;
   final double? load;
-  final String loadUnit;
+  final String? loadUnit;
   final double? distance;
   final String? distanceUnit;
   final int? durationSeconds;
@@ -73,7 +73,7 @@ class SetPerformanceDraft {
   factory SetPerformanceDraft.empty({
     required int setNumber,
     required int position,
-    String loadUnit = 'kg',
+    String? loadUnit,
     String? distanceUnit,
   }) {
     return SetPerformanceDraft(

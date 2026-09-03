@@ -1,6 +1,7 @@
 import '../models/active_performance_draft.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
+import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
 
 class PerformanceRecordMapper {
@@ -19,8 +20,15 @@ class PerformanceRecordMapper {
                         setNumber: setDraft.setNumber,
                         position: setDraft.position,
                         reps: setDraft.reps,
-                        load: setDraft.load,
-                        loadUnit: setDraft.loadUnit,
+                        load: _authoritativeLoad(
+                          load: setDraft.load,
+                          kind: exerciseDraft.exerciseSnapshot.loadKind,
+                        ),
+                        loadUnit: _authoritativeLoadUnit(
+                          load: setDraft.load,
+                          loadUnit: setDraft.loadUnit,
+                          kind: exerciseDraft.exerciseSnapshot.loadKind,
+                        ),
                         distance: setDraft.distance,
                         distanceUnit: setDraft.distanceUnit,
                         durationSeconds: setDraft.durationSeconds,
@@ -113,7 +121,7 @@ class PerformanceRecordMapper {
                             position: set.position,
                             reps: set.reps,
                             load: set.load,
-                            loadUnit: set.loadUnit ?? 'kg',
+                            loadUnit: set.loadUnit,
                             distance: set.distance,
                             distanceUnit: set.distanceUnit,
                             durationSeconds: set.durationSeconds,
@@ -148,5 +156,29 @@ class PerformanceRecordMapper {
       durationSeconds: record.durationSeconds,
       blockDrafts: blockDrafts,
     );
+  }
+
+  static double? _authoritativeLoad({
+    required double? load,
+    required StrengthActualLoadKind kind,
+  }) {
+    if (!kind.expectsExternalLoad) {
+      return null;
+    }
+    if (load == null) return null;
+    if (load == 0) return null;
+    return load;
+  }
+
+  static String? _authoritativeLoadUnit({
+    required double? load,
+    required String? loadUnit,
+    required StrengthActualLoadKind kind,
+  }) {
+    if (_authoritativeLoad(load: load, kind: kind) == null) {
+      return null;
+    }
+    final unit = loadUnit?.trim();
+    return unit == null || unit.isEmpty ? 'kg' : unit;
   }
 }

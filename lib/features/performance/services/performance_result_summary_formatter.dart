@@ -59,27 +59,7 @@ class PerformanceResultSummaryFormatter {
     if (completedSets.isEmpty) {
       return _statusFallback(block.status);
     }
-
-    final summaries = <String>[];
-    for (final set in completedSets.take(3)) {
-      final parts = <String>[];
-      if (set.reps != null) parts.add('${set.reps} reps');
-      if (set.load != null) {
-        parts.add(
-          '${set.load}${set.loadUnit == null ? '' : ' ${set.loadUnit}'}',
-        );
-      }
-      if (parts.isNotEmpty) summaries.add(parts.join(' · '));
-    }
-
-    if (summaries.isEmpty) {
-      return '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} logged';
-    }
-
-    final prefix =
-        '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} logged';
-    if (summaries.length == 1) return '$prefix · ${summaries.first}';
-    return '$prefix · ${summaries.take(2).join('; ')}';
+    return '${completedSets.length} set${completedSets.length == 1 ? '' : 's'} recorded';
   }
 
   static String _formatAmrap(AmrapResultData result) {
