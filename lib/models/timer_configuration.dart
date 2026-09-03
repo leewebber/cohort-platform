@@ -89,18 +89,33 @@ class TimerConfiguration {
     }
 
     return TimerConfiguration(
-      durationSeconds: _int(json['durationSeconds']),
-      totalDurationSeconds: _int(json['totalDurationSeconds']),
-      intervalSeconds: _int(json['intervalSeconds']),
-      preparationSeconds: _int(json['preparationSeconds']),
-      timeCapSeconds: _int(json['timeCapSeconds']),
-      stopwatchEnabled: json['stopwatchEnabled'] == true,
-      workSeconds: _int(json['workSeconds']),
-      restSeconds: _int(json['restSeconds']),
+      durationSeconds: _int(json['durationSeconds'] ?? json['duration_seconds']),
+      totalDurationSeconds: _int(
+        json['totalDurationSeconds'] ?? json['total_duration_seconds'],
+      ),
+      intervalSeconds: _int(
+        json['intervalSeconds'] ?? json['interval_seconds'],
+      ),
+      preparationSeconds: _int(
+        json['preparationSeconds'] ?? json['preparation_seconds'],
+      ),
+      timeCapSeconds: _int(json['timeCapSeconds'] ?? json['time_cap_seconds']),
+      stopwatchEnabled:
+          json['stopwatchEnabled'] == true || json['stopwatch_enabled'] == true,
+      workSeconds: _int(json['workSeconds'] ?? json['work_seconds']),
+      restSeconds: _int(
+        json['restSeconds'] ??
+            json['rest_seconds'] ??
+            json['recovery_seconds'],
+      ),
       rounds: _int(json['rounds']),
-      targetRounds: _int(json['targetRounds']),
-      restBetweenRoundsSeconds: _int(json['restBetweenRoundsSeconds']),
-      timerNotes: json['timerNotes']?.toString(),
+      targetRounds: _int(json['targetRounds'] ?? json['target_rounds']),
+      restBetweenRoundsSeconds: _int(
+        json['restBetweenRoundsSeconds'] ??
+            json['rest_between_rounds_seconds'] ??
+            json['between_round_recovery_seconds'],
+      ),
+      timerNotes: (json['timerNotes'] ?? json['timer_notes'])?.toString(),
     );
   }
 
@@ -135,6 +150,10 @@ class TimerConfiguration {
       WorkoutFormat.forTime => TimerConfiguration(
         timeCapSeconds: base.timeCapSeconds,
         stopwatchEnabled: true,
+        timerNotes: base.timerNotes,
+      ),
+      WorkoutFormat.steadyState => TimerConfiguration(
+        durationSeconds: base.durationSeconds,
         timerNotes: base.timerNotes,
       ),
       WorkoutFormat.intervals => TimerConfiguration(
@@ -182,6 +201,10 @@ class TimerConfiguration {
         }
       case WorkoutFormat.forTime:
         break;
+      case WorkoutFormat.steadyState:
+        if (durationSeconds == null || durationSeconds! <= 0) {
+          messages.add('Steady state requires a duration.');
+        }
       case WorkoutFormat.intervals:
         if (workSeconds == null || workSeconds! <= 0) {
           messages.add('Intervals require work duration.');
@@ -220,6 +243,10 @@ class TimerConfiguration {
         timeCapSeconds != null
             ? 'For Time · ${timeCapSeconds! ~/ 60} min cap'
             : 'For Time · Stopwatch',
+      WorkoutFormat.steadyState =>
+        durationSeconds != null
+            ? '${durationSeconds! ~/ 60} min continuous'
+            : 'Steady state',
       WorkoutFormat.intervals =>
         '${rounds ?? '?'} rounds · ${workSeconds ?? '?'}s work / ${restSeconds ?? '?'}s rest',
       WorkoutFormat.tabata =>

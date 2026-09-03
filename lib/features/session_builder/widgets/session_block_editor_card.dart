@@ -507,6 +507,12 @@ class _TimerFields extends StatelessWidget {
               ),
             ),
           ),
+          WorkoutFormat.steadyState => field(
+            'Duration (seconds)',
+            configuration.durationSeconds,
+            (value) =>
+                onChanged(configuration.copyWith(durationSeconds: value)),
+          ),
           WorkoutFormat.intervals => Column(
             children: [
               field(

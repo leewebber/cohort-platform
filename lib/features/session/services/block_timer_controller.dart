@@ -119,6 +119,15 @@ class BlockTimerController {
         secondarySeconds: configuration.timeCapSeconds,
         phaseLabel: 'For Time',
       ),
+      WorkoutFormat.steadyState => BlockTimerState(
+        format: format,
+        phase: BlockTimerPhase.countdown,
+        isRunning: true,
+        isPaused: false,
+        isFinished: false,
+        primarySeconds: configuration.durationSeconds ?? 0,
+        phaseLabel: 'Steady state',
+      ),
       WorkoutFormat.intervals || WorkoutFormat.tabata => BlockTimerState(
         format: format,
         phase: configuration.preparationSeconds != null
@@ -204,6 +213,7 @@ class BlockTimerController {
 
     switch (format) {
       case WorkoutFormat.amrap:
+      case WorkoutFormat.steadyState:
       case WorkoutFormat.other:
         if (current.primarySeconds <= 1) {
           _finish(current);

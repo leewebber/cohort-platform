@@ -28,6 +28,7 @@ class PlannedBlockDurationAdapter {
     return switch (format) {
       WorkoutFormat.amrap => timer.durationSeconds,
       WorkoutFormat.emom => timer.totalDurationSeconds,
+      WorkoutFormat.steadyState => timer.durationSeconds,
       WorkoutFormat.intervals => _intervalTotalSeconds(
         timer.workSeconds,
         timer.restSeconds,

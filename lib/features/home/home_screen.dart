@@ -14,6 +14,7 @@ import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../programme/models/fixed_programme_occurrence_projection.dart';
 import '../programme/presentation/athlete_programme_lifecycle_presentation.dart';
+import '../programme/presentation/programme_day_label_formatter.dart';
 import '../programme/screens/athlete_programme_schedule_screen.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/screens/scheduled_programme_session_preview_screen.dart';
@@ -23,6 +24,9 @@ import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../programme/widgets/fixed_programme_week_view.dart';
+import '../performance/models/training_session_record.dart';
+import '../performance/repositories/performance_record_store.dart';
+import '../performance/repositories/supabase_performance_record_store.dart';
 import '../session/services/programme_session_execution_launcher.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/athlete_home_runtime_authority.dart';
@@ -48,6 +52,7 @@ class HomeScreen extends StatefulWidget {
     this.fixedOccurrenceStore,
     this.executionLauncher,
     this.previewService,
+    this.performanceRecordStore,
     this.onOpenCalendar,
   });
 
@@ -73,6 +78,7 @@ class HomeScreen extends StatefulWidget {
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final PerformanceRecordStore? performanceRecordStore;
   final VoidCallback? onOpenCalendar;
 
   @override
@@ -89,6 +95,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   FixedProgrammeCalendarProjection? _calendar;
   ProgrammeAssignment? _assignment;
   String? _calendarError;
+  TrainingSessionRecord? _completedTodayRecord;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -147,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _assignment = assignment;
         _calendar = null;
         _calendarError = null;
+        _completedTodayRecord = null;
       });
       if (assignment?.isFixedSchedule == true) {
         final calendar =
@@ -158,7 +166,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             'Fixed schedule projection is incomplete for this assignment.',
           );
         }
-        if (mounted) setState(() => _calendar = calendar);
+        TrainingSessionRecord? completedTodayRecord;
+        final todayOccurrence = calendar.todayOccurrence;
+        if (todayOccurrence?.state == FixedProgrammeOccurrenceState.completed &&
+            todayOccurrence?.trainingSessionId != null) {
+          try {
+            completedTodayRecord =
+                await (widget.performanceRecordStore ??
+                        SupabasePerformanceRecordStore())
+                    .getTerminalForTrainingSession(
+                      athleteId: _athleteId,
+                      trainingSessionId: todayOccurrence!.trainingSessionId!,
+                    );
+          } catch (_) {
+            // The occurrence remains authoritative even if its optional
+            // performance summary cannot be loaded for this render.
+          }
+        }
+        if (mounted) {
+          setState(() {
+            _calendar = calendar;
+            _completedTodayRecord = completedTodayRecord;
+          });
+        }
       }
     } catch (error) {
       if (!mounted) return;
@@ -317,13 +347,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       widgets.addAll([
         const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
         const SizedBox(height: CohortSpacing.md),
-        CohortCard(
-          child: Text(
-            '${todayOccurrence.sessionTitle} · Completed',
-            style: CohortTextStyles.body,
-          ),
-        ),
+        _completedTodayCard(todayOccurrence),
       ]);
+      final upNext = calendar.nextPlannedOccurrence;
+      if (upNext != null) {
+        widgets.addAll([
+          const SizedBox(height: CohortSpacing.lg),
+          const Text('UP NEXT', style: CohortTextStyles.sectionLabel),
+          const SizedBox(height: CohortSpacing.sm),
+          _upNextCard(upNext),
+        ]);
+      }
     } else {
       widgets.add(
         AthleteProgrammeTodaySection(
@@ -398,6 +432,92 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return widgets;
   }
 
+  Widget _completedTodayCard(FixedProgrammeOccurrenceProjection occurrence) {
+    final record = _completedTodayRecord;
+    final summary = <String>[
+      if (record?.completedAt case final completedAt?)
+        'Finished ${_clockTime(completedAt)}',
+      if (record?.durationSeconds case final duration?)
+        'Duration ${_duration(duration)}',
+      if (record?.overallRpe case final rpe?) 'RPE $rpe',
+    ];
+    return CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
+          const SizedBox(height: CohortSpacing.xs),
+          Text('Completed', style: CohortTextStyles.body),
+          if (summary.isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(summary.join(' · '), style: CohortTextStyles.small),
+          ],
+          const SizedBox(height: CohortSpacing.md),
+          TextButton(
+            key: const ValueKey('completed-today-view-result'),
+            onPressed: () => _openOccurrence(occurrence),
+            child: const Text('View result'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _upNextCard(FixedProgrammeOccurrenceProjection occurrence) {
+    final scheduledDate = DateTime.parse(occurrence.scheduledDate);
+    return CohortCard(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  occurrence.sessionTitle,
+                  style: CohortTextStyles.cardTitle,
+                ),
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  'Week ${occurrence.weekNumber} · '
+                  '${ProgrammeDayLabelFormatter.format(dayKey: occurrence.dayKey)} · '
+                  '${AthleteProgrammeDateFormatter.dayMonth(scheduledDate)}',
+                  style: CohortTextStyles.small,
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            key: const ValueKey('up-next-view-session'),
+            onPressed: () => _openOccurrence(occurrence),
+            child: const Text('View'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _openOccurrence(FixedProgrammeOccurrenceProjection occurrence) {
+    return _openScheduledDay(
+      AthleteProgrammeWeekDayPresentation(
+        date: DateTime.parse(occurrence.scheduledDate),
+        state: occurrence.state,
+        occurrence: occurrence,
+      ),
+    );
+  }
+
+  String _clockTime(DateTime value) {
+    final local = value.toLocal();
+    return '${local.hour.toString().padLeft(2, '0')}:'
+        '${local.minute.toString().padLeft(2, '0')}';
+  }
+
+  String _duration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainder = seconds % 60;
+    return '${minutes}m ${remainder.toString().padLeft(2, '0')}s';
+  }
+
   Future<void> _openProgrammeCalendar() async {
     final shellCalendar = widget.onOpenCalendar;
     if (shellCalendar != null) {
@@ -436,6 +556,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       assignmentStore: widget.assignmentStore,
       prepareService: widget.prepareService,
       executionLauncher: widget.executionLauncher,
+      performanceRecordStore: widget.performanceRecordStore,
     );
     if (changed == true && mounted) await _refreshMaterialisedGate();
   }

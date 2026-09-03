@@ -146,7 +146,9 @@ BEGIN
     AND jsonb_array_length(timer_config->'alternating') = 2;
   PERFORM sprint12_assert_eq('AF', 'saturday_alternating_eight_minute_emom', '1', v_count::text);
   SELECT count(*) INTO v_count FROM session_blocks WHERE session_id IN ('APOLLO-W1-TUE-R1','APOLLO-W1-SUN-R1')
-    AND timer_config ? 'work_seconds' AND timer_config ? 'tracking';
+    AND workout_format = 'steady_state'
+    AND performance_capture_mode = 'endurance'
+    AND timer_config ? 'duration_seconds' AND timer_config ? 'tracking';
   PERFORM sprint12_assert_eq('AF', 'zone2_duration_and_tracking_survive', '2', v_count::text);
 
   -- Repeat real safe operations: enrolment and materialisation must not add rows.

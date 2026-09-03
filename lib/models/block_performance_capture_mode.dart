@@ -94,6 +94,8 @@ extension BlockPerformanceCaptureModeDb on BlockPerformanceCaptureMode {
         return BlockPerformanceCaptureMode.amrap;
       case WorkoutFormat.forTime:
         return BlockPerformanceCaptureMode.forTime;
+      case WorkoutFormat.steadyState:
+        return BlockPerformanceCaptureMode.endurance;
       case WorkoutFormat.intervals:
       case WorkoutFormat.tabata:
       case WorkoutFormat.emom:

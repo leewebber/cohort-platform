@@ -169,6 +169,21 @@ class FixedProgrammeCalendarProjection {
       )
       .toList(growable: false);
 
+  FixedProgrammeOccurrenceProjection? get nextPlannedOccurrence {
+    FixedProgrammeOccurrenceProjection? next;
+    for (final occurrence in occurrences) {
+      if (occurrence.scheduledDate.compareTo(today) <= 0 ||
+          occurrence.state != FixedProgrammeOccurrenceState.planned) {
+        continue;
+      }
+      if (next == null ||
+          occurrence.scheduledDate.compareTo(next.scheduledDate) < 0) {
+        next = occurrence;
+      }
+    }
+    return next;
+  }
+
   bool get startsInFuture => startDate.compareTo(today) > 0;
 
   factory FixedProgrammeCalendarProjection.fromMap(Map<String, dynamic> map) {

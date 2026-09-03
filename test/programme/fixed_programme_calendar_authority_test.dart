@@ -2,6 +2,10 @@ import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
+import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
@@ -260,6 +264,20 @@ class _PreviewLoader extends SessionExecutionLoader {
   }
 }
 
+class _PlanPreviewLoader extends SessionExecutionLoader {
+  _PlanPreviewLoader(this.plan);
+
+  final SessionExecutionPlan plan;
+
+  @override
+  Future<SessionExecutionLoadResult> load({
+    required String protocolId,
+    String? displayTitle,
+    String? programmeContextLabel,
+    Map<String, String> prescriptionLoadOverrides = const {},
+  }) async => SessionExecutionLoadResult(plan: plan);
+}
+
 class _NoopSessionExecutionLauncher extends SessionExecutionLauncher {
   int calls = 0;
   String? lastOccurrenceId;
@@ -342,6 +360,7 @@ FixedProgrammeOccurrenceProjection _occurrence({
   required String date,
   required FixedProgrammeOccurrenceState state,
   int? trainingSessionId,
+  String? sessionTitle,
 }) => FixedProgrammeOccurrenceProjection(
   assignmentId: assignment.id,
   occurrenceId: id,
@@ -356,7 +375,8 @@ FixedProgrammeOccurrenceProjection _occurrence({
   scheduledDate: date,
   originalScheduledDate: date,
   state: state,
-  sessionTitle: dayKey == 'day_1' ? 'Apollo Monday' : 'Apollo Tuesday',
+  sessionTitle:
+      sessionTitle ?? (dayKey == 'day_1' ? 'Apollo Monday' : 'Apollo Tuesday'),
   sessionLineageId: '00000000-0000-4000-8000-000000000099',
   sessionRevisionNumber: 1,
   trainingSessionId: trainingSessionId,
@@ -775,6 +795,266 @@ void main() {
       expect(find.text('Resume'), findsOneWidget);
       expect(find.text('Begin'), findsNothing);
       expect(store.calls, 2);
+    });
+
+    testWidgets(
+      'completed today retains result, next preview, and overdue Resume after relaunch',
+      (tester) async {
+        final assignment = _assignment();
+        final overdue = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000301',
+          slotId: '00000000-0000-4000-8000-000000000401',
+          protocolId: 'APOLLO-W1-MON-R1',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.inProgressOverdue,
+          trainingSessionId: 90,
+          sessionTitle: 'Apollo Strength',
+        );
+        final completed = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000302',
+          slotId: '00000000-0000-4000-8000-000000000402',
+          protocolId: 'APOLLO-W1-TUE-R1',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.completed,
+          trainingSessionId: 91,
+          sessionTitle: 'Apollo Base',
+        );
+        final next = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000303',
+          slotId: '00000000-0000-4000-8000-000000000403',
+          protocolId: 'APOLLO-W1-WED-R1',
+          dayKey: 'day_3',
+          date: '2026-09-03',
+          state: FixedProgrammeOccurrenceState.planned,
+          sessionTitle: 'Apollo Racehorse',
+        );
+        final calendar = _calendar(
+          assignment: assignment,
+          today: '2026-09-02',
+          occurrences: [overdue, completed, next],
+        );
+        final tables = await _tablesWith(assignment);
+        final performanceStore = InMemoryPerformanceRecordStore();
+        final controller =
+            PerformanceCaptureController.initializeFromExecutionPlan(
+                plan: const SessionExecutionPlan(
+                  sessionId: 'APOLLO-W1-TUE-R1',
+                  sessionTitle: 'Apollo Base',
+                  blocks: [
+                    SessionExecutionBlock(
+                      blockId: 'steady',
+                      title: 'Continuous run',
+                      blockType: SessionBlockType.conditioning,
+                      content: 'Continuous aerobic work.',
+                      workoutFormat: WorkoutFormat.steadyState,
+                      position: 1,
+                    ),
+                  ],
+                ),
+                athleteId: 'athlete-1',
+                trainingSessionId: 91,
+              )
+              ..updateBlockResultData(
+                'steady',
+                const EnduranceResultData(
+                  distance: 10,
+                  durationSeconds: 3600,
+                  averageHeartRate: 140,
+                ),
+              )
+              ..markBlockComplete('steady')
+              ..updateSessionRpe(7);
+        await performanceStore.completeRecord(
+          controller.buildPersistableDraft(
+            status: TrainingSessionRecordStatus.completed,
+            completedAt: controller.draft.startedAt.add(
+              const Duration(minutes: 61, seconds: 1),
+            ),
+          ),
+        );
+        final projectionStore = _ProjectionStore(calendar);
+        final previewService = ScheduledProgrammeSessionPreviewService(
+          loader: _PlanPreviewLoader(
+            const SessionExecutionPlan(
+              sessionId: 'APOLLO-W1-TUE-R1',
+              sessionTitle: 'Apollo Base',
+              blocks: [
+                SessionExecutionBlock(
+                  blockId: 'steady',
+                  title: 'Continuous run',
+                  blockType: SessionBlockType.conditioning,
+                  content: 'Continuous aerobic work.',
+                  workoutFormat: WorkoutFormat.steadyState,
+                  position: 1,
+                ),
+              ],
+            ),
+          ),
+        );
+
+        Widget app({Key? key}) => MaterialApp(
+          home: HomeScreen(
+            key: key,
+            embeddedInShell: true,
+            athleteIdOverride: 'athlete-1',
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            fixedOccurrenceStore: projectionStore,
+            previewService: previewService,
+            performanceRecordStore: performanceStore,
+          ),
+        );
+
+        await tester.pumpWidget(app());
+        await tester.pumpAndSettle();
+
+        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('Completed'), findsWidgets);
+        expect(find.textContaining('Duration 61m 01s'), findsOneWidget);
+        expect(find.textContaining('RPE 7'), findsOneWidget);
+        expect(find.text('UP NEXT'), findsOneWidget);
+        expect(find.text('Apollo Racehorse'), findsOneWidget);
+        expect(find.text('Resume'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+
+        await tester.tap(find.byKey(const ValueKey('up-next-view-session')));
+        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(
+          find.text('Available 3 September'),
+          300,
+          scrollable: find.byType(Scrollable).first,
+        );
+        expect(find.text('Available 3 September'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+        await tester.tap(find.byTooltip('Back'));
+        await tester.pumpAndSettle();
+
+        await tester.tap(
+          find.byKey(const ValueKey('completed-today-view-result')),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.text(
+            'This assigned session has been completed and cannot be restarted.',
+          ),
+          findsOneWidget,
+        );
+        await tester.drag(find.byType(ListView), const Offset(0, -600));
+        await tester.pumpAndSettle();
+        expect(find.textContaining('10.0 km in 1:00:00'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+        expect(find.text('Resume'), findsNothing);
+        await tester.tap(find.byTooltip('Back'));
+        await tester.pumpAndSettle();
+
+        await tester.pumpWidget(app(key: UniqueKey()));
+        await tester.pumpAndSettle();
+        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('UP NEXT'), findsOneWidget);
+        expect(find.text('Resume'), findsOneWidget);
+        expect(find.text('Begin'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'completed today omits UP NEXT when no future planned occurrence exists',
+      (tester) async {
+        final assignment = _assignment();
+        final laterMissed = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000311',
+          slotId: '00000000-0000-4000-8000-000000000411',
+          protocolId: 'APOLLO-W1-WED-R1',
+          dayKey: 'day_3',
+          date: '2026-09-03',
+          state: FixedProgrammeOccurrenceState.missed,
+          sessionTitle: 'Apollo Racehorse',
+        );
+        final completed = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000312',
+          slotId: '00000000-0000-4000-8000-000000000412',
+          protocolId: 'APOLLO-W1-TUE-R1',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.completed,
+          trainingSessionId: 92,
+          sessionTitle: 'Apollo Base',
+        );
+        final calendar = _calendar(
+          assignment: assignment,
+          today: '2026-09-02',
+          occurrences: [laterMissed, completed],
+        );
+        final tables = await _tablesWith(assignment);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: HomeScreen(
+              embeddedInShell: true,
+              athleteIdOverride: 'athlete-1',
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+              fixedOccurrenceStore: _ProjectionStore(calendar),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('Completed'), findsWidgets);
+        expect(find.text('UP NEXT'), findsNothing);
+        expect(find.text('Apollo Racehorse'), findsNothing);
+        expect(
+          calendar.nextPlannedOccurrence,
+          isNull,
+        );
+      },
+    );
+
+    test('next planned occurrence is the earliest future planned session', () {
+      final assignment = _assignment();
+      final later = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000321',
+        slotId: '00000000-0000-4000-8000-000000000421',
+        protocolId: 'APOLLO-W1-FRI-R1',
+        dayKey: 'day_5',
+        date: '2026-09-04',
+        state: FixedProgrammeOccurrenceState.planned,
+        sessionTitle: 'Later session',
+      );
+      final sooner = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000322',
+        slotId: '00000000-0000-4000-8000-000000000422',
+        protocolId: 'APOLLO-W1-WED-R1',
+        dayKey: 'day_3',
+        date: '2026-09-03',
+        state: FixedProgrammeOccurrenceState.planned,
+        sessionTitle: 'Sooner session',
+      );
+      final completed = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000323',
+        slotId: '00000000-0000-4000-8000-000000000423',
+        protocolId: 'APOLLO-W1-TUE-R1',
+        dayKey: 'day_2',
+        date: '2026-09-02',
+        state: FixedProgrammeOccurrenceState.completed,
+        sessionTitle: 'Apollo Base',
+      );
+
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [later, completed, sooner],
+      );
+
+      expect(calendar.nextPlannedOccurrence?.sessionTitle, 'Sooner session');
     });
 
     testWidgets('Home and Plans render the same seven authoritative states', (

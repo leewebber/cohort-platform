@@ -32,6 +32,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
   ProgrammeAssignmentStore? assignmentStore,
   AthleteProgrammeSessionPrepareService? prepareService,
   ProgrammeSessionExecutionLauncher? executionLauncher,
+  PerformanceRecordStore? performanceRecordStore,
 }) {
   return Navigator.of(context).push<bool>(
     MaterialPageRoute(
@@ -43,6 +44,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
         assignmentStore: assignmentStore,
         prepareService: prepareService,
         executionLauncher: executionLauncher,
+        performanceRecordStore: performanceRecordStore,
       ),
     ),
   );

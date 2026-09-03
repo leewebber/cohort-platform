@@ -5,12 +5,17 @@ import 'package:cohort_platform/features/performance/models/performance_result_t
 import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
 import 'package:cohort_platform/features/performance/models/training_block_result_status.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
+import 'package:cohort_platform/features/performance/models/block_capture_mode_resolver.dart';
 import 'package:cohort_platform/features/performance/services/endurance_metrics_calculator.dart';
 import 'package:cohort_platform/features/performance/services/performance_result_summary_formatter.dart';
 import 'package:cohort_platform/features/performance/widgets/endurance_duration_field.dart';
 import 'package:cohort_platform/features/performance/widgets/performance_capture_widgets.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/session_block.dart';
+import 'package:cohort_platform/models/timer_configuration.dart';
 import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -235,7 +240,7 @@ void main() {
                   title: 'Run',
                   blockType: SessionBlockType.conditioning,
                   content: 'Steady run',
-                  workoutFormat: WorkoutFormat.none,
+                  workoutFormat: WorkoutFormat.steadyState,
                   position: 1,
                 ),
                 position: 1,
@@ -250,9 +255,9 @@ void main() {
               ),
               onResultChanged: (_) {},
               onAddSet: (_) {},
-              onUpdateSet: (_, __, ___) {},
-              onDuplicateSet: (_, __) {},
-              onRemoveSet: (_, __) {},
+              onUpdateSet: (_, _, _) {},
+              onDuplicateSet: (_, _) {},
+              onRemoveSet: (_, _) {},
             ),
           ),
         ),
@@ -261,7 +266,125 @@ void main() {
       expect(find.text('Average pace'), findsOneWidget);
       expect(find.text('6:00 /km'), findsOneWidget);
       expect(find.text('Duration (seconds)'), findsNothing);
+      expect(find.textContaining('Intervals'), findsNothing);
+      expect(find.textContaining('? rounds'), findsNothing);
+      expect(find.text('Distance'), findsOneWidget);
+      expect(find.text('Average heart rate (optional)'), findsOneWidget);
     });
+  });
+
+  group('Steady-state execution boundary', () {
+    test(
+      'SQL timer keys decode without changing genuine interval semantics',
+      () {
+        final interval = SessionBlock.fromRow({
+          'block_id': 'interval-block',
+          'block_type': 'conditioning',
+          'title': 'Repeated intervals',
+          'content': 'Five repeated work efforts.',
+          'workout_format': 'intervals',
+          'timer_config': {
+            'rounds': 5,
+            'work_seconds': 240,
+            'recovery_seconds': 120,
+          },
+          'position': 1,
+          'performance_capture_mode': 'auto',
+        });
+
+        expect(interval.workoutFormat, WorkoutFormat.intervals);
+        expect(interval.timerConfiguration?.rounds, 5);
+        expect(interval.timerConfiguration?.workSeconds, 240);
+        expect(interval.timerConfiguration?.restSeconds, 120);
+        expect(
+          interval.timerConfiguration?.isValidForFormat(
+            WorkoutFormat.intervals,
+          ),
+          isTrue,
+        );
+        expect(
+          interval.timerConfiguration?.summaryForFormat(
+            WorkoutFormat.intervals,
+          ),
+          '5 rounds · 240s work / 120s rest',
+        );
+        expect(
+          BlockCaptureModeResolver.resolve(
+            blockType: interval.blockType,
+            workoutFormat: interval.workoutFormat,
+            linkedExerciseCount: 0,
+          ),
+          BlockCaptureMode.interval,
+        );
+      },
+    );
+
+    test(
+      'steady-state duration, distance, pace and HR save and restore',
+      () async {
+        const plan = SessionExecutionPlan(
+          sessionId: 'steady-session',
+          sessionTitle: 'Continuous aerobic run',
+          blocks: [
+            SessionExecutionBlock(
+              blockId: 'steady-block',
+              title: 'Continuous run',
+              blockType: SessionBlockType.conditioning,
+              content: 'Maintain the authored aerobic intensity.',
+              workoutFormat: WorkoutFormat.steadyState,
+              timerConfiguration: TimerConfiguration(durationSeconds: 3600),
+              timerSummary: '60 min continuous',
+              position: 1,
+            ),
+          ],
+        );
+        final store = InMemoryPerformanceRecordStore();
+        final controller =
+            PerformanceCaptureController.initializeFromExecutionPlan(
+                plan: plan,
+                athleteId: 'athlete-1',
+                trainingSessionId: 84,
+              )
+              ..updateBlockResultData(
+                'steady-block',
+                const EnduranceResultData(
+                  distance: 10,
+                  distanceUnit: 'km',
+                  durationSeconds: 3600,
+                  averageHeartRate: 142,
+                ),
+              )
+              ..markBlockComplete('steady-block')
+              ..updateSessionRpe(6);
+
+        final saved = await store.completeRecord(
+          controller.buildPersistableDraft(
+            status: TrainingSessionRecordStatus.completed,
+          ),
+        );
+        final restored = await store.getTerminalForTrainingSession(
+          athleteId: 'athlete-1',
+          trainingSessionId: 84,
+        );
+        final result = restored?.blockResults.single.resultData;
+
+        expect(saved.recordId, restored?.recordId);
+        expect(restored?.overallRpe, 6);
+        expect(result, isA<EnduranceResultData>());
+        final endurance = result! as EnduranceResultData;
+        expect(endurance.durationSeconds, 3600);
+        expect(endurance.distance, 10);
+        expect(endurance.averageHeartRate, 142);
+        expect(
+          EnduranceMetricsCalculator.formatPaceOrSpeed(
+            distance: endurance.distance,
+            distanceUnit: endurance.distanceUnit,
+            durationSeconds: endurance.durationSeconds,
+          ),
+          'Avg pace 6:00/km',
+        );
+      },
+    );
   });
 
   group('Endurance persistence and history', () {
@@ -288,7 +411,7 @@ void main() {
             title: 'Threshold Run',
             blockType: SessionBlockType.conditioning,
             content: 'Steady run',
-            workoutFormat: WorkoutFormat.none,
+            workoutFormat: WorkoutFormat.steadyState,
             position: 1,
           ),
           status: TrainingBlockResultStatus.completed,
@@ -321,7 +444,7 @@ void main() {
                   title: 'Run',
                   blockType: SessionBlockType.conditioning,
                   content: 'Steady run',
-                  workoutFormat: WorkoutFormat.none,
+                  workoutFormat: WorkoutFormat.steadyState,
                   position: 1,
                 ),
               ],

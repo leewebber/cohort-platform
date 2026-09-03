@@ -55,6 +55,8 @@ class BlockCaptureModeResolver {
         return BlockCaptureMode.amrap;
       case WorkoutFormat.forTime:
         return BlockCaptureMode.forTime;
+      case WorkoutFormat.steadyState:
+        return BlockCaptureMode.endurance;
       case WorkoutFormat.intervals:
       case WorkoutFormat.tabata:
       case WorkoutFormat.emom:
