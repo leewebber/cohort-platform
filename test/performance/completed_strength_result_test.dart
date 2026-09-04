@@ -9,6 +9,7 @@ import 'package:cohort_platform/features/performance/models/training_session_rec
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
+import 'package:cohort_platform/core/theme/colors.dart';
 import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
@@ -469,8 +470,13 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('completed-exercise-EX-SQUAT')));
       await tester.pumpAndSettle();
-      expect(find.textContaining('8 reps · 60 kg · Completed'), findsWidgets);
-      expect(find.textContaining('Est. 1RM'), findsOneWidget);
+      expect(find.text('TODAY'), findsOneWidget);
+      expect(find.text('8 ×'), findsOneWidget);
+      expect(find.text('60 kg'), findsOneWidget);
+      expect(find.text('8 reps · 60 kg · Completed'), findsNothing);
+      expect(find.text('BEST SET'), findsOneWidget);
+      expect(find.text('ESTIMATED 1RM'), findsOneWidget);
+      expect(find.text('WORKING VOLUME'), findsOneWidget);
     },
   );
 
@@ -514,9 +520,11 @@ void main() {
 
     await tester.tap(find.text('Back squat'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('5 reps · 100 kg · Completed'), findsWidgets);
-    expect(find.textContaining('5 reps · 105 kg · Completed'), findsWidgets);
-    expect(find.textContaining('70 kg'), findsNothing);
+    expect(find.text('TODAY'), findsOneWidget);
+    expect(find.text('100 kg'), findsOneWidget);
+    expect(find.text('105 kg'), findsOneWidget);
+    expect(find.textContaining('5 reps · 100 kg · Completed'), findsNothing);
+    expect(find.text('70 kg'), findsNothing);
   });
 
   testWidgets('badge meaning is not colour-only and is announced', (
@@ -582,7 +590,300 @@ void main() {
       const ActivateIntent(),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('5 reps · 80 kg · Completed'), findsWidgets);
+    expect(find.text('TODAY'), findsOneWidget);
+    expect(find.text('80 kg'), findsOneWidget);
+  });
+
+  testWidgets('expanded strength result uses Today, Last Time, and metric tiles', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final previous = _multiExerciseRecord(
+      recordId: 'r-pull-prev',
+      completedAt: DateTime.utc(2026, 8, 28, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-pull-prev',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 90,
+          reps: 5,
+        ),
+      ],
+    );
+    final current = _multiExerciseRecord(
+      recordId: 'r-pull-now',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-pull-now',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 100,
+          reps: 5,
+          extraSets: const [(2, 5, 105.0)],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CompletedSessionResultView(
+            record: current,
+            athleteHistory: [previous],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Weighted Pull-Up'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('TODAY'), findsOneWidget);
+    expect(find.byKey(const ValueKey('today-set-EX-095-1')), findsOneWidget);
+    expect(find.byKey(const ValueKey('today-set-EX-095-2')), findsOneWidget);
+    expect(find.text('LAST TIME'), findsOneWidget);
+    expect(
+      find.text(formatCompletedDate(DateTime.utc(2026, 8, 28, 18))),
+      findsOneWidget,
+    );
+    expect(find.text('100 kg'), findsOneWidget);
+    expect(find.text('105 kg'), findsOneWidget);
+    expect(find.text('90 kg'), findsOneWidget);
+    expect(find.text('Set 3'), findsNothing);
+    expect(find.textContaining('5 reps · 100 kg · Completed'), findsNothing);
+    expect(find.text('BEST SET'), findsOneWidget);
+    expect(find.text('5 × 105 kg'), findsOneWidget);
+    expect(find.text('ESTIMATED 1RM'), findsOneWidget);
+    expect(find.text('122.5 kg'), findsOneWidget);
+    expect(find.text('+17.5 kg'), findsOneWidget);
+    expect(find.text('WORKING VOLUME'), findsOneWidget);
+    expect(find.text('1,025 kg'), findsOneWidget);
+    expect(find.text('+575 kg'), findsOneWidget);
+    expect(find.text('Improved'), findsOneWidget);
+
+    final bestRow = tester.widget<DecoratedBox>(
+      find.descendant(
+        of: find.byKey(const ValueKey('today-set-EX-095-2')),
+        matching: find.byType(DecoratedBox),
+      ).first,
+    );
+    expect((bestRow.decoration as BoxDecoration).color, CohortColors.oliveSoft);
+
+    final todayRow = tester.widget<DecoratedBox>(
+      find.descendant(
+        of: find.byKey(const ValueKey('today-set-EX-095-1')),
+        matching: find.byType(DecoratedBox),
+      ).first,
+    );
+    expect((todayRow.decoration as BoxDecoration).color, Colors.transparent);
+
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('today-set-EX-095-1'))).dx,
+      tester.getTopLeft(find.byKey(const ValueKey('today-set-EX-095-2'))).dx,
+    );
+    expect(find.byType(TextField), findsNothing);
+    expect(find.byType(Checkbox), findsNothing);
+    expect(find.text('Begin'), findsNothing);
+    expect(find.text('Resume'), findsNothing);
+  });
+
+  testWidgets('narrow layout stacks Last Time under Today without overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final previous = _multiExerciseRecord(
+      recordId: 'r-n-prev',
+      completedAt: DateTime.utc(2026, 8, 28, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-n-prev',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 90,
+          reps: 5,
+        ),
+      ],
+    );
+    final current = _multiExerciseRecord(
+      recordId: 'r-n-now',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-n-now',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 100,
+          reps: 5,
+          extraSets: const [(2, 5, 105.0)],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SizedBox(
+            width: 320,
+            child: CompletedSessionResultView(
+              record: current,
+              athleteHistory: [previous],
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Weighted Pull-Up'));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.getTopLeft(find.text('LAST TIME')).dy,
+      greaterThan(tester.getTopLeft(find.text('TODAY')).dy),
+    );
+    expect(find.text('—'), findsNothing);
+    expect(find.textContaining('0.0 kg'), findsNothing);
+  });
+
+  testWidgets('expanded result respects large text scale without overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final previous = _multiExerciseRecord(
+      recordId: 'r-ts-prev',
+      completedAt: DateTime.utc(2026, 8, 28, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-ts-prev',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 90,
+          reps: 5,
+        ),
+      ],
+    );
+    final current = _multiExerciseRecord(
+      recordId: 'r-ts-now',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-ts-now',
+          exerciseId: 'EX-095',
+          name: 'Weighted Pull-Up',
+          position: 1,
+          load: 100,
+          reps: 5,
+          extraSets: const [(2, 5, 105.0)],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: const TextScaler.linear(1.6),
+            ),
+            child: child!,
+          );
+        },
+        home: Scaffold(
+          body: CompletedSessionResultView(
+            record: current,
+            athleteHistory: [previous],
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Weighted Pull-Up'));
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text('TODAY'), findsOneWidget);
+    expect(find.text('122.5 kg'), findsOneWidget);
+  });
+
+  testWidgets('bodyweight remains Not comparable and never shows 0.0 kg', (
+    tester,
+  ) async {
+    final previous = _completedStrengthRecord(
+      recordId: 'r-bw-prev',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 10,
+      reps: 12,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r-bw-now',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: null,
+      reps: 12,
+      loadKind: StrengthActualLoadKind.bodyweight,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CompletedSessionResultView(
+            record: current,
+            athleteHistory: [previous],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Not comparable'), findsOneWidget);
+    await tester.tap(find.text('Back squat'));
+    await tester.pumpAndSettle();
+    expect(find.text('Bodyweight'), findsWidgets);
+    expect(find.textContaining('0.0 kg'), findsNothing);
+    expect(find.text('ESTIMATED 1RM'), findsNothing);
+    expect(find.text('WORKING VOLUME'), findsNothing);
+  });
+
+  testWidgets('warm-up shows a single concise completion state', (tester) async {
+    final record = _completedStrengthRecord(
+      recordId: 'r-wu',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: 80,
+      reps: 5,
+      warmUpTitle: 'Apollo Shoulder Balance Warm-Up',
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: CompletedSessionResultView(record: record)),
+      ),
+    );
+
+    final warmUp = find.byKey(
+      const ValueKey('completed-block-Apollo Shoulder Balance Warm-Up'),
+    );
+    expect(warmUp, findsOneWidget);
+    expect(
+      find.descendant(of: warmUp, matching: find.text('Completed')),
+      findsOneWidget,
+    );
+    expect(find.text('Completed · Completed'), findsNothing);
+    expect(find.textContaining('Completed — Completed'), findsNothing);
   });
 }
 
@@ -747,6 +1048,7 @@ TrainingSessionRecord _completedStrengthRecord({
   int rpe = 7,
   String exerciseId = 'EX-SQUAT',
   StrengthActualLoadKind loadKind = StrengthActualLoadKind.external,
+  String warmUpTitle = 'Warm-up',
 }) {
   return TrainingSessionRecord(
     recordId: recordId,
@@ -767,9 +1069,9 @@ TrainingSessionRecord _completedStrengthRecord({
         blockResultId: '$recordId-w',
         sessionRecordId: recordId,
         sourceBlockId: 'warmup',
-        blockSnapshot: const BlockPerformanceSnapshot(
+        blockSnapshot: BlockPerformanceSnapshot(
           sourceBlockId: 'warmup',
-          title: 'Warm-up',
+          title: warmUpTitle,
           blockType: SessionBlockType.warmUp,
           content: 'Raise temperature for 8 minutes',
           workoutFormat: WorkoutFormat.none,

@@ -104,13 +104,14 @@ class CompletedBlockResultProjection {
         )
         .toList(growable: false);
     final prescription = block.blockSnapshot.content.trim();
+    final summary = isSimple
+        ? PerformanceResultSummaryFormatter.formatBlock(block)
+        : _blockHeadline(block, exercises);
     return CompletedBlockResultProjection(
       title: block.blockSnapshot.title,
       statusLabel: block.status.displayLabel,
       isSimpleCompletion: isSimple,
-      summary: isSimple
-          ? PerformanceResultSummaryFormatter.formatBlock(block)
-          : _blockHeadline(block, exercises),
+      summary: summary,
       exercises: exercises,
       prescriptionContext: prescription.isEmpty ? null : prescription,
     );
@@ -142,22 +143,26 @@ class CompletedExerciseResultProjection {
     required this.previousSets,
     required this.comparisonStatus,
     required this.comparisonLabel,
+    this.previousCompletedAt,
     this.bestSetLabel,
     this.estimated1RmLabel,
     this.volumeLabel,
     this.deltaLabels = const [],
+    this.metrics = const [],
   });
 
   final String sourceExerciseId;
   final String displayName;
   final List<CompletedSetResultProjection> sets;
   final List<CompletedSetResultProjection> previousSets;
+  final DateTime? previousCompletedAt;
   final StrengthExerciseComparisonStatus comparisonStatus;
   final String comparisonLabel;
   final String? bestSetLabel;
   final String? estimated1RmLabel;
   final String? volumeLabel;
   final List<String> deltaLabels;
+  final List<CompletedPerformanceMetric> metrics;
 
   factory CompletedExerciseResultProjection.fromExercise(
     TrainingExerciseResult exercise, {
@@ -165,18 +170,23 @@ class CompletedExerciseResultProjection {
     required List<TrainingSessionRecord> athleteHistory,
   }) {
     final kind = exercise.exerciseSnapshot.loadKind;
-    final sets = StrengthResultComparison.authoredSets(exercise)
-        .map(
-          (set) => CompletedSetResultProjection.fromSet(set, loadKind: kind),
-        )
-        .toList(growable: false);
-    final previous = StrengthResultComparison.previousExercise(
+    final previousOccurrence = StrengthResultComparison.previousOccurrence(
       exerciseId: exercise.sourceExerciseId,
       current: current,
       athleteHistory: athleteHistory,
     );
-    final previousKind =
-        previous?.exerciseSnapshot.loadKind ?? kind;
+    final previous = previousOccurrence?.exercise;
+    final bestSet = StrengthResultComparison.bestCompletedSet(exercise);
+    final sets = StrengthResultComparison.authoredSets(exercise)
+        .map(
+          (set) => CompletedSetResultProjection.fromSet(
+            set,
+            loadKind: kind,
+            isBestSet: bestSet != null && set.setNumber == bestSet.setNumber,
+          ),
+        )
+        .toList(growable: false);
+    final previousKind = previous?.exerciseSnapshot.loadKind ?? kind;
     final previousSets = previous == null
         ? const <CompletedSetResultProjection>[]
         : StrengthResultComparison.authoredSets(previous)
@@ -198,6 +208,7 @@ class CompletedExerciseResultProjection {
           : exercise.exerciseSnapshot.displayName,
       sets: sets,
       previousSets: previousSets,
+      previousCompletedAt: previousOccurrence?.completedAt,
       comparisonStatus: status,
       comparisonLabel: status.label,
       bestSetLabel: StrengthResultComparison.bestSetLabel(exercise),
@@ -207,36 +218,185 @@ class CompletedExerciseResultProjection {
         current: exercise,
         previous: previous,
       ),
+      metrics: _metrics(current: exercise, previous: previous),
     );
   }
+
+  static List<CompletedPerformanceMetric> _metrics({
+    required TrainingExerciseResult current,
+    required TrainingExerciseResult? previous,
+  }) {
+    final metrics = <CompletedPerformanceMetric>[];
+    final bestValue = StrengthResultComparison.bestSetValue(current);
+    if (bestValue != null) {
+      metrics.add(
+        CompletedPerformanceMetric(
+          key: 'best-set',
+          title: 'Best Set',
+          value: bestValue,
+          deltaLabel: _bestSetDelta(current: current, previous: previous),
+          tone: _loadTone(current: current, previous: previous),
+        ),
+      );
+    }
+    final current1Rm = StrengthResultComparison.estimated1RmMetric(current);
+    if (current1Rm != null) {
+      final previous1Rm = previous == null
+          ? null
+          : StrengthResultComparison.estimated1RmMetric(previous);
+      final comparable =
+          previous1Rm != null &&
+          previous1Rm.unit.toLowerCase() == current1Rm.unit.toLowerCase();
+      metrics.add(
+        CompletedPerformanceMetric(
+          key: 'estimated-1rm',
+          title: 'Estimated 1RM',
+          value:
+              '${StrengthLoadDisplay.formatQuantity(current1Rm.value)} ${current1Rm.unit}',
+          deltaLabel: comparable
+              ? _signedDelta(
+                  current1Rm.value - previous1Rm.value,
+                  current1Rm.unit,
+                )
+              : null,
+          tone: comparable
+              ? _numericTone(current1Rm.value - previous1Rm.value)
+              : StrengthMetricTone.none,
+        ),
+      );
+    }
+    final currentVolume = StrengthResultComparison.volumeMetric(current);
+    if (currentVolume != null) {
+      final previousVolume = previous == null
+          ? null
+          : StrengthResultComparison.volumeMetric(previous);
+      final comparable =
+          previousVolume != null &&
+          previousVolume.unit.toLowerCase() == currentVolume.unit.toLowerCase();
+      metrics.add(
+        CompletedPerformanceMetric(
+          key: 'working-volume',
+          title: 'Working Volume',
+          value:
+              '${StrengthLoadDisplay.formatQuantity(currentVolume.value)} ${currentVolume.unit}',
+          deltaLabel: comparable
+              ? _signedDelta(
+                  currentVolume.value - previousVolume.value,
+                  currentVolume.unit,
+                )
+              : null,
+          tone: comparable
+              ? _numericTone(currentVolume.value - previousVolume.value)
+              : StrengthMetricTone.none,
+        ),
+      );
+    }
+    return metrics;
+  }
+
+  static String? _bestSetDelta({
+    required TrainingExerciseResult current,
+    required TrainingExerciseResult? previous,
+  }) {
+    if (previous == null) return null;
+    final currentBest = StrengthResultComparison.bestCompletedSet(current);
+    final previousBest = StrengthResultComparison.bestCompletedSet(previous);
+    if (currentBest?.load == null ||
+        currentBest!.load == 0 ||
+        previousBest?.load == null ||
+        previousBest!.load == 0) {
+      return null;
+    }
+    final currentUnit = currentBest.loadUnit?.trim().isNotEmpty == true
+        ? currentBest.loadUnit!.trim()
+        : 'kg';
+    final previousUnit = previousBest.loadUnit?.trim().isNotEmpty == true
+        ? previousBest.loadUnit!.trim()
+        : 'kg';
+    if (currentUnit.toLowerCase() != previousUnit.toLowerCase()) return null;
+    return _signedDelta(currentBest.load! - previousBest.load!, currentUnit);
+  }
+
+  static StrengthMetricTone _loadTone({
+    required TrainingExerciseResult current,
+    required TrainingExerciseResult? previous,
+  }) {
+    if (previous == null) return StrengthMetricTone.none;
+    final currentBest = StrengthResultComparison.bestCompletedSet(current);
+    final previousBest = StrengthResultComparison.bestCompletedSet(previous);
+    if (currentBest?.load == null || previousBest?.load == null) {
+      return StrengthMetricTone.none;
+    }
+    return _numericTone(currentBest!.load! - previousBest!.load!);
+  }
+
+  static String? _signedDelta(double delta, String unit) {
+    if (delta == 0) return null;
+    final formatted = StrengthLoadDisplay.formatQuantity(delta.abs());
+    return '${delta > 0 ? '+' : '-'}$formatted $unit';
+  }
+
+  static StrengthMetricTone _numericTone(double delta) {
+    if (delta > 0) return StrengthMetricTone.positive;
+    if (delta < 0) return StrengthMetricTone.negative;
+    return StrengthMetricTone.neutral;
+  }
+}
+
+enum StrengthMetricTone { positive, neutral, negative, none }
+
+class CompletedPerformanceMetric {
+  const CompletedPerformanceMetric({
+    required this.key,
+    required this.title,
+    required this.value,
+    this.deltaLabel,
+    this.tone = StrengthMetricTone.none,
+  });
+
+  final String key;
+  final String title;
+  final String value;
+  final String? deltaLabel;
+  final StrengthMetricTone tone;
 }
 
 class CompletedSetResultProjection {
   const CompletedSetResultProjection({
     required this.setNumber,
+    required this.completed,
     required this.stateLabel,
+    this.reps,
     this.repsLabel,
     this.loadLabel,
+    this.isBestSet = false,
   });
 
   final int setNumber;
+  final bool completed;
   final String stateLabel;
+  final int? reps;
   final String? repsLabel;
   final String? loadLabel;
+  final bool isBestSet;
 
   factory CompletedSetResultProjection.fromSet(
     TrainingSetResult set, {
     required StrengthActualLoadKind loadKind,
+    bool isBestSet = false,
   }) {
     return CompletedSetResultProjection(
       setNumber: set.setNumber,
+      completed: set.completed,
       stateLabel: set.completed ? 'Completed' : 'Not completed',
+      reps: set.reps,
       repsLabel: set.reps == null ? null : '${set.reps} reps',
       loadLabel: StrengthLoadDisplay.format(
         load: set.load,
         loadUnit: set.loadUnit,
         kind: loadKind,
       ),
+      isBestSet: isBestSet,
     );
   }
 }
@@ -261,6 +421,25 @@ String formatCompletedClock(DateTime value) {
       '${local.hour.toString().padLeft(2, '0')}:'
       '${local.minute.toString().padLeft(2, '0')}';
   return '${local.day} ${months[local.month - 1]} $time';
+}
+
+String formatCompletedDate(DateTime value) {
+  final local = value.toLocal();
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  return '${local.day} ${months[local.month - 1]} ${local.year}';
 }
 
 String formatCompletedDuration(int seconds) {

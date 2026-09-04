@@ -56,6 +56,22 @@ class StrengthLoadDisplay {
         ? value.toInt().toString()
         : value.toStringAsFixed(1);
   }
+
+  static String formatQuantity(double value) {
+    if (value != value.roundToDouble()) {
+      return formatNumber(value);
+    }
+    final negative = value < 0;
+    final digits = value.abs().toInt().toString();
+    final grouped = StringBuffer();
+    for (var i = 0; i < digits.length; i++) {
+      if (i > 0 && (digits.length - i) % 3 == 0) {
+        grouped.write(',');
+      }
+      grouped.write(digits[i]);
+    }
+    return negative ? '-$grouped' : grouped.toString();
+  }
 }
 
 class StrengthResultComparison {
@@ -101,6 +117,19 @@ class StrengthResultComparison {
     required TrainingSessionRecord current,
     required List<TrainingSessionRecord> athleteHistory,
   }) {
+    return previousOccurrence(
+      exerciseId: exerciseId,
+      current: current,
+      athleteHistory: athleteHistory,
+    )?.exercise;
+  }
+
+  static ({TrainingExerciseResult exercise, DateTime completedAt})?
+  previousOccurrence({
+    required String exerciseId,
+    required TrainingSessionRecord current,
+    required List<TrainingSessionRecord> athleteHistory,
+  }) {
     final id = exerciseId.trim();
     if (id.isEmpty) return null;
     final currentAt = current.completedAt ?? current.startedAt;
@@ -123,7 +152,8 @@ class StrengthResultComparison {
         }
       }
     }
-    return latest;
+    if (latest == null || latestAt == null) return null;
+    return (exercise: latest, completedAt: latestAt);
   }
 
   static StrengthExerciseComparisonStatus status({
@@ -158,7 +188,11 @@ class StrengthResultComparison {
     return status(current: current, previous: previous).label;
   }
 
-  static String? bestSetLabel(TrainingExerciseResult exercise) {
+  static TrainingSetResult? bestCompletedSet(TrainingExerciseResult exercise) {
+    return _bestCompletedSet(exercise);
+  }
+
+  static String? bestSetValue(TrainingExerciseResult exercise) {
     final best = _bestCompletedSet(exercise);
     if (best == null) return null;
     final load = StrengthLoadDisplay.format(
@@ -166,10 +200,38 @@ class StrengthResultComparison {
       loadUnit: best.loadUnit,
       kind: exercise.exerciseSnapshot.loadKind,
     );
-    final reps = best.reps == null ? null : '${best.reps} reps';
-    final parts = <String>[?load, ?reps];
-    if (parts.isEmpty) return null;
-    return 'Best set ${best.setNumber}: ${parts.join(' · ')}';
+    if (best.reps != null && load != null) {
+      return '${best.reps} × $load';
+    }
+    if (load != null) return load;
+    if (best.reps != null) return '${best.reps} reps';
+    return null;
+  }
+
+  static String? bestSetLabel(TrainingExerciseResult exercise) {
+    final value = bestSetValue(exercise);
+    if (value == null) return null;
+    final best = _bestCompletedSet(exercise);
+    if (best == null) return null;
+    return 'Best set ${best.setNumber}: $value';
+  }
+
+  static ({double value, String unit})? estimated1RmMetric(
+    TrainingExerciseResult exercise,
+  ) {
+    final metric = _primaryMetric(exercise);
+    if (metric == null || metric.kind != _PrimaryMetricKind.estimated1Rm) {
+      return null;
+    }
+    return (value: metric.value, unit: metric.unit);
+  }
+
+  static ({double value, String unit})? volumeMetric(
+    TrainingExerciseResult exercise,
+  ) {
+    final volume = _volume(exercise);
+    if (volume == null) return null;
+    return (value: volume.value, unit: volume.unit);
   }
 
   static String? estimated1RmLabel(TrainingExerciseResult exercise) {
@@ -177,13 +239,13 @@ class StrengthResultComparison {
     if (metric == null || metric.kind != _PrimaryMetricKind.estimated1Rm) {
       return null;
     }
-    return 'Est. 1RM ${StrengthLoadDisplay.formatNumber(metric.value)} ${metric.unit}';
+    return 'Est. 1RM ${StrengthLoadDisplay.formatQuantity(metric.value)} ${metric.unit}';
   }
 
   static String? volumeLabel(TrainingExerciseResult exercise) {
     final volume = _volume(exercise);
     if (volume == null) return null;
-    return 'Volume ${StrengthLoadDisplay.formatNumber(volume.value)} ${volume.unit}';
+    return 'Volume ${StrengthLoadDisplay.formatQuantity(volume.value)} ${volume.unit}';
   }
 
   static List<String> secondaryDeltas({
