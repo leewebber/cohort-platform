@@ -13,6 +13,7 @@ class SessionExecutionExerciseSummary {
   const SessionExecutionExerciseSummary({
     required this.exerciseId,
     required this.displayName,
+    this.position = 0,
     this.displayLabelOverride,
     this.exercise,
     this.prescription,
@@ -23,6 +24,7 @@ class SessionExecutionExerciseSummary {
 
   final String exerciseId;
   final String displayName;
+  final int position;
   final String? displayLabelOverride;
   final Exercise? exercise;
   final StrengthExercisePrescription? prescription;
@@ -95,11 +97,15 @@ class SessionExecutionBlock {
     required Map<String, Exercise> exercisesById,
   }) {
     final timer = block.timerConfiguration;
-    final summaries = block.linkedExercises
+    final authoredLinks = List<SessionBlockExerciseLink>.from(
+      block.linkedExercises,
+    )..sort((a, b) => a.position.compareTo(b.position));
+    final summaries = authoredLinks
         .map(
           (link) => SessionExecutionExerciseSummary(
             exerciseId: link.exerciseId,
             displayName: _displayName(link, exercisesById),
+            position: link.position,
             displayLabelOverride: link.displayLabelOverride,
             exercise: exercisesById[link.exerciseId],
             prescription: link.prescription,

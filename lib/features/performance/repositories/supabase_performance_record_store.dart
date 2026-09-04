@@ -201,7 +201,7 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
         .from('training_block_results')
         .select()
         .eq('session_record_id', recordId)
-        .order('position');
+        .order('position', ascending: true);
 
     final blocks = <TrainingBlockResult>[];
     for (final blockRow in (blockRows as List).cast<Map<String, dynamic>>()) {
@@ -210,7 +210,7 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
           .from('training_exercise_results')
           .select()
           .eq('block_result_id', blockResultId)
-          .order('position');
+          .order('position', ascending: true);
 
       final exercises = <TrainingExerciseResult>[];
       for (final exerciseRow
@@ -221,7 +221,7 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
             .from('training_set_results')
             .select()
             .eq('exercise_result_id', exerciseResultId)
-            .order('position');
+            .order('position', ascending: true);
 
         final sets = (setRows as List)
             .cast<Map<String, dynamic>>()

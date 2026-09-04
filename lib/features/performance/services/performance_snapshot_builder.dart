@@ -62,17 +62,7 @@ class PerformanceSnapshotBuilder {
               timerSummary: block.timerSummary,
               coachNotes: block.coachNotes,
               performanceCaptureMode: block.performanceCaptureMode.dbValue,
-              exercises: block.linkedExercises
-                  .asMap()
-                  .entries
-                  .map(
-                    (entry) => exerciseSnapshotFromSummary(
-                      entry.value,
-                      position: entry.key + 1,
-                      blockType: block.blockType,
-                    ),
-                  )
-                  .toList(growable: false),
+              exercises: _authoredExerciseSnapshots(block),
             ),
           )
           .toList(growable: false),
@@ -94,17 +84,7 @@ class PerformanceSnapshotBuilder {
             timerSummary: block.timerSummary,
             coachNotes: block.coachNotes,
             performanceCaptureMode: block.performanceCaptureMode.dbValue,
-            exercises: block.linkedExercises
-                .asMap()
-                .entries
-                .map(
-                  (entry) => exerciseSnapshotFromSummary(
-                    entry.value,
-                    position: entry.key + 1,
-                    blockType: block.blockType,
-                  ),
-                )
-                .toList(growable: false),
+            exercises: _authoredExerciseSnapshots(block),
           );
 
           final captureMode = BlockCaptureModeResolver.resolveForBlock(block);
@@ -124,19 +104,51 @@ class PerformanceSnapshotBuilder {
               captureMode,
               block,
             ),
-            exerciseResults: block.linkedExercises
-                .asMap()
-                .entries
+            exerciseResults: _authoredSummaries(block)
                 .map(
                   (entry) => _initialExerciseDraft(
-                    entry.value,
-                    position: entry.key + 1,
+                    entry.summary,
+                    position: entry.position,
                     blockType: block.blockType,
                   ),
                 )
                 .toList(growable: false),
           );
         })
+        .toList(growable: false);
+  }
+
+  List<ExercisePerformanceSnapshot> _authoredExerciseSnapshots(
+    SessionExecutionBlock block,
+  ) {
+    return _authoredSummaries(block)
+        .map(
+          (entry) => exerciseSnapshotFromSummary(
+            entry.summary,
+            position: entry.position,
+            blockType: block.blockType,
+          ),
+        )
+        .toList(growable: false);
+  }
+
+  List<({SessionExecutionExerciseSummary summary, int position})>
+  _authoredSummaries(SessionExecutionBlock block) {
+    final indexed = block.linkedExercises.asMap().entries.toList()
+      ..sort((a, b) {
+        final aPos = a.value.position > 0 ? a.value.position : a.key + 1;
+        final bPos = b.value.position > 0 ? b.value.position : b.key + 1;
+        return aPos.compareTo(bPos);
+      });
+    return indexed
+        .map(
+          (entry) => (
+            summary: entry.value,
+            position: entry.value.position > 0
+                ? entry.value.position
+                : entry.key + 1,
+          ),
+        )
         .toList(growable: false);
   }
 

@@ -147,7 +147,50 @@ void main() {
     );
   });
 
-  test('first performance is labeled First recorded session', () {
+  test('exercises render in authored order when stored reversed', () {
+    final record = _multiExerciseRecord(
+      recordId: 'r-order',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-order',
+          exerciseId: 'EX-ROW',
+          name: 'Chest-supported row',
+          position: 3,
+          load: 70,
+          reps: 8,
+        ),
+        _exercise(
+          recordId: 'r-order',
+          exerciseId: 'EX-SQUAT',
+          name: 'Back squat',
+          position: 1,
+          load: 100,
+          reps: 5,
+        ),
+        _exercise(
+          recordId: 'r-order',
+          exerciseId: 'EX-BENCH',
+          name: 'Incline bench',
+          position: 2,
+          load: 80,
+          reps: 6,
+        ),
+      ],
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: record,
+    );
+    expect(
+      projection.blocks
+          .firstWhere((block) => block.title == 'Strength')
+          .exercises
+          .map((exercise) => exercise.displayName),
+      ['Back squat', 'Incline bench', 'Chest-supported row'],
+    );
+  });
+
+  test('first performance is labeled Baseline', () {
     final record = _completedStrengthRecord(
       recordId: 'r1',
       completedAt: DateTime.utc(2026, 9, 3, 18),
@@ -163,12 +206,20 @@ void main() {
           .firstWhere((block) => block.title == 'Strength')
           .exercises
           .single
+          .comparisonStatus,
+      StrengthExerciseComparisonStatus.baseline,
+    );
+    expect(
+      projection.blocks
+          .firstWhere((block) => block.title == 'Strength')
+          .exercises
+          .single
           .comparisonLabel,
-      'First recorded session',
+      'Baseline',
     );
   });
 
-  test('later performance compares against the prior completed result', () {
+  test('later performance compares estimated 1RM against the prior result', () {
     final previous = _completedStrengthRecord(
       recordId: 'r1',
       completedAt: DateTime.utc(2026, 9, 1, 18),
@@ -179,7 +230,7 @@ void main() {
       recordId: 'r2',
       completedAt: DateTime.utc(2026, 9, 3, 18),
       load: 90,
-      reps: 5,
+      reps: 3,
     );
     final projection = CompletedSessionResultProjection.fromRecords(
       record: current,
@@ -190,12 +241,130 @@ void main() {
         .exercises
         .single;
 
-    expect(exercise.comparisonLabel, contains('+10 kg best load'));
+    expect(exercise.comparisonStatus, StrengthExerciseComparisonStatus.improved);
+    expect(exercise.comparisonLabel, 'Improved');
     expect(exercise.bestSetLabel, contains('90 kg'));
-    expect(exercise.volumeLabel, contains('450 kg'));
+    expect(exercise.estimated1RmLabel, contains('Est. 1RM'));
+    expect(exercise.volumeLabel, contains('270 kg'));
+    expect(exercise.deltaLabels.any((label) => label.contains('est. 1RM')), isTrue);
     expect(exercise.sets, hasLength(1));
     expect(exercise.sets.single.loadLabel, '90 kg');
-    expect(exercise.sets.single.repsLabel, '5 reps');
+    expect(exercise.sets.single.repsLabel, '3 reps');
+    expect(exercise.previousSets.single.loadLabel, '80 kg');
+  });
+
+  test('maintained stays within the 1RM tolerance', () {
+    final previous = _completedStrengthRecord(
+      recordId: 'r1',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 100,
+      reps: 5,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r2',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: 100.4,
+      reps: 5,
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: current,
+      athleteHistory: [previous],
+    );
+    expect(
+      projection.blocks
+          .firstWhere((block) => block.title == 'Strength')
+          .exercises
+          .single
+          .comparisonStatus,
+      StrengthExerciseComparisonStatus.maintained,
+    );
+  });
+
+  test('lower estimated 1RM is Below previous', () {
+    final previous = _completedStrengthRecord(
+      recordId: 'r1',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 100,
+      reps: 5,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r2',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: 90,
+      reps: 5,
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: current,
+      athleteHistory: [previous],
+    );
+    expect(
+      projection.blocks
+          .firstWhere((block) => block.title == 'Strength')
+          .exercises
+          .single
+          .comparisonStatus,
+      StrengthExerciseComparisonStatus.belowPrevious,
+    );
+  });
+
+  test('incompatible load kinds are Not comparable, not a decline', () {
+    final previous = _completedStrengthRecord(
+      recordId: 'r1',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 100,
+      reps: 5,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r2',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: null,
+      reps: 8,
+      loadKind: StrengthActualLoadKind.bodyweight,
+      exerciseId: 'EX-SQUAT',
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: current,
+      athleteHistory: [previous],
+    );
+    final exercise = projection.blocks
+        .firstWhere((block) => block.title == 'Strength')
+        .exercises
+        .single;
+    expect(
+      exercise.comparisonStatus,
+      StrengthExerciseComparisonStatus.notComparable,
+    );
+    expect(exercise.sets.single.loadLabel, 'Bodyweight');
+    expect(exercise.sets.single.loadLabel?.contains('0.0'), isFalse);
+  });
+
+  test('missing external load is Not comparable and never shows 0.0 kg', () {
+    final previous = _completedStrengthRecord(
+      recordId: 'r1',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 80,
+      reps: 5,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r2',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: null,
+      reps: 5,
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: current,
+      athleteHistory: [previous],
+    );
+    final exercise = projection.blocks
+        .firstWhere((block) => block.title == 'Strength')
+        .exercises
+        .single;
+    expect(
+      exercise.comparisonStatus,
+      StrengthExerciseComparisonStatus.notComparable,
+    );
+    expect(exercise.sets.single.loadLabel, isNull);
+    expect(exercise.estimated1RmLabel, isNull);
   });
 
   test('listHistory stays athlete-isolated', () async {
@@ -263,6 +432,11 @@ void main() {
         rpe: 8,
       );
 
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -279,16 +453,137 @@ void main() {
       expect(find.text('Session summary'), findsOneWidget);
       expect(find.text('RPE 8'), findsOneWidget);
       expect(find.textContaining('Duration'), findsOneWidget);
-      expect(find.textContaining('Set 1 · 8 reps · 60 kg · Completed'), findsOneWidget);
-      expect(find.text('First recorded session'), findsOneWidget);
+      expect(find.text('Back squat'), findsOneWidget);
+      expect(find.text('Baseline'), findsOneWidget);
+      expect(find.textContaining('8 reps'), findsNothing);
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Resume'), findsNothing);
-      expect(find.textContaining('estimated'), findsNothing);
+      expect(find.textContaining('90 min estimated'), findsNothing);
       expect(find.textContaining('0.0 kg'), findsNothing);
       expect(find.byType(TextField), findsNothing);
       expect(find.byType(Checkbox), findsNothing);
+
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('completed-exercise-EX-SQUAT')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('completed-exercise-EX-SQUAT')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('8 reps · 60 kg · Completed'), findsWidgets);
+      expect(find.textContaining('Est. 1RM'), findsOneWidget);
     },
   );
+
+  testWidgets('accordion starts collapsed and expands the tapped exercise', (
+    tester,
+  ) async {
+    final record = _multiExerciseRecord(
+      recordId: 'r-ui-acc',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      exercises: [
+        _exercise(
+          recordId: 'r-ui-acc',
+          exerciseId: 'EX-SQUAT',
+          name: 'Back squat',
+          position: 1,
+          load: 100,
+          reps: 5,
+          extraSets: const [(2, 5, 105.0)],
+        ),
+        _exercise(
+          recordId: 'r-ui-acc',
+          exerciseId: 'EX-BENCH',
+          name: 'Incline bench',
+          position: 2,
+          load: 70,
+          reps: 6,
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: CompletedSessionResultView(record: record)),
+      ),
+    );
+
+    expect(find.text('Back squat'), findsOneWidget);
+    expect(find.text('Incline bench'), findsOneWidget);
+    expect(find.textContaining('105 kg'), findsNothing);
+    expect(find.textContaining('70 kg'), findsNothing);
+
+    await tester.tap(find.text('Back squat'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('5 reps · 100 kg · Completed'), findsWidgets);
+    expect(find.textContaining('5 reps · 105 kg · Completed'), findsWidgets);
+    expect(find.textContaining('70 kg'), findsNothing);
+  });
+
+  testWidgets('badge meaning is not colour-only and is announced', (
+    tester,
+  ) async {
+    final previous = _completedStrengthRecord(
+      recordId: 'r-prev',
+      completedAt: DateTime.utc(2026, 9, 1, 18),
+      load: 80,
+      reps: 5,
+    );
+    final current = _completedStrengthRecord(
+      recordId: 'r-now',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: 95,
+      reps: 5,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: CompletedSessionResultView(
+            record: current,
+            athleteHistory: [previous],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Improved'), findsOneWidget);
+    expect(find.byIcon(Icons.trending_up), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp('Improved compared with the previous')),
+      findsWidgets,
+    );
+  });
+
+  testWidgets('keyboard activate expands a collapsed exercise', (tester) async {
+    tester.view.physicalSize = const Size(800, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final record = _completedStrengthRecord(
+      recordId: 'r-key',
+      completedAt: DateTime.utc(2026, 9, 3, 18),
+      load: 80,
+      reps: 5,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: CompletedSessionResultView(record: record)),
+      ),
+    );
+
+    final row = find.byKey(const ValueKey('completed-exercise-EX-SQUAT'));
+    await tester.ensureVisible(row);
+    await tester.pumpAndSettle();
+    final inkWell = find.descendant(of: row, matching: find.byType(InkWell));
+    Actions.invoke<ActivateIntent>(
+      tester.element(inkWell),
+      const ActivateIntent(),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('5 reps · 80 kg · Completed'), findsWidgets);
+  });
 }
 
 PerformanceCaptureController _strengthController() {
@@ -333,14 +628,125 @@ PerformanceCaptureController _strengthController() {
   );
 }
 
+TrainingExerciseResult _exercise({
+  required String recordId,
+  required String exerciseId,
+  required String name,
+  required int position,
+  required double? load,
+  required int reps,
+  StrengthActualLoadKind loadKind = StrengthActualLoadKind.external,
+  List<(int setNumber, int reps, double? load)> extraSets = const [],
+}) {
+  final sets = [
+    TrainingSetResult(
+      setResultId: '$recordId-$exerciseId-1',
+      exerciseResultId: '$recordId-$exerciseId',
+      setNumber: 1,
+      position: 1,
+      reps: reps,
+      load: load,
+      loadUnit: load == null || loadKind != StrengthActualLoadKind.external
+          ? null
+          : 'kg',
+      completed: true,
+    ),
+    for (final extra in extraSets)
+      TrainingSetResult(
+        setResultId: '$recordId-$exerciseId-${extra.$1}',
+        exerciseResultId: '$recordId-$exerciseId',
+        setNumber: extra.$1,
+        position: extra.$1,
+        reps: extra.$2,
+        load: extra.$3,
+        loadUnit: extra.$3 == null || loadKind != StrengthActualLoadKind.external
+            ? null
+            : 'kg',
+        completed: true,
+      ),
+  ];
+  return TrainingExerciseResult(
+    exerciseResultId: '$recordId-$exerciseId',
+    blockResultId: '$recordId-s',
+    sourceExerciseId: exerciseId,
+    exerciseSnapshot: ExercisePerformanceSnapshot(
+      sourceExerciseId: exerciseId,
+      displayName: name,
+      position: position,
+      loadKind: loadKind,
+    ),
+    position: position,
+    setResults: sets,
+  );
+}
+
+TrainingSessionRecord _multiExerciseRecord({
+  required String recordId,
+  required DateTime completedAt,
+  required List<TrainingExerciseResult> exercises,
+  String athleteId = 'athlete-1',
+}) {
+  final snapshotExercises = List<ExercisePerformanceSnapshot>.from(
+    exercises.map((exercise) => exercise.exerciseSnapshot),
+  )..sort((a, b) => a.position.compareTo(b.position));
+  return TrainingSessionRecord(
+    recordId: recordId,
+    athleteId: athleteId,
+    trainingSessionId: 41,
+    sourceProtocolId: 'APOLLO-W1-MON-R1',
+    status: TrainingSessionRecordStatus.completed,
+    sessionSnapshot: SessionPerformanceSnapshot(
+      sourceProtocolId: 'APOLLO-W1-MON-R1',
+      sessionTitle: 'Apollo Strength',
+      blocks: [
+        BlockPerformanceSnapshot(
+          sourceBlockId: 'strength',
+          title: 'Strength',
+          blockType: SessionBlockType.strength,
+          content: 'Authored strength',
+          workoutFormat: WorkoutFormat.none,
+          position: 2,
+          exercises: snapshotExercises,
+        ),
+      ],
+    ),
+    startedAt: completedAt.subtract(const Duration(seconds: 2400)),
+    completedAt: completedAt,
+    durationSeconds: 2400,
+    overallRpe: 7,
+    blockResults: [
+      TrainingBlockResult(
+        blockResultId: '$recordId-s',
+        sessionRecordId: recordId,
+        sourceBlockId: 'strength',
+        blockSnapshot: BlockPerformanceSnapshot(
+          sourceBlockId: 'strength',
+          title: 'Strength',
+          blockType: SessionBlockType.strength,
+          content: 'Authored strength',
+          workoutFormat: WorkoutFormat.none,
+          position: 2,
+          exercises: snapshotExercises,
+        ),
+        status: TrainingBlockResultStatus.completed,
+        resultType: PerformanceResultType.strength,
+        position: 2,
+        exerciseResults: exercises,
+      ),
+    ],
+  );
+}
+
 TrainingSessionRecord _completedStrengthRecord({
   required String recordId,
   required DateTime completedAt,
-  required double load,
+  required double? load,
   required int reps,
   String athleteId = 'athlete-1',
   int durationSeconds = 2400,
   int rpe = 7,
+  String exerciseId = 'EX-SQUAT',
+  StrengthActualLoadKind loadKind = StrengthActualLoadKind.external,
 }) {
   return TrainingSessionRecord(
     recordId: recordId,
@@ -392,12 +798,12 @@ TrainingSessionRecord _completedStrengthRecord({
           TrainingExerciseResult(
             exerciseResultId: '$recordId-e',
             blockResultId: '$recordId-s',
-            sourceExerciseId: 'EX-SQUAT',
-            exerciseSnapshot: const ExercisePerformanceSnapshot(
-              sourceExerciseId: 'EX-SQUAT',
+            sourceExerciseId: exerciseId,
+            exerciseSnapshot: ExercisePerformanceSnapshot(
+              sourceExerciseId: exerciseId,
               displayName: 'Back squat',
               position: 1,
-              loadKind: StrengthActualLoadKind.external,
+              loadKind: loadKind,
             ),
             position: 1,
             setResults: [
@@ -408,7 +814,9 @@ TrainingSessionRecord _completedStrengthRecord({
                 position: 1,
                 reps: reps,
                 load: load,
-                loadUnit: 'kg',
+                loadUnit: load == null || loadKind != StrengthActualLoadKind.external
+                    ? null
+                    : 'kg',
                 completed: true,
               ),
             ],
