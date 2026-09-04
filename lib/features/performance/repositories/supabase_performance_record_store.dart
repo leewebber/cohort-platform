@@ -3,6 +3,7 @@ import '../mappers/performance_record_mapper.dart';
 import '../models/active_performance_draft.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../services/performance_correction_service.dart';
 import 'performance_record_store.dart';
 
 class SupabasePerformanceRecordStore extends PerformanceRecordStore {
@@ -123,6 +124,37 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
   }
 
   @override
+  Future<TrainingSessionRecord> correctCompleted(
+    PerformanceCorrectionDraft draft,
+  ) async {
+    const service = PerformanceCorrectionService();
+    final payload = service.toPayload(draft);
+    try {
+      await SupabaseService.client.rpc(
+        'correct_completed_performance_record',
+        params: {'payload': payload},
+      );
+    } catch (error) {
+      throw PerformanceCorrectionException(
+        error.toString(),
+        'This result could not be corrected.',
+      );
+    }
+    final hydrated = await getById(draft.record.recordId);
+    if (hydrated == null) {
+      throw const PerformanceRecordStoreException(
+        'Failed to reload the corrected result.',
+      );
+    }
+    if (hydrated.status != draft.record.status ||
+        hydrated.completedAt != draft.record.completedAt ||
+        hydrated.recordId != draft.record.recordId) {
+      throw const PerformanceCorrectionException('lifecycle_mutated');
+    }
+    return hydrated;
+  }
+
+  @override
   Future<List<TrainingSessionRecord>> listHistory({
     required String athleteId,
     int limit = 25,
@@ -238,6 +270,20 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
       );
     }
 
-    return TrainingSessionRecord.fromMap(recordRow, blockResults: blocks);
+    final lastCorrection = await SupabaseService.client
+        .from('performance_result_corrections')
+        .select('corrected_at')
+        .eq('record_id', recordId)
+        .order('corrected_at', ascending: false)
+        .limit(1)
+        .maybeSingle();
+    final lastCorrectedAt = lastCorrection == null
+        ? null
+        : DateTime.tryParse(lastCorrection['corrected_at']?.toString() ?? '');
+
+    return TrainingSessionRecord.fromMap(
+      recordRow,
+      blockResults: blocks,
+    ).copyWith(lastCorrectedAt: lastCorrectedAt);
   }
 }

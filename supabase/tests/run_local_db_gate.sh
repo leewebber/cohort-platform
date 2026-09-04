@@ -204,8 +204,10 @@ docker cp "${TESTS_DIR}/sql/gate_am_apollo_warmup_prescription_encoding.sql" "${
 docker cp "${TESTS_DIR}/sql/gate_an_apollo_all_warmups_and_athlete_details.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_an.sql"
 docker cp "${TESTS_DIR}/sql/gate_ao_authenticated_programme_slot_outcome_reads.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ao.sql"
 docker cp "${TESTS_DIR}/sql/gate_ap_apollo_conditioning_format.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ap.sql"
+docker cp "${TESTS_DIR}/sql/gate_aq_completed_performance_corrections.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_aq.sql"
 docker cp "${TESTS_DIR}/../migrations/20260825120000_structure_all_apollo_warmups_and_athlete_details.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_warmups_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260903120000_classify_continuous_conditioning_as_steady_state.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_steady_state_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260904120000_correct_completed_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_correction_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -245,7 +247,9 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_an.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ao.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_steady_state_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_correction_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ap.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_aq.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -290,8 +294,10 @@ docker cp "${TESTS_DIR}/sql/gate_am_apollo_warmup_prescription_encoding.sql" "${
 docker cp "${TESTS_DIR}/sql/gate_an_apollo_all_warmups_and_athlete_details.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_an.sql"
 docker cp "${TESTS_DIR}/sql/gate_ao_authenticated_programme_slot_outcome_reads.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ao.sql"
 docker cp "${TESTS_DIR}/sql/gate_ap_apollo_conditioning_format.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ap.sql"
+docker cp "${TESTS_DIR}/sql/gate_aq_completed_performance_corrections.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_aq.sql"
 docker cp "${TESTS_DIR}/../migrations/20260825120000_structure_all_apollo_warmups_and_athlete_details.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_warmups_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260903120000_classify_continuous_conditioning_as_steady_state.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_steady_state_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260904120000_correct_completed_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_correction_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -331,7 +337,9 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_an.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ao.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_steady_state_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_correction_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ap.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_aq.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e

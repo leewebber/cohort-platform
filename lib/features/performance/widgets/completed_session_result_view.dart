@@ -4,41 +4,85 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/radius.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../models/performance_result_data.dart';
+import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
+import '../repositories/in_memory_performance_record_store.dart';
+import '../repositories/performance_record_store.dart';
 import '../services/completed_session_result_projection.dart';
+import '../services/endurance_metrics_calculator.dart';
+import '../services/performance_correction_service.dart';
+import '../services/running_pace_plausibility.dart';
+import 'endurance_duration_field.dart';
+import 'implausible_running_pace_warning.dart';
+import 'performance_capture_widgets.dart';
+import 'performance_numeric_field.dart';
 
-class CompletedSessionResultView extends StatelessWidget {
+class CompletedSessionResultView extends StatefulWidget {
   const CompletedSessionResultView({
     super.key,
     required this.record,
     this.athleteHistory = const [],
     this.programmePosition,
     this.statusMessage,
+    this.performanceRecordStore,
+    this.onRecordCorrected,
   });
 
   final TrainingSessionRecord record;
   final List<TrainingSessionRecord> athleteHistory;
   final String? programmePosition;
   final String? statusMessage;
+  final PerformanceRecordStore? performanceRecordStore;
+  final ValueChanged<TrainingSessionRecord>? onRecordCorrected;
+
+  @override
+  State<CompletedSessionResultView> createState() =>
+      _CompletedSessionResultViewState();
+}
+
+class _CompletedSessionResultViewState
+    extends State<CompletedSessionResultView> {
+  late TrainingSessionRecord _record = widget.record;
+  late List<TrainingSessionRecord> _history = widget.athleteHistory;
+  PerformanceCorrectionDraft? _draft;
+  bool _saving = false;
+  String? _confirmation;
+
+  @override
+  void didUpdateWidget(covariant CompletedSessionResultView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.record.recordId != widget.record.recordId ||
+        oldWidget.record.lastCorrectedAt != widget.record.lastCorrectedAt ||
+        oldWidget.record.updatedAt != widget.record.updatedAt) {
+      _record = widget.record;
+      _history = widget.athleteHistory;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final projection = CompletedSessionResultProjection.fromRecords(
-      record: record,
-      athleteHistory: athleteHistory,
+      record: _record,
+      athleteHistory: _history,
     );
+    final editing = _draft != null;
     return ListView(
       key: const ValueKey('completed-session-result'),
       padding: const EdgeInsets.all(CohortSpacing.lg),
       children: [
-        Text('COMPLETED SESSION', style: CohortTextStyles.sectionLabel),
+        Text(
+          editing ? 'EDIT RESULTS' : 'COMPLETED SESSION',
+          style: CohortTextStyles.sectionLabel,
+        ),
         const SizedBox(height: CohortSpacing.sm),
         Text(projection.sessionTitle, style: CohortTextStyles.h1),
-        if (programmePosition != null) ...[
+        if (widget.programmePosition != null) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text(programmePosition!, style: CohortTextStyles.muted),
+          Text(widget.programmePosition!, style: CohortTextStyles.muted),
         ],
         const SizedBox(height: CohortSpacing.lg),
         CohortCard(
@@ -51,6 +95,17 @@ class CompletedSessionResultView extends StatelessWidget {
                 Text(
                   'Completed ${formatCompletedClock(completedAt)}',
                   style: CohortTextStyles.body,
+                ),
+              ],
+              if (projection.lastCorrectedAt case final correctedAt?) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Semantics(
+                  label:
+                      'Edited ${formatCompletedClock(correctedAt)}',
+                  child: Text(
+                    'Edited · ${formatCompletedClock(correctedAt)}',
+                    style: CohortTextStyles.small,
+                  ),
                 ),
               ],
               if (projection.durationSeconds case final duration?) ...[
@@ -71,9 +126,17 @@ class CompletedSessionResultView extends StatelessWidget {
                 '${projection.incompleteBlockCount} incomplete',
                 style: CohortTextStyles.small,
               ),
-              if (statusMessage != null) ...[
+              if (widget.statusMessage != null) ...[
                 const SizedBox(height: CohortSpacing.md),
-                Text(statusMessage!, style: CohortTextStyles.body),
+                Text(widget.statusMessage!, style: CohortTextStyles.body),
+              ],
+              if (_confirmation != null) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  _confirmation!,
+                  key: const ValueKey('correction-confirmation'),
+                  style: CohortTextStyles.body,
+                ),
               ],
             ],
           ),
@@ -81,12 +144,159 @@ class CompletedSessionResultView extends StatelessWidget {
         const SizedBox(height: CohortSpacing.xl),
         const SectionTitle('Results'),
         const SizedBox(height: CohortSpacing.md),
-        for (final block in projection.blocks) ...[
-          _CompletedBlockCard(block: block),
-          const SizedBox(height: CohortSpacing.md),
+        if (editing)
+          ..._editChildren(_draft!)
+        else ...[
+          for (final block in projection.blocks) ...[
+            _CompletedBlockCard(block: block),
+            const SizedBox(height: CohortSpacing.md),
+          ],
+          TextButton(
+            key: const ValueKey('edit-results'),
+            onPressed: _enterCorrection,
+            child: const Text('Edit results'),
+          ),
         ],
       ],
     );
+  }
+
+  List<Widget> _editChildren(PerformanceCorrectionDraft draft) {
+    final warning = draft.runningWarning();
+    return [
+      if (warning != null) ...[
+        ImplausibleRunningPaceWarning(warning: warning),
+        const SizedBox(height: CohortSpacing.md),
+      ],
+      for (final block in draft.blockResults) ...[
+        _CorrectionBlockEditor(
+          block: block,
+          onResultChanged: (data) => _replaceBlockResult(block.blockResultId, data),
+          onSetChanged: _replaceSet,
+        ),
+        const SizedBox(height: CohortSpacing.md),
+      ],
+      SessionRpeSelector(
+        value: draft.overallRpe,
+        onChanged: (value) => setState(() => draft.overallRpe = value),
+      ),
+      const SizedBox(height: CohortSpacing.md),
+      TextFormField(
+        key: const ValueKey('correction-athlete-note'),
+        initialValue: draft.athleteNote ?? '',
+        maxLines: 3,
+        decoration: const InputDecoration(labelText: 'Athlete note (optional)'),
+        onChanged: (value) =>
+            draft.athleteNote = value.trim().isEmpty ? null : value.trim(),
+      ),
+      const SizedBox(height: CohortSpacing.lg),
+      CohortButton(
+        key: const ValueKey('save-corrected-results'),
+        label: _saving ? 'Saving…' : 'Save results',
+        onPressed: _saving ? null : _saveCorrection,
+      ),
+      const SizedBox(height: CohortSpacing.sm),
+      TextButton(
+        key: const ValueKey('cancel-edit-results'),
+        onPressed: _saving ? null : _cancelCorrection,
+        child: const Text('Cancel'),
+      ),
+    ];
+  }
+
+  void _enterCorrection() {
+    setState(() {
+      _draft = PerformanceCorrectionDraft(_record);
+      _confirmation = null;
+    });
+  }
+
+  void _cancelCorrection() {
+    setState(() => _draft = null);
+  }
+
+  void _replaceBlockResult(String blockResultId, PerformanceResultData data) {
+    final draft = _draft;
+    if (draft == null) return;
+    setState(() {
+      draft.blockResults = [
+        for (final block in draft.blockResults)
+          block.blockResultId == blockResultId
+              ? block.copyWith(resultData: data)
+              : block,
+      ];
+    });
+  }
+
+  void _replaceSet(
+    String exerciseResultId,
+    String setResultId,
+    TrainingSetResult Function(TrainingSetResult) update,
+  ) {
+    final draft = _draft;
+    if (draft == null) return;
+    setState(() {
+      draft.blockResults = [
+        for (final block in draft.blockResults)
+          block.copyWith(
+            exerciseResults: [
+              for (final exercise in block.exerciseResults)
+                exercise.exerciseResultId == exerciseResultId
+                    ? exercise.copyWith(
+                        setResults: [
+                          for (final set in exercise.setResults)
+                            set.setResultId == setResultId
+                                ? update(set)
+                                : set,
+                        ],
+                      )
+                    : exercise,
+            ],
+          ),
+      ];
+    });
+  }
+
+  Future<void> _saveCorrection() async {
+    final draft = _draft;
+    if (draft == null || _saving) return;
+    final warning = draft.runningWarning();
+    if (warning != null && !draft.acknowledgeImplausibleRunningPace) {
+      final confirmed = await confirmImplausibleRunningPace(
+        context: context,
+        warning: warning,
+      );
+      if (!confirmed) return;
+      draft.acknowledgeImplausibleRunningPace = true;
+    }
+    setState(() => _saving = true);
+    try {
+      final store =
+          widget.performanceRecordStore ?? InMemoryPerformanceRecordStore();
+      if (store is InMemoryPerformanceRecordStore &&
+          await store.getById(_record.recordId) == null) {
+        store.put(_record);
+      }
+      final corrected = await store.correctCompleted(draft);
+      if (!mounted) return;
+      setState(() {
+        _record = corrected;
+        _history = [
+          for (final item in _history)
+            item.recordId == corrected.recordId ? corrected : item,
+        ];
+        _draft = null;
+        _saving = false;
+        _confirmation = 'Results updated';
+      });
+      widget.onRecordCorrected?.call(corrected);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.toString())),
+      );
+    }
   }
 }
 
@@ -104,12 +314,7 @@ class _CompletedBlockCard extends StatelessWidget {
         children: [
           Text(block.title, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.xs),
-          Text(
-            block.isSimpleCompletion
-                ? block.summary
-                : '${block.statusLabel} · ${block.summary}',
-            style: CohortTextStyles.small,
-          ),
+          Text(block.summary, style: CohortTextStyles.small),
           if (!block.isSimpleCompletion) ...[
             for (final exercise in block.exercises) ...[
               const SizedBox(height: CohortSpacing.sm),
@@ -569,5 +774,222 @@ class _PerformanceMetricTile extends StatelessWidget {
       StrengthMetricTone.negative => CohortColors.warning,
       StrengthMetricTone.none => CohortColors.textMuted,
     };
+  }
+}
+
+class _CorrectionBlockEditor extends StatelessWidget {
+  const _CorrectionBlockEditor({
+    required this.block,
+    required this.onResultChanged,
+    required this.onSetChanged,
+  });
+
+  final TrainingBlockResult block;
+  final ValueChanged<PerformanceResultData> onResultChanged;
+  final void Function(
+    String exerciseResultId,
+    String setResultId,
+    TrainingSetResult Function(TrainingSetResult),
+  )
+  onSetChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(block.blockSnapshot.title, style: CohortTextStyles.cardTitle),
+          const SizedBox(height: CohortSpacing.sm),
+          if (block.resultData is EnduranceResultData)
+            _CorrectionEnduranceFields(
+              result: block.resultData! as EnduranceResultData,
+              blockTitle: block.blockSnapshot.title,
+              workoutFormat: block.blockSnapshot.workoutFormat.name,
+              onChanged: onResultChanged,
+            )
+          else if (block.resultData is DistanceResultData)
+            _CorrectionDistanceFields(
+              result: block.resultData! as DistanceResultData,
+              onChanged: onResultChanged,
+            )
+          else if (block.resultData is IntervalResultData)
+            PerformanceNumericField(
+              label: 'Intervals completed',
+              value: '${(block.resultData! as IntervalResultData).intervalsCompleted}',
+              onChanged: (value) => onResultChanged(
+                (block.resultData! as IntervalResultData).copyWith(
+                  intervalsCompleted: int.tryParse(value) ?? 0,
+                ),
+              ),
+            ),
+          for (final exercise in block.exerciseResults) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              exercise.exerciseSnapshot.displayName,
+              style: CohortTextStyles.body,
+            ),
+            for (final set in exercise.setResults)
+              _CorrectionSetRow(
+                set: set,
+                loadKind: exercise.exerciseSnapshot.loadKind,
+                onChanged: (update) => onSetChanged(
+                  exercise.exerciseResultId,
+                  set.setResultId,
+                  update,
+                ),
+              ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _CorrectionEnduranceFields extends StatelessWidget {
+  const _CorrectionEnduranceFields({
+    required this.result,
+    required this.onChanged,
+    required this.blockTitle,
+    required this.workoutFormat,
+  });
+
+  final EnduranceResultData result;
+  final ValueChanged<PerformanceResultData> onChanged;
+  final String blockTitle;
+  final String workoutFormat;
+
+  @override
+  Widget build(BuildContext context) {
+    final liveMetric = EnduranceMetricsCalculator.liveMetric(
+      distance: result.distance,
+      distanceUnit: result.distanceUnit,
+      durationSeconds: result.durationSeconds,
+    );
+    final warning = RunningPacePlausibility.warning(
+      distance: result.distance,
+      distanceUnit: result.distanceUnit,
+      durationSeconds: result.durationSeconds,
+      workoutFormat: workoutFormat,
+      blockTitle: blockTitle,
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        PerformanceNumericField(
+          label: 'Distance',
+          value: result.distance?.toString() ?? '',
+          allowDecimal: true,
+          onChanged: (value) =>
+              onChanged(result.copyWith(distance: double.tryParse(value))),
+        ),
+        EnduranceDurationField(
+          key: const ValueKey('correction-duration'),
+          durationSeconds: result.durationSeconds,
+          onDurationSecondsChanged: (seconds) =>
+              onChanged(result.copyWith(durationSeconds: seconds)),
+        ),
+        if (liveMetric != null) ...[
+          const SizedBox(height: CohortSpacing.xs),
+          Text('${liveMetric.label}: ${liveMetric.value}', style: CohortTextStyles.body),
+        ],
+        if (warning != null) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          ImplausibleRunningPaceWarning(warning: warning),
+        ],
+        PerformanceNumericField(
+          label: 'Average heart rate',
+          value: result.averageHeartRate?.toString() ?? '',
+          onChanged: (value) => onChanged(
+            result.copyWith(averageHeartRate: int.tryParse(value)),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CorrectionDistanceFields extends StatelessWidget {
+  const _CorrectionDistanceFields({
+    required this.result,
+    required this.onChanged,
+  });
+
+  final DistanceResultData result;
+  final ValueChanged<PerformanceResultData> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        PerformanceNumericField(
+          label: 'Distance',
+          value: result.distance?.toString() ?? '',
+          allowDecimal: true,
+          onChanged: (value) =>
+              onChanged(result.copyWith(distance: double.tryParse(value))),
+        ),
+        EnduranceDurationField(
+          durationSeconds: result.durationSeconds,
+          onDurationSecondsChanged: (seconds) =>
+              onChanged(result.copyWith(durationSeconds: seconds)),
+        ),
+      ],
+    );
+  }
+}
+
+class _CorrectionSetRow extends StatelessWidget {
+  const _CorrectionSetRow({
+    required this.set,
+    required this.loadKind,
+    required this.onChanged,
+  });
+
+  final TrainingSetResult set;
+  final StrengthActualLoadKind loadKind;
+  final ValueChanged<TrainingSetResult Function(TrainingSetResult)> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: CohortSpacing.sm),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Set ${set.setNumber}', style: CohortTextStyles.eyebrow),
+          PerformanceNumericField(
+            label: 'Reps',
+            value: set.reps?.toString() ?? '',
+            onChanged: (value) => onChanged(
+              (current) => current.copyWith(reps: int.tryParse(value)),
+            ),
+          ),
+          if (loadKind.expectsExternalLoad)
+            PerformanceNumericField(
+              label: 'Load',
+              value: set.load?.toString() ?? '',
+              allowDecimal: true,
+              onChanged: (value) {
+                final parsed = double.tryParse(value);
+                onChanged(
+                  (current) => current.copyWith(
+                    load: parsed,
+                    loadUnit: current.loadUnit ?? 'kg',
+                    clearLoad: parsed == null,
+                  ),
+                );
+              },
+            )
+          else
+            Text(
+              loadKind == StrengthActualLoadKind.bodyweight
+                  ? 'Bodyweight'
+                  : 'No external load',
+              style: CohortTextStyles.muted,
+            ),
+        ],
+      ),
+    );
   }
 }

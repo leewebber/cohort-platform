@@ -61,6 +61,34 @@ class TrainingSetResult {
     );
   }
 
+  TrainingSetResult copyWith({
+    int? reps,
+    double? load,
+    String? loadUnit,
+    bool? completed,
+    int? rpe,
+    String? note,
+    bool clearLoad = false,
+  }) {
+    return TrainingSetResult(
+      setResultId: setResultId,
+      exerciseResultId: exerciseResultId,
+      setNumber: setNumber,
+      position: position,
+      reps: reps ?? this.reps,
+      load: clearLoad ? null : (load ?? this.load),
+      loadUnit: clearLoad ? null : (loadUnit ?? this.loadUnit),
+      distance: distance,
+      distanceUnit: distanceUnit,
+      durationSeconds: durationSeconds,
+      completed: completed ?? this.completed,
+      rpe: rpe ?? this.rpe,
+      note: note ?? this.note,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
   Map<String, dynamic> toUpsertMap() {
     return {
       'set_result_id': setResultId,
@@ -126,6 +154,20 @@ class TrainingExerciseResult {
       setResults: setResults,
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
+    );
+  }
+
+  TrainingExerciseResult copyWith({List<TrainingSetResult>? setResults}) {
+    return TrainingExerciseResult(
+      exerciseResultId: exerciseResultId,
+      blockResultId: blockResultId,
+      sourceExerciseId: sourceExerciseId,
+      exerciseSnapshot: exerciseSnapshot,
+      position: position,
+      athleteNote: athleteNote,
+      setResults: setResults ?? this.setResults,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
     );
   }
 
@@ -218,6 +260,30 @@ class TrainingBlockResult {
     );
   }
 
+  TrainingBlockResult copyWith({
+    PerformanceResultData? resultData,
+    String? athleteNote,
+    List<TrainingExerciseResult>? exerciseResults,
+  }) {
+    return TrainingBlockResult(
+      blockResultId: blockResultId,
+      sessionRecordId: sessionRecordId,
+      sourceBlockId: sourceBlockId,
+      blockSnapshot: blockSnapshot,
+      status: status,
+      resultType: resultType,
+      position: position,
+      resultData: resultData ?? this.resultData,
+      athleteNote: athleteNote ?? this.athleteNote,
+      startedAt: startedAt,
+      completedAt: completedAt,
+      durationSeconds: durationSeconds,
+      exerciseResults: exerciseResults ?? this.exerciseResults,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
   Map<String, dynamic> toUpsertMap() {
     return {
       'block_result_id': blockResultId,
@@ -256,6 +322,7 @@ class TrainingSessionRecord {
     this.blockResults = const [],
     this.createdAt,
     this.updatedAt,
+    this.lastCorrectedAt,
   });
 
   final String recordId;
@@ -276,6 +343,7 @@ class TrainingSessionRecord {
   final List<TrainingBlockResult> blockResults;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final DateTime? lastCorrectedAt;
 
   int get completedBlockCount => blockResults
       .where((b) => b.status == TrainingBlockResultStatus.completed)
@@ -312,6 +380,37 @@ class TrainingSessionRecord {
       blockResults: blockResults,
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
+      lastCorrectedAt: _parseDateTime(map['last_corrected_at']),
+    );
+  }
+
+  TrainingSessionRecord copyWith({
+    int? overallRpe,
+    String? athleteNote,
+    List<TrainingBlockResult>? blockResults,
+    DateTime? lastCorrectedAt,
+    DateTime? updatedAt,
+  }) {
+    return TrainingSessionRecord(
+      recordId: recordId,
+      athleteId: athleteId,
+      trainingSessionId: trainingSessionId,
+      sourceProtocolId: sourceProtocolId,
+      programmeId: programmeId,
+      assignmentId: assignmentId,
+      programmeSessionId: programmeSessionId,
+      status: status,
+      sessionSnapshot: sessionSnapshot,
+      activeBlockId: activeBlockId,
+      startedAt: startedAt,
+      completedAt: completedAt,
+      durationSeconds: durationSeconds,
+      overallRpe: overallRpe ?? this.overallRpe,
+      athleteNote: athleteNote ?? this.athleteNote,
+      blockResults: blockResults ?? this.blockResults,
+      createdAt: createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      lastCorrectedAt: lastCorrectedAt ?? this.lastCorrectedAt,
     );
   }
 

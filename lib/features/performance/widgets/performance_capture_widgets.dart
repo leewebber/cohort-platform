@@ -19,6 +19,8 @@ import 'endurance_duration_field.dart';
 import 'performance_numeric_field.dart';
 import '../services/endurance_metrics_calculator.dart';
 import '../services/performance_result_summary_formatter.dart';
+import '../services/running_pace_plausibility.dart';
+import 'implausible_running_pace_warning.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
 
@@ -267,6 +269,8 @@ class _ResultEditorBody extends StatelessWidget {
               blockDraft.resultData as EnduranceResultData? ??
               const EnduranceResultData(),
           onChanged: onResultChanged,
+          blockTitle: blockDraft.blockSnapshot.title,
+          workoutFormat: blockDraft.blockSnapshot.workoutFormat.name,
         );
       case BlockCaptureMode.rounds:
         return _RoundsEditor(
@@ -382,10 +386,17 @@ class _IntervalEditor extends StatelessWidget {
 }
 
 class _EnduranceEditor extends StatefulWidget {
-  const _EnduranceEditor({required this.result, required this.onChanged});
+  const _EnduranceEditor({
+    required this.result,
+    required this.onChanged,
+    this.blockTitle,
+    this.workoutFormat,
+  });
 
   final EnduranceResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
+  final String? blockTitle;
+  final String? workoutFormat;
 
   @override
   State<_EnduranceEditor> createState() => _EnduranceEditorState();
@@ -425,6 +436,13 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
       distanceUnit: result.distanceUnit,
       durationSeconds: result.durationSeconds,
     );
+    final runningWarning = RunningPacePlausibility.warning(
+      distance: result.distance,
+      distanceUnit: result.distanceUnit,
+      durationSeconds: result.durationSeconds,
+      workoutFormat: widget.workoutFormat,
+      blockTitle: widget.blockTitle,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,6 +478,10 @@ class _EnduranceEditorState extends State<_EnduranceEditor> {
           Text(liveMetric.label, style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.xs),
           Text(liveMetric.value, style: CohortTextStyles.body),
+        ],
+        if (runningWarning != null) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          ImplausibleRunningPaceWarning(warning: runningWarning),
         ],
         PerformanceNumericField(
           label: 'Average heart rate (optional)',

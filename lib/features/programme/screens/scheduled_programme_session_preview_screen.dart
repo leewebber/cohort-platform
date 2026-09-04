@@ -87,10 +87,17 @@ class _ScheduledProgrammeSessionPreviewScreenState
   bool _isOpeningSession = false;
   final Map<int, Future<TrainingSessionRecord?>> _completedRecords = {};
   Future<List<TrainingSessionRecord>>? _history;
+  bool _resultsCorrected = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: !_resultsCorrected,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        Navigator.of(context).pop(true);
+      },
+      child: Scaffold(
       appBar: AppBar(title: const Text('Session')),
       body: SafeArea(
         child: FutureBuilder<ScheduledProgrammeSessionPreview>(
@@ -115,6 +122,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
           },
         ),
       ),
+    ),
     );
   }
 
@@ -164,6 +172,20 @@ class _ScheduledProgrammeSessionPreviewScreenState
         athleteHistory: history,
         programmePosition: _programmePosition(preview),
         statusMessage: _statusMessage(preview),
+        performanceRecordStore:
+            widget.performanceRecordStore ?? SupabasePerformanceRecordStore(),
+        onRecordCorrected: (corrected) {
+          final trainingSessionId = preview.occurrence?.trainingSessionId;
+          setState(() {
+            _resultsCorrected = true;
+            if (trainingSessionId != null) {
+              _completedRecords[trainingSessionId] = Future.value(corrected);
+            }
+            _history = (widget.performanceRecordStore ??
+                    SupabasePerformanceRecordStore())
+                .listHistory(athleteId: widget.athleteId);
+          });
+        },
       );
     }
     final plan = preview.plan;

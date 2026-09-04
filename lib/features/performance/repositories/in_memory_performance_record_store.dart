@@ -2,6 +2,7 @@ import '../mappers/performance_record_mapper.dart';
 import '../models/active_performance_draft.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../services/performance_correction_service.dart';
 import 'performance_record_store.dart';
 
 class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
@@ -10,6 +11,9 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
 
   final PerformanceRecordMapper _mapper;
   final Map<String, TrainingSessionRecord> _recordsById = {};
+  final List<Map<String, dynamic>> corrections = [];
+  bool authenticated = true;
+  String? actingAthleteId;
 
   @override
   Future<TrainingSessionRecord?> getById(String recordId) async {
@@ -105,6 +109,53 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
   }
 
   @override
+  Future<TrainingSessionRecord> correctCompleted(
+    PerformanceCorrectionDraft draft,
+  ) async {
+    if (!authenticated) {
+      throw const PerformanceCorrectionException('authentication_required');
+    }
+    final existing = _recordsById[draft.record.recordId];
+    if (existing == null) {
+      throw const PerformanceCorrectionException('performance_record_not_found');
+    }
+    final actor = actingAthleteId ?? draft.record.athleteId;
+    if (actor != existing.athleteId) {
+      throw const PerformanceCorrectionException('not_performance_owner');
+    }
+    if (existing.status != TrainingSessionRecordStatus.completed) {
+      throw const PerformanceCorrectionException('session_not_completed');
+    }
+    const service = PerformanceCorrectionService();
+    final payload = service.toPayload(draft);
+    final corrected = service.applyLocally(draft).copyWith(
+      lastCorrectedAt: DateTime.now().toUtc(),
+    );
+    if (corrected.completedAt != existing.completedAt ||
+        corrected.status != existing.status) {
+      throw const PerformanceCorrectionException('lifecycle_mutated');
+    }
+    _recordsById[existing.recordId] = existing.copyWith(
+      overallRpe: corrected.overallRpe,
+      athleteNote: corrected.athleteNote,
+      blockResults: corrected.blockResults,
+      lastCorrectedAt: corrected.lastCorrectedAt,
+    );
+    corrections.add({
+      'record_id': existing.recordId,
+      'athlete_id': existing.athleteId,
+      'before': {
+        'overall_rpe': existing.overallRpe,
+      },
+      'after': payload,
+      'implausible_running_pace_acknowledged':
+          draft.acknowledgeImplausibleRunningPace,
+      'corrected_at': DateTime.now().toUtc().toIso8601String(),
+    });
+    return _recordsById[existing.recordId]!;
+  }
+
+  @override
   Future<List<TrainingSessionRecord>> listHistory({
     required String athleteId,
     int limit = 25,
@@ -154,6 +205,10 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
       _recordsById.remove(key);
     }
     return keysToRemove.length;
+  }
+
+  void put(TrainingSessionRecord record) {
+    _recordsById[record.recordId] = record;
   }
 
   void clear() => _recordsById.clear();

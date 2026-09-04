@@ -15,6 +15,7 @@ class CompletedSessionResultProjection {
     required this.completedAt,
     required this.durationSeconds,
     required this.overallRpe,
+    this.lastCorrectedAt,
     required this.completedBlockCount,
     required this.skippedBlockCount,
     required this.incompleteBlockCount,
@@ -25,6 +26,7 @@ class CompletedSessionResultProjection {
   final DateTime? completedAt;
   final int? durationSeconds;
   final int? overallRpe;
+  final DateTime? lastCorrectedAt;
   final int completedBlockCount;
   final int skippedBlockCount;
   final int incompleteBlockCount;
@@ -48,6 +50,7 @@ class CompletedSessionResultProjection {
       completedAt: record.completedAt,
       durationSeconds: record.durationSeconds,
       overallRpe: record.overallRpe,
+      lastCorrectedAt: record.lastCorrectedAt,
       completedBlockCount: record.completedBlockCount,
       skippedBlockCount: record.blockResults
           .where((block) => block.status == TrainingBlockResultStatus.skipped)

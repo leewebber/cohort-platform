@@ -13,6 +13,8 @@ import '../controllers/performance_capture_controller.dart';
 import '../mappers/workout_execution_outcome_mapper.dart';
 import '../models/training_session_record_status.dart';
 import '../services/performance_record_save_coordinator.dart';
+import '../services/running_pace_plausibility.dart';
+import '../widgets/implausible_running_pace_warning.dart';
 import '../widgets/performance_capture_widgets.dart';
 import '../../session/screens/session_complete_screen.dart';
 import '../../session/controllers/session_execution_controller.dart';
@@ -73,12 +75,23 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
   Future<void> _saveAndFinish() async {
     if (_saveState == PerformanceSaveState.saving) return;
 
+    _performanceController.updateSessionNote(_noteController.text);
+
+    final runningWarning = RunningPacePlausibility.fromDraft(
+      _performanceController.draft,
+    );
+    if (runningWarning != null) {
+      final confirmed = await confirmImplausibleRunningPace(
+        context: context,
+        warning: runningWarning,
+      );
+      if (!confirmed) return;
+    }
+
     setState(() {
       _saveState = PerformanceSaveState.saving;
       _errorMessage = null;
     });
-
-    _performanceController.updateSessionNote(_noteController.text);
 
     try {
       final status = _performanceController.resolveCompletionStatus();

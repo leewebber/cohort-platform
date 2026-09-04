@@ -1,6 +1,7 @@
 import '../models/active_performance_draft.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../services/performance_correction_service.dart';
 
 abstract class PerformanceRecordStore {
   const PerformanceRecordStore();
@@ -24,6 +25,10 @@ abstract class PerformanceRecordStore {
   Future<TrainingSessionRecord> saveDraft(ActivePerformanceDraft draft);
 
   Future<TrainingSessionRecord> completeRecord(ActivePerformanceDraft draft);
+
+  Future<TrainingSessionRecord> correctCompleted(
+    PerformanceCorrectionDraft draft,
+  );
 
   Future<List<TrainingSessionRecord>> listHistory({
     required String athleteId,

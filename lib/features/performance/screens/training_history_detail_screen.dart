@@ -54,6 +54,8 @@ class _TrainingHistoryDetailScreenState
                   child: CompletedSessionResultView(
                     record: record,
                     statusMessage: 'Completed',
+                    performanceRecordStore: _coordinator.store,
+                    onRecordCorrected: (_) => setState(() {}),
                   ),
                 ),
               ],

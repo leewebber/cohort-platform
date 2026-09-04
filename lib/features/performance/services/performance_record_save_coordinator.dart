@@ -14,6 +14,7 @@ import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
 import '../repositories/performance_record_store.dart';
 import '../repositories/supabase_performance_record_store.dart';
+import 'performance_correction_service.dart';
 
 class PerformanceCompletionResult {
   const PerformanceCompletionResult({
@@ -53,6 +54,8 @@ class PerformanceRecordSaveCoordinator {
              performanceStore: store ?? SupabasePerformanceRecordStore(),
              localRepository: localRepository,
            );
+
+  PerformanceRecordStore get store => _store;
 
   final PerformanceRecordStore _store;
   final TrainingSessionRepository _trainingSessionRepository;
@@ -231,6 +234,12 @@ class PerformanceRecordSaveCoordinator {
 
   Future<TrainingSessionRecord?> getRecordById(String recordId) {
     return _store.getById(recordId);
+  }
+
+  Future<TrainingSessionRecord> correctCompleted(
+    PerformanceCorrectionDraft draft,
+  ) {
+    return _store.correctCompleted(draft);
   }
 }
 
