@@ -53,15 +53,17 @@ The programme assumes competence with barbell lifting, weighted calisthenics, ru
 
 ## Weekly schedule
 
-| DaySession |                        |
-| ---------- | ---------------------- |
-| Monday     | **Apollo Strength**    |
-| Tuesday    | **Apollo Base**        |
-| Wednesday  | **Racehorse Strength** |
-| Thursday   | **Apollo Engine**      |
-| Friday     | **Apollo Sculpt**      |
-| Saturday   | **Apollo Athletic**    |
-| Sunday     | **Apollo Long**        |
+Founder calendar rule (package version 2): genuine interval/threshold quality work must not sit on the day immediately after Racehorse Strength. In weeks 1–11 the Engine/quality session is Day 2 and Apollo Base is Day 4. Week 12 keeps Assessment on Day 2 and Recovery on Day 4. Protocol identities retain their original weekday codes (`APOLLO-Wn-TUE-R1` remains Apollo Base; `APOLLO-Wn-THU-R1` remains Engine/quality). Week-by-week sections below still describe those protocol identities; scheduled positions live in the plan package.
+
+| DaySession | Weeks 1–11 | Week 12 |
+| ---------- | ---------- | ------- |
+| Monday     | **Apollo Strength** | **Final Apollo Strength** |
+| Tuesday    | **Apollo Engine** (quality) | **Apollo Base Assessment** |
+| Wednesday  | **Racehorse Strength** | **Final Racehorse** |
+| Thursday   | **Apollo Base** | **Recovery** |
+| Friday     | **Apollo Sculpt** | **Apollo Primer** |
+| Saturday   | **Apollo Athletic** | **Apollo Assessment** |
+| Sunday     | **Apollo Long** | **Apollo Arrival** |
 
 ## Equipment assumptions
 
@@ -1601,11 +1603,11 @@ All resistance work is performed at approximately 3 RIR.
 7. Overhead Cable Triceps Extension — 2 × 10–15
 8. Neck — 1 light set per direction
 
-### Tuesday — Apollo Base
+### Tuesday — Apollo Engine
 
-- Zone 2 — 45 minutes
-- Hanging Leg Raise — 2 × 8–12
-- Full Apollo mobility flow
+- 4 × 3 minutes at controlled approximately 10K effort
+- 2 minutes easy-jog recovery
+- Use the approved interval warm-up and cooldown
 
 ### Wednesday — Racehorse Strength
 
@@ -1617,11 +1619,11 @@ All resistance work is performed at approximately 3 RIR.
 6. Calf Raise — 2 × 8–12
 7. Farmer Carry — 2 × 30–40 m
 
-### Thursday — Apollo Engine
+### Thursday — Apollo Base
 
-- 4 × 3 minutes at controlled approximately 10K effort
-- 2 minutes easy-jog recovery
-- Use the approved interval warm-up and cooldown
+- Zone 2 — 45 minutes
+- Hanging Leg Raise — 2 × 8–12
+- Full Apollo mobility flow
 
 ### Friday — Apollo Sculpt
 

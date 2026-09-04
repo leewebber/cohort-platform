@@ -17,7 +17,7 @@ BEGIN
   FROM programme_versions v
   JOIN programme_lineages l ON l.id = v.lineage_id
   WHERE l.code = 'APOLLO-BUILD-12-WEEK'
-    AND v.version_number = 1
+    AND v.version_number = 2
     AND v.lifecycle_status = 'published';
 
   SELECT count(*) INTO v_count

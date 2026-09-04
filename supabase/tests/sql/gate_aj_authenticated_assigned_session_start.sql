@@ -24,7 +24,7 @@ BEGIN
   INTO v_version, v_hash
   FROM programme_versions v
   JOIN programme_lineages l ON l.id = v.lineage_id
-  WHERE l.code = 'APOLLO-BUILD-12-WEEK' AND v.version_number = 1;
+  WHERE l.code = 'APOLLO-BUILD-12-WEEK' AND v.version_number = 2;
 
   SELECT id INTO v_assignment
   FROM programme_assignments

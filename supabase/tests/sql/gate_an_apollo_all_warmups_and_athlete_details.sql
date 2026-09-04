@@ -12,7 +12,7 @@ BEGIN
   FROM programme_versions v
   JOIN programme_lineages l ON l.id = v.lineage_id
   WHERE l.code = 'APOLLO-BUILD-12-WEEK'
-    AND v.version_number = 1
+    AND v.version_number = 2
     AND v.lifecycle_status = 'published';
 
   SELECT id INTO v_assignment
@@ -269,7 +269,7 @@ BEGIN
   SELECT package_content_hash INTO v_value FROM programme_versions WHERE id = v_version;
   PERFORM sprint12_assert_eq(
     'AN', 'apollo_plan_package_hash_unchanged',
-    '7264703a8db56edd6685e97e736405ffa99124fd4c419a676a1246653ea52b87', v_value
+    '810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83', v_value
   );
 END $$;
 

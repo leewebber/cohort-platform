@@ -8,7 +8,7 @@ CREATE TEMP TABLE sprint12_apollo_import_payload (payload JSONB NOT NULL);
 DO $$
 DECLARE
   v_payload JSONB := (SELECT payload FROM sprint12_apollo_import_payload);
-  v_expected_hash TEXT := '7264703a8db56edd6685e97e736405ffa99124fd4c419a676a1246653ea52b87';
+  v_expected_hash TEXT := '810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83';
   v_legacy_protocol TEXT := 'APOLLO-GATE-AF-LEGACY-R1';
   v_legacy_session_lineage UUID := 'af000001-0000-4000-8000-000000000001';
   v_legacy_hash TEXT := sprint12_hash('apollo-gate-af-legacy');
@@ -43,8 +43,8 @@ BEGIN
 
   SELECT count(*) INTO v_count FROM programme_lineages WHERE code = 'APOLLO-BUILD-12-WEEK';
   PERFORM sprint12_assert_eq('AF', 'one_apollo_lineage', '1', v_count::text);
-  SELECT count(*) INTO v_count FROM programme_versions WHERE id = v_apollo_version AND version_number = 1;
-  PERFORM sprint12_assert_eq('AF', 'one_apollo_v1', '1', v_count::text);
+  SELECT count(*) INTO v_count FROM programme_versions WHERE id = v_apollo_version AND version_number = 2;
+  PERFORM sprint12_assert_eq('AF', 'one_apollo_v2', '1', v_count::text);
   PERFORM sprint12_assert_eq('AF', 'canonical_hash_unchanged', v_expected_hash,
     (SELECT package_content_hash FROM programme_versions WHERE id = v_apollo_version));
   SELECT count(*) INTO v_count FROM programme_version_weeks WHERE version_id = v_apollo_version;
@@ -132,6 +132,21 @@ BEGIN
   PERFORM sprint12_assert_eq('AF', 'monday_resolves_expected_protocol', 'APOLLO-W1-MON-R1', (
     SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
     JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=1 AND d.day_order=1));
+  PERFORM sprint12_assert_eq('AF', 'week1_day2_resolves_engine', 'APOLLO-W1-THU-R1', (
+    SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
+    JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=1 AND d.day_order=2));
+  PERFORM sprint12_assert_eq('AF', 'week1_day3_resolves_racehorse', 'APOLLO-W1-WED-R1', (
+    SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
+    JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=1 AND d.day_order=3));
+  PERFORM sprint12_assert_eq('AF', 'week1_day4_resolves_base', 'APOLLO-W1-TUE-R1', (
+    SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
+    JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=1 AND d.day_order=4));
+  PERFORM sprint12_assert_eq('AF', 'week12_day2_preserves_assessment', 'APOLLO-W12-TUE-R1', (
+    SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
+    JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=12 AND d.day_order=2));
+  PERFORM sprint12_assert_eq('AF', 'week12_day4_preserves_recovery', 'APOLLO-W12-THU-R1', (
+    SELECT s.protocol_id FROM programme_version_session_slots s JOIN programme_version_days d ON d.id=s.day_id
+    JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_apollo_version AND w.week_number=12 AND d.day_order=4));
   SELECT count(*) INTO v_blocks FROM session_blocks WHERE session_id='APOLLO-W1-MON-R1';
   SELECT bool_and(position = expected_position) INTO v_ordered FROM (
     SELECT position,row_number() over (ORDER BY position) AS expected_position FROM session_blocks WHERE session_id='APOLLO-W1-MON-R1'

@@ -816,12 +816,12 @@ void main() {
           assignment: assignment,
           id: '00000000-0000-4000-8000-000000000302',
           slotId: '00000000-0000-4000-8000-000000000402',
-          protocolId: 'APOLLO-W1-TUE-R1',
+          protocolId: 'APOLLO-W1-THU-R1',
           dayKey: 'day_2',
           date: '2026-09-02',
           state: FixedProgrammeOccurrenceState.completed,
           trainingSessionId: 91,
-          sessionTitle: 'Apollo Base',
+          sessionTitle: 'Apollo Engine',
         );
         final next = _occurrence(
           assignment: assignment,
@@ -843,8 +843,8 @@ void main() {
         final controller =
             PerformanceCaptureController.initializeFromExecutionPlan(
                 plan: const SessionExecutionPlan(
-                  sessionId: 'APOLLO-W1-TUE-R1',
-                  sessionTitle: 'Apollo Base',
+                  sessionId: 'APOLLO-W1-THU-R1',
+                  sessionTitle: 'Apollo Engine',
                   blocks: [
                     SessionExecutionBlock(
                       blockId: 'steady',
@@ -881,8 +881,8 @@ void main() {
         final previewService = ScheduledProgrammeSessionPreviewService(
           loader: _PlanPreviewLoader(
             const SessionExecutionPlan(
-              sessionId: 'APOLLO-W1-TUE-R1',
-              sessionTitle: 'Apollo Base',
+              sessionId: 'APOLLO-W1-THU-R1',
+              sessionTitle: 'Apollo Engine',
               blocks: [
                 SessionExecutionBlock(
                   blockId: 'steady',
@@ -912,7 +912,7 @@ void main() {
         await tester.pumpWidget(app());
         await tester.pumpAndSettle();
 
-        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('Apollo Engine'), findsOneWidget);
         expect(find.text('Completed'), findsWidgets);
         expect(find.textContaining('Duration 61m 01s'), findsOneWidget);
         expect(find.textContaining('RPE 7'), findsOneWidget);
@@ -953,7 +953,7 @@ void main() {
 
         await tester.pumpWidget(app(key: UniqueKey()));
         await tester.pumpAndSettle();
-        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('Apollo Engine'), findsOneWidget);
         expect(find.text('UP NEXT'), findsOneWidget);
         expect(find.text('Resume'), findsOneWidget);
         expect(find.text('Begin'), findsNothing);
@@ -978,12 +978,12 @@ void main() {
           assignment: assignment,
           id: '00000000-0000-4000-8000-000000000312',
           slotId: '00000000-0000-4000-8000-000000000412',
-          protocolId: 'APOLLO-W1-TUE-R1',
+          protocolId: 'APOLLO-W1-THU-R1',
           dayKey: 'day_2',
           date: '2026-09-02',
           state: FixedProgrammeOccurrenceState.completed,
           trainingSessionId: 92,
-          sessionTitle: 'Apollo Base',
+          sessionTitle: 'Apollo Engine',
         );
         final calendar = _calendar(
           assignment: assignment,
@@ -1004,14 +1004,11 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text('Apollo Base'), findsOneWidget);
+        expect(find.text('Apollo Engine'), findsOneWidget);
         expect(find.text('Completed'), findsWidgets);
         expect(find.text('UP NEXT'), findsNothing);
         expect(find.text('Apollo Racehorse'), findsNothing);
-        expect(
-          calendar.nextPlannedOccurrence,
-          isNull,
-        );
+        expect(calendar.nextPlannedOccurrence, isNull);
       },
     );
 
@@ -1041,11 +1038,11 @@ void main() {
         assignment: assignment,
         id: '00000000-0000-4000-8000-000000000323',
         slotId: '00000000-0000-4000-8000-000000000423',
-        protocolId: 'APOLLO-W1-TUE-R1',
+        protocolId: 'APOLLO-W1-THU-R1',
         dayKey: 'day_2',
         date: '2026-09-02',
         state: FixedProgrammeOccurrenceState.completed,
-        sessionTitle: 'Apollo Base',
+        sessionTitle: 'Apollo Engine',
       );
 
       final calendar = _calendar(

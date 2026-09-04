@@ -16,7 +16,7 @@ void main(List<String> arguments) {
 
   const source = 'tool/programmes/apollo_build_12_week_v1.plan-package.yaml';
   const expectedHash =
-      '7264703a8db56edd6685e97e736405ffa99124fd4c419a676a1246653ea52b87';
+      '810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83';
   final compiled = const PlanPackageCompiler().compile(File(source).readAsStringSync());
   if (!compiled.isValid || compiled.contentHashSha256 != expectedHash) {
     stderr.writeln('Apollo package failed canonical compilation: ${compiled.issues}');

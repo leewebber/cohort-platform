@@ -6,7 +6,7 @@ DO $$
 DECLARE v_version uuid;
 BEGIN
   SELECT v.id INTO v_version FROM programme_versions v JOIN programme_lineages l ON l.id=v.lineage_id
-    WHERE l.code='APOLLO-BUILD-12-WEEK' AND v.version_number=1;
+    WHERE l.code='APOLLO-BUILD-12-WEEK' AND v.version_number=2;
   IF (SELECT count(*) FROM programme_version_phases WHERE version_id=v_version) <> 3 THEN RAISE EXCEPTION 'AH phases unavailable'; END IF;
   IF (SELECT count(*) FROM programme_version_weeks WHERE version_id=v_version) <> 12 THEN RAISE EXCEPTION 'AH weeks unavailable'; END IF;
   IF (SELECT count(*) FROM programme_version_days d JOIN programme_version_weeks w ON w.id=d.week_id WHERE w.version_id=v_version) <> 84 THEN RAISE EXCEPTION 'AH days unavailable'; END IF;

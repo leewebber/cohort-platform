@@ -40,7 +40,7 @@ BEGIN
   FROM programme_versions v
   JOIN programme_lineages l ON l.id = v.lineage_id
   WHERE l.code = 'APOLLO-BUILD-12-WEEK'
-    AND v.version_number = 1
+    AND v.version_number = 2
     AND v.lifecycle_status = 'published';
 
   INSERT INTO auth.users (
@@ -205,12 +205,12 @@ BEGIN
   );
   v_session_a := (v_result->'training_session'->>'id')::BIGINT;
   PERFORM sprint12_record(
-    'AL', 'sep2_day2_starts_despite_day1_cursor', 'APOLLO-W1-TUE-R1/day_1',
+    'AL', 'sep2_day2_starts_despite_day1_cursor', 'APOLLO-W1-THU-R1/day_1',
     (v_result->'training_session'->>'protocol_id') || '/' ||
       (SELECT current_day_key FROM programme_assignments WHERE id = v_assignment_a),
     NULL,
     v_result->>'status' = 'created'
-      AND v_result->'training_session'->>'protocol_id' = 'APOLLO-W1-TUE-R1'
+      AND v_result->'training_session'->>'protocol_id' = 'APOLLO-W1-THU-R1'
       AND (SELECT current_day_key FROM programme_assignments WHERE id = v_assignment_a) = 'day_1',
     v_result::TEXT
   );
@@ -466,7 +466,7 @@ BEGIN
 
   PERFORM sprint12_assert_eq(
     'AL', 'canonical_apollo_hash_unchanged',
-    '7264703a8db56edd6685e97e736405ffa99124fd4c419a676a1246653ea52b87',
+    '810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83',
     (SELECT package_content_hash FROM programme_versions WHERE id = v_version)
   );
 

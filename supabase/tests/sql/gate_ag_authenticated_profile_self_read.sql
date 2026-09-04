@@ -50,7 +50,7 @@ BEGIN
   END IF;
   IF (SELECT count(*) FROM programme_versions v
       JOIN programme_lineages l ON l.id = v.lineage_id
-      WHERE l.code = 'APOLLO-BUILD-12-WEEK' AND v.version_number = 1) <> 1 THEN
+      WHERE l.code = 'APOLLO-BUILD-12-WEEK' AND v.version_number = 2) <> 1 THEN
     RAISE EXCEPTION 'AG Apollo programme version read regressed';
   END IF;
 END $$;
