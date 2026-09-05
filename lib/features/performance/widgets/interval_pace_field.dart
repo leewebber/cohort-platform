@@ -3,6 +3,33 @@ import 'package:flutter/services.dart';
 
 import '../services/interval_pace_format.dart';
 
+class IntervalPaceInputFormatter extends TextInputFormatter {
+  const IntervalPaceInputFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final filtered = newValue.text.replaceAll(RegExp(r'[^0-9:]'), '');
+    final isDeletion = newValue.text.length < oldValue.text.length;
+    final String next;
+    if (isDeletion) {
+      next = IntervalPaceFormat.applySmartDraft(
+        IntervalPaceFormat.digitsOnly(filtered),
+      );
+    } else if (!filtered.contains(':')) {
+      next = IntervalPaceFormat.applySmartDraft(filtered);
+    } else {
+      next = IntervalPaceFormat.applySmartDraft(filtered);
+    }
+    return TextEditingValue(
+      text: next,
+      selection: TextSelection.collapsed(offset: next.length),
+    );
+  }
+}
+
 class IntervalPaceField extends StatefulWidget {
   const IntervalPaceField({
     super.key,
@@ -34,6 +61,7 @@ class IntervalPaceField extends StatefulWidget {
 class IntervalPaceFieldState extends State<IntervalPaceField> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
+  String? _draftError;
 
   String get draftText => _controller.text;
 
@@ -75,8 +103,12 @@ class IntervalPaceFieldState extends State<IntervalPaceField> {
     _commitIfCompleteOrEmpty();
   }
 
-  void _handleDraft(String value) {
+  void _syncDraft(String value) {
+    final invalid = IntervalPaceFormat.hasInvalidSeconds(value);
     widget.onDraftChanged?.call(value);
+    setState(() {
+      _draftError = invalid ? IntervalPaceFormat.invalidPaceMessage : null;
+    });
     if (IntervalPaceFormat.isComplete(value)) {
       widget.onChanged(IntervalPaceFormat.parse(value));
     }
@@ -106,17 +138,18 @@ class IntervalPaceFieldState extends State<IntervalPaceField> {
       enabled: widget.enabled,
       autofocus: widget.autofocus,
       textInputAction: widget.textInputAction,
-      keyboardType: TextInputType.datetime,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'[0-9:.]')),
+      keyboardType: TextInputType.number,
+      inputFormatters: const [
+        IntervalPaceInputFormatter(),
       ],
       decoration: InputDecoration(
         labelText: widget.label,
-        hintText: '4:10',
+        hintText: '410',
+        helperText: IntervalPaceFormat.helperCopy,
         suffixText: '/km',
-        errorText: widget.errorText,
+        errorText: widget.errorText ?? _draftError,
       ),
-      onChanged: _handleDraft,
+      onChanged: _syncDraft,
       onSubmitted: _handleSubmitted,
     );
   }

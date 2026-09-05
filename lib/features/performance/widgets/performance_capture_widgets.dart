@@ -528,7 +528,7 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
     final pace = _draftPace() ?? row.paceSecondsPerKm;
     if (pace == null) {
       setState(() {
-        _errorText = 'Enter pace as MM:SS /km';
+        _errorText = IntervalPaceFormat.invalidPaceMessage;
       });
       return false;
     }

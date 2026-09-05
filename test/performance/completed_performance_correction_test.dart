@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:cohort_platform/features/performance/models/interval_work_result.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/services/interval_pace_format.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_type.dart';
 import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
 import 'package:cohort_platform/features/performance/models/training_block_result_status.dart';
@@ -106,6 +108,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('correction-duration')), findsNothing);
     expect(find.textContaining('0:33'), findsOneWidget);
+  });
+
+  testWidgets('correction pace field accepts 410 without completing a new row', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await tester.pumpWidget(_app(record: _apolloEngineCompleted()));
+    await tester.ensureVisible(find.byKey(const ValueKey('edit-results')));
+    await tester.tap(find.byKey(const ValueKey('edit-results')));
+    await tester.pumpAndSettle();
+    expect(find.text(IntervalPaceFormat.helperCopy), findsWidgets);
+    final field = find.byType(TextField).first;
+    await tester.enterText(field, '4');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '4');
+    await tester.enterText(field, '410');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '4:10');
+    expect(find.byType(TextField), findsWidgets);
   });
 
   test('valid correction updates the existing result and audit', () async {
@@ -348,6 +372,80 @@ Widget _app({
         performanceRecordStore: store,
       ),
     ),
+  );
+}
+
+TrainingSessionRecord _apolloEngineCompleted() {
+  const result = IntervalResultData(
+    totalIntervals: 5,
+    workSeconds: 180,
+    paceUnit: IntervalPaceUnit.secondsPerKm,
+    comparisonFamily: 'intervals:run:180s:sec_per_km',
+    intervals: [
+      IntervalWorkResult(
+        ordinal: 1,
+        workSeconds: 180,
+        paceSecondsPerKm: 265,
+        state: IntervalWorkState.completed,
+      ),
+      IntervalWorkResult(
+        ordinal: 2,
+        workSeconds: 180,
+        paceSecondsPerKm: 262,
+        state: IntervalWorkState.completed,
+      ),
+      IntervalWorkResult(
+        ordinal: 3,
+        workSeconds: 180,
+        paceSecondsPerKm: 260,
+        state: IntervalWorkState.completed,
+      ),
+      IntervalWorkResult(
+        ordinal: 4,
+        workSeconds: 180,
+        paceSecondsPerKm: 258,
+        state: IntervalWorkState.completed,
+      ),
+      IntervalWorkResult(
+        ordinal: 5,
+        workSeconds: 180,
+        paceSecondsPerKm: 255,
+        state: IntervalWorkState.completed,
+      ),
+    ],
+  );
+  return TrainingSessionRecord(
+    recordId: 'engine-1',
+    athleteId: 'athlete-1',
+    trainingSessionId: 44,
+    sourceProtocolId: 'APOLLO-W1-THU-R1',
+    status: TrainingSessionRecordStatus.completed,
+    sessionSnapshot: const SessionPerformanceSnapshot(
+      sourceProtocolId: 'APOLLO-W1-THU-R1',
+      sessionTitle: 'Apollo Engine',
+    ),
+    startedAt: DateTime.utc(2026, 8, 29, 10),
+    completedAt: DateTime.utc(2026, 8, 29, 10, 48),
+    blockResults: [
+      TrainingBlockResult(
+        blockResultId: 'engine-block',
+        sessionRecordId: 'engine-1',
+        sourceBlockId: 'engine',
+        blockSnapshot: const BlockPerformanceSnapshot(
+          sourceBlockId: 'engine',
+          title: '5K-effort intervals',
+          blockType: SessionBlockType.conditioning,
+          content: '5 x 3 minutes',
+          workoutFormat: WorkoutFormat.intervals,
+          workSeconds: 180,
+          position: 1,
+        ),
+        status: TrainingBlockResultStatus.completed,
+        resultType: PerformanceResultType.interval,
+        position: 1,
+        resultData: result,
+      ),
+    ],
   );
 }
 

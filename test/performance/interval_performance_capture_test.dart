@@ -62,13 +62,31 @@ void main() {
   test('formats and parses MM:SS /km pace', () {
     expect(IntervalPaceFormat.parse('4:10'), 250);
     expect(IntervalPaceFormat.parse('4:10 /km'), 250);
+    expect(IntervalPaceFormat.parse('410'), 250);
+    expect(IntervalPaceFormat.parse('400'), 240);
+    expect(IntervalPaceFormat.parse('359'), 239);
+    expect(IntervalPaceFormat.parse('1030'), 630);
     expect(IntervalPaceFormat.formatSecondsPerKm(248), '4:08');
     expect(IntervalPaceFormat.parse('4:99'), isNull);
+    expect(IntervalPaceFormat.parse('460'), isNull);
+    expect(IntervalPaceFormat.parse('12:99'), isNull);
     expect(IntervalPaceFormat.parse('4'), isNull);
+    expect(IntervalPaceFormat.parse('41'), isNull);
     expect(IntervalPaceFormat.parse('4:'), isNull);
     expect(IntervalPaceFormat.parse('4:1'), isNull);
     expect(IntervalPaceFormat.isComplete('4:10'), isTrue);
+    expect(IntervalPaceFormat.isComplete('410'), isTrue);
     expect(IntervalPaceFormat.isComplete('4:1'), isFalse);
+    expect(IntervalPaceFormat.applySmartDraft('4'), '4');
+    expect(IntervalPaceFormat.applySmartDraft('41'), '41');
+    expect(IntervalPaceFormat.applySmartDraft('410'), '4:10');
+    expect(IntervalPaceFormat.applySmartDraft('400'), '4:00');
+    expect(IntervalPaceFormat.applySmartDraft('359'), '3:59');
+    expect(IntervalPaceFormat.applySmartDraft('1030'), '10:30');
+    expect(IntervalPaceFormat.applySmartDraft('460'), '460');
+    expect(IntervalPaceFormat.hasInvalidSeconds('460'), isTrue);
+    expect(IntervalPaceFormat.hasInvalidSeconds('12:99'), isTrue);
+    expect(IntervalPaceFormat.helperCopy, 'Type 410 for 4:10 /km');
   });
 
   test('completion count is derived from recorded rows', () {
@@ -234,13 +252,15 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: BlockResultEditor(
-            blockDraft: controller.draft.blockDrafts.single,
-            onResultChanged: (_) {},
-            onAddSet: (_) {},
-            onUpdateSet: (_, _, _) {},
-            onDuplicateSet: (_, _) {},
-            onRemoveSet: (_, _) {},
+          body: SingleChildScrollView(
+            child: BlockResultEditor(
+              blockDraft: controller.draft.blockDrafts.single,
+              onResultChanged: (_) {},
+              onAddSet: (_) {},
+              onUpdateSet: (_, _, _) {},
+              onDuplicateSet: (_, _) {},
+              onRemoveSet: (_, _) {},
+            ),
           ),
         ),
       ),
@@ -324,16 +344,52 @@ void main() {
       await tester.pump();
     }
 
+    expect(find.text(IntervalPaceFormat.helperCopy), findsWidgets);
+
     await type('4');
     expect(tester.widget<TextField>(field).controller!.text, '4');
     expect(field, findsOneWidget);
-    expect(find.text('Enter pace as MM:SS /km'), findsNothing);
+    expect(find.text(IntervalPaceFormat.invalidPaceMessage), findsNothing);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .intervals
+          .first
+          .paceSecondsPerKm,
+      isNull,
+    );
+
+    await type('41');
+    expect(tester.widget<TextField>(field).controller!.text, '41');
+    expect(field, findsOneWidget);
     expect(
       (controller.draft.blockDrafts.single.resultData as IntervalResultData)
           .recordedCount,
       0,
     );
 
+    await type('410');
+    expect(tester.widget<TextField>(field).controller!.text, '4:10');
+    expect(field, findsOneWidget);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .intervals
+          .first
+          .state,
+      IntervalWorkState.pending,
+    );
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+
+    await type('');
+    await type('4');
     await type('4:');
     expect(tester.widget<TextField>(field).controller!.text, '4:');
     expect(field, findsOneWidget);
@@ -360,10 +416,10 @@ void main() {
 
     await tester.enterText(field, '4:1');
     await tester.pump();
-    expect(tester.widget<TextField>(field).controller!.text, '4:1');
+    expect(tester.widget<TextField>(field).controller!.text, '41');
     expect(field, findsOneWidget);
 
-    await tester.enterText(field, '4:10');
+    await tester.enterText(field, '410');
     await tester.pump();
     await tester.tap(find.widgetWithText(CheckboxListTile, 'Completed'));
     await tester.pump();
@@ -410,11 +466,20 @@ void main() {
         ),
       ),
     );
-    await tester.enterText(find.byType(TextField), '4:99');
+    await tester.enterText(find.byType(TextField), '460');
+    await tester.pump();
+    expect(find.text(IntervalPaceFormat.invalidPaceMessage), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+    await tester.enterText(find.byType(TextField), '12:99');
     await tester.pump();
     await tester.tap(find.widgetWithText(CheckboxListTile, 'Completed'));
     await tester.pump();
-    expect(find.text('Enter pace as MM:SS /km'), findsOneWidget);
+    expect(find.text(IntervalPaceFormat.invalidPaceMessage), findsOneWidget);
     expect(find.byType(TextField), findsOneWidget);
     expect(
       (controller.draft.blockDrafts.single.resultData as IntervalResultData)
@@ -436,16 +501,18 @@ void main() {
         home: Scaffold(
           body: StatefulBuilder(
             builder: (context, setState) {
-              return BlockResultEditor(
-                blockDraft: controller.draft.blockDrafts.single,
-                onResultChanged: (data) {
-                  controller.updateBlockResultData(blockId, data);
-                  setState(() {});
-                },
-                onAddSet: (_) {},
-                onUpdateSet: (_, _, _) {},
-                onDuplicateSet: (_, _) {},
-                onRemoveSet: (_, _) {},
+              return SingleChildScrollView(
+                child: BlockResultEditor(
+                  blockDraft: controller.draft.blockDrafts.single,
+                  onResultChanged: (data) {
+                    controller.updateBlockResultData(blockId, data);
+                    setState(() {});
+                  },
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                ),
               );
             },
           ),
@@ -489,16 +556,18 @@ void main() {
         home: Scaffold(
           body: StatefulBuilder(
             builder: (context, setState) {
-              return BlockResultEditor(
-                blockDraft: controller.draft.blockDrafts.single,
-                onResultChanged: (data) {
-                  controller.updateBlockResultData(blockId, data);
-                  setState(() {});
-                },
-                onAddSet: (_) {},
-                onUpdateSet: (_, _, _) {},
-                onDuplicateSet: (_, _) {},
-                onRemoveSet: (_, _) {},
+              return SingleChildScrollView(
+                child: BlockResultEditor(
+                  blockDraft: controller.draft.blockDrafts.single,
+                  onResultChanged: (data) {
+                    controller.updateBlockResultData(blockId, data);
+                    setState(() {});
+                  },
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                ),
               );
             },
           ),
@@ -535,6 +604,161 @@ void main() {
       relaunched!.blockResults.single.exerciseResults.single.setResults
           .map((set) => set.setResultId),
       ids,
+    );
+  });
+
+  test('digit-only formatter inserts a colon only when complete', () {
+    const formatter = IntervalPaceInputFormatter();
+    var value = TextEditingValue.empty;
+    value = formatter.formatEditUpdate(
+      value,
+      const TextEditingValue(
+        text: '4',
+        selection: TextSelection.collapsed(offset: 1),
+      ),
+    );
+    expect(value.text, '4');
+    value = formatter.formatEditUpdate(
+      value,
+      const TextEditingValue(
+        text: '41',
+        selection: TextSelection.collapsed(offset: 2),
+      ),
+    );
+    expect(value.text, '41');
+    value = formatter.formatEditUpdate(
+      value,
+      const TextEditingValue(
+        text: '410',
+        selection: TextSelection.collapsed(offset: 3),
+      ),
+    );
+    expect(value.text, '4:10');
+    expect(
+      formatter
+          .formatEditUpdate(
+            value,
+            const TextEditingValue(
+              text: '4:1',
+              selection: TextSelection.collapsed(offset: 3),
+            ),
+          )
+          .text,
+      '41',
+    );
+    expect(
+      formatter
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            const TextEditingValue(
+              text: '400',
+              selection: TextSelection.collapsed(offset: 3),
+            ),
+          )
+          .text,
+      '4:00',
+    );
+    expect(
+      formatter
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            const TextEditingValue(
+              text: '359',
+              selection: TextSelection.collapsed(offset: 3),
+            ),
+          )
+          .text,
+      '3:59',
+    );
+    expect(
+      formatter
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            const TextEditingValue(
+              text: '1030',
+              selection: TextSelection.collapsed(offset: 4),
+            ),
+          )
+          .text,
+      '10:30',
+    );
+    expect(
+      formatter
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            const TextEditingValue(
+              text: '4:10',
+              selection: TextSelection.collapsed(offset: 4),
+            ),
+          )
+          .text,
+      '4:10',
+    );
+    expect(
+      formatter
+          .formatEditUpdate(
+            TextEditingValue.empty,
+            const TextEditingValue(
+              text: '460',
+              selection: TextSelection.collapsed(offset: 3),
+            ),
+          )
+          .text,
+      '460',
+    );
+  });
+
+  testWidgets('paste 410 and replacement editing stay on interval 1', (
+    tester,
+  ) async {
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _enginePlan(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 19,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: BlockResultEditor(
+                  blockDraft: controller.draft.blockDrafts.single,
+                  onResultChanged: (data) {
+                    controller.updateBlockResultData(blockId, data);
+                    setState(() {});
+                  },
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    final field = find.byType(TextField);
+    await tester.enterText(field, '410');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '4:10');
+    await tester.enterText(field, '359');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '3:59');
+    await tester.enterText(field, '4:10');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '4:10');
+    expect(find.byType(TextField), findsOneWidget);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+    expect(
+      controller.draft.blockDrafts.single.exerciseResults.single.sets,
+      hasLength(5),
     );
   });
 }

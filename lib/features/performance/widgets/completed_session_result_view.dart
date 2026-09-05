@@ -1027,9 +1027,10 @@ class _CorrectionIntervalFields extends StatelessWidget {
                 row.copyWith(
                   paceSecondsPerKm: pace,
                   clearPace: pace == null,
-                  state: pace == null
+                  state: pace == null &&
+                          row.state == IntervalWorkState.completed
                       ? IntervalWorkState.pending
-                      : IntervalWorkState.completed,
+                      : row.state,
                 ),
               ),
             ),
