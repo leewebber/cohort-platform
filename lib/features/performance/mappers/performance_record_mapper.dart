@@ -3,6 +3,7 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
+import '../services/interval_set_sync.dart';
 
 class PerformanceRecordMapper {
   const PerformanceRecordMapper();
@@ -100,7 +101,7 @@ class PerformanceRecordMapper {
             status: block.status,
             captureMode: BlockCaptureMode.auto,
             resultType: block.resultType,
-            resultData: block.resultData ?? const CompletionResultData(),
+            resultData: _intervalResult(block),
             startedAt: block.startedAt,
             completedAt: block.completedAt,
             durationSeconds: block.durationSeconds,
@@ -155,6 +156,15 @@ class PerformanceRecordMapper {
       completedAt: record.completedAt,
       durationSeconds: record.durationSeconds,
       blockDrafts: blockDrafts,
+    );
+  }
+
+  static PerformanceResultData _intervalResult(TrainingBlockResult block) {
+    final data = block.resultData ?? const CompletionResultData();
+    if (data is! IntervalResultData) return data;
+    return IntervalSetSync.hydrateFromSets(
+      result: data,
+      exercises: block.exerciseResults,
     );
   }
 

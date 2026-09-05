@@ -1,3 +1,4 @@
+import 'interval_work_result.dart';
 import 'performance_result_type.dart';
 
 sealed class PerformanceResultData {
@@ -202,6 +203,10 @@ class IntervalResultData extends PerformanceResultData {
     this.distanceUnit,
     this.entered = false,
     this.note,
+    this.workSeconds,
+    this.paceUnit = IntervalPaceUnit.secondsPerKm,
+    this.comparisonFamily,
+    this.intervals = const [],
   });
 
   final int intervalsCompleted;
@@ -210,6 +215,22 @@ class IntervalResultData extends PerformanceResultData {
   final String? distanceUnit;
   final bool entered;
   final String? note;
+  final int? workSeconds;
+  final String paceUnit;
+  final String? comparisonFamily;
+  final List<IntervalWorkResult> intervals;
+
+  bool get usesPerIntervalCapture => intervals.isNotEmpty;
+
+  int get recordedCount {
+    if (usesPerIntervalCapture) {
+      return intervals.where((row) => row.state.countsAsCompleted).length;
+    }
+    return intervalsCompleted;
+  }
+
+  int? get prescribedCount =>
+      totalIntervals ?? (usesPerIntervalCapture ? intervals.length : null);
 
   @override
   PerformanceResultType get resultType => PerformanceResultType.interval;
@@ -217,15 +238,32 @@ class IntervalResultData extends PerformanceResultData {
   @override
   Map<String, dynamic> toJson() => {
     'resultType': resultType.dbValue,
-    'intervalsCompleted': intervalsCompleted,
+    'intervalsCompleted': recordedCount,
     if (totalIntervals != null) 'totalIntervals': totalIntervals,
     if (totalDistance != null) 'totalDistance': totalDistance,
     if (distanceUnit != null) 'distanceUnit': distanceUnit,
-    'entered': entered,
+    'entered': entered || recordedCount > 0,
     if (note != null) 'note': note,
+    if (workSeconds != null) 'workSeconds': workSeconds,
+    'paceUnit': paceUnit,
+    if (comparisonFamily != null) 'comparisonFamily': comparisonFamily,
+    if (intervals.isNotEmpty)
+      'intervals': intervals.map((row) => row.toJson()).toList(),
   };
 
   factory IntervalResultData.fromJson(Map<String, dynamic> json) {
+    final rawIntervals = json['intervals'];
+    final parsed = rawIntervals is List
+        ? rawIntervals
+              .whereType<Map>()
+              .map(
+                (item) => IntervalWorkResult.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .where((row) => row.ordinal > 0)
+              .toList(growable: false)
+        : const <IntervalWorkResult>[];
     return IntervalResultData(
       intervalsCompleted: _int(json['intervalsCompleted']),
       totalIntervals: _nullableInt(json['totalIntervals']),
@@ -233,6 +271,10 @@ class IntervalResultData extends PerformanceResultData {
       distanceUnit: _trim(json['distanceUnit']),
       entered: json['entered'] == true,
       note: _trim(json['note']),
+      workSeconds: _nullableInt(json['workSeconds'] ?? json['work_seconds']),
+      paceUnit: _trim(json['paceUnit']) ?? IntervalPaceUnit.secondsPerKm,
+      comparisonFamily: _trim(json['comparisonFamily']),
+      intervals: parsed,
     );
   }
 
@@ -243,7 +285,12 @@ class IntervalResultData extends PerformanceResultData {
     String? distanceUnit,
     bool? entered,
     String? note,
+    int? workSeconds,
+    String? paceUnit,
+    String? comparisonFamily,
+    List<IntervalWorkResult>? intervals,
   }) {
+    final nextIntervals = intervals ?? this.intervals;
     return IntervalResultData(
       intervalsCompleted: intervalsCompleted ?? this.intervalsCompleted,
       totalIntervals: totalIntervals ?? this.totalIntervals,
@@ -251,13 +298,28 @@ class IntervalResultData extends PerformanceResultData {
       distanceUnit: distanceUnit ?? this.distanceUnit,
       entered:
           entered ??
-          (intervalsCompleted != null ||
+          (intervals != null ||
+                  intervalsCompleted != null ||
                   totalDistance != null ||
                   distanceUnit != null
               ? true
               : this.entered),
       note: note ?? this.note,
+      workSeconds: workSeconds ?? this.workSeconds,
+      paceUnit: paceUnit ?? this.paceUnit,
+      comparisonFamily: comparisonFamily ?? this.comparisonFamily,
+      intervals: nextIntervals,
     );
+  }
+
+  IntervalResultData replaceInterval(IntervalWorkResult row) {
+    if (intervals.isEmpty) {
+      return copyWith(intervals: [row], entered: row.state.countsAsCompleted);
+    }
+    final next = intervals
+        .map((current) => current.ordinal == row.ordinal ? row : current)
+        .toList(growable: false);
+    return copyWith(intervals: next, entered: true);
   }
 }
 

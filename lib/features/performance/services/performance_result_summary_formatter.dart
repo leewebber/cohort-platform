@@ -3,6 +3,7 @@ import '../models/performance_result_type.dart';
 import '../models/training_session_record.dart';
 import '../models/training_block_result_status.dart';
 import 'endurance_metrics_calculator.dart';
+import 'interval_result_math.dart';
 
 class PerformanceResultSummaryFormatter {
   const PerformanceResultSummaryFormatter._();
@@ -81,10 +82,21 @@ class PerformanceResultSummaryFormatter {
   }
 
   static String _formatInterval(IntervalResultData result) {
-    if (result.totalIntervals != null) {
-      return '${result.intervalsCompleted} of ${result.totalIntervals} intervals completed';
-    }
-    return '${result.intervalsCompleted} intervals completed';
+    final prescribed = result.prescribedCount;
+    final count = prescribed == null
+        ? '${result.recordedCount} intervals completed'
+        : '${result.recordedCount}/$prescribed intervals';
+    final average = IntervalResultMath.formatPace(
+      IntervalResultMath.averagePaceSecondsPerKm(result),
+    );
+    final fastest = IntervalResultMath.formatPace(
+      IntervalResultMath.fastest(result)?.paceSecondsPerKm,
+    );
+    return [
+      count,
+      if (average.isNotEmpty) 'Avg $average',
+      if (fastest.isNotEmpty) 'Fastest $fastest',
+    ].join(' · ');
   }
 
   static String _formatDistance(DistanceResultData result) {

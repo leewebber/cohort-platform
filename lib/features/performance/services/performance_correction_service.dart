@@ -1,3 +1,4 @@
+import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
@@ -67,8 +68,30 @@ class PerformanceCorrectionService {
         _validateEndurance(data);
       }
       if (data is IntervalResultData) {
-        if (data.intervalsCompleted < 0 || data.intervalsCompleted > 1000) {
+        if (data.recordedCount < 0 || data.recordedCount > 1000) {
           throw const PerformanceCorrectionException('invalid_interval_count');
+        }
+        final prescribed = data.prescribedCount;
+        if (prescribed != null && data.recordedCount > prescribed) {
+          throw const PerformanceCorrectionException('invalid_interval_count');
+        }
+        if (data.usesPerIntervalCapture &&
+            prescribed != null &&
+            data.intervals.length > prescribed) {
+          throw const PerformanceCorrectionException('invalid_interval_count');
+        }
+        if (!IntervalPaceUnit.isSupported(data.paceUnit)) {
+          throw const PerformanceCorrectionException('invalid_pace_unit');
+        }
+        for (final row in data.intervals) {
+          if (prescribed != null &&
+              (row.ordinal < 1 || row.ordinal > prescribed)) {
+            throw const PerformanceCorrectionException('invalid_interval_ordinal');
+          }
+          if (row.state == IntervalWorkState.completed &&
+              (row.paceSecondsPerKm == null || row.paceSecondsPerKm! <= 0)) {
+            throw const PerformanceCorrectionException('invalid_pace');
+          }
         }
       }
       for (final exercise in block.exerciseResults) {
@@ -120,6 +143,9 @@ class PerformanceCorrectionService {
                   'completed': set.completed,
                   'rpe': set.rpe,
                   'note': set.note,
+                  'distance': set.distance,
+                  'distance_unit': set.distanceUnit,
+                  'duration_seconds': set.durationSeconds,
                 },
       ],
     };
@@ -167,7 +193,10 @@ class PerformanceCorrectionService {
               current.loadUnit != set.loadUnit ||
               current.completed != set.completed ||
               current.rpe != set.rpe ||
-              current.note != set.note;
+              current.note != set.note ||
+              current.distance != set.distance ||
+              current.distanceUnit != set.distanceUnit ||
+              current.durationSeconds != set.durationSeconds;
         }
       }
     }

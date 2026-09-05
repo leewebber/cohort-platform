@@ -1,5 +1,6 @@
 import '../../../models/workout_format.dart';
 import '../models/active_performance_draft.dart';
+import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
@@ -85,9 +86,35 @@ class PerformanceValidationService {
             'Elapsed time must be greater than zero.';
       }
     } else if (resultData is IntervalResultData) {
-      if (resultData.intervalsCompleted < 0) {
+      if (resultData.recordedCount < 0) {
         errors['$prefix.intervalsCompleted'] =
             'Intervals completed cannot be negative.';
+      }
+      final prescribed = resultData.prescribedCount;
+      if (prescribed != null && resultData.recordedCount > prescribed) {
+        errors['$prefix.intervalsCompleted'] =
+            'Intervals completed cannot exceed the authored rounds.';
+      }
+      if (resultData.usesPerIntervalCapture &&
+          prescribed != null &&
+          resultData.intervals.length > prescribed) {
+        errors['$prefix.intervals'] =
+            'More interval results than authored rounds.';
+      }
+      if (!IntervalPaceUnit.isSupported(resultData.paceUnit)) {
+        errors['$prefix.paceUnit'] = 'Unsupported interval pace unit.';
+      }
+      for (final row in resultData.intervals) {
+        if (prescribed != null &&
+            (row.ordinal < 1 || row.ordinal > prescribed)) {
+          errors['$prefix.interval:${row.ordinal}'] =
+              'Interval number is outside the authored block.';
+        }
+        if (row.state == IntervalWorkState.completed &&
+            (row.paceSecondsPerKm == null || row.paceSecondsPerKm! <= 0)) {
+          errors['$prefix.interval:${row.ordinal}'] =
+              'Completed intervals need a valid pace or Pace unavailable.';
+        }
       }
     } else if (resultData is DistanceResultData) {
       if (resultData.distance != null && resultData.distance! <= 0) {
@@ -137,7 +164,9 @@ class PerformanceValidationService {
       if (resultData is AmrapResultData && !resultData.entered) {
         errors['$prefix.amrap'] =
             'Enter performed rounds or reps before completing this block.';
-      } else if (resultData is IntervalResultData && !resultData.entered) {
+      } else if (resultData is IntervalResultData &&
+          !resultData.entered &&
+          resultData.recordedCount == 0) {
         errors['$prefix.intervals'] =
             'Enter completed intervals before completing this block.';
       } else if (resultData is RoundsResultData && !resultData.entered) {

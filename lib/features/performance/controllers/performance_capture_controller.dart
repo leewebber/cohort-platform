@@ -9,6 +9,7 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record_status.dart';
+import '../services/interval_set_sync.dart';
 import '../services/performance_snapshot_builder.dart';
 import '../services/performance_validation_service.dart';
 
@@ -104,10 +105,18 @@ class PerformanceCaptureController {
     String sourceBlockId,
     PerformanceResultData resultData,
   ) {
-    return _updateBlock(
-      sourceBlockId,
-      (block) => block.copyWith(resultData: resultData),
-    );
+    return _updateBlock(sourceBlockId, (block) {
+      var next = block.copyWith(resultData: resultData);
+      if (resultData is IntervalResultData && resultData.usesPerIntervalCapture) {
+        next = next.copyWith(
+          exerciseResults: IntervalSetSync.ensureAuthoredRows(
+            exercises: next.exerciseResults,
+            result: resultData,
+          ),
+        );
+      }
+      return next;
+    });
   }
 
   PerformanceCaptureController updateBlockNote(
@@ -122,6 +131,10 @@ class PerformanceCaptureController {
 
   PerformanceCaptureController addSet(String sourceBlockId, String exerciseId) {
     return _updateBlock(sourceBlockId, (block) {
+      final interval = block.resultData;
+      if (interval is IntervalResultData && interval.usesPerIntervalCapture) {
+        return block;
+      }
       final exercises = block.exerciseResults
           .map((exercise) {
             if (exercise.sourceExerciseId != exerciseId) return exercise;
@@ -175,6 +188,10 @@ class PerformanceCaptureController {
     String setResultId,
   ) {
     return _updateBlock(sourceBlockId, (block) {
+      final interval = block.resultData;
+      if (interval is IntervalResultData && interval.usesPerIntervalCapture) {
+        return block;
+      }
       final exercises = block.exerciseResults
           .map((exercise) {
             if (exercise.sourceExerciseId != exerciseId) return exercise;

@@ -2,6 +2,7 @@ import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/workout_format.dart';
 import '../../session/models/session_execution_plan.dart';
+import '../services/interval_capture_contract.dart';
 import 'performance_result_data.dart';
 import 'performance_result_type.dart';
 
@@ -142,9 +143,7 @@ class BlockCaptureModeResolver {
       case BlockCaptureMode.forTime:
         return const ForTimeResultData();
       case BlockCaptureMode.interval:
-        return IntervalResultData(
-          totalIntervals: block.timerConfiguration?.rounds,
-        );
+        return IntervalCaptureContract.authoredResult(block);
       case BlockCaptureMode.endurance:
         return const EnduranceResultData();
       case BlockCaptureMode.rounds:

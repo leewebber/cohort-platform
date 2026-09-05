@@ -105,6 +105,10 @@ class BlockPerformanceSnapshot {
     this.coachNotes,
     this.exercises = const [],
     this.performanceCaptureMode,
+    this.workSeconds,
+    this.recoverySeconds,
+    this.tracking = const [],
+    this.comparisonFamily,
   });
 
   final String sourceBlockId;
@@ -117,6 +121,10 @@ class BlockPerformanceSnapshot {
   final String? coachNotes;
   final List<ExercisePerformanceSnapshot> exercises;
   final String? performanceCaptureMode;
+  final int? workSeconds;
+  final int? recoverySeconds;
+  final List<String> tracking;
+  final String? comparisonFamily;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -130,6 +138,10 @@ class BlockPerformanceSnapshot {
     if (coachNotes != null) 'coachNotes': coachNotes,
     if (performanceCaptureMode != null)
       'performanceCaptureMode': performanceCaptureMode,
+    if (workSeconds != null) 'workSeconds': workSeconds,
+    if (recoverySeconds != null) 'recoverySeconds': recoverySeconds,
+    if (tracking.isNotEmpty) 'tracking': tracking,
+    if (comparisonFamily != null) 'comparisonFamily': comparisonFamily,
     'exercises': exercises.map((e) => e.toJson()).toList(),
   };
 
@@ -147,6 +159,14 @@ class BlockPerformanceSnapshot {
       timerSummary: _trim(json['timerSummary']),
       coachNotes: _trim(json['coachNotes']),
       performanceCaptureMode: _trim(json['performanceCaptureMode']),
+      workSeconds: _int(json['workSeconds'] ?? json['work_seconds']),
+      recoverySeconds: _int(
+        json['recoverySeconds'] ??
+            json['recovery_seconds'] ??
+            json['restSeconds'],
+      ),
+      tracking: _stringList(json['tracking']),
+      comparisonFamily: _trim(json['comparisonFamily']),
       exercises: exercisesJson is List
           ? exercisesJson
                 .whereType<Map>()
@@ -163,6 +183,20 @@ class BlockPerformanceSnapshot {
   static String? _trim(dynamic value) {
     final trimmed = value?.toString().trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  static int? _int(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    return int.tryParse(value.toString());
+  }
+
+  static List<String> _stringList(dynamic value) {
+    if (value is! List) return const [];
+    return value
+        .map((item) => item.toString().trim())
+        .where((item) => item.isNotEmpty)
+        .toList(growable: false);
   }
 }
 

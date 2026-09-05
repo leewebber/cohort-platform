@@ -6,8 +6,11 @@ import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/active_performance_draft.dart';
 import '../models/block_capture_mode_resolver.dart';
+import '../models/performance_result_data.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
+import 'interval_capture_contract.dart';
+import 'interval_set_sync.dart';
 
 class PerformanceSnapshotBuilder {
   const PerformanceSnapshotBuilder();
@@ -52,18 +55,7 @@ class PerformanceSnapshotBuilder {
       lineageCode: programmeContext?.lineageCode,
       blocks: plan.blocks
           .map(
-            (block) => BlockPerformanceSnapshot(
-              sourceBlockId: block.blockId,
-              title: block.title,
-              blockType: block.blockType,
-              content: block.content,
-              workoutFormat: block.workoutFormat,
-              position: block.position,
-              timerSummary: block.timerSummary,
-              coachNotes: block.coachNotes,
-              performanceCaptureMode: block.performanceCaptureMode.dbValue,
-              exercises: _authoredExerciseSnapshots(block),
-            ),
+            (block) => _blockSnapshot(block),
           )
           .toList(growable: false),
     );
@@ -74,23 +66,32 @@ class PerformanceSnapshotBuilder {
   ) {
     return plan.blocks
         .map((block) {
-          final snapshot = BlockPerformanceSnapshot(
-            sourceBlockId: block.blockId,
-            title: block.title,
-            blockType: block.blockType,
-            content: block.content,
-            workoutFormat: block.workoutFormat,
-            position: block.position,
-            timerSummary: block.timerSummary,
-            coachNotes: block.coachNotes,
-            performanceCaptureMode: block.performanceCaptureMode.dbValue,
-            exercises: _authoredExerciseSnapshots(block),
-          );
-
+          final snapshot = _blockSnapshot(block);
           final captureMode = BlockCaptureModeResolver.resolveForBlock(block);
           final resultType = BlockCaptureModeResolver.resultTypeFor(
             captureMode,
           );
+          final resultData = BlockCaptureModeResolver.initialResultData(
+            captureMode,
+            block,
+          );
+          var exercises = _authoredSummaries(block)
+              .map(
+                (entry) => _initialExerciseDraft(
+                  entry.summary,
+                  position: entry.position,
+                  blockType: block.blockType,
+                ),
+              )
+              .toList(growable: false);
+          if (resultData is IntervalResultData &&
+              IntervalCaptureContract.requiresPerIntervalRows(block)) {
+            exercises = IntervalSetSync.ensureAuthoredRows(
+              exercises: exercises,
+              result: resultData,
+              block: block,
+            );
+          }
 
           return BlockPerformanceDraft(
             blockResultId: DatabaseUuid.newV4(),
@@ -100,22 +101,31 @@ class PerformanceSnapshotBuilder {
             status: TrainingBlockResultStatus.notStarted,
             captureMode: captureMode,
             resultType: resultType,
-            resultData: BlockCaptureModeResolver.initialResultData(
-              captureMode,
-              block,
-            ),
-            exerciseResults: _authoredSummaries(block)
-                .map(
-                  (entry) => _initialExerciseDraft(
-                    entry.summary,
-                    position: entry.position,
-                    blockType: block.blockType,
-                  ),
-                )
-                .toList(growable: false),
+            resultData: resultData,
+            exerciseResults: exercises,
           );
         })
         .toList(growable: false);
+  }
+
+  BlockPerformanceSnapshot _blockSnapshot(SessionExecutionBlock block) {
+    final result = IntervalCaptureContract.authoredResult(block);
+    return BlockPerformanceSnapshot(
+      sourceBlockId: block.blockId,
+      title: block.title,
+      blockType: block.blockType,
+      content: block.content,
+      workoutFormat: block.workoutFormat,
+      position: block.position,
+      timerSummary: block.timerSummary,
+      coachNotes: block.coachNotes,
+      performanceCaptureMode: block.performanceCaptureMode.dbValue,
+      workSeconds: block.timerConfiguration?.workSeconds,
+      recoverySeconds: block.timerConfiguration?.restSeconds,
+      tracking: block.timerConfiguration?.tracking ?? const [],
+      comparisonFamily: result.comparisonFamily,
+      exercises: _authoredExerciseSnapshots(block),
+    );
   }
 
   List<ExercisePerformanceSnapshot> _authoredExerciseSnapshots(

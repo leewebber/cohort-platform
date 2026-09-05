@@ -7,6 +7,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
@@ -14,10 +15,12 @@ import '../repositories/in_memory_performance_record_store.dart';
 import '../repositories/performance_record_store.dart';
 import '../services/completed_session_result_projection.dart';
 import '../services/endurance_metrics_calculator.dart';
+import '../services/interval_set_sync.dart';
 import '../services/performance_correction_service.dart';
 import '../services/running_pace_plausibility.dart';
 import 'endurance_duration_field.dart';
 import 'implausible_running_pace_warning.dart';
+import 'interval_pace_field.dart';
 import 'performance_capture_widgets.dart';
 import 'performance_numeric_field.dart';
 
@@ -222,7 +225,33 @@ class _CompletedSessionResultViewState
       draft.blockResults = [
         for (final block in draft.blockResults)
           block.blockResultId == blockResultId
-              ? block.copyWith(resultData: data)
+              ? block.copyWith(
+                  resultData: data,
+                  exerciseResults: data is IntervalResultData
+                      ? [
+                          for (final exercise in block.exerciseResults)
+                            exercise.copyWith(
+                              setResults: [
+                                for (final set in exercise.setResults)
+                                  data.intervals
+                                          .where(
+                                            (row) =>
+                                                row.ordinal == set.setNumber,
+                                          )
+                                          .isEmpty
+                                      ? set
+                                      : IntervalSetSync.applyToRecordedSet(
+                                          set,
+                                          data.intervals.firstWhere(
+                                            (row) =>
+                                                row.ordinal == set.setNumber,
+                                          ),
+                                        ),
+                              ],
+                            ),
+                        ]
+                      : block.exerciseResults,
+                )
               : block,
       ];
     });
@@ -315,7 +344,10 @@ class _CompletedBlockCard extends StatelessWidget {
           Text(block.title, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.xs),
           Text(block.summary, style: CohortTextStyles.small),
-          if (!block.isSimpleCompletion) ...[
+          if (block.interval != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            _CompletedIntervalAccordion(interval: block.interval!),
+          ] else if (!block.isSimpleCompletion) ...[
             for (final exercise in block.exercises) ...[
               const SizedBox(height: CohortSpacing.sm),
               _CompletedExerciseAccordion(
@@ -334,6 +366,126 @@ class _CompletedBlockCard extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+class _CompletedIntervalAccordion extends StatefulWidget {
+  const _CompletedIntervalAccordion({required this.interval});
+
+  final CompletedIntervalBlockProjection interval;
+
+  @override
+  State<_CompletedIntervalAccordion> createState() =>
+      _CompletedIntervalAccordionState();
+}
+
+class _CompletedIntervalAccordionState
+    extends State<_CompletedIntervalAccordion> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final interval = widget.interval;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Semantics(
+            button: true,
+            expanded: _expanded,
+            label:
+                'Interval performance, ${interval.comparisonStatus.semanticLabel}',
+            hint: _expanded
+                ? 'Collapse interval detail'
+                : 'Expand interval detail',
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Interval performance',
+                    style: CohortTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                _ComparisonBadge(status: interval.comparisonStatus),
+                Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+              ],
+            ),
+          ),
+        ),
+        if (_expanded) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          for (final row in interval.rows)
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: row.isFastest
+                    ? CohortColors.oliveSoft
+                    : Colors.transparent,
+                borderRadius: CohortRadius.smallRadius,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: CohortSpacing.xs,
+                  vertical: CohortSpacing.sm,
+                ),
+                child: Semantics(
+                  label: [
+                    'Interval ${row.ordinal}',
+                    row.paceLabel,
+                    if (row.isFastest) 'Fastest interval',
+                    if (row.previousPaceLabel != null)
+                      'Previous ${row.previousPaceLabel}',
+                  ].join(', '),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Interval ${row.ordinal}',
+                          style: CohortTextStyles.muted,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          row.paceLabel,
+                          style: CohortTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          row.previousPaceLabel == null
+                              ? ''
+                              : row.previousPaceLabel!,
+                          style: CohortTextStyles.small,
+                          textAlign: TextAlign.end,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          if (interval.metrics.isNotEmpty) ...[
+            const SizedBox(height: CohortSpacing.md),
+            _PerformanceMetricsRow(metrics: interval.metrics),
+          ],
+          if (interval.personalRecordLabel != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              'PR · ${interval.personalRecordLabel}',
+              key: const ValueKey('interval-pr-label'),
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.phosphorHighlight,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ],
+      ],
     );
   }
 }
@@ -814,34 +966,91 @@ class _CorrectionBlockEditor extends StatelessWidget {
               onChanged: onResultChanged,
             )
           else if (block.resultData is IntervalResultData)
-            PerformanceNumericField(
-              label: 'Intervals completed',
-              value: '${(block.resultData! as IntervalResultData).intervalsCompleted}',
-              onChanged: (value) => onResultChanged(
-                (block.resultData! as IntervalResultData).copyWith(
-                  intervalsCompleted: int.tryParse(value) ?? 0,
-                ),
-              ),
+            _CorrectionIntervalFields(
+              result: block.resultData! as IntervalResultData,
+              onChanged: onResultChanged,
             ),
-          for (final exercise in block.exerciseResults) ...[
-            const SizedBox(height: CohortSpacing.sm),
-            Text(
-              exercise.exerciseSnapshot.displayName,
-              style: CohortTextStyles.body,
-            ),
-            for (final set in exercise.setResults)
-              _CorrectionSetRow(
-                set: set,
-                loadKind: exercise.exerciseSnapshot.loadKind,
-                onChanged: (update) => onSetChanged(
-                  exercise.exerciseResultId,
-                  set.setResultId,
-                  update,
-                ),
+          if (block.resultData is! IntervalResultData ||
+              !(block.resultData! as IntervalResultData).usesPerIntervalCapture)
+            for (final exercise in block.exerciseResults) ...[
+              const SizedBox(height: CohortSpacing.sm),
+              Text(
+                exercise.exerciseSnapshot.displayName,
+                style: CohortTextStyles.body,
               ),
-          ],
+              for (final set in exercise.setResults)
+                _CorrectionSetRow(
+                  set: set,
+                  loadKind: exercise.exerciseSnapshot.loadKind,
+                  onChanged: (update) => onSetChanged(
+                    exercise.exerciseResultId,
+                    set.setResultId,
+                    update,
+                  ),
+                ),
+            ],
         ],
       ),
+    );
+  }
+}
+
+class _CorrectionIntervalFields extends StatelessWidget {
+  const _CorrectionIntervalFields({
+    required this.result,
+    required this.onChanged,
+  });
+
+  final IntervalResultData result;
+  final ValueChanged<PerformanceResultData> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!result.usesPerIntervalCapture) {
+      return PerformanceNumericField(
+        label: 'Intervals completed',
+        value: '${result.intervalsCompleted}',
+        onChanged: (value) => onChanged(
+          result.copyWith(intervalsCompleted: int.tryParse(value) ?? 0),
+        ),
+      );
+    }
+    return Column(
+      children: [
+        for (final row in result.intervals) ...[
+          Text('Interval ${row.ordinal}', style: CohortTextStyles.small),
+          IntervalPaceField(
+            secondsPerKm: row.paceSecondsPerKm,
+            enabled: row.state != IntervalWorkState.paceUnavailable,
+            onChanged: (pace) => onChanged(
+              result.replaceInterval(
+                row.copyWith(
+                  paceSecondsPerKm: pace,
+                  clearPace: pace == null,
+                  state: pace == null
+                      ? IntervalWorkState.pending
+                      : IntervalWorkState.completed,
+                ),
+              ),
+            ),
+          ),
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Pace unavailable'),
+            value: row.state == IntervalWorkState.paceUnavailable,
+            onChanged: (value) => onChanged(
+              result.replaceInterval(
+                row.copyWith(
+                  state: value == true
+                      ? IntervalWorkState.paceUnavailable
+                      : IntervalWorkState.pending,
+                  clearPace: value == true,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

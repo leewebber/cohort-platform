@@ -17,6 +17,7 @@ class TimerConfiguration {
     this.targetRounds,
     this.restBetweenRoundsSeconds,
     this.timerNotes,
+    this.tracking = const [],
   });
 
   final int? durationSeconds;
@@ -31,6 +32,7 @@ class TimerConfiguration {
   final int? targetRounds;
   final int? restBetweenRoundsSeconds;
   final String? timerNotes;
+  final List<String> tracking;
 
   TimerConfiguration copyWith({
     int? durationSeconds,
@@ -45,6 +47,7 @@ class TimerConfiguration {
     int? targetRounds,
     int? restBetweenRoundsSeconds,
     String? timerNotes,
+    List<String>? tracking,
   }) {
     return TimerConfiguration(
       durationSeconds: durationSeconds ?? this.durationSeconds,
@@ -60,6 +63,7 @@ class TimerConfiguration {
       restBetweenRoundsSeconds:
           restBetweenRoundsSeconds ?? this.restBetweenRoundsSeconds,
       timerNotes: timerNotes ?? this.timerNotes,
+      tracking: tracking ?? this.tracking,
     );
   }
 
@@ -80,6 +84,7 @@ class TimerConfiguration {
         'restBetweenRoundsSeconds': restBetweenRoundsSeconds,
       if (timerNotes != null && timerNotes!.trim().isNotEmpty)
         'timerNotes': timerNotes!.trim(),
+      if (tracking.isNotEmpty) 'tracking': tracking,
     };
   }
 
@@ -116,6 +121,7 @@ class TimerConfiguration {
             json['between_round_recovery_seconds'],
       ),
       timerNotes: (json['timerNotes'] ?? json['timer_notes'])?.toString(),
+      tracking: _tracking(json['tracking'] ?? json['record']),
     );
   }
 
@@ -123,6 +129,18 @@ class TimerConfiguration {
     if (value == null) return null;
     if (value is int) return value;
     return int.tryParse(value.toString());
+  }
+
+  static List<String> _tracking(dynamic value) {
+    if (value is List) {
+      return value
+          .map((item) => item.toString().trim())
+          .where((item) => item.isNotEmpty)
+          .toList(growable: false);
+    }
+    final single = value?.toString().trim();
+    if (single == null || single.isEmpty) return const [];
+    return [single];
   }
 
   /// Clears fields incompatible with [format].
@@ -162,6 +180,7 @@ class TimerConfiguration {
         rounds: base.rounds,
         preparationSeconds: base.preparationSeconds,
         timerNotes: base.timerNotes,
+        tracking: base.tracking,
       ),
       WorkoutFormat.tabata => TimerConfiguration(
         workSeconds: base.workSeconds ?? 20,

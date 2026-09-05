@@ -12,11 +12,14 @@ import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../workout_player/services/previous_performance_resolver.dart';
 import '../models/active_performance_draft.dart';
 import '../models/performance_snapshot.dart';
+import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import 'endurance_duration_field.dart';
+import 'interval_pace_field.dart';
 import 'performance_numeric_field.dart';
+import '../services/interval_pace_format.dart';
 import '../services/endurance_metrics_calculator.dart';
 import '../services/performance_result_summary_formatter.dart';
 import '../services/running_pace_plausibility.dart';
@@ -367,19 +370,231 @@ class _ForTimeEditor extends StatelessWidget {
   }
 }
 
-class _IntervalEditor extends StatelessWidget {
+class _IntervalEditor extends StatefulWidget {
   const _IntervalEditor({required this.result, required this.onChanged});
   final IntervalResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
 
   @override
+  State<_IntervalEditor> createState() => _IntervalEditorState();
+}
+
+class _IntervalEditorState extends State<_IntervalEditor> {
+  bool _expanded = true;
+  int? _openOrdinal = 1;
+
+  IntervalResultData get _result => widget.result;
+
+  @override
   Widget build(BuildContext context) {
-    return PerformanceNumericField(
-      label:
-          'Intervals completed${result.totalIntervals == null ? '' : ' / ${result.totalIntervals}'}',
-      value: '${result.intervalsCompleted}',
-      onChanged: (value) => onChanged(
-        result.copyWith(intervalsCompleted: int.tryParse(value) ?? 0),
+    if (!_result.usesPerIntervalCapture) {
+      return PerformanceNumericField(
+        label:
+            'Intervals completed${_result.totalIntervals == null ? '' : ' / ${_result.totalIntervals}'}',
+        value: '${_result.intervalsCompleted}',
+        onChanged: (value) => widget.onChanged(
+          _result.copyWith(intervalsCompleted: int.tryParse(value) ?? 0),
+        ),
+      );
+    }
+
+    final prescribed = _result.prescribedCount ?? _result.intervals.length;
+    final recorded = _result.recordedCount;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          button: true,
+          expanded: _expanded,
+          label: 'Interval performance, $recorded of $prescribed recorded',
+          hint: _expanded ? 'Collapse interval performance' : 'Expand interval performance',
+          child: InkWell(
+            onTap: () => setState(() => _expanded = !_expanded),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'INTERVAL PERFORMANCE',
+                        style: CohortTextStyles.sectionLabel,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Interval performance · $recorded of $prescribed recorded',
+                        style: CohortTextStyles.small,
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+              ],
+            ),
+          ),
+        ),
+        if (_expanded) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          for (final row in _result.intervals)
+            _IntervalWorkRow(
+              key: ValueKey('interval-row-${row.ordinal}'),
+              row: row,
+              expanded: _openOrdinal == row.ordinal,
+              autofocus: row.ordinal == 1 && row.state == IntervalWorkState.pending,
+              onToggle: () => setState(() {
+                _openOrdinal = _openOrdinal == row.ordinal ? null : row.ordinal;
+              }),
+              onChanged: (next) {
+                widget.onChanged(_result.replaceInterval(next));
+                if (next.state.countsAsCompleted) {
+                  IntervalWorkResult? upcoming;
+                  for (final item in _result.intervals) {
+                    if (item.ordinal > next.ordinal &&
+                        item.state == IntervalWorkState.pending) {
+                      upcoming = item;
+                      break;
+                    }
+                  }
+                  setState(() => _openOrdinal = upcoming?.ordinal);
+                }
+              },
+            ),
+        ],
+      ],
+    );
+  }
+}
+
+class _IntervalWorkRow extends StatelessWidget {
+  const _IntervalWorkRow({
+    super.key,
+    required this.row,
+    required this.expanded,
+    required this.onToggle,
+    required this.onChanged,
+    this.autofocus = false,
+  });
+
+  final IntervalWorkResult row;
+  final bool expanded;
+  final bool autofocus;
+  final VoidCallback onToggle;
+  final ValueChanged<IntervalWorkResult> onChanged;
+
+  String get _stateLabel {
+    return switch (row.state) {
+      IntervalWorkState.completed =>
+        IntervalPaceFormat.display(row.paceSecondsPerKm),
+      IntervalWorkState.paceUnavailable => 'Pace unavailable',
+      IntervalWorkState.skipped => 'Skipped',
+      IntervalWorkState.pending => 'Not recorded',
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final workLabel = row.workSeconds >= 60 && row.workSeconds % 60 == 0
+        ? '${row.workSeconds ~/ 60}:00 work'
+        : '${row.workSeconds}s work';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+      child: CohortCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: onToggle,
+              child: Semantics(
+                button: true,
+                expanded: expanded,
+                label: 'Interval ${row.ordinal}, $workLabel, $_stateLabel',
+                hint: expanded ? 'Collapse interval' : 'Expand interval',
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Interval ${row.ordinal} · $workLabel',
+                        style: CohortTextStyles.body,
+                      ),
+                    ),
+                    Text(_stateLabel, style: CohortTextStyles.small),
+                    Icon(expanded ? Icons.expand_less : Icons.expand_more),
+                  ],
+                ),
+              ),
+            ),
+            if (expanded) ...[
+              const SizedBox(height: CohortSpacing.sm),
+              IntervalPaceField(
+                key: ValueKey('interval-pace-${row.ordinal}'),
+                secondsPerKm: row.paceSecondsPerKm,
+                enabled: row.state != IntervalWorkState.paceUnavailable &&
+                    row.state != IntervalWorkState.skipped,
+                autofocus: autofocus,
+                onChanged: (pace) => onChanged(
+                  row.copyWith(
+                    paceSecondsPerKm: pace,
+                    clearPace: pace == null,
+                    state: pace == null
+                        ? IntervalWorkState.pending
+                        : IntervalWorkState.completed,
+                  ),
+                ),
+                onSubmitted: (_) {
+                  if (row.paceSecondsPerKm != null) {
+                    onChanged(
+                      row.copyWith(state: IntervalWorkState.completed),
+                    );
+                  }
+                },
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: const Text('Completed'),
+                value: row.state.countsAsCompleted,
+                onChanged: (value) {
+                  if (value == true) {
+                    onChanged(
+                      row.copyWith(
+                        state: row.paceSecondsPerKm == null
+                            ? IntervalWorkState.paceUnavailable
+                            : IntervalWorkState.completed,
+                      ),
+                    );
+                  } else {
+                    onChanged(
+                      row.copyWith(
+                        state: IntervalWorkState.pending,
+                        clearPace: false,
+                      ),
+                    );
+                  }
+                },
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: const Text('Pace unavailable'),
+                value: row.state == IntervalWorkState.paceUnavailable,
+                onChanged: (value) {
+                  if (value == true) {
+                    onChanged(
+                      row.copyWith(
+                        state: IntervalWorkState.paceUnavailable,
+                        clearPace: true,
+                      ),
+                    );
+                  } else {
+                    onChanged(
+                      row.copyWith(state: IntervalWorkState.pending),
+                    );
+                  }
+                },
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }

@@ -65,10 +65,16 @@ class TrainingSetResult {
     int? reps,
     double? load,
     String? loadUnit,
+    double? distance,
+    String? distanceUnit,
+    int? durationSeconds,
     bool? completed,
     int? rpe,
     String? note,
     bool clearLoad = false,
+    bool clearDistance = false,
+    bool clearDurationSeconds = false,
+    bool clearNote = false,
   }) {
     return TrainingSetResult(
       setResultId: setResultId,
@@ -78,12 +84,14 @@ class TrainingSetResult {
       reps: reps ?? this.reps,
       load: clearLoad ? null : (load ?? this.load),
       loadUnit: clearLoad ? null : (loadUnit ?? this.loadUnit),
-      distance: distance,
-      distanceUnit: distanceUnit,
-      durationSeconds: durationSeconds,
+      distance: clearDistance ? null : (distance ?? this.distance),
+      distanceUnit: distanceUnit ?? this.distanceUnit,
+      durationSeconds: clearDurationSeconds
+          ? null
+          : (durationSeconds ?? this.durationSeconds),
       completed: completed ?? this.completed,
       rpe: rpe ?? this.rpe,
-      note: note ?? this.note,
+      note: clearNote ? null : (note ?? this.note),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -98,12 +106,12 @@ class TrainingSetResult {
       if (reps != null) 'reps': reps,
       if (load != null) 'load': load,
       if (loadUnit != null) 'load_unit': loadUnit,
-      if (distance != null) 'distance': distance,
-      if (distanceUnit != null) 'distance_unit': distanceUnit,
-      if (durationSeconds != null) 'duration_seconds': durationSeconds,
+      'distance': distance,
+      'distance_unit': distanceUnit,
+      'duration_seconds': durationSeconds,
       'completed': completed,
       if (rpe != null) 'rpe': rpe,
-      if (note != null) 'note': note,
+      'note': note,
     };
   }
 }

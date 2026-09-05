@@ -1,9 +1,14 @@
 import '../../../models/session_block_type.dart';
+import '../models/interval_work_result.dart';
+import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
 import 'endurance_metrics_calculator.dart';
+import 'interval_pace_format.dart';
+import 'interval_result_comparison.dart';
+import 'interval_result_math.dart';
 import 'performance_result_summary_formatter.dart';
 import 'strength_result_comparison.dart';
 
@@ -75,6 +80,7 @@ class CompletedBlockResultProjection {
     required this.summary,
     required this.exercises,
     this.prescriptionContext,
+    this.interval,
   });
 
   final String title;
@@ -83,6 +89,7 @@ class CompletedBlockResultProjection {
   final String summary;
   final List<CompletedExerciseResultProjection> exercises;
   final String? prescriptionContext;
+  final CompletedIntervalBlockProjection? interval;
 
   factory CompletedBlockResultProjection.fromBlock(
     TrainingBlockResult block, {
@@ -97,26 +104,36 @@ class CompletedBlockResultProjection {
             block.exerciseResults.every(
               (exercise) => exercise.setResults.isEmpty,
             ));
-    final exercises = StrengthResultComparison.authoredExercises(block)
-        .map(
-          (exercise) => CompletedExerciseResultProjection.fromExercise(
-            exercise,
-            current: current,
-            athleteHistory: athleteHistory,
-          ),
-        )
-        .toList(growable: false);
+    final interval = CompletedIntervalBlockProjection.tryFrom(
+      block,
+      current: current,
+      athleteHistory: athleteHistory,
+    );
+    final exercises = interval != null
+        ? const <CompletedExerciseResultProjection>[]
+        : StrengthResultComparison.authoredExercises(block)
+              .map(
+                (exercise) => CompletedExerciseResultProjection.fromExercise(
+                  exercise,
+                  current: current,
+                  athleteHistory: athleteHistory,
+                ),
+              )
+              .toList(growable: false);
     final prescription = block.blockSnapshot.content.trim();
-    final summary = isSimple
+    final summary = interval != null
+        ? interval.collapsedSummary
+        : isSimple
         ? PerformanceResultSummaryFormatter.formatBlock(block)
         : _blockHeadline(block, exercises);
     return CompletedBlockResultProjection(
       title: block.blockSnapshot.title,
       statusLabel: block.status.displayLabel,
-      isSimpleCompletion: isSimple,
+      isSimpleCompletion: isSimple && interval == null,
       summary: summary,
       exercises: exercises,
       prescriptionContext: prescription.isEmpty ? null : prescription,
+      interval: interval,
     );
   }
 
@@ -135,6 +152,158 @@ class CompletedBlockResultProjection {
       return PerformanceResultSummaryFormatter.formatBlock(block);
     }
     return '$setCount set${setCount == 1 ? '' : 's'} recorded';
+  }
+}
+
+class CompletedIntervalRowProjection {
+  const CompletedIntervalRowProjection({
+    required this.ordinal,
+    required this.paceLabel,
+    required this.isFastest,
+    this.previousPaceLabel,
+  });
+
+  final int ordinal;
+  final String paceLabel;
+  final bool isFastest;
+  final String? previousPaceLabel;
+}
+
+class CompletedIntervalBlockProjection {
+  const CompletedIntervalBlockProjection({
+    required this.collapsedSummary,
+    required this.comparisonStatus,
+    required this.familyLabel,
+    required this.rows,
+    required this.metrics,
+    this.personalRecordLabel,
+  });
+
+  final String collapsedSummary;
+  final StrengthExerciseComparisonStatus comparisonStatus;
+  final String familyLabel;
+  final List<CompletedIntervalRowProjection> rows;
+  final List<CompletedPerformanceMetric> metrics;
+  final String? personalRecordLabel;
+
+  static CompletedIntervalBlockProjection? tryFrom(
+    TrainingBlockResult block, {
+    required TrainingSessionRecord current,
+    required List<TrainingSessionRecord> athleteHistory,
+  }) {
+    final data = block.resultData;
+    if (block.resultType != PerformanceResultType.interval ||
+        data is! IntervalResultData ||
+        !data.usesPerIntervalCapture) {
+      return null;
+    }
+    final comparison = IntervalResultComparison.compare(
+      block: block,
+      current: current,
+      athleteHistory: athleteHistory,
+    );
+    final fastest = IntervalResultMath.fastest(data);
+    final previousByOrdinal = {
+      for (final row in comparison.previous?.intervals ?? const <IntervalWorkResult>[])
+        row.ordinal: row,
+    };
+    final rows = [
+      for (final row in data.intervals)
+        CompletedIntervalRowProjection(
+          ordinal: row.ordinal,
+          paceLabel: switch (row.state) {
+            IntervalWorkState.paceUnavailable => 'Pace unavailable',
+            IntervalWorkState.skipped => 'Skipped',
+            IntervalWorkState.completed =>
+              IntervalPaceFormat.display(row.paceSecondsPerKm).isEmpty
+                  ? '—'
+                  : IntervalPaceFormat.display(row.paceSecondsPerKm),
+            IntervalWorkState.pending => 'Not recorded',
+          },
+          isFastest:
+              fastest != null &&
+              row.ordinal == fastest.ordinal &&
+              row.hasValidPace,
+          previousPaceLabel: previousByOrdinal[row.ordinal]?.hasValidPace == true
+              ? IntervalPaceFormat.display(
+                  previousByOrdinal[row.ordinal]!.paceSecondsPerKm,
+                )
+              : null,
+        ),
+    ];
+    final prescribed = data.prescribedCount ?? data.intervals.length;
+    final average = IntervalResultMath.averagePaceSecondsPerKm(data);
+    final previousAvg = comparison.previous == null
+        ? null
+        : IntervalResultMath.averagePaceSecondsPerKm(comparison.previous!);
+    final previousFastest = comparison.previous == null
+        ? null
+        : IntervalResultMath.fastest(comparison.previous!);
+    return CompletedIntervalBlockProjection(
+      collapsedSummary: [
+        '${data.recordedCount}/$prescribed intervals',
+        if (average != null) 'Avg ${IntervalPaceFormat.display(average)}',
+        if (fastest != null)
+          'Fastest ${IntervalPaceFormat.display(fastest.paceSecondsPerKm)}',
+        comparison.status.label,
+      ].join(' · '),
+      comparisonStatus: comparison.status,
+      familyLabel: comparison.familyLabel,
+      rows: rows,
+      personalRecordLabel: comparison.fastestIsPersonalRecord
+          ? comparison.familyLabel
+          : null,
+      metrics: [
+        CompletedPerformanceMetric(
+          key: 'average-pace',
+          title: 'Average pace',
+          value: average == null ? '—' : IntervalPaceFormat.display(average),
+          deltaLabel: average != null && previousAvg != null
+              ? _paceDelta(previousAvg - average)
+              : null,
+          tone: average != null && previousAvg != null
+              ? _paceTone(previousAvg - average)
+              : StrengthMetricTone.none,
+        ),
+        CompletedPerformanceMetric(
+          key: 'fastest-interval',
+          title: 'Fastest interval',
+          value: fastest == null
+              ? '—'
+              : IntervalPaceFormat.display(fastest.paceSecondsPerKm),
+          deltaLabel:
+              fastest != null && previousFastest?.paceSecondsPerKm != null
+              ? _paceDelta(
+                  previousFastest!.paceSecondsPerKm! - fastest.paceSecondsPerKm!,
+                )
+              : null,
+          tone: fastest != null && previousFastest?.paceSecondsPerKm != null
+              ? _paceTone(
+                  previousFastest!.paceSecondsPerKm! - fastest.paceSecondsPerKm!,
+                )
+              : StrengthMetricTone.none,
+        ),
+        CompletedPerformanceMetric(
+          key: 'completion',
+          title: 'Completion',
+          value: '${data.recordedCount}/$prescribed',
+        ),
+      ],
+    );
+  }
+
+  static String? _paceDelta(double fasterBySeconds) {
+    if (fasterBySeconds.abs() < 0.05) return null;
+    final formatted = IntervalPaceFormat.formatSecondsPerKm(
+      fasterBySeconds.abs(),
+    );
+    return fasterBySeconds > 0 ? '−$formatted' : '+$formatted';
+  }
+
+  static StrengthMetricTone _paceTone(double fasterBySeconds) {
+    if (fasterBySeconds > 0.05) return StrengthMetricTone.positive;
+    if (fasterBySeconds < -0.05) return StrengthMetricTone.negative;
+    return StrengthMetricTone.neutral;
   }
 }
 
