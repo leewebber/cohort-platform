@@ -1,6 +1,16 @@
 class IntervalPaceFormat {
   const IntervalPaceFormat._();
 
+  static final RegExp _completePattern = RegExp(r'^(\d{1,3}):([0-5]\d)$');
+
+  static String normalize(String raw) {
+    return raw.trim().toLowerCase().replaceAll('/km', '').trim();
+  }
+
+  static bool isComplete(String raw) {
+    return _completePattern.hasMatch(normalize(raw));
+  }
+
   static String formatSecondsPerKm(double? secondsPerKm) {
     if (secondsPerKm == null || secondsPerKm <= 0) return '';
     final rounded = secondsPerKm.round();
@@ -15,29 +25,14 @@ class IntervalPaceFormat {
   }
 
   static double? parse(String raw) {
-    final trimmed = raw.trim().toLowerCase().replaceAll('/km', '').trim();
+    final trimmed = normalize(raw);
     if (trimmed.isEmpty) return null;
-    final colon = trimmed.split(':');
-    if (colon.length == 2) {
-      final minutes = int.tryParse(colon[0]);
-      final seconds = int.tryParse(colon[1]);
-      if (minutes == null || seconds == null || seconds >= 60 || minutes < 0) {
-        return null;
-      }
-      final total = minutes * 60 + seconds;
-      return total > 0 ? total.toDouble() : null;
-    }
-    if (trimmed.contains('.')) {
-      final minutes = int.tryParse(trimmed.split('.').first);
-      final fraction = trimmed.split('.').last.padRight(2, '0').substring(0, 2);
-      final seconds = int.tryParse(fraction);
-      if (minutes == null || seconds == null || seconds >= 60) return null;
-      final total = minutes * 60 + seconds;
-      return total > 0 ? total.toDouble() : null;
-    }
-    final whole = int.tryParse(trimmed);
-    if (whole == null || whole <= 0) return null;
-    return whole.toDouble();
+    final match = _completePattern.firstMatch(trimmed);
+    if (match == null) return null;
+    final minutes = int.parse(match[1]!);
+    final seconds = int.parse(match[2]!);
+    final total = minutes * 60 + seconds;
+    return total > 0 ? total.toDouble() : null;
   }
 
   static bool isPlausible(double? secondsPerKm) {

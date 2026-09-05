@@ -261,6 +261,7 @@ class _ResultEditorBody extends StatelessWidget {
         );
       case BlockCaptureMode.interval:
         return _IntervalEditor(
+          key: ValueKey('interval-editor-${blockDraft.sourceBlockId}'),
           result:
               blockDraft.resultData as IntervalResultData? ??
               const IntervalResultData(),
@@ -371,7 +372,11 @@ class _ForTimeEditor extends StatelessWidget {
 }
 
 class _IntervalEditor extends StatefulWidget {
-  const _IntervalEditor({required this.result, required this.onChanged});
+  const _IntervalEditor({
+    super.key,
+    required this.result,
+    required this.onChanged,
+  });
   final IntervalResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
 
@@ -382,8 +387,28 @@ class _IntervalEditor extends StatefulWidget {
 class _IntervalEditorState extends State<_IntervalEditor> {
   bool _expanded = true;
   int? _openOrdinal = 1;
+  int? _focusOrdinal = 1;
 
   IntervalResultData get _result => widget.result;
+
+  int? _nextPendingOrdinal(int afterOrdinal) {
+    for (final item in _result.intervals) {
+      if (item.ordinal > afterOrdinal &&
+          item.state == IntervalWorkState.pending) {
+        return item.ordinal;
+      }
+    }
+    return null;
+  }
+
+  void _persistRow(IntervalWorkResult next, {required bool advanceIfRecorded}) {
+    widget.onChanged(_result.replaceInterval(next));
+    if (!advanceIfRecorded || !next.state.countsAsCompleted) return;
+    setState(() {
+      _openOrdinal = _nextPendingOrdinal(next.ordinal);
+      _focusOrdinal = _openOrdinal;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -440,24 +465,13 @@ class _IntervalEditorState extends State<_IntervalEditor> {
               key: ValueKey('interval-row-${row.ordinal}'),
               row: row,
               expanded: _openOrdinal == row.ordinal,
-              autofocus: row.ordinal == 1 && row.state == IntervalWorkState.pending,
+              autofocus: _focusOrdinal == row.ordinal,
               onToggle: () => setState(() {
                 _openOrdinal = _openOrdinal == row.ordinal ? null : row.ordinal;
+                _focusOrdinal = _openOrdinal;
               }),
-              onChanged: (next) {
-                widget.onChanged(_result.replaceInterval(next));
-                if (next.state.countsAsCompleted) {
-                  IntervalWorkResult? upcoming;
-                  for (final item in _result.intervals) {
-                    if (item.ordinal > next.ordinal &&
-                        item.state == IntervalWorkState.pending) {
-                      upcoming = item;
-                      break;
-                    }
-                  }
-                  setState(() => _openOrdinal = upcoming?.ordinal);
-                }
-              },
+              onPersist: (next) => _persistRow(next, advanceIfRecorded: false),
+              onRecorded: (next) => _persistRow(next, advanceIfRecorded: true),
             ),
         ],
       ],
@@ -465,13 +479,14 @@ class _IntervalEditorState extends State<_IntervalEditor> {
   }
 }
 
-class _IntervalWorkRow extends StatelessWidget {
+class _IntervalWorkRow extends StatefulWidget {
   const _IntervalWorkRow({
     super.key,
     required this.row,
     required this.expanded,
     required this.onToggle,
-    required this.onChanged,
+    required this.onPersist,
+    required this.onRecorded,
     this.autofocus = false,
   });
 
@@ -479,7 +494,20 @@ class _IntervalWorkRow extends StatelessWidget {
   final bool expanded;
   final bool autofocus;
   final VoidCallback onToggle;
-  final ValueChanged<IntervalWorkResult> onChanged;
+  final ValueChanged<IntervalWorkResult> onPersist;
+  final ValueChanged<IntervalWorkResult> onRecorded;
+
+  @override
+  State<_IntervalWorkRow> createState() => _IntervalWorkRowState();
+}
+
+class _IntervalWorkRowState extends State<_IntervalWorkRow> {
+  final GlobalKey<IntervalPaceFieldState> _paceKey =
+      GlobalKey<IntervalPaceFieldState>();
+  String? _errorText;
+  String _draft = '';
+
+  IntervalWorkResult get row => widget.row;
 
   String get _stateLabel {
     return switch (row.state) {
@@ -489,6 +517,29 @@ class _IntervalWorkRow extends StatelessWidget {
       IntervalWorkState.skipped => 'Skipped',
       IntervalWorkState.pending => 'Not recorded',
     };
+  }
+
+  double? _draftPace() {
+    final text = _paceKey.currentState?.draftText ?? _draft;
+    return IntervalPaceFormat.parse(text);
+  }
+
+  bool _tryRecordCompleted() {
+    final pace = _draftPace() ?? row.paceSecondsPerKm;
+    if (pace == null) {
+      setState(() {
+        _errorText = 'Enter pace as MM:SS /km';
+      });
+      return false;
+    }
+    setState(() => _errorText = null);
+    widget.onRecorded(
+      row.copyWith(
+        paceSecondsPerKm: pace,
+        state: IntervalWorkState.completed,
+      ),
+    );
+    return true;
   }
 
   @override
@@ -503,12 +554,12 @@ class _IntervalWorkRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InkWell(
-              onTap: onToggle,
+              onTap: widget.onToggle,
               child: Semantics(
                 button: true,
-                expanded: expanded,
+                expanded: widget.expanded,
                 label: 'Interval ${row.ordinal}, $workLabel, $_stateLabel',
-                hint: expanded ? 'Collapse interval' : 'Expand interval',
+                hint: widget.expanded ? 'Collapse interval' : 'Expand interval',
                 child: Row(
                   children: [
                     Expanded(
@@ -518,35 +569,41 @@ class _IntervalWorkRow extends StatelessWidget {
                       ),
                     ),
                     Text(_stateLabel, style: CohortTextStyles.small),
-                    Icon(expanded ? Icons.expand_less : Icons.expand_more),
+                    Icon(widget.expanded ? Icons.expand_less : Icons.expand_more),
                   ],
                 ),
               ),
             ),
-            if (expanded) ...[
+            if (widget.expanded) ...[
               const SizedBox(height: CohortSpacing.sm),
               IntervalPaceField(
-                key: ValueKey('interval-pace-${row.ordinal}'),
+                key: _paceKey,
                 secondsPerKm: row.paceSecondsPerKm,
                 enabled: row.state != IntervalWorkState.paceUnavailable &&
                     row.state != IntervalWorkState.skipped,
-                autofocus: autofocus,
-                onChanged: (pace) => onChanged(
-                  row.copyWith(
-                    paceSecondsPerKm: pace,
-                    clearPace: pace == null,
-                    state: pace == null
-                        ? IntervalWorkState.pending
-                        : IntervalWorkState.completed,
-                  ),
-                ),
-                onSubmitted: (_) {
-                  if (row.paceSecondsPerKm != null) {
-                    onChanged(
-                      row.copyWith(state: IntervalWorkState.completed),
-                    );
+                autofocus: widget.autofocus,
+                errorText: _errorText,
+                onDraftChanged: (value) {
+                  _draft = value;
+                  if (_errorText != null) {
+                    setState(() => _errorText = null);
                   }
                 },
+                onChanged: (pace) {
+                  final nextState = pace == null
+                      ? (row.state == IntervalWorkState.completed
+                            ? IntervalWorkState.pending
+                            : row.state)
+                      : row.state;
+                  widget.onPersist(
+                    row.copyWith(
+                      paceSecondsPerKm: pace,
+                      clearPace: pace == null,
+                      state: nextState,
+                    ),
+                  );
+                },
+                onSubmitted: (_) => _tryRecordCompleted(),
               ),
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
@@ -555,21 +612,16 @@ class _IntervalWorkRow extends StatelessWidget {
                 value: row.state.countsAsCompleted,
                 onChanged: (value) {
                   if (value == true) {
-                    onChanged(
-                      row.copyWith(
-                        state: row.paceSecondsPerKm == null
-                            ? IntervalWorkState.paceUnavailable
-                            : IntervalWorkState.completed,
-                      ),
-                    );
-                  } else {
-                    onChanged(
-                      row.copyWith(
-                        state: IntervalWorkState.pending,
-                        clearPace: false,
-                      ),
-                    );
+                    _tryRecordCompleted();
+                    return;
                   }
+                  setState(() => _errorText = null);
+                  widget.onPersist(
+                    row.copyWith(
+                      state: IntervalWorkState.pending,
+                      clearPace: false,
+                    ),
+                  );
                 },
               ),
               CheckboxListTile(
@@ -578,18 +630,19 @@ class _IntervalWorkRow extends StatelessWidget {
                 title: const Text('Pace unavailable'),
                 value: row.state == IntervalWorkState.paceUnavailable,
                 onChanged: (value) {
+                  setState(() => _errorText = null);
                   if (value == true) {
-                    onChanged(
+                    widget.onRecorded(
                       row.copyWith(
                         state: IntervalWorkState.paceUnavailable,
                         clearPace: true,
                       ),
                     );
-                  } else {
-                    onChanged(
-                      row.copyWith(state: IntervalWorkState.pending),
-                    );
+                    return;
                   }
+                  widget.onPersist(
+                    row.copyWith(state: IntervalWorkState.pending),
+                  );
                 },
               ),
             ],

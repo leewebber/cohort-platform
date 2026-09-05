@@ -64,6 +64,11 @@ void main() {
     expect(IntervalPaceFormat.parse('4:10 /km'), 250);
     expect(IntervalPaceFormat.formatSecondsPerKm(248), '4:08');
     expect(IntervalPaceFormat.parse('4:99'), isNull);
+    expect(IntervalPaceFormat.parse('4'), isNull);
+    expect(IntervalPaceFormat.parse('4:'), isNull);
+    expect(IntervalPaceFormat.parse('4:1'), isNull);
+    expect(IntervalPaceFormat.isComplete('4:10'), isTrue);
+    expect(IntervalPaceFormat.isComplete('4:1'), isFalse);
   });
 
   test('completion count is derived from recorded rows', () {
@@ -273,5 +278,263 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     expect(find.textContaining('Interval performance'), findsWidgets);
+  });
+
+  testWidgets('character entry keeps interval 1 open until explicit complete', (
+    tester,
+  ) async {
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _enginePlan(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 15,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: BlockResultEditor(
+                  blockDraft: controller.draft.blockDrafts.single,
+                  onResultChanged: (data) {
+                    controller.updateBlockResultData(blockId, data);
+                    setState(() {});
+                  },
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    final field = find.byType(TextField);
+    expect(field, findsOneWidget);
+    await tester.tap(field);
+    await tester.pump();
+
+    Future<void> type(String value) async {
+      await tester.enterText(field, value);
+      await tester.pump();
+    }
+
+    await type('4');
+    expect(tester.widget<TextField>(field).controller!.text, '4');
+    expect(field, findsOneWidget);
+    expect(find.text('Enter pace as MM:SS /km'), findsNothing);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+
+    await type('4:');
+    expect(tester.widget<TextField>(field).controller!.text, '4:');
+    expect(field, findsOneWidget);
+
+    await type('4:1');
+    expect(tester.widget<TextField>(field).controller!.text, '4:1');
+    expect(field, findsOneWidget);
+
+    await type('4:10');
+    expect(tester.widget<TextField>(field).controller!.text, '4:10');
+    expect(field, findsOneWidget);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .intervals
+          .first
+          .state,
+      IntervalWorkState.pending,
+    );
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+
+    await tester.enterText(field, '4:1');
+    await tester.pump();
+    expect(tester.widget<TextField>(field).controller!.text, '4:1');
+    expect(field, findsOneWidget);
+
+    await tester.enterText(field, '4:10');
+    await tester.pump();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Completed'));
+    await tester.pump();
+
+    final recorded =
+        controller.draft.blockDrafts.single.resultData as IntervalResultData;
+    expect(recorded.intervals.first.state, IntervalWorkState.completed);
+    expect(recorded.intervals.first.paceSecondsPerKm, 250);
+    expect(recorded.recordedCount, 1);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      isNot('4:10'),
+    );
+  });
+
+  testWidgets('invalid seconds stay open and do not record', (tester) async {
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _enginePlan(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 16,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: BlockResultEditor(
+                  blockDraft: controller.draft.blockDrafts.single,
+                  onResultChanged: (data) {
+                    controller.updateBlockResultData(blockId, data);
+                    setState(() {});
+                  },
+                  onAddSet: (_) {},
+                  onUpdateSet: (_, _, _) {},
+                  onDuplicateSet: (_, _) {},
+                  onRemoveSet: (_, _) {},
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '4:99');
+    await tester.pump();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Completed'));
+    await tester.pump();
+    expect(find.text('Enter pace as MM:SS /km'), findsOneWidget);
+    expect(find.byType(TextField), findsOneWidget);
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .recordedCount,
+      0,
+    );
+  });
+
+  testWidgets('paste and rebuild during focus keep the draft', (tester) async {
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _enginePlan(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 17,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+
+    Widget editor() {
+      return MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return BlockResultEditor(
+                blockDraft: controller.draft.blockDrafts.single,
+                onResultChanged: (data) {
+                  controller.updateBlockResultData(blockId, data);
+                  setState(() {});
+                },
+                onAddSet: (_) {},
+                onUpdateSet: (_, _, _) {},
+                onDuplicateSet: (_, _) {},
+                onRemoveSet: (_, _) {},
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    await tester.pumpWidget(editor());
+    final field = find.byType(TextField);
+    await tester.tap(field);
+    await tester.pump();
+    await tester.enterText(field, '4');
+    await tester.pump();
+    await tester.pumpWidget(editor());
+    await tester.pump();
+    expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, '4');
+    await tester.enterText(find.byType(TextField), '4:10');
+    await tester.pump();
+    expect(tester.widget<TextField>(find.byType(TextField)).controller!.text, '4:10');
+    expect(
+      (controller.draft.blockDrafts.single.resultData as IntervalResultData)
+          .intervals
+          .first
+          .state,
+      IntervalWorkState.pending,
+    );
+  });
+
+  testWidgets('resume and relaunch keep five interval identities', (
+    tester,
+  ) async {
+    final store = InMemoryPerformanceRecordStore();
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _enginePlan(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 18,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return BlockResultEditor(
+                blockDraft: controller.draft.blockDrafts.single,
+                onResultChanged: (data) {
+                  controller.updateBlockResultData(blockId, data);
+                  setState(() {});
+                },
+                onAddSet: (_) {},
+                onUpdateSet: (_, _, _) {},
+                onDuplicateSet: (_, _) {},
+                onRemoveSet: (_, _) {},
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '4:10');
+    await tester.pump();
+    await tester.tap(find.widgetWithText(CheckboxListTile, 'Completed'));
+    await tester.pump();
+    await store.saveDraft(controller.draft);
+    final resumed = await store.getInProgressForTrainingSession(
+      athleteId: 'athlete-1',
+      trainingSessionId: 18,
+    );
+    final ids = resumed!.blockResults.single.exerciseResults.single.setResults
+        .map((set) => set.setResultId)
+        .toList();
+    expect(ids, hasLength(5));
+    expect(ids.toSet(), hasLength(5));
+    expect(
+      (resumed.blockResults.single.resultData as IntervalResultData)
+          .intervals
+          .first
+          .paceSecondsPerKm,
+      250,
+    );
+    await store.saveDraft(controller.draft);
+    final relaunched = await store.getInProgressForTrainingSession(
+      athleteId: 'athlete-1',
+      trainingSessionId: 18,
+    );
+    expect(
+      relaunched!.blockResults.single.exerciseResults.single.setResults
+          .map((set) => set.setResultId),
+      ids,
+    );
   });
 }
