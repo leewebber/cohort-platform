@@ -13,6 +13,7 @@ import '../../performance/repositories/performance_record_store.dart';
 import '../../performance/repositories/supabase_performance_record_store.dart';
 import '../../performance/services/performance_result_summary_formatter.dart';
 import '../../performance/widgets/completed_session_result_view.dart';
+import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../../session/widgets/athlete/athlete_block_card.dart';
@@ -41,6 +42,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
   PerformanceRecordStore? performanceRecordStore,
   FutureProgrammeSessionSwapStore? swapStore,
   FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore,
+  HomeTodaySessionRefreshController? refreshController,
 }) {
   return Navigator.of(context).push<bool>(
     MaterialPageRoute(
@@ -55,6 +57,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
         performanceRecordStore: performanceRecordStore,
         swapStore: swapStore,
         fixedOccurrenceStore: fixedOccurrenceStore,
+        refreshController: refreshController,
       ),
     ),
   );
@@ -73,6 +76,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
     this.performanceRecordStore,
     this.swapStore,
     this.fixedOccurrenceStore,
+    this.refreshController,
   });
 
   final String athleteId;
@@ -85,6 +89,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
+  final HomeTodaySessionRefreshController? refreshController;
 
   @override
   State<ScheduledProgrammeSessionPreviewScreen> createState() =>
@@ -461,10 +466,12 @@ class _ScheduledProgrammeSessionPreviewScreenState
           AthleteCatalogueEnrolmentServices.createPrepareService();
       final prepared = await prepare.prepareFixedOccurrence(assignment, moved);
       if (!prepared.isReady) {
+        await _reloadAuthoritativeSurfaces(source: 'swap_prepare_failed');
         throw StateError(
           prepared.message ?? 'This session could not be prepared safely.',
         );
       }
+      await _reloadAuthoritativeSurfaces(source: 'swap_and_begin');
       if (!mounted) return;
       await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
           .launch(
@@ -519,6 +526,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
           prepared.message ?? 'This session could not be prepared safely.',
         );
       }
+      await _reloadAuthoritativeSurfaces(source: 'preview_begin');
       if (!mounted) return;
       await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
           .launch(
@@ -538,6 +546,15 @@ class _ScheduledProgrammeSessionPreviewScreenState
       );
       setState(() => _isOpeningSession = false);
     }
+  }
+
+  HomeTodaySessionRefreshController? get _surfaceRefresh =>
+      widget.refreshController ??
+      AthleteProgrammeSurfaceRefreshScope.maybeOf(context);
+
+  Future<void> _reloadAuthoritativeSurfaces({required String source}) {
+    return _surfaceRefresh?.reloadAuthoritativeSurfaces(source: source) ??
+        Future<void>.value();
   }
 
   Future<void> _openExercise(SessionExecutionExerciseSummary summary) async {

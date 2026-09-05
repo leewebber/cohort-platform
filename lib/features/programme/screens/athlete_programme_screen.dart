@@ -76,11 +76,16 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   void initState() {
     super.initState();
     _controller.addListener(_onChanged);
+    widget.refreshController?.attachSurface(
+      this,
+      ({required String source}) => _loadProgramme(),
+    );
     _loadProgramme();
   }
 
   @override
   void dispose() {
+    widget.refreshController?.detachSurface(this);
     _controller.removeListener(_onChanged);
     super.dispose();
   }
@@ -495,6 +500,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       executionLauncher: widget.executionLauncher,
       swapStore: widget.swapStore,
       fixedOccurrenceStore: widget.fixedOccurrenceStore,
+      refreshController: widget.refreshController,
     );
     if (changed == true && mounted) await _loadFixedCalendar();
   }

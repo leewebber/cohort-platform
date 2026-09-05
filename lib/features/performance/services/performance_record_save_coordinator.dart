@@ -107,8 +107,14 @@ class PerformanceRecordSaveCoordinator {
     }
 
     final status = forcedStatus ?? controller.resolveCompletionStatus();
+    await _store.saveDraft(
+      controller.buildPersistableDraft(
+        status: TrainingSessionRecordStatus.inProgress,
+      ),
+    );
     final persistableDraft = controller.buildPersistableDraft(status: status);
     final record = await _store.completeRecord(persistableDraft);
+    final committed = await _store.getById(record.recordId) ?? record;
 
     final endedEarly = status != TrainingSessionRecordStatus.completed;
     await _trainingSessionRepository.completeSession(
@@ -121,7 +127,7 @@ class PerformanceRecordSaveCoordinator {
       ),
     );
 
-    return PerformanceCompletionResult(record: record);
+    return PerformanceCompletionResult(record: committed);
   }
 
   Future<PerformanceCompletionResult> _completeProgrammeBacked({
@@ -202,8 +208,9 @@ class PerformanceRecordSaveCoordinator {
       );
     }
 
+    final committed = await _store.getById(record.recordId) ?? record;
     return PerformanceCompletionResult(
-      record: record,
+      record: committed,
       progressionFailed: false,
       programmeCompletion: programmeCompletion,
       adaptationResult: adaptationResult,

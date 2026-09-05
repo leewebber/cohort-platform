@@ -6,6 +6,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
+import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
@@ -30,6 +31,7 @@ class AthleteCalendarScreen extends StatefulWidget {
     this.prepareService,
     this.executionLauncher,
     this.swapStore,
+    this.refreshController,
     this.onOpenProgrammes,
     this.authRefreshListenable,
   });
@@ -40,6 +42,7 @@ class AthleteCalendarScreen extends StatefulWidget {
   final ProgrammeAssignmentStore? assignmentStore;
   final AthleteProgrammeSessionPrepareService? prepareService;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final HomeTodaySessionRefreshController? refreshController;
   final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenProgrammes;
 
@@ -62,6 +65,10 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   void initState() {
     super.initState();
     widget.authRefreshListenable?.addListener(_reloadForAuthentication);
+    widget.refreshController?.attachSurface(
+      this,
+      ({required String source}) => _load(),
+    );
     _load();
   }
 
@@ -75,10 +82,18 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     if (oldWidget.athleteId != widget.athleteId) {
       unawaited(_load());
     }
+    if (oldWidget.refreshController != widget.refreshController) {
+      oldWidget.refreshController?.detachSurface(this);
+      widget.refreshController?.attachSurface(
+        this,
+        ({required String source}) => _load(),
+      );
+    }
   }
 
   @override
   void dispose() {
+    widget.refreshController?.detachSurface(this);
     widget.authRefreshListenable?.removeListener(_reloadForAuthentication);
     super.dispose();
   }
@@ -297,6 +312,7 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       executionLauncher: widget.executionLauncher,
       swapStore: widget.swapStore,
       fixedOccurrenceStore: widget.fixedOccurrenceStore,
+      refreshController: widget.refreshController,
     );
     if (changed == true && mounted) await _load();
   }

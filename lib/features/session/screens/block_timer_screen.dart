@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../services/block_timer_controller.dart';
@@ -112,29 +114,67 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
               if (state != null) ...[
                 Text(state.phaseLabel, style: CohortTextStyles.body),
                 const SizedBox(height: CohortSpacing.sm),
-                Text(
-                  _formatTime(state.primarySeconds),
-                  style: CohortTextStyles.h1.copyWith(fontSize: 56),
-                ),
                 if (state.totalRounds > 1)
                   Text(
                     widget.format == WorkoutFormat.emom
-                        ? 'Minute ${state.currentRound} of ${state.totalRounds}'
-                        : 'Round ${state.currentRound} of ${state.totalRounds}',
-                    style: CohortTextStyles.small,
+                        ? 'MINUTE ${state.currentRound} OF ${state.totalRounds}'
+                        : 'ROUND ${state.currentRound} OF ${state.totalRounds}',
+                    key: const ValueKey('block-timer-position'),
+                    style: CohortTextStyles.eyebrow,
                   ),
                 if (state.currentStationLabel != null) ...[
                   const SizedBox(height: CohortSpacing.sm),
                   Text(
-                    'Now ${state.currentStationLabel}',
-                    style: CohortTextStyles.body,
+                    state.currentStationLabel!.toUpperCase(),
+                    key: const ValueKey('block-timer-current-station'),
+                    style: CohortTextStyles.h2,
                   ),
                 ],
-                if (state.nextStationLabel != null)
+                if (state.currentStationTarget != null) ...[
+                  const SizedBox(height: CohortSpacing.xs),
                   Text(
-                    'Next ${state.nextStationLabel}',
-                    style: CohortTextStyles.small,
+                    state.currentStationTarget!.toUpperCase(),
+                    key: const ValueKey('block-timer-current-target'),
+                    style: CohortTextStyles.cardTitle,
                   ),
+                ],
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  _formatTime(state.primarySeconds),
+                  key: const ValueKey('block-timer-clock'),
+                  style: CohortTextStyles.h1.copyWith(fontSize: 64),
+                ),
+                if (AuthoredStationTargetFormatter.nextStationLine(
+                      label: state.nextStationLabel,
+                      target: state.nextStationTarget,
+                    )
+                    case final next?) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  Text(
+                    next,
+                    key: const ValueKey('block-timer-next-station'),
+                    style: CohortTextStyles.small.copyWith(
+                      color: CohortColors.textSecondary,
+                    ),
+                  ),
+                ],
+                Semantics(
+                  label: [
+                    if (state.totalRounds > 1)
+                      widget.format == WorkoutFormat.emom
+                          ? 'Minute ${state.currentRound} of ${state.totalRounds}'
+                          : 'Round ${state.currentRound} of ${state.totalRounds}',
+                    if (state.currentStationLabel != null)
+                      state.currentStationLabel,
+                    if (state.currentStationTarget != null)
+                      'Target ${state.currentStationTarget}',
+                    'Time remaining ${_formatTime(state.primarySeconds)}',
+                    ?AuthoredStationTargetFormatter.nextStationLine(
+                      label: state.nextStationLabel,
+                      target: state.nextStationTarget,
+                    ),
+                  ].join('. '),
+                ),
               ],
               const Spacer(),
               if (widget.format == WorkoutFormat.rounds &&

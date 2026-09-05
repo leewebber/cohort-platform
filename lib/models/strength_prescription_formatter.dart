@@ -1,4 +1,5 @@
 import '../core/presentation/athlete_duration_formatter.dart';
+import 'authored_station_target_formatter.dart';
 import 'strength_exercise_prescription.dart';
 
 /// Athlete- and coach-facing formatting for structured strength prescriptions.
@@ -7,6 +8,10 @@ class StrengthPrescriptionFormatter {
 
   static String formatSetsReps(StrengthExercisePrescription prescription) {
     final setsLabel = prescription.sets > 0 ? '${prescription.sets}' : '—';
+    final distance = prescription.authoredDistanceLabel;
+    if (distance != null) {
+      return '$setsLabel × $distance';
+    }
     final repsLabel =
         '${formatReps(prescription.reps)}'
         '${prescription.perSide ? ' / side' : ''}';

@@ -1,4 +1,5 @@
 import '../../performance/models/circuit_station_actual.dart';
+import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import 'block_timer_controller.dart';
@@ -56,11 +57,13 @@ class CircuitBlockTimerBridge {
         configuration,
         stationLabels,
       ),
+      currentStationTarget: _stationTarget(occurrence, configuration),
       nextStationLabel: _stationLabel(
         occurrence + 1,
         configuration,
         stationLabels,
       ),
+      nextStationTarget: _stationTarget(occurrence + 1, configuration),
     );
   }
 
@@ -69,11 +72,28 @@ class CircuitBlockTimerBridge {
     TimerConfiguration configuration,
     Map<String, String> stationLabels,
   ) {
-    final stations = configuration.stations;
-    if (stations.isEmpty || occurrence < 1) return null;
-    final spec = stations[(occurrence - 1) % stations.length];
+    final spec = _spec(occurrence, configuration);
+    if (spec == null) return null;
     final label = stationLabels[spec.exerciseId]?.trim();
     return (label != null && label.isNotEmpty) ? label : spec.exerciseId;
+  }
+
+  static String? _stationTarget(
+    int occurrence,
+    TimerConfiguration configuration,
+  ) {
+    final spec = _spec(occurrence, configuration);
+    if (spec == null) return null;
+    return AuthoredStationTargetFormatter.fromTimerSpec(spec);
+  }
+
+  static TimerStationSpec? _spec(
+    int occurrence,
+    TimerConfiguration configuration,
+  ) {
+    final stations = configuration.stations;
+    if (stations.isEmpty || occurrence < 1) return null;
+    return stations[(occurrence - 1) % stations.length];
   }
 
   static int _emomIntervals(TimerConfiguration configuration) {

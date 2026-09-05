@@ -459,12 +459,35 @@ class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> 
             ),
             for (final row in grouped[round]!)
               Text(
-                '${row.displayName}: ${_stationActualLabel(row)}',
+                '${row.displayName}: ${_stationPrescribedLabel(row)}'
+                ' · ${_stationActualLabel(row)}',
                 style: CohortTextStyles.small,
               ),
           ],
       ],
     );
+  }
+
+  static String _stationPrescribedLabel(CircuitStationActual row) {
+    return switch (row.primaryMetric) {
+      CircuitStationMetric.calories =>
+        row.prescribedCalories == null
+            ? 'Prescribed —'
+            : 'Prescribed ${row.prescribedCalories} cal',
+      CircuitStationMetric.reps =>
+        row.prescribedReps == null
+            ? 'Prescribed —'
+            : 'Prescribed ${row.prescribedReps} reps',
+      CircuitStationMetric.distance =>
+        row.prescribedDistanceMeters == null &&
+                (row.prescribedDistanceText == null ||
+                    row.prescribedDistanceText!.trim().isEmpty)
+            ? 'Prescribed —'
+            : 'Prescribed ${row.prescribedDistanceMeters ?? row.prescribedDistanceText} ${row.distanceUnit}',
+      CircuitStationMetric.duration => 'Prescribed time',
+      CircuitStationMetric.load => 'Prescribed load',
+      CircuitStationMetric.completion => 'Prescribed completion',
+    };
   }
 
   static String _stationActualLabel(CircuitStationActual row) {
@@ -875,7 +898,12 @@ class _RecordedSetRow extends StatelessWidget {
       container: true,
       label: [
         'Set ${set.setNumber}',
-        if (set.reps != null) '${set.reps} reps',
+        if (set.actualDistanceLabel != null)
+          'Actual ${set.actualDistanceLabel}'
+        else if (set.reps != null)
+          '${set.reps} reps',
+        if (set.prescribedDistanceLabel != null)
+          'Prescribed ${set.prescribedDistanceLabel}',
         if (set.loadLabel != null) set.loadLabel,
         set.stateLabel,
         if (set.isBestSet) 'Best completed set',
@@ -904,7 +932,8 @@ class _RecordedSetRow extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Text(
-                  set.reps == null ? '—' : '${set.reps} ×',
+                  set.actualDistanceLabel ??
+                      (set.reps == null ? '—' : '${set.reps} ×'),
                   style: CohortTextStyles.body.copyWith(
                     color: CohortColors.textPrimary,
                     fontWeight: FontWeight.w600,
@@ -1289,13 +1318,31 @@ class _CorrectionSetRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Set ${set.setNumber}', style: CohortTextStyles.eyebrow),
-          PerformanceNumericField(
-            label: 'Reps',
-            value: set.reps?.toString() ?? '',
-            onChanged: (value) => onChanged(
-              (current) => current.copyWith(reps: int.tryParse(value)),
+          if (set.distanceUnit?.trim().isNotEmpty == true ||
+              set.distance != null)
+            PerformanceNumericField(
+              label: 'Distance (${set.distanceUnit ?? 'm'})',
+              value: set.distance?.toString() ?? '',
+              allowDecimal: true,
+              onChanged: (value) {
+                final parsed = double.tryParse(value);
+                onChanged(
+                  (current) => current.copyWith(
+                    distance: parsed,
+                    distanceUnit: current.distanceUnit ?? 'm',
+                    clearDistance: parsed == null,
+                  ),
+                );
+              },
+            )
+          else
+            PerformanceNumericField(
+              label: 'Reps',
+              value: set.reps?.toString() ?? '',
+              onChanged: (value) => onChanged(
+                (current) => current.copyWith(reps: int.tryParse(value)),
+              ),
             ),
-          ),
           if (loadKind.expectsExternalLoad)
             PerformanceNumericField(
               label: 'Load',

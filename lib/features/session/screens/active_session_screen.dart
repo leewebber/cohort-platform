@@ -5,6 +5,7 @@ import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
+import '../../../features/home/controllers/home_today_session_refresh_controller.dart';
 import '../../../features/programme/models/programme_execution_context.dart';
 import '../../../features/programme/models/programme_progress_summary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
@@ -35,6 +36,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.athleteId,
     this.saveCoordinator,
     this.workoutLaunchContext,
+    this.refreshController,
   });
 
   final SessionExecutionController controller;
@@ -45,6 +47,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final String? athleteId;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
   final WorkoutSessionLaunchContext? workoutLaunchContext;
+  final HomeTodaySessionRefreshController? refreshController;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -62,6 +65,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   int _savedRevision = 0;
   bool _lastSaveSucceeded = true;
   bool _isLeaving = false;
+  bool _completionLocked = false;
 
   @override
   void initState() {
@@ -72,6 +76,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   }
 
   Future<bool> _persistDraft() {
+    if (_completionLocked) return Future.value(true);
     if (widget.trainingSessionId == null || widget.athleteId == null) {
       return Future.value(true);
     }
@@ -235,12 +240,21 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   }
 
   Future<void> _finishSession() async {
+    if (_completionLocked || _saveState == PerformanceSaveState.completing) {
+      return;
+    }
     final state = _controller.state;
     final eligibility = const SessionFinishEligibilityEvaluator().evaluate(
       incompleteBlockCount: state.incompleteCount,
       performanceDraft: _performanceController.draft,
     );
-    if (!eligibility.canFinish) return;
+    if (!eligibility.canFinish) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(eligibility.reason)),
+      );
+      return;
+    }
 
     if (!mounted) return;
     final trainingSessionId = widget.trainingSessionId;
@@ -251,6 +265,26 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
       return;
     }
 
+    setState(() {
+      _saveState = PerformanceSaveState.completing;
+      _saveError = null;
+    });
+    final flushed = await _ensureLatestDraftSaved();
+    if (!flushed) {
+      if (!mounted) return;
+      setState(() {
+        _saveState = PerformanceSaveState.error;
+        _saveError =
+            _saveError ??
+            'Could not save the latest station values. The session is still in progress.';
+      });
+      return;
+    }
+    _completionLocked = true;
+    if (!mounted) {
+      _completionLocked = false;
+      return;
+    }
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SessionFinishReviewScreen(
@@ -263,9 +297,22 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           saveCoordinator: _saveCoordinator,
           homeWorkoutExecution:
               widget.workoutLaunchContext?.homeWorkoutExecution,
+          flushPendingTree: _ensureLatestDraftSaved,
+          onAuthoritativeReload: () {
+            return (AthleteProgrammeSurfaceRefreshScope.maybeOf(context) ??
+                    widget.refreshController)
+                ?.reloadAuthoritativeSurfaces(source: 'session_completed');
+          },
         ),
       ),
     );
+    if (!mounted) return;
+    _completionLocked = false;
+    setState(() {
+      if (_saveState == PerformanceSaveState.completing) {
+        _saveState = PerformanceSaveState.saved;
+      }
+    });
   }
 
   void _syncBlockComplete(String blockId) {
@@ -469,7 +516,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                 ],
                 const SizedBox(height: CohortSpacing.xl),
                 CohortButton(
-                  label: 'Finish Session',
+                  label: _saveState == PerformanceSaveState.completing
+                      ? 'Completing…'
+                      : 'Finish Session',
                   onPressed: finishEligibility.canFinish
                       ? _finishSession
                       : null,

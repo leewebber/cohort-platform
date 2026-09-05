@@ -30,6 +30,8 @@ class SessionFinishReviewScreen extends StatefulWidget {
     this.programmeProgress,
     this.saveCoordinator,
     this.homeWorkoutExecution,
+    this.flushPendingTree,
+    this.onAuthoritativeReload,
   });
 
   final PerformanceCaptureController performanceController;
@@ -40,6 +42,8 @@ class SessionFinishReviewScreen extends StatefulWidget {
   final ProgrammeProgressSummary? programmeProgress;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
   final HomeWorkoutExecutionContext? homeWorkoutExecution;
+  final Future<bool> Function()? flushPendingTree;
+  final Future<void>? Function()? onAuthoritativeReload;
 
   @override
   State<SessionFinishReviewScreen> createState() =>
@@ -73,7 +77,10 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
   }
 
   Future<void> _saveAndFinish() async {
-    if (_saveState == PerformanceSaveState.saving) return;
+    if (_saveState == PerformanceSaveState.saving ||
+        _saveState == PerformanceSaveState.completing) {
+      return;
+    }
 
     _performanceController.updateSessionNote(_noteController.text);
 
@@ -89,11 +96,17 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
     }
 
     setState(() {
-      _saveState = PerformanceSaveState.saving;
+      _saveState = PerformanceSaveState.completing;
       _errorMessage = null;
     });
 
     try {
+      final flushed = await widget.flushPendingTree?.call();
+      if (flushed == false) {
+        throw StateError(
+          'Could not save the latest station values while the session was still in progress.',
+        );
+      }
       final status = _performanceController.resolveCompletionStatus();
       final finishedAt = DateTime.now();
       var usedDomainCompletion = false;
@@ -181,6 +194,10 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         );
       }
 
+      final reload = widget.onAuthoritativeReload?.call();
+      if (reload != null) await reload;
+
+      if (!mounted) return;
       setState(() => _saveState = PerformanceSaveState.saved);
 
       await Navigator.of(context).pushReplacement(
@@ -245,9 +262,13 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
               ),
               const SizedBox(height: CohortSpacing.lg),
               CohortButton(
-                label: 'Save and finish',
-                onPressed: _saveState == PerformanceSaveState.saving
-                    ? () {}
+                label: _saveState == PerformanceSaveState.completing
+                    ? 'Completing…'
+                    : 'Save and finish',
+                onPressed:
+                    _saveState == PerformanceSaveState.saving ||
+                        _saveState == PerformanceSaveState.completing
+                    ? null
                     : _saveAndFinish,
               ),
               const SizedBox(height: CohortSpacing.sm),

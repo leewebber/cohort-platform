@@ -172,5 +172,27 @@ void main() {
         'Rest 2 min',
       );
     });
+
+    test('formatter renders authored distance instead of empty reps', () {
+      final exact = StrengthExercisePrescription.fromJson({
+        'sets': 3,
+        'distance_m': 40,
+      });
+      expect(
+        StrengthPrescriptionFormatter.formatSetsReps(exact),
+        '3 × 40 m',
+      );
+      expect(exact.performanceCapture?.distanceUnit, 'm');
+
+      final range = StrengthExercisePrescription.fromJson({
+        'sets': 3,
+        'distance_m': '30-40',
+        'load': 'heavy',
+      });
+      expect(
+        StrengthPrescriptionFormatter.summaryLine(range),
+        '3 × 30-40 m · heavy',
+      );
+    });
   });
 }

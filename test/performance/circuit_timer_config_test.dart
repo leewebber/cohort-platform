@@ -124,7 +124,35 @@ void main() {
     expect(controller.state?.currentRound, 3);
     expect(controller.state?.primarySeconds, 41);
     expect(controller.state?.currentStationLabel, 'RowErg');
+    expect(controller.state?.currentStationTarget, '12 cal');
+    expect(controller.state?.nextStationLabel, 'Burpees');
+    expect(controller.state?.nextStationTarget, '8 reps');
     expect(controller.state?.isPaused, isTrue);
+    controller.dispose();
+  });
+
+  test('EMOM start exposes RowErg 12 cal then Burpees 8 reps', () {
+    late BlockTimerState latest;
+    final controller = BlockTimerController(
+      format: WorkoutFormat.emom,
+      configuration: TimerConfiguration.fromJson({
+        'duration_seconds': 480,
+        'interval_seconds': 60,
+        'alternating': [
+          {'minute': 1, 'exercise': 'EX-049', 'calories': 12},
+          {'minute': 2, 'exercise': 'EX-009', 'reps': 8},
+        ],
+      }),
+      stationLabels: const {'EX-049': 'RowErg', 'EX-009': 'Burpees'},
+      onStateChanged: (state) => latest = state,
+    );
+    controller.start();
+    expect(latest.currentRound, 1);
+    expect(latest.totalRounds, 8);
+    expect(latest.currentStationLabel, 'RowErg');
+    expect(latest.currentStationTarget, '12 cal');
+    expect(latest.nextStationLabel, 'Burpees');
+    expect(latest.nextStationTarget, '8 reps');
     controller.dispose();
   });
 

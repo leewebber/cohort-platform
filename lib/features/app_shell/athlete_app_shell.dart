@@ -8,6 +8,7 @@ import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/current_user_session.dart';
+import '../home/controllers/home_today_session_refresh_controller.dart';
 import '../home/home_screen.dart';
 import '../programme/controllers/athlete_programme_controllers.dart';
 import '../programme/screens/athlete_calendar_screen.dart';
@@ -76,6 +77,8 @@ class AthleteAppShell extends StatefulWidget {
 class _AthleteAppShellState extends State<AthleteAppShell> {
   int _index = 0;
   bool _recoveryPromptShown = false;
+  final HomeTodaySessionRefreshController _surfaceRefresh =
+      HomeTodaySessionRefreshController();
 
   FixedProgrammeOccurrenceProjectionStore get _fixedOccurrenceStore =>
       widget.fixedOccurrenceStore ??
@@ -179,7 +182,9 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AthleteProgrammeSurfaceRefreshScope(
+      controller: _surfaceRefresh,
+      child: Scaffold(
       backgroundColor: CohortColors.background,
       body: IndexedStack(
         index: _index,
@@ -187,12 +192,14 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           HomeScreen(
             authController: widget.authController,
             embeddedInShell: true,
+            refreshController: _surfaceRefresh,
             fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
           AthleteCalendarScreen(
             athleteId: _athleteId,
             fixedOccurrenceStore: _fixedOccurrenceStore,
+            refreshController: _surfaceRefresh,
             onOpenProgrammes: () => setState(() => _index = 2),
             authRefreshListenable: widget.authController,
           ),
@@ -201,6 +208,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           AthleteProgrammeScreen(
             athleteId: _athleteId,
             embeddedInShell: true,
+            refreshController: _surfaceRefresh,
             controller: widget.programmeScreenController,
             fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenCalendar: () => setState(() => _index = 1),
@@ -216,8 +224,16 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
       bottomNavigationBar: CohortAthleteBottomNavBar(
         selectedIndex: _index,
         destinations: AthleteAppShell.destinations,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        onDestinationSelected: (i) {
+          setState(() => _index = i);
+          if (i == 0) {
+            _surfaceRefresh.reloadAuthoritativeSurfaces(
+              source: 'shell_home_tab',
+            );
+          }
+        },
       ),
+    ),
     );
   }
 }

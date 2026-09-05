@@ -1,5 +1,6 @@
 import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
+import 'package:cohort_platform/features/home/controllers/home_today_session_refresh_controller.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
@@ -302,6 +303,119 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Week 1 · Day 6'), findsWidgets);
   });
+
+  testWidgets(
+    'Calendar swap updates already-mounted Home before any actuals',
+    (tester) async {
+      final harness = await _Harness.create();
+      final refresh = HomeTodaySessionRefreshController();
+      await tester.pumpWidget(
+        AthleteProgrammeSurfaceRefreshScope(
+          controller: refresh,
+          child: MaterialApp(
+            home: _SiblingHomeCalendarShell(
+              harness: harness,
+              refresh: refresh,
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(
+        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+      );
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Train today'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Train today'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('swap-and-begin')));
+      await tester.pumpAndSettle();
+
+      expect(harness.swapStore.calls, hasLength(1));
+      await tester.tap(find.byKey(const ValueKey('show-mounted-home')));
+      await tester.pumpAndSettle();
+      expect(find.text('Resume'), findsWidgets);
+      expect(find.text('Begin'), findsNothing);
+      expect(harness.projectionStore.value.todayOccurrence?.sessionTitle, 'Apollo Athletic');
+      expect(
+        harness.projectionStore.value.todayOccurrence?.state,
+        FixedProgrammeOccurrenceState.inProgress,
+      );
+    },
+  );
+}
+
+class _SiblingHomeCalendarShell extends StatefulWidget {
+  const _SiblingHomeCalendarShell({
+    required this.harness,
+    required this.refresh,
+  });
+
+  final _Harness harness;
+  final HomeTodaySessionRefreshController refresh;
+
+  @override
+  State<_SiblingHomeCalendarShell> createState() =>
+      _SiblingHomeCalendarShellState();
+}
+
+class _SiblingHomeCalendarShellState extends State<_SiblingHomeCalendarShell> {
+  int _index = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _index,
+        children: [
+          HomeScreen(
+            embeddedInShell: true,
+            athleteIdOverride: 'athlete-1',
+            refreshController: widget.refresh,
+            assignmentStore: InMemoryProgrammeAssignmentStore(
+              widget.harness.tables,
+            ),
+            fixedOccurrenceStore: widget.harness.projectionStore,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _TitleLoader(),
+            ),
+            prepareService: widget.harness.prepare,
+            executionLauncher: widget.harness.execution,
+            swapStore: widget.harness.swapStore,
+          ),
+          AthleteCalendarScreen(
+            athleteId: 'athlete-1',
+            refreshController: widget.refresh,
+            fixedOccurrenceStore: widget.harness.projectionStore,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _TitleLoader(),
+            ),
+            assignmentStore: InMemoryProgrammeAssignmentStore(
+              widget.harness.tables,
+            ),
+            prepareService: widget.harness.prepare,
+            executionLauncher: widget.harness.execution,
+            swapStore: widget.harness.swapStore,
+          ),
+        ],
+      ),
+      floatingActionButton: TextButton(
+        key: const ValueKey('show-mounted-home'),
+        onPressed: () => setState(() => _index = 0),
+        child: const Text('Show Home'),
+      ),
+    );
+  }
 }
 
 class _Harness {

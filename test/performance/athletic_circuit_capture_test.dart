@@ -5,6 +5,8 @@ import 'package:cohort_platform/features/performance/models/training_session_rec
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/circuit_result_comparison.dart';
+import 'package:cohort_platform/features/performance/services/circuit_set_sync.dart';
+import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
 import 'package:cohort_platform/features/performance/widgets/circuit_capture_editor.dart';
 import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
@@ -527,5 +529,75 @@ void main() {
     );
     expect(find.textContaining('Round 1'), findsWidgets);
     expect(find.textContaining('Sled Push'), findsWidgets);
+  });
+
+  test('calories stay calories through sync, results, correction and comparison',
+      () {
+    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: _w1Athletic(),
+      athleteId: 'athlete-1',
+      trainingSessionId: 33,
+    );
+    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
+    var result =
+        controller.draft.blockDrafts.single.resultData as CircuitResultData;
+    expect(result.stations.first.primaryMetric, CircuitStationMetric.calories);
+    result = result.replaceStation(
+      result.stations.first.copyWith(
+        calories: 12,
+        state: CircuitOccurrenceState.recorded,
+      ),
+    );
+    controller.updateBlockResultData(blockId, result);
+    final synced = CircuitSetSync.ensureAuthoredRows(
+      exercises: controller.draft.blockDrafts.single.exerciseResults,
+      result: result,
+    );
+    expect(synced.first.sets.first.reps, 12);
+    final hydrated = CircuitSetSync.hydrateFromSets(
+      result: result,
+      exercises: const PerformanceRecordMapper()
+          .fromDraft(
+            controller.buildPersistableDraft(
+              status: TrainingSessionRecordStatus.inProgress,
+            ),
+          )
+          .blockResults
+          .single
+          .exerciseResults,
+    );
+    expect(hydrated.stations.first.primaryMetric, CircuitStationMetric.calories);
+    expect(hydrated.stations.first.calories, 12);
+    expect(hydrated.stations.first.reps, isNull);
+
+    controller.markBlockComplete(blockId);
+    final record = const PerformanceRecordMapper().fromDraft(
+      controller.buildPersistableDraft(
+        status: TrainingSessionRecordStatus.completed,
+      ),
+    );
+    final projection = CompletedSessionResultProjection.fromRecords(
+      record: record,
+    );
+    expect(projection.blocks.single.circuit, isNotNull);
+    expect(
+      projection.blocks.single.circuit!.result.stations.first.primaryMetric,
+      CircuitStationMetric.calories,
+    );
+    expect(
+      CircuitResultComparison.primarySignal(
+        projection.blocks.single.circuit!.result,
+      )?.label,
+      'Total calories',
+    );
+
+    final draft = PerformanceCorrectionDraft(record);
+    final corrected =
+        (draft.blockResults.single.resultData as CircuitResultData)
+            .stations
+            .first;
+    expect(corrected.primaryMetric, CircuitStationMetric.calories);
+    expect(corrected.calories, 12);
+    const PerformanceCorrectionService().validate(draft);
   });
 }

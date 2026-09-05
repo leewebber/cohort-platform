@@ -314,6 +314,7 @@ class TimerStationSpec {
     this.calories,
     this.reps,
     this.distanceMeters,
+    this.distanceText,
   });
 
   final String exerciseId;
@@ -322,6 +323,7 @@ class TimerStationSpec {
   final int? calories;
   final int? reps;
   final double? distanceMeters;
+  final String? distanceText;
 
   Map<String, dynamic> toJson() => {
     'exercise': exerciseId,
@@ -330,6 +332,8 @@ class TimerStationSpec {
     if (calories != null) 'calories': calories,
     if (reps != null) 'reps': reps,
     if (distanceMeters != null) 'distance_m': distanceMeters,
+    if (distanceMeters == null && distanceText != null)
+      'distance_m': distanceText,
   };
 
   static List<TimerStationSpec> listFromJson(Map<String, dynamic> json) {
@@ -378,6 +382,11 @@ class TimerStationSpec {
       distanceMeters: distance is num
           ? distance.toDouble()
           : double.tryParse(distance?.toString() ?? ''),
+      distanceText: distance is num
+          ? null
+          : (double.tryParse(distance?.toString() ?? '') == null
+                ? distance?.toString().trim()
+                : null),
     );
   }
 }

@@ -43,6 +43,7 @@ class PerformanceSaveIndicator extends StatelessWidget {
     final label = switch (state) {
       PerformanceSaveState.idle => 'Ready to save',
       PerformanceSaveState.saving => 'Saving…',
+      PerformanceSaveState.completing => 'Completing session…',
       PerformanceSaveState.saved => 'Saved',
       PerformanceSaveState.error => errorMessage ?? 'Save failed',
     };
@@ -51,7 +52,7 @@ class PerformanceSaveIndicator extends StatelessWidget {
   }
 }
 
-enum PerformanceSaveState { idle, saving, saved, error }
+enum PerformanceSaveState { idle, saving, completing, saved, error }
 
 class _MaterialSwitchListTile extends StatelessWidget {
   const _MaterialSwitchListTile({

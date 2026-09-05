@@ -552,6 +552,8 @@ class CompletedSetResultProjection {
     this.reps,
     this.repsLabel,
     this.loadLabel,
+    this.prescribedDistanceLabel,
+    this.actualDistanceLabel,
     this.isBestSet = false,
   });
 
@@ -561,6 +563,8 @@ class CompletedSetResultProjection {
   final int? reps;
   final String? repsLabel;
   final String? loadLabel;
+  final String? prescribedDistanceLabel;
+  final String? actualDistanceLabel;
   final bool isBestSet;
 
   factory CompletedSetResultProjection.fromSet(
@@ -579,6 +583,10 @@ class CompletedSetResultProjection {
         loadUnit: set.loadUnit,
         kind: loadKind,
       ),
+      prescribedDistanceLabel: null,
+      actualDistanceLabel: set.distance == null
+          ? null
+          : '${set.distance == set.distance!.roundToDouble() ? set.distance!.toInt() : set.distance} ${set.distanceUnit ?? 'm'}',
       isBestSet: isBestSet,
     );
   }

@@ -47,7 +47,8 @@ class CircuitResultComparison {
           a.primaryMetric != b.primaryMetric ||
           a.prescribedCalories != b.prescribedCalories ||
           a.prescribedReps != b.prescribedReps ||
-          a.prescribedDistanceMeters != b.prescribedDistanceMeters) {
+          a.prescribedDistanceMeters != b.prescribedDistanceMeters ||
+          a.prescribedDistanceText != b.prescribedDistanceText) {
         return false;
       }
     }

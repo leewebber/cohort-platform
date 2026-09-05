@@ -107,7 +107,8 @@ void main() {
 
       await tester.tap(find.text('Save and finish'));
       await tester.pump();
-      await tester.tap(find.text('Save and finish'));
+      expect(find.text('Completing…'), findsOneWidget);
+      await tester.tap(find.text('Completing…'));
       await tester.pump();
 
       expect(coordinator.calls, 1);
@@ -158,6 +159,80 @@ void main() {
       expect(find.text('SESSION COMPLETE'), findsOneWidget);
     },
   );
+
+  testWidgets('Save and finish waits for flush then completes once', (
+    tester,
+  ) async {
+    final plan = M8ModernCaptureTestFixtures.singleBlockPlan();
+    final performance = M8ModernCaptureTestFixtures.performanceController(plan)
+      ..markBlockComplete(plan.blocks.single.blockId);
+    final flushGate = Completer<bool>();
+    var flushes = 0;
+    final coordinator = _DelayedSaveCoordinator(Completer<void>()..complete());
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SessionFinishReviewScreen(
+          performanceController: performance,
+          executionController: M8ModernCaptureTestFixtures.executionController(
+            plan,
+          ),
+          trainingSessionId: 9002,
+          athleteId: 'founder-test-athlete',
+          saveCoordinator: coordinator,
+          flushPendingTree: () async {
+            flushes++;
+            return flushGate.future;
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Save and finish'));
+    await tester.pump();
+    expect(find.text('Completing…'), findsOneWidget);
+    expect(coordinator.calls, 0);
+    await tester.tap(find.text('Completing…'));
+    await tester.pump();
+    expect(coordinator.calls, 0);
+    flushGate.complete(true);
+    await tester.pumpAndSettle();
+    expect(flushes, 1);
+    expect(coordinator.calls, 1);
+    expect(find.text('SESSION COMPLETE'), findsOneWidget);
+  });
+
+  testWidgets('failed flush keeps the session recoverable', (tester) async {
+    final plan = M8ModernCaptureTestFixtures.singleBlockPlan();
+    final performance = M8ModernCaptureTestFixtures.performanceController(plan)
+      ..markBlockComplete(plan.blocks.single.blockId);
+    final coordinator = _DelayedSaveCoordinator(Completer<void>()..complete());
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SessionFinishReviewScreen(
+          performanceController: performance,
+          executionController: M8ModernCaptureTestFixtures.executionController(
+            plan,
+          ),
+          trainingSessionId: 9003,
+          athleteId: 'founder-test-athlete',
+          saveCoordinator: coordinator,
+          flushPendingTree: () async => false,
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Save and finish'));
+    await tester.pumpAndSettle();
+    expect(coordinator.calls, 0);
+    expect(
+      find.textContaining('couldn\'t save that yet'),
+      findsOneWidget,
+    );
+    expect(find.text('SESSION COMPLETE'), findsNothing);
+    expect(find.text('Save and finish'), findsOneWidget);
+  });
 }
 
 ProgrammeExecutionContext _programmeContext() {

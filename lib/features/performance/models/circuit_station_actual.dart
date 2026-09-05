@@ -13,6 +13,7 @@ class CircuitStationActual {
     this.prescribedCalories,
     this.prescribedReps,
     this.prescribedDistanceMeters,
+    this.prescribedDistanceText,
     this.calories,
     this.reps,
     this.distance,
@@ -32,6 +33,7 @@ class CircuitStationActual {
   final int? prescribedCalories;
   final int? prescribedReps;
   final double? prescribedDistanceMeters;
+  final String? prescribedDistanceText;
   final double? calories;
   final int? reps;
   final double? distance;
@@ -67,6 +69,8 @@ class CircuitStationActual {
     if (prescribedReps != null) 'prescribedReps': prescribedReps,
     if (prescribedDistanceMeters != null)
       'prescribedDistanceMeters': prescribedDistanceMeters,
+    if (prescribedDistanceText != null)
+      'prescribedDistanceText': prescribedDistanceText,
     if (calories != null) 'calories': calories,
     if (reps != null) 'reps': reps,
     if (distance != null) 'distance': distance,
@@ -91,6 +95,7 @@ class CircuitStationActual {
       prescribedCalories: _nullableInt(json['prescribedCalories']),
       prescribedReps: _nullableInt(json['prescribedReps']),
       prescribedDistanceMeters: _nullableDouble(json['prescribedDistanceMeters']),
+      prescribedDistanceText: json['prescribedDistanceText']?.toString(),
       calories: _nullableDouble(json['calories']),
       reps: _nullableInt(json['reps']),
       distance: _nullableDouble(json['distance']),
@@ -129,6 +134,7 @@ class CircuitStationActual {
       prescribedCalories: prescribedCalories,
       prescribedReps: prescribedReps,
       prescribedDistanceMeters: prescribedDistanceMeters,
+      prescribedDistanceText: prescribedDistanceText,
       calories: clearCalories ? null : (calories ?? this.calories),
       reps: clearReps ? null : (reps ?? this.reps),
       distance: clearDistance ? null : (distance ?? this.distance),

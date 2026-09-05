@@ -120,13 +120,17 @@ class CircuitCaptureContract {
       prescribedCalories: spec.calories,
       prescribedReps: spec.reps,
       prescribedDistanceMeters: spec.distanceMeters,
+      prescribedDistanceText: spec.distanceText,
     );
   }
 
   static CircuitStationMetric _metric(TimerStationSpec spec) {
     if (spec.calories != null) return CircuitStationMetric.calories;
     if (spec.reps != null) return CircuitStationMetric.reps;
-    if (spec.distanceMeters != null) return CircuitStationMetric.distance;
+    if (spec.distanceMeters != null ||
+        (spec.distanceText?.trim().isNotEmpty == true)) {
+      return CircuitStationMetric.distance;
+    }
     return CircuitStationMetric.completion;
   }
 
@@ -135,6 +139,9 @@ class CircuitCaptureContract {
     if (spec.reps != null) return '${spec.exerciseId}:reps${spec.reps}';
     if (spec.distanceMeters != null) {
       return '${spec.exerciseId}:${spec.distanceMeters}m';
+    }
+    if (spec.distanceText?.trim().isNotEmpty == true) {
+      return '${spec.exerciseId}:${spec.distanceText}m';
     }
     return '${spec.exerciseId}:done';
   }
@@ -172,6 +179,7 @@ class CircuitCaptureContract {
       calories: prescription?.calories,
       reps: prescription?.reps.exactReps,
       distanceMeters: prescription?.prescribedDistanceMeters,
+      distanceText: prescription?.prescribedDistanceText,
     );
   }
 
@@ -187,6 +195,7 @@ class CircuitCaptureContract {
       calories: base.calories ?? extra.calories,
       reps: base.reps ?? extra.reps,
       distanceMeters: base.distanceMeters ?? extra.distanceMeters,
+      distanceText: base.distanceText ?? extra.distanceText,
     );
   }
 }

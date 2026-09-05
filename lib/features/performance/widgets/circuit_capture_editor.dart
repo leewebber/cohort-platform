@@ -71,7 +71,7 @@ class _CircuitStationRow extends StatelessWidget {
           if (row.primaryMetric == CircuitStationMetric.calories)
             PerformanceNumericField(
               key: ValueKey('circuit-${row.ordinal}-cal'),
-              label: 'Calories${row.prescribedCalories == null ? '' : ' / ${row.prescribedCalories}'}',
+              label: 'Calories${row.prescribedCalories == null ? '' : ' / ${row.prescribedCalories} cal'}',
               value: row.calories?.toString() ?? '',
               allowDecimal: true,
               onChanged: (value) {
@@ -109,7 +109,7 @@ class _CircuitStationRow extends StatelessWidget {
             PerformanceNumericField(
               key: ValueKey('circuit-${row.ordinal}-distance'),
               label:
-                  'Distance (${row.distanceUnit})${row.prescribedDistanceMeters == null ? '' : ' / ${row.prescribedDistanceMeters}'}',
+                  'Distance (${row.distanceUnit})${row.prescribedDistanceMeters == null && (row.prescribedDistanceText == null || row.prescribedDistanceText!.trim().isEmpty) ? '' : ' / ${row.prescribedDistanceMeters ?? row.prescribedDistanceText} ${row.distanceUnit}'}',
               value: row.distance?.toString() ?? '',
               allowDecimal: true,
               onChanged: (value) {

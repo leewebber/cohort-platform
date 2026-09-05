@@ -98,6 +98,17 @@ class _AthleteProgrammeTodaySectionState
       oldWidget.refreshController?.detach();
       widget.refreshController?.attach(_onRefresh);
     }
+    final occurrenceChanged =
+        oldWidget.fixedOccurrence?.occurrenceId !=
+            widget.fixedOccurrence?.occurrenceId ||
+        oldWidget.fixedOccurrence?.trainingSessionId !=
+            widget.fixedOccurrence?.trainingSessionId ||
+        oldWidget.fixedOccurrence?.scheduledDate !=
+            widget.fixedOccurrence?.scheduledDate ||
+        oldWidget.fixedAssignment?.id != widget.fixedAssignment?.id;
+    if (occurrenceChanged) {
+      _load(source: 'authoritative_occurrence');
+    }
   }
 
   @override

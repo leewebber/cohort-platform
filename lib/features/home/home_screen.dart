@@ -131,11 +131,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _refreshController.attachSurface(
+      this,
+      ({required String source}) => _refreshMaterialisedGate(),
+    );
     _refreshMaterialisedGate();
   }
 
   @override
   void dispose() {
+    _refreshController.detachSurface(this);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -563,6 +568,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       performanceRecordStore: widget.performanceRecordStore,
       swapStore: widget.swapStore,
       fixedOccurrenceStore: widget.fixedOccurrenceStore,
+      refreshController: _refreshController,
     );
     if (changed == true && mounted) await _refreshMaterialisedGate();
   }
