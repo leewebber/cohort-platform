@@ -169,6 +169,10 @@ class PerformanceValidationService {
           resultData.recordedCount == 0) {
         errors['$prefix.intervals'] =
             'Enter completed intervals before completing this block.';
+      } else if (resultData is CircuitResultData &&
+          resultData.recordedCount == 0) {
+        errors['$prefix.circuit'] =
+            'Record at least one station actual before completing this block.';
       } else if (resultData is RoundsResultData && !resultData.entered) {
         errors['$prefix.rounds'] =
             'Enter performed rounds or reps before completing this block.';

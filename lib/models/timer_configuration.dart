@@ -18,6 +18,7 @@ class TimerConfiguration {
     this.restBetweenRoundsSeconds,
     this.timerNotes,
     this.tracking = const [],
+    this.stations = const [],
   });
 
   final int? durationSeconds;
@@ -33,6 +34,17 @@ class TimerConfiguration {
   final int? restBetweenRoundsSeconds;
   final String? timerNotes;
   final List<String> tracking;
+  final List<TimerStationSpec> stations;
+
+  int? get emomTotalSeconds =>
+      totalDurationSeconds ??
+      (durationSeconds != null && durationSeconds! > 0
+          ? durationSeconds
+          : null);
+
+  int? get effectiveTargetRounds =>
+      targetRounds ??
+      (rounds != null && rounds! > 0 ? rounds : null);
 
   TimerConfiguration copyWith({
     int? durationSeconds,
@@ -48,6 +60,7 @@ class TimerConfiguration {
     int? restBetweenRoundsSeconds,
     String? timerNotes,
     List<String>? tracking,
+    List<TimerStationSpec>? stations,
   }) {
     return TimerConfiguration(
       durationSeconds: durationSeconds ?? this.durationSeconds,
@@ -64,6 +77,7 @@ class TimerConfiguration {
           restBetweenRoundsSeconds ?? this.restBetweenRoundsSeconds,
       timerNotes: timerNotes ?? this.timerNotes,
       tracking: tracking ?? this.tracking,
+      stations: stations ?? this.stations,
     );
   }
 
@@ -85,6 +99,8 @@ class TimerConfiguration {
       if (timerNotes != null && timerNotes!.trim().isNotEmpty)
         'timerNotes': timerNotes!.trim(),
       if (tracking.isNotEmpty) 'tracking': tracking,
+      if (stations.isNotEmpty)
+        'stations': stations.map((station) => station.toJson()).toList(),
     };
   }
 
@@ -93,11 +109,14 @@ class TimerConfiguration {
       return const TimerConfiguration();
     }
 
+    final duration = _int(json['durationSeconds'] ?? json['duration_seconds']);
+    final explicitTotal = _int(
+      json['totalDurationSeconds'] ?? json['total_duration_seconds'],
+    );
+    final authoredRounds = _int(json['rounds']);
     return TimerConfiguration(
-      durationSeconds: _int(json['durationSeconds'] ?? json['duration_seconds']),
-      totalDurationSeconds: _int(
-        json['totalDurationSeconds'] ?? json['total_duration_seconds'],
-      ),
+      durationSeconds: duration,
+      totalDurationSeconds: explicitTotal ?? duration,
       intervalSeconds: _int(
         json['intervalSeconds'] ?? json['interval_seconds'],
       ),
@@ -113,8 +132,9 @@ class TimerConfiguration {
             json['rest_seconds'] ??
             json['recovery_seconds'],
       ),
-      rounds: _int(json['rounds']),
-      targetRounds: _int(json['targetRounds'] ?? json['target_rounds']),
+      rounds: authoredRounds,
+      targetRounds: _int(json['targetRounds'] ?? json['target_rounds']) ??
+          authoredRounds,
       restBetweenRoundsSeconds: _int(
         json['restBetweenRoundsSeconds'] ??
             json['rest_between_rounds_seconds'] ??
@@ -122,6 +142,7 @@ class TimerConfiguration {
       ),
       timerNotes: (json['timerNotes'] ?? json['timer_notes'])?.toString(),
       tracking: _tracking(json['tracking'] ?? json['record']),
+      stations: TimerStationSpec.listFromJson(json),
     );
   }
 
@@ -160,10 +181,12 @@ class TimerConfiguration {
         timerNotes: base.timerNotes,
       ),
       WorkoutFormat.emom => TimerConfiguration(
-        totalDurationSeconds: base.totalDurationSeconds,
+        totalDurationSeconds: base.emomTotalSeconds,
+        durationSeconds: base.durationSeconds,
         intervalSeconds: base.intervalSeconds,
         preparationSeconds: base.preparationSeconds,
         timerNotes: base.timerNotes,
+        stations: base.stations,
       ),
       WorkoutFormat.forTime => TimerConfiguration(
         timeCapSeconds: base.timeCapSeconds,
@@ -189,9 +212,11 @@ class TimerConfiguration {
         timerNotes: base.timerNotes,
       ),
       WorkoutFormat.rounds => TimerConfiguration(
-        targetRounds: base.targetRounds,
+        targetRounds: base.effectiveTargetRounds,
+        rounds: base.rounds,
         restBetweenRoundsSeconds: base.restBetweenRoundsSeconds,
         timerNotes: base.timerNotes,
+        stations: base.stations,
       ),
       WorkoutFormat.other => TimerConfiguration(
         durationSeconds: base.durationSeconds,
@@ -212,7 +237,7 @@ class TimerConfiguration {
           messages.add('AMRAP requires a duration.');
         }
       case WorkoutFormat.emom:
-        if (totalDurationSeconds == null || totalDurationSeconds! <= 0) {
+        if (emomTotalSeconds == null || emomTotalSeconds! <= 0) {
           messages.add('EMOM requires a total duration.');
         }
         if (intervalSeconds == null || intervalSeconds! <= 0) {
@@ -257,7 +282,7 @@ class TimerConfiguration {
             ? '${durationSeconds! ~/ 60} min AMRAP'
             : 'AMRAP',
       WorkoutFormat.emom =>
-        '${totalDurationSeconds != null ? '${totalDurationSeconds! ~/ 60} min' : 'EMOM'} · ${intervalSeconds ?? '?'}s intervals',
+        '${emomTotalSeconds != null ? '${emomTotalSeconds! ~/ 60} min' : 'EMOM'} · ${intervalSeconds ?? '?'}s intervals',
       WorkoutFormat.forTime =>
         timeCapSeconds != null
             ? 'For Time · ${timeCapSeconds! ~/ 60} min cap'
@@ -271,9 +296,88 @@ class TimerConfiguration {
       WorkoutFormat.tabata =>
         '${rounds ?? 8} rounds · ${workSeconds ?? 20}s / ${restSeconds ?? 10}s',
       WorkoutFormat.rounds =>
-        targetRounds != null ? '$targetRounds rounds' : 'Rounds',
+        effectiveTargetRounds != null
+            ? '$effectiveTargetRounds rounds'
+            : 'Rounds',
       WorkoutFormat.other =>
         durationSeconds != null ? '${durationSeconds! ~/ 60} min' : 'Timer',
     };
+  }
+}
+
+/// Authored station inside an EMOM or rounds timer_config payload.
+class TimerStationSpec {
+  const TimerStationSpec({
+    required this.exerciseId,
+    required this.position,
+    this.minute,
+    this.calories,
+    this.reps,
+    this.distanceMeters,
+  });
+
+  final String exerciseId;
+  final int position;
+  final int? minute;
+  final int? calories;
+  final int? reps;
+  final double? distanceMeters;
+
+  Map<String, dynamic> toJson() => {
+    'exercise': exerciseId,
+    'position': position,
+    if (minute != null) 'minute': minute,
+    if (calories != null) 'calories': calories,
+    if (reps != null) 'reps': reps,
+    if (distanceMeters != null) 'distance_m': distanceMeters,
+  };
+
+  static List<TimerStationSpec> listFromJson(Map<String, dynamic> json) {
+    final explicit = json['stations'];
+    if (explicit is List) {
+      return [
+        for (var i = 0; i < explicit.length; i++)
+          if (explicit[i] is Map)
+            fromMap(Map<String, dynamic>.from(explicit[i] as Map), i + 1),
+      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+    }
+
+    final alternating = json['alternating'];
+    if (alternating is List) {
+      return [
+        for (var i = 0; i < alternating.length; i++)
+          if (alternating[i] is Map)
+            fromMap(Map<String, dynamic>.from(alternating[i] as Map), i + 1),
+      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+    }
+
+    final sequence = json['round_sequence'];
+    if (sequence is List) {
+      return [
+        for (var i = 0; i < sequence.length; i++)
+          TimerStationSpec(
+            exerciseId: sequence[i].toString().trim(),
+            position: i + 1,
+          ),
+      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+    }
+    return const [];
+  }
+
+  static TimerStationSpec fromMap(Map<String, dynamic> json, int fallbackPosition) {
+    final distance = json['distance_m'] ?? json['distanceMeters'];
+    return TimerStationSpec(
+      exerciseId: (json['exercise'] ?? json['exercise_id'] ?? json['exerciseId'])
+          .toString()
+          .trim(),
+      position: TimerConfiguration._int(json['position'] ?? json['minute']) ??
+          fallbackPosition,
+      minute: TimerConfiguration._int(json['minute']),
+      calories: TimerConfiguration._int(json['calories']),
+      reps: TimerConfiguration._int(json['reps']),
+      distanceMeters: distance is num
+          ? distance.toDouble()
+          : double.tryParse(distance?.toString() ?? ''),
+    );
   }
 }

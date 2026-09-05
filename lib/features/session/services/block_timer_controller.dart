@@ -17,6 +17,8 @@ class BlockTimerState {
     this.currentRound = 1,
     this.totalRounds = 1,
     this.phaseLabel = 'Timer',
+    this.currentStationLabel,
+    this.nextStationLabel,
   });
 
   final WorkoutFormat format;
@@ -29,6 +31,8 @@ class BlockTimerState {
   final int currentRound;
   final int totalRounds;
   final String phaseLabel;
+  final String? currentStationLabel;
+  final String? nextStationLabel;
 
   BlockTimerState copyWith({
     BlockTimerPhase? phase,
@@ -40,6 +44,8 @@ class BlockTimerState {
     int? currentRound,
     int? totalRounds,
     String? phaseLabel,
+    String? currentStationLabel,
+    String? nextStationLabel,
   }) {
     return BlockTimerState(
       format: format,
@@ -52,6 +58,8 @@ class BlockTimerState {
       currentRound: currentRound ?? this.currentRound,
       totalRounds: totalRounds ?? this.totalRounds,
       phaseLabel: phaseLabel ?? this.phaseLabel,
+      currentStationLabel: currentStationLabel ?? this.currentStationLabel,
+      nextStationLabel: nextStationLabel ?? this.nextStationLabel,
     );
   }
 }
@@ -61,11 +69,13 @@ class BlockTimerController {
     required this.format,
     required this.configuration,
     required this.onStateChanged,
+    this.stationLabels = const {},
   });
 
   final WorkoutFormat format;
   final TimerConfiguration configuration;
   final void Function(BlockTimerState state) onStateChanged;
+  final Map<String, String> stationLabels;
 
   Timer? _timer;
   BlockTimerState? _state;
@@ -103,11 +113,14 @@ class BlockTimerController {
             configuration.preparationSeconds ??
             configuration.intervalSeconds ??
             60,
-        secondarySeconds: configuration.totalDurationSeconds,
+        secondarySeconds: configuration.emomTotalSeconds,
+        currentRound: 1,
         totalRounds: _emomIntervals(),
         phaseLabel: configuration.preparationSeconds != null
             ? 'Prepare'
-            : 'EMOM',
+            : 'Minute 1',
+        currentStationLabel: _stationLabel(1),
+        nextStationLabel: _stationLabel(2),
       ),
       WorkoutFormat.forTime => BlockTimerState(
         format: format,
@@ -149,14 +162,16 @@ class BlockTimerController {
       ),
       WorkoutFormat.rounds => BlockTimerState(
         format: format,
-        phase: BlockTimerPhase.countdown,
+        phase: BlockTimerPhase.work,
         isRunning: false,
         isPaused: false,
         isFinished: false,
         primarySeconds: configuration.restBetweenRoundsSeconds ?? 0,
         currentRound: 1,
-        totalRounds: configuration.targetRounds ?? 1,
+        totalRounds: configuration.effectiveTargetRounds ?? 1,
         phaseLabel: 'Round 1',
+        currentStationLabel: _stationLabel(1),
+        nextStationLabel: _stationLabel(2),
       ),
       WorkoutFormat.other => BlockTimerState(
         format: format,
@@ -196,10 +211,57 @@ class BlockTimerController {
   }
 
   int _emomIntervals() {
-    final total = configuration.totalDurationSeconds;
+    final total = configuration.emomTotalSeconds;
     final interval = configuration.intervalSeconds;
     if (total == null || interval == null || interval <= 0) return 1;
-    return (total / interval).ceil();
+    return total ~/ interval;
+  }
+
+  String? _stationLabel(int occurrence) {
+    final stations = configuration.stations;
+    if (stations.isEmpty) return null;
+    final spec = stations[(occurrence - 1) % stations.length];
+    final label = stationLabels[spec.exerciseId]?.trim();
+    return (label != null && label.isNotEmpty) ? label : spec.exerciseId;
+  }
+
+  void restore(BlockTimerState state) {
+    _timer?.cancel();
+    _state = state;
+    onStateChanged(state);
+    if (state.isRunning && !state.isFinished) _tick();
+  }
+
+  void startRecovery() {
+    final current = _state;
+    if (current == null || format != WorkoutFormat.rounds) return;
+    final rest = configuration.restBetweenRoundsSeconds ?? 0;
+    if (rest <= 0) {
+      final next = current.currentRound + 1;
+      if (next > current.totalRounds) {
+        _finish(current);
+        return;
+      }
+      _state = current.copyWith(
+        currentRound: next,
+        phase: BlockTimerPhase.work,
+        isRunning: false,
+        phaseLabel: 'Round $next',
+        currentStationLabel: _stationLabel((next - 1) * configuration.stations.length + 1),
+        nextStationLabel: _stationLabel((next - 1) * configuration.stations.length + 2),
+      );
+      onStateChanged(_state!);
+      return;
+    }
+    _state = current.copyWith(
+      phase: BlockTimerPhase.rest,
+      isRunning: true,
+      isPaused: false,
+      primarySeconds: rest,
+      phaseLabel: 'Recovery',
+    );
+    onStateChanged(_state!);
+    _tick();
   }
 
   void _tick() {
@@ -234,6 +296,7 @@ class BlockTimerController {
       case WorkoutFormat.tabata:
         _tickIntervals(current);
       case WorkoutFormat.rounds:
+        _tickRounds(current);
       case WorkoutFormat.none:
         break;
     }
@@ -252,7 +315,37 @@ class BlockTimerController {
         currentRound: nextRound,
         primarySeconds: configuration.intervalSeconds ?? 60,
         phase: BlockTimerPhase.countdown,
-        phaseLabel: 'EMOM · Round $nextRound',
+        phaseLabel: 'Minute $nextRound',
+        currentStationLabel: _stationLabel(nextRound),
+        nextStationLabel: _stationLabel(nextRound + 1),
+      );
+      return;
+    }
+    _state = current.copyWith(primarySeconds: current.primarySeconds - 1);
+  }
+
+  void _tickRounds(BlockTimerState current) {
+    if (current.phase != BlockTimerPhase.rest) return;
+    if (current.primarySeconds <= 1) {
+      final next = current.currentRound + 1;
+      if (next > current.totalRounds) {
+        _finish(current);
+        return;
+      }
+      _state = current.copyWith(
+        currentRound: next,
+        phase: BlockTimerPhase.work,
+        isRunning: false,
+        primarySeconds: configuration.restBetweenRoundsSeconds ?? 0,
+        phaseLabel: 'Round $next',
+        currentStationLabel: _stationLabel(
+          (next - 1) * (configuration.stations.isEmpty ? 1 : configuration.stations.length) +
+              1,
+        ),
+        nextStationLabel: _stationLabel(
+          (next - 1) * (configuration.stations.isEmpty ? 1 : configuration.stations.length) +
+              2,
+        ),
       );
       return;
     }

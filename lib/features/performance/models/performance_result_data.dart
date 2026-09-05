@@ -1,3 +1,4 @@
+import 'circuit_station_actual.dart';
 import 'interval_work_result.dart';
 import 'performance_result_type.dart';
 
@@ -31,6 +32,8 @@ sealed class PerformanceResultData {
         return EnduranceResultData.fromJson(json);
       case PerformanceResultType.rounds:
         return RoundsResultData.fromJson(json);
+      case PerformanceResultType.circuit:
+        return CircuitResultData.fromJson(json);
       case PerformanceResultType.customMetric:
         return CustomMetricResultData.fromJson(json);
       case PerformanceResultType.completion:
@@ -521,6 +524,125 @@ class RoundsResultData extends PerformanceResultData {
               ? true
               : this.entered),
       note: note ?? this.note,
+    );
+  }
+}
+
+class CircuitResultData extends PerformanceResultData {
+  const CircuitResultData({
+    required this.format,
+    required this.comparisonFamily,
+    required this.stations,
+    this.targetRounds,
+    this.intervalSeconds,
+    this.restBetweenRoundsSeconds,
+    this.timerCursor,
+    this.note,
+  });
+
+  final String format;
+  final String comparisonFamily;
+  final List<CircuitStationActual> stations;
+  final int? targetRounds;
+  final int? intervalSeconds;
+  final int? restBetweenRoundsSeconds;
+  final CircuitTimerCursor? timerCursor;
+  final String? note;
+
+  bool get usesStationCapture => stations.isNotEmpty;
+
+  int get recordedCount =>
+      stations.where((row) => row.hasRecordedActual).length;
+
+  int get prescribedCount => stations.length;
+
+  int get completedRounds {
+    if (targetRounds == null || targetRounds! <= 0) return 0;
+    final byRound = <int, List<CircuitStationActual>>{};
+    for (final row in stations) {
+      byRound.putIfAbsent(row.round, () => []).add(row);
+    }
+    var complete = 0;
+    for (final entries in byRound.values) {
+      if (entries.isNotEmpty &&
+          entries.every((row) => row.hasRecordedActual)) {
+        complete += 1;
+      }
+    }
+    return complete;
+  }
+
+  @override
+  PerformanceResultType get resultType => PerformanceResultType.circuit;
+
+  @override
+  Map<String, dynamic> toJson() => {
+    'resultType': resultType.dbValue,
+    'format': format,
+    'comparisonFamily': comparisonFamily,
+    'stations': stations.map((row) => row.toJson()).toList(),
+    if (targetRounds != null) 'targetRounds': targetRounds,
+    if (intervalSeconds != null) 'intervalSeconds': intervalSeconds,
+    if (restBetweenRoundsSeconds != null)
+      'restBetweenRoundsSeconds': restBetweenRoundsSeconds,
+    if (timerCursor != null) 'timerCursor': timerCursor!.toJson(),
+    if (note != null) 'note': note,
+  };
+
+  factory CircuitResultData.fromJson(Map<String, dynamic> json) {
+    final raw = json['stations'];
+    final parsed = raw is List
+        ? raw
+              .whereType<Map>()
+              .map(
+                (item) => CircuitStationActual.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .where((row) => row.ordinal > 0)
+              .toList(growable: false)
+        : const <CircuitStationActual>[];
+    return CircuitResultData(
+      format: json['format']?.toString() ?? 'rounds',
+      comparisonFamily: json['comparisonFamily']?.toString() ?? '',
+      stations: parsed,
+      targetRounds: _nullableInt(json['targetRounds']),
+      intervalSeconds: _nullableInt(json['intervalSeconds']),
+      restBetweenRoundsSeconds: _nullableInt(json['restBetweenRoundsSeconds']),
+      timerCursor: json['timerCursor'] is Map
+          ? CircuitTimerCursor.fromJson(
+              Map<String, dynamic>.from(json['timerCursor'] as Map),
+            )
+          : null,
+      note: _trim(json['note']),
+    );
+  }
+
+  CircuitResultData copyWith({
+    List<CircuitStationActual>? stations,
+    CircuitTimerCursor? timerCursor,
+    String? note,
+    bool clearTimerCursor = false,
+  }) {
+    return CircuitResultData(
+      format: format,
+      comparisonFamily: comparisonFamily,
+      stations: stations ?? this.stations,
+      targetRounds: targetRounds,
+      intervalSeconds: intervalSeconds,
+      restBetweenRoundsSeconds: restBetweenRoundsSeconds,
+      timerCursor: clearTimerCursor ? null : (timerCursor ?? this.timerCursor),
+      note: note ?? this.note,
+    );
+  }
+
+  CircuitResultData replaceStation(CircuitStationActual row) {
+    if (stations.isEmpty) return copyWith(stations: [row]);
+    return copyWith(
+      stations: [
+        for (final current in stations)
+          current.ordinal == row.ordinal ? row : current,
+      ],
     );
   }
 }

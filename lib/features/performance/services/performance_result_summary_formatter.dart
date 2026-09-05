@@ -37,6 +37,8 @@ class PerformanceResultSummaryFormatter {
         return _formatEndurance(result as EnduranceResultData);
       case PerformanceResultType.rounds:
         return _formatRounds(result as RoundsResultData);
+      case PerformanceResultType.circuit:
+        return _formatCircuit(result as CircuitResultData);
       case PerformanceResultType.customMetric:
         return _formatCustom(result as CustomMetricResultData);
     }
@@ -152,6 +154,20 @@ class PerformanceResultSummaryFormatter {
 
   static String _formatRounds(RoundsResultData result) {
     return '${result.roundsCompleted} rounds + ${result.extraReps} reps';
+  }
+
+  static String _formatCircuit(CircuitResultData result) {
+    final complete = result.completedRounds;
+    final target = result.targetRounds;
+    final recorded = result.recordedCount;
+    final prescribed = result.prescribedCount;
+    if (result.format == 'emom') {
+      return '$recorded/$prescribed stations recorded';
+    }
+    if (target == null) {
+      return '$recorded stations recorded';
+    }
+    return '$complete/$target rounds · $recorded/$prescribed stations';
   }
 
   static String _formatCustom(CustomMetricResultData result) {

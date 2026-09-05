@@ -9,12 +9,16 @@ import '../../../features/programme/models/programme_execution_context.dart';
 import '../../../features/programme/models/programme_progress_summary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/models/active_performance_draft.dart';
+import '../../performance/models/performance_result_data.dart';
 import '../../performance/screens/session_finish_review_screen.dart';
+import '../../performance/services/circuit_capture_contract.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
 import '../models/workout_session_launch_context.dart';
+import '../services/block_timer_controller.dart';
+import '../services/circuit_block_timer_bridge.dart';
 import '../services/session_finish_eligibility.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 import '../widgets/athlete/athlete_session_components.dart';
@@ -185,15 +189,44 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
       return;
     }
 
-    await Navigator.of(context).push(
+    final labels = {
+      for (final exercise in block.linkedExercises)
+        exercise.exerciseId: exercise.displayName,
+    };
+    final draft = _blockDraft(block.blockId);
+    final existing = draft?.resultData;
+    final cursor = existing is CircuitResultData ? existing.timerCursor : null;
+    final popped = await Navigator.of(context).push<BlockTimerState>(
       MaterialPageRoute(
         builder: (_) => BlockTimerScreen(
           blockTitle: block.title,
           format: block.workoutFormat,
           configuration: block.timerConfiguration!,
+          stationLabels: labels,
+          initialState: cursor == null
+              ? null
+              : CircuitBlockTimerBridge.stateFrom(
+                  cursor: cursor,
+                  format: block.workoutFormat,
+                  configuration: block.timerConfiguration!,
+                  stationLabels: labels,
+                ),
         ),
       ),
     );
+    if (popped != null &&
+        CircuitCaptureContract.isCircuitFormat(block.workoutFormat)) {
+      final latest = _blockDraft(block.blockId)?.resultData;
+      if (latest is CircuitResultData) {
+        _performanceController.updateBlockResultData(
+          block.blockId,
+          latest.copyWith(
+            timerCursor: CircuitBlockTimerBridge.cursorFrom(popped),
+          ),
+        );
+        _persistDraft();
+      }
+    }
     _refresh();
   }
 

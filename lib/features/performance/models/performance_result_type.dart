@@ -8,6 +8,7 @@ enum PerformanceResultType {
   duration,
   endurance,
   rounds,
+  circuit,
   customMetric,
 }
 
@@ -32,6 +33,8 @@ extension PerformanceResultTypeDb on PerformanceResultType {
         return 'endurance';
       case PerformanceResultType.rounds:
         return 'rounds';
+      case PerformanceResultType.circuit:
+        return 'circuit';
       case PerformanceResultType.customMetric:
         return 'custom_metric';
     }
@@ -55,6 +58,8 @@ extension PerformanceResultTypeDb on PerformanceResultType {
         return PerformanceResultType.endurance;
       case 'rounds':
         return PerformanceResultType.rounds;
+      case 'circuit':
+        return PerformanceResultType.circuit;
       case 'custom_metric':
         return PerformanceResultType.customMetric;
       case 'completion':
@@ -72,6 +77,7 @@ enum BlockCaptureMode {
   interval,
   endurance,
   rounds,
+  circuit,
   completion,
   customMetric,
 }
@@ -93,6 +99,8 @@ extension BlockCaptureModeDb on BlockCaptureMode {
         return 'endurance';
       case BlockCaptureMode.rounds:
         return 'rounds';
+      case BlockCaptureMode.circuit:
+        return 'circuit';
       case BlockCaptureMode.completion:
         return 'completion';
       case BlockCaptureMode.customMetric:
@@ -114,6 +122,8 @@ extension BlockCaptureModeDb on BlockCaptureMode {
         return BlockCaptureMode.endurance;
       case 'rounds':
         return BlockCaptureMode.rounds;
+      case 'circuit':
+        return BlockCaptureMode.circuit;
       case 'completion':
         return BlockCaptureMode.completion;
       case 'custom_metric':

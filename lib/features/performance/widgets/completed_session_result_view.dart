@@ -15,7 +15,10 @@ import '../repositories/in_memory_performance_record_store.dart';
 import '../repositories/performance_record_store.dart';
 import '../services/completed_session_result_projection.dart';
 import '../services/endurance_metrics_calculator.dart';
+import '../models/circuit_station_actual.dart';
+import '../services/circuit_set_sync.dart';
 import '../services/interval_set_sync.dart';
+import 'circuit_capture_editor.dart';
 import '../services/performance_correction_service.dart';
 import '../services/running_pace_plausibility.dart';
 import 'endurance_duration_field.dart';
@@ -250,6 +253,33 @@ class _CompletedSessionResultViewState
                               ],
                             ),
                         ]
+                      : data is CircuitResultData
+                      ? [
+                          for (final exercise in block.exerciseResults)
+                            exercise.copyWith(
+                              setResults: [
+                                for (final set in exercise.setResults)
+                                  data.stations
+                                          .where(
+                                            (row) =>
+                                                row.stationId ==
+                                                    exercise.sourceExerciseId &&
+                                                row.round == set.setNumber,
+                                          )
+                                          .isEmpty
+                                      ? set
+                                      : CircuitSetSync.applyToRecordedSet(
+                                          set,
+                                          data.stations.firstWhere(
+                                            (row) =>
+                                                row.stationId ==
+                                                    exercise.sourceExerciseId &&
+                                                row.round == set.setNumber,
+                                          ),
+                                        ),
+                              ],
+                            ),
+                        ]
                       : block.exerciseResults,
                 )
               : block,
@@ -347,6 +377,9 @@ class _CompletedBlockCard extends StatelessWidget {
           if (block.interval != null) ...[
             const SizedBox(height: CohortSpacing.sm),
             _CompletedIntervalAccordion(interval: block.interval!),
+          ] else if (block.circuit != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            _CompletedCircuitAccordion(circuit: block.circuit!),
           ] else if (!block.isSimpleCompletion) ...[
             for (final exercise in block.exercises) ...[
               const SizedBox(height: CohortSpacing.sm),
@@ -367,6 +400,87 @@ class _CompletedBlockCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _CompletedCircuitAccordion extends StatefulWidget {
+  const _CompletedCircuitAccordion({required this.circuit});
+
+  final CompletedCircuitBlockProjection circuit;
+
+  @override
+  State<_CompletedCircuitAccordion> createState() =>
+      _CompletedCircuitAccordionState();
+}
+
+class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> {
+  bool _expanded = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final circuit = widget.circuit;
+    final grouped = <int, List<CircuitStationActual>>{};
+    for (final row in circuit.result.stations) {
+      grouped.putIfAbsent(row.round, () => []).add(row);
+    }
+    final rounds = grouped.keys.toList()..sort();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _expanded = !_expanded),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  circuit.result.format == 'emom'
+                      ? 'EMOM performance'
+                      : 'Circuit performance',
+                  style: CohortTextStyles.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              _ComparisonBadge(status: circuit.comparisonStatus),
+              Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+            ],
+          ),
+        ),
+        if (circuit.primaryLabel != null) ...[
+          const SizedBox(height: CohortSpacing.xs),
+          Text(circuit.primaryLabel!, style: CohortTextStyles.small),
+        ],
+        if (_expanded)
+          for (final round in rounds) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              circuit.result.format == 'emom' ? 'Minute $round' : 'Round $round',
+              style: CohortTextStyles.body,
+            ),
+            for (final row in grouped[round]!)
+              Text(
+                '${row.displayName}: ${_stationActualLabel(row)}',
+                style: CohortTextStyles.small,
+              ),
+          ],
+      ],
+    );
+  }
+
+  static String _stationActualLabel(CircuitStationActual row) {
+    if (!row.hasRecordedActual) return 'Not recorded';
+    return switch (row.primaryMetric) {
+      CircuitStationMetric.calories => '${row.calories} cal',
+      CircuitStationMetric.reps => '${row.reps} reps',
+      CircuitStationMetric.distance =>
+        '${row.distance} ${row.distanceUnit}'
+            '${row.load == null ? '' : ' · ${row.load} ${row.loadUnit ?? 'kg'}'}'
+            '${row.durationSeconds == null ? '' : ' · ${row.durationSeconds}s'}'
+            '${row.calories == null ? '' : ' · ${row.calories} cal'}',
+      CircuitStationMetric.duration => '${row.durationSeconds}s',
+      CircuitStationMetric.load => '${row.load} ${row.loadUnit ?? 'kg'}',
+      CircuitStationMetric.completion => 'Completed',
+    };
   }
 }
 
@@ -969,9 +1083,16 @@ class _CorrectionBlockEditor extends StatelessWidget {
             _CorrectionIntervalFields(
               result: block.resultData! as IntervalResultData,
               onChanged: onResultChanged,
+            )
+          else if (block.resultData is CircuitResultData)
+            CircuitCaptureEditor(
+              result: block.resultData! as CircuitResultData,
+              onChanged: onResultChanged,
             ),
-          if (block.resultData is! IntervalResultData ||
-              !(block.resultData! as IntervalResultData).usesPerIntervalCapture)
+          if ((block.resultData is! IntervalResultData ||
+                  !(block.resultData! as IntervalResultData)
+                      .usesPerIntervalCapture) &&
+              block.resultData is! CircuitResultData)
             for (final exercise in block.exerciseResults) ...[
               const SizedBox(height: CohortSpacing.sm),
               Text(

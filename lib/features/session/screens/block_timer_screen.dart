@@ -13,11 +13,15 @@ class BlockTimerScreen extends StatefulWidget {
     required this.blockTitle,
     required this.format,
     required this.configuration,
+    this.initialState,
+    this.stationLabels = const {},
   });
 
   final String blockTitle;
   final WorkoutFormat format;
   final TimerConfiguration configuration;
+  final BlockTimerState? initialState;
+  final Map<String, String> stationLabels;
 
   @override
   State<BlockTimerScreen> createState() => _BlockTimerScreenState();
@@ -33,9 +37,15 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
     _controller = BlockTimerController(
       format: widget.format,
       configuration: widget.configuration,
+      stationLabels: widget.stationLabels,
       onStateChanged: (state) => setState(() => _state = state),
     );
-    _controller!.start();
+    final restored = widget.initialState;
+    if (restored != null) {
+      _controller!.restore(restored);
+    } else {
+      _controller!.start();
+    }
   }
 
   @override
@@ -62,7 +72,10 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
         ],
       ),
     );
-    if (shouldExit == true && mounted) Navigator.pop(context);
+    if (shouldExit == true && mounted) {
+      _controller?.pause();
+      Navigator.pop(context, _controller?.state);
+    }
   }
 
   String _formatTime(int seconds) {
@@ -74,7 +87,14 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
   @override
   Widget build(BuildContext context) {
     final state = _state;
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _controller?.pause();
+        Navigator.of(context).pop(_controller?.state);
+      },
+      child: Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -98,11 +118,35 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                 ),
                 if (state.totalRounds > 1)
                   Text(
-                    'Round ${state.currentRound} of ${state.totalRounds}',
+                    widget.format == WorkoutFormat.emom
+                        ? 'Minute ${state.currentRound} of ${state.totalRounds}'
+                        : 'Round ${state.currentRound} of ${state.totalRounds}',
+                    style: CohortTextStyles.small,
+                  ),
+                if (state.currentStationLabel != null) ...[
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Now ${state.currentStationLabel}',
+                    style: CohortTextStyles.body,
+                  ),
+                ],
+                if (state.nextStationLabel != null)
+                  Text(
+                    'Next ${state.nextStationLabel}',
                     style: CohortTextStyles.small,
                   ),
               ],
               const Spacer(),
+              if (widget.format == WorkoutFormat.rounds &&
+                  state?.phase == BlockTimerPhase.work &&
+                  state?.isFinished != true)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+                  child: CohortButton(
+                    label: 'Start recovery',
+                    onPressed: () => _controller?.startRecovery(),
+                  ),
+                ),
               Row(
                 children: [
                   Expanded(
@@ -150,6 +194,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
             ],
           ),
         ),
+      ),
       ),
     );
   }

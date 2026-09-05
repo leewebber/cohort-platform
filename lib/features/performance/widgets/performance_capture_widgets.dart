@@ -17,6 +17,7 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import 'endurance_duration_field.dart';
+import 'circuit_capture_editor.dart';
 import 'interval_pace_field.dart';
 import 'performance_numeric_field.dart';
 import '../services/interval_pace_format.dart';
@@ -156,7 +157,8 @@ class BlockResultEditor extends StatelessWidget {
     final mode = _captureModeFor(blockDraft);
     return (mode == BlockCaptureMode.strength ||
             mode == BlockCaptureMode.completion) &&
-        blockDraft.exerciseResults.isNotEmpty;
+        blockDraft.exerciseResults.isNotEmpty &&
+        mode != BlockCaptureMode.circuit;
   }
 
   static BlockCaptureMode _captureModeFor(BlockPerformanceDraft blockDraft) {
@@ -171,6 +173,7 @@ class BlockResultEditor extends StatelessWidget {
       PerformanceResultType.distance => BlockCaptureMode.endurance,
       PerformanceResultType.endurance => BlockCaptureMode.endurance,
       PerformanceResultType.rounds => BlockCaptureMode.rounds,
+      PerformanceResultType.circuit => BlockCaptureMode.circuit,
       PerformanceResultType.customMetric => BlockCaptureMode.customMetric,
       PerformanceResultType.duration => BlockCaptureMode.endurance,
       PerformanceResultType.completion => BlockCaptureMode.completion,
@@ -275,6 +278,17 @@ class _ResultEditorBody extends StatelessWidget {
           onChanged: onResultChanged,
           blockTitle: blockDraft.blockSnapshot.title,
           workoutFormat: blockDraft.blockSnapshot.workoutFormat.name,
+        );
+      case BlockCaptureMode.circuit:
+        return CircuitCaptureEditor(
+          result:
+              blockDraft.resultData as CircuitResultData? ??
+              const CircuitResultData(
+                format: 'rounds',
+                comparisonFamily: '',
+                stations: [],
+              ),
+          onChanged: onResultChanged,
         );
       case BlockCaptureMode.rounds:
         return _RoundsEditor(
@@ -1191,6 +1205,32 @@ class _ExerciseActualRow extends StatelessWidget {
             },
           ),
         ),
+        if (set.distanceUnit?.trim().isNotEmpty == true ||
+            capture?.distanceUnit?.trim().isNotEmpty == true) ...[
+          const SizedBox(width: CohortSpacing.sm),
+          Expanded(
+            child: PerformanceNumericField(
+              key: ValueKey('${set.setResultId}-distance'),
+              label:
+                  'Distance (${set.distanceUnit ?? capture?.distanceUnit ?? 'm'})',
+              value: set.distance?.toString() ?? '',
+              allowDecimal: true,
+              onChanged: (value) {
+                final parsed = double.tryParse(value);
+                onUpdateSet(
+                  exerciseId,
+                  set.setResultId,
+                  (current) => current.copyWith(
+                    distance: parsed,
+                    distanceUnit:
+                        current.distanceUnit ?? capture?.distanceUnit ?? 'm',
+                    clearDistance: parsed == null,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
         if (loadKind.expectsExternalLoad) ...[
           const SizedBox(width: CohortSpacing.sm),
           Expanded(

@@ -9,6 +9,8 @@ import '../models/block_capture_mode_resolver.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
+import 'circuit_capture_contract.dart';
+import 'circuit_set_sync.dart';
 import 'interval_capture_contract.dart';
 import 'interval_set_sync.dart';
 
@@ -92,6 +94,14 @@ class PerformanceSnapshotBuilder {
               block: block,
             );
           }
+          if (resultData is CircuitResultData &&
+              CircuitCaptureContract.hasAuthoredStations(block)) {
+            exercises = CircuitSetSync.ensureAuthoredRows(
+              exercises: exercises,
+              result: resultData,
+              block: block,
+            );
+          }
 
           return BlockPerformanceDraft(
             blockResultId: DatabaseUuid.newV4(),
@@ -123,7 +133,9 @@ class PerformanceSnapshotBuilder {
       workSeconds: block.timerConfiguration?.workSeconds,
       recoverySeconds: block.timerConfiguration?.restSeconds,
       tracking: block.timerConfiguration?.tracking ?? const [],
-      comparisonFamily: result.comparisonFamily,
+      comparisonFamily: CircuitCaptureContract.hasAuthoredStations(block)
+          ? CircuitCaptureContract.comparisonFamily(block)
+          : result.comparisonFamily,
       exercises: _authoredExerciseSnapshots(block),
     );
   }

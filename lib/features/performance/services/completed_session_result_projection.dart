@@ -7,6 +7,7 @@ import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
 import 'endurance_metrics_calculator.dart';
 import 'interval_pace_format.dart';
+import 'circuit_result_comparison.dart';
 import 'interval_result_comparison.dart';
 import 'interval_result_math.dart';
 import 'performance_result_summary_formatter.dart';
@@ -81,6 +82,7 @@ class CompletedBlockResultProjection {
     required this.exercises,
     this.prescriptionContext,
     this.interval,
+    this.circuit,
   });
 
   final String title;
@@ -90,6 +92,7 @@ class CompletedBlockResultProjection {
   final List<CompletedExerciseResultProjection> exercises;
   final String? prescriptionContext;
   final CompletedIntervalBlockProjection? interval;
+  final CompletedCircuitBlockProjection? circuit;
 
   factory CompletedBlockResultProjection.fromBlock(
     TrainingBlockResult block, {
@@ -109,7 +112,12 @@ class CompletedBlockResultProjection {
       current: current,
       athleteHistory: athleteHistory,
     );
-    final exercises = interval != null
+    final circuit = CompletedCircuitBlockProjection.tryFrom(
+      block,
+      current: current,
+      athleteHistory: athleteHistory,
+    );
+    final exercises = interval != null || circuit != null
         ? const <CompletedExerciseResultProjection>[]
         : StrengthResultComparison.authoredExercises(block)
               .map(
@@ -123,17 +131,20 @@ class CompletedBlockResultProjection {
     final prescription = block.blockSnapshot.content.trim();
     final summary = interval != null
         ? interval.collapsedSummary
+        : circuit != null
+        ? circuit.collapsedSummary
         : isSimple
         ? PerformanceResultSummaryFormatter.formatBlock(block)
         : _blockHeadline(block, exercises);
     return CompletedBlockResultProjection(
       title: block.blockSnapshot.title,
       statusLabel: block.status.displayLabel,
-      isSimpleCompletion: isSimple && interval == null,
+      isSimpleCompletion: isSimple && interval == null && circuit == null,
       summary: summary,
       exercises: exercises,
       prescriptionContext: prescription.isEmpty ? null : prescription,
       interval: interval,
+      circuit: circuit,
     );
   }
 
@@ -618,4 +629,38 @@ String formatCompletedDuration(int seconds) {
   return EnduranceMetricsCalculator.formatDuration(seconds).isEmpty
       ? '${seconds ~/ 60}m ${seconds % 60}s'
       : EnduranceMetricsCalculator.formatDuration(seconds);
+}
+
+class CompletedCircuitBlockProjection {
+  const CompletedCircuitBlockProjection({
+    required this.result,
+    required this.comparisonStatus,
+    required this.collapsedSummary,
+    required this.primaryLabel,
+  });
+
+  final CircuitResultData result;
+  final StrengthExerciseComparisonStatus comparisonStatus;
+  final String collapsedSummary;
+  final String? primaryLabel;
+
+  static CompletedCircuitBlockProjection? tryFrom(
+    TrainingBlockResult block, {
+    required TrainingSessionRecord current,
+    required List<TrainingSessionRecord> athleteHistory,
+  }) {
+    final data = CircuitResultComparison.dataFor(block);
+    if (data == null || !data.usesStationCapture) return null;
+    final comparison = CircuitResultComparison.compare(
+      block: block,
+      current: current,
+      athleteHistory: athleteHistory,
+    );
+    return CompletedCircuitBlockProjection(
+      result: data,
+      comparisonStatus: comparison.status,
+      collapsedSummary: PerformanceResultSummaryFormatter.formatBlock(block),
+      primaryLabel: comparison.primaryLabel,
+    );
+  }
 }

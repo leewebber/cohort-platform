@@ -2,6 +2,7 @@ import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/workout_format.dart';
 import '../../session/models/session_execution_plan.dart';
+import '../services/circuit_capture_contract.dart';
 import '../services/interval_capture_contract.dart';
 import 'performance_result_data.dart';
 import 'performance_result_type.dart';
@@ -12,6 +13,9 @@ class BlockCaptureModeResolver {
   static BlockCaptureMode resolveForBlock(SessionExecutionBlock block) {
     final explicit = _explicitCaptureMode(block.performanceCaptureMode);
     if (explicit != null) return explicit;
+    if (CircuitCaptureContract.hasAuthoredStations(block)) {
+      return BlockCaptureMode.circuit;
+    }
     if (block.linkedExercises.any(
       (exercise) => exercise.prescription?.performanceCapture != null,
     )) {
@@ -60,8 +64,9 @@ class BlockCaptureModeResolver {
         return BlockCaptureMode.endurance;
       case WorkoutFormat.intervals:
       case WorkoutFormat.tabata:
-      case WorkoutFormat.emom:
         return BlockCaptureMode.interval;
+      case WorkoutFormat.emom:
+        return BlockCaptureMode.circuit;
       case WorkoutFormat.rounds:
         return BlockCaptureMode.rounds;
       case WorkoutFormat.none:
@@ -125,6 +130,8 @@ class BlockCaptureModeResolver {
         return PerformanceResultType.endurance;
       case BlockCaptureMode.rounds:
         return PerformanceResultType.rounds;
+      case BlockCaptureMode.circuit:
+        return PerformanceResultType.circuit;
       case BlockCaptureMode.customMetric:
         return PerformanceResultType.customMetric;
       case BlockCaptureMode.completion:
@@ -147,7 +154,11 @@ class BlockCaptureModeResolver {
       case BlockCaptureMode.endurance:
         return const EnduranceResultData();
       case BlockCaptureMode.rounds:
-        return const RoundsResultData();
+        return CircuitCaptureContract.hasAuthoredStations(block)
+            ? CircuitCaptureContract.authoredResult(block)
+            : const RoundsResultData();
+      case BlockCaptureMode.circuit:
+        return CircuitCaptureContract.authoredResult(block);
       case BlockCaptureMode.customMetric:
         return const CustomMetricResultData();
       case BlockCaptureMode.strength:

@@ -1,6 +1,4 @@
 import '../../../core/utils/database_uuid.dart';
-import '../../../models/session_block_type.dart';
-import '../../../models/workout_format.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../models/active_performance_draft.dart';
@@ -9,6 +7,7 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record_status.dart';
+import '../services/circuit_set_sync.dart';
 import '../services/interval_set_sync.dart';
 import '../services/performance_snapshot_builder.dart';
 import '../services/performance_validation_service.dart';
@@ -115,6 +114,14 @@ class PerformanceCaptureController {
           ),
         );
       }
+      if (resultData is CircuitResultData && resultData.usesStationCapture) {
+        next = next.copyWith(
+          exerciseResults: CircuitSetSync.ensureAuthoredRows(
+            exercises: next.exerciseResults,
+            result: resultData,
+          ),
+        );
+      }
       return next;
     });
   }
@@ -133,6 +140,9 @@ class PerformanceCaptureController {
     return _updateBlock(sourceBlockId, (block) {
       final interval = block.resultData;
       if (interval is IntervalResultData && interval.usesPerIntervalCapture) {
+        return block;
+      }
+      if (interval is CircuitResultData && interval.usesStationCapture) {
         return block;
       }
       final exercises = block.exerciseResults
@@ -192,6 +202,9 @@ class PerformanceCaptureController {
       if (interval is IntervalResultData && interval.usesPerIntervalCapture) {
         return block;
       }
+      if (interval is CircuitResultData && interval.usesStationCapture) {
+        return block;
+      }
       final exercises = block.exerciseResults
           .map((exercise) {
             if (exercise.sourceExerciseId != exerciseId) return exercise;
@@ -217,6 +230,13 @@ class PerformanceCaptureController {
     String setResultId,
   ) {
     return _updateBlock(sourceBlockId, (block) {
+      final interval = block.resultData;
+      if (interval is IntervalResultData && interval.usesPerIntervalCapture) {
+        return block;
+      }
+      if (interval is CircuitResultData && interval.usesStationCapture) {
+        return block;
+      }
       final exercises = block.exerciseResults
           .map((exercise) {
             if (exercise.sourceExerciseId != exerciseId) return exercise;

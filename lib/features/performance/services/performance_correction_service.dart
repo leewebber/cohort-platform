@@ -67,6 +67,18 @@ class PerformanceCorrectionService {
       if (data is EnduranceResultData) {
         _validateEndurance(data);
       }
+      if (data is CircuitResultData) {
+        if (data.recordedCount < 0 || data.recordedCount > 200) {
+          throw const PerformanceCorrectionException('invalid_circuit_count');
+        }
+        final seen = <int>{};
+        for (final row in data.stations) {
+          if (row.ordinal < 1 || seen.contains(row.ordinal)) {
+            throw const PerformanceCorrectionException('invalid_circuit_ordinal');
+          }
+          seen.add(row.ordinal);
+        }
+      }
       if (data is IntervalResultData) {
         if (data.recordedCount < 0 || data.recordedCount > 1000) {
           throw const PerformanceCorrectionException('invalid_interval_count');

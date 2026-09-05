@@ -15,6 +15,9 @@ class StrengthExercisePrescription {
     this.perSide = false,
     this.groupId,
     this.performanceCapture,
+    this.calories,
+    this.prescribedDistanceMeters,
+    this.prescribedDistanceText,
   });
 
   final int sets;
@@ -26,9 +29,17 @@ class StrengthExercisePrescription {
   final bool perSide;
   final String? groupId;
   final ExercisePerformanceCapture? performanceCapture;
+  final int? calories;
+  final double? prescribedDistanceMeters;
+  final String? prescribedDistanceText;
 
   bool get hasStructuredData =>
-      sets > 0 || reps.hasValue || load?.hasValue == true;
+      sets > 0 ||
+      reps.hasValue ||
+      load?.hasValue == true ||
+      calories != null ||
+      prescribedDistanceMeters != null ||
+      (prescribedDistanceText?.trim().isNotEmpty == true);
 
   StrengthExercisePrescription copyWith({
     int? sets,
@@ -40,6 +51,9 @@ class StrengthExercisePrescription {
     bool? perSide,
     String? groupId,
     ExercisePerformanceCapture? performanceCapture,
+    int? calories,
+    double? prescribedDistanceMeters,
+    String? prescribedDistanceText,
     bool clearLoad = false,
     bool clearRestSeconds = false,
     bool clearTempo = false,
@@ -59,6 +73,11 @@ class StrengthExercisePrescription {
       performanceCapture: clearPerformanceCapture
           ? null
           : (performanceCapture ?? this.performanceCapture),
+      calories: calories ?? this.calories,
+      prescribedDistanceMeters:
+          prescribedDistanceMeters ?? this.prescribedDistanceMeters,
+      prescribedDistanceText:
+          prescribedDistanceText ?? this.prescribedDistanceText,
     );
   }
 
@@ -74,10 +93,24 @@ class StrengthExercisePrescription {
       if (_nonEmpty(groupId) != null) 'group_id': groupId!.trim(),
       if (performanceCapture != null)
         'performance_capture': performanceCapture!.toJson(),
+      if (calories != null) 'calories': calories,
+      if (prescribedDistanceMeters != null)
+        'distance_m': prescribedDistanceMeters,
+      if (prescribedDistanceText != null) 'distance_m': prescribedDistanceText,
     };
   }
 
   factory StrengthExercisePrescription.fromJson(Map<String, dynamic> json) {
+    final distance = _decodeDistance(json['distance_m'] ?? json['distance']);
+    var capture = _captureFromJson(json['performance_capture']);
+    if (capture == null &&
+        (distance.meters != null ||
+            (distance.text?.trim().isNotEmpty == true))) {
+      capture = ExercisePerformanceCapture(
+        distanceUnit: 'm',
+        loadLabel: json['load'] == null ? null : 'Load per hand',
+      );
+    }
     return StrengthExercisePrescription(
       sets: _parseInt(json['sets']) ?? 0,
       reps: _decodeReps(json['reps']),
@@ -87,7 +120,10 @@ class StrengthExercisePrescription {
       coachCue: json['coach_cue']?.toString(),
       perSide: json['per_side'] == true,
       groupId: json['group_id']?.toString(),
-      performanceCapture: _captureFromJson(json['performance_capture']),
+      performanceCapture: capture,
+      calories: _parseInt(json['calories']),
+      prescribedDistanceMeters: distance.meters,
+      prescribedDistanceText: distance.text,
     );
   }
 
@@ -209,6 +245,16 @@ class StrengthExercisePrescription {
   );
 
   static final RegExp _compactLoadText = RegExp(r'^[a-z][a-z0-9_-]{0,79}$');
+
+  static ({double? meters, String? text}) _decodeDistance(dynamic value) {
+    if (value == null) return (meters: null, text: null);
+    if (value is num) return (meters: value.toDouble(), text: null);
+    final text = value.toString().trim();
+    if (text.isEmpty) return (meters: null, text: null);
+    final exact = double.tryParse(text);
+    if (exact != null) return (meters: exact, text: null);
+    return (meters: null, text: text);
+  }
 
   static ExercisePerformanceCapture? _captureFromJson(dynamic value) {
     if (value is Map<String, dynamic>) {

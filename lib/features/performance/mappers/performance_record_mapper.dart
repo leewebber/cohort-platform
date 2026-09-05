@@ -3,6 +3,7 @@ import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
+import '../services/circuit_set_sync.dart';
 import '../services/interval_set_sync.dart';
 
 class PerformanceRecordMapper {
@@ -101,7 +102,7 @@ class PerformanceRecordMapper {
             status: block.status,
             captureMode: BlockCaptureMode.auto,
             resultType: block.resultType,
-            resultData: _intervalResult(block),
+            resultData: _hydratedResult(block),
             startedAt: block.startedAt,
             completedAt: block.completedAt,
             durationSeconds: block.durationSeconds,
@@ -159,13 +160,21 @@ class PerformanceRecordMapper {
     );
   }
 
-  static PerformanceResultData _intervalResult(TrainingBlockResult block) {
+  static PerformanceResultData _hydratedResult(TrainingBlockResult block) {
     final data = block.resultData ?? const CompletionResultData();
-    if (data is! IntervalResultData) return data;
-    return IntervalSetSync.hydrateFromSets(
-      result: data,
-      exercises: block.exerciseResults,
-    );
+    if (data is IntervalResultData) {
+      return IntervalSetSync.hydrateFromSets(
+        result: data,
+        exercises: block.exerciseResults,
+      );
+    }
+    if (data is CircuitResultData) {
+      return CircuitSetSync.hydrateFromSets(
+        result: data,
+        exercises: block.exerciseResults,
+      );
+    }
+    return data;
   }
 
   static double? _authoritativeLoad({
