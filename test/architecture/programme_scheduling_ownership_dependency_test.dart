@@ -37,6 +37,8 @@ void main() {
       'ProgrammeScheduleRestoreService',
       'apply_programme_schedule_operation',
       'ProgrammeScheduleApplyService',
+      'swap_future_fixed_programme_session_and_begin',
+      'FutureProgrammeSessionSwapService',
     ];
     for (final path in owners) {
       final source = File('$root/$path').readAsStringSync();
@@ -213,6 +215,62 @@ void main() {
     ).readAsStringSync();
     expect(applyService.contains('SupabaseService'), isFalse);
     expect(applyService.contains('apply_programme_schedule_operation'), isFalse);
+
+    final swapAdapter = File(
+      '$root/lib/features/programme/services/'
+      'future_programme_session_swap_supabase_store.dart',
+    ).readAsStringSync();
+    expect(swapAdapter.contains('SupabaseService'), isTrue);
+    expect(
+      swapAdapter.contains('swap_future_fixed_programme_session_and_begin'),
+      isTrue,
+    );
+    expect(
+      swapAdapter.contains('apply_programme_schedule_operation'),
+      isFalse,
+    );
+    expect(
+      applyAdapter.contains('swap_future_fixed_programme_session_and_begin'),
+      isFalse,
+    );
+
+    final swapService = File(
+      '$root/lib/features/programme/services/'
+      'future_programme_session_swap_service.dart',
+    ).readAsStringSync();
+    expect(swapService.contains('SupabaseService'), isFalse);
+    expect(
+      swapService.contains('swap_future_fixed_programme_session_and_begin'),
+      isFalse,
+    );
+  });
+
+  test('future train-today swap migration grants authenticated only', () {
+    final sql = File(
+      '$root/supabase/migrations/'
+      '20260905180000_swap_future_fixed_programme_session_and_begin.sql',
+    ).readAsStringSync();
+    expect(
+      sql.contains(
+        'GRANT EXECUTE ON FUNCTION public.swap_future_fixed_programme_session_and_begin(\n  JSONB\n) TO authenticated',
+      ),
+      isTrue,
+    );
+    expect(
+      sql.contains(
+        'REVOKE ALL ON FUNCTION public.swap_future_fixed_programme_session_and_begin(\n  JSONB\n) FROM PUBLIC, anon',
+      ),
+      isTrue,
+    );
+    expect(sql.contains('future_train_today_swap'), isTrue);
+    expect(
+      sql.contains('cohort_fixed_assignment_refresh_compatibility_cursor'),
+      isTrue,
+    );
+    expect(
+      File('$root/supabase/tests/sql/gate_as_future_session_swap.sql').existsSync(),
+      isTrue,
+    );
   });
 
   test('dates remain outside stable identity', () {

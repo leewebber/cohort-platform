@@ -22,6 +22,7 @@ import '../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../programme/widgets/fixed_programme_week_view.dart';
 import '../performance/models/training_session_record.dart';
@@ -53,6 +54,7 @@ class HomeScreen extends StatefulWidget {
     this.executionLauncher,
     this.previewService,
     this.performanceRecordStore,
+    this.swapStore,
     this.onOpenCalendar,
   });
 
@@ -79,6 +81,7 @@ class HomeScreen extends StatefulWidget {
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ScheduledProgrammeSessionPreviewService? previewService;
   final PerformanceRecordStore? performanceRecordStore;
+  final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenCalendar;
 
   @override
@@ -536,6 +539,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           prepareService: widget.prepareService,
           executionLauncher: widget.executionLauncher,
           previewService: widget.previewService,
+          swapStore: widget.swapStore,
         ),
       ),
     );
@@ -557,6 +561,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       prepareService: widget.prepareService,
       executionLauncher: widget.executionLauncher,
       performanceRecordStore: widget.performanceRecordStore,
+      swapStore: widget.swapStore,
+      fixedOccurrenceStore: widget.fixedOccurrenceStore,
     );
     if (changed == true && mounted) await _refreshMaterialisedGate();
   }

@@ -6,16 +6,20 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
+import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
+import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/athlete_programme_controllers.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
+import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../services/future_programme_session_swap_store.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 import '../widgets/fixed_programme_week_view.dart';
 import 'athlete_programme_schedule_screen.dart';
@@ -32,6 +36,10 @@ class AthleteProgrammeScreen extends StatefulWidget {
     this.controller,
     this.fixedOccurrenceStore,
     this.previewService,
+    this.assignmentStore,
+    this.prepareService,
+    this.executionLauncher,
+    this.swapStore,
     this.onOpenCalendar,
   });
 
@@ -44,6 +52,10 @@ class AthleteProgrammeScreen extends StatefulWidget {
   final AthleteProgrammeScreenController? controller;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final ProgrammeAssignmentStore? assignmentStore;
+  final AthleteProgrammeSessionPrepareService? prepareService;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenCalendar;
 
   @override
@@ -459,6 +471,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
           assignmentId: assignment.id,
           fixedOccurrenceStore: widget.fixedOccurrenceStore,
           previewService: widget.previewService,
+          assignmentStore: widget.assignmentStore,
+          prepareService: widget.prepareService,
+          executionLauncher: widget.executionLauncher,
+          swapStore: widget.swapStore,
         ),
       ),
     );
@@ -474,6 +490,11 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       calendar: calendar,
       day: day,
       previewService: widget.previewService,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+      executionLauncher: widget.executionLauncher,
+      swapStore: widget.swapStore,
+      fixedOccurrenceStore: widget.fixedOccurrenceStore,
     );
     if (changed == true && mounted) await _loadFixedCalendar();
   }

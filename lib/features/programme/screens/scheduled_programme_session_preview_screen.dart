@@ -22,6 +22,11 @@ import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
+import '../services/fixed_programme_occurrence_projection_store.dart';
+import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../services/future_programme_session_swap_service.dart';
+import '../services/future_programme_session_swap_store.dart';
+import '../services/future_programme_session_swap_supabase_store.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 
 Future<bool?> openScheduledProgrammeSessionPreview({
@@ -34,6 +39,8 @@ Future<bool?> openScheduledProgrammeSessionPreview({
   AthleteProgrammeSessionPrepareService? prepareService,
   ProgrammeSessionExecutionLauncher? executionLauncher,
   PerformanceRecordStore? performanceRecordStore,
+  FutureProgrammeSessionSwapStore? swapStore,
+  FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore,
 }) {
   return Navigator.of(context).push<bool>(
     MaterialPageRoute(
@@ -46,6 +53,8 @@ Future<bool?> openScheduledProgrammeSessionPreview({
         prepareService: prepareService,
         executionLauncher: executionLauncher,
         performanceRecordStore: performanceRecordStore,
+        swapStore: swapStore,
+        fixedOccurrenceStore: fixedOccurrenceStore,
       ),
     ),
   );
@@ -62,6 +71,8 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
     this.prepareService,
     this.executionLauncher,
     this.performanceRecordStore,
+    this.swapStore,
+    this.fixedOccurrenceStore,
   });
 
   final String athleteId;
@@ -72,6 +83,8 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
   final AthleteProgrammeSessionPrepareService? prepareService;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final PerformanceRecordStore? performanceRecordStore;
+  final FutureProgrammeSessionSwapStore? swapStore;
+  final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
 
   @override
   State<ScheduledProgrammeSessionPreviewScreen> createState() =>
@@ -323,16 +336,154 @@ class _ScheduledProgrammeSessionPreviewScreenState
       ];
     }
     if (occurrence.state == FixedProgrammeOccurrenceState.planned) {
+      final canTrainToday = preview.calendar.canOfferFutureTrainTodaySwap(
+        occurrence,
+      );
       return [
         const SizedBox(height: CohortSpacing.md),
         CohortButton(
+          key: const ValueKey('scheduled-preview-available-date'),
           label:
               'Available ${AthleteProgrammeDateFormatter.dayMonth(preview.day.date)}',
           onPressed: null,
         ),
+        if (canTrainToday) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          CohortButton(
+            key: const ValueKey('scheduled-preview-train-today'),
+            label: 'Train today',
+            variant: CohortButtonVariant.secondary,
+            onPressed: _isOpeningSession
+                ? null
+                : () => _confirmTrainToday(preview),
+          ),
+        ],
       ];
     }
     return const [];
+  }
+
+  Future<void> _confirmTrainToday(
+    ScheduledProgrammeSessionPreview preview,
+  ) async {
+    final selected = preview.occurrence;
+    final today = preview.calendar.todayOccurrence;
+    if (selected == null ||
+        today == null ||
+        !preview.calendar.canOfferFutureTrainTodaySwap(selected) ||
+        _isOpeningSession) {
+      return;
+    }
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Train this session today?'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Changing the authored order may affect training balance and recovery. This is not generally recommended.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  '${selected.sessionTitle} moves from ${AthleteProgrammeDateFormatter.longDate(preview.day.date)} to ${AthleteProgrammeDateFormatter.longDate(_calendarDate(preview.calendar.today))}.',
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  '${today.sessionTitle} moves from ${AthleteProgrammeDateFormatter.longDate(_calendarDate(today.scheduledDate))} to ${AthleteProgrammeDateFormatter.longDate(_calendarDate(selected.scheduledDate))}.',
+                  style: CohortTextStyles.body,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              key: const ValueKey('swap-and-begin-cancel'),
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              key: const ValueKey('swap-and-begin'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Swap and begin'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _isOpeningSession = true);
+    try {
+      final assignmentStore =
+          widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
+      final assignment = await assignmentStore.getById(
+        preview.calendar.assignmentId,
+      );
+      if (assignment == null ||
+          !assignment.isActive ||
+          !assignment.isFixedSchedule ||
+          assignment.athleteId != widget.athleteId ||
+          assignment.id != selected.assignmentId) {
+        throw StateError('This assigned session is no longer executable.');
+      }
+      final swapResult =
+          await FutureProgrammeSessionSwapService(
+            store:
+                widget.swapStore ??
+                const FutureProgrammeSessionSwapSupabaseStore(),
+          ).swapAndBegin(calendar: preview.calendar, selected: selected);
+      if (!swapResult.isSuccess) {
+        throw StateError(swapResult.code ?? 'swap_failed');
+      }
+      final calendarStore =
+          widget.fixedOccurrenceStore ??
+          const FixedProgrammeOccurrenceProjectionSupabaseStore();
+      final refreshed = await calendarStore.resolveActive();
+      FixedProgrammeOccurrenceProjection? moved;
+      if (refreshed != null) {
+        for (final occurrence in refreshed.occurrences) {
+          if (occurrence.occurrenceId == selected.occurrenceId) {
+            moved = occurrence;
+            break;
+          }
+        }
+      }
+      if (moved == null || (!moved.isToday && !moved.isResumable)) {
+        throw StateError('swapped_session_not_executable');
+      }
+      final prepare =
+          widget.prepareService ??
+          AthleteCatalogueEnrolmentServices.createPrepareService();
+      final prepared = await prepare.prepareFixedOccurrence(assignment, moved);
+      if (!prepared.isReady) {
+        throw StateError(
+          prepared.message ?? 'This session could not be prepared safely.',
+        );
+      }
+      if (!mounted) return;
+      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
+          .launch(
+            context: context,
+            athleteId: widget.athleteId,
+            prepared: prepared,
+          );
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This session could not be swapped and started. Refresh your calendar and try again.',
+          ),
+        ),
+      );
+      setState(() => _isOpeningSession = false);
+    }
   }
 
   Future<void> _execute(ScheduledProgrammeSessionPreview preview) async {
@@ -466,5 +617,14 @@ class _ScheduledProgrammeSessionPreviewScreenState
   String? _text(String? value) {
     final trimmed = value?.trim();
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
+  }
+
+  DateTime _calendarDate(String isoDate) {
+    final parts = isoDate.split('-');
+    return DateTime(
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+      int.parse(parts[2]),
+    );
   }
 }

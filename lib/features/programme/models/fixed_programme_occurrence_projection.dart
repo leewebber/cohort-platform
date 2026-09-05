@@ -186,6 +186,36 @@ class FixedProgrammeCalendarProjection {
 
   bool get startsInFuture => startDate.compareTo(today) > 0;
 
+  /// A clean one-for-one Train-today swap is locally plausible.
+  ///
+  /// The authenticated RPC remains the authority and still rejects when the
+  /// server state is not a clean exchange.
+  bool canOfferFutureTrainTodaySwap(
+    FixedProgrammeOccurrenceProjection selected,
+  ) {
+    if (selected.assignmentId != assignmentId) return false;
+    if (selected.state != FixedProgrammeOccurrenceState.planned) return false;
+    if (selected.scheduledDate.compareTo(today) <= 0) return false;
+    final todaySession = todayOccurrence;
+    if (todaySession == null) return false;
+    if (todaySession.occurrenceId == selected.occurrenceId) return false;
+    if (todaySession.trainingSessionId != null || todaySession.isResumable) {
+      return false;
+    }
+    if (todaySession.state != FixedProgrammeOccurrenceState.today &&
+        todaySession.state != FixedProgrammeOccurrenceState.planned) {
+      return false;
+    }
+    for (final occurrence in occurrences) {
+      if (occurrence.isResumable) return false;
+      if (occurrence.state == FixedProgrammeOccurrenceState.missed ||
+          occurrence.state == FixedProgrammeOccurrenceState.inProgressOverdue) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   factory FixedProgrammeCalendarProjection.fromMap(Map<String, dynamic> map) {
     final assignmentId = _requiredString(map, 'assignment_id');
     final rawOccurrences = map['occurrences'];

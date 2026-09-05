@@ -20,6 +20,7 @@ import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../services/future_programme_session_swap_store.dart';
 import '../services/programme_schedule_apply_service.dart';
 import '../services/programme_schedule_apply_supabase_store.dart';
 import '../services/programme_schedule_operations_supabase_store.dart';
@@ -44,6 +45,7 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
     this.prepareService,
     this.executionLauncher,
     this.previewService,
+    this.swapStore,
   });
 
   final String athleteId;
@@ -54,6 +56,7 @@ class AthleteProgrammeScheduleScreen extends StatefulWidget {
   final AthleteProgrammeSessionPrepareService? prepareService;
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final FutureProgrammeSessionSwapStore? swapStore;
 
   @override
   State<AthleteProgrammeScheduleScreen> createState() =>
@@ -586,6 +589,8 @@ class _AthleteProgrammeScheduleScreenState
       assignmentStore: widget.assignmentStore,
       prepareService: widget.prepareService,
       executionLauncher: widget.executionLauncher,
+      swapStore: widget.swapStore,
+      fixedOccurrenceStore: widget.fixedOccurrenceStore,
     );
     if (changed == true && mounted) await _loadAuthoritativeCalendar();
   }

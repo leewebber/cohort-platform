@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../data/repositories/programme_assignment_store.dart';
+import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
+import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../services/future_programme_session_swap_store.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 import '../widgets/fixed_programme_week_view.dart';
 import 'scheduled_programme_session_preview_screen.dart';
@@ -22,6 +26,10 @@ class AthleteCalendarScreen extends StatefulWidget {
     required this.athleteId,
     this.fixedOccurrenceStore,
     this.previewService,
+    this.assignmentStore,
+    this.prepareService,
+    this.executionLauncher,
+    this.swapStore,
     this.onOpenProgrammes,
     this.authRefreshListenable,
   });
@@ -29,6 +37,10 @@ class AthleteCalendarScreen extends StatefulWidget {
   final String athleteId;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final ScheduledProgrammeSessionPreviewService? previewService;
+  final ProgrammeAssignmentStore? assignmentStore;
+  final AthleteProgrammeSessionPrepareService? prepareService;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenProgrammes;
 
   /// The shell notifies this screen when authentication/bootstrap state
@@ -280,6 +292,11 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       calendar: calendar,
       day: day,
       previewService: widget.previewService,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+      executionLauncher: widget.executionLauncher,
+      swapStore: widget.swapStore,
+      fixedOccurrenceStore: widget.fixedOccurrenceStore,
     );
     if (changed == true && mounted) await _load();
   }
