@@ -362,6 +362,13 @@ class _ScheduledProgrammeSessionPreviewScreenState
                 ? null
                 : () => _confirmTrainToday(preview),
           ),
+        ] else if ((preview.calendar.calendarDaysUntil(occurrence) ?? 0) >
+            FixedProgrammeCalendarProjection.futureTrainTodayHorizonDays) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text(
+            'Train today is available for sessions in the next 7 days.',
+            style: CohortTextStyles.muted,
+          ),
         ],
       ];
     }

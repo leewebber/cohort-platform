@@ -79,6 +79,70 @@ void main() {
 
     expect(calendar.canOfferFutureTrainTodaySwap(day6), isTrue);
     expect(calendar.canOfferFutureTrainTodaySwap(day1), isFalse);
+    expect(calendar.calendarDaysUntil(day2), 1);
+    expect(calendar.canOfferFutureTrainTodaySwap(day2), isTrue);
+
+    final dayExactly7 = _occurrence(
+      assignment: assignment,
+      id: 'occ-7',
+      slotId: ProgrammeScheduleTestFixtures.slot3Id,
+      protocolId: 'EX-007',
+      dayKey: 'day_7',
+      date: '2026-09-12',
+      state: FixedProgrammeOccurrenceState.planned,
+      sessionTitle: 'Apollo Long',
+    );
+    final dayPlus8 = _occurrence(
+      assignment: assignment,
+      id: 'occ-8',
+      slotId: '00000000-0000-4000-8000-000000000008',
+      protocolId: 'EX-008',
+      dayKey: 'day_1',
+      date: '2026-09-13',
+      state: FixedProgrammeOccurrenceState.planned,
+      sessionTitle: 'Week 2 Strength',
+    );
+    final horizonCalendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-05',
+      occurrences: [day1, day2, day6, dayExactly7, dayPlus8],
+    );
+    expect(horizonCalendar.calendarDaysUntil(dayExactly7), 7);
+    expect(horizonCalendar.canOfferFutureTrainTodaySwap(dayExactly7), isTrue);
+    expect(horizonCalendar.calendarDaysUntil(dayPlus8), 8);
+    expect(horizonCalendar.canOfferFutureTrainTodaySwap(dayPlus8), isFalse);
+
+    final dstCalendar = _calendar(
+      assignment: assignment,
+      today: '2026-03-08',
+      occurrences: [
+        _occurrence(
+          assignment: assignment,
+          id: 'occ-dst-today',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_1',
+          date: '2026-03-08',
+          state: FixedProgrammeOccurrenceState.today,
+          sessionTitle: 'Apollo Strength',
+        ),
+        _occurrence(
+          assignment: assignment,
+          id: 'occ-dst-7',
+          slotId: ProgrammeScheduleTestFixtures.slot4Id,
+          protocolId: 'FG-009',
+          dayKey: 'day_6',
+          date: '2026-03-15',
+          state: FixedProgrammeOccurrenceState.planned,
+          sessionTitle: 'Apollo Athletic',
+        ),
+      ],
+    );
+    expect(dstCalendar.calendarDaysUntil(dstCalendar.occurrences.last), 7);
+    expect(
+      dstCalendar.canOfferFutureTrainTodaySwap(dstCalendar.occurrences.last),
+      isTrue,
+    );
 
     final completedToday = _calendar(
       assignment: assignment,
@@ -128,6 +192,42 @@ void main() {
     final result = await FutureProgrammeSessionSwapService(
       store: store,
     ).swapAndBegin(calendar: calendar, selected: future);
+    expect(result.isSuccess, isFalse);
+    expect(result.code, 'swap_not_offered');
+    expect(store.calls, isEmpty);
+  });
+
+  test('swap service does not write when the session is 8 days away', () async {
+    final assignment = _assignment();
+    final today = _occurrence(
+      assignment: assignment,
+      id: 'occ-1',
+      slotId: ProgrammeScheduleTestFixtures.slot1Id,
+      protocolId: 'BW-001',
+      dayKey: 'day_1',
+      date: '2026-09-05',
+      state: FixedProgrammeOccurrenceState.today,
+      sessionTitle: 'Apollo Strength',
+    );
+    final plus8 = _occurrence(
+      assignment: assignment,
+      id: 'occ-8',
+      slotId: ProgrammeScheduleTestFixtures.slot4Id,
+      protocolId: 'FG-009',
+      dayKey: 'day_6',
+      date: '2026-09-13',
+      state: FixedProgrammeOccurrenceState.planned,
+      sessionTitle: 'Apollo Athletic',
+    );
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-05',
+      occurrences: [today, plus8],
+    );
+    final store = _RecordingSwapStore();
+    final result = await FutureProgrammeSessionSwapService(
+      store: store,
+    ).swapAndBegin(calendar: calendar, selected: plus8);
     expect(result.isSuccess, isFalse);
     expect(result.code, 'swap_not_offered');
     expect(store.calls, isEmpty);
@@ -191,6 +291,30 @@ void main() {
     expect(harness.launcher.lastOccurrenceId, harness.day6.occurrenceId);
     expect(harness.launcher.lastProtocolId, 'FG-009');
   });
+
+  testWidgets(
+    'sessions more than 7 days away keep preview and hide Train today',
+    (tester) async {
+      final harness = await _Harness.createBeyondHorizon();
+      await tester.pumpWidget(harness.previewApp());
+      await tester.pumpAndSettle();
+      expect(find.text('Session unavailable'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('Available 9 September'),
+        400,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Available 9 September'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Train today is available for sessions in the next 7 days.'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('Train today'), findsNothing);
+      expect(find.text('Begin'), findsNothing);
+      expect(find.text('Apollo Athletic'), findsWidgets);
+    },
+  );
 
   testWidgets('double Swap and begin is a single write', (tester) async {
     final harness = await _Harness.create();
@@ -548,9 +672,43 @@ class _Harness {
     );
   }
 
+  static Future<_Harness> createBeyondHorizon() async {
+    final base = await create();
+    final far = _occurrence(
+      assignment: base.assignment,
+      id: base.day6.occurrenceId,
+      slotId: base.day6.sessionSlotId,
+      protocolId: base.day6.protocolId,
+      dayKey: base.day6.dayKey,
+      date: '2026-09-09',
+      state: FixedProgrammeOccurrenceState.planned,
+      sessionTitle: base.day6.sessionTitle,
+    );
+    final calendar = _calendar(
+      assignment: base.assignment,
+      today: '2026-09-01',
+      occurrences: [base.day1, far],
+    );
+    return _Harness(
+      assignment: base.assignment,
+      day1: base.day1,
+      day2: base.day2,
+      day6: far,
+      original: calendar,
+      swapped: base.swapped,
+      tables: base.tables,
+      projectionStore: _MutableProjectionStore(calendar),
+      swapStore: base.swapStore,
+      startStore: base.startStore,
+      launcher: base.launcher,
+      prepare: base.prepare,
+      execution: base.execution,
+    );
+  }
+
   Widget previewApp() {
     final day = AthleteProgrammeWeekDayPresentation(
-      date: DateTime(2026, 9, 6),
+      date: DateTime.parse('${day6.scheduledDate}T12:00:00'),
       state: day6.state,
       occurrence: day6,
     );

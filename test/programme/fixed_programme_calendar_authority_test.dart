@@ -1249,6 +1249,11 @@ void main() {
       );
       expect(find.text('Available 1 September'), findsOneWidget);
       expect(find.text('Train today'), findsNothing);
+      await tester.scrollUntilVisible(
+        find.text('Train today is available for sessions in the next 7 days.'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.textContaining('2026-09-01'), findsNothing);
       expect(find.text('Begin'), findsNothing);
       expect(previewLoader.calls, 2);
@@ -1627,6 +1632,11 @@ void main() {
         );
         expect(find.text('Available 1 September'), findsOneWidget);
         expect(find.text('Train today'), findsNothing);
+        await tester.scrollUntilVisible(
+          find.text('Train today is available for sessions in the next 7 days.'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
 
         await tester.scrollUntilVisible(
           find.bySemanticsLabel(

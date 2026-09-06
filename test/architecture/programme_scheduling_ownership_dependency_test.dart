@@ -271,6 +271,19 @@ void main() {
       File('$root/supabase/tests/sql/gate_as_future_session_swap.sql').existsSync(),
       isTrue,
     );
+    final horizon = File(
+      '$root/supabase/migrations/'
+      '20260906120000_bound_future_train_today_swap_horizon.sql',
+    ).readAsStringSync();
+    expect(horizon.contains('selected_outside_train_today_horizon'), isTrue);
+    expect(horizon.contains('v_expected_selected - v_today) > 7'), isTrue);
+    expect(horizon.contains('AT TIME ZONE v_assignment.timezone'), isTrue);
+    expect(
+      horizon.contains(
+        'GRANT EXECUTE ON FUNCTION public.swap_future_fixed_programme_session_and_begin(\n  JSONB\n) TO authenticated',
+      ),
+      isTrue,
+    );
   });
 
   test('dates remain outside stable identity', () {

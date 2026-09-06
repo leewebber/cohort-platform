@@ -186,6 +186,25 @@ class FixedProgrammeCalendarProjection {
 
   bool get startsInFuture => startDate.compareTo(today) > 0;
 
+  static const int futureTrainTodayHorizonDays = 7;
+
+  /// Calendar days from athlete-local today to [selected], ignoring clock time.
+  int? calendarDaysUntil(FixedProgrammeOccurrenceProjection selected) {
+    final selectedDate = _dateOnly(selected.scheduledDate);
+    final todayDate = _dateOnly(today);
+    if (selectedDate == null || todayDate == null) return null;
+    return selectedDate.difference(todayDate).inDays;
+  }
+
+  bool isWithinFutureTrainTodayHorizon(
+    FixedProgrammeOccurrenceProjection selected,
+  ) {
+    final days = calendarDaysUntil(selected);
+    return days != null &&
+        days >= 1 &&
+        days <= futureTrainTodayHorizonDays;
+  }
+
   /// A clean one-for-one Train-today swap is locally plausible.
   ///
   /// The authenticated RPC remains the authority and still rejects when the
@@ -195,7 +214,7 @@ class FixedProgrammeCalendarProjection {
   ) {
     if (selected.assignmentId != assignmentId) return false;
     if (selected.state != FixedProgrammeOccurrenceState.planned) return false;
-    if (selected.scheduledDate.compareTo(today) <= 0) return false;
+    if (!isWithinFutureTrainTodayHorizon(selected)) return false;
     final todaySession = todayOccurrence;
     if (todaySession == null) return false;
     if (todaySession.occurrenceId == selected.occurrenceId) return false;
@@ -281,6 +300,16 @@ String _requiredDate(Map<String, dynamic> map, String key) {
     throw FormatException('Invalid fixed projection $key');
   }
   return value;
+}
+
+DateTime? _dateOnly(String raw) {
+  final match = RegExp(r'^(\d{4})-(\d{2})-(\d{2})').firstMatch(raw);
+  if (match == null) return null;
+  return DateTime.utc(
+    int.parse(match[1]!),
+    int.parse(match[2]!),
+    int.parse(match[3]!),
+  );
 }
 
 int _requiredPositiveInt(Map<String, dynamic> map, String key) {

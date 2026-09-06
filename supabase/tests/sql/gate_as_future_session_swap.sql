@@ -7,8 +7,22 @@ DECLARE
   v_hash TEXT;
   v_athlete_a UUID := 'a5000000-0000-4000-8000-00000000000a';
   v_athlete_b UUID := 'b5000000-0000-4000-8000-00000000000b';
+  v_athlete_c UUID := 'c5000000-0000-4000-8000-00000000000c';
+  v_athlete_d UUID := 'd5000000-0000-4000-8000-00000000000d';
+  v_athlete_e UUID := 'e5000000-0000-4000-8000-00000000000e';
   v_assignment_a UUID;
   v_assignment_b UUID;
+  v_assignment_c UUID;
+  v_assignment_d UUID;
+  v_assignment_e UUID;
+  v_plus_1 UUID;
+  v_plus_7 UUID;
+  v_plus_8 UUID;
+  v_plus_1_date DATE;
+  v_plus_7_date DATE;
+  v_plus_8_date DATE;
+  v_ny_today DATE;
+  v_utc_today DATE;
   v_day1 UUID;
   v_day2 UUID;
   v_day3 UUID;
@@ -62,13 +76,28 @@ BEGIN
     ('00000000-0000-0000-0000-000000000000', v_athlete_b,
      'authenticated', 'authenticated', 'gate-as-b@example.invalid',
      crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
+     '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
+    ('00000000-0000-0000-0000-000000000000', v_athlete_c,
+     'authenticated', 'authenticated', 'gate-as-c@example.invalid',
+     crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
+     '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
+    ('00000000-0000-0000-0000-000000000000', v_athlete_d,
+     'authenticated', 'authenticated', 'gate-as-d@example.invalid',
+     crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
+     '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
+    ('00000000-0000-0000-0000-000000000000', v_athlete_e,
+     'authenticated', 'authenticated', 'gate-as-e@example.invalid',
+     crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
      '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', '')
   ON CONFLICT (id) DO NOTHING;
 
   INSERT INTO profiles (id, display_name, is_athlete, is_coach)
   VALUES
     (v_athlete_a, 'Gate AS Athlete A', TRUE, FALSE),
-    (v_athlete_b, 'Gate AS Athlete B', TRUE, FALSE)
+    (v_athlete_b, 'Gate AS Athlete B', TRUE, FALSE),
+    (v_athlete_c, 'Gate AS Athlete C', TRUE, FALSE),
+    (v_athlete_d, 'Gate AS Athlete D', TRUE, FALSE),
+    (v_athlete_e, 'Gate AS Athlete E', TRUE, FALSE)
   ON CONFLICT (id) DO UPDATE
   SET is_athlete = TRUE, is_coach = FALSE;
 
@@ -560,6 +589,249 @@ BEGIN
     (SELECT materialised_package_content_hash FROM programme_assignments WHERE id = v_assignment_a),
     (SELECT package_content_hash FROM programme_schedule_projections WHERE assignment_id = v_assignment_a)
   );
+
+  PERFORM sprint12_assert_eq(
+    'AS', 'dst_spring_forward_is_seven_calendar_days',
+    '7',
+    (DATE '2026-03-15' - DATE '2026-03-08')::TEXT
+  );
+  PERFORM sprint12_assert_eq(
+    'AS', 'dst_fall_back_is_seven_calendar_days',
+    '7',
+    (DATE '2026-11-08' - DATE '2026-11-01')::TEXT
+  );
+
+  -- Horizon: tomorrow allowed, +7 allowed, +8 denied. Dates stay future.
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_c::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.enrol_athlete_in_catalogue_programme_version(
+    v_version,
+    'Atlantic/Canary',
+    FALSE
+  );
+  v_assignment_c := (v_result->>'enrolment_id')::UUID;
+  v_result := public.start_fixed_programme_from_enrolment(
+    v_assignment_c,
+    v_start_date,
+    'Atlantic/Canary'
+  );
+  PERFORM set_config('role', 'postgres', true);
+  SELECT o.id, o.scheduled_date
+  INTO v_day1, v_day1_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_c
+    AND o.week_number = 1 AND o.day_key = 'day_1';
+  SELECT o.id, o.scheduled_date
+  INTO v_plus_8, v_plus_8_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_c
+    AND o.scheduled_date = v_start_date + 8;
+  SELECT o.id, o.scheduled_date
+  INTO v_plus_7, v_plus_7_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_c
+    AND o.scheduled_date = v_start_date + 7;
+  PERFORM sprint12_record(
+    'AS', 'horizon_plus_eight_is_future', 'future',
+    v_plus_8_date::TEXT, NULL,
+    v_plus_8 IS NOT NULL AND v_plus_8_date = v_start_date + 8
+      AND v_plus_8_date > v_start_date,
+    NULL
+  );
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_c::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_c,
+      'today_occurrence_id', v_day1,
+      'selected_occurrence_id', v_plus_8,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_plus_8_date
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'horizon_eight_days_denied', 'selected_outside_train_today_horizon',
+    v_result->>'code', NULL,
+    v_result->>'code' = 'selected_outside_train_today_horizon',
+    v_result::TEXT
+  );
+  PERFORM sprint12_assert_eq(
+    'AS', 'horizon_eight_days_leaves_dates',
+    v_day1_date::TEXT || '/' || v_plus_8_date::TEXT,
+    (SELECT scheduled_date::TEXT FROM programme_schedule_occurrences WHERE id = v_day1)
+      || '/' ||
+    (SELECT scheduled_date::TEXT FROM programme_schedule_occurrences WHERE id = v_plus_8)
+  );
+  SELECT COUNT(*) INTO v_count
+  FROM programme_schedule_occurrences
+  WHERE assignment_id = v_assignment_c
+    AND disposition = 'scheduled'
+    AND scheduled_date < v_start_date;
+  PERFORM sprint12_assert_eq('AS', 'horizon_deny_creates_no_overdue', '0', v_count::TEXT);
+
+  -- Stale client: UI could still think +7, but the selected row is now +8.
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_c::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_c,
+      'today_occurrence_id', v_day1,
+      'selected_occurrence_id', v_plus_8,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_start_date + 7
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'stale_client_horizon_denied', 'stale_occurrence_dates',
+    v_result->>'code', NULL,
+    v_result->>'code' = 'stale_occurrence_dates',
+    v_result::TEXT
+  );
+
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_c::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_c,
+      'today_occurrence_id', v_day1,
+      'selected_occurrence_id', v_plus_7,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_plus_7_date
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'horizon_seven_days_allowed', 'created/swapped_and_begun',
+    (v_result->>'status') || '/' || (v_result->>'code'),
+    NULL,
+    v_result->>'status' = 'created' AND v_result->>'code' = 'swapped_and_begun',
+    v_result::TEXT
+  );
+
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_d::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.enrol_athlete_in_catalogue_programme_version(
+    v_version,
+    'Atlantic/Canary',
+    FALSE
+  );
+  v_assignment_d := (v_result->>'enrolment_id')::UUID;
+  v_result := public.start_fixed_programme_from_enrolment(
+    v_assignment_d,
+    v_start_date,
+    'Atlantic/Canary'
+  );
+  PERFORM set_config('role', 'postgres', true);
+  SELECT o.id, o.scheduled_date
+  INTO v_day1, v_day1_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_d
+    AND o.week_number = 1 AND o.day_key = 'day_1';
+  SELECT o.id, o.scheduled_date
+  INTO v_plus_1, v_plus_1_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_d
+    AND o.scheduled_date = v_start_date + 1;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_d::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_d,
+      'today_occurrence_id', v_day1,
+      'selected_occurrence_id', v_plus_1,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_plus_1_date
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'horizon_tomorrow_allowed', 'created/swapped_and_begun',
+    (v_result->>'status') || '/' || (v_result->>'code'),
+    NULL,
+    v_result->>'status' = 'created' AND v_result->>'code' = 'swapped_and_begun',
+    v_result::TEXT
+  );
+
+  v_ny_today := (NOW() AT TIME ZONE 'America/New_York')::DATE;
+  v_utc_today := (NOW() AT TIME ZONE 'UTC')::DATE;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_e::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.enrol_athlete_in_catalogue_programme_version(
+    v_version,
+    'America/New_York',
+    FALSE
+  );
+  v_assignment_e := (v_result->>'enrolment_id')::UUID;
+  v_result := public.start_fixed_programme_from_enrolment(
+    v_assignment_e,
+    v_ny_today,
+    'America/New_York'
+  );
+  PERFORM set_config('role', 'postgres', true);
+  SELECT o.id, o.scheduled_date
+  INTO v_day1, v_day1_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_e
+    AND o.scheduled_date = v_ny_today;
+  SELECT o.id, o.scheduled_date
+  INTO v_plus_8, v_plus_8_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_e
+    AND o.scheduled_date = v_ny_today + 8;
+  PERFORM sprint12_assert_eq(
+    'AS', 'timezone_today_uses_assignment_zone',
+    v_ny_today::TEXT,
+    v_day1_date::TEXT
+  );
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_e::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_e,
+      'today_occurrence_id', v_day1,
+      'selected_occurrence_id', v_plus_8,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_plus_8_date
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'timezone_horizon_eight_days_denied',
+    'selected_outside_train_today_horizon',
+    v_result->>'code', NULL,
+    v_result->>'code' = 'selected_outside_train_today_horizon',
+    v_result::TEXT
+  );
+  IF v_utc_today IS DISTINCT FROM v_ny_today THEN
+    PERFORM set_config('request.jwt.claim.sub', v_athlete_e::TEXT, true);
+    PERFORM set_config('role', 'authenticated', true);
+    v_result := public.swap_future_fixed_programme_session_and_begin(
+      jsonb_build_object(
+        'assignment_id', v_assignment_e,
+        'today_occurrence_id', v_day1,
+        'selected_occurrence_id', v_plus_8,
+        'expected_today_date', v_utc_today,
+        'expected_selected_date', v_utc_today + 7
+      )
+    );
+    PERFORM set_config('role', 'postgres', true);
+    PERFORM sprint12_record(
+      'AS', 'timezone_stale_utc_today_denied',
+      'today_date_mismatch',
+      v_result->>'code', NULL,
+      v_result->>'code' IN ('today_date_mismatch', 'stale_occurrence_dates'),
+      v_result::TEXT
+    );
+  ELSE
+    PERFORM sprint12_record(
+      'AS', 'timezone_stale_utc_today_denied',
+      'same_calendar_date',
+      'same_calendar_date',
+      TRUE, TRUE, NULL
+    );
+  END IF;
 END $$;
 
 SELECT gate, case_id, expected, actual, pass
