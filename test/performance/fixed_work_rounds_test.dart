@@ -10,8 +10,11 @@ import 'package:cohort_platform/features/performance/services/completed_session_
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
 import 'package:cohort_platform/features/performance/services/performance_result_summary_formatter.dart';
 import 'package:cohort_platform/features/performance/widgets/fixed_work_rounds_capture.dart';
+import 'package:cohort_platform/features/performance/widgets/round_time_field.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/services/fixed_work_rounds_controller.dart';
+import 'package:cohort_platform/features/session/widgets/athlete/athlete_block_card.dart';
+import 'package:cohort_platform/features/performance/services/interval_pace_format.dart';
 import 'package:cohort_platform/models/circuit_capture_strategy.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/strength_exercise_prescription.dart';
@@ -384,9 +387,141 @@ void main() {
     );
   });
 
-  testWidgets('capture shows two loads and Start Round 1, not twelve rows', (
+  test('manual times complete rounds without starting rest', () {
+    final controller = FixedWorkRoundsController(
+      result: CircuitCaptureContract.authoredResult(_w5().blocks.single),
+    );
+    controller.recordManualTime(1, 85);
+    expect(controller.result.rounds.first.isCompleted, isTrue);
+    expect(controller.result.rounds.first.elapsedSeconds, 85);
+    expect(controller.phase, FixedWorkPhase.ready);
+    expect(controller.startOrdinal, 2);
+  });
+
+  test('mixed timer then manual keeps one time per round', () {
+    var clock = DateTime.utc(2026, 9, 6, 12);
+    final controller = FixedWorkRoundsController(
+      result: CircuitCaptureContract.authoredResult(_w5().blocks.single),
+      now: () => clock,
+    );
+    controller.startRound();
+    clock = clock.add(const Duration(seconds: 70));
+    controller.finishRound();
+    controller.skipRest();
+    controller.recordManualTime(2, 88);
+    expect(controller.result.rounds.map((round) => round.elapsedSeconds), [
+      70,
+      88,
+      null,
+    ]);
+    expect(controller.startOrdinal, 3);
+    controller.recordManualTime(1, 65);
+    expect(controller.result.rounds.first.elapsedSeconds, 65);
+    expect(
+      controller.result.rounds.where((round) => round.isCompleted),
+      hasLength(2),
+    );
+  });
+
+  test('digit drafts format 125 and 1030 like pace fields', () {
+    expect(IntervalPaceFormat.applySmartDraft('125'), '1:25');
+    expect(IntervalPaceFormat.applySmartDraft('1030'), '10:30');
+    expect(IntervalPaceFormat.parse('125')?.round(), 85);
+    expect(IntervalPaceFormat.parse('1030')?.round(), 630);
+    expect(IntervalPaceFormat.isComplete('12'), isFalse);
+    expect(IntervalPaceFormat.hasInvalidSeconds('199'), isTrue);
+  });
+
+  testWidgets('prescription appears once with loads and start timer visible', (
     tester,
   ) async {
+    final plan = _w5();
+    final result = CircuitCaptureContract.authoredResult(plan.blocks.single);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: AthleteBlockCard(
+              block: plan.blocks.single,
+              isExpanded: true,
+              isActive: true,
+              isComplete: false,
+              onToggleExpanded: () {},
+              onMarkComplete: () {},
+              onReopen: () {},
+              onLaunchTimer: null,
+              onOpenExercise: (_) {},
+              performanceReplacesExerciseList: true,
+              performanceSection: FixedWorkRoundsCapture(
+                result: result,
+                onChanged: (_) {},
+                linkedExercises: plan.blocks.single.linkedExercises,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(find.text('Conditioning'), findsOneWidget);
+    expect(find.text('Fixed-work rounds'), findsOneWidget);
+    expect(find.text('3 ROUNDS'), findsOneWidget);
+    expect(find.text('Sled Push'), findsOneWidget);
+    expect(find.text('20 m'), findsNWidgets(2));
+    expect(find.text('Sled Push (kg)'), findsOneWidget);
+    expect(find.text('Sled Pull (kg)'), findsOneWidget);
+    expect(find.text('START TIMER'), findsOneWidget);
+    expect(find.textContaining('Three rounds'), findsNothing);
+    expect(find.textContaining('Athlete selected'), findsNothing);
+    expect(find.text('ROUNDS'), findsNothing);
+    expect(find.textContaining('Sled Push 20 m ·'), findsNothing);
+    expect(find.textContaining('Distance (m)'), findsNothing);
+  });
+
+  testWidgets('manual 125 and 1030 complete rounds; partial drafts do not', (
+    tester,
+  ) async {
+    var latest = CircuitCaptureContract.authoredResult(_w5().blocks.single);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: FixedWorkRoundsCapture(
+                  result: latest,
+                  onChanged: (value) {
+                    setState(() => latest = value as CircuitResultData);
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.byKey(const ValueKey('fixed-work-manual-toggle')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(RoundTimeField).at(0), '12');
+    await tester.pump();
+    expect(latest.rounds.first.isCompleted, isFalse);
+    await tester.enterText(find.byType(RoundTimeField).at(0), '125');
+    await tester.pump();
+    expect(latest.rounds.first.elapsedSeconds, 85);
+    expect(latest.rounds.first.isCompleted, isTrue);
+    await tester.enterText(find.byType(RoundTimeField).at(1), '1030');
+    await tester.pump();
+    expect(latest.rounds[1].elapsedSeconds, 630);
+    await tester.enterText(find.byType(RoundTimeField).at(2), '199');
+    await tester.pump();
+    expect(latest.rounds[2].isCompleted, isFalse);
+    expect(find.text('Enter seconds as 00–59'), findsOneWidget);
+  });
+
+  testWidgets('no overflow on a narrow screen', (tester) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     final result = CircuitCaptureContract.authoredResult(_w5().blocks.single);
     await tester.pumpWidget(
       MaterialApp(
@@ -400,10 +535,7 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Sled Push load (kg)'), findsOneWidget);
-    expect(find.text('Sled Pull load (kg)'), findsOneWidget);
-    expect(find.text('START ROUND 1'), findsOneWidget);
-    expect(find.textContaining('Distance (m)'), findsNothing);
-    expect(find.text('CIRCUIT PERFORMANCE'), findsNothing);
+    expect(tester.takeException(), isNull);
+    expect(find.text('START TIMER'), findsOneWidget);
   });
 }

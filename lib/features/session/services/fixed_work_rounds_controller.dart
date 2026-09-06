@@ -39,9 +39,27 @@ class FixedWorkRoundsController {
 
   int get restSeconds => _result.restBetweenRoundsSeconds ?? 0;
 
+  int get startOrdinal {
+    final current = _round(currentRound);
+    if (current != null &&
+        current.state == CircuitRoundCompletionState.pending) {
+      return currentRound;
+    }
+    return firstPendingOrdinal ?? currentRound;
+  }
+
+  int? get firstPendingOrdinal {
+    for (final round in _result.rounds) {
+      if (round.state == CircuitRoundCompletionState.pending) {
+        return round.ordinal;
+      }
+    }
+    return null;
+  }
+
   bool get canStartCurrentRound {
     if (phase != FixedWorkPhase.ready || _result.endedEarly) return false;
-    final round = _round(currentRound);
+    final round = _round(startOrdinal);
     return round != null &&
         round.state == CircuitRoundCompletionState.pending;
   }
@@ -80,7 +98,7 @@ class FixedWorkRoundsController {
   CircuitResultData startRound() {
     if (!canStartCurrentRound) return _result;
     final startedAt = _now().millisecondsSinceEpoch;
-    final ordinal = currentRound;
+    final ordinal = startOrdinal;
     _result = _result
         .replaceRound(
           _round(ordinal)!.copyWith(startedAtMs: startedAt),
@@ -151,6 +169,41 @@ class FixedWorkRoundsController {
     return _result;
   }
 
+  CircuitResultData recordManualTime(int ordinal, int seconds) {
+    final existing = _round(ordinal);
+    if (existing == null || seconds < 0) return _result;
+    _result = _result.replaceRound(
+      existing.copyWith(
+        elapsedSeconds: seconds,
+        state: CircuitRoundCompletionState.completed,
+      ),
+    );
+    return _alignCursorAfterManual();
+  }
+
+  CircuitResultData clearRoundTime(int ordinal) {
+    final existing = _round(ordinal);
+    if (existing == null) return _result;
+    _result = _result.replaceRound(
+      existing.copyWith(
+        state: CircuitRoundCompletionState.pending,
+        clearElapsed: true,
+        clearStarted: true,
+        clearFinished: true,
+      ),
+    );
+    if (phase == FixedWorkPhase.work || phase == FixedWorkPhase.rest) {
+      return _result;
+    }
+    return _alignCursorAfterManual();
+  }
+
+  bool laterRoundsExist(int ordinal) {
+    return _result.rounds.any(
+      (round) => round.ordinal > ordinal && round.isCompleted,
+    );
+  }
+
   CircuitResultData skipRest() => _armNextRound();
 
   CircuitResultData completeRestIfDue({DateTime? at}) {
@@ -203,6 +256,39 @@ class FixedWorkRoundsController {
     if (phase == FixedWorkPhase.rest) {
       completeRestIfDue();
     }
+    return _result;
+  }
+
+  CircuitResultData _alignCursorAfterManual() {
+    final pending = firstPendingOrdinal;
+    if (pending == null) {
+      _result = _result.copyWith(
+        timerCursor: CircuitTimerCursor(
+          currentRound: targetRounds,
+          currentOrdinal: targetRounds,
+          remainingSeconds: 0,
+          phase: 'finished',
+          isFinished: true,
+        ),
+      );
+      return _result;
+    }
+    if (phase == FixedWorkPhase.rest) return _result;
+    if (phase == FixedWorkPhase.work) {
+      final working = _round(currentRound);
+      if (working == null ||
+          working.state == CircuitRoundCompletionState.pending) {
+        return _result;
+      }
+    }
+    _result = _result.copyWith(
+      timerCursor: CircuitTimerCursor(
+        currentRound: pending,
+        currentOrdinal: pending,
+        remainingSeconds: 0,
+        phase: 'ready',
+      ),
+    );
     return _result;
   }
 

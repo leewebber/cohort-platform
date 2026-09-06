@@ -8,6 +8,7 @@ import '../../../../core/widgets/cohort_card.dart';
 import '../../../../models/session_block_type.dart';
 import '../../../../models/strength_exercise_prescription.dart';
 import '../../../../models/strength_prescription_formatter.dart';
+import '../../../performance/services/circuit_capture_contract.dart';
 import '../../models/session_execution_plan.dart';
 import '../strength_prescription_display.dart';
 import 'athlete_session_components.dart';
@@ -60,6 +61,7 @@ class AthleteBlockCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFixedWork = CircuitCaptureContract.isFixedWork(block);
     final borderColor = isActive
         ? CohortColors.olive
         : isComplete
@@ -86,13 +88,15 @@ class AthleteBlockCard extends StatelessWidget {
                       children: [
                         Text(block.title, style: CohortTextStyles.cardTitle),
                         Text(
-                          block.blockTypeLabel,
+                          isFixedWork
+                              ? 'Fixed-work rounds'
+                              : block.blockTypeLabel,
                           style: CohortTextStyles.small,
                         ),
                       ],
                     ),
                   ),
-                  if (block.workoutFormatLabel != null)
+                  if (block.workoutFormatLabel != null && !isFixedWork)
                     WorkoutFormatBadge(label: block.workoutFormatLabel!),
                   const SizedBox(width: CohortSpacing.sm),
                   Icon(
@@ -110,13 +114,14 @@ class AthleteBlockCard extends StatelessWidget {
             ),
             if (isExpanded) ...[
               const SizedBox(height: CohortSpacing.md),
-              WorkoutContentText(content: block.content),
-              if (block.timerSummary != null) ...[
+              if (!isFixedWork) WorkoutContentText(content: block.content),
+              if (block.timerSummary != null && !isFixedWork) ...[
                 const SizedBox(height: CohortSpacing.sm),
                 TimerSummaryText(summary: block.timerSummary!),
               ],
               if (block.linkedExercises.isNotEmpty &&
-                  !performanceReplacesExerciseList) ...[
+                  !performanceReplacesExerciseList &&
+                  !isFixedWork) ...[
                 const SizedBox(height: CohortSpacing.md),
                 _ExecutionExerciseList(
                   exercises: block.linkedExercises,
@@ -125,6 +130,7 @@ class AthleteBlockCard extends StatelessWidget {
                 ),
               ],
               if (block.coachNotes != null &&
+                  !isFixedWork &&
                   !block.blockType.supportsStructuredStrengthPrescription) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text('Coach notes', style: CohortTextStyles.eyebrow),

@@ -409,8 +409,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                           ? _blockDraft(block.blockId)
                           : null;
                       final performanceReplacesExerciseList =
-                          blockDraft != null &&
-                          BlockResultEditor.rendersExerciseRows(blockDraft);
+                          CircuitCaptureContract.isFixedWork(block) ||
+                          (blockDraft != null &&
+                              BlockResultEditor.rendersExerciseRows(blockDraft));
 
                       return AthleteBlockCard(
                         block: block,

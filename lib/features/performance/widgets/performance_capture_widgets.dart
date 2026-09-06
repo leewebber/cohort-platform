@@ -293,6 +293,8 @@ class _ResultEditorBody extends StatelessWidget {
           return FixedWorkRoundsCapture(
             result: circuit,
             onChanged: onResultChanged,
+            linkedExercises: linkedExercises,
+            onOpenExercise: onOpenExercise,
           );
         }
         return CircuitCaptureEditor(
@@ -305,6 +307,8 @@ class _ResultEditorBody extends StatelessWidget {
           return FixedWorkRoundsCapture(
             result: roundsData,
             onChanged: onResultChanged,
+            linkedExercises: linkedExercises,
+            onOpenExercise: onOpenExercise,
           );
         }
         return _RoundsEditor(
