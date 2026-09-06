@@ -284,6 +284,17 @@ void main() {
       ),
       isTrue,
     );
+    final openSession = File(
+      '$root/supabase/migrations/'
+      '20260906140000_ignore_completed_sessions_in_train_today_swap.sql',
+    ).readAsStringSync();
+    expect(openSession.contains("o.outcome_status = 'in_progress'"), isTrue);
+    expect(
+      openSession.contains(
+        'GRANT EXECUTE ON FUNCTION public.swap_future_fixed_programme_session_and_begin(\n  JSONB\n) TO authenticated',
+      ),
+      isTrue,
+    );
   });
 
   test('dates remain outside stable identity', () {

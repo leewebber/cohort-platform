@@ -214,6 +214,7 @@ docker cp "${TESTS_DIR}/../migrations/20260903120000_classify_continuous_conditi
 docker cp "${TESTS_DIR}/../migrations/20260904120000_correct_completed_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_correction_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905180000_swap_future_fixed_programme_session_and_begin.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260906120000_bound_future_train_today_swap_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_horizon_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260906140000_ignore_completed_sessions_in_train_today_swap.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_open_session_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -261,6 +262,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ar.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_horizon_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_open_session_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_as.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
@@ -316,6 +318,7 @@ docker cp "${TESTS_DIR}/../migrations/20260903120000_classify_continuous_conditi
 docker cp "${TESTS_DIR}/../migrations/20260904120000_correct_completed_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_correction_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905180000_swap_future_fixed_programme_session_and_begin.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260906120000_bound_future_train_today_swap_horizon.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_horizon_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260906140000_ignore_completed_sessions_in_train_today_swap.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_future_swap_open_session_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -363,6 +366,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ar.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_horizon_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_future_swap_open_session_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_as.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="

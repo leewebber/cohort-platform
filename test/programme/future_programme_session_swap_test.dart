@@ -194,7 +194,34 @@ void main() {
     ).swapAndBegin(calendar: calendar, selected: future);
     expect(result.isSuccess, isFalse);
     expect(result.code, 'swap_not_offered');
+    expect(
+      result.athleteVisibleMessage,
+      'A clean one-for-one swap is not available.',
+    );
     expect(store.calls, isEmpty);
+  });
+
+  test('maps overdue and in-progress swap codes to athlete-visible reasons', () {
+    expect(
+      FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
+        'overdue_occurrence',
+      ),
+      'Train today is unavailable while an earlier session is still unresolved.',
+    );
+    expect(
+      FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
+        'in_progress_session_exists',
+      ),
+      'Finish your current session before swapping another session into today.',
+    );
+    expect(
+      FutureProgrammeSessionSwapResult.fromRpcMap({
+        'status': 'ineligible',
+        'code': 'overdue_occurrence',
+        'assignment_id': 'should-not-appear',
+      }).athleteVisibleMessage,
+      'Train today is unavailable while an earlier session is still unresolved.',
+    );
   });
 
   test('swap service does not write when the session is 8 days away', () async {
@@ -290,6 +317,40 @@ void main() {
     expect(harness.launcher.calls, 1);
     expect(harness.launcher.lastOccurrenceId, harness.day6.occurrenceId);
     expect(harness.launcher.lastProtocolId, 'FG-009');
+  });
+
+  testWidgets('rejected swap shows the unresolved earlier session reason', (
+    tester,
+  ) async {
+    final harness = await _Harness.create();
+    harness.swapStore.result = const FutureProgrammeSessionSwapResult(
+      status: FutureProgrammeSessionSwapStatus.rejected,
+      code: 'overdue_occurrence',
+    );
+    await tester.pumpWidget(harness.previewApp());
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Train today'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Train today'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('swap-and-begin')));
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'Train today is unavailable while an earlier session is still unresolved.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'This session could not be swapped and started. Refresh your calendar and try again.',
+      ),
+      findsNothing,
+    );
+    expect(harness.startStore.calls, isEmpty);
   });
 
   testWidgets(
@@ -744,6 +805,7 @@ class _RecordingSwapStore implements FutureProgrammeSessionSwapStore {
 
   final VoidCallback? onSwap;
   final calls = <FutureProgrammeSessionSwapCommand>[];
+  FutureProgrammeSessionSwapResult? result;
 
   @override
   Future<FutureProgrammeSessionSwapResult> swapAndBegin(
@@ -751,11 +813,12 @@ class _RecordingSwapStore implements FutureProgrammeSessionSwapStore {
   ) async {
     calls.add(command);
     onSwap?.call();
-    return FutureProgrammeSessionSwapResult(
-      status: FutureProgrammeSessionSwapStatus.created,
-      code: 'swapped_and_begun',
-      selectedOccurrenceId: command.selectedOccurrenceId,
-    );
+    return result ??
+        FutureProgrammeSessionSwapResult(
+          status: FutureProgrammeSessionSwapStatus.created,
+          code: 'swapped_and_begun',
+          selectedOccurrenceId: command.selectedOccurrenceId,
+        );
   }
 }
 

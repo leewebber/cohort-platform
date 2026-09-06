@@ -10,11 +10,22 @@ DECLARE
   v_athlete_c UUID := 'c5000000-0000-4000-8000-00000000000c';
   v_athlete_d UUID := 'd5000000-0000-4000-8000-00000000000d';
   v_athlete_e UUID := 'e5000000-0000-4000-8000-00000000000e';
+  v_athlete_f UUID := 'f5000000-0000-4000-8000-00000000000f';
   v_assignment_a UUID;
   v_assignment_b UUID;
   v_assignment_c UUID;
   v_assignment_d UUID;
   v_assignment_e UUID;
+  v_assignment_f UUID;
+  v_w5_today DATE;
+  v_w5_start DATE;
+  v_w5_ath DATE;
+  v_w5_mon UUID;
+  v_w5_sat UUID;
+  v_hist RECORD;
+  v_clock TIMESTAMPTZ;
+  v_start JSONB;
+  v_complete JSONB;
   v_plus_1 UUID;
   v_plus_7 UUID;
   v_plus_8 UUID;
@@ -88,6 +99,10 @@ BEGIN
     ('00000000-0000-0000-0000-000000000000', v_athlete_e,
      'authenticated', 'authenticated', 'gate-as-e@example.invalid',
      crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
+     '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
+    ('00000000-0000-0000-0000-000000000000', v_athlete_f,
+     'authenticated', 'authenticated', 'gate-as-f@example.invalid',
+     crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
      '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', '')
   ON CONFLICT (id) DO NOTHING;
 
@@ -97,7 +112,8 @@ BEGIN
     (v_athlete_b, 'Gate AS Athlete B', TRUE, FALSE),
     (v_athlete_c, 'Gate AS Athlete C', TRUE, FALSE),
     (v_athlete_d, 'Gate AS Athlete D', TRUE, FALSE),
-    (v_athlete_e, 'Gate AS Athlete E', TRUE, FALSE)
+    (v_athlete_e, 'Gate AS Athlete E', TRUE, FALSE),
+    (v_athlete_f, 'Gate AS Athlete F', TRUE, FALSE)
   ON CONFLICT (id) DO UPDATE
   SET is_athlete = TRUE, is_coach = FALSE;
 
@@ -832,6 +848,143 @@ BEGIN
       TRUE, TRUE, NULL
     );
   END IF;
+
+  -- W5 Day 1 today, W5 Day 6 at +5, after lawful W1–W4 completions.
+  v_w5_today := public.cohort_resolve_athlete_local_date('Atlantic/Canary');
+  v_w5_start := v_w5_today - 28;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_f::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.enrol_athlete_in_catalogue_programme_version(
+    v_version,
+    'Atlantic/Canary',
+    FALSE
+  );
+  v_assignment_f := (v_result->>'enrolment_id')::UUID;
+  v_result := public.materialise_athlete_plan_from_enrolment(
+    v_assignment_f,
+    'Atlantic/Canary'
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM set_config('cohort.allow_materialisation_write', 'on', true);
+  UPDATE public.programme_assignments
+  SET started_at = v_w5_start,
+      timezone = 'Atlantic/Canary',
+      schedule_mode = 'fixed_schedule',
+      updated_at = NOW()
+  WHERE id = v_assignment_f
+    AND athlete_id = v_athlete_f;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_f::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.ensure_programme_schedule_projection(v_assignment_f);
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'w5_projection_ready', 'initialised/already_exists',
+    v_result->>'status', NULL,
+    v_result->>'status' IN ('initialised', 'already_exists'),
+    v_result::TEXT
+  );
+
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_f::TEXT, true);
+  FOR v_hist IN
+    SELECT *
+    FROM programme_schedule_occurrences
+    WHERE assignment_id = v_assignment_f
+      AND scheduled_date < v_w5_today
+    ORDER BY scheduled_date, week_number, day_key, session_order
+  LOOP
+    v_clock := (v_hist.scheduled_date::TIMESTAMP + INTERVAL '10 hours')
+      AT TIME ZONE 'Atlantic/Canary';
+    v_start := public.cohort_create_or_resume_fixed_occurrence_at(
+      v_hist.id,
+      v_clock
+    );
+    IF v_start->>'status' IS DISTINCT FROM 'created' THEN
+      RAISE EXCEPTION 'gate AS W5 history create failed: %', v_start;
+    END IF;
+    v_record := gen_random_uuid();
+    v_complete := public.complete_fixed_programme_occurrence_and_advance(
+      jsonb_build_object(
+        'occurrence_id', v_hist.id,
+        'assignment_id', v_assignment_f,
+        'session_slot_id', v_hist.session_slot_id,
+        'programme_version_id', v_version,
+        'materialised_package_content_hash', v_hash,
+        'programmed_session_key', v_hist.programmed_session_key,
+        'logical_completion_key', v_hist.programmed_session_key,
+        'idempotency_key', 'gate-as-w5-' || v_hist.id::TEXT,
+        'actuals_fingerprint', 'gate-as-w5-athlete-entered-actuals',
+        'protocol_id', v_hist.protocol_id,
+        'expected_week', v_hist.week_number,
+        'expected_day_key', v_hist.day_key,
+        'expected_slot_order', v_hist.session_order,
+        'training_session_id', (v_start->'training_session'->>'id')::BIGINT,
+        'record_id', v_record,
+        'status', 'completed',
+        'completion_record', jsonb_build_object(
+          'record_id', v_record,
+          'source_protocol_id', v_hist.protocol_id,
+          'session_snapshot', '{}'::JSONB,
+          'athlete_note', 'Gate AS lawful historical completion'
+        )
+      )
+    );
+    IF v_complete->>'status' IS DISTINCT FROM 'committed' THEN
+      RAISE EXCEPTION 'gate AS W5 history complete failed: %', v_complete;
+    END IF;
+  END LOOP;
+
+  SELECT o.id, o.scheduled_date
+  INTO v_w5_mon, v_day1_date
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_f
+    AND o.week_number = 5
+    AND o.day_key = 'day_1';
+  SELECT o.id, o.scheduled_date
+  INTO v_w5_sat, v_w5_ath
+  FROM programme_schedule_occurrences o
+  WHERE o.assignment_id = v_assignment_f
+    AND o.week_number = 5
+    AND o.day_key = 'day_6';
+  PERFORM sprint12_record(
+    'AS', 'w5_day1_is_today', v_w5_today::TEXT,
+    v_day1_date::TEXT, NULL,
+    v_day1_date = v_w5_today, NULL
+  );
+  PERFORM sprint12_record(
+    'AS', 'w5_day6_is_plus_five', (v_w5_today + 5)::TEXT,
+    v_w5_ath::TEXT, NULL,
+    v_w5_ath = v_w5_today + 5, NULL
+  );
+  SELECT COUNT(*) INTO v_count
+  FROM programme_slot_outcomes o
+  JOIN training_sessions ts ON ts.id = o.training_session_id
+  WHERE o.assignment_id = v_assignment_f
+    AND o.outcome_status = 'completed'
+    AND ts.status = 'in_progress';
+  PERFORM sprint12_record(
+    'AS', 'w5_completed_outcomes_leave_session_row_open', '28',
+    v_count::TEXT, NULL, v_count = 28, NULL
+  );
+
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_f::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_result := public.swap_future_fixed_programme_session_and_begin(
+    jsonb_build_object(
+      'assignment_id', v_assignment_f,
+      'today_occurrence_id', v_w5_mon,
+      'selected_occurrence_id', v_w5_sat,
+      'expected_today_date', v_day1_date,
+      'expected_selected_date', v_w5_ath
+    )
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'AS', 'w5_day1_day6_plus_five_allowed', 'created/swapped_and_begun',
+    (v_result->>'status') || '/' || (v_result->>'code'),
+    NULL,
+    v_result->>'status' = 'created' AND v_result->>'code' = 'swapped_and_begun',
+    v_result::TEXT
+  );
 END $$;
 
 SELECT gate, case_id, expected, actual, pass

@@ -31,11 +31,13 @@ class FutureProgrammeSessionSwapSupabaseStore
         code: 'unexpected_rpc_shape',
         message: 'This session could not be swapped safely.',
       );
-    } catch (error) {
+    } catch (_) {
       return FutureProgrammeSessionSwapResult(
         status: FutureProgrammeSessionSwapStatus.failed,
         code: 'client_error',
-        message: error.toString(),
+        message: FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
+          'client_error',
+        ),
       );
     }
   }

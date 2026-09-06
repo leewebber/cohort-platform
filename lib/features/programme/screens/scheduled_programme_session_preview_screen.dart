@@ -19,6 +19,7 @@ import '../../session/services/programme_session_execution_launcher.dart';
 import '../../session/widgets/athlete/athlete_block_card.dart';
 import '../../session/widgets/athlete/athlete_session_components.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../models/future_programme_session_swap.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
@@ -450,7 +451,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
                 const FutureProgrammeSessionSwapSupabaseStore(),
           ).swapAndBegin(calendar: preview.calendar, selected: selected);
       if (!swapResult.isSuccess) {
-        throw StateError(swapResult.code ?? 'swap_failed');
+        throw StateError(swapResult.athleteVisibleMessage);
       }
       final calendarStore =
           widget.fixedOccurrenceStore ??
@@ -489,13 +490,14 @@ class _ScheduledProgrammeSessionPreviewScreenState
       if (mounted) Navigator.of(context).pop(true);
     } catch (error) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'This session could not be swapped and started. Refresh your calendar and try again.',
-          ),
-        ),
-      );
+      final reason = error is StateError
+          ? error.message
+          : FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
+              null,
+            );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(reason)));
       setState(() => _isOpeningSession = false);
     }
   }
