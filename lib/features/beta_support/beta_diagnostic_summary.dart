@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import '../auth/services/current_user_session.dart';
+import '../../core/config/app_build_provenance.dart';
 import '../../core/constants/app_version.dart';
+import '../auth/services/current_user_session.dart';
 
 class BetaDiagnosticSummary {
   const BetaDiagnosticSummary({
     required this.appVersion,
+    required this.gitCommit,
+    required this.environmentLabel,
     required this.platform,
     required this.isCoach,
     required this.isAthlete,
@@ -18,6 +21,8 @@ class BetaDiagnosticSummary {
   });
 
   final String appVersion;
+  final String gitCommit;
+  final String environmentLabel;
   final String platform;
   final bool isCoach;
   final bool isAthlete;
@@ -27,11 +32,10 @@ class BetaDiagnosticSummary {
 
   String format() {
     final lines = <String>[
-      'Cohort beta diagnostic summary',
-      'App version: $appVersion',
-      'Platform: $platform',
-      'Coach role: $isCoach',
-      'Athlete role: $isAthlete',
+      'Cohort $appVersion',
+      'Commit $gitCommit',
+      'Environment $environmentLabel',
+      'Platform $platform',
       if (hasActiveAssignment != null)
         'Active assignment: $hasActiveAssignment',
       if (screenContext != null && screenContext!.trim().isNotEmpty)
@@ -57,8 +61,11 @@ class BetaDiagnosticSummary {
     bool? hasActiveAssignment,
   }) {
     final session = CurrentUserSession.maybeInstance;
+    final provenance = AppBuildProvenance.current;
     return BetaDiagnosticSummary(
       appVersion: AppVersion.label,
+      gitCommit: provenance.shortCommit,
+      environmentLabel: provenance.environmentLabel,
       platform: _platformLabel(),
       isCoach: session?.isCoach ?? false,
       isAthlete: session?.isAthlete ?? false,

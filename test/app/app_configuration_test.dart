@@ -1,4 +1,5 @@
 import 'package:cohort_platform/app/app.dart';
+import 'package:cohort_platform/core/config/build_environment.dart';
 import 'package:cohort_platform/core/services/supabase_service.dart';
 import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
 import 'package:cohort_platform/features/auth/screens/auth_gate.dart';
@@ -6,6 +7,7 @@ import 'package:cohort_platform/features/auth/services/profile_provisioning_serv
 import 'package:flutter_test/flutter_test.dart';
 
 import '../auth/auth_controller_test.dart' show FakeAuthSessionPort;
+import '../release/synthetic_jwts.dart';
 import '../support/in_memory_profile_repository.dart';
 
 void main() {
@@ -13,10 +15,12 @@ void main() {
     final invalid = SupabaseService.validateConfiguration(
       url: 'not-a-url',
       anonKey: 'short',
+      environment: BuildEnvironment.production,
     );
     final configured = SupabaseService.validateConfiguration(
-      url: 'https://project.supabase.co',
-      anonKey: 'valid-test-key-with-safe-length',
+      url: 'https://${BuildEnvironment.productionHost}',
+      anonKey: SyntheticJwts.anon,
+      environment: BuildEnvironment.production,
     );
 
     expect(invalid.isConfigured, isFalse);
@@ -28,12 +32,16 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         const CohortPlatformApp(
-          configurationError: 'Configuration unavailable',
+          configurationError:
+              'This build has invalid Production configuration.',
         ),
       );
 
       expect(find.text('Configuration required'), findsOneWidget);
-      expect(find.text('Configuration unavailable'), findsOneWidget);
+      expect(
+        find.text('This build has invalid Production configuration.'),
+        findsOneWidget,
+      );
       expect(find.byType(AuthGate), findsNothing);
       expect(tester.takeException(), isNull);
     },

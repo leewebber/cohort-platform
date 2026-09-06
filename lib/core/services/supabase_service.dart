@@ -1,5 +1,12 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../config/app_release_configuration.dart';
+import '../config/build_environment.dart';
+import '../config/release_configuration_code.dart';
+import '../config/release_configuration_policy.dart';
+
+typedef SupabaseClientInitializer =
+    Future<void> Function({required String url, required String anonKey});
 
 class SupabaseConfigurationException implements Exception {
   SupabaseConfigurationException(this.message);
@@ -15,60 +22,81 @@ class SupabaseService {
 
   static SupabaseClient get client => Supabase.instance.client;
 
-  static Future<void> initialize() async {
-    final result = await tryInitialize();
+  static const _policy = ReleaseConfigurationPolicy();
+
+  static Future<void> initialize({
+    AppReleaseConfiguration? configuration,
+    SupabaseClientInitializer? initializeClient,
+  }) async {
+    final result = await tryInitialize(
+      configuration: configuration,
+      initializeClient: initializeClient,
+    );
     if (!result.isConfigured) {
-      throw SupabaseConfigurationException(result.errorMessage!);
+      throw SupabaseConfigurationException(
+        result.errorMessage ?? 'This build has invalid configuration.',
+      );
     }
   }
 
-  static Future<SupabaseInitializationResult> tryInitialize() async {
-    try {
-      await dotenv.load(fileName: '.env');
-    } catch (_) {
-      return SupabaseInitializationResult.missing(
-        'Could not load .env. Copy .env.example to .env and restart the app.',
+  static Future<SupabaseInitializationResult> tryInitialize({
+    AppReleaseConfiguration? configuration,
+    SupabaseClientInitializer? initializeClient,
+  }) async {
+    final resolved = configuration ?? AppReleaseConfiguration.fromEnvironment();
+    final validation = _policy.validate(resolved);
+    if (!validation.isConfigured) {
+      return SupabaseInitializationResult.rejected(
+        code: validation.code!,
+        athleteMessage: validation.athleteMessage!,
       );
     }
 
-    final url = dotenv.env['SUPABASE_URL']?.trim();
-    final anonKey = dotenv.env['SUPABASE_ANON_KEY']?.trim();
-
-    final validation = validateConfiguration(url: url, anonKey: anonKey);
-    if (!validation.isConfigured) return validation;
-
+    final initializer = initializeClient ?? _defaultInitialize;
     try {
-      await Supabase.initialize(url: url!, publishableKey: anonKey!);
+      await initializer(
+        url: resolved.supabaseUrl,
+        anonKey: resolved.supabaseAnonKey,
+      );
     } catch (_) {
-      return SupabaseInitializationResult.missing(
-        'Supabase configuration is invalid. Check .env and restart the app.',
+      return SupabaseInitializationResult.rejected(
+        code: ReleaseConfigurationCode.malformedUrl,
+        athleteMessage:
+            resolved.environment?.invalidConfigurationMessage ??
+            'This build has invalid configuration.',
+        attemptedClientInitialization: true,
       );
     }
 
     return const SupabaseInitializationResult.configured();
+  }
+
+  static Future<void> _defaultInitialize({
+    required String url,
+    required String anonKey,
+  }) {
+    return Supabase.initialize(url: url, publishableKey: anonKey);
   }
 
   static SupabaseInitializationResult validateConfiguration({
     required String? url,
     required String? anonKey,
+    BuildEnvironment? environment,
   }) {
-    final parsedUrl = url == null ? null : Uri.tryParse(url);
-    final validUrl =
-        parsedUrl != null &&
-        (parsedUrl.scheme == 'https' || parsedUrl.scheme == 'http') &&
-        parsedUrl.host.isNotEmpty &&
-        !url!.contains('your-project');
-    final validKey =
-        anonKey != null &&
-        anonKey.length >= 20 &&
-        !anonKey.contains('your-anon-key');
-
-    if (!validUrl || !validKey) {
-      return SupabaseInitializationResult.missing(
-        'SUPABASE_URL and SUPABASE_ANON_KEY must be valid in .env.',
-      );
+    final result = _policy.validate(
+      AppReleaseConfiguration(
+        environment: environment,
+        supabaseUrl: url?.trim() ?? '',
+        supabaseAnonKey: anonKey?.trim() ?? '',
+      ),
+    );
+    if (result.isConfigured) {
+      return const SupabaseInitializationResult.configured();
     }
-    return const SupabaseInitializationResult.configured();
+    return SupabaseInitializationResult.rejected(
+      code: result.code!,
+      athleteMessage: result.athleteMessage!,
+    );
   }
 }
 
@@ -76,17 +104,36 @@ class SupabaseInitializationResult {
   const SupabaseInitializationResult._({
     required this.isConfigured,
     this.errorMessage,
+    this.code,
+    this.attemptedClientInitialization = false,
   });
 
   final bool isConfigured;
   final String? errorMessage;
+  final ReleaseConfigurationCode? code;
+  final bool attemptedClientInitialization;
 
-  const SupabaseInitializationResult.configured() : this._(isConfigured: true);
+  const SupabaseInitializationResult.configured()
+    : this._(isConfigured: true, attemptedClientInitialization: true);
+
+  factory SupabaseInitializationResult.rejected({
+    required ReleaseConfigurationCode code,
+    required String athleteMessage,
+    bool attemptedClientInitialization = false,
+  }) {
+    return SupabaseInitializationResult._(
+      isConfigured: false,
+      errorMessage: athleteMessage,
+      code: code,
+      attemptedClientInitialization: attemptedClientInitialization,
+    );
+  }
 
   factory SupabaseInitializationResult.missing(String message) {
     return SupabaseInitializationResult._(
       isConfigured: false,
       errorMessage: message,
+      code: ReleaseConfigurationCode.missingEnvironment,
     );
   }
 }

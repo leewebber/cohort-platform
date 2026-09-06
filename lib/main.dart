@@ -15,6 +15,7 @@ Future<void> main() async {
       configurationError: initResult.isConfigured
           ? null
           : initResult.errorMessage,
+      configurationErrorCode: initResult.isConfigured ? null : initResult.code,
     ),
   );
 }

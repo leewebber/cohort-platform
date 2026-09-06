@@ -1,0 +1,5 @@
+{
+  "COHORT_BUILD_ENV": "loopbackPreview",
+  "COHORT_SUPABASE_URL": "http://127.0.0.1:54321",
+  "COHORT_SUPABASE_ANON_KEY": "replace-with-anon-jwt"
+}

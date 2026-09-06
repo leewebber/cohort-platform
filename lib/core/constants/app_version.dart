@@ -1,6 +1,8 @@
+import '../config/app_build_provenance.dart';
+
 /// Application version label for beta diagnostics.
 class AppVersion {
   AppVersion._();
 
-  static const label = '1.0.0+1';
+  static String get label => AppBuildProvenance.current.displayVersion;
 }

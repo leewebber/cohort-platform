@@ -1,0 +1,5 @@
+{
+  "COHORT_BUILD_ENV": "production",
+  "COHORT_SUPABASE_URL": "https://otnhhdxstdnwccehacku.supabase.co",
+  "COHORT_SUPABASE_ANON_KEY": "replace-with-anon-jwt"
+}

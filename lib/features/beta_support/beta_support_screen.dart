@@ -35,7 +35,21 @@ class BetaSupportScreen extends StatelessWidget {
                   children: [
                     Text('App version', style: CohortTextStyles.cardTitle),
                     const SizedBox(height: CohortSpacing.xs),
-                    Text(summary.appVersion, style: CohortTextStyles.body),
+                    Text(
+                      'Cohort ${summary.appVersion}',
+                      style: CohortTextStyles.body,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                    Text('Commit', style: CohortTextStyles.cardTitle),
+                    const SizedBox(height: CohortSpacing.xs),
+                    Text(summary.gitCommit, style: CohortTextStyles.body),
+                    const SizedBox(height: CohortSpacing.sm),
+                    Text('Environment', style: CohortTextStyles.cardTitle),
+                    const SizedBox(height: CohortSpacing.xs),
+                    Text(
+                      summary.environmentLabel,
+                      style: CohortTextStyles.body,
+                    ),
                     const SizedBox(height: CohortSpacing.sm),
                     Text('Platform', style: CohortTextStyles.cardTitle),
                     const SizedBox(height: CohortSpacing.xs),

@@ -143,8 +143,7 @@ class UserFacingErrorMessages {
   }
 
   static String missingSupabaseConfiguration() {
-    return 'Supabase is not configured. Copy .env.example to .env and add '
-        'your project URL and anon key, then restart the app.';
+    return 'This build has invalid configuration.';
   }
 
   static String _authMessage(String message) {

@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 
-import '../core/errors/user_facing_error_messages.dart';
+import '../core/config/app_build_provenance.dart';
+import '../core/config/release_configuration_code.dart';
 import '../core/theme/spacing.dart';
 import '../core/theme/text_styles.dart';
 import '../core/widgets/cohort_card.dart';
 import '../core/widgets/section_title.dart';
 
 class ConfigurationErrorScreen extends StatelessWidget {
-  const ConfigurationErrorScreen({super.key, required this.message});
+  const ConfigurationErrorScreen({
+    super.key,
+    required this.message,
+    this.code,
+    this.provenance,
+  });
 
   final String message;
+  final ReleaseConfigurationCode? code;
+  final AppBuildProvenance? provenance;
 
   @override
   Widget build(BuildContext context) {
+    final build = provenance ?? AppBuildProvenance.current;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -28,13 +37,23 @@ class ConfigurationErrorScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(message, style: CohortTextStyles.body),
+                    const SizedBox(height: CohortSpacing.md),
                     Text(
-                      UserFacingErrorMessages.missingSupabaseConfiguration(),
-                      style: CohortTextStyles.body,
+                      'Cohort ${build.displayVersion}',
+                      style: CohortTextStyles.small,
                     ),
-                    if (message.trim().isNotEmpty) ...[
+                    Text(
+                      'Commit ${build.shortCommit}',
+                      style: CohortTextStyles.small,
+                    ),
+                    Text(
+                      'Environment ${build.environmentLabel}',
+                      style: CohortTextStyles.small,
+                    ),
+                    if (code != null) ...[
                       const SizedBox(height: CohortSpacing.sm),
-                      Text(message, style: CohortTextStyles.small),
+                      Text(code!.name, style: CohortTextStyles.small),
                     ],
                   ],
                 ),

@@ -19,10 +19,16 @@ Flutter client for the Cohort training platform.
    ```bash
    flutter pub get
    ```
-5. Run the app:
+5. Run the app without rewriting `.env`:
    ```bash
-   flutter run
+   ./tool/release/run_development.sh
    ```
+
+   Release and loopback preview builds must use
+   `./tool/release/build_app.sh` with an explicit `--env` and an
+   out-of-repository client JSON file. See
+   [`tool/release/README.md`](tool/release/README.md). Do not swap
+   repository `.env` for those builds.
 
 For local Chrome auth testing with stable email verification redirects:
 
