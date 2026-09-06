@@ -176,6 +176,8 @@ class CircuitTimerCursor {
     this.isRunning = false,
     this.isPaused = false,
     this.isFinished = false,
+    this.workStartedAtMs,
+    this.restStartedAtMs,
   });
 
   final int currentRound;
@@ -186,6 +188,8 @@ class CircuitTimerCursor {
   final bool isRunning;
   final bool isPaused;
   final bool isFinished;
+  final int? workStartedAtMs;
+  final int? restStartedAtMs;
 
   Map<String, dynamic> toJson() => {
     'currentRound': currentRound,
@@ -196,6 +200,8 @@ class CircuitTimerCursor {
     'isRunning': isRunning,
     'isPaused': isPaused,
     'isFinished': isFinished,
+    if (workStartedAtMs != null) 'workStartedAtMs': workStartedAtMs,
+    if (restStartedAtMs != null) 'restStartedAtMs': restStartedAtMs,
   };
 
   factory CircuitTimerCursor.fromJson(Map<String, dynamic>? json) {
@@ -204,7 +210,7 @@ class CircuitTimerCursor {
         currentRound: 1,
         currentOrdinal: 1,
         remainingSeconds: 0,
-        phase: 'work',
+        phase: 'ready',
       );
     }
     return CircuitTimerCursor(
@@ -215,13 +221,47 @@ class CircuitTimerCursor {
           ? 1
           : CircuitStationActual._int(json['currentOrdinal']),
       remainingSeconds: CircuitStationActual._int(json['remainingSeconds']),
-      phase: json['phase']?.toString() ?? 'work',
+      phase: json['phase']?.toString() ?? 'ready',
       secondarySeconds: CircuitStationActual._nullableInt(
         json['secondarySeconds'],
       ),
       isRunning: json['isRunning'] == true,
       isPaused: json['isPaused'] == true,
       isFinished: json['isFinished'] == true,
+      workStartedAtMs: CircuitStationActual._nullableInt(json['workStartedAtMs']),
+      restStartedAtMs: CircuitStationActual._nullableInt(json['restStartedAtMs']),
+    );
+  }
+
+  CircuitTimerCursor copyWith({
+    int? currentRound,
+    int? currentOrdinal,
+    int? remainingSeconds,
+    String? phase,
+    int? secondarySeconds,
+    bool? isRunning,
+    bool? isPaused,
+    bool? isFinished,
+    int? workStartedAtMs,
+    int? restStartedAtMs,
+    bool clearWorkStarted = false,
+    bool clearRestStarted = false,
+  }) {
+    return CircuitTimerCursor(
+      currentRound: currentRound ?? this.currentRound,
+      currentOrdinal: currentOrdinal ?? this.currentOrdinal,
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
+      phase: phase ?? this.phase,
+      secondarySeconds: secondarySeconds ?? this.secondarySeconds,
+      isRunning: isRunning ?? this.isRunning,
+      isPaused: isPaused ?? this.isPaused,
+      isFinished: isFinished ?? this.isFinished,
+      workStartedAtMs: clearWorkStarted
+          ? null
+          : (workStartedAtMs ?? this.workStartedAtMs),
+      restStartedAtMs: clearRestStarted
+          ? null
+          : (restStartedAtMs ?? this.restStartedAtMs),
     );
   }
 }

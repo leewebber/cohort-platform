@@ -1,3 +1,4 @@
+import '../models/circuit_round_actual.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/training_session_record.dart';
@@ -77,6 +78,31 @@ class PerformanceCorrectionService {
             throw const PerformanceCorrectionException('invalid_circuit_ordinal');
           }
           seen.add(row.ordinal);
+        }
+        if (data.isFixedWork) {
+          final seenRounds = <int>{};
+          for (final round in data.rounds) {
+            if (round.ordinal < 1 || seenRounds.contains(round.ordinal)) {
+              throw const PerformanceCorrectionException(
+                'invalid_circuit_ordinal',
+              );
+            }
+            seenRounds.add(round.ordinal);
+            if (round.elapsedSeconds != null &&
+                (round.elapsedSeconds! < 0 || round.elapsedSeconds! > 86400)) {
+              throw const PerformanceCorrectionException('invalid_round_time');
+            }
+            if (round.state == CircuitRoundCompletionState.completed &&
+                (round.elapsedSeconds == null || round.elapsedSeconds! < 0)) {
+              throw const PerformanceCorrectionException('invalid_round_time');
+            }
+          }
+          for (final setup in data.sharedSetup) {
+            if (setup.loadKg != null &&
+                (setup.loadKg! < 0 || setup.loadKg! > 2000)) {
+              throw const PerformanceCorrectionException('invalid_load');
+            }
+          }
         }
       }
       if (data is IntervalResultData) {

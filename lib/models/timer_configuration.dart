@@ -1,3 +1,4 @@
+import 'circuit_capture_strategy.dart';
 import 'workout_format.dart';
 
 /// Typed timer settings for a Session block (M6).
@@ -19,6 +20,7 @@ class TimerConfiguration {
     this.timerNotes,
     this.tracking = const [],
     this.stations = const [],
+    this.captureStrategy,
   });
 
   final int? durationSeconds;
@@ -35,6 +37,7 @@ class TimerConfiguration {
   final String? timerNotes;
   final List<String> tracking;
   final List<TimerStationSpec> stations;
+  final CircuitCaptureStrategy? captureStrategy;
 
   int? get emomTotalSeconds =>
       totalDurationSeconds ??
@@ -61,6 +64,7 @@ class TimerConfiguration {
     String? timerNotes,
     List<String>? tracking,
     List<TimerStationSpec>? stations,
+    CircuitCaptureStrategy? captureStrategy,
   }) {
     return TimerConfiguration(
       durationSeconds: durationSeconds ?? this.durationSeconds,
@@ -78,6 +82,7 @@ class TimerConfiguration {
       timerNotes: timerNotes ?? this.timerNotes,
       tracking: tracking ?? this.tracking,
       stations: stations ?? this.stations,
+      captureStrategy: captureStrategy ?? this.captureStrategy,
     );
   }
 
@@ -101,6 +106,8 @@ class TimerConfiguration {
       if (tracking.isNotEmpty) 'tracking': tracking,
       if (stations.isNotEmpty)
         'stations': stations.map((station) => station.toJson()).toList(),
+      if (captureStrategy != null)
+        'capture_strategy': captureStrategy!.dbValue,
     };
   }
 
@@ -143,6 +150,9 @@ class TimerConfiguration {
       timerNotes: (json['timerNotes'] ?? json['timer_notes'])?.toString(),
       tracking: _tracking(json['tracking'] ?? json['record']),
       stations: TimerStationSpec.listFromJson(json),
+      captureStrategy: CircuitCaptureStrategyDb.tryParse(
+        (json['capture_strategy'] ?? json['captureStrategy'])?.toString(),
+      ),
     );
   }
 
@@ -187,6 +197,7 @@ class TimerConfiguration {
         preparationSeconds: base.preparationSeconds,
         timerNotes: base.timerNotes,
         stations: base.stations,
+        captureStrategy: base.captureStrategy,
       ),
       WorkoutFormat.forTime => TimerConfiguration(
         timeCapSeconds: base.timeCapSeconds,
@@ -217,6 +228,7 @@ class TimerConfiguration {
         restBetweenRoundsSeconds: base.restBetweenRoundsSeconds,
         timerNotes: base.timerNotes,
         stations: base.stations,
+        captureStrategy: base.captureStrategy,
       ),
       WorkoutFormat.other => TimerConfiguration(
         durationSeconds: base.durationSeconds,

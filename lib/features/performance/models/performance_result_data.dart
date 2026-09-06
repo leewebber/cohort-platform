@@ -1,3 +1,5 @@
+import '../../../models/circuit_capture_strategy.dart';
+import 'circuit_round_actual.dart';
 import 'circuit_station_actual.dart';
 import 'interval_work_result.dart';
 import 'performance_result_type.dart';
@@ -533,30 +535,50 @@ class CircuitResultData extends PerformanceResultData {
     required this.format,
     required this.comparisonFamily,
     required this.stations,
+    this.captureStrategy = CircuitCaptureStrategy.variableOutput,
+    this.sharedSetup = const [],
+    this.rounds = const [],
     this.targetRounds,
     this.intervalSeconds,
     this.restBetweenRoundsSeconds,
     this.timerCursor,
+    this.endedEarly = false,
+    this.earlyEndReason,
     this.note,
   });
 
   final String format;
   final String comparisonFamily;
+  final CircuitCaptureStrategy captureStrategy;
   final List<CircuitStationActual> stations;
+  final List<CircuitSharedSetup> sharedSetup;
+  final List<CircuitRoundActual> rounds;
   final int? targetRounds;
   final int? intervalSeconds;
   final int? restBetweenRoundsSeconds;
   final CircuitTimerCursor? timerCursor;
+  final bool endedEarly;
+  final String? earlyEndReason;
   final String? note;
 
-  bool get usesStationCapture => stations.isNotEmpty;
+  bool get isFixedWork =>
+      captureStrategy == CircuitCaptureStrategy.fixedWork;
 
-  int get recordedCount =>
-      stations.where((row) => row.hasRecordedActual).length;
+  bool get usesStationCapture => !isFixedWork && stations.isNotEmpty;
 
-  int get prescribedCount => stations.length;
+  bool get usesCircuitCapture => isFixedWork || stations.isNotEmpty;
+
+  int get recordedCount => isFixedWork
+      ? rounds.where((round) => round.isCompleted).length
+      : stations.where((row) => row.hasRecordedActual).length;
+
+  int get prescribedCount =>
+      isFixedWork ? (targetRounds ?? rounds.length) : stations.length;
 
   int get completedRounds {
+    if (isFixedWork) {
+      return rounds.where((round) => round.isCompleted).length;
+    }
     if (targetRounds == null || targetRounds! <= 0) return 0;
     final byRound = <int, List<CircuitStationActual>>{};
     for (final row in stations) {
@@ -572,6 +594,31 @@ class CircuitResultData extends PerformanceResultData {
     return complete;
   }
 
+  List<int> get completedRoundSeconds =>
+      rounds
+          .where((round) => round.isCompleted)
+          .map((round) => round.elapsedSeconds!)
+          .toList(growable: false);
+
+  int? get totalWorkSeconds {
+    final times = completedRoundSeconds;
+    if (times.isEmpty) return null;
+    return times.fold<int>(0, (sum, value) => sum + value);
+  }
+
+  int? get averageRoundSeconds {
+    final times = completedRoundSeconds;
+    if (times.isEmpty) return null;
+    return (times.fold<int>(0, (sum, value) => sum + value) / times.length)
+        .round();
+  }
+
+  int? get fastestRoundSeconds {
+    final times = completedRoundSeconds;
+    if (times.isEmpty) return null;
+    return times.reduce((a, b) => a < b ? a : b);
+  }
+
   @override
   PerformanceResultType get resultType => PerformanceResultType.circuit;
 
@@ -580,12 +627,19 @@ class CircuitResultData extends PerformanceResultData {
     'resultType': resultType.dbValue,
     'format': format,
     'comparisonFamily': comparisonFamily,
+    'captureStrategy': captureStrategy.dbValue,
     'stations': stations.map((row) => row.toJson()).toList(),
+    if (sharedSetup.isNotEmpty)
+      'sharedSetup': sharedSetup.map((row) => row.toJson()).toList(),
+    if (rounds.isNotEmpty)
+      'rounds': rounds.map((row) => row.toJson()).toList(),
     if (targetRounds != null) 'targetRounds': targetRounds,
     if (intervalSeconds != null) 'intervalSeconds': intervalSeconds,
     if (restBetweenRoundsSeconds != null)
       'restBetweenRoundsSeconds': restBetweenRoundsSeconds,
     if (timerCursor != null) 'timerCursor': timerCursor!.toJson(),
+    'endedEarly': endedEarly,
+    if (earlyEndReason != null) 'earlyEndReason': earlyEndReason,
     if (note != null) 'note': note,
   };
 
@@ -602,10 +656,42 @@ class CircuitResultData extends PerformanceResultData {
               .where((row) => row.ordinal > 0)
               .toList(growable: false)
         : const <CircuitStationActual>[];
+    final rawRounds = json['rounds'];
+    final parsedRounds = rawRounds is List
+        ? rawRounds
+              .whereType<Map>()
+              .map(
+                (item) => CircuitRoundActual.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .where((row) => row.ordinal > 0)
+              .toList(growable: false)
+        : const <CircuitRoundActual>[];
+    final rawSetup = json['sharedSetup'];
+    final parsedSetup = rawSetup is List
+        ? rawSetup
+              .whereType<Map>()
+              .map(
+                (item) => CircuitSharedSetup.fromJson(
+                  Map<String, dynamic>.from(item),
+                ),
+              )
+              .where((row) => row.stationId.isNotEmpty)
+              .toList(growable: false)
+        : const <CircuitSharedSetup>[];
+    final strategy = CircuitCaptureStrategyDb.tryParse(
+      json['captureStrategy']?.toString(),
+    );
+    // Legacy drafts without an explicit strategy stay variable-output.
+    // Never reinterpret 12 station rows as round times.
     return CircuitResultData(
       format: json['format']?.toString() ?? 'rounds',
       comparisonFamily: json['comparisonFamily']?.toString() ?? '',
+      captureStrategy: strategy ?? CircuitCaptureStrategy.variableOutput,
       stations: parsed,
+      sharedSetup: parsedSetup,
+      rounds: parsedRounds,
       targetRounds: _nullableInt(json['targetRounds']),
       intervalSeconds: _nullableInt(json['intervalSeconds']),
       restBetweenRoundsSeconds: _nullableInt(json['restBetweenRoundsSeconds']),
@@ -614,24 +700,38 @@ class CircuitResultData extends PerformanceResultData {
               Map<String, dynamic>.from(json['timerCursor'] as Map),
             )
           : null,
+      endedEarly: json['endedEarly'] == true,
+      earlyEndReason: _trim(json['earlyEndReason']),
       note: _trim(json['note']),
     );
   }
 
   CircuitResultData copyWith({
     List<CircuitStationActual>? stations,
+    List<CircuitSharedSetup>? sharedSetup,
+    List<CircuitRoundActual>? rounds,
     CircuitTimerCursor? timerCursor,
+    bool? endedEarly,
+    String? earlyEndReason,
     String? note,
     bool clearTimerCursor = false,
+    bool clearEarlyEndReason = false,
   }) {
     return CircuitResultData(
       format: format,
       comparisonFamily: comparisonFamily,
+      captureStrategy: captureStrategy,
       stations: stations ?? this.stations,
+      sharedSetup: sharedSetup ?? this.sharedSetup,
+      rounds: rounds ?? this.rounds,
       targetRounds: targetRounds,
       intervalSeconds: intervalSeconds,
       restBetweenRoundsSeconds: restBetweenRoundsSeconds,
       timerCursor: clearTimerCursor ? null : (timerCursor ?? this.timerCursor),
+      endedEarly: endedEarly ?? this.endedEarly,
+      earlyEndReason: clearEarlyEndReason
+          ? null
+          : (earlyEndReason ?? this.earlyEndReason),
       note: note ?? this.note,
     );
   }
@@ -641,6 +741,24 @@ class CircuitResultData extends PerformanceResultData {
     return copyWith(
       stations: [
         for (final current in stations)
+          current.ordinal == row.ordinal ? row : current,
+      ],
+    );
+  }
+
+  CircuitResultData replaceSetup(CircuitSharedSetup row) {
+    return copyWith(
+      sharedSetup: [
+        for (final current in sharedSetup)
+          current.stationId == row.stationId ? row : current,
+      ],
+    );
+  }
+
+  CircuitResultData replaceRound(CircuitRoundActual row) {
+    return copyWith(
+      rounds: [
+        for (final current in rounds)
           current.ordinal == row.ordinal ? row : current,
       ],
     );

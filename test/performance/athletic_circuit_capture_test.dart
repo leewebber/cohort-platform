@@ -1,4 +1,5 @@
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/models/circuit_round_actual.dart';
 import 'package:cohort_platform/features/performance/models/circuit_station_actual.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
@@ -80,6 +81,7 @@ SessionExecutionPlan _w5Athletic() {
           'rounds': 3,
           'between_round_recovery_seconds': 90,
           'round_sequence': ['EX-131', 'EX-132', 'EX-050', 'EX-009'],
+          'capture_strategy': 'fixed_work',
         }),
         linkedExercises: [
           SessionExecutionExerciseSummary(
@@ -89,6 +91,7 @@ SessionExecutionPlan _w5Athletic() {
             prescription: StrengthExercisePrescription.fromJson({
               'distance_m': 20,
               'round_position': 1,
+              'load': {'type': 'athleteSelected'},
             }),
           ),
           SessionExecutionExerciseSummary(
@@ -98,6 +101,7 @@ SessionExecutionPlan _w5Athletic() {
             prescription: StrengthExercisePrescription.fromJson({
               'distance_m': 20,
               'round_position': 2,
+              'load': {'type': 'athleteSelected'},
             }),
           ),
           SessionExecutionExerciseSummary(
@@ -233,81 +237,20 @@ void main() {
     );
   });
 
-  test('W5 Athletic authors 12 station rows and keeps a partial final round', () {
+  test('W5 Athletic authors two load entries and three round timings', () {
     final controller = PerformanceCaptureController.initializeFromExecutionPlan(
       plan: _w5Athletic(),
       athleteId: 'athlete-1',
       trainingSessionId: 23,
     );
-    var result =
+    final result =
         controller.draft.blockDrafts.single.resultData as CircuitResultData;
-    expect(result.stations, hasLength(12));
+    expect(result.isFixedWork, isTrue);
+    expect(result.stations, hasLength(4));
+    expect(result.sharedSetup.map((row) => row.stationId), ['EX-131', 'EX-132']);
+    expect(result.rounds, hasLength(3));
     expect(result.targetRounds, 3);
-    result = result.replaceStation(
-      result.stations[8].copyWith(
-        distance: 20,
-        state: CircuitOccurrenceState.recorded,
-      ),
-    );
-    result = result.replaceStation(
-      result.stations[9].copyWith(
-        distance: 18,
-        state: CircuitOccurrenceState.recorded,
-      ),
-    );
-    expect(result.completedRounds, 0);
-    expect(result.recordedCount, 2);
-    expect(result.stations[8].round, 3);
-    expect(result.stations[9].round, 3);
-  });
-
-  test('W5 resume keeps station identities and a partial final round', () async {
-    final store = InMemoryPerformanceRecordStore();
-    final controller = PerformanceCaptureController.initializeFromExecutionPlan(
-      plan: _w5Athletic(),
-      athleteId: 'athlete-1',
-      trainingSessionId: 28,
-    );
-    final blockId = controller.draft.blockDrafts.single.sourceBlockId;
-    var result =
-        controller.draft.blockDrafts.single.resultData as CircuitResultData;
-    final ids = controller.draft.blockDrafts.single.exerciseResults
-        .expand((exercise) => exercise.sets)
-        .map((set) => set.setResultId)
-        .toList(growable: false);
-    result = result.replaceStation(
-      result.stations[8].copyWith(
-        distance: 20,
-        state: CircuitOccurrenceState.recorded,
-      ),
-    );
-    result = result.replaceStation(
-      result.stations[9].copyWith(
-        distance: 18,
-        load: 80,
-        state: CircuitOccurrenceState.recorded,
-      ),
-    );
-    controller.updateBlockResultData(blockId, result);
-    await store.saveDraft(controller.draft);
-
-    final resumed = await store.getInProgressForTrainingSession(
-      athleteId: 'athlete-1',
-      trainingSessionId: 28,
-    );
-    final resumedResult =
-        resumed!.blockResults.single.resultData as CircuitResultData;
-    expect(resumedResult.stations[8].distance, 20);
-    expect(resumedResult.stations[9].distance, 18);
-    expect(resumedResult.stations[9].load, 80);
-    expect(resumedResult.completedRounds, 0);
-    expect(
-      resumed.blockResults.single.exerciseResults
-          .expand((exercise) => exercise.setResults)
-          .map((set) => set.setResultId)
-          .toList(),
-      ids,
-    );
+    expect(result.stations.any((row) => row.round == 3), isFalse);
   });
 
   test('farmer-carry distance persists on strength sets', () {
@@ -501,10 +444,10 @@ void main() {
     final blockId = controller.draft.blockDrafts.single.sourceBlockId;
     var result =
         controller.draft.blockDrafts.single.resultData as CircuitResultData;
-    result = result.replaceStation(
-      result.stations.first.copyWith(
-        distance: 20,
-        state: CircuitOccurrenceState.recorded,
+    result = result.replaceRound(
+      result.rounds.first.copyWith(
+        elapsedSeconds: 95,
+        state: CircuitRoundCompletionState.completed,
       ),
     );
     controller

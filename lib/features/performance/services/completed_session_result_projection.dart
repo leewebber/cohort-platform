@@ -645,12 +645,14 @@ class CompletedCircuitBlockProjection {
     required this.comparisonStatus,
     required this.collapsedSummary,
     required this.primaryLabel,
+    this.fastestIsPersonalRecord = false,
   });
 
   final CircuitResultData result;
   final StrengthExerciseComparisonStatus comparisonStatus;
   final String collapsedSummary;
   final String? primaryLabel;
+  final bool fastestIsPersonalRecord;
 
   static CompletedCircuitBlockProjection? tryFrom(
     TrainingBlockResult block, {
@@ -658,7 +660,7 @@ class CompletedCircuitBlockProjection {
     required List<TrainingSessionRecord> athleteHistory,
   }) {
     final data = CircuitResultComparison.dataFor(block);
-    if (data == null || !data.usesStationCapture) return null;
+    if (data == null || !data.usesCircuitCapture) return null;
     final comparison = CircuitResultComparison.compare(
       block: block,
       current: current,
@@ -669,6 +671,7 @@ class CompletedCircuitBlockProjection {
       comparisonStatus: comparison.status,
       collapsedSummary: PerformanceResultSummaryFormatter.formatBlock(block),
       primaryLabel: comparison.primaryLabel,
+      fastestIsPersonalRecord: comparison.fastestIsPersonalRecord,
     );
   }
 }

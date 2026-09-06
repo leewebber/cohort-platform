@@ -12,6 +12,7 @@ class CircuitComparison {
     this.primaryLabel,
     this.currentPrimary,
     this.previousPrimary,
+    this.fastestIsPersonalRecord = false,
   });
 
   final StrengthExerciseComparisonStatus status;
@@ -20,6 +21,7 @@ class CircuitComparison {
   final String? primaryLabel;
   final double? currentPrimary;
   final double? previousPrimary;
+  final bool fastestIsPersonalRecord;
 }
 
 class CircuitResultComparison {
@@ -32,12 +34,13 @@ class CircuitResultComparison {
     return data is CircuitResultData ? data : null;
   }
 
-  static bool isComparable(CircuitResultData current, CircuitResultData other) {
+  static bool sameFamily(CircuitResultData current, CircuitResultData other) {
     if (current.comparisonFamily.isEmpty || other.comparisonFamily.isEmpty) {
       return false;
     }
     if (current.comparisonFamily != other.comparisonFamily) return false;
     if (current.format != other.format) return false;
+    if (current.captureStrategy != other.captureStrategy) return false;
     if (current.prescribedCount != other.prescribedCount) return false;
     if (current.stations.length != other.stations.length) return false;
     for (var i = 0; i < current.stations.length; i++) {
@@ -55,24 +58,62 @@ class CircuitResultComparison {
     return true;
   }
 
+  static bool loadsAreComparable(
+    CircuitResultData current,
+    CircuitResultData other,
+  ) {
+    if (current.sharedSetup.length != other.sharedSetup.length) return false;
+    for (var i = 0; i < current.sharedSetup.length; i++) {
+      final a = current.sharedSetup[i];
+      final b = other.sharedSetup[i];
+      if (a.stationId != b.stationId) return false;
+      if (a.loadKg == null || b.loadKg == null) return false;
+      if (a.loadKg != b.loadKg) return false;
+    }
+    return true;
+  }
+
+  static bool isComparable(CircuitResultData current, CircuitResultData other) {
+    if (!sameFamily(current, other)) return false;
+    if (current.isFixedWork) return loadsAreComparable(current, other);
+    return true;
+  }
+
   static CircuitComparison compare({
     required TrainingBlockResult block,
     required TrainingSessionRecord current,
     required List<TrainingSessionRecord> athleteHistory,
   }) {
     final data = dataFor(block);
-    if (data == null || !data.usesStationCapture) {
+    if (data == null || !data.usesCircuitCapture) {
       return const CircuitComparison(
         status: StrengthExerciseComparisonStatus.notComparable,
         familyLabel: 'Circuit',
       );
     }
-    final label = data.format == 'emom' ? 'EMOM' : 'Circuit';
+    final label = data.format == 'emom'
+        ? 'EMOM'
+        : data.isFixedWork
+        ? 'Fixed-work rounds'
+        : 'Circuit';
     final previous = previousComparable(
       current: current,
       block: block,
       athleteHistory: athleteHistory,
     );
+    if (data.isFixedWork &&
+        previous != null &&
+        sameFamily(data, previous.data) &&
+        !loadsAreComparable(data, previous.data)) {
+      return CircuitComparison(
+        status: StrengthExerciseComparisonStatus.notComparable,
+        familyLabel: label,
+        previous: previous.data,
+        primaryLabel: 'Not comparable',
+        currentPrimary: data.averageRoundSeconds?.toDouble(),
+        previousPrimary: previous.data.averageRoundSeconds?.toDouble(),
+      );
+    }
     final primary = primarySignal(data);
     if (previous == null) {
       return CircuitComparison(
@@ -111,7 +152,35 @@ class CircuitResultComparison {
       primaryLabel: primary.label,
       currentPrimary: primary.value,
       previousPrimary: previousPrimary.value,
+      fastestIsPersonalRecord: fastestRoundIsPersonalRecord(
+        current: data,
+        currentRecord: current,
+        athleteHistory: athleteHistory,
+      ),
     );
+  }
+
+  static bool fastestRoundIsPersonalRecord({
+    required CircuitResultData current,
+    required TrainingSessionRecord currentRecord,
+    required List<TrainingSessionRecord> athleteHistory,
+  }) {
+    if (!current.isFixedWork) return false;
+    final fastest = current.fastestRoundSeconds;
+    if (fastest == null) return false;
+    var sawComparable = false;
+    for (final record in athleteHistory) {
+      if (record.recordId == currentRecord.recordId) continue;
+      if (record.status != TrainingSessionRecordStatus.completed) continue;
+      for (final block in record.blockResults) {
+        final other = dataFor(block);
+        if (other == null || !isComparable(current, other)) continue;
+        sawComparable = true;
+        final otherFastest = other.fastestRoundSeconds;
+        if (otherFastest != null && otherFastest <= fastest) return false;
+      }
+    }
+    return sawComparable;
   }
 
   static ({TrainingBlockResult block, CircuitResultData data})? previousComparable({
@@ -134,7 +203,9 @@ class CircuitResultComparison {
       for (final other in record.blockResults) {
         final otherData = dataFor(other);
         if (otherData == null) continue;
-        if (isComparable(data, otherData)) {
+        if (data.isFixedWork
+            ? sameFamily(data, otherData)
+            : isComparable(data, otherData)) {
           return (block: other, data: otherData);
         }
       }
@@ -145,6 +216,11 @@ class CircuitResultComparison {
   static ({String label, double value, bool higherIsBetter})? primarySignal(
     CircuitResultData result,
   ) {
+    if (result.isFixedWork) {
+      final average = result.averageRoundSeconds;
+      if (average == null) return null;
+      return (label: 'Average round', value: average.toDouble(), higherIsBetter: false);
+    }
     final recorded = result.stations.where((row) => row.hasRecordedActual);
     if (recorded.isEmpty) return null;
     final calories = recorded.where(

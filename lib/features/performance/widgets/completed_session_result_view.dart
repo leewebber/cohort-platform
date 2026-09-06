@@ -19,6 +19,7 @@ import '../models/circuit_station_actual.dart';
 import '../services/circuit_set_sync.dart';
 import '../services/interval_set_sync.dart';
 import 'circuit_capture_editor.dart';
+import 'fixed_work_rounds_capture.dart';
 import '../services/performance_correction_service.dart';
 import '../services/running_pace_plausibility.dart';
 import 'endurance_duration_field.dart';
@@ -450,7 +451,50 @@ class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> 
           const SizedBox(height: CohortSpacing.xs),
           Text(circuit.primaryLabel!, style: CohortTextStyles.small),
         ],
-        if (_expanded)
+        if (_expanded && circuit.result.isFixedWork) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text('Equipment', style: CohortTextStyles.body),
+          for (final setup in circuit.result.sharedSetup)
+            Text(
+              setup.loadKg == null
+                  ? '${setup.displayName}: load not recorded'
+                  : '${setup.displayName}: ${setup.loadKg} ${setup.loadUnit}',
+              style: CohortTextStyles.small,
+            ),
+          const SizedBox(height: CohortSpacing.sm),
+          Text('Round times', style: CohortTextStyles.body),
+          for (final round in circuit.result.rounds)
+            Text(
+              round.isCompleted
+                  ? 'Round ${round.ordinal}: ${formatCompletedDuration(round.elapsedSeconds!)}'
+                  : 'Round ${round.ordinal}: incomplete',
+              style: CohortTextStyles.small,
+            ),
+          if (circuit.result.totalWorkSeconds != null)
+            Text(
+              'Total work time ${formatCompletedDuration(circuit.result.totalWorkSeconds!)}',
+              style: CohortTextStyles.small,
+            ),
+          if (circuit.result.averageRoundSeconds != null)
+            Text(
+              'Average round ${formatCompletedDuration(circuit.result.averageRoundSeconds!)}',
+              style: CohortTextStyles.small,
+            ),
+          if (circuit.result.fastestRoundSeconds != null)
+            Text(
+              circuit.fastestIsPersonalRecord
+                  ? 'Fastest round ${formatCompletedDuration(circuit.result.fastestRoundSeconds!)} · PR'
+                  : 'Fastest round ${formatCompletedDuration(circuit.result.fastestRoundSeconds!)}',
+              style: CohortTextStyles.small,
+            ),
+          const SizedBox(height: CohortSpacing.sm),
+          Text('Prescribed work', style: CohortTextStyles.small),
+          for (final row in circuit.result.stations)
+            Text(
+              '${row.displayName}: ${_stationPrescribedLabel(row)}',
+              style: CohortTextStyles.small,
+            ),
+        ] else if (_expanded)
           for (final round in rounds) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(
@@ -1114,10 +1158,16 @@ class _CorrectionBlockEditor extends StatelessWidget {
               onChanged: onResultChanged,
             )
           else if (block.resultData is CircuitResultData)
-            CircuitCaptureEditor(
-              result: block.resultData! as CircuitResultData,
-              onChanged: onResultChanged,
-            ),
+            (block.resultData! as CircuitResultData).isFixedWork
+                ? FixedWorkRoundsCapture(
+                    result: block.resultData! as CircuitResultData,
+                    onChanged: onResultChanged,
+                    readOnly: false,
+                  )
+                : CircuitCaptureEditor(
+                    result: block.resultData! as CircuitResultData,
+                    onChanged: onResultChanged,
+                  ),
           if ((block.resultData is! IntervalResultData ||
                   !(block.resultData! as IntervalResultData)
                       .usesPerIntervalCapture) &&

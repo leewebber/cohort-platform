@@ -14,7 +14,7 @@ class CircuitSetSync {
     required CircuitResultData result,
     SessionExecutionBlock? block,
   }) {
-    if (result.stations.isEmpty) return exercises;
+    if (result.isFixedWork || result.stations.isEmpty) return exercises;
     final byId = {for (final exercise in exercises) exercise.sourceExerciseId: exercise};
     final used = <String>{};
     final next = <ExercisePerformanceDraft>[];
@@ -155,7 +155,7 @@ class CircuitSetSync {
     required CircuitResultData result,
     required List<TrainingExerciseResult> exercises,
   }) {
-    if (result.stations.isEmpty) return result;
+    if (result.isFixedWork || result.stations.isEmpty) return result;
     final byExercise = {
       for (final exercise in exercises)
         exercise.sourceExerciseId: {

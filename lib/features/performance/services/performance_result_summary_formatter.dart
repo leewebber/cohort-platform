@@ -161,6 +161,17 @@ class PerformanceResultSummaryFormatter {
     final target = result.targetRounds;
     final recorded = result.recordedCount;
     final prescribed = result.prescribedCount;
+    if (result.isFixedWork) {
+      final average = result.averageRoundSeconds;
+      final fastest = result.fastestRoundSeconds;
+      final averageLabel = average == null
+          ? '—'
+          : EnduranceMetricsCalculator.formatDuration(average);
+      final fastestLabel = fastest == null
+          ? '—'
+          : EnduranceMetricsCalculator.formatDuration(fastest);
+      return '$complete/${target ?? result.rounds.length} rounds · average $averageLabel · fastest $fastestLabel';
+    }
     if (result.format == 'emom') {
       return '$recorded/$prescribed stations recorded';
     }

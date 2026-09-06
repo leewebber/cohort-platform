@@ -1,8 +1,11 @@
+import '../../../models/circuit_capture_strategy.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../../session/models/session_execution_plan.dart';
+import '../models/circuit_round_actual.dart';
 import '../models/circuit_station_actual.dart';
 import '../models/performance_result_data.dart';
+import '../models/performance_snapshot.dart';
 
 class CircuitCaptureContract {
   const CircuitCaptureContract._();
@@ -11,7 +14,21 @@ class CircuitCaptureContract {
     return format == WorkoutFormat.emom || format == WorkoutFormat.rounds;
   }
 
+  static CircuitCaptureStrategy resolveStrategy(SessionExecutionBlock block) {
+    return block.timerConfiguration?.captureStrategy ??
+        CircuitCaptureStrategy.variableOutput;
+  }
+
+  static bool isFixedWork(SessionExecutionBlock block) {
+    return isCircuitFormat(block.workoutFormat) &&
+        resolveStrategy(block) == CircuitCaptureStrategy.fixedWork;
+  }
+
   static bool hasAuthoredStations(SessionExecutionBlock block) {
+    if (isFixedWork(block)) {
+      return authoredStationSpecs(block).isNotEmpty &&
+          (block.timerConfiguration?.effectiveTargetRounds ?? 0) > 0;
+    }
     return authoredStationSpecs(block).isNotEmpty &&
         (occurrenceCount(block) ?? 0) > 0;
   }
@@ -52,22 +69,79 @@ class CircuitCaptureContract {
     final signature = specs
         .map((spec) => _stationSignature(spec))
         .join('|');
+    final strategy = resolveStrategy(block).dbValue;
     if (block.workoutFormat == WorkoutFormat.emom) {
       final total = block.timerConfiguration?.emomTotalSeconds ?? 0;
       final interval = block.timerConfiguration?.intervalSeconds ?? 60;
-      return 'emom:$signature:${interval}s:${total}s';
+      return '$strategy:emom:$signature:${interval}s:${total}s';
     }
     final rounds = block.timerConfiguration?.effectiveTargetRounds ?? 0;
-    return 'rounds:$signature:${rounds}r';
+    return '$strategy:rounds:$signature:${rounds}r';
   }
 
   static CircuitResultData authoredResult(SessionExecutionBlock block) {
     final specs = authoredStationSpecs(block);
+    final strategy = resolveStrategy(block);
+    final labels = {
+      for (final exercise in block.linkedExercises)
+        exercise.exerciseId: exercise.displayName,
+    };
+    if (strategy == CircuitCaptureStrategy.fixedWork) {
+      final target = block.timerConfiguration?.effectiveTargetRounds ?? 0;
+      if (specs.isEmpty || target <= 0) {
+        return CircuitResultData(
+          format: block.workoutFormat.dbValue,
+          comparisonFamily: comparisonFamily(block),
+          captureStrategy: strategy,
+          stations: const [],
+          targetRounds: target > 0 ? target : null,
+          restBetweenRoundsSeconds:
+              block.timerConfiguration?.restBetweenRoundsSeconds,
+        );
+      }
+      return CircuitResultData(
+        format: block.workoutFormat.dbValue,
+        comparisonFamily: comparisonFamily(block),
+        captureStrategy: strategy,
+        targetRounds: target,
+        restBetweenRoundsSeconds:
+            block.timerConfiguration?.restBetweenRoundsSeconds,
+        stations: [
+          for (var i = 0; i < specs.length; i++)
+            _occurrence(
+              block: block,
+              specs: specs,
+              labels: labels,
+              ordinal: i + 1,
+              forceRound: 0,
+            ),
+        ],
+        sharedSetup: [
+          for (final exercise in block.linkedExercises)
+            if (_expectsExternalLoad(block, exercise))
+              CircuitSharedSetup(
+                stationId: exercise.exerciseId,
+                displayName: labels[exercise.exerciseId] ?? exercise.displayName,
+              ),
+        ],
+        rounds: [
+          for (var ordinal = 1; ordinal <= target; ordinal++)
+            CircuitRoundActual(ordinal: ordinal),
+        ],
+        timerCursor: const CircuitTimerCursor(
+          currentRound: 1,
+          currentOrdinal: 1,
+          remainingSeconds: 0,
+          phase: 'ready',
+        ),
+      );
+    }
     final count = occurrenceCount(block);
     if (specs.isEmpty || count == null || count <= 0) {
       return CircuitResultData(
         format: block.workoutFormat.dbValue,
         comparisonFamily: comparisonFamily(block),
+        captureStrategy: strategy,
         stations: const [],
         targetRounds: block.timerConfiguration?.effectiveTargetRounds,
         intervalSeconds: block.timerConfiguration?.intervalSeconds,
@@ -75,13 +149,10 @@ class CircuitCaptureContract {
             block.timerConfiguration?.restBetweenRoundsSeconds,
       );
     }
-    final labels = {
-      for (final exercise in block.linkedExercises)
-        exercise.exerciseId: exercise.displayName,
-    };
     return CircuitResultData(
       format: block.workoutFormat.dbValue,
       comparisonFamily: comparisonFamily(block),
+      captureStrategy: strategy,
       targetRounds: block.workoutFormat == WorkoutFormat.emom
           ? count
           : block.timerConfiguration?.effectiveTargetRounds,
@@ -100,16 +171,28 @@ class CircuitCaptureContract {
     );
   }
 
+  static bool _expectsExternalLoad(
+    SessionExecutionBlock block,
+    SessionExecutionExerciseSummary exercise,
+  ) {
+    return StrengthActualLoadKind.fromPrescription(
+      blockType: block.blockType,
+      prescription: exercise.prescription,
+    ).expectsExternalLoad;
+  }
+
   static CircuitStationActual _occurrence({
     required SessionExecutionBlock block,
     required List<TimerStationSpec> specs,
     required Map<String, String> labels,
     required int ordinal,
+    int? forceRound,
   }) {
     final spec = specs[(ordinal - 1) % specs.length];
-    final round = block.workoutFormat == WorkoutFormat.emom
-        ? ordinal
-        : ((ordinal - 1) ~/ specs.length) + 1;
+    final round = forceRound ??
+        (block.workoutFormat == WorkoutFormat.emom
+            ? ordinal
+            : ((ordinal - 1) ~/ specs.length) + 1);
     return CircuitStationActual(
       ordinal: ordinal,
       round: round,

@@ -18,6 +18,7 @@ import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import 'endurance_duration_field.dart';
 import 'circuit_capture_editor.dart';
+import 'fixed_work_rounds_capture.dart';
 import 'interval_pace_field.dart';
 import 'performance_numeric_field.dart';
 import '../services/interval_pace_format.dart';
@@ -281,17 +282,31 @@ class _ResultEditorBody extends StatelessWidget {
           workoutFormat: blockDraft.blockSnapshot.workoutFormat.name,
         );
       case BlockCaptureMode.circuit:
+        final circuit =
+            blockDraft.resultData as CircuitResultData? ??
+            const CircuitResultData(
+              format: 'rounds',
+              comparisonFamily: '',
+              stations: [],
+            );
+        if (circuit.isFixedWork) {
+          return FixedWorkRoundsCapture(
+            result: circuit,
+            onChanged: onResultChanged,
+          );
+        }
         return CircuitCaptureEditor(
-          result:
-              blockDraft.resultData as CircuitResultData? ??
-              const CircuitResultData(
-                format: 'rounds',
-                comparisonFamily: '',
-                stations: [],
-              ),
+          result: circuit,
           onChanged: onResultChanged,
         );
       case BlockCaptureMode.rounds:
+        final roundsData = blockDraft.resultData;
+        if (roundsData is CircuitResultData && roundsData.isFixedWork) {
+          return FixedWorkRoundsCapture(
+            result: roundsData,
+            onChanged: onResultChanged,
+          );
+        }
         return _RoundsEditor(
           result:
               blockDraft.resultData as RoundsResultData? ??

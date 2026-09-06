@@ -424,7 +424,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                         },
                         onMarkComplete: () => _syncBlockComplete(block.blockId),
                         onReopen: () => _syncBlockReopen(block.blockId),
-                        onLaunchTimer: block.hasTimer
+                        onLaunchTimer: block.hasTimer &&
+                                !CircuitCaptureContract.isFixedWork(block)
                             ? () => _launchTimer(block)
                             : null,
                         onOpenExercise: _openExercise,
