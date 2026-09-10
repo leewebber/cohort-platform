@@ -18,6 +18,26 @@ class StrengthPrescriptionFormatter {
     return '$setsLabel × $repsLabel';
   }
 
+  /// Compact collapsed-card volume from the authored prescription.
+  ///
+  /// V1 prescriptions are uniform across sets. When dosage is missing, this
+  /// returns a truthful set-count label instead of a fabricated shorthand.
+  static String collapsedVolumeLine(
+    StrengthExercisePrescription? prescription,
+  ) {
+    if (prescription == null || prescription.sets <= 0) {
+      return 'Prescribed sets';
+    }
+    final hasDose =
+        prescription.authoredDistanceLabel != null ||
+        prescription.reps.hasValue;
+    if (!hasDose) {
+      final count = prescription.sets;
+      return '$count prescribed set${count == 1 ? '' : 's'}';
+    }
+    return formatSetsReps(prescription);
+  }
+
   static String formatReps(StrengthRepPrescription reps) {
     return switch (reps.type) {
       StrengthRepType.exact => reps.exactReps?.toString() ?? '—',

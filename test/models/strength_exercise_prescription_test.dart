@@ -178,10 +178,7 @@ void main() {
         'sets': 3,
         'distance_m': 40,
       });
-      expect(
-        StrengthPrescriptionFormatter.formatSetsReps(exact),
-        '3 × 40 m',
-      );
+      expect(StrengthPrescriptionFormatter.formatSetsReps(exact), '3 × 40 m');
       expect(exact.performanceCapture?.distanceUnit, 'm');
 
       final range = StrengthExercisePrescription.fromJson({
@@ -192,6 +189,110 @@ void main() {
       expect(
         StrengthPrescriptionFormatter.summaryLine(range),
         '3 × 30-40 m · heavy',
+      );
+    });
+
+    test('collapsed volume uses canonical dosage without load prose', () {
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 4,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.range,
+              minReps: 6,
+              maxReps: 8,
+            ),
+            load: StrengthLoadPrescription(
+              type: StrengthLoadType.fixedKg,
+              kg: 20,
+            ),
+          ),
+        ),
+        '4 × 6–8',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 4,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.exact,
+              exactReps: 5,
+            ),
+          ),
+        ),
+        '4 × 5',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 3,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.range,
+              minReps: 8,
+              maxReps: 10,
+            ),
+          ),
+        ),
+        '3 × 8–10',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 3,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.distance,
+              text: '40 m',
+            ),
+            prescribedDistanceText: '40 m',
+          ),
+        ),
+        '3 × 40 m',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 3,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.duration,
+              text: '45 sec',
+            ),
+          ),
+        ),
+        '3 × 45 sec',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 2,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.exact,
+              exactReps: 8,
+            ),
+            perSide: true,
+          ),
+        ),
+        '2 × 8 / side',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 3,
+            reps: StrengthRepPrescription(
+              type: StrengthRepType.maxEffort,
+              text: 'AMRAP',
+            ),
+          ),
+        ),
+        '3 × AMRAP',
+      );
+      expect(
+        StrengthPrescriptionFormatter.collapsedVolumeLine(
+          const StrengthExercisePrescription(
+            sets: 4,
+            reps: StrengthRepPrescription(type: StrengthRepType.exact),
+          ),
+        ),
+        '4 prescribed sets',
       );
     });
   });

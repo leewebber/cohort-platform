@@ -250,9 +250,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     );
     if (!eligibility.canFinish) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(eligibility.reason)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(eligibility.reason)));
       return;
     }
 
@@ -366,7 +366,12 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.fromLTRB(
+              24,
+              24,
+              24,
+              24 + MediaQuery.viewInsetsOf(context).bottom,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -411,7 +416,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                       final performanceReplacesExerciseList =
                           CircuitCaptureContract.isFixedWork(block) ||
                           (blockDraft != null &&
-                              BlockResultEditor.rendersExerciseRows(blockDraft));
+                              BlockResultEditor.rendersExerciseRows(
+                                blockDraft,
+                              ));
 
                       return AthleteBlockCard(
                         block: block,
@@ -425,7 +432,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                         },
                         onMarkComplete: () => _syncBlockComplete(block.blockId),
                         onReopen: () => _syncBlockReopen(block.blockId),
-                        onLaunchTimer: block.hasTimer &&
+                        onLaunchTimer:
+                            block.hasTimer &&
                                 !CircuitCaptureContract.isFixedWork(block)
                             ? () => _launchTimer(block)
                             : null,

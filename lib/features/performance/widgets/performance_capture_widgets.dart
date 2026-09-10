@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
+import '../services/strength_exercise_capture_completion.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
@@ -131,6 +133,7 @@ class BlockResultEditor extends StatelessWidget {
     this.onApplyElapsedSeconds,
     this.linkedExercises = const [],
     this.onOpenExercise,
+    this.previousPerformanceResolver = const PreviousPerformanceResolver(),
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -147,6 +150,7 @@ class BlockResultEditor extends StatelessWidget {
   final ValueChanged<int>? onApplyElapsedSeconds;
   final List<SessionExecutionExerciseSummary> linkedExercises;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
+  final PreviousPerformanceResolver previousPerformanceResolver;
 
   static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
     return _captureModeFor(blockDraft) != BlockCaptureMode.completion ||
@@ -201,6 +205,7 @@ class BlockResultEditor extends StatelessWidget {
           onRemoveSet: onRemoveSet,
           onApplyElapsedSeconds: onApplyElapsedSeconds,
           onOpenExercise: onOpenExercise,
+          previousPerformanceResolver: previousPerformanceResolver,
         ),
       ],
     );
@@ -218,6 +223,7 @@ class _ResultEditorBody extends StatelessWidget {
     required this.onRemoveSet,
     this.onApplyElapsedSeconds,
     this.onOpenExercise,
+    this.previousPerformanceResolver = const PreviousPerformanceResolver(),
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -234,6 +240,7 @@ class _ResultEditorBody extends StatelessWidget {
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final ValueChanged<int>? onApplyElapsedSeconds;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
+  final PreviousPerformanceResolver previousPerformanceResolver;
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +248,7 @@ class _ResultEditorBody extends StatelessWidget {
     switch (mode) {
       case BlockCaptureMode.strength:
         return _StrengthEditor(
+          key: ValueKey('strength-accordion-${blockDraft.sourceBlockId}'),
           blockDraft: blockDraft,
           linkedExercises: linkedExercises,
           onAddSet: onAddSet,
@@ -248,6 +256,7 @@ class _ResultEditorBody extends StatelessWidget {
           onDuplicateSet: onDuplicateSet,
           onRemoveSet: onRemoveSet,
           onOpenExercise: onOpenExercise,
+          previousPerformanceResolver: previousPerformanceResolver,
         );
       case BlockCaptureMode.amrap:
         return _AmrapEditor(
@@ -466,7 +475,9 @@ class _IntervalEditorState extends State<_IntervalEditor> {
           button: true,
           expanded: _expanded,
           label: 'Interval performance, $recorded of $prescribed recorded',
-          hint: _expanded ? 'Collapse interval performance' : 'Expand interval performance',
+          hint: _expanded
+              ? 'Collapse interval performance'
+              : 'Expand interval performance',
           child: InkWell(
             onTap: () => setState(() => _expanded = !_expanded),
             child: Row(
@@ -545,8 +556,9 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
 
   String get _stateLabel {
     return switch (row.state) {
-      IntervalWorkState.completed =>
-        IntervalPaceFormat.display(row.paceSecondsPerKm),
+      IntervalWorkState.completed => IntervalPaceFormat.display(
+        row.paceSecondsPerKm,
+      ),
       IntervalWorkState.paceUnavailable => 'Pace unavailable',
       IntervalWorkState.skipped => 'Skipped',
       IntervalWorkState.pending => 'Not recorded',
@@ -568,10 +580,7 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
     }
     setState(() => _errorText = null);
     widget.onRecorded(
-      row.copyWith(
-        paceSecondsPerKm: pace,
-        state: IntervalWorkState.completed,
-      ),
+      row.copyWith(paceSecondsPerKm: pace, state: IntervalWorkState.completed),
     );
     return true;
   }
@@ -603,7 +612,9 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
                       ),
                     ),
                     Text(_stateLabel, style: CohortTextStyles.small),
-                    Icon(widget.expanded ? Icons.expand_less : Icons.expand_more),
+                    Icon(
+                      widget.expanded ? Icons.expand_less : Icons.expand_more,
+                    ),
                   ],
                 ),
               ),
@@ -613,7 +624,8 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
               IntervalPaceField(
                 key: _paceKey,
                 secondsPerKm: row.paceSecondsPerKm,
-                enabled: row.state != IntervalWorkState.paceUnavailable &&
+                enabled:
+                    row.state != IntervalWorkState.paceUnavailable &&
                     row.state != IntervalWorkState.skipped,
                 autofocus: widget.autofocus,
                 errorText: _errorText,
@@ -939,14 +951,16 @@ class _ExerciseAcknowledgementEditor extends StatelessWidget {
   }
 }
 
-class _StrengthEditor extends StatelessWidget {
+class _StrengthEditor extends StatefulWidget {
   const _StrengthEditor({
+    super.key,
     required this.blockDraft,
     required this.linkedExercises,
     required this.onAddSet,
     required this.onUpdateSet,
     required this.onDuplicateSet,
     required this.onRemoveSet,
+    required this.previousPerformanceResolver,
     this.onOpenExercise,
   });
 
@@ -961,10 +975,43 @@ class _StrengthEditor extends StatelessWidget {
   onUpdateSet;
   final void Function(String exerciseId, String setResultId) onDuplicateSet;
   final void Function(String exerciseId, String setResultId) onRemoveSet;
+  final PreviousPerformanceResolver previousPerformanceResolver;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
 
+  @override
+  State<_StrengthEditor> createState() => _StrengthEditorState();
+}
+
+class _StrengthEditorState extends State<_StrengthEditor> {
+  String? _expandedExerciseResultId;
+  final Map<String, GlobalKey> _cardKeys = {};
+  final Map<String, PreviousPerformanceSnapshot?> _previousByExerciseId = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _expandedExerciseResultId = _earliestIncompleteId();
+  }
+
+  @override
+  void didUpdateWidget(covariant _StrengthEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.blockDraft.sourceBlockId != widget.blockDraft.sourceBlockId) {
+      _previousByExerciseId.clear();
+      _expandedExerciseResultId = _earliestIncompleteId();
+      return;
+    }
+    final ids = widget.blockDraft.exerciseResults
+        .map((exercise) => exercise.exerciseResultId)
+        .toSet();
+    if (_expandedExerciseResultId != null &&
+        !ids.contains(_expandedExerciseResultId)) {
+      _expandedExerciseResultId = _earliestIncompleteId();
+    }
+  }
+
   SessionExecutionExerciseSummary? _summaryFor(String exerciseId) {
-    for (final summary in linkedExercises) {
+    for (final summary in widget.linkedExercises) {
       if (summary.exerciseId == exerciseId) return summary;
     }
     return null;
@@ -977,42 +1024,327 @@ class _StrengthEditor extends StatelessWidget {
     );
   }
 
+  String? _earliestIncompleteId() {
+    for (final exercise in widget.blockDraft.exerciseResults) {
+      if (!StrengthExerciseCaptureCompletion.isComplete(
+        exercise: exercise,
+        prescription: _summaryFor(exercise.sourceExerciseId)?.prescription,
+      )) {
+        return exercise.exerciseResultId;
+      }
+    }
+    return null;
+  }
+
+  PreviousPerformanceSnapshot? _cachedPrevious(
+    SessionExecutionExerciseSummary? summary,
+  ) {
+    if (summary == null) return null;
+    if (_previousByExerciseId.containsKey(summary.exerciseId)) {
+      return _previousByExerciseId[summary.exerciseId];
+    }
+    final resolved = widget.previousPerformanceResolver.resolveLatest(
+      exerciseId: summary.exerciseId,
+      requiredType: PreviousPerformanceSessionType.strength,
+    );
+    _previousByExerciseId[summary.exerciseId] = resolved;
+    return resolved;
+  }
+
+  Duration _motionDuration(BuildContext context) {
+    return MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : const Duration(milliseconds: 180);
+  }
+
+  void _toggleExercise(String exerciseResultId) {
+    final collapsing = _expandedExerciseResultId == exerciseResultId;
+    setState(() {
+      _expandedExerciseResultId = collapsing ? null : exerciseResultId;
+    });
+    if (!collapsing) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final cardContext = _cardKeys[exerciseResultId]?.currentContext;
+        if (cardContext == null || !cardContext.mounted) return;
+        Scrollable.ensureVisible(
+          cardContext,
+          alignment: 0.08,
+          duration: _motionDuration(cardContext),
+          curve: Curves.easeOutCubic,
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String? previousGroupKey;
+    String? previousGroupId;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final exercise in blockDraft.exerciseResults) ...[
-          _PerformanceExerciseTitle(
-            label: _exerciseLabel(exercise),
-            summary: _summaryFor(exercise.sourceExerciseId),
-            onOpenExercise: onOpenExercise,
+        for (final exercise in widget.blockDraft.exerciseResults) ...[
+          Builder(
+            builder: (context) {
+              final summary = _summaryFor(exercise.sourceExerciseId);
+              final groupKey = summary?.hasExecutionGroup == true
+                  ? summary!.executionGroupKey
+                  : null;
+              final groupId = summary?.prescription?.groupId?.trim();
+              final showExecutionGroup =
+                  groupKey != null && groupKey != previousGroupKey;
+              final showPaired =
+                  groupId != null &&
+                  groupId.isNotEmpty &&
+                  groupId != previousGroupId &&
+                  groupKey == null;
+              previousGroupKey = groupKey ?? previousGroupKey;
+              previousGroupId = groupId ?? previousGroupId;
+
+              final expanded =
+                  exercise.exerciseResultId == _expandedExerciseResultId;
+              final complete = StrengthExerciseCaptureCompletion.isComplete(
+                exercise: exercise,
+                prescription: summary?.prescription,
+              );
+              final volume = StrengthPrescriptionFormatter.collapsedVolumeLine(
+                summary?.prescription,
+              );
+              final status =
+                  StrengthExerciseCaptureCompletion.collapsedStatusLine(
+                    exercise: exercise,
+                    prescription: summary?.prescription,
+                  );
+              final label = _exerciseLabel(exercise);
+              final cardKey = _cardKeys.putIfAbsent(
+                exercise.exerciseResultId,
+                GlobalKey.new,
+              );
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (showExecutionGroup) ...[
+                    Text(
+                      '${summary!.executionGroupLabel} · '
+                      '${summary.executionGroupRounds} rounds',
+                      style: CohortTextStyles.eyebrow,
+                    ),
+                    const SizedBox(height: CohortSpacing.sm),
+                  ] else if (showPaired) ...[
+                    Text('Paired work', style: CohortTextStyles.eyebrow),
+                    const SizedBox(height: CohortSpacing.sm),
+                  ],
+                  KeyedSubtree(
+                    key: cardKey,
+                    child: _StrengthExerciseAccordionCard(
+                      label: label,
+                      volume: volume,
+                      statusLine: status,
+                      isExpanded: expanded,
+                      isComplete: complete,
+                      reduceMotion: MediaQuery.disableAnimationsOf(context),
+                      onToggle: () =>
+                          _toggleExercise(exercise.exerciseResultId),
+                      onOpenExercise:
+                          summary != null && widget.onOpenExercise != null
+                          ? () => widget.onOpenExercise!(summary)
+                          : null,
+                      expandedBody: expanded
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _ExerciseTargetComparison(
+                                  summary: summary,
+                                  previous: _cachedPrevious(summary),
+                                  useProvidedPrevious: true,
+                                ),
+                                const SizedBox(height: CohortSpacing.sm),
+                                for (final set in exercise.sets)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: CohortSpacing.sm,
+                                    ),
+                                    child: _ExerciseActualRow(
+                                      exerciseId: exercise.sourceExerciseId,
+                                      set: set,
+                                      capture: summary
+                                          ?.prescription
+                                          ?.performanceCapture,
+                                      loadKind:
+                                          exercise.exerciseSnapshot.loadKind,
+                                      onUpdateSet: widget.onUpdateSet,
+                                    ),
+                                  ),
+                                CohortButton(
+                                  label: exercise.sets.isEmpty
+                                      ? 'Add first set'
+                                      : 'Add set',
+                                  onPressed: () => widget.onAddSet(
+                                    exercise.sourceExerciseId,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(height: CohortSpacing.md),
+                ],
+              );
+            },
           ),
-          const SizedBox(height: CohortSpacing.sm),
-          _ExerciseTargetComparison(
-            summary: _summaryFor(exercise.sourceExerciseId),
-          ),
-          const SizedBox(height: CohortSpacing.sm),
-          for (final set in exercise.sets)
-            Padding(
-              padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-              child: _ExerciseActualRow(
-                exerciseId: exercise.sourceExerciseId,
-                set: set,
-                capture: _summaryFor(
-                  exercise.sourceExerciseId,
-                )?.prescription?.performanceCapture,
-                loadKind: exercise.exerciseSnapshot.loadKind,
-                onUpdateSet: onUpdateSet,
-              ),
-            ),
-          CohortButton(
-            label: exercise.sets.isEmpty ? 'Add first set' : 'Add set',
-            onPressed: () => onAddSet(exercise.sourceExerciseId),
-          ),
-          const SizedBox(height: CohortSpacing.md),
         ],
       ],
+    );
+  }
+}
+
+class _StrengthExerciseAccordionCard extends StatelessWidget {
+  const _StrengthExerciseAccordionCard({
+    required this.label,
+    required this.volume,
+    required this.isExpanded,
+    required this.isComplete,
+    required this.reduceMotion,
+    required this.onToggle,
+    this.statusLine,
+    this.onOpenExercise,
+    this.expandedBody,
+  });
+
+  final String label;
+  final String volume;
+  final String? statusLine;
+  final bool isExpanded;
+  final bool isComplete;
+  final bool reduceMotion;
+  final VoidCallback onToggle;
+  final VoidCallback? onOpenExercise;
+  final Widget? expandedBody;
+
+  @override
+  Widget build(BuildContext context) {
+    final semanticsLabel = [
+      label,
+      volume,
+      if (statusLine != null) statusLine,
+    ].join('. ');
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isComplete
+              ? CohortColors.success.withValues(alpha: 0.45)
+              : CohortColors.border,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(CohortSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Semantics(
+                    container: true,
+                    button: true,
+                    expanded: isExpanded,
+                    label: semanticsLabel,
+                    hint: isExpanded ? 'Collapse exercise' : 'Expand exercise',
+                    child: InkWell(
+                      onTap: onToggle,
+                      borderRadius: BorderRadius.circular(8),
+                      child: ExcludeSemantics(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 48),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: CohortSpacing.xs,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        label,
+                                        style: CohortTextStyles.cardTitle,
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        volume,
+                                        style: CohortTextStyles.small,
+                                      ),
+                                      if (statusLine != null) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          statusLine!,
+                                          style: CohortTextStyles.small
+                                              .copyWith(
+                                                color: CohortColors.success,
+                                              ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: CohortSpacing.sm,
+                                ),
+                                child: Icon(
+                                  isExpanded
+                                      ? Icons.expand_less
+                                      : Icons.expand_more,
+                                  color: CohortColors.textSecondary,
+                                  semanticLabel: isExpanded
+                                      ? 'Expanded'
+                                      : 'Collapsed',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                if (isExpanded && onOpenExercise != null)
+                  Semantics(
+                    button: true,
+                    label: 'Exercise info for $label',
+                    child: IconButton(
+                      tooltip: 'Exercise info',
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: onOpenExercise,
+                    ),
+                  ),
+              ],
+            ),
+            AnimatedSize(
+              duration: reduceMotion
+                  ? Duration.zero
+                  : const Duration(milliseconds: 180),
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: isExpanded && expandedBody != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: CohortSpacing.sm),
+                      child: expandedBody,
+                    )
+                  : const SizedBox(width: double.infinity),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1049,27 +1381,35 @@ class _PerformanceExerciseTitle extends StatelessWidget {
 }
 
 class _ExerciseTargetComparison extends StatelessWidget {
-  const _ExerciseTargetComparison({required this.summary});
+  const _ExerciseTargetComparison({
+    required this.summary,
+    this.previous,
+    this.useProvidedPrevious = false,
+  });
 
   final SessionExecutionExerciseSummary? summary;
+  final PreviousPerformanceSnapshot? previous;
+  final bool useProvidedPrevious;
 
   @override
   Widget build(BuildContext context) {
     final prescription = summary?.prescription;
-    final previous = summary == null
+    final resolvedPrevious = useProvidedPrevious
+        ? previous
+        : summary == null
         ? null
         : const PreviousPerformanceResolver().resolveLatest(
             exerciseId: summary!.exerciseId,
             requiredType: PreviousPerformanceSessionType.strength,
           );
-    final previousParts = previous == null
+    final previousParts = resolvedPrevious == null
         ? const <String>[]
         : <String>[
-            ?_text(previous.repSummary),
-            ?_text(previous.loadSummary),
-            ?_text(previous.distanceSummary),
-            ?_text(previous.durationSummary),
-            if (previous.rpe case final value?) 'RPE $value',
+            ?_text(resolvedPrevious.repSummary),
+            ?_text(resolvedPrevious.loadSummary),
+            ?_text(resolvedPrevious.distanceSummary),
+            ?_text(resolvedPrevious.durationSummary),
+            if (resolvedPrevious.rpe case final value?) 'RPE $value',
           ];
 
     return Column(
