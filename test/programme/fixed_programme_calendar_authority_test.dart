@@ -555,6 +555,31 @@ void main() {
       },
     );
 
+    test(
+      'unstarted overdue occurrence can be prepared for late start',
+      () async {
+        final assignment = _assignment();
+        final overdue = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000201',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.overdue,
+        );
+        final tables = await _tablesWith(assignment);
+        final result = await _prepareService(
+          tables: tables,
+          loader: _EchoLoader(),
+          projectionStore: _ProjectionStore(null),
+        ).prepareFixedOccurrence(assignment, overdue);
+
+        expect(result.isReady, isTrue);
+        expect(result.executionContext?.occurrenceId, overdue.occurrenceId);
+      },
+    );
+
     test('future occurrence cannot be prepared', () async {
       final assignment = _assignment();
       final future = _occurrence(
@@ -928,9 +953,9 @@ void main() {
           300,
           scrollable: find.byType(Scrollable).first,
         );
-      expect(find.text('Available 3 September'), findsOneWidget);
-      expect(find.text('Train today'), findsNothing);
-      expect(find.text('Begin'), findsNothing);
+        expect(find.text('Available 3 September'), findsOneWidget);
+        expect(find.text('Train today'), findsNothing);
+        expect(find.text('Begin'), findsNothing);
         await tester.tap(find.byTooltip('Back'));
         await tester.pumpAndSettle();
 
@@ -938,12 +963,7 @@ void main() {
           find.byKey(const ValueKey('completed-today-view-result')),
         );
         await tester.pumpAndSettle();
-        expect(
-          find.text(
-            'This assigned session has been completed and cannot be restarted.',
-          ),
-          findsOneWidget,
-        );
+        expect(find.textContaining('Scheduled 2 Sep'), findsOneWidget);
         await tester.drag(find.byType(ListView), const Offset(0, -600));
         await tester.pumpAndSettle();
         expect(find.textContaining('10.0 km in 1:00:00'), findsOneWidget);
@@ -1066,7 +1086,7 @@ void main() {
         protocolId: 'BW-001',
         dayKey: 'day_1',
         date: '2026-09-01',
-        state: FixedProgrammeOccurrenceState.missed,
+        state: FixedProgrammeOccurrenceState.overdue,
       );
       final day2 = _occurrence(
         assignment: assignment,
@@ -1110,7 +1130,8 @@ void main() {
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
       expect(find.text('THIS WEEK'), findsOneWidget);
       expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
-      expect(find.text('Missed'), findsOneWidget);
+      expect(find.text('1 SESSION TO RESOLVE'), findsOneWidget);
+      expect(find.text('Overdue'), findsWidgets);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
       expect(find.text('Rest'), findsNothing);
@@ -1130,7 +1151,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('THIS WEEK'), findsOneWidget);
-      expect(find.text('Missed'), findsOneWidget);
+      expect(find.text('Overdue'), findsWidgets);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
       expect(find.text('Rest'), findsNothing);
@@ -1633,7 +1654,9 @@ void main() {
         expect(find.text('Available 1 September'), findsOneWidget);
         expect(find.text('Train today'), findsNothing);
         await tester.scrollUntilVisible(
-          find.text('Train today is available for sessions in the next 7 days.'),
+          find.text(
+            'Train today is available for sessions in the next 7 days.',
+          ),
           200,
           scrollable: find.byType(Scrollable).first,
         );
@@ -1815,50 +1838,46 @@ void main() {
       expect(activeLauncher.lastOccurrenceId, occurrence.occurrenceId);
     });
 
-    testWidgets('Missed, Completed and empty dates never offer execution', (
+    testWidgets('Completed and empty dates never offer execution', (
       tester,
     ) async {
       final assignment = _assignment(athleteId: 'athlete.local');
-      for (final state in const [
-        FixedProgrammeOccurrenceState.missed,
-        FixedProgrammeOccurrenceState.completed,
-      ]) {
-        final occurrence = _occurrence(
-          assignment: assignment,
-          id: '00000000-0000-4000-8000-000000000401',
-          slotId: ProgrammeScheduleTestFixtures.slot1Id,
-          protocolId: 'APOLLO-W1-MON-R1',
-          dayKey: 'day_1',
-          date: '2026-09-01',
-          state: state,
-        );
-        final calendar = _calendar(
-          assignment: assignment,
-          today: '2026-09-02',
-          occurrences: [occurrence],
-        );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: ScheduledProgrammeSessionPreviewScreen(
-              key: ValueKey(state),
-              athleteId: 'athlete.local',
-              calendar: calendar,
-              day: AthleteProgrammeWeekDayPresentation(
-                date: DateTime(2026, 9, 1),
-                state: state,
-                occurrence: occurrence,
-              ),
-              previewService: ScheduledProgrammeSessionPreviewService(
-                loader: _PreviewLoader(),
-              ),
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000401',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'APOLLO-W1-MON-R1',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.completed,
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [occurrence],
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ScheduledProgrammeSessionPreviewScreen(
+            key: const ValueKey('completed-empty-dates-completed'),
+            athleteId: 'athlete.local',
+            calendar: calendar,
+            day: AthleteProgrammeWeekDayPresentation(
+              date: DateTime(2026, 9, 1),
+              state: FixedProgrammeOccurrenceState.completed,
+              occurrence: occurrence,
+            ),
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _PreviewLoader(),
             ),
           ),
-        );
-        await tester.pumpAndSettle();
-        expect(find.text(state.displayLabel), findsOneWidget);
-        expect(find.text('Begin'), findsNothing);
-        expect(find.text('Resume'), findsNothing);
-      }
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Completed'), findsWidgets);
+      expect(find.text('Begin'), findsNothing);
+      expect(find.text('Resume'), findsNothing);
+      expect(find.text('Start this session'), findsNothing);
 
       final restCalendar = _calendar(
         assignment: assignment,
@@ -1868,6 +1887,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: ScheduledProgrammeSessionPreviewScreen(
+            key: const ValueKey('completed-empty-dates-rest'),
             athleteId: 'athlete.local',
             calendar: restCalendar,
             day: AthleteProgrammeWeekDayPresentation(

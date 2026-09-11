@@ -2,8 +2,10 @@ enum FixedProgrammeOccurrenceState {
   planned('PLANNED', 'Planned'),
   today('TODAY', 'Today'),
   inProgress('IN_PROGRESS', 'In Progress'),
+  overdue('OVERDUE', 'Overdue'),
   inProgressOverdue('IN_PROGRESS_OVERDUE', 'In Progress Overdue'),
   completed('COMPLETED', 'Completed'),
+  skipped('SKIPPED', 'Skipped'),
   missed('MISSED', 'Missed'),
   rest('REST', 'Rest');
 
@@ -59,6 +61,16 @@ class FixedProgrammeOccurrenceProjection {
   final int? trainingSessionId;
 
   bool get isToday => state == FixedProgrammeOccurrenceState.today;
+
+  bool get isOverdue =>
+      state == FixedProgrammeOccurrenceState.overdue ||
+      state == FixedProgrammeOccurrenceState.inProgressOverdue;
+
+  bool get isLateStartable => state == FixedProgrammeOccurrenceState.overdue;
+
+  bool get isExecutable => isToday || isResumable || isLateStartable;
+
+  bool get wasRescheduled => scheduledDate != originalScheduledDate;
 
   bool get isResumable =>
       state == FixedProgrammeOccurrenceState.inProgress ||
@@ -163,11 +175,41 @@ class FixedProgrammeCalendarProjection {
   }
 
   List<FixedProgrammeOccurrenceProjection> get overdue => occurrences
-      .where(
-        (occurrence) =>
-            occurrence.state == FixedProgrammeOccurrenceState.inProgressOverdue,
-      )
+      .where((occurrence) => occurrence.isOverdue)
       .toList(growable: false);
+
+  String get calendarEndDate {
+    var end = startDate;
+    for (final occurrence in occurrences) {
+      if (occurrence.scheduledDate.compareTo(end) > 0) {
+        end = occurrence.scheduledDate;
+      }
+      if (occurrence.originalScheduledDate.compareTo(end) > 0) {
+        end = occurrence.originalScheduledDate;
+      }
+    }
+    return end;
+  }
+
+  FixedProgrammeOccurrenceProjection? occurrenceOnDate(String isoDate) {
+    for (final occurrence in occurrences) {
+      if (occurrence.scheduledDate == isoDate) return occurrence;
+    }
+    return null;
+  }
+
+  bool isWithinOverdueRescheduleHorizon(String isoDate) {
+    final selectedDate = _dateOnly(isoDate);
+    final todayDate = _dateOnly(today);
+    if (selectedDate == null || todayDate == null) return false;
+    final days = selectedDate.difference(todayDate).inDays;
+    return days >= 0 && days <= futureTrainTodayHorizonDays;
+  }
+
+  bool isWithinAssignmentCalendar(String isoDate) {
+    return isoDate.compareTo(startDate) >= 0 &&
+        isoDate.compareTo(calendarEndDate) <= 0;
+  }
 
   FixedProgrammeOccurrenceProjection? get nextPlannedOccurrence {
     FixedProgrammeOccurrenceProjection? next;
@@ -200,9 +242,7 @@ class FixedProgrammeCalendarProjection {
     FixedProgrammeOccurrenceProjection selected,
   ) {
     final days = calendarDaysUntil(selected);
-    return days != null &&
-        days >= 1 &&
-        days <= futureTrainTodayHorizonDays;
+    return days != null && days >= 1 && days <= futureTrainTodayHorizonDays;
   }
 
   /// A clean one-for-one Train-today swap is locally plausible.
@@ -227,10 +267,6 @@ class FixedProgrammeCalendarProjection {
     }
     for (final occurrence in occurrences) {
       if (occurrence.isResumable) return false;
-      if (occurrence.state == FixedProgrammeOccurrenceState.missed ||
-          occurrence.state == FixedProgrammeOccurrenceState.inProgressOverdue) {
-        return false;
-      }
     }
     return true;
   }

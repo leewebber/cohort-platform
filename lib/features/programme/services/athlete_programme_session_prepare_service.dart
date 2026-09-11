@@ -113,9 +113,8 @@ class AthleteProgrammeSessionPrepareService {
 
   /// Prepares one server-projected fixed occurrence.
   ///
-  /// Only the calendar Today occurrence or an already-started resumable
-  /// occurrence is executable in Slice 1. The caller cannot use this method to
-  /// make a planned or missed occurrence eligible.
+  /// Today, already-started resumable, and incomplete overdue occurrences are
+  /// executable. Future planned occurrences remain ineligible.
   Future<AthleteProgrammePrepareResult> prepareFixedOccurrence(
     ProgrammeAssignment assignment,
     FixedProgrammeOccurrenceProjection occurrence, {
@@ -135,8 +134,7 @@ class AthleteProgrammeSessionPrepareService {
         message: 'This programme assignment is not executable.',
       );
     }
-    if (occurrence.assignmentId != assignment.id ||
-        (!occurrence.isToday && !occurrence.isResumable)) {
+    if (occurrence.assignmentId != assignment.id || !occurrence.isExecutable) {
       return const AthleteProgrammePrepareResult(
         status: AthleteProgrammePrepareStatus.failure,
         code: 'fixed_occurrence_not_executable',

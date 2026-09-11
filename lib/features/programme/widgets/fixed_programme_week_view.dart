@@ -156,7 +156,9 @@ class _FixedProgrammeDayCell extends StatelessWidget {
     return switch (state) {
       FixedProgrammeOccurrenceState.inProgress => 'In progress',
       FixedProgrammeOccurrenceState.inProgressOverdue => 'Overdue',
+      FixedProgrammeOccurrenceState.overdue => 'Overdue',
       FixedProgrammeOccurrenceState.completed => 'Done',
+      FixedProgrammeOccurrenceState.skipped => 'Skipped',
       _ => state.displayLabel,
     };
   }
@@ -168,7 +170,9 @@ class _FixedProgrammeDayCell extends StatelessWidget {
       FixedProgrammeOccurrenceState.inProgressOverdue => const Color(
         0xFFE0A96D,
       ),
+      FixedProgrammeOccurrenceState.overdue => const Color(0xFFE0A96D),
       FixedProgrammeOccurrenceState.completed => const Color(0xFF7DBE91),
+      FixedProgrammeOccurrenceState.skipped => const Color(0xFF9AA194),
       FixedProgrammeOccurrenceState.missed => const Color(0xFFD47F74),
       FixedProgrammeOccurrenceState.planned => const Color(0xFF8E9A82),
       FixedProgrammeOccurrenceState.rest => const Color(0xFF737A70),

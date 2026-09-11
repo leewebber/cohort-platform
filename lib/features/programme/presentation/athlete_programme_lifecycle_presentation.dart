@@ -225,11 +225,31 @@ abstract final class AthleteProgrammeDateFormatter {
     'November',
     'December',
   ];
+  static const _shortMonths = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   static String shortWeekday(DateTime date) => _shortWeekdays[date.weekday - 1];
 
   static String longDate(DateTime date) =>
       '${_weekdays[date.weekday - 1]}, ${date.day} ${_months[date.month - 1]}';
+
+  static String weekdayDayMonth(DateTime date) =>
+      '${_weekdays[date.weekday - 1]} ${date.day} ${_months[date.month - 1]}';
+
+  static String shortDayMonth(DateTime date) =>
+      '${date.day} ${_shortMonths[date.month - 1]}';
 
   static String dayMonth(DateTime date) =>
       '${date.day} ${_months[date.month - 1]}';

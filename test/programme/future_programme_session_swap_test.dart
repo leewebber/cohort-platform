@@ -82,6 +82,24 @@ void main() {
     expect(calendar.calendarDaysUntil(day2), 1);
     expect(calendar.canOfferFutureTrainTodaySwap(day2), isTrue);
 
+    final leftoverOverdue = _occurrence(
+      assignment: assignment,
+      id: 'occ-overdue',
+      slotId: '00000000-0000-4000-8000-000000000099',
+      protocolId: 'EX-099',
+      dayKey: 'day_1',
+      date: '2026-09-03',
+      state: FixedProgrammeOccurrenceState.overdue,
+      sessionTitle: 'Apollo Intervals',
+    );
+    final overdueCalendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-05',
+      occurrences: [leftoverOverdue, day1, day2, day6],
+    );
+    expect(overdueCalendar.overdue, hasLength(1));
+    expect(overdueCalendar.canOfferFutureTrainTodaySwap(day6), isTrue);
+
     final dayExactly7 = _occurrence(
       assignment: assignment,
       id: 'occ-7',
@@ -171,35 +189,38 @@ void main() {
     expect(noToday.canOfferFutureTrainTodaySwap(day6), isFalse);
   });
 
-  test('swap service does not write when a clean swap is unavailable', () async {
-    final assignment = _assignment();
-    final future = _occurrence(
-      assignment: assignment,
-      id: 'occ-6',
-      slotId: ProgrammeScheduleTestFixtures.slot4Id,
-      protocolId: 'FG-009',
-      dayKey: 'day_6',
-      date: '2026-09-10',
-      state: FixedProgrammeOccurrenceState.planned,
-      sessionTitle: 'Apollo Athletic',
-    );
-    final calendar = _calendar(
-      assignment: assignment,
-      today: '2026-08-24',
-      occurrences: [future],
-    );
-    final store = _RecordingSwapStore();
-    final result = await FutureProgrammeSessionSwapService(
-      store: store,
-    ).swapAndBegin(calendar: calendar, selected: future);
-    expect(result.isSuccess, isFalse);
-    expect(result.code, 'swap_not_offered');
-    expect(
-      result.athleteVisibleMessage,
-      'A clean one-for-one swap is not available.',
-    );
-    expect(store.calls, isEmpty);
-  });
+  test(
+    'swap service does not write when a clean swap is unavailable',
+    () async {
+      final assignment = _assignment();
+      final future = _occurrence(
+        assignment: assignment,
+        id: 'occ-6',
+        slotId: ProgrammeScheduleTestFixtures.slot4Id,
+        protocolId: 'FG-009',
+        dayKey: 'day_6',
+        date: '2026-09-10',
+        state: FixedProgrammeOccurrenceState.planned,
+        sessionTitle: 'Apollo Athletic',
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-08-24',
+        occurrences: [future],
+      );
+      final store = _RecordingSwapStore();
+      final result = await FutureProgrammeSessionSwapService(
+        store: store,
+      ).swapAndBegin(calendar: calendar, selected: future);
+      expect(result.isSuccess, isFalse);
+      expect(result.code, 'swap_not_offered');
+      expect(
+        result.athleteVisibleMessage,
+        'A clean one-for-one swap is not available.',
+      );
+      expect(store.calls, isEmpty);
+    },
+  );
 
   test('maps overdue and in-progress swap codes to athlete-visible reasons', () {
     expect(
@@ -395,118 +416,67 @@ void main() {
     expect(harness.startStore.calls, hasLength(1));
   });
 
-  testWidgets('Home, Calendar, Resume, and Current Programme reload after swap', (
-    tester,
-  ) async {
-    final harness = await _Harness.create();
-    harness.projectionStore.value = harness.swapped;
-    expect(harness.swapped.todayOccurrence?.sessionTitle, 'Apollo Athletic');
-    expect(
-      harness.swapped.todayOccurrence?.state,
-      FixedProgrammeOccurrenceState.inProgress,
-    );
-    expect(
-      harness.swapped.occurrences
-          .where((item) => item.scheduledDate == '2026-09-06')
-          .single
-          .sessionTitle,
-      'Apollo Strength',
-    );
-    expect(
-      harness.swapped.occurrences
-          .where((item) => item.scheduledDate == '2026-09-02')
-          .single
-          .sessionTitle,
-      'Apollo Engine',
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: HomeScreen(
-          embeddedInShell: true,
-          athleteIdOverride: 'athlete-1',
-          assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
-          fixedOccurrenceStore: harness.projectionStore,
-          previewService: ScheduledProgrammeSessionPreviewService(
-            loader: _TitleLoader(),
-          ),
-          prepareService: harness.prepare,
-          executionLauncher: harness.execution,
-          swapStore: harness.swapStore,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Resume'), findsWidgets);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        home: AthleteCalendarScreen(
-          athleteId: 'athlete-1',
-          fixedOccurrenceStore: harness.projectionStore,
-          previewService: ScheduledProgrammeSessionPreviewService(
-            loader: _TitleLoader(),
-          ),
-          assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
-          prepareService: harness.prepare,
-          executionLauncher: harness.execution,
-          swapStore: harness.swapStore,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('In progress'), findsWidgets);
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.byKey(const ValueKey('programme-week-day-2026-09-06')));
-    await tester.pumpAndSettle();
-    expect(find.text('Apollo Strength'), findsWidgets);
-    expect(find.text('Week 1 · Day 1 · Sunday, 6 September'), findsOneWidget);
-    await tester.tap(find.byTooltip('Back'));
-    await tester.pumpAndSettle();
-
-    final programmeController = AthleteProgrammeScreenController(
-      athleteId: 'athlete-1',
-      assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
-      versionStore: InMemoryProgrammeVersionStore(harness.tables),
-    );
-    await tester.pumpWidget(
-      MaterialApp(
-        home: AthleteProgrammeScreen(
-          athleteId: 'athlete-1',
-          controller: programmeController,
-          fixedOccurrenceStore: harness.projectionStore,
-          previewService: ScheduledProgrammeSessionPreviewService(
-            loader: _TitleLoader(),
-          ),
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.text('Week 1 · Day 6'), findsWidgets);
-  });
-
   testWidgets(
-    'Calendar swap updates already-mounted Home before any actuals',
+    'Home, Calendar, Resume, and Current Programme reload after swap',
     (tester) async {
       final harness = await _Harness.create();
-      final refresh = HomeTodaySessionRefreshController();
+      harness.projectionStore.value = harness.swapped;
+      expect(harness.swapped.todayOccurrence?.sessionTitle, 'Apollo Athletic');
+      expect(
+        harness.swapped.todayOccurrence?.state,
+        FixedProgrammeOccurrenceState.inProgress,
+      );
+      expect(
+        harness.swapped.occurrences
+            .where((item) => item.scheduledDate == '2026-09-06')
+            .single
+            .sessionTitle,
+        'Apollo Strength',
+      );
+      expect(
+        harness.swapped.occurrences
+            .where((item) => item.scheduledDate == '2026-09-02')
+            .single
+            .sessionTitle,
+        'Apollo Engine',
+      );
+
       await tester.pumpWidget(
-        AthleteProgrammeSurfaceRefreshScope(
-          controller: refresh,
-          child: MaterialApp(
-            home: _SiblingHomeCalendarShell(
-              harness: harness,
-              refresh: refresh,
+        MaterialApp(
+          home: HomeScreen(
+            embeddedInShell: true,
+            athleteIdOverride: 'athlete-1',
+            assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
+            fixedOccurrenceStore: harness.projectionStore,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _TitleLoader(),
             ),
+            prepareService: harness.prepare,
+            executionLauncher: harness.execution,
+            swapStore: harness.swapStore,
           ),
         ),
       );
       await tester.pumpAndSettle();
+      expect(find.text('Resume'), findsWidgets);
 
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteCalendarScreen(
+            athleteId: 'athlete-1',
+            fixedOccurrenceStore: harness.projectionStore,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _TitleLoader(),
+            ),
+            assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
+            prepareService: harness.prepare,
+            executionLauncher: harness.execution,
+            swapStore: harness.swapStore,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('In progress'), findsWidgets);
       await tester.scrollUntilVisible(
         find.byKey(const ValueKey('programme-week-day-2026-09-06')),
         300,
@@ -516,28 +486,81 @@ void main() {
         find.byKey(const ValueKey('programme-week-day-2026-09-06')),
       );
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(
-        find.text('Train today'),
-        400,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.tap(find.text('Train today'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('swap-and-begin')));
+      expect(find.text('Apollo Strength'), findsWidgets);
+      expect(find.text('Week 1 · Day 1 · Sunday, 6 September'), findsOneWidget);
+      await tester.tap(find.byTooltip('Back'));
       await tester.pumpAndSettle();
 
-      expect(harness.swapStore.calls, hasLength(1));
-      await tester.tap(find.byKey(const ValueKey('show-mounted-home')));
-      await tester.pumpAndSettle();
-      expect(find.text('Resume'), findsWidgets);
-      expect(find.text('Begin'), findsNothing);
-      expect(harness.projectionStore.value.todayOccurrence?.sessionTitle, 'Apollo Athletic');
-      expect(
-        harness.projectionStore.value.todayOccurrence?.state,
-        FixedProgrammeOccurrenceState.inProgress,
+      final programmeController = AthleteProgrammeScreenController(
+        athleteId: 'athlete-1',
+        assignmentStore: InMemoryProgrammeAssignmentStore(harness.tables),
+        versionStore: InMemoryProgrammeVersionStore(harness.tables),
       );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AthleteProgrammeScreen(
+            athleteId: 'athlete-1',
+            controller: programmeController,
+            fixedOccurrenceStore: harness.projectionStore,
+            previewService: ScheduledProgrammeSessionPreviewService(
+              loader: _TitleLoader(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Week 1 · Day 6'), findsWidgets);
     },
   );
+
+  testWidgets('Calendar swap updates already-mounted Home before any actuals', (
+    tester,
+  ) async {
+    final harness = await _Harness.create();
+    final refresh = HomeTodaySessionRefreshController();
+    await tester.pumpWidget(
+      AthleteProgrammeSurfaceRefreshScope(
+        controller: refresh,
+        child: MaterialApp(
+          home: _SiblingHomeCalendarShell(harness: harness, refresh: refresh),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(
+      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Train today'),
+      400,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.tap(find.text('Train today'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('swap-and-begin')));
+    await tester.pumpAndSettle();
+
+    expect(harness.swapStore.calls, hasLength(1));
+    await tester.tap(find.byKey(const ValueKey('show-mounted-home')));
+    await tester.pumpAndSettle();
+    expect(find.text('Resume'), findsWidgets);
+    expect(find.text('Begin'), findsNothing);
+    expect(
+      harness.projectionStore.value.todayOccurrence?.sessionTitle,
+      'Apollo Athletic',
+    );
+    expect(
+      harness.projectionStore.value.todayOccurrence?.state,
+      FixedProgrammeOccurrenceState.inProgress,
+    );
+  });
 }
 
 class _SiblingHomeCalendarShell extends StatefulWidget {
@@ -791,7 +814,8 @@ class _Harness {
   }
 }
 
-class _MutableProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
+class _MutableProjectionStore
+    implements FixedProgrammeOccurrenceProjectionStore {
   _MutableProjectionStore(this.value);
 
   FixedProgrammeCalendarProjection value;
@@ -1007,7 +1031,9 @@ Future<InMemoryProgrammeTables> _tablesWith(
       programmeVersionId: version.id,
     ),
   );
-  final versionIndex = tables.versions.indexWhere((row) => row.id == version.id);
+  final versionIndex = tables.versions.indexWhere(
+    (row) => row.id == version.id,
+  );
   if (versionIndex >= 0) {
     tables.versions[versionIndex] = version;
   } else {

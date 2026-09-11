@@ -380,33 +380,70 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       );
     }
 
-    for (final overdue in calendar.overdue) {
+    if (calendar.overdue.isNotEmpty) {
       widgets.addAll([
-        const SizedBox(height: CohortSpacing.md),
-        CohortCard(
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '${overdue.sessionTitle} · '
-                  '${AthleteProgrammeDateFormatter.dayMonth(DateTime.parse(overdue.scheduledDate))}\n'
-                  'In Progress Overdue',
-                  style: CohortTextStyles.body,
-                ),
-              ),
-              TextButton(
-                onPressed: () => _openScheduledDay(
-                  AthleteProgrammeWeekDayPresentation(
-                    date: DateTime.parse(overdue.scheduledDate),
-                    state: overdue.state,
-                    occurrence: overdue,
-                  ),
-                ),
-                child: const Text('Resume'),
-              ),
-            ],
-          ),
+        const SizedBox(height: CohortSpacing.lg),
+        Text(
+          calendar.overdue.length == 1
+              ? '1 SESSION TO RESOLVE'
+              : '${calendar.overdue.length} SESSIONS TO RESOLVE',
+          style: CohortTextStyles.sectionLabel,
         ),
+        const SizedBox(height: CohortSpacing.sm),
+        for (final overdue in calendar.overdue) ...[
+          CohortCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(overdue.sessionTitle, style: CohortTextStyles.cardTitle),
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  'Overdue · ${AthleteProgrammeDateFormatter.dayMonth(DateTime.parse(overdue.scheduledDate))}',
+                  style: CohortTextStyles.muted,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                Wrap(
+                  spacing: CohortSpacing.sm,
+                  children: [
+                    TextButton(
+                      onPressed: () => _openScheduledDay(
+                        AthleteProgrammeWeekDayPresentation(
+                          date: DateTime.parse(overdue.scheduledDate),
+                          state: overdue.state,
+                          occurrence: overdue,
+                        ),
+                      ),
+                      child: Text(overdue.isResumable ? 'Resume' : 'Train now'),
+                    ),
+                    if (overdue.isLateStartable)
+                      TextButton(
+                        onPressed: () => _openScheduledDay(
+                          AthleteProgrammeWeekDayPresentation(
+                            date: DateTime.parse(overdue.scheduledDate),
+                            state: overdue.state,
+                            occurrence: overdue,
+                          ),
+                        ),
+                        child: const Text('Reschedule'),
+                      ),
+                    if (overdue.isLateStartable)
+                      TextButton(
+                        onPressed: () => _openScheduledDay(
+                          AthleteProgrammeWeekDayPresentation(
+                            date: DateTime.parse(overdue.scheduledDate),
+                            state: overdue.state,
+                            occurrence: overdue,
+                          ),
+                        ),
+                        child: const Text('Skip'),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+        ],
       ]);
     }
 

@@ -29,6 +29,10 @@ import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../services/future_programme_session_swap_service.dart';
 import '../services/future_programme_session_swap_store.dart';
 import '../services/future_programme_session_swap_supabase_store.dart';
+import '../services/overdue_programme_recovery_service.dart';
+import '../services/overdue_programme_recovery_store.dart';
+import '../services/overdue_programme_recovery_supabase_store.dart';
+import '../models/overdue_programme_recovery.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 
 Future<bool?> openScheduledProgrammeSessionPreview({
@@ -42,6 +46,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
   ProgrammeSessionExecutionLauncher? executionLauncher,
   PerformanceRecordStore? performanceRecordStore,
   FutureProgrammeSessionSwapStore? swapStore,
+  OverdueProgrammeRecoveryStore? recoveryStore,
   FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore,
   HomeTodaySessionRefreshController? refreshController,
 }) {
@@ -57,6 +62,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
         executionLauncher: executionLauncher,
         performanceRecordStore: performanceRecordStore,
         swapStore: swapStore,
+        recoveryStore: recoveryStore,
         fixedOccurrenceStore: fixedOccurrenceStore,
         refreshController: refreshController,
       ),
@@ -76,6 +82,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
     this.executionLauncher,
     this.performanceRecordStore,
     this.swapStore,
+    this.recoveryStore,
     this.fixedOccurrenceStore,
     this.refreshController,
   });
@@ -89,6 +96,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
+  final OverdueProgrammeRecoveryStore? recoveryStore;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final HomeTodaySessionRefreshController? refreshController;
 
@@ -117,31 +125,31 @@ class _ScheduledProgrammeSessionPreviewScreenState
         Navigator.of(context).pop(true);
       },
       child: Scaffold(
-      appBar: AppBar(title: const Text('Session')),
-      body: SafeArea(
-        child: FutureBuilder<ScheduledProgrammeSessionPreview>(
-          future: _preview,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError || !snapshot.hasData) {
-              return Padding(
-                padding: const EdgeInsets.all(CohortSpacing.lg),
-                child: AthleteFeedbackState(
-                  title: 'Session unavailable',
-                  message:
-                      'This assigned session could not be loaded safely. Please go back and refresh your calendar.',
-                  actionLabel: 'Go back',
-                  onAction: () => Navigator.of(context).pop(),
-                ),
-              );
-            }
-            return _buildPreview(snapshot.data!);
-          },
+        appBar: AppBar(title: const Text('Session')),
+        body: SafeArea(
+          child: FutureBuilder<ScheduledProgrammeSessionPreview>(
+            future: _preview,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.all(CohortSpacing.lg),
+                  child: AthleteFeedbackState(
+                    title: 'Session unavailable',
+                    message:
+                        'This assigned session could not be loaded safely. Please go back and refresh your calendar.',
+                    actionLabel: 'Go back',
+                    onAction: () => Navigator.of(context).pop(),
+                  ),
+                );
+              }
+              return _buildPreview(snapshot.data!);
+            },
+          ),
         ),
       ),
-    ),
     );
   }
 
@@ -190,7 +198,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
         record: record,
         athleteHistory: history,
         programmePosition: _programmePosition(preview),
-        statusMessage: _statusMessage(preview),
+        statusMessage: _completedStatusMessage(preview, record: record),
         performanceRecordStore:
             widget.performanceRecordStore ?? SupabasePerformanceRecordStore(),
         onRecordCorrected: (corrected) {
@@ -200,9 +208,10 @@ class _ScheduledProgrammeSessionPreviewScreenState
             if (trainingSessionId != null) {
               _completedRecords[trainingSessionId] = Future.value(corrected);
             }
-            _history = (widget.performanceRecordStore ??
-                    SupabasePerformanceRecordStore())
-                .listHistory(athleteId: widget.athleteId);
+            _history =
+                (widget.performanceRecordStore ??
+                        SupabasePerformanceRecordStore())
+                    .listHistory(athleteId: widget.athleteId);
           });
         },
       );
@@ -279,13 +288,29 @@ class _ScheduledProgrammeSessionPreviewScreenState
   }
 
   Widget _statusCard(ScheduledProgrammeSessionPreview preview) {
+    final occurrence = preview.occurrence;
+    final isOverdueContext =
+        occurrence != null &&
+        (occurrence.isLateStartable ||
+            occurrence.state == FixedProgrammeOccurrenceState.missed);
     return CohortCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(_statusTitle(preview), style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.xs),
-          Text(_statusMessage(preview), style: CohortTextStyles.body),
+          if (isOverdueContext) ...[
+            Text(
+              'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}',
+              style: CohortTextStyles.body,
+            ),
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              'Training today, ${AthleteProgrammeDateFormatter.weekdayDayMonth(_calendarDate(preview.calendar.today))}',
+              style: CohortTextStyles.body,
+            ),
+          ] else
+            Text(_statusMessage(preview), style: CohortTextStyles.body),
         ],
       ),
     );
@@ -329,15 +354,49 @@ class _ScheduledProgrammeSessionPreviewScreenState
   List<Widget> _executionAction(ScheduledProgrammeSessionPreview preview) {
     final occurrence = preview.occurrence;
     if (occurrence == null) return const [];
-    if (occurrence.isToday || occurrence.isResumable) {
+    if (occurrence.isResumable) {
       return [
         const SizedBox(height: CohortSpacing.md),
         CohortButton(
-          key: ValueKey(
-            'scheduled-preview-${occurrence.isResumable ? 'resume' : 'begin'}',
-          ),
-          label: occurrence.isResumable ? 'Resume' : 'Begin',
+          key: const ValueKey('scheduled-preview-resume'),
+          label: 'Resume',
           onPressed: _isOpeningSession ? null : () => _execute(preview),
+        ),
+      ];
+    }
+    if (occurrence.isToday) {
+      return [
+        const SizedBox(height: CohortSpacing.md),
+        CohortButton(
+          key: const ValueKey('scheduled-preview-begin'),
+          label: 'Begin',
+          onPressed: _isOpeningSession ? null : () => _execute(preview),
+        ),
+      ];
+    }
+    if (occurrence.isLateStartable) {
+      return [
+        const SizedBox(height: CohortSpacing.md),
+        CohortButton(
+          key: const ValueKey('scheduled-preview-start-late'),
+          label: 'Start this session',
+          onPressed: _isOpeningSession
+              ? null
+              : () => _confirmLateStart(preview),
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+        CohortButton(
+          key: const ValueKey('scheduled-preview-reschedule'),
+          label: 'Reschedule',
+          variant: CohortButtonVariant.secondary,
+          onPressed: _isOpeningSession ? null : () => _reschedule(preview),
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+        CohortButton(
+          key: const ValueKey('scheduled-preview-skip'),
+          label: 'Skip session',
+          variant: CohortButtonVariant.secondary,
+          onPressed: _isOpeningSession ? null : () => _confirmSkip(preview),
         ),
       ];
     }
@@ -444,12 +503,10 @@ class _ScheduledProgrammeSessionPreviewScreenState
           assignment.id != selected.assignmentId) {
         throw StateError('This assigned session is no longer executable.');
       }
-      final swapResult =
-          await FutureProgrammeSessionSwapService(
-            store:
-                widget.swapStore ??
-                const FutureProgrammeSessionSwapSupabaseStore(),
-          ).swapAndBegin(calendar: preview.calendar, selected: selected);
+      final swapResult = await FutureProgrammeSessionSwapService(
+        store:
+            widget.swapStore ?? const FutureProgrammeSessionSwapSupabaseStore(),
+      ).swapAndBegin(calendar: preview.calendar, selected: selected);
       if (!swapResult.isSuccess) {
         throw StateError(swapResult.athleteVisibleMessage);
       }
@@ -466,7 +523,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
           }
         }
       }
-      if (moved == null || (!moved.isToday && !moved.isResumable)) {
+      if (moved == null || !moved.isExecutable) {
         throw StateError('swapped_session_not_executable');
       }
       final prepare =
@@ -492,9 +549,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
       if (!mounted) return;
       final reason = error is StateError
           ? error.message
-          : FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
-              null,
-            );
+          : FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(null);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text(reason)));
@@ -504,9 +559,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
 
   Future<void> _execute(ScheduledProgrammeSessionPreview preview) async {
     final occurrence = preview.occurrence;
-    if (occurrence == null ||
-        (!occurrence.isToday && !occurrence.isResumable) ||
-        _isOpeningSession) {
+    if (occurrence == null || !occurrence.isExecutable || _isOpeningSession) {
       return;
     }
     setState(() => _isOpeningSession = true);
@@ -601,10 +654,12 @@ class _ScheduledProgrammeSessionPreviewScreenState
       FixedProgrammeOccurrenceState.planned => 'Scheduled for $date',
       FixedProgrammeOccurrenceState.today => 'Today · $date',
       FixedProgrammeOccurrenceState.inProgress => 'In progress',
+      FixedProgrammeOccurrenceState.overdue => 'Overdue',
       FixedProgrammeOccurrenceState.inProgressOverdue =>
         'In progress · overdue',
       FixedProgrammeOccurrenceState.completed => 'Completed',
-      FixedProgrammeOccurrenceState.missed => 'Missed',
+      FixedProgrammeOccurrenceState.skipped => 'Skipped',
+      FixedProgrammeOccurrenceState.missed => 'Overdue',
       FixedProgrammeOccurrenceState.rest => 'Rest day',
     };
   }
@@ -621,12 +676,15 @@ class _ScheduledProgrammeSessionPreviewScreenState
         'This assigned session is available to begin today.',
       FixedProgrammeOccurrenceState.inProgress =>
         'Resume the training session already linked to this programme date.',
+      FixedProgrammeOccurrenceState.overdue => _overdueBanner(preview),
       FixedProgrammeOccurrenceState.inProgressOverdue =>
         'This earlier session remains resumable without changing today’s programme session.',
-      FixedProgrammeOccurrenceState.completed =>
-        'This assigned session has been completed and cannot be restarted.',
-      FixedProgrammeOccurrenceState.missed =>
-        'This session was not started on its scheduled date and cannot be started late.',
+      FixedProgrammeOccurrenceState.completed => _completedStatusMessage(
+        preview,
+      ),
+      FixedProgrammeOccurrenceState.skipped =>
+        'This session was skipped and is no longer executable.',
+      FixedProgrammeOccurrenceState.missed => _overdueBanner(preview),
       FixedProgrammeOccurrenceState.rest =>
         'No training session is scheduled for this programme date.',
     };
@@ -645,6 +703,369 @@ class _ScheduledProgrammeSessionPreviewScreenState
     return trimmed == null || trimmed.isEmpty ? null : trimmed;
   }
 
+  String _overdueBanner(ScheduledProgrammeSessionPreview preview) {
+    return 'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}\n'
+        'Training today, ${AthleteProgrammeDateFormatter.weekdayDayMonth(_calendarDate(preview.calendar.today))}';
+  }
+
+  String _completedStatusMessage(
+    ScheduledProgrammeSessionPreview preview, {
+    TrainingSessionRecord? record,
+  }) {
+    final occurrence = preview.occurrence;
+    if (occurrence == null) {
+      return 'This assigned session has been completed and cannot be restarted.';
+    }
+    final original = _calendarDate(occurrence.originalScheduledDate);
+    final completedAt = record?.completedAt;
+    if (completedAt != null) {
+      final completedLocal = DateTime(
+        completedAt.year,
+        completedAt.month,
+        completedAt.day,
+      );
+      if (original != completedLocal) {
+        return 'Scheduled ${AthleteProgrammeDateFormatter.shortDayMonth(original)} · '
+            'Completed ${AthleteProgrammeDateFormatter.shortDayMonth(completedLocal)}';
+      }
+    } else if (occurrence.originalScheduledDate.compareTo(
+          preview.calendar.today,
+        ) <
+        0) {
+      return 'Scheduled ${AthleteProgrammeDateFormatter.shortDayMonth(original)} · Completed late';
+    }
+    return 'This assigned session has been completed and cannot be restarted.';
+  }
+
+  Future<void> _confirmLateStart(
+    ScheduledProgrammeSessionPreview preview,
+  ) async {
+    final occurrence = preview.occurrence;
+    if (occurrence == null || _isOpeningSession) return;
+    final scheduledLabel = AthleteProgrammeDateFormatter.weekdayDayMonth(
+      preview.day.date,
+    );
+    final todayOccurrence = preview.calendar.todayOccurrence;
+    final todayLabel = todayOccurrence == null
+        ? null
+        : AthleteProgrammeDateFormatter.weekdayDayMonth(
+            _calendarDate(preview.calendar.today),
+          );
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            'Start ${scheduledLabel.split(' ').first}’s session now?',
+          ),
+          content: Text(
+            todayLabel == null
+                ? 'This keeps the original scheduled date.'
+                : 'Your $todayLabel session will remain scheduled.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Back'),
+            ),
+            TextButton(
+              key: const ValueKey('late-start-confirm'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Start this session'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed == true && mounted) await _execute(preview);
+  }
+
+  Future<void> _confirmSkip(ScheduledProgrammeSessionPreview preview) async {
+    final occurrence = preview.occurrence;
+    if (occurrence == null || _isOpeningSession) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Skip this session?'),
+          content: Text(
+            'Skip ${occurrence.sessionTitle} scheduled for '
+            '${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}? '
+            'This cannot be undone from the calendar.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Back'),
+            ),
+            TextButton(
+              key: const ValueKey('skip-session-confirm'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Skip session'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) return;
+    await _applyRecovery(
+      preview,
+      OverdueProgrammeRecoveryCommand(
+        assignmentId: preview.calendar.assignmentId,
+        sourceOccurrenceId: occurrence.occurrenceId,
+        operation: OverdueProgrammeRecoveryOperation.skip,
+        idempotencyKey:
+            'skip:${occurrence.occurrenceId}:${DateTime.now().millisecondsSinceEpoch}',
+        expectedSourceDate: occurrence.scheduledDate,
+      ),
+    );
+  }
+
+  Future<void> _reschedule(ScheduledProgrammeSessionPreview preview) async {
+    final occurrence = preview.occurrence;
+    if (occurrence == null || _isOpeningSession) return;
+    final today = _calendarDate(preview.calendar.today);
+    final choices = <_RescheduleChoice>[];
+    for (var i = 0; i <= 7; i++) {
+      final date = today.add(Duration(days: i));
+      final iso =
+          '${date.year.toString().padLeft(4, '0')}-'
+          '${date.month.toString().padLeft(2, '0')}-'
+          '${date.day.toString().padLeft(2, '0')}';
+      if (iso == occurrence.scheduledDate) continue;
+      final inHorizon = preview.calendar.isWithinOverdueRescheduleHorizon(iso);
+      final inAssignment = preview.calendar.isWithinAssignmentCalendar(iso);
+      final occupant = preview.calendar.occurrenceOnDate(iso);
+      choices.add(
+        _RescheduleChoice(
+          date: date,
+          isoDate: iso,
+          occupant: occupant,
+          enabled: inHorizon && inAssignment && occupant?.isResumable != true,
+          blockedReason: !inHorizon
+              ? 'Outside the next 7 days'
+              : !inAssignment
+              ? 'Outside this programme'
+              : occupant?.state == FixedProgrammeOccurrenceState.completed
+              ? 'Completed session already on this date'
+              : occupant?.isResumable == true
+              ? 'In-progress session already on this date'
+              : null,
+        ),
+      );
+    }
+    final selected = await showModalBottomSheet<_RescheduleChoice>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.lg),
+            child: SizedBox(
+              height: MediaQuery.sizeOf(sheetContext).height * 0.65,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Reschedule', style: CohortTextStyles.h2),
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    'Choose a date in the next 7 days.',
+                    style: CohortTextStyles.body,
+                  ),
+                  const SizedBox(height: CohortSpacing.md),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        for (final choice in choices)
+                          ListTile(
+                            key: ValueKey('reschedule-date-${choice.isoDate}'),
+                            enabled:
+                                choice.enabled && choice.blockedReason == null,
+                            title: Text(
+                              choice.isoDate == preview.calendar.today
+                                  ? 'Today · ${AthleteProgrammeDateFormatter.weekdayDayMonth(choice.date)}'
+                                  : AthleteProgrammeDateFormatter.weekdayDayMonth(
+                                      choice.date,
+                                    ),
+                            ),
+                            subtitle: Text(
+                              choice.blockedReason ??
+                                  (choice.occupant == null
+                                      ? 'Empty date'
+                                      : choice.occupant!.sessionTitle),
+                            ),
+                            onTap:
+                                choice.enabled && choice.blockedReason == null
+                                ? () => Navigator.of(sheetContext).pop(choice)
+                                : null,
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    if (selected == null || !mounted) return;
+    if (selected.occupant != null &&
+        (selected.occupant!.state == FixedProgrammeOccurrenceState.completed ||
+            selected.occupant!.isResumable)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            selected.occupant!.isResumable
+                ? 'Finish the session already in progress on that date before swapping.'
+                : 'A completed session is already on that date and cannot be moved.',
+          ),
+        ),
+      );
+      return;
+    }
+    if (selected.occupant == null) {
+      final confirmed = await _confirmMove(preview, selected);
+      if (confirmed != true || !mounted) return;
+      await _applyRecovery(
+        preview,
+        OverdueProgrammeRecoveryCommand(
+          assignmentId: preview.calendar.assignmentId,
+          sourceOccurrenceId: occurrence.occurrenceId,
+          operation: OverdueProgrammeRecoveryOperation.move,
+          destinationDate: selected.isoDate,
+          expectedSourceDate: occurrence.scheduledDate,
+          idempotencyKey:
+              'move:${occurrence.occurrenceId}:${selected.isoDate}:${DateTime.now().millisecondsSinceEpoch}',
+        ),
+      );
+      return;
+    }
+    final confirmed = await _confirmSwap(preview, selected);
+    if (confirmed != true || !mounted) return;
+    await _applyRecovery(
+      preview,
+      OverdueProgrammeRecoveryCommand(
+        assignmentId: preview.calendar.assignmentId,
+        sourceOccurrenceId: occurrence.occurrenceId,
+        operation: OverdueProgrammeRecoveryOperation.swap,
+        destinationDate: selected.isoDate,
+        counterpartOccurrenceId: selected.occupant!.occurrenceId,
+        expectedSourceDate: occurrence.scheduledDate,
+        expectedDestinationDate: selected.isoDate,
+        idempotencyKey:
+            'swap:${occurrence.occurrenceId}:${selected.occupant!.occurrenceId}:${DateTime.now().millisecondsSinceEpoch}',
+      ),
+    );
+  }
+
+  Future<bool?> _confirmMove(
+    ScheduledProgrammeSessionPreview preview,
+    _RescheduleChoice destination,
+  ) {
+    final occurrence = preview.occurrence!;
+    return showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Move this session?'),
+          content: Text(
+            'Move ${occurrence.sessionTitle} from '
+            '${AthleteProgrammeDateFormatter.shortWeekday(preview.day.date)} '
+            '${AthleteProgrammeDateFormatter.shortDayMonth(preview.day.date)} to '
+            '${AthleteProgrammeDateFormatter.shortWeekday(destination.date)} '
+            '${AthleteProgrammeDateFormatter.shortDayMonth(destination.date)}?',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Back'),
+            ),
+            TextButton(
+              key: const ValueKey('move-session-confirm'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(
+                destination.isoDate == preview.calendar.today
+                    ? 'Move to today'
+                    : 'Move session',
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool?> _confirmSwap(
+    ScheduledProgrammeSessionPreview preview,
+    _RescheduleChoice destination,
+  ) {
+    final occurrence = preview.occurrence!;
+    final other = destination.occupant!;
+    return showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Swap these sessions?'),
+          content: Text(
+            'Swap:\n'
+            '${AthleteProgrammeDateFormatter.shortWeekday(preview.day.date)} — ${occurrence.sessionTitle}\n'
+            '${AthleteProgrammeDateFormatter.shortWeekday(destination.date)} — ${other.sessionTitle}?',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Back'),
+            ),
+            TextButton(
+              key: const ValueKey('swap-session-confirm'),
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Swap sessions'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _applyRecovery(
+    ScheduledProgrammeSessionPreview preview,
+    OverdueProgrammeRecoveryCommand command,
+  ) async {
+    setState(() => _isOpeningSession = true);
+    try {
+      final result = await OverdueProgrammeRecoveryService(
+        store:
+            widget.recoveryStore ??
+            const OverdueProgrammeRecoverySupabaseStore(),
+      ).recover(command);
+      if (!result.isSuccess) {
+        throw StateError(result.athleteVisibleMessage);
+      }
+      await _reloadAuthoritativeSurfaces(source: 'overdue_recovery');
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            error is StateError
+                ? error.message
+                : OverdueProgrammeRecoveryResult.athleteVisibleMessageForCode(
+                    null,
+                  ),
+          ),
+        ),
+      );
+      setState(() => _isOpeningSession = false);
+    }
+  }
+
   DateTime _calendarDate(String isoDate) {
     final parts = isoDate.split('-');
     return DateTime(
@@ -653,4 +1074,20 @@ class _ScheduledProgrammeSessionPreviewScreenState
       int.parse(parts[2]),
     );
   }
+}
+
+class _RescheduleChoice {
+  const _RescheduleChoice({
+    required this.date,
+    required this.isoDate,
+    required this.enabled,
+    this.occupant,
+    this.blockedReason,
+  });
+
+  final DateTime date;
+  final String isoDate;
+  final FixedProgrammeOccurrenceProjection? occupant;
+  final bool enabled;
+  final String? blockedReason;
 }
