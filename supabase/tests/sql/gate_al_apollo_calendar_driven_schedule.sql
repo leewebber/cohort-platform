@@ -66,7 +66,7 @@ BEGIN
   ON CONFLICT (id) DO UPDATE
   SET is_athlete = TRUE, is_coach = FALSE;
 
-  -- Athlete A: selected start is preserved and untouched Day 1 becomes missed.
+  -- Athlete A: selected start is preserved and untouched Day 1 becomes overdue.
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::TEXT, true);
   PERFORM set_config('role', 'authenticated', true);
   v_result := public.enrol_athlete_in_catalogue_programme_version(
@@ -158,12 +158,12 @@ BEGIN
     v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
-    'AL', 'sep2_missed_day1_today_day2', 'MISSED/TODAY',
+    'AL', 'sep2_overdue_day1_today_day2', 'OVERDUE/TODAY',
     (SELECT e->>'state' FROM jsonb_array_elements(v_projection->'occurrences') e WHERE e->>'id' = v_day1_a::TEXT)
       || '/' ||
     (SELECT e->>'state' FROM jsonb_array_elements(v_projection->'occurrences') e WHERE e->>'id' = v_day2_a::TEXT),
     NULL,
-    (SELECT e->>'state' FROM jsonb_array_elements(v_projection->'occurrences') e WHERE e->>'id' = v_day1_a::TEXT) = 'MISSED'
+    (SELECT e->>'state' FROM jsonb_array_elements(v_projection->'occurrences') e WHERE e->>'id' = v_day1_a::TEXT) = 'OVERDUE'
       AND (SELECT e->>'state' FROM jsonb_array_elements(v_projection->'occurrences') e WHERE e->>'id' = v_day2_a::TEXT) = 'TODAY',
     v_projection::TEXT
   );
@@ -187,9 +187,23 @@ BEGIN
     v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'
   );
   PERFORM sprint12_record(
-    'AL', 'missed_day1_cannot_start', 'missed_occurrence', v_result->>'code',
-    NULL, v_result->>'code' = 'missed_occurrence', v_result::TEXT
+    'AL', 'overdue_day1_late_start', 'created', v_result->>'status',
+    NULL,
+    v_result->>'status' = 'created'
+      AND (v_result->>'occurrence_id') = v_day1_a::TEXT
+      AND (v_result->>'original_scheduled_date') = v_start_date::TEXT,
+    v_result::TEXT
   );
+  -- Keep Day 1 open while proving Today still starts independently.
+  PERFORM set_config('role', 'postgres', true);
+  DELETE FROM programme_slot_outcomes
+  WHERE assignment_id = v_assignment_a
+    AND session_slot_id = (
+      SELECT session_slot_id FROM programme_schedule_occurrences WHERE id = v_day1_a
+    );
+  DELETE FROM training_sessions
+  WHERE id = (v_result->'training_session'->>'id')::BIGINT;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete_a::TEXT, true);
   v_result := public.cohort_create_or_resume_fixed_occurrence_at(
     v_day3_a,
     v_day_2_date::TIMESTAMP AT TIME ZONE 'Atlantic/Canary'

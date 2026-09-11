@@ -588,9 +588,10 @@ BEGIN
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'AS', 'overdue_rejected', 'overdue_occurrence',
+    'AS', 'overdue_does_not_block_train_today', 'swapped_and_begun',
     v_result->>'code', NULL,
-    v_result->>'code' = 'overdue_occurrence',
+    v_result->>'status' IN ('created', 'resumed')
+      AND v_result->>'code' = 'swapped_and_begun',
     v_result::TEXT
   );
 
