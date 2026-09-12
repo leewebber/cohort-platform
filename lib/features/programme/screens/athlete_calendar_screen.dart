@@ -15,7 +15,8 @@ import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../services/future_programme_session_swap_store.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
-import '../widgets/fixed_programme_week_view.dart';
+import '../presentation/athlete_calendar_agenda_presentation.dart';
+import '../widgets/athlete_programme_week_agenda.dart';
 import 'scheduled_programme_session_preview_screen.dart';
 
 /// Athlete-wide training calendar. It consumes assignment-scoped occurrences
@@ -57,7 +58,7 @@ class AthleteCalendarScreen extends StatefulWidget {
 class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   FixedProgrammeCalendarProjection? _calendar;
   DateTime? _weekStart;
-  FixedProgrammeOccurrenceProjection? _selected;
+  String? _expandedRowId;
   String? _error;
   _CalendarLoadState _loadState = _CalendarLoadState.loading;
 
@@ -157,15 +158,21 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
                   Text('Training schedule', style: CohortTextStyles.muted),
                   const SizedBox(height: CohortSpacing.md),
                   _weekControls(calendar),
-                  const SizedBox(height: CohortSpacing.md),
-                  FixedProgrammeWeekView(
-                    presentation: _weekPresentation(calendar),
-                    onDayTap: _openDay,
+                  const SizedBox(height: CohortSpacing.sm),
+                  Text(
+                    _isCurrentWeek(calendar) ? 'THIS WEEK' : 'WEEK',
+                    style: CohortTextStyles.sectionLabel,
                   ),
-                  if (_selected != null) ...[
-                    const SizedBox(height: CohortSpacing.md),
-                    _selectedSummary(_selected!),
-                  ],
+                  const SizedBox(height: CohortSpacing.md),
+                  AthleteProgrammeWeekAgenda(
+                    rows: AthleteCalendarAgendaFormatter.weekRows(
+                      calendar: calendar,
+                      weekStart: _weekStart!,
+                    ),
+                    expandedRowId: _expandedRowId,
+                    onToggleRow: _toggleRow,
+                    onOpenSession: _openRow,
+                  ),
                 ],
               ),
       ),
@@ -224,9 +231,10 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       children: [
         IconButton(
           tooltip: 'Previous week',
-          onPressed: () => setState(
-            () => _weekStart = week.subtract(const Duration(days: 7)),
-          ),
+          onPressed: () => setState(() {
+            _weekStart = week.subtract(const Duration(days: 7));
+            _expandedRowId = null;
+          }),
           icon: const Icon(Icons.chevron_left),
         ),
         Expanded(
@@ -241,71 +249,42 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
         ),
         IconButton(
           tooltip: 'Next week',
-          onPressed: () =>
-              setState(() => _weekStart = week.add(const Duration(days: 7))),
+          onPressed: () => setState(() {
+            _weekStart = week.add(const Duration(days: 7));
+            _expandedRowId = null;
+          }),
           icon: const Icon(Icons.chevron_right),
         ),
         TextButton(
-          onPressed: () => setState(
-            () => _weekStart = _monday(DateTime.parse(calendar.today)),
-          ),
-          child: const Text('Today'),
+          onPressed: () => setState(() {
+            _weekStart = _monday(DateTime.parse(calendar.today));
+            _expandedRowId = null;
+          }),
+          child: const Text('This week'),
         ),
       ],
     );
   }
 
-  AthleteProgrammeWeekPresentation _weekPresentation(
-    FixedProgrammeCalendarProjection calendar,
-  ) {
-    final start = _weekStart!;
-    final days = List.generate(7, (index) {
-      final date = start.add(Duration(days: index));
-      final occurrence = _occurrenceOn(calendar.occurrences, date);
-      return AthleteProgrammeWeekDayPresentation(
-        date: date,
-        state: occurrence?.state ?? FixedProgrammeOccurrenceState.rest,
-        occurrence: occurrence,
-      );
-    }, growable: false);
-    return AthleteProgrammeWeekPresentation(
-      heading: 'SCHEDULE',
-      dateRangeLabel: AthleteProgrammeDateFormatter.dateRange(
-        days.first.date,
-        days.last.date,
-      ),
-      days: days,
-    );
+  void _toggleRow(AthleteCalendarAgendaRow row) {
+    setState(() {
+      _expandedRowId = _expandedRowId == row.rowId ? null : row.rowId;
+    });
   }
 
-  Widget _selectedSummary(FixedProgrammeOccurrenceProjection occurrence) =>
-      CohortCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'Selected session\n${occurrence.sessionTitle}',
-                style: CohortTextStyles.body,
-              ),
-            ),
-            TextButton(
-              onPressed: () => setState(() => _selected = null),
-              child: const Text('Clear'),
-            ),
-          ],
-        ),
-      );
-
-  Future<void> _openDay(AthleteProgrammeWeekDayPresentation day) async {
+  Future<void> _openRow(AthleteCalendarAgendaRow row) async {
     final calendar = _calendar;
-    final occurrence = day.occurrence;
+    final occurrence = row.occurrence;
     if (calendar == null || occurrence == null) return;
-    setState(() => _selected = occurrence);
     final changed = await openScheduledProgrammeSessionPreview(
       context: context,
       athleteId: widget.athleteId,
       calendar: calendar,
-      day: day,
+      day: AthleteProgrammeWeekDayPresentation(
+        date: row.date,
+        state: occurrence.state,
+        occurrence: occurrence,
+      ),
       previewService: widget.previewService,
       assignmentStore: widget.assignmentStore,
       prepareService: widget.prepareService,
@@ -317,16 +296,13 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     if (changed == true && mounted) await _load();
   }
 
-  FixedProgrammeOccurrenceProjection? _occurrenceOn(
-    List<FixedProgrammeOccurrenceProjection> occurrences,
-    DateTime date,
-  ) {
-    final iso =
-        '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-    for (final occurrence in occurrences) {
-      if (occurrence.scheduledDate == iso) return occurrence;
-    }
-    return null;
+  bool _isCurrentWeek(FixedProgrammeCalendarProjection calendar) {
+    final current = _monday(DateTime.parse(calendar.today));
+    final shown = _weekStart;
+    return shown != null &&
+        shown.year == current.year &&
+        shown.month == current.month &&
+        shown.day == current.day;
   }
 
   DateTime _monday(DateTime date) =>

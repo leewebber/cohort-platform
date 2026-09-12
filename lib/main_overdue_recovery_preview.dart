@@ -1,79 +1,41 @@
 import 'package:cohort_platform/app/theme.dart';
-import 'package:cohort_platform/core/theme/spacing.dart';
 import 'package:cohort_platform/core/theme/text_styles.dart';
-import 'package:cohort_platform/core/widgets/cohort_button.dart';
 import 'package:cohort_platform/core/widgets/cohort_card.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_calendar_agenda_presentation.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
-import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_view.dart';
+import 'package:cohort_platform/features/programme/widgets/athlete_programme_week_agenda.dart';
 import 'package:flutter/material.dart';
 
-/// Local in-memory preview for incomplete-session surfaces.
-///
-/// Does not contact hosted Supabase, mutate production data, or install over
-/// Lee's device build.
+/// Local in-memory preview for Home vs Calendar jobs.
 ///
 /// Launch:
 ///   flutter run -d web-server --web-port 4174 -t lib/main_overdue_recovery_preview.dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(theme: cohortTheme, home: const _IncompleteSessionPreview()),
+    MaterialApp(theme: cohortTheme, home: const _HomeCalendarJobsPreview()),
   );
 }
 
-class _IncompleteSessionPreview extends StatelessWidget {
-  const _IncompleteSessionPreview();
+class _HomeCalendarJobsPreview extends StatefulWidget {
+  const _HomeCalendarJobsPreview();
+
+  @override
+  State<_HomeCalendarJobsPreview> createState() =>
+      _HomeCalendarJobsPreviewState();
+}
+
+class _HomeCalendarJobsPreviewState extends State<_HomeCalendarJobsPreview> {
+  String? _expandedRowId = 'occ-incomplete';
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime(2026, 9, 10);
-    final tuesday = DateTime(2026, 9, 8);
-    final week = AthleteProgrammeWeekPresentation(
-      heading: 'THIS WEEK',
-      dateRangeLabel: '8–14 September',
-      days: [
-        for (var i = 0; i < 7; i++)
-          AthleteProgrammeWeekDayPresentation(
-            date: DateTime(2026, 9, 8).add(Duration(days: i)),
-            state: i == 0
-                ? FixedProgrammeOccurrenceState.overdue
-                : i == 2
-                ? FixedProgrammeOccurrenceState.today
-                : FixedProgrammeOccurrenceState.rest,
-            occurrence: i == 0 || i == 2
-                ? FixedProgrammeOccurrenceProjection(
-                    assignmentId: 'preview',
-                    occurrenceId: 'occ-$i',
-                    sessionSlotId: 'slot-$i',
-                    programmeVersionId: 'version',
-                    protocolId: 'APOLLO',
-                    programmedSessionKey: 'preview-$i',
-                    weekNumber: 1,
-                    dayKey: 'day_${i + 1}',
-                    sessionOrder: 1,
-                    scheduledDate: DateTime(
-                      2026,
-                      9,
-                      8,
-                    ).add(Duration(days: i)).toIso8601String().substring(0, 10),
-                    originalScheduledDate: DateTime(
-                      2026,
-                      9,
-                      8,
-                    ).add(Duration(days: i)).toIso8601String().substring(0, 10),
-                    state: i == 0
-                        ? FixedProgrammeOccurrenceState.overdue
-                        : FixedProgrammeOccurrenceState.today,
-                    sessionTitle: i == 0
-                        ? 'Apollo Intervals'
-                        : 'Apollo Strength',
-                  )
-                : null,
-          ),
-      ],
+    final calendar = _previewCalendar();
+    final rows = AthleteCalendarAgendaFormatter.weekRows(
+      calendar: calendar,
+      weekStart: DateTime(2026, 9, 7),
     );
-
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
       body: SafeArea(
@@ -87,102 +49,57 @@ class _IncompleteSessionPreview extends StatelessWidget {
                 const Text('TODAY', style: CohortTextStyles.sectionLabel),
                 const SizedBox(height: 8),
                 const CohortCard(
-                  child: Text(
-                    'Apollo Strength',
-                    style: CohortTextStyles.cardTitle,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Semantics(
-                  label: IncompleteSessionAthleteCopy.countPhrase(1),
-                  child: Text(
-                    IncompleteSessionAthleteCopy.sectionHeading(1),
-                    style: CohortTextStyles.sectionLabel,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                CohortCard(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Apollo Intervals',
-                              style: CohortTextStyles.cardTitle,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              IncompleteSessionAthleteCopy.scheduledLine(
-                                tuesday,
-                              ),
-                              style: CohortTextStyles.muted,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              IncompleteSessionAthleteCopy.statusLabel,
-                              style: CohortTextStyles.small,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 28),
-                FixedProgrammeWeekView(presentation: week, onDayTap: (_) {}),
-                const SizedBox(height: 28),
-                const Text(
-                  'SCHEDULED SESSION',
-                  style: CohortTextStyles.sectionLabel,
-                ),
-                const SizedBox(height: 8),
-                Text('Apollo Intervals', style: CohortTextStyles.h1),
-                const SizedBox(height: 12),
-                CohortCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        IncompleteSessionAthleteCopy.statusLabel,
+                        'Thursday 10 September',
+                        style: CohortTextStyles.muted,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Apollo Strength',
                         style: CohortTextStyles.cardTitle,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        IncompleteSessionAthleteCopy.scheduledForLine(tuesday),
-                        style: CohortTextStyles.body,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        IncompleteSessionAthleteCopy.stillCompletable,
-                        style: CohortTextStyles.body,
-                      ),
-                      const SizedBox(height: CohortSpacing.md),
-                      const CohortButton(
-                        label: IncompleteSessionAthleteCopy.doThisSession,
-                        onPressed: null,
-                      ),
-                      const SizedBox(height: 8),
-                      const CohortButton(
-                        label: 'Reschedule',
-                        variant: CohortButtonVariant.secondary,
-                        onPressed: null,
-                      ),
+                      SizedBox(height: 4),
+                      Text('Begin', style: CohortTextStyles.body),
                     ],
                   ),
                 ),
                 const SizedBox(height: 28),
+                const Text(
+                  'CURRENT PROGRAMME',
+                  style: CohortTextStyles.sectionLabel,
+                ),
+                const SizedBox(height: 8),
                 CohortCard(
                   child: Text(
-                    IncompleteSessionAthleteCopy.completedLater(
-                      scheduled: tuesday,
-                      completed: today,
-                    ),
+                    '${calendar.programmeName}\nWeek 1 · Day 4',
                     style: CohortTextStyles.body,
                   ),
+                ),
+                const SizedBox(height: 36),
+                const Text('CALENDAR', style: CohortTextStyles.sectionLabel),
+                const SizedBox(height: 4),
+                Text(
+                  AthleteProgrammeDateFormatter.dateRange(
+                    DateTime(2026, 9, 7),
+                    DateTime(2026, 9, 13),
+                  ),
+                  style: CohortTextStyles.small,
+                ),
+                const SizedBox(height: 12),
+                AthleteProgrammeWeekAgenda(
+                  rows: rows,
+                  expandedRowId: _expandedRowId,
+                  onToggleRow: (row) {
+                    setState(() {
+                      _expandedRowId = _expandedRowId == row.rowId
+                          ? null
+                          : row.rowId;
+                    });
+                  },
+                  onOpenSession: (_) {},
                 ),
               ],
             ),
@@ -191,4 +108,97 @@ class _IncompleteSessionPreview extends StatelessWidget {
       ),
     );
   }
+}
+
+FixedProgrammeCalendarProjection _previewCalendar() {
+  FixedProgrammeOccurrenceProjection session({
+    required String id,
+    required String date,
+    required FixedProgrammeOccurrenceState state,
+    required String title,
+    required String type,
+    int order = 1,
+    String? originalDate,
+  }) {
+    return FixedProgrammeOccurrenceProjection(
+      assignmentId: 'preview',
+      occurrenceId: id,
+      sessionSlotId: 'slot-$id',
+      programmeVersionId: 'version',
+      protocolId: 'APOLLO',
+      programmedSessionKey: 'preview-$id',
+      weekNumber: 1,
+      dayKey: 'day_$order',
+      sessionOrder: order,
+      scheduledDate: date,
+      originalScheduledDate: originalDate ?? date,
+      state: state,
+      sessionTitle: title,
+      sessionType: type,
+    );
+  }
+
+  return FixedProgrammeCalendarProjection(
+    assignmentId: 'preview',
+    programmeName: 'Apollo Build — 12-Week Initial Block',
+    timezone: 'Atlantic/Canary',
+    scheduleMode: 'fixed_schedule',
+    startDate: '2026-09-01',
+    today: '2026-09-10',
+    weekStart: '2026-09-07',
+    weekEnd: '2026-09-13',
+    occurrences: [
+      session(
+        id: 'occ-complete',
+        date: '2026-09-07',
+        state: FixedProgrammeOccurrenceState.completed,
+        title: 'Apollo Strength',
+        type: 'Strength · Gym',
+      ),
+      session(
+        id: 'occ-incomplete',
+        date: '2026-09-08',
+        state: FixedProgrammeOccurrenceState.overdue,
+        title: 'Apollo Intervals',
+        type: 'Run',
+      ),
+      session(
+        id: 'occ-zone2',
+        date: '2026-09-09',
+        state: FixedProgrammeOccurrenceState.completed,
+        title: 'Zone 2 Run',
+        type: 'Endurance',
+      ),
+      session(
+        id: 'occ-today-a',
+        date: '2026-09-10',
+        state: FixedProgrammeOccurrenceState.today,
+        title: 'Apollo Strength',
+        type: 'Strength · Gym',
+      ),
+      session(
+        id: 'occ-today-b',
+        date: '2026-09-10',
+        state: FixedProgrammeOccurrenceState.planned,
+        title: 'Evening Mobility Flow With Extended Recovery Notes',
+        type: 'Recovery',
+        order: 2,
+      ),
+      session(
+        id: 'occ-interval',
+        date: '2026-09-11',
+        state: FixedProgrammeOccurrenceState.planned,
+        title: 'Interval Run',
+        type: 'Run',
+      ),
+      session(
+        id: 'occ-mobility',
+        date: '2026-09-12',
+        state: FixedProgrammeOccurrenceState.planned,
+        title: 'Mobility',
+        type: 'Recovery',
+      ),
+    ],
+    currentWeek: const [],
+  );
 }

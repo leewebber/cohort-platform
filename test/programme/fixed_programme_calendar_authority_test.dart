@@ -19,6 +19,8 @@ import 'package:cohort_platform/features/programme/services/athlete_programme_au
 import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
 import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
 import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_calendar_agenda_presentation.dart';
+import 'package:cohort_platform/features/programme/widgets/athlete_programme_week_agenda.dart';
 import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_view.dart';
 import 'package:cohort_platform/features/exercises/exercise_detail/exercise_detail_screen.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
@@ -943,21 +945,9 @@ void main() {
         expect(find.textContaining('RPE 7'), findsOneWidget);
         expect(find.text('UP NEXT'), findsOneWidget);
         expect(find.text('Apollo Racehorse'), findsOneWidget);
-        expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+        expect(find.text('INCOMPLETE SESSION'), findsNothing);
         expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
-
-        await tester.tap(find.text('Scheduled 1 September'));
-        await tester.pumpAndSettle();
-        expect(find.text('SCHEDULED SESSION'), findsOneWidget);
-        await tester.scrollUntilVisible(
-          find.text('Resume'),
-          300,
-          scrollable: find.byType(Scrollable).last,
-        );
-        expect(find.text('Resume'), findsOneWidget);
-        await tester.tap(find.byTooltip('Back'));
-        await tester.pumpAndSettle();
 
         await tester.tap(find.byKey(const ValueKey('up-next-view-session')));
         await tester.pumpAndSettle();
@@ -989,7 +979,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Apollo Engine'), findsOneWidget);
         expect(find.text('UP NEXT'), findsOneWidget);
-        expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+        expect(find.text('INCOMPLETE SESSION'), findsNothing);
         expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
       },
@@ -1142,19 +1132,14 @@ void main() {
 
       expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
-      expect(find.text('THIS WEEK'), findsOneWidget);
       expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
-      expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
-      expect(find.bySemanticsLabel('1 incomplete session'), findsWidgets);
-      expect(find.text('Incomplete'), findsWidgets);
+      expect(find.text('INCOMPLETE SESSION'), findsNothing);
+      expect(find.text('THIS WEEK'), findsNothing);
       expect(find.text('Overdue'), findsNothing);
       expect(find.textContaining('resolve'), findsNothing);
       expect(find.text('Train now'), findsNothing);
       expect(find.text('Skip'), findsNothing);
       expect(find.text('Reschedule'), findsNothing);
-      expect(find.text('Today'), findsOneWidget);
-      expect(find.text('Not active'), findsOneWidget);
-      expect(find.text('Rest'), findsNothing);
       expect(find.text('Programme'), findsNothing);
       expect(find.text('Build physical capability.'), findsNothing);
 
@@ -1173,8 +1158,7 @@ void main() {
       expect(find.text('THIS WEEK'), findsOneWidget);
       expect(find.text('Incomplete'), findsWidgets);
       expect(find.text('Overdue'), findsNothing);
-      expect(find.text('Today'), findsOneWidget);
-      expect(find.text('Not active'), findsOneWidget);
+      expect(find.textContaining('Today'), findsWidgets);
       expect(find.text('Rest'), findsNothing);
     });
 
@@ -1228,9 +1212,7 @@ void main() {
         find.text('Your first session unlocks in 8 days.'),
         findsOneWidget,
       );
-      expect(find.text('FIRST WEEK'), findsOneWidget);
-      expect(find.text('1–7 September'), findsOneWidget);
-      expect(find.text('Planned'), findsNWidgets(7));
+      expect(find.text('FIRST WEEK'), findsNothing);
       expect(find.text("TODAY'S TRAINING"), findsNothing);
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Rest'), findsNothing);
@@ -1238,23 +1220,11 @@ void main() {
       expect(find.textContaining('Atlantic/Canary'), findsNothing);
       expect(find.textContaining('day_1'), findsNothing);
       expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
-      await tester.tap(
-        find.byKey(const ValueKey('programme-week-day-2026-09-01')),
-      );
-      await tester.pumpAndSettle();
-      expect(
-        find.byType(ScheduledProgrammeSessionPreviewScreen),
-        findsOneWidget,
-      );
-      expect(find.text('Scheduled for Tuesday, 1 September'), findsOneWidget);
-      expect(find.text('Begin'), findsNothing);
       expect(startStore.calls, isEmpty);
       expect(executionView.calls, 0);
       expect(prepareLoader.calls, 0);
       expect(tables.outcomes, isEmpty);
       expect(assignment.currentDayKey, 'day_1');
-      await tester.tap(find.byTooltip('Back'));
-      await tester.pumpAndSettle();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -1298,7 +1268,7 @@ void main() {
       );
       expect(find.textContaining('2026-09-01'), findsNothing);
       expect(find.text('Begin'), findsNothing);
-      expect(previewLoader.calls, 2);
+      expect(previewLoader.calls, 1);
     });
 
     testWidgets(
@@ -1395,8 +1365,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
-      expect(find.text('Today'), findsOneWidget);
-      expect(find.text('THIS WEEK'), findsOneWidget);
+      expect(find.text('THIS WEEK'), findsNothing);
 
       final plansController = AthleteProgrammeScreenController(
         athleteId: 'athlete.local',
@@ -1440,7 +1409,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('TODAY'), findsOneWidget);
-      expect(find.text('No session scheduled today.'), findsOneWidget);
+      expect(find.text('Rest day'), findsOneWidget);
       expect(find.text("TODAY'S TRAINING"), findsNothing);
       expect(find.text('Rest'), findsNothing);
     });
@@ -1455,17 +1424,21 @@ void main() {
       final assignment = _assignment(athleteId: 'athlete.local');
       final projection = _calendar(
         assignment: assignment,
-        today: '2026-08-24',
+        today: '2026-09-02',
         occurrences: _firstWeekOccurrences(assignment: assignment),
       );
-      final tables = await _tablesWith(assignment);
 
       await tester.pumpWidget(
         MaterialApp(
-          home: HomeScreen(
-            embeddedInShell: true,
-            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-            fixedOccurrenceStore: _ProjectionStore(projection),
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: AthleteProgrammeWeekAgenda(
+                rows: AthleteCalendarAgendaFormatter.weekRows(
+                  calendar: projection,
+                  weekStart: DateTime(2026, 8, 31),
+                ),
+              ),
+            ),
           ),
         ),
       );
@@ -1479,7 +1452,7 @@ void main() {
       final tapSize = tester.getSize(firstDay);
       expect(tapSize.width, greaterThanOrEqualTo(48));
       expect(tapSize.height, greaterThanOrEqualTo(48));
-      expect(find.text('Planned'), findsNWidgets(7));
+      expect(find.text('Planned'), findsWidgets);
     });
 
     testWidgets('empty calendar dates are inert and never labelled Rest', (
@@ -1984,6 +1957,8 @@ void main() {
       await tester.tap(
         find.byKey(const ValueKey('programme-week-day-2026-09-01')),
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('View session'));
       await tester.pumpAndSettle();
       expect(find.text('Session'), findsOneWidget);
       expect(find.textContaining('Scheduled for'), findsOneWidget);

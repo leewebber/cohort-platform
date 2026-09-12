@@ -2,6 +2,7 @@ import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
 import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
+import 'package:cohort_platform/features/programme/screens/athlete_calendar_screen.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/models/overdue_programme_recovery.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
@@ -292,89 +293,15 @@ void main() {
     expect(store.commands, isEmpty);
   });
 
-  testWidgets(
-    'Home shows compact incomplete card without a crowded action row',
-    (tester) async {
-      final assignment = _assignment();
-      final overdue = _occurrence(
-        assignment: assignment,
-        date: '2026-09-08',
-        state: FixedProgrammeOccurrenceState.overdue,
-        title: 'Apollo Intervals',
-      );
-      final today = _occurrence(
-        assignment: assignment,
-        id: 'occ-today',
-        slotId: ProgrammeScheduleTestFixtures.slot2Id,
-        protocolId: 'BW-001',
-        dayKey: 'day_2',
-        date: '2026-09-10',
-        state: FixedProgrammeOccurrenceState.today,
-        title: 'Apollo Strength',
-      );
-      final calendar = _calendar(
-        assignment: assignment,
-        today: '2026-09-10',
-        occurrences: [overdue, today],
-      );
-      await tester.pumpWidget(
-        await _homeApp(assignment: assignment, calendar: calendar),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
-      expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
-      expect(find.bySemanticsLabel('1 incomplete session'), findsWidgets);
-      expect(find.text('Scheduled 8 September'), findsOneWidget);
-      expect(find.text('Incomplete'), findsWidgets);
-      expect(find.text('Overdue'), findsNothing);
-      expect(find.textContaining('resolve'), findsNothing);
-      expect(find.text('Train now'), findsNothing);
-      expect(find.text('Do this session'), findsNothing);
-      expect(find.text('Reschedule'), findsNothing);
-      expect(find.text('Skip'), findsNothing);
-      expect(
-        find.byKey(ValueKey('incomplete-session-card-${overdue.occurrenceId}')),
-        findsOneWidget,
-      );
-
-      await tester.ensureVisible(find.text('Scheduled 8 September'));
-      await tester.tap(find.text('Scheduled 8 September'));
-      await tester.pumpAndSettle();
-      expect(find.text('SCHEDULED SESSION'), findsOneWidget);
-      await tester.scrollUntilVisible(
-        find.text(IncompleteSessionAthleteCopy.doThisSession),
-        300,
-        scrollable: find.byType(Scrollable).last,
-      );
-      expect(
-        find.text(IncompleteSessionAthleteCopy.doThisSession),
-        findsOneWidget,
-      );
-      expect(find.text('Reschedule'), findsOneWidget);
-      expect(find.text('Skip session'), findsNothing);
-    },
-  );
-
-  testWidgets('Home uses plural grammar for multiple incomplete sessions', (
+  testWidgets('Home keeps today primary and hides incomplete backlog', (
     tester,
   ) async {
     final assignment = _assignment();
-    final first = _occurrence(
+    final overdue = _occurrence(
       assignment: assignment,
       date: '2026-09-08',
       state: FixedProgrammeOccurrenceState.overdue,
       title: 'Apollo Intervals',
-    );
-    final second = _occurrence(
-      assignment: assignment,
-      id: 'occ-overdue-2',
-      slotId: ProgrammeScheduleTestFixtures.slot3Id,
-      protocolId: 'APOLLO-W1-WED-R1',
-      dayKey: 'day_3',
-      date: '2026-09-09',
-      state: FixedProgrammeOccurrenceState.overdue,
-      title: 'Apollo Engine',
     );
     final today = _occurrence(
       assignment: assignment,
@@ -389,15 +316,70 @@ void main() {
     final calendar = _calendar(
       assignment: assignment,
       today: '2026-09-10',
-      occurrences: [first, second, today],
+      occurrences: [overdue, today],
     );
     await tester.pumpWidget(
       await _homeApp(assignment: assignment, calendar: calendar),
     );
     await tester.pumpAndSettle();
-    expect(find.text('INCOMPLETE SESSIONS'), findsOneWidget);
-    expect(find.bySemanticsLabel('2 incomplete sessions'), findsWidgets);
+
+    expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
     expect(find.text('INCOMPLETE SESSION'), findsNothing);
+    expect(find.text('INCOMPLETE SESSIONS'), findsNothing);
+    expect(find.text('Apollo Intervals'), findsNothing);
+    expect(find.text('Overdue'), findsNothing);
+    expect(find.textContaining('resolve'), findsNothing);
+    expect(find.text('Do this session'), findsNothing);
+    expect(find.text('Reschedule'), findsNothing);
+    expect(find.byType(FixedProgrammeWeekView), findsNothing);
+  });
+
+  testWidgets('Calendar discovers incomplete sessions without writing', (
+    tester,
+  ) async {
+    final assignment = _assignment();
+    final overdue = _occurrence(
+      assignment: assignment,
+      date: '2026-09-08',
+      state: FixedProgrammeOccurrenceState.overdue,
+      title: 'Apollo Intervals',
+    );
+    final today = _occurrence(
+      assignment: assignment,
+      id: 'occ-today',
+      slotId: ProgrammeScheduleTestFixtures.slot2Id,
+      protocolId: 'BW-001',
+      dayKey: 'day_2',
+      date: '2026-09-10',
+      state: FixedProgrammeOccurrenceState.today,
+      title: 'Apollo Strength',
+    );
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-10',
+      occurrences: [overdue, today],
+    );
+    final store = _RecordingRecoveryStore();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteCalendarScreen(
+          athleteId: assignment.athleteId,
+          fixedOccurrenceStore: _HomeProjectionStore(calendar),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Incomplete'), findsWidgets);
+    expect(find.text('Apollo Intervals'), findsOneWidget);
+    expect(find.text('Overdue'), findsNothing);
+    await tester.tap(find.text('Apollo Intervals'));
+    await tester.pump();
+    expect(
+      find.text(IncompleteSessionAthleteCopy.doThisSession),
+      findsOneWidget,
+    );
+    expect(find.text('Reschedule'), findsOneWidget);
+    expect(store.commands, isEmpty);
   });
 }
 

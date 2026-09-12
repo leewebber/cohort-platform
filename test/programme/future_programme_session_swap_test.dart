@@ -460,6 +460,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Resume'), findsWidgets);
 
+      tester.view.physicalSize = const Size(430, 1400);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
       await tester.pumpWidget(
         MaterialApp(
           home: AthleteCalendarScreen(
@@ -482,9 +486,14 @@ void main() {
         300,
         scrollable: find.byType(Scrollable).first,
       );
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+      );
       await tester.tap(
         find.byKey(const ValueKey('programme-week-day-2026-09-06')),
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('View session'));
       await tester.pumpAndSettle();
       expect(find.text('Apollo Strength'), findsWidgets);
       expect(find.text('Week 1 · Day 1 · Sunday, 6 September'), findsOneWidget);
@@ -518,6 +527,10 @@ void main() {
   ) async {
     final harness = await _Harness.create();
     final refresh = HomeTodaySessionRefreshController();
+    tester.view.physicalSize = const Size(430, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       AthleteProgrammeSurfaceRefreshScope(
         controller: refresh,
@@ -533,9 +546,14 @@ void main() {
       300,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+    );
     await tester.tap(
       find.byKey(const ValueKey('programme-week-day-2026-09-06')),
     );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('View session'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('Train today'),

@@ -38,6 +38,7 @@ class FixedProgrammeOccurrenceProjection {
     required this.originalScheduledDate,
     required this.state,
     required this.sessionTitle,
+    this.sessionType,
     this.sessionLineageId,
     this.sessionRevisionNumber,
     this.trainingSessionId,
@@ -56,6 +57,7 @@ class FixedProgrammeOccurrenceProjection {
   final String originalScheduledDate;
   final FixedProgrammeOccurrenceState state;
   final String sessionTitle;
+  final String? sessionType;
   final String? sessionLineageId;
   final int? sessionRevisionNumber;
   final int? trainingSessionId;
@@ -94,6 +96,7 @@ class FixedProgrammeOccurrenceProjection {
       originalScheduledDate: _requiredDate(map, 'original_scheduled_date'),
       state: FixedProgrammeOccurrenceState.parse(map['state']),
       sessionTitle: _requiredString(map, 'session_title'),
+      sessionType: _optionalString(map['session_type']),
       sessionLineageId: _optionalString(map['session_lineage_id']),
       sessionRevisionNumber: _optionalPositiveInt(
         map['session_revision_number'],
@@ -192,10 +195,16 @@ class FixedProgrammeCalendarProjection {
   }
 
   FixedProgrammeOccurrenceProjection? occurrenceOnDate(String isoDate) {
-    for (final occurrence in occurrences) {
-      if (occurrence.scheduledDate == isoDate) return occurrence;
-    }
-    return null;
+    final matches = occurrencesOnDate(isoDate);
+    return matches.isEmpty ? null : matches.first;
+  }
+
+  List<FixedProgrammeOccurrenceProjection> occurrencesOnDate(String isoDate) {
+    final matches = occurrences
+        .where((occurrence) => occurrence.scheduledDate == isoDate)
+        .toList();
+    matches.sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
+    return List.unmodifiable(matches);
   }
 
   bool isWithinOverdueRescheduleHorizon(String isoDate) {

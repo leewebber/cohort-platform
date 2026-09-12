@@ -24,7 +24,6 @@ import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
-import '../programme/widgets/fixed_programme_week_view.dart';
 import '../performance/models/training_session_record.dart';
 import '../performance/repositories/performance_record_store.dart';
 import '../performance/repositories/supabase_performance_record_store.dart';
@@ -343,13 +342,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       widgets.addAll(const [
         Text('TODAY', style: CohortTextStyles.sectionLabel),
         SizedBox(height: CohortSpacing.md),
-        CohortCard(
-          child: Text(
-            'No session scheduled today.',
-            style: CohortTextStyles.body,
-          ),
-        ),
+        CohortCard(child: Text('Rest day', style: CohortTextStyles.body)),
       ]);
+      final upNext = calendar.nextPlannedOccurrence;
+      if (upNext != null) {
+        widgets.addAll([
+          const SizedBox(height: CohortSpacing.lg),
+          const Text('UP NEXT', style: CohortTextStyles.sectionLabel),
+          const SizedBox(height: CohortSpacing.sm),
+          _upNextCard(upNext),
+        ]);
+      }
     } else if (todayOccurrence.state ==
         FixedProgrammeOccurrenceState.completed) {
       widgets.addAll([
@@ -380,36 +383,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       );
     }
 
-    if (calendar.overdue.isNotEmpty) {
-      widgets.addAll([
-        const SizedBox(height: CohortSpacing.lg),
-        Semantics(
-          label: IncompleteSessionAthleteCopy.countPhrase(
-            calendar.overdue.length,
-          ),
-          excludeSemantics: true,
-          child: Text(
-            IncompleteSessionAthleteCopy.sectionHeading(
-              calendar.overdue.length,
-            ),
-            style: CohortTextStyles.sectionLabel,
-          ),
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        for (final overdue in calendar.overdue) ...[
-          _incompleteSessionCard(overdue),
-          const SizedBox(height: CohortSpacing.sm),
-        ],
-      ]);
-    }
-
     widgets.addAll([
-      const SizedBox(height: CohortSpacing.xl),
-      FixedProgrammeWeekView(
-        presentation: lifecycle.week,
-        onDayTap: _openScheduledDay,
-        onViewCalendar: _openProgrammeCalendar,
-      ),
       const SizedBox(height: CohortSpacing.xl),
       Text('CURRENT PROGRAMME', style: CohortTextStyles.sectionLabel),
       const SizedBox(height: CohortSpacing.md),
@@ -431,47 +405,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ),
     ]);
     return widgets;
-  }
-
-  Widget _incompleteSessionCard(FixedProgrammeOccurrenceProjection occurrence) {
-    final scheduled = DateTime.parse(occurrence.scheduledDate);
-    return Semantics(
-      button: true,
-      label:
-          '${occurrence.sessionTitle}, '
-          '${IncompleteSessionAthleteCopy.scheduledLine(scheduled)}, '
-          '${IncompleteSessionAthleteCopy.statusLabel}',
-      child: CohortCard(
-        key: ValueKey('incomplete-session-card-${occurrence.occurrenceId}'),
-        onTap: () => _openOccurrence(occurrence),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    occurrence.sessionTitle,
-                    style: CohortTextStyles.cardTitle,
-                  ),
-                  const SizedBox(height: CohortSpacing.xs),
-                  Text(
-                    IncompleteSessionAthleteCopy.scheduledLine(scheduled),
-                    style: CohortTextStyles.muted,
-                  ),
-                  const SizedBox(height: CohortSpacing.xs),
-                  Text(
-                    IncompleteSessionAthleteCopy.statusLabel,
-                    style: CohortTextStyles.small,
-                  ),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right),
-          ],
-        ),
-      ),
-    );
   }
 
   Widget _completedTodayCard(FixedProgrammeOccurrenceProjection occurrence) {

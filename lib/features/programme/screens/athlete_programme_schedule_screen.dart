@@ -14,6 +14,7 @@ import '../../../domain/programme_scheduling/programme_scheduling_domain.dart';
 import '../../../domain/session_occurrence/value_objects/session_occurrence_date.dart';
 import '../controllers/athlete_programme_schedule_controller.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../presentation/athlete_calendar_agenda_presentation.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../presentation/programme_day_label_formatter.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
@@ -27,7 +28,7 @@ import '../services/programme_schedule_operations_supabase_store.dart';
 import '../services/programme_schedule_projection_supabase_store.dart';
 import '../services/programme_schedule_restore_service.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
-import '../widgets/fixed_programme_week_view.dart';
+import '../widgets/athlete_programme_week_agenda.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import 'scheduled_programme_session_preview_screen.dart';
 
@@ -535,51 +536,34 @@ class _AthleteProgrammeScheduleScreenState
               ),
             ],
             const SizedBox(height: CohortSpacing.xl),
-            FixedProgrammeWeekView(
-              presentation: lifecycle.week,
-              onDayTap: _openFixedDay,
-            ),
-            if (projection.overdue.isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.xl),
-              Semantics(
-                label: IncompleteSessionAthleteCopy.countPhrase(
-                  projection.overdue.length,
-                ),
-                excludeSemantics: true,
-                child: Text(
-                  IncompleteSessionAthleteCopy.sectionHeading(
-                    projection.overdue.length,
-                  ),
-                  style: CohortTextStyles.sectionLabel,
-                ),
+            Text(lifecycle.week.heading, style: CohortTextStyles.sectionLabel),
+            const SizedBox(height: CohortSpacing.md),
+            AthleteProgrammeWeekAgenda(
+              rows: AthleteCalendarAgendaFormatter.weekRows(
+                calendar: projection,
+                weekStart: lifecycle.week.days.first.date,
               ),
-              const SizedBox(height: CohortSpacing.md),
-              for (final occurrence in projection.overdue) ...[
-                CohortCard(
-                  onTap: () => _openFixedDay(
-                    AthleteProgrammeWeekDayPresentation(
-                      date: DateTime.parse(occurrence.scheduledDate),
-                      state: occurrence.state,
-                      occurrence: occurrence,
-                    ),
+              onToggleRow: (row) {
+                if (row.occurrence == null) return;
+                _openFixedDay(
+                  AthleteProgrammeWeekDayPresentation(
+                    date: row.date,
+                    state: row.occurrence!.state,
+                    occurrence: row.occurrence,
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${occurrence.sessionTitle}\n'
-                          '${IncompleteSessionAthleteCopy.scheduledLine(DateTime.parse(occurrence.scheduledDate))}\n'
-                          '${IncompleteSessionAthleteCopy.statusLabel}',
-                          style: CohortTextStyles.body,
-                        ),
-                      ),
-                      const Icon(Icons.chevron_right),
-                    ],
+                );
+              },
+              onOpenSession: (row) {
+                if (row.occurrence == null) return;
+                _openFixedDay(
+                  AthleteProgrammeWeekDayPresentation(
+                    date: row.date,
+                    state: row.occurrence!.state,
+                    occurrence: row.occurrence,
                   ),
-                ),
-                const SizedBox(height: CohortSpacing.sm),
-              ],
-            ],
+                );
+              },
+            ),
           ],
         ),
       ),
