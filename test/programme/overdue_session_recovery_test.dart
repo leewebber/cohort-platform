@@ -1,7 +1,14 @@
+import 'package:cohort_platform/core/persistence/athlete_local_repository.dart';
+import 'package:cohort_platform/core/persistence/local_kv_store.dart';
+import 'package:cohort_platform/features/home/home_screen.dart';
+import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/models/overdue_programme_recovery.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
 import 'package:cohort_platform/features/programme/screens/scheduled_programme_session_preview_screen.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_authored_slot_resolver.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_session_prepare_service.dart';
+import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
 import 'package:cohort_platform/features/programme/services/overdue_programme_recovery_store.dart';
 import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
 import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_view.dart';
@@ -12,6 +19,7 @@ import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/in_memory_programme_stores.dart';
 import '../support/programme_schedule_test_fixtures.dart';
 import 'package:cohort_platform/models/programme_assignment.dart';
 
@@ -42,14 +50,32 @@ void main() {
 
     expect(overdue.isLateStartable, isTrue);
     expect(overdue.isExecutable, isTrue);
+    expect(overdue.state.wireValue, 'OVERDUE');
+    expect(overdue.state.displayLabel, 'Incomplete');
+    expect(overdue.state, isNot(FixedProgrammeOccurrenceState.skipped));
+    expect(overdue.state, isNot(FixedProgrammeOccurrenceState.missed));
     expect(calendar.overdue, hasLength(1));
     expect(calendar.todayOccurrence?.sessionTitle, 'Apollo Strength');
+    expect(calendar.todayOccurrence?.isExecutable, isTrue);
     expect(calendar.isWithinOverdueRescheduleHorizon('2026-09-17'), isTrue);
     expect(calendar.isWithinOverdueRescheduleHorizon('2026-09-18'), isFalse);
     expect(calendar.isWithinOverdueRescheduleHorizon('2026-09-09'), isFalse);
+    expect(OverdueProgrammeRecoveryOperation.skip.wireValue, 'skip');
+    expect(IncompleteSessionAthleteCopy.countPhrase(1), '1 incomplete session');
+    expect(
+      IncompleteSessionAthleteCopy.countPhrase(2),
+      '2 incomplete sessions',
+    );
+    expect(
+      IncompleteSessionAthleteCopy.completedLater(
+        scheduled: DateTime(2026, 9, 8),
+        completed: DateTime(2026, 9, 10),
+      ),
+      'Scheduled 8 September · Completed 10 September',
+    );
   });
 
-  testWidgets('overdue Calendar item is tappable and opens late actions', (
+  testWidgets('past unfinished Calendar cell displays Incomplete', (
     tester,
   ) async {
     final assignment = _assignment();
@@ -77,11 +103,13 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Overdue'), findsWidgets);
+    expect(find.text('Incomplete'), findsWidgets);
+    expect(find.text('Overdue'), findsNothing);
+    expect(find.text('Missed'), findsNothing);
     expect(tester.widget<InkWell>(find.byType(InkWell).first).onTap, isNotNull);
   });
 
-  testWidgets('overdue preview shows banner, start, reschedule and skip', (
+  testWidgets('incomplete preview shows Do this session and Reschedule only', (
     tester,
   ) async {
     final assignment = _assignment();
@@ -130,27 +158,32 @@ void main() {
       findsWidgets,
     );
     expect(
-      find.textContaining('Training today, Thursday 10 September'),
+      find.textContaining(IncompleteSessionAthleteCopy.stillCompletable),
       findsWidgets,
     );
+    expect(find.text('Incomplete'), findsWidgets);
+    expect(find.text('Overdue'), findsNothing);
+    expect(find.textContaining('resolve'), findsNothing);
+    expect(find.textContaining('Resolve'), findsNothing);
     expect(find.text('Adapt Session'), findsNothing);
     expect(find.text('Begin'), findsNothing);
+    expect(find.text('Skip session'), findsNothing);
+    expect(find.byKey(const ValueKey('scheduled-preview-skip')), findsNothing);
+    expect(find.textContaining('session now?'), findsNothing);
 
     await tester.scrollUntilVisible(
-      find.text('Start this session'),
+      find.text(IncompleteSessionAthleteCopy.doThisSession),
       300,
       scrollable: find.byType(Scrollable).first,
     );
-    expect(find.text('Start this session'), findsOneWidget);
-    expect(find.text('Reschedule'), findsOneWidget);
-    expect(find.text('Skip session'), findsOneWidget);
-    await tester.tap(find.text('Start this session'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('session now?'), findsOneWidget);
     expect(
-      find.text('Your Thursday 10 September session will remain scheduled.'),
+      find.text(IncompleteSessionAthleteCopy.doThisSession),
       findsOneWidget,
     );
+    expect(find.text('Reschedule'), findsOneWidget);
+    await tester.tap(find.text(IncompleteSessionAthleteCopy.doThisSession));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('session now?'), findsNothing);
   });
 
   testWidgets('reschedule offers move to today and swap confirmation', (
@@ -220,7 +253,9 @@ void main() {
     );
   });
 
-  testWidgets('explicit skip requires confirmation', (tester) async {
+  testWidgets('prominent Skip action is absent from incomplete detail', (
+    tester,
+  ) async {
     final assignment = _assignment();
     final overdue = _occurrence(
       assignment: assignment,
@@ -252,21 +287,156 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('Skip session'),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.text('Skip session'));
-    await tester.pumpAndSettle();
-    expect(find.text('Skip this session?'), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('skip-session-confirm')));
-    await tester.pumpAndSettle();
-    expect(
-      store.commands.single.operation,
-      OverdueProgrammeRecoveryOperation.skip,
-    );
+    expect(find.text('Skip session'), findsNothing);
+    expect(find.text('Skip'), findsNothing);
+    expect(store.commands, isEmpty);
   });
+
+  testWidgets(
+    'Home shows compact incomplete card without a crowded action row',
+    (tester) async {
+      final assignment = _assignment();
+      final overdue = _occurrence(
+        assignment: assignment,
+        date: '2026-09-08',
+        state: FixedProgrammeOccurrenceState.overdue,
+        title: 'Apollo Intervals',
+      );
+      final today = _occurrence(
+        assignment: assignment,
+        id: 'occ-today',
+        slotId: ProgrammeScheduleTestFixtures.slot2Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_2',
+        date: '2026-09-10',
+        state: FixedProgrammeOccurrenceState.today,
+        title: 'Apollo Strength',
+      );
+      final calendar = _calendar(
+        assignment: assignment,
+        today: '2026-09-10',
+        occurrences: [overdue, today],
+      );
+      await tester.pumpWidget(
+        await _homeApp(assignment: assignment, calendar: calendar),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
+      expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+      expect(find.bySemanticsLabel('1 incomplete session'), findsWidgets);
+      expect(find.text('Scheduled 8 September'), findsOneWidget);
+      expect(find.text('Incomplete'), findsWidgets);
+      expect(find.text('Overdue'), findsNothing);
+      expect(find.textContaining('resolve'), findsNothing);
+      expect(find.text('Train now'), findsNothing);
+      expect(find.text('Do this session'), findsNothing);
+      expect(find.text('Reschedule'), findsNothing);
+      expect(find.text('Skip'), findsNothing);
+      expect(
+        find.byKey(ValueKey('incomplete-session-card-${overdue.occurrenceId}')),
+        findsOneWidget,
+      );
+
+      await tester.ensureVisible(find.text('Scheduled 8 September'));
+      await tester.tap(find.text('Scheduled 8 September'));
+      await tester.pumpAndSettle();
+      expect(find.text('SCHEDULED SESSION'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text(IncompleteSessionAthleteCopy.doThisSession),
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      expect(
+        find.text(IncompleteSessionAthleteCopy.doThisSession),
+        findsOneWidget,
+      );
+      expect(find.text('Reschedule'), findsOneWidget);
+      expect(find.text('Skip session'), findsNothing);
+    },
+  );
+
+  testWidgets('Home uses plural grammar for multiple incomplete sessions', (
+    tester,
+  ) async {
+    final assignment = _assignment();
+    final first = _occurrence(
+      assignment: assignment,
+      date: '2026-09-08',
+      state: FixedProgrammeOccurrenceState.overdue,
+      title: 'Apollo Intervals',
+    );
+    final second = _occurrence(
+      assignment: assignment,
+      id: 'occ-overdue-2',
+      slotId: ProgrammeScheduleTestFixtures.slot3Id,
+      protocolId: 'APOLLO-W1-WED-R1',
+      dayKey: 'day_3',
+      date: '2026-09-09',
+      state: FixedProgrammeOccurrenceState.overdue,
+      title: 'Apollo Engine',
+    );
+    final today = _occurrence(
+      assignment: assignment,
+      id: 'occ-today',
+      slotId: ProgrammeScheduleTestFixtures.slot2Id,
+      protocolId: 'BW-001',
+      dayKey: 'day_2',
+      date: '2026-09-10',
+      state: FixedProgrammeOccurrenceState.today,
+      title: 'Apollo Strength',
+    );
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-10',
+      occurrences: [first, second, today],
+    );
+    await tester.pumpWidget(
+      await _homeApp(assignment: assignment, calendar: calendar),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('INCOMPLETE SESSIONS'), findsOneWidget);
+    expect(find.bySemanticsLabel('2 incomplete sessions'), findsWidgets);
+    expect(find.text('INCOMPLETE SESSION'), findsNothing);
+  });
+}
+
+Future<Widget> _homeApp({
+  required ProgrammeAssignment assignment,
+  required FixedProgrammeCalendarProjection calendar,
+}) async {
+  final tables = InMemoryProgrammeTables();
+  tables.assignments.add(assignment);
+  final store = _HomeProjectionStore(calendar);
+  return MaterialApp(
+    home: HomeScreen(
+      embeddedInShell: true,
+      athleteIdOverride: assignment.athleteId,
+      assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+      prepareService: AthleteProgrammeSessionPrepareService(
+        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+        slotResolver: AthleteProgrammeAuthoredSlotResolver(
+          versionStore: InMemoryProgrammeVersionStore(tables),
+        ),
+        sessionLoader: _PreviewLoader(),
+        localRepository: AthleteLocalRepository(InMemoryKvStore()),
+        fixedOccurrenceStore: store,
+      ),
+      fixedOccurrenceStore: store,
+      previewService: ScheduledProgrammeSessionPreviewService(
+        loader: _PreviewLoader(),
+      ),
+    ),
+  );
+}
+
+class _HomeProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
+  _HomeProjectionStore(this.projection);
+
+  final FixedProgrammeCalendarProjection projection;
+
+  @override
+  Future<FixedProgrammeCalendarProjection?> resolveActive() async => projection;
 }
 
 class _RecordingRecoveryStore implements OverdueProgrammeRecoveryStore {

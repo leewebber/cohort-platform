@@ -8,7 +8,7 @@ import 'package:cohort_platform/features/programme/presentation/athlete_programm
 import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_view.dart';
 import 'package:flutter/material.dart';
 
-/// Local in-memory preview for overdue recovery surfaces.
+/// Local in-memory preview for incomplete-session surfaces.
 ///
 /// Does not contact hosted Supabase, mutate production data, or install over
 /// Lee's device build.
@@ -18,18 +18,17 @@ import 'package:flutter/material.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(theme: cohortTheme, home: const _OverdueRecoveryPreview()),
+    MaterialApp(theme: cohortTheme, home: const _IncompleteSessionPreview()),
   );
 }
 
-class _OverdueRecoveryPreview extends StatelessWidget {
-  const _OverdueRecoveryPreview();
+class _IncompleteSessionPreview extends StatelessWidget {
+  const _IncompleteSessionPreview();
 
   @override
   Widget build(BuildContext context) {
     final today = DateTime(2026, 9, 10);
     final tuesday = DateTime(2026, 9, 8);
-    final friday = DateTime(2026, 9, 11);
     final week = AthleteProgrammeWeekPresentation(
       heading: 'THIS WEEK',
       dateRangeLabel: '8–14 September',
@@ -76,7 +75,7 @@ class _OverdueRecoveryPreview extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Overdue recovery preview')),
+      appBar: AppBar(title: const Text('Home')),
       body: SafeArea(
         child: Align(
           alignment: Alignment.topCenter,
@@ -85,104 +84,105 @@ class _OverdueRecoveryPreview extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                const Text('Calendar · overdue remains tappable'),
-                const SizedBox(height: 12),
-                FixedProgrammeWeekView(presentation: week, onDayTap: (_) {}),
-                const SizedBox(height: 28),
                 const Text('TODAY', style: CohortTextStyles.sectionLabel),
                 const SizedBox(height: 8),
-                const CohortCard(child: Text('Apollo Strength · Today')),
+                const CohortCard(
+                  child: Text(
+                    'Apollo Strength',
+                    style: CohortTextStyles.cardTitle,
+                  ),
+                ),
                 const SizedBox(height: 20),
-                const Text(
-                  '1 SESSION TO RESOLVE',
-                  style: CohortTextStyles.sectionLabel,
+                Semantics(
+                  label: IncompleteSessionAthleteCopy.countPhrase(1),
+                  child: Text(
+                    IncompleteSessionAthleteCopy.sectionHeading(1),
+                    style: CohortTextStyles.sectionLabel,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 CohortCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  onTap: () {},
+                  child: Row(
                     children: [
-                      Text(
-                        'Apollo Intervals',
-                        style: CohortTextStyles.cardTitle,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Apollo Intervals',
+                              style: CohortTextStyles.cardTitle,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              IncompleteSessionAthleteCopy.scheduledLine(
+                                tuesday,
+                              ),
+                              style: CohortTextStyles.muted,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              IncompleteSessionAthleteCopy.statusLabel,
+                              style: CohortTextStyles.small,
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Overdue · ${AthleteProgrammeDateFormatter.dayMonth(tuesday)}',
-                        style: CohortTextStyles.muted,
-                      ),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        children: const [
-                          Text('Train now'),
-                          Text('Reschedule'),
-                          Text('Skip'),
-                        ],
-                      ),
+                      const Icon(Icons.chevron_right),
                     ],
                   ),
                 ),
                 const SizedBox(height: 28),
-                const Text('Late-session confirmation'),
+                FixedProgrammeWeekView(presentation: week, onDayTap: (_) {}),
+                const SizedBox(height: 28),
+                const Text(
+                  'SCHEDULED SESSION',
+                  style: CohortTextStyles.sectionLabel,
+                ),
                 const SizedBox(height: 8),
+                Text('Apollo Intervals', style: CohortTextStyles.h1),
+                const SizedBox(height: 12),
                 CohortCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(tuesday)}',
+                        IncompleteSessionAthleteCopy.statusLabel,
+                        style: CohortTextStyles.cardTitle,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        IncompleteSessionAthleteCopy.scheduledForLine(tuesday),
                         style: CohortTextStyles.body,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Training today, ${AthleteProgrammeDateFormatter.weekdayDayMonth(today)}',
+                        IncompleteSessionAthleteCopy.stillCompletable,
                         style: CohortTextStyles.body,
                       ),
                       const SizedBox(height: CohortSpacing.md),
-                      const Text('Start Tuesday’s session now?'),
-                      const Text(
-                        'Your Thursday session will remain scheduled.',
-                      ),
-                      const SizedBox(height: 12),
                       const CohortButton(
-                        label: 'Start this session',
+                        label: IncompleteSessionAthleteCopy.doThisSession,
+                        onPressed: null,
+                      ),
+                      const SizedBox(height: 8),
+                      const CohortButton(
+                        label: 'Reschedule',
+                        variant: CohortButtonVariant.secondary,
                         onPressed: null,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 28),
-                const Text('Move-to-date'),
-                const SizedBox(height: 8),
                 CohortCard(
                   child: Text(
-                    'Move Apollo Intervals from Tuesday 8 Sep to Friday 11 Sep?',
+                    IncompleteSessionAthleteCopy.completedLater(
+                      scheduled: tuesday,
+                      completed: today,
+                    ),
                     style: CohortTextStyles.body,
                   ),
-                ),
-                const SizedBox(height: 28),
-                const Text('Swap confirmation'),
-                const SizedBox(height: 8),
-                const CohortCard(
-                  child: Text(
-                    'Swap:\nTuesday — Apollo Intervals\nFriday — Apollo Strength?',
-                  ),
-                ),
-                const SizedBox(height: 28),
-                const Text('Completed late'),
-                const SizedBox(height: 8),
-                CohortCard(
-                  child: Text(
-                    'Scheduled ${AthleteProgrammeDateFormatter.shortDayMonth(tuesday)} · '
-                    'Completed ${AthleteProgrammeDateFormatter.shortDayMonth(today)}',
-                    style: CohortTextStyles.body,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Friday ${AthleteProgrammeDateFormatter.shortDayMonth(friday)} remains available for reschedule.',
-                  style: CohortTextStyles.muted,
                 ),
               ],
             ),

@@ -155,8 +155,10 @@ class _FixedProgrammeDayCell extends StatelessWidget {
   String _compactStateLabel(FixedProgrammeOccurrenceState state) {
     return switch (state) {
       FixedProgrammeOccurrenceState.inProgress => 'In progress',
-      FixedProgrammeOccurrenceState.inProgressOverdue => 'Overdue',
-      FixedProgrammeOccurrenceState.overdue => 'Overdue',
+      FixedProgrammeOccurrenceState.inProgressOverdue =>
+        IncompleteSessionAthleteCopy.statusLabel,
+      FixedProgrammeOccurrenceState.overdue =>
+        IncompleteSessionAthleteCopy.statusLabel,
       FixedProgrammeOccurrenceState.completed => 'Done',
       FixedProgrammeOccurrenceState.skipped => 'Skipped',
       _ => state.displayLabel,

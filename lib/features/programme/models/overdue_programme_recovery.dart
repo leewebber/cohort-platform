@@ -89,7 +89,7 @@ class OverdueProgrammeRecoveryResult {
   static String athleteVisibleMessageForCode(String? code) {
     return switch (code) {
       'destination_outside_horizon' =>
-        'You can reschedule an overdue session into the next 7 days.',
+        'You can reschedule this session into the next 7 days.',
       'destination_in_past' =>
         'Choose today or a future date in the next 7 days.',
       'destination_after_assignment_end' =>
@@ -103,7 +103,7 @@ class OverdueProgrammeRecoveryResult {
       'occurrence_in_progress' => 'Finish this session before rescheduling it.',
       'occurrence_completed' => 'That session is already completed.',
       'source_not_overdue' =>
-        'Only an overdue session can be rescheduled here.',
+        'This session cannot be rescheduled from here.',
       'stale_occurrence_dates' || 'stale_schedule_revision' =>
         'Your calendar has changed. Refresh and try again.',
       'not_authenticated' || 'assignment_not_authorised' =>

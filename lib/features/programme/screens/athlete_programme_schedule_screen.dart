@@ -541,30 +541,39 @@ class _AthleteProgrammeScheduleScreenState
             ),
             if (projection.overdue.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.xl),
-              const SectionTitle('Resume overdue'),
+              Semantics(
+                label: IncompleteSessionAthleteCopy.countPhrase(
+                  projection.overdue.length,
+                ),
+                excludeSemantics: true,
+                child: Text(
+                  IncompleteSessionAthleteCopy.sectionHeading(
+                    projection.overdue.length,
+                  ),
+                  style: CohortTextStyles.sectionLabel,
+                ),
+              ),
               const SizedBox(height: CohortSpacing.md),
               for (final occurrence in projection.overdue) ...[
                 CohortCard(
+                  onTap: () => _openFixedDay(
+                    AthleteProgrammeWeekDayPresentation(
+                      date: DateTime.parse(occurrence.scheduledDate),
+                      state: occurrence.state,
+                      occurrence: occurrence,
+                    ),
+                  ),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
                           '${occurrence.sessionTitle}\n'
-                          '${AthleteProgrammeDateFormatter.dayMonth(DateTime.parse(occurrence.scheduledDate))} · '
-                          '${occurrence.state.displayLabel}',
+                          '${IncompleteSessionAthleteCopy.scheduledLine(DateTime.parse(occurrence.scheduledDate))}\n'
+                          '${IncompleteSessionAthleteCopy.statusLabel}',
                           style: CohortTextStyles.body,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => _openFixedDay(
-                          AthleteProgrammeWeekDayPresentation(
-                            date: DateTime.parse(occurrence.scheduledDate),
-                            state: occurrence.state,
-                            occurrence: occurrence,
-                          ),
-                        ),
-                        child: const Text('Resume'),
-                      ),
+                      const Icon(Icons.chevron_right),
                     ],
                   ),
                 ),

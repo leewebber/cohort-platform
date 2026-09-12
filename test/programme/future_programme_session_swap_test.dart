@@ -227,7 +227,7 @@ void main() {
       FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
         'overdue_occurrence',
       ),
-      'Train today is unavailable while an earlier session is still unresolved.',
+      'You can still train today. An earlier session remains incomplete.',
     );
     expect(
       FutureProgrammeSessionSwapResult.athleteVisibleMessageForCode(
@@ -241,7 +241,7 @@ void main() {
         'code': 'overdue_occurrence',
         'assignment_id': 'should-not-appear',
       }).athleteVisibleMessage,
-      'Train today is unavailable while an earlier session is still unresolved.',
+      'You can still train today. An earlier session remains incomplete.',
     );
   });
 
@@ -361,7 +361,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       find.text(
-        'Train today is unavailable while an earlier session is still unresolved.',
+        'You can still train today. An earlier session remains incomplete.',
       ),
       findsOneWidget,
     );

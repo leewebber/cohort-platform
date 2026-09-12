@@ -943,8 +943,21 @@ void main() {
         expect(find.textContaining('RPE 7'), findsOneWidget);
         expect(find.text('UP NEXT'), findsOneWidget);
         expect(find.text('Apollo Racehorse'), findsOneWidget);
-        expect(find.text('Resume'), findsOneWidget);
+        expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+        expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
+
+        await tester.tap(find.text('Scheduled 1 September'));
+        await tester.pumpAndSettle();
+        expect(find.text('SCHEDULED SESSION'), findsOneWidget);
+        await tester.scrollUntilVisible(
+          find.text('Resume'),
+          300,
+          scrollable: find.byType(Scrollable).last,
+        );
+        expect(find.text('Resume'), findsOneWidget);
+        await tester.tap(find.byTooltip('Back'));
+        await tester.pumpAndSettle();
 
         await tester.tap(find.byKey(const ValueKey('up-next-view-session')));
         await tester.pumpAndSettle();
@@ -976,7 +989,8 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Apollo Engine'), findsOneWidget);
         expect(find.text('UP NEXT'), findsOneWidget);
-        expect(find.text('Resume'), findsOneWidget);
+        expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+        expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
       },
     );
@@ -1130,8 +1144,14 @@ void main() {
       expect(find.text("TODAY'S TRAINING"), findsOneWidget);
       expect(find.text('THIS WEEK'), findsOneWidget);
       expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
-      expect(find.text('1 SESSION TO RESOLVE'), findsOneWidget);
-      expect(find.text('Overdue'), findsWidgets);
+      expect(find.text('INCOMPLETE SESSION'), findsOneWidget);
+      expect(find.bySemanticsLabel('1 incomplete session'), findsWidgets);
+      expect(find.text('Incomplete'), findsWidgets);
+      expect(find.text('Overdue'), findsNothing);
+      expect(find.textContaining('resolve'), findsNothing);
+      expect(find.text('Train now'), findsNothing);
+      expect(find.text('Skip'), findsNothing);
+      expect(find.text('Reschedule'), findsNothing);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
       expect(find.text('Rest'), findsNothing);
@@ -1151,7 +1171,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('THIS WEEK'), findsOneWidget);
-      expect(find.text('Overdue'), findsWidgets);
+      expect(find.text('Incomplete'), findsWidgets);
+      expect(find.text('Overdue'), findsNothing);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Not active'), findsOneWidget);
       expect(find.text('Rest'), findsNothing);
@@ -1878,6 +1899,7 @@ void main() {
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Resume'), findsNothing);
       expect(find.text('Start this session'), findsNothing);
+      expect(find.text('Do this session'), findsNothing);
 
       final restCalendar = _calendar(
         assignment: assignment,

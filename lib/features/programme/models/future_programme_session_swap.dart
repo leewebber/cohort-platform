@@ -74,7 +74,7 @@ class FutureProgrammeSessionSwapResult {
   static String athleteVisibleMessageForCode(String? code) {
     return switch (code) {
       'overdue_occurrence' =>
-        'Train today is unavailable while an earlier session is still unresolved.',
+        'You can still train today. An earlier session remains incomplete.',
       'in_progress_session_exists' ||
       'occurrence_has_session_state' =>
         'Finish your current session before swapping another session into today.',

@@ -301,12 +301,12 @@ class _ScheduledProgrammeSessionPreviewScreenState
           const SizedBox(height: CohortSpacing.xs),
           if (isOverdueContext) ...[
             Text(
-              'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}',
+              IncompleteSessionAthleteCopy.scheduledForLine(preview.day.date),
               style: CohortTextStyles.body,
             ),
             const SizedBox(height: CohortSpacing.xs),
             Text(
-              'Training today, ${AthleteProgrammeDateFormatter.weekdayDayMonth(_calendarDate(preview.calendar.today))}',
+              IncompleteSessionAthleteCopy.stillCompletable,
               style: CohortTextStyles.body,
             ),
           ] else
@@ -379,10 +379,8 @@ class _ScheduledProgrammeSessionPreviewScreenState
         const SizedBox(height: CohortSpacing.md),
         CohortButton(
           key: const ValueKey('scheduled-preview-start-late'),
-          label: 'Start this session',
-          onPressed: _isOpeningSession
-              ? null
-              : () => _confirmLateStart(preview),
+          label: IncompleteSessionAthleteCopy.doThisSession,
+          onPressed: _isOpeningSession ? null : () => _execute(preview),
         ),
         const SizedBox(height: CohortSpacing.sm),
         CohortButton(
@@ -390,13 +388,6 @@ class _ScheduledProgrammeSessionPreviewScreenState
           label: 'Reschedule',
           variant: CohortButtonVariant.secondary,
           onPressed: _isOpeningSession ? null : () => _reschedule(preview),
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        CohortButton(
-          key: const ValueKey('scheduled-preview-skip'),
-          label: 'Skip session',
-          variant: CohortButtonVariant.secondary,
-          onPressed: _isOpeningSession ? null : () => _confirmSkip(preview),
         ),
       ];
     }
@@ -654,12 +645,13 @@ class _ScheduledProgrammeSessionPreviewScreenState
       FixedProgrammeOccurrenceState.planned => 'Scheduled for $date',
       FixedProgrammeOccurrenceState.today => 'Today · $date',
       FixedProgrammeOccurrenceState.inProgress => 'In progress',
-      FixedProgrammeOccurrenceState.overdue => 'Overdue',
-      FixedProgrammeOccurrenceState.inProgressOverdue =>
-        'In progress · overdue',
+      FixedProgrammeOccurrenceState.overdue =>
+        IncompleteSessionAthleteCopy.statusLabel,
+      FixedProgrammeOccurrenceState.inProgressOverdue => 'In progress',
       FixedProgrammeOccurrenceState.completed => 'Completed',
       FixedProgrammeOccurrenceState.skipped => 'Skipped',
-      FixedProgrammeOccurrenceState.missed => 'Overdue',
+      FixedProgrammeOccurrenceState.missed =>
+        IncompleteSessionAthleteCopy.statusLabel,
       FixedProgrammeOccurrenceState.rest => 'Rest day',
     };
   }
@@ -678,7 +670,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
         'Resume the training session already linked to this programme date.',
       FixedProgrammeOccurrenceState.overdue => _overdueBanner(preview),
       FixedProgrammeOccurrenceState.inProgressOverdue =>
-        'This earlier session remains resumable without changing today’s programme session.',
+        IncompleteSessionAthleteCopy.stillCompletable,
       FixedProgrammeOccurrenceState.completed => _completedStatusMessage(
         preview,
       ),
@@ -704,8 +696,8 @@ class _ScheduledProgrammeSessionPreviewScreenState
   }
 
   String _overdueBanner(ScheduledProgrammeSessionPreview preview) {
-    return 'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}\n'
-        'Training today, ${AthleteProgrammeDateFormatter.weekdayDayMonth(_calendarDate(preview.calendar.today))}';
+    return '${IncompleteSessionAthleteCopy.scheduledForLine(preview.day.date)}\n'
+        '${IncompleteSessionAthleteCopy.stillCompletable}';
   }
 
   String _completedStatusMessage(
@@ -725,102 +717,18 @@ class _ScheduledProgrammeSessionPreviewScreenState
         completedAt.day,
       );
       if (original != completedLocal) {
-        return 'Scheduled ${AthleteProgrammeDateFormatter.shortDayMonth(original)} · '
-            'Completed ${AthleteProgrammeDateFormatter.shortDayMonth(completedLocal)}';
+        return IncompleteSessionAthleteCopy.completedLater(
+          scheduled: original,
+          completed: completedLocal,
+        );
       }
     } else if (occurrence.originalScheduledDate.compareTo(
           preview.calendar.today,
         ) <
         0) {
-      return 'Scheduled ${AthleteProgrammeDateFormatter.shortDayMonth(original)} · Completed late';
+      return IncompleteSessionAthleteCopy.scheduledLine(original);
     }
     return 'This assigned session has been completed and cannot be restarted.';
-  }
-
-  Future<void> _confirmLateStart(
-    ScheduledProgrammeSessionPreview preview,
-  ) async {
-    final occurrence = preview.occurrence;
-    if (occurrence == null || _isOpeningSession) return;
-    final scheduledLabel = AthleteProgrammeDateFormatter.weekdayDayMonth(
-      preview.day.date,
-    );
-    final todayOccurrence = preview.calendar.todayOccurrence;
-    final todayLabel = todayOccurrence == null
-        ? null
-        : AthleteProgrammeDateFormatter.weekdayDayMonth(
-            _calendarDate(preview.calendar.today),
-          );
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(
-            'Start ${scheduledLabel.split(' ').first}’s session now?',
-          ),
-          content: Text(
-            todayLabel == null
-                ? 'This keeps the original scheduled date.'
-                : 'Your $todayLabel session will remain scheduled.',
-            style: CohortTextStyles.body,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Back'),
-            ),
-            TextButton(
-              key: const ValueKey('late-start-confirm'),
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('Start this session'),
-            ),
-          ],
-        );
-      },
-    );
-    if (confirmed == true && mounted) await _execute(preview);
-  }
-
-  Future<void> _confirmSkip(ScheduledProgrammeSessionPreview preview) async {
-    final occurrence = preview.occurrence;
-    if (occurrence == null || _isOpeningSession) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Skip this session?'),
-          content: Text(
-            'Skip ${occurrence.sessionTitle} scheduled for '
-            '${AthleteProgrammeDateFormatter.weekdayDayMonth(preview.day.date)}? '
-            'This cannot be undone from the calendar.',
-            style: CohortTextStyles.body,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: const Text('Back'),
-            ),
-            TextButton(
-              key: const ValueKey('skip-session-confirm'),
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: const Text('Skip session'),
-            ),
-          ],
-        );
-      },
-    );
-    if (confirmed != true || !mounted) return;
-    await _applyRecovery(
-      preview,
-      OverdueProgrammeRecoveryCommand(
-        assignmentId: preview.calendar.assignmentId,
-        sourceOccurrenceId: occurrence.occurrenceId,
-        operation: OverdueProgrammeRecoveryOperation.skip,
-        idempotencyKey:
-            'skip:${occurrence.occurrenceId}:${DateTime.now().millisecondsSinceEpoch}',
-        expectedSourceDate: occurrence.scheduledDate,
-      ),
-    );
   }
 
   Future<void> _reschedule(ScheduledProgrammeSessionPreview preview) async {

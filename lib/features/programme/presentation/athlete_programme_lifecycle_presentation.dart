@@ -62,6 +62,35 @@ class AthleteProgrammeLifecyclePresentation {
   bool get isUpcoming => lifecycle == AthleteProgrammeLifecycle.upcoming;
 }
 
+/// Athlete-visible copy for past unfinished sessions.
+///
+/// Internal lifecycle may still derive `OVERDUE`. Athletes see Incomplete.
+abstract final class IncompleteSessionAthleteCopy {
+  static const statusLabel = 'Incomplete';
+  static const doThisSession = 'Do this session';
+  static const stillCompletable =
+      "You can still complete this session. Today's scheduled session will not change.";
+
+  static String sectionHeading(int count) =>
+      count == 1 ? 'INCOMPLETE SESSION' : 'INCOMPLETE SESSIONS';
+
+  static String countPhrase(int count) =>
+      count == 1 ? '1 incomplete session' : '$count incomplete sessions';
+
+  static String scheduledLine(DateTime date) =>
+      'Scheduled ${AthleteProgrammeDateFormatter.dayMonth(date)}';
+
+  static String scheduledForLine(DateTime date) =>
+      'Scheduled for ${AthleteProgrammeDateFormatter.weekdayDayMonth(date)}';
+
+  static String completedLater({
+    required DateTime scheduled,
+    required DateTime completed,
+  }) =>
+      'Scheduled ${AthleteProgrammeDateFormatter.dayMonth(scheduled)} · '
+      'Completed ${AthleteProgrammeDateFormatter.dayMonth(completed)}';
+}
+
 abstract final class AthleteProgrammeLifecycleFormatter {
   static AthleteProgrammeLifecyclePresentation fromFixedProjection(
     FixedProgrammeCalendarProjection projection,
