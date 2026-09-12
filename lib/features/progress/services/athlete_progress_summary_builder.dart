@@ -6,9 +6,13 @@ import '../../../data/repositories/programme_version_store.dart';
 import '../../../data/repositories/programme_version_supabase_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../home/services/athlete_home_runtime_authority.dart';
+import '../../performance/models/training_session_record.dart';
+import '../../performance/repositories/performance_record_store.dart';
+import '../../performance/repositories/supabase_performance_record_store.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/services/programme_progress_summary_service.dart';
 import '../models/progress_summary.dart';
+import 'athlete_progress_evidence_projection.dart';
 
 /// Resolves athlete Progress-tab authority (Phase 2.7 / 2.8).
 ///
@@ -21,6 +25,7 @@ class AthleteProgressSummaryBuilder {
     ProgrammeVersionStore? versionStore,
     ProgrammeSlotOutcomeStore? slotOutcomeStore,
     ProgrammeProgressSummaryService? programmeProgressService,
+    PerformanceRecordStore? performanceRecordStore,
     AthleteHomeRuntimeAuthorityResolver? authorityResolver,
   })  : _assignmentStore =
             assignmentStore ?? const ProgrammeAssignmentSupabaseStore(),
@@ -29,6 +34,8 @@ class AthleteProgressSummaryBuilder {
             slotOutcomeStore ?? const ProgrammeSlotOutcomeSupabaseStore(),
         _programmeProgress =
             programmeProgressService ?? const ProgrammeProgressSummaryService(),
+        _performanceRecordStore =
+            performanceRecordStore ?? SupabasePerformanceRecordStore(),
         _authorityResolver =
             authorityResolver ?? const AthleteHomeRuntimeAuthorityResolver();
 
@@ -36,6 +43,7 @@ class AthleteProgressSummaryBuilder {
   final ProgrammeVersionStore _versionStore;
   final ProgrammeSlotOutcomeStore _slotOutcomeStore;
   final ProgrammeProgressSummaryService _programmeProgress;
+  final PerformanceRecordStore _performanceRecordStore;
   final AthleteHomeRuntimeAuthorityResolver _authorityResolver;
 
   Future<ProgressSummary> build({
@@ -60,11 +68,14 @@ class AthleteProgressSummaryBuilder {
 
     switch (authority) {
       case AthleteHomeRuntimeAuthority.programme:
-        return _buildProgramme(assignment!);
+        return _mergeEvidence(
+          await _buildProgramme(assignment!),
+          athleteId: athleteId,
+        );
       case AthleteHomeRuntimeAuthority.loading:
       case AthleteHomeRuntimeAuthority.unavailable:
       case AthleteHomeRuntimeAuthority.none:
-        return emptySummary();
+        return _mergeEvidence(emptySummary(), athleteId: athleteId);
     }
   }
 
@@ -126,6 +137,59 @@ class AthleteProgressSummaryBuilder {
       timeline: const [],
       history: const [],
       upcoming: null,
+    );
+  }
+
+  Future<ProgressSummary> _mergeEvidence(
+    ProgressSummary base, {
+    required String athleteId,
+  }) async {
+    List<TrainingSessionRecord> history = const [];
+    try {
+      history = await _performanceRecordStore.listHistory(
+        athleteId: athleteId,
+        limit: 40,
+      );
+    } catch (_) {
+      history = const [];
+    }
+    final completed = AthleteProgressEvidenceProjection.completedRecords(
+      history,
+    );
+    if (completed.isEmpty) return base;
+
+    final fromRecords = completed.length;
+    final sessions = base.sessionsCompleted >= fromRecords
+        ? base.sessionsCompleted
+        : fromRecords;
+    final planned = base.compliance.planned >= sessions
+        ? base.compliance.planned
+        : sessions;
+    final percentage = planned == 0
+        ? 0
+        : ((sessions / planned) * 100).round().clamp(0, 100);
+    return ProgressSummary(
+      hasActivePlan: base.hasActivePlan || sessions > 0,
+      planName: base.planName,
+      weekLabel: base.weekLabel,
+      phaseLabel: base.phaseLabel,
+      sessionsCompleted: sessions,
+      compliance: ProgressCompliance(
+        completed: sessions,
+        planned: planned,
+        percentage: percentage,
+        currentStreak: base.compliance.currentStreak,
+        longestStreak: base.compliance.longestStreak,
+      ),
+      recentImprovements: base.recentImprovements,
+      timeline: base.timeline,
+      history: AthleteProgressEvidenceProjection.historyItems(completed),
+      upcoming: base.upcoming,
+      exerciseBests: AthleteProgressEvidenceProjection.exerciseBests(completed),
+      strengthSessionCount:
+          AthleteProgressEvidenceProjection.strengthSessionCount(completed),
+      enduranceSessionCount:
+          AthleteProgressEvidenceProjection.enduranceSessionCount(completed),
     );
   }
 

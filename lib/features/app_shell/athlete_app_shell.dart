@@ -21,6 +21,7 @@ import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../session/services/programme_session_execution_launcher.dart';
 import '../progress/screens/progress_screen.dart';
+import '../progress/services/athlete_progress_summary_builder.dart';
 import '../../data/repositories/programme_assignment_store.dart';
 import 'screens/athlete_profile_screen.dart';
 
@@ -44,6 +45,7 @@ class AthleteAppShell extends StatefulWidget {
     this.previewService,
     this.performanceRecordStore,
     this.swapStore,
+    this.progressBuilder,
   });
 
   final AuthController? authController;
@@ -59,6 +61,7 @@ class AthleteAppShell extends StatefulWidget {
   final ScheduledProgrammeSessionPreviewService? previewService;
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
+  final AthleteProgressSummaryBuilder? progressBuilder;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -257,6 +260,11 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           ),
           ProgressScreen(
             embeddedInShell: true,
+            progressBuilder: widget.progressBuilder ??
+                AthleteProgressSummaryBuilder(
+                  assignmentStore: widget.assignmentStore,
+                  performanceRecordStore: widget.performanceRecordStore,
+                ),
             onChoosePlan: () => setState(() => _index = 2),
             onStartToday: () => setState(() => _index = 0),
           ),

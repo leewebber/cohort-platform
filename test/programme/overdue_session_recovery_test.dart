@@ -20,6 +20,7 @@ import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/calendar_widget_harness.dart';
 import '../support/in_memory_programme_stores.dart';
 import '../support/programme_schedule_test_fixtures.dart';
 import 'package:cohort_platform/models/programme_assignment.dart';
@@ -172,17 +173,18 @@ void main() {
     expect(find.byKey(const ValueKey('scheduled-preview-skip')), findsNothing);
     expect(find.textContaining('session now?'), findsNothing);
 
-    await tester.scrollUntilVisible(
-      find.text(IncompleteSessionAthleteCopy.doThisSession),
-      300,
-      scrollable: find.byType(Scrollable).first,
-    );
     expect(
-      find.text(IncompleteSessionAthleteCopy.doThisSession),
+      find.byKey(const ValueKey('scheduled-preview-start-late')),
       findsOneWidget,
     );
-    expect(find.text('Reschedule'), findsOneWidget);
-    await tester.tap(find.text(IncompleteSessionAthleteCopy.doThisSession));
+    expect(find.text('Begin'), findsNothing);
+    expect(find.byKey(const ValueKey('scheduled-preview-skip')), findsNothing);
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('scheduled-preview-start-late')),
+    );
+    await tester.tap(
+      find.byKey(const ValueKey('scheduled-preview-start-late')),
+    );
     await tester.pumpAndSettle();
     expect(find.textContaining('session now?'), findsNothing);
   });
@@ -360,11 +362,30 @@ void main() {
       occurrences: [overdue, today],
     );
     final store = _RecordingRecoveryStore();
+    final preview = await ScheduledProgrammeSessionPreviewService(
+      loader: _PreviewLoader(),
+    ).load(
+      calendar: calendar,
+      day: AthleteProgrammeWeekDayPresentation(
+        date: DateTime(2026, 9, 8),
+        state: overdue.state,
+        occurrence: overdue,
+      ),
+    );
+    expect(preview.plan, isNotNull);
+    expect(overdue.isLateStartable, isTrue);
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       MaterialApp(
         home: AthleteCalendarScreen(
           athleteId: assignment.athleteId,
           fixedOccurrenceStore: _HomeProjectionStore(calendar),
+          previewService: ScheduledProgrammeSessionPreviewService(
+            loader: _PreviewLoader(),
+          ),
         ),
       ),
     );
@@ -372,8 +393,21 @@ void main() {
     expect(find.text('Incomplete'), findsWidgets);
     expect(find.text('Apollo Intervals'), findsOneWidget);
     expect(find.text('Overdue'), findsNothing);
-    await tester.tap(find.text('Apollo Intervals'));
-    await tester.pump();
+    await tapCalendarFinder(
+      tester,
+      find.byKey(const ValueKey('calendar-month-day-2026-09-08')),
+    );
+    await tapCalendarFinder(
+      tester,
+      find.byKey(const ValueKey('calendar-selected-view-session-occ-overdue')),
+    );
+    expect(find.text('Session'), findsOneWidget);
+    expect(find.text('Session unavailable'), findsNothing);
+    expect(find.text('Incomplete'), findsWidgets);
+    expect(
+      find.textContaining(IncompleteSessionAthleteCopy.stillCompletable),
+      findsWidgets,
+    );
     expect(
       find.text(IncompleteSessionAthleteCopy.doThisSession),
       findsOneWidget,
@@ -455,7 +489,7 @@ class _PreviewLoader extends SessionExecutionLoader {
             title: 'Training',
             blockType: SessionBlockType.strength,
             content: 'Work',
-            workoutFormat: WorkoutFormat.steadyState,
+            workoutFormat: WorkoutFormat.none,
             position: 0,
           ),
         ],

@@ -155,6 +155,7 @@ void main() {
           executionLauncher: bundle.execution,
           previewService: bundle.previewService,
           performanceRecordStore: bundle.performance,
+          progressBuilder: bundle.progressBuilder,
           swapStore: bundle.swapStore,
           programmeScreenController: bundle.programmeController,
         ),
@@ -179,7 +180,8 @@ void main() {
     await tester.tap(find.text('Calendar'));
     await tester.pumpAndSettle();
     expect(find.byType(AthleteCalendarScreen), findsOneWidget);
-    expect(find.text('THIS WEEK'), findsOneWidget);
+    expect(find.text('September 2026'), findsOneWidget);
+    expect(find.text('THIS WEEK'), findsNothing);
     expect(find.text('Incomplete'), findsWidgets);
     expect(find.text('Apollo Intervals'), findsOneWidget);
 
@@ -192,6 +194,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ProgressScreen), findsOneWidget);
     expect(find.text('PROGRESS'), findsWidgets);
+    expect(find.text('Complete your first session to begin'), findsWidgets);
+    expect(find.text('0 sessions completed'), findsOneWidget);
 
     await tester.tap(find.text('Profile').last);
     await tester.pumpAndSettle();

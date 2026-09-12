@@ -124,6 +124,7 @@ class AthleteShellPreviewAppState extends State<AthleteShellPreviewApp> {
                       performanceRecordStore: _bundle.performance,
                       swapStore: _bundle.swapStore,
                       programmeScreenController: _bundle.programmeController,
+                      progressBuilder: _bundle.progressBuilder,
                     ),
             ),
           ],
@@ -212,6 +213,9 @@ class _PreviewControlsDrawer extends StatelessWidget {
         'Home — today in progress',
       AthleteShellPreviewScenario.todayComplete => 'Home — today complete',
       AthleteShellPreviewScenario.restDay => 'Home — rest day',
+      AthleteShellPreviewScenario.progressEmpty => 'Progress — no completions',
+      AthleteShellPreviewScenario.progressTwoStrength =>
+        'Progress — two strength sessions',
     };
   }
 }

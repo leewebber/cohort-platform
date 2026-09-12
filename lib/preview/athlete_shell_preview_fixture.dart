@@ -2,9 +2,12 @@ import '../features/athlete_profile/models/athlete_profile.dart';
 import '../features/athlete_profile/services/athlete_profile_session.dart';
 import '../features/auth/models/user_profile.dart';
 import '../features/auth/services/current_user_session.dart';
+import '../features/performance/models/performance_result_type.dart';
 import '../features/performance/models/performance_snapshot.dart';
+import '../features/performance/models/training_block_result_status.dart';
 import '../features/performance/models/training_session_record.dart';
 import '../features/performance/models/training_session_record_status.dart';
+import '../features/progress/services/athlete_progress_summary_builder.dart';
 import '../features/performance/repositories/in_memory_performance_record_store.dart';
 import '../features/plans/models/programmed_session_key.dart';
 import '../features/programme/controllers/athlete_programme_controllers.dart';
@@ -49,6 +52,8 @@ enum AthleteShellPreviewScenario {
   todayInProgress,
   todayComplete,
   restDay,
+  progressEmpty,
+  progressTwoStrength,
 }
 
 class AthleteShellPreviewBundle {
@@ -62,6 +67,7 @@ class AthleteShellPreviewBundle {
     required this.performance,
     required this.swapStore,
     required this.programmeController,
+    required this.progressBuilder,
   });
 
   final PreviewAssignmentStore assignmentStore;
@@ -73,6 +79,7 @@ class AthleteShellPreviewBundle {
   final InMemoryPerformanceRecordStore performance;
   final PreviewSwapStore swapStore;
   final AthleteProgrammeScreenController programmeController;
+  final AthleteProgressSummaryBuilder progressBuilder;
 
   factory AthleteShellPreviewBundle.seed(AthleteShellPreviewScenario scenario) {
     _bindAthlete();
@@ -122,8 +129,12 @@ class AthleteShellPreviewBundle {
       fixedOccurrenceStore: projectionStore,
     );
     final performance = InMemoryPerformanceRecordStore();
-    if (scenario == AthleteShellPreviewScenario.todayComplete) {
-      performance.put(_completedRecord());
+    if (scenario == AthleteShellPreviewScenario.progressTwoStrength) {
+      for (final record in _completedStrengthHistory()) {
+        performance.put(record);
+      }
+    } else if (scenario == AthleteShellPreviewScenario.todayComplete) {
+      performance.put(_completedStrengthHistory().last);
     }
     return AthleteShellPreviewBundle(
       assignmentStore: assignmentStore,
@@ -146,6 +157,11 @@ class AthleteShellPreviewBundle {
         assignmentStore: assignmentStore,
         versionStore: versionStore,
         prepareService: prepare,
+      ),
+      progressBuilder: AthleteProgressSummaryBuilder(
+        assignmentStore: assignmentStore,
+        versionStore: versionStore,
+        performanceRecordStore: performance,
       ),
     );
   }
@@ -384,6 +400,10 @@ FixedProgrammeCalendarProjection _calendar(
     AthleteShellPreviewScenario.todayComplete =>
       FixedProgrammeOccurrenceState.completed,
     AthleteShellPreviewScenario.restDay => FixedProgrammeOccurrenceState.rest,
+    AthleteShellPreviewScenario.progressEmpty =>
+      FixedProgrammeOccurrenceState.today,
+    AthleteShellPreviewScenario.progressTwoStrength =>
+      FixedProgrammeOccurrenceState.completed,
   };
   final occurrences = <FixedProgrammeOccurrenceProjection>[
     session(
@@ -407,7 +427,10 @@ FixedProgrammeCalendarProjection _calendar(
         protocolId: 'BW-001',
         slotId: previewSlotStrength,
         trainingSessionId:
-            scenario == AthleteShellPreviewScenario.todayComplete ? 41 : null,
+            scenario == AthleteShellPreviewScenario.todayComplete ||
+                    scenario == AthleteShellPreviewScenario.progressTwoStrength
+                ? 41
+                : null,
       ),
     session(
       id: 'occ-future',
@@ -452,24 +475,131 @@ FixedProgrammeCalendarProjection _calendar(
   );
 }
 
-TrainingSessionRecord _completedRecord() {
+List<TrainingSessionRecord> _completedStrengthHistory() {
+  return [
+    _strengthRecord(
+      recordId: 'record-preview-earlier',
+      trainingSessionId: 40,
+      completedAt: DateTime.utc(2026, 9, 3, 10),
+      pullLoad: 10,
+      includePress: false,
+    ),
+    _strengthRecord(
+      recordId: 'record-preview-complete',
+      trainingSessionId: 41,
+      completedAt: DateTime.utc(2026, 9, 10, 10, 12),
+      pullLoad: 12,
+      includePress: true,
+    ),
+  ];
+}
+
+TrainingSessionRecord _strengthRecord({
+  required String recordId,
+  required int trainingSessionId,
+  required DateTime completedAt,
+  required double pullLoad,
+  required bool includePress,
+}) {
+  TrainingExerciseResult exercise({
+    required String id,
+    required String name,
+    required int position,
+    required double load,
+  }) {
+    return TrainingExerciseResult(
+      exerciseResultId: '$recordId-$id',
+      blockResultId: '$recordId-s',
+      sourceExerciseId: id,
+      exerciseSnapshot: ExercisePerformanceSnapshot(
+        sourceExerciseId: id,
+        displayName: name,
+        position: position,
+        loadKind: StrengthActualLoadKind.external,
+      ),
+      position: position,
+      setResults: [
+        TrainingSetResult(
+          setResultId: '$recordId-$id-1',
+          exerciseResultId: '$recordId-$id',
+          setNumber: 1,
+          position: 1,
+          reps: 6,
+          load: load,
+          loadUnit: 'kg',
+          completed: true,
+        ),
+      ],
+    );
+  }
+
+  final exercises = [
+    exercise(
+      id: 'EX-095',
+      name: 'Weighted Pull-Up',
+      position: 1,
+      load: pullLoad,
+    ),
+    if (includePress)
+      exercise(
+        id: 'EX-136',
+        name: 'Incline DB Press',
+        position: 2,
+        load: 22,
+      ),
+  ];
   return TrainingSessionRecord(
-    recordId: 'record-preview-complete',
+    recordId: recordId,
     athleteId: previewAthleteId,
-    trainingSessionId: 41,
+    trainingSessionId: trainingSessionId,
     sourceProtocolId: 'BW-001',
     programmeId: 'APOLLO-V2',
     assignmentId: previewAssignmentId,
     status: TrainingSessionRecordStatus.completed,
-    sessionSnapshot: const SessionPerformanceSnapshot(
+    sessionSnapshot: SessionPerformanceSnapshot(
       sourceProtocolId: 'BW-001',
       sessionTitle: 'Apollo Strength',
       programmeTitle: 'Apollo Build — 12-Week Initial Block',
+      blocks: [
+        BlockPerformanceSnapshot(
+          sourceBlockId: 'strength',
+          title: 'Upper Strength',
+          blockType: SessionBlockType.strength,
+          content: '',
+          workoutFormat: WorkoutFormat.none,
+          position: 1,
+          exercises: [
+            for (final item in exercises) item.exerciseSnapshot,
+          ],
+        ),
+      ],
     ),
-    startedAt: DateTime.utc(2026, 9, 10, 9),
-    completedAt: DateTime.utc(2026, 9, 10, 10, 12),
+    startedAt: completedAt.subtract(const Duration(hours: 1)),
+    completedAt: completedAt,
     durationSeconds: 4320,
     overallRpe: 7,
+    blockResults: [
+      TrainingBlockResult(
+        blockResultId: '$recordId-s',
+        sessionRecordId: recordId,
+        sourceBlockId: 'strength',
+        blockSnapshot: BlockPerformanceSnapshot(
+          sourceBlockId: 'strength',
+          title: 'Upper Strength',
+          blockType: SessionBlockType.strength,
+          content: '',
+          workoutFormat: WorkoutFormat.none,
+          position: 1,
+          exercises: [
+            for (final item in exercises) item.exerciseSnapshot,
+          ],
+        ),
+        status: TrainingBlockResultStatus.completed,
+        resultType: PerformanceResultType.strength,
+        position: 1,
+        exerciseResults: exercises,
+      ),
+    ],
   );
 }
 

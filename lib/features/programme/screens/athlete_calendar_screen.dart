@@ -10,19 +10,18 @@ import '../../../data/repositories/programme_assignment_store.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../presentation/athlete_calendar_agenda_presentation.dart';
+import '../presentation/athlete_calendar_month_presentation.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
 import '../services/future_programme_session_swap_store.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
-import '../presentation/athlete_calendar_agenda_presentation.dart';
-import '../widgets/athlete_programme_week_agenda.dart';
+import '../widgets/athlete_calendar_month_grid.dart';
 import 'scheduled_programme_session_preview_screen.dart';
 
-/// Athlete-wide training calendar. It consumes assignment-scoped occurrences
-/// but deliberately does not own a programme or assume a single programme
-/// name; future projections can merge non-overlapping assignment schedules.
+/// Athlete-wide training calendar. Month grid is the default presentation.
 class AthleteCalendarScreen extends StatefulWidget {
   const AthleteCalendarScreen({
     super.key,
@@ -47,9 +46,6 @@ class AthleteCalendarScreen extends StatefulWidget {
   final HomeTodaySessionRefreshController? refreshController;
   final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenProgrammes;
-
-  /// The shell notifies this screen when authentication/bootstrap state
-  /// changes, so an early no-assignment response is never retained.
   final Listenable? authRefreshListenable;
 
   @override
@@ -57,9 +53,10 @@ class AthleteCalendarScreen extends StatefulWidget {
 }
 
 class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
+  final GlobalKey _selectedDetailKey = GlobalKey();
   FixedProgrammeCalendarProjection? _calendar;
-  DateTime? _weekStart;
-  String? _expandedRowId;
+  DateTime? _month;
+  DateTime? _selectedDate;
   String? _error;
   _CalendarLoadState _loadState = _CalendarLoadState.loading;
 
@@ -124,7 +121,9 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
             ? _CalendarLoadState.empty
             : _CalendarLoadState.loaded;
         if (calendar != null) {
-          _weekStart ??= _monday(DateTime.parse(calendar.weekStart));
+          final today = DateTime.parse(calendar.today);
+          _month ??= AthleteCalendarMonthFormatter.monthStart(today);
+          _selectedDate ??= today;
         }
         _error = null;
       });
@@ -143,15 +142,7 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   Widget build(BuildContext context) {
     final calendar = _calendar;
     return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          children: [
-            CohortBrandLockup(),
-            SizedBox(width: 12),
-            Text('Calendar'),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: const Text('Calendar')),
       body: SafeArea(
         child: _loadState == _CalendarLoadState.loading
             ? const Center(child: CircularProgressIndicator())
@@ -160,27 +151,31 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
             : _loadState == _CalendarLoadState.error
             ? _errorState()
             : ListView(
+                key: const ValueKey('calendar-month-grid-scroll'),
                 padding: const EdgeInsets.all(CohortSpacing.lg),
                 children: [
-                  Text(calendar!.programmeName, style: CohortTextStyles.h2),
+                  const CohortBrandLockup(),
+                  const SizedBox(height: CohortSpacing.md),
+                  Text(
+                    calendar!.programmeName,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: CohortTextStyles.h2,
+                  ),
                   const SizedBox(height: CohortSpacing.xs),
                   Text('Training schedule', style: CohortTextStyles.muted),
                   const SizedBox(height: CohortSpacing.md),
-                  _weekControls(calendar),
-                  const SizedBox(height: CohortSpacing.sm),
-                  Text(
-                    _isCurrentWeek(calendar) ? 'THIS WEEK' : 'WEEK',
-                    style: CohortTextStyles.sectionLabel,
-                  ),
+                  _monthControls(calendar),
                   const SizedBox(height: CohortSpacing.md),
-                  AthleteProgrammeWeekAgenda(
-                    rows: AthleteCalendarAgendaFormatter.weekRows(
+                  ..._selectedDetail(calendar),
+                  const SizedBox(height: CohortSpacing.lg),
+                  AthleteCalendarMonthGrid(
+                    cells: AthleteCalendarMonthFormatter.monthCells(
                       calendar: calendar,
-                      weekStart: _weekStart!,
+                      month: _month!,
+                      selectedDate: _selectedDate,
                     ),
-                    expandedRowId: _expandedRowId,
-                    onToggleRow: _toggleRow,
-                    onOpenSession: _openRow,
+                    onSelectDate: _selectDate,
                   ),
                 ],
               ),
@@ -234,63 +229,124 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     ),
   );
 
-  Widget _weekControls(FixedProgrammeCalendarProjection calendar) {
-    final week = _weekStart!;
-    return Row(
+  Widget _monthControls(FixedProgrammeCalendarProjection calendar) {
+    final month = _month!;
+    return Column(
       children: [
-        IconButton(
-          tooltip: 'Previous week',
-          onPressed: () => setState(() {
-            _weekStart = week.subtract(const Duration(days: 7));
-            _expandedRowId = null;
-          }),
-          icon: const Icon(Icons.chevron_left),
-        ),
-        Expanded(
-          child: Text(
-            AthleteProgrammeDateFormatter.dateRange(
-              week,
-              week.add(const Duration(days: 6)),
+        Row(
+          children: [
+            IconButton(
+              key: const ValueKey('calendar-month-previous'),
+              tooltip: 'Previous month',
+              onPressed: () => setState(() {
+                _month = AthleteCalendarMonthFormatter.addMonths(month, -1);
+              }),
+              icon: const Icon(Icons.chevron_left),
             ),
-            textAlign: TextAlign.center,
-            style: CohortTextStyles.cardTitle,
+            Expanded(
+              child: Text(
+                AthleteProgrammeDateFormatter.monthYear(month),
+                textAlign: TextAlign.center,
+                style: CohortTextStyles.cardTitle,
+              ),
+            ),
+            IconButton(
+              key: const ValueKey('calendar-month-next'),
+              tooltip: 'Next month',
+              onPressed: () => setState(() {
+                _month = AthleteCalendarMonthFormatter.addMonths(month, 1);
+              }),
+              icon: const Icon(Icons.chevron_right),
+            ),
+          ],
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            key: const ValueKey('calendar-month-current'),
+            onPressed: () => setState(() {
+              _month = AthleteCalendarMonthFormatter.monthStart(
+                DateTime.parse(calendar.today),
+              );
+              _selectedDate = DateTime.parse(calendar.today);
+            }),
+            child: const Text('This month'),
           ),
-        ),
-        IconButton(
-          tooltip: 'Next week',
-          onPressed: () => setState(() {
-            _weekStart = week.add(const Duration(days: 7));
-            _expandedRowId = null;
-          }),
-          icon: const Icon(Icons.chevron_right),
-        ),
-        TextButton(
-          onPressed: () => setState(() {
-            _weekStart = _monday(DateTime.parse(calendar.today));
-            _expandedRowId = null;
-          }),
-          child: const Text('This week'),
         ),
       ],
     );
   }
 
-  void _toggleRow(AthleteCalendarAgendaRow row) {
-    setState(() {
-      _expandedRowId = _expandedRowId == row.rowId ? null : row.rowId;
-    });
+  void _selectDate(DateTime date) {
+    setState(() => _selectedDate = DateTime(date.year, date.month, date.day));
   }
 
-  Future<void> _openRow(AthleteCalendarAgendaRow row) async {
+  List<Widget> _selectedDetail(FixedProgrammeCalendarProjection calendar) {
+    final selected = _selectedDate;
+    if (selected == null) return const [];
+    final iso = AthleteCalendarMonthFormatter.isoDate(selected);
+    final occurrences = calendar.occurrencesOnDate(iso);
+    if (occurrences.isEmpty) {
+      return [
+        CohortCard(
+          key: _selectedDetailKey,
+          child: Text(
+            '${AthleteProgrammeDateFormatter.weekdayDayMonth(selected)}\n'
+            'No session scheduled',
+            style: CohortTextStyles.body,
+          ),
+        ),
+      ];
+    }
+    return [
+      for (final occurrence in occurrences) ...[
+        CohortCard(
+          key: occurrence.occurrenceId == occurrences.first.occurrenceId
+              ? _selectedDetailKey
+              : null,
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            onTap: () => _openOccurrence(occurrence),
+            title: Text(
+              occurrence.sessionTitle,
+              style: CohortTextStyles.cardTitle,
+            ),
+            subtitle: Text(
+              [
+                AthleteCalendarStatusCopy.forOccurrence(occurrence),
+                if (occurrence.sessionType?.trim().isNotEmpty == true)
+                  occurrence.sessionType!,
+              ].join(' · '),
+              style: CohortTextStyles.small,
+            ),
+            trailing: TextButton(
+              key: ValueKey(
+                'calendar-selected-view-session-${occurrence.occurrenceId}',
+              ),
+              onPressed: () => _openOccurrence(occurrence),
+              child: const Text('View session'),
+            ),
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+      ],
+    ];
+  }
+
+  Future<void> _openOccurrence(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
     final calendar = _calendar;
-    final occurrence = row.occurrence;
-    if (calendar == null || occurrence == null) return;
+    if (calendar == null) return;
     final changed = await openScheduledProgrammeSessionPreview(
       context: context,
       athleteId: widget.athleteId,
       calendar: calendar,
       day: AthleteProgrammeWeekDayPresentation(
-        date: row.date,
+        date: AthleteCalendarMonthFormatter.parseIsoDate(
+          occurrence.scheduledDate,
+        ),
         state: occurrence.state,
         occurrence: occurrence,
       ),
@@ -304,18 +360,6 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     );
     if (changed == true && mounted) await _load();
   }
-
-  bool _isCurrentWeek(FixedProgrammeCalendarProjection calendar) {
-    final current = _monday(DateTime.parse(calendar.today));
-    final shown = _weekStart;
-    return shown != null &&
-        shown.year == current.year &&
-        shown.month == current.month &&
-        shown.day == current.day;
-  }
-
-  DateTime _monday(DateTime date) =>
-      date.subtract(Duration(days: date.weekday - 1));
 }
 
 enum _CalendarLoadState { loading, loaded, empty, error }

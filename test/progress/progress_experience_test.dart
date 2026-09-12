@@ -37,7 +37,7 @@ void main() {
       );
       await tester.pump();
       expect(find.text('Am I getting better?'), findsOneWidget);
-      expect(find.textContaining('capability profile'), findsOneWidget);
+      expect(find.text('Complete your first session to begin'), findsWidgets);
       expect(find.text('CHOOSE A PLAN'), findsOneWidget);
     });
 
@@ -92,7 +92,8 @@ void main() {
       expect(find.text('Fat Loss Foundation'), findsWidgets);
       expect(find.textContaining('Work Capacity'), findsWidgets);
       expect(find.text('CAPABILITY OVERVIEW'), findsOneWidget);
-      expect(find.text('CURRENT PLAN PROGRESS'), findsOneWidget);
+      expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
+      expect(find.text('RECENT IMPROVEMENTS'), findsOneWidget);
     });
   });
 }

@@ -56,6 +56,25 @@ class ProgressUpcoming {
   final String weekLabel;
 }
 
+/// Evidence-backed exercise best for Progress cards.
+class ProgressExerciseBest {
+  const ProgressExerciseBest({
+    required this.exerciseId,
+    required this.displayName,
+    required this.bestSetLabel,
+    required this.comparisonLabel,
+    required this.isFirstRecorded,
+    this.comparisonImproved = false,
+  });
+
+  final String exerciseId;
+  final String displayName;
+  final String bestSetLabel;
+  final String comparisonLabel;
+  final bool isFirstRecorded;
+  final bool comparisonImproved;
+}
+
 /// Full Progress screen model.
 class ProgressSummary {
   const ProgressSummary({
@@ -69,6 +88,9 @@ class ProgressSummary {
     this.planName,
     this.weekLabel,
     this.phaseLabel,
+    this.exerciseBests = const [],
+    this.strengthSessionCount = 0,
+    this.enduranceSessionCount = 0,
   });
 
   final bool hasActivePlan;
@@ -81,4 +103,7 @@ class ProgressSummary {
   final List<CapabilityTimelineEvent> timeline;
   final List<ProgressSessionHistoryItem> history;
   final ProgressUpcoming? upcoming;
+  final List<ProgressExerciseBest> exerciseBests;
+  final int strengthSessionCount;
+  final int enduranceSessionCount;
 }

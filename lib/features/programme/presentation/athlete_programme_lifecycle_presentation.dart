@@ -277,6 +277,9 @@ abstract final class AthleteProgrammeDateFormatter {
   static String weekdayDayMonth(DateTime date) =>
       '${_weekdays[date.weekday - 1]} ${date.day} ${_months[date.month - 1]}';
 
+  static String monthYear(DateTime date) =>
+      '${_months[date.month - 1]} ${date.year}';
+
   static String shortDayMonth(DateTime date) =>
       '${date.day} ${_shortMonths[date.month - 1]}';
 

@@ -227,6 +227,8 @@ class _ScheduledProgrammeSessionPreviewScreenState
         Text(_programmePosition(preview), style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.lg),
         _statusCard(preview),
+        if (!preview.isRest && occurrence != null && plan != null)
+          ..._executionAction(preview),
         if (preview.isRest) ...[
           const SizedBox(height: CohortSpacing.xl),
           CohortCard(
@@ -271,7 +273,6 @@ class _ScheduledProgrammeSessionPreviewScreenState
             ),
             const SizedBox(height: CohortSpacing.md),
           ],
-          ..._executionAction(preview),
         ],
       ],
     );

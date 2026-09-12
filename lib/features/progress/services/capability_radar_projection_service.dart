@@ -140,6 +140,8 @@ class CapabilityRadarProjectionService {
   CapabilityRadarModel project({
     List<CapabilityTimelineEvent>? timeline,
     ProgressCompliance? compliance,
+    int strengthSessionCount = 0,
+    int enduranceSessionCount = 0,
   }) {
     final events = timeline ?? CapabilityTimelineStore.all;
     final axes = <CapabilityRadarAxis>[];
@@ -157,17 +159,33 @@ class CapabilityRadarProjectionService {
         if (level != null) levels.add(level);
       }
 
-      if (levels.isEmpty) {
-        axes.add(
-          CapabilityRadarAxis(dimension: dimension, available: false),
-        );
-      } else {
+      if (levels.isNotEmpty) {
         final avg = levels.reduce((a, b) => a + b) / levels.length;
         axes.add(
           CapabilityRadarAxis(
             dimension: dimension,
             available: true,
             normalisedValue: avg.clamp(0.0, 1.0),
+          ),
+        );
+        continue;
+      }
+
+      final participation = _participation(
+        dimension: dimension,
+        strengthSessionCount: strengthSessionCount,
+        enduranceSessionCount: enduranceSessionCount,
+      );
+      if (participation == null) {
+        axes.add(
+          CapabilityRadarAxis(dimension: dimension, available: false),
+        );
+      } else {
+        axes.add(
+          CapabilityRadarAxis(
+            dimension: dimension,
+            available: true,
+            normalisedValue: participation,
           ),
         );
       }
@@ -239,6 +257,20 @@ class CapabilityRadarProjectionService {
     }
 
     return List.unmodifiable(cards);
+  }
+
+  double? _participation({
+    required CapabilityRadarDimension dimension,
+    required int strengthSessionCount,
+    required int enduranceSessionCount,
+  }) {
+    final count = switch (dimension) {
+      CapabilityRadarDimension.strength => strengthSessionCount,
+      CapabilityRadarDimension.endurance => enduranceSessionCount,
+      _ => 0,
+    };
+    if (count <= 0) return null;
+    return (0.18 + (0.08 * count)).clamp(0.18, 0.55);
   }
 
   CapabilityRadarAxis _disciplineAxis(ProgressCompliance? compliance) {

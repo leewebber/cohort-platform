@@ -228,7 +228,10 @@ void main() {
       await tester.pump();
 
       expect(find.text('Am I getting better?'), findsOneWidget);
-      expect(find.textContaining('capability profile'), findsOneWidget);
+      expect(
+        find.text('Complete your first session to begin'),
+        findsWidgets,
+      );
       expect(find.text('CHOOSE A PLAN'), findsOneWidget);
       expect(find.text('CAPABILITY OVERVIEW'), findsOneWidget);
     });

@@ -32,6 +32,7 @@ import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/calendar_widget_harness.dart';
 import '../support/in_memory_programme_stores.dart';
 import '../support/programme_schedule_test_fixtures.dart';
 
@@ -481,19 +482,14 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('In progress'), findsWidgets);
-      await tester.scrollUntilVisible(
-        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-        300,
-        scrollable: find.byType(Scrollable).first,
+      await tapCalendarFinder(
+        tester,
+        find.byKey(const ValueKey('calendar-month-day-2026-09-06')),
       );
-      await tester.ensureVisible(
-        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
+      await tapCalendarFinder(
+        tester,
+        find.text('View session'),
       );
-      await tester.tap(
-        find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-      );
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('View session'));
       await tester.pumpAndSettle();
       expect(find.text('Apollo Strength'), findsWidgets);
       expect(find.text('Week 1 · Day 1 · Sunday, 6 September'), findsOneWidget);
@@ -541,19 +537,11 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-      300,
-      scrollable: find.byType(Scrollable).first,
+    await tapCalendarFinder(
+      tester,
+      find.byKey(const ValueKey('calendar-month-day-2026-09-06')),
     );
-    await tester.ensureVisible(
-      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-    );
-    await tester.tap(
-      find.byKey(const ValueKey('programme-week-day-2026-09-06')),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('View session'));
+    await tapCalendarFinder(tester, find.text('View session'));
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(
       find.text('Train today'),

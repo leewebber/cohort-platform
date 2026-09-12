@@ -109,9 +109,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 title: const Text('PROGRESS', style: CohortTextStyles.eyebrow),
                 centerTitle: false,
               ),
-        body: const SafeArea(
-          child: Center(
-            child: Text('Loading progress…', style: CohortTextStyles.muted),
+        body: SafeArea(
+          child: _ProgressBody(
+            summary: AthleteProgressSummaryBuilder.emptySummary(),
+            radar: CapabilityRadarModel.emptyScaffold,
+            metrics: const [],
+            loading: true,
           ),
         ),
       );
@@ -121,6 +124,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
     final radar = widget.radarService.project(
       timeline: resolved.timeline,
       compliance: resolved.compliance,
+      strengthSessionCount: resolved.strengthSessionCount,
+      enduranceSessionCount: resolved.enduranceSessionCount,
     );
     final metrics = widget.radarService.metricCards(
       timeline: resolved.timeline,
@@ -138,115 +143,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
               centerTitle: false,
             ),
       body: SafeArea(
-        child: resolved.hasActivePlan && resolved.sessionsCompleted > 0
-            ? _ProgressBody(
-                summary: resolved,
-                radar: radar,
-                metrics: metrics,
-              )
-            : _EmptyProgress(
-                radar: radar,
-                hasPlan: resolved.hasActivePlan,
-                onChoosePlan: widget.onChoosePlan,
-                onStartToday: widget.onStartToday,
-              ),
-      ),
-    );
-  }
-}
-
-class _EmptyProgress extends StatelessWidget {
-  const _EmptyProgress({
-    required this.radar,
-    required this.hasPlan,
-    this.onChoosePlan,
-    this.onStartToday,
-  });
-
-  final CapabilityRadarModel radar;
-  final bool hasPlan;
-  final VoidCallback? onChoosePlan;
-  final VoidCallback? onStartToday;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        CohortSpacing.xl,
-        CohortSpacing.md,
-        CohortSpacing.xl,
-        CohortSpacing.xxl,
-      ),
-      children: [
-        const CohortBrandLockup(),
-        const SizedBox(height: CohortSpacing.md),
-        Text('PROGRESS', style: CohortTextStyles.eyebrow),
-        const SizedBox(height: CohortSpacing.md),
-        Text('Am I getting better?', style: CohortTextStyles.h1),
-        const SizedBox(height: CohortSpacing.md),
-        Text(
-          'Complete your first sessions and Cohort will begin building '
-          'your capability profile.',
-          style: CohortTextStyles.body,
-        ),
-        const SizedBox(height: CohortSpacing.xl),
-        if (hasPlan)
-          CohortButton(
-            label: "START TODAY'S TRAINING",
-            showTrailingArrow: true,
-            onPressed: onStartToday ?? () {},
-          )
-        else
-          CohortButton(
-            label: 'CHOOSE A PLAN',
-            showTrailingArrow: true,
-            onPressed: onChoosePlan ?? () {},
-          ),
-        const SizedBox(height: CohortSpacing.xl),
-        Text('CAPABILITY OVERVIEW', style: CohortTextStyles.sectionLabel),
-        const SizedBox(height: CohortSpacing.md),
-        Center(child: CapabilityRadarChart(model: radar)),
-        const SizedBox(height: CohortSpacing.xl),
-        const _PlaceholderModule(title: 'Lower Body Strength'),
-        const _PlaceholderModule(title: 'Threshold Pace'),
-        const _PlaceholderModule(title: 'Training Discipline'),
-        const _PlaceholderModule(title: 'Current Plan Progress'),
-      ],
-    );
-  }
-}
-
-class _PlaceholderModule extends StatelessWidget {
-  const _PlaceholderModule({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: CohortSpacing.md),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(CohortSpacing.lg),
-        decoration: BoxDecoration(
-          color: CohortColors.surfaceRaised.withValues(alpha: 0.55),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: CohortColors.border.withValues(alpha: 0.7),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: CohortTextStyles.cardTitle),
-            const SizedBox(height: 4),
-            Text(
-              'Awaiting evidence',
-              style: CohortTextStyles.small.copyWith(
-                color: CohortColors.textMuted,
-              ),
-            ),
-          ],
+        child: _ProgressBody(
+          summary: resolved,
+          radar: radar,
+          metrics: metrics,
+          onChoosePlan: widget.onChoosePlan,
+          onStartToday: widget.onStartToday,
         ),
       ),
     );
@@ -258,11 +160,17 @@ class _ProgressBody extends StatelessWidget {
     required this.summary,
     required this.radar,
     required this.metrics,
+    this.onChoosePlan,
+    this.onStartToday,
+    this.loading = false,
   });
 
   final ProgressSummary summary;
   final CapabilityRadarModel radar;
   final List<ProgressMetricCardModel> metrics;
+  final VoidCallback? onChoosePlan;
+  final VoidCallback? onStartToday;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -283,13 +191,71 @@ class _ProgressBody extends StatelessWidget {
           Text('Am I getting better?', style: CohortTextStyles.h1),
           const SizedBox(height: CohortSpacing.sm),
           Text(
-            'Capability development, recent improvements, and plan progress.',
+            loading
+                ? 'Loading recorded sessions…'
+                : summary.sessionsCompleted == 0
+                ? 'Complete your first session to begin'
+                : 'Recorded sessions and exercise bests from completed work.',
             style: CohortTextStyles.body,
           ),
+          if (!summary.hasActivePlan) ...[
+            const SizedBox(height: CohortSpacing.lg),
+            CohortButton(
+              label: 'CHOOSE A PLAN',
+              showTrailingArrow: true,
+              onPressed: onChoosePlan ?? () {},
+            ),
+          ],
+          if (summary.hasActivePlan &&
+              summary.sessionsCompleted == 0 &&
+              onStartToday != null) ...[
+            const SizedBox(height: CohortSpacing.lg),
+            CohortButton(
+              label: "START TODAY'S TRAINING",
+              showTrailingArrow: true,
+              onPressed: onStartToday,
+            ),
+          ],
           const SizedBox(height: CohortSpacing.xl),
           _Section(
             title: 'Capability Overview',
             child: Center(child: CapabilityRadarChart(model: radar)),
+          ),
+          _Section(
+            title: 'Sessions completed',
+            child: Text(
+              '${summary.sessionsCompleted} sessions completed',
+              style: CohortTextStyles.h2,
+            ),
+          ),
+          _Section(
+            title: 'Programme consistency',
+            child: Text(
+              summary.compliance.planned == 0 && summary.sessionsCompleted == 0
+                  ? 'Awaiting evidence'
+                  : '${summary.compliance.completed} of ${summary.compliance.planned} '
+                        'planned sessions · ${summary.compliance.percentage}%',
+              style: CohortTextStyles.body,
+            ),
+          ),
+          _Section(
+            title: 'Exercise performances',
+            child: summary.exerciseBests.isEmpty
+                ? const Text(
+                    'Awaiting evidence',
+                    style: CohortTextStyles.body,
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final best in summary.exerciseBests) ...[
+                        Text(best.displayName, style: CohortTextStyles.cardTitle),
+                        Text(best.bestSetLabel, style: CohortTextStyles.h2),
+                        Text(best.comparisonLabel, style: CohortTextStyles.small),
+                        const SizedBox(height: CohortSpacing.md),
+                      ],
+                    ],
+                  ),
           ),
           if (metrics.isNotEmpty)
             _Section(
@@ -300,38 +266,56 @@ class _ProgressBody extends StatelessWidget {
                 ],
               ),
             ),
+          if (summary.recentImprovements.isNotEmpty)
+            _Section(
+              title: 'Recent improvements',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final line in summary.recentImprovements) ...[
+                    Text(line, style: CohortTextStyles.cardTitle),
+                    const SizedBox(height: CohortSpacing.sm),
+                  ],
+                ],
+              ),
+            ),
           _Section(
-            title: 'Recent Improvements',
-            child: summary.recentImprovements.isEmpty
-                ? Text(
-                    'Complete a session to see your first improvements.',
+            title: 'Recent notable performances',
+            child: summary.exerciseBests.isEmpty
+                ? const Text(
+                    'Complete your first session to begin',
                     style: CohortTextStyles.body,
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (final line in summary.recentImprovements) ...[
-                        Text(line, style: CohortTextStyles.cardTitle),
-                        const SizedBox(height: CohortSpacing.sm),
-                      ],
+                      for (final best in summary.exerciseBests)
+                        if (best.comparisonImproved || best.isFirstRecorded) ...[
+                          Text(best.displayName, style: CohortTextStyles.cardTitle),
+                          Text(
+                            best.isFirstRecorded
+                                ? 'First recorded performance'
+                                : best.comparisonLabel,
+                            style: CohortTextStyles.small,
+                          ),
+                          const SizedBox(height: CohortSpacing.sm),
+                        ],
                     ],
                   ),
           ),
           _Section(
-            title: 'Current Plan Progress',
+            title: 'Current programme',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(summary.planName ?? 'Plan', style: CohortTextStyles.h2),
+                Text(
+                  summary.planName ?? 'No active programme',
+                  style: CohortTextStyles.h2,
+                ),
                 const SizedBox(height: CohortSpacing.xs),
                 Text(
                   '${summary.phaseLabel ?? '—'} · ${summary.weekLabel ?? '—'}',
                   style: CohortTextStyles.body,
-                ),
-                const SizedBox(height: CohortSpacing.md),
-                Text(
-                  '${summary.sessionsCompleted} sessions completed',
-                  style: CohortTextStyles.small,
                 ),
               ],
             ),

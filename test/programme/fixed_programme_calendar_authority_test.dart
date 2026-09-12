@@ -39,6 +39,7 @@ import 'package:cohort_platform/models/workout_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../support/calendar_widget_harness.dart';
 import '../support/in_memory_programme_stores.dart';
 import '../support/programme_schedule_test_fixtures.dart';
 
@@ -1627,6 +1628,14 @@ void main() {
         expect(find.text('Begin'), findsNothing);
         expect(find.textContaining('APOLLO-W1-MON-R1'), findsNothing);
         expect(find.textContaining('day_1'), findsNothing);
+        expect(find.text('Available 1 September'), findsOneWidget);
+        expect(find.text('Train today'), findsNothing);
+        expect(
+          find.text(
+            'Train today is available for sessions in the next 7 days.',
+          ),
+          findsOneWidget,
+        );
 
         for (final movement in const [
           'Thoracic Extension Over Foam Roller',
@@ -1643,20 +1652,6 @@ void main() {
           expect(find.text(movement), findsOneWidget);
           expect(tester.takeException(), isNull);
         }
-        await tester.scrollUntilVisible(
-          find.text('Available 1 September'),
-          500,
-          scrollable: find.byType(Scrollable).first,
-        );
-        expect(find.text('Available 1 September'), findsOneWidget);
-        expect(find.text('Train today'), findsNothing);
-        await tester.scrollUntilVisible(
-          find.text(
-            'Train today is available for sessions in the next 7 days.',
-          ),
-          200,
-          scrollable: find.byType(Scrollable).first,
-        );
 
         await tester.scrollUntilVisible(
           find.bySemanticsLabel(
@@ -1929,6 +1924,10 @@ void main() {
         occurrences: occurrences,
       );
       final store = _ProjectionStore(calendar);
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
 
       expect(calendar.occurrences, hasLength(84));
       expect(
@@ -1955,14 +1954,18 @@ void main() {
 
       expect(find.text('Calendar'), findsOneWidget);
       expect(find.text('Rest'), findsNothing);
-      await tester.tap(find.byTooltip('Next week'));
+      await tester.tap(find.byKey(const ValueKey('calendar-month-next')));
       await tester.pumpAndSettle();
-      await tester.tap(
-        find.byKey(const ValueKey('programme-week-day-2026-09-01')),
+      await tapCalendarFinder(
+        tester,
+        find.byKey(const ValueKey('calendar-month-day-2026-09-01')),
       );
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('View session'));
-      await tester.pumpAndSettle();
+      await tapCalendarFinder(
+        tester,
+        find.byKey(
+          const ValueKey('calendar-selected-view-session-occurrence-0'),
+        ),
+      );
       expect(find.text('Session'), findsOneWidget);
       expect(find.textContaining('Scheduled for'), findsOneWidget);
       expect(find.text('Begin'), findsNothing);
