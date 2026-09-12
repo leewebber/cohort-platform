@@ -940,27 +940,21 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Apollo Engine'), findsOneWidget);
-        expect(find.text('Completed'), findsWidgets);
+        expect(find.text('Complete'), findsWidgets);
         expect(find.textContaining('Duration 61m 01s'), findsOneWidget);
         expect(find.textContaining('RPE 7'), findsOneWidget);
-        expect(find.text('UP NEXT'), findsOneWidget);
-        expect(find.text('Apollo Racehorse'), findsOneWidget);
+        await tester.tap(find.text('Show results'));
+        await tester.pumpAndSettle();
+        expect(
+          find.textContaining('First recorded performance'),
+          findsOneWidget,
+        );
+        expect(find.text('UP NEXT'), findsNothing);
+        expect(find.text('Apollo Racehorse'), findsNothing);
+        expect(find.text('CURRENT PROGRAMME'), findsNothing);
         expect(find.text('INCOMPLETE SESSION'), findsNothing);
         expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
-
-        await tester.tap(find.byKey(const ValueKey('up-next-view-session')));
-        await tester.pumpAndSettle();
-        await tester.scrollUntilVisible(
-          find.text('Available 3 September'),
-          300,
-          scrollable: find.byType(Scrollable).first,
-        );
-        expect(find.text('Available 3 September'), findsOneWidget);
-        expect(find.text('Train today'), findsNothing);
-        expect(find.text('Begin'), findsNothing);
-        await tester.tap(find.byTooltip('Back'));
-        await tester.pumpAndSettle();
 
         await tester.tap(
           find.byKey(const ValueKey('completed-today-view-result')),
@@ -978,7 +972,8 @@ void main() {
         await tester.pumpWidget(app(key: UniqueKey()));
         await tester.pumpAndSettle();
         expect(find.text('Apollo Engine'), findsOneWidget);
-        expect(find.text('UP NEXT'), findsOneWidget);
+        expect(find.text('UP NEXT'), findsNothing);
+        expect(find.text('Apollo Racehorse'), findsNothing);
         expect(find.text('INCOMPLETE SESSION'), findsNothing);
         expect(find.text('Resume'), findsNothing);
         expect(find.text('Begin'), findsNothing);
@@ -1030,7 +1025,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Apollo Engine'), findsOneWidget);
-        expect(find.text('Completed'), findsWidgets);
+        expect(find.text('Complete'), findsWidgets);
         expect(find.text('UP NEXT'), findsNothing);
         expect(find.text('Apollo Racehorse'), findsNothing);
         expect(calendar.nextPlannedOccurrence, isNull);
@@ -1131,8 +1126,13 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
-      expect(find.text("TODAY'S TRAINING"), findsOneWidget);
-      expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
+      expect(find.text('TODAY'), findsWidgets);
+      expect(find.text('CURRENT PROGRAMME'), findsNothing);
+      expect(find.text('View Calendar'), findsNothing);
+      expect(find.text('Exercise'), findsOneWidget);
+      expect(find.textContaining('approximately 45 min'), findsOneWidget);
+      expect(find.text('Begin'), findsOneWidget);
+      expect(find.text('Adapt Session'), findsOneWidget);
       expect(find.text('INCOMPLETE SESSION'), findsNothing);
       expect(find.text('THIS WEEK'), findsNothing);
       expect(find.text('Overdue'), findsNothing);
@@ -1205,9 +1205,11 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('UPCOMING PROGRAMME'), findsOneWidget);
+      expect(find.text('TODAY'), findsOneWidget);
       expect(find.text('Apollo Build — 12-Week Initial Block'), findsOneWidget);
       expect(find.text('Starts Tuesday, 1 September'), findsOneWidget);
+      expect(find.text('View first week'), findsNothing);
+      expect(find.text('View Calendar'), findsNothing);
       expect(
         find.text('Your first session unlocks in 8 days.'),
         findsOneWidget,
@@ -1364,8 +1366,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text("TODAY'S TRAINING"), findsOneWidget);
+      expect(find.text('TODAY'), findsWidgets);
       expect(find.text('THIS WEEK'), findsNothing);
+      expect(find.text('CURRENT PROGRAMME'), findsNothing);
 
       final plansController = AthleteProgrammeScreenController(
         athleteId: 'athlete.local',
@@ -1966,14 +1969,18 @@ void main() {
     },
   );
 
-  testWidgets('Home calendar action delegates to the unified Calendar tab', (
+  testWidgets('Home does not embed Calendar; rest next hint can open it', (
     tester,
   ) async {
     final assignment = _assignment(athleteId: 'athlete.local');
+    final firstWeek = _firstWeekOccurrences(assignment: assignment);
+    final restOccurrences = firstWeek
+        .where((occurrence) => occurrence.scheduledDate != '2026-09-06')
+        .toList(growable: false);
     final calendar = _calendar(
       assignment: assignment,
-      today: '2026-08-25',
-      occurrences: _firstWeekOccurrences(assignment: assignment),
+      today: '2026-09-06',
+      occurrences: restOccurrences,
     );
     var openedCalendar = false;
     await tester.pumpWidget(
@@ -1990,7 +1997,10 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('View Calendar').first);
+    expect(find.text('View Calendar'), findsNothing);
+    expect(find.text('THIS WEEK'), findsNothing);
+    expect(find.textContaining('Next:'), findsOneWidget);
+    await tester.tap(find.textContaining('Next:'));
     expect(openedCalendar, isTrue);
   });
 
@@ -2127,6 +2137,263 @@ void main() {
     );
     expect(activeLabels.lifecycle, AthleteProgrammeLifecycle.active);
     expect(activeLabels.statusLabel, 'Week 1 · Day 1');
+  });
+
+  test('Home slice keeps only today plus rest-day next hint', () {
+    final assignment = _assignment();
+    final calendar = _calendar(
+      assignment: assignment,
+      today: '2026-09-02',
+      occurrences: [
+        _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000801',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_1',
+          date: '2026-09-01',
+          state: FixedProgrammeOccurrenceState.overdue,
+          sessionTitle: 'Yesterday',
+        ),
+        _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000802',
+          slotId: ProgrammeScheduleTestFixtures.slot2Id,
+          protocolId: 'RN-006',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.today,
+          sessionTitle: 'Today A',
+        ),
+        _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000803',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.planned,
+          sessionTitle: 'Today B',
+        ),
+        _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000804',
+          slotId: ProgrammeScheduleTestFixtures.slot2Id,
+          protocolId: 'RN-006',
+          dayKey: 'day_3',
+          date: '2026-09-03',
+          state: FixedProgrammeOccurrenceState.planned,
+          sessionTitle: 'Tomorrow',
+        ),
+      ],
+    );
+
+    final home = calendar.forHomeToday();
+    expect(home.occurrences.map((o) => o.sessionTitle), ['Today A', 'Today B']);
+    expect(home.todaySessions, hasLength(2));
+    expect(home.nextPlannedOccurrence, isNull);
+
+    final rest = _calendar(
+      assignment: assignment,
+      today: '2026-09-06',
+      occurrences: _firstWeekOccurrences(assignment: assignment)
+          .where((occurrence) => occurrence.scheduledDate != '2026-09-06')
+          .toList(),
+    ).forHomeToday();
+    expect(rest.isRestToday, isTrue);
+    expect(rest.todaySessions, isEmpty);
+    expect(rest.nextPlannedOccurrence, isNotNull);
+    expect(rest.occurrences, hasLength(1));
+  });
+
+  testWidgets('Home shows every session for today and no other dates', (
+    tester,
+  ) async {
+    final assignment = _assignment(athleteId: 'athlete.local');
+    final morning = _occurrence(
+      assignment: assignment,
+      id: '00000000-0000-4000-8000-000000000811',
+      slotId: ProgrammeScheduleTestFixtures.slot1Id,
+      protocolId: 'BW-001',
+      dayKey: 'day_2',
+      date: '2026-09-02',
+      state: FixedProgrammeOccurrenceState.today,
+      sessionTitle: 'Morning Strength',
+    );
+    final evening = _occurrence(
+      assignment: assignment,
+      id: '00000000-0000-4000-8000-000000000812',
+      slotId: ProgrammeScheduleTestFixtures.slot2Id,
+      protocolId: 'RN-006',
+      dayKey: 'day_2',
+      date: '2026-09-02',
+      state: FixedProgrammeOccurrenceState.today,
+      sessionTitle: 'Evening Mobility',
+    );
+    final past = _occurrence(
+      assignment: assignment,
+      id: '00000000-0000-4000-8000-000000000813',
+      slotId: ProgrammeScheduleTestFixtures.slot1Id,
+      protocolId: 'BW-001',
+      dayKey: 'day_1',
+      date: '2026-09-01',
+      state: FixedProgrammeOccurrenceState.overdue,
+      sessionTitle: 'Incomplete Intervals',
+    );
+    final future = _occurrence(
+      assignment: assignment,
+      id: '00000000-0000-4000-8000-000000000814',
+      slotId: ProgrammeScheduleTestFixtures.slot2Id,
+      protocolId: 'RN-006',
+      dayKey: 'day_3',
+      date: '2026-09-03',
+      state: FixedProgrammeOccurrenceState.planned,
+      sessionTitle: 'Future Engine',
+    );
+    final store = _ProjectionStore(
+      _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [morning, evening, past, future],
+      ),
+    );
+    final tables = await _tablesWith(assignment);
+    final prepare = _prepareService(
+      tables: tables,
+      loader: _EchoLoader(),
+      projectionStore: store,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HomeScreen(
+          embeddedInShell: true,
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          prepareService: prepare,
+          fixedOccurrenceStore: store,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Morning Strength'), findsOneWidget);
+    expect(find.text('Evening Mobility'), findsOneWidget);
+    expect(find.text('Incomplete Intervals'), findsNothing);
+    expect(find.text('Future Engine'), findsNothing);
+    expect(find.text('INCOMPLETE SESSION'), findsNothing);
+    expect(find.text('CURRENT PROGRAMME'), findsNothing);
+    expect(find.text('THIS WEEK'), findsNothing);
+    expect(store.calls, 1);
+    expect(find.byType(AthleteProgrammeTodaySection), findsNWidgets(2));
+  });
+
+  testWidgets('Home does not render the unused 84-occurrence catalogue', (
+    tester,
+  ) async {
+    final assignment = _assignment(athleteId: 'athlete.local');
+    final occurrences = List<FixedProgrammeOccurrenceProjection>.generate(84, (
+      index,
+    ) {
+      final date = DateTime.utc(2026, 9, 1).add(Duration(days: index ~/ 2));
+      return _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-${(900 + index).toString().padLeft(12, '0')}',
+        slotId: index.isEven
+            ? ProgrammeScheduleTestFixtures.slot1Id
+            : ProgrammeScheduleTestFixtures.slot2Id,
+        protocolId: index.isEven ? 'BW-001' : 'RN-006',
+        dayKey: 'day_${(index % 7) + 1}',
+        date: date.toIso8601String().substring(0, 10),
+        state: date.toIso8601String().substring(0, 10) == '2026-09-02'
+            ? FixedProgrammeOccurrenceState.today
+            : FixedProgrammeOccurrenceState.planned,
+        sessionTitle: 'Session $index',
+      );
+    });
+    final store = _ProjectionStore(
+      _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: occurrences,
+      ),
+    );
+    final tables = await _tablesWith(assignment);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: HomeScreen(
+          embeddedInShell: true,
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          prepareService: _prepareService(
+            tables: tables,
+            loader: _EchoLoader(),
+            projectionStore: store,
+          ),
+          fixedOccurrenceStore: store,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Session 2'), findsOneWidget);
+    expect(find.text('Session 3'), findsOneWidget);
+    expect(find.text('Session 0'), findsNothing);
+    expect(find.text('Session 10'), findsNothing);
+    expect(find.text('Session 83'), findsNothing);
+    expect(store.calls, 1);
+  });
+
+  testWidgets('Home primary action stays above the fold on a narrow phone', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final assignment = _assignment(athleteId: 'athlete.local');
+    final store = _ProjectionStore(
+      _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [
+          _occurrence(
+            assignment: assignment,
+            id: '00000000-0000-4000-8000-000000000821',
+            slotId: ProgrammeScheduleTestFixtures.slot2Id,
+            protocolId: 'RN-006',
+            dayKey: 'day_2',
+            date: '2026-09-02',
+            state: FixedProgrammeOccurrenceState.today,
+          ),
+        ],
+      ),
+    );
+    final tables = await _tablesWith(assignment);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(
+            size: Size(390, 844),
+            textScaler: TextScaler.linear(1.3),
+          ),
+          child: HomeScreen(
+            embeddedInShell: true,
+            assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+            prepareService: _prepareService(
+              tables: tables,
+              loader: _EchoLoader(),
+              projectionStore: store,
+            ),
+            fixedOccurrenceStore: store,
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final begin = tester.getRect(find.text('Begin'));
+    expect(begin.bottom, lessThan(760));
+    expect(tester.takeException(), isNull);
   });
 
   test('typed projection rejects malformed or non-seven-day payloads', () {

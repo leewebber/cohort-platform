@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_reversion_service.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
-import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
-import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/programme_adaptation_revert_sheet.dart';
-import '../../../core/widgets/today_session_card.dart';
 import '../../../models/programme_assignment.dart';
 import '../../programme/models/athlete_programme_prepared_session.dart';
 import '../../programme/models/fixed_programme_occurrence_projection.dart';
-import '../../programme/presentation/programme_day_label_formatter.dart';
 import '../../programme/services/athlete_catalogue_enrolment_services.dart';
 import '../../programme/services/athlete_programme_session_prepare_service.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/home_today_session_refresh_controller.dart';
+import '../presentation/athlete_home_today_presentation.dart';
 import '../services/programme_adapt_flow.dart';
+import 'athlete_home_today_session_panel.dart';
 
 /// Home/today surface for a materialised authored programme session.
 ///
@@ -37,6 +35,8 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     this.fixedAssignment,
     this.fixedOccurrence,
     this.onExecutionReturned,
+    this.onViewFullSession,
+    this.dateLabel,
   });
 
   final String athleteId;
@@ -48,6 +48,8 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
   final ProgrammeAssignment? fixedAssignment;
   final FixedProgrammeOccurrenceProjection? fixedOccurrence;
   final Future<void> Function()? onExecutionReturned;
+  final VoidCallback? onViewFullSession;
+  final String? dateLabel;
 
   /// Test seam: when set, used instead of [prepareService] for load.
   final Future<AthleteProgrammePrepareResult> Function(String athleteId)?
@@ -331,22 +333,35 @@ class _AthleteProgrammeTodaySectionState
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Column(
+      final occurrence = widget.fixedOccurrence;
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
-          SizedBox(height: CohortSpacing.md),
-          Text('Preparing today\'s session…', style: CohortTextStyles.muted),
+          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          if (occurrence != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
+          ],
+          const SizedBox(height: CohortSpacing.md),
+          const Text(
+            'Preparing today\'s session…',
+            style: CohortTextStyles.muted,
+          ),
         ],
       );
     }
 
     final result = _result;
     if (result == null || !result.isReady || result.package == null) {
+      final occurrence = widget.fixedOccurrence;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          if (occurrence != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
+          ],
           const SizedBox(height: CohortSpacing.md),
           Text(
             _error ?? 'Today\'s session could not be prepared.',
@@ -364,92 +379,56 @@ class _AthleteProgrammeTodaySectionState
     final package = result.package!;
     final ctx = result.executionContext;
     final fixedOccurrence = widget.fixedOccurrence;
-    final weekLabel = ctx == null
-        ? 'Week ${package.programmedSessionKey.week}'
-        : 'Week ${ctx.weekNumber}';
-    final subtitle = ProgrammeDayLabelFormatter.format(
-      dayKey: ctx?.dayKey ?? package.dayKey ?? 'day_1',
+    final dateLabel = widget.dateLabel ??
+        (fixedOccurrence == null
+            ? null
+            : AthleteHomeTodayFormatter.fullDate(
+                DateTime.parse(fixedOccurrence.scheduledDate),
+              ));
+    final weekDayLabel = AthleteHomeTodayFormatter.weekDayLabel(
+      weekNumber: ctx?.weekNumber ?? package.programmedSessionKey.week,
+      dayKey: ctx?.dayKey ?? package.dayKey ?? fixedOccurrence?.dayKey,
     );
+    final primaryLabel = _opening
+        ? 'Opening…'
+        : _openError == null
+        ? fixedOccurrence?.isResumable == true
+              ? 'Resume'
+              : 'Begin'
+        : 'Retry';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TodaySessionCard(
-          title: package.brief.sessionName,
-          subtitle: subtitle,
-          weekLabel: weekLabel,
-          duration: package.brief.durationLabel,
+        AthleteHomeTodaySessionPanel(
+          package: package,
+          dateLabel: dateLabel,
           programmeName: ctx?.programmeName,
+          weekDayLabel: weekDayLabel,
+          occurrence: fixedOccurrence,
+          status: package.hasAcceptedAdaptation
+              ? 'ADAPTED PREPARED SESSION'
+              : fixedOccurrence?.isResumable == true
+              ? 'In progress'
+              : 'Not started',
           adaptationNotice: package.hasAcceptedAdaptation
               ? 'Adapted for today — original authored prescription retained as reference.'
               : null,
-          status: package.hasAcceptedAdaptation
-              ? 'Adapted Prepared Session'
-              : fixedOccurrence?.state.displayLabel ?? 'Prepared Session',
-          statusDetail: package.hasAcceptedAdaptation
-              ? 'Accepted adaptation applies only to this prepared session. '
-                    'Programme and later sessions unchanged.'
-              : 'Authored programme · exact version. Submit completion to advance.',
-          buttonLabel: _opening
-              ? 'Opening…'
-              : _openError == null
-              ? fixedOccurrence?.isResumable == true
-                    ? 'Resume'
-                    : 'Begin'
-              : 'Retry',
-          onPressed: _opening || _adapting || _reverting ? null : _open,
+          primaryLabel: primaryLabel,
+          primaryBusy: _opening,
+          onPrimary: _opening || _adapting || _reverting ? null : _open,
+          onViewFullSession: widget.onViewFullSession,
+          adaptLabel: _canAdapt || _adapting ? (_adapting ? 'Preparing…' : 'Adapt Session') : null,
+          onAdapt: _adapt,
+          adaptEnabled: _canAdapt && !_adapting,
+          revertLabel: _canRevert || _reverting
+              ? (_reverting ? 'Reverting…' : 'Revert to Original')
+              : null,
+          onRevert: _canRevert ? _revert : null,
         ),
         if (_openError != null) ...[
           const SizedBox(height: CohortSpacing.sm),
           Text(_openError!, style: CohortTextStyles.body),
-        ],
-        if (_canAdapt || _adapting) ...[
-          const SizedBox(height: CohortSpacing.sm),
-          CohortCard(
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Adapt Today', style: CohortTextStyles.body),
-                      SizedBox(height: CohortSpacing.xs),
-                      Text(
-                        'Review an adjustment for this prepared session.',
-                        style: CohortTextStyles.small,
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: _adapting ? null : _adapt,
-                  child: Text(
-                    _adapting ? 'Preparing…' : 'Adapt Session',
-                    style: CohortTextStyles.body.copyWith(
-                      color: CohortColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        if (_canRevert || _reverting) ...[
-          const SizedBox(height: CohortSpacing.md),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              onPressed: _reverting ? null : _revert,
-              child: Text(
-                _reverting ? 'Reverting…' : 'Revert to Original',
-                style: CohortTextStyles.body.copyWith(
-                  color: CohortColors.textPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
         ],
       ],
     );

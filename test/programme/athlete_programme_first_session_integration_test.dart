@@ -659,7 +659,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(AthleteProgrammeTodaySection), findsOneWidget);
-      expect(find.text('AUTHORED SESSION'), findsOneWidget);
+      expect(find.text('Authored Session'), findsOneWidget);
       expect(find.textContaining('Begin'), findsOneWidget);
       expect(find.text('Choose a programme'), findsNothing);
       expect(find.textContaining('subscription'), findsNothing);
@@ -740,7 +740,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('AUTHORED SESSION'), findsOneWidget);
+      expect(find.text('Authored Session'), findsOneWidget);
     });
   });
 

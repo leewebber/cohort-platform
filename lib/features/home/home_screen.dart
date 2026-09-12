@@ -14,8 +14,9 @@ import '../athlete_profile/services/athlete_profile_session.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../programme/models/fixed_programme_occurrence_projection.dart';
 import '../programme/presentation/athlete_programme_lifecycle_presentation.dart';
-import '../programme/presentation/programme_day_label_formatter.dart';
 import '../programme/screens/athlete_programme_schedule_screen.dart';
+import 'presentation/athlete_home_today_presentation.dart';
+import 'widgets/athlete_home_completed_today_card.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/screens/scheduled_programme_session_preview_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
@@ -97,7 +98,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   FixedProgrammeCalendarProjection? _calendar;
   ProgrammeAssignment? _assignment;
   String? _calendarError;
-  TrainingSessionRecord? _completedTodayRecord;
+  final Map<String, TrainingSessionRecord> _completedTodayRecords = {};
+  String? _expandedCompletedOccurrenceId;
+  List<TrainingSessionRecord> _completedHistory = const [];
+  bool _completedHistoryLoading = false;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -161,7 +165,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _assignment = assignment;
         _calendar = null;
         _calendarError = null;
-        _completedTodayRecord = null;
+        _completedTodayRecords.clear();
+        _expandedCompletedOccurrenceId = null;
+        _completedHistory = const [];
+        _completedHistoryLoading = false;
       });
       if (assignment?.isFixedSchedule == true) {
         final calendar =
@@ -173,29 +180,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             'Fixed schedule projection is incomplete for this assignment.',
           );
         }
-        TrainingSessionRecord? completedTodayRecord;
-        final todayOccurrence = calendar.todayOccurrence;
-        if (todayOccurrence?.state == FixedProgrammeOccurrenceState.completed &&
-            todayOccurrence?.trainingSessionId != null) {
-          try {
-            completedTodayRecord =
-                await (widget.performanceRecordStore ??
-                        SupabasePerformanceRecordStore())
-                    .getTerminalForTrainingSession(
-                      athleteId: _athleteId,
-                      trainingSessionId: todayOccurrence!.trainingSessionId!,
-                    );
-          } catch (_) {
-            // The occurrence remains authoritative even if its optional
-            // performance summary cannot be loaded for this render.
-          }
-        }
+        final homeCalendar = calendar.forHomeToday();
         if (mounted) {
-          setState(() {
-            _calendar = calendar;
-            _completedTodayRecord = completedTodayRecord;
-          });
+          setState(() => _calendar = homeCalendar);
         }
+        await _loadCompletedTodayRecords(homeCalendar);
       }
     } catch (error) {
       if (!mounted) return;
@@ -293,11 +282,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final calendar = _calendar;
     if (calendar == null) {
       return [
-        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
+        const Text('TODAY', style: CohortTextStyles.sectionLabel),
         const SizedBox(height: CohortSpacing.md),
         CohortCard(
           child: Text(
-            _calendarError ?? 'Loading your programme calendar…',
+            _calendarError ?? 'Loading today\'s session…',
             style: CohortTextStyles.body,
           ),
         ),
@@ -307,14 +296,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
       calendar,
     );
-    final todayOccurrence = calendar.todayOccurrence;
-    final todayDay = calendar.currentWeek.firstWhere(
-      (day) => day.date == calendar.today,
-    );
-    final widgets = <Widget>[];
+    final todayDate = DateTime.parse(calendar.today);
+    final dateLabel = AthleteHomeTodayFormatter.fullDate(todayDate);
+
     if (lifecycle.isUpcoming) {
-      widgets.addAll([
-        const Text('UPCOMING PROGRAMME', style: CohortTextStyles.sectionLabel),
+      return [
+        const Text('TODAY', style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.xs),
+        Text(dateLabel, style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.md),
         CohortCard(
           child: Column(
@@ -328,147 +317,168 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ),
               const SizedBox(height: CohortSpacing.xs),
               Text(lifecycle.supportingLine, style: CohortTextStyles.muted),
-              const SizedBox(height: CohortSpacing.md),
-              TextButton(
-                onPressed: _openProgrammeCalendar,
-                child: const Text('View first week'),
-              ),
             ],
           ),
         ),
-      ]);
-    } else if (todayOccurrence == null ||
-        todayDay.state == FixedProgrammeOccurrenceState.rest) {
-      widgets.addAll(const [
-        Text('TODAY', style: CohortTextStyles.sectionLabel),
-        SizedBox(height: CohortSpacing.md),
-        CohortCard(child: Text('Rest day', style: CohortTextStyles.body)),
-      ]);
-      final upNext = calendar.nextPlannedOccurrence;
-      if (upNext != null) {
-        widgets.addAll([
-          const SizedBox(height: CohortSpacing.lg),
-          const Text('UP NEXT', style: CohortTextStyles.sectionLabel),
-          const SizedBox(height: CohortSpacing.sm),
-          _upNextCard(upNext),
-        ]);
-      }
-    } else if (todayOccurrence.state ==
-        FixedProgrammeOccurrenceState.completed) {
-      widgets.addAll([
-        const Text("TODAY'S TRAINING", style: CohortTextStyles.sectionLabel),
-        const SizedBox(height: CohortSpacing.md),
-        _completedTodayCard(todayOccurrence),
-      ]);
-      final upNext = calendar.nextPlannedOccurrence;
-      if (upNext != null) {
-        widgets.addAll([
-          const SizedBox(height: CohortSpacing.lg),
-          const Text('UP NEXT', style: CohortTextStyles.sectionLabel),
-          const SizedBox(height: CohortSpacing.sm),
-          _upNextCard(upNext),
-        ]);
-      }
-    } else {
-      widgets.add(
-        AthleteProgrammeTodaySection(
-          athleteId: _athleteId,
-          refreshController: _refreshController,
-          prepareService: _prepareService,
-          executionLauncher: widget.executionLauncher,
-          fixedAssignment: assignment,
-          fixedOccurrence: todayOccurrence,
-          onExecutionReturned: _refreshMaterialisedGate,
-        ),
-      );
+      ];
     }
 
-    widgets.addAll([
-      const SizedBox(height: CohortSpacing.xl),
-      Text('CURRENT PROGRAMME', style: CohortTextStyles.sectionLabel),
-      const SizedBox(height: CohortSpacing.md),
-      CohortCard(
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                '${lifecycle.programmeName}\n${lifecycle.statusLabel}',
+    if (calendar.isRestToday) {
+      final nextHint = AthleteHomeTodayFormatter.nextSessionHint(calendar);
+      return [
+        const Text('TODAY', style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.xs),
+        Text(dateLabel, style: CohortTextStyles.muted),
+        const SizedBox(height: CohortSpacing.md),
+        CohortCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(lifecycle.programmeName, style: CohortTextStyles.small),
+              const SizedBox(height: CohortSpacing.sm),
+              const Text('Rest day', style: CohortTextStyles.h2),
+              const SizedBox(height: CohortSpacing.sm),
+              const Text(
+                'No training session is scheduled for this programme date.',
                 style: CohortTextStyles.body,
               ),
-            ),
-            TextButton(
-              onPressed: _openProgrammeCalendar,
-              child: const Text('View Calendar'),
-            ),
-          ],
+              if (nextHint != null) ...[
+                const SizedBox(height: CohortSpacing.md),
+                TextButton(
+                  onPressed: widget.onOpenCalendar ?? _openProgrammeCalendar,
+                  child: Text(nextHint),
+                ),
+              ],
+            ],
+          ),
         ),
-      ),
-    ]);
+      ];
+    }
+
+    final todaySessions = AthleteHomeTodayFormatter.prioritizedTodaySessions(
+      calendar,
+    );
+    final widgets = <Widget>[];
+    for (var index = 0; index < todaySessions.length; index++) {
+      if (index > 0) {
+        widgets.add(const SizedBox(height: CohortSpacing.lg));
+      }
+      final occurrence = todaySessions[index];
+      if (occurrence.state == FixedProgrammeOccurrenceState.completed) {
+        widgets.add(_completedTodayCard(calendar, occurrence));
+      } else {
+        widgets.add(
+          AthleteProgrammeTodaySection(
+            key: ValueKey(occurrence.occurrenceId),
+            athleteId: _athleteId,
+            refreshController: index == 0 ? _refreshController : null,
+            prepareService: _prepareService,
+            executionLauncher: widget.executionLauncher,
+            fixedAssignment: assignment,
+            fixedOccurrence: occurrence,
+            dateLabel: dateLabel,
+            onExecutionReturned: _refreshMaterialisedGate,
+            onViewFullSession: () => _openOccurrence(occurrence),
+          ),
+        );
+      }
+    }
     return widgets;
   }
 
-  Widget _completedTodayCard(FixedProgrammeOccurrenceProjection occurrence) {
-    final record = _completedTodayRecord;
-    final summary = <String>[
-      if (record?.completedAt case final completedAt?)
-        'Finished ${_clockTime(completedAt)}',
-      if (record?.durationSeconds case final duration?)
-        'Duration ${_duration(duration)}',
-      if (record?.overallRpe case final rpe?) 'RPE $rpe',
-    ];
-    return CohortCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
-          const SizedBox(height: CohortSpacing.xs),
-          Text('Completed', style: CohortTextStyles.body),
-          if (summary.isNotEmpty) ...[
-            const SizedBox(height: CohortSpacing.sm),
-            Text(summary.join(' · '), style: CohortTextStyles.small),
-          ],
-          const SizedBox(height: CohortSpacing.md),
-          TextButton(
-            key: const ValueKey('completed-today-view-result'),
-            onPressed: () => _openOccurrence(occurrence),
-            child: const Text('View result'),
-          ),
-        ],
+  Widget _completedTodayCard(
+    FixedProgrammeCalendarProjection calendar,
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) {
+    final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
+      calendar,
+    );
+    return AthleteHomeCompletedTodayCard(
+      occurrence: occurrence,
+      dateLabel: AthleteHomeTodayFormatter.fullDate(DateTime.parse(calendar.today)),
+      programmeName: lifecycle.programmeName,
+      weekDayLabel: AthleteHomeTodayFormatter.weekDayLabel(
+        weekNumber: occurrence.weekNumber,
+        dayKey: occurrence.dayKey,
       ),
+      record: _completedTodayRecords[occurrence.occurrenceId],
+      history: _expandedCompletedOccurrenceId == occurrence.occurrenceId
+          ? _completedHistory
+          : const [],
+      historyLoading:
+          _completedHistoryLoading &&
+          _expandedCompletedOccurrenceId == occurrence.occurrenceId,
+      expanded: _expandedCompletedOccurrenceId == occurrence.occurrenceId,
+      onToggleExpanded: () => _toggleCompletedResults(occurrence),
+      onViewResults: () => _openOccurrence(occurrence),
     );
   }
 
-  Widget _upNextCard(FixedProgrammeOccurrenceProjection occurrence) {
-    final scheduledDate = DateTime.parse(occurrence.scheduledDate);
-    return CohortCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  occurrence.sessionTitle,
-                  style: CohortTextStyles.cardTitle,
-                ),
-                const SizedBox(height: CohortSpacing.xs),
-                Text(
-                  'Week ${occurrence.weekNumber} · '
-                  '${ProgrammeDayLabelFormatter.format(dayKey: occurrence.dayKey)} · '
-                  '${AthleteProgrammeDateFormatter.dayMonth(scheduledDate)}',
-                  style: CohortTextStyles.small,
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            key: const ValueKey('up-next-view-session'),
-            onPressed: () => _openOccurrence(occurrence),
-            child: const Text('View'),
-          ),
-        ],
-      ),
-    );
+  Future<void> _loadCompletedTodayRecords(
+    FixedProgrammeCalendarProjection calendar,
+  ) async {
+    final store =
+        widget.performanceRecordStore ?? SupabasePerformanceRecordStore();
+    final records = <String, TrainingSessionRecord>{};
+    for (final occurrence in calendar.todaySessions) {
+      if (occurrence.state != FixedProgrammeOccurrenceState.completed) {
+        continue;
+      }
+      final trainingSessionId = occurrence.trainingSessionId;
+      if (trainingSessionId == null) continue;
+      try {
+        final record = await store.getTerminalForTrainingSession(
+          athleteId: _athleteId,
+          trainingSessionId: trainingSessionId,
+        );
+        if (record != null) {
+          records[occurrence.occurrenceId] = record;
+        }
+      } catch (_) {
+        // Today's completed occurrence remains visible without its summary.
+      }
+    }
+    if (!mounted) return;
+    setState(() {
+      _completedTodayRecords
+        ..clear()
+        ..addAll(records);
+    });
+  }
+
+  Future<void> _toggleCompletedResults(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    if (_expandedCompletedOccurrenceId == occurrence.occurrenceId) {
+      setState(() {
+        _expandedCompletedOccurrenceId = null;
+        _completedHistory = const [];
+        _completedHistoryLoading = false;
+      });
+      return;
+    }
+    setState(() {
+      _expandedCompletedOccurrenceId = occurrence.occurrenceId;
+      _completedHistoryLoading = true;
+      _completedHistory = const [];
+    });
+    try {
+      final history =
+          await (widget.performanceRecordStore ??
+                  SupabasePerformanceRecordStore())
+              .listHistory(athleteId: _athleteId, limit: 12);
+      if (!mounted) return;
+      setState(() {
+        _completedHistory = history;
+        _completedHistoryLoading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _completedHistory = const [];
+        _completedHistoryLoading = false;
+      });
+    }
   }
 
   Future<void> _openOccurrence(FixedProgrammeOccurrenceProjection occurrence) {
@@ -479,18 +489,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         occurrence: occurrence,
       ),
     );
-  }
-
-  String _clockTime(DateTime value) {
-    final local = value.toLocal();
-    return '${local.hour.toString().padLeft(2, '0')}:'
-        '${local.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _duration(int seconds) {
-    final minutes = seconds ~/ 60;
-    final remainder = seconds % 60;
-    return '${minutes}m ${remainder.toString().padLeft(2, '0')}s';
   }
 
   Future<void> _openProgrammeCalendar() async {

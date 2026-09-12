@@ -30,7 +30,7 @@ void main() {
 
   test('Home and Plans use the shared day-key presentation formatter', () {
     final home = File(
-      'lib/features/home/widgets/athlete_programme_today_section.dart',
+      'lib/features/home/presentation/athlete_home_today_presentation.dart',
     ).readAsStringSync();
     final plans = File(
       'lib/features/programme/screens/athlete_programme_schedule_screen.dart',

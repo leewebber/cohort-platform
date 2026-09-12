@@ -171,10 +171,75 @@ class FixedProgrammeCalendarProjection {
   final List<FixedProgrammeCalendarDayProjection> currentWeek;
 
   FixedProgrammeOccurrenceProjection? get todayOccurrence {
-    for (final occurrence in occurrences) {
-      if (occurrence.scheduledDate == today) return occurrence;
+    final matches = occurrencesOnDate(today);
+    return matches.isEmpty ? null : matches.first;
+  }
+
+  /// True when today is an authored rest day, not an executable session.
+  bool get isRestToday {
+    for (final day in currentWeek) {
+      if (day.date == today) return day.isRest;
     }
-    return null;
+    final todaySessions = occurrencesOnDate(today);
+    return todaySessions.isEmpty ||
+        todaySessions.every(
+          (occurrence) => occurrence.state == FixedProgrammeOccurrenceState.rest,
+        );
+  }
+
+  List<FixedProgrammeOccurrenceProjection> get todaySessions {
+    return occurrencesOnDate(today)
+        .where(
+          (occurrence) => occurrence.state != FixedProgrammeOccurrenceState.rest,
+        )
+        .toList(growable: false);
+  }
+
+  /// Home consumes only today plus an optional rest-day next-session hint.
+  FixedProgrammeCalendarProjection forHomeToday() {
+    if (startsInFuture) {
+      return copyWith(occurrences: const [], currentWeek: const []);
+    }
+    final todaySessions = occurrencesOnDate(today);
+    final todayWeek = currentWeek
+        .where((day) => day.date == today)
+        .toList(growable: false);
+    final restToday =
+        todayWeek.any((day) => day.isRest) ||
+        todaySessions.isEmpty ||
+        todaySessions.every(
+          (occurrence) => occurrence.state == FixedProgrammeOccurrenceState.rest,
+        );
+    final kept = <FixedProgrammeOccurrenceProjection>[...todaySessions];
+    if (restToday) {
+      final next = nextPlannedOccurrence;
+      if (next != null &&
+          !kept.any((occurrence) => occurrence.occurrenceId == next.occurrenceId)) {
+        kept.add(next);
+      }
+    }
+    return copyWith(
+      occurrences: List.unmodifiable(kept),
+      currentWeek: List.unmodifiable(todayWeek),
+    );
+  }
+
+  FixedProgrammeCalendarProjection copyWith({
+    List<FixedProgrammeOccurrenceProjection>? occurrences,
+    List<FixedProgrammeCalendarDayProjection>? currentWeek,
+  }) {
+    return FixedProgrammeCalendarProjection(
+      assignmentId: assignmentId,
+      programmeName: programmeName,
+      timezone: timezone,
+      scheduleMode: scheduleMode,
+      startDate: startDate,
+      today: today,
+      weekStart: weekStart,
+      weekEnd: weekEnd,
+      occurrences: occurrences ?? this.occurrences,
+      currentWeek: currentWeek ?? this.currentWeek,
+    );
   }
 
   List<FixedProgrammeOccurrenceProjection> get overdue => occurrences
