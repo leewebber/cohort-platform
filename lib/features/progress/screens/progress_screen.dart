@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../adaptive_progression/models/capability_timeline.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
@@ -177,6 +178,8 @@ class _EmptyProgress extends StatelessWidget {
         CohortSpacing.xxl,
       ),
       children: [
+        const CohortBrandLockup(),
+        const SizedBox(height: CohortSpacing.md),
         Text('PROGRESS', style: CohortTextStyles.eyebrow),
         const SizedBox(height: CohortSpacing.md),
         Text('Am I getting better?', style: CohortTextStyles.h1),
@@ -273,6 +276,8 @@ class _ProgressBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const CohortBrandLockup(),
+          const SizedBox(height: CohortSpacing.md),
           Text('PROGRESS', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.md),
           Text('Am I getting better?', style: CohortTextStyles.h1),

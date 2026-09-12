@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
@@ -267,7 +268,13 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Programme'),
+        title: const Row(
+          children: [
+            CohortBrandLockup(),
+            SizedBox(width: 12),
+            Text('Programmes'),
+          ],
+        ),
         automaticallyImplyLeading: !widget.embeddedInShell,
       ),
       body: SafeArea(

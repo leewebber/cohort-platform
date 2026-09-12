@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
@@ -142,7 +143,15 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   Widget build(BuildContext context) {
     final calendar = _calendar;
     return Scaffold(
-      appBar: AppBar(title: const Text('Calendar')),
+      appBar: AppBar(
+        title: const Row(
+          children: [
+            CohortBrandLockup(),
+            SizedBox(width: 12),
+            Text('Calendar'),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: _loadState == _CalendarLoadState.loading
             ? const Center(child: CircularProgressIndicator())

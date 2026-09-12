@@ -12,10 +12,16 @@ import '../home/controllers/home_today_session_refresh_controller.dart';
 import '../home/home_screen.dart';
 import '../programme/controllers/athlete_programme_controllers.dart';
 import '../programme/screens/athlete_calendar_screen.dart';
+import '../performance/repositories/performance_record_store.dart';
 import '../programme/screens/athlete_programme_screen.dart';
+import '../programme/services/athlete_programme_session_prepare_service.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/services/future_programme_session_swap_store.dart';
+import '../programme/services/scheduled_programme_session_preview_service.dart';
+import '../session/services/programme_session_execution_launcher.dart';
 import '../progress/screens/progress_screen.dart';
+import '../../data/repositories/programme_assignment_store.dart';
 import 'screens/athlete_profile_screen.dart';
 
 /// Athlete application shell — the athlete's five primary destinations.
@@ -32,6 +38,12 @@ class AthleteAppShell extends StatefulWidget {
     this.planDefinitionMissing = false,
     this.programmeScreenController,
     this.fixedOccurrenceStore,
+    this.assignmentStore,
+    this.prepareService,
+    this.executionLauncher,
+    this.previewService,
+    this.performanceRecordStore,
+    this.swapStore,
   });
 
   final AuthController? authController;
@@ -41,6 +53,12 @@ class AthleteAppShell extends StatefulWidget {
   /// Optional programme tab controller (tests / local wiring).
   final AthleteProgrammeScreenController? programmeScreenController;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
+  final ProgrammeAssignmentStore? assignmentStore;
+  final AthleteProgrammeSessionPrepareService? prepareService;
+  final ProgrammeSessionExecutionLauncher? executionLauncher;
+  final ScheduledProgrammeSessionPreviewService? previewService;
+  final PerformanceRecordStore? performanceRecordStore;
+  final FutureProgrammeSessionSwapStore? swapStore;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -79,6 +97,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
   bool _recoveryPromptShown = false;
   final HomeTodaySessionRefreshController _surfaceRefresh =
       HomeTodaySessionRefreshController();
+  final ScrollController _homeScroll = ScrollController();
 
   FixedProgrammeOccurrenceProjectionStore get _fixedOccurrenceStore =>
       widget.fixedOccurrenceStore ??
@@ -88,6 +107,12 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
       AthleteProfileSession.profile?.athleteId ??
       CurrentUserSession.maybeInstance?.athleteId ??
       'athlete.local';
+
+  @override
+  void dispose() {
+    _homeScroll.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -193,13 +218,25 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             authController: widget.authController,
             embeddedInShell: true,
             refreshController: _surfaceRefresh,
+            assignmentStore: widget.assignmentStore,
+            prepareService: widget.prepareService,
+            executionLauncher: widget.executionLauncher,
+            previewService: widget.previewService,
+            performanceRecordStore: widget.performanceRecordStore,
+            swapStore: widget.swapStore,
             fixedOccurrenceStore: _fixedOccurrenceStore,
+            scrollController: _homeScroll,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
           AthleteCalendarScreen(
             athleteId: _athleteId,
             fixedOccurrenceStore: _fixedOccurrenceStore,
             refreshController: _surfaceRefresh,
+            assignmentStore: widget.assignmentStore,
+            prepareService: widget.prepareService,
+            executionLauncher: widget.executionLauncher,
+            previewService: widget.previewService,
+            swapStore: widget.swapStore,
             onOpenProgrammes: () => setState(() => _index = 2),
             authRefreshListenable: widget.authController,
           ),
@@ -210,6 +247,11 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             embeddedInShell: true,
             refreshController: _surfaceRefresh,
             controller: widget.programmeScreenController,
+            assignmentStore: widget.assignmentStore,
+            prepareService: widget.prepareService,
+            executionLauncher: widget.executionLauncher,
+            previewService: widget.previewService,
+            swapStore: widget.swapStore,
             fixedOccurrenceStore: _fixedOccurrenceStore,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
@@ -225,8 +267,16 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
         selectedIndex: _index,
         destinations: AthleteAppShell.destinations,
         onDestinationSelected: (i) {
+          final alreadyHome = _index == 0 && i == 0;
           setState(() => _index = i);
           if (i == 0) {
+            if (alreadyHome && _homeScroll.hasClients) {
+              _homeScroll.animateTo(
+                0,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOut,
+              );
+            }
             _surfaceRefresh.reloadAuthoritativeSurfaces(
               source: 'shell_home_tab',
             );

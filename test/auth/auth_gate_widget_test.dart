@@ -60,6 +60,6 @@ void main() {
 
     expect(find.text('COHORT'), findsOneWidget);
     expect(find.text('Home'), findsWidgets);
-    expect(find.text('Lee'), findsOneWidget);
+    expect(find.textContaining('Lee'), findsWidgets);
   });
 }

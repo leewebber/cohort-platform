@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/cohort_lighting.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/spacing.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
+import '../app_shell/presentation/athlete_time_aware_greeting.dart';
+import '../app_shell/widgets/athlete_shell_header.dart';
 import '../../data/repositories/programme_assignment_store.dart';
 import '../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../models/programme_assignment.dart';
@@ -56,6 +57,8 @@ class HomeScreen extends StatefulWidget {
     this.performanceRecordStore,
     this.swapStore,
     this.onOpenCalendar,
+    this.scrollController,
+    this.greetingNowUtc,
   });
 
   final AuthController? authController;
@@ -83,6 +86,10 @@ class HomeScreen extends StatefulWidget {
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
   final VoidCallback? onOpenCalendar;
+  final ScrollController? scrollController;
+
+  /// Test seam for time-aware greeting. Defaults to UTC now.
+  final DateTime Function()? greetingNowUtc;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -111,10 +118,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         'athlete.local';
   }
 
-  String get _displayName =>
+  String? get _greetingDisplayName =>
       AthleteProfileSession.profile?.displayName ??
-      CurrentUserSession.maybeInstance?.profile.displayName ??
-      'Athlete';
+      CurrentUserSession.maybeInstance?.profile.displayName;
 
   ProgrammeAssignmentStore get _assignmentStore =>
       widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
@@ -221,15 +227,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
     final bottomPad = widget.embeddedInShell ? 24.0 : 24.0 + 72.0 + bottomInset;
 
+    final greeting = AthleteTimeAwareGreeting.format(
+      localNow: AthleteIanaClock.nowInZone(
+        _assignment?.timezone ?? _calendar?.timezone,
+        utcNow: widget.greetingNowUtc?.call(),
+      ),
+      displayName: _greetingDisplayName,
+    );
+
     return Scaffold(
       backgroundColor: CohortColors.background,
       body: SafeArea(
         child: SingleChildScrollView(
+          controller: widget.scrollController,
           padding: EdgeInsets.fromLTRB(24, 16, 24, bottomPad),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _HomeBrandHeader(displayName: _displayName),
+              AthleteShellHeader(greeting: greeting),
               const SizedBox(height: CohortSpacing.lg),
               ..._todayForAuthority(authority),
             ],
@@ -536,55 +551,5 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       refreshController: _refreshController,
     );
     if (changed == true && mounted) await _refreshMaterialisedGate();
-  }
-}
-
-class _HomeBrandHeader extends StatelessWidget {
-  const _HomeBrandHeader({required this.displayName});
-
-  final String displayName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: CohortColors.oliveSoft,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: CohortColors.edgeHighlight.withValues(alpha: 0.28),
-            ),
-            boxShadow: CohortLighting.emissive(opacity: 0.06, blurRadius: 10),
-          ),
-          child: Icon(
-            Icons.hexagon_outlined,
-            color: CohortColors.phosphor,
-            size: 22,
-            shadows: [
-              Shadow(
-                color: CohortColors.phosphor.withValues(alpha: 0.4),
-                blurRadius: 5,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: CohortSpacing.md),
-        Text(
-          'COHORT',
-          style: CohortTextStyles.h2.copyWith(letterSpacing: 2, fontSize: 18),
-        ),
-        const Spacer(),
-        Text(
-          displayName.split(' ').first,
-          style: CohortTextStyles.statusActive.copyWith(
-            color: CohortColors.phosphor,
-            letterSpacing: 0.4,
-          ),
-        ),
-      ],
-    );
   }
 }

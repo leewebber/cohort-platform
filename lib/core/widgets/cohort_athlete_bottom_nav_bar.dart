@@ -117,7 +117,12 @@ class _NavItem extends StatelessWidget {
         ? CohortColors.phosphor
         : CohortColors.textMuted;
 
-    return Material(
+    return Semantics(
+      button: true,
+      selected: selected,
+      enabled: enabled,
+      label: destination.label,
+      child: Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -152,17 +157,22 @@ class _NavItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                destination.label,
-                style: CohortTextStyles.muted.copyWith(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: color,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  destination.label,
+                  maxLines: 1,
+                  style: CohortTextStyles.muted.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
                 ),
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }

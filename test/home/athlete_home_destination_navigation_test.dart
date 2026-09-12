@@ -16,6 +16,8 @@ void main() {
     expect(find.text('VIEW PROGRAMMES'), findsOneWidget);
     expect(find.text('THIS WEEK'), findsNothing);
     expect(find.text('No programme scheduled'), findsNothing);
+    expect(find.text('Programmes'), findsWidgets);
+    expect(find.text('Profile'), findsWidgets);
 
     await tester.tap(find.text('Calendar'));
     await tester.pumpAndSettle();

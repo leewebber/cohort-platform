@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/config/app_build_provenance.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
@@ -43,6 +45,8 @@ class AthleteProfileScreen extends StatelessWidget {
             CohortSpacing.xxl,
           ),
           children: [
+            const CohortBrandLockup(),
+            const SizedBox(height: CohortSpacing.md),
             Text('PROFILE', style: CohortTextStyles.eyebrow),
             const SizedBox(height: CohortSpacing.md),
             Text(_displayName, style: CohortTextStyles.h1),
@@ -114,6 +118,18 @@ class AthleteProfileScreen extends StatelessWidget {
                     'Review completed sessions and performance records.',
                 showChevron: true,
               ),
+            ),
+            const SizedBox(height: CohortSpacing.lg),
+            _SectionHeader('App'),
+            _ProfileRow(
+              title: 'Version',
+              subtitle: AppBuildProvenance.current.displayVersion,
+            ),
+            _ProfileRow(
+              title: 'Build',
+              subtitle:
+                  '${AppBuildProvenance.current.environmentLabel} · '
+                  '${AppBuildProvenance.current.shortCommit}',
             ),
             const SizedBox(height: CohortSpacing.lg),
             _SectionHeader('Support'),
