@@ -545,6 +545,9 @@ class CircuitResultData extends PerformanceResultData {
     this.endedEarly = false,
     this.earlyEndReason,
     this.note,
+    this.recordedCompletedRounds,
+    this.prescribedTargetsUsed,
+    this.scoreEntered = false,
   });
 
   final String format;
@@ -561,24 +564,51 @@ class CircuitResultData extends PerformanceResultData {
   final String? earlyEndReason;
   final String? note;
 
+  /// Canonical EMOM interval/round count. Athlete-facing copy says "intervals".
+  final int? recordedCompletedRounds;
+  final bool? prescribedTargetsUsed;
+  final bool scoreEntered;
+
   bool get isFixedWork =>
       captureStrategy == CircuitCaptureStrategy.fixedWork;
 
-  bool get usesStationCapture => !isFixedWork && stations.isNotEmpty;
+  /// One timed EMOM minute is one canonical [completedRounds] unit.
+  bool get isEmomScore => format == 'emom' && !isFixedWork;
 
-  bool get usesCircuitCapture => isFixedWork || stations.isNotEmpty;
+  bool get usedInAppTimer =>
+      timerCursor != null &&
+      (timerCursor!.isFinished ||
+          timerCursor!.isRunning ||
+          timerCursor!.isPaused ||
+          timerCursor!.currentRound > 1);
 
-  int get recordedCount => isFixedWork
+  bool get usesStationCapture =>
+      !isFixedWork && !isEmomScore && stations.isNotEmpty;
+
+  bool get usesCircuitCapture =>
+      isFixedWork || isEmomScore || stations.isNotEmpty;
+
+  int get recordedCount => isEmomScore
+      ? completedRounds
+      : isFixedWork
       ? rounds.where((round) => round.isCompleted).length
       : stations.where((row) => row.hasRecordedActual).length;
 
-  int get prescribedCount =>
-      isFixedWork ? (targetRounds ?? rounds.length) : stations.length;
+  int get prescribedCount => isEmomScore || isFixedWork
+      ? (targetRounds ?? rounds.length)
+      : stations.length;
 
   int get completedRounds {
+    if (isEmomScore) {
+      return recordedCompletedRounds ?? _derivedStationRounds;
+    }
     if (isFixedWork) {
       return rounds.where((round) => round.isCompleted).length;
     }
+    return _derivedStationRounds;
+  }
+
+  int get _derivedStationRounds {
     if (targetRounds == null || targetRounds! <= 0) return 0;
     final byRound = <int, List<CircuitStationActual>>{};
     for (final row in stations) {
@@ -641,6 +671,11 @@ class CircuitResultData extends PerformanceResultData {
     'endedEarly': endedEarly,
     if (earlyEndReason != null) 'earlyEndReason': earlyEndReason,
     if (note != null) 'note': note,
+    if (recordedCompletedRounds != null)
+      'completedRounds': recordedCompletedRounds,
+    if (prescribedTargetsUsed != null)
+      'prescribedTargetsUsed': prescribedTargetsUsed,
+    'scoreEntered': scoreEntered,
   };
 
   factory CircuitResultData.fromJson(Map<String, dynamic> json) {
@@ -703,6 +738,12 @@ class CircuitResultData extends PerformanceResultData {
       endedEarly: json['endedEarly'] == true,
       earlyEndReason: _trim(json['earlyEndReason']),
       note: _trim(json['note']),
+      recordedCompletedRounds: _nullableInt(json['completedRounds']),
+      prescribedTargetsUsed: json['prescribedTargetsUsed'] is bool
+          ? json['prescribedTargetsUsed'] as bool
+          : null,
+      scoreEntered:
+          json['scoreEntered'] == true || json['completedRounds'] != null,
     );
   }
 
@@ -710,12 +751,19 @@ class CircuitResultData extends PerformanceResultData {
     List<CircuitStationActual>? stations,
     List<CircuitSharedSetup>? sharedSetup,
     List<CircuitRoundActual>? rounds,
+    int? targetRounds,
+    int? intervalSeconds,
     CircuitTimerCursor? timerCursor,
     bool? endedEarly,
     String? earlyEndReason,
     String? note,
+    int? recordedCompletedRounds,
+    bool? prescribedTargetsUsed,
+    bool? scoreEntered,
     bool clearTimerCursor = false,
     bool clearEarlyEndReason = false,
+    bool clearRecordedCompletedRounds = false,
+    bool clearPrescribedTargetsUsed = false,
   }) {
     return CircuitResultData(
       format: format,
@@ -724,8 +772,8 @@ class CircuitResultData extends PerformanceResultData {
       stations: stations ?? this.stations,
       sharedSetup: sharedSetup ?? this.sharedSetup,
       rounds: rounds ?? this.rounds,
-      targetRounds: targetRounds,
-      intervalSeconds: intervalSeconds,
+      targetRounds: targetRounds ?? this.targetRounds,
+      intervalSeconds: intervalSeconds ?? this.intervalSeconds,
       restBetweenRoundsSeconds: restBetweenRoundsSeconds,
       timerCursor: clearTimerCursor ? null : (timerCursor ?? this.timerCursor),
       endedEarly: endedEarly ?? this.endedEarly,
@@ -733,6 +781,13 @@ class CircuitResultData extends PerformanceResultData {
           ? null
           : (earlyEndReason ?? this.earlyEndReason),
       note: note ?? this.note,
+      recordedCompletedRounds: clearRecordedCompletedRounds
+          ? null
+          : (recordedCompletedRounds ?? this.recordedCompletedRounds),
+      prescribedTargetsUsed: clearPrescribedTargetsUsed
+          ? null
+          : (prescribedTargetsUsed ?? this.prescribedTargetsUsed),
+      scoreEntered: scoreEntered ?? this.scoreEntered,
     );
   }
 

@@ -1,5 +1,6 @@
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
+import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
 import '../../features/session/models/session_execution_plan.dart';
 import '../../features/workout_player/models/workout_session_brief.dart';
@@ -81,6 +82,8 @@ class SessionExecutionPlanCodec {
       'workoutFormat': block.workoutFormat.name,
       'position': block.position,
       'timerSummary': block.timerSummary,
+      if (block.timerConfiguration != null)
+        'timerConfiguration': block.timerConfiguration!.toJson(),
       'coachNotes': block.coachNotes,
       'linkedExercises': block.linkedExercises.map((e) {
         return {
@@ -133,6 +136,11 @@ class SessionExecutionPlanCodec {
       workoutFormat: format,
       position: (map['position'] as num?)?.toInt() ?? 0,
       timerSummary: map['timerSummary']?.toString(),
+      timerConfiguration: map['timerConfiguration'] is Map
+          ? TimerConfiguration.fromJson(
+              Map<String, dynamic>.from(map['timerConfiguration'] as Map),
+            )
+          : null,
       linkedExercises: exercises,
       coachNotes: map['coachNotes']?.toString(),
     );

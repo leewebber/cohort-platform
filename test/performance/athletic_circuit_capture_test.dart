@@ -6,7 +6,6 @@ import 'package:cohort_platform/features/performance/models/training_session_rec
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/circuit_result_comparison.dart';
-import 'package:cohort_platform/features/performance/services/circuit_set_sync.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
 import 'package:cohort_platform/features/performance/widgets/circuit_capture_editor.dart';
@@ -129,7 +128,7 @@ SessionExecutionPlan _w5Athletic() {
 }
 
 void main() {
-  test('W1 Athletic authors eight station occurrences not interval counts', () {
+  test('W1 Athletic authors two stations and eight intervals', () {
     final controller = PerformanceCaptureController.initializeFromExecutionPlan(
       plan: _w1Athletic(),
       athleteId: 'athlete-1',
@@ -137,11 +136,10 @@ void main() {
     );
     final result =
         controller.draft.blockDrafts.single.resultData as CircuitResultData;
-    expect(result.stations, hasLength(8));
-    expect(result.stations.map((row) => row.stationId).take(2), [
-      'EX-049',
-      'EX-009',
-    ]);
+    expect(result.isEmomScore, isTrue);
+    expect(result.stations, hasLength(2));
+    expect(result.targetRounds, 8);
+    expect(result.stations.map((row) => row.stationId), ['EX-049', 'EX-009']);
     expect(result.stations.first.primaryMetric, CircuitStationMetric.calories);
     expect(result.stations[1].primaryMetric, CircuitStationMetric.reps);
     expect(controller.draft.blockDrafts.single.exerciseResults, hasLength(2));
@@ -149,7 +147,7 @@ void main() {
       controller.draft.blockDrafts.single.exerciseResults
           .expand((exercise) => exercise.sets)
           .length,
-      8,
+      0,
     );
   });
 
@@ -163,15 +161,6 @@ void main() {
     final blockId = controller.draft.blockDrafts.single.sourceBlockId;
     var result =
         controller.draft.blockDrafts.single.resultData as CircuitResultData;
-    final firstSetId = controller
-        .draft
-        .blockDrafts
-        .single
-        .exerciseResults
-        .first
-        .sets
-        .first
-        .setResultId;
     result = result.replaceStation(
       result.stations.first.copyWith(
         calories: 12,
@@ -193,21 +182,16 @@ void main() {
     );
     final resumedResult =
         resumed!.blockResults.single.resultData as CircuitResultData;
-    expect(resumedResult.recordedCount, 2);
     expect(resumedResult.stations.first.calories, 12);
-    expect(
-      resumed.blockResults.single.exerciseResults.first.setResults.first.setResultId,
-      firstSetId,
-    );
+    expect(resumedResult.stations[1].reps, 8);
 
     controller
       ..updateBlockResultData(
         blockId,
-        resumedResult.replaceStation(
-          resumedResult.stations[2].copyWith(
-            calories: 11,
-            state: CircuitOccurrenceState.recorded,
-          ),
+        resumedResult.copyWith(
+          recordedCompletedRounds: 8,
+          prescribedTargetsUsed: false,
+          scoreEntered: true,
         ),
       )
       ..markBlockComplete(blockId);
@@ -222,19 +206,10 @@ void main() {
     );
     final done =
         relaunched!.blockResults.single.resultData as CircuitResultData;
-    expect(done.stations.map((row) => row.calories).take(3).toList(), [
-      12,
-      null,
-      11,
-    ]);
-    expect(
-      relaunched.blockResults.single.exerciseResults
-          .expand((exercise) => exercise.setResults)
-          .map((set) => set.setResultId)
-          .toSet()
-          .length,
-      8,
-    );
+    expect(done.completedRounds, 8);
+    expect(done.stations.first.calories, 12);
+    expect(done.stations[1].reps, 8);
+    expect(done.usedInAppTimer, isFalse);
   });
 
   test('W5 Athletic authors two load entries and three round timings', () {
@@ -304,65 +279,27 @@ void main() {
     expect(set.load, 24);
   });
 
-  test('compatible EMOM families compare calories; incompatible stay honest', () {
+  test('compatible EMOM families compare intervals; incompatible stay honest', () {
     final first = PerformanceCaptureController.initializeFromExecutionPlan(
       plan: _w1Athletic(),
       athleteId: 'athlete-1',
       trainingSessionId: 24,
     ).draft.blockDrafts.single.resultData as CircuitResultData;
-    final recorded = first.replaceStation(
-      first.stations.first.copyWith(
-        calories: 12,
-        state: CircuitOccurrenceState.recorded,
-      ),
+    final recorded = first.copyWith(
+      recordedCompletedRounds: 8,
+      prescribedTargetsUsed: true,
+      scoreEntered: true,
     );
     expect(CircuitResultComparison.isComparable(first, recorded), isTrue);
-    expect(CircuitResultComparison.primarySignal(recorded)?.value, 12);
+    expect(CircuitResultComparison.primarySignal(recorded)?.value, 8);
+    expect(CircuitResultComparison.primarySignal(recorded)?.label, 'Intervals completed');
+    expect(CircuitResultComparison.primarySignal(first), isNull);
 
-    final longer = first.copyWith(
-      stations: [
-        ...first.stations,
-        CircuitStationActual(
-          ordinal: 9,
-          round: 9,
-          stationIndex: 1,
-          stationId: 'EX-049',
-          displayName: 'RowErg',
-          primaryMetric: CircuitStationMetric.calories,
-          prescribedCalories: 12,
-        ),
-      ],
-    );
+    final longer = first.copyWith(targetRounds: 10, intervalSeconds: 60);
     expect(CircuitResultComparison.isComparable(first, longer), isFalse);
-    expect(
-      CircuitResultComparison.primarySignal(first),
-      isNull,
-    );
 
-    final w3Family = first.copyWith(
-      stations: [
-        ...first.stations,
-        CircuitStationActual(
-          ordinal: 9,
-          round: 9,
-          stationIndex: 1,
-          stationId: 'EX-049',
-          displayName: 'RowErg',
-          primaryMetric: CircuitStationMetric.calories,
-          prescribedCalories: 12,
-        ),
-        CircuitStationActual(
-          ordinal: 10,
-          round: 10,
-          stationIndex: 2,
-          stationId: 'EX-009',
-          displayName: 'Burpees',
-          primaryMetric: CircuitStationMetric.reps,
-          prescribedReps: 8,
-        ),
-      ],
-    );
-    expect(CircuitResultComparison.isComparable(first, w3Family), isFalse);
+    final differentInterval = first.copyWith(intervalSeconds: 90);
+    expect(CircuitResultComparison.isComparable(first, differentInterval), isFalse);
   });
 
   test('correction payload keeps circuit station actuals', () {
@@ -403,7 +340,7 @@ void main() {
     );
   });
 
-  testWidgets('W1 editor shows stations and not Intervals completed', (
+  testWidgets('W1 editor shows EMOM interval score not station-actual grid', (
     tester,
   ) async {
     final controller = PerformanceCaptureController.initializeFromExecutionPlan(
@@ -427,10 +364,10 @@ void main() {
         ),
       ),
     );
-    expect(find.textContaining('Intervals completed'), findsNothing);
-    expect(find.byType(CircuitCaptureEditor), findsOneWidget);
-    expect(find.textContaining('RowErg'), findsWidgets);
-    expect(find.textContaining('Calories'), findsWidgets);
+    expect(find.text('EMOM complete'), findsOneWidget);
+    expect(find.byType(CircuitCaptureEditor), findsNothing);
+    expect(find.textContaining('0 of 0 stations'), findsNothing);
+    expect(find.textContaining('8 of 8'), findsWidgets);
   });
 
   testWidgets('completed circuit dashboard lists rounds and stations', (
@@ -485,33 +422,22 @@ void main() {
     var result =
         controller.draft.blockDrafts.single.resultData as CircuitResultData;
     expect(result.stations.first.primaryMetric, CircuitStationMetric.calories);
-    result = result.replaceStation(
-      result.stations.first.copyWith(
-        calories: 12,
-        state: CircuitOccurrenceState.recorded,
-      ),
+    result = result.copyWith(
+      recordedCompletedRounds: 8,
+      prescribedTargetsUsed: false,
+      scoreEntered: true,
+      stations: [
+        result.stations.first.copyWith(
+          calories: 12,
+          state: CircuitOccurrenceState.recorded,
+        ),
+        result.stations[1],
+      ],
     );
     controller.updateBlockResultData(blockId, result);
-    final synced = CircuitSetSync.ensureAuthoredRows(
-      exercises: controller.draft.blockDrafts.single.exerciseResults,
-      result: result,
-    );
-    expect(synced.first.sets.first.reps, 12);
-    final hydrated = CircuitSetSync.hydrateFromSets(
-      result: result,
-      exercises: const PerformanceRecordMapper()
-          .fromDraft(
-            controller.buildPersistableDraft(
-              status: TrainingSessionRecordStatus.inProgress,
-            ),
-          )
-          .blockResults
-          .single
-          .exerciseResults,
-    );
-    expect(hydrated.stations.first.primaryMetric, CircuitStationMetric.calories);
-    expect(hydrated.stations.first.calories, 12);
-    expect(hydrated.stations.first.reps, isNull);
+    expect(result.usesStationCapture, isFalse);
+    expect(result.stations.first.primaryMetric, CircuitStationMetric.calories);
+    expect(result.stations.first.calories, 12);
 
     controller.markBlockComplete(blockId);
     final record = const PerformanceRecordMapper().fromDraft(
@@ -531,7 +457,7 @@ void main() {
       CircuitResultComparison.primarySignal(
         projection.blocks.single.circuit!.result,
       )?.label,
-      'Total calories',
+      'Intervals completed',
     );
 
     final draft = PerformanceCorrectionDraft(record);

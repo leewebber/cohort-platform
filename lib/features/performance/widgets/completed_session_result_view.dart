@@ -494,6 +494,37 @@ class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> 
               '${row.displayName}: ${_stationPrescribedLabel(row)}',
               style: CohortTextStyles.small,
             ),
+        ] else if (_expanded && circuit.result.isEmomScore) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text(
+            '${circuit.result.completedRounds} of ${circuit.result.targetRounds ?? circuit.result.completedRounds} intervals completed',
+            style: CohortTextStyles.body,
+          ),
+          Text(
+            circuit.result.prescribedTargetsUsed == false
+                ? 'Targets adjusted'
+                : 'Prescribed targets achieved',
+            style: CohortTextStyles.small,
+          ),
+          for (final row in circuit.result.stations)
+            Text(
+              circuit.result.prescribedTargetsUsed == false &&
+                      row.hasRecordedActual
+                  ? '${row.displayName}: ${_stationActualLabel(row)}'
+                  : '${row.displayName}: ${_stationPrescribedLabel(row)}',
+              style: CohortTextStyles.small,
+            ),
+          if (circuit.previous != null) ...[
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              'Last time: ${circuit.previous!.completedRounds} of ${circuit.previous!.targetRounds ?? circuit.previous!.completedRounds} intervals completed',
+              style: CohortTextStyles.small,
+            ),
+            Text(
+              'Today: ${circuit.result.completedRounds} of ${circuit.result.targetRounds ?? circuit.result.completedRounds} intervals completed',
+              style: CohortTextStyles.small,
+            ),
+          ],
         ] else if (_expanded)
           for (final round in rounds) ...[
             const SizedBox(height: CohortSpacing.sm),

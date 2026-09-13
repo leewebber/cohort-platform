@@ -11,10 +11,13 @@ import '../../../features/programme/models/programme_progress_summary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/models/active_performance_draft.dart';
 import '../../performance/models/performance_result_data.dart';
+import '../../performance/screens/emom_result_screen.dart';
 import '../../performance/screens/session_finish_review_screen.dart';
 import '../../performance/services/circuit_capture_contract.dart';
+import '../../performance/services/emom_score_contract.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
+import '../../../models/workout_format.dart';
 import '../controllers/session_execution_controller.dart';
 import '../models/session_execution_plan.dart';
 import '../models/workout_session_launch_context.dart';
@@ -208,6 +211,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
           format: block.workoutFormat,
           configuration: block.timerConfiguration!,
           stationLabels: labels,
+          onCheckpoint: (state) => _persistTimerCursor(block, state),
           initialState: cursor == null
               ? null
               : CircuitBlockTimerBridge.stateFrom(
@@ -221,18 +225,44 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     );
     if (popped != null &&
         CircuitCaptureContract.isCircuitFormat(block.workoutFormat)) {
-      final latest = _blockDraft(block.blockId)?.resultData;
-      if (latest is CircuitResultData) {
-        _performanceController.updateBlockResultData(
-          block.blockId,
-          latest.copyWith(
-            timerCursor: CircuitBlockTimerBridge.cursorFrom(popped),
-          ),
-        );
-        _persistDraft();
+      _persistTimerCursor(block, popped);
+      if (block.workoutFormat == WorkoutFormat.emom) {
+        await _openEmomResult(block, timer: popped);
+        return;
       }
     }
     _refresh();
+  }
+
+  void _persistTimerCursor(SessionExecutionBlock block, BlockTimerState state) {
+    final latest = _blockDraft(block.blockId)?.resultData;
+    if (latest is! CircuitResultData) return;
+    _performanceController.updateBlockResultData(
+      block.blockId,
+      latest.copyWith(timerCursor: CircuitBlockTimerBridge.cursorFrom(state)),
+    );
+    _persistDraft();
+  }
+
+  Future<void> _openEmomResult(
+    SessionExecutionBlock block, {
+    BlockTimerState? timer,
+  }) async {
+    final draft = _blockDraft(block.blockId);
+    final result = draft?.resultData;
+    if (result is! CircuitResultData) return;
+    final saved = await openEmomResultCapture(
+      context,
+      result: result,
+      timer: timer,
+    );
+    if (!mounted) return;
+    if (saved == null) {
+      _refresh();
+      return;
+    }
+    _performanceController.updateBlockResultData(block.blockId, saved);
+    _commitBlockComplete(block.blockId);
   }
 
   BlockPerformanceDraft? _blockDraft(String blockId) {
@@ -316,6 +346,25 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   }
 
   void _syncBlockComplete(String blockId) {
+    SessionExecutionBlock? block;
+    for (final item in _controller.state.plan.blocks) {
+      if (item.blockId == blockId) {
+        block = item;
+        break;
+      }
+    }
+    final result = _blockDraft(blockId)?.resultData;
+    if (block != null &&
+        block.workoutFormat == WorkoutFormat.emom &&
+        result is CircuitResultData &&
+        !result.scoreEntered) {
+      _openEmomResult(block);
+      return;
+    }
+    _commitBlockComplete(blockId);
+  }
+
+  void _commitBlockComplete(String blockId) {
     _performanceController.markBlockComplete(blockId);
     final validation = _performanceController.validateForCompletion();
     final blockErrors = validation.fieldErrors.entries
@@ -413,6 +462,12 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                       final blockDraft = isActive
                           ? _blockDraft(block.blockId)
                           : null;
+                      final isEmom = block.workoutFormat == WorkoutFormat.emom;
+                      final emomResult = blockDraft?.resultData
+                              is CircuitResultData
+                          ? blockDraft!.resultData as CircuitResultData
+                          : null;
+                      final timerStarted = emomResult?.usedInAppTimer == true;
                       final performanceReplacesExerciseList =
                           CircuitCaptureContract.isFixedWork(block) ||
                           (blockDraft != null &&
@@ -425,6 +480,19 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                         isExpanded: isExpanded,
                         isActive: isActive,
                         isComplete: state.isBlockComplete(block.blockId),
+                        stackActions: isEmom,
+                        timerActionLabel: 'Start timer',
+                        completeActionLabel: isEmom
+                            ? (timerStarted
+                                  ? 'End and record result'
+                                  : 'Record result without timer')
+                            : null,
+                        recordedResultSummary:
+                            state.isBlockComplete(block.blockId) &&
+                                emomResult != null &&
+                                emomResult.isEmomScore
+                            ? EmomScoreContract.completedSummary(emomResult)
+                            : null,
                         onToggleExpanded: () {
                           if (isActive) return;
                           _controller.toggleBlockExpanded(block.blockId);
@@ -467,6 +535,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                             : null,
                         performanceSection:
                             blockDraft == null ||
+                                isEmom ||
                                 !BlockResultEditor.showsCaptureFields(
                                   blockDraft,
                                 )

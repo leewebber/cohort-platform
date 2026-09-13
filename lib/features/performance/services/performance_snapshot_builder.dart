@@ -95,6 +95,7 @@ class PerformanceSnapshotBuilder {
             );
           }
           if (resultData is CircuitResultData &&
+              resultData.usesStationCapture &&
               CircuitCaptureContract.hasAuthoredStations(block)) {
             exercises = CircuitSetSync.ensureAuthoredRows(
               exercises: exercises,

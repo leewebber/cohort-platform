@@ -17,6 +17,7 @@ class BlockTimerScreen extends StatefulWidget {
     required this.configuration,
     this.initialState,
     this.stationLabels = const {},
+    this.onCheckpoint,
   });
 
   final String blockTitle;
@@ -24,6 +25,7 @@ class BlockTimerScreen extends StatefulWidget {
   final TimerConfiguration configuration;
   final BlockTimerState? initialState;
   final Map<String, String> stationLabels;
+  final ValueChanged<BlockTimerState>? onCheckpoint;
 
   @override
   State<BlockTimerScreen> createState() => _BlockTimerScreenState();
@@ -40,7 +42,22 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
       format: widget.format,
       configuration: widget.configuration,
       stationLabels: widget.stationLabels,
-      onStateChanged: (state) => setState(() => _state = state),
+      onStateChanged: (state) {
+        final previousRound = _state?.currentRound;
+        final justFinished = state.isFinished && _state?.isFinished != true;
+        setState(() => _state = state);
+        if (previousRound != null && previousRound != state.currentRound) {
+          widget.onCheckpoint?.call(state);
+        }
+        if (justFinished) {
+          widget.onCheckpoint?.call(state);
+          if (widget.format == WorkoutFormat.emom) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) Navigator.pop(context, state);
+            });
+          }
+        }
+      },
     );
     final restored = widget.initialState;
     if (restored != null) {
@@ -185,6 +202,28 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                   child: CohortButton(
                     label: 'Start recovery',
                     onPressed: () => _controller?.startRecovery(),
+                  ),
+                ),
+              if (widget.format == WorkoutFormat.emom &&
+                  state?.isFinished != true)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+                  child: CohortButton(
+                    label: 'End early',
+                    variant: CohortButtonVariant.secondary,
+                    onPressed: () {
+                      _controller?.pause();
+                      Navigator.pop(context, _controller?.state);
+                    },
+                  ),
+                ),
+              if (widget.format == WorkoutFormat.emom &&
+                  state?.isFinished == true)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+                  child: CohortButton(
+                    label: 'Record result',
+                    onPressed: () => Navigator.pop(context, _controller?.state),
                   ),
                 ),
               Row(

@@ -172,6 +172,13 @@ class PerformanceResultSummaryFormatter {
           : EnduranceMetricsCalculator.formatDuration(fastest);
       return '$complete/${target ?? result.rounds.length} rounds · average $averageLabel · fastest $fastestLabel';
     }
+    if (result.isEmomScore) {
+      final total = target ?? prescribed;
+      final targets = result.prescribedTargetsUsed == false
+          ? 'Targets adjusted'
+          : 'Prescribed targets achieved';
+      return '${result.completedRounds} of $total intervals completed · $targets';
+    }
     if (result.format == 'emom') {
       return '$recorded/$prescribed stations recorded';
     }

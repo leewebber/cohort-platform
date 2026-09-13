@@ -646,6 +646,7 @@ class CompletedCircuitBlockProjection {
     required this.collapsedSummary,
     required this.primaryLabel,
     this.fastestIsPersonalRecord = false,
+    this.previous,
   });
 
   final CircuitResultData result;
@@ -653,6 +654,7 @@ class CompletedCircuitBlockProjection {
   final String collapsedSummary;
   final String? primaryLabel;
   final bool fastestIsPersonalRecord;
+  final CircuitResultData? previous;
 
   static CompletedCircuitBlockProjection? tryFrom(
     TrainingBlockResult block, {
@@ -672,6 +674,7 @@ class CompletedCircuitBlockProjection {
       collapsedSummary: PerformanceResultSummaryFormatter.formatBlock(block),
       primaryLabel: comparison.primaryLabel,
       fastestIsPersonalRecord: comparison.fastestIsPersonalRecord,
+      previous: comparison.previous,
     );
   }
 }

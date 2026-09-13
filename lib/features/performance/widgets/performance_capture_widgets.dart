@@ -20,6 +20,7 @@ import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import 'endurance_duration_field.dart';
 import 'circuit_capture_editor.dart';
+import 'emom_result_capture.dart';
 import 'fixed_work_rounds_capture.dart';
 import 'interval_pace_field.dart';
 import 'performance_numeric_field.dart';
@@ -304,6 +305,13 @@ class _ResultEditorBody extends StatelessWidget {
             onChanged: onResultChanged,
             linkedExercises: linkedExercises,
             onOpenExercise: onOpenExercise,
+          );
+        }
+        if (circuit.isEmomScore) {
+          return EmomResultCapture(
+            result: circuit,
+            showActions: false,
+            onChanged: onResultChanged,
           );
         }
         return CircuitCaptureEditor(

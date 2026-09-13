@@ -33,6 +33,9 @@ class AthleteBlockCard extends StatelessWidget {
     this.showBlockNavigation = false,
     this.onPrevious,
     this.onNext,
+    this.timerActionLabel = 'Start timer',
+    this.completeActionLabel,
+    this.stackActions = false,
   });
 
   final SessionExecutionBlock block;
@@ -58,6 +61,9 @@ class AthleteBlockCard extends StatelessWidget {
   final bool showBlockNavigation;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
+  final String timerActionLabel;
+  final String? completeActionLabel;
+  final bool stackActions;
 
   @override
   Widget build(BuildContext context) {
@@ -162,27 +168,42 @@ class AthleteBlockCard extends StatelessWidget {
               ],
               if (showActions) ...[
                 const SizedBox(height: CohortSpacing.lg),
-                Row(
-                  children: [
-                    if (block.hasTimer && onLaunchTimer != null)
+                if (stackActions) ...[
+                  if (block.hasTimer && onLaunchTimer != null && !isComplete)
+                    CohortButton(
+                      label: timerActionLabel,
+                      onPressed: () => onLaunchTimer?.call(),
+                    ),
+                  if (block.hasTimer && onLaunchTimer != null && !isComplete)
+                    const SizedBox(height: CohortSpacing.sm),
+                  CohortButton(
+                    label: isComplete
+                        ? 'Reopen block'
+                        : (completeActionLabel ?? 'Mark block complete'),
+                    onPressed: isComplete ? onReopen : onMarkComplete,
+                  ),
+                ] else
+                  Row(
+                    children: [
+                      if (block.hasTimer && onLaunchTimer != null)
+                        Expanded(
+                          child: CohortButton(
+                            label: timerActionLabel,
+                            onPressed: () => onLaunchTimer?.call(),
+                          ),
+                        ),
+                      if (block.hasTimer && onLaunchTimer != null)
+                        const SizedBox(width: CohortSpacing.sm),
                       Expanded(
                         child: CohortButton(
-                          label: 'Start timer',
-                          onPressed: () => onLaunchTimer?.call(),
+                          label: isComplete
+                              ? 'Reopen block'
+                              : (completeActionLabel ?? 'Mark block complete'),
+                          onPressed: isComplete ? onReopen : onMarkComplete,
                         ),
                       ),
-                    if (block.hasTimer && onLaunchTimer != null)
-                      const SizedBox(width: CohortSpacing.sm),
-                    Expanded(
-                      child: CohortButton(
-                        label: isComplete
-                            ? 'Reopen block'
-                            : 'Mark block complete',
-                        onPressed: isComplete ? onReopen : onMarkComplete,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ],
           ],

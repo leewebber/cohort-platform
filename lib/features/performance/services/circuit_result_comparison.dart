@@ -41,6 +41,10 @@ class CircuitResultComparison {
     if (current.comparisonFamily != other.comparisonFamily) return false;
     if (current.format != other.format) return false;
     if (current.captureStrategy != other.captureStrategy) return false;
+    if (current.isEmomScore && other.isEmomScore) {
+      return current.targetRounds == other.targetRounds &&
+          current.intervalSeconds == other.intervalSeconds;
+    }
     if (current.prescribedCount != other.prescribedCount) return false;
     if (current.stations.length != other.stations.length) return false;
     for (var i = 0; i < current.stations.length; i++) {
@@ -220,6 +224,16 @@ class CircuitResultComparison {
       final average = result.averageRoundSeconds;
       if (average == null) return null;
       return (label: 'Average round', value: average.toDouble(), higherIsBetter: false);
+    }
+    if (result.isEmomScore) {
+      if (!result.scoreEntered && result.recordedCompletedRounds == null) {
+        return null;
+      }
+      return (
+        label: 'Intervals completed',
+        value: result.completedRounds.toDouble(),
+        higherIsBetter: true,
+      );
     }
     final recorded = result.stations.where((row) => row.hasRecordedActual);
     if (recorded.isEmpty) return null;

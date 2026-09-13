@@ -1,5 +1,6 @@
 import '../../../models/workout_format.dart';
 import '../models/active_performance_draft.dart';
+import '../models/circuit_station_actual.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
@@ -169,11 +170,13 @@ class PerformanceValidationService {
           resultData.recordedCount == 0) {
         errors['$prefix.intervals'] =
             'Enter completed intervals before completing this block.';
+      } else if (resultData is CircuitResultData && resultData.isEmomScore) {
+        _validateEmomScore(resultData, prefix, errors);
       } else if (resultData is CircuitResultData &&
           resultData.recordedCount == 0) {
         errors['$prefix.circuit'] = resultData.isFixedWork
             ? 'Finish at least one round before completing this block.'
-            : 'Record at least one station actual before completing this block.';
+            : 'Enter the number of intervals completed.';
       } else if (resultData is RoundsResultData && !resultData.entered) {
         errors['$prefix.rounds'] =
             'Enter performed rounds or reps before completing this block.';
@@ -250,6 +253,68 @@ class PerformanceValidationService {
         }
       }
     }
+  }
+
+  void _validateEmomScore(
+    CircuitResultData result,
+    String prefix,
+    Map<String, String> errors,
+  ) {
+    final total = result.targetRounds;
+    final completed = result.recordedCompletedRounds;
+    if (!result.scoreEntered || completed == null) {
+      errors['$prefix.intervals'] = 'Enter the number of intervals completed.';
+      return;
+    }
+    if (completed < 0) {
+      errors['$prefix.intervals'] = 'Enter the number of intervals completed.';
+      return;
+    }
+    if (total != null && completed > total) {
+      errors['$prefix.intervals'] =
+          'Intervals completed cannot exceed $total.';
+      return;
+    }
+    if (completed == 0 && !result.endedEarly) {
+      errors['$prefix.outcome'] =
+          'Choose whether you completed the full EMOM or ended early.';
+      return;
+    }
+    if (total != null && completed < total && !result.endedEarly) {
+      errors['$prefix.outcome'] =
+          'Choose whether you completed the full EMOM or ended early.';
+      return;
+    }
+    if (total != null && completed == total && result.endedEarly) {
+      errors['$prefix.outcome'] =
+          'Choose whether you completed the full EMOM or ended early.';
+      return;
+    }
+    if (result.prescribedTargetsUsed == null) {
+      errors['$prefix.targets'] =
+          'Choose whether you used the prescribed targets.';
+      return;
+    }
+    if (result.prescribedTargetsUsed == false) {
+      for (final row in result.stations) {
+        if (!_emomStationNeedsActual(row)) continue;
+        if (row.hasRecordedActual) continue;
+        final metric = switch (row.primaryMetric) {
+          CircuitStationMetric.calories => 'calories',
+          CircuitStationMetric.reps => 'reps',
+          CircuitStationMetric.distance => 'distance',
+          _ => 'result',
+        };
+        errors['$prefix.station:${row.stationId}'] =
+            'Enter your adjusted ${row.displayName} $metric.';
+      }
+    }
+  }
+
+  bool _emomStationNeedsActual(CircuitStationActual row) {
+    return row.primaryMetric == CircuitStationMetric.calories ||
+        row.primaryMetric == CircuitStationMetric.reps ||
+        row.primaryMetric == CircuitStationMetric.distance;
   }
 
   bool _blockCountsTowardCompletion(BlockPerformanceDraft block) {

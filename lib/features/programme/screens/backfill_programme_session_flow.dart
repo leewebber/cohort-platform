@@ -7,8 +7,10 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/mappers/performance_record_mapper.dart';
 import '../../performance/models/training_session_record_status.dart';
+import '../../performance/models/performance_result_data.dart';
 import '../../performance/services/performance_result_summary_formatter.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
+import '../../../models/workout_format.dart';
 import '../../session/controllers/session_execution_controller.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/services/session_finish_eligibility.dart';
@@ -328,8 +330,36 @@ class _BackfillResultsEntryScreenState extends State<BackfillResultsEntryScreen>
       isActive: true,
       isComplete: execution.state.isBlockComplete(block.blockId),
       onToggleExpanded: () {},
+      completeActionLabel: block.workoutFormat == WorkoutFormat.emom
+          ? 'Save result and complete block'
+          : null,
       onMarkComplete: () {
+        final result = draft?.resultData;
+        if (result is CircuitResultData &&
+            result.isEmomScore &&
+            !result.scoreEntered) {
+          performance.updateBlockResultData(
+            block.blockId,
+            result.copyWith(scoreEntered: true),
+          );
+        }
         performance.markBlockComplete(block.blockId);
+        final validation = performance.validateForCompletion();
+        String? blockError;
+        for (final entry in validation.fieldErrors.entries) {
+          if (entry.key.startsWith('block:${block.blockId}')) {
+            blockError = entry.value;
+            break;
+          }
+        }
+        if (blockError != null) {
+          performance.reopenBlock(block.blockId);
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(blockError)));
+          setState(() {});
+          return;
+        }
         execution.markBlockComplete(block.blockId);
         setState(() {});
       },

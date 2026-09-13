@@ -29,6 +29,9 @@ class CircuitCaptureContract {
       return authoredStationSpecs(block).isNotEmpty &&
           (block.timerConfiguration?.effectiveTargetRounds ?? 0) > 0;
     }
+    if (block.workoutFormat == WorkoutFormat.emom) {
+      return (occurrenceCount(block) ?? 0) > 0;
+    }
     return authoredStationSpecs(block).isNotEmpty &&
         (occurrenceCount(block) ?? 0) > 0;
   }
@@ -51,14 +54,14 @@ class CircuitCaptureContract {
   }
 
   static int? occurrenceCount(SessionExecutionBlock block) {
-    final specs = authoredStationSpecs(block);
-    if (specs.isEmpty) return null;
     if (block.workoutFormat == WorkoutFormat.emom) {
       final total = block.timerConfiguration?.emomTotalSeconds;
       final interval = block.timerConfiguration?.intervalSeconds ?? 60;
       if (total == null || total <= 0 || interval <= 0) return null;
       return total ~/ interval;
     }
+    final specs = authoredStationSpecs(block);
+    if (specs.isEmpty) return null;
     final rounds = block.timerConfiguration?.effectiveTargetRounds;
     if (rounds == null || rounds <= 0) return null;
     return rounds * specs.length;
@@ -137,6 +140,27 @@ class CircuitCaptureContract {
       );
     }
     final count = occurrenceCount(block);
+    if (block.workoutFormat == WorkoutFormat.emom) {
+      return CircuitResultData(
+        format: block.workoutFormat.dbValue,
+        comparisonFamily: comparisonFamily(block),
+        captureStrategy: strategy,
+        targetRounds: count != null && count > 0 ? count : null,
+        intervalSeconds: block.timerConfiguration?.intervalSeconds,
+        restBetweenRoundsSeconds:
+            block.timerConfiguration?.restBetweenRoundsSeconds,
+        stations: [
+          for (var i = 0; i < specs.length; i++)
+            _occurrence(
+              block: block,
+              specs: specs,
+              labels: labels,
+              ordinal: i + 1,
+              forceRound: 1,
+            ),
+        ],
+      );
+    }
     if (specs.isEmpty || count == null || count <= 0) {
       return CircuitResultData(
         format: block.workoutFormat.dbValue,
@@ -153,9 +177,7 @@ class CircuitCaptureContract {
       format: block.workoutFormat.dbValue,
       comparisonFamily: comparisonFamily(block),
       captureStrategy: strategy,
-      targetRounds: block.workoutFormat == WorkoutFormat.emom
-          ? count
-          : block.timerConfiguration?.effectiveTargetRounds,
+      targetRounds: block.timerConfiguration?.effectiveTargetRounds,
       intervalSeconds: block.timerConfiguration?.intervalSeconds,
       restBetweenRoundsSeconds:
           block.timerConfiguration?.restBetweenRoundsSeconds,
