@@ -132,14 +132,14 @@ class StrengthResultComparison {
   }) {
     final id = exerciseId.trim();
     if (id.isEmpty) return null;
-    final currentAt = current.completedAt ?? current.startedAt;
+    final currentAt = current.performanceChronologyAt;
     TrainingExerciseResult? latest;
     DateTime? latestAt;
     for (final record in athleteHistory) {
       if (record.athleteId != current.athleteId) continue;
       if (record.recordId == current.recordId) continue;
       if (record.status != TrainingSessionRecordStatus.completed) continue;
-      final at = record.completedAt ?? record.startedAt;
+      final at = record.performanceChronologyAt;
       if (!at.isBefore(currentAt)) continue;
       for (final block in record.blockResults) {
         for (final exercise in block.exerciseResults) {

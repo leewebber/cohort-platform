@@ -3,6 +3,7 @@ import '../mappers/performance_record_mapper.dart';
 import '../models/active_performance_draft.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../services/performance_chronology.dart';
 import '../services/performance_correction_service.dart';
 import 'performance_record_store.dart';
 
@@ -173,6 +174,7 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     for (final row in rows) {
       records.add(await _hydrateRecord(row));
     }
+    records.sort(PerformanceChronology.compareNewestFirst);
     return records;
   }
 

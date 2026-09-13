@@ -1,6 +1,7 @@
 import '../../../models/session_block_type.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
+import '../../performance/services/performance_chronology.dart';
 import '../../performance/services/strength_result_comparison.dart';
 import '../models/progress_summary.dart';
 
@@ -45,7 +46,11 @@ abstract final class AthleteProgressEvidenceProjection {
           ),
         )
         .toList()
-      ..sort((a, b) => b.completedAt.compareTo(a.completedAt));
+      ..sort((a, b) {
+        final byDate = b.completedAt.compareTo(a.completedAt);
+        if (byDate != 0) return byDate;
+        return a.sessionName.compareTo(b.sessionName);
+      });
     return List.unmodifiable(items);
   }
 
@@ -57,9 +62,7 @@ abstract final class AthleteProgressEvidenceProjection {
       TrainingSessionRecord record,
     })>{};
     final sorted = [...completed]
-      ..sort(
-        (a, b) => b.performanceChronologyAt.compareTo(a.performanceChronologyAt),
-      );
+      ..sort(PerformanceChronology.compareNewestFirst);
     for (final record in sorted) {
       for (final block in record.blockResults) {
         if (block.blockSnapshot.blockType != SessionBlockType.strength) {

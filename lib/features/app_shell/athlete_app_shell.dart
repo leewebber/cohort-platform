@@ -17,7 +17,9 @@ import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/services/athlete_runtime_capabilities.dart';
 import '../programme/services/backfill_programme_session_store.dart';
+import '../programme/services/supabase_backfill_programme_session_store.dart';
 import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../session/services/programme_session_execution_launcher.dart';
@@ -104,6 +106,8 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
   final HomeTodaySessionRefreshController _surfaceRefresh =
       HomeTodaySessionRefreshController();
   final ScrollController _homeScroll = ScrollController();
+  AthleteRuntimeCapabilities _capabilities =
+      AthleteRuntimeCapabilities.unavailable;
 
   FixedProgrammeOccurrenceProjectionStore get _fixedOccurrenceStore =>
       widget.fixedOccurrenceStore ??
@@ -113,6 +117,12 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
       AthleteProfileSession.profile?.athleteId ??
       CurrentUserSession.maybeInstance?.athleteId ??
       'athlete.local';
+
+  BackfillProgrammeSessionStore get _backfillStore =>
+      widget.backfillStore ??
+      SupabaseBackfillProgrammeSessionStore(
+        capabilitiesReader: () => _capabilities,
+      );
 
   @override
   void dispose() {
@@ -126,6 +136,15 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _maybeShowRecoveryPrompts();
     });
+    if (widget.backfillStore == null) {
+      _loadHostedCapabilities();
+    }
+  }
+
+  Future<void> _loadHostedCapabilities() async {
+    final loaded = await const SupabaseAthleteRuntimeCapabilityStore().load();
+    if (!mounted) return;
+    setState(() => _capabilities = loaded);
   }
 
   Future<void> _maybeShowRecoveryPrompts() async {
@@ -243,7 +262,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             executionLauncher: widget.executionLauncher,
             previewService: widget.previewService,
             swapStore: widget.swapStore,
-            backfillStore: widget.backfillStore,
+            backfillStore: _backfillStore,
             onOpenProgrammes: () => setState(() => _index = 2),
             authRefreshListenable: widget.authController,
           ),

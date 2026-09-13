@@ -2,6 +2,7 @@ import '../mappers/performance_record_mapper.dart';
 import '../models/active_performance_draft.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../services/performance_chronology.dart';
 import '../services/performance_correction_service.dart';
 import 'performance_record_store.dart';
 
@@ -169,11 +170,7 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
                   isTerminalRecordStatus(record.status),
             )
             .toList()
-          ..sort(
-            (a, b) => (b.completedAt ?? b.startedAt).compareTo(
-              a.completedAt ?? a.startedAt,
-            ),
-          );
+          ..sort(PerformanceChronology.compareNewestFirst);
 
     if (offset >= records.length) return const [];
     final end = (offset + limit).clamp(0, records.length);

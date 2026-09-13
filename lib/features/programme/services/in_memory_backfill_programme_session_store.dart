@@ -111,12 +111,7 @@ class InMemoryBackfillProgrammeSessionStore
       programmeSessionId: occurrence.sessionSlotId,
       status: TrainingSessionRecordStatus.completed,
       sessionSnapshot: mapped.sessionSnapshot,
-      startedAt: DateTime.utc(
-        performedOn.year,
-        performedOn.month,
-        performedOn.day,
-        12,
-      ),
+      startedAt: recordedAt,
       completedAt: recordedAt,
       durationSeconds: mapped.durationSeconds,
       overallRpe: mapped.overallRpe,
@@ -160,9 +155,9 @@ class InMemoryBackfillProgrammeSessionStore
     for (final record in performance.records) {
       if (record.athleteId == command.athleteId &&
           record.assignmentId == command.assignmentId &&
-          record.programmeSessionId != null &&
+          record.programmeSessionId == command.draft.programmeSessionId &&
           record.status == TrainingSessionRecordStatus.completed &&
-          record.sourceProtocolId == command.draft.sourceProtocolId) {
+          record.entryMode == SessionResultEntryMode.backfill) {
         return record;
       }
     }

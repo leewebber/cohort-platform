@@ -413,7 +413,8 @@ class TrainingSessionRecord {
       performedPrecision: SessionPerformedPrecision.parse(
         map['performed_precision'],
       ),
-      recordedAt: _parseDateTime(map['recorded_at']),
+      recordedAt: _parseDateTime(map['recorded_at']) ??
+          _parseDateTime(map['created_at']),
     );
   }
 
@@ -469,6 +470,27 @@ class TrainingSessionRecord {
       if (durationSeconds != null) 'duration_seconds': durationSeconds,
       if (overallRpe != null) 'overall_rpe': overallRpe,
       if (athleteNote != null) 'athlete_note': athleteNote,
+    };
+  }
+
+  Map<String, dynamic> toCompletionTreeMap() {
+    return {
+      ...toUpsertMap(),
+      'block_results': [
+        for (final block in blockResults)
+          {
+            ...block.toUpsertMap(),
+            'exercise_results': [
+              for (final exercise in block.exerciseResults)
+                {
+                  ...exercise.toUpsertMap(),
+                  'set_results': [
+                    for (final set in exercise.setResults) set.toUpsertMap(),
+                  ],
+                },
+            ],
+          },
+      ],
     };
   }
 }

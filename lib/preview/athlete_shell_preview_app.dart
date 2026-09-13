@@ -185,7 +185,11 @@ class _PreviewControlsDrawer extends StatelessWidget {
             const Text('Preview controls', style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.sm),
             const Text(
-              'Disposable fixture only. Does not contact hosted data.',
+              'Disposable fixture only. Does not contact hosted data. '
+              'Incomplete recovery: Train today opens the original session; '
+              'Backfill results uses date → capture → review → save. '
+              'Calendar becomes Complete, Progress inserts by performed date, '
+              'and today stays unchanged. Retry is idempotent.',
               style: CohortTextStyles.small,
             ),
             const SizedBox(height: CohortSpacing.lg),

@@ -435,7 +435,12 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       assignmentStore: widget.assignmentStore,
       prepareService: widget.prepareService,
     );
-    if (saved == true && mounted) await _load();
+    if (saved == true && mounted) {
+      await widget.refreshController?.reloadAuthoritativeSurfaces(
+        source: 'backfill_saved',
+      );
+      if (mounted) await _load();
+    }
   }
 }
 
