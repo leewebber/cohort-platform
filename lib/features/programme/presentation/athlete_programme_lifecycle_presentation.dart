@@ -67,9 +67,12 @@ class AthleteProgrammeLifecyclePresentation {
 /// Internal lifecycle may still derive `OVERDUE`. Athletes see Incomplete.
 abstract final class IncompleteSessionAthleteCopy {
   static const statusLabel = 'Incomplete';
-  static const doThisSession = 'Do this session';
+  static const trainToday = 'Train today';
+  static const backfillResults = 'Backfill results';
+  static const reschedule = 'Reschedule';
+  static const doThisSession = trainToday;
   static const stillCompletable =
-      "You can still complete this session. Today's scheduled session will not change.";
+      'You can still complete this session now or enter results if you already performed it.';
 
   static String sectionHeading(int count) =>
       count == 1 ? 'INCOMPLETE SESSION' : 'INCOMPLETE SESSIONS';
@@ -89,6 +92,15 @@ abstract final class IncompleteSessionAthleteCopy {
   }) =>
       'Scheduled ${AthleteProgrammeDateFormatter.dayMonth(scheduled)} · '
       'Completed ${AthleteProgrammeDateFormatter.dayMonth(completed)}';
+
+  static String backfillHistory({
+    required DateTime scheduled,
+    required DateTime performed,
+    required DateTime entered,
+  }) =>
+      'Scheduled ${AthleteProgrammeDateFormatter.dayMonth(scheduled)} · '
+      'Performed ${AthleteProgrammeDateFormatter.dayMonth(performed)} · '
+      'Entered ${AthleteProgrammeDateFormatter.dayMonth(entered)}';
 }
 
 abstract final class AthleteProgrammeLifecycleFormatter {

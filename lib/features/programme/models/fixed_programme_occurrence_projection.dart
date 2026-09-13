@@ -68,7 +68,14 @@ class FixedProgrammeOccurrenceProjection {
       state == FixedProgrammeOccurrenceState.overdue ||
       state == FixedProgrammeOccurrenceState.inProgressOverdue;
 
-  bool get isLateStartable => state == FixedProgrammeOccurrenceState.overdue;
+  /// Date-derived unfinished work. Legacy `MISSED` is not an explicit skip.
+  bool get isDateDerivedUnfinished =>
+      state == FixedProgrammeOccurrenceState.overdue ||
+      state == FixedProgrammeOccurrenceState.missed;
+
+  bool get isLateStartable => isDateDerivedUnfinished;
+
+  bool get canOfferHistoricalBackfill => isDateDerivedUnfinished;
 
   bool get isExecutable => isToday || isResumable || isLateStartable;
 
@@ -102,6 +109,32 @@ class FixedProgrammeOccurrenceProjection {
         map['session_revision_number'],
       ),
       trainingSessionId: _optionalPositiveInt(map['training_session_id']),
+    );
+  }
+
+  FixedProgrammeOccurrenceProjection copyWith({
+    FixedProgrammeOccurrenceState? state,
+    int? trainingSessionId,
+    String? scheduledDate,
+  }) {
+    return FixedProgrammeOccurrenceProjection(
+      assignmentId: assignmentId,
+      occurrenceId: occurrenceId,
+      sessionSlotId: sessionSlotId,
+      programmeVersionId: programmeVersionId,
+      protocolId: protocolId,
+      programmedSessionKey: programmedSessionKey,
+      weekNumber: weekNumber,
+      dayKey: dayKey,
+      sessionOrder: sessionOrder,
+      scheduledDate: scheduledDate ?? this.scheduledDate,
+      originalScheduledDate: originalScheduledDate,
+      state: state ?? this.state,
+      sessionTitle: sessionTitle,
+      sessionType: sessionType,
+      sessionLineageId: sessionLineageId,
+      sessionRevisionNumber: sessionRevisionNumber,
+      trainingSessionId: trainingSessionId ?? this.trainingSessionId,
     );
   }
 }

@@ -209,8 +209,9 @@ class _ExpandedDetail extends StatelessWidget {
     if (occurrence.isLateStartable ||
         occurrence.state == FixedProgrammeOccurrenceState.missed) {
       return const [
-        (label: IncompleteSessionAthleteCopy.doThisSession),
-        (label: 'Reschedule'),
+        (label: IncompleteSessionAthleteCopy.trainToday),
+        (label: IncompleteSessionAthleteCopy.backfillResults),
+        (label: IncompleteSessionAthleteCopy.reschedule),
       ];
     }
     if (occurrence.state == FixedProgrammeOccurrenceState.completed) {

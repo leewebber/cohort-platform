@@ -16,9 +16,14 @@ import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
 import '../services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../models/incomplete_session_recovery.dart';
+import '../services/backfill_programme_session_store.dart';
 import '../services/future_programme_session_swap_store.dart';
+import '../services/incomplete_session_train_today.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 import '../widgets/athlete_calendar_month_grid.dart';
+import '../widgets/incomplete_session_recovery_actions.dart';
+import 'backfill_programme_session_flow.dart';
 import 'scheduled_programme_session_preview_screen.dart';
 
 /// Athlete-wide training calendar. Month grid is the default presentation.
@@ -32,6 +37,7 @@ class AthleteCalendarScreen extends StatefulWidget {
     this.prepareService,
     this.executionLauncher,
     this.swapStore,
+    this.backfillStore,
     this.refreshController,
     this.onOpenProgrammes,
     this.authRefreshListenable,
@@ -45,6 +51,7 @@ class AthleteCalendarScreen extends StatefulWidget {
   final ProgrammeSessionExecutionLauncher? executionLauncher;
   final HomeTodaySessionRefreshController? refreshController;
   final FutureProgrammeSessionSwapStore? swapStore;
+  final BackfillProgrammeSessionStore? backfillStore;
   final VoidCallback? onOpenProgrammes;
   final Listenable? authRefreshListenable;
 
@@ -329,6 +336,17 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
             ),
           ),
         ),
+        if (_canRecover(calendar, occurrence)) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          IncompleteSessionRecoveryActions(
+            scheduledDate: selected,
+            onTrainToday: () => _trainToday(occurrence),
+            onBackfill: widget.backfillStore?.isSupported == true
+                ? () => _backfill(occurrence)
+                : null,
+            onReschedule: () => _openOccurrence(occurrence),
+          ),
+        ],
         const SizedBox(height: CohortSpacing.sm),
       ],
     ];
@@ -355,10 +373,69 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       prepareService: widget.prepareService,
       executionLauncher: widget.executionLauncher,
       swapStore: widget.swapStore,
+      backfillStore: widget.backfillStore,
       fixedOccurrenceStore: widget.fixedOccurrenceStore,
       refreshController: widget.refreshController,
     );
     if (changed == true && mounted) await _load();
+  }
+
+  bool _canRecover(
+    FixedProgrammeCalendarProjection calendar,
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) {
+    return IncompleteSessionRecovery.canTrainToday(
+      occurrence: occurrence,
+      calendar: calendar,
+      athleteAssignmentId: calendar.assignmentId,
+    );
+  }
+
+  Future<void> _trainToday(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final calendar = _calendar;
+    if (calendar == null) return;
+    try {
+      await IncompleteSessionTrainToday.open(
+        context: context,
+        athleteId: widget.athleteId,
+        calendar: calendar,
+        occurrence: occurrence,
+        assignmentStore: widget.assignmentStore,
+        prepareService: widget.prepareService,
+        executionLauncher: widget.executionLauncher,
+        refreshController: widget.refreshController,
+      );
+      if (mounted) await _load();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'This session could not be opened. Refresh your calendar and try again.',
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _backfill(
+    FixedProgrammeOccurrenceProjection occurrence,
+  ) async {
+    final calendar = _calendar;
+    final store = widget.backfillStore;
+    if (calendar == null || store == null || !store.isSupported) return;
+    final saved = await openBackfillProgrammeSessionFlow(
+      context: context,
+      athleteId: widget.athleteId,
+      calendar: calendar,
+      occurrence: occurrence,
+      backfillStore: store,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+    );
+    if (saved == true && mounted) await _load();
   }
 }
 

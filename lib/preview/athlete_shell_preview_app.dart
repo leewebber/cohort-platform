@@ -25,7 +25,7 @@ class AthleteShellPreviewAppState extends State<AthleteShellPreviewApp> {
   late AthleteShellPreviewBundle _bundle;
   late AuthController _auth;
   AthleteShellPreviewScenario _scenario =
-      AthleteShellPreviewScenario.todayNotStarted;
+      AthleteShellPreviewScenario.incompleteRecovery;
   int _resets = 0;
   bool _signedOut = false;
 
@@ -123,6 +123,7 @@ class AthleteShellPreviewAppState extends State<AthleteShellPreviewApp> {
                       previewService: _bundle.previewService,
                       performanceRecordStore: _bundle.performance,
                       swapStore: _bundle.swapStore,
+                      backfillStore: _bundle.backfillStore,
                       programmeScreenController: _bundle.programmeController,
                       progressBuilder: _bundle.progressBuilder,
                     ),
@@ -215,7 +216,9 @@ class _PreviewControlsDrawer extends StatelessWidget {
       AthleteShellPreviewScenario.restDay => 'Home — rest day',
       AthleteShellPreviewScenario.progressEmpty => 'Progress — no completions',
       AthleteShellPreviewScenario.progressTwoStrength =>
-        'Progress — two strength sessions',
+          'Progress — two strength sessions',
+      AthleteShellPreviewScenario.incompleteRecovery =>
+          'Calendar — incomplete Train today / Backfill',
     };
   }
 }

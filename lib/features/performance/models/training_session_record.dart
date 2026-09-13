@@ -3,6 +3,7 @@ import '../../../models/workout_format.dart';
 import 'performance_result_data.dart';
 import 'performance_result_type.dart';
 import 'performance_snapshot.dart';
+import 'session_result_entry_mode.dart';
 import 'training_block_result_status.dart';
 import 'training_session_record_status.dart';
 
@@ -332,6 +333,10 @@ class TrainingSessionRecord {
     this.createdAt,
     this.updatedAt,
     this.lastCorrectedAt,
+    this.entryMode = SessionResultEntryMode.live,
+    this.performedOn,
+    this.performedPrecision = SessionPerformedPrecision.timestamp,
+    this.recordedAt,
   });
 
   final String recordId;
@@ -353,6 +358,19 @@ class TrainingSessionRecord {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final DateTime? lastCorrectedAt;
+  final SessionResultEntryMode entryMode;
+  final DateTime? performedOn;
+  final SessionPerformedPrecision performedPrecision;
+  final DateTime? recordedAt;
+
+  /// Chronology for comparison and Progress. Never uses recorded/entry time.
+  DateTime get performanceChronologyAt {
+    final performed = performedOn;
+    if (performed != null) {
+      return DateTime.utc(performed.year, performed.month, performed.day);
+    }
+    return startedAt.toUtc();
+  }
 
   int get completedBlockCount => blockResults
       .where((b) => b.status == TrainingBlockResultStatus.completed)
@@ -390,6 +408,12 @@ class TrainingSessionRecord {
       createdAt: _parseDateTime(map['created_at']),
       updatedAt: _parseDateTime(map['updated_at']),
       lastCorrectedAt: _parseDateTime(map['last_corrected_at']),
+      entryMode: SessionResultEntryMode.parse(map['entry_mode']),
+      performedOn: _parseDateOnly(map['performed_on']),
+      performedPrecision: SessionPerformedPrecision.parse(
+        map['performed_precision'],
+      ),
+      recordedAt: _parseDateTime(map['recorded_at']),
     );
   }
 
@@ -420,6 +444,10 @@ class TrainingSessionRecord {
       createdAt: createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       lastCorrectedAt: lastCorrectedAt ?? this.lastCorrectedAt,
+      entryMode: entryMode,
+      performedOn: performedOn,
+      performedPrecision: performedPrecision,
+      recordedAt: recordedAt,
     );
   }
 
@@ -466,4 +494,10 @@ double? _nullableDouble(dynamic value) {
 DateTime? _parseDateTime(dynamic value) {
   if (value == null) return null;
   return DateTime.tryParse(value.toString());
+}
+
+DateTime? _parseDateOnly(dynamic value) {
+  final parsed = _parseDateTime(value);
+  if (parsed == null) return null;
+  return DateTime.utc(parsed.year, parsed.month, parsed.day);
 }

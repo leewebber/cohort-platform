@@ -16,6 +16,8 @@ import '../features/programme/models/programme_catalog_entry.dart';
 import '../features/programme/models/programme_template.dart';
 import '../features/programme/services/athlete_programme_authored_slot_resolver.dart';
 import '../features/programme/services/athlete_programme_session_prepare_service.dart';
+import '../features/programme/services/backfill_programme_session_store.dart';
+import '../features/programme/services/in_memory_backfill_programme_session_store.dart';
 import '../features/programme/services/scheduled_programme_session_preview_service.dart';
 import '../features/session/models/session_execution_plan.dart';
 import '../features/session/services/programme_session_execution_launcher.dart';
@@ -54,6 +56,7 @@ enum AthleteShellPreviewScenario {
   restDay,
   progressEmpty,
   progressTwoStrength,
+  incompleteRecovery,
 }
 
 class AthleteShellPreviewBundle {
@@ -66,6 +69,7 @@ class AthleteShellPreviewBundle {
     required this.previewService,
     required this.performance,
     required this.swapStore,
+    required this.backfillStore,
     required this.programmeController,
     required this.progressBuilder,
   });
@@ -78,6 +82,7 @@ class AthleteShellPreviewBundle {
   final ScheduledProgrammeSessionPreviewService previewService;
   final InMemoryPerformanceRecordStore performance;
   final PreviewSwapStore swapStore;
+  final BackfillProgrammeSessionStore backfillStore;
   final AthleteProgrammeScreenController programmeController;
   final AthleteProgressSummaryBuilder progressBuilder;
 
@@ -151,6 +156,12 @@ class AthleteShellPreviewBundle {
         assignmentStore: assignmentStore,
         projectionStore: projectionStore,
         packageContentHash: previewPackageHash,
+      ),
+      backfillStore: InMemoryBackfillProgrammeSessionStore(
+        performance: performance,
+        projectionStore: projectionStore,
+        readProjection: () => projectionStore.projection,
+        writeProjection: (next) => projectionStore.projection = next,
       ),
       programmeController: AthleteProgrammeScreenController(
         athleteId: previewAthleteId,
@@ -404,6 +415,8 @@ FixedProgrammeCalendarProjection _calendar(
       FixedProgrammeOccurrenceState.today,
     AthleteShellPreviewScenario.progressTwoStrength =>
       FixedProgrammeOccurrenceState.completed,
+    AthleteShellPreviewScenario.incompleteRecovery =>
+      FixedProgrammeOccurrenceState.today,
   };
   final occurrences = <FixedProgrammeOccurrenceProjection>[
     session(

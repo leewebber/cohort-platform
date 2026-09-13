@@ -111,7 +111,7 @@ void main() {
     expect(tester.widget<InkWell>(find.byType(InkWell).first).onTap, isNotNull);
   });
 
-  testWidgets('incomplete preview shows Do this session and Reschedule only', (
+  testWidgets('incomplete preview shows Train today and Reschedule', (
     tester,
   ) async {
     final assignment = _assignment();
@@ -174,16 +174,16 @@ void main() {
     expect(find.textContaining('session now?'), findsNothing);
 
     expect(
-      find.byKey(const ValueKey('scheduled-preview-start-late')),
+      find.byKey(const ValueKey('incomplete-train-today')),
       findsOneWidget,
     );
     expect(find.text('Begin'), findsNothing);
     expect(find.byKey(const ValueKey('scheduled-preview-skip')), findsNothing);
     await tester.ensureVisible(
-      find.byKey(const ValueKey('scheduled-preview-start-late')),
+      find.byKey(const ValueKey('incomplete-train-today')),
     );
     await tester.tap(
-      find.byKey(const ValueKey('scheduled-preview-start-late')),
+      find.byKey(const ValueKey('incomplete-train-today')),
     );
     await tester.pumpAndSettle();
     expect(find.textContaining('session now?'), findsNothing);

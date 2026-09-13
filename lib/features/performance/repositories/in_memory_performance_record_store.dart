@@ -207,6 +207,8 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
     return keysToRemove.length;
   }
 
+  Iterable<TrainingSessionRecord> get records => _recordsById.values;
+
   void put(TrainingSessionRecord record) {
     _recordsById[record.recordId] = record;
   }

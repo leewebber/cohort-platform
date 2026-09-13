@@ -197,17 +197,17 @@ void main() {
     expect(find.text('Complete'), findsOneWidget);
     expect(find.text('Planned'), findsWidgets);
     expect(find.text('Overdue'), findsNothing);
-    expect(find.text('Do this session'), findsOneWidget);
+    expect(find.text('Train today'), findsOneWidget);
     expect(find.text('Reschedule'), findsOneWidget);
     expect(opens, 0);
 
-    await tester.tap(find.text('Do this session'));
+    await tester.tap(find.text('Train today'));
     await tester.pump();
     expect(opens, 1);
 
     await tester.tap(find.text('Zone 2 Run'));
     await tester.pump();
-    expect(find.text('Do this session'), findsNothing);
+    expect(find.text('Train today'), findsNothing);
     expect(find.text('View results'), findsOneWidget);
     expect(find.text('Scheduled 7 September'), findsOneWidget);
   });

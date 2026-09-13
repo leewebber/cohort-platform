@@ -32,7 +32,7 @@ abstract final class AthleteProgressEvidenceProjection {
     final items = completed
         .map(
           (record) => ProgressSessionHistoryItem(
-            completedAt: record.completedAt ?? record.startedAt,
+            completedAt: record.performanceChronologyAt,
             planName: record.sessionSnapshot.programmeTitle ??
                 record.programmeId ??
                 'Programme',
@@ -58,9 +58,7 @@ abstract final class AthleteProgressEvidenceProjection {
     })>{};
     final sorted = [...completed]
       ..sort(
-        (a, b) => (b.completedAt ?? b.startedAt).compareTo(
-          a.completedAt ?? a.startedAt,
-        ),
+        (a, b) => b.performanceChronologyAt.compareTo(a.performanceChronologyAt),
       );
     for (final record in sorted) {
       for (final block in record.blockResults) {

@@ -32,8 +32,13 @@ import '../services/future_programme_session_swap_supabase_store.dart';
 import '../services/overdue_programme_recovery_service.dart';
 import '../services/overdue_programme_recovery_store.dart';
 import '../services/overdue_programme_recovery_supabase_store.dart';
+import '../models/incomplete_session_recovery.dart';
 import '../models/overdue_programme_recovery.dart';
+import '../services/backfill_programme_session_store.dart';
+import '../services/incomplete_session_train_today.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
+import '../widgets/incomplete_session_recovery_actions.dart';
+import 'backfill_programme_session_flow.dart';
 
 Future<bool?> openScheduledProgrammeSessionPreview({
   required BuildContext context,
@@ -47,6 +52,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
   PerformanceRecordStore? performanceRecordStore,
   FutureProgrammeSessionSwapStore? swapStore,
   OverdueProgrammeRecoveryStore? recoveryStore,
+  BackfillProgrammeSessionStore? backfillStore,
   FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore,
   HomeTodaySessionRefreshController? refreshController,
 }) {
@@ -63,6 +69,7 @@ Future<bool?> openScheduledProgrammeSessionPreview({
         performanceRecordStore: performanceRecordStore,
         swapStore: swapStore,
         recoveryStore: recoveryStore,
+        backfillStore: backfillStore,
         fixedOccurrenceStore: fixedOccurrenceStore,
         refreshController: refreshController,
       ),
@@ -83,6 +90,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
     this.performanceRecordStore,
     this.swapStore,
     this.recoveryStore,
+    this.backfillStore,
     this.fixedOccurrenceStore,
     this.refreshController,
   });
@@ -97,6 +105,7 @@ class ScheduledProgrammeSessionPreviewScreen extends StatefulWidget {
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
   final OverdueProgrammeRecoveryStore? recoveryStore;
+  final BackfillProgrammeSessionStore? backfillStore;
   final FixedProgrammeOccurrenceProjectionStore? fixedOccurrenceStore;
   final HomeTodaySessionRefreshController? refreshController;
 
@@ -375,20 +384,40 @@ class _ScheduledProgrammeSessionPreviewScreenState
         ),
       ];
     }
-    if (occurrence.isLateStartable) {
+    if (IncompleteSessionRecovery.canTrainToday(
+          occurrence: occurrence,
+          calendar: preview.calendar,
+          athleteAssignmentId: preview.calendar.assignmentId,
+        ) ||
+        IncompleteSessionRecovery.canBackfill(
+          occurrence: occurrence,
+          calendar: preview.calendar,
+          athleteAssignmentId: preview.calendar.assignmentId,
+          backendSupported: widget.backfillStore?.isSupported == true,
+        )) {
       return [
         const SizedBox(height: CohortSpacing.md),
-        CohortButton(
-          key: const ValueKey('scheduled-preview-start-late'),
-          label: IncompleteSessionAthleteCopy.doThisSession,
-          onPressed: _isOpeningSession ? null : () => _execute(preview),
-        ),
-        const SizedBox(height: CohortSpacing.sm),
-        CohortButton(
-          key: const ValueKey('scheduled-preview-reschedule'),
-          label: 'Reschedule',
-          variant: CohortButtonVariant.secondary,
-          onPressed: _isOpeningSession ? null : () => _reschedule(preview),
+        IncompleteSessionRecoveryActions(
+          scheduledDate: preview.day.date,
+          busy: _isOpeningSession,
+          onTrainToday:
+              IncompleteSessionRecovery.canTrainToday(
+                occurrence: occurrence,
+                calendar: preview.calendar,
+                athleteAssignmentId: preview.calendar.assignmentId,
+              )
+              ? () => _execute(preview)
+              : null,
+          onBackfill:
+              IncompleteSessionRecovery.canBackfill(
+                occurrence: occurrence,
+                calendar: preview.calendar,
+                athleteAssignmentId: preview.calendar.assignmentId,
+                backendSupported: widget.backfillStore?.isSupported == true,
+              )
+              ? () => _backfill(preview)
+              : null,
+          onReschedule: () => _reschedule(preview),
         ),
       ];
     }
@@ -556,38 +585,16 @@ class _ScheduledProgrammeSessionPreviewScreenState
     }
     setState(() => _isOpeningSession = true);
     try {
-      final assignmentStore =
-          widget.assignmentStore ?? const ProgrammeAssignmentSupabaseStore();
-      final assignment = await assignmentStore.getById(
-        preview.calendar.assignmentId,
+      await IncompleteSessionTrainToday.open(
+        context: context,
+        athleteId: widget.athleteId,
+        calendar: preview.calendar,
+        occurrence: occurrence,
+        assignmentStore: widget.assignmentStore,
+        prepareService: widget.prepareService,
+        executionLauncher: widget.executionLauncher,
+        refreshController: _surfaceRefresh,
       );
-      if (assignment == null ||
-          !assignment.isActive ||
-          !assignment.isFixedSchedule ||
-          assignment.athleteId != widget.athleteId ||
-          assignment.id != occurrence.assignmentId) {
-        throw StateError('This assigned session is no longer executable.');
-      }
-      final prepare =
-          widget.prepareService ??
-          AthleteCatalogueEnrolmentServices.createPrepareService();
-      final prepared = await prepare.prepareFixedOccurrence(
-        assignment,
-        occurrence,
-      );
-      if (!prepared.isReady) {
-        throw StateError(
-          prepared.message ?? 'This session could not be prepared safely.',
-        );
-      }
-      await _reloadAuthoritativeSurfaces(source: 'preview_begin');
-      if (!mounted) return;
-      await (widget.executionLauncher ?? ProgrammeSessionExecutionLauncher())
-          .launch(
-            context: context,
-            athleteId: widget.athleteId,
-            prepared: prepared,
-          );
       if (mounted) Navigator.of(context).pop(true);
     } catch (error) {
       if (!mounted) return;
@@ -599,6 +606,26 @@ class _ScheduledProgrammeSessionPreviewScreenState
         ),
       );
       setState(() => _isOpeningSession = false);
+    }
+  }
+
+  Future<void> _backfill(ScheduledProgrammeSessionPreview preview) async {
+    final occurrence = preview.occurrence;
+    final store = widget.backfillStore;
+    if (occurrence == null || store == null || !store.isSupported) return;
+    final saved = await openBackfillProgrammeSessionFlow(
+      context: context,
+      athleteId: widget.athleteId,
+      calendar: preview.calendar,
+      occurrence: occurrence,
+      backfillStore: store,
+      assignmentStore: widget.assignmentStore,
+      prepareService: widget.prepareService,
+    );
+    if (saved == true && mounted) {
+      await _reloadAuthoritativeSurfaces(source: 'backfill_saved');
+      if (!mounted) return;
+      Navigator.of(context).pop(true);
     }
   }
 
@@ -710,6 +737,17 @@ class _ScheduledProgrammeSessionPreviewScreenState
       return 'This assigned session has been completed and cannot be restarted.';
     }
     final original = _calendarDate(occurrence.originalScheduledDate);
+    if (record?.entryMode.name == 'backfill' && record?.performedOn != null) {
+      final performed = record!.performedOn!;
+      final entered = record.recordedAt ?? record.completedAt ?? record.createdAt;
+      if (entered != null) {
+        return IncompleteSessionAthleteCopy.backfillHistory(
+          scheduled: original,
+          performed: DateTime(performed.year, performed.month, performed.day),
+          entered: DateTime(entered.year, entered.month, entered.day),
+        );
+      }
+    }
     final completedAt = record?.completedAt;
     if (completedAt != null) {
       final completedLocal = DateTime(

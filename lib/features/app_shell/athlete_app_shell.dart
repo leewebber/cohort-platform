@@ -17,6 +17,7 @@ import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/services/athlete_programme_session_prepare_service.dart';
 import '../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
+import '../programme/services/backfill_programme_session_store.dart';
 import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../session/services/programme_session_execution_launcher.dart';
@@ -45,6 +46,7 @@ class AthleteAppShell extends StatefulWidget {
     this.previewService,
     this.performanceRecordStore,
     this.swapStore,
+    this.backfillStore,
     this.progressBuilder,
   });
 
@@ -61,6 +63,7 @@ class AthleteAppShell extends StatefulWidget {
   final ScheduledProgrammeSessionPreviewService? previewService;
   final PerformanceRecordStore? performanceRecordStore;
   final FutureProgrammeSessionSwapStore? swapStore;
+  final BackfillProgrammeSessionStore? backfillStore;
   final AthleteProgressSummaryBuilder? progressBuilder;
 
   static const destinations = [
@@ -240,6 +243,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             executionLauncher: widget.executionLauncher,
             previewService: widget.previewService,
             swapStore: widget.swapStore,
+            backfillStore: widget.backfillStore,
             onOpenProgrammes: () => setState(() => _index = 2),
             authRefreshListenable: widget.authController,
           ),
