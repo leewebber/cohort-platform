@@ -2,6 +2,7 @@
 
 | Document | Purpose |
 |----------|---------|
+| [Delivery_Roadmap_v1.md](./Delivery_Roadmap_v1.md) | **Active** product milestone sequence after Phase 1 Integration Closeout |
 | [../architecture/Planning_Engine_v1.md](../architecture/Planning_Engine_v1.md) | Canonical planning architecture (Phase 3.5) |
 | [Planning_Engine_Implementation_v1.md](./Planning_Engine_Implementation_v1.md) | Phase 4 Sprint 1 — contracts, merge policies, and `PlanningEngineService` |
 | [Session_Blueprint_Implementation_v1.md](./Session_Blueprint_Implementation_v1.md) | Phase 4 Sprint 2 — `SessionBlueprint` and deterministic generator |

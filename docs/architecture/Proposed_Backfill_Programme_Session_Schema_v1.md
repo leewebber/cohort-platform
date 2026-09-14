@@ -1,7 +1,14 @@
-# Proposed backfill programme-session schema (not applied)
+# Proposed backfill programme-session schema (SUPERSEDED)
 
-Founder review required before any hosted or local-chain application.
-This file is **not** a `supabase/migrations/` entry.
+**Status: SUPERSEDED — schema applied.**
+Applied migration: `supabase/migrations/20260913120000_backfill_fixed_programme_session_results.sql`
+Binding runtime doc: [Backfill_Fixed_Programme_Session_Results_v1.md](./Backfill_Fixed_Programme_Session_Results_v1.md)
+
+Keep this file as the design discussion that preceded application. Do not
+treat it as live schema authority. Some proposed names (`recorded_at`,
+`complete_backfilled_fixed_programme_session`) differ from the applied RPC
+`complete_backfilled_fixed_programme_occurrence`. This file is not a
+migration.
 
 ## Why existing columns are insufficient
 

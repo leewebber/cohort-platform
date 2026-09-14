@@ -1,9 +1,16 @@
-# Athlete-Controlled Programme Scheduling v1 — Sprint 1.7A
+# Athlete-Controlled Programme Scheduling v1 — Sprint 1.7
 
-**Status:** Binding for Phase 1 athlete-controlled programme scheduling  
-**Sprint:** 1.7A discovery and binding contract only  
+**Status:** Binding for Phase 1 Sprint 1.7 (1.7A–1.7F complete)
+**Post-close integration:** calendar month grid, Incomplete language, Train
+today, Backfill — see
+[Athlete_Calendar_Month_Grid_and_Recovery_v1.md](./Athlete_Calendar_Month_Grid_and_Recovery_v1.md)
+and [Backfill_Fixed_Programme_Session_Results_v1.md](./Backfill_Fixed_Programme_Session_Results_v1.md).
+Those surfaces extend this contract; they were not part of original 1.7A.
+
+**Sprint:** 1.7A discovery produced this contract; later 1.7 work and dogfood
+integration implemented it.
 **Depends on:** Sprint 1.4A materialisation, Sprint 1.4B prepared session,
-Sprint 1.5A completion/advancement, Sprint 1.6A–1.6E acceptance-gated adaptation  
+Sprint 1.5A completion/advancement, Sprint 1.6A–1.6E acceptance-gated adaptation
 **Companions:** [Authored_Plan_Package_v1.md](./Authored_Plan_Package_v1.md),
 [Athlete_Plan_Materialisation_v1.md](./Athlete_Plan_Materialisation_v1.md),
 [Athlete_First_Prepared_Session_v1.md](./Athlete_First_Prepared_Session_v1.md),
@@ -40,6 +47,10 @@ explicit preview → confirm → atomic apply semantics.
 ---
 
 ## Repository findings (Sprint 1.7A discovery)
+
+> **Historical discovery (1.7A):** findings below describe pre-1.7C state.
+> Durable schedule projection, Calendar month grid, and hosted Backfill are
+> implemented in later sprints and post-close integration.
 
 ### Current production model
 
@@ -149,10 +160,10 @@ provenance**, never by display label, date, or list index alone.
 
 ### Explicitly insufficient as sole identity
 
-- scheduled calendar date  
-- UI row position  
-- session title / display name  
-- mutable array index  
+- scheduled calendar date
+- UI row position
+- session title / display name
+- mutable array index
 
 ### Relationship to `SessionOccurrence`
 
@@ -345,14 +356,14 @@ No general event-sourcing platform is required: a bounded operation log
 
 Every mutating scheduling action must follow:
 
-1. Preview  
-2. Explicit athlete confirmation (one deliberate confirm control)  
-3. Reload authoritative schedule + assignment + outcomes  
-4. Verify preview identity/fingerprint + eligibility  
-5. Atomically persist the exact reviewed transition  
-6. Persist-before-cache local update  
-7. Apply prepared-state side effects  
-8. Relaunch restore from durable state  
+1. Preview
+2. Explicit athlete confirmation (one deliberate confirm control)
+3. Reload authoritative schedule + assignment + outcomes
+4. Verify preview identity/fingerprint + eligibility
+5. Atomically persist the exact reviewed transition
+6. Persist-before-cache local update
+7. Apply prepared-state side effects
+8. Relaunch restore from durable state
 
 Non-confirmation paths (open sheet, dismiss, cancel, back, navigate away) are
 complete no-ops.
@@ -416,7 +427,7 @@ When the due occurrence later becomes current again, prepare uses the normal
 - **Programme cursor** continues to mean: the next authored occurrence that
   completion progress treats as current.
 - Cursor advances by:
-  1. Sprint 1.5A successful completion; or  
+  1. Sprint 1.5A successful completion; or
   2. Sprint 1.7 skip’s dedicated scheduling cursor transition.
 - Move/swap/push do **not** rewrite authored cursor coordinates; they change
   dates and may change which occurrence is **due today**.
@@ -426,9 +437,9 @@ When the due occurrence later becomes current again, prepare uses the normal
 Today (athlete-local date in assignment timezone) shows:
 
 1. All uncompleted, non-skipped occurrences with `scheduledDate = today`,
-   ordered by authored order; and/or  
+   ordered by authored order; and/or
 2. If none, the earliest overdue uncompleted occurrence (scheduledDate < today),
-   ordered by authored order; and/or  
+   ordered by authored order; and/or
 3. If none, an empty-today state with next upcoming scheduled date.
 
 Prepare/Adapt/Begin attach to the selected due occurrence’s programmed key.
@@ -477,24 +488,24 @@ Allowed. Ordered by authored order for Today and prepare selection defaults.
 
 ### Required durable components (proposed)
 
-1. **Schedule projection** rows per authored executable slot  
-   (identity + `scheduledDate` + status).  
-2. **Schedule revision** on the assignment (monotonic integer / fingerprint).  
+1. **Schedule projection** rows per authored executable slot
+   (identity + `scheduledDate` + status).
+2. **Schedule revision** on the assignment (monotonic integer / fingerprint).
 3. **Scheduling operation log** (preview id, type, before/after snapshot,
-   athlete id, timestamps) sufficient for one-level undo and audit.  
+   athlete id, timestamps) sufficient for one-level undo and audit.
 4. **Atomic RPC(s)** performing validate + write projection + outcome/cursor
-   side effects under row locks.  
+   side effects under row locks.
 5. **RLS/grants** so athletes mutate only their assignments; coaches/admin per
-   existing role model.  
+   existing role model.
 6. **Local cache** of schedule projection for offline display, always
    subordinated to server reload before mutate.
 
 ### Atomicity requirements
 
-- Persist-before-cache.  
-- Either complete transition succeeds or prior schedule remains authoritative.  
-- No partial multi-occurrence push.  
-- Skip’s outcome write and cursor transition are one transaction.  
+- Persist-before-cache.
+- Either complete transition succeeds or prior schedule remains authoritative.
+- No partial multi-occurrence push.
+- Skip’s outcome write and cursor transition are one transaction.
 - Idempotency keys required on mutating RPCs.
 
 ### Explicitly not authorised in 1.7A
@@ -537,15 +548,15 @@ Later authorised implementation sprints must:
 
 ## Exclusions (Sprint 1.7A–1.7F unless separately approved)
 
-- Programme reauthoring or athlete-specific version generation  
-- Coach Brain / Adaptive Progression / adaptation-pipeline scheduling  
-- Post-completion future-slot prescription mutation (ADR-022)  
-- Fabricated completion or previous-performance evidence  
-- Unsolicited recommendation banners  
-- Payments / ownership redesign  
-- Full multi-level undo history / general event sourcing  
-- Free-form reorder of authored package order (separate permissioned epic)  
-- Wearable-driven auto-reschedule  
+- Programme reauthoring or athlete-specific version generation
+- Coach Brain / Adaptive Progression / adaptation-pipeline scheduling
+- Post-completion future-slot prescription mutation (ADR-022)
+- Fabricated completion or previous-performance evidence
+- Unsolicited recommendation banners
+- Payments / ownership redesign
+- Full multi-level undo history / general event sourcing
+- Free-form reorder of authored package order (separate permissioned epic)
+- Wearable-driven auto-reschedule
 
 ---
 
@@ -731,12 +742,12 @@ continuing to forbid mutation/apply/persist services.
 
 When separately authorised:
 
-1. Materialised athlete with known cursor and prepared session.  
-2. Preview+move collision case.  
-3. Skip without completion evidence; cursor advances; prepare cleared.  
-4. Push-right near horizon fail-closed.  
-5. Undo restore after relaunch.  
-6. Confirm 1.5A Self-Test 2 completion still green.  
+1. Materialised athlete with known cursor and prepared session.
+2. Preview+move collision case.
+3. Skip without completion evidence; cursor advances; prepare cleared.
+4. Push-right near horizon fail-closed.
+5. Undo restore after relaunch.
+6. Confirm 1.5A Self-Test 2 completion still green.
 7. Confirm adaptation accept/revert still scoped to current prepare.
 
 No staging contact is authorised in 1.7A.

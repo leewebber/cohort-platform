@@ -1,5 +1,9 @@
 # 64 — V2.0 Product Readiness: First Slice (Authentication & Profiles)
 
+> **Status: HISTORICAL — V2.0 first auth slice. Do not use for current
+> readiness, launch, or test-count claims.** See
+> [docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md](../docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
+
 **Status:** Implemented  
 **Phase:** V2.0 product delivery — first vertical slice
 

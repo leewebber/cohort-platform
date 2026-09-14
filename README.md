@@ -77,9 +77,12 @@ authorisation.
 
 Start with the current repository checkpoint and architecture index:
 
-- [`docs/checkpoints/CURRENT_CHECKPOINT.md`](docs/checkpoints/CURRENT_CHECKPOINT.md)
+- [`docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md`](docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md)
 - [`docs/architecture/README.md`](docs/architecture/README.md)
+- [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md)
 - [`AGENTS.md`](AGENTS.md)
+- Historical atomic-resume / Phase 3 record:
+  [`docs/checkpoints/CURRENT_CHECKPOINT.md`](docs/checkpoints/CURRENT_CHECKPOINT.md)
 
 Product history and engineering delivery documents also live in
 [`07 Documentation/`](07%20Documentation/). Current surviving entry points

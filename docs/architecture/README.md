@@ -1,19 +1,30 @@
 # Architecture documentation index
 
-**Phase 2 is CLOSED. Phase 3.1A–3.1F local Exercise Database work and the
-verified 132-row hosted catalogue are complete. Its selected identity-bridge
-consumer, `founder_programme_yaml_import`, is complete and founder-accepted at
-`fb724d2f7a854bd4a36cbb45c884adcb82222765`; Phase 3.1 is complete. The trusted
-Plan Package import runtime is separate and Plan Package v1 contains no
-exercise identities. Phase 3.2B–3.2D are complete and Phase 3.2E/F/G remain
-unallocated. The founder-accepted allocation dossier selects a bounded local
-Exercise Knowledge text-guidance application read projection as the next
-technical task. Its local implementation is complete and founder-accepted at
-`9bc5cd7cc78d0fe771aa7608ba717ec88787a0c2`.**
-Start from
-[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md)
-and
-[`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md).
+**Phase 1 Integration Closeout is the live delivery pointer.** Start from
+[`../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md`](../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
+Phase 2 is CLOSED. Phase 3.1A–3.1F and the verified 132-row hosted catalogue
+are complete. The Exercise Knowledge text projection is complete and is not
+the next product milestone. Phase 3.2E/F/G remain unallocated.
+
+| Document | Purpose |
+|----------|---------|
+| [Phase_1_Implemented_Architecture_v1.md](./Phase_1_Implemented_Architecture_v1.md) | Production athlete architecture as implemented |
+| [Phase_1_Dogfood_Commit_Chain_v1.md](./Phase_1_Dogfood_Commit_Chain_v1.md) | Dogfood commit / capability map |
+| [Athlete_Calendar_Month_Grid_and_Recovery_v1.md](./Athlete_Calendar_Month_Grid_and_Recovery_v1.md) | Month grid, Incomplete, Train today |
+| [Backfill_Fixed_Programme_Session_Results_v1.md](./Backfill_Fixed_Programme_Session_Results_v1.md) | Applied Backfill schema and chronology |
+| [Athletic_Circuit_and_EMOM_Capture_v1.md](./Athletic_Circuit_and_EMOM_Capture_v1.md) | Circuit / EMOM capture |
+| [Phase_1_Lifecycle_Inconsistencies_v1.md](./Phase_1_Lifecycle_Inconsistencies_v1.md) | Parent-session / cursor diagnosis |
+| [Phase_1_Preview_Inventory_v1.md](./Phase_1_Preview_Inventory_v1.md) | Preview vs production entry points |
+| [Phase_1_Migration_Chain_v1.md](./Phase_1_Migration_Chain_v1.md) | Migration ledger for Phase 1 dogfood |
+| [Phase_1_Test_Suite_Inventory_v1.md](./Phase_1_Test_Suite_Inventory_v1.md) | Tests by capability |
+| [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
+| [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
+| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence |
+
+The historical Phase 3 index continues below.
+[`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
+remains binding for identity mappings. The August atomic-resume record is
+[`../checkpoints/CURRENT_CHECKPOINT.md`](../checkpoints/CURRENT_CHECKPOINT.md).
 
 The July 2026 document
 [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md)

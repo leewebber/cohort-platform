@@ -16,6 +16,11 @@ B4e=complete
 Production rejected throughout. No further Phase 1 staging, fixture or
 hardening task is required.
 
+**Historical note:** “Next authority: Phase 2” is satisfied — Phase 2 closed
+2026-08-09. Post-`e034ea9` dogfood integration is separate from B4e evidence
+and is recorded in
+[../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md](../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
+
 ## B4e closure summary
 
 | Journey | Evidence | Result |

@@ -14,9 +14,15 @@ Before changing the repository:
 4. Treat existing uncommitted changes as user-owned. Do not discard, clean,
    stage, or rewrite them unless explicitly authorised.
 
-Phase 1 product Sprints **1.1–1.7** are **closed** at `e034ea9`
-(`PHASE_1_GO=true`, `PHASE_1_CLOSED=true`, `B4e=complete`). Phase 2 —
-Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
+Phase 1 product Sprints **1.1–1.7** are **closed** (`PHASE_1_GO=true`,
+`PHASE_1_CLOSED=true`, `B4e=complete`). Staging evidence was reviewed at
+harness HEAD `7ba8455`; that closeout was recorded at docs commit `e034ea9`.
+Post-close dogfood integration (calendar month grid, Backfill, Train today,
+Home today-only, programme Progress, circuit/EMOM capture, founder iPhone
+workflow) lives on `codex/apollo-dogfood` through `969ef5b` plus Integration
+Closeout docs. Binding checkpoint:
+[`docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md`](docs/checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
+Phase 2 — Architecture Consolidation is **CLOSED** (`PHASE_2_CLOSED=true`,
 `CANONICAL_ARCHITECTURE_FROZEN=true`). Programme Athlete runtime is the sole
 operational athlete authority.
 
@@ -140,14 +146,21 @@ record.
 
 ## Current delivery sequence
 
-The founder-accepted allocation dossier selected:
-`EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_APPLICATION_READ_PROJECTION_IMPLEMENTATION`.
-The bounded local implementation now provides a UI-neutral application read
-projection over published `MovementStandard` and `CoachingContent`. It is
-complete and founder-accepted. The exactly one recommended next task is the
-read-only
-`POST_EXERCISE_KNOWLEDGE_TEXT_GUIDANCE_PROJECTION_NEXT_TASK_ALLOCATION_DOSSIER`.
-No downstream implementation or Phase 3.2E/F/G objective is authorised.
+The active product sequence is
+[`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md):
+Phase 1 Integration Closeout → Progression Mechanics Validation → M9 →
+catalogue/enrolment → M10 isolation → adaptation integrity → closed beta →
+entitlements → wearables/media.
+
+The Exercise Knowledge text-guidance application read projection is complete
+and founder-accepted at `9bc5cd7`. It is **not** the next product milestone.
+Phase 3.2E/F/G remain unallocated. Do not begin them, Product-UI Gate 2, or
+hosted catalogue mutations without separate authority.
+
+Integration Closeout must not push or fast-forward `origin/main` without
+founder approval. Applied Backfill schema is
+`supabase/migrations/20260913120000_backfill_fixed_programme_session_results.sql`,
+not `Proposed_Backfill_Programme_Session_Schema_v1.md`.
 
 Do not allocate Phase 3.2E/F/G, treat Coaching Glossary or Session Templates as
 the next numerical phase, change Plan Package v1 to manufacture an exercise-ID

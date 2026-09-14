@@ -1,5 +1,10 @@
 # Progress Experience MVP — Phase 5 Sprint 5
 
+> **Status: HISTORICAL — Phase 5 Plan Library progress (retired Phase 2.9).**
+> Current evidence surface: programme Progress via slot outcomes and
+> `training_session_records`. See
+> [Phase_1_Implemented_Architecture_v1.md](../architecture/Phase_1_Implemented_Architecture_v1.md).
+
 **Date:** 2026-07-29  
 **Status:** Calm Progress screen — “Am I getting better?”  
 **Data:** In-memory completions + capability timeline from Sprint 4

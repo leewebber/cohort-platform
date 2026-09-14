@@ -1,5 +1,10 @@
 # Current repository checkpoint
 
+> **Live delivery pointer:** Phase 1 Integration Closeout is
+> [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
+> This file remains the historical atomic-resume / Phase 3 checkpoint. It is
+> not the next-task authority.
+
 **Recorded:** 2026-08-13
 **Status:** `PROGRAMME_SESSION_ATOMIC_RESUME_AND_EXECUTION_PROVENANCE_CORRECTION`
 is complete and locally verified. The retained vertical-slice base

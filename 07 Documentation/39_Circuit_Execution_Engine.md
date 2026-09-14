@@ -1,6 +1,8 @@
 # 39 — Circuit Execution Engine
 
-**Status:** Design (v0.1)  
+**Status:** Design (v0.1) plus **partial production implementation** at dogfood
+HEAD (circuit timer, EMOM interval score capture, persistence, Backfill reuse).
+See [docs/architecture/Athletic_Circuit_and_EMOM_Capture_v1.md](../docs/architecture/Athletic_Circuit_and_EMOM_Capture_v1.md).
 **Related:** `38_Execution_Engine_Architecture.md`, `35_Strength_Performance_Logging.md`, `37_Interval_Execution_Engine.md`, `SessionExecutionRouter`, `training_sessions`, `protocol_steps`
 
 ---
@@ -16,7 +18,10 @@ The Circuit Execution Engine records **how an athlete performed a programmed con
 5. Detect **observational progress** over time (faster times, more rounds/reps, heavier loads at equal score, lower RPE).
 6. Fit the **shared execution lifecycle** in `38_Execution_Engine_Architecture.md` — preview, persistence, resume, early finish, Today's Wins, review.
 
-This document defines v0.1 architecture, behaviour, and Dart models. It does **not** implement UI, repositories, or database migrations.
+This document defines v0.1 architecture, behaviour, and Dart models. Circuit
+timer, EMOM result capture, and persistence now exist on the production
+athlete path; treat later sections as design history where they conflict with
+`Athletic_Circuit_and_EMOM_Capture_v1.md`.
 
 ### Design principles
 

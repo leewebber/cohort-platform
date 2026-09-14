@@ -1,5 +1,12 @@
 # Cohort Platform — Architecture Blueprint v2
 
+> **Partially superseded post–Phase 2.10.** Runtime claims in this file must
+> be checked against
+> [Canonical_Programme_Architecture_Freeze_v1.md](./Canonical_Programme_Architecture_Freeze_v1.md)
+> and [Phase_1_Implemented_Architecture_v1.md](./Phase_1_Implemented_Architecture_v1.md).
+> Occurrence projection and M8 performance paths are Supabase-backed for
+> programme athletes; in-memory stores remain test/preview only.
+
 **Status:** Primary technical reference (Phase 2 closed — see [Phase_2_Architecture_Consolidation_Completion.md](./Phase_2_Architecture_Consolidation_Completion.md))  
 **Source of truth:** Implemented code on branch `refactor/architecture-alignment` and live Supabase schema  
 **Supersedes for orientation:** `07 Documentation/51_Cohort_Platform_v1_Architecture_Freeze.md` (v1 athlete/coach baseline — does not describe the M3–M7 domain execution pipeline)  

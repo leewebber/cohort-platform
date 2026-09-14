@@ -1,5 +1,9 @@
 # Daily Briefing MVP — Phase 5 Sprint 6
 
+> **Status: HISTORICAL — Phase 5 Coach Brain Home briefing (retired Phase 2.9).**
+> Home is today-only for programme athletes. See
+> [Athlete_Home_Runtime_Authority_v1.md](../architecture/Athlete_Home_Runtime_Authority_v1.md).
+
 **Date:** 2026-07-29  
 **Status:** Home as coaching briefing  
 **Engine:** Unchanged — reads existing Coach Brain brief fields only

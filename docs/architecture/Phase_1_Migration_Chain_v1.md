@@ -1,0 +1,40 @@
+# Phase 1 migration chain
+
+**Local proof:** `./supabase/tests/run_local_db_gate.sh` (fresh `db reset` plus
+repeat reset; never hosted).  
+**Hosted Field Manual:** overdue recovery and Backfill migrations were applied
+in an earlier authorised deploy. The closeout trigger
+`20260914120000_terminalize_training_session_from_completed_record.sql` is
+**local-only until founder approval**.
+
+Fresh local databases apply every file in `supabase/migrations/` by timestamp.
+Upgrade from the closest production-equivalent schema is the hosted-faithful
+baseline fixture
+`supabase/tests/fixtures/local_test_baseline_prereq.sql` (schema-only, no
+INSERT/COPY) followed by that same timestamped chain.
+
+## Dogfood-critical migrations
+
+| File | Purpose | Kind | Row writes at migrate? | Hosted (recorded) |
+|------|---------|------|------------------------|-------------------|
+| `20260801160000_complete_programme_session_and_advance.sql` | Complete + cursor | Replaces function | No | Yes (earlier Phase 1) |
+| `20260813140000_atomic_programme_training_session_start.sql` | Idempotent start | Replaces function | No | Yes |
+| `20260824120000_apollo_calendar_driven_schedule_slice_1.sql` | Occurrence calendar | Tables + functions | No | Yes |
+| `20260904120000_correct_completed_performance_record.sql` | Corrections | Additive table + RPC | No | Yes |
+| `20260905120000_interval_set_result_integrity.sql` | Interval ordinals | Trigger | No | Yes |
+| `20260905180000_swap_future_fixed_programme_session_and_begin.sql` | Train today swap | Replaces functions | No | Yes |
+| `20260906120000_bound_future_train_today_swap_horizon.sql` | 7-day bound | Replaces function | No | Yes |
+| `20260906140000_ignore_completed_sessions_in_train_today_swap.sql` | Ignore closed sessions | Replaces function | No | Yes |
+| `20260911120000_overdue_fixed_programme_recovery.sql` | Incomplete recovery | Replaces functions | No | Applied 2026-09-13 |
+| `20260913120000_backfill_fixed_programme_session_results.sql` | Backfill provenance | Additive columns + RPC | No | Applied 2026-09-13 |
+| `20260914120000_terminalize_training_session_from_completed_record.sql` | Parent session close | Trigger | No | **Not applied** |
+
+Earlier catalogue, RLS, Apollo week protocols, and enrolment migrations remain
+required dependencies. Rollback of function-body replacements is restore the
+previous migration file; rollback of the new trigger is `DROP TRIGGER`.
+
+Compatibility: the trigger only adds parent `completed` when evidence already
+exists. Older app builds that still call `completeSession()` stay compatible.
+
+Local gate coverage: Gates C–AU plus **AV** (parent close from terminal
+record). Capability reporting remains `cohort_athlete_runtime_capabilities`.

@@ -1,5 +1,10 @@
 # Workout Player MVP — Phase 5 Sprint 1
 
+> **Status: HISTORICAL — Phase 5 Coach Brain athlete path (retired Phase 2.9).**
+> Current programme athlete runtime: [Canonical_Programme_Architecture_Freeze_v1.md](../architecture/Canonical_Programme_Architecture_Freeze_v1.md),
+> [Athlete_Home_Runtime_Authority_v1.md](../architecture/Athlete_Home_Runtime_Authority_v1.md),
+> [Phase_1_Implemented_Architecture_v1.md](../architecture/Phase_1_Implemented_Architecture_v1.md).
+
 **Date:** 2026-07-29  
 **Status:** Athlete vertical slice — execute today’s session from Home  
 **Engine:** Phase 4 Coach Brain → `SessionExecutionPlan` (unchanged)
