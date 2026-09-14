@@ -15,6 +15,7 @@ import '../../adaptive_progression/models/capability_timeline.dart';
 import '../../adaptive_progression/models/session_completion.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
+import '../../performance/services/previous_strength_performance_service.dart';
 import '../services/current_user_session.dart';
 import '../services/profile_provisioning_service.dart';
 
@@ -187,6 +188,7 @@ class AuthController extends ChangeNotifier {
       SessionCompletionStore.clear();
       CapabilityTimelineStore.clear();
       PreviousPerformanceStore.clear();
+      PreviousStrengthPerformanceCache.clear();
     }
     _state = AuthViewState.initial().copyWith(
       status: AuthStatus.unauthenticated,

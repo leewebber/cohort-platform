@@ -12,7 +12,9 @@ import '../../session/models/session_execution_plan.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../workout_player/services/previous_performance_resolver.dart';
+import '../models/previous_strength_performance.dart';
 import '../models/active_performance_draft.dart';
+import '../services/completed_session_result_projection.dart';
 import '../models/performance_snapshot.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
@@ -135,6 +137,8 @@ class BlockResultEditor extends StatelessWidget {
     this.linkedExercises = const [],
     this.onOpenExercise,
     this.previousPerformanceResolver = const PreviousPerformanceResolver(),
+    this.previousStrengthHistory,
+    this.onRetryPreviousStrength,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -152,6 +156,8 @@ class BlockResultEditor extends StatelessWidget {
   final List<SessionExecutionExerciseSummary> linkedExercises;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
   final PreviousPerformanceResolver previousPerformanceResolver;
+  final PreviousStrengthHistoryState? previousStrengthHistory;
+  final VoidCallback? onRetryPreviousStrength;
 
   static bool showsCaptureFields(BlockPerformanceDraft blockDraft) {
     return _captureModeFor(blockDraft) != BlockCaptureMode.completion ||
@@ -207,6 +213,8 @@ class BlockResultEditor extends StatelessWidget {
           onApplyElapsedSeconds: onApplyElapsedSeconds,
           onOpenExercise: onOpenExercise,
           previousPerformanceResolver: previousPerformanceResolver,
+          previousStrengthHistory: previousStrengthHistory,
+          onRetryPreviousStrength: onRetryPreviousStrength,
         ),
       ],
     );
@@ -225,6 +233,8 @@ class _ResultEditorBody extends StatelessWidget {
     this.onApplyElapsedSeconds,
     this.onOpenExercise,
     this.previousPerformanceResolver = const PreviousPerformanceResolver(),
+    this.previousStrengthHistory,
+    this.onRetryPreviousStrength,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -242,6 +252,8 @@ class _ResultEditorBody extends StatelessWidget {
   final ValueChanged<int>? onApplyElapsedSeconds;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
   final PreviousPerformanceResolver previousPerformanceResolver;
+  final PreviousStrengthHistoryState? previousStrengthHistory;
+  final VoidCallback? onRetryPreviousStrength;
 
   @override
   Widget build(BuildContext context) {
@@ -258,6 +270,8 @@ class _ResultEditorBody extends StatelessWidget {
           onRemoveSet: onRemoveSet,
           onOpenExercise: onOpenExercise,
           previousPerformanceResolver: previousPerformanceResolver,
+          previousStrengthHistory: previousStrengthHistory,
+          onRetryPreviousStrength: onRetryPreviousStrength,
         );
       case BlockCaptureMode.amrap:
         return _AmrapEditor(
@@ -970,6 +984,8 @@ class _StrengthEditor extends StatefulWidget {
     required this.onRemoveSet,
     required this.previousPerformanceResolver,
     this.onOpenExercise,
+    this.previousStrengthHistory,
+    this.onRetryPreviousStrength,
   });
 
   final BlockPerformanceDraft blockDraft;
@@ -985,6 +1001,8 @@ class _StrengthEditor extends StatefulWidget {
   final void Function(String exerciseId, String setResultId) onRemoveSet;
   final PreviousPerformanceResolver previousPerformanceResolver;
   final ValueChanged<SessionExecutionExerciseSummary>? onOpenExercise;
+  final PreviousStrengthHistoryState? previousStrengthHistory;
+  final VoidCallback? onRetryPreviousStrength;
 
   @override
   State<_StrengthEditor> createState() => _StrengthEditorState();
@@ -1044,10 +1062,42 @@ class _StrengthEditorState extends State<_StrengthEditor> {
     return null;
   }
 
+  PreviousStrengthExerciseEvidence? _hostedPrevious(
+    SessionExecutionExerciseSummary? summary,
+  ) {
+    final history = widget.previousStrengthHistory;
+    if (history == null || !history.isReady || summary == null) return null;
+    return history.byExerciseId[summary.exerciseId];
+  }
+
   PreviousPerformanceSnapshot? _cachedPrevious(
     SessionExecutionExerciseSummary? summary,
   ) {
     if (summary == null) return null;
+    final hosted = _hostedPrevious(summary);
+    if (hosted != null) {
+      return PreviousPerformanceSnapshot(
+        exerciseId: hosted.exerciseId,
+        sessionType: PreviousPerformanceSessionType.strength,
+        performedAt: hosted.performedAt,
+        setSummary: hosted.summaryLine,
+        loadSummary: hosted.topSet == null
+            ? null
+            : StrengthLoadDisplay.format(
+                load: hosted.topSet!.load,
+                loadUnit: hosted.topSet!.loadUnit,
+                kind: hosted.topSet!.load == null || hosted.topSet!.load == 0
+                    ? StrengthActualLoadKind.bodyweight
+                    : StrengthActualLoadKind.external,
+              ),
+        repSummary: hosted.topSet?.reps == null
+            ? null
+            : '${hosted.topSet!.reps}',
+      );
+    }
+    if (widget.previousStrengthHistory?.isReady == true) {
+      return null;
+    }
     if (_previousByExerciseId.containsKey(summary.exerciseId)) {
       return _previousByExerciseId[summary.exerciseId];
     }
@@ -1165,6 +1215,9 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                 _ExerciseTargetComparison(
                                   summary: summary,
                                   previous: _cachedPrevious(summary),
+                                  hosted: _hostedPrevious(summary),
+                                  history: widget.previousStrengthHistory,
+                                  onRetry: widget.onRetryPreviousStrength,
                                   useProvidedPrevious: true,
                                 ),
                                 const SizedBox(height: CohortSpacing.sm),
@@ -1182,6 +1235,9 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                       loadKind:
                                           exercise.exerciseSnapshot.loadKind,
                                       onUpdateSet: widget.onUpdateSet,
+                                      previousSet: _hostedPrevious(
+                                        summary,
+                                      )?.setForNumber(set.setNumber),
                                     ),
                                   ),
                                 CohortButton(
@@ -1392,33 +1448,23 @@ class _ExerciseTargetComparison extends StatelessWidget {
   const _ExerciseTargetComparison({
     required this.summary,
     this.previous,
+    this.hosted,
+    this.history,
+    this.onRetry,
     this.useProvidedPrevious = false,
   });
 
   final SessionExecutionExerciseSummary? summary;
   final PreviousPerformanceSnapshot? previous;
+  final PreviousStrengthExerciseEvidence? hosted;
+  final PreviousStrengthHistoryState? history;
+  final VoidCallback? onRetry;
   final bool useProvidedPrevious;
 
   @override
   Widget build(BuildContext context) {
     final prescription = summary?.prescription;
-    final resolvedPrevious = useProvidedPrevious
-        ? previous
-        : summary == null
-        ? null
-        : const PreviousPerformanceResolver().resolveLatest(
-            exerciseId: summary!.exerciseId,
-            requiredType: PreviousPerformanceSessionType.strength,
-          );
-    final previousParts = resolvedPrevious == null
-        ? const <String>[]
-        : <String>[
-            ?_text(resolvedPrevious.repSummary),
-            ?_text(resolvedPrevious.loadSummary),
-            ?_text(resolvedPrevious.distanceSummary),
-            ?_text(resolvedPrevious.durationSummary),
-            if (resolvedPrevious.rpe case final value?) 'RPE $value',
-          ];
+    final lastTimeBody = _lastTimeBody();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1437,14 +1483,78 @@ class _ExerciseTargetComparison extends StatelessWidget {
           style: CohortTextStyles.small,
         ),
         const SizedBox(height: CohortSpacing.xs),
-        Text('Last time', style: CohortTextStyles.eyebrow),
-        Text(
-          previousParts.isEmpty
-              ? 'No previous performance'
-              : previousParts.join(' · '),
-          style: CohortTextStyles.small,
-        ),
+        Text('Previous performance', style: CohortTextStyles.eyebrow),
+        lastTimeBody,
       ],
+    );
+  }
+
+  Widget _lastTimeBody() {
+    if (history != null && history!.isLoading) {
+      return Text(
+        'Loading previous performance…',
+        style: CohortTextStyles.small,
+      );
+    }
+    if (history != null && history!.isFailed) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Couldn’t load previous performance',
+            style: CohortTextStyles.small,
+          ),
+          TextButton(
+            onPressed: onRetry,
+            child: const Text('Retry'),
+          ),
+        ],
+      );
+    }
+    if (hosted != null) {
+      final extra = hosted!.completedSetCount > 0
+          ? hosted!.summaryLine
+          : null;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            formatCompletedDate(hosted!.performedAt),
+            style: CohortTextStyles.small,
+          ),
+          if (extra != null)
+            Text(extra, style: CohortTextStyles.small),
+        ],
+      );
+    }
+    if (history != null && history!.isReady) {
+      return Text(
+        'First recorded performance',
+        style: CohortTextStyles.small,
+      );
+    }
+    final resolvedPrevious = useProvidedPrevious
+        ? previous
+        : summary == null
+        ? null
+        : const PreviousPerformanceResolver().resolveLatest(
+            exerciseId: summary!.exerciseId,
+            requiredType: PreviousPerformanceSessionType.strength,
+          );
+    final previousParts = resolvedPrevious == null
+        ? const <String>[]
+        : <String>[
+            ?_text(resolvedPrevious.repSummary),
+            ?_text(resolvedPrevious.loadSummary),
+            ?_text(resolvedPrevious.distanceSummary),
+            ?_text(resolvedPrevious.durationSummary),
+            if (resolvedPrevious.rpe case final value?) 'RPE $value',
+          ];
+    return Text(
+      previousParts.isEmpty
+          ? 'First recorded performance'
+          : previousParts.join(' · '),
+      style: CohortTextStyles.small,
     );
   }
 
@@ -1461,12 +1571,14 @@ class _ExerciseActualRow extends StatelessWidget {
     required this.capture,
     required this.loadKind,
     required this.onUpdateSet,
+    this.previousSet,
   });
 
   final String exerciseId;
   final SetPerformanceDraft set;
   final ExercisePerformanceCapture? capture;
   final StrengthActualLoadKind loadKind;
+  final PreviousStrengthSetEvidence? previousSet;
   final void Function(
     String exerciseId,
     String setResultId,
@@ -1481,6 +1593,8 @@ class _ExerciseActualRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Set ${set.setNumber}', style: CohortTextStyles.small),
+          if (previousSet != null)
+            Text(previousSet!.ghostLine, style: CohortTextStyles.small),
           Row(
             children: [
               Expanded(
@@ -1555,7 +1669,12 @@ class _ExerciseActualRow extends StatelessWidget {
       );
     }
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (previousSet != null)
+          Text(previousSet!.ghostLine, style: CohortTextStyles.small),
+        Row(
       children: [
         Expanded(
           child: PerformanceNumericField(
@@ -1629,6 +1748,8 @@ class _ExerciseActualRow extends StatelessWidget {
             set.setResultId,
             (current) => current.copyWith(completed: value ?? false),
           ),
+        ),
+      ],
         ),
       ],
     );

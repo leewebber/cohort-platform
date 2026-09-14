@@ -1,5 +1,6 @@
 import 'package:cohort_platform/features/performance/models/active_performance_draft.dart';
 import 'package:cohort_platform/features/performance/services/performance_snapshot_builder.dart';
+import 'package:cohort_platform/features/performance/models/previous_strength_performance.dart';
 import 'package:cohort_platform/features/performance/widgets/performance_capture_widgets.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'dart:ui' show Tristate;
@@ -38,7 +39,7 @@ void main() {
   ) async {
     await _pumpEditor(tester, draft: _initialDraft());
 
-    expect(find.text('Last time'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
     expect(find.text('Add set'), findsOneWidget);
     expect(find.text('Set 1 reps'), findsWidgets);
     expect(find.text('Today'), findsOneWidget);
@@ -52,7 +53,7 @@ void main() {
 
     expect(find.text('Load per hand (kg)'), findsNothing);
     expect(find.text('Set 1 reps'), findsWidgets);
-    expect(find.text('Last time'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
     expect(
       find.bySemanticsLabel('Exercise info for Incline Barbell Bench Press'),
       findsNothing,
@@ -65,11 +66,11 @@ void main() {
     await _pumpEditor(tester, draft: _initialDraft());
 
     await _tapExercise(tester, 'Incline Barbell Bench Press');
-    expect(find.text('Last time'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
     expect(find.text('Add set'), findsOneWidget);
 
     await _tapExercise(tester, 'Incline Barbell Bench Press');
-    expect(find.text('Last time'), findsNothing);
+    expect(find.text('Previous performance'), findsNothing);
     expect(find.text('Add set'), findsNothing);
   });
 
@@ -101,7 +102,7 @@ void main() {
     await _tapExercise(tester, 'Weighted Pull-Up');
 
     expect(find.text('Add set'), findsNothing);
-    expect(find.text('Last time'), findsNothing);
+    expect(find.text('Previous performance'), findsNothing);
     expect(find.text('Weighted Pull-Up'), findsOneWidget);
     expect(find.text('Incline Barbell Bench Press'), findsOneWidget);
   });
@@ -164,6 +165,84 @@ void main() {
       expect(harness.draft.exerciseResults.first.sets.first.completed, isFalse);
     },
   );
+
+  testWidgets('hosted Week 1 evidence shows ghosts without writing today', (
+    tester,
+  ) async {
+    await _pumpEditor(
+      tester,
+      draft: _initialDraft(),
+      history: PreviousStrengthHistoryState.ready({
+        'EX-095': PreviousStrengthExerciseEvidence(
+          exerciseId: 'EX-095',
+          recordId: 'week-1',
+          performedAt: DateTime.utc(2026, 9, 7),
+          sets: const [
+            PreviousStrengthSetEvidence(
+              setNumber: 1,
+              reps: 5,
+              load: 10,
+              loadUnit: 'kg',
+            ),
+          ],
+        ),
+      }),
+    );
+
+    expect(find.text('Previous performance'), findsOneWidget);
+    expect(find.textContaining('Last: 10 kg'), findsOneWidget);
+    expect(find.text('First recorded performance'), findsNothing);
+  });
+
+  testWidgets('loading and error remain distinct from first recorded', (
+    tester,
+  ) async {
+    await _pumpEditor(
+      tester,
+      draft: _initialDraft(),
+      history: const PreviousStrengthHistoryState.loading(),
+    );
+    expect(find.text('Loading previous performance…'), findsOneWidget);
+    expect(find.text('First recorded performance'), findsNothing);
+
+    var retried = 0;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: BlockResultEditor(
+              blockDraft: _initialDraft(),
+              linkedExercises: _apolloUpper().linkedExercises,
+              previousStrengthHistory:
+                  const PreviousStrengthHistoryState.failed(),
+              onRetryPreviousStrength: () => retried += 1,
+              onResultChanged: (_) {},
+              onAddSet: (_) {},
+              onUpdateSet: (_, _, _) {},
+              onDuplicateSet: (_, _) {},
+              onRemoveSet: (_, _) {},
+              onOpenExercise: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Couldn’t load previous performance'), findsOneWidget);
+    await tester.tap(find.text('Retry'));
+    expect(retried, 1);
+  });
+
+  testWidgets('ready history with no match is first recorded performance', (
+    tester,
+  ) async {
+    await _pumpEditor(
+      tester,
+      draft: _initialDraft(),
+      history: const PreviousStrengthHistoryState.ready({}),
+    );
+    expect(find.text('First recorded performance'), findsOneWidget);
+  });
 
   testWidgets('previous performance appears only when expanded', (
     tester,
@@ -238,7 +317,7 @@ void main() {
     await _pumpEditor(tester, draft: draft);
 
     expect(find.text('Completed · 4 sets'), findsNothing);
-    expect(find.text('Last time'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
   });
 
   testWidgets('resume expands the earliest incomplete exercise', (
@@ -259,7 +338,7 @@ void main() {
   testWidgets('fully completed strength list opens collapsed', (tester) async {
     await _pumpEditor(tester, draft: _resumeDraft(completeAll: true));
 
-    expect(find.text('Last time'), findsNothing);
+    expect(find.text('Previous performance'), findsNothing);
     expect(find.text('Add set'), findsNothing);
     expect(find.text('Completed · 4 sets'), findsNWidgets(2));
     expect(find.text('Completed · 3 sets'), findsNWidgets(3));
@@ -454,13 +533,13 @@ void main() {
 
     expect(find.text('Weighted Pull-Up'), findsOneWidget);
     expect(find.text('4 × 5–6'), findsOneWidget);
-    expect(find.text('Last time'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
     expect(find.textContaining('+10 kg'), findsOneWidget);
     expect(find.text('Incline Barbell Bench Press'), findsOneWidget);
     expect(find.text('4 × 6–8'), findsOneWidget);
 
     await _tapExercise(tester, 'Weighted Pull-Up');
-    expect(find.text('Last time'), findsNothing);
+    expect(find.text('Previous performance'), findsNothing);
 
     await _tapExercise(tester, 'Weighted Pull-Up');
     expect(find.textContaining('+10 kg'), findsOneWidget);
@@ -508,6 +587,7 @@ Future<void> _pumpEditor(
   WidgetTester tester, {
   required BlockPerformanceDraft draft,
   PreviousPerformanceResolver? resolver,
+  PreviousStrengthHistoryState? history,
 }) async {
   tester.view.physicalSize = const Size(430, 2000);
   tester.view.devicePixelRatio = 1;
@@ -526,6 +606,7 @@ Future<void> _pumpEditor(
                     .linkedExercises,
             previousPerformanceResolver:
                 resolver ?? const PreviousPerformanceResolver(),
+            previousStrengthHistory: history,
             onResultChanged: (_) {},
             onAddSet: (_) {},
             onUpdateSet: (_, _, _) {},

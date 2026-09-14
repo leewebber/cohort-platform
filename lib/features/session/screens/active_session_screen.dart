@@ -16,6 +16,8 @@ import '../../performance/screens/session_finish_review_screen.dart';
 import '../../performance/services/circuit_capture_contract.dart';
 import '../../performance/services/emom_score_contract.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
+import '../../performance/services/previous_strength_performance_service.dart';
+import '../../performance/models/previous_strength_performance.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
 import '../../../models/workout_format.dart';
 import '../controllers/session_execution_controller.dart';
@@ -40,6 +42,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.saveCoordinator,
     this.workoutLaunchContext,
     this.refreshController,
+    this.previousStrengthService,
   });
 
   final SessionExecutionController controller;
@@ -51,6 +54,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final PerformanceRecordSaveCoordinator? saveCoordinator;
   final WorkoutSessionLaunchContext? workoutLaunchContext;
   final HomeTodaySessionRefreshController? refreshController;
+  final PreviousStrengthPerformanceService? previousStrengthService;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -69,13 +73,54 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
   bool _lastSaveSucceeded = true;
   bool _isLeaving = false;
   bool _completionLocked = false;
+  PreviousStrengthHistoryState _previousStrengthHistory =
+      const PreviousStrengthHistoryState.loading();
+  late final PreviousStrengthPerformanceService _previousStrengthService;
 
   @override
   void initState() {
     super.initState();
     _saveCoordinator =
         widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
+    _previousStrengthService =
+        widget.previousStrengthService ?? PreviousStrengthPerformanceService();
     _persistDraft();
+    _loadPreviousStrength();
+  }
+
+  Future<void> _loadPreviousStrength() async {
+    final athleteId = widget.athleteId?.trim();
+    final ids = _controller.state.plan.blocks
+        .expand((block) => block.linkedExercises)
+        .map((exercise) => exercise.exerciseId.trim())
+        .where((id) => id.isNotEmpty)
+        .toSet();
+    if (athleteId == null || athleteId.isEmpty || ids.isEmpty) {
+      setState(() {
+        _previousStrengthHistory = const PreviousStrengthHistoryState.idle();
+      });
+      return;
+    }
+    setState(() {
+      _previousStrengthHistory = const PreviousStrengthHistoryState.loading();
+    });
+    try {
+      final result = await _previousStrengthService.latestForExercises(
+        athleteId: athleteId,
+        exerciseIds: ids,
+        excludeRecordId: _performanceController.draft.recordId,
+        currentChronologyAt: _performanceController.draft.startedAt.toUtc(),
+      );
+      if (!mounted) return;
+      setState(() {
+        _previousStrengthHistory = PreviousStrengthHistoryState.ready(result);
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _previousStrengthHistory = const PreviousStrengthHistoryState.failed();
+      });
+    }
   }
 
   Future<bool> _persistDraft() {
@@ -543,6 +588,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                             : BlockResultEditor(
                                 blockDraft: blockDraft,
                                 linkedExercises: block.linkedExercises,
+                                previousStrengthHistory:
+                                    _previousStrengthHistory,
+                                onRetryPreviousStrength: _loadPreviousStrength,
                                 onResultChanged: (result) {
                                   _performanceController.updateBlockResultData(
                                     block.blockId,

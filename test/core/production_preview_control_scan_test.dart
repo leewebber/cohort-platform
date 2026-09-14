@@ -38,13 +38,14 @@ void main() {
     final productionMain = File('lib/main.dart').readAsStringSync();
     expect(productionMain, contains('CohortPlatformApp'));
     expect(productionMain, isNot(contains('main_emom_result_preview')));
-    expect(productionMain, isNot(contains('AthleteShellPreviewApp')));
+    expect(productionMain, isNot(contains('main_week2_previous_strength_preview')));
 
     final previewMains = [
       'lib/main_athlete_shell_preview.dart',
       'lib/main_emom_result_preview.dart',
       'lib/main_overdue_recovery_preview.dart',
       'lib/main_strength_accordion_preview.dart',
+      'lib/main_week2_previous_strength_preview.dart',
     ];
     for (final path in previewMains) {
       expect(File(path).existsSync(), isTrue, reason: path);

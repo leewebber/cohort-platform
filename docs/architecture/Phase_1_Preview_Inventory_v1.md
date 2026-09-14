@@ -8,6 +8,7 @@ Ports below are **local conventions**, not product behaviour.
 | `lib/main_athlete_shell_preview.dart` | 5-tab shell layout | In-memory preview athlete | Yes for layout | No |
 | `lib/main_overdue_recovery_preview.dart` | Incomplete recovery UX | Local overdue fixtures | Historical; production Calendar now owns this | No |
 | `lib/main_strength_accordion_preview.dart` | Strength accordion | Local strength fixtures | Optional | No |
+| `lib/main_week2_previous_strength_preview.dart` | Week 2 previous-performance states | Local W1/W2 fixtures | Hotfix QA | No |
 | `lib/main_emom_result_preview.dart` | EMOM result surface | Local EMOM fixtures (port **4183**) | Yes for isolated QA | No |
 | `lib/main_s13_staging_verify.dart` | Staging Sprint 1.3 | Hosted staging only | Staging-gated | No |
 | `lib/main_s14a_staging_verify.dart` | Staging 1.4A | Hosted staging only | Staging-gated | No |

@@ -189,11 +189,37 @@ void main() {
         expect(source.contains('ExerciseExecutionResult'), isTrue);
         expect(source.contains('StrengthExecutionResult'), isTrue);
         expect(source.contains('class PreviousPerformanceFromResults'), isTrue);
-        // Must not invent next-load / rewrite programme via this descriptive path.
         expect(source.contains('recommendNextLoad'), isFalse);
         expect(source.contains('AthleteProgrammeGenerationService'), isFalse);
         expect(source.contains('commitDayOfAdaptation'), isFalse);
         expect(source.contains('SessionAdaptationPipeline'), isFalse);
+      },
+    );
+
+    test(
+      'programme strength accordion loads hosted previous strength history',
+      () {
+        final active = File(
+          '$root/lib/features/session/screens/active_session_screen.dart',
+        ).readAsStringSync();
+        expect(active.contains('PreviousStrengthPerformanceService'), isTrue);
+        expect(active.contains('latestForExercises'), isTrue);
+        expect(active.contains('excludeRecordId'), isTrue);
+        final editor = File(
+          '$root/lib/features/performance/widgets/performance_capture_widgets.dart',
+        ).readAsStringSync();
+        expect(editor.contains('First recorded performance'), isTrue);
+        expect(editor.contains('Couldn’t load previous performance'), isTrue);
+        expect(editor.contains('Loading previous performance'), isTrue);
+        final launcher = File(
+          '$root/lib/features/session/services/session_execution_launcher.dart',
+        ).readAsStringSync();
+        expect(launcher.contains('athleteId: athleteId'), isTrue);
+        expect(
+          launcher.contains('InMemoryPreviousStrengthPerformanceStore'),
+          isFalse,
+        );
+        expect(active.contains('InMemoryPreviousStrengthPerformanceStore'), isFalse);
       },
     );
 

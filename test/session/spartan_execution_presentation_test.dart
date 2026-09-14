@@ -290,8 +290,8 @@ void main() {
 
     expect(find.text('Today'), findsOneWidget);
     expect(find.text('4 × 40 metres · Rest 1 min 15 sec'), findsOneWidget);
-    expect(find.text('Last time'), findsOneWidget);
-    expect(find.text('No previous performance'), findsOneWidget);
+    expect(find.text('Previous performance'), findsOneWidget);
+    expect(find.text('First recorded performance'), findsOneWidget);
     expect(find.text('Load per hand (kg)'), findsNWidgets(4));
     expect(find.text('Completed distance (m)'), findsNWidgets(4));
     expect(find.text('Duration (optional)'), findsNWidgets(4));
@@ -462,7 +462,7 @@ void main() {
 
       expect(find.text('Farmer Carry'), findsOneWidget);
       expect(find.text('4 × 40 metres · Rest 1 min 15 sec'), findsOneWidget);
-      expect(find.text('Last time'), findsOneWidget);
+      expect(find.text('Previous performance'), findsOneWidget);
       expect(find.text('Add set'), findsOneWidget);
       expect(find.text('Exercises'), findsNothing);
       expect(find.text('Performance'), findsNothing);

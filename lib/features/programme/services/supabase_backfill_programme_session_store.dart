@@ -3,6 +3,7 @@ import '../../performance/mappers/performance_record_mapper.dart';
 import '../../performance/models/session_result_entry_mode.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
+import '../../performance/services/previous_strength_performance_service.dart';
 import '../../../core/services/supabase_service.dart';
 import '../models/backfill_programme_session.dart';
 import 'athlete_programme_completion_service.dart';
@@ -94,6 +95,9 @@ class SupabaseBackfillProgrammeSessionStore
     final status = response['status']?.toString();
     final code = response['code']?.toString();
     if (status == 'committed' || status == 'already_committed') {
+      PreviousStrengthPerformanceService.invalidateAfterWrite(
+        submitted.athleteId,
+      );
       final raw = response['completion_record'];
       final record = raw is Map
           ? TrainingSessionRecord.fromMap(

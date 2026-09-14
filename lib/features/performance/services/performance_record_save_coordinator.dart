@@ -15,6 +15,7 @@ import '../models/training_session_record_status.dart';
 import '../repositories/performance_record_store.dart';
 import '../repositories/supabase_performance_record_store.dart';
 import 'performance_correction_service.dart';
+import 'previous_strength_performance_service.dart';
 
 class PerformanceCompletionResult {
   const PerformanceCompletionResult({
@@ -127,6 +128,7 @@ class PerformanceRecordSaveCoordinator {
       ),
     );
 
+    PreviousStrengthPerformanceService.invalidateAfterWrite(athleteId);
     return PerformanceCompletionResult(record: committed);
   }
 
@@ -209,6 +211,7 @@ class PerformanceRecordSaveCoordinator {
     }
 
     final committed = await _store.getById(record.recordId) ?? record;
+    PreviousStrengthPerformanceService.invalidateAfterWrite(athleteId);
     return PerformanceCompletionResult(
       record: committed,
       progressionFailed: false,
@@ -245,8 +248,10 @@ class PerformanceRecordSaveCoordinator {
 
   Future<TrainingSessionRecord> correctCompleted(
     PerformanceCorrectionDraft draft,
-  ) {
-    return _store.correctCompleted(draft);
+  ) async {
+    final record = await _store.correctCompleted(draft);
+    PreviousStrengthPerformanceService.invalidateAfterWrite(record.athleteId);
+    return record;
   }
 }
 

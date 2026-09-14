@@ -10,6 +10,7 @@ import '../../features/plans/models/plan_definition.dart';
 import '../../features/plans/models/programmed_session_key.dart';
 import '../../features/plans/services/plan_assignment_service.dart';
 import '../../features/workout_player/models/previous_performance_snapshot.dart';
+import '../../features/performance/services/previous_strength_performance_service.dart';
 import 'athlete_local_repository.dart';
 import 'models/execution_result_models.dart';
 import 'restored_session_factory.dart';
@@ -320,5 +321,6 @@ class AthleteStateHydrator {
     SessionCompletionStore.clear();
     CapabilityTimelineStore.clear();
     PreviousPerformanceStore.clear();
+    PreviousStrengthPerformanceCache.clear();
   }
 }
