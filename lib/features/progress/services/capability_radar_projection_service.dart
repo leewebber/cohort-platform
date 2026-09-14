@@ -144,6 +144,7 @@ class CapabilityRadarProjectionService {
     int enduranceSessionCount = 0,
   }) {
     final events = timeline ?? CapabilityTimelineStore.all;
+    assert(strengthSessionCount >= 0 && enduranceSessionCount >= 0);
     final axes = <CapabilityRadarAxis>[];
 
     for (final dimension in CapabilityRadarDimension.values) {
@@ -171,24 +172,9 @@ class CapabilityRadarProjectionService {
         continue;
       }
 
-      final participation = _participation(
-        dimension: dimension,
-        strengthSessionCount: strengthSessionCount,
-        enduranceSessionCount: enduranceSessionCount,
+      axes.add(
+        CapabilityRadarAxis(dimension: dimension, available: false),
       );
-      if (participation == null) {
-        axes.add(
-          CapabilityRadarAxis(dimension: dimension, available: false),
-        );
-      } else {
-        axes.add(
-          CapabilityRadarAxis(
-            dimension: dimension,
-            available: true,
-            normalisedValue: participation,
-          ),
-        );
-      }
     }
 
     return CapabilityRadarModel(axes: List.unmodifiable(axes));
@@ -257,20 +243,6 @@ class CapabilityRadarProjectionService {
     }
 
     return List.unmodifiable(cards);
-  }
-
-  double? _participation({
-    required CapabilityRadarDimension dimension,
-    required int strengthSessionCount,
-    required int enduranceSessionCount,
-  }) {
-    final count = switch (dimension) {
-      CapabilityRadarDimension.strength => strengthSessionCount,
-      CapabilityRadarDimension.endurance => enduranceSessionCount,
-      _ => 0,
-    };
-    if (count <= 0) return null;
-    return (0.18 + (0.08 * count)).clamp(0.18, 0.55);
   }
 
   CapabilityRadarAxis _disciplineAxis(ProgressCompliance? compliance) {

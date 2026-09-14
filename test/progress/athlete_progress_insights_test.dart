@@ -64,7 +64,7 @@ void main() {
     expect(press.comparisonImproved, isFalse);
   });
 
-  test('two strength sessions fill Strength participation without claiming improvement', () {
+  test('two strength sessions do not fill Strength from session count', () {
     const service = CapabilityRadarProjectionService();
     final radar = service.project(
       timeline: const [],
@@ -77,8 +77,8 @@ void main() {
     final endurance = radar.axes.firstWhere(
       (axis) => axis.dimension == CapabilityRadarDimension.endurance,
     );
-    expect(strength.available, isTrue);
-    expect(strength.normalisedValue, closeTo(0.34, 0.001));
+    expect(strength.available, isFalse);
+    expect(strength.normalisedValue, isNull);
     expect(endurance.available, isFalse);
     expect(service.metricCards(timeline: const []), isEmpty);
   });

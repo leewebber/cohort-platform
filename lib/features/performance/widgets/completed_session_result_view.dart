@@ -843,6 +843,11 @@ class _ComparisonBadge extends StatelessWidget {
         foreground: CohortColors.warning,
         background: const Color(0xFF22180C),
       ),
+      StrengthExerciseComparisonStatus.mixed => (
+        icon: Icons.swap_vert,
+        foreground: CohortColors.olive,
+        background: CohortColors.oliveSoft,
+      ),
       StrengthExerciseComparisonStatus.baseline => (
         icon: Icons.flag_outlined,
         foreground: CohortColors.textSecondary,
@@ -850,6 +855,11 @@ class _ComparisonBadge extends StatelessWidget {
       ),
       StrengthExerciseComparisonStatus.notComparable => (
         icon: Icons.compare_arrows,
+        foreground: CohortColors.textMuted,
+        background: CohortColors.surfaceRaised,
+      ),
+      StrengthExerciseComparisonStatus.insufficientEvidence => (
+        icon: Icons.hourglass_empty,
         foreground: CohortColors.textMuted,
         background: CohortColors.surfaceRaised,
       ),
