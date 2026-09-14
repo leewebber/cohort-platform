@@ -3,9 +3,10 @@
 **Local proof:** `./supabase/tests/run_local_db_gate.sh` (fresh `db reset` plus
 repeat reset; never hosted).  
 **Hosted Field Manual:** overdue recovery and Backfill migrations were applied
-in an earlier authorised deploy. The closeout trigger
-`20260914120000_terminalize_training_session_from_completed_record.sql` is
-**local-only until founder approval**.
+in an earlier authorised deploy. The closeout trigger and historical
+reconciliation (`20260914120000`, `20260914121000`) are the authorised
+lifecycle pair; apply only those two files, never the remainder of the
+chain, on a production-equivalent upgrade.
 
 Fresh local databases apply every file in `supabase/migrations/` by timestamp.
 Upgrade from the closest production-equivalent schema is the hosted-faithful
@@ -27,7 +28,8 @@ INSERT/COPY) followed by that same timestamped chain.
 | `20260906140000_ignore_completed_sessions_in_train_today_swap.sql` | Ignore closed sessions | Replaces function | No | Yes |
 | `20260911120000_overdue_fixed_programme_recovery.sql` | Incomplete recovery | Replaces functions | No | Applied 2026-09-13 |
 | `20260913120000_backfill_fixed_programme_session_results.sql` | Backfill provenance | Additive columns + RPC | No | Applied 2026-09-13 |
-| `20260914120000_terminalize_training_session_from_completed_record.sql` | Parent session close | Trigger | No | **Not applied** |
+| `20260914120000_terminalize_training_session_from_completed_record.sql` | Parent session close | Trigger | No | Authorised hosted lifecycle pair |
+| `20260914121000_reconcile_terminal_training_sessions_from_records.sql` | Historical parent close | Function + SELECT | Qualified parents only | Authorised hosted lifecycle pair |
 
 Earlier catalogue, RLS, Apollo week protocols, and enrolment migrations remain
 required dependencies. Rollback of function-body replacements is restore the
@@ -36,5 +38,6 @@ previous migration file; rollback of the new trigger is `DROP TRIGGER`.
 Compatibility: the trigger only adds parent `completed` when evidence already
 exists. Older app builds that still call `completeSession()` stay compatible.
 
-Local gate coverage: Gates C–AU plus **AV** (parent close from terminal
-record). Capability reporting remains `cohort_athlete_runtime_capabilities`.
+Local gate coverage: Gates C–AU plus **AV** (future parent close from
+terminal record) and **AW** (historical reconciliation). Capability
+reporting remains `cohort_athlete_runtime_capabilities`.

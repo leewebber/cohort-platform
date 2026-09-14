@@ -76,3 +76,13 @@ move/swap; production athlete shell; founder iPhone deployment workflow.
 Launch readiness, public-auth production hardening, wearables, full exercise
 video, notifications, payments, external coach authoring, advanced
 adaptation, or controlled multi-athlete beta. Those remain later milestones.
+
+## Follow-on: hosted lifecycle reconciliation (2026-09-14)
+
+Authorised separately from this closeout document. Field Manual received
+only `20260914120000` (trigger, zero historical rows) and `20260914121000`
+(generic parent close). Three parents (33, 34, 39) became `completed` from
+existing live records. Sessions 30 and 31 remain `in_progress`. Result
+trees, occurrences, slot outcomes, schedule operations, and the assignment
+cursor were unchanged. Founder build 1.0.0 (4) was not reinstalled.
+Progression Mechanics Validation remains paused until founder approval.

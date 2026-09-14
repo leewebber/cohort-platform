@@ -1,7 +1,9 @@
 # Phase 1 lifecycle inconsistencies
 
-**Status:** Diagnosis complete. Local prevention trigger added. Hosted
-historical repair is **proposed only** and is **not applied**.
+**Status:** Applied on Cohort Field Manual (`otnhhdxstdnwccehacku`) on
+2026-09-14. Prevention trigger plus generic historical reconciliation.
+Three parent `training_sessions` (33, 34, 39) closed from existing live
+completed records. Sessions 30 and 31 unchanged (no terminal records).
 
 Observed on the founder Field Manual athlete (read-only; IDs are shapes, not
 a mutation list):
@@ -81,48 +83,35 @@ vs cursor and evidence vs parent status.
 Not implemented here: rewriting `TrainingSessionSetRepository` PostgREST
 filters (legacy M8 path; needs a dedicated consumer audit).
 
-## Hosted reconciliation proposal (paused)
+## Hosted reconciliation (generic)
 
-Do **not** apply on Field Manual without founder approval. Do **not** write
-Lee-specific SQL.
+Do **not** write Lee-specific SQL. Do **not** infer completion from age.
+Do **not** close a parent from a slot outcome alone, and do **not** use
+`NOW()` as historical `completed_at`.
 
-Generic, auditable steps:
+`cohort_reconcile_terminal_training_sessions_from_records()` updates a
+parent `training_sessions` row only when:
 
-1. **Read-only report** of counts:
-   - terminal outcome ∧ parent `in_progress`
-   - record completed ∧ outcome not terminal
-   - cursor slot terminal ∧ remaining scheduled earlier occurrences
-   - `in_progress` parents with no record and no in-progress outcome
-2. **Close orphan parents** only where a terminal record **or** terminal
-   slot outcome exists:
+- exactly one linked `training_session_records` row exists
+- that record is `completed` or `partially_completed` with `completed_at`
+- athlete IDs agree when both are present
+- at least one `training_block_results` row exists
+- the parent is not already `completed`
 
-```sql
-UPDATE public.training_sessions ts
-SET status = 'completed',
-    completed_at = COALESCE(ts.completed_at, NOW()),
-    updated_at = NOW()
-WHERE ts.status = 'in_progress'
-  AND (
-    EXISTS (
-      SELECT 1 FROM public.training_session_records r
-      WHERE r.training_session_id = ts.id
-        AND r.status IN ('completed', 'partially_completed')
-    )
-    OR EXISTS (
-      SELECT 1 FROM public.programme_slot_outcomes o
-      WHERE o.training_session_id = ts.id
-        AND o.outcome_status IN ('completed', 'completed_partial')
-    )
-  );
-```
+Parents with no record, in-progress-only records, `abandoned` records,
+athlete mismatch, or multiple linked records are excluded.
 
-3. Apply `20260914120000_terminalize_training_session_from_completed_record.sql`
-   so new completions stay consistent.
-4. Optionally refresh compatibility cursors for active `fixed_schedule`
-   assignments via the existing refresh function — **not** by inventing a
-   next session.
-5. Leave truly abandoned open rows `in_progress`. Never delete stale rows
-   merely because they look old.
+Apply order on Field Manual:
 
-Rollback: restore from backup taken immediately before the UPDATE; the
-trigger is additive `CREATE OR REPLACE` / `DROP TRIGGER IF EXISTS`.
+1. `20260914120000_terminalize_training_session_from_completed_record.sql`
+   (future path; zero historical row writes)
+2. `20260914121000_reconcile_terminal_training_sessions_from_records.sql`
+   (idempotent historical close)
+
+Do **not** refresh compatibility cursors in this task. Leave abandoned
+open rows `in_progress`. Never delete stale rows merely because they look
+old.
+
+Rollback: restore the three parent rows from the pre-mutation snapshot,
+or restore from WAL/logical backup; the trigger is additive
+`CREATE OR REPLACE` / `DROP TRIGGER IF EXISTS`.

@@ -16,7 +16,7 @@ suite should be rewritten to shrink file count.
 | Incomplete / Train today / swap | `overdue_session_recovery_test.dart`; future-swap SQL gates |
 | Backfill chronology | `test/programme/backfill_persistence_test.dart` |
 | Completion / cursor | `athlete_programme_completion_self_test_2_test.dart`; Gate L |
-| Lifecycle parent vs record | `session_lifecycle_authority_test.dart`; Gate AV |
+| Lifecycle parent vs record | `session_lifecycle_authority_test.dart`; Gates AV and AW |
 | EMOM / circuit / interval / strength | `test/performance/emom_score_capture_test.dart` and siblings |
 | Production vs preview | `test/core/production_preview_control_scan_test.dart` |
 | Adaptation fail-closed | `test/architecture/`; safety gate adaptation group |
@@ -28,6 +28,7 @@ suite should be rewritten to shrink file count.
 ## Known gaps closed in this closeout
 
 - Terminal parent-session trigger + Gate AV
+- Historical parent reconciliation + Gate AW
 - Calendar vs cursor / evidence vs parent documentation tests
 - Preview entry inventory assertions
 - Timestamp-ordered migration chain test
