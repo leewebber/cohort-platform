@@ -1,8 +1,8 @@
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
-import '../models/performance_result_type.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../progression/interval_progression.dart';
 import 'interval_capture_contract.dart';
 import 'interval_result_math.dart';
 import 'strength_result_comparison.dart';
@@ -63,14 +63,21 @@ class IntervalResultComparison {
     final familyLabel = IntervalCaptureContract.familyLabel(
       workSeconds: data.workSeconds ?? block.blockSnapshot.workSeconds,
     );
-    final previous = previousComparable(
+    final previous = IntervalProgressionComparison.previousComparable(
       current: current,
-      block: block,
+      currentData: data,
       athleteHistory: athleteHistory,
+    );
+    final progression = IntervalProgressionComparison.compare(
+      current: data,
+      previous: previous?.data,
+      previousPerformedAt: previous?.completedAt,
     );
     if (previous == null) {
       return IntervalComparison(
-        status: StrengthExerciseComparisonStatus.baseline,
+        status: StrengthExerciseComparisonStatus.fromOutcome(
+          progression.outcome,
+        ),
         familyLabel: familyLabel,
       );
     }
@@ -80,19 +87,14 @@ class IntervalResultComparison {
     );
     if (currentAvg == null || previousAvg == null) {
       return IntervalComparison(
-        status: StrengthExerciseComparisonStatus.notComparable,
+        status: StrengthExerciseComparisonStatus.fromOutcome(
+          progression.outcome,
+        ),
         familyLabel: familyLabel,
         previous: previous.data,
         previousCompletedAt: previous.completedAt,
       );
     }
-    final delta = previousAvg - currentAvg;
-    final tolerance = _tolerance(previousAvg);
-    final status = delta > tolerance
-        ? StrengthExerciseComparisonStatus.improved
-        : delta < -tolerance
-        ? StrengthExerciseComparisonStatus.belowPrevious
-        : StrengthExerciseComparisonStatus.maintained;
     final currentFastest = IntervalResultMath.fastest(data);
     final historical = fastestInFamily(
       current: current,
@@ -105,7 +107,7 @@ class IntervalResultComparison {
         currentFastest.paceSecondsPerKm! + 1e-9 <
             historical.paceSecondsPerKm!;
     return IntervalComparison(
-      status: status,
+      status: StrengthExerciseComparisonStatus.fromOutcome(progression.outcome),
       familyLabel: familyLabel,
       previous: previous.data,
       previousCompletedAt: previous.completedAt,
@@ -121,27 +123,11 @@ class IntervalResultComparison {
   }) {
     final currentData = dataFor(block);
     if (currentData == null) return null;
-    final currentAt = current.completedAt ?? current.startedAt;
-    IntervalResultData? latest;
-    DateTime? latestAt;
-    for (final record in athleteHistory) {
-      if (record.athleteId != current.athleteId) continue;
-      if (record.recordId == current.recordId) continue;
-      if (record.status != TrainingSessionRecordStatus.completed) continue;
-      final at = record.completedAt ?? record.startedAt;
-      if (!at.isBefore(currentAt)) continue;
-      for (final candidate in record.blockResults) {
-        if (candidate.resultType != PerformanceResultType.interval) continue;
-        final data = dataFor(candidate);
-        if (data == null || !isComparable(currentData, data)) continue;
-        if (latestAt == null || at.isAfter(latestAt)) {
-          latest = data;
-          latestAt = at;
-        }
-      }
-    }
-    if (latest == null || latestAt == null) return null;
-    return (data: latest, completedAt: latestAt);
+    return IntervalProgressionComparison.previousComparable(
+      current: current,
+      currentData: currentData,
+      athleteHistory: athleteHistory,
+    );
   }
 
   static IntervalWorkResult? fastestInFamily({
@@ -168,10 +154,5 @@ class IntervalResultComparison {
       }
     }
     return best;
-  }
-
-  static double _tolerance(double previousAvg) {
-    final relative = previousAvg.abs() * relativeTolerance;
-    return relative > absoluteTolerance ? relative : absoluteTolerance;
   }
 }

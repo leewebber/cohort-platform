@@ -211,6 +211,12 @@ void main() {
         expect(editor.contains('First recorded performance'), isTrue);
         expect(editor.contains('Couldn’t load previous performance'), isTrue);
         expect(editor.contains('Loading previous performance'), isTrue);
+        expect(
+          File('$root/lib/features/performance/progression/strength_progression.dart')
+              .readAsStringSync()
+              .contains('estimated1Rm'),
+          isFalse,
+        );
         final launcher = File(
           '$root/lib/features/session/services/session_execution_launcher.dart',
         ).readAsStringSync();

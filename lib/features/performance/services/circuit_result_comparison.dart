@@ -2,6 +2,7 @@ import '../models/circuit_station_actual.dart';
 import '../models/performance_result_data.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
+import '../progression/circuit_progression.dart';
 import 'strength_result_comparison.dart';
 
 class CircuitComparison {
@@ -100,9 +101,9 @@ class CircuitResultComparison {
         : data.isFixedWork
         ? 'Fixed-work rounds'
         : 'Circuit';
-    final previous = previousComparable(
+    final previous = CircuitProgressionComparison.previousComparable(
       current: current,
-      block: block,
+      currentData: data,
       athleteHistory: athleteHistory,
     );
     if (data.isFixedWork &&
@@ -128,9 +129,16 @@ class CircuitResultComparison {
       );
     }
     final previousPrimary = primarySignal(previous.data);
+    final progression = CircuitProgressionComparison.compare(
+      current: data,
+      previous: previous.data,
+      previousPerformedAt: previous.completedAt,
+    );
     if (primary == null || previousPrimary == null) {
       return CircuitComparison(
-        status: StrengthExerciseComparisonStatus.notComparable,
+        status: StrengthExerciseComparisonStatus.fromOutcome(
+          progression.outcome,
+        ),
         familyLabel: label,
         previous: previous.data,
         primaryLabel: primary?.label,
@@ -138,19 +146,8 @@ class CircuitResultComparison {
         previousPrimary: previousPrimary?.value,
       );
     }
-    final delta = primary.value - previousPrimary.value;
-    final tolerance = previousPrimary.value.abs() * relativeTolerance;
-    final status = delta > tolerance
-        ? (primary.higherIsBetter
-              ? StrengthExerciseComparisonStatus.improved
-              : StrengthExerciseComparisonStatus.belowPrevious)
-        : delta < -tolerance
-        ? (primary.higherIsBetter
-              ? StrengthExerciseComparisonStatus.belowPrevious
-              : StrengthExerciseComparisonStatus.improved)
-        : StrengthExerciseComparisonStatus.maintained;
     return CircuitComparison(
-      status: status,
+      status: StrengthExerciseComparisonStatus.fromOutcome(progression.outcome),
       familyLabel: label,
       previous: previous.data,
       primaryLabel: primary.label,

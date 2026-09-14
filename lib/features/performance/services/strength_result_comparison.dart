@@ -1,36 +1,60 @@
-import 'dart:math' as math;
-
 import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
-import '../models/training_session_record_status.dart';
+import '../progression/progression_comparison.dart';
+import '../progression/strength_progression.dart';
 
 enum StrengthExerciseComparisonStatus {
   improved,
   maintained,
   belowPrevious,
+  mixed,
   baseline,
-  notComparable;
+  notComparable,
+  insufficientEvidence;
 
   String get label => switch (this) {
     StrengthExerciseComparisonStatus.improved => 'Improved',
-    StrengthExerciseComparisonStatus.maintained => 'Maintained',
-    StrengthExerciseComparisonStatus.belowPrevious => 'Below previous',
-    StrengthExerciseComparisonStatus.baseline => 'Baseline',
+    StrengthExerciseComparisonStatus.maintained => 'Matched',
+    StrengthExerciseComparisonStatus.belowPrevious => 'Below last performance',
+    StrengthExerciseComparisonStatus.mixed => 'Mixed',
+    StrengthExerciseComparisonStatus.baseline => 'First performance',
     StrengthExerciseComparisonStatus.notComparable => 'Not comparable',
+    StrengthExerciseComparisonStatus.insufficientEvidence =>
+      'Insufficient evidence',
   };
 
   String get semanticLabel => switch (this) {
     StrengthExerciseComparisonStatus.improved =>
       'Improved compared with the previous completed session',
     StrengthExerciseComparisonStatus.maintained =>
-      'Maintained compared with the previous completed session',
+      'Matched the previous completed session',
     StrengthExerciseComparisonStatus.belowPrevious =>
-      'Below the previous completed session',
+      'Below last performance',
+    StrengthExerciseComparisonStatus.mixed =>
+      'Mixed compared with the previous completed session',
     StrengthExerciseComparisonStatus.baseline =>
-      'Baseline — first completed result for this exercise',
+      'First performance for this exercise',
     StrengthExerciseComparisonStatus.notComparable =>
       'Not comparable with the previous completed session',
+    StrengthExerciseComparisonStatus.insufficientEvidence =>
+      'Insufficient evidence for a comparison',
   };
+
+  static StrengthExerciseComparisonStatus fromOutcome(ProgressionOutcome outcome) {
+    return switch (outcome) {
+      ProgressionOutcome.improved => StrengthExerciseComparisonStatus.improved,
+      ProgressionOutcome.matched => StrengthExerciseComparisonStatus.maintained,
+      ProgressionOutcome.belowLastPerformance =>
+        StrengthExerciseComparisonStatus.belowPrevious,
+      ProgressionOutcome.mixed => StrengthExerciseComparisonStatus.mixed,
+      ProgressionOutcome.firstPerformance =>
+        StrengthExerciseComparisonStatus.baseline,
+      ProgressionOutcome.notComparable =>
+        StrengthExerciseComparisonStatus.notComparable,
+      ProgressionOutcome.insufficientEvidence =>
+        StrengthExerciseComparisonStatus.insufficientEvidence,
+    };
+  }
 }
 
 class StrengthLoadDisplay {
@@ -130,55 +154,34 @@ class StrengthResultComparison {
     required TrainingSessionRecord current,
     required List<TrainingSessionRecord> athleteHistory,
   }) {
-    final id = exerciseId.trim();
-    if (id.isEmpty) return null;
-    final currentAt = current.performanceChronologyAt;
-    TrainingExerciseResult? latest;
-    DateTime? latestAt;
-    for (final record in athleteHistory) {
-      if (record.athleteId != current.athleteId) continue;
-      if (record.recordId == current.recordId) continue;
-      if (record.status != TrainingSessionRecordStatus.completed) continue;
-      final at = record.performanceChronologyAt;
-      if (!at.isBefore(currentAt)) continue;
-      for (final block in record.blockResults) {
-        for (final exercise in block.exerciseResults) {
-          if (exercise.sourceExerciseId != id) continue;
-          if (exercise.setResults.isEmpty) continue;
-          if (latestAt == null || at.isAfter(latestAt)) {
-            latest = exercise;
-            latestAt = at;
-          }
-        }
-      }
-    }
-    if (latest == null || latestAt == null) return null;
-    return (exercise: latest, completedAt: latestAt);
+    return StrengthProgressionComparison.previousOccurrence(
+      exerciseId: exerciseId,
+      current: current,
+      athleteHistory: athleteHistory,
+    );
   }
 
   static StrengthExerciseComparisonStatus status({
     required TrainingExerciseResult current,
     required TrainingExerciseResult? previous,
   }) {
-    if (previous == null) return StrengthExerciseComparisonStatus.baseline;
-    final currentMetric = _primaryMetric(current);
-    final previousMetric = _primaryMetric(previous);
-    if (currentMetric == null || previousMetric == null) {
-      return StrengthExerciseComparisonStatus.notComparable;
-    }
-    if (!_compatible(currentMetric, previousMetric)) {
-      return StrengthExerciseComparisonStatus.notComparable;
-    }
-    final delta = currentMetric.value - previousMetric.value;
-    final tolerance = math.max(
-      absoluteTolerance,
-      previousMetric.value.abs() * relativeTolerance,
+    return StrengthExerciseComparisonStatus.fromOutcome(
+      compareProgression(current: current, previous: previous).outcome,
     );
-    if (delta > tolerance) return StrengthExerciseComparisonStatus.improved;
-    if (delta < -tolerance) {
-      return StrengthExerciseComparisonStatus.belowPrevious;
-    }
-    return StrengthExerciseComparisonStatus.maintained;
+  }
+
+  static ProgressionComparison compareProgression({
+    required TrainingExerciseResult current,
+    required TrainingExerciseResult? previous,
+    DateTime? previousPerformedAt,
+  }) {
+    return StrengthProgressionComparison.compare(
+      current: StrengthProgressionFacts.fromExercise(current),
+      previous: previous == null
+          ? null
+          : StrengthProgressionFacts.fromExercise(previous),
+      previousPerformedAt: previousPerformedAt,
+    );
   }
 
   static String label({
@@ -253,35 +256,13 @@ class StrengthResultComparison {
     required TrainingExerciseResult? previous,
   }) {
     if (previous == null) return const [];
-    final parts = <String>[];
-    final current1Rm = _primaryMetric(current);
-    final previous1Rm = _primaryMetric(previous);
-    if (current1Rm != null &&
-        previous1Rm != null &&
-        _compatible(current1Rm, previous1Rm)) {
-      final delta = current1Rm.value - previous1Rm.value;
-      if (delta != 0) {
-        parts.add(
-          '${_signed(delta)} ${current1Rm.unit} est. 1RM',
-        );
-      }
-    }
-    final currentReps = _totalReps(current);
-    final previousReps = _totalReps(previous);
-    if (currentReps != null && previousReps != null && currentReps != previousReps) {
-      parts.add('${_signedInt(currentReps - previousReps)} reps');
-    }
-    final currentVolume = _volume(current);
-    final previousVolume = _volume(previous);
-    if (currentVolume != null &&
-        previousVolume != null &&
-        _sameUnit(currentVolume.unit, previousVolume.unit) &&
-        currentVolume.value != previousVolume.value) {
-      parts.add(
-        '${_signed(currentVolume.value - previousVolume.value)} ${currentVolume.unit} volume',
-      );
-    }
-    return parts;
+    return [
+      for (final delta in compareProgression(
+        current: current,
+        previous: previous,
+      ).deltas)
+        delta.label,
+    ];
   }
 
   static _PrimaryMetric? _primaryMetric(TrainingExerciseResult exercise) {
@@ -332,10 +313,6 @@ class StrengthResultComparison {
     return a.exerciseSnapshot.position.compareTo(b.exerciseSnapshot.position);
   }
 
-  static bool _compatible(_PrimaryMetric current, _PrimaryMetric previous) {
-    return current.kind == previous.kind && _sameUnit(current.unit, previous.unit);
-  }
-
   static bool _sameUnit(String left, String right) =>
       left.toLowerCase() == right.toLowerCase();
 
@@ -368,17 +345,6 @@ class StrengthResultComparison {
     return best;
   }
 
-  static int? _totalReps(TrainingExerciseResult exercise) {
-    var total = 0;
-    var any = false;
-    for (final set in exercise.setResults) {
-      if (!set.completed || set.reps == null) continue;
-      any = true;
-      total += set.reps!;
-    }
-    return any ? total : null;
-  }
-
   static _PrimaryMetric? _volume(TrainingExerciseResult exercise) {
     if (exercise.exerciseSnapshot.loadKind != StrengthActualLoadKind.external) {
       return null;
@@ -403,13 +369,6 @@ class StrengthResultComparison {
       unit: unit,
     );
   }
-
-  static String _signed(double value) {
-    final formatted = StrengthLoadDisplay.formatNumber(value.abs());
-    return value > 0 ? '+$formatted' : '-$formatted';
-  }
-
-  static String _signedInt(int value) => value > 0 ? '+$value' : '$value';
 }
 
 enum _PrimaryMetricKind { estimated1Rm, volume }

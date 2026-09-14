@@ -191,7 +191,7 @@ void main() {
     );
   });
 
-  test('first performance is labeled Baseline', () {
+  test('first performance is labeled First performance', () {
     final record = _completedStrengthRecord(
       recordId: 'r1',
       completedAt: DateTime.utc(2026, 9, 3, 18),
@@ -216,11 +216,11 @@ void main() {
           .exercises
           .single
           .comparisonLabel,
-      'Baseline',
+      'First performance',
     );
   });
 
-  test('later performance compares estimated 1RM against the prior result', () {
+  test('heavier load with fewer reps is Mixed, not estimated-1RM Improved', () {
     final previous = _completedStrengthRecord(
       recordId: 'r1',
       completedAt: DateTime.utc(2026, 9, 1, 18),
@@ -242,12 +242,11 @@ void main() {
         .exercises
         .single;
 
-    expect(exercise.comparisonStatus, StrengthExerciseComparisonStatus.improved);
-    expect(exercise.comparisonLabel, 'Improved');
+    expect(exercise.comparisonStatus, StrengthExerciseComparisonStatus.mixed);
+    expect(exercise.comparisonLabel, 'Mixed');
     expect(exercise.bestSetLabel, contains('90 kg'));
     expect(exercise.estimated1RmLabel, contains('Est. 1RM'));
     expect(exercise.volumeLabel, contains('270 kg'));
-    expect(exercise.deltaLabels.any((label) => label.contains('est. 1RM')), isTrue);
     expect(exercise.sets, hasLength(1));
     expect(exercise.sets.single.loadLabel, '90 kg');
     expect(exercise.sets.single.repsLabel, '3 reps');
@@ -455,7 +454,7 @@ void main() {
       expect(find.text('RPE 8'), findsOneWidget);
       expect(find.textContaining('Duration'), findsOneWidget);
       expect(find.text('Back squat'), findsOneWidget);
-      expect(find.text('Baseline'), findsOneWidget);
+      expect(find.text('First performance'), findsOneWidget);
       expect(find.textContaining('8 reps'), findsNothing);
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Resume'), findsNothing);

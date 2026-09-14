@@ -267,7 +267,7 @@ void main() {
       record: current,
       athleteHistory: [previous, current],
     );
-    expect(before.blocks.last.exercises.single.comparisonStatus.label, 'Below previous');
+    expect(before.blocks.last.exercises.single.comparisonStatus.label, 'Below last performance');
 
     final draft = PerformanceCorrectionDraft(current);
     draft.blockResults = [
