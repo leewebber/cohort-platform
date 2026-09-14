@@ -363,17 +363,57 @@ limits.
 
 **Home completed-today:** only the most useful session-level highlights.
 
-**Progress:** programme-wide history — sessions completed, adherence, recent
-performances, exercise bests, comparison highlights, PBs, format histories,
-radar **framework**, low-evidence states.
+**Progress:** programme-wide history — sessions completed, **Training
+Discipline** (sessions due so far), recent performances, exercise bests,
+comparison highlights, PBs, format histories, radar **framework**,
+low-evidence states.
 
 Live workout must not block Begin/Resume on optional history.
 
 ---
 
+## Training Discipline (time-eligible)
+
+Discipline is **not** programme completion.
+
+Previous (incorrect) formula:
+
+```text
+completed sessions ÷ every required session in the programme
+```
+
+Corrected formula:
+
+```text
+completed eligible sessions ÷ all eligible sessions due so far
+```
+
+Example: 84 programme sessions, 7 due, 6 complete, 1 incomplete, 77 future
+→ **6 / 7 = 86%**, not 6 / 84 = 7%.
+
+**Eligibility** uses the assignment IANA timezone and Calendar occurrence
+`scheduledDate` (effective date after reschedule). An occurrence is
+denominator-eligible when its effective date is before athlete-local today,
+or it is scheduled today and already terminal (complete, partial-complete,
+explicit skip). Today Planned / In progress are excluded until terminal or
+the local date rolls. Authored rest, empty dates, cancelled/`replaced`
+slots, and future unfinished sessions are excluded.
+
+**Partial completion:** binary count. `completed_partial` is a canonical
+terminal completion (`isTerminal: true`, calendar state `COMPLETED`) so
+numerator +1 and denominator +1. No 0.5 fraction. Show the partial count
+in detailed evidence.
+
+**Reschedule** counts one occurrence once on its effective date. **Swap**
+keeps two independent occurrences. Backfill / Train today on a past
+incomplete session change the numerator only.
+
+---
+
 ## Progress radar
 
-- Discipline / evidence coverage may use attendance/completion.
+- Discipline may use the time-eligible due-so-far percentage. Future
+  sessions must not suppress the axis.
 - Strength, Endurance, Power, Threshold, Durability, Mobility must **not**
   fill from session count.
 - Performance axes require suitable performance evidence. None exists as a

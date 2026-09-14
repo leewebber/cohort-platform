@@ -1,5 +1,4 @@
 import '../../adaptive_progression/models/capability_timeline.dart';
-import '../../adaptive_progression/models/session_completion.dart';
 import '../models/progress_summary.dart';
 
 /// Athlete-facing radar dimension (product language).
@@ -122,15 +121,9 @@ class CapabilityRadarProjectionService {
       'cohort.capability.aerobic_capacity',
       'cohort.capability.strength_endurance',
     ],
-    CapabilityRadarDimension.threshold: [
-      'cohort.capability.threshold',
-    ],
-    CapabilityRadarDimension.power: [
-      'cohort.capability.work_capacity',
-    ],
-    CapabilityRadarDimension.durability: [
-      'cohort.capability.resilience',
-    ],
+    CapabilityRadarDimension.threshold: ['cohort.capability.threshold'],
+    CapabilityRadarDimension.power: ['cohort.capability.work_capacity'],
+    CapabilityRadarDimension.durability: ['cohort.capability.resilience'],
     CapabilityRadarDimension.mobility: [
       'cohort.capability.movement_competency',
     ],
@@ -172,9 +165,7 @@ class CapabilityRadarProjectionService {
         continue;
       }
 
-      axes.add(
-        CapabilityRadarAxis(dimension: dimension, available: false),
-      );
+      axes.add(CapabilityRadarAxis(dimension: dimension, available: false));
     }
 
     return CapabilityRadarModel(axes: List.unmodifiable(axes));
@@ -219,25 +210,21 @@ class CapabilityRadarProjectionService {
       'cohort.capability.aerobic_capacity',
       'Aerobic Endurance',
     );
-    addFromCapability(
-      'cohort.capability.pulling_strength',
-      'Pulling Strength',
-    );
+    addFromCapability('cohort.capability.pulling_strength', 'Pulling Strength');
 
-    if (compliance != null &&
-        (SessionCompletionStore.all.isNotEmpty || compliance.completed > 0)) {
+    if (compliance != null && compliance.hasScore) {
       cards.add(
         ProgressMetricCardModel(
           id: 'discipline',
           title: 'Training Discipline',
           currentLabel: '${compliance.percentage}%',
-          previousLabel: null,
+          previousLabel: compliance.supportingLabel,
           direction: compliance.percentage >= 70
               ? CapabilityChangeDirection.up
               : compliance.percentage >= 40
               ? CapabilityChangeDirection.steady
               : CapabilityChangeDirection.down,
-          lastUpdated: SessionCompletionStore.latest?.completedAt,
+          lastUpdated: null,
         ),
       );
     }
@@ -246,8 +233,7 @@ class CapabilityRadarProjectionService {
   }
 
   CapabilityRadarAxis _disciplineAxis(ProgressCompliance? compliance) {
-    if (compliance == null ||
-        (compliance.planned <= 0 && SessionCompletionStore.all.isEmpty)) {
+    if (compliance == null || !compliance.hasScore) {
       return const CapabilityRadarAxis(
         dimension: CapabilityRadarDimension.discipline,
         available: false,

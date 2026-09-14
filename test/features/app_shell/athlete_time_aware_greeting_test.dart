@@ -54,10 +54,7 @@ void main() {
       );
       expect(newYork.hour, 23);
       expect(
-        AthleteTimeAwareGreeting.format(
-          localNow: newYork,
-          displayName: 'Lee',
-        ),
+        AthleteTimeAwareGreeting.format(localNow: newYork, displayName: 'Lee'),
         'Good evening, Lee',
       );
       expect(
@@ -74,20 +71,15 @@ void main() {
       final local = AthleteIanaClock.nowInZone('Not/AZone', utcNow: utc);
       expect(local.hour, utc.hour);
       expect(local.minute, utc.minute);
+      expect(AthleteIanaClock.dateOnly('Not/AZone', utcNow: utc), '2026-09-10');
     });
 
     test('Atlantic/Canary uses EU summer time', () {
       final utc = DateTime.utc(2026, 9, 10, 23, 30);
-      final canary = AthleteIanaClock.nowInZone(
-        'Atlantic/Canary',
-        utcNow: utc,
-      );
+      final canary = AthleteIanaClock.nowInZone('Atlantic/Canary', utcNow: utc);
       expect(canary.hour, 0);
       expect(
-        AthleteTimeAwareGreeting.format(
-          localNow: canary,
-          displayName: 'Lee',
-        ),
+        AthleteTimeAwareGreeting.format(localNow: canary, displayName: 'Lee'),
         'Good morning, Lee',
       );
     });

@@ -102,6 +102,7 @@ class AthleteAppShell extends StatefulWidget {
 
 class _AthleteAppShellState extends State<AthleteAppShell> {
   int _index = 0;
+  int _progressEpoch = 0;
   bool _recoveryPromptShown = false;
   final HomeTodaySessionRefreshController _surfaceRefresh =
       HomeTodaySessionRefreshController();
@@ -282,11 +283,13 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             onOpenCalendar: () => setState(() => _index = 1),
           ),
           ProgressScreen(
+            key: ValueKey(_progressEpoch),
             embeddedInShell: true,
             progressBuilder: widget.progressBuilder ??
                 AthleteProgressSummaryBuilder(
                   assignmentStore: widget.assignmentStore,
                   performanceRecordStore: widget.performanceRecordStore,
+                  occurrenceStore: _fixedOccurrenceStore,
                 ),
             onChoosePlan: () => setState(() => _index = 2),
             onStartToday: () => setState(() => _index = 0),
@@ -299,7 +302,10 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
         destinations: AthleteAppShell.destinations,
         onDestinationSelected: (i) {
           final alreadyHome = _index == 0 && i == 0;
-          setState(() => _index = i);
+          setState(() {
+            _index = i;
+            if (i == 3) _progressEpoch++;
+          });
           if (i == 0) {
             if (alreadyHome && _homeScroll.hasClients) {
               _homeScroll.animateTo(
@@ -310,6 +316,11 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             }
             _surfaceRefresh.reloadAuthoritativeSurfaces(
               source: 'shell_home_tab',
+            );
+          }
+          if (i == 3) {
+            _surfaceRefresh.reloadAuthoritativeSurfaces(
+              source: 'shell_progress_tab',
             );
           }
         },

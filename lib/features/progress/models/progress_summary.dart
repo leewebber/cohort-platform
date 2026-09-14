@@ -1,6 +1,21 @@
 import '../../adaptive_progression/models/capability_timeline.dart';
 
+/// Whether Training Discipline has any due-session evidence yet.
+enum DisciplineAvailability {
+  /// Assignment start is still in the athlete-local future.
+  preStart,
+
+  /// Programme has started, but no required session is due yet.
+  noneDue,
+
+  /// At least one required session is denominator-eligible.
+  scored,
+}
+
 /// Compliance snapshot for Progress (memory only).
+///
+/// [completed] / [planned] are the time-eligible Discipline numerator and
+/// denominator (sessions due so far), not total programme length.
 class ProgressCompliance {
   const ProgressCompliance({
     required this.completed,
@@ -8,13 +23,56 @@ class ProgressCompliance {
     required this.percentage,
     required this.currentStreak,
     required this.longestStreak,
+    this.availability,
+    this.asOfDate,
+    this.timezone,
+    this.futureExcluded = 0,
+    this.incompleteCount = 0,
+    this.skippedCount = 0,
+    this.partialCompletedCount = 0,
+    this.totalRequired = 0,
   });
 
+  /// Eligible completed sessions (Discipline numerator).
   final int completed;
+
+  /// Eligible sessions due so far (Discipline denominator).
   final int planned;
   final int percentage;
   final int currentStreak;
   final int longestStreak;
+
+  /// When null, inferred from [planned] so injected test summaries stay scored.
+  final DisciplineAvailability? availability;
+  final String? asOfDate;
+  final String? timezone;
+  final int futureExcluded;
+  final int incompleteCount;
+  final int skippedCount;
+  final int partialCompletedCount;
+  final int totalRequired;
+
+  DisciplineAvailability get resolvedAvailability {
+    return availability ??
+        (planned > 0
+            ? DisciplineAvailability.scored
+            : DisciplineAvailability.noneDue);
+  }
+
+  bool get hasScore =>
+      resolvedAvailability == DisciplineAvailability.scored && planned > 0;
+
+  String get athleteHeadline {
+    if (!hasScore) return 'No sessions due yet';
+    return '$completed of $planned sessions completed · $percentage%';
+  }
+
+  String get supportingLabel => 'Sessions due so far';
+
+  String get semanticLabel {
+    if (!hasScore) return athleteHeadline;
+    return '$athleteHeadline. $supportingLabel';
+  }
 }
 
 /// One row in session history.

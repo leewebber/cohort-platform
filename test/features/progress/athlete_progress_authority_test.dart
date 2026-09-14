@@ -31,34 +31,39 @@ void main() {
   });
 
   group('AthleteProgressSummaryBuilder', () {
-    test('programme-only uses canonical session counts, not Plan Library', () async {
-      final tables = await _seedProgrammeTables(completedSessions: 1);
-      _bindLegacyActivePlan(
-        planName: 'Fat Loss Foundation',
-        sessionsInStore: 9,
-      );
+    test(
+      'programme-only uses canonical session counts, not Plan Library',
+      () async {
+        final tables = await _seedProgrammeTables(completedSessions: 1);
+        _bindLegacyActivePlan(
+          planName: 'Fat Loss Foundation',
+          sessionsInStore: 9,
+        );
 
-      final builder = AthleteProgressSummaryBuilder(
-        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-        versionStore: InMemoryProgrammeVersionStore(tables),
-        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
-      );
+        final builder = AthleteProgressSummaryBuilder(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: InMemoryProgrammeVersionStore(tables),
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+        );
 
-      // Clear legacy so this is programme-only for authority, but leave
-      // SessionCompletionStore polluted to prove it is ignored.
-      AthleteProfileSession.clear();
+        // Clear legacy so this is programme-only for authority, but leave
+        // SessionCompletionStore polluted to prove it is ignored.
+        AthleteProfileSession.clear();
 
-      final summary = await builder.build(athleteId: 'lee');
+        final summary = await builder.build(athleteId: 'lee');
 
-      expect(summary.hasActivePlan, isTrue);
-      expect(summary.planName, 'PROG-TEST');
-      expect(summary.sessionsCompleted, 1);
-      expect(summary.compliance.planned, 4);
-      expect(summary.recentImprovements, isEmpty);
-      expect(summary.timeline, isEmpty);
-      expect(summary.upcoming, isNull);
-      expect(summary.history, isEmpty);
-    });
+        expect(summary.hasActivePlan, isTrue);
+        expect(summary.planName, 'PROG-TEST');
+        expect(summary.sessionsCompleted, 1);
+        expect(summary.compliance.hasScore, isFalse);
+        expect(summary.compliance.planned, 0);
+        expect(summary.compliance.athleteHeadline, 'No sessions due yet');
+        expect(summary.recentImprovements, isEmpty);
+        expect(summary.timeline, isEmpty);
+        expect(summary.upcoming, isNull);
+        expect(summary.history, isEmpty);
+      },
+    );
 
     test('both-present ignores legacy Plan Library evidence', () async {
       final tables = await _seedProgrammeTables(completedSessions: 2);
@@ -74,59 +79,67 @@ void main() {
 
       expect(summary.sessionsCompleted, 2);
       expect(summary.planName, isNot('Fat Loss Foundation'));
-      expect(summary.compliance.completed, 2);
+      expect(summary.compliance.completed, 0);
+      expect(summary.compliance.hasScore, isFalse);
       expect(summary.upcoming, isNull);
     });
 
-    test('stale hasActivePlan alone does not contaminate programme progress',
-        () async {
-      final tables = await _seedProgrammeTables(completedSessions: 1);
-      _bindLegacyActivePlan(sessionsInStore: 3);
+    test(
+      'stale hasActivePlan alone does not contaminate programme progress',
+      () async {
+        final tables = await _seedProgrammeTables(completedSessions: 1);
+        _bindLegacyActivePlan(sessionsInStore: 3);
 
-      final builder = AthleteProgressSummaryBuilder(
-        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-        versionStore: InMemoryProgrammeVersionStore(tables),
-        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
-      );
+        final builder = AthleteProgressSummaryBuilder(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: InMemoryProgrammeVersionStore(tables),
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+        );
 
-      final summary = await builder.build(athleteId: 'lee');
+        final summary = await builder.build(athleteId: 'lee');
 
-      expect(summary.sessionsCompleted, 1);
-      expect(AthleteProfileSession.hasActivePlan, isTrue);
-    });
+        expect(summary.sessionsCompleted, 1);
+        expect(AthleteProfileSession.hasActivePlan, isTrue);
+      },
+    );
 
-    test('programme evidence unavailable does not fall back to legacy',
-        () async {
-      _bindLegacyActivePlan(sessionsInStore: 4);
+    test(
+      'programme evidence unavailable does not fall back to legacy',
+      () async {
+        _bindLegacyActivePlan(sessionsInStore: 4);
 
-      final builder = AthleteProgressSummaryBuilder(
-        assignmentStore: const _ThrowingAssignmentStore(),
-      );
+        final builder = AthleteProgressSummaryBuilder(
+          assignmentStore: const _ThrowingAssignmentStore(),
+        );
 
-      final summary = await builder.build(athleteId: 'lee');
+        final summary = await builder.build(athleteId: 'lee');
 
-      expect(summary.hasActivePlan, isFalse);
-      expect(summary.sessionsCompleted, 0);
-      expect(summary.planName, isNull);
-    });
+        expect(summary.hasActivePlan, isFalse);
+        expect(summary.sessionsCompleted, 0);
+        expect(summary.planName, isNull);
+      },
+    );
 
-    test('pure legacy Progress resolves to empty/neutral (Phase 2.8)', () async {
-      final tables = InMemoryProgrammeTables();
-      _bindLegacyActivePlan(sessionsInStore: 2);
+    test(
+      'pure legacy Progress resolves to empty/neutral (Phase 2.8)',
+      () async {
+        final tables = InMemoryProgrammeTables();
+        _bindLegacyActivePlan(sessionsInStore: 2);
 
-      final builder = AthleteProgressSummaryBuilder(
-        assignmentStore: InMemoryProgrammeAssignmentStore(tables),
-        versionStore: InMemoryProgrammeVersionStore(tables),
-        slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
-      );
+        final builder = AthleteProgressSummaryBuilder(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: InMemoryProgrammeVersionStore(tables),
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+        );
 
-      final summary = await builder.build(athleteId: 'athlete.local');
+        final summary = await builder.build(athleteId: 'athlete.local');
 
-      expect(summary.hasActivePlan, isFalse);
-      expect(summary.sessionsCompleted, 0);
-      expect(summary.planName, isNull);
-      expect(AthleteProfileSession.hasActivePlan, isTrue);
-    });
+        expect(summary.hasActivePlan, isFalse);
+        expect(summary.sessionsCompleted, 0);
+        expect(summary.planName, isNull);
+        expect(AthleteProfileSession.hasActivePlan, isTrue);
+      },
+    );
 
     test('opening builder does not mutate legacy assignment', () async {
       final tables = await _seedProgrammeTables(completedSessions: 1);
@@ -267,8 +280,9 @@ void _bindLegacyActivePlan({
             goalContext: const PlanningGoalContext(
               goalId: 'cohort.goal.general_fat_loss',
             ),
-            capabilityEvidence:
-                const AthleteCapabilityEvidenceProfile(items: []),
+            capabilityEvidence: const AthleteCapabilityEvidenceProfile(
+              items: [],
+            ),
             knowledgeOntologyVersion: '1.3.0',
             asOf: now,
           ),

@@ -8,10 +8,7 @@ abstract final class AthleteTimeAwareGreeting {
     return trimmed.split(RegExp(r'\s+')).first;
   }
 
-  static String format({
-    required DateTime localNow,
-    String? displayName,
-  }) {
+  static String format({required DateTime localNow, String? displayName}) {
     final period = periodLabel(localNow.hour);
     final name = firstName(displayName);
     if (name.isEmpty) return period;
@@ -30,13 +27,19 @@ abstract final class AthleteTimeAwareGreeting {
 ///
 /// Unknown IANA names fall back to UTC rather than the device clock.
 abstract final class AthleteIanaClock {
-  static DateTime nowInZone(
-    String? iana, {
-    DateTime? utcNow,
-  }) {
+  static DateTime nowInZone(String? iana, {DateTime? utcNow}) {
     final utc = (utcNow ?? DateTime.now().toUtc()).toUtc();
     final offset = offsetFor(iana, utc);
     return utc.add(offset);
+  }
+
+  /// Assignment-local calendar date `YYYY-MM-DD`. Unknown zones use UTC.
+  static String dateOnly(String? iana, {DateTime? utcNow}) {
+    final local = nowInZone(iana, utcNow: utcNow);
+    final year = local.year.toString().padLeft(4, '0');
+    final month = local.month.toString().padLeft(2, '0');
+    final day = local.day.toString().padLeft(2, '0');
+    return '$year-$month-$day';
   }
 
   static Duration offsetFor(String? iana, DateTime utc) {

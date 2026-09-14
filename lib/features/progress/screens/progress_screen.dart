@@ -6,8 +6,10 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../adaptive_progression/models/capability_timeline.dart';
+import '../../app_shell/presentation/athlete_time_aware_greeting.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../auth/services/current_user_session.dart';
+import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../models/progress_summary.dart';
 import '../services/athlete_progress_summary_builder.dart';
 import '../services/capability_radar_projection_service.dart';
@@ -42,9 +44,11 @@ class ProgressScreen extends StatefulWidget {
   State<ProgressScreen> createState() => _ProgressScreenState();
 }
 
-class _ProgressScreenState extends State<ProgressScreen> {
+class _ProgressScreenState extends State<ProgressScreen>
+    with WidgetsBindingObserver {
   ProgressSummary? _resolved;
   bool _loading = false;
+  HomeTodaySessionRefreshController? _attachedController;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -57,15 +61,52 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _bootstrap();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _attachSurfaceReload();
+  }
+
+  @override
+  void dispose() {
+    _detachSurfaceReload();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _bootstrap();
+    }
   }
 
   @override
   void didUpdateWidget(covariant ProgressScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.summary != oldWidget.summary) {
+    if (widget.summary != oldWidget.summary ||
+        widget.progressBuilder != oldWidget.progressBuilder) {
       _bootstrap();
     }
+  }
+
+  void _attachSurfaceReload() {
+    final controller = AthleteProgrammeSurfaceRefreshScope.maybeOf(context);
+    if (identical(_attachedController, controller)) return;
+    _attachedController?.detachSurface(this);
+    _attachedController = controller;
+    controller?.attachSurface(this, ({required source}) async {
+      await _bootstrap();
+    });
+  }
+
+  void _detachSurfaceReload() {
+    _attachedController?.detachSurface(this);
+    _attachedController = null;
   }
 
   Future<void> _bootstrap() async {
@@ -96,8 +137,22 @@ class _ProgressScreenState extends State<ProgressScreen> {
     }
   }
 
+  void _invalidateIfLocalDateMoved() {
+    if (widget.summary != null) return;
+    final compliance = _resolved?.compliance;
+    final asOf = compliance?.asOfDate;
+    final timezone = compliance?.timezone;
+    if (asOf == null || asOf.isEmpty) return;
+    final today = AthleteIanaClock.dateOnly(timezone);
+    if (today == asOf) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _bootstrap();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _invalidateIfLocalDateMoved();
     if (_loading || _resolved == null) {
       return Scaffold(
         backgroundColor: CohortColors.background,
@@ -229,29 +284,55 @@ class _ProgressBody extends StatelessWidget {
             ),
           ),
           _Section(
-            title: 'Programme consistency',
-            child: Text(
-              summary.compliance.planned == 0 && summary.sessionsCompleted == 0
-                  ? 'Awaiting evidence'
-                  : '${summary.compliance.completed} of ${summary.compliance.planned} '
-                        'planned sessions · ${summary.compliance.percentage}%',
-              style: CohortTextStyles.body,
+            title: 'Programme consistency so far',
+            child: Semantics(
+              container: true,
+              label: summary.compliance.semanticLabel,
+              child: ExcludeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      summary.compliance.athleteHeadline,
+                      style: CohortTextStyles.body,
+                    ),
+                    if (summary.compliance.hasScore) ...[
+                      const SizedBox(height: CohortSpacing.xs),
+                      Text(
+                        summary.compliance.supportingLabel,
+                        style: CohortTextStyles.small,
+                      ),
+                    ],
+                    if (summary.compliance.partialCompletedCount > 0) ...[
+                      const SizedBox(height: CohortSpacing.xs),
+                      Text(
+                        '${summary.compliance.partialCompletedCount} '
+                        'partially completed (counted as complete)',
+                        style: CohortTextStyles.small,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
           _Section(
             title: 'Exercise performances',
             child: summary.exerciseBests.isEmpty
-                ? const Text(
-                    'Awaiting evidence',
-                    style: CohortTextStyles.body,
-                  )
+                ? const Text('Awaiting evidence', style: CohortTextStyles.body)
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       for (final best in summary.exerciseBests) ...[
-                        Text(best.displayName, style: CohortTextStyles.cardTitle),
+                        Text(
+                          best.displayName,
+                          style: CohortTextStyles.cardTitle,
+                        ),
                         Text(best.bestSetLabel, style: CohortTextStyles.h2),
-                        Text(best.comparisonLabel, style: CohortTextStyles.small),
+                        Text(
+                          best.comparisonLabel,
+                          style: CohortTextStyles.small,
+                        ),
                         if (best.personalBestLabel != null)
                           Text(
                             best.personalBestLabel!,
@@ -295,8 +376,12 @@ class _ProgressBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       for (final best in summary.exerciseBests)
-                        if (best.comparisonImproved || best.isFirstRecorded) ...[
-                          Text(best.displayName, style: CohortTextStyles.cardTitle),
+                        if (best.comparisonImproved ||
+                            best.isFirstRecorded) ...[
+                          Text(
+                            best.displayName,
+                            style: CohortTextStyles.cardTitle,
+                          ),
                           Text(
                             best.comparisonLabel,
                             style: CohortTextStyles.small,
@@ -341,12 +426,19 @@ class _ProgressBody extends StatelessWidget {
               ),
             ),
           _Section(
-            title: 'Discipline',
-            child: Text(
-              '${summary.compliance.completed} of ${summary.compliance.planned} '
-              'planned sessions · ${summary.compliance.percentage}% · '
-              'streak ${summary.compliance.currentStreak} days',
-              style: CohortTextStyles.body,
+            title: 'Training Discipline',
+            child: Semantics(
+              container: true,
+              label: summary.compliance.semanticLabel,
+              child: ExcludeSemantics(
+                child: Text(
+                  summary.compliance.hasScore
+                      ? '${summary.compliance.percentage}% · '
+                            '${summary.compliance.supportingLabel}'
+                      : summary.compliance.athleteHeadline,
+                  style: CohortTextStyles.body,
+                ),
+              ),
             ),
           ),
         ],
