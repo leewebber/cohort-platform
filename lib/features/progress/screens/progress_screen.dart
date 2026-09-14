@@ -252,6 +252,11 @@ class _ProgressBody extends StatelessWidget {
                         Text(best.displayName, style: CohortTextStyles.cardTitle),
                         Text(best.bestSetLabel, style: CohortTextStyles.h2),
                         Text(best.comparisonLabel, style: CohortTextStyles.small),
+                        if (best.personalBestLabel != null)
+                          Text(
+                            best.personalBestLabel!,
+                            style: CohortTextStyles.small,
+                          ),
                         const SizedBox(height: CohortSpacing.md),
                       ],
                     ],
@@ -293,9 +298,7 @@ class _ProgressBody extends StatelessWidget {
                         if (best.comparisonImproved || best.isFirstRecorded) ...[
                           Text(best.displayName, style: CohortTextStyles.cardTitle),
                           Text(
-                            best.isFirstRecorded
-                                ? 'First recorded performance'
-                                : best.comparisonLabel,
+                            best.comparisonLabel,
                             style: CohortTextStyles.small,
                           ),
                           const SizedBox(height: CohortSpacing.sm),

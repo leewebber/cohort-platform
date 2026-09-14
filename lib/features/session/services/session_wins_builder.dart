@@ -282,6 +282,8 @@ class SessionWinsBuilder {
   }) {
     switch (result.progressType) {
       case ExerciseProgressType.mixedResult:
+      case ExerciseProgressType.belowLastPerformance:
+      case ExerciseProgressType.notComparable:
       case ExerciseProgressType.insufficientData:
         return null;
       case ExerciseProgressType.loadProgress:

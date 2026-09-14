@@ -5,6 +5,7 @@ import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
+import '../progression/personal_bests.dart';
 import 'endurance_metrics_calculator.dart';
 import 'interval_pace_format.dart';
 import 'circuit_result_comparison.dart';
@@ -332,6 +333,8 @@ class CompletedExerciseResultProjection {
     this.volumeLabel,
     this.deltaLabels = const [],
     this.metrics = const [],
+    this.comparisonHighlight,
+    this.personalBestLabels = const [],
   });
 
   final String sourceExerciseId;
@@ -346,6 +349,8 @@ class CompletedExerciseResultProjection {
   final String? volumeLabel;
   final List<String> deltaLabels;
   final List<CompletedPerformanceMetric> metrics;
+  final String? comparisonHighlight;
+  final List<String> personalBestLabels;
 
   factory CompletedExerciseResultProjection.fromExercise(
     TrainingExerciseResult exercise, {
@@ -380,9 +385,19 @@ class CompletedExerciseResultProjection {
                 ),
               )
               .toList(growable: false);
-    final status = StrengthResultComparison.status(
+    final comparison = StrengthResultComparison.compareProgression(
       current: exercise,
       previous: previous,
+      previousPerformedAt: previousOccurrence?.completedAt,
+    );
+    final status = StrengthExerciseComparisonStatus.fromOutcome(
+      comparison.outcome,
+    );
+    final personalBests = PersonalBestEvaluator.announcedForCurrent(
+      athleteId: current.athleteId,
+      exerciseId: exercise.sourceExerciseId,
+      current: current,
+      history: athleteHistory,
     );
     return CompletedExerciseResultProjection(
       sourceExerciseId: exercise.sourceExerciseId,
@@ -394,6 +409,10 @@ class CompletedExerciseResultProjection {
       previousCompletedAt: previousOccurrence?.completedAt,
       comparisonStatus: status,
       comparisonLabel: status.label,
+      comparisonHighlight: comparison.conciseHighlight,
+      personalBestLabels: [
+        for (final best in personalBests) '${best.kind.label}: ${best.detail}',
+      ],
       bestSetLabel: StrengthResultComparison.bestSetLabel(exercise),
       estimated1RmLabel: StrengthResultComparison.estimated1RmLabel(exercise),
       volumeLabel: StrengthResultComparison.volumeLabel(exercise),

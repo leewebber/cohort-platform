@@ -123,9 +123,12 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
                         style: CohortTextStyles.small,
                       ),
                     Text(
-                      exercise.comparisonLabel,
+                      exercise.comparisonHighlight ?? exercise.comparisonLabel,
                       style: CohortTextStyles.small,
                     ),
+                    if (exercise.personalBestLabels.isNotEmpty)
+                      for (final label in exercise.personalBestLabels)
+                        Text(label, style: CohortTextStyles.small),
                     if (exercise.previousSets.isNotEmpty)
                       Text(
                         'Previous: ${exercise.previousSets.map(_setLine).join(' · ')}',

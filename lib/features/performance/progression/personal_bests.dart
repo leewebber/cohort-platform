@@ -7,16 +7,12 @@ import 'strength_progression.dart';
 enum PersonalBestKind {
   heaviestLoad,
   repsAtLoad,
-  loadAtReps,
-  sessionVolume,
-  lowestRpeForMatchedWork;
+  sessionVolume;
 
   String get label => switch (this) {
-    PersonalBestKind.heaviestLoad => 'Heaviest load',
-    PersonalBestKind.repsAtLoad => 'Rep best at load',
-    PersonalBestKind.loadAtReps => 'Load best at reps',
-    PersonalBestKind.sessionVolume => 'Volume best',
-    PersonalBestKind.lowestRpeForMatchedWork => 'Lowest RPE for matched work',
+    PersonalBestKind.heaviestLoad => 'Heaviest completed load',
+    PersonalBestKind.repsAtLoad => 'Most completed reps at a specified load',
+    PersonalBestKind.sessionVolume => 'Highest valid comparable session volume',
   };
 }
 
@@ -38,6 +34,21 @@ class PersonalBest {
   final String detail;
 }
 
+/// Observational personal-best detection from completed actuals only.
+///
+/// Types:
+/// - Heaviest completed load
+/// - Most completed reps at a specified load, only when a prior completed
+///   set exists at that same load (never inferred from a first visit to a load)
+/// - Highest valid comparable session volume, only when the increase is not
+///   merely additional prescribed or extra completed sets
+///
+/// Prioritization when one session creates multiple technically valid bests:
+/// 1. Heaviest completed load
+/// 2. Most completed reps at a specified load, omitting a reps-at-load that
+///    is the same heaviest-load set already announced
+/// 3. Session volume, omitted when explained by the load/rep bests or by
+///    extra prescribed sets
 abstract final class PersonalBestEvaluator {
   static List<PersonalBest> forExercise({
     required String athleteId,
@@ -54,97 +65,231 @@ abstract final class PersonalBestEvaluator {
         )
         .toList()
       ..sort(PerformanceChronology.compareNewestFirst);
+    if (eligible.isEmpty) return const [];
 
-    TrainingSetResult? heaviest;
-    DateTime? heaviestAt;
-    String? heaviestRecord;
-    String displayName = '';
-    TrainingSetResult? mostRepsAtHeaviest;
-    double? bestVolume;
-    DateTime? volumeAt;
-    String? volumeRecord;
-
+    final sessions = <_ExerciseSession>[];
     for (final record in eligible) {
-      for (final block in record.blockResults) {
-        for (final exercise in block.exerciseResults) {
-          if (exercise.sourceExerciseId != id) continue;
-          if (exercise.exerciseSnapshot.loadKind !=
-              StrengthActualLoadKind.external) {
-            continue;
-          }
-          displayName = exercise.exerciseSnapshot.displayName;
-          final facts = StrengthProgressionFacts.fromExercise(exercise);
-          for (final set in facts.sets) {
-            final load = set.load;
-            if (load == null || load <= 0) continue;
-            if (heaviest == null || load > (heaviest.load ?? 0)) {
-              heaviest = set;
-              heaviestAt = record.performanceChronologyAt;
-              heaviestRecord = record.recordId;
-              mostRepsAtHeaviest = set;
-            } else if (load == heaviest.load &&
-                (set.reps ?? 0) > (mostRepsAtHeaviest?.reps ?? 0)) {
-              mostRepsAtHeaviest = set;
-              heaviestAt = record.performanceChronologyAt;
-              heaviestRecord = record.recordId;
-            }
-          }
-          final volume = facts.volume;
-          if (volume != null && (bestVolume == null || volume > bestVolume)) {
-            bestVolume = volume;
-            volumeAt = record.performanceChronologyAt;
-            volumeRecord = record.recordId;
-          }
+      final session = _sessionFor(record, id);
+      if (session != null) sessions.add(session);
+    }
+    if (sessions.isEmpty) return const [];
+
+    return List.unmodifiable(_prioritized(sessions, exerciseId: id));
+  }
+
+  /// Bests established by [current], using [history] plus [current] as evidence.
+  static List<PersonalBest> announcedForCurrent({
+    required String athleteId,
+    required String exerciseId,
+    required TrainingSessionRecord current,
+    required List<TrainingSessionRecord> history,
+  }) {
+    final merged = <TrainingSessionRecord>[
+      for (final record in history)
+        if (record.recordId != current.recordId) record,
+      current,
+    ];
+    return [
+      for (final best in forExercise(
+        athleteId: athleteId,
+        exerciseId: exerciseId,
+        history: merged,
+      ))
+        if (best.recordId == current.recordId) best,
+    ];
+  }
+
+  static _ExerciseSession? _sessionFor(
+    TrainingSessionRecord record,
+    String exerciseId,
+  ) {
+    for (final block in record.blockResults) {
+      for (final exercise in block.exerciseResults) {
+        if (exercise.sourceExerciseId != exerciseId) continue;
+        if (exercise.exerciseSnapshot.loadKind !=
+            StrengthActualLoadKind.external) {
+          continue;
+        }
+        final facts = StrengthProgressionFacts.fromExercise(exercise);
+        if (facts.sets.isEmpty) continue;
+        return _ExerciseSession(
+          recordId: record.recordId,
+          displayName: exercise.exerciseSnapshot.displayName,
+          performedAt: record.performanceChronologyAt,
+          facts: facts,
+        );
+      }
+    }
+    return null;
+  }
+
+  static List<PersonalBest> _prioritized(
+    List<_ExerciseSession> sessions, {
+    required String exerciseId,
+  }) {
+    _ExerciseSession? heaviestSession;
+    TrainingSetResult? heaviestSet;
+    for (final session in sessions) {
+      for (final set in session.facts.sets) {
+        final load = set.load;
+        if (load == null || load <= 0) continue;
+        if (heaviestSet == null || load > (heaviestSet.load ?? 0)) {
+          heaviestSet = set;
+          heaviestSession = session;
         }
       }
     }
+    if (heaviestSession == null || heaviestSet == null) return const [];
+    final holder = heaviestSession;
+    final topSet = heaviestSet;
 
-    if (heaviest == null || heaviestAt == null || heaviestRecord == null) {
-      return const [];
+    final out = <PersonalBest>[];
+    final priorHeaviest = sessions
+        .where((session) => session.recordId != holder.recordId)
+        .expand((session) => session.facts.sets)
+        .map((set) => set.load ?? 0)
+        .fold<double>(0, (max, load) => load > max ? load : max);
+    if (sessions.length >= 2 && (topSet.load ?? 0) > priorHeaviest) {
+      out.add(
+        PersonalBest(
+          kind: PersonalBestKind.heaviestLoad,
+          exerciseId: exerciseId,
+          displayName: holder.displayName,
+          performedAt: holder.performedAt,
+          recordId: holder.recordId,
+          detail: '${_load(topSet.load)} kg',
+        ),
+      );
     }
 
-    final out = <PersonalBest>[
-      PersonalBest(
-        kind: PersonalBestKind.heaviestLoad,
-        exerciseId: id,
-        displayName: displayName,
-        performedAt: heaviestAt,
-        recordId: heaviestRecord,
-        detail:
-            '${heaviest.load!.toStringAsFixed(heaviest.load! == heaviest.load!.roundToDouble() ? 0 : 1)} kg',
-      ),
-    ];
-    if (mostRepsAtHeaviest != null &&
-        mostRepsAtHeaviest.reps != null &&
-        mostRepsAtHeaviest.reps! > (heaviest.reps ?? 0)) {
+    final repsAtLoad = _repsAtLoadBest(sessions: sessions);
+    if (repsAtLoad != null) {
       out.add(
         PersonalBest(
           kind: PersonalBestKind.repsAtLoad,
-          exerciseId: id,
-          displayName: displayName,
-          performedAt: heaviestAt,
-          recordId: heaviestRecord,
-          detail: '${mostRepsAtHeaviest.reps} reps at ${heaviest.load} kg',
+          exerciseId: exerciseId,
+          displayName: repsAtLoad.session.displayName,
+          performedAt: repsAtLoad.session.performedAt,
+          recordId: repsAtLoad.session.recordId,
+          detail:
+              '${repsAtLoad.set.reps} reps at ${_load(repsAtLoad.set.load)} kg',
         ),
       );
     }
-    final impliedVolume =
-        (heaviest.load ?? 0) * (heaviest.reps ?? 0) * 1.0;
-    if (bestVolume != null &&
-        volumeAt != null &&
-        volumeRecord != null &&
-        bestVolume > impliedVolume * 1.25) {
+
+    final volumeBest = _volumeBest(
+      sessions: sessions,
+      heaviestSession: holder,
+      heaviestSet: topSet,
+    );
+    if (volumeBest != null) {
       out.add(
         PersonalBest(
           kind: PersonalBestKind.sessionVolume,
-          exerciseId: id,
-          displayName: displayName,
-          performedAt: volumeAt,
-          recordId: volumeRecord,
-          detail: '${bestVolume.round()} kg volume',
+          exerciseId: exerciseId,
+          displayName: volumeBest.displayName,
+          performedAt: volumeBest.performedAt,
+          recordId: volumeBest.recordId,
+          detail: '${volumeBest.facts.volume!.round()} kg volume',
         ),
       );
     }
-    return List.unmodifiable(out);
+    return out;
   }
+
+  /// Reps-at-load requires a prior completed set at the same load. The heaviest
+  /// set is not also announced as a reps-at-load best.
+  static ({_ExerciseSession session, TrainingSetResult set})? _repsAtLoadBest({
+    required List<_ExerciseSession> sessions,
+  }) {
+    final byLoad = <double, List<({_ExerciseSession session, TrainingSetResult set})>>{};
+    for (final session in sessions) {
+      for (final set in session.facts.sets) {
+        final load = set.load;
+        if (load == null || load <= 0 || set.reps == null) continue;
+        byLoad.putIfAbsent(load, () => []).add((session: session, set: set));
+      }
+    }
+
+    ({_ExerciseSession session, TrainingSetResult set})? best;
+    for (final entries in byLoad.values) {
+      final distinctRecords = {for (final entry in entries) entry.session.recordId};
+      if (distinctRecords.length < 2) continue;
+      entries.sort((a, b) => (b.set.reps ?? 0).compareTo(a.set.reps ?? 0));
+      final candidate = entries.first;
+      final priorBestReps = entries
+          .where((entry) => entry.session.recordId != candidate.session.recordId)
+          .map((entry) => entry.set.reps ?? 0)
+          .fold<int>(0, (max, reps) => reps > max ? reps : max);
+      if ((candidate.set.reps ?? 0) <= priorBestReps) continue;
+      if (best == null || (candidate.set.reps ?? 0) > (best.set.reps ?? 0)) {
+        best = candidate;
+      }
+    }
+    return best;
+  }
+
+  static _ExerciseSession? _volumeBest({
+    required List<_ExerciseSession> sessions,
+    required _ExerciseSession heaviestSession,
+    required TrainingSetResult heaviestSet,
+  }) {
+    _ExerciseSession? best;
+    for (final session in sessions) {
+      final volume = session.facts.volume;
+      if (volume == null) continue;
+      if (_volumeFromExtraSets(session, sessions)) continue;
+      if (best == null || volume > (best.facts.volume ?? 0)) {
+        best = session;
+      }
+    }
+    if (best == null) return null;
+    final implied = (heaviestSet.load ?? 0) * (heaviestSet.reps ?? 0);
+    if (best.recordId == heaviestSession.recordId &&
+        (best.facts.volume ?? 0) <= implied * 1.25) {
+      return null;
+    }
+    return best;
+  }
+
+  static bool _volumeFromExtraSets(
+    _ExerciseSession candidate,
+    List<_ExerciseSession> sessions,
+  ) {
+    final minSets = sessions
+        .map((session) => session.facts.completedSetCount ?? 0)
+        .where((count) => count > 0)
+        .fold<int?>(null, (min, count) => min == null || count < min ? count : min);
+    if (minSets == null) return false;
+    final currentSets = candidate.facts.completedSetCount ?? 0;
+    if (currentSets <= minSets) return false;
+    final prescribedGrew = sessions.any((session) {
+      final a = candidate.facts.prescribedSetCount;
+      final b = session.facts.prescribedSetCount;
+      if (a == null || b == null) return currentSets > (session.facts.completedSetCount ?? 0);
+      return a > b;
+    });
+    return prescribedGrew || currentSets > minSets;
+  }
+
+  static String _load(double? value) {
+    if (value == null) return '0';
+    return value == value.roundToDouble()
+        ? value.toInt().toString()
+        : value.toStringAsFixed(1);
+  }
+}
+
+class _ExerciseSession {
+  const _ExerciseSession({
+    required this.recordId,
+    required this.displayName,
+    required this.performedAt,
+    required this.facts,
+  });
+
+  final String recordId;
+  final String displayName;
+  final DateTime performedAt;
+  final StrengthProgressionFacts facts;
 }

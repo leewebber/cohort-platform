@@ -129,8 +129,8 @@ void main() {
     await tester.pump();
     expect(find.text('2 sessions completed'), findsOneWidget);
     expect(find.text('Weighted Pull-Up'), findsWidgets);
-    expect(find.text('First recorded performance'), findsOneWidget);
-    expect(find.textContaining('Improved compared'), findsWidgets);
+    expect(find.textContaining('First performance'), findsWidgets);
+    expect(find.textContaining('Improved'), findsWidgets);
   });
 }
 

@@ -1,13 +1,25 @@
 import 'package:cohort_platform/app/theme.dart';
-import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
+import 'package:cohort_platform/core/theme/colors.dart';
+import 'package:cohort_platform/core/theme/spacing.dart';
+import 'package:cohort_platform/core/theme/text_styles.dart';
+import 'package:cohort_platform/features/home/widgets/athlete_home_completed_today_card.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
-import 'package:cohort_platform/features/performance/progression/endurance_progression.dart';
-import 'package:cohort_platform/features/performance/progression/progression_comparison.dart';
+import 'package:cohort_platform/features/performance/progression/personal_bests.dart';
+import 'package:cohort_platform/features/performance/progression/progression_mechanics_fixtures.dart';
 import 'package:cohort_platform/features/performance/progression/strength_progression.dart';
-import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
+import 'package:cohort_platform/features/progress/models/progress_summary.dart';
+import 'package:cohort_platform/features/progress/screens/progress_screen.dart';
+import 'package:cohort_platform/features/progress/services/athlete_progress_evidence_projection.dart';
+import 'package:cohort_platform/features/progress/services/athlete_progress_summary_builder.dart';
+import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
+import 'package:cohort_platform/features/session/models/strength_set_entry.dart';
+import 'package:cohort_platform/features/session/services/strength_progress_service.dart';
+import 'package:cohort_platform/features/session/widgets/shared/progress_result_card.dart';
+import 'package:cohort_platform/models/previous_exercise_performance.dart';
 import 'package:flutter/material.dart';
 
-/// Local preview: Progression Mechanics v1 states. Does not contact Field Manual.
+/// Local preview: identical evidence across player / Home / results / Progress.
 ///
 ///   flutter run -d chrome --web-port 4175 -t lib/main_progression_mechanics_preview.dart
 void main() {
@@ -15,136 +27,259 @@ void main() {
   runApp(MaterialApp(theme: cohortTheme, home: const _Preview()));
 }
 
-class _Case {
-  const _Case(this.title, this.comparison);
-  final String title;
-  final ProgressionComparison comparison;
-}
-
 class _Preview extends StatelessWidget {
   const _Preview();
 
   @override
   Widget build(BuildContext context) {
-    final cases = _cases();
-    return Scaffold(
-      appBar: AppBar(title: const Text('Progression Mechanics v1')),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: cases.length,
-        separatorBuilder: (_, _) => const Divider(),
-        itemBuilder: (context, index) {
-          final item = cases[index];
-          return ListTile(
-            title: Text(item.title),
-            subtitle: Text(
-              '${item.comparison.outcome.label}\n'
-              '${item.comparison.summary}\n'
-              'confidence: ${item.comparison.confidence.name}\n'
-              '${item.comparison.deltas.map((d) => d.label).join(' · ')}',
-            ),
-            isThreeLine: true,
-          );
-        },
+    return DefaultTabController(
+      length: _cases.length,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Progression Mechanics v1'),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: [for (final item in _cases) Tab(text: item.title)],
+          ),
+        ),
+        body: TabBarView(
+          children: [for (final item in _cases) _CaseView(item: item)],
+        ),
       ),
     );
   }
 }
 
-TrainingSetResult _set(double load, int reps, {int n = 1, int? rpe}) {
-  return TrainingSetResult(
-    setResultId: '$n',
-    exerciseResultId: 'e',
-    setNumber: n,
-    position: n,
-    load: load,
-    loadUnit: 'kg',
-    reps: reps,
-    rpe: rpe,
-    completed: true,
-  );
+class _CaseView extends StatelessWidget {
+  const _CaseView({required this.item});
+
+  final _PreviewCase item;
+
+  @override
+  Widget build(BuildContext context) {
+    final history = <TrainingSessionRecord>[
+      if (item.previous != null) item.previous!,
+      item.current,
+    ];
+    final previousExercise =
+        item.previous?.blockResults.first.exerciseResults.first;
+    final currentExercise =
+        item.current.blockResults.first.exerciseResults.first;
+    final engine = StrengthProgressionComparison.compare(
+      current: StrengthProgressionFacts.fromExercise(currentExercise),
+      previous: previousExercise == null
+          ? null
+          : StrengthProgressionFacts.fromExercise(previousExercise),
+    );
+    final pbs = PersonalBestEvaluator.announcedForCurrent(
+      athleteId: ProgressionMechanicsFixtures.athleteId,
+      exerciseId: ProgressionMechanicsFixtures.exerciseId,
+      current: item.current,
+      history: history,
+    );
+    final player = const StrengthProgressService().evaluate(
+      previousPerformance: previousExercise == null
+          ? null
+          : PreviousExercisePerformance(
+              performedAt: item.previous!.performanceChronologyAt,
+              sets: [
+                for (final set in previousExercise.setResults)
+                  PreviousPerformedSet(
+                    loadLabel: '${set.load?.toStringAsFixed(0)}kg',
+                    reps: '${set.reps}',
+                    displayLine: '${set.load} × ${set.reps}',
+                    rpe: set.rpe?.toDouble(),
+                  ),
+              ],
+            ),
+      todayCompletedSets: [
+        for (final set in currentExercise.setResults)
+          StrengthSetEntry(
+            localId: set.setResultId,
+            setNumber: set.setNumber,
+            actualReps: '${set.reps}',
+            load: '${set.load}kg',
+            rpe: set.rpe,
+            completed: set.completed,
+          ),
+      ],
+      exerciseId: ProgressionMechanicsFixtures.exerciseId,
+      personalBests: pbs,
+    );
+    final completed = AthleteProgressEvidenceProjection.completedRecords(
+      history,
+    );
+    final progressBests = AthleteProgressEvidenceProjection.exerciseBests(
+      completed,
+    );
+    final summary = ProgressSummary(
+      hasActivePlan: true,
+      planName: 'Apollo',
+      weekLabel: 'Week 2',
+      phaseLabel: 'Foundation',
+      sessionsCompleted: completed.length,
+      compliance: ProgressCompliance(
+        completed: completed.length,
+        planned: completed.length,
+        percentage: 100,
+        currentStreak: completed.length,
+        longestStreak: completed.length,
+      ),
+      recentImprovements: const [],
+      timeline: const [],
+      history: AthleteProgressEvidenceProjection.historyItems(completed),
+      upcoming: AthleteProgressSummaryBuilder.emptySummary().upcoming,
+      exerciseBests: progressBests,
+      strengthSessionCount:
+          AthleteProgressEvidenceProjection.strengthSessionCount(completed),
+      enduranceSessionCount: 0,
+    );
+    final occurrence = FixedProgrammeOccurrenceProjection(
+      assignmentId: 'preview',
+      occurrenceId: 'occ',
+      sessionSlotId: 'slot',
+      programmeVersionId: 'ver',
+      protocolId: 'p',
+      programmedSessionKey: 'key',
+      weekNumber: 2,
+      dayKey: 'monday',
+      sessionOrder: 1,
+      scheduledDate: '2026-09-14',
+      originalScheduledDate: '2026-09-14',
+      state: FixedProgrammeOccurrenceState.completed,
+      sessionTitle: item.current.sessionSnapshot.sessionTitle,
+    );
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text(item.subtitle, style: CohortTextStyles.muted),
+        const SizedBox(height: CohortSpacing.sm),
+        Text(
+          'Canonical: ${engine.conciseHighlight}',
+          style: CohortTextStyles.body,
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        Text('Workout player', style: CohortTextStyles.sectionLabel),
+        ProgressResultCard(
+          title: player.title,
+          message: player.message,
+          reasons: player.reasons,
+          accentColor: CohortColors.olive,
+        ),
+        const SizedBox(height: CohortSpacing.lg),
+        Text('Completed-today Home', style: CohortTextStyles.sectionLabel),
+        AthleteHomeCompletedTodayCard(
+          occurrence: occurrence,
+          dateLabel: 'Monday 14 Sep',
+          programmeName: 'Apollo',
+          weekDayLabel: 'Week 2 · Monday',
+          expanded: true,
+          onToggleExpanded: () {},
+          onViewResults: () {},
+          record: item.current,
+          history: history,
+        ),
+        const SizedBox(height: CohortSpacing.lg),
+        Text('Result detail', style: CohortTextStyles.sectionLabel),
+        SizedBox(
+          height: 520,
+          child: CompletedSessionResultView(
+            record: item.current,
+            athleteHistory: history,
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.lg),
+        Text('Progress', style: CohortTextStyles.sectionLabel),
+        SizedBox(
+          height: 640,
+          child: ProgressScreen(summary: summary),
+        ),
+        if (item.radarNote != null) ...[
+          const SizedBox(height: CohortSpacing.md),
+          Text(item.radarNote!, style: CohortTextStyles.muted),
+        ],
+      ],
+    );
+  }
 }
 
-StrengthProgressionFacts _facts(List<TrainingSetResult> sets, {int? prescribed}) {
-  return StrengthProgressionFacts(
-    exerciseId: 'EX-095',
-    loadKind: StrengthActualLoadKind.external,
-    sets: sets,
-    prescribedSetCount: prescribed,
-  );
+class _PreviewCase {
+  const _PreviewCase({
+    required this.title,
+    required this.subtitle,
+    required this.current,
+    this.previous,
+    this.radarNote,
+  });
+
+  final String title;
+  final String subtitle;
+  final TrainingSessionRecord current;
+  final TrainingSessionRecord? previous;
+  final String? radarNote;
 }
 
-List<_Case> _cases() {
-  const w1 = [
-    TrainingSetResult(
-      setResultId: '1',
-      exerciseResultId: 'e',
-      setNumber: 1,
-      position: 1,
-      load: 10,
-      loadUnit: 'kg',
-      reps: 5,
-      completed: true,
-    ),
-  ];
-  return [
-    _Case('1 Strength — first performance', StrengthProgressionComparison.compare(current: _facts(w1))),
-    _Case(
-      '2 Strength — improved',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(15, 5)]),
-        previous: _facts([_set(10, 5)]),
-      ),
-    ),
-    _Case(
-      '3 Strength — matched',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(10, 5)]),
-        previous: _facts([_set(10, 5)]),
-      ),
-    ),
-    _Case(
-      '4 Strength — mixed',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(90, 3)]),
-        previous: _facts([_set(80, 5)]),
-      ),
-    ),
-    _Case(
-      '5 Strength — below last performance',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(8, 5)]),
-        previous: _facts([_set(10, 5)]),
-      ),
-    ),
-    _Case(
-      '6 Strength — changed prescription',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(10, 12), _set(10, 12, n: 2), _set(10, 12, n: 3), _set(10, 12, n: 4)], prescribed: 4),
-        previous: _facts([_set(10, 15), _set(10, 15, n: 2), _set(10, 15, n: 3)], prescribed: 3),
-      ),
-    ),
-    _Case(
-      '7 Strength — precise PB (heaviest displayed as improved)',
-      StrengthProgressionComparison.compare(
-        current: _facts([_set(20, 5)]),
-        previous: _facts([_set(10, 5)]),
-      ),
-    ),
-    _Case(
-      '10 Endurance — factual evidence without false verdict',
-      EnduranceProgressionComparison.compare(
-        current: const EnduranceResultData(distance: 5, durationSeconds: 1400),
-        previous: const EnduranceResultData(distance: 5, durationSeconds: 1500),
-      ),
-    ),
-    const _Case(
-      '17 Retrieval failure/retry',
-      ProgressionComparison(
-        outcome: ProgressionOutcome.insufficientEvidence,
-        confidence: EvidenceConfidence.none,
-        summary: 'Couldn’t load previous performance',
-      ),
-    ),
-  ];
-}
+final _cases = <_PreviewCase>[
+  _PreviewCase(
+    title: '1 Improved',
+    subtitle: 'Weighted Pull-Up +20 kg × 6 vs × 5 at RPE 8',
+    current: ProgressionMechanicsFixtures.improved20x6(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+  ),
+  _PreviewCase(
+    title: '2 Matched',
+    subtitle: 'Same 20 kg × 5 at RPE 8',
+    current: ProgressionMechanicsFixtures.matched20x5(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+  ),
+  _PreviewCase(
+    title: '3 Mixed',
+    subtitle: '90 kg × 3 vs 80 kg × 5',
+    current: ProgressionMechanicsFixtures.mixed90x3(),
+    previous: ProgressionMechanicsFixtures.previous80x5(),
+  ),
+  _PreviewCase(
+    title: '4 Below',
+    subtitle: '18 kg × 5 vs 20 kg × 5',
+    current: ProgressionMechanicsFixtures.below18x5(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+  ),
+  _PreviewCase(
+    title: '5 First',
+    subtitle: 'No prior comparable result',
+    current: ProgressionMechanicsFixtures.first20x5(),
+  ),
+  _PreviewCase(
+    title: '6 Changed Rx',
+    subtitle: '4 × 12 vs 3 × 15 at 10 kg',
+    current: ProgressionMechanicsFixtures.changedPrescription4x10x12(),
+    previous: ProgressionMechanicsFixtures.previous3x10x15(),
+  ),
+  _PreviewCase(
+    title: '7 Precise PB',
+    subtitle: '25 kg × 5 vs 20 kg × 5 — heaviest completed load',
+    current: ProgressionMechanicsFixtures.precisePb25x5(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+  ),
+  _PreviewCase(
+    title: '8 Corrected',
+    subtitle: 'Corrected result recomputes below last performance',
+    current: ProgressionMechanicsFixtures.corrected18x5(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+  ),
+  _PreviewCase(
+    title: '9 Backfill',
+    subtitle: 'Older Backfill chronology is the prior',
+    current: ProgressionMechanicsFixtures.improved20x6(),
+    previous: ProgressionMechanicsFixtures.olderBackfill20x5(),
+  ),
+  _PreviewCase(
+    title: '10 Radar',
+    subtitle: 'Two completed strength sessions without a scoring contract',
+    current: ProgressionMechanicsFixtures.improved20x6(),
+    previous: ProgressionMechanicsFixtures.previous20x5(),
+    radarNote:
+        'Strength / Endurance / Threshold / Power / Durability / Mobility stay unavailable. Discipline may use adherence. No invented global capability formula.',
+  ),
+];

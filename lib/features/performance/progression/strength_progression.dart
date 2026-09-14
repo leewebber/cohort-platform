@@ -25,7 +25,7 @@ class StrengthProgressionFacts {
       exerciseId: exercise.sourceExerciseId.trim(),
       loadKind: exercise.exerciseSnapshot.loadKind,
       sets: EligiblePerformanceEvidence.completedActualSets(exercise),
-      prescribedSetCount: prescribedSetCount,
+      prescribedSetCount: prescribedSetCount ?? exercise.setResults.length,
     );
   }
 
@@ -111,7 +111,7 @@ abstract final class StrengthProgressionComparison {
       if (loadDelta == 0 && repsDelta != null && repsDelta != 0)
         MetricDelta(
           key: 'reps',
-          label: '${_signedInt(repsDelta)} reps at the same load',
+          label: _moreRepsLabel(repsDelta),
         ),
       if (rpeDelta != null && rpeDelta != 0 && loadDelta == 0 && repsDelta == 0)
         MetricDelta(
@@ -198,7 +198,7 @@ abstract final class StrengthProgressionComparison {
       return ProgressionComparison(
         outcome: ProgressionOutcome.improved,
         confidence: EvidenceConfidence.high,
-        summary: '${_signedInt(repsDelta)} reps at the same load',
+        summary: _moreRepsLabel(repsDelta),
         deltas: deltas,
         previousPerformedAt: previousPerformedAt,
         comparisonKey: current.exerciseId,
@@ -394,5 +394,10 @@ abstract final class StrengthProgressionComparison {
     return value > 0 ? '+$formatted' : '-$formatted';
   }
 
-  static String _signedInt(int value) => value > 0 ? '+$value' : '$value';
+  static String _moreRepsLabel(int repsDelta) {
+    final count = repsDelta.abs();
+    final noun = count == 1 ? 'rep' : 'reps';
+    if (repsDelta > 0) return '$count more $noun at the same load';
+    return '$count fewer $noun at the same load';
+  }
 }

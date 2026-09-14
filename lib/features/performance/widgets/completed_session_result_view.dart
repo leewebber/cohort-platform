@@ -906,6 +906,16 @@ class _CompletedExerciseDetail extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                exercise.comparisonHighlight ?? exercise.comparisonLabel,
+                style: CohortTextStyles.body,
+              ),
+              if (exercise.personalBestLabels.isNotEmpty) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                for (final label in exercise.personalBestLabels)
+                  Text(label, style: CohortTextStyles.small),
+              ],
+              const SizedBox(height: CohortSpacing.sm),
               if (previous == null || stacked) ...[
                 today,
                 if (previous != null) ...[

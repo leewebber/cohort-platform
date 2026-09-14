@@ -14,7 +14,7 @@ This sprint does **not** rewrite working programme previous-strength retrieval
 | `PreviousStrengthPerformanceService` | complete and contract-compliant for **recall** | Athlete + canonical exercise ID + terminal records + `PerformanceChronology`. Unchanged. |
 | `PreviousPerformanceResolver` / `PreviousPerformanceStore` | disconnected from production programme strength | Legacy KV/in-memory; accordion uses it only as fallback when hosted history is not ready. |
 | `StrengthResultComparison` | conflicting | Primary verdict is Epley estimated 1RM. 90 kg × 3 vs 80 kg × 5 is labeled Improved. Contract requires Mixed. Labels `Baseline` / `Maintained` vs required First performance / Matched. Ignores partially completed records. |
-| `StrengthProgressService` + `ExerciseProgressType` | conflicting / disconnected | Third vocabulary (`loadProgress`, `volumeProgress`). Used by legacy `StrengthSessionView` / `SessionPlayerScreen`, not programme `ActiveSessionScreen`. |
+| `StrengthProgressService` + `ExerciseProgressType` | adapter | Extracts logged sets; verdicts come from `StrengthProgressionComparison`. `ExerciseProgressType` remains only for SessionWins classification. |
 | Circuit / EMOM comparison | partially implemented | Format-aware `comparisonFamily`; EMOM intervals completed; fixed-work average round. Reuses strength enum. Chronology uses `completedAt`, not `PerformanceChronology`. No Mixed. Adjusted vs prescribed targets not distinguished in verdict copy. |
 | Interval comparison | partially implemented | Family + work duration + pace. Faster = Improved. Chronology uses `completedAt`. Consistency (pace spread) does not force Mixed. |
 | Endurance / Zone 2 | missing | No restrained “facts without verdict” service. Conditioning blocks counted as endurance sessions for radar participation. |
@@ -36,9 +36,11 @@ Canonical v1 vocabulary lives in
 `lib/features/performance/progression/`. Existing format comparators must
 **delegate** verdicts there. Widgets display projections only.
 
-`StrengthProgressService` remains for the legacy session player this sprint and
-must not be used by programme Progress, Home completed-today, or completed
-session results.
+`StrengthProgressService` is a session-player **evidence adapter**. It extracts
+logged sets and previous-performance ghosts into `StrengthProgressionFacts` and
+delegates comparison, PB status, and athlete-facing copy to
+`lib/features/performance/progression/`. It must not emit an independent
+Improved / Matched / Mixed / PB vocabulary.
 
 ## Radar violation
 

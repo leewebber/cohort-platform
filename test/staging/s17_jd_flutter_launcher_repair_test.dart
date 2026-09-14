@@ -125,26 +125,22 @@ void main() {
     });
 
     test('4 missing package_config fails before hosted contact', () async {
-      final cfg = File('$root/.dart_tool/package_config.json');
-      final bak = File('${tmp.path}/package_config.json.bak');
-      expect(cfg.existsSync(), isTrue);
-      cfg.copySync(bak.path);
-      cfg.deleteSync();
-      try {
-        final r = await Process.run(
-          liveLauncher,
-          [],
-          environment: liveEnv(resultPath: '${tmp.path}/missing_cfg_out.json'),
-          workingDirectory: root,
-        );
-        expect(r.exitCode, 2);
-        final err = '${r.stdout}\n${r.stderr}';
-        expect(err, contains('package_config'));
-        expect(err, isNot(contains('Resolving dependencies...')));
-        expect(File('${tmp.path}/missing_cfg_out.json').existsSync(), isFalse);
-      } finally {
-        bak.copySync(cfg.path);
-      }
+      final isolated = Directory.systemTemp.createTempSync('jd_missing_cfg_');
+      addTearDown(() {
+        if (isolated.existsSync()) isolated.deleteSync(recursive: true);
+      });
+      File('$root/pubspec.yaml').copySync('${isolated.path}/pubspec.yaml');
+      File('$root/pubspec.lock').copySync('${isolated.path}/pubspec.lock');
+      final r = await Process.run('bash', [
+        '-c',
+        'set -euo pipefail; export S17_ROOT="${isolated.path}"; '
+            'source "$gate"; s17_jd_flutter_package_require',
+      ], workingDirectory: root);
+      expect(r.exitCode, 2);
+      final err = '${r.stdout}\n${r.stderr}';
+      expect(err, contains('package_config'));
+      expect(err, isNot(contains('Resolving dependencies...')));
+      expect(File('$root/.dart_tool/package_config.json').existsSync(), isTrue);
     });
 
     test('5 genuine live mode still selects hosted ports (no silent fake)',

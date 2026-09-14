@@ -1,6 +1,7 @@
 import '../../../models/session_block_type.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
+import '../../performance/progression/personal_bests.dart';
 import '../../performance/services/performance_chronology.dart';
 import '../../performance/services/strength_result_comparison.dart';
 import '../models/progress_summary.dart';
@@ -14,7 +15,9 @@ abstract final class AthleteProgressEvidenceProjection {
   ) {
     return history
         .where(
-          (record) => record.status == TrainingSessionRecordStatus.completed,
+          (record) =>
+              record.status == TrainingSessionRecordStatus.completed ||
+              record.status == TrainingSessionRecordStatus.partiallyCompleted,
         )
         .toList(growable: false);
   }
@@ -91,18 +94,32 @@ abstract final class AthleteProgressEvidenceProjection {
         current: entry.record,
         athleteHistory: completed,
       );
-      final status = StrengthResultComparison.status(
+      final comparison = StrengthResultComparison.compareProgression(
         current: entry.exercise,
         previous: previous,
       );
+      final status = StrengthExerciseComparisonStatus.fromOutcome(
+        comparison.outcome,
+      );
       final best = StrengthResultComparison.bestSetValue(entry.exercise);
       if (best == null) continue;
+      final personalBests = PersonalBestEvaluator.announcedForCurrent(
+        athleteId: entry.record.athleteId,
+        exerciseId: entry.exercise.sourceExerciseId,
+        current: entry.record,
+        history: completed,
+      );
       bests.add(
         ProgressExerciseBest(
           exerciseId: entry.exercise.sourceExerciseId,
           displayName: entry.exercise.exerciseSnapshot.displayName,
           bestSetLabel: best,
-          comparisonLabel: status.semanticLabel,
+          comparisonLabel: comparison.conciseHighlight,
+          personalBestLabel: personalBests.isEmpty
+              ? null
+              : personalBests
+                    .map((item) => '${item.kind.label}: ${item.detail}')
+                    .join(' · '),
           isFirstRecorded:
               status == StrengthExerciseComparisonStatus.baseline,
           comparisonImproved:

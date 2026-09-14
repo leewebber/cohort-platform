@@ -344,6 +344,8 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
         log.progressResult = widget.progressService.evaluate(
           previousPerformance: previous,
           todayCompletedSets: log.sets.where((set) => set.completed).toList(),
+          exerciseId: log.step.exerciseId?.trim() ?? 'logged-exercise',
+          prescribedSetCount: log.prescribedSetCount,
         );
       });
     }
@@ -517,6 +519,8 @@ class _StrengthSessionViewState extends State<StrengthSessionView> {
       progressResult = widget.progressService.evaluate(
         previousPerformance: previous,
         todayCompletedSets: log.sets.where((set) => set.completed).toList(),
+        exerciseId: log.step.exerciseId?.trim() ?? 'logged-exercise',
+        prescribedSetCount: log.prescribedSetCount,
       );
     }
 
@@ -1286,7 +1290,9 @@ Color _exerciseProgressAccent(ExerciseProgressType progressType) {
     ExerciseProgressType.volumeProgress ||
     ExerciseProgressType.rpeProgress => CohortColors.success,
     ExerciseProgressType.matchedPerformance => CohortColors.olive,
-    ExerciseProgressType.mixedResult => CohortColors.warning,
+    ExerciseProgressType.mixedResult ||
+    ExerciseProgressType.belowLastPerformance => CohortColors.warning,
+    ExerciseProgressType.notComparable ||
     ExerciseProgressType.insufficientData => CohortColors.textSecondary,
   };
 }

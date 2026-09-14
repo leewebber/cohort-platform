@@ -78,6 +78,7 @@ void main() {
       previous: facts(),
     );
     expect(result.outcome, ProgressionOutcome.improved);
+    expect(result.summary, '1 more rep at the same load');
   });
 
   test('same work lower RPE is improved', () {

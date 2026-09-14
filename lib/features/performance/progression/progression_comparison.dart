@@ -49,6 +49,15 @@ class ProgressionComparison {
   final String comparisonKey;
   final bool prescriptionChanged;
 
+  /// Athlete-facing one-line highlight shared by every surface.
+  String get conciseHighlight {
+    final summaryText = summary.trim();
+    if (summaryText.isEmpty || summaryText == outcome.label) {
+      return outcome.label;
+    }
+    return '${outcome.label} — $summaryText';
+  }
+
   static const first = ProgressionComparison(
     outcome: ProgressionOutcome.firstPerformance,
     confidence: EvidenceConfidence.none,

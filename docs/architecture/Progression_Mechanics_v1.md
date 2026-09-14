@@ -258,20 +258,30 @@ Distinct metrics, never a generic “PB” badge on every set.
 
 | Type | Definition |
 |---|---|
-| Heaviest load | Max completed external load for that exercise |
-| Rep best at load | Most completed reps at a specific completed load |
-| Load best at reps | Heaviest completed load at a specific completed rep count |
-| Session volume | Highest valid comparable `load × reps` session total |
-| Matched-work RPE | Optional lowest RPE for the same matched load/reps |
+| Heaviest completed load | Max completed external load for that exercise |
+| Most completed reps at a specified load | Most completed reps at a load that already has prior completed evidence |
+| Highest valid comparable session volume | Highest `load × reps` session total, only when not merely caused by additional prescribed or extra completed sets |
 
 A PB must use actual completed evidence, name its metric and exercise, keep the
 performed date, survive Backfill chronology, recalculate after correction, and
 never derive from a prescription. Variants stay separate.
 
-**Announcement priority (dedupe):** heaviest load, then a rep-at-load best that
-is not already implied by that heaviest set, then volume only when it is not
-explained by the load/rep bests. Do not announce multiple noisy PBs for one
-trivial set.
+**Announcement priority (dedupe):** when one session creates multiple
+technically valid bests, announce in this order and drop redundant labels:
+
+1. **Heaviest completed load** — only if the load is strictly heavier than
+   every prior eligible session. A first visit to a load is this type, not a
+   reps-at-load best.
+2. **Most completed reps at a specified load** — only if a prior completed set
+   exists at that same load, and the current reps exceed that prior. Do not
+   infer this type from insufficient history. Do not label every improved set
+   as a PB: more reps at an already-established heaviest load is this type, not
+   a second heaviest-load badge.
+3. **Highest valid comparable session volume** — only when the volume increase
+   is not merely additional prescribed or extra completed sets, and is not
+   already explained by the load/rep bests.
+
+Never announce a generic “PB” on every improved set.
 
 ---
 

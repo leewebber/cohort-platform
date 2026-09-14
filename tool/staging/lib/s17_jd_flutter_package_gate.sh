@@ -6,6 +6,13 @@
 #   require  — fail closed if package configuration is missing/stale (no network)
 #
 # Live/execute launchers must invoke Flutter with --no-pub after this gate.
+#
+# Freshness is lockfile-relative, not pubspec.yaml mtime. A version/build
+# stamp in pubspec.yaml (for example 1.0.0+5) does not change the resolved
+# package graph. `flutter pub get` is a no-op in that case and will not
+# rewrite package_config.json, so comparing yaml mtime to the generated
+# config is a false stale. Unresolved dependency edits must update
+# pubspec.lock; a lockfile newer than package_config remains stale.
 
 s17_jd_flutter_package_paths() {
   if [[ -z "${S17_ROOT:-}" ]]; then
@@ -32,9 +39,9 @@ s17_jd_flutter_package_config_ok() {
     echo "REFUSED: missing .dart_tool/package_config.json" >&2
     return 2
   fi
-  # Stale if authored inputs are newer than generated package config.
-  if [[ "$JD_PUBSPEC" -nt "$JD_PACKAGE_CONFIG" || "$JD_LOCKFILE" -nt "$JD_PACKAGE_CONFIG" ]]; then
-    echo "REFUSED: stale package_config relative to pubspec.yaml/pubspec.lock" >&2
+  # Stale only when the lockfile (resolved graph) is newer than generated config.
+  if [[ "$JD_LOCKFILE" -nt "$JD_PACKAGE_CONFIG" ]]; then
+    echo "REFUSED: stale package_config relative to pubspec.lock" >&2
     return 2
   fi
   if ! grep -q '"name": "cohort_platform"' "$JD_PACKAGE_CONFIG"; then
@@ -64,6 +71,11 @@ s17_jd_flutter_package_prepare() {
   ); then
     echo "REFUSED: flutter pub get failed during package preparation" >&2
     return 2
+  fi
+  # pub get may no-op without rewriting package_config.json. Stamp the
+  # generated artifact so --no-pub require sees a lock-consistent config.
+  if [[ -f "$JD_PACKAGE_CONFIG" ]]; then
+    touch "$JD_PACKAGE_CONFIG"
   fi
   if ! s17_jd_flutter_package_config_ok; then
     echo "REFUSED: package_config still invalid after flutter pub get" >&2

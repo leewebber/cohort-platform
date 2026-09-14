@@ -65,6 +65,7 @@ class ProgressExerciseBest {
     required this.comparisonLabel,
     required this.isFirstRecorded,
     this.comparisonImproved = false,
+    this.personalBestLabel,
   });
 
   final String exerciseId;
@@ -73,6 +74,7 @@ class ProgressExerciseBest {
   final String comparisonLabel;
   final bool isFirstRecorded;
   final bool comparisonImproved;
+  final String? personalBestLabel;
 }
 
 /// Full Progress screen model.
