@@ -963,8 +963,8 @@ BEGIN
     AND o.outcome_status = 'completed'
     AND ts.status = 'in_progress';
   PERFORM sprint12_record(
-    'AS', 'w5_completed_outcomes_leave_session_row_open', '28',
-    v_count::TEXT, NULL, v_count = 28, NULL
+    'AS', 'w5_completed_outcomes_close_session_row', '0',
+    v_count::TEXT, NULL, v_count = 0, NULL
   );
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete_f::TEXT, true);

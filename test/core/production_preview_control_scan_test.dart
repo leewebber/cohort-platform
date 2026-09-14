@@ -24,8 +24,31 @@ void main() {
       if (contents.contains('AthleteShellPreviewApp')) {
         violations.add('$path imports the preview harness');
       }
+      if (contents.contains('main_emom_result_preview')) {
+        violations.add('$path references the EMOM preview entry');
+      }
+      if (contents.contains('InMemoryPerformanceRecordStore')) {
+        violations.add('$path uses an in-memory performance store');
+      }
     }
     expect(violations, isEmpty, reason: violations.join('\n'));
+  });
+
+  test('preview entry points stay off the production main', () {
+    final productionMain = File('lib/main.dart').readAsStringSync();
+    expect(productionMain, contains('CohortPlatformApp'));
+    expect(productionMain, isNot(contains('main_emom_result_preview')));
+    expect(productionMain, isNot(contains('AthleteShellPreviewApp')));
+
+    final previewMains = [
+      'lib/main_athlete_shell_preview.dart',
+      'lib/main_emom_result_preview.dart',
+      'lib/main_overdue_recovery_preview.dart',
+      'lib/main_strength_accordion_preview.dart',
+    ];
+    for (final path in previewMains) {
+      expect(File(path).existsSync(), isTrue, reason: path);
+    }
   });
 
   test('production profile diagnostics stay secret-free', () {
