@@ -4,11 +4,17 @@ class AthleteRuntimeCapabilities {
   const AthleteRuntimeCapabilities({
     this.overdueRecovery = false,
     this.backfillResults = false,
+    this.contentGraphRead = false,
+    this.contentGraphPublish = false,
+    this.contentGraphImpact = false,
     this.schemaVersion = 0,
   });
 
   final bool overdueRecovery;
   final bool backfillResults;
+  final bool contentGraphRead;
+  final bool contentGraphPublish;
+  final bool contentGraphImpact;
   final int schemaVersion;
 
   static const unavailable = AthleteRuntimeCapabilities();
@@ -32,6 +38,9 @@ class SupabaseAthleteRuntimeCapabilityStore {
       return AthleteRuntimeCapabilities(
         overdueRecovery: map['overdue_recovery'] == true,
         backfillResults: map['backfill_results'] == true,
+        contentGraphRead: map['content_graph_read'] == true,
+        contentGraphPublish: map['content_graph_publish'] == true,
+        contentGraphImpact: map['content_graph_impact'] == true,
         schemaVersion: int.tryParse(map['schema_version']?.toString() ?? '') ?? 0,
       );
     } catch (error) {
