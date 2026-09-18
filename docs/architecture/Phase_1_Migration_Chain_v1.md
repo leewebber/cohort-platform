@@ -42,7 +42,7 @@ exists. Older app builds that still call `completeSession()` stay compatible.
 
 | File | Purpose | Kind | Row writes at migrate? | Hosted (recorded) |
 |------|---------|------|------------------------|-------------------|
-| `20260918120000_content_graph_core.sql` | Publishers, manifests, pin immutability | Additive | First-party publisher row only | No |
+| `20260918120000_content_graph_core.sql` | Publishers, manifests, pin immutability | Additive | **No** (publisher bootstrap is manual) | No |
 | `20260918120100_content_graph_publication.sql` | Graph publication RPC | Functions | No | No |
 | `20260918120200_content_graph_read_models.sql` | Used-by views / impact / diff | Views + functions | No | No |
 | `20260918120300_content_graph_rls.sql` | Graph RLS + capability keys | RLS | No | No |

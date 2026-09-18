@@ -1,11 +1,13 @@
 # M9 Field Manual rollout preflight
 
-**Recorded:** 2026-09-18  
-**Status:** Read-only preflight complete. **Paused for founder approval.**  
-Hosted migrations, publisher seed (beyond the approved file’s own INSERT), reconstruction apply, and manifest publication were **not** executed.
+**Recorded:** 2026-09-18
+**Status:** Preflight corrected locally. **Paused for founder approval of hosted schema-only apply.**
+Hosted migrations, publisher bootstrap, reconstruction, and manifest publication were **not** executed.
 
 ```text
 M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT_COMPLETE=true
+M9_FIELD_MANUAL_PREFLIGHT_CORRECTIONS=true
+MIGRATION_TIME_PUBLISHER_SEED=removed
 HOSTED_TARGET=Cohort Field Manual
 HOSTED_PROJECT_REF=otnhhdxstdnwccehacku
 HOSTED_REGION=eu-west-1
@@ -23,13 +25,41 @@ NOTHING_PUSHED=true
 PHONE_UNTOUCHED=true
 REPO_ENV_UNTOUCHED=true
 M10_STARTED=false
-FULL_FLUTTER_SUITE_REQUIRED=false
 NEXT_TASK_IMPLEMENTATION_AUTHORISED=false
 ```
 
-Binding: [`../architecture/Content_Relationship_Graph_and_Versioning_v1.md`](../architecture/Content_Relationship_Graph_and_Versioning_v1.md), [`../architecture/M9_Content_Graph_Persistence_v1.md`](../architecture/M9_Content_Graph_Persistence_v1.md), [`../architecture/Phase_1_Migration_Chain_v1.md`](../architecture/Phase_1_Migration_Chain_v1.md), [`../architecture/M9_Legacy_Reconstruction_Runbook_v1.md`](../architecture/M9_Legacy_Reconstruction_Runbook_v1.md).
+Binding: [`../architecture/Content_Relationship_Graph_and_Versioning_v1.md`](../architecture/Content_Relationship_Graph_and_Versioning_v1.md), [`../architecture/M9_Content_Graph_Persistence_v1.md`](../architecture/M9_Content_Graph_Persistence_v1.md), [`../architecture/M9_Publisher_Bootstrap_Runbook_v1.md`](../architecture/M9_Publisher_Bootstrap_Runbook_v1.md), [`../architecture/Phase_1_Migration_Chain_v1.md`](../architecture/Phase_1_Migration_Chain_v1.md), [`../architecture/M9_Legacy_Reconstruction_Runbook_v1.md`](../architecture/M9_Legacy_Reconstruction_Runbook_v1.md).
 
-Do not treat this document as authority to apply hosted schema, seed extra publishers, reconstruct, publish manifests, change catalogue defaults, or repin assignments.
+## Corrections after founder decision
+
+1. **Publisher bootstrap decoupled.** `20260918120000` no longer INSERTs `cohort_global`. Applying `120000`–`120400` creates schema only (zero publisher/manifest/reconstruction rows). Publication returns `unauthorised` / `missing_publisher` until the manual bootstrap is separately authorised.
+2. **Graph SELECT no longer treats every coach as a global published-manifest reader.** Access uses assigned athlete, catalogue eligibility, publisher principal, or existing `cohort_programme_version_is_dev_coach_readable` programme ownership.
+
+### Migration file hashes (SHA-256)
+
+Preflight hashes (superseded for any hosted apply):
+
+| File | Preflight SHA-256 |
+|------|-------------------|
+| `20260918120000_content_graph_core.sql` | `8e18d8207fb36aa9aae888d879b55822fe4b06c1240323954800bc6cf52ecb36` |
+| `20260918120100_content_graph_publication.sql` | `4443cae0411c86010b85e5d35326b16b4659bbe823790e9937a76f523a972a0c` |
+| `20260918120200_content_graph_read_models.sql` | `95eff642cadcd2c4e1064056eee0ee23254ea045ad1dd060cf8777de156682a7` |
+| `20260918120300_content_graph_rls.sql` | `284310bcd59ffa9061d48a357f28f69231bfa6aaa14ea62a318c649e31ee1471` |
+| `20260918120400_content_graph_reconstruction.sql` | `9b40fb312a06c020d35b063443022214223cae9df695f4c17a10a84cb6bb6655` |
+
+Corrected hashes (use these):
+
+| File | SHA-256 | Changed? |
+|------|---------|----------|
+| `supabase/migrations/20260918120000_content_graph_core.sql` | `09d980e63c59c6673cef9bc5667cab3eb0c9c9a6c5d9dd9aacb18c85bf4e6edb` | **yes — supersedes preflight** |
+| `supabase/migrations/20260918120100_content_graph_publication.sql` | `db93f774a498366e393874ca89ab31591ae20f674b11e6e165ae90d1e2fd0929` | **yes** (`missing_publisher`) |
+| `supabase/migrations/20260918120200_content_graph_read_models.sql` | `a561023a6a62b698c0f131c3ade4d181df91dfcd7f0daf8543651ef6df07229d` | **yes** (read helper, impact/diff) |
+| `supabase/migrations/20260918120300_content_graph_rls.sql` | `909e9f19872078eb2136e53c2a571f20d7fcd01edbfd86ce0b324f17da36e53c` | **yes** (scoped SELECT) |
+| `supabase/migrations/20260918120400_content_graph_reconstruction.sql` | `9b40fb312a06c020d35b063443022214223cae9df695f4c17a10a84cb6bb6655` | unchanged |
+
+Manual bootstrap (not a migration): `supabase/manual/content_graph_bootstrap_cohort_global.sql`.
+
+Do not treat this document as authority to apply hosted schema, run bootstrap, reconstruct, publish manifests, change catalogue defaults, or repin assignments.
 
 ## A. Repository preflight
 
@@ -43,15 +73,7 @@ Do not treat this document as authority to apply hosted schema, seed extra publi
 | Founder build | `1.0.0+7` remains `pubspec.yaml`; latest stamp `c50530d`; no newer build-number commit exists |
 | Apollo Plan Package SHA-256 | `810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83` (hosted Apollo v2 matches) |
 
-### Migration file hashes (SHA-256)
-
-| File | SHA-256 |
-|------|---------|
-| `supabase/migrations/20260918120000_content_graph_core.sql` | `8e18d8207fb36aa9aae888d879b55822fe4b06c1240323954800bc6cf52ecb36` |
-| `supabase/migrations/20260918120100_content_graph_publication.sql` | `4443cae0411c86010b85e5d35326b16b4659bbe823790e9937a76f523a972a0c` |
-| `supabase/migrations/20260918120200_content_graph_read_models.sql` | `95eff642cadcd2c4e1064056eee0ee23254ea045ad1dd060cf8777de156682a7` |
-| `supabase/migrations/20260918120300_content_graph_rls.sql` | `284310bcd59ffa9061d48a357f28f69231bfa6aaa14ea62a318c649e31ee1471` |
-| `supabase/migrations/20260918120400_content_graph_reconstruction.sql` | `9b40fb312a06c020d35b063443022214223cae9df695f4c17a10a84cb6bb6655` |
+### Migration file hashes (SHA-256) — historical preflight table replaced above
 
 ### Build 7 production compatibility
 
@@ -190,14 +212,7 @@ Inspected hosted functions whose bodies mention `UPDATE public.programme_assignm
 
 ## F. Publisher mapping proposal (do not insert extra rows)
 
-`20260918120000` already inserts first-party publisher:
-
-- id `00000000-0000-4000-8000-00000000c001`
-- namespace `cohort_global`
-- display_name `Cohort`
-- `first_party=true`
-
-That INSERT is the **only** migration-time content row. It is permission-coupled with schema apply (see blockers).
+`20260918120000` no longer inserts a publisher. First-party `cohort_global` is created only by the separately authorised bootstrap in `supabase/manual/content_graph_bootstrap_cohort_global.sql` (stable id `00000000-0000-4000-8000-00000000c001`). Schema apply must leave publisher tables empty.
 
 | Content | Stable authority | Mapping |
 |---------|------------------|---------|
@@ -253,11 +268,9 @@ Local `./supabase/tests/run_local_db_gate.sh`:
 6. Pin UPDATE raises `content_graph_assignment_pin_immutable`
 7. Capability probe remains callable
 
-**Migration-time row writes on hosted content tables:** none expected for assignments, programmes, occurrences, results, or catalogue rows.
+**Migration-time row writes:** zero publisher, principal, manifest, reconstruction, assignment, programme, occurrence, result, or catalogue rows. Gate AX asserts `schema_only_zero_publishers` before explicit bootstrap.
 
-**Exception (approved file, permission-coupled):** `120000` INSERTs one `content_publishers` row (`cohort_global`) `ON CONFLICT DO NOTHING`. No reconstruction, no manifests, no repin.
-
-Hosted `db push --dry-run` matches those five files only.
+Hosted `db push --dry-run` (preflight) listed those five files only. The manual bootstrap file is not in `supabase/migrations/`.
 
 ## I. RLS simulation
 
@@ -265,17 +278,22 @@ Proven in Gate AX with `anon`, `authenticated` athlete, coach, and service_role-
 
 | Case | Result |
 |------|--------|
-| Unauthenticated publish / private graph | denied |
-| Assigned athlete reads published assigned manifest | allowed |
+| Unauthenticated | denied |
+| Assigned athlete reads published assigned / retired-but-pinned manifest | allowed |
+| Catalogue-eligible published visibility | allowed (same as programme catalogue SELECT) |
+| Athlete unrelated / unpublished | denied |
 | Athlete INSERT/UPDATE/DELETE manifests | denied |
-| Athlete `content_graph_assignment_impact` | `unauthorised` |
-| Catalogue-eligible published visibility | intended (eligibility helper) |
-| Cross-publisher publish | `unauthorised` / identity conflict |
-| Trusted `publish_content_graph_manifest` | typed outcomes (`published`, `already_published`, `hash_mismatch`, …) |
-| Retired-but-pinned | pin remains; new SELECT includes assignment match even if catalogue-ineligible |
+| Athlete impact / other-namespace diff | denied (`unauthorised` or unresolved) |
+| Publisher principal | own active namespace, including draft graph rows |
+| Other publisher private namespace | denied unless separately catalogue-visible |
+| Coach | only `cohort_programme_version_is_dev_coach_readable` (own `coach_private`) plus catalogue-consumer path |
+| Unrelated coach private graph | denied |
+| Inactive publisher membership | cannot use namespace path |
+| Forged principal INSERT | denied |
+| Trusted `publish_content_graph_manifest` | typed outcomes; `missing_publisher` before bootstrap |
 | Build 7 Home/Calendar/Progress/workout | no new table required |
 
-**Broadening vs current hosted (new objects only):** authenticated coaches can `SELECT` published manifests and publisher principal rows more widely than a strict namespace-only reader. This does **not** change existing `programme_versions` / assignment RLS. Impact RPC remains publisher/service constrained. Direct writes on graph tables remain denied for `authenticated`.
+Existing `programme_versions` / assignment RLS was not weakened. Used-by views remain `security_invoker`. Impact is publisher-principal or service_role only. `content_graph_publish` is not granted to generic coaches.
 
 ## J. Recovery plan (do not execute)
 
@@ -297,6 +315,7 @@ Only if **no** published manifests exist (true until a later publication task):
 8. Drop `content_graph_manifests`
 9. Drop `programme_versions.supersedes_version_id` and index
 10. Drop `content_publisher_principals`, `content_publishers`
+11. If Phase 2 bootstrap was applied separately, `DROP FUNCTION content_graph_bootstrap_cohort_global(uuid)` (that function is **not** in the migration chain)
 
 Canonical authored tables (`programme_*`, `performance_protocols`, `session_blocks`, `session_block_exercises`, `exercises_v2`, assignments, occurrences, results) are **not** dropped.
 
@@ -319,29 +338,43 @@ After a successful hosted apply, `schema_migrations` will contain the five versi
 
 ## K. Proposed future authorised sequence (not executed)
 
+### Phase 1 — schema only
+
 1. Re-verify Field Manual ref `otnhhdxstdnwccehacku`, health, ledger max still `20260914121000`
-2. Recapture counts/hashes (appendix)
-3. Apply **each** of the five migrations individually in order
-4. Verify objects after each file
-5. Verify `cohort_athlete_runtime_capabilities` schema_version 2 additive keys
-6. Confirm build 7 Home/Calendar/Progress/workout still function (probe only)
-7. Confirm assignment/programme/occurrence/result/catalogue row counts and Apollo pin hash unchanged
+2. Recapture counts/hashes using **corrected** file hashes above
+3. Apply `20260918120000`–`20260918120400` individually in order
+4. Verify schema/objects after each file
+5. Verify `cohort_athlete_runtime_capabilities` schema_version 2 keys; `content_graph_publish` false without a principal
+6. Confirm build 7 Home/Calendar/Programmes/Progress/workout
+7. Confirm **zero** publisher/manifest/reconstruction/authored/assignment mutations
 8. Read-only postflight
-9. **Stop** before extra publisher seed, reconstruction apply, and manifest publication
-10. Separate founder approval for reconstruction and publication
+9. **Stop**
+
+### Phase 2 — separately authorised publisher bootstrap
+
+1. Review `supabase/manual/content_graph_bootstrap_cohort_global.sql`
+2. Install the function, then `SELECT content_graph_bootstrap_cohort_global('<principal-uuid>')` with an explicit principal
+3. Verify `created` / retry `already_exists` / conflict isolation
+4. **Stop** (no reconstruction, no publication)
+
+### Phase 3 — separately authorised reconstruction/publication
+
+1. Dry-run reconstruction against hosted schema
+2. Approve exact programme versions
+3. Apply reconstruction
+4. Publish manifests
+5. No catalogue/default or assignment changes
 
 ### Permission boundaries (non-implied)
 
-| Permission | This preflight | Schema deploy task | Later |
-|------------|----------------|--------------------|-------|
-| Schema deployment of the five files | proposed only | requires explicit approval | |
-| First-party publisher bootstrap | coupled inside `120000` INSERT | approve **with** schema or split the file first | extra publishers still forbidden |
-| Reconstruction apply | dry-run only | **not** included | separate |
-| Manifest publication | forbidden | **not** included | separate |
-| Catalogue / default-version changes | none | **not** included | separate |
-| Assignment repin | none; not needed | **not** included | separate RPC if ever |
-
-Approval of schema deploy must not be read as approval of reconstruction, publication, catalogue mutation, or repin.
+| Permission | Schema deploy | Bootstrap | Reconstruction/publication |
+|------------|---------------|-----------|----------------------------|
+| Five migrations | this phase | no | no |
+| `cohort_global` row | **forbidden** | this phase | no |
+| Reconstruction apply | no | no | this phase |
+| Manifest publication | no | no | this phase |
+| Catalogue / default-version changes | no | no | **still no** |
+| Assignment repin | no | no | **still no** |
 
 ## L. Tests and gates
 
@@ -357,16 +390,19 @@ Approval of schema deploy must not be read as approval of reconstruction, public
 | `test/features/progress/time_eligible_discipline_test.dart` | pass (includes assignment-local day rollover) |
 | `./supabase/tests/run_local_db_gate.sh` (fresh + reapply, Gate AX) | **ALL LOCAL DB GATE CHECKS PASSED** |
 | `./tool/testing/run_phase2_consolidation_safety_gate.sh` | **PASS** |
-| Full `flutter test` | **not required** — no source/test fixture changes in this task |
+| Full `flutter test` | **pass** (`+3021 ~6`) |
+| Changed-file `flutter analyze` | **No issues found** (`content_graph_persistence_test.dart`, `content_graph_migration_test.dart`) |
+| Full `flutter analyze` | **710 issues found** (existing baseline; includes `server/trusted_plan_package_import` unresolved URIs). **Zero new issues** in files this correction changed. |
 
 ## M. Blockers and stop conditions
 
-1. **Permission coupling:** `120000` seeds `cohort_global`. Schema-only approval is not separable unless the INSERT is split in a future commit. This is **not** a schema conflict. Founder must accept combined schema+first-party publisher bootstrap, or require a split before hosted apply.
-2. Hosted reconstruction/publication remain **unauthorised**.
+1. Hosted reconstruction/publication remain **unauthorised** until Phase 3.
+2. Publisher bootstrap remains **unauthorised** until Phase 2; schema-only must stay empty of publisher rows.
 3. Coach-private / `dev-coach` rows need supplemental ownership evidence before any non-global publisher seed.
 4. `BP-001` / `SQ-001` and `__UNASSIGNED__` must stay unresolved/invalid; never guessed.
-5. Do not repair the hosted ledger to “match” older timestamps; dry-run already lists the five pending files when local migrations are present.
+5. Do not repair the hosted ledger to “match” older timestamps.
 6. `origin/main` moved, dirty worktree, or target ≠ Field Manual → stop.
+7. Do not apply the superseded preflight hashes of `120000`–`120300`.
 
 No conflicting hosted prerequisite blocks the five additive files.
 

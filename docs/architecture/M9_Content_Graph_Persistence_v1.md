@@ -52,9 +52,17 @@ catalogue flags, assignment lifecycle.
 `publish_content_graph_manifest(jsonb)` returns typed statuses:
 
 `published` · `already_published` · `hash_mismatch` · `unsupported_format` ·
-`unresolved_reference` · `conflicting_identity` · `unauthorised`
+`unresolved_reference` · `conflicting_identity` · `unauthorised` ·
+`missing_publisher`
 
-It does not change catalogue default or assignment pins.
+It does not change catalogue default or assignment pins. Schema-only
+deployment creates **zero** publisher rows. First-party `cohort_global` is
+created only by the separately authorised operation in
+`supabase/manual/content_graph_bootstrap_cohort_global.sql` (see
+[M9_Publisher_Bootstrap_Runbook_v1.md](./M9_Publisher_Bootstrap_Runbook_v1.md)).
+Until that bootstrap, publication fails closed (`missing_publisher` /
+`unauthorised`). Capabilities may report `content_graph_read` (schema present)
+while `content_graph_publish` remains false.
 
 ## Assignment pinning
 
@@ -64,13 +72,19 @@ column. Materialisation continues to use the pin.
 
 ## RLS matrix
 
-| Actor | Read published assigned/catalogue graph | Publish | Impact counts | Direct manifest write |
-|-------|------------------------------------------|---------|---------------|------------------------|
+| Actor | Read graph | Publish | Impact counts | Direct manifest write |
+|-------|------------|---------|---------------|------------------------|
 | Unauthenticated | deny | deny | deny | deny |
-| Athlete | assigned or catalogue-visible only | deny | deny | deny |
-| Publisher principal | owned namespace + published | owned active namespace via RPC | owned namespace | deny (RPC only) |
-| Other publisher | no mutation; no private impact | deny | deny | deny |
-| service_role / postgres | yes | yes | yes | bypass RLS; still immutable trigger |
+| Athlete | assigned published or catalogue-eligible only | deny | deny | deny |
+| Catalogue consumer | same as catalogue-eligible programme versions | deny | deny | deny |
+| Publisher principal | own active namespace (draft + published) | owned active namespace via RPC | owned namespace | deny (RPC only) |
+| Other publisher | no private-namespace rows unless catalogue-visible | deny | deny | deny |
+| Coach | own `coach_private` via existing `dev_coach_readable`; not all published catalogue | deny | deny | deny |
+| Inactive principal | no namespace path | deny | deny | deny |
+| service_role | yes | yes | yes | bypass RLS; still immutable trigger |
+
+`content_graph_is_service_role` uses request GUC/JWT, not `current_user`, so
+SECURITY DEFINER impact/diff cannot treat table-owner `postgres` as trusted.
 
 Retired/archived versions remain readable for a pinned assignment.
 

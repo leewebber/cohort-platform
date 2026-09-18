@@ -35,6 +35,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [M9_Migration_Backfill_Plan_v1.md](./M9_Migration_Backfill_Plan_v1.md) | Hosted backfill after approval |
 | [M9_Content_Graph_Persistence_v1.md](./M9_Content_Graph_Persistence_v1.md) | Sprint 2 local persistence / RLS / publication |
 | [M9_Legacy_Reconstruction_Runbook_v1.md](./M9_Legacy_Reconstruction_Runbook_v1.md) | Local reconstruction; not hosted |
+| [M9_Publisher_Bootstrap_Runbook_v1.md](./M9_Publisher_Bootstrap_Runbook_v1.md) | Manual first-party `cohort_global` bootstrap (not a migration) |
 | [../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md](../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md) | Sprint 2 pause |
 | [../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md](../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md) | Field Manual graph rollout preflight (read-only) |
 
