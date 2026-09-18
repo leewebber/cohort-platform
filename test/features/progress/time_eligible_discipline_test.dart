@@ -603,6 +603,126 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('1 of 1 sessions completed · 100%'), findsOneWidget);
     });
+
+    testWidgets(
+      'assignment-local day rollover refreshes once then settles',
+      (tester) async {
+        var utcNow = DateTime.utc(2026, 9, 18, 12);
+        final store = _MutatingOccurrenceStore();
+        final tables = InMemoryProgrammeTables();
+        final assignment = ProgrammeScheduleTestFixtures.materialisedAssignment(
+          athleteId: 'lee',
+        ).copyWith(timezone: 'Europe/London');
+        tables.assignments.add(assignment);
+        final versionStore = InMemoryProgrammeVersionStore(tables);
+        await versionStore.saveTemplateTree(
+          version: ProgrammeScheduleTestFixtures.version(),
+          tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+        );
+        store.calendar = _calendar(
+          assignment: assignment,
+          today: '2026-09-18',
+          occurrences: [
+            _occ(
+              'done',
+              '2026-09-17',
+              FixedProgrammeOccurrenceState.completed,
+            ),
+          ],
+        );
+        final builder = AthleteProgressSummaryBuilder(
+          assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+          versionStore: versionStore,
+          slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+          occurrenceStore: store,
+        );
+        await tester.pumpWidget(
+          MaterialApp(
+            home: ProgressScreen(
+              athleteIdOverride: 'lee',
+              progressBuilder: builder,
+              utcNow: () => utcNow,
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(find.text('1 of 1 sessions completed · 100%'), findsOneWidget);
+
+        utcNow = DateTime.utc(2026, 9, 19, 0, 30);
+        store.calendar = _calendar(
+          assignment: assignment,
+          today: '2026-09-19',
+          occurrences: [
+            _occ(
+              'done',
+              '2026-09-17',
+              FixedProgrammeOccurrenceState.completed,
+            ),
+            _occ(
+              'overdue',
+              '2026-09-18',
+              FixedProgrammeOccurrenceState.overdue,
+            ),
+          ],
+        );
+        await tester.pump();
+        await tester.pumpAndSettle();
+        expect(find.textContaining('sessions completed'), findsWidgets);
+      },
+    );
+
+    testWidgets(
+      'removing Progress detaches surface reload and pending date callbacks',
+      (tester) async {
+        final refresh = HomeTodaySessionRefreshController();
+        final tables = InMemoryProgrammeTables();
+        tables.assignments.add(
+          ProgrammeScheduleTestFixtures.materialisedAssignment(
+            athleteId: 'lee',
+          ).copyWith(timezone: 'Europe/London'),
+        );
+        final versionStore = InMemoryProgrammeVersionStore(tables);
+        await versionStore.saveTemplateTree(
+          version: ProgrammeScheduleTestFixtures.version(),
+          tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
+        );
+        await tester.pumpWidget(
+          AthleteProgrammeSurfaceRefreshScope(
+            controller: refresh,
+            child: MaterialApp(
+              home: ProgressScreen(
+                athleteIdOverride: 'lee',
+                progressBuilder: AthleteProgressSummaryBuilder(
+                  assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+                  versionStore: versionStore,
+                  slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
+                  occurrenceStore: const _StaticOccurrenceStore(
+                    FixedProgrammeCalendarProjection(
+                      assignmentId: 'asg',
+                      programmeName: 'Apollo',
+                      timezone: 'Europe/London',
+                      scheduleMode: 'fixed_schedule',
+                      startDate: '2026-09-07',
+                      today: '2026-09-14',
+                      weekStart: '2026-09-07',
+                      weekEnd: '2026-09-13',
+                      occurrences: [],
+                      currentWeek: [],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+        expect(refresh.hasSurfaceListeners, isTrue);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        expect(refresh.hasSurfaceListeners, isFalse);
+        expect(tester.binding.transientCallbackCount, 0);
+      },
+    );
   });
 
   test('fromProgrammeSummary keeps factual sessionsCompleted separate', () {

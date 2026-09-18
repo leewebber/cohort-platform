@@ -25,6 +25,7 @@ class ProgressScreen extends StatefulWidget {
     this.athleteIdOverride,
     this.onChoosePlan,
     this.onStartToday,
+    this.utcNow,
   });
 
   /// Sync override for tests / precomputed summaries.
@@ -40,6 +41,9 @@ class ProgressScreen extends StatefulWidget {
   final VoidCallback? onChoosePlan;
   final VoidCallback? onStartToday;
 
+  /// Assignment-local clock for tests. Production uses UTC wall time.
+  final DateTime Function()? utcNow;
+
   @override
   State<ProgressScreen> createState() => _ProgressScreenState();
 }
@@ -49,6 +53,7 @@ class _ProgressScreenState extends State<ProgressScreen>
   ProgressSummary? _resolved;
   bool _loading = false;
   HomeTodaySessionRefreshController? _attachedController;
+  String? _bootstrappedWallDate;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -109,12 +114,19 @@ class _ProgressScreenState extends State<ProgressScreen>
     _attachedController = null;
   }
 
+  DateTime _utcNow() => widget.utcNow?.call() ?? DateTime.now().toUtc();
+
+  String _wallDate(String? timezone) {
+    return AthleteIanaClock.dateOnly(timezone, utcNow: _utcNow());
+  }
+
   Future<void> _bootstrap() async {
     final injected = widget.summary;
     if (injected != null) {
       setState(() {
         _resolved = injected;
         _loading = false;
+        _bootstrappedWallDate = _wallDate(injected.compliance.timezone);
       });
       return;
     }
@@ -127,26 +139,30 @@ class _ProgressScreenState extends State<ProgressScreen>
       setState(() {
         _resolved = summary;
         _loading = false;
+        _bootstrappedWallDate = _wallDate(summary.compliance.timezone);
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
         _resolved = AthleteProgressSummaryBuilder.emptySummary();
         _loading = false;
+        _bootstrappedWallDate = _wallDate(null);
       });
     }
   }
 
   void _invalidateIfLocalDateMoved() {
     if (widget.summary != null) return;
-    final compliance = _resolved?.compliance;
-    final asOf = compliance?.asOfDate;
-    final timezone = compliance?.timezone;
-    if (asOf == null || asOf.isEmpty) return;
-    final today = AthleteIanaClock.dateOnly(timezone);
-    if (today == asOf) return;
+    if (_loading || _resolved == null || _bootstrappedWallDate == null) {
+      return;
+    }
+    final timezone = _resolved?.compliance.timezone;
+    final today = _wallDate(timezone);
+    if (today == _bootstrappedWallDate) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _bootstrap();
+      if (!mounted) return;
+      if (_loading) return;
+      _bootstrap();
     });
   }
 
