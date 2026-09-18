@@ -70,6 +70,60 @@ SELECT
 FROM public.content_graph_manifests m
 WHERE m.publication_state = 'published';
 
+-- Shared graph-read authority. Coaches are not global catalogue readers.
+CREATE OR REPLACE FUNCTION public.content_graph_actor_may_read_manifest(
+  p_programme_version_id UUID,
+  p_publisher_id UUID,
+  p_publication_state TEXT
+)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+BEGIN
+  IF public.content_graph_is_service_role() THEN
+    RETURN TRUE;
+  END IF;
+  IF auth.uid() IS NULL THEN
+    RETURN FALSE;
+  END IF;
+  IF p_publisher_id IS NOT NULL AND EXISTS (
+    SELECT 1
+    FROM public.content_publisher_principals m
+    JOIN public.content_publishers p ON p.id = m.publisher_id
+    WHERE m.publisher_id = p_publisher_id
+      AND m.principal_id = auth.uid()
+      AND m.principal_role IN ('owner', 'publisher', 'reader')
+      AND p.lifecycle = 'active'
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  IF p_publication_state IS DISTINCT FROM 'published' THEN
+    RETURN FALSE;
+  END IF;
+  IF EXISTS (
+    SELECT 1
+    FROM public.programme_assignments a
+    WHERE a.programme_version_id = p_programme_version_id
+      AND a.athlete_id = auth.uid()
+  ) THEN
+    RETURN TRUE;
+  END IF;
+  IF public.cohort_programme_version_is_catalogue_eligible(p_programme_version_id) THEN
+    RETURN TRUE;
+  END IF;
+  IF public.cohort_programme_version_is_dev_coach_readable(p_programme_version_id) THEN
+    RETURN TRUE;
+  END IF;
+  RETURN FALSE;
+END;
+$$;
+
+COMMENT ON FUNCTION public.content_graph_actor_may_read_manifest(UUID, UUID, TEXT) IS
+  'Graph read authority: assigned athlete, catalogue-eligible version, publisher principal, or existing coach programme ownership. Not a global coach bypass.';
+
 -- Operational assignment counts. Not part of graph structural identity.
 CREATE OR REPLACE FUNCTION public.content_graph_assignment_impact(
   p_programme_version_id UUID
@@ -100,15 +154,9 @@ BEGIN
     IF auth.uid() IS NULL THEN
       RETURN jsonb_build_object('status', 'unauthorised', 'code', 'unauthenticated');
     END IF;
-    IF public.cohort_auth_is_athlete() AND NOT public.cohort_auth_is_coach() THEN
+    IF v_publisher IS NULL
+       OR NOT public.content_graph_publisher_may_operate(v_publisher) THEN
       RETURN jsonb_build_object('status', 'unauthorised', 'code', 'private_impact_denied');
-    END IF;
-    IF v_publisher IS NOT NULL
-       AND NOT public.content_graph_publisher_may_operate(v_publisher) THEN
-      RETURN jsonb_build_object('status', 'unauthorised', 'code', 'namespace_isolation');
-    END IF;
-    IF v_publisher IS NULL AND NOT public.cohort_auth_is_coach() THEN
-      RETURN jsonb_build_object('status', 'unauthorised', 'code', 'unauthorised');
     END IF;
   END IF;
 
@@ -168,6 +216,17 @@ BEGIN
     AND publication_state = 'published';
   IF NOT FOUND THEN
     RETURN jsonb_build_object('status', 'unresolved_reference', 'code', 'to_manifest_missing');
+  END IF;
+
+  IF NOT public.content_graph_is_service_role() THEN
+    IF NOT public.content_graph_actor_may_read_manifest(
+         v_from.programme_version_id, v_from.publisher_id, v_from.publication_state
+       )
+       OR NOT public.content_graph_actor_may_read_manifest(
+         v_to.programme_version_id, v_to.publisher_id, v_to.publication_state
+       ) THEN
+      RETURN jsonb_build_object('status', 'unauthorised', 'code', 'unauthorised');
+    END IF;
   END IF;
 
   SELECT COUNT(*) INTO v_from_sessions
@@ -233,7 +292,11 @@ COMMENT ON VIEW public.content_exercise_used_by_programme IS
 COMMENT ON FUNCTION public.content_graph_assignment_impact(UUID) IS
   'Operational assignment counts. Changing these must not change graph_structural_hash.';
 
+REVOKE ALL ON FUNCTION public.content_graph_actor_may_read_manifest(UUID, UUID, TEXT)
+  FROM PUBLIC, anon;
 REVOKE ALL ON FUNCTION public.content_graph_assignment_impact(UUID) FROM PUBLIC, anon;
 REVOKE ALL ON FUNCTION public.content_graph_version_diff(UUID, UUID) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.content_graph_actor_may_read_manifest(UUID, UUID, TEXT)
+  TO authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.content_graph_assignment_impact(UUID) TO authenticated, service_role;
 GRANT EXECUTE ON FUNCTION public.content_graph_version_diff(UUID, UUID) TO authenticated, service_role;

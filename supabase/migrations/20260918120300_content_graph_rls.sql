@@ -25,7 +25,10 @@ CREATE POLICY content_publishers_select
   FOR SELECT
   TO authenticated
   USING (
-    lifecycle = 'active'
+    (
+      first_party = TRUE
+      AND lifecycle = 'active'
+    )
     OR EXISTS (
       SELECT 1
       FROM public.content_publisher_principals m
@@ -40,10 +43,31 @@ CREATE POLICY content_publisher_principals_select
   ON public.content_publisher_principals
   FOR SELECT
   TO authenticated
-  USING (
-    principal_id = auth.uid()
-    OR public.cohort_auth_is_coach()
-  );
+  USING (principal_id = auth.uid());
+
+DROP POLICY IF EXISTS content_publisher_principals_no_insert
+  ON public.content_publisher_principals;
+CREATE POLICY content_publisher_principals_no_insert
+  ON public.content_publisher_principals
+  FOR INSERT
+  TO authenticated
+  WITH CHECK (FALSE);
+
+DROP POLICY IF EXISTS content_publisher_principals_no_update
+  ON public.content_publisher_principals;
+CREATE POLICY content_publisher_principals_no_update
+  ON public.content_publisher_principals
+  FOR UPDATE
+  TO authenticated
+  USING (FALSE);
+
+DROP POLICY IF EXISTS content_publisher_principals_no_delete
+  ON public.content_publisher_principals;
+CREATE POLICY content_publisher_principals_no_delete
+  ON public.content_publisher_principals
+  FOR DELETE
+  TO authenticated
+  USING (FALSE);
 
 DROP POLICY IF EXISTS content_graph_manifests_select
   ON public.content_graph_manifests;
@@ -52,21 +76,10 @@ CREATE POLICY content_graph_manifests_select
   FOR SELECT
   TO authenticated
   USING (
-    publication_state = 'published'
-    AND (
-      EXISTS (
-        SELECT 1
-        FROM public.programme_assignments a
-        WHERE a.programme_version_id = content_graph_manifests.programme_version_id
-          AND a.athlete_id = auth.uid()
-      )
-      OR public.cohort_programme_version_is_catalogue_eligible(
-        content_graph_manifests.programme_version_id
-      )
-      OR public.content_graph_publisher_may_operate(
-        content_graph_manifests.publisher_id
-      )
-      OR public.cohort_auth_is_coach()
+    public.content_graph_actor_may_read_manifest(
+      programme_version_id,
+      publisher_id,
+      publication_state
     )
   );
 
@@ -128,6 +141,7 @@ AS $$
 DECLARE
   v_athlete UUID := auth.uid();
   v_graph BOOLEAN;
+  v_publisher BOOLEAN;
 BEGIN
   v_graph := EXISTS (
     SELECT 1
@@ -135,6 +149,14 @@ BEGIN
     JOIN pg_namespace n ON n.oid = p.pronamespace
     WHERE n.nspname = 'public'
       AND p.proname = 'publish_content_graph_manifest'
+  );
+  v_publisher := EXISTS (
+    SELECT 1
+    FROM public.content_publisher_principals m
+    JOIN public.content_publishers p ON p.id = m.publisher_id
+    WHERE m.principal_id = v_athlete
+      AND m.principal_role IN ('owner', 'publisher')
+      AND p.lifecycle = 'active'
   );
 
   IF v_athlete IS NULL OR NOT public.cohort_auth_is_athlete() THEN
@@ -163,9 +185,9 @@ BEGIN
     'backfill_results', true,
     'content_graph_read', v_graph,
     'content_graph_publish',
-      v_graph AND public.cohort_auth_is_coach(),
+      v_graph AND v_publisher,
     'content_graph_impact',
-      v_graph AND public.cohort_auth_is_coach()
+      v_graph AND v_publisher
   );
 END;
 $$;
@@ -176,4 +198,4 @@ GRANT EXECUTE ON FUNCTION public.cohort_athlete_runtime_capabilities()
   TO authenticated;
 
 COMMENT ON FUNCTION public.cohort_athlete_runtime_capabilities() IS
-  'Explicit hosted capability probe. Missing graph RPCs mean content_graph_* is unavailable. Build 7 treats unknown keys as false.';
+  'Explicit hosted capability probe. content_graph_read means schema exists. content_graph_publish/impact require an active publisher principal, not merely coach. Build 7 treats unknown keys as false.';
