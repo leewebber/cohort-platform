@@ -1,3 +1,4 @@
+import 'content_graph_manifest.dart';
 import 'content_graph_models.dart';
 import 'content_graph_service.dart';
 import 'content_graph_vocabulary.dart';
@@ -27,6 +28,9 @@ class M9ContentGraphFixtures {
   static const exerciseSquat = 'EX-136';
   static const exercisePull = 'EX-095';
   static const exerciseReplacement = 'EX-137';
+  static final fixtureSourcePackageHash = ContentGraphBinding.sha256Hex(
+    'm9-fixture-plan-package-v1:APOLLO-BUILD-12-WEEK@2',
+  );
 
   static ContentGraphService seed({
     InMemoryContentGraphStore? store,
@@ -122,7 +126,7 @@ class M9ContentGraphFixtures {
       ),
     );
     graph.putProgrammeVersion(
-      const ProgrammeVersion(
+      ProgrammeVersion(
         id: v1Id,
         programmeId: programmeId,
         versionNumber: 1,
@@ -130,6 +134,7 @@ class M9ContentGraphFixtures {
         ownerId: 'publisher.cohort-global',
         label: 'v1',
         sourcePackageRef: 'plan-package-v1:APOLLO-BUILD-12-WEEK@2',
+        sourcePackageHash: fixtureSourcePackageHash,
       ),
     );
     graph.putPlacement(
@@ -145,6 +150,7 @@ class M9ContentGraphFixtures {
     );
 
     final service = ContentGraphService(store: graph);
+    service.rebindSupplementalFromGraph(v1Id);
     service.publish(
       actor: firstParty,
       programmeVersionId: v1Id,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 
+import 'content_graph_manifest.dart';
 import 'content_graph_models.dart';
 import 'content_graph_vocabulary.dart';
 
@@ -12,21 +13,39 @@ import 'content_graph_vocabulary.dart';
 class ContentGraphCanonicaliser {
   const ContentGraphCanonicaliser();
 
-  static const formatVersion = 1;
+  static const formatVersion = ContentGraphBinding.graphFormatVersion;
+  static const compilerVersion = ContentGraphBinding.compilerVersion;
 
   String canonicalJson({
     required ProgrammeVersion version,
     required List<ProgrammePlacement> placements,
     required List<SessionTemplateVersion> sessionVersions,
     required List<AuthoredBlock> blocks,
+    StructuralContentGraph? graph,
   }) {
     final tree = _sorted({
+      'blocks': [
+        for (final b in _byKeys(blocks, (x) => [
+              x.sessionTemplateVersionId,
+              x.position,
+              x.id,
+            ]))
+          _sorted({
+            'session_template_version_id': b.sessionTemplateVersionId,
+            'position': b.position,
+            'title': b.title,
+            'exercise_ids': [...b.exerciseIds]..sort(),
+            'prescription_by_exercise': _sorted(b.prescriptionByExercise),
+          }),
+      ],
+      'compiler_version': compilerVersion,
+      'edges': [
+        for (final e in _sortedEdges(graph?.edges ?? const [])) e.toCanonical(),
+      ],
       'format_version': formatVersion,
-      'programme_version': _sorted({
-        'programme_id': version.programmeId,
-        'compiler_format_version': formatVersion,
-        'source_package_ref': version.sourcePackageRef,
-      }),
+      'nodes': [
+        for (final n in _sortedNodes(graph?.nodes ?? const [])) n.toCanonical(),
+      ],
       'placements': [
         for (final p in _byKeys(placements, (x) => [
               x.weekNumber,
@@ -44,6 +63,11 @@ class ContentGraphCanonicaliser {
             'optional': p.optional,
           }),
       ],
+      'programme_version': _sorted({
+        'programme_id': version.programmeId,
+        'compiler_format_version': formatVersion,
+        'source_package_ref': version.sourcePackageRef,
+      }),
       'session_versions': [
         for (final s in _byKeys(sessionVersions, (x) => [x.id]))
           _sorted({
@@ -51,20 +75,6 @@ class ContentGraphCanonicaliser {
             'template_id': s.templateId,
             'revision_number': s.revisionNumber,
             'source_hash': s.sourceHash,
-          }),
-      ],
-      'blocks': [
-        for (final b in _byKeys(blocks, (x) => [
-              x.sessionTemplateVersionId,
-              x.position,
-              x.id,
-            ]))
-          _sorted({
-            'session_template_version_id': b.sessionTemplateVersionId,
-            'position': b.position,
-            'title': b.title,
-            'exercise_ids': [...b.exerciseIds]..sort(),
-            'prescription_by_exercise': _sorted(b.prescriptionByExercise),
           }),
       ],
     });
@@ -87,6 +97,34 @@ class ContentGraphCanonicaliser {
       final bk = keys(b);
       for (var i = 0; i < ak.length; i++) {
         final c = ak[i].compareTo(bk[i]);
+        if (c != 0) return c;
+      }
+      return 0;
+    });
+    return copy;
+  }
+
+  List<ContentGraphNode> _sortedNodes(List<ContentGraphNode> nodes) {
+    final copy = [...nodes];
+    copy.sort((a, b) {
+      final type = a.type.name.compareTo(b.type.name);
+      if (type != 0) return type;
+      return a.id.compareTo(b.id);
+    });
+    return copy;
+  }
+
+  List<ContentGraphEdge> _sortedEdges(List<ContentGraphEdge> edges) {
+    final copy = [...edges];
+    copy.sort((a, b) {
+      final keys = [
+        a.type.name.compareTo(b.type.name),
+        a.fromType.name.compareTo(b.fromType.name),
+        a.fromId.compareTo(b.fromId),
+        a.toType.name.compareTo(b.toType.name),
+        a.toId.compareTo(b.toId),
+      ];
+      for (final c in keys) {
         if (c != 0) return c;
       }
       return 0;

@@ -1,3 +1,4 @@
+import 'content_graph_manifest.dart';
 import 'content_graph_models.dart';
 import 'content_graph_store.dart';
 import 'content_graph_vocabulary.dart';
@@ -13,6 +14,7 @@ class InMemoryContentGraphStore implements ContentGraphStore {
   final placements = <String, ProgrammePlacement>{};
   final assignments = <String, PinnedAssignment>{};
   final occurrences = <String, DerivedOccurrence>{};
+  final supplementalSources = <String, SupplementalRelationshipSource>{};
 
   @override
   ContentPublisher? publisher(String id) => publishers[id];
@@ -157,6 +159,19 @@ class InMemoryContentGraphStore implements ContentGraphStore {
       occurrences[occurrence.id] = occurrence;
 
   @override
+  void putSupplementalSource(
+    String programmeVersionId,
+    SupplementalRelationshipSource source,
+  ) {
+    supplementalSources[programmeVersionId] = source;
+  }
+
+  @override
+  SupplementalRelationshipSource? supplementalSource(String programmeVersionId) {
+    return supplementalSources[programmeVersionId];
+  }
+
+  @override
   void removeDraftVersion(String programmeVersionId) {
     final version = programmeVersions[programmeVersionId];
     if (version == null) return;
@@ -174,10 +189,15 @@ class InMemoryContentGraphStore implements ContentGraphStore {
     }
     placements.removeWhere((_, p) => p.programmeVersionId == programmeVersionId);
     programmeVersions.remove(programmeVersionId);
+    supplementalSources.remove(programmeVersionId);
   }
 
   bool _publishedContentChanged(ProgrammeVersion before, ProgrammeVersion after) {
     return before.canonicalHash != after.canonicalHash ||
+        before.compositeContentIdentity != after.compositeContentIdentity ||
+        before.sourcePackageHash != after.sourcePackageHash ||
+        before.supplementalRelationshipHash !=
+            after.supplementalRelationshipHash ||
         before.versionNumber != after.versionNumber ||
         before.programmeId != after.programmeId;
   }

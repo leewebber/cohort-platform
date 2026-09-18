@@ -149,6 +149,12 @@ class ProgrammeVersion {
     this.catalogueDefault = false,
     this.changeSummary,
     this.sourcePackageRef,
+    this.sourcePackageHash,
+    this.supplementalRelationshipHash,
+    this.compositeContentIdentity,
+    this.sourcePackageSchemaVersion = 'plan-package/v1',
+    this.graphFormatVersion = 1,
+    this.compilerVersion = 'content-graph-compiler/v1',
   });
 
   final String id;
@@ -163,6 +169,12 @@ class ProgrammeVersion {
   final bool catalogueDefault;
   final String? changeSummary;
   final String? sourcePackageRef;
+  final String? sourcePackageHash;
+  final String? supplementalRelationshipHash;
+  final String? compositeContentIdentity;
+  final String sourcePackageSchemaVersion;
+  final int graphFormatVersion;
+  final String compilerVersion;
 
   ProgrammeVersion copyWith({
     ContentLifecycle? lifecycle,
@@ -170,6 +182,9 @@ class ProgrammeVersion {
     bool? catalogueDefault,
     String? changeSummary,
     String? supersedesVersionId,
+    String? sourcePackageHash,
+    String? supplementalRelationshipHash,
+    String? compositeContentIdentity,
   }) {
     return ProgrammeVersion(
       id: id,
@@ -184,6 +199,14 @@ class ProgrammeVersion {
       catalogueDefault: catalogueDefault ?? this.catalogueDefault,
       changeSummary: changeSummary ?? this.changeSummary,
       sourcePackageRef: sourcePackageRef,
+      sourcePackageHash: sourcePackageHash ?? this.sourcePackageHash,
+      supplementalRelationshipHash:
+          supplementalRelationshipHash ?? this.supplementalRelationshipHash,
+      compositeContentIdentity:
+          compositeContentIdentity ?? this.compositeContentIdentity,
+      sourcePackageSchemaVersion: sourcePackageSchemaVersion,
+      graphFormatVersion: graphFormatVersion,
+      compilerVersion: compilerVersion,
     );
   }
 }

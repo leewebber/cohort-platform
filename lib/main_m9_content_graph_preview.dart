@@ -1,6 +1,9 @@
 import 'package:cohort_platform/app/theme.dart';
+import 'package:cohort_platform/domain/content_graph/apollo_local_graph_binder.dart';
+import 'package:cohort_platform/domain/content_graph/content_graph_manifest.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_models.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_service.dart';
+import 'package:cohort_platform/domain/content_graph/content_graph_vocabulary.dart';
 import 'package:cohort_platform/domain/content_graph/in_memory_content_graph_store.dart';
 import 'package:cohort_platform/domain/content_graph/m9_content_graph_fixtures.dart';
 import 'package:flutter/material.dart';
@@ -55,6 +58,10 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
     final assignment = service.resolveAssignment(
       M9ContentGraphFixtures.athleteAssignmentId,
     );
+    final compiled = service.compileDraft(v1.id);
+    final activeCount = service
+        .usedByExercise(M9ContentGraphFixtures.exerciseSquat)
+        .activeAssignmentCount;
     return Scaffold(
       appBar: AppBar(title: const Text('M9 Content Graph (fixtures)')),
       body: ListView(
@@ -68,7 +75,27 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
           Text('Programme: ${M9ContentGraphFixtures.programmeId}'),
           Text('v1: ${v1.id} ${v1.lifecycle.name} default=${v1.catalogueDefault}'),
           Text(
-            'Pinned athlete: ${assignment.athleteId} → ${assignment.programmeVersionId}',
+            'Existing athlete pinned to v1: ${assignment.athleteId} → ${assignment.programmeVersionId}',
+          ),
+          Text('Source package hash: ${compiled.manifest.sourceCanonicalContentSha256}'),
+          Text(
+            'Supplemental relationship-source hash: ${compiled.manifest.supplementalRelationshipSha256}',
+          ),
+          Text('Graph hash: ${compiled.manifest.graphCanonicalSha256}'),
+          Text(
+            'Composite content identity: ${compiled.manifest.compositeContentIdentity}',
+          ),
+          Text(
+            'Active assignment count (operational, not in graph hash): $activeCount',
+          ),
+          const Text(
+            'Apollo v1 compatibility bridge: Plan Package v1 hash '
+            '${ApolloLocalGraphBinder.expectedPlanPackageHash} is retained; '
+            'exercise edges require separately versioned Apollo SQL relationships.',
+          ),
+          const Text(
+            'PROPOSAL ONLY — Plan Package v2: embed canonical EX-* IDs, '
+            'session-template-version lineage, and graph references. No v1 rewrite.',
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -99,6 +126,26 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
                 onPressed: _denyExternal,
                 child: const Text('Deny cross-namespace'),
               ),
+              OutlinedButton(
+                onPressed: _alignedPackageGraph,
+                child: const Text('Valid aligned package + graph'),
+              ),
+              OutlinedButton(
+                onPressed: _rejectStaleGraph,
+                child: const Text('Stale graph rejection'),
+              ),
+              OutlinedButton(
+                onPressed: _rejectAlteredPackage,
+                child: const Text('Altered package rejection'),
+              ),
+              OutlinedButton(
+                onPressed: _rejectUnresolvedExercise,
+                child: const Text('Unresolved exercise rejection'),
+              ),
+              OutlinedButton(
+                onPressed: _assignmentCountWithoutHashChange,
+                child: const Text('Assignment count vs graph hash'),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -120,6 +167,7 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
         sessionTemplateVersionId: M9ContentGraphFixtures.sessionV2Id,
       ),
     );
+    service.rebindSupplementalFromGraph(draft.id);
     final diff = service.diffAgainstPrevious(draft.id);
     final published = service.publish(
       actor: M9ContentGraphFixtures.firstParty,
@@ -188,5 +236,79 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
     } on ContentGraphException catch (error) {
       _record('cross-namespace ${error.code.name}');
     }
+  }
+
+  void _alignedPackageGraph() {
+    final compiled = service.compileDraft(M9ContentGraphFixtures.v1Id);
+    service.validateManifest(
+      compiled.manifest,
+      programmeVersionId: M9ContentGraphFixtures.v1Id,
+    );
+    _record(
+      'aligned package ${compiled.manifest.sourceCanonicalContentSha256} '
+      'graph ${compiled.manifest.graphCanonicalSha256}',
+    );
+  }
+
+  void _rejectStaleGraph() {
+    try {
+      final compiled = service.compileDraft(M9ContentGraphFixtures.v1Id);
+      service.validateManifest(
+        compiled.manifest.copyWith(graphCanonicalSha256: 'stale-graph'),
+        programmeVersionId: M9ContentGraphFixtures.v1Id,
+      );
+      _record('unexpected stale graph accepted');
+    } on ContentGraphException catch (error) {
+      _record('stale graph ${error.code.name}');
+    }
+  }
+
+  void _rejectAlteredPackage() {
+    try {
+      final compiled = service.compileDraft(M9ContentGraphFixtures.v1Id);
+      service.validateManifest(
+        compiled.manifest.copyWith(
+          sourceCanonicalContentSha256: 'altered-package',
+        ),
+        programmeVersionId: M9ContentGraphFixtures.v1Id,
+      );
+      _record('unexpected altered package accepted');
+    } on ContentGraphException catch (error) {
+      _record('altered package ${error.code.name}');
+    }
+  }
+
+  void _rejectUnresolvedExercise() {
+    try {
+      service.assertDerivedUsedByEdge(
+        const ContentGraphEdge(
+          type: ContentRelationshipType.exerciseUsedByBlock,
+          fromType: ContentNodeType.exercise,
+          fromId: 'EX-999',
+          toType: ContentNodeType.authoredBlock,
+          toId: 'block.missing',
+        ),
+        M9ContentGraphFixtures.v1Id,
+      );
+      _record('unexpected unresolved exercise accepted');
+    } on ContentGraphException catch (error) {
+      _record('unresolved exercise ${error.code.name}');
+    }
+  }
+
+  void _assignmentCountWithoutHashChange() {
+    final before = service.compileDraft(M9ContentGraphFixtures.v1Id).sha256;
+    service.enrol(
+      assignmentId: 'assignment.preview-count',
+      athleteId: 'athlete.preview-count',
+      programmeId: M9ContentGraphFixtures.programmeId,
+    );
+    final after = service.compileDraft(M9ContentGraphFixtures.v1Id).sha256;
+    final count = service
+        .usedByExercise(M9ContentGraphFixtures.exerciseSquat)
+        .activeAssignmentCount;
+    _record(
+      'assignment count $count graph hash unchanged=${before == after}',
+    );
   }
 }

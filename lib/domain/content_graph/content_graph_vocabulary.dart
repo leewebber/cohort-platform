@@ -13,6 +13,7 @@ enum ContentNodeType {
   programmeVersion,
   programmePlacement,
   authoredBlock,
+  pinnedAssignment,
   equipmentRequirement,
   capabilityTag,
   publisher,
@@ -59,6 +60,12 @@ enum ContentGraphFailureCode {
   assignmentPinned,
   notFound,
   validationFailed,
+  staleGraph,
+  sourceHashMismatch,
+  missingSourceHash,
+  unsupportedCompiler,
+  compositeMismatch,
+  supplementalMismatch,
 }
 
 enum ContentUsageScope {

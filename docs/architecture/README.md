@@ -26,6 +26,8 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Content_Relationship_Type_Registry_v1.md](./Content_Relationship_Type_Registry_v1.md) | M9 relationship-type registry |
 | [M9_Version_Lifecycle_v1.md](./M9_Version_Lifecycle_v1.md) | M9 draft/publish/retire |
 | [M9_Compiler_Format_Decision_v1.md](./M9_Compiler_Format_Decision_v1.md) | Plan Package v1 frozen; graph manifest v1 |
+| [M9_Manifest_Authority_and_Binding_v1.md](./M9_Manifest_Authority_and_Binding_v1.md) | Graph manifest is derived; source/supplemental/composite hashes |
+| [M9_Plan_Package_v2_Proposal_v1.md](./M9_Plan_Package_v2_Proposal_v1.md) | Proposal only — future package exercise IDs |
 | [M9_Assignment_Pinning_Proof_v1.md](./M9_Assignment_Pinning_Proof_v1.md) | Enrolment pin ≠ latest |
 | [M9_Exercise_Identity_Review_v1.md](./M9_Exercise_Identity_Review_v1.md) | `EX-*` review, no hosted mutation |
 | [M9_Future_Plan_Builder_Boundary_v1.md](./M9_Future_Plan_Builder_Boundary_v1.md) | Future assembly boundary |

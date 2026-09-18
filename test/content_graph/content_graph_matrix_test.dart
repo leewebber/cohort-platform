@@ -223,6 +223,7 @@ void main() {
           slotOrder: 1,
         ),
       );
+      service.rebindSupplementalFromGraph(draft.id);
       final v2 = service.publish(
         actor: M9ContentGraphFixtures.firstParty,
         programmeVersionId: draft.id,
@@ -266,6 +267,7 @@ void main() {
           slotOrder: 1,
         ),
       );
+      service.rebindSupplementalFromGraph(draft.id);
       service.publish(
         actor: M9ContentGraphFixtures.firstParty,
         programmeVersionId: draft.id,

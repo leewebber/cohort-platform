@@ -15,3 +15,8 @@ M9 Content Graph manifest format v1 is a **parallel** canonical JSON:
 Unresolved or ambiguous references fail publication. Identical structural hashes reject redundant publish.
 
 If Plan Package later gains exercise identities, that is **schema v2** with an adapter — never a silent reinterpretation of v1 hashes.
+
+Binding, composite identity, and the Apollo v1 SQL compatibility bridge:
+[`M9_Manifest_Authority_and_Binding_v1.md`](./M9_Manifest_Authority_and_Binding_v1.md).
+
+v2 proposal only: [`M9_Plan_Package_v2_Proposal_v1.md`](./M9_Plan_Package_v2_Proposal_v1.md).

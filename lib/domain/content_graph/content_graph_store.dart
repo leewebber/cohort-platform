@@ -1,3 +1,4 @@
+import 'content_graph_manifest.dart';
 import 'content_graph_models.dart';
 
 abstract class ContentGraphStore {
@@ -28,5 +29,10 @@ abstract class ContentGraphStore {
   void putPlacement(ProgrammePlacement placement);
   void putAssignment(PinnedAssignment assignment);
   void putOccurrence(DerivedOccurrence occurrence);
+  void putSupplementalSource(
+    String programmeVersionId,
+    SupplementalRelationshipSource source,
+  );
+  SupplementalRelationshipSource? supplementalSource(String programmeVersionId);
   void removeDraftVersion(String programmeVersionId);
 }

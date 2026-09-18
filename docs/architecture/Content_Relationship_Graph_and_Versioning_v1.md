@@ -122,11 +122,10 @@ Classes: breaking execution, material training, metadata/presentation.
 ## 14. Package integrity / compiler
 
 **Decision:** Plan Package schema **v1 is frozen**. M9 adds Content Graph
-manifest format **v1** (SHA-256 over structural canonical JSON, no timestamps
-or row UUIDs in the hash). Apollo’s published Plan Package hash must not
-change. Old readers keep working. A future Plan Package v2 that includes
-exercise identities requires an explicit format version, not a silent hash
-reinterpretation.
+manifest format **v1** as a **derived** integrity/read-model. It must be bound
+to the exact source package hash plus, for v1 content, a separately versioned
+supplemental relationship source. Apollo’s published Plan Package hash must not
+change. See [`M9_Manifest_Authority_and_Binding_v1.md`](./M9_Manifest_Authority_and_Binding_v1.md).
 
 ## 15. Existing-content migration
 
