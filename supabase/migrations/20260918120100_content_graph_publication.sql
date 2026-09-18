@@ -122,6 +122,22 @@ BEGIN
     FROM public.content_publishers
     WHERE namespace = 'cohort_global' AND lifecycle = 'active'
     LIMIT 1;
+    IF v_publisher_id IS NULL THEN
+      RETURN jsonb_build_object(
+        'status', 'unauthorised',
+        'code', 'missing_publisher'
+      );
+    END IF;
+  ELSIF NOT EXISTS (
+    SELECT 1
+    FROM public.content_publishers p
+    WHERE p.id = v_publisher_id
+      AND p.lifecycle = 'active'
+  ) THEN
+    RETURN jsonb_build_object(
+      'status', 'unauthorised',
+      'code', 'missing_publisher'
+    );
   END IF;
 
   IF NOT public.content_graph_publisher_may_operate(v_publisher_id) THEN

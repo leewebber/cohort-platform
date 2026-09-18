@@ -23,18 +23,7 @@ CREATE TABLE IF NOT EXISTS public.content_publishers (
 );
 
 COMMENT ON TABLE public.content_publishers IS
-  'M9 publisher/namespace registry. namespace is identity and is never reused after retirement. display_name is metadata only.';
-
-INSERT INTO public.content_publishers (
-  id, namespace, display_name, first_party, lifecycle
-) VALUES (
-  '00000000-0000-4000-8000-00000000c001',
-  'cohort_global',
-  'Cohort',
-  TRUE,
-  'active'
-)
-ON CONFLICT (namespace) DO NOTHING;
+  'M9 publisher/namespace registry. namespace is identity and is never reused after retirement. display_name is metadata only. First-party cohort_global is not seeded by this migration; use the separately authorised manual bootstrap.';
 
 CREATE TABLE IF NOT EXISTS public.content_publisher_principals (
   publisher_id  UUID NOT NULL

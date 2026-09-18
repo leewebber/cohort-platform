@@ -24,6 +24,8 @@ void main() {
     expect(core, contains('CREATE TABLE IF NOT EXISTS public.content_publishers'));
     expect(core, contains('CREATE TABLE IF NOT EXISTS public.content_graph_manifests'));
     expect(core, contains('content_graph_prevent_assignment_repin'));
+    expect(core, isNot(contains('INSERT INTO public.content_publishers')));
+    expect(core.toLowerCase(), isNot(contains("'cohort_global'")));
     final publish = File(files[1]).readAsStringSync();
     expect(publish, contains('publish_content_graph_manifest'));
     expect(publish, contains("'published'"));
@@ -36,5 +38,41 @@ void main() {
     final rls = File(files[3]).readAsStringSync();
     expect(rls, contains('content_graph_read'));
     expect(rls, contains('ENABLE ROW LEVEL SECURITY'));
+    expect(rls, contains('content_graph_actor_may_read_manifest'));
+    expect(
+      rls,
+      isNot(contains('OR public.cohort_auth_is_coach()')),
+    );
+  });
+
+  test('manual publisher bootstrap is not part of the migration chain', () {
+    final migrations = Directory('supabase/migrations')
+        .listSync()
+        .whereType<File>()
+        .map((file) => file.uri.pathSegments.last)
+        .toList();
+    expect(
+      migrations.any((name) => name.contains('bootstrap_cohort_global')),
+      isFalse,
+    );
+    final bootstrap = File(
+      'supabase/manual/content_graph_bootstrap_cohort_global.sql',
+    );
+    expect(bootstrap.existsSync(), isTrue);
+    final sql = bootstrap.readAsStringSync();
+    expect(sql, contains('content_graph_bootstrap_cohort_global'));
+    expect(sql, contains("'created'"));
+    expect(sql, contains("'already_exists'"));
+    expect(sql, contains("'conflict'"));
+    expect(sql, contains('missing_principal'));
+    expect(sql, isNot(contains('otnhhdxstdnwccehacku')));
+    expect(sql, isNot(contains('b5fc87e3')));
+    expect(sql, contains('-- SELECT public.content_graph_bootstrap_cohort_global'));
+    expect(
+      sql,
+      isNot(contains('\nSELECT public.content_graph_bootstrap_cohort_global')),
+    );
+    final publish = File(files[1]).readAsStringSync();
+    expect(publish, contains("'missing_publisher'"));
   });
 }

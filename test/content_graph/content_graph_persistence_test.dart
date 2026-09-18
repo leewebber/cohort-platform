@@ -192,6 +192,14 @@ void main() {
     expect(AthleteRuntimeCapabilities.unavailable.contentGraphRead, isFalse);
     expect(AthleteRuntimeCapabilities.unavailable.contentGraphPublish, isFalse);
     expect(AthleteRuntimeCapabilities.unavailable.contentGraphImpact, isFalse);
+    expect(AthleteRuntimeCapabilities.unavailable.schemaVersion, 0);
+    const schemaOnly = AthleteRuntimeCapabilities(
+      schemaVersion: 2,
+      contentGraphRead: true,
+    );
+    expect(schemaOnly.contentGraphPublish, isFalse);
+    expect(schemaOnly.contentGraphImpact, isFalse);
+    expect(schemaOnly.contentGraphRead, isTrue);
   });
 
   test('display names are not relationship keys', () {
