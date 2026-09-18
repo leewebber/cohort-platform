@@ -20,6 +20,18 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
 | [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
 | [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence |
+| [Content_Relationship_Graph_and_Versioning_v1.md](./Content_Relationship_Graph_and_Versioning_v1.md) | **M9 binding** — content graph, versioning, pinning |
+| [M9_Existing_Content_System_Audit_v1.md](./M9_Existing_Content_System_Audit_v1.md) | M9 current-model audit |
+| [M9_Schema_Proposal_v1.md](./M9_Schema_Proposal_v1.md) | M9 additive schema proposal (not applied) |
+| [Content_Relationship_Type_Registry_v1.md](./Content_Relationship_Type_Registry_v1.md) | M9 relationship-type registry |
+| [M9_Version_Lifecycle_v1.md](./M9_Version_Lifecycle_v1.md) | M9 draft/publish/retire |
+| [M9_Compiler_Format_Decision_v1.md](./M9_Compiler_Format_Decision_v1.md) | Plan Package v1 frozen; graph manifest v1 |
+| [M9_Assignment_Pinning_Proof_v1.md](./M9_Assignment_Pinning_Proof_v1.md) | Enrolment pin ≠ latest |
+| [M9_Exercise_Identity_Review_v1.md](./M9_Exercise_Identity_Review_v1.md) | `EX-*` review, no hosted mutation |
+| [M9_Future_Plan_Builder_Boundary_v1.md](./M9_Future_Plan_Builder_Boundary_v1.md) | Future assembly boundary |
+| [M9_External_Author_Boundary_v1.md](./M9_External_Author_Boundary_v1.md) | Future publisher namespaces |
+| [M9_Migration_Backfill_Plan_v1.md](./M9_Migration_Backfill_Plan_v1.md) | Hosted backfill after approval |
+| [../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_HANDOFF.md](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_HANDOFF.md) | M9 Sprint 1 handoff / pause |
 
 The historical Phase 3 index continues below.
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)

@@ -11,7 +11,8 @@ does not promote deferred work into the current dogfood baseline.
 
 1. **Phase 1 Integration Closeout** (this task; merge/push paused)
 2. **Progression Mechanics Validation**
-3. **M9 Content Relationship Graph and Versioning**
+3. **M9 Content Relationship Graph and Versioning** (Sprint 1 local
+   contract/services; hosted schema paused for founder approval)
 4. **Programme Catalogue and Enrolment** (productised; enrolment primitives
    already exist)
 5. **M10 Athlete/Coach Management and Isolation**
