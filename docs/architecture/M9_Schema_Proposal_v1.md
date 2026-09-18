@@ -1,6 +1,11 @@
-# M9 schema proposal (not applied)
+# M9 schema proposal (Sprint 2 local; not Field Manual)
 
-**Do not apply to Field Manual in Sprint 1.** Additive only, after founder approval.
+Sprint 2 implements the additive objects below in
+`supabase/migrations/20260918120*.sql`. **Do not apply to Field Manual until
+founder approval.**
+
+The `session_block_exercises.exercise_id → exercises_v2` FK is **not** added:
+unresolved name-only IDs must remain representable.
 
 ```mermaid
 erDiagram

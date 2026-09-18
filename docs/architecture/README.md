@@ -33,7 +33,9 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [M9_Future_Plan_Builder_Boundary_v1.md](./M9_Future_Plan_Builder_Boundary_v1.md) | Future assembly boundary |
 | [M9_External_Author_Boundary_v1.md](./M9_External_Author_Boundary_v1.md) | Future publisher namespaces |
 | [M9_Migration_Backfill_Plan_v1.md](./M9_Migration_Backfill_Plan_v1.md) | Hosted backfill after approval |
-| [../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_HANDOFF.md](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_HANDOFF.md) | M9 Sprint 1 handoff / pause |
+| [M9_Content_Graph_Persistence_v1.md](./M9_Content_Graph_Persistence_v1.md) | Sprint 2 local persistence / RLS / publication |
+| [M9_Legacy_Reconstruction_Runbook_v1.md](./M9_Legacy_Reconstruction_Runbook_v1.md) | Local reconstruction; not hosted |
+| [../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md](../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md) | Sprint 2 pause |
 
 The historical Phase 3 index continues below.
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)

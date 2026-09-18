@@ -2,6 +2,8 @@ import 'package:cohort_platform/app/theme.dart';
 import 'package:cohort_platform/domain/content_graph/apollo_local_graph_binder.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_manifest.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_models.dart';
+import 'package:cohort_platform/domain/content_graph/content_graph_persistence.dart';
+import 'package:cohort_platform/domain/content_graph/content_graph_reconstruction.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_service.dart';
 import 'package:cohort_platform/domain/content_graph/content_graph_vocabulary.dart';
 import 'package:cohort_platform/domain/content_graph/in_memory_content_graph_store.dart';
@@ -38,6 +40,8 @@ class M9ContentGraphExplorer extends StatefulWidget {
 class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
   late final InMemoryContentGraphStore store;
   late final ContentGraphService service;
+  late final ContentGraphPersistenceService persistence;
+  final reconstruction = ContentGraphReconstructionService();
   final log = <String>[];
 
   @override
@@ -45,6 +49,10 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
     super.initState();
     store = InMemoryContentGraphStore();
     service = M9ContentGraphFixtures.seed(store: store);
+    persistence = ContentGraphPersistenceService(
+      graph: service,
+      repository: InMemoryContentGraphManifestRepository(),
+    );
     log.add('v1 published and existing athlete pinned');
   }
 
@@ -94,8 +102,8 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
             'exercise edges require separately versioned Apollo SQL relationships.',
           ),
           const Text(
-            'PROPOSAL ONLY — Plan Package v2: embed canonical EX-* IDs, '
-            'session-template-version lineage, and graph references. No v1 rewrite.',
+            'INTERNAL ARCHITECTURE PREVIEW — Sprint 2 persistence contract. '
+            'Fixtures only. Not Field Manual. Plan Package v2 is proposal-only.',
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -145,6 +153,14 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
               OutlinedButton(
                 onPressed: _assignmentCountWithoutHashChange,
                 child: const Text('Assignment count vs graph hash'),
+              ),
+              OutlinedButton(
+                onPressed: _persistManifest,
+                child: const Text('Persist published manifest'),
+              ),
+              OutlinedButton(
+                onPressed: _legacyDryRun,
+                child: const Text('Legacy dry-run'),
               ),
             ],
           ),
@@ -309,6 +325,70 @@ class _M9ContentGraphExplorerState extends State<M9ContentGraphExplorer> {
         .activeAssignmentCount;
     _record(
       'assignment count $count graph hash unchanged=${before == after}',
+    );
+  }
+
+  Future<void> _persistManifest() async {
+    final result = await persistence.persistPublished(
+      programmeVersionId: M9ContentGraphFixtures.v1Id,
+    );
+    final loaded = await persistence.repository.loadByProgrammeVersion(
+      M9ContentGraphFixtures.v1Id,
+    );
+    _record(
+      'persist ${result.status.name} composite=${loaded?.compositeIdentity}',
+    );
+  }
+
+  void _legacyDryRun() {
+    final dry = reconstruction.run(
+      jobKey: 'preview-legacy',
+      sourceCanonical: 'fixture-source',
+      exercises: const [
+        ContentExercise(id: 'EX-136', displayName: 'Back Squat'),
+        ContentExercise(
+          id: 'LEGACY-NAME-ONLY',
+          displayName: 'Unknown',
+          unresolvedLegacy: true,
+        ),
+      ],
+      supplementalExerciseIds: const ['EX-136'],
+      authoredExerciseIds: const ['EX-136'],
+    );
+    final apply = reconstruction.run(
+      jobKey: 'preview-legacy',
+      sourceCanonical: 'fixture-source',
+      exercises: const [
+        ContentExercise(id: 'EX-136', displayName: 'Back Squat'),
+        ContentExercise(
+          id: 'LEGACY-NAME-ONLY',
+          displayName: 'Unknown',
+          unresolvedLegacy: true,
+        ),
+      ],
+      supplementalExerciseIds: const ['EX-136'],
+      authoredExerciseIds: const ['EX-136'],
+      dryRun: false,
+      apply: true,
+    );
+    final second = reconstruction.run(
+      jobKey: 'preview-legacy',
+      sourceCanonical: 'fixture-source',
+      exercises: const [
+        ContentExercise(id: 'EX-136', displayName: 'Back Squat'),
+        ContentExercise(
+          id: 'LEGACY-NAME-ONLY',
+          displayName: 'Unknown',
+          unresolvedLegacy: true,
+        ),
+      ],
+      supplementalExerciseIds: const ['EX-136'],
+      authoredExerciseIds: const ['EX-136'],
+      dryRun: false,
+      apply: true,
+    );
+    _record(
+      'legacy dry unresolved=${dry.unresolvedCount} apply rows=${apply.rowsWritten} second=${second.rowsWritten}',
     );
   }
 }

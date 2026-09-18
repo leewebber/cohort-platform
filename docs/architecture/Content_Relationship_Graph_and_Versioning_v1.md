@@ -1,6 +1,7 @@
 # Content Relationship Graph and Versioning v1
 
-**Status:** Binding for M9 Sprint 1 (local domain + review; hosted schema not applied)  
+**Status:** Binding. Sprint 1 local domain approved. Sprint 2 local persistence
+implemented, **not applied to Field Manual**.
 **Baseline:** `origin/main` `c50530db195bf4ed57393ebb66e0e404bfacec26`  
 **Does not rewrite:** [`Canonical_Programme_Architecture_Freeze_v1.md`](./Canonical_Programme_Architecture_Freeze_v1.md), Plan Package v1, Phase 1 athlete runtime.
 
