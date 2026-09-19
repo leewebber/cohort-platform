@@ -11,6 +11,7 @@ Ports below are **local conventions**, not product behaviour.
 | `lib/main_week2_previous_strength_preview.dart` | Week 2 previous-performance states | Local W1/W2 fixtures | Hotfix QA | No |
 | `lib/main_progression_mechanics_preview.dart` | Progression Mechanics v1 outcomes | Local comparison fixtures | Sprint 1 QA | No |
 | `lib/main_m9_content_graph_preview.dart` | M9 graph explorer | Local fixtures (port **4187**); Sprint 2 persistence preview | Architecture QA | No |
+| `lib/main_m10_isolation_preview.dart` | M10 publisher-athlete isolation | Local fixtures (port **4190**) | Architecture QA | No |
 | `lib/main_emom_result_preview.dart` | EMOM result surface | Local EMOM fixtures (port **4183**) | Yes for isolated QA | No |
 | `lib/main_s13_staging_verify.dart` | Staging Sprint 1.3 | Hosted staging only | Staging-gated | No |
 | `lib/main_s14a_staging_verify.dart` | Staging 1.4A | Hosted staging only | Staging-gated | No |
