@@ -8,14 +8,18 @@
 ```text
 M10_STARTED=true
 M10_SPRINT_1_LOCAL=true
-M10_SPRINT_2_STARTED=false
+M10_SPRINT_2_STARTED=true
 HOSTED_MUTATIONS=0
 PHONE_BUILD_REQUIRED=false
 PLAN_PACKAGE_V1_CHANGED=false
 ```
 
+> **Sprint 2 local work is recorded in**
+> [`M10_SPRINT_2_HANDOFF.md`](./M10_SPRINT_2_HANDOFF.md). This file remains
+> the Sprint 1 pause record.
+
 **Do not:** push, apply hosted migrations, mutate Field Manual, publish
-manifests, repin assignments, rebuild the phone, or start Sprint 2.
+manifests, repin assignments, or rebuild the phone.
 
 Binding:
 [`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md).

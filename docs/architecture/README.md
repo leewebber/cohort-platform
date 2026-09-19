@@ -22,9 +22,10 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Phase_1_Test_Suite_Inventory_v1.md](./Phase_1_Test_Suite_Inventory_v1.md) | Tests by capability |
 | [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
 | [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
-| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 Sprint 1 local) |
-| [M10_Athlete_Coach_Management_and_Isolation_v1.md](./M10_Athlete_Coach_Management_and_Isolation_v1.md) | **M10 binding** — publisher-scoped athlete membership isolation |
-| [../checkpoints/M10_SPRINT_1_HANDOFF.md](../checkpoints/M10_SPRINT_1_HANDOFF.md) | M10 Sprint 1 local handoff (not hosted) |
+| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 Sprint 2 local) |
+| [M10_Athlete_Coach_Management_and_Isolation_v1.md](./M10_Athlete_Coach_Management_and_Isolation_v1.md) | **M10 binding** — consent membership + isolation |
+| [../checkpoints/M10_SPRINT_1_HANDOFF.md](../checkpoints/M10_SPRINT_1_HANDOFF.md) | Historical M10 Sprint 1 local handoff |
+| [../checkpoints/M10_SPRINT_2_HANDOFF.md](../checkpoints/M10_SPRINT_2_HANDOFF.md) | M10 Sprint 2 local persistence (not hosted) |
 | [Content_Relationship_Graph_and_Versioning_v1.md](./Content_Relationship_Graph_and_Versioning_v1.md) | **M9 binding** — content graph, versioning, pinning |
 | [M9_Existing_Content_System_Audit_v1.md](./M9_Existing_Content_System_Audit_v1.md) | M9 current-model audit |
 | [M9_Schema_Proposal_v1.md](./M9_Schema_Proposal_v1.md) | M9 additive schema proposal (not applied) |

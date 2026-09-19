@@ -51,3 +51,16 @@ exists. Older app builds that still call `completeSession()` stay compatible.
 Local gate coverage: Gates C–AU plus **AV**, **AW**, and **AX** (content-graph
 persistence). Capability reporting remains `cohort_athlete_runtime_capabilities`
 (schema_version 2 keys are additive).
+
+## M10 Sprint 2 (local only, not Field Manual)
+
+| File | Purpose | Kind | Row writes at migrate? | Hosted (recorded) |
+|------|---------|------|------------------------|-------------------|
+| `20260919120000_publisher_athlete_membership_core.sql` | Invitations, memberships, append-only events | Additive | **No** | No |
+| `20260919120100_publisher_athlete_membership_rpcs.sql` | Consent RPCs | Functions | No | No |
+| `20260919120200_publisher_athlete_roster_projection.sql` | Roster/inbox/audit reads | Views + functions | No | No |
+| `20260919120300_publisher_athlete_membership_rls.sql` | Membership RLS | RLS | No | No |
+| `20260919120400_publisher_athlete_membership_capabilities.sql` | Capability schema_version 3 | Functions | No | No |
+
+Local gate coverage adds **AY** (publisher–athlete consent). Enrolment is never
+inferred into membership. Hosted apply is not authorised.
