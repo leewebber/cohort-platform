@@ -1,6 +1,6 @@
 # Delivery roadmap
 
-**Status:** Active sequence after M9 closeout
+**Status:** Active sequence after M9 closeout; M10 Sprint 1 local
 
 **Release path:** Founder testing → controlled coaching-style pilot → closed
 catalogue beta → public beta → launch
@@ -12,7 +12,9 @@ does not promote deferred work into the current dogfood baseline.
 Manual (Apollo v2 and Spartan v3 manifests published). Binding:
 [`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 Founder phone **build 7** remains current; M9 did not require a phone release.
-**M10 has not started.**
+**M10 Sprint 1 is local only** (publisher-scoped membership isolation). Binding:
+[`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md).
+Hosted apply and Sprint 2 have not started.
 
 ## Next milestones
 
@@ -22,7 +24,7 @@ Founder phone **build 7** remains current; M9 did not require a phone release.
    Apollo v2 + Spartan v3 published)
 4. **Programme Catalogue and Enrolment** (productised; enrolment primitives
    already exist)
-5. **M10 Athlete/Coach Management and Isolation** (next numerical milestone)
+5. **M10 Athlete/Coach Management and Isolation** (Sprint 1 local; not hosted)
 6. **Adaptation and Integrity**
 7. **Closed Beta Infrastructure**
 8. **Commercial Entitlements / Payments**
