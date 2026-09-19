@@ -20,7 +20,15 @@ void main() {
       expect(files, equals(List<String>.from(files)..sort()));
       expect(
         files.last,
-        '20260918120400_content_graph_reconstruction.sql',
+        '20260919120400_publisher_athlete_membership_capabilities.sql',
+      );
+      expect(
+        files,
+        contains('20260918120400_content_graph_reconstruction.sql'),
+      );
+      expect(
+        files,
+        contains('20260919120000_publisher_athlete_membership_core.sql'),
       );
       expect(
         files,

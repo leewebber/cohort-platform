@@ -99,7 +99,9 @@ BEGIN
   PERFORM set_config('role', 'postgres', true);
   PERFORM set_config('request.jwt.claim.sub', '', true);
   PERFORM set_config('request.jwt.claim.role', '', true);
-  PERFORM sprint12_assert_eq('AX', 'schema_only_caps_version', '2', v_caps->>'schema_version', v_caps::TEXT);
+  IF (v_caps->>'schema_version')::int < 2 THEN
+    RAISE EXCEPTION 'AX schema_only_caps_version below 2: %', v_caps;
+  END IF;
   PERFORM sprint12_assert_eq('AX', 'schema_only_caps_read', 'true', v_caps->>'content_graph_read', NULL);
   PERFORM sprint12_assert_eq('AX', 'schema_only_caps_publish', 'false', v_caps->>'content_graph_publish', NULL);
   PERFORM sprint12_assert_eq('AX', 'schema_only_caps_impact', 'false', v_caps->>'content_graph_impact', NULL);
@@ -593,6 +595,7 @@ SELECT set_config('request.jwt.claim.role', 'authenticated', true);
 DO $$
 DECLARE
   v_count INT;
+  v_caps JSONB;
   v_private UUID := 'd0000001-0000-4000-8000-0000000000e1';
 BEGIN
   SELECT count(*) INTO v_count
@@ -600,6 +603,13 @@ BEGIN
   WHERE programme_version_id = v_private;
   IF v_count <> 0 THEN
     RAISE EXCEPTION 'AX unrelated coach read private graph';
+  END IF;
+  v_caps := public.cohort_athlete_runtime_capabilities();
+  IF COALESCE(v_caps->>'content_graph_publish', 'false') = 'true' THEN
+    RAISE EXCEPTION 'AX coach-only publish leaked: %', v_caps;
+  END IF;
+  IF COALESCE(v_caps->>'publisher_athlete_membership_invite', 'false') = 'true' THEN
+    RAISE EXCEPTION 'AX coach-only membership invite leaked: %', v_caps;
   END IF;
 END $$;
 ROLLBACK;
@@ -651,12 +661,21 @@ BEGIN
     RAISE EXCEPTION 'AX first-party owner impact on other namespace: %', v_res;
   END IF;
   v_caps := public.cohort_athlete_runtime_capabilities();
-  IF v_caps->>'status' IS DISTINCT FROM 'authorization_failure' THEN
-    NULL; -- owner is coach, not athlete
+  IF v_caps->>'content_graph_read' IS DISTINCT FROM 'true' THEN
+    RAISE EXCEPTION 'AX first-party owner missing graph read: %', v_caps;
   END IF;
-  IF COALESCE(v_caps->>'content_graph_publish', 'false') = 'true'
-     AND v_caps->>'status' = 'ok' THEN
-    RAISE EXCEPTION 'AX non-athlete should not get athlete ok publish';
+  -- M10 schema_version 3 reports publisher-principal authority even when the
+  -- actor is not an athlete. v2 treated the probe as athlete-only.
+  IF (v_caps->>'schema_version')::int >= 3 THEN
+    IF v_caps->>'status' IS DISTINCT FROM 'ok' THEN
+      RAISE EXCEPTION 'AX first-party owner capability status: %', v_caps;
+    END IF;
+    IF v_caps->>'content_graph_publish' IS DISTINCT FROM 'true' THEN
+      RAISE EXCEPTION 'AX first-party owner missing publish capability: %', v_caps;
+    END IF;
+    IF v_caps->>'publisher_athlete_membership_invite' IS DISTINCT FROM 'true' THEN
+      RAISE EXCEPTION 'AX first-party owner missing membership invite: %', v_caps;
+    END IF;
   END IF;
   BEGIN
     INSERT INTO public.content_publisher_principals (
@@ -706,8 +725,8 @@ BEGIN
   IF v_caps->>'content_graph_publish' IS DISTINCT FROM 'false' THEN
     RAISE EXCEPTION 'AX athlete publish capability leaked: %', v_caps;
   END IF;
-  IF v_caps->>'schema_version' IS DISTINCT FROM '2' THEN
-    RAISE EXCEPTION 'AX schema_version not 2: %', v_caps;
+  IF (v_caps->>'schema_version')::int < 2 THEN
+    RAISE EXCEPTION 'AX schema_version below 2: %', v_caps;
   END IF;
   SELECT count(*) INTO v_count FROM public.content_graph_manifests;
   IF v_count < 1 THEN
