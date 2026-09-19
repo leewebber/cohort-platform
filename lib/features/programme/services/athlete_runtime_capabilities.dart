@@ -7,6 +7,9 @@ class AthleteRuntimeCapabilities {
     this.contentGraphRead = false,
     this.contentGraphPublish = false,
     this.contentGraphImpact = false,
+    this.publisherAthleteMembershipRead = false,
+    this.publisherAthleteMembershipInvite = false,
+    this.publisherAthleteMembershipManage = false,
     this.schemaVersion = 0,
   });
 
@@ -15,6 +18,9 @@ class AthleteRuntimeCapabilities {
   final bool contentGraphRead;
   final bool contentGraphPublish;
   final bool contentGraphImpact;
+  final bool publisherAthleteMembershipRead;
+  final bool publisherAthleteMembershipInvite;
+  final bool publisherAthleteMembershipManage;
   final int schemaVersion;
 
   static const unavailable = AthleteRuntimeCapabilities();
@@ -41,6 +47,12 @@ class SupabaseAthleteRuntimeCapabilityStore {
         contentGraphRead: map['content_graph_read'] == true,
         contentGraphPublish: map['content_graph_publish'] == true,
         contentGraphImpact: map['content_graph_impact'] == true,
+        publisherAthleteMembershipRead:
+            map['publisher_athlete_membership_read'] == true,
+        publisherAthleteMembershipInvite:
+            map['publisher_athlete_membership_invite'] == true,
+        publisherAthleteMembershipManage:
+            map['publisher_athlete_membership_manage'] == true,
         schemaVersion: int.tryParse(map['schema_version']?.toString() ?? '') ?? 0,
       );
     } catch (error) {
