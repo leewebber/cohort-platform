@@ -2,6 +2,7 @@
 
 > **Live delivery pointer:** Phase 1 Integration Closeout is
 > [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
+> **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 > This file remains the historical atomic-resume / Phase 3 checkpoint. It is
 > not the next-task authority.
 

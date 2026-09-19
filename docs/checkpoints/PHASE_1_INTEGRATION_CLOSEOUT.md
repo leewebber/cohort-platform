@@ -10,6 +10,11 @@ This is the current repository checkpoint for dogfood Phase 1. It supersedes
 historical atomic-resume / Phase 3 record and is not rewritten as if those
 tasks were the next work.
 
+**M9 is closed.** See
+[`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+The next numerical milestone is M10. Founder phone **build 7** is current; M9
+did not require a phone release.
+
 ```text
 PHASE_1_SPRINTS_1_1_TO_1_7_CLOSED=true
 PHASE_1_CLOSED_AT_DOCS_COMMIT=e034ea9

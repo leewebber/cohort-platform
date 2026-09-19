@@ -1,21 +1,28 @@
 # Delivery roadmap
 
-**Status:** Active sequence after Phase 1 Integration Closeout  
+**Status:** Active sequence after M9 closeout
+
 **Release path:** Founder testing → controlled coaching-style pilot → closed
 catalogue beta → public beta → launch
 
 Phase 1 Integration Closeout is documentation and lifecycle consolidation. It
 does not promote deferred work into the current dogfood baseline.
 
+**M9 Content Relationship Graph and Versioning is closed** on Cohort Field
+Manual (Apollo v2 and Spartan v3 manifests published). Binding:
+[`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+Founder phone **build 7** remains current; M9 did not require a phone release.
+**M10 has not started.**
+
 ## Next milestones
 
-1. **Phase 1 Integration Closeout** (this task; merge/push paused)
+1. **Phase 1 Integration Closeout** (complete)
 2. **Progression Mechanics Validation**
-3. **M9 Content Relationship Graph and Versioning** (Sprint 1 local
-   contract/services; hosted schema paused for founder approval)
+3. **M9 Content Relationship Graph and Versioning** (**closed**; Field Manual
+   Apollo v2 + Spartan v3 published)
 4. **Programme Catalogue and Enrolment** (productised; enrolment primitives
    already exist)
-5. **M10 Athlete/Coach Management and Isolation**
+5. **M10 Athlete/Coach Management and Isolation** (next numerical milestone)
 6. **Adaptation and Integrity**
 7. **Closed Beta Infrastructure**
 8. **Commercial Entitlements / Payments**

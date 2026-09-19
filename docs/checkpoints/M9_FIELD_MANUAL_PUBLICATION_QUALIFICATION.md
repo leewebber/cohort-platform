@@ -1,9 +1,13 @@
 # M9 Field Manual publication qualification (Phase 3A)
 
 **Recorded:** 2026-09-19
-**Status:** Phase 3A qualification complete. Qualified Apollo and Spartan v3
-publication artifacts are source-controlled. **No hosted publication.**
-**Paused for separate Phase 3B authorisation per programme.**
+
+> **Historical qualification.** Apollo v2 and Spartan v3 were later published
+> as separate authorised units. Authoritative closeout:
+> [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+
+**Status:** Historical Phase 3A qualification. Artifacts were source-controlled
+here. Hosted publication of those artifacts is recorded in the M9 closeout.
 
 ```text
 M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION_COMPLETE=true

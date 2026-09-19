@@ -148,9 +148,10 @@ record.
 
 The active product sequence is
 [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md):
-Phase 1 Integration Closeout → Progression Mechanics Validation → M9 →
-catalogue/enrolment → M10 isolation → adaptation integrity → closed beta →
-entitlements → wearables/media.
+Phase 1 Integration Closeout → Progression Mechanics Validation → M9
+(**closed**; [`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md))
+→ catalogue/enrolment → M10 isolation → adaptation integrity → closed beta →
+entitlements → wearables/media. Do not start M10 without separate authority.
 
 The Exercise Knowledge text-guidance application read projection is complete
 and founder-accepted at `9bc5cd7`. It is **not** the next product milestone.

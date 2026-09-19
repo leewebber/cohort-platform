@@ -5,6 +5,15 @@ These files are reviewable source-controlled payloads. **Committing an artifact
 does not authorize hosted publication.** Hosted `publish_content_graph_manifest`
 requires a separate founder decision per programme.
 
+Field Manual now holds the reviewed Apollo v2 and Spartan v3 manifests. See
+[`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../../../docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+
+Operational hosted comparison (external secrets; not CI):
+
+```bash
+M9_VERIFY_HOSTED=1 ./tool/content_graph/verify_hosted_published_artifacts.sh
+```
+
 ## Authoritative source inputs
 
 | Candidate | Inputs |

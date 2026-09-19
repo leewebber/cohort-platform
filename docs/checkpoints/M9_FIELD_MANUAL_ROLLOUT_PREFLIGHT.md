@@ -1,8 +1,13 @@
 # M9 Field Manual rollout preflight
 
 **Recorded:** 2026-09-18
-**Status:** Preflight corrected locally. **Paused for founder approval of hosted schema-only apply.**
-Hosted migrations, publisher bootstrap, reconstruction, and manifest publication were **not** executed.
+
+> **Historical preflight.** Schema apply, bootstrap, and publication later
+> completed. Authoritative closeout:
+> [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+
+**Status:** Historical Field Manual schema preflight (read-only at the time).
+Hosted migrations, publisher bootstrap, reconstruction, and manifest publication were **not** executed in this task.
 
 ```text
 M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT_COMPLETE=true

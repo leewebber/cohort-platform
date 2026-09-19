@@ -1,6 +1,12 @@
 # M9 Sprint 2 — content-graph persistence checkpoint
 
-**Status:** Locally implemented; **paused for founder architectural and migration approval**  
+> **Superseded.** M9 is closed. See
+> [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+> This file is the historical Sprint 2 pause record.
+
+**Status:** Historical Sprint 2 pause. Hosted schema and publication later
+completed under the M9 closeout.
+
 **Branch:** `feat/m9-content-graph-persistence-v1`  
 **Base:** `origin/main` `0d3bc7f0b040edbf7b92d9b0877113e92ed090d2`
 

@@ -1,6 +1,9 @@
 # Architecture documentation index
 
-**Phase 1 Integration Closeout is the live delivery pointer.** Start from
+**Phase 1 Integration Closeout remains the Phase 1 dogfood pointer.**
+**M9 Content Relationship Graph is closed.** Start M9 follow-on work from
+[`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+Phase 1 Integration Closeout remains
 [`../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md`](../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
 Phase 2 is CLOSED. Phase 3.1A–3.1F and the verified 132-row hosted catalogue
 are complete. The Exercise Knowledge text projection is complete and is not
@@ -19,7 +22,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Phase_1_Test_Suite_Inventory_v1.md](./Phase_1_Test_Suite_Inventory_v1.md) | Tests by capability |
 | [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
 | [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
-| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence |
+| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 next) |
 | [Content_Relationship_Graph_and_Versioning_v1.md](./Content_Relationship_Graph_and_Versioning_v1.md) | **M9 binding** — content graph, versioning, pinning |
 | [M9_Existing_Content_System_Audit_v1.md](./M9_Existing_Content_System_Audit_v1.md) | M9 current-model audit |
 | [M9_Schema_Proposal_v1.md](./M9_Schema_Proposal_v1.md) | M9 additive schema proposal (not applied) |
@@ -36,9 +39,10 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [M9_Content_Graph_Persistence_v1.md](./M9_Content_Graph_Persistence_v1.md) | Sprint 2 local persistence / RLS / publication |
 | [M9_Legacy_Reconstruction_Runbook_v1.md](./M9_Legacy_Reconstruction_Runbook_v1.md) | Local reconstruction; not hosted |
 | [M9_Publisher_Bootstrap_Runbook_v1.md](./M9_Publisher_Bootstrap_Runbook_v1.md) | Manual first-party `cohort_global` bootstrap (not a migration) |
-| [../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md](../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md) | Sprint 2 pause |
-| [../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md](../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md) | Field Manual graph rollout preflight (read-only) |
-| [../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md](../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md) | Field Manual Phase 3A qualification + source-controlled publication artifacts (not hosted-published) |
+| [../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md) | **M9 closeout** — local implementation + Field Manual Apollo v2 / Spartan v3 publication |
+| [../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md](../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md) | Historical Sprint 2 pause (superseded by closeout) |
+| [../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md](../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md) | Historical Field Manual schema preflight |
+| [../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md](../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md) | Historical Phase 3A qualification / artifact bind |
 
 The historical Phase 3 index continues below.
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)

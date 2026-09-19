@@ -1,11 +1,20 @@
 # M9 Content Relationship Graph — checkpoint / handoff
 
-**Status:** Sprint 1 locally complete after source-binding correction; **paused for founder architectural approval**
-**Branch:** `feat/m9-content-relationship-graph-v1`**Do not:** apply hosted migrations, push, start M10, install a phone build, mutate Field Manual, repin Apollo.
+> **Superseded.** M9 is closed. See
+> [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
+
+**Status:** Historical Sprint 1 handoff. Locally complete after source-binding
+correction; later hosted rollout is recorded in the closeout.
+
+**Branch:** `feat/m9-content-relationship-graph-v1`
+
+**Do not:** apply hosted migrations, push, start M10, install a phone build, mutate Field Manual, repin Apollo.
 
 ## Binding
 
-[`../architecture/Content_Relationship_Graph_and_Versioning_v1.md`](../architecture/Content_Relationship_Graph_and_Versioning_v1.md)[`../architecture/M9_Manifest_Authority_and_Binding_v1.md`](../architecture/M9_Manifest_Authority_and_Binding_v1.md)
+[`../architecture/Content_Relationship_Graph_and_Versioning_v1.md`](../architecture/Content_Relationship_Graph_and_Versioning_v1.md)
+
+[`../architecture/M9_Manifest_Authority_and_Binding_v1.md`](../architecture/M9_Manifest_Authority_and_Binding_v1.md)
 
 ## Local preview
 
