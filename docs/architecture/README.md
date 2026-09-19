@@ -38,6 +38,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [M9_Publisher_Bootstrap_Runbook_v1.md](./M9_Publisher_Bootstrap_Runbook_v1.md) | Manual first-party `cohort_global` bootstrap (not a migration) |
 | [../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md](../checkpoints/M9_CONTENT_GRAPH_PERSISTENCE_HANDOFF.md) | Sprint 2 pause |
 | [../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md](../checkpoints/M9_FIELD_MANUAL_ROLLOUT_PREFLIGHT.md) | Field Manual graph rollout preflight (read-only) |
+| [../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md](../checkpoints/M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION.md) | Field Manual Phase 3A publication qualification (read-only) |
 
 The historical Phase 3 index continues below.
 [`Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md`](./Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md)
