@@ -1,6 +1,8 @@
 import 'package:cohort_platform/app/theme.dart';
+import 'package:cohort_platform/domain/athlete_coach_isolation/consent_store.dart';
 import 'package:cohort_platform/domain/athlete_coach_isolation/isolation_models.dart';
 import 'package:cohort_platform/domain/athlete_coach_isolation/m10_isolation_fixtures.dart';
+import 'package:cohort_platform/domain/athlete_coach_isolation/publisher_athlete_consent_service.dart';
 import 'package:cohort_platform/domain/athlete_coach_isolation/publisher_athlete_isolation_service.dart';
 import 'package:cohort_platform/domain/content_graph/m9_content_graph_fixtures.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,14 @@ enum _PreviewScene {
   invalid,
   stale,
   pinning,
+  pendingNoRoster,
+  acceptedOwnPin,
+  foreignPinHidden,
+  declined,
+  revoked,
+  expired,
+  missingCapability,
+  auditTimeline,
 }
 
 class M10IsolationPreviewScreen extends StatefulWidget {
@@ -48,6 +58,7 @@ class _M10IsolationPreviewScreenState extends State<M10IsolationPreviewScreen> {
   IsolationRosterResult? roster;
   IsolationActivateResult? command;
   String? compiledComposite;
+  List<String> consentLog = const [];
 
   @override
   void initState() {
@@ -57,6 +68,7 @@ class _M10IsolationPreviewScreenState extends State<M10IsolationPreviewScreen> {
 
   void _load() {
     command = null;
+    consentLog = const [];
     switch (scene) {
       case _PreviewScene.success:
         final harness = M10IsolationFixtures.seed();
@@ -101,8 +113,102 @@ class _M10IsolationPreviewScreenState extends State<M10IsolationPreviewScreen> {
           pinnedAssignmentId: 'assignment.does-not-exist',
         );
         roster = service.inspectRoster(M10IsolationFixtures.firstParty);
+      case _PreviewScene.pendingNoRoster:
+      case _PreviewScene.acceptedOwnPin:
+      case _PreviewScene.foreignPinHidden:
+      case _PreviewScene.declined:
+      case _PreviewScene.revoked:
+      case _PreviewScene.expired:
+      case _PreviewScene.missingCapability:
+      case _PreviewScene.auditTimeline:
+        consentLog = _consentScene(scene);
+        roster = null;
+        command = null;
     }
     setState(() {});
+  }
+
+  List<String> _consentScene(_PreviewScene scene) {
+    final clock = FixedConsentClock(DateTime.utc(2026, 9, 19, 12));
+    final store = InMemoryConsentStore();
+    final publisher = M10IsolationFixtures.firstParty;
+    const athlete = IsolationActor(
+      principalId: 'athlete.fixture-consent',
+      publisherId: M10IsolationFixtures.firstPartyPublisherId,
+      capability: IsolationCapability.reader,
+    );
+    final service = PublisherAthleteConsentService(
+      store: store,
+      clock: clock,
+      knownAthletes: {athlete.principalId},
+      activePublishers: {
+        M10IsolationFixtures.firstPartyPublisherId,
+        M10IsolationFixtures.acmePublisherId,
+      },
+      pinsForAthlete: (id) {
+        if (scene == _PreviewScene.foreignPinHidden) {
+          return const PublisherProgrammePin(
+            assignmentId: 'assignment.foreign',
+            programmeVersionId: 'programme-version.acme',
+            publisherId: M10IsolationFixtures.acmePublisherId,
+          );
+        }
+        return const PublisherProgrammePin(
+          assignmentId: M9ContentGraphFixtures.athleteAssignmentId,
+          programmeVersionId: M9ContentGraphFixtures.v1Id,
+          publisherId: M10IsolationFixtures.firstPartyPublisherId,
+          versionName: 'Apollo fixture v1',
+          compositeIdentity: 'fixture-composite',
+        );
+      },
+    );
+    if (scene == _PreviewScene.missingCapability) {
+      return [
+        'invite=${service.invite(actor: M10IsolationFixtures.unauthorised, athleteId: athlete.principalId).outcome.name}',
+      ];
+    }
+    final invited = service.invite(actor: publisher, athleteId: athlete.principalId);
+    if (scene == _PreviewScene.pendingNoRoster) {
+      return [
+        'invite=${invited.outcome.name}',
+        'roster=${service.inspectRoster(publisher).length}',
+      ];
+    }
+    if (scene == _PreviewScene.declined) {
+      return [
+        'decline=${service.decline(athlete: athlete, invitationId: invited.invitation!.id).outcome.name}',
+        'roster=${service.inspectRoster(publisher).length}',
+      ];
+    }
+    if (scene == _PreviewScene.expired) {
+      clock.advance(const Duration(days: 8));
+      return [
+        'accept=${service.accept(athlete: athlete, invitationId: invited.invitation!.id).outcome.name}',
+      ];
+    }
+    final accepted = service.accept(
+      athlete: athlete,
+      invitationId: invited.invitation!.id,
+    );
+    if (scene == _PreviewScene.acceptedOwnPin ||
+        scene == _PreviewScene.foreignPinHidden) {
+      final row = service.inspectRoster(publisher).single;
+      return [
+        'accept=${accepted.outcome.name}',
+        'visibility=${row.assignmentVisibility.name}',
+        'version=${row.programmeVersionId ?? 'hidden'}',
+        'composite=${row.graphCompositeIdentity ?? 'hidden'}',
+      ];
+    }
+    if (scene == _PreviewScene.revoked) {
+      return [
+        'revoke=${service.revoke(actor: athlete, membershipId: accepted.membership!.id).outcome.name}',
+        'roster=${service.inspectRoster(publisher).length}',
+      ];
+    }
+    return [
+      for (final event in store.events) '${event.transition} → ${event.newState}',
+    ];
   }
 
   @override
@@ -158,6 +264,11 @@ class _M10IsolationPreviewScreenState extends State<M10IsolationPreviewScreen> {
                   '${entry.staleDeclaredComposite ? ' · STALE' : ''}',
                 ),
               ),
+          ],
+          if (consentLog.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text('Consent log', style: Theme.of(context).textTheme.titleMedium),
+            for (final line in consentLog) Text(line),
           ],
           if (command != null) ...[
             const SizedBox(height: 12),
