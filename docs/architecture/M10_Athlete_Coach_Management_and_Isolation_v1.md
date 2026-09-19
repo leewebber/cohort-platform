@@ -1,15 +1,20 @@
 # M10 Athlete/Coach Management and Isolation v1
 
-**Status:** Binding Sprint 1 contract  
-**Recorded:** 2026-09-19  
-**Milestone:** M10 Athlete/Coach Management and Isolation  
-**Does not start:** Sprint 2, hosted apply, phone release, Plan Package v2
+**Status:** Binding Sprint 1–2 contract
+
+**Recorded:** 2026-09-19
+
+**Milestone:** M10 Athlete/Coach Management and Isolation
+
+**Does not start:** Sprint 3, hosted apply, phone release, Plan Package v2
 
 ```text
 M10_MILESTONE=Athlete/Coach Management and Isolation
 M10_SPRINT_1=publisher-scoped athlete membership isolation
+M10_SPRINT_2=persistent consent-based membership (local migrations only)
 PLAN_PACKAGE_V1_CHANGED=false
 HOSTED_MIGRATION_REQUIRED=false
+HOSTED_APPLY_AUTHORISED=false
 PHONE_BUILD_REQUIRED=false
 ATHLETE_PRODUCTION_UI_IN_SCOPE=false
 ```
@@ -273,9 +278,147 @@ rewriting `coach_athlete_relationships` in place.
 
 ## 16. Later-version extension points
 
-- Persist memberships with RLS
+- Hosted apply of Sprint 2 migrations (separate founder authority)
 - Bind V2.0 invite accept to a publisher principal
+- Email / deep-link invitation (must not enumerate accounts)
 - Org → many principals
 - Audited repin using M9 impact
 - B2B2C: first-party catalogue athlete vs publisher-roster athlete
 - Coach UI over the isolated roster (founder/internal first)
+- Detailed performance access (explicit later sprint)
+
+---
+
+## 17. Sprint 2 consent contract
+
+Catalogue purchase, programme enrolment, or training on a publisher’s
+programme **does not** make the athlete visible to that publisher.
+
+Publisher management access requires a **separate explicit consent
+relationship** owned by M10. M9 remains authoritative for publishers,
+principals, manifests, programme versions, assignment pins, and
+used-by / impact / diff.
+
+### 17.1 Separate concepts
+
+| Concept | Grants | Does not grant |
+|---------|--------|----------------|
+| **Programme enrolment** | Athlete may execute the pinned version | Publisher roster access |
+| **Management invitation** | A pending request exists | Any training-data or roster read |
+| **Active membership** | After athlete accept: permitted management projection | Programme ownership, pin rewrite, other-publisher visibility |
+| **Revocation** | Ends future management access; audit remains | Deleting assignments, results, or history |
+| **Decline / expiry** | Invitation is closed | Any management access; training continues |
+
+An athlete may hold **multiple active memberships** with different publishers
+when each is accepted separately. A publisher does not own an athlete.
+
+### 17.2 Invitation targeting (v1)
+
+Invitation targets an existing `profiles.id` (`auth.users.id`). Creation
+requires an active publisher principal. The athlete accepts or declines.
+Publishers are not given email search, directory, or account-existence
+oracle. No reusable invite token is stored.
+
+**Limitation:** the inviter must already know the athlete UUID (out-of-band).
+That is unsuitable as the long-term product invite UX. Email/deep-link is an
+extension point and must not leak whether an email has a Cohort account.
+
+### 17.3 State machines
+
+Invitations and memberships are **separate rows**. An accepted invitation
+creates a membership. This matches existing `coach_athlete_invites` +
+`coach_athlete_relationships` plus append-only events. They are not two
+authorities: only M10 publisher-keyed rows are the management consent
+authority.
+
+**Invitation:** `pending` → `accepted` | `declined` | `expired` | `cancelled`
+
+**Membership:** `active` → `revoked`
+
+Rules:
+
+- `pending` grants no athlete-data access
+- only the target athlete may accept or decline
+- the inviting publisher may cancel `pending`
+- accept / decline / revoke / cancel are idempotent
+- expiry is evaluated in UTC (`expires_at <= now()`)
+- revoked membership cannot silently become active; a later invite is a new
+  invitation and, on accept, a **new** membership id
+- no transition deletes history
+- clients cannot UPDATE/INSERT/DELETE these tables; commands are RPCs
+- retired publisher or inactive/missing principal fails closed
+
+### 17.4 RPC outcomes
+
+`invited` · `already_pending` · `accepted` · `already_active` · `declined` ·
+`already_declined` · `cancelled` · `already_cancelled` · `expired` ·
+`revoked` · `already_revoked` · `unauthorised` · `invalid_target` ·
+`publisher_inactive` · `principal_inactive` · `conflict`
+
+Clients must not parse exception text for expected outcomes.
+
+RPCs never enrol, move assignments, rewrite pins, publish manifests, write
+results, or copy athlete data.
+
+### 17.5 Roster projection (after active consent)
+
+Publisher may see:
+
+- athlete id
+- profile `display_name` already allowed by linked-profile policy
+- membership state and dates
+- **managing-publisher assignment only:** assignment id, pinned
+  `programme_version_id`, version title, published M9 composite / used-by
+  count when the pin’s version is owned by this publisher
+
+Publisher must **not** see: full result trees, health, private notes,
+recovery/wearables, auth metadata, email/phone, other-publisher assignments
+or memberships, unrelated programme history.
+
+States: no assignment (`assignment_visibility=none`); managing pin
+(`own`); other-publisher pin (`foreign_hidden` — membership shown, pin
+hidden); retired but pinned own version (show version + `retired`); missing
+manifest (`graph_status=missing`); composite mismatch (`graph_status=stale`).
+
+Detailed performance access returns `unavailable` / `not_authorised`.
+
+### 17.6 RLS matrix
+
+| Actor | Invitations | Memberships | Roster | Audit |
+|-------|-------------|-------------|--------|-------|
+| Anonymous | deny | deny | deny | deny |
+| Athlete | own only; accept/decline/revoke via RPC | own only | deny | own relationship |
+| Publisher principal (active) | own publisher | own publisher after accept | own publisher | own namespace |
+| Coach role alone | deny | deny | deny | deny |
+| Other publisher | deny | deny | deny | deny |
+| Service role | explicit trusted path | same | same | same |
+
+### 17.7 Capabilities (schema version 3)
+
+Additive keys on `cohort_athlete_runtime_capabilities`:
+
+- `publisher_athlete_membership_read`
+- `publisher_athlete_membership_invite`
+- `publisher_athlete_membership_manage`
+
+Values reflect **actor authority**, not mere table existence. Build 7 ignores
+unknown keys. Production without this migration fails closed.
+
+### 17.8 CoachAthleteService disposition
+
+**Keep as legacy coach-profile path.** It remains for historical tests and
+existing founder Coach Studio / Join-coach screens keyed by `profiles.id`.
+It is **not** the M10 consent authority and must not be called by new M10
+services. Sprint 3+ may migrate those screens. Do not delete it. Do not
+infer M10 membership from `coach_athlete_relationships` or assignments.
+
+### 17.9 Sprint 2 decisions
+
+| Decision | Alternatives | Why |
+|----------|--------------|-----|
+| Separate invite + membership + event tables | One lifecycle row | Matches V2.0 + adaptation-event conventions; audit stays append-only |
+| Target existing `profiles.id` | Email search | No account oracle; UUID targeting is a documented v1 limit |
+| Multi-publisher active memberships | Keep one-coach-global | Product rule; V2.0 unique-coach index is not reused |
+| Hide foreign-publisher pins | Show all assignments | Consent is per publisher, not “see everything the athlete trains” |
+| Do not backfill from assignments | Infer membership | Binding product rule |
+| Legacy `CoachAthleteService` retained | Delete or wrap now | Avoid dual-write; keep tests; explicit deprecation |
