@@ -5,6 +5,7 @@
 > **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 > **M10 Sprint 1 (local):** [`M10_SPRINT_1_HANDOFF.md`](./M10_SPRINT_1_HANDOFF.md).
 > **M10 Sprint 2 (local, not hosted):** [`M10_SPRINT_2_HANDOFF.md`](./M10_SPRINT_2_HANDOFF.md).
+> **M10 Field Manual membership preflight (read-only):** [`M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md`](./M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md).
 > This file remains the historical atomic-resume / Phase 3 checkpoint. It is
 > not the next-task authority.
 
