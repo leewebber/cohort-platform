@@ -1,0 +1,501 @@
+{
+  "blocks": [
+    {
+      "block_id": "778af1c7-1510-4c27-8d5b-e6c4493c6487", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "7152840a-0c71-4c5b-951b-ceb6cc3bfaa6", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Primary Lift"
+    }, 
+    {
+      "block_id": "f24de8ac-28ad-4112-bed9-b8162fe1daa7", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Strength"
+    }, 
+    {
+      "block_id": "d43963ef-731c-44b0-801a-b4ecd930a566", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Accessory"
+    }, 
+    {
+      "block_id": "b106a4b6-28a4-4efd-8f6f-288d061221fc", 
+      "position": 5, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Arms"
+    }, 
+    {
+      "block_id": "97c374e2-e99e-4228-abd9-b3bc0f3cc3ab", 
+      "position": 6, 
+      "session_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "title": "Carry"
+    }, 
+    {
+      "block_id": "3774e250-0483-4744-84a5-58340d09021a", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "67c33ca9-6d16-4240-9114-b5f9ba04e36b", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "title": "Main Running Block"
+    }, 
+    {
+      "block_id": "31bb9280-5284-4676-9e12-6c3f2e793398", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "title": "Bodyweight Strength"
+    }, 
+    {
+      "block_id": "a00dc0ed-0c91-43d9-aa68-799db1c5be7a", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "title": "Core"
+    }, 
+    {
+      "block_id": "786c89af-c5e9-4a89-8261-e3ddcd4438b1", 
+      "position": 5, 
+      "session_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "title": "Mobility"
+    }, 
+    {
+      "block_id": "a4cb8975-b33b-4547-a170-059583fe9634", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "762d3b1a-0ecc-4e81-a42b-c843fd70e4f7", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Primary Lift"
+    }, 
+    {
+      "block_id": "15206f93-4966-44eb-8577-21f35630536c", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Strength"
+    }, 
+    {
+      "block_id": "5942a498-e781-4e44-82fa-4abbd368f44a", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Accessory"
+    }, 
+    {
+      "block_id": "f0866be8-fbee-49da-bb36-e96684351b96", 
+      "position": 5, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Core"
+    }, 
+    {
+      "block_id": "8c8028ed-e22a-4276-a9a0-73325621976f", 
+      "position": 6, 
+      "session_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "title": "Carry"
+    }, 
+    {
+      "block_id": "ecc52995-cc89-43e1-a942-c32f9d445a0d", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "752ee52a-6a6a-4b23-b331-1098ec08dded", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "title": "Main Running Block"
+    }, 
+    {
+      "block_id": "3494feeb-c1dd-45fa-a538-0205d25232a7", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "title": "Bodyweight Strength"
+    }, 
+    {
+      "block_id": "c7b345b1-4db6-4301-94a4-24953d64ae25", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "title": "Core"
+    }, 
+    {
+      "block_id": "61415ad0-cf38-4bfe-bb15-1200981dfed3", 
+      "position": 5, 
+      "session_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "title": "Cooldown / Mobility"
+    }, 
+    {
+      "block_id": "c1326e9c-673f-4eb0-bddf-5ea1e796b1b2", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "6e5f148b-d194-435a-8a6d-8d89e9ac0136", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Primary Lift"
+    }, 
+    {
+      "block_id": "0b832f07-524a-4f32-9ed0-9aba4fa66def", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Strength"
+    }, 
+    {
+      "block_id": "1ae24fbd-2652-429d-b59a-31a1b916d1e4", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Accessory"
+    }, 
+    {
+      "block_id": "3e215612-0515-4757-9db0-315ffedb2676", 
+      "position": 5, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Arms"
+    }, 
+    {
+      "block_id": "3e627c5c-0068-4979-97f9-606e66415b3e", 
+      "position": 6, 
+      "session_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "title": "Core"
+    }, 
+    {
+      "block_id": "60cfbcd7-efd8-4ec3-9194-0ed9d9a6bdf9", 
+      "position": 1, 
+      "session_id": "founder-spartan-physique-v1-w1-d6-s1", 
+      "title": "Warm Up"
+    }, 
+    {
+      "block_id": "556530b1-320a-4ae9-8a1e-5af216880143", 
+      "position": 2, 
+      "session_id": "founder-spartan-physique-v1-w1-d6-s1", 
+      "title": "Main Running Block"
+    }, 
+    {
+      "block_id": "cc63f5a5-427d-4029-97e3-ff79d4031c22", 
+      "position": 3, 
+      "session_id": "founder-spartan-physique-v1-w1-d6-s1", 
+      "title": "Warrior Circuit"
+    }, 
+    {
+      "block_id": "d09278a4-790f-408e-9ab8-85e5bcf834b0", 
+      "position": 4, 
+      "session_id": "founder-spartan-physique-v1-w1-d6-s1", 
+      "title": "Cooldown"
+    }
+  ], 
+  "lineage_code": "SPARTAN-PHYSIQUE", 
+  "package_content_hash": "b4bfaab4f6cd25417d52b6f0b2604d9f98b3e10b074c3d58896acde3db05473e", 
+  "placements": [
+    {
+      "day_key": "day_1", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2", 
+      "slot_order": 1, 
+      "week_number": 1
+    }, 
+    {
+      "day_key": "day_2", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d2-s1", 
+      "slot_order": 1, 
+      "week_number": 1
+    }, 
+    {
+      "day_key": "day_3", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d3-s1", 
+      "slot_order": 1, 
+      "week_number": 1
+    }, 
+    {
+      "day_key": "day_4", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d4-s1", 
+      "slot_order": 1, 
+      "week_number": 1
+    }, 
+    {
+      "day_key": "day_5", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d5-s1", 
+      "slot_order": 1, 
+      "week_number": 1
+    }, 
+    {
+      "day_key": "day_6", 
+      "protocol_id": "founder-spartan-physique-v1-w1-d6-s1", 
+      "slot_order": 1, 
+      "week_number": 1
+    }
+  ], 
+  "programme_version_id": "32986922-47d1-46b0-b391-a7931d73033e", 
+  "sbe": [
+    {
+      "block_id": "0b832f07-524a-4f32-9ed0-9aba4fa66def", 
+      "exercise_id": "EX-084", 
+      "position": 1
+    }, 
+    {
+      "block_id": "0b832f07-524a-4f32-9ed0-9aba4fa66def", 
+      "exercise_id": "EX-092", 
+      "position": 2
+    }, 
+    {
+      "block_id": "0b832f07-524a-4f32-9ed0-9aba4fa66def", 
+      "exercise_id": "EX-037", 
+      "position": 3
+    }, 
+    {
+      "block_id": "15206f93-4966-44eb-8577-21f35630536c", 
+      "exercise_id": "EX-029", 
+      "position": 1
+    }, 
+    {
+      "block_id": "15206f93-4966-44eb-8577-21f35630536c", 
+      "exercise_id": "EX-025", 
+      "position": 2
+    }, 
+    {
+      "block_id": "1ae24fbd-2652-429d-b59a-31a1b916d1e4", 
+      "exercise_id": "EX-044", 
+      "position": 1
+    }, 
+    {
+      "block_id": "1ae24fbd-2652-429d-b59a-31a1b916d1e4", 
+      "exercise_id": "EX-047", 
+      "position": 2
+    }, 
+    {
+      "block_id": "31bb9280-5284-4676-9e12-6c3f2e793398", 
+      "exercise_id": "EX-053", 
+      "position": 1
+    }, 
+    {
+      "block_id": "31bb9280-5284-4676-9e12-6c3f2e793398", 
+      "exercise_id": "EX-012", 
+      "position": 2
+    }, 
+    {
+      "block_id": "3494feeb-c1dd-45fa-a538-0205d25232a7", 
+      "exercise_id": "EX-086", 
+      "position": 1
+    }, 
+    {
+      "block_id": "3494feeb-c1dd-45fa-a538-0205d25232a7", 
+      "exercise_id": "EX-053", 
+      "position": 2
+    }, 
+    {
+      "block_id": "3774e250-0483-4744-84a5-58340d09021a", 
+      "exercise_id": "EX-062", 
+      "position": 1
+    }, 
+    {
+      "block_id": "3e215612-0515-4757-9db0-315ffedb2676", 
+      "exercise_id": "EX-120", 
+      "position": 1
+    }, 
+    {
+      "block_id": "3e215612-0515-4757-9db0-315ffedb2676", 
+      "exercise_id": "EX-121", 
+      "position": 2
+    }, 
+    {
+      "block_id": "3e627c5c-0068-4979-97f9-606e66415b3e", 
+      "exercise_id": "EX-113", 
+      "position": 1
+    }, 
+    {
+      "block_id": "556530b1-320a-4ae9-8a1e-5af216880143", 
+      "exercise_id": "EX-001", 
+      "position": 1
+    }, 
+    {
+      "block_id": "5942a498-e781-4e44-82fa-4abbd368f44a", 
+      "exercise_id": "EX-125", 
+      "position": 1
+    }, 
+    {
+      "block_id": "5942a498-e781-4e44-82fa-4abbd368f44a", 
+      "exercise_id": "EX-127", 
+      "position": 2
+    }, 
+    {
+      "block_id": "60cfbcd7-efd8-4ec3-9194-0ed9d9a6bdf9", 
+      "exercise_id": "EX-001", 
+      "position": 1
+    }, 
+    {
+      "block_id": "61415ad0-cf38-4bfe-bb15-1200981dfed3", 
+      "exercise_id": "EX-062", 
+      "position": 1
+    }, 
+    {
+      "block_id": "67c33ca9-6d16-4240-9114-b5f9ba04e36b", 
+      "exercise_id": "EX-001", 
+      "position": 1
+    }, 
+    {
+      "block_id": "6e5f148b-d194-435a-8a6d-8d89e9ac0136", 
+      "exercise_id": "EX-097", 
+      "position": 1
+    }, 
+    {
+      "block_id": "7152840a-0c71-4c5b-951b-ceb6cc3bfaa6", 
+      "exercise_id": "EX-095", 
+      "position": 1
+    }, 
+    {
+      "block_id": "752ee52a-6a6a-4b23-b331-1098ec08dded", 
+      "exercise_id": "EX-002", 
+      "position": 1
+    }, 
+    {
+      "block_id": "762d3b1a-0ecc-4e81-a42b-c843fd70e4f7", 
+      "exercise_id": "EX-078", 
+      "position": 1
+    }, 
+    {
+      "block_id": "778af1c7-1510-4c27-8d5b-e6c4493c6487", 
+      "exercise_id": "EX-133", 
+      "position": 1
+    }, 
+    {
+      "block_id": "778af1c7-1510-4c27-8d5b-e6c4493c6487", 
+      "exercise_id": "EX-134", 
+      "position": 2
+    }, 
+    {
+      "block_id": "778af1c7-1510-4c27-8d5b-e6c4493c6487", 
+      "exercise_id": "EX-135", 
+      "position": 3
+    }, 
+    {
+      "block_id": "778af1c7-1510-4c27-8d5b-e6c4493c6487", 
+      "exercise_id": "EX-111", 
+      "position": 4
+    }, 
+    {
+      "block_id": "786c89af-c5e9-4a89-8261-e3ddcd4438b1", 
+      "exercise_id": "EX-062", 
+      "position": 1
+    }, 
+    {
+      "block_id": "8c8028ed-e22a-4276-a9a0-73325621976f", 
+      "exercise_id": "EX-102", 
+      "position": 1
+    }, 
+    {
+      "block_id": "97c374e2-e99e-4228-abd9-b3bc0f3cc3ab", 
+      "exercise_id": "EX-101", 
+      "position": 1
+    }, 
+    {
+      "block_id": "a00dc0ed-0c91-43d9-aa68-799db1c5be7a", 
+      "exercise_id": "EX-119", 
+      "position": 1
+    }, 
+    {
+      "block_id": "a00dc0ed-0c91-43d9-aa68-799db1c5be7a", 
+      "exercise_id": "EX-021", 
+      "position": 2
+    }, 
+    {
+      "block_id": "a4cb8975-b33b-4547-a170-059583fe9634", 
+      "exercise_id": "EX-029", 
+      "position": 1
+    }, 
+    {
+      "block_id": "b106a4b6-28a4-4efd-8f6f-288d061221fc", 
+      "exercise_id": "EX-042", 
+      "position": 1
+    }, 
+    {
+      "block_id": "b106a4b6-28a4-4efd-8f6f-288d061221fc", 
+      "exercise_id": "EX-121", 
+      "position": 2
+    }, 
+    {
+      "block_id": "c1326e9c-673f-4eb0-bddf-5ea1e796b1b2", 
+      "exercise_id": "EX-062", 
+      "position": 1
+    }, 
+    {
+      "block_id": "c7b345b1-4db6-4301-94a4-24953d64ae25", 
+      "exercise_id": "EX-112", 
+      "position": 1
+    }, 
+    {
+      "block_id": "c7b345b1-4db6-4301-94a4-24953d64ae25", 
+      "exercise_id": "EX-116", 
+      "position": 2
+    }, 
+    {
+      "block_id": "cc63f5a5-427d-4029-97e3-ff79d4031c22", 
+      "exercise_id": "EX-025", 
+      "position": 1
+    }, 
+    {
+      "block_id": "cc63f5a5-427d-4029-97e3-ff79d4031c22", 
+      "exercise_id": "EX-053", 
+      "position": 2
+    }, 
+    {
+      "block_id": "cc63f5a5-427d-4029-97e3-ff79d4031c22", 
+      "exercise_id": "EX-012", 
+      "position": 3
+    }, 
+    {
+      "block_id": "cc63f5a5-427d-4029-97e3-ff79d4031c22", 
+      "exercise_id": "EX-118", 
+      "position": 4
+    }, 
+    {
+      "block_id": "d09278a4-790f-408e-9ab8-85e5bcf834b0", 
+      "exercise_id": "EX-062", 
+      "position": 1
+    }, 
+    {
+      "block_id": "d43963ef-731c-44b0-801a-b4ecd930a566", 
+      "exercise_id": "EX-044", 
+      "position": 1
+    }, 
+    {
+      "block_id": "d43963ef-731c-44b0-801a-b4ecd930a566", 
+      "exercise_id": "EX-094", 
+      "position": 2
+    }, 
+    {
+      "block_id": "ecc52995-cc89-43e1-a942-c32f9d445a0d", 
+      "exercise_id": "EX-001", 
+      "position": 1
+    }, 
+    {
+      "block_id": "f0866be8-fbee-49da-bb36-e96684351b96", 
+      "exercise_id": "EX-117", 
+      "position": 1
+    }, 
+    {
+      "block_id": "f24de8ac-28ad-4112-bed9-b8162fe1daa7", 
+      "exercise_id": "EX-084", 
+      "position": 1
+    }, 
+    {
+      "block_id": "f24de8ac-28ad-4112-bed9-b8162fe1daa7", 
+      "exercise_id": "EX-090", 
+      "position": 2
+    }, 
+    {
+      "block_id": "f24de8ac-28ad-4112-bed9-b8162fe1daa7", 
+      "exercise_id": "EX-087", 
+      "position": 3
+    }
+  ], 
+  "schema": "content-graph-hosted-relationships/v1", 
+  "version_number": 3
+}

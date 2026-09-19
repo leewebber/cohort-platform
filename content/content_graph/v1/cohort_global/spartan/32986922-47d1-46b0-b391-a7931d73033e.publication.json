@@ -1,0 +1,1446 @@
+{
+  "programme_version_id": "32986922-47d1-46b0-b391-a7931d73033e",
+  "compiler_version": "content-graph-compiler/v1",
+  "graph_format_version": 1,
+  "source_package_hash": "b4bfaab4f6cd25417d52b6f0b2604d9f98b3e10b074c3d58896acde3db05473e",
+  "supplemental_relationship_hash": "052735532570816fabdd1824730edc4afdc414bc3f2eac8f28db2f23fffd6247",
+  "graph_structural_hash": "8ddb918e3e642c85bc150dff0741f4a581a21927375d2365102d945e77ae5715",
+  "composite_identity": "8c5989bd8ba360294cb619e721213a94fe19302387f7bf8008c203bfb5538d17",
+  "canonical_payload": {
+    "blocks": [
+      {
+        "exercise_ids": [
+          "EX-111",
+          "EX-133",
+          "EX-134",
+          "EX-135"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-095"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Primary Lift"
+      },
+      {
+        "exercise_ids": [
+          "EX-084",
+          "EX-087",
+          "EX-090"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Strength"
+      },
+      {
+        "exercise_ids": [
+          "EX-044",
+          "EX-094"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Accessory"
+      },
+      {
+        "exercise_ids": [
+          "EX-042",
+          "EX-121"
+        ],
+        "position": 5,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Arms"
+      },
+      {
+        "exercise_ids": [
+          "EX-101"
+        ],
+        "position": 6,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "title": "Carry"
+      },
+      {
+        "exercise_ids": [
+          "EX-062"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-001"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "title": "Main Running Block"
+      },
+      {
+        "exercise_ids": [
+          "EX-012",
+          "EX-053"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "title": "Bodyweight Strength"
+      },
+      {
+        "exercise_ids": [
+          "EX-021",
+          "EX-119"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "title": "Core"
+      },
+      {
+        "exercise_ids": [
+          "EX-062"
+        ],
+        "position": 5,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "title": "Mobility"
+      },
+      {
+        "exercise_ids": [
+          "EX-029"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-078"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Primary Lift"
+      },
+      {
+        "exercise_ids": [
+          "EX-025",
+          "EX-029"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Strength"
+      },
+      {
+        "exercise_ids": [
+          "EX-125",
+          "EX-127"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Accessory"
+      },
+      {
+        "exercise_ids": [
+          "EX-117"
+        ],
+        "position": 5,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Core"
+      },
+      {
+        "exercise_ids": [
+          "EX-102"
+        ],
+        "position": 6,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "title": "Carry"
+      },
+      {
+        "exercise_ids": [
+          "EX-001"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-002"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "title": "Main Running Block"
+      },
+      {
+        "exercise_ids": [
+          "EX-053",
+          "EX-086"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "title": "Bodyweight Strength"
+      },
+      {
+        "exercise_ids": [
+          "EX-112",
+          "EX-116"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "title": "Core"
+      },
+      {
+        "exercise_ids": [
+          "EX-062"
+        ],
+        "position": 5,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "title": "Cooldown / Mobility"
+      },
+      {
+        "exercise_ids": [
+          "EX-062"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-097"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Primary Lift"
+      },
+      {
+        "exercise_ids": [
+          "EX-037",
+          "EX-084",
+          "EX-092"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Strength"
+      },
+      {
+        "exercise_ids": [
+          "EX-044",
+          "EX-047"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Accessory"
+      },
+      {
+        "exercise_ids": [
+          "EX-120",
+          "EX-121"
+        ],
+        "position": 5,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Arms"
+      },
+      {
+        "exercise_ids": [
+          "EX-113"
+        ],
+        "position": 6,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "title": "Core"
+      },
+      {
+        "exercise_ids": [
+          "EX-001"
+        ],
+        "position": 1,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "title": "Warm Up"
+      },
+      {
+        "exercise_ids": [
+          "EX-001"
+        ],
+        "position": 2,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "title": "Main Running Block"
+      },
+      {
+        "exercise_ids": [
+          "EX-012",
+          "EX-025",
+          "EX-053",
+          "EX-118"
+        ],
+        "position": 3,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "title": "Warrior Circuit"
+      },
+      {
+        "exercise_ids": [
+          "EX-062"
+        ],
+        "position": 4,
+        "prescription_by_exercise": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "title": "Cooldown"
+      }
+    ],
+    "compiler_version": "content-graph-compiler/v1",
+    "edges": [
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:5",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:6",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1:5",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:5",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1:6",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1:5",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:5",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1:6",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d6-s1:1",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d6-s1:2",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d6-s1:4",
+        "from_type": "authoredBlock",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "to_type": "sessionTemplateVersion",
+        "type": "blockBelongsToSessionTemplateVersion"
+      },
+      {
+        "from_id": "EX-001",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-001",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-001",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-001",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-002",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-012",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-012",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-021",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-025",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-025",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-029",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-029",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-037",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-042",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-044",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-044",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-047",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-053",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-053",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-053",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-062",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-062",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-062",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-062",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-062",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-078",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-084",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-084",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-086",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-087",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-090",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-092",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-094",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-095",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-097",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:2",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-101",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:6",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-102",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:6",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-111",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-112",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-113",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:6",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-116",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d4-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-117",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-118",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-119",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d2-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-120",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-121",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-121",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d5-s1:5",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-125",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-127",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d3-s1:4",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-133",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-134",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "EX-135",
+        "from_type": "exercise",
+        "to_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "to_type": "authoredBlock",
+        "type": "exerciseUsedByBlock"
+      },
+      {
+        "from_id": "1/day_1/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "1/day_2/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "1/day_3/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "1/day_4/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "1/day_5/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "1/day_6/1",
+        "from_type": "programmePlacement",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programmeVersion",
+        "type": "placementBelongsToProgrammeVersion"
+      },
+      {
+        "from_id": "programme.spartan-physique",
+        "from_type": "programmeVersion",
+        "to_id": "programme.spartan-physique",
+        "to_type": "programme",
+        "type": "programmeVersionBelongsToProgramme"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_1/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_2/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_3/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_4/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_5/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      },
+      {
+        "from_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "from_type": "sessionTemplateVersion",
+        "to_id": "1/day_6/1",
+        "to_type": "programmePlacement",
+        "type": "sessionTemplateVersionUsedByPlacement"
+      }
+    ],
+    "format_version": 1,
+    "nodes": [
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:5",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2:6",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1:5",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:5",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1:6",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1:5",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:5",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1:6",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1:1",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1:2",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1:3",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1:4",
+        "type": "authoredBlock"
+      },
+      {
+        "id": "EX-001",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-002",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-012",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-021",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-025",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-029",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-037",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-042",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-044",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-047",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-053",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-062",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-078",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-084",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-086",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-087",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-090",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-092",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-094",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-095",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-097",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-101",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-102",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-111",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-112",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-113",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-116",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-117",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-118",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-119",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-120",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-121",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-125",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-127",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-133",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-134",
+        "type": "exercise"
+      },
+      {
+        "id": "EX-135",
+        "type": "exercise"
+      },
+      {
+        "id": "programme.spartan-physique",
+        "type": "programme"
+      },
+      {
+        "id": "1/day_1/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "1/day_2/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "1/day_3/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "1/day_4/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "1/day_5/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "1/day_6/1",
+        "type": "programmePlacement"
+      },
+      {
+        "id": "programme.spartan-physique",
+        "type": "programmeVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "type": "sessionTemplateVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1",
+        "type": "sessionTemplateVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1",
+        "type": "sessionTemplateVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1",
+        "type": "sessionTemplateVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1",
+        "type": "sessionTemplateVersion"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1",
+        "type": "sessionTemplateVersion"
+      }
+    ],
+    "placements": [
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_1",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      },
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_2",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d2-s1",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      },
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_3",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d3-s1",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      },
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_4",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d4-s1",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      },
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_5",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d5-s1",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      },
+      {
+        "adaptation_permission": "default",
+        "day_key": "day_6",
+        "optional": false,
+        "progression_parameters": {},
+        "session_template_version_id": "founder-spartan-physique-v1-w1-d6-s1",
+        "slot_order": 1,
+        "title_override": null,
+        "week_number": 1
+      }
+    ],
+    "programme_version": {
+      "compiler_format_version": 1,
+      "programme_id": "programme.spartan-physique",
+      "source_package_ref": "plan-package-v1:SPARTAN-PHYSIQUE@3"
+    },
+    "session_versions": [
+      {
+        "id": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d1-s1-rev-2",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d1-s1-rev-2"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d2-s1",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d2-s1",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d2-s1"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d3-s1",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d3-s1",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d3-s1"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d4-s1",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d4-s1",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d4-s1"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d5-s1",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d5-s1",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d5-s1"
+      },
+      {
+        "id": "founder-spartan-physique-v1-w1-d6-s1",
+        "revision_number": 1,
+        "source_hash": "founder-spartan-physique-v1-w1-d6-s1",
+        "template_id": "session-template.founder-spartan-physique-v1-w1-d6-s1"
+      }
+    ]
+  },
+  "unresolved": [],
+  "require_full_resolution": true,
+  "publisher_id": "00000000-0000-4000-8000-00000000c001"
+}

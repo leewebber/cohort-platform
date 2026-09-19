@@ -1,0 +1,44 @@
+{
+  "compiler_version": "content-graph-compiler/v1",
+  "graph_format_version": 1,
+  "publisher_id": "00000000-0000-4000-8000-00000000c001",
+  "schema": "content-graph-publication-index/v1",
+  "candidates": [
+    {
+      "classification": "2",
+      "composite_identity": "481956c3277f4666ae80766c65e114b69aaf982758917e3de05ca5f8b9157b12",
+      "edge_count": 738,
+      "eligibility": "publishable_with_explicit_unresolved",
+      "graph_structural_hash": "2b17ad30ab69a247948677078a1e37e5e7e077bf437cff527cb69937d5fb89e8",
+      "label": "apollo",
+      "manifest_path": "cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.manifest.json",
+      "manifest_sha256": "01876a268b2194ff72395a7a68f12dc3f9d438ed73b13b36ba2108856b25deb4",
+      "node_count": 300,
+      "programme_version_id": "2ba018bd-7dc2-4dfd-8d8e-e35823158920",
+      "publication_path": "cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.publication.json",
+      "publication_sha256": "fb2378ee6b841d71225e37d6c2823d5b966ac380dcea31366f288957736c0dc1",
+      "require_full_resolution": false,
+      "source_package_hash": "810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83",
+      "supplemental_relationship_hash": "5bb78fc24df9af9f03b0bddde238b004f64c54c60cef0872640b0d209e4951d0",
+      "unresolved_count": 131
+    },
+    {
+      "classification": "1",
+      "composite_identity": "8c5989bd8ba360294cb619e721213a94fe19302387f7bf8008c203bfb5538d17",
+      "edge_count": 97,
+      "eligibility": "fully_eligible",
+      "graph_structural_hash": "8ddb918e3e642c85bc150dff0741f4a581a21927375d2365102d945e77ae5715",
+      "label": "spartan_v3",
+      "manifest_path": "cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.manifest.json",
+      "manifest_sha256": "515362b81902c520d2f71c351739cc79b21b94923b1997fa84e28ce74615e202",
+      "node_count": 83,
+      "programme_version_id": "32986922-47d1-46b0-b391-a7931d73033e",
+      "publication_path": "cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.publication.json",
+      "publication_sha256": "c517b2f0359e2f0f7bc68bb57b64f9c67ab82d09373244c3cda9ca302415eb67",
+      "require_full_resolution": true,
+      "source_package_hash": "b4bfaab4f6cd25417d52b6f0b2604d9f98b3e10b074c3d58896acde3db05473e",
+      "supplemental_relationship_hash": "052735532570816fabdd1824730edc4afdc414bc3f2eac8f28db2f23fffd6247",
+      "unresolved_count": 0
+    }
+  ]
+}
