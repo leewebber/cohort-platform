@@ -1,12 +1,13 @@
 # M9 Field Manual publication qualification (Phase 3A)
 
 **Recorded:** 2026-09-19
-**Status:** Read-only hosted qualification complete. Candidate manifests generated locally.
-**Paused for founder approval of Phase 3B writes.** Hosted reconstruction jobs and
-manifest publication were **not** executed.
+**Status:** Phase 3A qualification complete. Qualified Apollo and Spartan v3
+publication artifacts are source-controlled. **No hosted publication.**
+**Paused for separate Phase 3B authorisation per programme.**
 
 ```text
 M9_FIELD_MANUAL_PUBLICATION_QUALIFICATION_COMPLETE=true
+M9_FIELD_MANUAL_PUBLICATION_ARTIFACTS_RECORDED=true
 HOSTED_TARGET=Cohort Field Manual
 HOSTED_PROJECT_REF=otnhhdxstdnwccehacku
 HOSTED_REGION=eu-west-1
@@ -22,10 +23,10 @@ BOOTSTRAP_HELPER_PRESENT=false
 ORIGIN_MAIN=5953525d299a763447747bb77e07d8e56b7552a3
 BRANCH=chore/m9-field-manual-publication-qualification
 HOSTED_MUTATIONS=0
-NOTHING_PUSHED=true
 PHONE_UNTOUCHED=true
 REPO_ENV_UNTOUCHED=true
-CANDIDATES_COMMITTED=false
+CANDIDATES_COMMITTED=true
+HOSTED_PUBLICATION_OCCURRED=false
 M10_STARTED=false
 PHASE_3B_AUTHORISED=false
 ```
@@ -39,8 +40,11 @@ Binding: [`../architecture/M9_Manifest_Authority_and_Binding_v1.md`](../architec
 Restrictive local checkpoint (not in git):
 `AgentStores/.../m9-field-manual-publication-qualification-checkpoint`.
 It holds hosted counts/hashes, identifier-safe inventory, generation summary,
-and candidate JSON. Candidates are **not** committed until a later task decides
-repository ownership.
+and temporary candidate JSON used only as a comparison target.
+
+Canonical publication inputs now live at
+[`../../content/content_graph/v1/`](../../content/content_graph/v1/).
+**Committing an artifact does not authorize hosted publication.**
 
 ## A. Repository and target preflight
 
@@ -242,48 +246,46 @@ hosted `content_graph_version_diff` cannot yet return `ok`.
 Each unit is separately authorisable. Catalogue/default changes and assignment
 repins stay **outside** Phase 3B.
 
-### K1. Apollo reconstruction record (optional audit)
+**Reconstruction-job decision:** `publish_content_graph_manifest` has **no**
+foreign key or existence check against `content_graph_reconstruction_jobs`.
+For these already-deterministically reconstructed, source-controlled manifests,
+**no reconstruction job is required.** Publish the reviewed publication JSON
+directly. The hosted manifest row is the immutable record; this qualification
+document is reconstruction provenance. Do not invent a ceremonial job.
 
-| Field | Value |
-|-------|-------|
-| Function | `content_graph_record_reconstruction` |
-| Table | `content_graph_reconstruction_jobs` +1 |
-| Version | `2ba018bd-7dc2-4dfd-8d8e-e35823158920` |
-| Publisher | `cohort_global` `00000000-0000-4000-8000-00000000c001` |
-| Source / supplemental / graph / composite | see Section H |
-| Expected RPC | `dry_run` then optional `applied` with `rows_written=0` on exact retry |
-| Idempotency | same `job_key` + fingerprint → noop; fingerprint change → `source_changed_during_resume` |
-| Rollback | DELETE unpublished job row. Does not touch authored content |
+Stop points: after Apollo publication (K1), after Spartan publication (K2).
+Do not start the other unit without its own authorisation. Do not start M10.
 
-Not required for publication; recommended only as an audit trail.
-
-### K2. Apollo manifest publication
+### K1. Apollo manifest publication (separate authorised unit)
 
 | Field | Value |
 |-------|-------|
 | Function | `publish_content_graph_manifest` |
+| Artifact | `content/content_graph/v1/cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.publication.json` |
 | Table | `content_graph_manifests` +1 |
-| Version / publisher / hashes | Section H |
+| `require_full_resolution` | **false** |
 | Expected RPC | first `published`; exact retry `already_published` |
-| Row-count change | manifests 0→1; jobs unchanged unless K1 ran |
+| Jobs | remain 0 |
 | Idempotency | composite + graph match |
 | Forward repair | none in-place; published rows are immutable |
-| Rollback | founder-approved DROP of that manifest row/objects only; not an in-place rewrite |
 
-### K3. Spartan reconstruction record (optional, separate)
+### K2. Spartan v3 manifest publication (separate authorised unit)
 
-Same shape as K1 for `32986922-47d1-46b0-b391-a7931d73033e` and Spartan hashes.
-Do not reuse Apollo supplemental or job_key.
-
-### K4. Spartan manifest publication (separate)
-
-Same shape as K2 for Spartan hashes. Do not bundle with Apollo.
+| Field | Value |
+|-------|-------|
+| Function | `publish_content_graph_manifest` |
+| Artifact | `content/content_graph/v1/cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.publication.json` |
+| Table | `content_graph_manifests` +1 |
+| `require_full_resolution` | **true** |
+| Expected RPC | first `published`; exact retry `already_published` |
+| Jobs | remain 0 |
+| Do not bundle with Apollo | yes |
 
 ## L. Candidate artifact security
 
-Candidates contain no credentials, JWTs, emails, athlete/profile data,
-assignment ids, or performance results. Stored only in the restrictive
-checkpoint. **Not committed.**
+Canonical artifacts contain no credentials, JWTs, emails, athlete/profile data,
+assignment ids, or performance results. Temporary checkpoint candidates remain
+comparison-only and are not the generation method.
 
 ## M. Tests and gates
 
@@ -303,7 +305,14 @@ checkpoint. **Not committed.**
 | Local exact-candidate SQL validation | passed (disposable local DB) |
 | Local DB Gate AX (full local DB gate) | **ALL LOCAL DB GATE CHECKS PASSED** |
 | Phase 2 safety gate | **PASS** (6/6 groups) |
-| Full `flutter test` | **not re-run** for the docs-only commit; no application/test source changes |
+| Full `flutter test` | **not re-run** for the docs-only 3A commit; no application/test source changes then |
+| Artifact verification + isolated double regenerate | passed (`publication_artifacts_test`) |
+| Local committed-artifact SQL validation | passed (disposable local DB; Section P) |
+| Graph binding / used-by / impact / enrolment / migration static | re-run passed for artifact promotion |
+| Plan Package package tests | re-run passed |
+| Local DB Gate AX | **ALL LOCAL DB GATE CHECKS PASSED** (artifact promotion) |
+| Phase 2 safety gate | **PASS** 6/6 (artifact promotion) |
+| Full `flutter test` after artifact promotion | **not re-run**; no `lib/` production change — scripts, artifacts, tests, docs only |
 
 ## N. Permission boundaries
 
@@ -326,3 +335,101 @@ Repeated Section C query after all hosted reads. Must match Phase 2 closeout.
 | Pin | `b5fc87e3-…` → `2ba018bd-…` | identical | yes |
 | Content/training hashes | Phase 2 values | identical | yes |
 | Health | `ACTIVE_HEALTHY` | `ACTIVE_HEALTHY` (projects list) | yes |
+
+## P. Source-controlled publication artifacts (this task)
+
+No Field Manual write. Hosted manifests remain **0**. Reconstruction jobs remain
+**0**. Artifacts were regenerated from canonical repository inputs, not copied
+from the temporary checkpoint.
+
+Temporary comparison targets (not generation method):
+
+- Apollo `…/candidates/apollo_candidate_run1.json` SHA-256 `7cad2dc991f8b089d61fe2b058a1fbf3ca55b1c1d3d2478720f8a96500e2d915`
+- Spartan `…/candidates/spartan_candidate_run1.json` SHA-256 `8e09179bf93d9e9d480c9284e33b79e9f45ebd1357e5db47c10709cfe57b0fa0`
+
+### Canonical location
+
+[`../../content/content_graph/v1/`](../../content/content_graph/v1/)
+
+| Path | Role |
+|------|------|
+| `README.md` | Inputs, compiler/format, JSON rules, regenerate/verify/publish, immutable-review, no-authorisation rule |
+| `index.json` | Machine-readable candidate set |
+| `checksums.sha256` | File SHA-256 index |
+| `sources/spartan_physique_v3.relationships.json` | Hosted-compatible Spartan v3 relationship source (file SHA-256 `f3a22f0c323714b93d46c3f7034f9159a142f6475c23deebaab1b063cf2d7792`) |
+
+### Apollo
+
+- Programme version: `2ba018bd-7dc2-4dfd-8d8e-e35823158920`
+- Manifest: `content/content_graph/v1/cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.manifest.json`
+- Publication: `content/content_graph/v1/cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.publication.json`
+- Manifest SHA-256: `01876a268b2194ff72395a7a68f12dc3f9d438ed73b13b36ba2108856b25deb4`
+- Publication SHA-256: `fb2378ee6b841d71225e37d6c2823d5b966ac380dcea31366f288957736c0dc1`
+- Source: `810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83`
+- Supplemental: `5bb78fc24df9af9f03b0bddde238b004f64c54c60cef0872640b0d209e4951d0`
+- Graph: `2b17ad30ab69a247948677078a1e37e5e7e077bf437cff527cb69937d5fb89e8`
+- Composite: `481956c3277f4666ae80766c65e114b69aaf982758917e3de05ca5f8b9157b12`
+- Nodes / edges / unresolved: **300 / 738 / 131** (`name_only_block:*` retained)
+- `require_full_resolution`: **false**
+- Eligibility: class 2, publishable with explicit unresolved
+
+### Spartan v3
+
+- Programme version: `32986922-47d1-46b0-b391-a7931d73033e`
+- Manifest: `content/content_graph/v1/cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.manifest.json`
+- Publication: `content/content_graph/v1/cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.publication.json`
+- Manifest SHA-256: `515362b81902c520d2f71c351739cc79b21b94923b1997fa84e28ce74615e202`
+- Publication SHA-256: `c517b2f0359e2f0f7bc68bb57b64f9c67ab82d09373244c3cda9ca302415eb67`
+- Source: `b4bfaab4f6cd25417d52b6f0b2604d9f98b3e10b074c3d58896acde3db05473e`
+- Supplemental: `052735532570816fabdd1824730edc4afdc414bc3f2eac8f28db2f23fffd6247`
+- Graph: `8ddb918e3e642c85bc150dff0741f4a581a21927375d2365102d945e77ae5715`
+- Composite: `8c5989bd8ba360294cb619e721213a94fe19302387f7bf8008c203bfb5538d17`
+- Nodes / edges / unresolved: **83 / 97 / 0**
+- `require_full_resolution`: **true**
+- Eligibility: class 1, fully eligible
+- Inputs: committed Plan Package v1 (hash matches hosted) + relationship source above; **no Apollo SQL reuse**
+
+### Regeneration and verification
+
+```bash
+dart --packages=.dart_tool/package_config.json \
+  tool/content_graph/generate_publication_artifacts.dart
+(cd content/content_graph/v1 && shasum -a 256 -c checksums.sha256)
+flutter test test/content_graph/publication_artifacts_test.dart
+./tool/content_graph/run_local_publication_validate.sh
+```
+
+Double generation (two isolated processes / temp roots): byte-identical
+manifests, publications, index, checksums; identical node/edge counts and all
+four identity hashes. No wall-clock, path, or row-order drift. No athlete,
+assignment, performance, credential, or hosted-connection fields.
+
+### Local publication (disposable DB)
+
+| Step | Result |
+|------|--------|
+| Spartan first | `published` |
+| Independence after Spartan | Apollo unpublished |
+| Spartan retry | `already_published` |
+| Spartan graph mutation | `conflicting_identity` |
+| Apollo `require_full_resolution=true` | `unresolved_reference` |
+| Apollo first | `published` |
+| Independence after Apollo | both present; neither required the other to exist first |
+| Apollo retry | `already_published` |
+| Apollo graph / package mismatch | `conflicting_identity` / `hash_mismatch` |
+| Reconstruction jobs | **0** |
+| Catalogue / defaults / pins | unchanged |
+| Authored content | unchanged |
+
+Candidates are separately publishable. Operational assignment counts do not
+change artifact bytes or graph hashes.
+
+### Hosted non-actions (this task)
+
+Field Manual was not contacted. Manifests **0**, jobs **0**, publishers /
+principals remain **1 / 1** (last verified 3A postflight; this task did not
+re-query hosted). Ledger remains **90 / 20260918120400**. No catalogue/default
+change, assignment repin, training-data mutation, phone rebuild, or M10. Repo
+`.env` SHA-256 remains `869a01b1e4ee6b0559face678843f0df9ce57cbaf30febadb90f796c2a161816`.
+
+Do not publish either manifest until separately authorised.
