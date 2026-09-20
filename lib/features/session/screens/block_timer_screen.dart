@@ -117,8 +117,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               TextButton(
                 onPressed: _confirmExit,
@@ -127,7 +126,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
               const SizedBox(height: CohortSpacing.md),
               Text(widget.blockTitle, style: CohortTextStyles.h2),
               Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
-              const Spacer(),
+              const SizedBox(height: CohortSpacing.xl),
               if (state != null) ...[
                 Text(state.phaseLabel, style: CohortTextStyles.body),
                 const SizedBox(height: CohortSpacing.sm),
@@ -193,7 +192,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                   ].join('. '),
                 ),
               ],
-              const Spacer(),
+              const SizedBox(height: CohortSpacing.xl),
               if (widget.format == WorkoutFormat.rounds &&
                   state?.phase == BlockTimerPhase.work &&
                   state?.isFinished != true)

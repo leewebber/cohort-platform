@@ -35,6 +35,15 @@ class CircuitCaptureEditor extends StatelessWidget {
           '${result.recordedCount} of ${result.prescribedCount} stations recorded',
           style: CohortTextStyles.small,
         ),
+        if (result.endedEarly) ...[
+          const SizedBox(height: CohortSpacing.xs),
+          Text(
+            result.earlyEndReason == null || result.earlyEndReason!.isEmpty
+                ? 'Circuit ended early'
+                : 'Circuit ended early · ${result.earlyEndReason}',
+            style: CohortTextStyles.body,
+          ),
+        ],
         const SizedBox(height: CohortSpacing.sm),
         for (final round in rounds) ...[
           Text(

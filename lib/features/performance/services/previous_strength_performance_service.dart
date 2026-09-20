@@ -48,6 +48,20 @@ class PreviousStrengthPerformanceCache {
   static void clear() => _byKey.clear();
 }
 
+class EmptyPreviousStrengthPerformanceStore
+    implements PreviousStrengthPerformanceStore {
+  const EmptyPreviousStrengthPerformanceStore();
+
+  @override
+  Future<List<PreviousStrengthCandidate>> loadCandidates({
+    required String athleteId,
+    required Set<String> exerciseIds,
+    String? excludeRecordId,
+  }) async {
+    return const [];
+  }
+}
+
 class PreviousStrengthPerformanceService {
   PreviousStrengthPerformanceService({
     PreviousStrengthPerformanceStore? store,

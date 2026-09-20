@@ -17,6 +17,7 @@ import '../services/performance_record_save_coordinator.dart';
 import '../services/running_pace_plausibility.dart';
 import '../widgets/implausible_running_pace_warning.dart';
 import '../widgets/performance_capture_widgets.dart';
+import '../../session/presentation/production_restore_athlete_copy.dart';
 import '../../session/screens/session_complete_screen.dart';
 import '../../session/controllers/session_execution_controller.dart';
 import '../../session/services/production_restore_envelope_store.dart';
@@ -275,6 +276,13 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
                 ),
               ),
               const SizedBox(height: CohortSpacing.lg),
+              if (_saveState == PerformanceSaveState.error) ...[
+                Text(
+                  ProductionRestoreAthleteCopy.completionPendingBody,
+                  style: CohortTextStyles.body,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+              ],
               PerformanceSaveIndicator(
                 state: _saveState,
                 errorMessage: _errorMessage,

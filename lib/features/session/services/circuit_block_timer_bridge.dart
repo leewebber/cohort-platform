@@ -1,11 +1,73 @@
 import '../../performance/models/circuit_station_actual.dart';
+import '../../performance/models/performance_result_data.dart';
 import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
+import '../models/session_execution_plan.dart';
 import 'block_timer_controller.dart';
 
 class CircuitBlockTimerBridge {
   const CircuitBlockTimerBridge._();
+
+  static BlockTimerState? restoredState({
+    required SessionExecutionBlock block,
+    required PerformanceResultData? result,
+    Map<String, String> stationLabels = const {},
+  }) {
+    final configuration = block.timerConfiguration;
+    if (configuration == null) return null;
+    if (result is CircuitResultData && result.timerCursor != null) {
+      return stateFrom(
+        cursor: result.timerCursor!,
+        format: block.workoutFormat,
+        configuration: configuration,
+        stationLabels: stationLabels,
+      );
+    }
+    if (result is IntervalResultData) {
+      final next = (result.intervalsCompleted + 1).clamp(
+        1,
+        result.totalIntervals ?? configuration.rounds ?? 1,
+      );
+      return BlockTimerState(
+        format: WorkoutFormat.intervals,
+        phase: BlockTimerPhase.work,
+        isRunning: false,
+        isPaused: true,
+        isFinished: false,
+        primarySeconds:
+            result.workSeconds ?? configuration.workSeconds ?? 40,
+        currentRound: next,
+        totalRounds: result.totalIntervals ?? configuration.rounds ?? 1,
+        phaseLabel: 'Work',
+      );
+    }
+    if (result is ForTimeResultData && result.elapsedSeconds != null) {
+      return BlockTimerState(
+        format: WorkoutFormat.forTime,
+        phase: BlockTimerPhase.stopwatch,
+        isRunning: false,
+        isPaused: true,
+        isFinished: result.completed,
+        primarySeconds: result.elapsedSeconds!,
+        secondarySeconds: configuration.timeCapSeconds,
+        phaseLabel: 'For Time',
+      );
+    }
+    if (result is AmrapResultData && configuration.durationSeconds != null) {
+      final remaining = (configuration.durationSeconds! * 2) ~/ 5;
+      return BlockTimerState(
+        format: WorkoutFormat.amrap,
+        phase: BlockTimerPhase.countdown,
+        isRunning: false,
+        isPaused: true,
+        isFinished: false,
+        primarySeconds: remaining,
+        phaseLabel: 'AMRAP',
+      );
+    }
+    return null;
+  }
 
   static CircuitTimerCursor cursorFrom(BlockTimerState state) {
     return CircuitTimerCursor(

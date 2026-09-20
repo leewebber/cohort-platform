@@ -4,6 +4,7 @@ import 'package:cohort_platform/features/performance/models/training_session_rec
 import 'package:cohort_platform/features/session/models/production_restore_outcome.dart';
 import 'package:cohort_platform/features/session/models/production_session_draft.dart';
 import 'package:cohort_platform/features/session/models/production_session_ui_cursor.dart';
+import 'package:cohort_platform/features/session/presentation/production_restore_athlete_copy.dart';
 import 'package:cohort_platform/features/session/services/production_restore_resolver.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -112,6 +113,11 @@ void main() {
       request(identity: identity(athleteId: 'other'), actuals: actuals()),
     );
     expect(decision.outcome, ProductionRestoreOutcome.foreignAthlete);
+    expect(
+      decision.athleteMessage,
+      ProductionRestoreAthleteCopy.foreignAthleteTitle,
+    );
+    expect(decision.athleteMessage, isNot(contains('Sign in required')));
   });
 
   test('foreign actuals are rejected even without identity', () {

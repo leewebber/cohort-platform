@@ -16,7 +16,9 @@ import '../models/production_restore_outcome.dart';
 import '../models/production_session_draft.dart';
 import '../models/session_execution_plan.dart';
 import '../models/workout_session_launch_context.dart';
+import '../presentation/production_restore_athlete_copy.dart';
 import '../screens/active_session_screen.dart';
+import '../screens/production_restore_blocked_screen.dart';
 import 'production_restore_envelope_store.dart';
 import 'production_restore_resolver.dart';
 import 'session_execution_loader.dart';
@@ -217,8 +219,16 @@ class SessionExecutionLauncher {
         performanceController: performanceController,
       );
       controller.startSession();
-    } else {
+    } else if (decision.outcome == ProductionRestoreOutcome.completedHosted) {
       throw _restoreFailure(decision);
+    } else {
+      if (!context.mounted) throw _restoreFailure(decision);
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => ProductionRestoreBlockedScreen(decision: decision),
+        ),
+      );
+      return;
     }
 
     if (!context.mounted) return;
@@ -250,15 +260,19 @@ class SessionExecutionLauncher {
   }) {
     if (programmeContext == null || !programmeContext.isProgrammeBacked) {
       if (hostedCompleted) {
-        return const ProductionRestoreDecision(
+        return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.completedHosted,
-          athleteMessage: 'Session already completed',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.completedHosted,
+          ),
         );
       }
       if (actuals != null && actuals.athleteId == athleteId) {
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.resumable,
-          athleteMessage: 'Restoring your session',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.resumable,
+          ),
           mayEnterWithRestoredActuals: true,
           actuals: actuals,
           cursor: envelope?.cursor,
@@ -268,13 +282,17 @@ class SessionExecutionLauncher {
       if (actuals != null && actuals.athleteId != athleteId) {
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.foreignAthlete,
-          athleteMessage: 'Sign in required',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.foreignAthlete,
+          ),
           actuals: actuals,
         );
       }
-      return const ProductionRestoreDecision(
+      return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.noDraft,
-        athleteMessage: "Preparing today's session",
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.noDraft,
+        ),
         mayBeginFresh: true,
       );
     }

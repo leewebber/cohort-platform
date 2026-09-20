@@ -3,6 +3,7 @@ import '../models/active_session_state.dart';
 import '../models/production_restore_outcome.dart';
 import '../models/production_session_draft.dart';
 import '../models/production_session_ui_cursor.dart';
+import '../presentation/production_restore_athlete_copy.dart';
 import 'production_session_draft_classifier.dart';
 
 /// Inputs for the single production restore authority.
@@ -93,15 +94,19 @@ class ProductionRestoreResolver {
     request.legacySnapshotPresent;
 
     if (request.unavailable) {
-      return const ProductionRestoreDecision(
+      return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.unavailable,
-        athleteMessage: 'This session format is not available yet.',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.unavailable,
+        ),
       );
     }
     if (request.hostedCompleted) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.completedHosted,
-        athleteMessage: 'Session already completed',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.completedHosted,
+        ),
         identity: request.persistedIdentity,
         actuals: request.actuals,
         classification: ProductionDraftRestoreClass.completedHosted,
@@ -110,9 +115,11 @@ class ProductionRestoreResolver {
     if (request.transientNetworkFailure &&
         request.actuals == null &&
         request.persistedIdentity == null) {
-      return const ProductionRestoreDecision(
+      return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.transientFailure,
-        athleteMessage: 'Waiting for connection',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.transientFailure,
+        ),
       );
     }
 
@@ -120,24 +127,30 @@ class ProductionRestoreResolver {
     if (actuals != null && actuals.athleteId != request.athleteId) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.foreignAthlete,
-        athleteMessage: 'Sign in required',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.foreignAthlete,
+        ),
         actuals: actuals,
         classification: ProductionDraftRestoreClass.foreignAthlete,
       );
     }
 
     if (request.jsonCorrupt) {
-      return const ProductionRestoreDecision(
+      return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.corrupt,
-        athleteMessage: 'Draft cannot be safely restored',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.corrupt,
+        ),
         classification: ProductionDraftRestoreClass.corrupt,
       );
     }
 
     if (actuals == null && request.persistedIdentity == null) {
-      return const ProductionRestoreDecision(
+      return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.noDraft,
-        athleteMessage: "Preparing today's session",
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.noDraft,
+        ),
         mayBeginFresh: true,
       );
     }
@@ -147,7 +160,9 @@ class ProductionRestoreResolver {
         actuals.trainingSessionId != request.trainingSessionId) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.conflict,
-        athleteMessage: 'Draft cannot be safely restored',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.conflict,
+        ),
         actuals: actuals,
       );
     }
@@ -158,7 +173,9 @@ class ProductionRestoreResolver {
         actuals.assignmentId != request.assignmentId) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.staleOccurrence,
-        athleteMessage: 'Draft cannot be safely restored',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.staleOccurrence,
+        ),
         actuals: actuals,
         classification: ProductionDraftRestoreClass.staleOccurrence,
       );
@@ -170,7 +187,9 @@ class ProductionRestoreResolver {
         actuals.programmeId != request.programmeVersionId) {
       return ProductionRestoreDecision(
         outcome: ProductionRestoreOutcome.staleProgrammeVersion,
-        athleteMessage: 'Draft cannot be safely restored',
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.staleProgrammeVersion,
+        ),
         actuals: actuals,
         classification: ProductionDraftRestoreClass.staleProgrammeVersion,
       );
@@ -199,7 +218,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.compatible:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.resumable,
-          athleteMessage: 'Restoring your session',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.resumable,
+          ),
           mayEnterWithRestoredActuals: actuals != null,
           restoreCursor: cursor != null,
           identity: identity,
@@ -210,7 +231,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.legacyPartial:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.legacyPartiallyRecoverable,
-          athleteMessage: 'Restoring your session',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.legacyPartiallyRecoverable,
+          ),
           mayEnterWithRestoredActuals: actuals != null,
           restoreCursor: cursor != null,
           identity: identity,
@@ -221,7 +244,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.unsupportedFutureVersion:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.unsupportedVersion,
-          athleteMessage: 'Restoring your session',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.unsupportedVersion,
+          ),
           mayEnterWithRestoredActuals: actuals != null,
           restoreCursor: false,
           identity: identity,
@@ -231,7 +256,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.staleOccurrence:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.staleOccurrence,
-          athleteMessage: 'Draft cannot be safely restored',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.staleOccurrence,
+          ),
           identity: identity,
           actuals: actuals,
           classification: classification,
@@ -239,7 +266,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.staleProgrammeVersion:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.staleProgrammeVersion,
-          athleteMessage: 'Draft cannot be safely restored',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.staleProgrammeVersion,
+          ),
           identity: identity,
           actuals: actuals,
           classification: classification,
@@ -247,7 +276,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.foreignAthlete:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.foreignAthlete,
-          athleteMessage: 'Sign in required',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.foreignAthlete,
+        ),
           identity: identity,
           actuals: actuals,
           classification: classification,
@@ -255,7 +286,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.completedHosted:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.completedHosted,
-          athleteMessage: 'Session already completed',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.completedHosted,
+        ),
           identity: identity,
           actuals: actuals,
           classification: classification,
@@ -263,7 +296,9 @@ class ProductionRestoreResolver {
       case ProductionDraftRestoreClass.corrupt:
         return ProductionRestoreDecision(
           outcome: ProductionRestoreOutcome.corrupt,
-          athleteMessage: 'Draft cannot be safely restored',
+          athleteMessage: ProductionRestoreAthleteCopy.message(
+            ProductionRestoreOutcome.corrupt,
+          ),
           identity: identity,
           actuals: actuals,
           classification: classification,

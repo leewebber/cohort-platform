@@ -32,6 +32,7 @@ import '../performance/repositories/supabase_performance_record_store.dart';
 import '../session/services/programme_session_execution_launcher.dart';
 import 'controllers/home_today_session_refresh_controller.dart';
 import 'services/athlete_home_runtime_authority.dart';
+import 'widgets/athlete_home_rest_day_card.dart';
 import 'widgets/athlete_programme_today_section.dart';
 
 /// Athlete Home — entirely focused on today.
@@ -345,27 +346,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(height: CohortSpacing.xs),
         Text(dateLabel, style: CohortTextStyles.muted),
         const SizedBox(height: CohortSpacing.md),
-        CohortCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(lifecycle.programmeName, style: CohortTextStyles.small),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text('Rest day', style: CohortTextStyles.h2),
-              const SizedBox(height: CohortSpacing.sm),
-              const Text(
-                'No training session is scheduled for this programme date.',
-                style: CohortTextStyles.body,
-              ),
-              if (nextHint != null) ...[
-                const SizedBox(height: CohortSpacing.md),
-                TextButton(
-                  onPressed: widget.onOpenCalendar ?? _openProgrammeCalendar,
-                  child: Text(nextHint),
-                ),
-              ],
-            ],
-          ),
+        AthleteHomeRestDayCard(
+          programmeName: lifecycle.programmeName,
+          dateLabel: dateLabel,
+          guidance: null,
+          nextSessionHint: nextHint,
+          onOpenCalendar: widget.onOpenCalendar ?? _openProgrammeCalendar,
         ),
       ];
     }

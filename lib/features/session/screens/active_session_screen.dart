@@ -54,6 +54,8 @@ class ActiveSessionScreen extends StatefulWidget {
     this.refreshController,
     this.previousStrengthService,
     this.restoreEnvelopeStore,
+    this.openRestoredTimer = false,
+    this.restoredTimerOverride,
   });
 
   final SessionExecutionController controller;
@@ -67,6 +69,8 @@ class ActiveSessionScreen extends StatefulWidget {
   final HomeTodaySessionRefreshController? refreshController;
   final PreviousStrengthPerformanceService? previousStrengthService;
   final ProductionRestoreEnvelopeStore? restoreEnvelopeStore;
+  final bool openRestoredTimer;
+  final BlockTimerState? restoredTimerOverride;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -103,6 +107,16 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
+    if (widget.openRestoredTimer) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final block = _controller.state.activeBlock ??
+            _controller.state.plan.blocks.firstOrNull;
+        if (block != null && block.hasTimer) {
+          unawaited(_launchTimer(block));
+        }
+      });
+    }
   }
 
   @override
@@ -391,7 +405,12 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     };
     final draft = _blockDraft(block.blockId);
     final existing = draft?.resultData;
-    final cursor = existing is CircuitResultData ? existing.timerCursor : null;
+    final initialState = widget.restoredTimerOverride ??
+        CircuitBlockTimerBridge.restoredState(
+          block: block,
+          result: existing,
+          stationLabels: labels,
+        );
     final popped = await Navigator.of(context).push<BlockTimerState>(
       MaterialPageRoute(
         builder: (_) => BlockTimerScreen(
@@ -400,14 +419,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           configuration: block.timerConfiguration!,
           stationLabels: labels,
           onCheckpoint: (state) => _persistTimerCursor(block, state),
-          initialState: cursor == null
-              ? null
-              : CircuitBlockTimerBridge.stateFrom(
-                  cursor: cursor,
-                  format: block.workoutFormat,
-                  configuration: block.timerConfiguration!,
-                  stationLabels: labels,
-                ),
+          initialState: initialState,
         ),
       ),
     );
