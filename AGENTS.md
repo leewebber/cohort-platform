@@ -147,11 +147,18 @@ record.
 ## Current delivery sequence
 
 The active product sequence is
-[`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md):
-Phase 1 Integration Closeout → Progression Mechanics Validation → M9
-(**closed**; [`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md))
-→ catalogue/enrolment → M10 isolation → adaptation integrity → closed beta →
-entitlements → wearables/media. Do not start M10 without separate authority.
+[`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
+and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).
+M9 is **closed**
+([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
+M10 infrastructure is **closed**
+([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).
+Deeper coach-platform development is **frozen**. Binding order: complete the
+athlete experience → launch programme library → adaptation engine →
+progression/tracking → exercise knowledge/media → wearables → onboarding →
+commercial systems → staged betas → individual hybrid-athlete launch → Build
+Your Own → coaching/publisher platform → B2B later. Do not start M10 Sprint
+3, Build Your Own, or coaching-product work without separate authority.
 
 The Exercise Knowledge text-guidance application read projection is complete
 and founder-accepted at `9bc5cd7`. It is **not** the next product milestone.

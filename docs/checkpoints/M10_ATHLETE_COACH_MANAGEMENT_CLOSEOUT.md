@@ -26,9 +26,9 @@ NEXT_AUTHORITY=ATHLETE_PRODUCT_COMPLETION_PLAN
 ```
 
 Binding:
-[`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md).
-The next product sequence is the Athlete Product Completion Plan (separate
-planning commit).
+[`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md),
+[`../planning/Athlete_Product_Completion_Plan_v1.md`](../planning/Athlete_Product_Completion_Plan_v1.md),
+[`ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md`](./ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md).
 
 This file does **not** authorise Sprint 3, hosted consent smoke, invitation
 creation, roster backfill, manifest mutation, or a phone release.

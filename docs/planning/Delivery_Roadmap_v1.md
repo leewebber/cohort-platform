@@ -1,9 +1,12 @@
 # Delivery roadmap
 
-**Status:** M9 closed; M10 infrastructure **closed** (coach product frozen)
+**Status:** M10 Athlete/Coach Management and Isolation **closed**. Deeper
+coach-platform development is **frozen**. Binding athlete-launch sequence:
+[`Athlete_Product_Completion_Plan_v1.md`](./Athlete_Product_Completion_Plan_v1.md).
 
-**Release path:** Founder testing → controlled coaching-style pilot → closed
-catalogue beta → public beta → launch
+**Release path:** Founder dogfood → 5–10 trusted athletes → 25–50 structured
+beta → 100–250 launch-candidate beta → public individual-athlete launch →
+Build Your Own → coaching/publisher → B2B later.
 
 Phase 1 Integration Closeout is documentation and lifecycle consolidation. It
 does not promote deferred work into the current dogfood baseline.
@@ -11,37 +14,43 @@ does not promote deferred work into the current dogfood baseline.
 **M9 Content Relationship Graph and Versioning is closed** on Cohort Field
 Manual (Apollo v2 and Spartan v3 manifests published). Binding:
 [`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
-Founder phone **build 7** remains current; M9 did not require a phone release.
+Founder phone **build 7** remains current.
+
 **M10 is closed** on Field Manual (ledger 96 / `20260920120000`; zero
 relationship rows). Binding:
 [`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
-Sprint 3+ coaching product has not started and is frozen.
+Sprint 3+ coaching product is not the next milestone.
 
-## Next milestones
+## Next milestones (athlete-first)
 
 1. **Phase 1 Integration Closeout** (complete)
-2. **Progression Mechanics Validation**
-3. **M9 Content Relationship Graph and Versioning** (**closed**; Field Manual
-   Apollo v2 + Spartan v3 published)
-4. **Programme Catalogue and Enrolment** (productised; enrolment primitives
-   already exist)
-5. **M10 Athlete/Coach Management and Isolation** (**closed**; coach product frozen)
-6. **Adaptation and Integrity**
-7. **Closed Beta Infrastructure**
-8. **Commercial Entitlements / Payments**
-9. **Wearables and Exercise Media**
+2. **Progression Mechanics Validation** (ongoing with the honest tracking
+   milestone)
+3. **M9 Content Relationship Graph and Versioning** (**closed**)
+4. **M10 Athlete/Coach Management and Isolation** (**closed**; coach product
+   frozen)
+5. **Athlete Experience Completion**
+6. **Launch programme library**
+7. **Adaptation Engine v1**
+8. **Progression and tracking**
+9. **Exercise knowledge and media**
+10. **Wearables and integrations**
+11. **Onboarding and programme matching**
+12. **Commercial and operations**
+13. **Staged closed betas**
+14. **Public launch to individual hybrid athletes**
+15. **Build Your Own Programme** (after athlete launch)
+16. **Coaching / publisher platform** (after Build Your Own)
+17. **B2B / B2B2C / white label** (later)
 
-## Deferred (do not pull into Phase 1 closeout)
+## Deferred (do not pull forward)
 
-- Wearables
-- Full exercise-video player / library
-- Notifications
-- Payments
-- External coach authoring
-- Advanced adaptation
-- Public launch infrastructure
-- Product-UI Gate 2
-- Phase 3.2E/F/G (unallocated)
+- Deeper coach invitations, roster, messaging, teams, billing
+- Unconstrained AI plan assembly
+- Phase 3.2E/F/G as unallocated science work (media is the plan’s M-MED, not
+  a silent Phase 3 reopen)
+- Product-UI Gate 2 as a substitute for Athlete Experience Completion
+- Public launch infrastructure before commercial/legal gates
 
 Phase 3.1 catalogue/bridge work and the local Exercise Knowledge text
 projection remain complete and must not be reopened as “the next Phase 1

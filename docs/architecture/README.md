@@ -25,7 +25,9 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Phase_1_Test_Suite_Inventory_v1.md](./Phase_1_Test_Suite_Inventory_v1.md) | Tests by capability |
 | [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
 | [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
-| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 closed) |
+| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9/M10 closed; athlete-first) |
+| [../planning/Athlete_Product_Completion_Plan_v1.md](../planning/Athlete_Product_Completion_Plan_v1.md) | **Binding** athlete-launch doctrine and milestone plan |
+| [../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md](../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md) | Next-task authority after M10 closeout |
 | [M10_Athlete_Coach_Management_and_Isolation_v1.md](./M10_Athlete_Coach_Management_and_Isolation_v1.md) | **M10 binding** — consent membership + isolation |
 | [../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md) | **M10 closeout** — hosted schema/ACL; coach product frozen |
 | [../checkpoints/M10_SPRINT_1_HANDOFF.md](../checkpoints/M10_SPRINT_1_HANDOFF.md) | Historical M10 Sprint 1 local handoff |
