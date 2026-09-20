@@ -203,6 +203,8 @@ absent) · phone build 7 draft mutation · hosted writes.
 
 ## 10. Preview
 
-Internal: `lib/main_daily_journey_integrity_preview.dart`  
-Command: `flutter run -t lib/main_daily_journey_integrity_preview.dart`  
+Internal: `lib/main_daily_journey_integrity_preview.dart`
+
+Command: `flutter run -t lib/main_daily_journey_integrity_preview.dart`
+
 Not imported from `lib/main.dart`.
