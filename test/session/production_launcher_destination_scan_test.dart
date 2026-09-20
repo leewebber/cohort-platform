@@ -12,6 +12,8 @@ void main() {
     ).readAsStringSync();
     expect(launcher.contains('SessionPlayerScreen'), isFalse);
     expect(launcher.contains('ActiveSessionScreen'), isTrue);
+    expect(launcher.contains('ProductionRestoreResolver'), isTrue);
+    expect(launcher.contains('AthleteSessionMemoryStore.instance.read'), isTrue);
     expect(programme.contains('SessionPlayerScreen'), isFalse);
     expect(programme.contains('launchActiveSessionWithPlan'), isTrue);
   });
