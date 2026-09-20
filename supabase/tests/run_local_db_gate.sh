@@ -228,6 +228,7 @@ docker cp "${TESTS_DIR}/../migrations/20260914120000_terminalize_training_sessio
 docker cp "${TESTS_DIR}/../migrations/20260914121000_reconcile_terminal_training_sessions_from_records.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_reconcile_terminal_session_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260918120300_content_graph_rls.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_content_graph_rls_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260919120400_publisher_athlete_membership_capabilities.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_membership_capabilities_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260920120000_publisher_athlete_membership_privilege_hardening.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_membership_privilege_hardening_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -282,6 +283,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_reconcile_terminal_session_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_content_graph_rls_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_membership_capabilities_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_membership_privilege_hardening_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_as.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_at.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_au.sql
@@ -358,6 +360,7 @@ docker cp "${TESTS_DIR}/../migrations/20260914120000_terminalize_training_sessio
 docker cp "${TESTS_DIR}/../migrations/20260914121000_reconcile_terminal_training_sessions_from_records.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_reconcile_terminal_session_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260918120300_content_graph_rls.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_content_graph_rls_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260919120400_publisher_athlete_membership_capabilities.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_membership_capabilities_migration.sql"
+docker cp "${TESTS_DIR}/../migrations/20260920120000_publisher_athlete_membership_privilege_hardening.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_membership_privilege_hardening_migration.sql"
 docker cp "${SPRINT12_APOLLO_PAYLOAD}" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_apollo_import_payload.json"
 docker exec -i "${SPRINT12_DB_CONTAINER}" \
   psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -412,6 +415,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_reconcile_terminal_session_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_content_graph_rls_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_membership_capabilities_migration.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -1 -f /tmp/sprint12_membership_privilege_hardening_migration.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_as.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_at.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_au.sql
