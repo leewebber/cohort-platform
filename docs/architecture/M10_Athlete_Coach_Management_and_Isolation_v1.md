@@ -199,16 +199,25 @@ M10 flags to the hosted RPC in this sprint.
 
 ## 10. Security / RLS expectations
 
-Future hosted RLS (not applied now) must:
+Hosted M10 schema (`20260919120000`–`120400`) is applied on Field Manual.
+Authorization checks and RLS deny anonymous writes and unauthorised reads.
+Default PostgreSQL privileges still left `PUBLIC`/`anon` EXECUTE on several
+RPCs and `authenticated ALL` on tables until additive hardening
+`20260920120000` (local; **not hosted until founder approval**).
 
-- deny anonymous
-- restrict membership rows to the caller’s publisher principal
+Required matrix after hardening:
+
+- deny anonymous table access and M10 management EXECUTE
+- no `PUBLIC` EXECUTE or table privilege on M10 consent objects
+- authenticated mutates only through typed RPCs (no direct INSERT/UPDATE/DELETE)
+- authenticated has no direct SELECT on M10 tables/views (RPC-only reads)
+- restrict membership rows to the caller’s publisher principal or own athlete rows
 - deny coaches a global roster
 - keep assignment pin immutable
 - keep published manifests immutable
-- not grant graph impact by being a coach profile alone (M9 rule)
+- not grant graph impact or membership by being a coach profile alone (M9 rule)
 
-Sprint 1 proves the same rules in domain tests.
+Sprint 1 proves the same rules in domain tests. Gate AY proves SQL ACLs locally.
 
 ---
 
@@ -382,16 +391,26 @@ manifest (`graph_status=missing`); composite mismatch (`graph_status=stale`).
 
 Detailed performance access returns `unavailable` / `not_authorised`.
 
-### 17.6 RLS matrix
+### 17.6 RLS and privilege matrix
 
-| Actor | Invitations | Memberships | Roster | Audit |
-|-------|-------------|-------------|--------|-------|
-| Anonymous | deny | deny | deny | deny |
-| Athlete | own only; accept/decline/revoke via RPC | own only | deny | own relationship |
-| Publisher principal (active) | own publisher | own publisher after accept | own publisher | own namespace |
-| Coach role alone | deny | deny | deny | deny |
-| Other publisher | deny | deny | deny | deny |
-| Service role | explicit trusted path | same | same | same |
+Row policies remain SELECT-own-or-principal and deny writes. Hardening
+`20260920120000` additionally revokes client table ACLs so those policies are
+defence in depth, not the only control.
+
+| Actor | Invitations | Memberships | Roster | Audit | EXECUTE |
+|-------|-------------|-------------|--------|-------|---------|
+| `PUBLIC` / anonymous | deny (no table ACL) | deny | deny | deny | none on M10 management functions |
+| Athlete | RPC only; accept/decline/revoke | RPC inspect own | deny inspect | RPC own history | client RPCs |
+| Publisher principal (active) | RPC invite/cancel | RPC after accept | RPC inspect | RPC namespace | client RPCs |
+| Coach role alone | deny | deny | deny | deny | RPCs executable; authority fails closed |
+| Other publisher | deny | deny | deny | deny | same |
+| `service_role` / `postgres` | administrative | same; events have no UPDATE | SELECT | same | helpers + RPCs |
+
+Internal helpers (`expire_pending`, `record_event`, `assignment_is_own`,
+trigger functions) are not executable by `authenticated` or `anon`.
+
+Capability `cohort_athlete_runtime_capabilities()` stays authenticated +
+`service_role` only (no anon EXECUTE), matching the existing bootstrap.
 
 ### 17.7 Capabilities (schema version 3)
 

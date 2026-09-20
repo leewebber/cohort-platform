@@ -27,6 +27,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [../checkpoints/M10_SPRINT_1_HANDOFF.md](../checkpoints/M10_SPRINT_1_HANDOFF.md) | Historical M10 Sprint 1 local handoff |
 | [../checkpoints/M10_SPRINT_2_HANDOFF.md](../checkpoints/M10_SPRINT_2_HANDOFF.md) | M10 Sprint 2 local persistence (not hosted) |
 | [../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md](../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md) | M10 Field Manual membership preflight (read-only) |
+| [../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md](../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md) | M10 ACL hardening (local; hosted apply paused) |
 | [Content_Relationship_Graph_and_Versioning_v1.md](./Content_Relationship_Graph_and_Versioning_v1.md) | **M9 binding** — content graph, versioning, pinning |
 | [M9_Existing_Content_System_Audit_v1.md](./M9_Existing_Content_System_Audit_v1.md) | M9 current-model audit |
 | [M9_Schema_Proposal_v1.md](./M9_Schema_Proposal_v1.md) | M9 additive schema proposal (not applied) |

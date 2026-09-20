@@ -16,7 +16,9 @@ Founder phone **build 7** remains current; M9 did not require a phone release.
 Binding:
 [`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md)
 §17 and [`../checkpoints/M10_SPRINT_2_HANDOFF.md`](../checkpoints/M10_SPRINT_2_HANDOFF.md).
-Hosted apply and Sprint 3 have not started.
+Field Manual has schema-only membership objects (`20260919120000`–`120400`);
+ACL hardening `20260920120000` is local and **not hosted**. Sprint 3 has not
+started.
 
 ## Next milestones
 

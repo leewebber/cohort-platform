@@ -24,6 +24,10 @@ PUSHED=false
 memberships, infer membership from assignments, publish manifests, rebuild
 the phone, or start Sprint 3.
 
+See also
+[`M10_MEMBERSHIP_PRIVILEGE_HARDENING.md`](./M10_MEMBERSHIP_PRIVILEGE_HARDENING.md)
+for the later ACL-narrowing migration (local; hosted apply paused).
+
 Binding:
 [`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md)
 §17.
@@ -49,6 +53,9 @@ Binding:
 - `publisher_athlete_roster` (security invoker)
 - RLS deny-writes; SELECT own athlete or publisher principal
 - capability keys `publisher_athlete_membership_read|invite|manage`
+- **Privilege hardening** `20260920120000` (local): revoke PUBLIC/anon EXECUTE
+  and authenticated table ALL; RPC-only client access. Hosted apply **not**
+  done.
 
 Migration-time row writes: **zero**. No assignment backfill.
 

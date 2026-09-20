@@ -52,15 +52,16 @@ Local gate coverage: Gates C–AU plus **AV**, **AW**, and **AX** (content-graph
 persistence). Capability reporting remains `cohort_athlete_runtime_capabilities`
 (schema_version 2 keys are additive).
 
-## M10 Sprint 2 (local only, not Field Manual)
+## M10 Sprint 2 / privilege hardening
 
 | File | Purpose | Kind | Row writes at migrate? | Hosted (recorded) |
 |------|---------|------|------------------------|-------------------|
-| `20260919120000_publisher_athlete_membership_core.sql` | Invitations, memberships, append-only events | Additive | **No** | No |
-| `20260919120100_publisher_athlete_membership_rpcs.sql` | Consent RPCs | Functions | No | No |
-| `20260919120200_publisher_athlete_roster_projection.sql` | Roster/inbox/audit reads | Views + functions | No | No |
-| `20260919120300_publisher_athlete_membership_rls.sql` | Membership RLS | RLS | No | No |
-| `20260919120400_publisher_athlete_membership_capabilities.sql` | Capability schema_version 3 | Functions | No | No |
+| `20260919120000_publisher_athlete_membership_core.sql` | Invitations, memberships, append-only events | Additive | **No** | Schema-only Field Manual |
+| `20260919120100_publisher_athlete_membership_rpcs.sql` | Consent RPCs | Functions | No | Schema-only Field Manual |
+| `20260919120200_publisher_athlete_roster_projection.sql` | Roster/inbox/audit reads | Views + functions | No | Schema-only Field Manual |
+| `20260919120300_publisher_athlete_membership_rls.sql` | Membership RLS | RLS | No | Schema-only Field Manual |
+| `20260919120400_publisher_athlete_membership_capabilities.sql` | Capability schema_version 3 | Functions | No | Schema-only Field Manual |
+| `20260920120000_publisher_athlete_membership_privilege_hardening.sql` | Least-privilege ACLs | REVOKE/GRANT | **No** | **Not applied** (awaiting founder approval) |
 
-Local gate coverage adds **AY** (publisher–athlete consent). Enrolment is never
-inferred into membership. Hosted apply is not authorised.
+Local gate coverage adds **AY** (consent + ACL). Enrolment is never inferred
+into membership. Hardening must not be applied hosted without new approval.

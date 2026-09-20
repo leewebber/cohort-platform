@@ -38,6 +38,11 @@ Binding:
 This document does **not** authorise hosted apply, consent smoke tests,
 backfill, manifest mutation, or Sprint 3.
 
+Schema-only apply of `20260919120000`–`120400` later landed on Field Manual
+(ledger 95). Privilege hardening `20260920120000` is a **separate** local
+migration and is **not** hosted until founder approval. See
+[`M10_MEMBERSHIP_PRIVILEGE_HARDENING.md`](./M10_MEMBERSHIP_PRIVILEGE_HARDENING.md).
+
 ---
 
 ## A. Repository verification
