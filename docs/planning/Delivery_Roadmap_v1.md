@@ -1,6 +1,6 @@
 # Delivery roadmap
 
-**Status:** Active sequence after M9 closeout; M10 Sprint 2 local (not hosted)
+**Status:** M9 closed; M10 infrastructure **closed** (coach product frozen)
 
 **Release path:** Founder testing → controlled coaching-style pilot → closed
 catalogue beta → public beta → launch
@@ -12,13 +12,10 @@ does not promote deferred work into the current dogfood baseline.
 Manual (Apollo v2 and Spartan v3 manifests published). Binding:
 [`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 Founder phone **build 7** remains current; M9 did not require a phone release.
-**M10 Sprint 2 is local only** (persistent consent membership + tenant RLS).
-Binding:
-[`../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md`](../architecture/M10_Athlete_Coach_Management_and_Isolation_v1.md)
-§17 and [`../checkpoints/M10_SPRINT_2_HANDOFF.md`](../checkpoints/M10_SPRINT_2_HANDOFF.md).
-Field Manual has schema-only membership objects (`20260919120000`–`120400`);
-ACL hardening `20260920120000` is local and **not hosted**. Sprint 3 has not
-started.
+**M10 is closed** on Field Manual (ledger 96 / `20260920120000`; zero
+relationship rows). Binding:
+[`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
+Sprint 3+ coaching product has not started and is frozen.
 
 ## Next milestones
 
@@ -28,7 +25,7 @@ started.
    Apollo v2 + Spartan v3 published)
 4. **Programme Catalogue and Enrolment** (productised; enrolment primitives
    already exist)
-5. **M10 Athlete/Coach Management and Isolation** (Sprint 2 local; not hosted)
+5. **M10 Athlete/Coach Management and Isolation** (**closed**; coach product frozen)
 6. **Adaptation and Integrity**
 7. **Closed Beta Infrastructure**
 8. **Commercial Entitlements / Payments**

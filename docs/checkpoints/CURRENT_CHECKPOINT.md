@@ -3,10 +3,8 @@
 > **Live delivery pointer:** Phase 1 Integration Closeout is
 > [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
 > **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
-> **M10 Sprint 1 (local):** [`M10_SPRINT_1_HANDOFF.md`](./M10_SPRINT_1_HANDOFF.md).
-> **M10 Sprint 2 (local, not hosted):** [`M10_SPRINT_2_HANDOFF.md`](./M10_SPRINT_2_HANDOFF.md).
-> **M10 Field Manual membership preflight (read-only):** [`M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md`](./M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md).
-> **M10 privilege hardening (local, not hosted):** [`M10_MEMBERSHIP_PRIVILEGE_HARDENING.md`](./M10_MEMBERSHIP_PRIVILEGE_HARDENING.md).
+> **M10 authority (closed):** [`M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](./M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
+> Historical M10 sprint / preflight / hardening records remain evidence only.
 > This file remains the historical atomic-resume / Phase 3 checkpoint. It is
 > not the next-task authority.
 

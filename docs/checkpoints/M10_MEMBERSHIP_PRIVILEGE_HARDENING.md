@@ -1,5 +1,11 @@
 # M10 membership privilege hardening
 
+**Hosted apply completed 2026-09-20** (Field Manual ledger 96 /
+`20260920120000`). Live ACL status:
+[`M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](./M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
+This file remains the local hardening design record. Flags below describe the
+pre-apply pause and are **not** current Field Manual state.
+
 **Recorded:** 2026-09-20
 
 **Status:** Local additive ACL hardening complete. **Paused for founder

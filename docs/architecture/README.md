@@ -1,7 +1,10 @@
 # Architecture documentation index
 
 **Phase 1 Integration Closeout remains the Phase 1 dogfood pointer.**
-**M9 Content Relationship Graph is closed.** Start M9 follow-on work from
+**M9 Content Relationship Graph is closed.**
+**M10 Athlete/Coach Management and Isolation is closed.** Live M10 record:
+[`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
+Start M9 follow-on work from
 [`../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](../checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 Phase 1 Integration Closeout remains
 [`../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md`](../checkpoints/PHASE_1_INTEGRATION_CLOSEOUT.md).
@@ -22,12 +25,13 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Phase_1_Test_Suite_Inventory_v1.md](./Phase_1_Test_Suite_Inventory_v1.md) | Tests by capability |
 | [Phase_1_Development_Baseline_v1.md](./Phase_1_Development_Baseline_v1.md) | Reproducible local workflow |
 | [Phase_1_Integration_Readiness_v1.md](./Phase_1_Integration_Readiness_v1.md) | Fast-forward readiness (paused) |
-| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 Sprint 2 local) |
+| [../planning/Delivery_Roadmap_v1.md](../planning/Delivery_Roadmap_v1.md) | Active milestone sequence (M9 closed; M10 closed) |
 | [M10_Athlete_Coach_Management_and_Isolation_v1.md](./M10_Athlete_Coach_Management_and_Isolation_v1.md) | **M10 binding** — consent membership + isolation |
+| [../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md) | **M10 closeout** — hosted schema/ACL; coach product frozen |
 | [../checkpoints/M10_SPRINT_1_HANDOFF.md](../checkpoints/M10_SPRINT_1_HANDOFF.md) | Historical M10 Sprint 1 local handoff |
-| [../checkpoints/M10_SPRINT_2_HANDOFF.md](../checkpoints/M10_SPRINT_2_HANDOFF.md) | M10 Sprint 2 local persistence (not hosted) |
-| [../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md](../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md) | M10 Field Manual membership preflight (read-only) |
-| [../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md](../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md) | M10 ACL hardening (local; hosted apply paused) |
+| [../checkpoints/M10_SPRINT_2_HANDOFF.md](../checkpoints/M10_SPRINT_2_HANDOFF.md) | Historical M10 Sprint 2 local persistence |
+| [../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md](../checkpoints/M10_FIELD_MANUAL_MEMBERSHIP_PREFLIGHT.md) | Historical M10 Field Manual membership preflight |
+| [../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md](../checkpoints/M10_MEMBERSHIP_PRIVILEGE_HARDENING.md) | Historical M10 ACL hardening design record |
 | [Content_Relationship_Graph_and_Versioning_v1.md](./Content_Relationship_Graph_and_Versioning_v1.md) | **M9 binding** — content graph, versioning, pinning |
 | [M9_Existing_Content_System_Audit_v1.md](./M9_Existing_Content_System_Audit_v1.md) | M9 current-model audit |
 | [M9_Schema_Proposal_v1.md](./M9_Schema_Proposal_v1.md) | M9 additive schema proposal (not applied) |

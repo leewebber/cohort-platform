@@ -1,5 +1,10 @@
 # M10 Athlete/Coach Management and Isolation v1
 
+**Infrastructure closed 2026-09-20.** Live hosted status:
+[`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
+Sprint 3+ coach-platform product remains **frozen**. Historical Sprint 1–2
+contract below is retained and is not next-task authority.
+
 **Status:** Binding Sprint 1–2 contract
 
 **Recorded:** 2026-09-19

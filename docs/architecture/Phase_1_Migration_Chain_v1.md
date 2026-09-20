@@ -61,7 +61,8 @@ persistence). Capability reporting remains `cohort_athlete_runtime_capabilities`
 | `20260919120200_publisher_athlete_roster_projection.sql` | Roster/inbox/audit reads | Views + functions | No | Schema-only Field Manual |
 | `20260919120300_publisher_athlete_membership_rls.sql` | Membership RLS | RLS | No | Schema-only Field Manual |
 | `20260919120400_publisher_athlete_membership_capabilities.sql` | Capability schema_version 3 | Functions | No | Schema-only Field Manual |
-| `20260920120000_publisher_athlete_membership_privilege_hardening.sql` | Least-privilege ACLs | REVOKE/GRANT | **No** | **Not applied** (awaiting founder approval) |
+| `20260920120000_publisher_athlete_membership_privilege_hardening.sql` | Least-privilege ACLs | REVOKE/GRANT | **No** | Field Manual ledger 96 (2026-09-20) |
 
 Local gate coverage adds **AY** (consent + ACL). Enrolment is never inferred
-into membership. Hardening must not be applied hosted without new approval.
+into membership. M10 infrastructure closeout:
+[`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
