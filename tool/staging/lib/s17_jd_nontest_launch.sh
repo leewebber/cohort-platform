@@ -50,7 +50,7 @@ s17_jd_nontest_flutter_run() {
   local run_pid=$!
   set +m
 
-  python3 - "$result_file" "$run_pid" "$timeout_sec" "$grace_sec" "$stdout_log" "$stderr_log" "$progress_file" "$surface" <<'PY'
+  python3 - "$result_file" "$run_pid" "$timeout_sec" "$grace_sec" "$stdout_log" "$stderr_log" "$progress_file" "$surface" "$S17_ROOT" <<'PY'
 import json, os, pathlib, signal, sys, time
 
 result = pathlib.Path(sys.argv[1])
@@ -61,16 +61,30 @@ stdout_log = pathlib.Path(sys.argv[5])
 stderr_log = pathlib.Path(sys.argv[6])
 progress = pathlib.Path(sys.argv[7])
 surface = sys.argv[8]
+sys.path.insert(0, str(pathlib.Path(sys.argv[9]) / "tool/staging/lib"))
+from s17_jd_nontest_containment import should_signal_process_group
+
+def _signal_tree(sig):
+    try:
+        waiter_pgid = os.getpgrp()
+        child_pgid = os.getpgid(run_pid)
+    except ProcessLookupError:
+        return
+    if should_signal_process_group(waiter_pgid, child_pgid):
+        try:
+            os.killpg(child_pgid, sig)
+            return
+        except (ProcessLookupError, PermissionError):
+            pass
+    try:
+        os.kill(run_pid, sig)
+    except ProcessLookupError:
+        return
 
 def terminate():
-    # Kill process group when possible so nested flutter/engine children die.
-    try:
-        os.killpg(run_pid, signal.SIGTERM)
-    except (ProcessLookupError, PermissionError):
-        try:
-            os.kill(run_pid, signal.SIGTERM)
-        except ProcessLookupError:
-            return
+    # Never killpg the waiter/test-runner group. SIGTERM after ok:true is
+    # intentional flutter cleanup, not a product failure.
+    _signal_tree(signal.SIGTERM)
     end = time.time() + grace
     while time.time() < end:
         try:
@@ -78,13 +92,7 @@ def terminate():
         except ProcessLookupError:
             return
         time.sleep(0.2)
-    try:
-        os.killpg(run_pid, signal.SIGKILL)
-    except (ProcessLookupError, PermissionError):
-        try:
-            os.kill(run_pid, signal.SIGKILL)
-        except ProcessLookupError:
-            return
+    _signal_tree(signal.SIGKILL)
 
 def write_terminal_from_progress(reason: str, code: int):
     payload = {
@@ -190,6 +198,27 @@ sys.exit(write_terminal_from_progress("timeout", 3))
 PY
   local py_ec=$?
   set -e
+  local result_ok=0
+  if [[ -f "$result_file" ]]; then
+    if python3 - "$S17_ROOT" "$result_file" <<'PY'
+import json, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(sys.argv[1]) / "tool/staging/lib"))
+from s17_jd_nontest_containment import launcher_exit_after_waiter
+try:
+    ok = json.loads(Path(sys.argv[2]).read_text()).get("ok") is True
+except Exception:
+    ok = False
+sys.exit(launcher_exit_after_waiter(0, ok))
+PY
+    then
+      result_ok=1
+    fi
+  fi
+  # Successful result wins over waiter SIGTERM during intentional flutter cleanup.
+  if [[ "$result_ok" -eq 1 ]]; then
+    return 0
+  fi
   if [[ "$py_ec" -ne 0 ]]; then
     return "$py_ec"
   fi
@@ -197,18 +226,5 @@ PY
     echo "REFUSED: non-test launch produced no result file" >&2
     return 2
   fi
-  # Honour terminal result ok flag for shell callers / Python outer.
-  if ! python3 - "$result_file" <<'PY'
-import json, sys
-from pathlib import Path
-try:
-    ok = json.loads(Path(sys.argv[1]).read_text()).get("ok") is True
-except Exception:
-    ok = False
-sys.exit(0 if ok else 2)
-PY
-  then
-    return 2
-  fi
-  return 0
+  return 2
 }
