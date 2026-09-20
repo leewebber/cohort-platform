@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../application/athlete_workout/athlete_workout_completion_application_service.dart';
 import '../../../application/athlete_workout/home_workout_execution_context.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
+import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -18,6 +19,7 @@ import '../widgets/implausible_running_pace_warning.dart';
 import '../widgets/performance_capture_widgets.dart';
 import '../../session/screens/session_complete_screen.dart';
 import '../../session/controllers/session_execution_controller.dart';
+import '../../session/services/production_restore_envelope_store.dart';
 
 class SessionFinishReviewScreen extends StatefulWidget {
   const SessionFinishReviewScreen({
@@ -196,6 +198,23 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
 
       final reload = widget.onAuthoritativeReload?.call();
       if (reload != null) await reload;
+
+      ProductionRestoreEnvelopeStore.instance.clear(
+        athleteId: widget.athleteId,
+        trainingSessionId: widget.trainingSessionId,
+      );
+      AthleteSessionMemoryStore.instance.clear(
+        AthleteSessionMemoryStore.sessionKey(
+          protocolId: widget.executionController.state.plan.sessionId,
+          trainingSessionId: widget.trainingSessionId,
+        ),
+      );
+      if (AthletePersistence.isInitialized) {
+        await AthletePersistence.repository.clearProductionRestoreEnvelope(
+          athleteId: widget.athleteId,
+          trainingSessionId: widget.trainingSessionId,
+        );
+      }
 
       if (!mounted) return;
       setState(() => _saveState = PerformanceSaveState.saved);

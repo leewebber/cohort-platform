@@ -19,6 +19,8 @@ import '../../adaptive_progression/models/session_completion.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../performance/services/previous_strength_performance_service.dart';
+import '../../session/controllers/session_execution_controller.dart';
+import '../../session/services/production_restore_envelope_store.dart';
 import '../services/current_user_session.dart';
 import '../services/profile_provisioning_service.dart';
 
@@ -193,6 +195,12 @@ class AuthController extends ChangeNotifier {
     CurrentUserSession.clear();
     LastVerifiedAuthProfileStore.forgetIfUser(athleteId);
     UserSessionCache.clearAll();
+    AthleteSessionMemoryStore.instance.clearAll();
+    if (athleteId != null && athleteId.isNotEmpty) {
+      ProductionRestoreEnvelopeStore.instance.clearForAthlete(athleteId);
+    } else {
+      ProductionRestoreEnvelopeStore.instance.clearAll();
+    }
     FounderAccessPolicy.bindSessionEmail(null);
     // Sign-out policy B: clear local athlete training data from the device.
     if (AthletePersistence.isInitialized) {

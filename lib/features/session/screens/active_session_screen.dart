@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../core/errors/user_facing_error_messages.dart';
+import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -13,6 +14,7 @@ import '../../../features/programme/models/programme_progress_summary.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
 import '../../performance/models/active_performance_draft.dart';
 import '../../performance/models/performance_result_data.dart';
+import '../../performance/models/training_session_record_status.dart';
 import '../../performance/screens/emom_result_screen.dart';
 import '../../performance/screens/session_finish_review_screen.dart';
 import '../../performance/services/circuit_capture_contract.dart';
@@ -23,8 +25,14 @@ import '../../performance/models/previous_strength_performance.dart';
 import '../../performance/widgets/performance_capture_widgets.dart';
 import '../../../models/workout_format.dart';
 import '../controllers/session_execution_controller.dart';
+import '../models/production_restore_envelope.dart';
+import '../models/production_restore_outcome.dart';
+import '../models/production_session_draft.dart';
+import '../models/production_session_ui_cursor.dart';
 import '../models/session_execution_plan.dart';
 import '../models/workout_session_launch_context.dart';
+import '../services/production_restore_envelope_store.dart';
+import '../services/production_restore_resolver.dart';
 import '../services/block_timer_controller.dart';
 import '../services/circuit_block_timer_bridge.dart';
 import '../services/session_finish_eligibility.dart';
@@ -45,6 +53,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.workoutLaunchContext,
     this.refreshController,
     this.previousStrengthService,
+    this.restoreEnvelopeStore,
   });
 
   final SessionExecutionController controller;
@@ -57,6 +66,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final WorkoutSessionLaunchContext? workoutLaunchContext;
   final HomeTodaySessionRefreshController? refreshController;
   final PreviousStrengthPerformanceService? previousStrengthService;
+  final ProductionRestoreEnvelopeStore? restoreEnvelopeStore;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -79,6 +89,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
   PreviousStrengthHistoryState _previousStrengthHistory =
       const PreviousStrengthHistoryState.loading();
   late final PreviousStrengthPerformanceService _previousStrengthService;
+  late final ProductionRestoreEnvelopeStore _restoreEnvelopeStore;
 
   @override
   void initState() {
@@ -87,6 +98,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
     _previousStrengthService =
         widget.previousStrengthService ?? PreviousStrengthPerformanceService();
+    _restoreEnvelopeStore =
+        widget.restoreEnvelopeStore ?? ProductionRestoreEnvelopeStore.instance;
     WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
@@ -104,6 +117,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.paused) {
       unawaited(_persistDraft());
+    }
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_reconcileForeground());
     }
   }
 
@@ -177,6 +193,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     });
     try {
       await _saveCoordinator.saveDraft(controller: _performanceController);
+      await _persistRestoreEnvelope();
       _savedRevision = requestedRevision;
       _lastSaveSucceeded = true;
       if (!mounted) return;
@@ -192,6 +209,113 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           logTag: 'session_draft_save',
         );
       });
+    }
+  }
+
+  Future<void> _persistRestoreEnvelope() async {
+    final athleteId = widget.athleteId;
+    final trainingSessionId = widget.trainingSessionId;
+    final programmeContext = widget.programmeContext;
+    if (athleteId == null ||
+        trainingSessionId == null ||
+        programmeContext == null ||
+        !programmeContext.isProgrammeBacked) {
+      return;
+    }
+    final state = _controller.state;
+    final envelope = ProductionRestoreEnvelope(
+      identity: ProductionSessionDraft(
+        schemaVersion: ProductionSessionDraft.currentSchemaVersion,
+        athleteId: athleteId,
+        assignmentId: programmeContext.assignmentId,
+        programmeVersionId: programmeContext.programmeVersionId,
+        programmedSessionKey: programmeContext.programmedSessionKey ?? '',
+        packageContentHash: programmeContext.packageContentHash ?? '',
+        trainingSessionId: trainingSessionId,
+        entryMode: 'live',
+        occurrenceId: programmeContext.occurrenceId,
+        startedAt: _performanceController.draft.startedAt,
+        lastDurableSaveAt: DateTime.now().toUtc(),
+      ),
+      cursor: ProductionSessionUiCursor(
+        schemaVersion: ProductionSessionUiCursor.currentSchemaVersion,
+        athleteId: athleteId,
+        assignmentId: programmeContext.assignmentId,
+        trainingSessionId: trainingSessionId,
+        occurrenceId: programmeContext.occurrenceId,
+        activeBlockId: state.activeBlock?.blockId ??
+            _performanceController.draft.activeBlockId,
+        activeBlockIndex: state.activeBlockIndex,
+        expandedBlockIds: state.expandedBlockIds,
+        savedAt: DateTime.now().toUtc(),
+      ),
+    );
+    _restoreEnvelopeStore.write(envelope);
+    if (AthletePersistence.isInitialized) {
+      await AthletePersistence.repository.saveProductionRestoreEnvelope(
+        athleteId: athleteId,
+        trainingSessionId: trainingSessionId,
+        payload: envelope.toJson(),
+      );
+    }
+  }
+
+  Future<void> _reconcileForeground() async {
+    final athleteId = widget.athleteId;
+    final trainingSessionId = widget.trainingSessionId;
+    final programmeContext = widget.programmeContext;
+    if (athleteId == null || trainingSessionId == null || _completionLocked) {
+      return;
+    }
+    try {
+      final inProgress = await _saveCoordinator.loadInProgressDraftAsRecord(
+        athleteId: athleteId,
+        trainingSessionId: trainingSessionId,
+      );
+      final terminal = inProgress == null
+          ? await _saveCoordinator.store.getTerminalForTrainingSession(
+              athleteId: athleteId,
+              trainingSessionId: trainingSessionId,
+            )
+          : null;
+      final hostedCompleted =
+          terminal?.status == TrainingSessionRecordStatus.completed;
+      if (programmeContext != null && programmeContext.isProgrammeBacked) {
+        final envelope = _restoreEnvelopeStore.read(
+          athleteId: athleteId,
+          trainingSessionId: trainingSessionId,
+        );
+        final decision = const ProductionRestoreResolver().resolve(
+          ProductionRestoreRequest(
+            athleteId: athleteId,
+            assignmentId: programmeContext.assignmentId,
+            programmeVersionId: programmeContext.programmeVersionId,
+            programmedSessionKey: programmeContext.programmedSessionKey ?? '',
+            packageContentHash: programmeContext.packageContentHash ?? '',
+            occurrenceId: programmeContext.occurrenceId,
+            trainingSessionId: trainingSessionId,
+            hostedCompleted: hostedCompleted,
+            persistedIdentity: envelope?.identity,
+            actuals: inProgress == null
+                ? null
+                : _saveCoordinator
+                      .restoreControllerFromRecord(inProgress)
+                      .draft,
+          ),
+        );
+        if (decision.outcome == ProductionRestoreOutcome.completedHosted &&
+            mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Session already completed')),
+          );
+        }
+      } else if (hostedCompleted && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Session already completed')),
+        );
+      }
+    } catch (_) {
+      // Network loss keeps the local draft; do not treat as revocation.
     }
   }
 

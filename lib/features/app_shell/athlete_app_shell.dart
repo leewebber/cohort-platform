@@ -23,6 +23,7 @@ import '../programme/services/supabase_backfill_programme_session_store.dart';
 import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../session/services/programme_session_execution_launcher.dart';
+import '../session/services/workout_progress_snapshot_policy.dart';
 import '../progress/screens/progress_screen.dart';
 import '../progress/services/athlete_progress_summary_builder.dart';
 import '../../data/repositories/programme_assignment_store.dart';
@@ -177,57 +178,40 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
     }
 
     final progress = widget.pendingWorkoutProgress;
-    if (!mounted || progress == null || progress.phase != 'active') return;
+    if (!mounted || progress == null) return;
 
-    final choice = await showDialog<_WorkoutRecoveryChoice>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: CohortColors.surface,
-        title: Text('Resume training?', style: CohortTextStyles.h2),
-        content: Text(
-          'You have an unfinished session. '
-          'Resume continues from where you left off. '
-          'Discard clears the in-progress session without marking it complete.',
-          style: CohortTextStyles.body,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(_WorkoutRecoveryChoice.discard),
-            child: const Text('Discard In-Progress Session'),
-          ),
-          TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(_WorkoutRecoveryChoice.resume),
-            child: const Text('Resume Training'),
-          ),
-        ],
-      ),
+    final action = const WorkoutProgressSnapshotPolicy().bootAction(
+      snapshot: progress,
+      currentAthleteId: _athleteId,
     );
+    if (action == WorkoutProgressSnapshotBootAction.none) return;
 
-    if (!mounted) return;
-    if (choice == _WorkoutRecoveryChoice.discard) {
-      if (AthletePersistence.isInitialized) {
-        await AthletePersistence.hydrator.discardWorkoutProgress(_athleteId);
-      }
-      return;
-    }
-
-    if (choice == _WorkoutRecoveryChoice.resume) {
-      // Safe subset: acknowledge resume intent; full player restore is limited
-      // to clearing the prompt and returning Home so the athlete can relaunch
-      // today's session. Cursor indexes are retained in the snapshot for later.
-      setState(() => _index = 0);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Open Today\'s Training to continue. '
-            'Your in-progress position was saved.',
+    if (action == WorkoutProgressSnapshotBootAction.showCannotRestore) {
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: CohortColors.surface,
+          title: Text(
+            'Draft cannot be safely restored',
+            style: CohortTextStyles.h2,
           ),
+          content: Text(
+            'An older in-progress snapshot cannot be opened as a workout. '
+            'Use Home to begin or resume today’s session.',
+            style: CohortTextStyles.body,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
         ),
       );
+    }
+
+    if (AthletePersistence.isInitialized) {
+      await AthletePersistence.hydrator.discardWorkoutProgress(_athleteId);
     }
   }
 
@@ -329,5 +313,3 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
     );
   }
 }
-
-enum _WorkoutRecoveryChoice { resume, discard }
