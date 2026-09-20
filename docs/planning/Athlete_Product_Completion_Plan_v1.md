@@ -1113,4 +1113,13 @@ Out of scope: M10 Sprint 3, consent rows, media filming pipeline, IAP,
 BYO, coach roster, Phase 3.2E allocation, hosted writes, treating preview
 modality players as a second production authority.
 
-This document does **not** start that sprint.
+Sprint 1 local evidence (2026-09-20): AuthGate no longer treats onboarding as
+shell authority; START TRAINING generation is removed from production login;
+`ProductionSessionDraft` v1 classifies restore; rest/recovery without
+executable blocks is guidance-only; `ActiveSessionScreen` persists on
+background. See
+[`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md)
+and
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md).
+Scores are not Complete. Preview players still do not prove production
+readiness.

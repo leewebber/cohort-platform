@@ -6,6 +6,7 @@
 > **M10 authority (closed):** [`M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](./M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
 > **Next-task authority:** [`ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md`](./ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md)
 > and [`../planning/Athlete_Product_Completion_Plan_v1.md`](../planning/Athlete_Product_Completion_Plan_v1.md).
+> **Daily Journey Integrity Sprint 1 (local):** [`DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md`](./DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md).
 > Historical M10 sprint / preflight / hardening records remain evidence only.
 > This file remains the historical atomic-resume / Phase 3 checkpoint. It is
 > not the next-task authority.

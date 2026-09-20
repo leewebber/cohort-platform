@@ -15,6 +15,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | Document | Purpose |
 |----------|---------|
 | [Daily_Journey_Integrity_v1.md](./Daily_Journey_Integrity_v1.md) | **Sprint 1** production auth, session entry, resumable draft |
+| [../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md) | Sprint 1 local handoff (paused for founder approval) |
 | [Phase_1_Implemented_Architecture_v1.md](./Phase_1_Implemented_Architecture_v1.md) | Production athlete architecture as implemented |
 | [Phase_1_Dogfood_Commit_Chain_v1.md](./Phase_1_Dogfood_Commit_Chain_v1.md) | Dogfood commit / capability map |
 | [Athlete_Calendar_Month_Grid_and_Recovery_v1.md](./Athlete_Calendar_Month_Grid_and_Recovery_v1.md) | Month grid, Incomplete, Train today |
