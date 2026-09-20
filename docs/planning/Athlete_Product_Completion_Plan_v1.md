@@ -1115,11 +1115,14 @@ modality players as a second production authority.
 
 Sprint 1 local evidence (2026-09-20): AuthGate no longer treats onboarding as
 shell authority; START TRAINING generation is removed from production login;
-`ProductionSessionDraft` v1 classifies restore; rest/recovery without
-executable blocks is guidance-only; `ActiveSessionScreen` persists on
-background. See
+`ProductionRestoreResolver` is the only resume authority;
+`ActivePerformanceDraft` holds actuals; `ProductionSessionDraft` + UI cursor
+are companions; `AthleteSessionMemoryStore` and `WorkoutProgressSnapshot`
+cannot authorize resume; the boot “Resume training?” prompt is retired;
+rest/recovery without executable blocks is guidance-only; format restore is
+proven on the production draft path in tests, not preview players. Offline
+completion queue remains deferred. See
 [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md)
 and
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md).
-Scores are not Complete. Preview players still do not prove production
-readiness.
+Scores are not Complete.

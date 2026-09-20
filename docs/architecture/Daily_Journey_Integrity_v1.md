@@ -116,6 +116,22 @@ Canonical launch identity (required for programme-backed starts):
 
 Preview `SessionPlayerScreen` is not a production destination.
 
+### Restore hierarchy
+
+| Store | Role |
+|-------|------|
+| `ActivePerformanceDraft` | Durable actuals. Authoritative for result restoration. |
+| `ProductionSessionDraft` | Identity / integrity / classification. Not a second actuals store. |
+| `ProductionSessionUiCursor` | Versioned companion navigation state, scoped to athlete + session. |
+| `AthleteSessionMemoryStore` | Same-process cache only. Cannot authorize resume. Discarded when durable authority disagrees. |
+| `WorkoutProgressSnapshot` | Legacy WorkoutPlayer discovery only. Never proof. Never creates a training session. Never routes to preview players. |
+
+`ProductionRestoreResolver` is the only production resume authority. Home Resume, Calendar Train today / in-progress, boot affordance, foreground reconcile, and process-restart launch all call it before `ActiveSessionScreen` is entered with restored data.
+
+Boot no longer shows an independent “Resume training?” prompt. Empty legacy snapshots are cleared. Unmappable `enteredResults` show **Draft cannot be safely restored**. Home’s occurrence Resume remains the athlete action when a valid durable draft exists.
+
+UI cursor: schema v1, athlete/assignment/occurrence/training-session scoped. Missing or unsupported cursor falls back to the first incomplete block. Cursor never changes result semantics. Successful hosted completion clears envelope + cursor. Failed completion retains both.
+
 ---
 
 ## 4. Draft schema
@@ -196,8 +212,10 @@ hosted complete. Backfill ≠ live. Correction uses completed-results path.
 ## 9. Deferred
 
 Programme comparison · Android identity/signing · full a11y programme ·
-wearables · broader adaptation triggers · offline completion queue (if still
-absent) · phone build 7 draft mutation · hosted writes.
+wearables · broader adaptation triggers · **offline completion queue** (honest
+pending/retry + retained draft only) · phone build 7 draft mutation · hosted
+writes · composing every format through a device-run ActiveSessionScreen
+widget matrix beyond the in-memory production-route restore tests.
 
 ---
 

@@ -9,10 +9,14 @@ import 'package:cohort_platform/features/auth/services/auth_session_port.dart';
 import 'package:cohort_platform/features/auth/services/last_verified_auth_profile_store.dart';
 import 'package:cohort_platform/features/auth/services/production_auth_authority.dart';
 import 'package:cohort_platform/features/auth/services/profile_provisioning_service.dart';
+import 'package:cohort_platform/core/persistence/models/execution_result_models.dart';
 import 'package:cohort_platform/features/session/models/production_session_draft.dart';
+import 'package:cohort_platform/features/session/models/production_session_ui_cursor.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/services/production_recovery_session_policy.dart';
+import 'package:cohort_platform/features/session/services/production_restore_resolver.dart';
 import 'package:cohort_platform/features/session/services/production_session_draft_classifier.dart';
+import 'package:cohort_platform/features/session/services/workout_progress_snapshot_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -48,6 +52,8 @@ class DailyJourneyIntegrityPreviewScreen extends StatelessWidget {
     const authority = ProductionAuthAuthority();
     const classifier = ProductionSessionDraftClassifier();
     const recovery = ProductionRecoverySessionPolicy();
+    const restore = ProductionRestoreResolver();
+    const snapshotPolicy = WorkoutProgressSnapshotPolicy();
 
     final signedOut = authority.resolve(
       status: AuthStatus.unauthenticated,
@@ -104,6 +110,41 @@ class DailyJourneyIntegrityPreviewScreen extends StatelessWidget {
       entryMode: 'live',
     );
 
+    final validCursor = const ProductionSessionUiCursor(
+      schemaVersion: 1,
+      athleteId: 'preview-athlete',
+      assignmentId: 'preview-assignment',
+      trainingSessionId: 1,
+      occurrenceId: 'preview-occ',
+      activeBlockId: 'strength',
+    );
+    final futureCursor = const ProductionSessionUiCursor(
+      schemaVersion: 99,
+      athleteId: 'preview-athlete',
+      assignmentId: 'preview-assignment',
+      trainingSessionId: 1,
+      activeBlockId: 'strength',
+    );
+    final restoreRequest = ProductionRestoreRequest(
+      athleteId: 'preview-athlete',
+      assignmentId: 'preview-assignment',
+      programmeVersionId: 'preview-version',
+      programmedSessionKey: 'preview-key',
+      packageContentHash: 'a' * 64,
+      occurrenceId: 'preview-occ',
+      trainingSessionId: 1,
+      persistedIdentity: compatible,
+      cursor: validCursor,
+    );
+    final snapshot = WorkoutProgressSnapshot(
+      sessionId: 'legacy',
+      athleteId: 'preview-athlete',
+      currentExerciseIndex: 0,
+      currentSet: 1,
+      completedExerciseIndexes: const [],
+      startedAt: DateTime.utc(2026, 1, 1),
+      lastUpdatedAt: DateTime.utc(2026, 1, 1),
+    );
     const restPlan = SessionExecutionPlan(
       sessionId: 'preview-rest',
       sessionTitle: 'Rest',
@@ -128,7 +169,62 @@ class DailyJourneyIntegrityPreviewScreen extends StatelessWidget {
             '10 Foreign draft: ${classifier.classify(draft: foreign, authority: draftAuthority)}',
           ),
           Text(
+            '5–7 Begin/Resume/Train today: ProgrammeSessionExecutionLauncher + resolver',
+          ),
+          Text(
+            '8 Valid durable identity: ${restore.resolve(restoreRequest).outcome}',
+          ),
+          Text(
+            '9 Memory newer is ignored: ${restore.resolve(restoreRequest).discardMemory}',
+          ),
+          Text(
+            '10 Foreign draft: ${classifier.classify(draft: foreign, authority: draftAuthority)}',
+          ),
+          Text(
+            '11 Legacy snapshot without draft: ${snapshotPolicy.bootAction(snapshot: snapshot, currentAthleteId: 'preview-athlete')}',
+          ),
+          Text(
+            '12 Hosted completed: ${restore.resolve(ProductionRestoreRequest(
+              athleteId: 'preview-athlete',
+              assignmentId: 'preview-assignment',
+              programmeVersionId: 'preview-version',
+              programmedSessionKey: 'preview-key',
+              packageContentHash: 'a' * 64,
+              hostedCompleted: true,
+              persistedIdentity: compatible,
+            )).outcome}',
+          ),
+          Text(
+            '13 Missing cursor still resumable when identity matches: ${restore.resolve(ProductionRestoreRequest(
+              athleteId: 'preview-athlete',
+              assignmentId: 'preview-assignment',
+              programmeVersionId: 'preview-version',
+              programmedSessionKey: 'preview-key',
+              packageContentHash: 'a' * 64,
+              occurrenceId: 'preview-occ',
+              trainingSessionId: 1,
+              persistedIdentity: compatible,
+            )).restoreCursor}',
+          ),
+          Text(
+            '14 Unsupported cursor ignored: ${restore.resolve(ProductionRestoreRequest(
+              athleteId: 'preview-athlete',
+              assignmentId: 'preview-assignment',
+              programmeVersionId: 'preview-version',
+              programmedSessionKey: 'preview-key',
+              packageContentHash: 'a' * 64,
+              occurrenceId: 'preview-occ',
+              trainingSessionId: 1,
+              persistedIdentity: compatible,
+              cursor: futureCursor,
+            )).restoreCursor}',
+          ),
+          Text(
             '20 Recovery/rest: ${recovery.decide(plan: restPlan, authoredAsRecoveryOrRest: true)}',
+          ),
+          const Text('12 Offline completion queue: deferred — pending/retry only'),
+          const Text(
+            '15–19 Format restore: ActiveSessionScreen + ActivePerformanceDraft (see tests)',
           ),
           const SizedBox(height: 16),
           FilledButton(
