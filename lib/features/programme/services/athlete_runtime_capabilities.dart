@@ -28,14 +28,17 @@ class AthleteRuntimeCapabilities {
 
 /// Single hosted capability probe. UI must not catch RPC-not-found locally.
 class SupabaseAthleteRuntimeCapabilityStore {
-  const SupabaseAthleteRuntimeCapabilityStore();
+  const SupabaseAthleteRuntimeCapabilityStore({this.rpc});
 
   static const rpcName = 'cohort_athlete_runtime_capabilities';
 
+  /// Optional test seam. Production uses [SupabaseService.client.rpc].
+  final Future<dynamic> Function()? rpc;
+
   Future<AthleteRuntimeCapabilities> load() async {
     try {
-      final client = SupabaseService.client;
-      final response = await client.rpc(rpcName);
+      final response = await (rpc ??
+          () => SupabaseService.client.rpc(rpcName))();
       if (response is! Map) return AthleteRuntimeCapabilities.unavailable;
       final map = Map<String, dynamic>.from(response);
       if (map['status']?.toString() != 'ok') {

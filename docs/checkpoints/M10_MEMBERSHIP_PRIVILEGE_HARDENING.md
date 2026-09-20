@@ -76,9 +76,46 @@ No dynamic SQL. No function-body behaviour change except grants + trigger
 - `git diff --check`: clean
 - Local DB reset/reapply + Gate AY ACL: `ALL LOCAL DB GATE CHECKS PASSED`
 - Phase 2 safety gate: `PHASE2_CONSOLIDATION_SAFETY_GATE=PASS`
-- Full `flutter test`: 3055 passed, 6 skipped, **1 unrelated fail**
-  (`test/staging/s17_jd_nontest_runtime_proof_test.dart` SIGTERM during
-  `flutter run`; not an M10 ACL regression)
+- Full `flutter test`: recorded in the verification closeout below
+
+## Capability anon EXECUTE — Option B
+
+Production never **requires** `cohort_athlete_runtime_capabilities()` before
+authentication. The sole production caller is
+`AthleteAppShell._loadHostedCapabilities()` (`lib/features/app_shell/athlete_app_shell.dart`),
+which runs after `AuthGate` has already chosen Login vs athlete shell.
+`AuthGate` / `CohortPlatformApp` do not await the RPC. Cold start with no
+session presents `LoginScreen`. Failures (permission-denied `42501`, missing
+function `PGRST202`/`42883`, expired JWT, network, or
+`authentication_required`) map to `AthleteRuntimeCapabilities.unavailable`.
+Build 7 ignores unknown keys and does not call the RPC from the sign-in
+screen.
+
+`20260913120000` and later already `REVOKE ALL FROM PUBLIC, anon`. Hardening
+restates the same grant. Hosted empty-state “anon_caps” probes used the
+Management API / postgres role, not PostgREST `anon`. Revoking anon EXECUTE is
+therefore not a behaviour change for PostgREST; it must not be described as
+leaving a previous PostgREST-anon grant in place.
+
+M10 management RPCs remain: no PUBLIC EXECUTE, no anon EXECUTE, authenticated
+EXECUTE only on intentional client RPCs.
+
+## Staging SIGTERM classification
+
+`test/staging/s17_jd_nontest_runtime_proof_test.dart` test `2-7 creator +
+execute loopback HTTP proof` isolated **3× pass** on this branch (~1:21–1:44)
+and **pass** on a clean worktree of `origin/main` `84d20b7` (~1:43). No Flutter
+processes were running beforehand. Hardening commits do not touch the
+launcher. `s17_jd_nontest_launch.sh` **intentionally SIGTERMs** the `flutter
+run` process group after the result file appears. Full-suite exit 2 with
+`Terminated: 15` is a waiter/`killpg` race when job control is not isolated
+under concurrent `flutter test`, not a product or M10 ACL failure.
+
+**Classification: 3 — confirmed environmental/harness flake**, with a
+deterministic containment defect (shared process group `killpg`). Fixed in a
+separate commit: do not `killpg` the waiter’s group; honour `ok:true` if the
+waiter dies during intentional cleanup. Regression:
+`test/staging/s17_jd_nontest_containment_test.dart`.
 
 After founder approval only: apply **this one file** to Field Manual, then
 read-only ACL + zero-row proof. Do not create invitations. Do not start Sprint 3.
