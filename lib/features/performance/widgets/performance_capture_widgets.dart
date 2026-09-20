@@ -421,6 +421,11 @@ class _ForTimeEditor extends StatelessWidget {
           onChanged: (value) =>
               onChanged(result.copyWith(elapsedSeconds: int.tryParse(value))),
         ),
+        if (result.remainingWorkNote?.trim().isNotEmpty == true)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text('Remaining: ${result.remainingWorkNote}'),
+          ),
         _MaterialSwitchListTile(
           title: 'Completed',
           value: result.completed,

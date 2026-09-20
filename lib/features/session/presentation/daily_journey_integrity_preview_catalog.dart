@@ -125,6 +125,15 @@ class DailyJourneyIntegrityPreviewScenario {
         resolved == ProductionRestoreOutcome.resumable) {
       throw StateError('${state.name} cannot report resumable');
     }
+    final claimedFormat = format;
+    if (claimedFormat != null && plan.blocks.isNotEmpty) {
+      final authored = plan.blocks.first.workoutFormat;
+      if (authored != claimedFormat) {
+        throw StateError(
+          '${state.name} cannot relabel ${authored.name} as ${claimedFormat.name}',
+        );
+      }
+    }
   }
 }
 
@@ -237,6 +246,7 @@ List<DailyJourneyIntegrityPreviewScenario> dailyJourneyIntegrityPreviewScenarios
       kind: DailyJourneyIntegrityPreviewKind.activeSession,
       plan: previewForTimePlan(),
       format: WorkoutFormat.forTime,
+      openRestoredTimer: true,
     ),
     DailyJourneyIntegrityPreviewScenario(
       state: DailyJourneyIntegrityPreviewState.amrapResume,
@@ -567,7 +577,7 @@ SessionExecutionPlan previewCircuitPlan() {
 SessionExecutionPlan previewForTimePlan() {
   return const SessionExecutionPlan(
     sessionId: 'fortime',
-    sessionTitle: 'For time',
+    sessionTitle: '21-15-9 For Time',
     programmeContextLabel: 'Week 1 · Day 5',
     durationMin: 12,
     blocks: [
@@ -575,7 +585,8 @@ SessionExecutionPlan previewForTimePlan() {
         blockId: 'fortime',
         title: '21-15-9',
         blockType: SessionBlockType.conditioning,
-        content: 'Thruster and pull-up',
+        content:
+            '21 thrusters, 21 pull-ups\n15 thrusters, 15 pull-ups\n9 thrusters, 9 pull-ups',
         workoutFormat: WorkoutFormat.forTime,
         position: 1,
         performanceCaptureMode: BlockPerformanceCaptureMode.forTime,
@@ -584,6 +595,16 @@ SessionExecutionPlan previewForTimePlan() {
           stopwatchEnabled: true,
         ),
         timerSummary: 'For Time · 12 min cap',
+        linkedExercises: [
+          SessionExecutionExerciseSummary(
+            exerciseId: 'ex-thruster',
+            displayName: 'Thruster',
+          ),
+          SessionExecutionExerciseSummary(
+            exerciseId: 'ex-pullup',
+            displayName: 'Pull-up',
+          ),
+        ],
       ),
     ],
   );

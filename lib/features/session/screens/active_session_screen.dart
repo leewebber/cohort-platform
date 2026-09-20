@@ -418,6 +418,13 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           format: block.workoutFormat,
           configuration: block.timerConfiguration!,
           stationLabels: labels,
+          prescriptionLines: block.content
+              .split('\n')
+              .where((line) => line.trim().isNotEmpty)
+              .toList(),
+          restoredWorkNote: existing is ForTimeResultData
+              ? existing.remainingWorkNote
+              : null,
           onCheckpoint: (state) => _persistTimerCursor(block, state),
           initialState: initialState,
         ),
@@ -431,7 +438,23 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         return;
       }
     }
+    if (popped != null && block.workoutFormat == WorkoutFormat.forTime) {
+      _persistForTimeElapsed(block, popped);
+    }
     _refresh();
+  }
+
+  void _persistForTimeElapsed(
+    SessionExecutionBlock block,
+    BlockTimerState state,
+  ) {
+    final latest = _blockDraft(block.blockId)?.resultData;
+    if (latest is! ForTimeResultData) return;
+    _performanceController.updateBlockResultData(
+      block.blockId,
+      latest.copyWith(elapsedSeconds: state.primarySeconds),
+    );
+    _persistDraft();
   }
 
   void _persistTimerCursor(SessionExecutionBlock block, BlockTimerState state) {
@@ -674,6 +697,15 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                               BlockResultEditor.rendersExerciseRows(
                                 blockDraft,
                               ));
+                      final restoredTimer =
+                          CircuitBlockTimerBridge.restoredState(
+                            block: block,
+                            result: blockDraft?.resultData,
+                            stationLabels: {
+                              for (final exercise in block.linkedExercises)
+                                exercise.exerciseId: exercise.displayName,
+                            },
+                          );
 
                       return AthleteBlockCard(
                         block: block,
@@ -681,7 +713,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                         isActive: isActive,
                         isComplete: state.isBlockComplete(block.blockId),
                         stackActions: isEmom,
-                        timerActionLabel: 'Start timer',
+                        timerActionLabel:
+                            restoredTimer != null ? 'Resume' : 'Start timer',
                         completeActionLabel: isEmom
                             ? (timerStarted
                                   ? 'End and record result'

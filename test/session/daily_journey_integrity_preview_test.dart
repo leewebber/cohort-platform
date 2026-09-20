@@ -1,3 +1,5 @@
+import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/session/models/production_restore_outcome.dart';
 import 'package:cohort_platform/features/session/presentation/daily_journey_integrity_preview_catalog.dart';
 import 'package:cohort_platform/features/session/presentation/production_restore_athlete_copy.dart';
@@ -122,8 +124,18 @@ void main() {
     expect(find.text('EMOM'), findsNothing);
 
     await show(DailyJourneyIntegrityPreviewState.forTimeResume);
-    expect(find.text('Elapsed seconds'), findsOneWidget);
-    expect(find.text('412'), findsWidgets);
+    expect(find.text('For Time'), findsWidgets);
+    expect(find.text('21-15-9 For Time'), findsOneWidget);
+    expect(find.text('21 thrusters, 21 pull-ups'), findsOneWidget);
+    expect(find.text('2 reps left'), findsOneWidget);
+    expect(find.text('06:52'), findsOneWidget);
+    expect(find.text('Resume'), findsWidgets);
+    expect(find.text('Record time'), findsOneWidget);
+    expect(find.text('Start timer'), findsNothing);
+    expect(find.text('Rounds'), findsNothing);
+    expect(find.text('Circuit'), findsNothing);
+    expect(find.text('Three-station circuit'), findsNothing);
+    expect(find.text('3 rounds'), findsNothing);
     expect(find.text('EMOM'), findsNothing);
 
     await show(DailyJourneyIntegrityPreviewState.amrapResume);
@@ -236,5 +248,105 @@ void main() {
     expect(previewAmrapPlan().blocks.first.workoutFormat, WorkoutFormat.amrap);
     expect(previewEmomPlan().blocks.first.workoutFormat, WorkoutFormat.emom);
     expect(previewIntervalPlan().blocks.first.workoutFormat, WorkoutFormat.intervals);
+  });
+
+  test('for-time selector creates a canonical for-time plan', () {
+    final forTime = scenarios.firstWhere(
+      (item) => item.state == DailyJourneyIntegrityPreviewState.forTimeResume,
+    );
+    final circuit = scenarios.firstWhere(
+      (item) => item.state == DailyJourneyIntegrityPreviewState.circuitResume,
+    );
+    forTime.assertConsistent();
+    circuit.assertConsistent();
+    expect(forTime.plan.sessionId, 'fortime');
+    expect(forTime.plan.sessionTitle, '21-15-9 For Time');
+    expect(forTime.plan.blocks.first.workoutFormat, WorkoutFormat.forTime);
+    expect(forTime.plan.blocks.first.workoutFormatLabel, 'For Time');
+    expect(forTime.format, WorkoutFormat.forTime);
+    expect(forTime.openRestoredTimer, isTrue);
+    expect(circuit.plan.sessionId, 'circuit');
+    expect(circuit.plan.blocks.first.workoutFormat, WorkoutFormat.rounds);
+    expect(circuit.format, WorkoutFormat.rounds);
+    expect(forTime.plan.sessionId, isNot(circuit.plan.sessionId));
+    expect(forTime.format, isNot(circuit.format));
+    expect(
+      forTime.plan.blocks.first.workoutFormat,
+      isNot(circuit.plan.blocks.first.workoutFormat),
+    );
+  });
+
+  test('preview-only relabelling cannot make a circuit fixture claim for-time', () {
+    final circuit = scenarios.firstWhere(
+      (item) => item.state == DailyJourneyIntegrityPreviewState.circuitResume,
+    );
+    expect(
+      () => DailyJourneyIntegrityPreviewScenario(
+        state: circuit.state,
+        label: '7 Relabelled circuit',
+        expectedOutcome: circuit.expectedOutcome,
+        kind: circuit.kind,
+        plan: circuit.plan,
+        format: WorkoutFormat.forTime,
+      ).assertConsistent(),
+      throwsStateError,
+    );
+  });
+
+  test('for-time actuals and session identity survive restore', () {
+    final scenario = scenarios.firstWhere(
+      (item) => item.state == DailyJourneyIntegrityPreviewState.forTimeResume,
+    );
+    final request = restoreRequest(scenario.state);
+    expect(request.trainingSessionId, 4);
+    expect(request.programmedSessionKey, previewSessionKey);
+    expect(request.persistedIdentity?.trainingSessionId, 4);
+    expect(request.actuals?.trainingSessionId, 4);
+    expect(request.actuals?.recordId, 'preview-record');
+
+    final performance = PerformanceCaptureController.initializeFromExecutionPlan(
+      plan: scenario.plan,
+      athleteId: previewAthleteId,
+      trainingSessionId: 4,
+    );
+    applyPreviewActuals(
+      state: scenario.state,
+      performance: performance,
+      plan: scenario.plan,
+    );
+    final result =
+        performance.draft.blockDrafts.first.resultData as ForTimeResultData;
+    expect(performance.draft.trainingSessionId, 4);
+    expect(performance.draft.athleteId, previewAthleteId);
+    expect(performance.draft.recordId, isNotEmpty);
+    expect(result.elapsedSeconds, 412);
+    expect(result.remainingWorkNote, '2 reps left');
+    expect(result.runtimeType, isNot(CircuitResultData));
+  });
+
+  testWidgets('selector remounts for-time after circuit', (tester) async {
+    await tester.pumpWidget(
+      const DailyJourneyIntegrityPreviewApp(
+        initialState: DailyJourneyIntegrityPreviewState.circuitResume,
+      ),
+    );
+    await tester.pump();
+    await tester.pump();
+    expect(find.textContaining('CIRCUIT PERFORMANCE'), findsOneWidget);
+    expect(find.text('Rounds'), findsWidgets);
+
+    await tester.tap(find.byKey(const ValueKey('preview-state-selector')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('7 Resumed for-time').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('For Time'), findsWidgets);
+    expect(find.text('06:52'), findsOneWidget);
+    expect(find.text('Resume'), findsWidgets);
+    expect(find.text('Start timer'), findsNothing);
+    expect(find.text('Rounds'), findsNothing);
+    expect(find.text('Circuit'), findsNothing);
+    expect(find.textContaining('CIRCUIT PERFORMANCE'), findsNothing);
+    expect(find.text('2 reps left'), findsOneWidget);
   });
 }

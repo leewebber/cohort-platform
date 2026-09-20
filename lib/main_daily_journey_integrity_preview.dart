@@ -4,6 +4,7 @@ import 'package:cohort_platform/core/theme/text_styles.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_home_rest_day_card.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_home_today_session_panel.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/performance/services/previous_strength_performance_service.dart';
@@ -139,7 +140,12 @@ class _DailyJourneyIntegrityPreviewScreenState
                     ),
                   ),
                 ),
-                Expanded(child: _bodyFor(_scenario, decision)),
+                Expanded(
+                  child: KeyedSubtree(
+                    key: ValueKey(_scenario.state),
+                    child: _bodyFor(_scenario, decision),
+                  ),
+                ),
               ],
             ),
           ),
@@ -158,6 +164,7 @@ class _DailyJourneyIntegrityPreviewScreenState
         scenario: scenario,
       ),
       DailyJourneyIntegrityPreviewKind.activeSession => _ActivePreview(
+        key: ValueKey(scenario.state),
         scenario: scenario,
       ),
       DailyJourneyIntegrityPreviewKind.blocked => ProductionRestoreBlockedScreen(
@@ -272,7 +279,7 @@ class _HomePreview extends StatelessWidget {
 }
 
 class _ActivePreview extends StatelessWidget {
-  const _ActivePreview({required this.scenario});
+  const _ActivePreview({super.key, required this.scenario});
 
   final DailyJourneyIntegrityPreviewScenario scenario;
 
@@ -301,6 +308,7 @@ class _ActivePreview extends StatelessWidget {
           : {plan.blocks.first.blockId},
     );
     final session = ActiveSessionScreen(
+      key: ValueKey('session-${plan.sessionId}'),
       controller: execution,
       performanceController: performance,
       athleteId: previewAthleteId,
@@ -326,10 +334,16 @@ class _ActivePreview extends StatelessWidget {
         MaterialPage<void>(child: session),
         MaterialPage<void>(
           child: BlockTimerScreen(
-            blockTitle: block.title,
+            blockTitle: plan.sessionTitle,
             format: block.workoutFormat,
             configuration: block.timerConfiguration!,
-            stationLabels: labels,
+            prescriptionLines: block.content
+                .split('\n')
+                .where((line) => line.trim().isNotEmpty)
+                .toList(),
+            restoredWorkNote: result is ForTimeResultData
+                ? result.remainingWorkNote
+                : null,
             initialState: scenario.restoredTimerOverride ??
                 CircuitBlockTimerBridge.restoredState(
                   block: block,

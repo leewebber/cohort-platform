@@ -17,6 +17,8 @@ class BlockTimerScreen extends StatefulWidget {
     required this.configuration,
     this.initialState,
     this.stationLabels = const {},
+    this.prescriptionLines = const [],
+    this.restoredWorkNote,
     this.onCheckpoint,
   });
 
@@ -25,6 +27,8 @@ class BlockTimerScreen extends StatefulWidget {
   final TimerConfiguration configuration;
   final BlockTimerState? initialState;
   final Map<String, String> stationLabels;
+  final List<String> prescriptionLines;
+  final String? restoredWorkNote;
   final ValueChanged<BlockTimerState>? onCheckpoint;
 
   @override
@@ -65,6 +69,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
     } else {
       _controller!.start();
     }
+    _state = _controller!.state;
   }
 
   @override
@@ -117,8 +122,10 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: ListView(
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               TextButton(
                 onPressed: _confirmExit,
                 child: const Text('← Back to block'),
@@ -126,7 +133,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
               const SizedBox(height: CohortSpacing.md),
               Text(widget.blockTitle, style: CohortTextStyles.h2),
               Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
-              const SizedBox(height: CohortSpacing.xl),
+              const SizedBox(height: CohortSpacing.md),
               if (state != null) ...[
                 Text(state.phaseLabel, style: CohortTextStyles.body),
                 const SizedBox(height: CohortSpacing.sm),
@@ -184,7 +191,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                       state.currentStationLabel,
                     if (state.currentStationTarget != null)
                       'Target ${state.currentStationTarget}',
-                    'Time remaining ${_formatTime(state.primarySeconds)}',
+                    widget.format == WorkoutFormat.forTime
+                        ? 'Elapsed ${_formatTime(state.primarySeconds)}'
+                        : 'Time remaining ${_formatTime(state.primarySeconds)}',
                     ?AuthoredStationTargetFormatter.nextStationLine(
                       label: state.nextStationLabel,
                       target: state.nextStationTarget,
@@ -223,6 +232,18 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                   child: CohortButton(
                     label: 'Record result',
                     onPressed: () => Navigator.pop(context, _controller?.state),
+                  ),
+                ),
+              if (widget.format == WorkoutFormat.forTime &&
+                  state?.isFinished != true)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+                  child: CohortButton(
+                    label: 'Record time',
+                    onPressed: () {
+                      _controller?.pause();
+                      Navigator.pop(context, _controller?.state);
+                    },
                   ),
                 ),
               Row(
@@ -269,7 +290,21 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
                   ),
                 ],
               ),
+              if (widget.prescriptionLines.isNotEmpty) ...[
+                const SizedBox(height: CohortSpacing.lg),
+                for (final line in widget.prescriptionLines)
+                  Text(line, style: CohortTextStyles.body),
+              ],
+              if (widget.restoredWorkNote?.trim().isNotEmpty == true) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                Text(
+                  widget.restoredWorkNote!,
+                  key: const ValueKey('block-timer-restored-work'),
+                  style: CohortTextStyles.body,
+                ),
+              ],
             ],
+            ),
           ),
         ),
       ),
