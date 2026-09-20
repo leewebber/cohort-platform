@@ -10,6 +10,7 @@ import '../models/prepared_execution_package.dart';
 import '../models/session_execution_plan.dart';
 import 'programme_training_session_start_store.dart';
 import 'programme_training_session_start_supabase_store.dart';
+import 'production_recovery_session_policy.dart';
 import 'session_execution_launcher.dart';
 
 enum ProgrammeSessionExecutionFailureCode {
@@ -20,6 +21,7 @@ enum ProgrammeSessionExecutionFailureCode {
   malformedExecutionProvenance,
   preparedProvenanceMismatch,
   unsupportedAuthoredBlock,
+  recoveryGuidanceOnly,
   completedOccurrence,
   missingTrainingSession,
   trainingSessionMismatch,
@@ -70,6 +72,7 @@ class ProgrammeSessionExecutionLauncher {
       );
     }
 
+    _validateRecoveryTreatment(package.plan);
     _validatePreparedIdentity(
       athleteId: athleteId,
       package: package,
@@ -252,6 +255,26 @@ class ProgrammeSessionExecutionLauncher {
       failureCode,
       'Cohort could not start this exact authored session (${code ?? 'unknown_start_failure'}). Re-prepare or retry without changing the session.',
     );
+  }
+
+  void _validateRecoveryTreatment(SessionExecutionPlan plan) {
+    const policy = ProductionRecoverySessionPolicy();
+    final treatment = policy.decide(
+      plan: plan,
+      authoredAsRecoveryOrRest: !plan.hasExecutableBlocks,
+    );
+    if (treatment == ProductionRecoveryTreatment.guidanceOnly) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.recoveryGuidanceOnly,
+        'This is a rest or recovery day. There is no workout to begin.',
+      );
+    }
+    if (treatment == ProductionRecoveryTreatment.unavailable) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
+        'This session format is not available yet.',
+      );
+    }
   }
 
   void _validateSupportedPlan(SessionExecutionPlan plan) {

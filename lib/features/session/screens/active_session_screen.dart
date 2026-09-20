@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/errors/user_facing_error_messages.dart';
@@ -60,7 +62,8 @@ class ActiveSessionScreen extends StatefulWidget {
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
 }
 
-class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
+class _ActiveSessionScreenState extends State<ActiveSessionScreen>
+    with WidgetsBindingObserver {
   late final SessionExecutionController _controller = widget.controller;
   late final PerformanceCaptureController _performanceController =
       widget.performanceController;
@@ -84,8 +87,24 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
         widget.saveCoordinator ?? PerformanceRecordSaveCoordinator();
     _previousStrengthService =
         widget.previousStrengthService ?? PreviousStrengthPerformanceService();
+    WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.paused) {
+      unawaited(_persistDraft());
+    }
   }
 
   Future<void> _loadPreviousStrength() async {
