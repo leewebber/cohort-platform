@@ -109,8 +109,16 @@ The launch product must be:
 
 ## 2. Current athlete-product audit
 
-Readiness scores use **production `lib/`**, hosted Field Manual architecture,
-and tests. Fixture previews and unit tests alone do **not** award Complete.
+Readiness scores use **production `lib/main.dart`** (`AuthGate` →
+`AthleteAppShell`), hosted Field Manual architecture, and tests. Fixture
+previews and unit tests alone do **not** award Complete. Phase 1 closeout
+still records `PUBLIC_LAUNCH_READY=false`.
+
+**Production execution spine:** programme sessions launch through
+`ProgrammeSessionExecutionLauncher` → `ActiveSessionScreen` (block cards +
+performance capture). Dedicated `StrengthSessionView` / `IntervalSessionView`
+/ `CircuitSessionView` are **not** the athlete-shell path. Do not score those
+preview players as production completeness.
 
 Score vocabulary: **Complete** · **Strong foundation** · **Functional but
 incomplete** · **Prototype-only** · **Missing** · **Blocked**.
@@ -122,7 +130,7 @@ incomplete** · **Prototype-only** · **Missing** · **Blocked**.
 | 1 | Authentication / account lifecycle | Functional but incomplete | Critical |
 | 2 | Athlete onboarding | Functional but incomplete | Critical |
 | 3 | Programme discovery / catalogue | Functional but incomplete | Critical |
-| 4 | Programme detail / comparison | Functional but incomplete | High |
+| 4 | Programme detail / comparison | Missing (athlete side-by-side) | High |
 | 5 | Enrolment / start | Strong foundation | Critical |
 | 6 | Home / today | Strong foundation | Critical |
 | 7 | Calendar / schedule | Strong foundation | Critical |
@@ -130,12 +138,12 @@ incomplete** · **Prototype-only** · **Missing** · **Blocked**.
 | 9 | Workout preparation | Strong foundation | Critical |
 | 10 | Strength execution | Strong foundation | Critical |
 | 11 | Running / endurance execution | Functional but incomplete | Critical |
-| 12 | Interval execution | Strong foundation | Critical |
+| 12 | Interval execution | Functional but incomplete | Critical |
 | 13 | EMOM / circuit / for-time | Strong foundation | Critical |
-| 14 | Rest / recovery sessions | Functional but incomplete | High |
+| 14 | Rest / recovery sessions | Prototype-only | High |
 | 15 | Adapt Session | Functional but incomplete | Critical |
-| 16 | Draft / offline / crash recovery | Strong foundation | Critical |
-| 17 | Results / corrections | Functional but incomplete | Critical |
+| 16 | Draft / offline / crash recovery | Functional but incomplete | Critical |
+| 17 | Results / corrections | Strong foundation | Critical |
 | 18 | Previous performance | Strong foundation | Critical |
 | 19 | Progression comparisons | Functional but incomplete | Critical |
 | 20 | Progress destination | Functional but incomplete | Critical |
@@ -144,13 +152,13 @@ incomplete** · **Prototype-only** · **Missing** · **Blocked**.
 | 23 | Exercise knowledge / media | Prototype-only | High |
 | 24 | Wearables / health integrations | Missing | Critical (launch bar) |
 | 25 | Profile / settings / help | Functional but incomplete | High |
-| 26 | Accessibility | Functional but incomplete | Critical |
+| 26 | Accessibility | Prototype-only | Critical |
 | 27 | Performance / responsiveness | Functional but incomplete | Critical |
 | 28 | Subscription / entitlements | Missing | Critical before public |
 | 29 | Analytics / observability | Missing | High |
 | 30 | Support / operations | Prototype-only | Critical before public |
 | 31 | Privacy / legal / account deletion | Missing | Critical before public |
-| 32 | Android readiness | Functional but incomplete | High (after iOS dogfood) |
+| 32 | Android readiness | Prototype-only | High (after iOS dogfood) |
 | 33 | App Store / Play Store readiness | Missing | Critical before public |
 | 34 | Programme library depth | Prototype-only | Critical |
 | 35 | Beta / distribution tooling | Prototype-only | High |
@@ -166,35 +174,46 @@ evidence · recommended milestone · exit criteria.
 #### 1. Authentication / account lifecycle
 
 - **Authority:** `AuthGate`, `AuthService` / Supabase Auth; `profiles.id` =
-  `auth.users.id`.
+  `auth.users.id`. Authenticated athletes resolve to `AthleteAppShell` (or
+  founder workspace).
 - **Readiness:** Email sign-up, verification, session restore work on Field
   Manual. Role chips still expose coach-era identity. No account deletion,
   export, or SSO suite.
-- **Gaps:** Password reset UX polish; session expiry copy; account deletion;
-  social sign-in research; coach-role suppression for athlete launch.
+- **Gaps:** `AuthGate` can mount `AthleteAppShell` **unauthenticated** when
+  local `AthleteProfileSession.hasCompletedOnboarding` is true — not a
+  public-launch path. Password reset UX; session expiry copy; account
+  deletion; social sign-in research; coach-role suppression.
 - **Criticality:** Critical.
 - **Dependency:** Hosted Auth; later commercial identity.
-- **Evidence:** `lib/features/auth/`; founder phone build 7 login. Not a store
+- **Evidence:** `auth_gate.dart`; `PHASE_1_INTEGRATION_CLOSEOUT.md`
+  (`PUBLIC_LAUNCH_READY=false`). Founder phone build 7 login is not a store
   lifecycle proof.
 - **Milestone:** Athlete Experience Completion, then Commercial.
-- **Exit:** Athlete can create, verify, restore, reset, and (before public
-  launch) delete an account without founder intervention.
+- **Exit:** Production shell requires a real session; athlete can create,
+  verify, restore, reset, and (before public launch) delete an account
+  without founder intervention.
 
 #### 2. Athlete onboarding
 
-- **Authority:** Partial profile / role selection; no dedicated launch
-  onboarding graph that recommends an authored programme.
+- **Authority:** Profile setup after auth. Login **START TRAINING** still
+  runs local `AthleteOnboardingFlow` and can generate a programme through
+  `AthleteProgrammeGenerationService` (legacy Coach Brain) — **not**
+  catalogue enrolment.
 - **Readiness:** Functional but incomplete.
-- **Gaps:** Goal, event date, days/week, equipment, limitations; explainable
-  recommendation; insufficient-match state.
-- **Criticality:** Critical for catalogue matching; can dogfood with founder
-  assignment.
-- **Dependency:** Launch library families; not Build Your Own.
-- **Evidence:** Auth/profile screens; Planning Engine exists as a **legacy
-  generative** path and must not assemble unverified plans.
-- **Milestone:** Onboarding and Personalisation (after library skeleton).
+- **Gaps:** Must not remain a launch path. Need goal, event date, days/week,
+  equipment, limitations; explainable **authored** recommendation;
+  insufficient-match state.
+- **Criticality:** Critical for catalogue matching; founder dogfood may keep
+  a pinned assignment.
+- **Dependency:** Launch library families; not Build Your Own; not Coach
+  Brain assembly.
+- **Evidence:** `LoginScreen` start-training; generation service. Planning
+  Engine / Coach Brain must not assemble unverified plans for launch.
+- **Milestone:** Onboarding and Personalisation (after library skeleton);
+  AEC must hide or fail-closed the generative path in production.
 - **Exit:** Athlete receives one explainable authored recommendation or an
-  honest insufficient-match, with manual catalogue override.
+  honest insufficient-match, with manual catalogue override. No generative
+  programme reaches Home.
 
 #### 3. Programme discovery / catalogue
 
@@ -215,15 +234,17 @@ evidence · recommended milestone · exit criteria.
 
 #### 4. Programme detail / comparison
 
-- **Authority:** Programme overview + `programme_comparison` services
-  (version diff more than athlete-facing “which plan for me”).
-- **Readiness:** Functional but incomplete.
-- **Gaps:** Side-by-side family comparison (duration, days/week, equipment,
-  race vs general); athlete-readable week structure.
-- **Criticality:** High.
+- **Authority:** Catalogue row metadata + `AthleteProgrammeScreen` week
+  view. `lib/features/programme_comparison/` is **coach-studio**
+  intelligence, not mounted on `AthleteAppShell`.
+- **Readiness:** **Missing** as an athlete product (detail is thin; no
+  side-by-side).
+- **Gaps:** Family comparison (duration, days/week, equipment, race vs
+  general); athlete-readable week structure beyond the active pin.
+- **Criticality:** High once more than two families exist.
 - **Dependency:** Authored metadata on programme versions.
-- **Evidence:** Comparison tests exist; production athlete UI is thin.
-- **Milestone:** Catalogue productisation.
+- **Evidence:** No athlete comparison screen on the production shell.
+- **Milestone:** Catalogue productisation (`M-LIB` / AEC catalogue slice).
 - **Exit:** Athlete can compare two families without founder explanation.
 
 #### 5. Enrolment / start
@@ -300,16 +321,19 @@ evidence · recommended milestone · exit criteria.
 
 #### 10. Strength execution
 
-- **Authority:** Strength session view; set actuals; previous performance
-  shell.
-- **Readiness:** Strong foundation.
-- **Gaps:** Tempo/RIR consistency; rest UX; media; load unit prefs.
+- **Authority:** Production: `ActiveSessionScreen` + strength accordion /
+  capture coordinator. `StrengthSessionView` is **not** the programme
+  launcher path.
+- **Readiness:** Strong foundation on the production capture path.
+- **Gaps:** Tempo/RIR consistency; rest UX; media; load unit prefs; do not
+  dual-maintain a second player as launch authority.
 - **Criticality:** Critical.
 - **Dependency:** Authored loads; previous actuals.
-- **Evidence:** `strength_session_view.dart`; performance services.
+- **Evidence:** Strength accordion/completion tests; preview mains are not
+  the shell.
 - **Milestone:** Athlete Experience Completion.
-- **Exit:** Complete a prescribed strength session, save all sets, survive
-  interruption.
+- **Exit:** Complete a prescribed strength session on `ActiveSessionScreen`,
+  save all sets, survive interruption.
 
 #### 11. Running / endurance execution
 
@@ -328,49 +352,59 @@ evidence · recommended milestone · exit criteria.
 
 #### 12. Interval execution
 
-- **Authority:** Interval session hydrator + work results.
-- **Readiness:** Strong foundation for in-app intervals.
-- **Gaps:** Watch sync; rest accuracy; outdoor cueing.
+- **Authority:** Production block-aware interval capture on
+  `ActiveSessionScreen`. Dedicated `IntervalSessionView` is preview/dev
+  (`SessionPlayerScreen`).
+- **Readiness:** Functional but incomplete (capture contracts exist; player
+  chrome is split).
+- **Gaps:** One production interval experience; watch sync; outdoor cueing.
 - **Criticality:** Critical.
 - **Dependency:** Timer + later wearables.
-- **Evidence:** Interval models/tests.
+- **Evidence:** Interval capture tests; router dual path.
 - **Milestone:** Athlete Experience, then Wearables.
-- **Exit:** Complete authored intervals with work/rest actuals retained.
+- **Exit:** Complete authored intervals on the production launcher with
+  work/rest actuals retained.
 
 #### 13. EMOM / circuit / for-time
 
-- **Authority:** Circuit/EMOM capture architecture; station templates ≠
-  one row per minute.
-- **Readiness:** Strong foundation.
+- **Authority:** Production: `BlockTimerScreen` + EMOM/circuit/for-time
+  capture widgets on the active-session path. `CircuitSessionView` is not
+  the shell launcher.
+- **Readiness:** Strong foundation for capture contracts.
 - **Gaps:** AMRAP polish; for-time edge states; premium timer chrome.
 - **Criticality:** Critical (HYROX-style work).
 - **Dependency:** Authored circuit metadata.
-- **Evidence:** `Athletic_Circuit_and_EMOM_Capture_v1.md`; capture widgets.
+- **Evidence:** `Athletic_Circuit_and_EMOM_Capture_v1.md`; capture tests.
 - **Milestone:** Athlete Experience Completion.
 - **Exit:** Circuit/EMOM/for-time save scores that remain comparable later.
 
 #### 14. Rest / recovery sessions
 
-- **Authority:** Schedule can place rest; mobility as session format is
-  thinner than strength/circuit.
-- **Readiness:** Functional but incomplete.
-- **Gaps:** Recovery intent copy from authored notes only; check-in;
-  wearable recovery later.
+- **Authority:** Calendar rest days. `SessionExecutionMode.recoveryFlow`
+  exists; `SessionPlayerScreen` still falls back to a legacy step card
+  (`TODO: Replace with RecoverySessionView`).
+- **Readiness:** **Prototype-only** for executed recovery sessions.
+- **Gaps:** Dedicated recovery player; authored mobility sessions as
+  first-class today states; check-in without fake PRs.
 - **Criticality:** High.
-- **Dependency:** Library rest weeks; not colour-only “recovery”.
-- **Evidence:** Calendar rest days; limited dedicated recovery player.
+- **Dependency:** Library rest/mobility weeks; not colour-only “recovery”.
+- **Evidence:** Router + TODO; no recovery-specific tests found.
 - **Milestone:** Library + Experience.
-- **Exit:** Rest days are first-class today states, not empty holes.
+- **Exit:** Rest days and authored recovery sessions are first-class today
+  states, not empty holes or placeholder players.
 
 #### 15. Adapt Session
 
 - **Authority:** `ProgrammeAdaptFlow` → proposal →
   `programme_adaptation_proposal_sheet` → explicit accept. Pipeline via
   Plan-Package-native adapter. No Coach Brain Home.
-- **Readiness:** Functional but incomplete. Reason-selection exists; many
-  launch triggers are unevidenced or unproductised.
-- **Gaps:** See §6 trigger list; confidence/insufficient-evidence UI;
-  consequence preview completeness.
+- **Readiness:** **Strong foundation** for day-of,
+  acceptance-gated Adapt (`time`, `equipment`, `environment`, `recovery`).
+  **Functional but incomplete** against the full §6 launch-trigger list.
+  Policy gate already prohibits rewrite/later-session/periodisation
+  invention.
+- **Gaps:** See §6 (missed session, event date, pause/return, deload, …);
+  confidence/insufficient-evidence UI; consequence preview completeness.
 - **Criticality:** Critical.
 - **Dependency:** Authored adaptation metadata; evidence inputs.
 - **Evidence:** `programme_adapt_flow.dart`; adaptation architecture docs;
@@ -383,23 +417,25 @@ evidence · recommended milestone · exit criteria.
 
 - **Authority:** Local execution draft + atomic resume RPC; provenance
   fail-closed.
-- **Readiness:** Strong foundation.
-- **Gaps:** Weak-network messaging; conflict when two devices; offline
-  enrolment.
+- **Readiness:** Functional but incomplete. Local snapshot + atomic resume
+  RPC exist; shell recovery does **not** always restore full player state.
+- **Gaps:** Full in-progress restore; weak-network messaging; two-device
+  conflict; guest persistence desync from hosted assignment.
 - **Criticality:** Critical.
-- **Dependency:** Atomic resume checkpoint.
-- **Evidence:** `CURRENT_CHECKPOINT.md` atomic resume; `session_draft_save`.
+- **Dependency:** Atomic resume checkpoint; `AthletePersistence`.
+- **Evidence:** `athlete_app_shell` recovery dialog; hydrator tests.
 - **Milestone:** Athlete Experience Completion.
-- **Exit:** Kill-app mid-set restores the same session; no duplicate
-  `training_sessions`.
+- **Exit:** Kill-app mid-set restores the same session and capture; no
+  duplicate `training_sessions`.
 
 #### 17. Results / corrections
 
 - **Authority:** Completion screens; result views; Backfill
   `entry_mode`.
-- **Readiness:** Functional but incomplete.
-- **Gaps:** Post-complete correction policy; what is immutable vs
-  correctable; athlete-facing chronology labels.
+- **Readiness:** Strong foundation for hosted save + completed-session
+  correction.
+- **Gaps:** Athlete-facing chronology labels (scheduled vs performed vs
+  recorded); what is immutable vs correctable after Backfill.
 - **Criticality:** Critical (history trust).
 - **Dependency:** Backfill schema (applied).
 - **Evidence:** `completed_session_result_view.dart`; Backfill architecture.
@@ -486,7 +522,9 @@ evidence · recommended milestone · exit criteria.
   launch-critical.
 - **Dependency:** Phase 3.2E/F/G remain **unallocated** until this plan
   authorises the media milestone (not a numerical Phase 3 reopen).
-- **Evidence:** Catalogue 132 rows; no video player package; projection
+- **Evidence:** Catalogue 132 rows; `OperationalExerciseTextGuidance` is
+  **not** imported under `lib/features/`; `ExerciseDetailScreen` still uses
+  the legacy protocol `Exercise` model. No video player package. Projection
   must not change prescription.
 - **Milestone:** Exercise knowledge and media.
 - **Exit:** Launch programmes resolve `EX-*` to owned or licensed demo
@@ -515,7 +553,8 @@ evidence · recommended milestone · exit criteria.
   launch.
 - **Criticality:** High.
 - **Dependency:** Commercial + support.
-- **Evidence:** Athlete shell destinations; `join_coach_card.dart`.
+- **Evidence:** `AthleteProfileScreen`; `BetaSupportScreen`;
+  `join_coach_card.dart`. Wearables row is already “Coming later”.
 - **Milestone:** Experience + Commercial.
 - **Exit:** Profile explains account, programme, legal, and support
   without exposing coach-platform internals.
@@ -523,12 +562,12 @@ evidence · recommended milestone · exit criteria.
 #### 26. Accessibility
 
 - **Authority:** Partial `Semantics` on nav, calendar, some capture.
-- **Readiness:** Functional but incomplete.
+- **Readiness:** Prototype-only as a programme (scattered `Semantics` only).
 - **Gaps:** Full VoiceOver pass; Dynamic Type; colour-not-only; reduce
   motion; focus order on timers.
 - **Criticality:** Critical.
 - **Dependency:** Design system discipline.
-- **Evidence:** Scattered Semantics; no recorded a11y audit.
+- **Evidence:** ~20 widget files; no dedicated a11y suite.
 - **Milestone:** Every athlete milestone includes a11y exit criteria.
 - **Exit:** Launch paths usable with VoiceOver; status never colour-only.
 
@@ -595,23 +634,28 @@ evidence · recommended milestone · exit criteria.
 
 #### 32. Android readiness
 
-- **Authority:** `android/` project exists.
-- **Readiness:** Functional but incomplete (not founder-dogfood primary).
-- **Gaps:** Health Connect, billing, devices matrix, Play listing.
+- **Authority:** Default Flutter `android/` scaffold.
+- **Readiness:** Prototype-only.
+- **Gaps:** `applicationId` is still `com.example.cohort_platform`; debug
+  signing used for release; Health Connect; Play listing.
 - **Criticality:** High after iOS journey is solid.
 - **Dependency:** iOS proof first recommended.
-- **Evidence:** Android manifests; founder workflow is iPhone build 7.
+- **Evidence:** `android/app/build.gradle.kts`; founder workflow is iPhone
+  `uk.cohortperformance.cohort` build 7.
 - **Milestone:** Late Experience / store readiness.
-- **Exit:** Parity on launch-critical journeys on a defined device set.
+- **Exit:** Real applicationId, release signing, and parity on
+  launch-critical journeys on a defined device set.
 
 #### 33. App Store / Play Store readiness
 
-- **Authority:** None.
-- **Readiness:** Missing.
-- **Gaps:** Listings, review notes, privacy nutrition, age rating, IAP.
+- **Authority:** iOS project + `ReleaseConfigurationPolicy`; no listing pack.
+- **Readiness:** Missing as a submission package.
+- **Gaps:** Listings, review notes, privacy nutrition, age rating, IAP
+  screenshots.
 - **Criticality:** Critical before public.
 - **Dependency:** Commercial + legal + screenshots.
-- **Evidence:** No store metadata pack in-repo.
+- **Evidence:** iOS bundle `uk.cohortperformance.cohort`;
+  `PUBLIC_LAUNCH_READY=false`; no store metadata pack in-repo.
 - **Milestone:** Commercial + public launch gate.
 - **Exit:** Submission assets complete; sandbox IAP reviewed.
 
@@ -978,7 +1022,7 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 | ID | Milestone | Outcome | Workstreams | Deps | User value | Tech risk | Content risk | External | Founder input | Tests | Preview/beta | Hosted migration | Phone | Exit | Deferred | Effort |
 |----|-----------|---------|-------------|------|------------|-----------|--------------|----------|---------------|-------|--------------|------------------|-------|------|----------|--------|
-| M-AEC | Athlete Experience Completion | Daily journey at funded-product quality | Home/Calendar/execution/errors/a11y/profile hygiene | M10 closed | Immediate | Medium | Low | — | Copy/design | Focused Flutter + device | Founder dogfood | Unlikely | Likely | §5 exits for 6–14 | Coach UI | **XL** |
+| M-AEC | Athlete Experience Completion | Daily journey at funded-product quality | Home/Calendar/`ActiveSessionScreen` execution/errors/a11y; **close guest + Coach Brain generate paths**; hide coach chrome | M10 closed | Immediate | Medium | Low | — | Copy/design | Focused Flutter + device | Founder dogfood | Unlikely | Likely | §5 exits for 6–14 | Coach UI; preview players as second authority | **XL** |
 | M-LIB | Launch programme library | 8–12 families through quality gate | Authorship, compile, manifest, editorial | M9; exercises | Core offer | Medium | **High** | Filming later | Every family | Import + graph tests | Founder then 5–10 | Publish only when approved | After content | Quality gate | Sub-60 until ready | **XL** |
 | M-ADP | Adaptation Engine v1 | All launch triggers on contract | Evidence, UI, metadata, audit | AEC; metadata | Trust | High | Medium | Wearables later as signals | Copy tone | Adaptation + a11y | Dogfood + 5–10 | Only if audit tables needed | Yes | §6 | Multi-week AI | **L–XL** |
 | M-PRG | Progression & tracking | Honest hierarchy in Progress | Comparability, reviews, radar rules | AEC; actuals | Trust | Medium | Medium | — | What “better” means | Progress tests + 6–12w | 5–10 / 25–50 | Unlikely | Yes | §7 | Fancy social PRs | **L** |
@@ -1024,15 +1068,15 @@ Manual read-only confirmation.
 | Theme | Band | Evidence | Largest gap | Next measurable gate |
 |-------|------|----------|-------------|----------------------|
 | Architecture / integrity | **70–85%** | Freeze, Programme Athlete runtime, M9/M10 hosted, atomic resume | Athlete-facing complexity still leaks in places | AEC: no dual authority regressions |
-| Workout execution | **60–75%** | Strength/interval/circuit/EMOM capture | Outdoor run + watch loop | Device complete-session matrix |
-| Daily athlete experience | **50–65%** | Today-only Home, dogfood | Premium empty/error/offline | Every today state has next action |
+| Workout execution | **55–70%** | Production `ActiveSessionScreen` capture; dedicated modality views are preview | Dual player stacks; outdoor run + watch | One launcher path; device complete-session matrix |
+| Daily athlete experience | **50–65%** | Today-only Home, dogfood | Guest/local bypass; premium empty/error/offline | Auth-required shell; every today state has next action |
 | Calendar / recovery | **65–80%** | Month grid, Incomplete, Train today | Pause/event-date | Multi-incomplete + move without data loss |
 | Progression | **35–50%** | Previous performance; partial comparisons | Honest reviews + radar rules | Insufficient-evidence default in UI |
-| Adaptation | **30–45%** | Acceptance-gated flow | Trigger coverage | All v1 triggers on 8-step contract |
+| Adaptation | **35–50%** | Day-of accept-gate is real; many §6 triggers are not | Trigger coverage | All v1 triggers on 8-step contract |
 | Programme library | **15–30%** | Two published programmes | 8–12 gated families | First new family through quality gate |
 | Exercise knowledge / media | **10–25%** | Identities + text pilot | Film + production UI | Shot list locked; 10 exercises filmed |
 | Wearables / integrations | **0–10%** | No packages | All vendors unverified | Written HealthKit spike result |
-| Onboarding | **20–35%** | Auth/profile only | Recommendation | Mapping table on real families |
+| Onboarding | **15–30%** | Local START TRAINING can still generate Coach Brain plans | Authored recommendation; kill generative path | Mapping table on real families; no generative Home |
 | Commercial systems | **0–15%** | Explicitly non-commercial enrol | Entire stack | Sandbox IAP + deletion |
 | Beta / operations | **15–30%** | Founder build 7 | Distro + observability | TestFlight + crash reporting |
 
@@ -1061,10 +1105,12 @@ explicit footnote.
 slice).
 
 In scope (when founder authorises implementation): production Home today
-states, calendar recovery, execution save/resume, error/offline/a11y, hide
-coach-platform chrome from the athlete shell.
+states, calendar recovery, `ActiveSessionScreen` save/resume, error/offline/
+a11y, hide coach-platform chrome, **fail-closed guest shell and Coach Brain
+START TRAINING generation**.
 
 Out of scope: M10 Sprint 3, consent rows, media filming pipeline, IAP,
-BYO, coach roster, Phase 3.2E allocation, hosted writes.
+BYO, coach roster, Phase 3.2E allocation, hosted writes, treating preview
+modality players as a second production authority.
 
 This document does **not** start that sprint.

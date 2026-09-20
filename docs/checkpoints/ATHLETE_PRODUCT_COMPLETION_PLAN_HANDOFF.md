@@ -50,8 +50,9 @@ M10 migration. Phone **build 7** untouched. No hosted consent smoke.
 ## Next implementation milestone
 
 **M-AEC — Athlete Experience Completion**, first slice recommended:
-**Daily Journey Integrity** (Home today, calendar recovery, execution
-save/resume, error/offline/accessibility, hide coach chrome).
+**Daily Journey Integrity** (Home today, calendar recovery,
+`ActiveSessionScreen` save/resume, error/offline/accessibility, hide coach
+chrome, close guest/Coach Brain generate paths).
 
 Do not start it in this task.
 
@@ -63,10 +64,12 @@ migration, white label. M10 schema remains; product is Phase C.
 
 ## Readiness summary
 
-Strongest: architecture integrity and the programme-athlete execution spine.
-Weakest vs launch bar: programme library depth (two published families),
-wearables (unverified / missing), commercial/legal, exercise media, honest
-progression/adaptation coverage. See plan §15 bands — not false precision.
+Strongest: architecture integrity and the programme-athlete
+`ActiveSessionScreen` spine. Weakest vs launch bar: programme library depth
+(two published families), wearables (unverified / missing), commercial/legal,
+exercise media, guest/Coach Brain onboarding leftover, athlete comparison
+UI, recovery player. See plan §15 bands — not false precision. Production
+audit addendum 2026-09-20 (late repository pass) is folded into plan §2.
 
 ## Critical path
 
