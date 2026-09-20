@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cohort_platform/features/auth/controllers/auth_controller.dart';
+import 'package:cohort_platform/features/auth/models/auth_view_state.dart';
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/models/user_role.dart';
 import 'package:cohort_platform/features/auth/services/auth_session_port.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
+import 'package:cohort_platform/features/auth/services/last_verified_auth_profile_store.dart';
 import 'package:cohort_platform/features/auth/services/profile_provisioning_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -138,6 +141,7 @@ void main() {
 
   setUp(() {
     CurrentUserSession.clear();
+    LastVerifiedAuthProfileStore.clear();
     authService = FakeAuthSessionPort();
     profileRepository = InMemoryProfileRepository();
     profileService = ProfileProvisioningService(
@@ -147,6 +151,7 @@ void main() {
 
   tearDown(() {
     CurrentUserSession.clear();
+    LastVerifiedAuthProfileStore.clear();
   });
 
   group('ProfileProvisioningService', () {
@@ -238,8 +243,48 @@ void main() {
 
       await controller.signIn(email: 'lee@example.com', password: 'wrong');
 
-      expect(controller.state.status.name, 'error');
+      expect(controller.state.status.name, 'unauthenticated');
       expect(controller.state.errorMessage, 'Email or password is incorrect.');
+    });
+
+    test('network profile failure keeps offline identity when cached', () async {
+      authService.setAuthenticated(
+        userId: 'user-123',
+        email: 'lee@example.com',
+      );
+      LastVerifiedAuthProfileStore.remember(
+        const UserProfile(
+          id: 'user-123',
+          displayName: 'Lee',
+          isCoach: false,
+          isAthlete: true,
+        ),
+      );
+
+      final controller = AuthController(
+        authService: authService,
+        profileProvisioningService: _NetworkFailingProvisioning(),
+      );
+      await controller.initialize();
+
+      expect(controller.state.status, AuthStatus.authenticatedOffline);
+      expect(CurrentUserSession.requireInstance.athleteId, 'user-123');
+    });
+
+    test('invalid session fails closed without a guest athlete', () async {
+      authService.setAuthenticated(
+        userId: 'user-123',
+        email: 'lee@example.com',
+      );
+
+      final controller = AuthController(
+        authService: authService,
+        profileProvisioningService: _InvalidAuthProvisioning(),
+      );
+      await controller.initialize();
+
+      expect(controller.state.status, AuthStatus.invalidIdentity);
+      expect(CurrentUserSession.maybeInstance, isNull);
     });
 
     test(
@@ -335,4 +380,18 @@ void main() {
       expect(CurrentUserSession.maybeInstance, isNull);
     });
   });
+}
+
+class _NetworkFailingProvisioning extends ProfileProvisioningService {
+  @override
+  Future<UserProfile?> loadProfile(String userId) {
+    throw const SocketException('Failed host lookup');
+  }
+}
+
+class _InvalidAuthProvisioning extends ProfileProvisioningService {
+  @override
+  Future<UserProfile?> loadProfile(String userId) {
+    throw Exception('Invalid refresh token');
+  }
 }

@@ -29,6 +29,31 @@ void main() {
 
     expect(find.text('Welcome back'), findsOneWidget);
     expect(find.text('Sign in'), findsOneWidget);
+    expect(find.text('START TRAINING'), findsNothing);
+  });
+
+  testWidgets('local onboarding completion cannot open the athlete shell', (
+    tester,
+  ) async {
+    CurrentUserSession.clear();
+    final authService = FakeAuthSessionPort();
+    final profileRepository = InMemoryProfileRepository();
+    final controller = AuthController(
+      authService: authService,
+      profileProvisioningService: ProfileProvisioningService(
+        profileRepository: profileRepository,
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(home: AuthGate(controller: controller)),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.text('Welcome back'), findsOneWidget);
+    expect(find.text('Home'), findsNothing);
+    expect(find.text('START TRAINING'), findsNothing);
   });
 
   testWidgets('AuthGate routes to home when authenticated with profile', (

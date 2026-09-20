@@ -4,9 +4,12 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/auth_view_state.dart';
+import '../models/production_auth_phase.dart';
 import '../models/user_role.dart';
+import '../services/auth_failure_classifier.dart';
 import '../services/auth_session_port.dart';
 import '../services/auth_service.dart';
+import '../services/last_verified_auth_profile_store.dart';
 import '../../../core/access/founder_access_policy.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/persistence/athlete_persistence.dart';
@@ -30,6 +33,7 @@ class AuthController extends ChangeNotifier {
 
   final AuthSessionPort _authService;
   final ProfileProvisioningService _profileProvisioningService;
+  final AuthFailureClassifier _failureClassifier = const AuthFailureClassifier();
 
   AuthViewState _state;
   StreamSubscription<AuthState>? _authSubscription;
@@ -40,6 +44,10 @@ class AuthController extends ChangeNotifier {
 
   /// Signed-in email when available (founder allowlist resolution).
   String? get currentEmail => _authService.currentUser?.email;
+
+  /// Truthful persisted Supabase session (online or cached).
+  bool get hasPersistedSession =>
+      _authService.currentSession != null && _authService.currentUser != null;
 
   Future<void> initialize() async {
     _state = _state.copyWith(status: AuthStatus.loading, clearError: true);
@@ -76,14 +84,19 @@ class AuthController extends ChangeNotifier {
       await _resolveAuthenticatedUser(response.user!);
     } on AuthException catch (error) {
       _state = _state.copyWith(
-        status: AuthStatus.error,
+        status: AuthStatus.unauthenticated,
+        failure: AuthIdentityFailure.invalid,
         errorMessage: _friendlyAuthMessage(error.message),
       );
       notifyListeners();
     } catch (error) {
+      final failure = _failureClassifier.classify(error);
       _state = _state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: error.toString(),
+        status: AuthStatus.unauthenticated,
+        failure: failure,
+        errorMessage: failure == AuthIdentityFailure.network
+            ? 'Waiting for connection. Try again when you are online.'
+            : UserFacingErrorMessages.from(error),
       );
       notifyListeners();
     }
@@ -178,6 +191,7 @@ class AuthController extends ChangeNotifier {
         AthleteProfileSession.profile?.athleteId;
     await _authService.signOut();
     CurrentUserSession.clear();
+    LastVerifiedAuthProfileStore.forgetIfUser(athleteId);
     UserSessionCache.clearAll();
     FounderAccessPolicy.bindSessionEmail(null);
     // Sign-out policy B: clear local athlete training data from the device.
@@ -292,16 +306,43 @@ class AuthController extends ChangeNotifier {
       }
 
       CurrentUserSession.bind(profile);
+      LastVerifiedAuthProfileStore.remember(profile);
       _state = _state.copyWith(
         status: AuthStatus.authenticated,
         profile: profile,
+        failure: AuthIdentityFailure.none,
         clearError: true,
         clearPendingEmail: true,
       );
       notifyListeners();
     } catch (error) {
+      final failure = _failureClassifier.classify(error);
+      final cached = LastVerifiedAuthProfileStore.readIfMatches(user.id);
+      if (failure == AuthIdentityFailure.network && cached != null) {
+        CurrentUserSession.bind(cached);
+        _state = _state.copyWith(
+          status: AuthStatus.authenticatedOffline,
+          profile: cached,
+          failure: AuthIdentityFailure.network,
+          errorMessage: 'Waiting for connection.',
+        );
+        notifyListeners();
+        return;
+      }
+      if (failure == AuthIdentityFailure.invalid) {
+        CurrentUserSession.clear();
+        _state = _state.copyWith(
+          status: AuthStatus.invalidIdentity,
+          failure: AuthIdentityFailure.invalid,
+          clearProfile: true,
+          errorMessage: 'Sign in required.',
+        );
+        notifyListeners();
+        return;
+      }
       _state = _state.copyWith(
         status: AuthStatus.error,
+        failure: failure,
         errorMessage: UserFacingErrorMessages.from(error),
       );
       notifyListeners();
@@ -321,9 +362,11 @@ class AuthController extends ChangeNotifier {
       );
 
       CurrentUserSession.bind(profile);
+      LastVerifiedAuthProfileStore.remember(profile);
       _state = _state.copyWith(
         status: AuthStatus.authenticated,
         profile: profile,
+        failure: AuthIdentityFailure.none,
         clearError: true,
         clearPendingEmail: true,
       );

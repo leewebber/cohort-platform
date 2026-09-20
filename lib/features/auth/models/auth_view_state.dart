@@ -1,3 +1,4 @@
+import 'production_auth_phase.dart';
 import 'user_profile.dart';
 import 'user_role.dart';
 
@@ -8,6 +9,8 @@ enum AuthStatus {
   awaitingEmailConfirmation,
   profileRequired,
   authenticated,
+  authenticatedOffline,
+  invalidIdentity,
   error,
 }
 
@@ -19,6 +22,7 @@ class AuthViewState {
     this.pendingEmail,
     this.pendingDisplayName,
     this.pendingRoles,
+    this.failure = AuthIdentityFailure.none,
   });
 
   final AuthStatus status;
@@ -27,6 +31,7 @@ class AuthViewState {
   final String? pendingEmail;
   final String? pendingDisplayName;
   final Set<UserRole>? pendingRoles;
+  final AuthIdentityFailure failure;
 
   factory AuthViewState.initial() {
     return const AuthViewState(status: AuthStatus.initial);
@@ -44,6 +49,7 @@ class AuthViewState {
     bool clearPendingDisplayName = false,
     Set<UserRole>? pendingRoles,
     bool clearPendingRoles = false,
+    AuthIdentityFailure? failure,
   }) {
     return AuthViewState(
       status: status ?? this.status,
@@ -58,6 +64,7 @@ class AuthViewState {
       pendingRoles: clearPendingRoles
           ? null
           : (pendingRoles ?? this.pendingRoles),
+      failure: failure ?? this.failure,
     );
   }
 }

@@ -9,9 +9,10 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../app_shell/athlete_app_shell.dart';
 import '../../app_shell/founder_workspace_shell.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../controllers/auth_controller.dart';
-import '../models/auth_view_state.dart';
+import '../models/production_auth_phase.dart';
+import '../services/current_user_session.dart';
+import '../services/production_auth_authority.dart';
 import 'email_verification_screen.dart';
 import 'login_screen.dart';
 import 'profile_setup_screen.dart';
@@ -27,6 +28,7 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> {
   final _experienceResolver = const AppExperienceResolver();
+  final _authority = const ProductionAuthAuthority();
   bool _hydrating = true;
   AthleteHydrationResult? _hydration;
 
@@ -39,20 +41,29 @@ class _AuthGateState extends State<AuthGate> {
 
   Future<void> _bootstrap() async {
     await widget.controller.initialize();
-    AthleteHydrationResult? hydration;
-    if (AthletePersistence.isInitialized) {
-      try {
-        hydration = await AthletePersistence.hydrate(allowRegenerate: true);
-      } catch (e, st) {
-        debugPrint('[AuthGate] athlete hydration failed: $e');
-        debugPrint('$st');
-      }
-    }
+    await _hydrateForAuthenticatedIdentity();
     if (!mounted) return;
     setState(() {
-      _hydration = hydration;
       _hydrating = false;
     });
+  }
+
+  Future<void> _hydrateForAuthenticatedIdentity() async {
+    if (!AthletePersistence.isInitialized) return;
+    final athleteId = CurrentUserSession.maybeInstance?.athleteId;
+    if (athleteId == null || athleteId.isEmpty) {
+      _hydration = null;
+      return;
+    }
+    try {
+      _hydration = await AthletePersistence.hydrate(
+        preferredAthleteId: athleteId,
+        allowRegenerate: false,
+      );
+    } catch (e, st) {
+      debugPrint('[AuthGate] athlete hydration failed: $e');
+      debugPrint('$st');
+    }
   }
 
   @override
@@ -64,16 +75,29 @@ class _AuthGateState extends State<AuthGate> {
   void _onChanged() {
     if (!mounted) return;
 
-    final status = widget.controller.state.status;
-    if (status == AuthStatus.authenticated ||
-        status == AuthStatus.profileRequired) {
+    final phase = _phase;
+    if (phase == ProductionAuthPhase.authenticatedOnline ||
+        phase == ProductionAuthPhase.authenticatedOffline ||
+        phase == ProductionAuthPhase.profileRequired) {
       Navigator.of(context).popUntil((route) => route.isFirst);
     }
 
     setState(() {});
   }
 
-  Widget _experienceRoot() {
+  ProductionAuthPhase get _phase {
+    final state = widget.controller.state;
+    return _authority.resolve(
+      status: state.status,
+      hasPersistedSession: widget.controller.hasPersistedSession,
+      hasVerifiedProfile:
+          state.profile != null || CurrentUserSession.maybeInstance != null,
+      failure: state.failure,
+    );
+  }
+
+  Widget _experienceRoot({required bool offline}) {
+    // Offline phase keeps the same shell; drafts stay scoped to the user id.
     final email = widget.controller.currentEmail;
     FounderAccessPolicy.bindSessionEmail(email);
     final role = _experienceResolver.resolve(email: email);
@@ -89,30 +113,29 @@ class _AuthGateState extends State<AuthGate> {
 
   @override
   Widget build(BuildContext context) {
-    if (_hydrating ||
-        widget.controller.state.status == AuthStatus.initial ||
-        widget.controller.state.status == AuthStatus.loading) {
-      return const _AuthLoadingScreen();
+    final phase = _phase;
+    if (_hydrating || phase == ProductionAuthPhase.authenticating) {
+      return const _AuthLoadingScreen(message: 'Restoring your session');
     }
 
-    final state = widget.controller.state;
-
-    return switch (state.status) {
-      AuthStatus.initial || AuthStatus.loading => const _AuthLoadingScreen(),
-      AuthStatus.authenticated => _experienceRoot(),
-      AuthStatus.profileRequired => ProfileSetupScreen(
+    return switch (phase) {
+      ProductionAuthPhase.authenticating => const _AuthLoadingScreen(
+        message: 'Signing in',
+      ),
+      ProductionAuthPhase.authenticatedOnline => _experienceRoot(
+        offline: false,
+      ),
+      ProductionAuthPhase.authenticatedOffline => _experienceRoot(
+        offline: true,
+      ),
+      ProductionAuthPhase.profileRequired => ProfileSetupScreen(
         controller: widget.controller,
       ),
-      AuthStatus.unauthenticated || AuthStatus.error =>
-        AthleteProfileSession.hasCompletedOnboarding
-            ? AthleteAppShell(
-                authController: widget.controller,
-                pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
-                planDefinitionMissing:
-                    _hydration?.planDefinitionMissing ?? false,
-              )
-            : LoginScreen(controller: widget.controller),
-      AuthStatus.awaitingEmailConfirmation => EmailVerificationScreen(
+      ProductionAuthPhase.awaitingEmailConfirmation => EmailVerificationScreen(
+        controller: widget.controller,
+      ),
+      ProductionAuthPhase.unauthenticated ||
+      ProductionAuthPhase.invalidIdentity => LoginScreen(
         controller: widget.controller,
       ),
     };
@@ -120,7 +143,9 @@ class _AuthGateState extends State<AuthGate> {
 }
 
 class _AuthLoadingScreen extends StatelessWidget {
-  const _AuthLoadingScreen();
+  const _AuthLoadingScreen({this.message = 'Restoring your session'});
+
+  final String message;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +157,7 @@ class _AuthLoadingScreen extends StatelessWidget {
           children: [
             Text('COHORT', style: CohortTextStyles.eyebrow),
             const SizedBox(height: 16),
-            Text('Preparing…', style: CohortTextStyles.body),
+            Text(message, style: CohortTextStyles.body),
           ],
         ),
       ),

@@ -175,7 +175,7 @@ void main() {
 
       await controller.signIn(email: 'alex@example.com', password: 'wrong');
 
-      expect(controller.state.status, AuthStatus.error);
+        expect(controller.state.status, AuthStatus.unauthenticated);
       expect(controller.state.errorMessage, isNotNull);
       expect(profiles.getProfileCallCount, 0);
     });

@@ -4,13 +4,8 @@ import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
-import '../../app_shell/athlete_app_shell.dart';
-import '../../athlete_profile/onboarding/athlete_onboarding_flow.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../controllers/auth_controller.dart';
 import '../models/auth_view_state.dart';
-import '../models/user_profile.dart';
-import '../services/current_user_session.dart';
 import '../widgets/auth_form_field.dart';
 import '../widgets/auth_scaffold.dart';
 import 'sign_up_screen.dart';
@@ -47,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final status = widget.controller.state.status;
     if (status == AuthStatus.authenticated ||
+        status == AuthStatus.authenticatedOffline ||
         status == AuthStatus.profileRequired) {
       Navigator.of(context).popUntil((route) => route.isFirst);
       return;
@@ -82,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return AuthScaffold(
       title: 'Welcome back',
-      subtitle: 'Sign in to continue training and coaching in Cohort.',
+      subtitle: 'Sign in to continue your Cohort training.',
       footer: TextButton(
         onPressed: isLoading
             ? null
@@ -143,41 +139,6 @@ class _LoginScreenState extends State<LoginScreen> {
           CohortButton(
             label: isLoading ? 'Signing in…' : 'Sign in',
             onPressed: isLoading ? () {} : _submit,
-          ),
-          const SizedBox(height: CohortSpacing.md),
-          CohortButton(
-            label: 'START TRAINING',
-            variant: CohortButtonVariant.secondary,
-            onPressed: isLoading
-                ? () {}
-                : () async {
-                    final completed = await Navigator.of(context).push<bool>(
-                      MaterialPageRoute(
-                        builder: (_) => const AthleteOnboardingFlow(),
-                      ),
-                    );
-                    if (completed == true && context.mounted) {
-                      final profile = AthleteProfileSession.profile;
-                      if (profile != null) {
-                        CurrentUserSession.bind(
-                          UserProfile(
-                            id: profile.athleteId,
-                            displayName: profile.displayName,
-                            isCoach: false,
-                            isAthlete: true,
-                          ),
-                        );
-                      }
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (_) => AthleteAppShell(
-                            authController: widget.controller,
-                          ),
-                        ),
-                        (_) => false,
-                      );
-                    }
-                  },
           ),
         ],
       ),
