@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cohort_platform/staging_tooling/journey_d/journey_d_live_entrypoint.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Deterministic Flutter launcher repair for Journey D create/execute.
@@ -64,6 +65,9 @@ void main() {
         expect(src, contains('flutter run'));
         expect(src, contains('flutter_run_nontest'));
         expect(src, contains('flutter_test_fake_only'));
+        if (path == liveLauncher) {
+          expect(src, contains('B4D21D3_NESTED_FLUTTER_TOOL_REFUSED'));
+        }
         // Launchers must not invoke pub get as a command (comments may mention it).
         expect(src, isNot(contains('\nflutter pub get')));
         expect(src, isNot(contains('flutter pub get\n')));
@@ -81,16 +85,29 @@ void main() {
       ], workingDirectory: root);
       expect(prep.exitCode, 0, reason: '${prep.stdout}\n${prep.stderr}');
 
+      final env = liveEnv();
       final r = await Process.run(
         liveLauncher,
         [],
-        environment: liveEnv(),
+        environment: env,
         workingDirectory: root,
       );
-      expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
+      expect(r.exitCode, 3, reason: '${r.stdout}\n${r.stderr}');
       final out = '${r.stdout}\n${r.stderr}';
+      expect(out, contains('B4D21D3_NESTED_FLUTTER_TOOL_REFUSED'));
       expect(out, isNot(contains('Resolving dependencies...')));
-      expect(out, contains('All tests passed'));
+      expect(out, isNot(contains('All tests passed')));
+
+      final code = await runJourneyDLiveEntrypoint(
+        environment: {
+          'S17_JD_LIVE_REQUEST_FILE': env['S17_JD_LIVE_REQUEST_FILE']!,
+          'S17_JD_LIVE_RESULT_FILE': env['S17_JD_LIVE_RESULT_FILE']!,
+          'S17_JD_LIVE_PORTS': 'fake',
+          'S17_JD_ALLOW_FAKE_PORTS': '1',
+        },
+        ensureFlutterBinding: false,
+      );
+      expect(code, 0);
       final result =
           jsonDecode(File('${tmp.path}/out.json').readAsStringSync())
               as Map<String, dynamic>;

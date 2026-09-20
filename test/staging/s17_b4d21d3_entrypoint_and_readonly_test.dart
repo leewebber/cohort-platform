@@ -79,10 +79,12 @@ void main() {
       expect(launcherSrc, contains('journey_d_live_main.dart'));
       expect(launcherSrc, contains('--no-pub'));
       expect(launcherSrc, contains('s17_jd_flutter_package_require'));
+      expect(launcherSrc, contains('B4D21D3_NESTED_FLUTTER_TOOL_REFUSED'));
       expect(launcherSrc, isNot(contains('exec dart run')));
 
       final files = req();
-      final r = await Process.run(
+      final spawned = Stopwatch()..start();
+      final nested = await Process.run(
         launcher,
         [],
         environment: {
@@ -93,11 +95,33 @@ void main() {
           'S17_JD_LIVE_PORTS': 'fake',
           'S17_JD_ALLOW_FAKE_PORTS': '1',
           'S17_ROOT': root,
+          'FLUTTER_TEST': 'true',
         },
         workingDirectory: root,
       );
-      expect(r.exitCode, 0, reason: '${r.stdout}\n${r.stderr}');
-      expect('${r.stdout}\n${r.stderr}', contains('JD_RUNTIME=flutter_test_fake_only'));
+      spawned.stop();
+      expect(nested.exitCode, 3, reason: '${nested.stdout}\n${nested.stderr}');
+      expect(
+        '${nested.stdout}\n${nested.stderr}',
+        contains('B4D21D3_NESTED_FLUTTER_TOOL_REFUSED'),
+      );
+      expect(spawned.elapsed, lessThan(const Duration(seconds: 5)));
+      expect(File(files['S17_JD_LIVE_RESULT_FILE']!).existsSync(), isFalse);
+      final leftover = await Process.run('pgrep', [
+        '-fl',
+        'create_s17_journey_d_live_harness_test.dart',
+      ]);
+      expect(leftover.exitCode, isNot(0), reason: leftover.stdout);
+
+      final code = await runJourneyDLiveEntrypoint(
+        environment: {
+          ...files,
+          'S17_JD_LIVE_PORTS': 'fake',
+          'S17_JD_ALLOW_FAKE_PORTS': '1',
+        },
+        ensureFlutterBinding: false,
+      );
+      expect(code, 0);
       final out =
           jsonDecode(File(files['S17_JD_LIVE_RESULT_FILE']!).readAsStringSync())
               as Map<String, dynamic>;

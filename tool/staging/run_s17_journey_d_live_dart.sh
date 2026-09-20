@@ -54,6 +54,14 @@ s17_jd_flutter_package_require
 # Fake-only local contract: flutter test is acceptable (no hosted traffic).
 if [[ "$PORTS_MODE" == "fake" && "${S17_JD_ALLOW_FAKE_PORTS:-}" == "1" && "${S17_JD_LOOPBACK_PROOF:-}" != "1" ]]; then
   echo "JD_RUNTIME=flutter_test_fake_only"
+  # Nested flutter CLI under an existing Flutter test isolate waits on the
+  # global tool lock (~23s isolated, >30s under the default suite). Refuse
+  # instead of hanging; the caller must run fake orchestration in-process.
+  if [[ -n "${FLUTTER_TEST:-}" ]]; then
+    echo "JD_CLASSIFICATION=B4D21D3_NESTED_FLUTTER_TOOL_REFUSED"
+    echo "REFUSED: nested flutter test under FLUTTER_TEST" >&2
+    exit 3
+  fi
   # Harness suite is tagged and skipped by default (dart_test.yaml).
   exec flutter test \
     --no-pub \
