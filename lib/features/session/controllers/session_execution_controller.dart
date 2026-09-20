@@ -93,6 +93,7 @@ class SessionExecutionController {
   void restoreFromDurableDraft({
     required Set<String> completedBlockIds,
     String? activeBlockId,
+    Set<String>? expandedBlockIds,
   }) {
     final validIds = _plan.blocks.map((block) => block.blockId).toSet();
     final completed = completedBlockIds.intersection(validIds);
@@ -124,16 +125,24 @@ class SessionExecutionController {
       if (activeId != null) {
         _runtime!.expandedBlockIds
           ..clear()
-          ..add(activeId);
+          ..addAll(
+            (expandedBlockIds ?? {activeId}).where(validIds.contains),
+          );
+        if (_runtime!.expandedBlockIds.isEmpty) {
+          _runtime!.expandedBlockIds.add(activeId);
+        }
       }
       _persist();
       return;
     }
 
+    final expanded = (expandedBlockIds ?? {?activeId})
+        .where(validIds.contains)
+        .toSet();
     _legacyState = _legacyState.copyWith(
       activeBlockIndex: activeIndex,
       completedBlockIds: completed,
-      expandedBlockIds: {?activeId},
+      expandedBlockIds: expanded.isEmpty ? {?activeId} : expanded,
       sessionStatus: SessionExecutionStatus.inProgress,
       startedAt: _legacyState.startedAt ?? DateTime.now(),
     );

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/persistence/athlete_persistence.dart';
+
 import '../../adaptation/services/adaptation_prescription_service.dart';
 import '../../performance/controllers/performance_capture_controller.dart';
+import '../../performance/models/active_performance_draft.dart';
 import '../../performance/models/training_block_result_status.dart';
+import '../../performance/models/training_session_record_status.dart';
 import '../../performance/services/performance_record_save_coordinator.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/session_execution_controller.dart';
+import '../models/production_restore_envelope.dart';
+import '../models/production_restore_outcome.dart';
+import '../models/production_session_draft.dart';
 import '../models/session_execution_plan.dart';
-import '../models/session_execution_status.dart';
 import '../models/workout_session_launch_context.dart';
 import '../screens/active_session_screen.dart';
+import 'production_restore_envelope_store.dart';
+import 'production_restore_resolver.dart';
 import 'session_execution_loader.dart';
 
 /// Launches [ActiveSessionScreen] with the same wiring as session overview.
@@ -19,14 +27,21 @@ class SessionExecutionLauncher {
     SessionExecutionLoader? loader,
     PerformanceRecordSaveCoordinator? saveCoordinator,
     AdaptationPrescriptionService? prescriptionService,
+    ProductionRestoreResolver? restoreResolver,
+    ProductionRestoreEnvelopeStore? restoreEnvelopeStore,
   }) : _loader = loader ?? SessionExecutionLoader(),
        _saveCoordinator = saveCoordinator ?? PerformanceRecordSaveCoordinator(),
        _prescriptionService =
-           prescriptionService ?? AdaptationPrescriptionService();
+           prescriptionService ?? AdaptationPrescriptionService(),
+       _restoreResolver = restoreResolver ?? const ProductionRestoreResolver(),
+       _restoreEnvelopeStore =
+           restoreEnvelopeStore ?? ProductionRestoreEnvelopeStore.instance;
 
   final SessionExecutionLoader _loader;
   final PerformanceRecordSaveCoordinator _saveCoordinator;
   final AdaptationPrescriptionService _prescriptionService;
+  final ProductionRestoreResolver _restoreResolver;
+  final ProductionRestoreEnvelopeStore _restoreEnvelopeStore;
 
   Future<void> launchActiveSession({
     required BuildContext context,
@@ -106,41 +121,85 @@ class SessionExecutionLauncher {
       protocolId: protocolId,
       trainingSessionId: trainingSessionId,
     );
-    final restored = AthleteSessionMemoryStore.instance.read(sessionKey);
-    final controller = SessionExecutionController(
-      plan: plan,
-      sessionKey: sessionKey,
-      restoredState: restored,
-      workoutLaunchContext: workoutLaunchContext,
-    );
-
-    var continueSession =
-        restored?.sessionStatus == SessionExecutionStatus.inProgress;
-
-    PerformanceCaptureController performanceController;
-    final existingRecord = await _saveCoordinator.loadInProgressDraftAsRecord(
+    final memory = AthleteSessionMemoryStore.instance.read(sessionKey);
+    var envelope = _restoreEnvelopeStore.read(
       athleteId: athleteId,
       trainingSessionId: trainingSessionId,
     );
-
-    if (existingRecord != null) {
-      performanceController = _saveCoordinator.restoreControllerFromRecord(
-        existingRecord,
-      );
-      if (restored == null) {
-        final durableDraft = performanceController.draft;
-        controller.restoreFromDurableDraft(
-          completedBlockIds: durableDraft.blockDrafts
-              .where(
-                (block) => block.status == TrainingBlockResultStatus.completed,
-              )
-              .map((block) => block.sourceBlockId)
-              .toSet(),
-          activeBlockId: durableDraft.activeBlockId,
-        );
+    if (envelope == null && AthletePersistence.isInitialized) {
+      final payload = await AthletePersistence.repository
+          .readProductionRestoreEnvelope(
+            athleteId: athleteId,
+            trainingSessionId: trainingSessionId,
+          );
+      if (payload != null) {
+        try {
+          envelope = ProductionRestoreEnvelope.fromJson(payload);
+          _restoreEnvelopeStore.write(envelope);
+        } catch (_) {
+          envelope = null;
+        }
       }
-      continueSession = true;
-    } else {
+    }
+
+    var hostedCompleted = false;
+    var existingRecord = await _saveCoordinator.loadInProgressDraftAsRecord(
+      athleteId: athleteId,
+      trainingSessionId: trainingSessionId,
+    );
+    if (existingRecord == null) {
+      final terminal = await _saveCoordinator.store
+          .getTerminalForTrainingSession(
+            athleteId: athleteId,
+            trainingSessionId: trainingSessionId,
+          );
+      hostedCompleted =
+          terminal?.status == TrainingSessionRecordStatus.completed;
+    }
+
+    final actuals = existingRecord == null
+        ? null
+        : _saveCoordinator.restoreControllerFromRecord(existingRecord).draft;
+
+    final decision = _decideRestore(
+      athleteId: athleteId,
+      trainingSessionId: trainingSessionId,
+      programmeContext: programmeContext,
+      actuals: actuals,
+      envelope: envelope,
+      hostedCompleted: hostedCompleted,
+    );
+    _applyRestorePolicy(
+      sessionKey: sessionKey,
+      memoryPresent: memory != null,
+      decision: decision,
+    );
+
+    final controller = SessionExecutionController(
+      plan: plan,
+      sessionKey: sessionKey,
+      restoredState: null,
+      workoutLaunchContext: workoutLaunchContext,
+    );
+
+    late final PerformanceCaptureController performanceController;
+    if (decision.mayEnterWithRestoredActuals && decision.actuals != null) {
+      performanceController = PerformanceCaptureController(
+        draft: decision.actuals!,
+      );
+      final durableDraft = performanceController.draft;
+      controller.restoreFromDurableDraft(
+        completedBlockIds: durableDraft.blockDrafts
+            .where(
+              (block) => block.status == TrainingBlockResultStatus.completed,
+            )
+            .map((block) => block.sourceBlockId)
+            .toSet(),
+        activeBlockId:
+            decision.cursor?.activeBlockId ?? durableDraft.activeBlockId,
+        expandedBlockIds: decision.cursor?.expandedBlockIds,
+      );
+    } else if (decision.mayBeginFresh) {
       performanceController =
           PerformanceCaptureController.initializeFromExecutionPlan(
             plan: plan,
@@ -151,10 +210,15 @@ class SessionExecutionLauncher {
       await _saveCoordinator.createOrResumeInProgress(
         controller: performanceController,
       );
-    }
-
-    if (!continueSession) {
+      _writeIdentityEnvelope(
+        athleteId: athleteId,
+        trainingSessionId: trainingSessionId,
+        programmeContext: programmeContext,
+        performanceController: performanceController,
+      );
       controller.startSession();
+    } else {
+      throw _restoreFailure(decision);
     }
 
     if (!context.mounted) return;
@@ -170,8 +234,110 @@ class SessionExecutionLauncher {
           athleteId: athleteId,
           saveCoordinator: _saveCoordinator,
           workoutLaunchContext: workoutLaunchContext,
+          restoreEnvelopeStore: _restoreEnvelopeStore,
         ),
       ),
+    );
+  }
+
+  ProductionRestoreDecision _decideRestore({
+    required String athleteId,
+    required int trainingSessionId,
+    required ProgrammeExecutionContext? programmeContext,
+    required ActivePerformanceDraft? actuals,
+    required ProductionRestoreEnvelope? envelope,
+    required bool hostedCompleted,
+  }) {
+    if (programmeContext == null || !programmeContext.isProgrammeBacked) {
+      if (hostedCompleted) {
+        return const ProductionRestoreDecision(
+          outcome: ProductionRestoreOutcome.completedHosted,
+          athleteMessage: 'Session already completed',
+        );
+      }
+      if (actuals != null && actuals.athleteId == athleteId) {
+        return ProductionRestoreDecision(
+          outcome: ProductionRestoreOutcome.resumable,
+          athleteMessage: 'Restoring your session',
+          mayEnterWithRestoredActuals: true,
+          actuals: actuals,
+          cursor: envelope?.cursor,
+          restoreCursor: envelope?.cursor != null,
+        );
+      }
+      if (actuals != null && actuals.athleteId != athleteId) {
+        return ProductionRestoreDecision(
+          outcome: ProductionRestoreOutcome.foreignAthlete,
+          athleteMessage: 'Sign in required',
+          actuals: actuals,
+        );
+      }
+      return const ProductionRestoreDecision(
+        outcome: ProductionRestoreOutcome.noDraft,
+        athleteMessage: "Preparing today's session",
+        mayBeginFresh: true,
+      );
+    }
+
+    return _restoreResolver.resolve(
+      ProductionRestoreRequest(
+        athleteId: athleteId,
+        assignmentId: programmeContext.assignmentId,
+        programmeVersionId: programmeContext.programmeVersionId,
+        programmedSessionKey: programmeContext.programmedSessionKey ?? '',
+        packageContentHash: programmeContext.packageContentHash ?? '',
+        occurrenceId: programmeContext.occurrenceId,
+        trainingSessionId: trainingSessionId,
+        hostedCompleted: hostedCompleted,
+        persistedIdentity: envelope?.identity,
+        actuals: actuals,
+        cursor: envelope?.cursor,
+        memoryState: null,
+      ),
+    );
+  }
+
+  void _applyRestorePolicy({
+    required String sessionKey,
+    required bool memoryPresent,
+    required ProductionRestoreDecision decision,
+  }) {
+    if (decision.discardMemory || memoryPresent) {
+      AthleteSessionMemoryStore.instance.clear(sessionKey);
+    }
+  }
+
+  void _writeIdentityEnvelope({
+    required String athleteId,
+    required int trainingSessionId,
+    required ProgrammeExecutionContext? programmeContext,
+    required PerformanceCaptureController performanceController,
+  }) {
+    if (programmeContext == null || !programmeContext.isProgrammeBacked) {
+      return;
+    }
+    _restoreEnvelopeStore.write(
+      ProductionRestoreEnvelope(
+        identity: ProductionSessionDraft(
+          schemaVersion: ProductionSessionDraft.currentSchemaVersion,
+          athleteId: athleteId,
+          assignmentId: programmeContext.assignmentId,
+          programmeVersionId: programmeContext.programmeVersionId,
+          programmedSessionKey: programmeContext.programmedSessionKey ?? '',
+          packageContentHash: programmeContext.packageContentHash ?? '',
+          trainingSessionId: trainingSessionId,
+          entryMode: 'live',
+          occurrenceId: programmeContext.occurrenceId,
+          startedAt: performanceController.draft.startedAt,
+        ),
+      ),
+    );
+  }
+
+  Exception _restoreFailure(ProductionRestoreDecision decision) {
+    return ProductionRestoreException(
+      decision.outcome,
+      decision.athleteMessage,
     );
   }
 }

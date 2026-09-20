@@ -96,6 +96,12 @@ abstract final class PersistenceKeys {
   static String workoutProgress(String athleteId) =>
       '${athleteRoot(athleteId)}.workout_progress';
 
+  static String productionRestoreEnvelope(
+    String athleteId,
+    int trainingSessionId,
+  ) =>
+      '${athleteRoot(athleteId)}.production_restore.$trainingSessionId';
+
   static String exerciseResults(String athleteId) =>
       '${athleteRoot(athleteId)}.exercise_results';
 

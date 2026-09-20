@@ -10,6 +10,7 @@ import '../models/prepared_execution_package.dart';
 import '../models/session_execution_plan.dart';
 import 'programme_training_session_start_store.dart';
 import 'programme_training_session_start_supabase_store.dart';
+import '../models/production_restore_outcome.dart';
 import 'production_recovery_session_policy.dart';
 import 'session_execution_launcher.dart';
 
@@ -22,6 +23,8 @@ enum ProgrammeSessionExecutionFailureCode {
   preparedProvenanceMismatch,
   unsupportedAuthoredBlock,
   recoveryGuidanceOnly,
+  restoreRejected,
+  sessionAlreadyCompleted,
   completedOccurrence,
   missingTrainingSession,
   trainingSessionMismatch,
@@ -87,14 +90,23 @@ class ProgrammeSessionExecutionLauncher {
     );
 
     if (!context.mounted) return;
-    await _sessionExecution.launchActiveSessionWithPlan(
-      context: context,
-      plan: package.plan,
-      protocolId: programmeContext.effectiveProtocolId,
-      trainingSessionId: trainingSession.id,
-      athleteId: athleteId,
-      programmeContext: programmeContext,
-    );
+    try {
+      await _sessionExecution.launchActiveSessionWithPlan(
+        context: context,
+        plan: package.plan,
+        protocolId: programmeContext.effectiveProtocolId,
+        trainingSessionId: trainingSession.id,
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+      );
+    } on ProductionRestoreException catch (error) {
+      throw ProgrammeSessionExecutionException(
+        error.outcome == ProductionRestoreOutcome.completedHosted
+            ? ProgrammeSessionExecutionFailureCode.sessionAlreadyCompleted
+            : ProgrammeSessionExecutionFailureCode.restoreRejected,
+        error.athleteMessage,
+      );
+    }
   }
 
   Future<TrainingSession> createOrResumeTrainingSession({

@@ -322,6 +322,39 @@ class AthleteLocalRepository {
     await _store.remove(PersistenceKeys.workoutProgress(athleteId));
   }
 
+  Future<void> saveProductionRestoreEnvelope({
+    required String athleteId,
+    required int trainingSessionId,
+    required Map<String, dynamic> payload,
+  }) async {
+    await _write(
+      PersistenceKeys.productionRestoreEnvelope(athleteId, trainingSessionId),
+      PersistenceSchemaVersions.productionRestoreEnvelope,
+      payload,
+    );
+  }
+
+  Future<Map<String, dynamic>?> readProductionRestoreEnvelope({
+    required String athleteId,
+    required int trainingSessionId,
+  }) async {
+    final envelope = await _readEnvelope(
+      PersistenceKeys.productionRestoreEnvelope(athleteId, trainingSessionId),
+      expectedVersion: PersistenceSchemaVersions.productionRestoreEnvelope,
+      aggregate: 'production_restore_envelope',
+    );
+    return envelope?.payload;
+  }
+
+  Future<void> clearProductionRestoreEnvelope({
+    required String athleteId,
+    required int trainingSessionId,
+  }) async {
+    await _store.remove(
+      PersistenceKeys.productionRestoreEnvelope(athleteId, trainingSessionId),
+    );
+  }
+
   // --- Programme schedule projection (Sprint 1.7C; cache only) ---
 
   /// Persists server-authoritative projection after successful ensure/load.

@@ -93,6 +93,7 @@ abstract final class PersistenceSchemaVersions {
   static const capabilityTimeline = 1;
   static const previousPerformance = 1;
   static const workoutProgress = 1;
+  static const productionRestoreEnvelope = 1;
   static const exerciseResults = 1;
   static const programmeScheduleProjection = 1;
 }
