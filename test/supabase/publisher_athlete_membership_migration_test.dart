@@ -9,6 +9,7 @@ void main() {
     'supabase/migrations/20260919120200_publisher_athlete_roster_projection.sql',
     'supabase/migrations/20260919120300_publisher_athlete_membership_rls.sql',
     'supabase/migrations/20260919120400_publisher_athlete_membership_capabilities.sql',
+    'supabase/migrations/20260920120000_publisher_athlete_membership_privilege_hardening.sql',
   ];
 
   test('membership migrations are additive and do not infer consent', () {
@@ -43,5 +44,13 @@ void main() {
     final caps = File(files[4]).readAsStringSync();
     expect(caps, contains('publisher_athlete_membership_read'));
     expect(caps, contains("'schema_version', 3"));
+    final harden = File(files[5]).readAsStringSync();
+    expect(harden, contains('REVOKE ALL ON TABLE public.publisher_athlete_invitations FROM PUBLIC'));
+    expect(harden, contains('REVOKE ALL ON TABLE public.publisher_athlete_invitations FROM authenticated'));
+    expect(harden, contains('FROM PUBLIC, anon'));
+    expect(harden, contains('FROM PUBLIC, anon, authenticated'));
+    expect(harden, contains('publisher_athlete_expire_pending'));
+    expect(harden, isNot(contains('INSERT INTO public.publisher_athlete_')));
+    expect(harden, isNot(contains('ALTER TABLE public.programme_assignments')));
   });
 }

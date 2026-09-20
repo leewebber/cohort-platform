@@ -200,6 +200,11 @@ void main() {
     expect(schemaOnly.contentGraphPublish, isFalse);
     expect(schemaOnly.contentGraphImpact, isFalse);
     expect(schemaOnly.contentGraphRead, isTrue);
+    const schema3Unknown = AthleteRuntimeCapabilities(schemaVersion: 3);
+    expect(schema3Unknown.publisherAthleteMembershipRead, isFalse);
+    expect(schema3Unknown.publisherAthleteMembershipInvite, isFalse);
+    expect(schema3Unknown.publisherAthleteMembershipManage, isFalse);
+    expect(schema3Unknown.overdueRecovery, isFalse);
   });
 
   test('display names are not relationship keys', () {

@@ -122,6 +122,7 @@ DECLARE
   v_athlete UUID := 'e0000001-0000-4000-8000-0000000000c1';
   v_mem UUID;
   v_res JSONB;
+  v_id UUID;
 BEGIN
   SELECT id INTO v_mem
   FROM public.publisher_athlete_memberships
@@ -148,6 +149,175 @@ BEGIN
   END IF;
   IF (v_res->>'schema_version')::int < 3 THEN
     RAISE EXCEPTION 'AY schema_version: %', v_res;
+  END IF;
+
+  v_res := public.cohort_publisher_athlete_invite(v_pub_a, v_athlete);
+  IF v_res->>'status' IS DISTINCT FROM 'invited' THEN
+    RAISE EXCEPTION 'AY re-invite: %', v_res;
+  END IF;
+  v_id := (v_res->>'invitation_id')::UUID;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
+  v_res := public.cohort_publisher_athlete_list_pending_invitations(NULL);
+  IF v_res->>'status' IS DISTINCT FROM 'ready' THEN
+    RAISE EXCEPTION 'AY athlete inbox: %', v_res;
+  END IF;
+  PERFORM set_config('request.jwt.claim.sub', v_owner_a::TEXT, true);
+  v_res := public.cohort_publisher_athlete_cancel_invitation(v_id);
+  IF v_res->>'status' IS DISTINCT FROM 'cancelled' THEN
+    RAISE EXCEPTION 'AY cancel: %', v_res;
+  END IF;
+  v_res := public.cohort_publisher_athlete_invite(v_pub_a, v_athlete);
+  IF v_res->>'status' IS DISTINCT FROM 'invited' THEN
+    RAISE EXCEPTION 'AY invite-for-decline: %', v_res;
+  END IF;
+  v_id := (v_res->>'invitation_id')::UUID;
+  PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
+  v_res := public.cohort_publisher_athlete_decline_invitation(v_id);
+  IF v_res->>'status' IS DISTINCT FROM 'declined' THEN
+    RAISE EXCEPTION 'AY decline: %', v_res;
+  END IF;
+  v_res := public.cohort_publisher_athlete_inspect_memberships();
+  IF v_res->>'status' IS NULL THEN
+    RAISE EXCEPTION 'AY membership inspect: %', v_res;
+  END IF;
+  v_res := public.cohort_publisher_athlete_inspect_audit(NULL, NULL);
+  IF v_res->>'status' IS DISTINCT FROM 'ready' THEN
+    RAISE EXCEPTION 'AY audit inspect: %', v_res;
+  END IF;
+END;
+$$;
+
+-- Privilege matrix (PUBLIC/anon/authenticated). Generic roles only.
+DO $$
+DECLARE
+  v_rel TEXT;
+  v_fn TEXT;
+  v_pub UUID := 'e0000001-0000-4000-8000-0000000000a1';
+  v_owner UUID := 'e0000001-0000-4000-8000-0000000000b1';
+  v_athlete UUID := 'e0000001-0000-4000-8000-0000000000c1';
+  v_denied BOOLEAN;
+  v_caps JSONB;
+BEGIN
+  FOREACH v_rel IN ARRAY ARRAY[
+    'publisher_athlete_invitations',
+    'publisher_athlete_memberships',
+    'publisher_athlete_membership_events',
+    'publisher_athlete_roster'
+  ]
+  LOOP
+    IF EXISTS (
+      SELECT 1
+      FROM pg_class c
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+      CROSS JOIN LATERAL aclexplode(c.relacl) e
+      WHERE n.nspname = 'public' AND c.relname = v_rel AND e.grantee = 0
+    ) THEN
+      RAISE EXCEPTION 'AY PUBLIC table grant on %', v_rel;
+    END IF;
+    IF has_table_privilege('anon', format('public.%I', v_rel), 'SELECT')
+       OR has_table_privilege('anon', format('public.%I', v_rel), 'INSERT') THEN
+      RAISE EXCEPTION 'AY anon table privilege on %', v_rel;
+    END IF;
+    IF has_table_privilege('authenticated', format('public.%I', v_rel), 'INSERT')
+       OR has_table_privilege('authenticated', format('public.%I', v_rel), 'UPDATE')
+       OR has_table_privilege('authenticated', format('public.%I', v_rel), 'DELETE')
+       OR has_table_privilege('authenticated', format('public.%I', v_rel), 'TRUNCATE') THEN
+      RAISE EXCEPTION 'AY authenticated write privilege on %', v_rel;
+    END IF;
+    IF has_table_privilege('authenticated', format('public.%I', v_rel), 'SELECT') THEN
+      RAISE EXCEPTION 'AY authenticated SELECT still present on %', v_rel;
+    END IF;
+    IF NOT has_table_privilege('service_role', format('public.%I', v_rel), 'SELECT') THEN
+      RAISE EXCEPTION 'AY service_role SELECT missing on %', v_rel;
+    END IF;
+  END LOOP;
+
+  IF has_table_privilege(
+    'service_role', 'public.publisher_athlete_membership_events', 'UPDATE'
+  ) THEN
+    RAISE EXCEPTION 'AY service_role UPDATE on append-only events';
+  END IF;
+
+  FOREACH v_fn IN ARRAY ARRAY[
+    'public.cohort_publisher_athlete_invite(uuid,uuid,timestamptz,text)',
+    'public.cohort_publisher_athlete_accept_invitation(uuid,text)',
+    'public.cohort_publisher_athlete_decline_invitation(uuid,text)',
+    'public.cohort_publisher_athlete_cancel_invitation(uuid,text)',
+    'public.cohort_publisher_athlete_revoke_membership(uuid,text,text)',
+    'public.cohort_publisher_athlete_inspect_roster(uuid,integer,integer)',
+    'public.cohort_publisher_athlete_list_pending_invitations(uuid,integer,integer)',
+    'public.cohort_publisher_athlete_inspect_memberships()',
+    'public.cohort_publisher_athlete_inspect_audit(uuid,uuid,integer,integer)'
+  ]
+  LOOP
+    IF EXISTS (
+      SELECT 1
+      FROM pg_proc p
+      JOIN pg_namespace n ON n.oid = p.pronamespace
+      CROSS JOIN LATERAL aclexplode(p.proacl) e
+      WHERE n.nspname = 'public'
+        AND p.oid = v_fn::regprocedure
+        AND e.grantee = 0
+        AND e.privilege_type = 'EXECUTE'
+    ) THEN
+      RAISE EXCEPTION 'AY PUBLIC EXECUTE on %', v_fn;
+    END IF;
+    IF has_function_privilege('anon', v_fn, 'EXECUTE') THEN
+      RAISE EXCEPTION 'AY anon EXECUTE on %', v_fn;
+    END IF;
+    IF NOT has_function_privilege('authenticated', v_fn, 'EXECUTE') THEN
+      RAISE EXCEPTION 'AY authenticated EXECUTE missing on %', v_fn;
+    END IF;
+    IF NOT has_function_privilege('service_role', v_fn, 'EXECUTE') THEN
+      RAISE EXCEPTION 'AY service_role EXECUTE missing on %', v_fn;
+    END IF;
+  END LOOP;
+
+  FOREACH v_fn IN ARRAY ARRAY[
+    'public.publisher_athlete_expire_pending()',
+    'public.publisher_athlete_record_event(uuid,uuid,uuid,uuid,uuid,text,text,text,text,text,text)',
+    'public.publisher_athlete_assignment_is_own(uuid,uuid)',
+    'public.publisher_athlete_prevent_event_mutation()',
+    'public.publisher_athlete_set_updated_at()'
+  ]
+  LOOP
+    IF has_function_privilege('anon', v_fn, 'EXECUTE')
+       OR has_function_privilege('authenticated', v_fn, 'EXECUTE') THEN
+      RAISE EXCEPTION 'AY client EXECUTE on helper %', v_fn;
+    END IF;
+  END LOOP;
+
+  IF has_function_privilege('anon', 'public.cohort_athlete_runtime_capabilities()', 'EXECUTE') THEN
+    RAISE EXCEPTION 'AY anon EXECUTE on capabilities';
+  END IF;
+  IF NOT has_function_privilege(
+    'authenticated', 'public.cohort_athlete_runtime_capabilities()', 'EXECUTE'
+  ) THEN
+    RAISE EXCEPTION 'AY authenticated EXECUTE missing on capabilities';
+  END IF;
+
+  PERFORM set_config('role', 'authenticated', true);
+  PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
+  PERFORM set_config('request.jwt.claim.role', 'authenticated', true);
+  BEGIN
+    INSERT INTO public.publisher_athlete_memberships (
+      publisher_id, athlete_id, invited_by, state
+    ) VALUES (v_pub, v_athlete, v_owner, 'active');
+    v_denied := FALSE;
+  EXCEPTION
+    WHEN insufficient_privilege THEN
+      v_denied := TRUE;
+    WHEN OTHERS THEN
+      v_denied := SQLSTATE IN ('42501', 'P0001');
+  END;
+  IF NOT v_denied THEN
+    RAISE EXCEPTION 'AY authenticated direct membership insert not denied';
+  END IF;
+
+  RESET ROLE;
+  v_caps := public.cohort_athlete_runtime_capabilities();
+  IF (v_caps->>'schema_version')::int IS DISTINCT FROM 3 THEN
+    RAISE EXCEPTION 'AY caps schema after ACL: %', v_caps;
   END IF;
 END;
 $$;
