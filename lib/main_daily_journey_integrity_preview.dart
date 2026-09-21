@@ -1,6 +1,8 @@
 import 'package:cohort_platform/app/theme.dart';
 import 'package:cohort_platform/core/theme/colors.dart';
 import 'package:cohort_platform/core/theme/text_styles.dart';
+import 'package:cohort_platform/core/theme/spacing.dart';
+import 'package:cohort_platform/features/home/widgets/athlete_home_completed_today_card.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_home_rest_day_card.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_home_today_session_panel.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
@@ -8,10 +10,12 @@ import 'package:cohort_platform/features/performance/models/performance_result_d
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/performance/services/previous_strength_performance_service.dart';
+import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
 import 'package:cohort_platform/features/performance/widgets/session_completion_pending_panel.dart';
 import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
 import 'package:cohort_platform/features/session/models/production_restore_outcome.dart';
 import 'package:cohort_platform/features/session/presentation/daily_journey_integrity_preview_catalog.dart';
+import 'package:cohort_platform/features/session/presentation/production_restore_athlete_copy.dart';
 import 'package:cohort_platform/features/session/screens/active_session_screen.dart';
 import 'package:cohort_platform/features/session/screens/block_timer_screen.dart';
 import 'package:cohort_platform/features/session/screens/production_restore_blocked_screen.dart';
@@ -194,12 +198,16 @@ class _DailyJourneyIntegrityPreviewScreenState
         padding: const EdgeInsets.all(24),
         children: [
           SessionCompletionPendingPanel(
-            idempotencyKey: 'finish-4-preview-frozen',
-            onRetry: () {},
+            idempotencyKey: previewCompletionIdempotencyKey,
+            onRetry: () => _select(
+              DailyJourneyIntegrityPreviewState.completionReconciled,
+            ),
             onReturnToSession: () => _openRestoredSession(scenario),
           ),
         ],
       ),
+      DailyJourneyIntegrityPreviewKind.completionReconciled =>
+        _ReconciledCompletionPreview(scenario: scenario),
       DailyJourneyIntegrityPreviewKind.restDay => ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -241,6 +249,70 @@ class _DailyJourneyIntegrityPreviewScreenState
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ReconciledCompletionPreview extends StatefulWidget {
+  const _ReconciledCompletionPreview({required this.scenario});
+
+  final DailyJourneyIntegrityPreviewScenario scenario;
+
+  @override
+  State<_ReconciledCompletionPreview> createState() =>
+      _ReconciledCompletionPreviewState();
+}
+
+class _ReconciledCompletionPreviewState
+    extends State<_ReconciledCompletionPreview> {
+  var _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final record = previewCommittedStrengthRecord();
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Semantics(
+          liveRegion: true,
+          label: ProductionRestoreAthleteCopy.completionReconciledTitle,
+          child: Text(
+            ProductionRestoreAthleteCopy.completionReconciledTitle,
+            style: CohortTextStyles.body,
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+        Text(
+          ProductionRestoreAthleteCopy.completionReconciledBody,
+          style: CohortTextStyles.small,
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        AthleteHomeCompletedTodayCard(
+          occurrence: previewCompletedOccurrence(),
+          dateLabel: 'Sunday 20 September',
+          programmeName: 'Preview programme',
+          weekDayLabel:
+              widget.scenario.plan.programmeContextLabel ?? 'Week 1 · Day 1',
+          expanded: _expanded,
+          onToggleExpanded: () => setState(() => _expanded = !_expanded),
+          record: record,
+          onViewResults: () {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => Scaffold(
+                  appBar: AppBar(title: const Text('Results')),
+                  body: CompletedSessionResultView(
+                    record: record,
+                    programmePosition: widget.scenario.plan.programmeContextLabel,
+                    statusMessage:
+                        ProductionRestoreAthleteCopy.completionReconciledTitle,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

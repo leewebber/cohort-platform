@@ -1,11 +1,14 @@
 import '../../performance/controllers/performance_capture_controller.dart';
+import '../../performance/mappers/performance_record_mapper.dart';
 import '../../performance/models/active_performance_draft.dart';
 import '../../performance/models/circuit_station_actual.dart';
 import '../../performance/models/performance_result_data.dart';
 import '../../performance/models/performance_result_type.dart';
 import '../../performance/models/performance_snapshot.dart';
+import '../../performance/models/training_session_record.dart';
 import '../../performance/models/training_session_record_status.dart';
 import '../../plans/models/programmed_session_key.dart';
+import '../../programme/models/fixed_programme_occurrence_projection.dart';
 import '../../workout_player/models/workout_session_brief.dart';
 import '../../../core/persistence/models/execution_result_models.dart';
 import '../../../models/block_performance_capture_mode.dart';
@@ -47,6 +50,7 @@ enum DailyJourneyIntegrityPreviewState {
   corruptDraft,
   unsupportedDraft,
   completionPending,
+  completionReconciled,
   structuredRecovery,
   guidanceRest,
 }
@@ -57,6 +61,7 @@ enum DailyJourneyIntegrityPreviewKind {
   activeSession,
   blocked,
   completionPending,
+  completionReconciled,
   restDay,
 }
 
@@ -125,6 +130,19 @@ class DailyJourneyIntegrityPreviewScenario {
         resolved == ProductionRestoreOutcome.resumable) {
       throw StateError('${state.name} cannot report resumable');
     }
+    if (state == DailyJourneyIntegrityPreviewState.completionReconciled) {
+      if (kind != DailyJourneyIntegrityPreviewKind.completionReconciled) {
+        throw StateError('${state.name} must use the reconciled Home projection');
+      }
+      final request = restoreRequest(state);
+      if (!request.hostedCompleted ||
+          request.actuals != null ||
+          request.persistedIdentity != null) {
+        throw StateError(
+          '${state.name} must clear local draft after hosted completion',
+        );
+      }
+    }
     final claimedFormat = format;
     if (claimedFormat != null && plan.blocks.isNotEmpty) {
       final authored = plan.blocks.first.workoutFormat;
@@ -158,6 +176,9 @@ ProductionRestoreRequest restoreRequest(
     DailyJourneyIntegrityPreviewState.amrapResume ||
     DailyJourneyIntegrityPreviewState.completionPending =>
       _request(identity: _identity(), actuals: _actuals()),
+    DailyJourneyIntegrityPreviewState.completionReconciled => _request(
+      hostedCompleted: true,
+    ),
     DailyJourneyIntegrityPreviewState.structuredRecovery => _request(),
     DailyJourneyIntegrityPreviewState.legacyPartial => _request(
       identity: _identity(schemaVersion: 0, trainingSessionId: 0),
@@ -324,15 +345,22 @@ List<DailyJourneyIntegrityPreviewScenario> dailyJourneyIntegrityPreviewScenarios
       plan: previewStrengthPlan(),
     ),
     DailyJourneyIntegrityPreviewScenario(
+      state: DailyJourneyIntegrityPreviewState.completionReconciled,
+      label: '17 Completion reconciled — already saved',
+      expectedOutcome: ProductionRestoreOutcome.completedHosted,
+      kind: DailyJourneyIntegrityPreviewKind.completionReconciled,
+      plan: previewStrengthPlan(),
+    ),
+    DailyJourneyIntegrityPreviewScenario(
       state: DailyJourneyIntegrityPreviewState.structuredRecovery,
-      label: '17 Structured recovery',
+      label: '18 Structured recovery',
       expectedOutcome: ProductionRestoreOutcome.noDraft,
       kind: DailyJourneyIntegrityPreviewKind.homeBegin,
       plan: previewRecoveryPlan(),
     ),
     DailyJourneyIntegrityPreviewScenario(
       state: DailyJourneyIntegrityPreviewState.guidanceRest,
-      label: '18 Guidance-only rest',
+      label: '19 Guidance-only rest',
       expectedOutcome: ProductionRestoreOutcome.noDraft,
       kind: DailyJourneyIntegrityPreviewKind.restDay,
       plan: const SessionExecutionPlan(
@@ -348,6 +376,7 @@ ProductionRestoreRequest _request({
   ProductionSessionDraft? identity,
   ActivePerformanceDraft? actuals,
   bool jsonCorrupt = false,
+  bool hostedCompleted = false,
 }) {
   return ProductionRestoreRequest(
     athleteId: previewAthleteId,
@@ -357,10 +386,82 @@ ProductionRestoreRequest _request({
     packageContentHash: previewHash,
     occurrenceId: previewOccurrenceId,
     trainingSessionId: 4,
+    hostedCompleted: hostedCompleted,
     jsonCorrupt: jsonCorrupt,
-    persistedIdentity: identity,
-    actuals: actuals,
+    persistedIdentity: hostedCompleted ? null : identity,
+    actuals: hostedCompleted ? null : actuals,
   );
+}
+
+const previewCompletionIdempotencyKey = 'finish-4-preview-frozen';
+
+FixedProgrammeOccurrenceProjection previewCompletedOccurrence() {
+  return const FixedProgrammeOccurrenceProjection(
+    assignmentId: previewAssignmentId,
+    occurrenceId: previewOccurrenceId,
+    sessionSlotId: 'preview-slot',
+    programmeVersionId: previewVersionId,
+    protocolId: 'preview-protocol',
+    programmedSessionKey: previewSessionKey,
+    weekNumber: 1,
+    dayKey: 'day_1',
+    sessionOrder: 1,
+    scheduledDate: '2026-09-20',
+    originalScheduledDate: '2026-09-20',
+    state: FixedProgrammeOccurrenceState.completed,
+    sessionTitle: 'Strength',
+    trainingSessionId: 4,
+  );
+}
+
+TrainingSessionRecord previewCommittedStrengthRecord() {
+  final plan = previewStrengthPlan();
+  final performance = PerformanceCaptureController.initializeFromExecutionPlan(
+    plan: plan,
+    athleteId: previewAthleteId,
+    trainingSessionId: 4,
+  );
+  final exercise = performance.draft.blockDrafts.first.exerciseResults.first;
+  for (final set in exercise.sets) {
+    performance.updateSet(
+      plan.blocks.first.blockId,
+      exercise.sourceExerciseId,
+      set.setResultId,
+      (current) => current.copyWith(reps: 5, load: 60, rpe: 7, completed: true),
+    );
+  }
+  performance
+    ..markBlockComplete(plan.blocks.first.blockId)
+    ..updateSessionRpe(7);
+  return const PerformanceRecordMapper().fromDraft(
+    performance.buildPersistableDraft(
+      status: TrainingSessionRecordStatus.completed,
+      completedAt: DateTime.utc(2026, 9, 20, 10, 45),
+    ),
+  );
+}
+
+TrainingSessionRecord previewFindCommittedCompletion({
+  required List<TrainingSessionRecord> hostedRecords,
+  required String athleteId,
+  required int trainingSessionId,
+  required String idempotencyKey,
+}) {
+  if (idempotencyKey != previewCompletionIdempotencyKey) {
+    throw StateError('Retry must reuse the same completion identity.');
+  }
+  final matches = hostedRecords
+      .where(
+        (record) =>
+            record.athleteId == athleteId &&
+            record.trainingSessionId == trainingSessionId &&
+            record.status == TrainingSessionRecordStatus.completed,
+      )
+      .toList(growable: false);
+  if (matches.length != 1) {
+    throw StateError('Expected one committed completion.');
+  }
+  return matches.single;
 }
 
 ProductionSessionDraft _identity({

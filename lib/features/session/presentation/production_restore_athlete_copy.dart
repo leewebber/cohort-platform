@@ -28,6 +28,9 @@ class ProductionRestoreAthleteCopy {
   static const completionPendingTitle = 'Completion pending';
   static const completionPendingBody =
       'Your entered results remain saved on this phone. Retry will not start a new workout.';
+  static const completionReconciledTitle = 'This session was already saved.';
+  static const completionReconciledBody =
+      'Your results are in training history. Nothing else needs to be submitted.';
   static const returnHome = 'Return to Home';
   static const continueSafely = 'Continue safely';
   static const openCalendar = 'Open Calendar';

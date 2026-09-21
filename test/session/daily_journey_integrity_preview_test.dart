@@ -1,5 +1,7 @@
+import 'package:cohort_platform/features/home/widgets/athlete_home_completed_today_card.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
+import 'package:cohort_platform/features/performance/widgets/completed_session_result_view.dart';
 import 'package:cohort_platform/features/session/models/production_restore_outcome.dart';
 import 'package:cohort_platform/features/session/presentation/daily_journey_integrity_preview_catalog.dart';
 import 'package:cohort_platform/features/session/presentation/production_restore_athlete_copy.dart';
@@ -13,7 +15,7 @@ void main() {
   final scenarios = dailyJourneyIntegrityPreviewScenarios();
 
   test('each selector maps to its claimed resolver outcome', () {
-    expect(scenarios, hasLength(18));
+    expect(scenarios, hasLength(19));
     for (final scenario in scenarios) {
       scenario.assertConsistent();
       if (scenario.state == DailyJourneyIntegrityPreviewState.unsafeLegacy) {
@@ -71,9 +73,94 @@ void main() {
   });
 
   test('completion retry preserves the same idempotency identity', () {
-    const key = 'finish-4-preview-frozen';
-    expect(key, startsWith('finish-4-'));
-    expect(key, isNot(contains(DateTime.now().toIso8601String())));
+    expect(previewCompletionIdempotencyKey, startsWith('finish-4-'));
+    expect(
+      previewCompletionIdempotencyKey,
+      isNot(contains(DateTime.now().toIso8601String())),
+    );
+  });
+
+  test('reconciliation finds one committed record for the same identity', () {
+    final committed = previewCommittedStrengthRecord();
+    final found = previewFindCommittedCompletion(
+      hostedRecords: [committed],
+      athleteId: previewAthleteId,
+      trainingSessionId: 4,
+      idempotencyKey: previewCompletionIdempotencyKey,
+    );
+    expect(found.recordId, committed.recordId);
+    expect(found.trainingSessionId, 4);
+    expect(found.status.name, 'completed');
+    expect(
+      () => previewFindCommittedCompletion(
+        hostedRecords: [committed, committed],
+        athleteId: previewAthleteId,
+        trainingSessionId: 4,
+        idempotencyKey: previewCompletionIdempotencyKey,
+      ),
+      throwsStateError,
+    );
+    expect(
+      () => previewFindCommittedCompletion(
+        hostedRecords: [committed],
+        athleteId: previewAthleteId,
+        trainingSessionId: 4,
+        idempotencyKey: 'finish-4-new-key',
+      ),
+      throwsStateError,
+    );
+  });
+
+  test('reconciled request has cleared local draft and hosted completion', () {
+    final pending = restoreRequest(
+      DailyJourneyIntegrityPreviewState.completionPending,
+    );
+    final reconciled = restoreRequest(
+      DailyJourneyIntegrityPreviewState.completionReconciled,
+    );
+    expect(pending.actuals, isNotNull);
+    expect(pending.hostedCompleted, isFalse);
+    expect(reconciled.hostedCompleted, isTrue);
+    expect(reconciled.actuals, isNull);
+    expect(reconciled.persistedIdentity, isNull);
+    expect(reconciled.cursor, isNull);
+    expect(
+      const ProductionRestoreResolver().resolve(reconciled).outcome,
+      ProductionRestoreOutcome.completedHosted,
+    );
+  });
+
+  test('reconciled result summary uses the committed record', () {
+    final record = previewCommittedStrengthRecord();
+    expect(record.sessionSnapshot.sessionTitle, 'Strength');
+    expect(record.trainingSessionId, 4);
+    expect(record.athleteId, previewAthleteId);
+    expect(record.overallRpe, 7);
+    final sets = record.blockResults.single.exerciseResults.single.setResults;
+    expect(sets, hasLength(3));
+    expect(sets.first.reps, 5);
+    expect(sets.first.load, 60);
+  });
+
+  test('production-facing reconciled copy has no technical language', () {
+    const forbidden = [
+      'idempotency',
+      'RPC',
+      'resolver',
+      'payload',
+      'Supabase',
+      'hosted reconciliation',
+      'cursor',
+    ];
+    final copy = [
+      ProductionRestoreAthleteCopy.completionPendingTitle,
+      ProductionRestoreAthleteCopy.completionPendingBody,
+      ProductionRestoreAthleteCopy.completionReconciledTitle,
+      ProductionRestoreAthleteCopy.completionReconciledBody,
+    ].join(' ');
+    for (final term in forbidden) {
+      expect(copy.toLowerCase(), isNot(contains(term.toLowerCase())));
+    }
   });
 
   testWidgets('preview selector, blocked actions and format surfaces', (
@@ -188,6 +275,24 @@ void main() {
       find.byKey(const ValueKey('completion-pending-idempotency')),
       findsOneWidget,
     );
+    expect(find.text(ProductionRestoreAthleteCopy.retry), findsOneWidget);
+
+    await show(DailyJourneyIntegrityPreviewState.completionReconciled);
+    expect(
+      find.text(ProductionRestoreAthleteCopy.completionReconciledTitle),
+      findsOneWidget,
+    );
+    expect(find.text('Strength'), findsWidgets);
+    expect(find.text('Complete'), findsOneWidget);
+    expect(find.byType(AthleteHomeCompletedTodayCard), findsOneWidget);
+    expect(find.text('View results'), findsOneWidget);
+    expect(find.text(ProductionRestoreAthleteCopy.retry), findsNothing);
+    expect(find.text('Resume'), findsNothing);
+    expect(find.text('Begin'), findsNothing);
+    expect(find.text('Save and finish'), findsNothing);
+    expect(find.text('Finish Session'), findsNothing);
+    expect(find.textContaining('idempotency'), findsNothing);
+    expect(find.textContaining('RPC'), findsNothing);
 
     await show(DailyJourneyIntegrityPreviewState.structuredRecovery);
     expect(find.text('Recovery'), findsWidgets);
@@ -322,6 +427,80 @@ void main() {
     expect(result.elapsedSeconds, 412);
     expect(result.remainingWorkNote, '2 reps left');
     expect(result.runtimeType, isNot(CircuitResultData));
+  });
+
+  testWidgets('pending Retry transitions to reconciled completion', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const DailyJourneyIntegrityPreviewApp(
+        initialState: DailyJourneyIntegrityPreviewState.completionPending,
+      ),
+    );
+    await tester.pump();
+    expect(find.byKey(const ValueKey('completion-pending-retry')), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('completion-pending-retry')));
+    await tester.pump();
+    await tester.pump();
+
+    expect(
+      find.text('17 Completion reconciled — already saved'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(ProductionRestoreAthleteCopy.completionReconciledTitle),
+      findsOneWidget,
+    );
+    expect(find.byType(AthleteHomeCompletedTodayCard), findsOneWidget);
+    expect(find.text('Complete'), findsOneWidget);
+    expect(find.byKey(const ValueKey('completion-pending-retry')), findsNothing);
+    expect(find.text('Resume'), findsNothing);
+    expect(find.text('Begin'), findsNothing);
+
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('completed-today-view-result')),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('completed-today-view-result')));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(CompletedSessionResultView), findsOneWidget);
+    expect(find.text('COMPLETED SESSION'), findsOneWidget);
+    expect(find.text('Strength'), findsWidgets);
+    expect(
+      find.text(ProductionRestoreAthleteCopy.completionReconciledTitle),
+      findsWidgets,
+    );
+  });
+
+  testWidgets('reconciled Home stays valid on a narrow screen', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.2;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+
+    await tester.pumpWidget(
+      const DailyJourneyIntegrityPreviewApp(
+        initialState: DailyJourneyIntegrityPreviewState.completionReconciled,
+      ),
+    );
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    expect(find.text('Complete'), findsOneWidget);
+    expect(
+      tester.getSemantics(find.text('Complete')).label,
+      contains('Complete'),
+    );
+    expect(find.text('View results'), findsOneWidget);
+    expect(find.text('Retry'), findsNothing);
   });
 
   testWidgets('selector remounts for-time after circuit', (tester) async {
