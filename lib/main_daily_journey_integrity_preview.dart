@@ -20,6 +20,7 @@ import 'package:cohort_platform/features/session/screens/active_session_screen.d
 import 'package:cohort_platform/features/session/screens/block_timer_screen.dart';
 import 'package:cohort_platform/features/session/screens/production_restore_blocked_screen.dart';
 import 'package:cohort_platform/features/session/services/circuit_block_timer_bridge.dart';
+import 'package:cohort_platform/features/session/services/production_restore_resolver.dart';
 import 'package:flutter/material.dart';
 
 /// Internal Daily Journey Integrity preview. Fixtures only. Not imported by
@@ -31,7 +32,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const DailyJourneyIntegrityPreviewApp(
-      initialState: DailyJourneyIntegrityPreviewState.completionReconciled,
+      initialState: DailyJourneyIntegrityPreviewState.noDraft,
+      accessibilityReview: true,
     ),
   );
 }
@@ -40,15 +42,20 @@ class DailyJourneyIntegrityPreviewApp extends StatelessWidget {
   const DailyJourneyIntegrityPreviewApp({
     super.key,
     this.initialState = DailyJourneyIntegrityPreviewState.noDraft,
+    this.accessibilityReview = false,
   });
 
   final DailyJourneyIntegrityPreviewState initialState;
+  final bool accessibilityReview;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: cohortTheme,
-      home: DailyJourneyIntegrityPreviewScreen(initialState: initialState),
+      home: DailyJourneyIntegrityPreviewScreen(
+        initialState: initialState,
+        accessibilityReview: accessibilityReview,
+      ),
     );
   }
 }
@@ -57,9 +64,11 @@ class DailyJourneyIntegrityPreviewScreen extends StatefulWidget {
   const DailyJourneyIntegrityPreviewScreen({
     super.key,
     this.initialState = DailyJourneyIntegrityPreviewState.noDraft,
+    this.accessibilityReview = false,
   });
 
   final DailyJourneyIntegrityPreviewState initialState;
+  final bool accessibilityReview;
 
   @override
   State<DailyJourneyIntegrityPreviewScreen> createState() =>
@@ -70,10 +79,16 @@ class _DailyJourneyIntegrityPreviewScreenState
     extends State<DailyJourneyIntegrityPreviewScreen> {
   final _scenarios = dailyJourneyIntegrityPreviewScenarios();
   late DailyJourneyIntegrityPreviewScenario _scenario;
+  var _a11yReview = false;
+  var _previewWidth = 390.0;
+  var _textScale = 1.0;
+  var _reduceMotion = false;
+  var _semanticsDebug = false;
 
   @override
   void initState() {
     super.initState();
+    _a11yReview = widget.accessibilityReview;
     _scenario = _scenarios.firstWhere(
       (item) => item.state == widget.initialState,
     );
@@ -89,7 +104,7 @@ class _DailyJourneyIntegrityPreviewScreenState
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 390),
+            constraints: BoxConstraints(maxWidth: _previewWidth),
             child: Column(
               children: [
                 Material(
@@ -144,14 +159,94 @@ class _DailyJourneyIntegrityPreviewScreenState
                             color: Colors.white70,
                           ),
                         ),
+                        SwitchListTile(
+                          key: const ValueKey('preview-a11y-review'),
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            'Accessibility review',
+                            style: CohortTextStyles.small.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          value: _a11yReview,
+                          onChanged: (value) =>
+                              setState(() => _a11yReview = value),
+                        ),
+                        if (_a11yReview) ...[
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              for (final width in [320.0, 390.0])
+                                ChoiceChip(
+                                  key: ValueKey('preview-width-$width'),
+                                  label: Text('${width.toInt()}px'),
+                                  selected: _previewWidth == width,
+                                  onSelected: (_) =>
+                                      setState(() => _previewWidth = width),
+                                ),
+                              for (final scale in [1.0, 1.3, 1.6, 2.0])
+                                ChoiceChip(
+                                  key: ValueKey('preview-scale-$scale'),
+                                  label: Text('${scale}×'),
+                                  selected: _textScale == scale,
+                                  onSelected: (_) =>
+                                      setState(() => _textScale = scale),
+                                ),
+                            ],
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              'Reduced motion',
+                              style: CohortTextStyles.small.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                            value: _reduceMotion,
+                            onChanged: (value) =>
+                                setState(() => _reduceMotion = value),
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              'Semantics debugger',
+                              style: CohortTextStyles.small.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                            value: _semanticsDebug,
+                            onChanged: (value) =>
+                                setState(() => _semanticsDebug = value),
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
                 Expanded(
-                  child: KeyedSubtree(
-                    key: ValueKey(_scenario.state),
-                    child: _bodyFor(_scenario, decision),
+                  child: MediaQuery(
+                    data: MediaQuery.of(context).copyWith(
+                      textScaler: TextScaler.linear(
+                        _a11yReview ? _textScale : 1.0,
+                      ),
+                      disableAnimations: _a11yReview && _reduceMotion,
+                      size: Size(
+                        _previewWidth,
+                        MediaQuery.sizeOf(context).height,
+                      ),
+                    ),
+                    child: Builder(
+                      builder: (context) {
+                        Widget body = KeyedSubtree(
+                          key: ValueKey(_scenario.state),
+                          child: _bodyFor(_scenario, decision),
+                        );
+                        if (_a11yReview && _semanticsDebug) {
+                          body = SemanticsDebugger(child: body);
+                        }
+                        return body;
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -228,6 +323,10 @@ class _DailyJourneyIntegrityPreviewScreenState
             onOpenCalendar: () {},
           ),
         ],
+      ),
+      DailyJourneyIntegrityPreviewKind.discardConfirm => _DiscardConfirmPreview(
+        decision: decision,
+        onReturnHome: () => _select(DailyJourneyIntegrityPreviewState.noDraft),
       ),
     };
   }
@@ -421,3 +520,41 @@ class _ActivePreview extends StatelessWidget {
     );
   }
 }
+
+class _DiscardConfirmPreview extends StatefulWidget {
+  const _DiscardConfirmPreview({
+    required this.decision,
+    required this.onReturnHome,
+  });
+
+  final ProductionRestoreDecision decision;
+  final VoidCallback onReturnHome;
+
+  @override
+  State<_DiscardConfirmPreview> createState() => _DiscardConfirmPreviewState();
+}
+
+class _DiscardConfirmPreviewState extends State<_DiscardConfirmPreview> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      showDialog<bool>(
+        context: context,
+        builder: (_) => const ProductionRestoreDiscardDialog(),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ProductionRestoreBlockedScreen(
+      decision: widget.decision,
+      unsafeLegacy: true,
+      onReturnHome: widget.onReturnHome,
+      onDiscardDraft: () async {},
+    );
+  }
+}
+

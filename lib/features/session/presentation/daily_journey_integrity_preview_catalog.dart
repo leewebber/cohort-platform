@@ -53,6 +53,7 @@ enum DailyJourneyIntegrityPreviewState {
   completionReconciled,
   structuredRecovery,
   guidanceRest,
+  discardConfirm,
 }
 
 enum DailyJourneyIntegrityPreviewKind {
@@ -63,6 +64,7 @@ enum DailyJourneyIntegrityPreviewKind {
   completionPending,
   completionReconciled,
   restDay,
+  discardConfirm,
 }
 
 class DailyJourneyIntegrityPreviewScenario {
@@ -207,6 +209,9 @@ ProductionRestoreRequest restoreRequest(
       actuals: _actuals(),
     ),
     DailyJourneyIntegrityPreviewState.guidanceRest => _request(),
+    DailyJourneyIntegrityPreviewState.discardConfirm => _request(
+      jsonCorrupt: true,
+    ),
   };
 }
 
@@ -368,6 +373,14 @@ List<DailyJourneyIntegrityPreviewScenario> dailyJourneyIntegrityPreviewScenarios
         sessionTitle: 'Rest day',
         blocks: [],
       ),
+    ),
+    DailyJourneyIntegrityPreviewScenario(
+      state: DailyJourneyIntegrityPreviewState.discardConfirm,
+      label: '20 Destructive discard confirmation',
+      expectedOutcome: ProductionRestoreOutcome.corrupt,
+      kind: DailyJourneyIntegrityPreviewKind.discardConfirm,
+      plan: previewStrengthPlan(),
+      unsafeLegacy: true,
     ),
   ];
 }

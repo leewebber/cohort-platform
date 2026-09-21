@@ -15,7 +15,7 @@ void main() {
   final scenarios = dailyJourneyIntegrityPreviewScenarios();
 
   test('each selector maps to its claimed resolver outcome', () {
-    expect(scenarios, hasLength(19));
+    expect(scenarios, hasLength(20));
     for (final scenario in scenarios) {
       scenario.assertConsistent();
       if (scenario.state == DailyJourneyIntegrityPreviewState.unsafeLegacy) {
