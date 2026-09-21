@@ -39,22 +39,48 @@ class PerformanceSaveIndicator extends StatelessWidget {
     super.key,
     required this.state,
     this.errorMessage,
+    this.onRetry,
+    this.pendingRetained = false,
   });
 
   final PerformanceSaveState state;
   final String? errorMessage;
+  final VoidCallback? onRetry;
+  final bool pendingRetained;
 
   @override
   Widget build(BuildContext context) {
     final label = switch (state) {
-      PerformanceSaveState.idle => 'Ready to save',
-      PerformanceSaveState.saving => 'Saving…',
-      PerformanceSaveState.completing => 'Completing session…',
-      PerformanceSaveState.saved => 'Saved',
-      PerformanceSaveState.error => errorMessage ?? 'Save failed',
+      PerformanceSaveState.idle => '',
+      PerformanceSaveState.saving => 'Saving',
+      PerformanceSaveState.completing => 'Completion pending',
+      PerformanceSaveState.saved =>
+        pendingRetained ? 'Completion confirmed' : 'Saved',
+      PerformanceSaveState.error =>
+        errorMessage ?? 'Couldn’t save — Retry',
     };
+    if (label.isEmpty) return const SizedBox.shrink();
 
-    return Text(label, style: CohortTextStyles.small);
+    return Semantics(
+      liveRegion: true,
+      label: label,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: CohortTextStyles.small),
+          if (state == PerformanceSaveState.completing)
+            Text(
+              'Your entered results are still saved on this phone.',
+              style: CohortTextStyles.small,
+            ),
+          if (state == PerformanceSaveState.error && onRetry != null)
+            TextButton(
+              onPressed: onRetry,
+              child: const Text('Retry'),
+            ),
+        ],
+      ),
+    );
   }
 }
 

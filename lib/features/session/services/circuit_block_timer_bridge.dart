@@ -55,7 +55,8 @@ class CircuitBlockTimerBridge {
       );
     }
     if (result is AmrapResultData && configuration.durationSeconds != null) {
-      final remaining = (configuration.durationSeconds! * 2) ~/ 5;
+      final remaining =
+          result.remainingSeconds ?? configuration.durationSeconds!;
       return BlockTimerState(
         format: WorkoutFormat.amrap,
         phase: BlockTimerPhase.countdown,

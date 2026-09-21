@@ -19,6 +19,7 @@ import '../models/workout_session_launch_context.dart';
 import '../presentation/production_restore_athlete_copy.dart';
 import '../screens/active_session_screen.dart';
 import '../screens/production_restore_blocked_screen.dart';
+import 'circuit_block_timer_bridge.dart';
 import 'production_restore_envelope_store.dart';
 import 'production_restore_resolver.dart';
 import 'session_execution_loader.dart';
@@ -233,6 +234,23 @@ class SessionExecutionLauncher {
 
     if (!context.mounted) return;
 
+    var openRestoredTimer = false;
+    if (decision.mayEnterWithRestoredActuals) {
+      for (final block in plan.blocks) {
+        final result = performanceController.draft
+            .blockDraftFor(block.blockId)
+            ?.resultData;
+        if (CircuitBlockTimerBridge.restoredState(
+              block: block,
+              result: result,
+            ) !=
+            null) {
+          openRestoredTimer = true;
+          break;
+        }
+      }
+    }
+
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ActiveSessionScreen(
@@ -245,6 +263,7 @@ class SessionExecutionLauncher {
           saveCoordinator: _saveCoordinator,
           workoutLaunchContext: workoutLaunchContext,
           restoreEnvelopeStore: _restoreEnvelopeStore,
+          openRestoredTimer: openRestoredTimer,
         ),
       ),
     );

@@ -207,7 +207,7 @@ List<DailyJourneyIntegrityPreviewScenario> dailyJourneyIntegrityPreviewScenarios
     ),
     DailyJourneyIntegrityPreviewScenario(
       state: DailyJourneyIntegrityPreviewState.strengthResume,
-      label: '3 Resumed strength at exact set',
+      label: '3 Strength restored after process kill',
       expectedOutcome: ProductionRestoreOutcome.resumable,
       kind: DailyJourneyIntegrityPreviewKind.activeSession,
       plan: previewStrengthPlan(),

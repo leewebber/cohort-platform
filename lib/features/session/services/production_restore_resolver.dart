@@ -247,7 +247,7 @@ class ProductionRestoreResolver {
           athleteMessage: ProductionRestoreAthleteCopy.message(
             ProductionRestoreOutcome.unsupportedVersion,
           ),
-          mayEnterWithRestoredActuals: actuals != null,
+          mayEnterWithRestoredActuals: false,
           restoreCursor: false,
           identity: identity,
           actuals: actuals,

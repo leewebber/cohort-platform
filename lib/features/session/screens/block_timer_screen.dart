@@ -35,7 +35,8 @@ class BlockTimerScreen extends StatefulWidget {
   State<BlockTimerScreen> createState() => _BlockTimerScreenState();
 }
 
-class _BlockTimerScreenState extends State<BlockTimerScreen> {
+class _BlockTimerScreenState extends State<BlockTimerScreen>
+    with WidgetsBindingObserver {
   BlockTimerController? _controller;
   BlockTimerState? _state;
 
@@ -70,12 +71,27 @@ class _BlockTimerScreenState extends State<BlockTimerScreen> {
       _controller!.start();
     }
     _state = _controller!.state;
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _controller?.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.paused) {
+      final current = _controller?.state;
+      if (current != null) {
+        _controller?.pause();
+        widget.onCheckpoint?.call(_controller?.state ?? current);
+      }
+    }
   }
 
   Future<void> _confirmExit() async {

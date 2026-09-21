@@ -425,45 +425,53 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           restoredWorkNote: existing is ForTimeResultData
               ? existing.remainingWorkNote
               : null,
-          onCheckpoint: (state) => _persistTimerCursor(block, state),
+          onCheckpoint: (state) => _persistTimerEvidence(block, state),
           initialState: initialState,
         ),
       ),
     );
-    if (popped != null &&
-        CircuitCaptureContract.isCircuitFormat(block.workoutFormat)) {
-      _persistTimerCursor(block, popped);
+    if (popped != null) {
+      _persistTimerEvidence(block, popped);
       if (block.workoutFormat == WorkoutFormat.emom) {
         await _openEmomResult(block, timer: popped);
         return;
       }
     }
-    if (popped != null && block.workoutFormat == WorkoutFormat.forTime) {
-      _persistForTimeElapsed(block, popped);
-    }
     _refresh();
   }
 
-  void _persistForTimeElapsed(
+  void _persistTimerEvidence(
     SessionExecutionBlock block,
     BlockTimerState state,
   ) {
     final latest = _blockDraft(block.blockId)?.resultData;
-    if (latest is! ForTimeResultData) return;
-    _performanceController.updateBlockResultData(
-      block.blockId,
-      latest.copyWith(elapsedSeconds: state.primarySeconds),
-    );
-    _persistDraft();
-  }
-
-  void _persistTimerCursor(SessionExecutionBlock block, BlockTimerState state) {
-    final latest = _blockDraft(block.blockId)?.resultData;
-    if (latest is! CircuitResultData) return;
-    _performanceController.updateBlockResultData(
-      block.blockId,
-      latest.copyWith(timerCursor: CircuitBlockTimerBridge.cursorFrom(state)),
-    );
+    if (latest is CircuitResultData) {
+      _performanceController.updateBlockResultData(
+        block.blockId,
+        latest.copyWith(timerCursor: CircuitBlockTimerBridge.cursorFrom(state)),
+      );
+    } else if (latest is ForTimeResultData) {
+      _performanceController.updateBlockResultData(
+        block.blockId,
+        latest.copyWith(elapsedSeconds: state.primarySeconds),
+      );
+    } else if (latest is IntervalResultData) {
+      _performanceController.updateBlockResultData(
+        block.blockId,
+        latest.copyWith(
+          workSeconds: state.primarySeconds,
+          intervalsCompleted: (state.currentRound - 1).clamp(0, 999),
+          entered: true,
+        ),
+      );
+    } else if (latest is AmrapResultData) {
+      _performanceController.updateBlockResultData(
+        block.blockId,
+        latest.copyWith(remainingSeconds: state.primarySeconds),
+      );
+    } else {
+      return;
+    }
     _persistDraft();
   }
 
@@ -661,7 +669,10 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                 const SizedBox(height: CohortSpacing.lg),
                 PerformanceSaveIndicator(
                   state: _saveState,
-                  errorMessage: _saveError,
+                  errorMessage: _saveError ?? 'Couldn’t save — Retry',
+                  onRetry: _saveState == PerformanceSaveState.error
+                      ? () => unawaited(_persistDraft())
+                      : null,
                 ),
                 const SizedBox(height: CohortSpacing.lg),
                 SessionProgressIndicator(
@@ -779,6 +790,20 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                                 previousStrengthHistory:
                                     _previousStrengthHistory,
                                 onRetryPreviousStrength: _loadPreviousStrength,
+                                onApplyElapsedSeconds: (seconds) {
+                                  final current = blockDraft.resultData;
+                                  if (current is ForTimeResultData) {
+                                    _performanceController
+                                        .updateBlockResultData(
+                                      block.blockId,
+                                      current.copyWith(
+                                        elapsedSeconds: seconds,
+                                      ),
+                                    );
+                                    _persistDraft();
+                                    _refresh();
+                                  }
+                                },
                                 onResultChanged: (result) {
                                   _performanceController.updateBlockResultData(
                                     block.blockId,
@@ -830,13 +855,19 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                   ),
                 ],
                 const SizedBox(height: CohortSpacing.xl),
-                CohortButton(
-                  label: _saveState == PerformanceSaveState.completing
-                      ? 'Completing…'
-                      : 'Finish Session',
-                  onPressed: finishEligibility.canFinish
-                      ? _finishSession
-                      : null,
+                Semantics(
+                  button: true,
+                  label: finishEligibility.canFinish
+                      ? 'Finish session'
+                      : finishEligibility.reason,
+                  child: CohortButton(
+                    label: _saveState == PerformanceSaveState.completing
+                        ? 'Completion pending'
+                        : 'Finish Session',
+                    onPressed: finishEligibility.canFinish
+                        ? _finishSession
+                        : null,
+                  ),
                 ),
                 const SizedBox(height: CohortSpacing.sm),
                 Text(

@@ -99,12 +99,14 @@ class AmrapResultData extends PerformanceResultData {
     this.rounds = 0,
     this.extraReps = 0,
     this.entered = false,
+    this.remainingSeconds,
     this.note,
   });
 
   final int rounds;
   final int extraReps;
   final bool entered;
+  final int? remainingSeconds;
   final String? note;
 
   @override
@@ -116,6 +118,7 @@ class AmrapResultData extends PerformanceResultData {
     'rounds': rounds,
     'extraReps': extraReps,
     'entered': entered,
+    if (remainingSeconds != null) 'remainingSeconds': remainingSeconds,
     if (note != null) 'note': note,
   };
 
@@ -124,6 +127,7 @@ class AmrapResultData extends PerformanceResultData {
       rounds: _int(json['rounds']),
       extraReps: _int(json['extraReps']),
       entered: json['entered'] == true,
+      remainingSeconds: _nullableInt(json['remainingSeconds']),
       note: _trim(json['note']),
     );
   }
@@ -132,6 +136,7 @@ class AmrapResultData extends PerformanceResultData {
     int? rounds,
     int? extraReps,
     bool? entered,
+    int? remainingSeconds,
     String? note,
   }) {
     return AmrapResultData(
@@ -140,6 +145,7 @@ class AmrapResultData extends PerformanceResultData {
       entered:
           entered ??
           (rounds != null || extraReps != null ? true : this.entered),
+      remainingSeconds: remainingSeconds ?? this.remainingSeconds,
       note: note ?? this.note,
     );
   }
