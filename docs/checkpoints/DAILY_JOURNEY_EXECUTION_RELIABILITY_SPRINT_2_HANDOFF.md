@@ -56,6 +56,8 @@ manual-only.
 - Production resume auto-opens a restored timer when persisted evidence
   exists.
 - Hosted complete wins over stale serialized local draft.
+- Lost/uncertain hosted completion stays **Completion pending** with
+  Retry; it does not lock the finish action as in-flight.
 - Unsupported future identity fails closed.
 - Build-7 missing identity fields remain partially recoverable.
 

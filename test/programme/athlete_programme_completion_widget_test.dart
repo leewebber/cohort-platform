@@ -145,7 +145,8 @@ void main() {
       await tester.tap(find.text('Save and finish'));
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('still confirming'), findsOneWidget);
+      expect(find.textContaining('Completion pending'), findsOneWidget);
+      expect(find.textContaining('still saved on this phone'), findsOneWidget);
       expect(execution.state.sessionStatus, SessionExecutionStatus.inProgress);
       expect(find.text('SESSION COMPLETE'), findsNothing);
 

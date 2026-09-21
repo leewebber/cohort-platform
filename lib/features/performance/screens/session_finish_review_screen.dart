@@ -176,9 +176,8 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             programmeCompletion?.status ==
             AthleteProgrammeCompletionStatus.networkUncertain;
         setState(() {
-          _saveState = uncertain
-              ? PerformanceSaveState.completing
-              : PerformanceSaveState.error;
+          // Uncertain is retryable pending — not an in-flight lock.
+          _saveState = PerformanceSaveState.error;
           _errorMessage = uncertain
               ? 'Completion pending. Your results are still saved on this phone.'
               : (programmeCompletion?.message ??

@@ -182,7 +182,8 @@ idempotency):
 | Saving local write | Saving |
 | Durable local write succeeded | Saved |
 | Local write failed | Couldn’t save — Retry |
-| Hosted completion in flight or uncertain | Completion pending |
+| Hosted completion in flight | Completing… (not retryable until the request returns) |
+| Hosted completion uncertain / lost response | Completion pending + Retry |
 | Hosted success or reconciled commit | Completion confirmed |
 
 Do not show Saved until the durable local write succeeds. Do not show Complete
