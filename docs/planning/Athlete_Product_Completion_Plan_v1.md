@@ -1101,28 +1101,14 @@ explicit footnote.
 
 ## 17. Immediate next sprint (recommendation only)
 
-**Athlete Experience Completion — Daily Journey Integrity** (first AEC
-slice).
+**Athlete Experience Completion — Daily Journey Integrity Sprint 2:**
+Production Execution Reliability.
 
-In scope (when founder authorises implementation): production Home today
-states, calendar recovery, `ActiveSessionScreen` save/resume, error/offline/
-a11y, hide coach-platform chrome, **fail-closed guest shell and Coach Brain
-START TRAINING generation**.
+Sprint 1 is integrated at `e646f11`. Binding Sprint 2:
+[`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md).
 
-Out of scope: M10 Sprint 3, consent rows, media filming pipeline, IAP,
-BYO, coach roster, Phase 3.2E allocation, hosted writes, treating preview
-modality players as a second production authority.
+Out of scope: M10 Sprint 3, programme comparison, Android release, wearables,
+offline completion queue, blue brand, Field Manual mutation, treating preview
+players as production authority.
 
-Sprint 1 local evidence (2026-09-20): AuthGate no longer treats onboarding as
-shell authority; START TRAINING generation is removed from production login;
-`ProductionRestoreResolver` is the only resume authority;
-`ActivePerformanceDraft` holds actuals; `ProductionSessionDraft` + UI cursor
-are companions; `AthleteSessionMemoryStore` and `WorkoutProgressSnapshot`
-cannot authorize resume; the boot “Resume training?” prompt is retired;
-rest/recovery without executable blocks is guidance-only; format restore is
-proven on the production draft path in tests, not preview players. Offline
-completion queue remains deferred. See
-[`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md)
-and
-[`../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md).
 Scores are not Complete.
