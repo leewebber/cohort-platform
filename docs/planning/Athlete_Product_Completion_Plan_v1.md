@@ -1101,11 +1101,12 @@ explicit footnote.
 
 ## 17. Immediate next sprint (recommendation only)
 
-**Athlete Experience Completion — Daily Journey Integrity Sprint 2:**
-Production Execution Reliability.
+**Athlete Experience Completion — Daily Journey Integrity Sprint 3:**
+Accessibility and Interaction Integrity.
 
-Sprint 1 is integrated at `e646f11`. Binding Sprint 2:
-[`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md).
+Sprint 1 is integrated at `e646f11`. Sprint 2 is integrated at `5b584a6`.
+Binding Sprint 3:
+[`../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md`](../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md).
 
 Out of scope: M10 Sprint 3, programme comparison, Android release, wearables,
 offline completion queue, blue brand, Field Manual mutation, treating preview
