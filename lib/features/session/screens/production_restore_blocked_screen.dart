@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -57,7 +58,12 @@ class ProductionRestoreBlockedScreen extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
-            Text(title, style: CohortTextStyles.h2),
+            Semantics(
+              liveRegion: true,
+              header: true,
+              label: title,
+              child: Text(title, style: CohortTextStyles.h2),
+            ),
             const SizedBox(height: CohortSpacing.md),
             Text(body, style: CohortTextStyles.body),
             const SizedBox(height: CohortSpacing.xl),
@@ -97,6 +103,7 @@ class ProductionRestoreBlockedScreen extends StatelessWidget {
                 key: const ValueKey('restore-discard-draft'),
                 label: ProductionRestoreAthleteCopy.discardDraft,
                 variant: CohortButtonVariant.secondary,
+                semanticHint: 'Opens a confirmation dialog',
                 onPressed: () => _confirmDiscard(context),
               ),
             ],
@@ -117,23 +124,38 @@ class ProductionRestoreBlockedScreen extends StatelessWidget {
   Future<void> _confirmDiscard(BuildContext context) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text(ProductionRestoreAthleteCopy.discardDraft),
-        content: const Text(ProductionRestoreAthleteCopy.discardDraftConfirm),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text(ProductionRestoreAthleteCopy.discardDraft),
-          ),
-        ],
-      ),
+      builder: (context) => const ProductionRestoreDiscardDialog(),
     );
     if (confirmed == true) {
       await onDiscardDraft?.call();
     }
+  }
+}
+
+class ProductionRestoreDiscardDialog extends StatelessWidget {
+  const ProductionRestoreDiscardDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text(ProductionRestoreAthleteCopy.discardDraft),
+      content: const Text(ProductionRestoreAthleteCopy.discardDraftConfirm),
+      actions: [
+        JourneyMinTap(
+          child: TextButton(
+            key: const ValueKey('restore-discard-cancel'),
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+        ),
+        JourneyMinTap(
+          child: TextButton(
+            key: const ValueKey('restore-discard-confirm'),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text(ProductionRestoreAthleteCopy.discardDraft),
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -10,12 +10,16 @@ class PerformanceNumericField extends StatefulWidget {
     required this.onChanged,
     this.label,
     this.allowDecimal = false,
+    this.autofocus = false,
+    this.errorText,
   });
 
   final String? value;
   final ValueChanged<String> onChanged;
   final String? label;
   final bool allowDecimal;
+  final bool autofocus;
+  final String? errorText;
 
   @override
   State<PerformanceNumericField> createState() =>
@@ -57,7 +61,11 @@ class _PerformanceNumericFieldState extends State<PerformanceNumericField> {
     return TextField(
       controller: _controller,
       focusNode: _focusNode,
-      decoration: InputDecoration(labelText: widget.label),
+      autofocus: widget.autofocus,
+      decoration: InputDecoration(
+        labelText: widget.label,
+        errorText: widget.errorText,
+      ),
       keyboardType: widget.allowDecimal
           ? const TextInputType.numberWithOptions(decimal: true)
           : TextInputType.number,

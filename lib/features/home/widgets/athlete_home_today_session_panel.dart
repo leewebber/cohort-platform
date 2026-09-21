@@ -82,10 +82,7 @@ class _AthleteHomeTodaySessionPanelState
         ? widget.occurrence!.sessionTitle
         : package.brief.sessionName;
 
-    return Semantics(
-      container: true,
-      label: '$title, $status',
-      child: CohortCard(
+    return CohortCard(
         variant: CohortCardVariant.premium,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +90,12 @@ class _AthleteHomeTodaySessionPanelState
             Text('TODAY', style: CohortTextStyles.sectionLabel),
             if (widget.dateLabel != null) ...[
               const SizedBox(height: CohortSpacing.xs),
-              Text(widget.dateLabel!, style: CohortTextStyles.muted),
+              Text(
+                widget.dateLabel!,
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.textSecondary,
+                ),
+              ),
             ],
             if (widget.programmeName != null &&
                 widget.programmeName!.trim().isNotEmpty) ...[
@@ -109,14 +111,22 @@ class _AthleteHomeTodaySessionPanelState
             Text(title, style: CohortTextStyles.h2),
             if (meta != null) ...[
               const SizedBox(height: CohortSpacing.xs),
-              Text(meta, style: CohortTextStyles.muted),
+              Text(
+                meta,
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.textSecondary,
+                ),
+              ),
             ],
             if (focus != null) ...[
               const SizedBox(height: CohortSpacing.sm),
               Text(focus, style: CohortTextStyles.body),
             ],
             const SizedBox(height: CohortSpacing.sm),
-            Text(status, style: CohortTextStyles.statusActive),
+            Semantics(
+              label: 'Status $status',
+              child: Text(status, style: CohortTextStyles.statusActive),
+            ),
             if (widget.adaptationNotice != null) ...[
               const SizedBox(height: CohortSpacing.xs),
               Text(widget.adaptationNotice!, style: CohortTextStyles.small),
@@ -145,9 +155,11 @@ class _AthleteHomeTodaySessionPanelState
             const SizedBox(height: CohortSpacing.md),
             CohortButton(
               key: const ValueKey('home-today-primary-action'),
-              label: widget.primaryLabel,
+              label: widget.primaryBusy ? 'Starting…' : widget.primaryLabel,
+              semanticLabel:
+                  '${widget.primaryLabel}. $title. Status $status',
               showTrailingArrow: true,
-              onPressed: widget.onPrimary,
+              onPressed: widget.primaryBusy ? null : widget.onPrimary,
             ),
             if (widget.adaptLabel != null) ...[
               const SizedBox(height: CohortSpacing.xs),
@@ -160,7 +172,7 @@ class _AthleteHomeTodaySessionPanelState
                     style: CohortTextStyles.body.copyWith(
                       color: widget.adaptEnabled
                           ? CohortColors.textPrimary
-                          : CohortColors.textMuted,
+                          : CohortColors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -177,7 +189,6 @@ class _AthleteHomeTodaySessionPanelState
               ),
           ],
         ),
-      ),
     );
   }
 }
@@ -199,8 +210,11 @@ class _PrescriptionRow extends StatelessWidget {
             Flexible(
               child: Text(
                 line.detail!,
-                style: CohortTextStyles.muted,
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.textSecondary,
+                ),
                 textAlign: TextAlign.right,
+                softWrap: true,
               ),
             ),
         ],

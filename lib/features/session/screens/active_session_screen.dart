@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/errors/user_facing_error_messages.dart';
 import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../presentation/daily_journey_accessibility.dart';
 import '../../../features/exercises/exercise_detail/exercise_detail_screen.dart';
 import '../../../features/home/controllers/home_today_session_refresh_controller.dart';
 import '../../../features/programme/models/programme_execution_context.dart';
@@ -90,6 +92,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
   bool _lastSaveSucceeded = true;
   bool _isLeaving = false;
   bool _completionLocked = false;
+  String? _journeyAnnouncement;
   PreviousStrengthHistoryState _previousStrengthHistory =
       const PreviousStrengthHistoryState.loading();
   late final PreviousStrengthPerformanceService _previousStrengthService;
@@ -107,6 +110,22 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
+    final restoredDraft = widget.openRestoredTimer ||
+        _performanceController.draft.blockDrafts.any(
+          (block) => block.exerciseResults.any(
+            (exercise) => exercise.sets.any(
+              (set) =>
+                  set.completed ||
+                  set.reps != null ||
+                  set.load != null ||
+                  set.distance != null,
+            ),
+          ),
+        );
+    if (restoredDraft) {
+      _journeyAnnouncement =
+          'Draft restored. Your entered results are on this phone.';
+    }
     if (widget.openRestoredTimer) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -615,6 +634,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     _performanceController.setActiveBlock(
       _controller.state.activeBlock?.blockId,
     );
+    _journeyAnnouncement = 'Block completed';
     _persistDraft();
     _refresh();
   }
@@ -655,12 +675,15 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton.icon(
-                  key: const ValueKey('active-session-back-to-home'),
-                  onPressed: _isLeaving ? null : _returnToHome,
-                  icon: const Icon(Icons.arrow_back_rounded),
-                  label: const Text('Back to Home'),
+                JourneyMinTap(
+                  child: TextButton.icon(
+                    key: const ValueKey('active-session-back-to-home'),
+                    onPressed: _isLeaving ? null : _returnToHome,
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    label: const Text('Back to Home'),
+                  ),
                 ),
+                JourneyAnnouncement(message: _journeyAnnouncement),
                 const SizedBox(height: CohortSpacing.md),
                 AthleteSessionHeader(
                   title: state.plan.sessionTitle,
@@ -855,24 +878,25 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                   ),
                 ],
                 const SizedBox(height: CohortSpacing.xl),
-                Semantics(
-                  button: true,
-                  label: finishEligibility.canFinish
+                CohortButton(
+                  label: _saveState == PerformanceSaveState.completing
+                      ? 'Completion pending'
+                      : 'Finish Session',
+                  semanticLabel: finishEligibility.canFinish
                       ? 'Finish session'
                       : finishEligibility.reason,
-                  child: CohortButton(
-                    label: _saveState == PerformanceSaveState.completing
-                        ? 'Completion pending'
-                        : 'Finish Session',
-                    onPressed: finishEligibility.canFinish
-                        ? _finishSession
-                        : null,
-                  ),
+                  semanticHint: finishEligibility.canFinish
+                      ? null
+                      : 'Unavailable',
+                  onPressed: finishEligibility.canFinish
+                      ? _finishSession
+                      : null,
                 ),
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
                   finishEligibility.reason,
                   key: const ValueKey('finish-session-reason'),
+                  softWrap: true,
                 ),
               ],
             ),

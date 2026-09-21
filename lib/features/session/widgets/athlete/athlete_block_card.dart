@@ -86,7 +86,17 @@ class AthleteBlockCard extends StatelessWidget {
           children: [
             InkWell(
               onTap: onToggleExpanded,
-              child: Row(
+              child: Semantics(
+                button: true,
+                expanded: isExpanded,
+                label: [
+                  block.title,
+                  if (isActive) 'Active' else if (isComplete) 'Completed' else 'Not started',
+                  isFixedWork ? 'Fixed-work rounds' : block.blockTypeLabel,
+                ].join('. '),
+                hint: isExpanded ? 'Collapse block' : 'Expand block',
+                child: ExcludeSemantics(
+                  child: Row(
                 children: [
                   Expanded(
                     child: Column(
@@ -98,6 +108,14 @@ class AthleteBlockCard extends StatelessWidget {
                               ? 'Fixed-work rounds'
                               : block.blockTypeLabel,
                           style: CohortTextStyles.small,
+                        ),
+                        Text(
+                          isActive
+                              ? 'Active'
+                              : isComplete
+                              ? 'Completed'
+                              : 'Not started',
+                          style: CohortTextStyles.statusActive,
                         ),
                       ],
                     ),
@@ -116,6 +134,8 @@ class AthleteBlockCard extends StatelessWidget {
                         : CohortColors.textSecondary,
                   ),
                 ],
+                  ),
+                ),
               ),
             ),
             if (isExpanded) ...[

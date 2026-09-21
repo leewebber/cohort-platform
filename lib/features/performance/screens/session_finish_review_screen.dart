@@ -9,6 +9,8 @@ import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../session/presentation/daily_journey_accessibility.dart';
+import '../../session/presentation/production_restore_athlete_copy.dart';
 import '../../programme/models/athlete_programme_completion.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../programme/models/programme_progress_summary.dart';
@@ -19,7 +21,6 @@ import '../services/performance_record_save_coordinator.dart';
 import '../services/running_pace_plausibility.dart';
 import '../widgets/implausible_running_pace_warning.dart';
 import '../widgets/performance_capture_widgets.dart';
-import '../../session/presentation/production_restore_athlete_copy.dart';
 import '../../session/screens/session_complete_screen.dart';
 import '../../session/controllers/session_execution_controller.dart';
 import '../../session/services/production_restore_envelope_store.dart';
@@ -263,6 +264,16 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Review Session', style: CohortTextStyles.h1),
+              JourneyAnnouncement(
+                message: switch (_saveState) {
+                  PerformanceSaveState.completing =>
+                    ProductionRestoreAthleteCopy.completionPendingTitle,
+                  PerformanceSaveState.error => _errorMessage,
+                  PerformanceSaveState.saved =>
+                    ProductionRestoreAthleteCopy.completionReconciledTitle,
+                  _ => null,
+                },
+              ),
               const SizedBox(height: CohortSpacing.lg),
               Text(
                 '${draft.completedBlockCount} completed · '
@@ -308,6 +319,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
               CohortButton(
                 label: _saveState == PerformanceSaveState.completing
                     ? 'Completing…'
+                    : 'Save and finish',
+                semanticLabel: _saveState == PerformanceSaveState.completing
+                    ? 'Completion pending'
                     : 'Save and finish',
                 onPressed:
                     _saveState == PerformanceSaveState.saving ||

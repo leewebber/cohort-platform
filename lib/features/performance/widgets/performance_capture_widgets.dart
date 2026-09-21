@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -9,6 +10,7 @@ import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
 import '../services/strength_exercise_capture_completion.dart';
 import '../../session/models/session_execution_plan.dart';
+import '../../session/presentation/daily_journey_accessibility.dart';
 import '../../session/services/athlete_exercise_label_resolver.dart';
 import '../../workout_player/models/previous_performance_snapshot.dart';
 import '../../workout_player/services/previous_performance_resolver.dart';
@@ -61,25 +63,34 @@ class PerformanceSaveIndicator extends StatelessWidget {
     };
     if (label.isEmpty) return const SizedBox.shrink();
 
-    return Semantics(
-      liveRegion: true,
-      label: label,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: CohortTextStyles.small),
-          if (state == PerformanceSaveState.completing)
-            Text(
-              'Your entered results are still saved on this phone.',
-              style: CohortTextStyles.small,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          liveRegion: true,
+          label: label,
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: CohortTextStyles.small),
+                if (state == PerformanceSaveState.completing)
+                  Text(
+                    'Your entered results are still saved on this phone.',
+                    style: CohortTextStyles.small,
+                  ),
+              ],
             ),
-          if (state == PerformanceSaveState.error && onRetry != null)
-            TextButton(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
-        ],
-      ),
+          ),
+        ),
+        if (state == PerformanceSaveState.error && onRetry != null)
+          CohortButton(
+            key: const ValueKey('performance-save-retry'),
+            label: 'Retry',
+            semanticLabel: 'Retry save. Local results are still on this phone',
+            onPressed: onRetry,
+          ),
+      ],
     );
   }
 }
@@ -979,11 +990,9 @@ class _ExerciseAcknowledgementEditor extends StatelessWidget {
                       contentPadding: EdgeInsets.zero,
                       controlAffinity: ListTileControlAffinity.leading,
                       title: Text(
-                        summary?.hasExecutionGroup == true
-                            ? 'Round ${row.setNumber}'
-                            : exercise.sets.length == 1
-                            ? 'Completed'
-                            : 'Set ${row.setNumber}',
+                        DailyJourneyAccessibility.setCompletedLabel(
+                          row.setNumber,
+                        ),
                       ),
                       value: row.completed,
                       onChanged: (value) => onUpdateSet(
@@ -1400,9 +1409,6 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
                                       ? Icons.expand_less
                                       : Icons.expand_more,
                                   color: CohortColors.textSecondary,
-                                  semanticLabel: isExpanded
-                                      ? 'Expanded'
-                                      : 'Collapsed',
                                 ),
                               ),
                             ],
@@ -1413,13 +1419,15 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
                   ),
                 ),
                 if (isExpanded && onOpenExercise != null)
-                  Semantics(
-                    button: true,
-                    label: 'Exercise info for $label',
-                    child: IconButton(
-                      tooltip: 'Exercise info',
-                      icon: const Icon(Icons.info_outline),
-                      onPressed: onOpenExercise,
+                  JourneyMinTap(
+                    child: Semantics(
+                      button: true,
+                      label: 'Exercise info for $label',
+                      child: IconButton(
+                        tooltip: 'Exercise info',
+                        icon: const Icon(Icons.info_outline),
+                        onPressed: onOpenExercise,
+                      ),
                     ),
                   ),
               ],
@@ -1463,11 +1471,14 @@ class _PerformanceExerciseTitle extends StatelessWidget {
         Expanded(child: Text(label, style: CohortTextStyles.cardTitle)),
         Semantics(
           button: canOpen,
+          enabled: canOpen,
           label: 'Exercise info for $label',
-          child: IconButton(
-            tooltip: 'Exercise info',
-            icon: const Icon(Icons.info_outline),
-            onPressed: canOpen ? () => onOpenExercise!(summary!) : null,
+          child: JourneyMinTap(
+            child: IconButton(
+              tooltip: 'Exercise info',
+              icon: const Icon(Icons.info_outline),
+              onPressed: canOpen ? () => onOpenExercise!(summary!) : null,
+            ),
           ),
         ),
       ],
@@ -1532,12 +1543,14 @@ class _ExerciseTargetComparison extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Couldn’t load previous performance',
+            'Couldn’t load previous performance. You can still record this set.',
             style: CohortTextStyles.small,
           ),
-          TextButton(
-            onPressed: onRetry,
-            child: const Text('Retry'),
+          JourneyMinTap(
+            child: TextButton(
+              onPressed: onRetry,
+              child: const Text('Retry previous performance'),
+            ),
           ),
         ],
       );
@@ -1626,55 +1639,55 @@ class _ExerciseActualRow extends StatelessWidget {
           Text('Set ${set.setNumber}', style: CohortTextStyles.small),
           if (previousSet != null)
             Text(previousSet!.ghostLine, style: CohortTextStyles.small),
-          Row(
-            children: [
-              Expanded(
-                child: PerformanceNumericField(
-                  key: ValueKey('${set.setResultId}-load'),
-                  label:
-                      '${_label(capture!.loadLabel, 'Load')} (${set.loadUnit})',
-                  value: set.load?.toString() ?? '',
-                  allowDecimal: true,
-                  onChanged: (value) {
-                    final parsed = double.tryParse(value);
-                    onUpdateSet(
-                      exerciseId,
-                      set.setResultId,
-                      (current) => current.copyWith(
-                        load: parsed,
-                        clearLoad: parsed == null,
-                      ),
-                    );
-                  },
+          _SetCaptureFields(
+            stackedChildren: [
+              PerformanceNumericField(
+                key: ValueKey('${set.setResultId}-load'),
+                label: DailyJourneyAccessibility.setLoadLabel(
+                  set.setNumber,
+                  set.loadUnit,
                 ),
+                value: set.load?.toString() ?? '',
+                allowDecimal: true,
+                autofocus: set.setNumber == 1 && !set.completed,
+                onChanged: (value) {
+                  final parsed = double.tryParse(value);
+                  onUpdateSet(
+                    exerciseId,
+                    set.setResultId,
+                    (current) => current.copyWith(
+                      load: parsed,
+                      clearLoad: parsed == null,
+                    ),
+                  );
+                },
               ),
-              const SizedBox(width: CohortSpacing.sm),
-              Expanded(
-                child: PerformanceNumericField(
-                  key: ValueKey('${set.setResultId}-distance'),
-                  label:
-                      'Completed distance (${set.distanceUnit ?? capture!.distanceUnit ?? 'm'})',
-                  value: set.distance?.toString() ?? '',
-                  allowDecimal: true,
-                  onChanged: (value) {
-                    final parsed = double.tryParse(value);
-                    onUpdateSet(
-                      exerciseId,
-                      set.setResultId,
-                      (current) => current.copyWith(
-                        distance: parsed,
-                        clearDistance: parsed == null,
-                      ),
-                    );
-                  },
+              PerformanceNumericField(
+                key: ValueKey('${set.setResultId}-distance'),
+                label: DailyJourneyAccessibility.setDistanceLabel(
+                  set.setNumber,
+                  set.distanceUnit ?? capture!.distanceUnit,
                 ),
+                value: set.distance?.toString() ?? '',
+                allowDecimal: true,
+                onChanged: (value) {
+                  final parsed = double.tryParse(value);
+                  onUpdateSet(
+                    exerciseId,
+                    set.setResultId,
+                    (current) => current.copyWith(
+                      distance: parsed,
+                      clearDistance: parsed == null,
+                    ),
+                  );
+                },
               ),
             ],
           ),
           if (capture!.durationOptional)
             EnduranceDurationField(
               key: ValueKey('${set.setResultId}-duration'),
-              label: 'Duration (optional)',
+              label: 'Set ${set.setNumber} duration, seconds (optional)',
               durationSeconds: set.durationSeconds,
               onDurationSecondsChanged: (seconds) => onUpdateSet(
                 exerciseId,
@@ -1688,7 +1701,9 @@ class _ExerciseActualRow extends StatelessWidget {
           CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: const Text('Completed'),
+            title: Text(
+              DailyJourneyAccessibility.setCompletedLabel(set.setNumber),
+            ),
             value: set.completed,
             onChanged: (value) => onUpdateSet(
               exerciseId,
@@ -1700,79 +1715,90 @@ class _ExerciseActualRow extends StatelessWidget {
       );
     }
 
+    final loadField = loadKind.expectsExternalLoad
+        ? PerformanceNumericField(
+            key: ValueKey('${set.setResultId}-load'),
+            label: DailyJourneyAccessibility.setLoadLabel(
+              set.setNumber,
+              set.loadUnit ?? 'kg',
+            ),
+            value: set.load?.toString() ?? '',
+            allowDecimal: true,
+            autofocus: set.setNumber == 1 && !set.completed,
+            onChanged: (value) {
+              final parsed = double.tryParse(value);
+              onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) =>
+                    current.copyWith(load: parsed, clearLoad: parsed == null),
+              );
+            },
+          )
+        : null;
+    final distanceField =
+        set.distanceUnit?.trim().isNotEmpty == true ||
+            capture?.distanceUnit?.trim().isNotEmpty == true
+        ? PerformanceNumericField(
+            key: ValueKey('${set.setResultId}-distance'),
+            label: DailyJourneyAccessibility.setDistanceLabel(
+              set.setNumber,
+              set.distanceUnit ?? capture?.distanceUnit,
+            ),
+            value: set.distance?.toString() ?? '',
+            allowDecimal: true,
+            onChanged: (value) {
+              final parsed = double.tryParse(value);
+              onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) => current.copyWith(
+                  distance: parsed,
+                  distanceUnit:
+                      current.distanceUnit ?? capture?.distanceUnit ?? 'm',
+                  clearDistance: parsed == null,
+                ),
+              );
+            },
+          )
+        : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (previousSet != null)
           Text(previousSet!.ghostLine, style: CohortTextStyles.small),
-        Row(
-      children: [
-        Expanded(
-          child: PerformanceNumericField(
-            key: ValueKey('${set.setResultId}-reps'),
-            label: 'Set ${set.setNumber} reps',
-            value: set.reps?.toString() ?? '',
-            onChanged: (value) {
-              final parsed = int.tryParse(value);
-              onUpdateSet(
-                exerciseId,
-                set.setResultId,
-                (current) =>
-                    current.copyWith(reps: parsed, clearReps: parsed == null),
-              );
-            },
-          ),
-        ),
-        if (set.distanceUnit?.trim().isNotEmpty == true ||
-            capture?.distanceUnit?.trim().isNotEmpty == true) ...[
-          const SizedBox(width: CohortSpacing.sm),
-          Expanded(
-            child: PerformanceNumericField(
-              key: ValueKey('${set.setResultId}-distance'),
-              label:
-                  'Distance (${set.distanceUnit ?? capture?.distanceUnit ?? 'm'})',
-              value: set.distance?.toString() ?? '',
-              allowDecimal: true,
+        _SetCaptureFields(
+          stackedChildren: [
+            PerformanceNumericField(
+              key: ValueKey('${set.setResultId}-reps'),
+              label: DailyJourneyAccessibility.setRepsLabel(set.setNumber),
+              value: set.reps?.toString() ?? '',
+              autofocus: set.setNumber == 1 &&
+                  !set.completed &&
+                  loadField == null,
               onChanged: (value) {
-                final parsed = double.tryParse(value);
-                onUpdateSet(
-                  exerciseId,
-                  set.setResultId,
-                  (current) => current.copyWith(
-                    distance: parsed,
-                    distanceUnit:
-                        current.distanceUnit ?? capture?.distanceUnit ?? 'm',
-                    clearDistance: parsed == null,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-        if (loadKind.expectsExternalLoad) ...[
-          const SizedBox(width: CohortSpacing.sm),
-          Expanded(
-            child: PerformanceNumericField(
-              key: ValueKey('${set.setResultId}-load'),
-              label: 'Load (${set.loadUnit ?? 'kg'})',
-              value: set.load?.toString() ?? '',
-              allowDecimal: true,
-              onChanged: (value) {
-                final parsed = double.tryParse(value);
+                final parsed = int.tryParse(value);
                 onUpdateSet(
                   exerciseId,
                   set.setResultId,
                   (current) =>
-                      current.copyWith(load: parsed, clearLoad: parsed == null),
+                      current.copyWith(reps: parsed, clearReps: parsed == null),
                 );
               },
             ),
+            ?distanceField,
+            ?loadField,
+            if (loadKind == StrengthActualLoadKind.bodyweight)
+              const Text('Bodyweight'),
+          ],
+        ),
+        CheckboxListTile(
+          contentPadding: EdgeInsets.zero,
+          controlAffinity: ListTileControlAffinity.leading,
+          title: Text(
+            DailyJourneyAccessibility.setCompletedLabel(set.setNumber),
           ),
-        ] else if (loadKind == StrengthActualLoadKind.bodyweight) ...[
-          const SizedBox(width: CohortSpacing.sm),
-          const Expanded(child: Text('Bodyweight')),
-        ],
-        Checkbox(
           value: set.completed,
           onChanged: (value) => onUpdateSet(
             exerciseId,
@@ -1781,14 +1807,45 @@ class _ExerciseActualRow extends StatelessWidget {
           ),
         ),
       ],
-        ),
-      ],
     );
   }
+}
 
-  static String _label(String? value, String fallback) {
-    final trimmed = value?.trim();
-    return trimmed == null || trimmed.isEmpty ? fallback : trimmed;
+class _SetCaptureFields extends StatelessWidget {
+  const _SetCaptureFields({required this.stackedChildren});
+
+  final List<Widget> stackedChildren;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final stack = DailyJourneyAccessibility.shouldStackFields(
+          context,
+          constraints.maxWidth,
+        );
+        if (stack) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final child in stackedChildren) ...[
+                child,
+                const SizedBox(height: CohortSpacing.sm),
+              ],
+            ],
+          );
+        }
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < stackedChildren.length; i++) ...[
+              if (i > 0) const SizedBox(width: CohortSpacing.sm),
+              Expanded(child: stackedChildren[i]),
+            ],
+          ],
+        );
+      },
+    );
   }
 }
 

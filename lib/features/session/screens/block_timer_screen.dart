@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -7,6 +8,7 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../models/authored_station_target_formatter.dart';
 import '../../../models/timer_configuration.dart';
 import '../../../models/workout_format.dart';
+import '../presentation/daily_journey_accessibility.dart';
 import '../services/block_timer_controller.dart';
 
 class BlockTimerScreen extends StatefulWidget {
@@ -39,6 +41,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
     with WidgetsBindingObserver {
   BlockTimerController? _controller;
   BlockTimerState? _state;
+  String? _announcement;
 
   @override
   void initState() {
@@ -50,12 +53,25 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
       onStateChanged: (state) {
         final previousRound = _state?.currentRound;
         final justFinished = state.isFinished && _state?.isFinished != true;
+        final wasPaused = _state?.isPaused;
         setState(() => _state = state);
+        if (wasPaused == false && state.isPaused) {
+          _announce(
+            '${widget.format.displayLabel} timer paused. ${_timeSummary(state)}',
+          );
+        } else if (wasPaused == true && !state.isPaused && !state.isFinished) {
+          _announce(
+            '${widget.format.displayLabel} timer resumed. ${_timeSummary(state)}',
+          );
+        }
         if (previousRound != null && previousRound != state.currentRound) {
           widget.onCheckpoint?.call(state);
         }
         if (justFinished) {
           widget.onCheckpoint?.call(state);
+          _announce(
+            '${widget.format.displayLabel} block completed. ${_timeSummary(state)}',
+          );
           if (widget.format == WorkoutFormat.emom) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) Navigator.pop(context, state);
@@ -67,11 +83,27 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
     final restored = widget.initialState;
     if (restored != null) {
       _controller!.restore(restored);
+      _announcement =
+          '${widget.format.displayLabel} timer restored, '
+          '${restored.isPaused ? 'paused' : 'running'}. '
+          '${_timeSummary(restored)}';
     } else {
       _controller!.start();
     }
     _state = _controller!.state;
     WidgetsBinding.instance.addObserver(this);
+  }
+
+  void _announce(String message) {
+    setState(() => _announcement = message);
+  }
+
+  String _timeSummary(BlockTimerState state) {
+    final clock = _formatTime(state.primarySeconds);
+    if (widget.format == WorkoutFormat.forTime) {
+      return 'Elapsed $clock';
+    }
+    return 'Time remaining $clock';
   }
 
   @override
@@ -142,10 +174,13 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              TextButton(
-                onPressed: _confirmExit,
-                child: const Text('← Back to block'),
+              JourneyMinTap(
+                child: TextButton(
+                  onPressed: _confirmExit,
+                  child: const Text('Back to block'),
+                ),
               ),
+              JourneyAnnouncement(message: _announcement),
               const SizedBox(height: CohortSpacing.md),
               Text(widget.blockTitle, style: CohortTextStyles.h2),
               Text(widget.format.displayLabel, style: CohortTextStyles.eyebrow),
@@ -178,10 +213,15 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                   ),
                 ],
                 const SizedBox(height: CohortSpacing.md),
-                Text(
-                  _formatTime(state.primarySeconds),
-                  key: const ValueKey('block-timer-clock'),
-                  style: CohortTextStyles.h1.copyWith(fontSize: 64),
+                ExcludeSemantics(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _formatTime(state.primarySeconds),
+                      key: const ValueKey('block-timer-clock'),
+                      style: CohortTextStyles.h1.copyWith(fontSize: 64),
+                    ),
+                  ),
                 ),
                 if (AuthoredStationTargetFormatter.nextStationLine(
                       label: state.nextStationLabel,
@@ -198,7 +238,11 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                   ),
                 ],
                 Semantics(
+                  container: true,
+                  liveRegion: false,
                   label: [
+                    '${widget.format.displayLabel} timer',
+                    state.isPaused ? 'Paused' : 'Running',
                     if (state.totalRounds > 1)
                       widget.format == WorkoutFormat.emom
                           ? 'Minute ${state.currentRound} of ${state.totalRounds}'
@@ -207,9 +251,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                       state.currentStationLabel,
                     if (state.currentStationTarget != null)
                       'Target ${state.currentStationTarget}',
-                    widget.format == WorkoutFormat.forTime
-                        ? 'Elapsed ${_formatTime(state.primarySeconds)}'
-                        : 'Time remaining ${_formatTime(state.primarySeconds)}',
+                    _timeSummary(state),
                     ?AuthoredStationTargetFormatter.nextStationLine(
                       label: state.nextStationLabel,
                       target: state.nextStationTarget,
@@ -267,6 +309,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                   Expanded(
                     child: CohortButton(
                       label: state?.isPaused == true ? 'Resume' : 'Pause',
+                      semanticLabel: state?.isPaused == true
+                          ? 'Resume ${widget.format.displayLabel} timer'
+                          : 'Pause ${widget.format.displayLabel} timer',
                       onPressed: () {
                         if (state?.isPaused == true) {
                           _controller?.resume();
@@ -280,6 +325,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                   Expanded(
                     child: CohortButton(
                       label: 'Reset',
+                      semanticLabel: 'Reset ${widget.format.displayLabel} timer',
                       onPressed: () async {
                         final reset = await showDialog<bool>(
                           context: context,

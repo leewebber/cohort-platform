@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_card.dart';
@@ -31,7 +32,11 @@ class AthleteHomeRestDayCard extends StatelessWidget {
             Text(programmeName!, style: CohortTextStyles.small),
             const SizedBox(height: CohortSpacing.sm),
           ],
-          const Text('Rest day', style: CohortTextStyles.h2),
+          Semantics(
+            header: true,
+            label: 'Rest day. Guidance only. No workout to begin',
+            child: const Text('Rest day', style: CohortTextStyles.h2),
+          ),
           const SizedBox(height: CohortSpacing.sm),
           Text(
             (guidance != null && guidance!.trim().isNotEmpty)
@@ -41,10 +46,12 @@ class AthleteHomeRestDayCard extends StatelessWidget {
           ),
           if (nextSessionHint != null && onOpenCalendar != null) ...[
             const SizedBox(height: CohortSpacing.md),
-            TextButton(
-              key: const ValueKey('rest-day-next-session'),
-              onPressed: onOpenCalendar,
-              child: Text(nextSessionHint!),
+            JourneyMinTap(
+              child: TextButton(
+                key: const ValueKey('rest-day-next-session'),
+                onPressed: onOpenCalendar,
+                child: Text(nextSessionHint!),
+              ),
             ),
           ],
         ],

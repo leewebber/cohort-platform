@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
@@ -42,16 +43,18 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
         .take(3)
         .map((block) => '${block.title} · ${block.summary}')
         .toList(growable: false);
-    return Semantics(
-      container: true,
-      label: '${occurrence.sessionTitle}, Complete',
-      child: CohortCard(
+    return CohortCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('TODAY', style: CohortTextStyles.sectionLabel),
             const SizedBox(height: CohortSpacing.xs),
-            Text(dateLabel, style: CohortTextStyles.muted),
+            Text(
+              dateLabel,
+              style: CohortTextStyles.small.copyWith(
+                color: CohortColors.textSecondary,
+              ),
+            ),
             if (programmeName.trim().isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.sm),
               Text(programmeName, style: CohortTextStyles.small),
@@ -63,7 +66,10 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
             const SizedBox(height: CohortSpacing.md),
             Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.xs),
-            const Text('Complete', style: CohortTextStyles.statusActive),
+            Semantics(
+              label: 'Status Complete',
+              child: const Text('Complete', style: CohortTextStyles.statusActive),
+            ),
             if (summary.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.sm),
               Text(summary.join(' · '), style: CohortTextStyles.small),
@@ -80,12 +86,12 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
             CohortButton(
               key: const ValueKey('completed-today-view-result'),
               label: 'View results',
+              semanticLabel: 'View results. ${occurrence.sessionTitle}. Status Complete',
               variant: CohortButtonVariant.secondary,
               onPressed: onViewResults,
             ),
           ],
         ),
-      ),
     );
   }
 

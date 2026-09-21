@@ -23,9 +23,14 @@ class SessionCompletionPendingPanel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          ProductionRestoreAthleteCopy.completionPendingTitle,
-          style: CohortTextStyles.h2,
+        Semantics(
+          liveRegion: true,
+          header: true,
+          label: ProductionRestoreAthleteCopy.completionPendingTitle,
+          child: Text(
+            ProductionRestoreAthleteCopy.completionPendingTitle,
+            style: CohortTextStyles.h2,
+          ),
         ),
         const SizedBox(height: CohortSpacing.md),
         Text(
@@ -36,6 +41,7 @@ class SessionCompletionPendingPanel extends StatelessWidget {
         CohortButton(
           key: const ValueKey('completion-pending-retry'),
           label: ProductionRestoreAthleteCopy.retry,
+          semanticLabel: 'Retry completion. Local results are still on this phone',
           onPressed: onRetry,
         ),
         if (onReturnToSession != null) ...[
