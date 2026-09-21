@@ -493,6 +493,53 @@ class TrainingSessionRecord {
       ],
     };
   }
+
+  factory TrainingSessionRecord.fromCompletionTreeMap(
+    Map<String, dynamic> map,
+  ) {
+    final blocksRaw = map['block_results'];
+    final blocks = <TrainingBlockResult>[];
+    if (blocksRaw is List) {
+      for (final blockRaw in blocksRaw) {
+        if (blockRaw is! Map) continue;
+        final blockMap = Map<String, dynamic>.from(blockRaw);
+        final exercisesRaw = blockMap['exercise_results'];
+        final exercises = <TrainingExerciseResult>[];
+        if (exercisesRaw is List) {
+          for (final exerciseRaw in exercisesRaw) {
+            if (exerciseRaw is! Map) continue;
+            final exerciseMap = Map<String, dynamic>.from(exerciseRaw);
+            final setsRaw = exerciseMap['set_results'];
+            final sets = <TrainingSetResult>[];
+            if (setsRaw is List) {
+              for (final setRaw in setsRaw) {
+                if (setRaw is Map) {
+                  sets.add(
+                    TrainingSetResult.fromMap(
+                      Map<String, dynamic>.from(setRaw),
+                    ),
+                  );
+                }
+              }
+            }
+            exercises.add(
+              TrainingExerciseResult.fromMap(
+                exerciseMap,
+                setResults: sets,
+              ),
+            );
+          }
+        }
+        blocks.add(
+          TrainingBlockResult.fromMap(
+            blockMap,
+            exerciseResults: exercises,
+          ),
+        );
+      }
+    }
+    return TrainingSessionRecord.fromMap(map, blockResults: blocks);
+  }
 }
 
 String? _trim(dynamic value) {

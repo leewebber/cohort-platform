@@ -156,6 +156,21 @@ class InMemoryPerformanceRecordStore extends PerformanceRecordStore {
     return _recordsById[existing.recordId]!;
   }
 
+  List<Map<String, dynamic>> exportCompletionTrees() {
+    return [
+      for (final record in _recordsById.values) record.toCompletionTreeMap(),
+    ];
+  }
+
+  void seedFromCompletionTrees(Iterable<Map<String, dynamic>> trees) {
+    _recordsById.clear();
+    for (final tree in trees) {
+      final record = TrainingSessionRecord.fromCompletionTreeMap(tree);
+      if (record.recordId.isEmpty) continue;
+      _recordsById[record.recordId] = record;
+    }
+  }
+
   @override
   Future<List<TrainingSessionRecord>> listHistory({
     required String athleteId,
