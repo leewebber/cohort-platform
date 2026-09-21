@@ -131,13 +131,9 @@ void main() {
 
     expect(find.byType(AthleteHomeCompletedTodayCard), findsOneWidget);
     expect(find.text('Begin'), findsNothing);
-    await tester.tap(find.text('Show results'));
-    await tester.pumpAndSettle();
-    expect(find.text('Hide results'), findsOneWidget);
-    expect(
-      find.text('First recorded performance — no previous comparable result.'),
-      findsOneWidget,
-    );
+    expect(find.text('View results'), findsOneWidget);
+    expect(find.text('Show results'), findsNothing);
+    expect(find.text('Hide results'), findsNothing);
   });
 
   testWidgets('shell keeps five destinations and preserves tab state', (

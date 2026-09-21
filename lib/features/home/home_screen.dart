@@ -107,9 +107,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   ProgrammeAssignment? _assignment;
   String? _calendarError;
   final Map<String, TrainingSessionRecord> _completedTodayRecords = {};
-  String? _expandedCompletedOccurrenceId;
-  List<TrainingSessionRecord> _completedHistory = const [];
-  bool _completedHistoryLoading = false;
 
   String get _athleteId {
     final override = widget.athleteIdOverride?.trim();
@@ -173,9 +170,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _calendar = null;
         _calendarError = null;
         _completedTodayRecords.clear();
-        _expandedCompletedOccurrenceId = null;
-        _completedHistory = const [];
-        _completedHistoryLoading = false;
       });
       if (assignment?.isFixedSchedule == true) {
         final calendar =
@@ -403,14 +397,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         dayKey: occurrence.dayKey,
       ),
       record: _completedTodayRecords[occurrence.occurrenceId],
-      history: _expandedCompletedOccurrenceId == occurrence.occurrenceId
-          ? _completedHistory
-          : const [],
-      historyLoading:
-          _completedHistoryLoading &&
-          _expandedCompletedOccurrenceId == occurrence.occurrenceId,
-      expanded: _expandedCompletedOccurrenceId == occurrence.occurrenceId,
-      onToggleExpanded: () => _toggleCompletedResults(occurrence),
       onViewResults: () => _openOccurrence(occurrence),
     );
   }
@@ -445,41 +431,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ..clear()
         ..addAll(records);
     });
-  }
-
-  Future<void> _toggleCompletedResults(
-    FixedProgrammeOccurrenceProjection occurrence,
-  ) async {
-    if (_expandedCompletedOccurrenceId == occurrence.occurrenceId) {
-      setState(() {
-        _expandedCompletedOccurrenceId = null;
-        _completedHistory = const [];
-        _completedHistoryLoading = false;
-      });
-      return;
-    }
-    setState(() {
-      _expandedCompletedOccurrenceId = occurrence.occurrenceId;
-      _completedHistoryLoading = true;
-      _completedHistory = const [];
-    });
-    try {
-      final history =
-          await (widget.performanceRecordStore ??
-                  SupabasePerformanceRecordStore())
-              .listHistory(athleteId: _athleteId, limit: 12);
-      if (!mounted) return;
-      setState(() {
-        _completedHistory = history;
-        _completedHistoryLoading = false;
-      });
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        _completedHistory = const [];
-        _completedHistoryLoading = false;
-      });
-    }
   }
 
   Future<void> _openOccurrence(FixedProgrammeOccurrenceProjection occurrence) {

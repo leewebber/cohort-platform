@@ -15,33 +15,22 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
     required this.dateLabel,
     required this.programmeName,
     required this.weekDayLabel,
-    required this.expanded,
-    required this.onToggleExpanded,
     required this.onViewResults,
     this.record,
-    this.history = const [],
-    this.historyLoading = false,
   });
 
   final FixedProgrammeOccurrenceProjection occurrence;
   final String dateLabel;
   final String programmeName;
   final String weekDayLabel;
-  final bool expanded;
-  final VoidCallback onToggleExpanded;
   final VoidCallback onViewResults;
   final TrainingSessionRecord? record;
-  final List<TrainingSessionRecord> history;
-  final bool historyLoading;
 
   @override
   Widget build(BuildContext context) {
     final projection = record == null
         ? null
-        : CompletedSessionResultProjection.fromRecords(
-            record: record!,
-            athleteHistory: history,
-          );
+        : CompletedSessionResultProjection.fromRecords(record: record!);
     final summary = <String>[
       if (record?.completedAt case final completedAt?)
         'Finished ${_clock(completedAt)}',
@@ -53,8 +42,6 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
         .take(3)
         .map((block) => '${block.title} · ${block.summary}')
         .toList(growable: false);
-    final hasComparison = projection?.blocks.any(_hasComparison) ?? false;
-
     return Semantics(
       container: true,
       label: '${occurrence.sessionTitle}, Complete',
@@ -89,80 +76,7 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
                   child: Text(line, style: CohortTextStyles.body),
                 ),
             ],
-            TextButton(
-              onPressed: onToggleExpanded,
-              child: Text(expanded ? 'Hide results' : 'Show results'),
-            ),
-            if (expanded) ...[
-              if (historyLoading)
-                const Text(
-                  'Loading comparison…',
-                  style: CohortTextStyles.muted,
-                )
-              else if (projection == null)
-                const Text(
-                  'Results are available in the session record.',
-                  style: CohortTextStyles.muted,
-                )
-              else ...[
-                if (!hasComparison)
-                  const Text(
-                    'First recorded performance — no previous comparable result.',
-                    style: CohortTextStyles.small,
-                  ),
-                const SizedBox(height: CohortSpacing.sm),
-                for (final block in projection.blocks) ...[
-                  Text(block.title, style: CohortTextStyles.cardTitle),
-                  Text(block.summary, style: CohortTextStyles.body),
-                  for (final exercise in block.exercises) ...[
-                    const SizedBox(height: CohortSpacing.xs),
-                    Text(exercise.displayName, style: CohortTextStyles.body),
-                    if (exercise.bestSetLabel != null)
-                      Text(
-                        exercise.bestSetLabel!,
-                        style: CohortTextStyles.small,
-                      ),
-                    Text(
-                      exercise.comparisonHighlight ?? exercise.comparisonLabel,
-                      style: CohortTextStyles.small,
-                    ),
-                    if (exercise.personalBestLabels.isNotEmpty)
-                      for (final label in exercise.personalBestLabels)
-                        Text(label, style: CohortTextStyles.small),
-                    if (exercise.previousSets.isNotEmpty)
-                      Text(
-                        'Previous: ${exercise.previousSets.map(_setLine).join(' · ')}',
-                        style: CohortTextStyles.muted,
-                      ),
-                    for (final delta in exercise.deltaLabels)
-                      Text(delta, style: CohortTextStyles.small),
-                  ],
-                  if (block.interval != null) ...[
-                    Text(
-                      block.interval!.comparisonStatus.label,
-                      style: CohortTextStyles.small,
-                    ),
-                    if (block.interval!.personalRecordLabel != null)
-                      Text(
-                        block.interval!.personalRecordLabel!,
-                        style: CohortTextStyles.small,
-                      ),
-                  ],
-                  if (block.circuit != null) ...[
-                    Text(
-                      block.circuit!.comparisonStatus.label,
-                      style: CohortTextStyles.small,
-                    ),
-                    if (block.circuit!.fastestIsPersonalRecord)
-                      const Text(
-                        'Personal best established',
-                        style: CohortTextStyles.small,
-                      ),
-                  ],
-                  const SizedBox(height: CohortSpacing.sm),
-                ],
-              ],
-            ],
+            const SizedBox(height: CohortSpacing.md),
             CohortButton(
               key: const ValueKey('completed-today-view-result'),
               label: 'View results',
@@ -173,36 +87,6 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  static String _setLine(CompletedSetResultProjection set) {
-    final parts = <String>[
-      if (set.loadLabel != null) set.loadLabel!,
-      if (set.repsLabel != null) set.repsLabel!,
-    ];
-    return parts.isEmpty ? 'Set ${set.setNumber}' : parts.join(' ');
-  }
-
-  static bool _hasComparison(CompletedBlockResultProjection block) {
-    final comparable = {
-      StrengthExerciseComparisonStatus.improved,
-      StrengthExerciseComparisonStatus.maintained,
-      StrengthExerciseComparisonStatus.belowPrevious,
-    };
-    if (block.exercises.any(
-      (exercise) => comparable.contains(exercise.comparisonStatus),
-    )) {
-      return true;
-    }
-    if (block.interval != null &&
-        comparable.contains(block.interval!.comparisonStatus)) {
-      return true;
-    }
-    if (block.circuit != null &&
-        comparable.contains(block.circuit!.comparisonStatus)) {
-      return true;
-    }
-    return false;
   }
 
   static String _clock(DateTime value) {

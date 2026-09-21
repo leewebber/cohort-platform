@@ -944,12 +944,8 @@ void main() {
         expect(find.text('Complete'), findsWidgets);
         expect(find.textContaining('Duration 61m 01s'), findsOneWidget);
         expect(find.textContaining('RPE 7'), findsOneWidget);
-        await tester.tap(find.text('Show results'));
-        await tester.pumpAndSettle();
-        expect(
-          find.textContaining('First recorded performance'),
-          findsOneWidget,
-        );
+        expect(find.text('View results'), findsOneWidget);
+        expect(find.text('Show results'), findsNothing);
         expect(find.text('UP NEXT'), findsNothing);
         expect(find.text('Apollo Racehorse'), findsNothing);
         expect(find.text('CURRENT PROGRAMME'), findsNothing);

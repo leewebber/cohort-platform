@@ -291,7 +291,7 @@ void main() {
     expect(find.textContaining('Duration 45m 00s'), findsOneWidget);
     expect(find.textContaining('Duration -'), findsNothing);
     expect(find.text('View results'), findsOneWidget);
-    expect(find.text('Show results'), findsOneWidget);
+    expect(find.text('Show results'), findsNothing);
     expect(find.text(ProductionRestoreAthleteCopy.retry), findsNothing);
     expect(find.text('Resume'), findsNothing);
     expect(find.text('Begin'), findsNothing);

@@ -257,19 +257,10 @@ class _DailyJourneyIntegrityPreviewScreenState
   }
 }
 
-class _ReconciledCompletionPreview extends StatefulWidget {
+class _ReconciledCompletionPreview extends StatelessWidget {
   const _ReconciledCompletionPreview({required this.scenario});
 
   final DailyJourneyIntegrityPreviewScenario scenario;
-
-  @override
-  State<_ReconciledCompletionPreview> createState() =>
-      _ReconciledCompletionPreviewState();
-}
-
-class _ReconciledCompletionPreviewState
-    extends State<_ReconciledCompletionPreview> {
-  var _expanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -295,10 +286,7 @@ class _ReconciledCompletionPreviewState
           occurrence: previewCompletedOccurrence(),
           dateLabel: 'Sunday 20 September',
           programmeName: 'Preview programme',
-          weekDayLabel:
-              widget.scenario.plan.programmeContextLabel ?? 'Week 1 · Day 1',
-          expanded: _expanded,
-          onToggleExpanded: () => setState(() => _expanded = !_expanded),
+          weekDayLabel: scenario.plan.programmeContextLabel ?? 'Week 1 · Day 1',
           record: record,
           onViewResults: () {
             Navigator.of(context).push(
@@ -307,7 +295,7 @@ class _ReconciledCompletionPreviewState
                   appBar: AppBar(title: const Text('Results')),
                   body: CompletedSessionResultView(
                     record: record,
-                    programmePosition: widget.scenario.plan.programmeContextLabel,
+                    programmePosition: scenario.plan.programmeContextLabel,
                     statusMessage:
                         ProductionRestoreAthleteCopy.completionReconciledTitle,
                   ),
