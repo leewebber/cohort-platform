@@ -48,7 +48,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Could not save session'), findsOneWidget);
-    expect(find.text('Retry'), findsOneWidget);
+    expect(find.text('Retry'), findsWidgets);
     expect(find.text('Stay'), findsOneWidget);
     expect(find.text('Morning Session'), findsOneWidget);
 

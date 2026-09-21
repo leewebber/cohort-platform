@@ -391,7 +391,9 @@ void main() {
   });
 
   group('Athlete-facing wording polish', () {
-    testWidgets('review save indicator uses Ready to save', (tester) async {
+    testWidgets('review save indicator stays quiet until a write starts', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -400,7 +402,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Ready to save'), findsOneWidget);
+      expect(find.text('Ready to save'), findsNothing);
       expect(find.text('Draft ready'), findsNothing);
     });
 

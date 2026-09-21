@@ -173,12 +173,12 @@ void main() {
     );
   });
 
-  test('unsupported identity version still restores matching actuals', () {
+  test('unsupported identity version fails closed', () {
     final decision = resolver.resolve(
       request(identity: identity(schemaVersion: 99), actuals: actuals()),
     );
     expect(decision.outcome, ProductionRestoreOutcome.unsupportedVersion);
-    expect(decision.mayEnterWithRestoredActuals, isTrue);
+    expect(decision.mayEnterWithRestoredActuals, isFalse);
     expect(decision.restoreCursor, isFalse);
   });
 
