@@ -55,9 +55,11 @@ class ProductionRestoreBlockedScreen extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
-          children: [
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Semantics(
               liveRegion: true,
               header: true,
@@ -115,7 +117,8 @@ class ProductionRestoreBlockedScreen extends StatelessWidget {
                 child: const Text(ProductionRestoreAthleteCopy.returnHome),
               ),
             ],
-          ],
+            ],
+          ),
         ),
       ),
     );

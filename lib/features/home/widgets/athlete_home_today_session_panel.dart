@@ -125,7 +125,9 @@ class _AthleteHomeTodaySessionPanelState
             const SizedBox(height: CohortSpacing.sm),
             Semantics(
               label: 'Status $status',
-              child: Text(status, style: CohortTextStyles.statusActive),
+              child: ExcludeSemantics(
+                child: Text(status, style: CohortTextStyles.statusActive),
+              ),
             ),
             if (widget.adaptationNotice != null) ...[
               const SizedBox(height: CohortSpacing.xs),

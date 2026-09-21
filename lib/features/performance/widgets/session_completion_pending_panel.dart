@@ -27,9 +27,11 @@ class SessionCompletionPendingPanel extends StatelessWidget {
           liveRegion: true,
           header: true,
           label: ProductionRestoreAthleteCopy.completionPendingTitle,
-          child: Text(
-            ProductionRestoreAthleteCopy.completionPendingTitle,
-            style: CohortTextStyles.h2,
+          child: ExcludeSemantics(
+            child: Text(
+              ProductionRestoreAthleteCopy.completionPendingTitle,
+              style: CohortTextStyles.h2,
+            ),
           ),
         ),
         const SizedBox(height: CohortSpacing.md),

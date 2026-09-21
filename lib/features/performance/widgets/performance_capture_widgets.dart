@@ -1432,10 +1432,16 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
                   ),
               ],
             ),
-            AnimatedSize(
-              duration: reduceMotion
-                  ? Duration.zero
-                  : const Duration(milliseconds: 180),
+            if (reduceMotion)
+              isExpanded && expandedBody != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: CohortSpacing.sm),
+                      child: expandedBody,
+                    )
+                  : const SizedBox(width: double.infinity)
+            else
+              AnimatedSize(
+              duration: const Duration(milliseconds: 180),
               curve: Curves.easeOutCubic,
               alignment: Alignment.topCenter,
               child: isExpanded && expandedBody != null

@@ -68,7 +68,12 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
             const SizedBox(height: CohortSpacing.xs),
             Semantics(
               label: 'Status Complete',
-              child: const Text('Complete', style: CohortTextStyles.statusActive),
+              child: ExcludeSemantics(
+                child: const Text(
+                  'Complete',
+                  style: CohortTextStyles.statusActive,
+                ),
+              ),
             ),
             if (summary.isNotEmpty) ...[
               const SizedBox(height: CohortSpacing.sm),
