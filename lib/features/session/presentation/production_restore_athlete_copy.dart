@@ -27,7 +27,7 @@ class ProductionRestoreAthleteCopy {
       'Your captured results are kept. Position may start at the first incomplete movement.';
   static const completionPendingTitle = 'Completion pending';
   static const completionPendingBody =
-      'Your entered results remain saved on this device. Cohort could not confirm the hosted record. Retry uses the same completion request.';
+      'Your entered results remain saved on this phone. Retry will not start a new workout.';
   static const returnHome = 'Return to Home';
   static const continueSafely = 'Continue safely';
   static const openCalendar = 'Open Calendar';

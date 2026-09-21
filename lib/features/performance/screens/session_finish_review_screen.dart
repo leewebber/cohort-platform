@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../application/athlete_workout/athlete_workout_completion_application_service.dart';
@@ -164,22 +166,33 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
 
       final programmeCompletion = result.programmeCompletion;
       if (result.progressionFailed) {
+        final alreadyCommitted =
+            programmeCompletion?.status ==
+            AthleteProgrammeCompletionStatus.alreadyCommitted;
+        if (alreadyCommitted) {
+          // Hosted truth won; fall through to cleanup.
+        } else {
         final uncertain =
             programmeCompletion?.status ==
             AthleteProgrammeCompletionStatus.networkUncertain;
         setState(() {
-          _saveState = PerformanceSaveState.error;
+          _saveState = uncertain
+              ? PerformanceSaveState.completing
+              : PerformanceSaveState.error;
           _errorMessage = uncertain
-              ? 'Submission is still confirming. Tap Save and finish to reconcile — do not start a new attempt.'
+              ? 'Completion pending. Your results are still saved on this phone.'
               : (programmeCompletion?.message ??
                     UserFacingErrorMessages.sessionProgressionWarning());
         });
         return;
+        }
       }
 
       // Never show success from optimistic local state alone.
       if (widget.programmeContext?.isProgrammeBacked == true &&
-          programmeCompletion?.isSuccess != true) {
+          programmeCompletion?.isSuccess != true &&
+          programmeCompletion?.status !=
+              AthleteProgrammeCompletionStatus.alreadyCommitted) {
         setState(() {
           _saveState = PerformanceSaveState.error;
           _errorMessage = UserFacingErrorMessages.sessionProgressionWarning();
@@ -286,6 +299,11 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
               PerformanceSaveIndicator(
                 state: _saveState,
                 errorMessage: _errorMessage,
+                pendingRetained: true,
+                onRetry: _saveState == PerformanceSaveState.error ||
+                        _saveState == PerformanceSaveState.completing
+                    ? () => unawaited(_saveAndFinish())
+                    : null,
               ),
               const SizedBox(height: CohortSpacing.lg),
               CohortButton(
