@@ -8,6 +8,7 @@ import '../models/performance_result_type.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record_status.dart';
 import '../services/circuit_set_sync.dart';
+import '../services/completed_session_duration.dart';
 import '../services/interval_set_sync.dart';
 import '../services/performance_snapshot_builder.dart';
 import '../services/performance_validation_service.dart';
@@ -286,10 +287,10 @@ class PerformanceCaptureController {
     _draft = _draft.copyWith(
       status: TrainingSessionRecordStatus.abandoned,
       completedAt: DateTime.now().toUtc(),
-      durationSeconds: DateTime.now()
-          .toUtc()
-          .difference(_draft.startedAt)
-          .inSeconds,
+      durationSeconds: CompletedSessionDuration.fromInstants(
+        startedAt: _draft.startedAt,
+        completedAt: DateTime.now().toUtc(),
+      ),
     );
     return this;
   }
@@ -302,7 +303,10 @@ class PerformanceCaptureController {
     return _draft.copyWith(
       status: status,
       completedAt: endedAt,
-      durationSeconds: endedAt.difference(_draft.startedAt).inSeconds,
+      durationSeconds: CompletedSessionDuration.fromInstants(
+        startedAt: _draft.startedAt,
+        completedAt: endedAt,
+      ),
     );
   }
 

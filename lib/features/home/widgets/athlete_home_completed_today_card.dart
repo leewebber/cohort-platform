@@ -45,8 +45,8 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
     final summary = <String>[
       if (record?.completedAt case final completedAt?)
         'Finished ${_clock(completedAt)}',
-      if (record?.durationSeconds case final duration?)
-        'Duration ${_duration(duration)}',
+      if (projection?.durationSeconds case final duration?)
+        if (duration > 0) 'Duration ${_duration(duration)}',
       if (record?.overallRpe case final rpe?) 'RPE $rpe',
     ];
     final collapsedBlocks = projection?.blocks
@@ -212,6 +212,7 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
   }
 
   static String _duration(int seconds) {
+    if (seconds <= 0) return '';
     final minutes = seconds ~/ 60;
     final remainder = seconds % 60;
     return '${minutes}m ${remainder.toString().padLeft(2, '0')}s';

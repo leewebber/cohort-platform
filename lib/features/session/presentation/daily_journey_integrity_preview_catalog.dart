@@ -433,10 +433,14 @@ TrainingSessionRecord previewCommittedStrengthRecord() {
   performance
     ..markBlockComplete(plan.blocks.first.blockId)
     ..updateSessionRpe(7);
+  final startedAt = DateTime.utc(2026, 9, 20, 10, 0);
+  final completedAt = DateTime.utc(2026, 9, 20, 10, 45);
   return const PerformanceRecordMapper().fromDraft(
-    performance.buildPersistableDraft(
+    PerformanceCaptureController(
+      draft: performance.draft.copyWith(startedAt: startedAt),
+    ).buildPersistableDraft(
       status: TrainingSessionRecordStatus.completed,
-      completedAt: DateTime.utc(2026, 9, 20, 10, 45),
+      completedAt: completedAt,
     ),
   );
 }

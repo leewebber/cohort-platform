@@ -29,7 +29,11 @@ import 'package:flutter/material.dart';
 ///     -t lib/main_daily_journey_integrity_preview.dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const DailyJourneyIntegrityPreviewApp());
+  runApp(
+    const DailyJourneyIntegrityPreviewApp(
+      initialState: DailyJourneyIntegrityPreviewState.completionReconciled,
+    ),
+  );
 }
 
 class DailyJourneyIntegrityPreviewApp extends StatelessWidget {

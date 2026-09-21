@@ -6,6 +6,7 @@ import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
 import '../progression/personal_bests.dart';
+import 'completed_session_duration.dart';
 import 'endurance_metrics_calculator.dart';
 import 'interval_pace_format.dart';
 import 'circuit_result_comparison.dart';
@@ -55,7 +56,7 @@ class CompletedSessionResultProjection {
     return CompletedSessionResultProjection(
       sessionTitle: record.sessionSnapshot.sessionTitle,
       completedAt: record.completedAt,
-      durationSeconds: record.durationSeconds,
+      durationSeconds: CompletedSessionDuration.fromRecord(record),
       overallRpe: record.overallRpe,
       lastCorrectedAt: record.lastCorrectedAt,
       completedBlockCount: record.completedBlockCount,
@@ -653,8 +654,9 @@ String formatCompletedDate(DateTime value) {
 }
 
 String formatCompletedDuration(int seconds) {
+  if (seconds <= 0) return '';
   return EnduranceMetricsCalculator.formatDuration(seconds).isEmpty
-      ? '${seconds ~/ 60}m ${seconds % 60}s'
+      ? '${seconds ~/ 60}m ${(seconds % 60).toString().padLeft(2, '0')}s'
       : EnduranceMetricsCalculator.formatDuration(seconds);
 }
 

@@ -136,6 +136,9 @@ void main() {
     expect(record.trainingSessionId, 4);
     expect(record.athleteId, previewAthleteId);
     expect(record.overallRpe, 7);
+    expect(record.startedAt, DateTime.utc(2026, 9, 20, 10, 0));
+    expect(record.completedAt, DateTime.utc(2026, 9, 20, 10, 45));
+    expect(record.durationSeconds, 45 * 60);
     final sets = record.blockResults.single.exerciseResults.single.setResults;
     expect(sets, hasLength(3));
     expect(sets.first.reps, 5);
@@ -285,7 +288,10 @@ void main() {
     expect(find.text('Strength'), findsWidgets);
     expect(find.text('Complete'), findsOneWidget);
     expect(find.byType(AthleteHomeCompletedTodayCard), findsOneWidget);
+    expect(find.textContaining('Duration 45m 00s'), findsOneWidget);
+    expect(find.textContaining('Duration -'), findsNothing);
     expect(find.text('View results'), findsOneWidget);
+    expect(find.text('Show results'), findsOneWidget);
     expect(find.text(ProductionRestoreAthleteCopy.retry), findsNothing);
     expect(find.text('Resume'), findsNothing);
     expect(find.text('Begin'), findsNothing);
@@ -459,6 +465,8 @@ void main() {
     );
     expect(find.byType(AthleteHomeCompletedTodayCard), findsOneWidget);
     expect(find.text('Complete'), findsOneWidget);
+    expect(find.textContaining('Duration 45m 00s'), findsOneWidget);
+    expect(find.textContaining('Duration -'), findsNothing);
     expect(find.byKey(const ValueKey('completion-pending-retry')), findsNothing);
     expect(find.text('Resume'), findsNothing);
     expect(find.text('Begin'), findsNothing);
@@ -495,6 +503,8 @@ void main() {
     await tester.pump();
     expect(tester.takeException(), isNull);
     expect(find.text('Complete'), findsOneWidget);
+    expect(find.textContaining('Duration 45m 00s'), findsOneWidget);
+    expect(find.textContaining('Duration -'), findsNothing);
     expect(
       tester.getSemantics(find.text('Complete')).label,
       contains('Complete'),
