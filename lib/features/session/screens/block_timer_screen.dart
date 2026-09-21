@@ -304,53 +304,72 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
                     },
                   ),
                 ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CohortButton(
-                      label: state?.isPaused == true ? 'Resume' : 'Pause',
-                      semanticLabel: state?.isPaused == true
-                          ? 'Resume ${widget.format.displayLabel} timer'
-                          : 'Pause ${widget.format.displayLabel} timer',
-                      onPressed: () {
-                        if (state?.isPaused == true) {
-                          _controller?.resume();
-                        } else {
-                          _controller?.pause();
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: CohortSpacing.sm),
-                  Expanded(
-                    child: CohortButton(
-                      label: 'Reset',
-                      semanticLabel: 'Reset ${widget.format.displayLabel} timer',
-                      onPressed: () async {
-                        final reset = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Reset timer?'),
-                            content: const Text(
-                              'This will restart the timer from the beginning.',
-                            ),
-                            actions: [
-                              TextButton(
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final pause = CohortButton(
+                    label: state?.isPaused == true ? 'Resume' : 'Pause',
+                    semanticLabel: state?.isPaused == true
+                        ? 'Resume ${widget.format.displayLabel} timer'
+                        : 'Pause ${widget.format.displayLabel} timer',
+                    onPressed: () {
+                      if (state?.isPaused == true) {
+                        _controller?.resume();
+                      } else {
+                        _controller?.pause();
+                      }
+                    },
+                  );
+                  final reset = CohortButton(
+                    label: 'Reset',
+                    semanticLabel: 'Reset ${widget.format.displayLabel} timer',
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Reset timer?'),
+                          content: const Text(
+                            'This will restart the timer from the beginning.',
+                          ),
+                          actions: [
+                            JourneyMinTap(
+                              child: TextButton(
                                 onPressed: () => Navigator.pop(context, false),
                                 child: const Text('Cancel'),
                               ),
-                              TextButton(
+                            ),
+                            JourneyMinTap(
+                              child: TextButton(
                                 onPressed: () => Navigator.pop(context, true),
                                 child: const Text('Reset'),
                               ),
-                            ],
-                          ),
-                        );
-                        if (reset == true) _controller?.reset();
-                      },
-                    ),
-                  ),
-                ],
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirmed == true) _controller?.reset();
+                    },
+                  );
+                  if (DailyJourneyAccessibility.shouldStackFields(
+                    context,
+                    constraints.maxWidth,
+                  )) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        pause,
+                        const SizedBox(height: CohortSpacing.sm),
+                        reset,
+                      ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Expanded(child: pause),
+                      const SizedBox(width: CohortSpacing.sm),
+                      Expanded(child: reset),
+                    ],
+                  );
+                },
               ),
               if (widget.prescriptionLines.isNotEmpty) ...[
                 const SizedBox(height: CohortSpacing.lg),
