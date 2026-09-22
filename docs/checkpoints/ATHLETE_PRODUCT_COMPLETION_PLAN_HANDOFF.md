@@ -12,6 +12,8 @@ M10_CLOSED=true
 COACH_PLATFORM_FROZEN=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED
 NEXT_IMPLEMENTATION_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
@@ -54,10 +56,12 @@ M10 migration. Phone **build 7** untouched. No hosted consent smoke.
 Daily Journey Integrity is **closed**. Binding:
 [`DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. The first Complete Athlete
-Experience sprint is **not** authorised. Programme comparison is a known
-missing athlete experience and must be audited and bound before
-implementation.
+`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. Complete Athlete Experience
+is **audited, awaiting founder approval**
+([`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+[`COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)).
+Selected Sprint 1 recommendation is **Programme Discovery and Decision**.
+Implementation is **not** authorised.
 
 ## Frozen / deferred coach scope
 

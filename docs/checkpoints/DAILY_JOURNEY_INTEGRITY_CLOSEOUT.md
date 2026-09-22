@@ -241,9 +241,11 @@ Integrity rules:
 
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`
 
-Daily Journey Integrity is closed. Remaining Athlete Experience Completion
-work is **not** started. Programme comparison is a known missing athlete
-experience and must be **audited and bound** before implementation.
+Daily Journey Integrity is closed. Complete Athlete Experience is
+**audited, awaiting founder approval**:
+[`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+[`COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
+Implementation is **not** started.
 
 Do not start Android TalkBack, Android release identity, Daily Journey
 reimplementation, offline completion, wearables/GPS, or the experimental

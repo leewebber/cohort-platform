@@ -12,11 +12,15 @@ COACH_PLATFORM_FROZEN=true
 M10_CLOSED=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
 
 Binding parents:
+[`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md),
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md),
 [`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md),
 [`../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md`](../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md),
@@ -1062,7 +1066,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 ### Critical path
 
-`M-AEC` (Daily Journey Integrity **closed**; remaining AEC not authorised)
+`M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
+audited, awaiting approval; implementation not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1132,15 +1137,21 @@ explicit footnote.
 Daily Journey Integrity is **COMPLETE**. Binding:
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
+Complete Athlete Experience is **audited, awaiting founder approval**.
+Binding:
+[`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
+
 ```text
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-The first **Complete Athlete Experience** sprint is **not** authorised.
-Programme comparison is a known missing athlete experience and must be
-audited and bound before implementation.
+Selected Sprint 1 recommendation (not authorised): **Programme Discovery
+and Decision**. The milestone is **not** implemented.
 
 **Standalone WOD Timer and Whiteboard** is a pre-launch utility candidate
 **after** the core athlete journey is complete. Do not promote it ahead of

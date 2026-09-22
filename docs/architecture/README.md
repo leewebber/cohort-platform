@@ -14,6 +14,8 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 
 | Document | Purpose |
 |----------|---------|
+| [Complete_Athlete_Experience_v1.md](./Complete_Athlete_Experience_v1.md) | **Complete Athlete Experience** milestone (audited, awaiting approval) |
+| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md) | Production-route audit, scoreboard, Sprint 1 recommendation |
 | [Daily_Journey_Integrity_v1.md](./Daily_Journey_Integrity_v1.md) | **Sprint 1** production auth, session entry, resumable draft |
 | [Daily_Journey_Execution_Reliability_v1.md](./Daily_Journey_Execution_Reliability_v1.md) | **Sprint 2** interruption, serialized restart, completion reconciliation |
 | [../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md) | **Daily Journey Integrity COMPLETE** (Sprints 1–3 + physical VoiceOver classification) |

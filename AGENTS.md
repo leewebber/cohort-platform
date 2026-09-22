@@ -151,9 +151,13 @@ The active product sequence is
 and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).
 Daily Journey Integrity is **COMPLETE**
 ([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md);
-`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). The first Complete Athlete
-Experience sprint is **not** authorised. Programme comparison must be
-audited and bound before implementation. M9 is **closed**
+`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete Experience
+is **audited, awaiting founder approval**
+(`COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL`,
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED`). Binding:
+[`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
+[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
+Implementation is **not** authorised. M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).

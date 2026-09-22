@@ -31,8 +31,12 @@ Sprint 3+ coaching product is not the next milestone.
    frozen)
 5. **Athlete Experience Completion** — Daily Journey Integrity **closed**
    ([`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
-   Remaining Complete Athlete Experience work is **not** authorised. Programme
-   comparison must be audited and bound before implementation.
+   Complete Athlete Experience is **audited, awaiting founder approval**
+   (`COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL`,
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED`). Binding:
+   [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+   [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
+   Implementation is **not** authorised.
 6. **Launch programme library**
 7. **Adaptation Engine v1**
 8. **Progression and tracking** — later includes the deferred
