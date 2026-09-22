@@ -10,12 +10,13 @@
 > [`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)
 > (`DAILY_JOURNEY_INTEGRITY=COMPLETE`,
 > `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete
-> Experience is **audited, awaiting founder approval**
-> (`COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL`,
-> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED`). Binding:
+> Experience architecture is **approved**; selected Sprint 1 is
+> **Programme Discovery and Decision**, **not started**
+> (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
+> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED`). Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
-> Implementation is **not** authorised. Sprint 1 `e646f11`, Sprint 2
+> Implementation is **not** authorised. Daily Journey Sprint 1 `e646f11`, Sprint 2
 > `5b584a6`, Sprint 3 `5329343`, whitespace `6796cb2`. Contracts:
 > [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md),
 > [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md),

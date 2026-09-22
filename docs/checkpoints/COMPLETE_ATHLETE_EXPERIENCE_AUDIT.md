@@ -1,15 +1,18 @@
 # Complete Athlete Experience — production audit
 
 **Recorded:** 2026-09-22
-**Status:** Read-only production audit. Milestone **not** implemented.
+**Status:** Read-only production audit retained. Architecture **approved**.
+Sprint 1 **approved, not started**. Milestone **not** implemented.
 **Architecture binding:**
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md)
 **Audit HEAD / `origin/main`:** `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
+**Decision record:** 2026-09-22 (this file’s §11). Evidence in §§1–8 is
+unchanged production-route audit.
 **Branch:** `docs/complete-athlete-experience-audit` (local only)
 
 ```text
-COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -530,28 +533,44 @@ complete the decision that the rest of the product assumes.
 
 ## 9. Selected Sprint 1
 
-**Programme Discovery and Decision** — see
+**Programme Discovery and Decision** is **approved, not started**. Binding
+detail:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md)
 §7.
+
+```text
+discover
+  → inspect authored programme detail
+  → compare candidates
+  → make an explicit enrolment decision
+```
 
 Layers (do not collapse):
 
 1. Programme discovery (existing list + authored facts already on the model)
 2. Programme detail (missing)
 3. Side-by-side comparison (missing)
-4. Enrolment decision (existing explicit RPC)
+4. Enrolment decision (existing explicit RPC; **no-programme athletes
+   only** in Sprint 1)
 
-**Rationale.** Rank 1 is the only gap that stops a new authenticated
-athlete from starting the closed Daily Journey spine honestly. Enrolment
-authority and pin integrity are already strong; the missing product is
-inspection. Implementation size is bounded if Sprint 1 reuses the RPC and
-does not author library content, matching, adaptation, or payments.
+**Rationale (audit, unchanged).** Rank 1 is the only gap that stops a new
+authenticated athlete from starting the closed Daily Journey spine
+honestly. Enrolment authority and pin integrity are already strong; the
+missing product is inspection.
 
-**Sprint 2 outline (not authorised):** Enrolment start integrity and
-superseded-pin honesty.
+**Founder-bound Sprint 1 limit.** Assigned athletes may inspect and
+compare. Sprint 1 must not replace, rewrite, or repin. The existing
+replace-active dialog remains audit evidence of current production, not a
+Sprint 1 product path. Sprint 1 must also replace production-visible
+testing-access copy on this route.
 
-**Sprint 3 outline (not authorised):** Programme lifecycle Home and
-cross-surface Progress / History agreement.
+**Sprint 2 outline (not authorised):** IANA enrol timezone, pinned-versus-
+default honesty, and explicit replacement **design**. Replacement is not
+approved by being listed.
+
+**Sprint 3 outline (not authorised):** Programme-complete Home and
+Progress / History agreement, including the Progress error-as-empty and
+History fallback launch blockers.
 
 ---
 
@@ -560,40 +579,47 @@ cross-surface Progress / History agreement.
 Treat as launch-critical for Complete Athlete Experience, not for Daily
 Journey Integrity (already closed):
 
-1. No athlete programme detail.
-2. No athlete programme comparison.
-3. Enrol timezone may not be IANA (`DateTime.now().timeZoneName`).
-4. Progress hosted failure can present as empty training.
-5. Profile History athlete-id fallback `athlete.local`.
-6. Programme-complete and superseded-default journeys are not honest
-   products.
-
-Items 1–2 are Sprint 1. Item 3 is Sprint 2. Items 4–6 are later unless a
-founder re-ranks.
-
----
-
-## 11. Unresolved founder decisions
-
-1. Approve architecture + Sprint 1 selection.
-2. Allow replace-active inside Sprint 1, or defer replacement.
-3. Coach-only users in `AthleteAppShell`.
-4. How long testing-access enrol copy remains.
-5. Whether Progress error-as-empty is a same-milestone hotfix after
-   Sprint 1 (recommended no: keep Sprint 1 bounded).
+1. No athlete programme detail — **Sprint 1**.
+2. No athlete programme comparison — **Sprint 1**.
+3. Production-visible testing-access enrol copy — **Sprint 1** (copy only).
+4. Enrol timezone may not be IANA (`DateTime.now().timeZoneName`) —
+   **Sprint 2 architecture work**.
+5. Superseded-default / programme-complete honesty — Sprint 2 design and
+   Sprint 3 Home, respectively.
+6. Progress hosted failure can present as empty training — **Sprint 3
+   launch blocker**. Milestone cannot close until corrected and tested.
+7. Profile History athlete-id fallback `athlete.local` — **Sprint 3
+   launch blocker**. Milestone cannot close until corrected and tested.
+8. Active-programme replacement UX — **out of Sprint 1**; Sprint 2
+   architecture work only; transaction **not approved**.
 
 ---
 
-## 12. Verification (this audit task)
+## 11. Resolved founder decisions
 
-Recorded on the documentation commit worktree (docs only).
+Replaces the unresolved list from the original audit commit. Production
+evidence in §§1–8 is not rewritten.
+
+| # | Original question | Founder binding |
+|---|-------------------|-----------------|
+| 1 | Approve architecture + Sprint 1? | Architecture v1 **approved**. Sprint 1 is **Programme Discovery and Decision**, `APPROVED_NOT_STARTED`. Implementation not started until separately authorised. |
+| 2 | Replace-active in Sprint 1? | **No.** No-programme enrol only. Assigned athletes may inspect/compare. No replace, rewrite, repin, or hidden switch. Truthful “switching not available” CTA if another programme is shown. No dead replacement CTA. Replacement listed in Sprint 2 design only; **not approved**. |
+| 3 | Coach-only users in `AthleteAppShell`? | Coach role alone does **not** authorise the athlete shell. Fail closed. Dual-role only via authoritative athlete context. No synthetic, display-name, or fallback identity. Later coach product uses its own shell. Launch-integrity requirement. Not this docs task. Not silently Sprint 1 unless an implementation plan proves the `AuthGate` boundary is touched. |
+| 4 | Testing-access copy? | Internal fixtures / internal builds only. External beta and production must be product-neutral, or explicitly beta access. Do not imply payment, subscription, entitlement, or permanence. Sprint 1 must audit and replace production-visible testing language on discovery/detail/comparison/enrolment. Commercial design remains later. |
+| 5 | Progress error-as-empty / History fallback in Sprint 1? | **No.** Keep Sprint 1 bounded. Both are launch blockers in Sprint 3. Progress must not present hosted/query failure as empty. History must not use `athlete.local` or another fallback as authority. Failure honest and retryable; missing identity fails closed. Complete Athlete Experience cannot close until both are corrected and tested. |
+
+---
+
+## 12. Verification (original audit task)
+
+Recorded on the documentation audit commit worktree (docs only).
 
 | Check | Result |
 |-------|--------|
 | Production-entry / route scan | `lib/main.dart` does not import the Daily Journey preview. `AthleteAppShell` mounts Home, Calendar, Programmes, Progress, Profile. `programme_comparison` is not imported by `app_shell`, `home`, `programme/screens`, or `auth`. |
 | Focused tests | `flutter test` on home authority, catalogue enrolment, shell catalogue entry, content-graph pin migration, and enrolment migration: **43 passed** |
 | Relative links | 204 links on changed pointer + new docs: **ok** |
-| Flag consistency | `AUDITED_AWAITING_APPROVAL` / `SPRINT_1=NOT_STARTED` / DJ `COMPLETE` / `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE` |
+| Flag consistency (audit commit) | Then `AUDITED_AWAITING_APPROVAL` / `SPRINT_1=NOT_STARTED` / DJ `COMPLETE` / `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE` |
 | `git diff --check` | clean |
 | Phase 2 consolidation safety gate | **PASS** (`groups_passed=6`) |
 
@@ -603,7 +629,26 @@ No full Flutter suite. No DB gate. No hosted contact.
 
 ## 13. Explicit non-actions
 
-This task did not implement athlete features, create a preview, change
-product code, contact hosted systems, install a phone build, push,
-mutate Field Manual, change `.env`, touch WOD Timer / Whiteboard, start
-Performance Portfolio, or mark the milestone implemented.
+The original audit and this decision-binding correction did not implement
+athlete features, create a preview, change product code, schema, or
+fixtures, contact hosted systems, install a phone build, push, mutate
+Field Manual, change `.env`, touch WOD Timer / Whiteboard, start
+Performance Portfolio, start Sprint 1, authorise Sprint 2/3, or mark the
+milestone implemented.
+
+## 14. Decision-binding verification
+
+Recorded on the founder-decision documentation worktree (docs only).
+
+| Check | Result |
+|-------|--------|
+| Relative links | 204 links on changed pointer + binding docs: **ok** |
+| Flag consistency | `ARCHITECTURE_APPROVED` / `APPROVED_NOT_STARTED` on live pointers; prior audit-commit flags retained only as historical evidence in §12 |
+| `git diff --check` | clean |
+| Focused authority / pin / enrol tests | **43 passed** |
+| Phase 2 consolidation safety gate | **PASS** (`groups_passed=6`) |
+
+```text
+COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
+```

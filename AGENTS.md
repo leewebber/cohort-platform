@@ -152,9 +152,10 @@ and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.m
 Daily Journey Integrity is **COMPLETE**
 ([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md);
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete Experience
-is **audited, awaiting founder approval**
-(`COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL`,
-`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED`). Binding:
+architecture is **approved**; selected Sprint 1 is **Programme Discovery
+and Decision**, **not started**
+(`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED`). Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
 Implementation is **not** authorised. M9 is **closed**

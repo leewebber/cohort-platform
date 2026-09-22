@@ -12,8 +12,8 @@ M10_CLOSED=true
 COACH_PLATFORM_FROZEN=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
-COMPLETE_ATHLETE_EXPERIENCE=AUDITED_AWAITING_APPROVAL
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
@@ -57,10 +57,10 @@ Daily Journey Integrity is **closed**. Binding:
 [`DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. Complete Athlete Experience
-is **audited, awaiting founder approval**
+architecture is **approved**; selected Sprint 1 is **Programme Discovery
+and Decision**, **not started**
 ([`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 [`COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)).
-Selected Sprint 1 recommendation is **Programme Discovery and Decision**.
 Implementation is **not** authorised.
 
 ## Frozen / deferred coach scope

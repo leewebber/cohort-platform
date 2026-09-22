@@ -241,8 +241,9 @@ Integrity rules:
 
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`
 
-Daily Journey Integrity is closed. Complete Athlete Experience is
-**audited, awaiting founder approval**:
+Daily Journey Integrity is closed. Complete Athlete Experience
+architecture is **approved**; selected Sprint 1 is **Programme Discovery
+and Decision**, **not started**:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 [`COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
 Implementation is **not** started.
