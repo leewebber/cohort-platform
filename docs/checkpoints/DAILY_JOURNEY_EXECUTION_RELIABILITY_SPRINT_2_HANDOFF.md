@@ -2,9 +2,9 @@
 
 **Recorded:** 2026-09-21
 
-**Status:** Local Sprint 2. **Paused for founder architectural and visual
-approval.** Do not integrate, install a phone build, or exercise hosted
-training data until approval.
+**Status:** Historical Sprint 2 handoff. Integrated at `5b584a6`. Daily
+Journey Integrity is **complete**. Closeout:
+[`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 ```text
 DAILY_JOURNEY_INTEGRITY_SPRINT_2=local

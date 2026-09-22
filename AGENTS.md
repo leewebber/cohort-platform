@@ -149,7 +149,11 @@ record.
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
 and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).
-M9 is **closed**
+Daily Journey Integrity is **COMPLETE**
+([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md);
+`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). The first Complete Athlete
+Experience sprint is **not** authorised. Programme comparison must be
+audited and bound before implementation. M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).

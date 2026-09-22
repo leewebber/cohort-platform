@@ -1,7 +1,8 @@
 # Daily Journey Integrity v1
 
-**Status:** Binding Sprint 1 contract for production authentication, session
-entry, and resumable workout state.
+**Status:** Binding Sprint 1 contract. Daily Journey Integrity is
+**complete**. Closeout:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 **Recorded:** 2026-09-20
 

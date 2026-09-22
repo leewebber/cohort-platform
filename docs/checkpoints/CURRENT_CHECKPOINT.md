@@ -6,13 +6,15 @@
 > **M10 authority (closed):** [`M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](./M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
 > **Next-task authority:** [`ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md`](./ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md)
 > and [`../planning/Athlete_Product_Completion_Plan_v1.md`](../planning/Athlete_Product_Completion_Plan_v1.md).
-> **Daily Journey Integrity Sprint 1:** integrated on `origin/main` at
-> `e646f11`. Binding:
-> [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md).
-> **Sprint 2:** integrated on `origin/main` at `5b584a6`. Binding:
-> [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md).
-> **Sprint 3 (local):** [`../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md`](../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md)
-> and [`./DAILY_JOURNEY_ACCESSIBILITY_SPRINT_3_HANDOFF.md`](./DAILY_JOURNEY_ACCESSIBILITY_SPRINT_3_HANDOFF.md).
+> **Daily Journey Integrity is COMPLETE.** Closeout:
+> [`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)
+> (`DAILY_JOURNEY_INTEGRITY=COMPLETE`,
+> `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`; first Complete Athlete
+> Experience sprint is **not** authorised). Sprint 1 `e646f11`, Sprint 2
+> `5b584a6`, Sprint 3 `5329343`, whitespace `6796cb2`. Contracts:
+> [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md),
+> [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md),
+> [`../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md`](../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md).
 > Historical M10 sprint / preflight / hardening records remain evidence only.
 > This file remains the historical atomic-resume / Phase 3 checkpoint. It is
 > not the next-task authority.

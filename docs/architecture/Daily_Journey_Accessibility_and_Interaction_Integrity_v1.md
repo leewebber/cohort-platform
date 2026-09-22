@@ -1,7 +1,9 @@
 # Daily Journey Accessibility and Interaction Integrity v1
 
-**Status:** Binding Sprint 3 contract for production athlete-workout
-accessibility, physical usability, and display/input resilience.
+**Status:** Binding Sprint 3 contract. Daily Journey Integrity is
+**complete**. Closeout:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
+Physical VoiceOver is a representative founder review, not certification.
 
 **Recorded:** 2026-09-21
 

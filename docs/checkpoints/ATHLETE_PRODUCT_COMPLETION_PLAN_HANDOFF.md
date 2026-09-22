@@ -10,7 +10,9 @@ roadmap approval.
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
 M10_CLOSED=true
 COACH_PLATFORM_FROZEN=true
-NEXT_IMPLEMENTATION_MILESTONE=M-AEC Athlete Experience Completion
+DAILY_JOURNEY_INTEGRITY=COMPLETE
+NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+NEXT_IMPLEMENTATION_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 HOSTED_WRITES_THIS_TASK=false
@@ -49,12 +51,13 @@ M10 migration. Phone **build 7** untouched. No hosted consent smoke.
 
 ## Next implementation milestone
 
-**M-AEC — Athlete Experience Completion**, first slice recommended:
-**Daily Journey Integrity** (Home today, calendar recovery,
-`ActiveSessionScreen` save/resume, error/offline/accessibility, hide coach
-chrome, close guest/Coach Brain generate paths).
+Daily Journey Integrity is **closed**. Binding:
+[`DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-Do not start it in this task.
+`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. The first Complete Athlete
+Experience sprint is **not** authorised. Programme comparison is a known
+missing athlete experience and must be audited and bound before
+implementation.
 
 ## Frozen / deferred coach scope
 

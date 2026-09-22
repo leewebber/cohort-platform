@@ -1,7 +1,8 @@
 # Daily Journey Execution Reliability v1
 
-**Status:** Binding Sprint 2 contract for production workout interruption,
-serialized restart, completion reconciliation, and build-7 compatibility.
+**Status:** Binding Sprint 2 contract. Daily Journey Integrity is
+**complete**. Closeout:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 **Recorded:** 2026-09-21
 

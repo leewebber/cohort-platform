@@ -10,11 +10,14 @@ ATHLETE_PRODUCT_COMPLETION_PLAN=v1
 ATHLETE_FIRST_LAUNCH=true
 COACH_PLATFORM_FROZEN=true
 M10_CLOSED=true
+DAILY_JOURNEY_INTEGRITY=COMPLETE
+NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
 
 Binding parents:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md),
 [`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md),
 [`../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md`](../checkpoints/ATHLETE_PRODUCT_COMPLETION_PLAN_HANDOFF.md),
 [`../architecture/Canonical_Programme_Architecture_Freeze_v1.md`](../architecture/Canonical_Programme_Architecture_Freeze_v1.md),
@@ -882,6 +885,30 @@ programme completion.
 - **Validation:** 6–12 weeks real-world on launch families before public
   claims.
 
+### Deferred capability — Athlete-defined Performance Portfolio
+
+Recorded at Daily Journey closeout. **Not authorised for implementation
+now.** Binding:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
+
+Athletes may later track Cohort-authored HYROX / Hybrid / Tactical packs
+**and** athlete-created metric portfolios (name, protocol, unit, direction,
+baseline, current, personal best, target, history, optional category,
+configurable radar, coverage, later neglected-capability suggestions).
+
+Integrity (must survive any later design):
+
+1. Incompatible units must never share one raw radar axis system.
+2. Radar values require an explicit normalisation model.
+3. Training coverage and measured performance change are separate.
+4. Sessions targeting a capability are not proof of improvement.
+5. Programme-to-metric links must be authored / canonical, not name
+   similarity or unconstrained AI inference.
+6. History stays truthful when portfolios change.
+7. User-created metrics must not alter canonical programme content.
+
+Do not implement schema, UI, radar maths, or mappings in this closeout.
+
 ---
 
 ## 8. Exercise knowledge and media milestone
@@ -1022,7 +1049,7 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 | ID | Milestone | Outcome | Workstreams | Deps | User value | Tech risk | Content risk | External | Founder input | Tests | Preview/beta | Hosted migration | Phone | Exit | Deferred | Effort |
 |----|-----------|---------|-------------|------|------------|-----------|--------------|----------|---------------|-------|--------------|------------------|-------|------|----------|--------|
-| M-AEC | Athlete Experience Completion | Daily journey at funded-product quality | Home/Calendar/`ActiveSessionScreen` execution/errors/a11y; **close guest + Coach Brain generate paths**; hide coach chrome | M10 closed | Immediate | Medium | Low | — | Copy/design | Focused Flutter + device | Founder dogfood | Unlikely | Likely | §5 exits for 6–14 | Coach UI; preview players as second authority | **XL** |
+| M-AEC | Athlete Experience Completion | Remaining athlete-experience quality after Daily Journey close | Remaining Home/Calendar polish; **close leftover guest + Coach Brain generate paths**; hide coach chrome; programme comparison only after audit | M10 closed; DJ closed | Immediate | Medium | Low | — | Copy/design | Focused Flutter + device | Founder dogfood | Unlikely | Likely | §5 exits for remaining 6–14 | Coach UI; preview players as second authority | **L–XL** |
 | M-LIB | Launch programme library | 8–12 families through quality gate | Authorship, compile, manifest, editorial | M9; exercises | Core offer | Medium | **High** | Filming later | Every family | Import + graph tests | Founder then 5–10 | Publish only when approved | After content | Quality gate | Sub-60 until ready | **XL** |
 | M-ADP | Adaptation Engine v1 | All launch triggers on contract | Evidence, UI, metadata, audit | AEC; metadata | Trust | High | Medium | Wearables later as signals | Copy tone | Adaptation + a11y | Dogfood + 5–10 | Only if audit tables needed | Yes | §6 | Multi-week AI | **L–XL** |
 | M-PRG | Progression & tracking | Honest hierarchy in Progress | Comparability, reviews, radar rules | AEC; actuals | Trust | Medium | Medium | — | What “better” means | Progress tests + 6–12w | 5–10 / 25–50 | Unlikely | Yes | §7 | Fancy social PRs | **L** |
@@ -1035,7 +1062,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 ### Critical path
 
-`M-AEC` → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
+`M-AEC` (Daily Journey Integrity **closed**; remaining AEC not authorised)
+→ (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
 
@@ -1101,15 +1129,28 @@ explicit footnote.
 
 ## 17. Immediate next sprint (recommendation only)
 
-**Athlete Experience Completion — Daily Journey Integrity Sprint 3:**
-Accessibility and Interaction Integrity.
+Daily Journey Integrity is **COMPLETE**. Binding:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-Sprint 1 is integrated at `e646f11`. Sprint 2 is integrated at `5b584a6`.
-Binding Sprint 3:
-[`../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md`](../architecture/Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md).
+```text
+DAILY_JOURNEY_INTEGRITY=COMPLETE
+NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+NEXT_IMPLEMENTATION_AUTHORISED=false
+```
 
-Out of scope: M10 Sprint 3, programme comparison, Android release, wearables,
-offline completion queue, blue brand, Field Manual mutation, treating preview
-players as production authority.
+The first **Complete Athlete Experience** sprint is **not** authorised.
+Programme comparison is a known missing athlete experience and must be
+audited and bound before implementation.
+
+**Standalone WOD Timer and Whiteboard** is a pre-launch utility candidate
+**after** the core athlete journey is complete. Do not promote it ahead of
+remaining AEC sequencing without a later founder decision.
+
+**Athlete-defined Performance Portfolio** belongs to **Progression and
+tracking** (`M-PRG`). Not this closeout.
+
+Out of scope now: M10 Sprint 3, programme comparison implementation,
+Android release, wearables, offline completion queue, blue brand, Field
+Manual mutation, treating preview players as production authority.
 
 Scores are not Complete.

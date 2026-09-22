@@ -2,8 +2,9 @@
 
 **Recorded:** 2026-09-20
 
-**Status:** Local Sprint 1 plus restore-authority completion. **Paused for
-founder architectural and visual approval.**
+**Status:** Historical Sprint 1 handoff. Integrated at `e646f11`. Daily
+Journey Integrity is **complete**. Closeout:
+[`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 ```text
 DAILY_JOURNEY_INTEGRITY_SPRINT_1=local

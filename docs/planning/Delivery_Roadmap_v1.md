@@ -29,10 +29,14 @@ Sprint 3+ coaching product is not the next milestone.
 3. **M9 Content Relationship Graph and Versioning** (**closed**)
 4. **M10 Athlete/Coach Management and Isolation** (**closed**; coach product
    frozen)
-5. **Athlete Experience Completion**
+5. **Athlete Experience Completion** — Daily Journey Integrity **closed**
+   ([`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
+   Remaining Complete Athlete Experience work is **not** authorised. Programme
+   comparison must be audited and bound before implementation.
 6. **Launch programme library**
 7. **Adaptation Engine v1**
-8. **Progression and tracking**
+8. **Progression and tracking** — later includes the deferred
+   **Athlete-defined Performance Portfolio**
 9. **Exercise knowledge and media**
 10. **Wearables and integrations**
 11. **Onboarding and programme matching**
@@ -42,6 +46,11 @@ Sprint 3+ coaching product is not the next milestone.
 15. **Build Your Own Programme** (after athlete launch)
 16. **Coaching / publisher platform** (after Build Your Own)
 17. **B2B / B2B2C / white label** (later)
+
+**Pre-launch utility candidate (after the core athlete journey is complete;
+do not promote ahead of remaining AEC sequencing without a later founder
+decision):** **Standalone WOD Timer and Whiteboard**. Binding concept:
+[`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
 ## Deferred (do not pull forward)
 
