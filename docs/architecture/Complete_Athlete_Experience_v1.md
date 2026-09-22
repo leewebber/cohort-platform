@@ -402,7 +402,7 @@ erase the production-route audit.
 | Decision | Binding |
 |----------|---------|
 | Architecture v1 | **Approved** (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`) |
-| Sprint 1 name | **Programme Discovery and Decision** (`APPROVED_NOT_STARTED`) |
+| Sprint 1 name | **Programme Discovery and Decision** (`AWAITING_FOUNDER_APPROVAL`) |
 | Implementation | **Not started** until separately authorised |
 | Active-programme replacement | **Out of Sprint 1.** Inspect/compare allowed. No replace, rewrite, or repin. No hidden switch. Truthful CTA if another programme is shown. Listed in Sprint 2 architecture work only; **not approved** as a transaction |
 | Coach-only shell entry | Coach role alone does **not** authorise `AthleteAppShell`. Fail closed. Dual-role only via authoritative athlete context. No synthetic / display-name / fallback identity. Launch-integrity requirement; not this docs task; not silently Sprint 1 |
