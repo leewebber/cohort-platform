@@ -10,10 +10,11 @@
 > [`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)
 > (`DAILY_JOURNEY_INTEGRITY=COMPLETE`,
 > `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete
-> Experience architecture is **approved**; selected Sprint 1 is
-> **Programme Discovery and Decision**, **not started**
+> Experience architecture is **approved**; Sprint 1
+> **Programme Discovery and Decision** is a **local handoff awaiting
+> founder approval**
 > (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED`). Binding:
+> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL`). Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
 > Implementation is **not** authorised. Daily Journey Sprint 1 `e646f11`, Sprint 2

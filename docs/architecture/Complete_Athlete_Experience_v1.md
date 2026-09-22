@@ -11,7 +11,7 @@ authorised until a separate implementation task.
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -234,7 +234,7 @@ see one coherent state.
 ## 7. Selected Sprint 1 (approved, not started)
 
 **Name:** Programme Discovery and Decision
-**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED`
+**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL`
 
 Sprint 1 exists to let an athlete:
 
@@ -357,8 +357,8 @@ Stop before replacement, timezone/pin-honesty work, Progress composition,
 settings, offline catalogue cache, coach-shell routing, or library
 content production.
 
-Sprint 1 remains `APPROVED_NOT_STARTED` until a separate implementation
-task.
+Sprint 1 local implementation is `AWAITING_FOUNDER_APPROVAL`. It is not
+on `origin/main` until a later fast-forward.
 
 ---
 
