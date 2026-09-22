@@ -114,8 +114,7 @@ class AthleteCatalogueEnrolmentResult {
           enrolmentId: _trim(map['enrolment_id']),
           programmeVersionId: _trim(map['programme_version_id']),
           code: code,
-          message:
-              'You already have an active programme. Confirm to switch, or keep your current enrolment.',
+          message: 'Programme switching is not available here yet.',
         );
       case 'authorization_failure':
         return AthleteCatalogueEnrolmentResult(

@@ -185,6 +185,7 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   ProgrammeCatalogEntry? _selected;
   String? _activeVersionId;
   AthleteCatalogueEnrolmentResult? _lastResult;
+  final List<String> _comparisonVersionIds = [];
 
   bool get isLoading => _loading;
   bool get isSubmitting => _submitting;
@@ -193,6 +194,47 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   ProgrammeCatalogEntry? get selectedProgramme => _selected;
   String? get activeVersionId => _activeVersionId;
   AthleteCatalogueEnrolmentResult? get lastEnrolmentResult => _lastResult;
+  bool get hasActiveAssignment =>
+      _activeVersionId != null && _activeVersionId!.isNotEmpty;
+  bool get canEnrol => !hasActiveAssignment;
+  List<String> get comparisonVersionIds =>
+      List<String>.unmodifiable(_comparisonVersionIds);
+  List<ProgrammeCatalogEntry> get comparisonSelections {
+    return _comparisonVersionIds
+        .map(entryByVersionId)
+        .whereType<ProgrammeCatalogEntry>()
+        .toList(growable: false);
+  }
+
+  ProgrammeCatalogEntry? entryByVersionId(String versionId) {
+    for (final entry in _programmes) {
+      if (entry.versionId == versionId) return entry;
+    }
+    return null;
+  }
+
+  bool isSelectedForCompare(ProgrammeCatalogEntry entry) {
+    return _comparisonVersionIds.contains(entry.versionId);
+  }
+
+  void toggleCompare(ProgrammeCatalogEntry entry) {
+    if (_comparisonVersionIds.contains(entry.versionId)) {
+      _comparisonVersionIds.remove(entry.versionId);
+      notifyListeners();
+      return;
+    }
+    if (_comparisonVersionIds.length >= 2) {
+      _comparisonVersionIds.removeAt(0);
+    }
+    _comparisonVersionIds.add(entry.versionId);
+    notifyListeners();
+  }
+
+  void clearComparison() {
+    if (_comparisonVersionIds.isEmpty) return;
+    _comparisonVersionIds.clear();
+    notifyListeners();
+  }
 
   Future<void> load() async {
     _loading = true;
@@ -223,17 +265,31 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
   }
 
   bool isCurrentProgramme(ProgrammeCatalogEntry entry) {
-    return entry.versionId == _activeVersionId;
+    return entry.versionId == activeVersionId;
   }
 
   /// Enrols in the selected catalogue programme (exact version id).
+  ///
+  /// Sprint 1 never replaces an active assignment. [replaceActive] is
+  /// ignored so the existing RPC cannot be reused as a hidden switch.
   Future<AthleteCatalogueEnrolmentResult?> confirmEnrol({
     required DateTime startedAt,
     required String timezone,
     bool replaceActive = false,
   }) async {
+    // Sprint 1 never uses replacement, even if a caller passes the flag.
+    if (replaceActive) {
+      replaceActive = false;
+    }
+
     final selected = _selected;
     if (selected == null || _submitting) return null;
+
+    _submitting = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    await _refreshActiveAssignment();
 
     if (selected.versionId == _activeVersionId) {
       final already = AthleteCatalogueEnrolmentResult(
@@ -243,25 +299,54 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
         message: 'You are already enrolled in this programme.',
       );
       _lastResult = already;
+      _submitting = false;
       notifyListeners();
       return already;
     }
 
-    _submitting = true;
-    _errorMessage = null;
-    notifyListeners();
+    if (hasActiveAssignment) {
+      final blocked = AthleteCatalogueEnrolmentResult(
+        status: AthleteCatalogueEnrolmentStatus.conflict,
+        programmeVersionId: selected.versionId,
+        athleteId: _athleteId,
+        code: 'sprint1_switch_unavailable',
+        message: 'Programme switching is not available here yet.',
+      );
+      _lastResult = blocked;
+      _submitting = false;
+      notifyListeners();
+      return blocked;
+    }
 
-    final hasActive = _activeVersionId != null && _activeVersionId!.isNotEmpty;
+    final stillListed = _programmes.any(
+      (entry) => entry.versionId == selected.versionId,
+    );
+    if (!stillListed) {
+      final stale = AthleteCatalogueEnrolmentResult(
+        status: AthleteCatalogueEnrolmentStatus.authorizationFailure,
+        programmeVersionId: selected.versionId,
+        athleteId: _athleteId,
+        code: 'version_not_catalogue_eligible',
+        message: 'This programme is not available to enrol in right now.',
+      );
+      _lastResult = stale;
+      _errorMessage = stale.message;
+      _submitting = false;
+      notifyListeners();
+      return stale;
+    }
+
     final result = await enrolmentService.enrol(
       athleteId: _athleteId,
       programmeVersionId: selected.versionId,
       timezone: timezone,
-      replaceActive: replaceActive || hasActive,
+      replaceActive: false,
     );
 
     _lastResult = result;
     if (result.isSuccess) {
       _activeVersionId = result.programmeVersionId ?? selected.versionId;
+      await _refreshActiveAssignment();
     } else if (result.status != AthleteCatalogueEnrolmentStatus.conflict) {
       _errorMessage = result.message;
     }
@@ -269,5 +354,16 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     _submitting = false;
     notifyListeners();
     return result;
+  }
+
+  Future<void> _refreshActiveAssignment() async {
+    final assignments = assignmentStore;
+    if (assignments == null) return;
+    try {
+      final active = await assignments.getActiveAssignment(_athleteId);
+      _activeVersionId = active?.programmeVersionId;
+    } catch (_) {
+      // Keep last known pin. Enrol still uses the existing RPC authority.
+    }
   }
 }
