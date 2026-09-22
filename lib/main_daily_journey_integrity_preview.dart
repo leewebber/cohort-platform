@@ -557,4 +557,3 @@ class _DiscardConfirmPreviewState extends State<_DiscardConfirmPreview> {
     );
   }
 }
-
