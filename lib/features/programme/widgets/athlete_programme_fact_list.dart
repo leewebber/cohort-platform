@@ -1,49 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/colors.dart';
-import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../presentation/athlete_programme_decision_copy.dart';
 import '../presentation/athlete_programme_decision_facts.dart';
-
-class AthleteProgrammeFactList extends StatelessWidget {
-  const AthleteProgrammeFactList({
-    super.key,
-    required this.facts,
-    this.includeSummary = true,
-  });
-
-  final AthleteProgrammeDecisionFacts facts;
-  final bool includeSummary;
-
-  @override
-  Widget build(BuildContext context) {
-    final rows = <(String, String)>[
-      ('Goal', facts.goalLabel),
-      ('Intended level', facts.levelLabel),
-      ('Duration', facts.durationLabel),
-      ('Sessions per week', facts.frequencyLabel),
-      ('Equipment', facts.equipmentLabel),
-      ('Training emphasis', facts.emphasisLabel),
-      ('Session formats', facts.formatsLabel),
-      ('Progression', facts.progressionLabel),
-      ('Recovery', facts.recoveryLabel),
-      ('Status', facts.statusLabel),
-      if (includeSummary) ('Summary', facts.summaryLabel),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (final row in rows) ...[
-          Text(row.$1, style: CohortTextStyles.eyebrow),
-          const SizedBox(height: CohortSpacing.xs),
-          Text(row.$2, style: CohortTextStyles.body),
-          const SizedBox(height: CohortSpacing.md),
-        ],
-      ],
-    );
-  }
-}
 
 class AthleteProgrammeStatusChip extends StatelessWidget {
   const AthleteProgrammeStatusChip({super.key, required this.label});
@@ -60,11 +20,97 @@ class AthleteProgrammeStatusChip extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Text(
             label,
             style: CohortTextStyles.eyebrow.copyWith(
               color: CohortColors.textPrimary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AthleteProgrammeGlanceTiles extends StatelessWidget {
+  const AthleteProgrammeGlanceTiles({super.key, required this.facts});
+
+  final AthleteProgrammeDecisionFacts facts;
+
+  @override
+  Widget build(BuildContext context) {
+    final tiles = <(String, String)>[
+      ('Duration', facts.glanceValue(facts.durationDisplay)),
+      ('Sessions / week', facts.glanceValue(facts.frequencyDisplay)),
+      ('Intended level', facts.glanceValue(facts.intendedLevel)),
+      ('Equipment', facts.glanceValue(facts.equipment)),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
+            AthleteProgrammeDecisionCopy.atAGlance,
+            style: CohortTextStyles.h2,
+          ),
+        ),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final scale = MediaQuery.textScalerOf(context).scale(16) / 16;
+            final stacked = constraints.maxWidth < 360 || scale >= 1.6;
+            final gap = 8.0;
+            final width = stacked
+                ? constraints.maxWidth
+                : (constraints.maxWidth - gap) / 2;
+            return Wrap(
+              spacing: gap,
+              runSpacing: gap,
+              children: [
+                for (final tile in tiles)
+                  SizedBox(
+                    width: width,
+                    child: _GlanceTile(label: tile.$1, value: tile.$2),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _GlanceTile extends StatelessWidget {
+  const _GlanceTile({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      label: '$label, $value',
+      child: ExcludeSemantics(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: CohortColors.surfaceRaised,
+            border: Border.all(color: CohortColors.border),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label.toUpperCase(), style: CohortTextStyles.tileLabel),
+                const SizedBox(height: 6),
+                Text(value, style: CohortTextStyles.body),
+              ],
             ),
           ),
         ),

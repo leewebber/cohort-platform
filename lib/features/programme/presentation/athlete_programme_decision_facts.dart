@@ -17,6 +17,10 @@ class AthleteProgrammeDecisionFacts {
     this.sessionsPerWeek,
     this.equipment,
     this.summary,
+    this.trainingEmphasis,
+    this.sessionFormats,
+    this.progression,
+    this.recovery,
   });
 
   final String versionId;
@@ -27,6 +31,10 @@ class AthleteProgrammeDecisionFacts {
   final int? sessionsPerWeek;
   final String? equipment;
   final String? summary;
+  final String? trainingEmphasis;
+  final String? sessionFormats;
+  final String? progression;
+  final String? recovery;
   final bool catalogueAvailable;
   final bool isCurrentProgramme;
 
@@ -53,10 +61,8 @@ class AthleteProgrammeDecisionFacts {
 
   String get goalLabel => primaryGoal ?? omitted;
   String get levelLabel => intendedLevel ?? omitted;
-  String get durationLabel =>
-      durationWeeks == null ? omitted : '$durationWeeks weeks';
-  String get frequencyLabel =>
-      sessionsPerWeek == null ? omitted : '$sessionsPerWeek sessions / week';
+  String get durationLabel => durationDisplay ?? omitted;
+  String get frequencyLabel => frequencyDisplay ?? omitted;
   String get equipmentLabel => equipment ?? omitted;
   String get summaryLabel => summary ?? omitted;
   String get statusLabel => isCurrentProgramme
@@ -64,10 +70,34 @@ class AthleteProgrammeDecisionFacts {
       : (catalogueAvailable
             ? AthleteProgrammeDecisionCopy.available
             : AthleteProgrammeDecisionCopy.unavailable);
-  String get emphasisLabel => omitted;
-  String get formatsLabel => omitted;
-  String get progressionLabel => omitted;
-  String get recoveryLabel => omitted;
+  String get emphasisLabel => trainingEmphasis ?? omitted;
+  String get formatsLabel => sessionFormats ?? omitted;
+  String get progressionLabel => progression ?? omitted;
+  String get recoveryLabel => recovery ?? omitted;
+
+  String? get durationDisplay =>
+      durationWeeks == null ? null : '$durationWeeks weeks';
+  String? get frequencyDisplay =>
+      sessionsPerWeek == null ? null : '$sessionsPerWeek sessions / week';
+
+  bool get hasSupportingInformation =>
+      trainingEmphasis != null ||
+      sessionFormats != null ||
+      progression != null ||
+      recovery != null;
+
+  List<(String, String?)> get supportingFacts => [
+    ('Training emphasis', trainingEmphasis),
+    ('Session formats', sessionFormats),
+    ('Progression', progression),
+    ('Recovery', recovery),
+  ];
+
+  String glanceValue(String? authored) =>
+      authored ?? AthleteProgrammeDecisionCopy.notSpecified;
+
+  static String compareValue(String? authored) =>
+      authored ?? AthleteProgrammeDecisionCopy.notSpecified;
 
   static String? _optional(String? raw) {
     final value = raw?.trim();

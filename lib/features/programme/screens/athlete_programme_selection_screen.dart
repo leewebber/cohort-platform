@@ -21,12 +21,12 @@ class AthleteProgrammeSelectionScreen extends StatefulWidget {
     super.key,
     required this.athleteId,
     this.refreshController,
-    AthleteProgrammeSelectionController? controller,
-  }) : _controller = controller;
+    this.controller,
+  });
 
   final String athleteId;
   final HomeTodaySessionRefreshController? refreshController;
-  final AthleteProgrammeSelectionController? _controller;
+  final AthleteProgrammeSelectionController? controller;
 
   @override
   State<AthleteProgrammeSelectionScreen> createState() =>
@@ -36,7 +36,7 @@ class AthleteProgrammeSelectionScreen extends StatefulWidget {
 class _AthleteProgrammeSelectionScreenState
     extends State<AthleteProgrammeSelectionScreen> {
   late final AthleteProgrammeSelectionController _controller =
-      widget._controller ??
+      widget.controller ??
       AthleteCatalogueEnrolmentServices.createSelectionController(
         athleteId: widget.athleteId,
       );
@@ -73,11 +73,10 @@ class _AthleteProgrammeSelectionScreenState
   Future<void> _openComparison() async {
     final enrolled = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) =>
-            AthleteProgrammeComparisonScreen(
-              controller: _controller,
-              refreshController: widget.refreshController,
-            ),
+        builder: (_) => AthleteProgrammeComparisonScreen(
+          controller: _controller,
+          refreshController: widget.refreshController,
+        ),
       ),
     );
     if (enrolled == true && mounted) {
@@ -88,7 +87,9 @@ class _AthleteProgrammeSelectionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AthleteProgrammeDecisionCopy.catalogueTitle)),
+      appBar: AppBar(
+        title: const Text(AthleteProgrammeDecisionCopy.catalogueTitle),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(CohortSpacing.lg),

@@ -60,17 +60,20 @@ entry (or assignment pin for current-programme status):
 | Athlete label | Source | If missing |
 |---------------|--------|------------|
 | Title | `name` | Neutral “Programme” |
-| Goal | `primaryGoal` | Not provided |
-| Intended level | `difficulty` | Not provided |
-| Duration | `durationWeeks` | Not provided |
-| Sessions per week | `sessionsPerWeek` | Not provided |
-| Equipment | `equipmentRequirements` | Not provided |
-| Summary | `description` | Not provided |
+| Goal | `primaryGoal` | Omit from hero; glance/review use Not specified |
+| Intended level | `difficulty` | Not specified in glance/review |
+| Duration | `durationWeeks` | Not specified in glance/review |
+| Sessions per week | `sessionsPerWeek` | Not specified in glance/review |
+| Equipment | `equipmentRequirements` | Not specified in glance |
+| Summary | `description` | Omit when absent |
 | Catalogue status | published + approved + not archived | Honest unavailable |
 | Current programme | assignment `programmeVersionId` equals entry `versionId` | — |
 
 Do not invent training emphasis, session formats, progression, or rest
-structure from names or session contents. Show **Not provided**.
+structure from names or session contents. Omit an optional section when
+every field in it is unauthored. In comparison, hide a row when both
+programmes lack that value. If only one lacks it, show **Not specified**.
+Never present absence as a programme feature.
 
 Never show internal IDs, hashes, lineage codes, graph terms, publisher
 mechanics, or compiler language.

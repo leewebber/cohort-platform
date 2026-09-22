@@ -52,25 +52,24 @@ class AthleteProgrammeDetailScreen extends StatelessWidget {
         );
 
         return Scaffold(
-          appBar: AppBar(title: Text(facts.title)),
+          appBar: AppBar(title: const Text('Programme')),
           body: SafeArea(
             child: ListView(
-              padding: const EdgeInsets.all(CohortSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(
+                CohortSpacing.lg,
+                CohortSpacing.md,
+                CohortSpacing.lg,
+                CohortSpacing.xxl,
+              ),
               children: [
-                Text(facts.title, style: CohortTextStyles.h1),
-                const SizedBox(height: CohortSpacing.sm),
-                AthleteProgrammeStatusChip(label: facts.statusLabel),
-                if (controller.hasActiveAssignment &&
-                    !facts.isCurrentProgramme) ...[
-                  const SizedBox(height: CohortSpacing.md),
-                  const Text(
-                    AthleteProgrammeDecisionCopy.switchingUnavailable,
-                    style: CohortTextStyles.body,
-                  ),
+                _ProgrammeHero(facts: facts),
+                const SizedBox(height: CohortSpacing.xl),
+                AthleteProgrammeGlanceTiles(facts: facts),
+                if (facts.hasSupportingInformation) ...[
+                  const SizedBox(height: CohortSpacing.xl),
+                  _SupportingInformation(facts: facts),
                 ],
                 const SizedBox(height: CohortSpacing.xl),
-                AthleteProgrammeFactList(facts: facts),
-                const SizedBox(height: CohortSpacing.lg),
                 _DecisionArea(
                   controller: controller,
                   facts: facts,
@@ -81,6 +80,63 @@ class AthleteProgrammeDetailScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ProgrammeHero extends StatelessWidget {
+  const _ProgrammeHero({required this.facts});
+
+  final AthleteProgrammeDecisionFacts facts;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AthleteProgrammeStatusChip(label: facts.statusLabel),
+        const SizedBox(height: CohortSpacing.md),
+        Semantics(
+          header: true,
+          child: Text(facts.title, style: CohortTextStyles.h1),
+        ),
+        if (facts.primaryGoal != null) ...[
+          const SizedBox(height: CohortSpacing.sm),
+          Text(facts.primaryGoal!, style: CohortTextStyles.h2),
+        ],
+        if (facts.summary != null) ...[
+          const SizedBox(height: CohortSpacing.md),
+          Text(facts.summary!, style: CohortTextStyles.body),
+        ],
+      ],
+    );
+  }
+}
+
+class _SupportingInformation extends StatelessWidget {
+  const _SupportingInformation({required this.facts});
+
+  final AthleteProgrammeDecisionFacts facts;
+
+  @override
+  Widget build(BuildContext context) {
+    final present = facts.supportingFacts
+        .where((fact) => fact.$2 != null)
+        .toList(growable: false);
+
+    return CohortCard(
+      padding: const EdgeInsets.all(CohortSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < present.length; i++) ...[
+            if (i > 0) const SizedBox(height: CohortSpacing.md),
+            Text(present[i].$1, style: CohortTextStyles.eyebrow),
+            const SizedBox(height: CohortSpacing.xs),
+            Text(present[i].$2!, style: CohortTextStyles.body),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -99,16 +155,12 @@ class _DecisionArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (facts.isCurrentProgramme) {
-      return const CohortCard(
-        child: Text(
-          AthleteProgrammeDecisionCopy.currentProgramme,
-          style: CohortTextStyles.body,
-        ),
-      );
+      return const SizedBox.shrink();
     }
 
     if (controller.hasActiveAssignment) {
       return const CohortCard(
+        padding: EdgeInsets.all(CohortSpacing.md),
         child: Text(
           AthleteProgrammeDecisionCopy.switchingUnavailable,
           style: CohortTextStyles.body,
@@ -118,6 +170,7 @@ class _DecisionArea extends StatelessWidget {
 
     if (!facts.catalogueAvailable) {
       return const CohortCard(
+        padding: EdgeInsets.all(CohortSpacing.md),
         child: Text(
           AthleteProgrammeDecisionCopy.detailUnavailable,
           style: CohortTextStyles.body,
@@ -134,19 +187,21 @@ class _DecisionArea extends StatelessWidget {
               final entry = controller.entryByVersionId(facts.versionId);
               if (entry == null) return;
               controller.selectProgramme(entry);
-              Navigator.of(context).push<bool>(
-                MaterialPageRoute(
-                  builder: (_) => AthleteProgrammeEnrolmentReviewScreen(
-                    controller: controller,
-                    versionId: facts.versionId,
-                    refreshController: refreshController,
-                  ),
-                ),
-              ).then((enrolled) {
-                if (enrolled == true && context.mounted) {
-                  Navigator.of(context).pop(true);
-                }
-              });
+              Navigator.of(context)
+                  .push<bool>(
+                    MaterialPageRoute(
+                      builder: (_) => AthleteProgrammeEnrolmentReviewScreen(
+                        controller: controller,
+                        versionId: facts.versionId,
+                        refreshController: refreshController,
+                      ),
+                    ),
+                  )
+                  .then((enrolled) {
+                    if (enrolled == true && context.mounted) {
+                      Navigator.of(context).pop(true);
+                    }
+                  });
             },
     );
   }

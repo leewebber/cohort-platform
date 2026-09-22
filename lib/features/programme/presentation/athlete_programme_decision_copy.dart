@@ -16,10 +16,15 @@ abstract final class AthleteProgrammeDecisionCopy {
   static const available = 'Available';
   static const unavailable = 'Not available';
   static const notProvided = 'Not provided';
+  static const notSpecified = 'Not specified';
+  static const atAGlance = 'At a glance';
   static const switchingUnavailable =
       'Programme switching is not available here yet.';
   static const enrol = 'Enrol';
   static const enrolReviewTitle = 'Enrol in this programme?';
+  static const enrolReviewPinned =
+      'It becomes your current programme and stays pinned to this exact '
+      'programme version.';
   static const enrolConfirm = 'Confirm enrolment';
   static const cancel = 'Cancel';
   static const retry = 'Retry';

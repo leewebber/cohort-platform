@@ -120,13 +120,40 @@ class _AthleteProgrammeEnrolmentReviewScreenState
         child: ListView(
           padding: const EdgeInsets.all(CohortSpacing.lg),
           children: [
-            Text(
-              AthleteProgrammeDecisionCopy.enrolReviewTitle,
-              style: CohortTextStyles.h1,
+            Semantics(
+              header: true,
+              child: Text(
+                AthleteProgrammeDecisionCopy.enrolReviewTitle,
+                style: CohortTextStyles.h1,
+              ),
+            ),
+            const SizedBox(height: CohortSpacing.lg),
+            Text(facts.title, style: CohortTextStyles.h2),
+            const SizedBox(height: CohortSpacing.md),
+            _ReviewFact(
+              label: 'Goal',
+              value: facts.glanceValue(facts.primaryGoal),
+            ),
+            _ReviewFact(
+              label: 'Duration',
+              value: facts.glanceValue(facts.durationDisplay),
+            ),
+            _ReviewFact(
+              label: 'Sessions per week',
+              value: facts.glanceValue(facts.frequencyDisplay),
+            ),
+            _ReviewFact(
+              label: 'Intended level',
+              value: facts.glanceValue(facts.intendedLevel),
             ),
             const SizedBox(height: CohortSpacing.md),
             Text(
               AthleteProgrammeDecisionCopy.enrolReviewBody(facts.title),
+              style: CohortTextStyles.body,
+            ),
+            const SizedBox(height: CohortSpacing.sm),
+            const Text(
+              AthleteProgrammeDecisionCopy.enrolReviewPinned,
               style: CohortTextStyles.body,
             ),
             const SizedBox(height: CohortSpacing.xl),
@@ -172,6 +199,34 @@ class _AthleteProgrammeEnrolmentReviewScreenState
                   : () => Navigator.of(context).pop(false),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ReviewFact extends StatelessWidget {
+  const _ReviewFact({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+      child: Semantics(
+        container: true,
+        label: '$label, $value',
+        child: ExcludeSemantics(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: CohortTextStyles.small),
+              const SizedBox(height: 2),
+              Text(value, style: CohortTextStyles.body),
+            ],
+          ),
         ),
       ),
     );
