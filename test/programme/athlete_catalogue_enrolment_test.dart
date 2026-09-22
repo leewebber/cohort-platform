@@ -293,17 +293,14 @@ void main() {
 
       expect(find.text('Choose programme'), findsOneWidget);
       expect(find.text('Cohort Strength'), findsOneWidget);
+      expect(find.text('View details'), findsOneWidget);
+      expect(find.text('Compare'), findsOneWidget);
       expect(find.textContaining('Buy'), findsNothing);
       expect(find.textContaining('Purchase'), findsNothing);
       expect(find.textContaining('Checkout'), findsNothing);
       expect(find.textContaining(r'$'), findsNothing);
-
-      await tester.tap(find.text('Cohort Strength'));
-      await tester.pumpAndSettle();
-
-      expect(find.textContaining('Enrol in'), findsOneWidget);
-      expect(find.text('Enrol'), findsOneWidget);
-      expect(find.textContaining('not a purchase'), findsOneWidget);
+      expect(find.textContaining('testing'), findsNothing);
+      expect(find.textContaining('not a purchase'), findsNothing);
     });
 
     testWidgets('empty catalogue state', (tester) async {
