@@ -39,9 +39,7 @@ class ProgrammeDiscoveryDecisionPreviewApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: cohortTheme,
-      home: ProgrammeDiscoveryDecisionPreviewScreen(
-        initialState: initialState,
-      ),
+      home: ProgrammeDiscoveryDecisionPreviewScreen(initialState: initialState),
     );
   }
 }
@@ -67,11 +65,15 @@ class _ProgrammeDiscoveryDecisionPreviewScreenState
   @override
   Widget build(BuildContext context) {
     final narrow =
-        _state == ProgrammeDiscoveryDecisionPreviewState.largeTextNarrow;
+        _state == ProgrammeDiscoveryDecisionPreviewState.largeTextNarrow ||
+        _state == ProgrammeDiscoveryDecisionPreviewState.comparisonNarrow;
+    final largeText =
+        _state == ProgrammeDiscoveryDecisionPreviewState.largeTextNarrow ||
+        _state == ProgrammeDiscoveryDecisionPreviewState.comparisonLargeText;
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
         size: narrow ? const Size(320, 800) : MediaQuery.of(context).size,
-        textScaler: TextScaler.linear(narrow ? 2 : 1),
+        textScaler: TextScaler.linear(largeText ? 2 : 1),
       ),
       child: Scaffold(
         appBar: AppBar(title: const Text('Decision preview (internal)')),
@@ -130,6 +132,8 @@ class _PreviewSurfaceState extends State<_PreviewSurface> {
     await _controller.load();
     final state = widget.state;
     if (state == ProgrammeDiscoveryDecisionPreviewState.comparison ||
+        state == ProgrammeDiscoveryDecisionPreviewState.comparisonNarrow ||
+        state == ProgrammeDiscoveryDecisionPreviewState.comparisonLargeText ||
         state ==
             ProgrammeDiscoveryDecisionPreviewState.comparisonMissingFacts) {
       if (_controller.programmes.length >= 2) {
@@ -174,6 +178,8 @@ class _PreviewSurfaceState extends State<_PreviewSurface> {
           versionId: 'preview-spartan',
         );
       case ProgrammeDiscoveryDecisionPreviewState.comparison:
+      case ProgrammeDiscoveryDecisionPreviewState.comparisonNarrow:
+      case ProgrammeDiscoveryDecisionPreviewState.comparisonLargeText:
       case ProgrammeDiscoveryDecisionPreviewState.comparisonMissingFacts:
         return AthleteProgrammeComparisonScreen(controller: _controller);
       case ProgrammeDiscoveryDecisionPreviewState.enrolmentReview:

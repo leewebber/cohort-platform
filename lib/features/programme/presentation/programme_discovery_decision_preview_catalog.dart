@@ -6,6 +6,8 @@ enum ProgrammeDiscoveryDecisionPreviewState {
   detailApollo,
   detailSpartan,
   comparison,
+  comparisonNarrow,
+  comparisonLargeText,
   comparisonMissingFacts,
   enrolmentReview,
   enrolmentPending,
