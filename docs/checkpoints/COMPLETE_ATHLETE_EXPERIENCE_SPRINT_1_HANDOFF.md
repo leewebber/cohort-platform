@@ -19,8 +19,8 @@ Binding:
 [`../architecture/Athlete_Programme_Discovery_and_Decision_v1.md`](../architecture/Athlete_Programme_Discovery_and_Decision_v1.md),
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
 
-**Base:** `origin/main` `3d2213940ae2d6f066fafc30dbd48f71fed2bf14`  
-**Prior approved local HEAD:** `a3e59ae0`  
+**Base:** `origin/main` `3d2213940ae2d6f066fafc30dbd48f71fed2bf14`
+**Prior approved local HEAD:** `a3e59ae0`
 **Correction branch tip:** local `feat/programme-discovery-decision-v1`
 
 ---
