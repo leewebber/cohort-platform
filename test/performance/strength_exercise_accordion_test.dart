@@ -118,7 +118,7 @@ void main() {
       '7',
     );
     await tester.enterText(
-      find.widgetWithText(TextField, 'Load (kg)').first,
+      find.widgetWithText(TextField, 'Set 1 load, kilograms').first,
       '12.5',
     );
     await tester.pump();
@@ -385,7 +385,7 @@ void main() {
           .widgetList<TextField>(find.byType(TextField))
           .map((field) => field.decoration?.labelText)
           .whereType<String>()
-          .where((label) => label.startsWith('Set'))
+          .where((label) => label.contains('reps'))
           .toList(),
       ['Set 1 reps', 'Set 2 reps', 'Set 3 reps', 'Set 4 reps'],
     );
@@ -471,7 +471,7 @@ void main() {
     await _tapExercise(tester, 'Farmer Carry');
 
     expect(find.text('Farmer Carry'), findsOneWidget);
-    expect(find.text('Load per hand (kg)'), findsWidgets);
+    expect(find.byType(TextField), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 

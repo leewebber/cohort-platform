@@ -84,11 +84,19 @@ class PerformanceSaveIndicator extends StatelessWidget {
           ),
         ),
         if (state == PerformanceSaveState.error && onRetry != null)
-          CohortButton(
-            key: const ValueKey('performance-save-retry'),
-            label: 'Retry',
-            semanticLabel: 'Retry save. Local results are still on this phone',
-            onPressed: onRetry,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: JourneyMinTap(
+              child: Semantics(
+                button: true,
+                label: 'Retry save. Local results are still on this phone',
+                child: TextButton(
+                  key: const ValueKey('performance-save-retry'),
+                  onPressed: onRetry,
+                  child: const Text('Retry'),
+                ),
+              ),
+            ),
           ),
       ],
     );
@@ -1549,13 +1557,17 @@ class _ExerciseTargetComparison extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Couldn’t load previous performance. You can still record this set.',
+            'Couldn’t load previous performance',
+            style: CohortTextStyles.small,
+          ),
+          Text(
+            'You can still record this set.',
             style: CohortTextStyles.small,
           ),
           JourneyMinTap(
             child: TextButton(
               onPressed: onRetry,
-              child: const Text('Retry previous performance'),
+              child: const Text('Retry'),
             ),
           ),
         ],
@@ -1649,7 +1661,14 @@ class _ExerciseActualRow extends StatelessWidget {
             stackedChildren: [
               PerformanceNumericField(
                 key: ValueKey('${set.setResultId}-load'),
-                label: DailyJourneyAccessibility.setLoadLabel(
+                label: _label(
+                  capture!.loadLabel,
+                  DailyJourneyAccessibility.setLoadLabel(
+                    set.setNumber,
+                    set.loadUnit,
+                  ),
+                ),
+                semanticLabel: DailyJourneyAccessibility.setLoadLabel(
                   set.setNumber,
                   set.loadUnit,
                 ),
@@ -1670,7 +1689,9 @@ class _ExerciseActualRow extends StatelessWidget {
               ),
               PerformanceNumericField(
                 key: ValueKey('${set.setResultId}-distance'),
-                label: DailyJourneyAccessibility.setDistanceLabel(
+                label:
+                    'Completed distance (${set.distanceUnit ?? capture!.distanceUnit ?? 'm'})',
+                semanticLabel: DailyJourneyAccessibility.setDistanceLabel(
                   set.setNumber,
                   set.distanceUnit ?? capture!.distanceUnit,
                 ),
@@ -1693,7 +1714,7 @@ class _ExerciseActualRow extends StatelessWidget {
           if (capture!.durationOptional)
             EnduranceDurationField(
               key: ValueKey('${set.setResultId}-duration'),
-              label: 'Set ${set.setNumber} duration, seconds (optional)',
+              label: 'Duration (optional)',
               durationSeconds: set.durationSeconds,
               onDurationSecondsChanged: (seconds) => onUpdateSet(
                 exerciseId,
@@ -1707,9 +1728,7 @@ class _ExerciseActualRow extends StatelessWidget {
           CheckboxListTile(
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: Text(
-              DailyJourneyAccessibility.setCompletedLabel(set.setNumber),
-            ),
+            title: const Text('Completed'),
             value: set.completed,
             onChanged: (value) => onUpdateSet(
               exerciseId,
@@ -1814,6 +1833,11 @@ class _ExerciseActualRow extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  static String _label(String? value, String fallback) {
+    final trimmed = value?.trim();
+    return trimmed == null || trimmed.isEmpty ? fallback : trimmed;
   }
 }
 

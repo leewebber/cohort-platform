@@ -17,6 +17,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Daily_Journey_Integrity_v1.md](./Daily_Journey_Integrity_v1.md) | **Sprint 1** production auth, session entry, resumable draft |
 | [Daily_Journey_Execution_Reliability_v1.md](./Daily_Journey_Execution_Reliability_v1.md) | **Sprint 2** interruption, serialized restart, completion reconciliation |
 | [Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md](./Daily_Journey_Accessibility_and_Interaction_Integrity_v1.md) | **Sprint 3** production accessibility and interaction integrity |
+| [../checkpoints/DAILY_JOURNEY_ACCESSIBILITY_SPRINT_3_HANDOFF.md](../checkpoints/DAILY_JOURNEY_ACCESSIBILITY_SPRINT_3_HANDOFF.md) | Sprint 3 local handoff (paused for founder approval) |
 | [../checkpoints/DAILY_JOURNEY_EXECUTION_RELIABILITY_SPRINT_2_HANDOFF.md](../checkpoints/DAILY_JOURNEY_EXECUTION_RELIABILITY_SPRINT_2_HANDOFF.md) | Sprint 2 integrated at `5b584a6` |
 | [../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_SPRINT_1_HANDOFF.md) | Sprint 1 integrated at `e646f11` |
 | [Phase_1_Implemented_Architecture_v1.md](./Phase_1_Implemented_Architecture_v1.md) | Production athlete architecture as implemented |

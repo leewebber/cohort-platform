@@ -187,7 +187,7 @@ class _DailyJourneyIntegrityPreviewScreenState
                               for (final scale in [1.0, 1.3, 1.6, 2.0])
                                 ChoiceChip(
                                   key: ValueKey('preview-scale-$scale'),
-                                  label: Text('${scale}×'),
+                                  label: Text('$scale×'),
                                   selected: _textScale == scale,
                                   onSelected: (_) =>
                                       setState(() => _textScale = scale),

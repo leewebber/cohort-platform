@@ -142,6 +142,7 @@ void main() {
         ),
       );
 
+      await tester.ensureVisible(find.text('Save and finish'));
       await tester.tap(find.text('Save and finish'));
       await tester.pumpAndSettle();
 
@@ -150,6 +151,7 @@ void main() {
       expect(execution.state.sessionStatus, SessionExecutionStatus.inProgress);
       expect(find.text('SESSION COMPLETE'), findsNothing);
 
+      await tester.ensureVisible(find.text('Save and finish'));
       await tester.tap(find.text('Save and finish'));
       await tester.pumpAndSettle();
 

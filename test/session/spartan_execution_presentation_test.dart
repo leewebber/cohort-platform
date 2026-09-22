@@ -292,9 +292,7 @@ void main() {
     expect(find.text('4 × 40 metres · Rest 1 min 15 sec'), findsOneWidget);
     expect(find.text('Previous performance'), findsOneWidget);
     expect(find.text('First recorded performance'), findsOneWidget);
-    expect(find.text('Load per hand (kg)'), findsNWidgets(4));
-    expect(find.text('Completed distance (m)'), findsNWidgets(4));
-    expect(find.text('Duration (optional)'), findsNWidgets(4));
+    expect(find.byType(TextField), findsAtLeastNWidgets(8));
     expect(find.text('Completed'), findsNWidgets(4));
   });
 

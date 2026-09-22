@@ -58,6 +58,7 @@ class _CohortButtonState extends State<CohortButton> {
                     ? () {
                         if (!_once.tryAcquire()) return;
                         widget.onPressed!();
+                        _once.releaseNextFrame(() {});
                       }
                     : null,
                 borderRadius: CohortRadius.mediumRadius,

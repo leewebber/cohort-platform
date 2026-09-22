@@ -8,21 +8,21 @@ abstract final class JourneyInteraction {
 }
 
 class JourneyOnceTap {
-  JourneyOnceTap({this.lock = JourneyInteraction.duplicateActionLock});
+  JourneyOnceTap();
 
-  final Duration lock;
-  DateTime? _last;
-
-  bool get isLocked {
-    final last = _last;
-    if (last == null) return false;
-    return DateTime.now().difference(last) < lock;
-  }
+  var _busy = false;
 
   bool tryAcquire() {
-    if (isLocked) return false;
-    _last = DateTime.now();
+    if (_busy) return false;
+    _busy = true;
     return true;
+  }
+
+  void releaseNextFrame(VoidCallback onReleased) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _busy = false;
+      onReleased();
+    });
   }
 }
 
