@@ -1,6 +1,5 @@
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
-import 'package:cohort_platform/features/programme/models/programme_catalog_entry.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_decision_copy.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_decision_facts.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_comparison_screen.dart';
@@ -153,6 +152,8 @@ void main() {
     expect(facts.levelLabel, AthleteProgrammeDecisionCopy.notProvided);
     expect(facts.emphasisLabel, AthleteProgrammeDecisionCopy.notProvided);
     expect(facts.formatsLabel, AthleteProgrammeDecisionCopy.notProvided);
+    expect(facts.hasSupportingInformation, isFalse);
+    expect(facts.trainingEmphasis, isNull);
     expect(facts.versionId, 'v1');
   });
 
@@ -170,7 +171,9 @@ void main() {
     expect(listed.map((e) => e.versionId), ['pub']);
   });
 
-  testWidgets('discovery reaches detail and hides testing copy', (tester) async {
+  testWidgets('discovery reaches detail and hides testing copy', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390, 1200);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -189,7 +192,9 @@ void main() {
     await tester.tap(find.text('View details'));
     await tester.pumpAndSettle();
     expect(find.byType(AthleteProgrammeDetailScreen), findsOneWidget);
-    expect(find.text('Apollo'), findsWidgets);
+    expect(find.text('Apollo'), findsOneWidget);
+    expect(find.text('Training emphasis'), findsNothing);
+    expect(find.text(AthleteProgrammeDecisionCopy.notProvided), findsNothing);
     await tester.ensureVisible(find.text('Enrol'));
     expect(find.text('Enrol'), findsOneWidget);
   });
@@ -215,7 +220,8 @@ void main() {
     expect(find.text('Duration'), findsOneWidget);
     expect(find.text('12 weeks'), findsOneWidget);
     expect(find.text('8 weeks'), findsOneWidget);
-    expect(find.text(AthleteProgrammeDecisionCopy.notProvided), findsWidgets);
+    expect(find.text('Training emphasis'), findsNothing);
+    expect(find.text(AthleteProgrammeDecisionCopy.notProvided), findsNothing);
   });
 
   testWidgets('comparison stacks on a 320px viewport', (tester) async {
@@ -240,7 +246,178 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.textContaining('Apollo:'), findsWidgets);
+    expect(find.text('Apollo'), findsWidgets);
+    expect(find.text('Spartan'), findsWidgets);
+    expect(find.textContaining('Apollo:'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('optional supporting section is omitted when unauthored', (
+    tester,
+  ) async {
+    final controller = _controller(
+      entries: [_entry('v-apollo', name: 'Apollo')],
+    );
+    await controller.load();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeDetailScreen(
+          controller: controller,
+          versionId: 'v-apollo',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('At a glance'), findsOneWidget);
+    expect(find.text('Training emphasis'), findsNothing);
+    expect(find.text('Session formats'), findsNothing);
+    expect(find.text('Progression'), findsNothing);
+    expect(find.text('Recovery'), findsNothing);
+    expect(find.text(AthleteProgrammeDecisionCopy.notProvided), findsNothing);
+  });
+
+  testWidgets('detail has one programme title below the app bar', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final tables = InMemoryProgrammeTables()
+      ..assignments.add(
+        ProgrammeScheduleTestFixtures.assignment(
+          programmeVersionId: 'v-apollo',
+        ),
+      );
+    final controller = _controller(
+      entries: [
+        _entry('v-apollo', name: 'Apollo'),
+        _entry('v-spartan', name: 'Spartan'),
+      ],
+      tables: tables,
+    );
+    await controller.load();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeDetailScreen(
+          controller: controller,
+          versionId: 'v-apollo',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Apollo'), findsOneWidget);
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.currentProgramme),
+      findsOneWidget,
+    );
+    expect(find.text(AthleteProgrammeDecisionCopy.enrol), findsNothing);
+
+    final detail = find.byType(AthleteProgrammeDetailScreen);
+    final appBar = find.descendant(of: detail, matching: find.byType(AppBar));
+    final title = find.descendant(of: detail, matching: find.text('Apollo'));
+    expect(
+      tester.getTopLeft(title).dy,
+      greaterThanOrEqualTo(tester.getBottomLeft(appBar).dy - 0.5),
+    );
+  });
+
+  testWidgets('Spartan title stays below the app bar at large text', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(320, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controller = _controller(
+      entries: [_entry('v-spartan', name: 'Spartan')],
+    );
+    await controller.load();
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: const TextScaler.linear(2)),
+            child: child!,
+          );
+        },
+        home: AthleteProgrammeDetailScreen(
+          controller: controller,
+          versionId: 'v-spartan',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Spartan'), findsOneWidget);
+    final detail = find.byType(AthleteProgrammeDetailScreen);
+    final appBar = find.descendant(of: detail, matching: find.byType(AppBar));
+    final title = find.descendant(of: detail, matching: find.text('Spartan'));
+    expect(
+      tester.getTopLeft(title).dy,
+      greaterThanOrEqualTo(tester.getBottomLeft(appBar).dy - 0.5),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('one-sided missing comparison data stays labelled', (
+    tester,
+  ) async {
+    final controller = _controller(
+      entries: [
+        _entry('v-apollo', name: 'Apollo', equipment: 'Barbell'),
+        _entry('v-spartan', name: 'Spartan', equipment: null),
+      ],
+    );
+    await controller.load();
+    controller.toggleCompare(controller.programmes.first);
+    controller.toggleCompare(controller.programmes.last);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeComparisonScreen(controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Equipment'), findsOneWidget);
+    expect(find.text('Barbell'), findsOneWidget);
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.notSpecified),
+      findsOneWidget,
+    );
+    expect(find.text(AthleteProgrammeDecisionCopy.notProvided), findsNothing);
+  });
+
+  testWidgets('comparison identity stays visible while scrolling', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 420);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controller = _controller(
+      entries: [
+        _entry('v-apollo', name: 'Apollo'),
+        _entry('v-spartan', name: 'Spartan'),
+      ],
+    );
+    await controller.load();
+    controller.toggleCompare(controller.programmes.first);
+    controller.toggleCompare(controller.programmes.last);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeComparisonScreen(controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, -300));
+    await tester.pumpAndSettle();
+    expect(find.text('Apollo'), findsWidgets);
+    expect(find.text('Spartan'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -254,7 +431,9 @@ void main() {
     );
     final tables = InMemoryProgrammeTables()
       ..assignments.add(
-        ProgrammeScheduleTestFixtures.assignment(programmeVersionId: 'v-apollo'),
+        ProgrammeScheduleTestFixtures.assignment(
+          programmeVersionId: 'v-apollo',
+        ),
       );
     final controller = _controller(
       entries: [
@@ -277,44 +456,49 @@ void main() {
     expect(controller.activeVersionId, 'v-apollo');
   });
 
-  test('no-programme enrol uses existing RPC only and ignores replace', () async {
-    final store = _RecordingEnrolmentStore(
-      const AthleteCatalogueEnrolmentResult(
-        status: AthleteCatalogueEnrolmentStatus.enrolled,
-        enrolmentId: 'e-new',
-        programmeVersionId: 'v-apollo',
-        athleteId: 'lee',
-        enrolmentSource: EnrolmentSource.nonCommercialTest,
-      ),
-    );
-    final controller = _controller(
-      entries: [_entry('v-apollo', name: 'Apollo')],
-      store: store,
-    );
-    await controller.load();
-    controller.selectProgramme(controller.programmes.first);
-    final first = controller.confirmEnrol(
-      startedAt: DateTime.utc(2026, 9, 22),
-      timezone: 'UTC',
-      replaceActive: true,
-    );
-    final second = await controller.confirmEnrol(
-      startedAt: DateTime.utc(2026, 9, 22),
-      timezone: 'UTC',
-    );
-    final firstResult = await first;
-    expect(second, isNull);
-    expect(firstResult?.isSuccess, isTrue);
-    expect(store.calls, 1);
-    expect(store.lastVersionId, 'v-apollo');
-    expect(store.lastReplace, isFalse);
-    expect(controller.activeVersionId, 'v-apollo');
-  });
+  test(
+    'no-programme enrol uses existing RPC only and ignores replace',
+    () async {
+      final store = _RecordingEnrolmentStore(
+        const AthleteCatalogueEnrolmentResult(
+          status: AthleteCatalogueEnrolmentStatus.enrolled,
+          enrolmentId: 'e-new',
+          programmeVersionId: 'v-apollo',
+          athleteId: 'lee',
+          enrolmentSource: EnrolmentSource.nonCommercialTest,
+        ),
+      );
+      final controller = _controller(
+        entries: [_entry('v-apollo', name: 'Apollo')],
+        store: store,
+      );
+      await controller.load();
+      controller.selectProgramme(controller.programmes.first);
+      final first = controller.confirmEnrol(
+        startedAt: DateTime.utc(2026, 9, 22),
+        timezone: 'UTC',
+        replaceActive: true,
+      );
+      final second = await controller.confirmEnrol(
+        startedAt: DateTime.utc(2026, 9, 22),
+        timezone: 'UTC',
+      );
+      final firstResult = await first;
+      expect(second, isNull);
+      expect(firstResult?.isSuccess, isTrue);
+      expect(store.calls, 1);
+      expect(store.lastVersionId, 'v-apollo');
+      expect(store.lastReplace, isFalse);
+      expect(controller.activeVersionId, 'v-apollo');
+    },
+  );
 
   testWidgets('active athlete detail has no enrol CTA', (tester) async {
     final tables = InMemoryProgrammeTables()
       ..assignments.add(
-        ProgrammeScheduleTestFixtures.assignment(programmeVersionId: 'v-apollo'),
+        ProgrammeScheduleTestFixtures.assignment(
+          programmeVersionId: 'v-apollo',
+        ),
       );
     final controller = _controller(
       entries: [
@@ -342,7 +526,14 @@ void main() {
     expect(find.text(AthleteProgrammeDecisionCopy.enrol), findsNothing);
   });
 
-  testWidgets('enrolment review does not mutate before confirm', (tester) async {
+  testWidgets('enrolment review does not mutate before confirm', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
     final store = _RecordingEnrolmentStore(
       const AthleteCatalogueEnrolmentResult(
         status: AthleteCatalogueEnrolmentStatus.failed,
@@ -365,8 +556,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(store.calls, 0);
     expect(find.textContaining('Apollo'), findsWidgets);
-    expect(find.text(AthleteProgrammeDecisionCopy.enrolConfirm), findsOneWidget);
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.enrolConfirm),
+      findsOneWidget,
+    );
 
+    await tester.ensureVisible(
+      find.text(AthleteProgrammeDecisionCopy.enrolConfirm),
+    );
     await tester.tap(find.text(AthleteProgrammeDecisionCopy.enrolConfirm));
     await tester.pumpAndSettle();
     expect(store.calls, 1);
