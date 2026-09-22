@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
-import '../models/athlete_catalogue_enrolment.dart';
 import '../models/programme_catalog_entry.dart';
+import '../presentation/athlete_programme_decision_copy.dart';
+import '../presentation/athlete_programme_decision_facts.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
+import '../widgets/athlete_programme_fact_list.dart';
+import 'athlete_programme_comparison_screen.dart';
+import 'athlete_programme_detail_screen.dart';
 
-/// Sprint 1.3 athlete catalogue: browse eligible programmes and enrol.
-///
-/// Non-commercial test / closed-beta enrolment. No purchase or ownership UI.
+/// Athlete catalogue: discover, inspect, compare, and enrol when unassigned.
 class AthleteProgrammeSelectionScreen extends StatefulWidget {
   const AthleteProgrammeSelectionScreen({
     super.key,
@@ -55,85 +58,37 @@ class _AthleteProgrammeSelectionScreenState
     if (mounted) setState(() {});
   }
 
-  Future<void> _onProgrammeTap(ProgrammeCatalogEntry entry) async {
-    if (_controller.isCurrentProgramme(entry) || _controller.isSubmitting) {
-      return;
-    }
-
-    _controller.selectProgramme(entry);
-
-    final confirmed = await showDialog<bool>(
+  Future<void> _openDetail(ProgrammeCatalogEntry entry) async {
+    final enrolled = await AthleteProgrammeDetailRoute.open(
       context: context,
-      builder: (context) {
-        final hasActive = _controller.activeVersionId != null;
-        return AlertDialog(
-          title: Text('Enrol in ${entry.name}?'),
-          content: Text(
-            hasActive
-                ? 'This will end your current programme enrolment and enrol you '
-                      'in this programme version.\n\n'
-                      'Your completed training history will be preserved.\n\n'
-                      'This is programme access for testing — not a purchase.'
-                : 'You will enrol in this exact programme version.\n\n'
-                      'This is programme access for testing — not a purchase.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Enrol'),
-            ),
-          ],
-        );
-      },
+      controller: _controller,
+      versionId: entry.versionId,
+      refreshController: widget.refreshController,
     );
-
-    if (confirmed != true || !mounted) {
-      return;
+    if (enrolled == true && mounted) {
+      Navigator.of(context).pop(true);
     }
+  }
 
-    final result = await _controller.confirmEnrol(
-      startedAt: DateTime.now(),
-      timezone: DateTime.now().timeZoneName,
-      replaceActive: _controller.activeVersionId != null,
+  Future<void> _openComparison() async {
+    final enrolled = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) =>
+            AthleteProgrammeComparisonScreen(
+              controller: _controller,
+              refreshController: widget.refreshController,
+            ),
+      ),
     );
-
-    if (!mounted || result == null) return;
-
-    if (result.status == AthleteCatalogueEnrolmentStatus.alreadyEnrolled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result.message ?? 'Already enrolled.')),
-      );
-      return;
-    }
-
-    if (result.isSuccess) {
-      widget.refreshController?.requestRefresh(
-        source: 'athlete_catalogue_enrolment',
-      );
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Enrolled. Your programme is ready.')),
-        );
-      }
-      Navigator.pop(context, true);
-      return;
-    }
-
-    if (result.message != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(result.message!)));
+    if (enrolled == true && mounted) {
+      Navigator.of(context).pop(true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Choose programme')),
+      appBar: AppBar(title: const Text(AthleteProgrammeDecisionCopy.catalogueTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(CohortSpacing.lg),
@@ -145,7 +100,13 @@ class _AthleteProgrammeSelectionScreenState
 
   Widget _buildBody() {
     if (_controller.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return Center(
+        child: Semantics(
+          liveRegion: true,
+          label: AthleteProgrammeDecisionCopy.catalogueLoading,
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     if (_controller.errorMessage != null) {
@@ -153,11 +114,16 @@ class _AthleteProgrammeSelectionScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(_controller.errorMessage!, style: CohortTextStyles.body),
+            const Text(
+              AthleteProgrammeDecisionCopy.catalogueUnavailable,
+              style: CohortTextStyles.body,
+            ),
             const SizedBox(height: CohortSpacing.md),
-            TextButton(
+            Text(_controller.errorMessage!, style: CohortTextStyles.muted),
+            const SizedBox(height: CohortSpacing.md),
+            CohortButton(
+              label: AthleteProgrammeDecisionCopy.retry,
               onPressed: _controller.isSubmitting ? null : _controller.load,
-              child: const Text('Retry'),
             ),
           ],
         ),
@@ -167,36 +133,46 @@ class _AthleteProgrammeSelectionScreenState
     if (_controller.programmes.isEmpty) {
       return const CohortCard(
         child: Text(
-          'No programmes are available in the catalogue right now.',
+          AthleteProgrammeDecisionCopy.catalogueEmpty,
           style: CohortTextStyles.body,
         ),
       );
     }
 
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ListView.separated(
-          itemCount: _controller.programmes.length,
-          separatorBuilder: (_, __) => const SizedBox(height: CohortSpacing.sm),
-          itemBuilder: (context, index) {
-            final entry = _controller.programmes[index];
-            final isCurrent = _controller.isCurrentProgramme(entry);
-            return _AthleteProgrammeCatalogCard(
-              entry: entry,
-              isCurrent: isCurrent,
-              onTap: (isCurrent || _controller.isSubmitting)
-                  ? null
-                  : () => _onProgrammeTap(entry),
-            );
-          },
+        const Text(
+          AthleteProgrammeDecisionCopy.catalogueIntro,
+          style: CohortTextStyles.body,
         ),
-        if (_controller.isSubmitting)
-          const Positioned.fill(
-            child: ColoredBox(
-              color: Color(0x66FFFFFF),
-              child: Center(child: CircularProgressIndicator()),
-            ),
+        const SizedBox(height: CohortSpacing.lg),
+        if (_controller.comparisonVersionIds.length == 2) ...[
+          CohortButton(
+            label: AthleteProgrammeDecisionCopy.compareNow,
+            onPressed: _openComparison,
           ),
+          const SizedBox(height: CohortSpacing.md),
+        ],
+        Expanded(
+          child: ListView.separated(
+            itemCount: _controller.programmes.length,
+            separatorBuilder: (_, _) =>
+                const SizedBox(height: CohortSpacing.sm),
+            itemBuilder: (context, index) {
+              final entry = _controller.programmes[index];
+              return _AthleteProgrammeCatalogCard(
+                facts: AthleteProgrammeDecisionFacts.fromEntry(
+                  entry,
+                  isCurrentProgramme: _controller.isCurrentProgramme(entry),
+                ),
+                selectedForCompare: _controller.isSelectedForCompare(entry),
+                onViewDetails: () => _openDetail(entry),
+                onToggleCompare: () => _controller.toggleCompare(entry),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -204,69 +180,71 @@ class _AthleteProgrammeSelectionScreenState
 
 class _AthleteProgrammeCatalogCard extends StatelessWidget {
   const _AthleteProgrammeCatalogCard({
-    required this.entry,
-    required this.isCurrent,
-    this.onTap,
+    required this.facts,
+    required this.selectedForCompare,
+    required this.onViewDetails,
+    required this.onToggleCompare,
   });
 
-  final ProgrammeCatalogEntry entry;
-  final bool isCurrent;
-  final VoidCallback? onTap;
+  final AthleteProgrammeDecisionFacts facts;
+  final bool selectedForCompare;
+  final VoidCallback onViewDetails;
+  final VoidCallback onToggleCompare;
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: isCurrent ? 0.55 : 1,
-      child: CohortCard(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(entry.name, style: CohortTextStyles.cardTitle),
-                ),
-                if (isCurrent)
-                  Text(
-                    'Enrolled',
-                    style: CohortTextStyles.eyebrow.copyWith(
-                      color: CohortColors.textMuted,
-                    ),
-                  ),
-              ],
+    return CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(facts.title, style: CohortTextStyles.cardTitle),
+              ),
+              AthleteProgrammeStatusChip(label: facts.statusLabel),
+            ],
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          Text(facts.goalLabel, style: CohortTextStyles.body),
+          const SizedBox(height: CohortSpacing.xs),
+          Text(
+            [
+              facts.durationLabel,
+              facts.frequencyLabel,
+              facts.levelLabel,
+            ].join(' · '),
+            style: CohortTextStyles.small.copyWith(
+              color: CohortColors.textMuted,
             ),
-            if (entry.primaryGoal != null &&
-                entry.primaryGoal!.trim().isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.xs),
-              Text(entry.primaryGoal!.trim(), style: CohortTextStyles.body),
-            ],
-            if (entry.description != null &&
-                entry.description!.trim().isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.xs),
-              Text(
-                entry.description!.trim(),
-                style: CohortTextStyles.small,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-            const SizedBox(height: CohortSpacing.sm),
+          ),
+          if (facts.summary != null) ...[
+            const SizedBox(height: CohortSpacing.xs),
             Text(
-              [
-                if (entry.durationWeeks != null) '${entry.durationWeeks} weeks',
-                if (entry.sessionsPerWeek != null)
-                  '${entry.sessionsPerWeek}/week',
-                if (entry.difficulty != null && entry.difficulty!.isNotEmpty)
-                  entry.difficulty!,
-                'v${entry.versionNumber}',
-              ].where((part) => part.trim().isNotEmpty).join(' · '),
-              style: CohortTextStyles.small.copyWith(
-                color: CohortColors.textMuted,
-              ),
+              facts.summary!,
+              style: CohortTextStyles.small,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
-        ),
+          const SizedBox(height: CohortSpacing.md),
+          CohortButton(
+            label: AthleteProgrammeDecisionCopy.viewDetails,
+            variant: CohortButtonVariant.secondary,
+            onPressed: onViewDetails,
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          CohortButton(
+            label: selectedForCompare
+                ? AthleteProgrammeDecisionCopy.selectedForCompare
+                : AthleteProgrammeDecisionCopy.compare,
+            variant: CohortButtonVariant.secondary,
+            semanticHint: selectedForCompare
+                ? 'Remove ${facts.title} from comparison'
+                : 'Add ${facts.title} to comparison',
+            onPressed: onToggleCompare,
+          ),
+        ],
       ),
     );
   }
