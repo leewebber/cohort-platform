@@ -26,7 +26,10 @@ void main() {
     expect(
       find.text('No programme scheduled').evaluate().isNotEmpty ||
           find
-              .text('Your programme schedule could not be loaded.')
+              .text(
+                'This programme version is temporarily unavailable. Your '
+                'training has not been changed.',
+              )
               .evaluate()
               .isNotEmpty,
       isTrue,
