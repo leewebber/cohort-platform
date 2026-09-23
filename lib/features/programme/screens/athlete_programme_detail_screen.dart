@@ -49,6 +49,9 @@ class AthleteProgrammeDetailScreen extends StatelessWidget {
         final facts = AthleteProgrammeDecisionFacts.fromEntry(
           entry,
           isCurrentProgramme: controller.isCurrentProgramme(entry),
+          catalogueDefaultVersionId: controller.catalogueDefaultVersionId(
+            entry.lineageCode,
+          ),
         );
 
         return Scaffold(

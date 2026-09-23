@@ -14,6 +14,9 @@ import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/athlete_programme_controllers.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../domain/athlete_programme_continuity.dart';
+import '../models/programme_catalog_entry.dart';
+import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
@@ -72,6 +75,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   FixedProgrammeCalendarProjection? _fixedCalendar;
   bool _fixedCalendarLoading = false;
   String? _fixedCalendarError;
+  AthleteProgrammeContinuity _continuity = const AthleteProgrammeContinuity(
+    status: AthleteProgrammeContinuityStatus.none,
+    timezoneHealth: AssignmentTimezoneHealth.valid,
+  );
 
   @override
   void initState() {
@@ -98,6 +105,28 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   Future<void> _loadProgramme() async {
     await _controller.load();
     await _loadFixedCalendar();
+    await _refreshContinuity();
+  }
+
+  Future<void> _refreshContinuity() async {
+    final assignment = _controller.activeAssignment;
+    List<ProgrammeCatalogEntry> catalogue = const [];
+    try {
+      catalogue = await AthleteCatalogueEnrolmentServices.createCatalogService()
+          .listPublishedAssignableProgrammes();
+    } catch (_) {
+      catalogue = const [];
+    }
+    if (!mounted) return;
+    setState(() {
+      _continuity = AthleteProgrammeContinuity.project(
+        assignment: assignment,
+        pinnedTitle: _controller.activeVersion?.name,
+        pinResolvable: assignment == null || _controller.activeVersion != null,
+        catalogue: catalogue,
+        executionUnavailable: _fixedCalendarError != null,
+      );
+    });
   }
 
   Future<void> _loadFixedCalendar() async {
@@ -141,7 +170,8 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
         setState(() {
           _fixedCalendar = null;
           _fixedCalendarLoading = false;
-          _fixedCalendarError = error.toString();
+          _fixedCalendarError =
+              AthleteProgrammeContinuityCopy.failureMessage(error);
         });
       }
     }
@@ -178,6 +208,14 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       helpText: 'Choose programme start date',
     );
     if (selected == null || !mounted) return;
+    if (_continuity.needsTimezoneRepair) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(AthleteProgrammeContinuityCopy.timezoneRepairRequired),
+        ),
+      );
+      return;
+    }
     final timezone = assignment.timezone?.trim();
     if (timezone == null || timezone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -350,6 +388,11 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
             const SizedBox(height: CohortSpacing.xs),
             Text('$sessions sessions per week', style: CohortTextStyles.small),
           ],
+          const SizedBox(height: CohortSpacing.md),
+          Text(
+            AthleteProgrammeContinuityCopy.overviewMessage(_continuity),
+            style: CohortTextStyles.body,
+          ),
           const SizedBox(height: CohortSpacing.md),
           _buildLifecycleStatus(assignment),
           if (assignment.isFixedSchedule && _fixedCalendar != null) ...[

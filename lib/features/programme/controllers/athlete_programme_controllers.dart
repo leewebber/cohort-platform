@@ -4,6 +4,8 @@ import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_version_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../../models/programme_version.dart';
+import '../domain/athlete_programme_continuity.dart';
+import '../domain/enrolment_iana_timezone.dart';
 import '../models/athlete_catalogue_enrolment.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../models/programme_catalog_entry.dart';
@@ -268,15 +270,23 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     return entry.versionId == activeVersionId;
   }
 
+  String? catalogueDefaultVersionId(String lineageCode) {
+    return AthleteProgrammeContinuity.catalogueDefaultVersionIdFor(
+      lineageCode: lineageCode,
+      catalogue: _programmes,
+    );
+  }
+
   /// Enrols in the selected catalogue programme (exact version id).
   ///
   /// Sprint 1 never replaces an active assignment. [replaceActive] is
   /// ignored so the existing RPC cannot be reused as a hidden switch.
   Future<AthleteCatalogueEnrolmentResult?> confirmEnrol({
-    required DateTime startedAt,
+    DateTime? startedAt,
     required String timezone,
     bool replaceActive = false,
   }) async {
+    // startedAt is not persisted authority. Server derives the local date.
     // Sprint 1 never uses replacement, even if a caller passes the flag.
     if (replaceActive) {
       replaceActive = false;
@@ -284,6 +294,21 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
 
     final selected = _selected;
     if (selected == null || _submitting) return null;
+
+    final validatedTimezone = EnrolmentIanaTimezone.canonicalize(timezone);
+    if (validatedTimezone == null) {
+      final invalid = AthleteCatalogueEnrolmentResult(
+        status: AthleteCatalogueEnrolmentStatus.validationFailure,
+        programmeVersionId: selected.versionId,
+        athleteId: _athleteId,
+        code: 'invalid_timezone',
+        message: 'Choose a valid training timezone to enrol.',
+      );
+      _lastResult = invalid;
+      _errorMessage = invalid.message;
+      notifyListeners();
+      return invalid;
+    }
 
     _submitting = true;
     _errorMessage = null;
@@ -339,7 +364,7 @@ class AthleteProgrammeSelectionController extends ChangeNotifier {
     final result = await enrolmentService.enrol(
       athleteId: _athleteId,
       programmeVersionId: selected.versionId,
-      timezone: timezone,
+      timezone: validatedTimezone,
       replaceActive: false,
     );
 

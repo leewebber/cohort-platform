@@ -166,6 +166,8 @@ class _AthleteProgrammeSelectionScreenState
                 facts: AthleteProgrammeDecisionFacts.fromEntry(
                   entry,
                   isCurrentProgramme: _controller.isCurrentProgramme(entry),
+                  catalogueDefaultVersionId: _controller
+                      .catalogueDefaultVersionId(entry.lineageCode),
                 ),
                 selectedForCompare: _controller.isSelectedForCompare(entry),
                 onViewDetails: () => _openDetail(entry),

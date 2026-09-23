@@ -12,6 +12,7 @@ import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/athlete_calendar_agenda_presentation.dart';
 import '../presentation/athlete_calendar_month_presentation.dart';
+import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
@@ -139,7 +140,7 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
         setState(() {
           _calendar = null;
           _loadState = _CalendarLoadState.error;
-          _error = 'Your programme schedule could not be loaded.';
+          _error = AthleteProgrammeContinuityCopy.failureMessage(error);
         });
       }
     }
@@ -225,7 +226,10 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Calendar unavailable', style: CohortTextStyles.h2),
+            Text(
+              AthleteProgrammeContinuityCopy.pinnedUnavailable,
+              style: CohortTextStyles.h2,
+            ),
             const SizedBox(height: CohortSpacing.sm),
             Text(_error!, style: CohortTextStyles.body),
             const SizedBox(height: CohortSpacing.md),

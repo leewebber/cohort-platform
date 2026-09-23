@@ -91,10 +91,16 @@ class AthleteProgrammeComparisonScreen extends StatelessWidget {
         final left = AthleteProgrammeDecisionFacts.fromEntry(
           selections[0],
           isCurrentProgramme: controller.isCurrentProgramme(selections[0]),
+          catalogueDefaultVersionId: controller.catalogueDefaultVersionId(
+            selections[0].lineageCode,
+          ),
         );
         final right = AthleteProgrammeDecisionFacts.fromEntry(
           selections[1],
           isCurrentProgramme: controller.isCurrentProgramme(selections[1]),
+          catalogueDefaultVersionId: controller.catalogueDefaultVersionId(
+            selections[1].lineageCode,
+          ),
         );
 
         final media = MediaQuery.of(context);

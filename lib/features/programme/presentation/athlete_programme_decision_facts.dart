@@ -1,5 +1,7 @@
 import '../../../models/programme_vocabulary.dart';
+import '../domain/athlete_programme_continuity.dart';
 import '../models/programme_catalog_entry.dart';
+import 'athlete_programme_continuity_copy.dart';
 import 'athlete_programme_decision_copy.dart';
 
 /// Authored catalogue facts for athlete discovery, detail, and comparison.
@@ -11,6 +13,7 @@ class AthleteProgrammeDecisionFacts {
     required this.title,
     required this.catalogueAvailable,
     required this.isCurrentProgramme,
+    this.continuityStatus = AthleteProgrammeContinuityStatus.none,
     this.primaryGoal,
     this.intendedLevel,
     this.durationWeeks,
@@ -37,14 +40,17 @@ class AthleteProgrammeDecisionFacts {
   final String? recovery;
   final bool catalogueAvailable;
   final bool isCurrentProgramme;
+  final AthleteProgrammeContinuityStatus continuityStatus;
 
   static const omitted = AthleteProgrammeDecisionCopy.notProvided;
 
   factory AthleteProgrammeDecisionFacts.fromEntry(
     ProgrammeCatalogEntry entry, {
     required bool isCurrentProgramme,
+    String? catalogueDefaultVersionId,
   }) {
     final name = entry.name.trim();
+    final available = _isAvailable(entry);
     return AthleteProgrammeDecisionFacts(
       versionId: entry.versionId,
       title: name.isEmpty ? 'Programme' : name,
@@ -54,8 +60,14 @@ class AthleteProgrammeDecisionFacts {
       sessionsPerWeek: entry.sessionsPerWeek,
       equipment: _optional(entry.equipmentRequirements),
       summary: _optional(entry.description),
-      catalogueAvailable: _isAvailable(entry),
+      catalogueAvailable: available,
       isCurrentProgramme: isCurrentProgramme,
+      continuityStatus: AthleteProgrammeContinuity.catalogCardStatus(
+        versionId: entry.versionId,
+        activeVersionId: isCurrentProgramme ? entry.versionId : null,
+        catalogueDefaultVersionId: catalogueDefaultVersionId,
+        catalogueEligible: available,
+      ),
     );
   }
 
@@ -65,11 +77,8 @@ class AthleteProgrammeDecisionFacts {
   String get frequencyLabel => frequencyDisplay ?? omitted;
   String get equipmentLabel => equipment ?? omitted;
   String get summaryLabel => summary ?? omitted;
-  String get statusLabel => isCurrentProgramme
-      ? AthleteProgrammeDecisionCopy.currentProgramme
-      : (catalogueAvailable
-            ? AthleteProgrammeDecisionCopy.available
-            : AthleteProgrammeDecisionCopy.unavailable);
+  String get statusLabel =>
+      AthleteProgrammeContinuityCopy.statusChip(continuityStatus);
   String get emphasisLabel => trainingEmphasis ?? omitted;
   String get formatsLabel => sessionFormats ?? omitted;
   String get progressionLabel => progression ?? omitted;
