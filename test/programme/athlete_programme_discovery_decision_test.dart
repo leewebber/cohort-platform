@@ -571,6 +571,8 @@ void main() {
     expect(store.calls, 1);
     expect(find.text('Hosted enrolment is unavailable.'), findsWidgets);
     expect(find.text(AthleteProgrammeDecisionCopy.retry), findsOneWidget);
+    expect(find.text(AthleteProgrammeDecisionCopy.cancel), findsOneWidget);
+    expect(find.text(AthleteProgrammeDecisionCopy.enrolConfirm), findsNothing);
   });
 
   testWidgets('enrolment review uses one version-commitment statement', (
@@ -595,6 +597,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    expect(find.text('Enrol in Apollo?'), findsOneWidget);
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.enrolReviewAppBar),
+      findsOneWidget,
+    );
+    expect(find.text(AthleteProgrammeDecisionCopy.enrol), findsNothing);
+    expect(find.text('Apollo'), findsNothing);
+    expect(find.text('Enrol in this programme?'), findsNothing);
     expect(
       find.text(
         'Apollo becomes your current programme. Your training stays '

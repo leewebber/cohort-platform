@@ -21,7 +21,7 @@ abstract final class AthleteProgrammeDecisionCopy {
   static const switchingUnavailable =
       'Programme switching is not available here yet.';
   static const enrol = 'Enrol';
-  static const enrolReviewTitle = 'Enrol in this programme?';
+  static const enrolReviewAppBar = 'Review';
   static const enrolConfirm = 'Confirm enrolment';
   static const cancel = 'Cancel';
   static const retry = 'Retry';
@@ -40,6 +40,10 @@ abstract final class AthleteProgrammeDecisionCopy {
       'One of the selected programmes is no longer available.';
   static const assignedDuringFlow =
       'You now have a current programme. Enrolment is not available here.';
+
+  static String enrolReviewTitle(String programmeName) {
+    return 'Enrol in $programmeName?';
+  }
 
   static String enrolReviewBody(String programmeName) {
     return '$programmeName becomes your current programme. Your training '

@@ -90,7 +90,9 @@ class _AthleteProgrammeEnrolmentReviewScreenState
 
     if (entry == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text(AthleteProgrammeDecisionCopy.enrol)),
+        appBar: AppBar(
+          title: const Text(AthleteProgrammeDecisionCopy.enrolReviewAppBar),
+        ),
         body: const SafeArea(
           child: Padding(
             padding: EdgeInsets.all(CohortSpacing.lg),
@@ -115,7 +117,9 @@ class _AthleteProgrammeEnrolmentReviewScreenState
     final rejected = last != null && !last.isSuccess;
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AthleteProgrammeDecisionCopy.enrol)),
+      appBar: AppBar(
+        title: const Text(AthleteProgrammeDecisionCopy.enrolReviewAppBar),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(CohortSpacing.lg),
@@ -123,13 +127,11 @@ class _AthleteProgrammeEnrolmentReviewScreenState
             Semantics(
               header: true,
               child: Text(
-                AthleteProgrammeDecisionCopy.enrolReviewTitle,
+                AthleteProgrammeDecisionCopy.enrolReviewTitle(facts.title),
                 style: CohortTextStyles.h1,
               ),
             ),
             const SizedBox(height: CohortSpacing.lg),
-            Text(facts.title, style: CohortTextStyles.h2),
-            const SizedBox(height: CohortSpacing.md),
             _ReviewFact(
               label: 'Goal',
               value: facts.glanceValue(facts.primaryGoal),
