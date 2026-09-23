@@ -102,7 +102,7 @@ BEGIN
   -- Anon execute denied
   BEGIN
     PERFORM set_config('role', 'anon', true);
-    v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'UTC', FALSE);
+    v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'Europe/London', FALSE);
     PERFORM sprint12_record('J','anon_execute','permission_denied', coalesce(v_res->>'status','executed'), NULL, FALSE, 'anon executed');
   EXCEPTION WHEN insufficient_privilege THEN
     PERFORM sprint12_record('J','anon_execute','permission_denied','permission_denied', TRUE, TRUE, 'EXECUTE denied');
@@ -114,7 +114,7 @@ BEGIN
   -- Athlete A enrols eligible
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'J','enrol_eligible','enrolled', v_res->>'status',
@@ -136,7 +136,7 @@ BEGIN
   -- Idempotent repeat
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'J','idempotent_repeat','already_enrolled', v_res->>'status',
@@ -149,7 +149,7 @@ BEGIN
   -- Draft denied
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_draft, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_draft, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'J','deny_draft','version_not_catalogue_eligible', coalesce(v_res->>'code', v_res->>'status'),
@@ -159,7 +159,7 @@ BEGIN
   -- Unapproved denied
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_unapproved, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_unapproved, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'J','deny_unapproved','version_not_catalogue_eligible', coalesce(v_res->>'code', v_res->>'status'),
@@ -169,7 +169,7 @@ BEGIN
   -- Wrong scope denied
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_private, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_private, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'J','deny_wrong_scope','version_not_catalogue_eligible', coalesce(v_res->>'code', v_res->>'status'),
@@ -179,7 +179,7 @@ BEGIN
   -- Athlete B independent enrolment
   PERFORM set_config('request.jwt.claim.sub', v_athlete_b::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_eligible, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   v_enrol_b := (v_res->>'enrolment_id')::uuid;
   PERFORM sprint12_record(

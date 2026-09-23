@@ -124,7 +124,7 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete_a::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_version, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_version, 'Europe/London', FALSE);
   v_enrol_a := (v_res->>'enrolment_id')::uuid;
   v_res := public.materialise_athlete_plan_from_enrolment(v_enrol_a, 'UTC');
   PERFORM set_config('role', 'postgres', true);
@@ -342,7 +342,7 @@ BEGIN
   -- Cross-athlete denied
   PERFORM set_config('request.jwt.claim.sub', v_athlete_b::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_version, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_version, 'Europe/London', FALSE);
   -- May fail if one-active / version exclusivity; ignore for B isolation probe.
   v_res := public.complete_programme_session_and_advance(jsonb_build_object(
     'assignment_id', v_enrol_a,

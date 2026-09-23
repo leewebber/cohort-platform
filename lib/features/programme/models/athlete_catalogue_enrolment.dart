@@ -57,6 +57,8 @@ class AthleteCatalogueEnrolmentResult {
     this.enrolmentSource = EnrolmentSource.unspecified,
     this.athleteId,
     this.replacedEnrolmentId,
+    this.startedAt,
+    this.timezone,
     this.code,
     this.message,
   });
@@ -70,6 +72,8 @@ class AthleteCatalogueEnrolmentResult {
   final EnrolmentSource enrolmentSource;
   final String? athleteId;
   final String? replacedEnrolmentId;
+  final DateTime? startedAt;
+  final String? timezone;
   final String? code;
   final String? message;
 
@@ -95,6 +99,8 @@ class AthleteCatalogueEnrolmentResult {
           ),
           athleteId: _trim(map['athlete_id']),
           replacedEnrolmentId: _trim(map['replaced_enrolment_id']),
+          startedAt: _parseDate(map['started_at']),
+          timezone: _trim(map['timezone']),
         );
       case 'already_enrolled':
         return AthleteCatalogueEnrolmentResult(
@@ -106,6 +112,8 @@ class AthleteCatalogueEnrolmentResult {
             map['enrolment_source']?.toString(),
           ),
           athleteId: _trim(map['athlete_id']),
+          startedAt: _parseDate(map['started_at']),
+          timezone: _trim(map['timezone']),
           message: 'You are already enrolled in this programme.',
         );
       case 'conflict':
@@ -166,9 +174,23 @@ class AthleteCatalogueEnrolmentResult {
         return 'That programme is not ready to start yet.';
       case 'invalid_args':
         return 'Choose a programme to enrol.';
+      case 'invalid_timezone':
+        return 'Choose a valid training timezone to enrol.';
       default:
         return 'Enrolment could not be validated. Please try again.';
     }
+  }
+
+  static DateTime? _parseDate(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) {
+      return DateTime(value.year, value.month, value.day);
+    }
+    final raw = value.toString().trim();
+    if (raw.isEmpty) return null;
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) return null;
+    return DateTime(parsed.year, parsed.month, parsed.day);
   }
 }
 

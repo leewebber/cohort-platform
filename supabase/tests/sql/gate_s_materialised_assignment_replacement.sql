@@ -62,7 +62,7 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'Europe/London', FALSE);
   v_old := (v_res->>'enrolment_id')::uuid;
   v_res := public.materialise_athlete_plan_from_enrolment(v_old, 'UTC');
   PERFORM set_config('role', 'postgres', true);
@@ -86,7 +86,7 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v2, 'UTC', TRUE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v2, 'Europe/London', TRUE);
   PERFORM set_config('role', 'postgres', true);
   v_new := (v_res->>'enrolment_id')::uuid;
   PERFORM sprint12_record('S','materialised_replace_authorised','enrolled',v_res->>'status',NULL,
@@ -108,7 +108,7 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'Europe/London', FALSE);
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record('S','replace_false_conflict','active_enrolment_exists',v_res->>'code',NULL,
     (v_res->>'status') = 'conflict' AND (v_res->>'code') = 'active_enrolment_exists',v_res::text);
@@ -116,9 +116,9 @@ BEGIN
   -- The unmaterialised replacement path remains valid.
   PERFORM set_config('request.jwt.claim.sub', v_other::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'Europe/London', FALSE);
   v_active := (v_res->>'enrolment_id')::uuid;
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v2, 'UTC', TRUE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v2, 'Europe/London', TRUE);
   PERFORM set_config('role', 'postgres', true);
   SELECT count(*) INTO v_count FROM programme_assignments
   WHERE id = v_active AND status = 'reassigned' AND materialised_at IS NULL;
@@ -128,14 +128,14 @@ BEGIN
   -- A later insertion failure rolls the supersession update back with it.
   PERFORM set_config('request.jwt.claim.sub', v_other::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'UTC', TRUE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_v1, 'Europe/London', TRUE);
   v_active := (v_res->>'enrolment_id')::uuid;
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_install_fail_trigger('public.programme_assignments'::regclass, 'sprint12_s_replace_fail', 'check_violation');
   BEGIN
     PERFORM set_config('request.jwt.claim.sub', v_other::text, true);
     PERFORM set_config('role', 'authenticated', true);
-    PERFORM public.enrol_athlete_in_catalogue_programme_version(v_v3, 'UTC', TRUE);
+    PERFORM public.enrol_athlete_in_catalogue_programme_version(v_v3, 'Europe/London', TRUE);
   EXCEPTION WHEN OTHERS THEN v_error := SQLSTATE;
   END;
   PERFORM set_config('role', 'postgres', true);

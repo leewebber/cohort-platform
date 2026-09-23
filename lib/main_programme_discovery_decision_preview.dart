@@ -7,6 +7,7 @@ import 'package:cohort_platform/features/programme/presentation/athlete_programm
 import 'package:cohort_platform/features/programme/presentation/programme_discovery_decision_preview_catalog.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_comparison_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_detail_screen.dart';
+import 'package:cohort_platform/features/programme/domain/enrolment_timezone_capture.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_enrolment_review_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_selection_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
@@ -192,6 +193,9 @@ class _PreviewSurfaceState extends State<_PreviewSurface> {
         return AthleteProgrammeEnrolmentReviewScreen(
           controller: _controller,
           versionId: 'preview-apollo',
+          timezoneSource: const StaticDeviceIanaTimezoneSource(
+            'Asia/Makassar',
+          ),
         );
       case ProgrammeDiscoveryDecisionPreviewState.enrolmentSuccess:
         return const Center(

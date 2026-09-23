@@ -1,5 +1,6 @@
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../models/programme_assignment.dart';
+import '../domain/enrolment_iana_timezone.dart';
 import '../models/athlete_catalogue_enrolment.dart';
 import 'athlete_catalogue_enrolment_store.dart';
 
@@ -25,6 +26,14 @@ class AthleteCatalogueEnrolmentService {
   }) async {
     final trimmedVersion = programmeVersionId.trim();
     final trimmedAthlete = athleteId.trim();
+
+    if (!EnrolmentIanaTimezone.isValidIdentifier(timezone)) {
+      return const AthleteCatalogueEnrolmentResult(
+        status: AthleteCatalogueEnrolmentStatus.validationFailure,
+        code: 'invalid_timezone',
+        message: 'Choose a valid training timezone to enrol.',
+      );
+    }
 
     final result = await _enrolmentStore.enrol(
       programmeVersionId: trimmedVersion,

@@ -84,7 +84,7 @@ BEGIN
   ON CONFLICT (id) DO UPDATE SET is_athlete=TRUE,is_coach=FALSE;
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_legacy_version, 'UTC', FALSE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_legacy_version, 'Europe/London', FALSE);
   v_legacy_assignment := (v_res->>'enrolment_id')::uuid;
   v_res := public.materialise_athlete_plan_from_enrolment(v_legacy_assignment, 'UTC');
   PERFORM set_config('role', 'postgres', true);
@@ -95,7 +95,7 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_apollo_version, 'UTC', TRUE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_apollo_version, 'Europe/London', TRUE);
   v_apollo_assignment := (v_res->>'enrolment_id')::uuid;
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record('AF','replacement_authorised','enrolled',v_res->>'status',NULL,
@@ -168,7 +168,7 @@ BEGIN
 
   -- Repeat real safe operations: enrolment and materialisation must not add rows.
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true); PERFORM set_config('role','authenticated',true);
-  v_res := public.enrol_athlete_in_catalogue_programme_version(v_apollo_version,'UTC',TRUE);
+  v_res := public.enrol_athlete_in_catalogue_programme_version(v_apollo_version,'Europe/London',TRUE);
   PERFORM set_config('role','postgres',true);
   PERFORM sprint12_record('AF','replacement_retry_idempotent','already_enrolled',v_res->>'status',NULL,(v_res->>'status')='already_enrolled',v_res::text);
   PERFORM set_config('role','authenticated',true);
