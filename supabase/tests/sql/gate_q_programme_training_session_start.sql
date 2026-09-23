@@ -127,7 +127,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_catalogue_programme_version(
     v_version,
-    'UTC',
+    'Europe/London',
     FALSE
   );
   v_assignment_a := (v_res->>'enrolment_id')::UUID;
@@ -141,7 +141,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_catalogue_programme_version(
     v_version,
-    'UTC',
+    'Europe/London',
     FALSE
   );
   v_assignment_b := (v_res->>'enrolment_id')::UUID;
@@ -155,7 +155,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_catalogue_programme_version(
     v_version,
-    'UTC',
+    'Europe/London',
     FALSE
   );
   v_assignment_c := (v_res->>'enrolment_id')::UUID;
@@ -169,7 +169,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_catalogue_programme_version(
     v_version,
-    'UTC',
+    'Europe/London',
     FALSE
   );
   v_assignment_d := (v_res->>'enrolment_id')::UUID;
@@ -183,7 +183,7 @@ BEGIN
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_catalogue_programme_version(
     v_version,
-    'UTC',
+    'Europe/London',
     FALSE
   );
   v_assignment_e := (v_res->>'enrolment_id')::UUID;

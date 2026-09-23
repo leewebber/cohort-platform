@@ -1,6 +1,5 @@
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
-import 'package:cohort_platform/features/programme/models/programme_catalog_entry.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_selection_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_store.dart';
