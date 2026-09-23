@@ -2,7 +2,7 @@
 
 **Recorded:** 2026-09-22
 **Live pointer (2026-09-23):** Sprint 1 is **complete** at `a3cd351`.
-Sprint 2 audit:
+Sprint 2 is **approved, not started**. Sprint 2 binding:
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
 [`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
 Historical flags below remain the 2026-09-22 audit record.

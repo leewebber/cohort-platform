@@ -2,7 +2,7 @@
 
 **Status:** Binding milestone definition. Architecture **approved**.
 Sprint 1 **Programme Discovery and Decision** is **complete** on
-`origin/main` `a3cd351`. Sprint 2 is **audited, awaiting approval**.
+`origin/main` `a3cd351`. Sprint 2 is **approved, not started**.
 Sprint 2 implementation is **not** authorised.
 **Recorded:** 2026-09-22
 **Live pointer:** 2026-09-23
@@ -17,7 +17,7 @@ Sprint 2 implementation is **not** authorised.
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -370,10 +370,10 @@ Sprint 1 is **complete** on `origin/main` `a3cd351`.
 
 ## 8. Recommended later sequence (not authorised)
 
-**Sprint 2** binding (audited, **not approved**):
+**Sprint 2** binding (**approved, not started**):
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md).
-Proposed slice: IANA enrol + start-date honesty + pinned-versus-default
-status. Replacement remains design-only. Pin rules must not change.
+Slice: IANA enrol + athlete-local start date + pinned-versus-default
+status. Replacement remains architecture only. Pin rules must not change.
 
 Historical outline (2026-09-22): IANA timezone, superseded-pin honesty,
 replacement **design**, historical preservation, aftermath. Listing
@@ -410,6 +410,14 @@ erase the production-route audit.
 | Testing-access copy | Internal fixtures / internal builds only. Production and external beta must be truthful and product-neutral, or explicitly “beta access”. Sprint 1 must replace production-visible testing language on the discovery/detail/comparison/enrolment route. Commercial design remains later |
 | Progress error-as-empty | Launch blocker. Out of Sprint 1. Sprint 3. Milestone cannot close until corrected and tested |
 | History identity fallback | Launch blocker. No `athlete.local` or other fallback authority. Fail closed. Out of Sprint 1. Sprint 3. Milestone cannot close until corrected and tested |
+
+### 9.1 Sprint 2 decisions (2026-09-23)
+
+Live binding:
+[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
+§3. Sprint 2 is **approved, not started**. End+create replacement is
+architecture only. Enrol `started_at` is IANA-local in the enrol
+transaction, not session `CURRENT_DATE`.
 
 ---
 

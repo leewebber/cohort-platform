@@ -155,9 +155,9 @@ Daily Journey Integrity is **COMPLETE**
 architecture is **approved**. Sprint 1 **Programme Discovery and
 Decision** is **complete** on `origin/main` `a3cd351`
 (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **audited,
-awaiting approval**
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL`).
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **approved,
+not started**
+(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED`).
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md),

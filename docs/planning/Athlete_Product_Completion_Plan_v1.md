@@ -14,7 +14,7 @@ DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
@@ -1071,7 +1071,7 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
 architecture approved; Sprint 1 complete at `a3cd351`; Sprint 2
-audited, awaiting approval; implementation not authorised)
+approved, not started; implementation not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1143,7 +1143,7 @@ Daily Journey Integrity is **COMPLETE**. Binding:
 
 Complete Athlete Experience architecture is **approved**. Sprint 1
 **Programme Discovery and Decision** is **complete** at `a3cd351`.
-Sprint 2 is **audited, awaiting approval**. Binding:
+Sprint 2 is **approved, not started**. Binding:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
@@ -1153,7 +1153,7 @@ DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 

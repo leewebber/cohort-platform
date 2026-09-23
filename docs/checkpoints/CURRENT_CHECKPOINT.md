@@ -14,9 +14,8 @@
 > and Decision** is **complete** on `origin/main` `a3cd351`
 > (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
 > `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 **Enrolment
-> Start Integrity and Programme Continuity** is **audited, awaiting
-> approval**
-> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL`).
+> Start Integrity and Programme Continuity** is **approved, not started**
+> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED`).
 > Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),

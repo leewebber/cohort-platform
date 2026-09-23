@@ -1,18 +1,21 @@
 # Complete Athlete Experience Sprint 2 — audit
 
 **Recorded:** 2026-09-23
-**Status:** Documentation audit complete. Sprint 2 **not approved, not
-started, not implemented.**
-**Base:** `origin/main` `a3cd3512093f4dc96843e01ab0efe311671e4db9`
-**Binding:**
+**Live pointer:** Founder decisions bound 2026-09-23.
+Sprint 2 is **approved, not started, not implemented.**
+Binding:
 [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md)
+§3. Historical §§1–7 remain the audit evidence. The §8 list below is
+preserved as the pre-decision question set; live answers are in §8.1.
+**Base:** `origin/main` `a3cd3512093f4dc96843e01ab0efe311671e4db9`
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 REPLACEMENT_TRANSACTION_AUTHORISED=false
+HOSTED_REPAIR_AUTHORISED=false
 HOSTED_WRITES=false
 PUSHED=false
 ```
@@ -172,19 +175,40 @@ History rows stay on the old assignment (Gate S).
 
 ---
 
-## 7. Sprint recommendation
+## 7. Sprint recommendation (historical 2026-09-23 audit)
 
 **Smallest vertical slice:** IANA enrol + start-date honesty +
 pinned-versus-default status + unified unavailable-pin copy.
 Replacement remains architecture only.
 
-See
+The founder-approved boundary and the start-date override
+(`CURRENT_DATE` is **not** retained as inert authority) live in
 [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md)
-§8.
+§§3 and 9–10.
 
 ---
 
-## 8. Unresolved founder decisions
+## 8. Founder decisions
+
+### 8.1 Resolved (2026-09-23)
+
+| # | Historical question | Binding |
+|---|---------------------|---------|
+| 1 | Approve Sprint 2 boundary (no replacement transaction)? | **Approved, not started.** Included: IANA enrol, athlete-local start date, server validation/persistence, pin-versus-default status, truthful current/default/superseded/unavailable copy, unified unavailable-pin handling. Excluded: replacement transaction, repin, automatic upgrade, completion, Progress/History, travel rescheduling, settings redesign, matching, adaptation, payments, wearables, offline completion queue. |
+| 2 | Persist `Asia/Makassar` / `Europe/London`; fail-closed invalid capture? | **Yes.** Validated IANA only. Device IANA is a suggested default. Review shows the zone and the athlete may change it. Server validates `pg_timezone_names`. Never persist or infer `BST`, `GMT`, `WITA`, `KST`, or offsets. |
+| 3 | Travel does not move scheduled days? | **Yes.** Active programme stays on the enrolment timezone. Device change does not rewrite the assignment. Travel rescheduling is a later product. |
+| 4 | End+create as the future replacement model? | **Approved as architecture only.** End current assignment, preserve history, create a new pin, link via `superseded_by_assignment_id`. Never mutate the old pin. Transaction, UI, mid-programme eligibility, draft/adaptation aftermath, occurrence cancellation, return-to-old, RPC/schema, and entitlement remain **unapproved**. |
+| 5 | Abbreviation rows need explicit IANA repair, not guessed mapping? | **Yes.** Repair-required fail-closed state may be built in Sprint 2. Hosted repair apply requires separate inventory and founder approval. Do not assume occurrence regeneration vs timezone-only repair. |
+
+**Start-date override:** the audit’s “keep enrol `CURRENT_DATE` inert”
+recommendation is **not** adopted. The server derives `started_at` as
+the athlete-local date in the validated IANA zone inside the enrol
+transaction. Decorative client `DateTime.now()` is not authority. No
+new future-date picker.
+
+### 8.2 Historical unresolved list (pre-decision)
+
+Preserved as the 2026-09-23 audit question set:
 
 1. Approve the Sprint 2 implementation boundary (no replacement
    transaction).
@@ -198,7 +222,23 @@ See
 
 ---
 
-## 9. Explicit non-actions
+## 9. Acceptance gates (implementation, later task)
 
-No Sprint 2 implementation, no replacement RPC/UI, no schema inventing
-occurrence rewrites, no Field Manual, no phone, no push, no Sprint 3.
+See
+[`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md)
+§10. Summary: iOS/Android/web IANA capture; server IANA validation;
+UTC-midnight local date; `Europe/London` DST; `Asia/Makassar` non-DST;
+invalid/missing fail-closed; travel without silent movement; idempotent
+enrol; no row on validation failure; no pin mutation; default change
+without execution change; no cross-version composition; consistent
+unavailable-pin copy; 320/390 and large-text review; accessible status
+wording; local DB Gate AY if RPC/schema changes; no hosted apply or
+data repair without separate approval.
+
+---
+
+## 10. Explicit non-actions
+
+No Sprint 2 implementation, no replacement RPC/UI, no hosted timezone
+repair, no schema inventing occurrence rewrites, no Field Manual, no
+phone, no push, no Sprint 3.
