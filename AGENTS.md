@@ -152,13 +152,17 @@ and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.m
 Daily Journey Integrity is **COMPLETE**
 ([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md);
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete Experience
-architecture is **approved**; Sprint 1 **Programme Discovery and
-Decision** is a local handoff awaiting founder approval
+architecture is **approved**. Sprint 1 **Programme Discovery and
+Decision** is **complete** on `origin/main` `a3cd351`
 (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL`). Binding:
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **audited,
+awaiting approval**
+(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL`).
+Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
-[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
-Implementation is **not** authorised. M9 is **closed**
+[`docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
+[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
+Sprint 2 implementation is **not** authorised. M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).

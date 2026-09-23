@@ -1,19 +1,21 @@
 # Complete Athlete Experience Sprint 1 — handoff
 
 **Recorded:** 2026-09-22
-**Status:** Local implementation plus founder visual-review correction.
-Awaiting founder visual approval. Not pushed. Not Sprint 1 approved.
+**Status:** Historical Sprint 1 handoff. Founder-approved and integrated
+to `origin/main` at `a3cd351`. Next: Sprint 2 audit (not implementation).
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL
-FOUNDER_VISUAL_REVIEW=CORRECTION_APPLIED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
+FOUNDER_VISUAL_REVIEW=APPROVED
+INTEGRATED_AT=a3cd3512093f4dc96843e01ab0efe311671e4db9
 NEXT_IMPLEMENTATION_AUTHORISED=false
-PHONE_UNTOUCHED=true
-HOSTED_WRITES=false
-PUSHED=false
-REPO_ENV_UNTOUCHED=true
 ```
+
+Sprint 2 binding:
+[`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
+[`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
 
 Binding:
 [`../architecture/Athlete_Programme_Discovery_and_Decision_v1.md`](../architecture/Athlete_Programme_Discovery_and_Decision_v1.md),

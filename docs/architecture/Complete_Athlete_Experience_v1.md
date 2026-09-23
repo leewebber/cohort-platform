@@ -1,17 +1,23 @@
 # Complete Athlete Experience v1
 
 **Status:** Binding milestone definition. Architecture **approved**.
-Selected Sprint 1 **approved, not started**. Implementation **not**
-authorised until a separate implementation task.
+Sprint 1 **Programme Discovery and Decision** is **complete** on
+`origin/main` `a3cd351`. Sprint 2 is **audited, awaiting approval**.
+Sprint 2 implementation is **not** authorised.
 **Recorded:** 2026-09-22
+**Live pointer:** 2026-09-23
 **Decisions bound:** 2026-09-22
 **Audit evidence:**
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)
-**Base:** `origin/main` `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
+**Sprint 2 binding:**
+[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md)
+**Historical architecture base:** `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -231,10 +237,11 @@ see one coherent state.
 
 ---
 
-## 7. Selected Sprint 1 (approved, not started)
+## 7. Selected Sprint 1 (complete)
 
 **Name:** Programme Discovery and Decision
-**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=AWAITING_FOUNDER_APPROVAL`
+**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE` on `origin/main`
+`a3cd351`. The section below remains the historical Sprint 1 contract.
 
 Sprint 1 exists to let an athlete:
 
@@ -357,26 +364,20 @@ Stop before replacement, timezone/pin-honesty work, Progress composition,
 settings, offline catalogue cache, coach-shell routing, or library
 content production.
 
-Sprint 1 local implementation is `AWAITING_FOUNDER_APPROVAL`. It is not
-on `origin/main` until a later fast-forward.
+Sprint 1 is **complete** on `origin/main` `a3cd351`.
 
 ---
 
 ## 8. Recommended later sequence (not authorised)
 
-**Sprint 2 (outline, not authorised):** Enrolment start integrity,
-superseded-pin honesty, and **replacement transaction design** —
+**Sprint 2** binding (audited, **not approved**):
+[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md).
+Proposed slice: IANA enrol + start-date honesty + pinned-versus-default
+status. Replacement remains design-only. Pin rules must not change.
 
-- IANA timezone on enrol
-- athlete-visible pinned version versus catalogue default
-- retired / superseded copy
-- explicit replacement transaction design
-- historical programme preservation
-- safe aftermath across Home, Calendar, Progress, and History
-
-Do not change pin rules. **Do not treat replacement as approved** merely
-because it is listed here. The transaction and UX require separate
-founder approval.
+Historical outline (2026-09-22): IANA timezone, superseded-pin honesty,
+replacement **design**, historical preservation, aftermath. Listing
+replacement does **not** approve the transaction.
 
 **Sprint 3 (outline, not authorised):** Programme-complete Home and
 cross-surface agreement —
@@ -402,7 +403,7 @@ erase the production-route audit.
 | Decision | Binding |
 |----------|---------|
 | Architecture v1 | **Approved** (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`) |
-| Sprint 1 name | **Programme Discovery and Decision** (`AWAITING_FOUNDER_APPROVAL`) |
+| Sprint 1 name | **Programme Discovery and Decision** (`COMPLETE` at `a3cd351`) |
 | Implementation | **Not started** until separately authorised |
 | Active-programme replacement | **Out of Sprint 1.** Inspect/compare allowed. No replace, rewrite, or repin. No hidden switch. Truthful CTA if another programme is shown. Listed in Sprint 2 architecture work only; **not approved** as a transaction |
 | Coach-only shell entry | Coach role alone does **not** authorise `AthleteAppShell`. Fail closed. Dual-role only via authoritative athlete context. No synthetic / display-name / fallback identity. Launch-integrity requirement; not this docs task; not silently Sprint 1 |

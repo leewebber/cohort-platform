@@ -31,13 +31,17 @@ Sprint 3+ coaching product is not the next milestone.
    frozen)
 5. **Athlete Experience Completion** — Daily Journey Integrity **closed**
    ([`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
-   Complete Athlete Experience architecture is **approved**; selected
-   Sprint 1 is **Programme Discovery and Decision**, **not started**
+   Complete Athlete Experience architecture is **approved**. Sprint 1
+   **Programme Discovery and Decision** is **complete** at `a3cd351`.
+   Sprint 2 is **audited, awaiting approval**
    (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED`). Binding:
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL`).
+   Binding:
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
-   [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
-   Implementation is **not** authorised.
+   [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
+   [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
+   Sprint 2 implementation is **not** authorised.
 6. **Launch programme library**
 7. **Adaptation Engine v1**
 8. **Progression and tracking** — later includes the deferred

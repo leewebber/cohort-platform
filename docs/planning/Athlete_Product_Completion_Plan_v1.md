@@ -13,13 +13,16 @@ M10_CLOSED=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
 
 Binding parents:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
+[`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md),
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md),
 [`../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](../checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md),
@@ -1067,8 +1070,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 ### Critical path
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
-architecture approved; Sprint 1 approved, not started; implementation
-not authorised)
+architecture approved; Sprint 1 complete at `a3cd351`; Sprint 2
+audited, awaiting approval; implementation not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1138,21 +1141,24 @@ explicit footnote.
 Daily Journey Integrity is **COMPLETE**. Binding:
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-Complete Athlete Experience architecture is **approved**. Selected Sprint
-1 is **Programme Discovery and Decision**, **not started**. Binding:
+Complete Athlete Experience architecture is **approved**. Sprint 1
+**Programme Discovery and Decision** is **complete** at `a3cd351`.
+Sprint 2 is **audited, awaiting approval**. Binding:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
-[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md).
+[`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
 
 ```text
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=AUDITED_AWAITING_APPROVAL
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-Sprint 1 implementation is **not** authorised until a separate task. The
-milestone is **not** implemented. Active-programme replacement is out of
+Sprint 2 implementation is **not** authorised until a separate task. The
+milestone is **not** complete. Active-programme replacement is out of
 Sprint 1.
 
 **Standalone WOD Timer and Whiteboard** is a pre-launch utility candidate
