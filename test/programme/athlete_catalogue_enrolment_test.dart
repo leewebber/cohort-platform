@@ -153,7 +153,7 @@ void main() {
         final result = await service.enrol(
           athleteId: 'lee',
           programmeVersionId: 'v-exact',
-          timezone: 'UTC',
+          timezone: 'Europe/London',
         );
 
         expect(store.calls, 1);
@@ -178,6 +178,7 @@ void main() {
       final result = await service.enrol(
         athleteId: 'lee',
         programmeVersionId: 'requested-version',
+        timezone: 'Europe/London',
       );
 
       expect(result.programmeVersionId, 'requested-version');
@@ -210,11 +211,11 @@ void main() {
 
       final first = controller.confirmEnrol(
         startedAt: DateTime.utc(2026, 8, 1),
-        timezone: 'UTC',
+        timezone: 'Europe/London',
       );
       final second = await controller.confirmEnrol(
         startedAt: DateTime.utc(2026, 8, 1),
-        timezone: 'UTC',
+        timezone: 'Europe/London',
       );
       final firstResult = await first;
 
@@ -251,7 +252,7 @@ void main() {
 
       final result = await controller.confirmEnrol(
         startedAt: DateTime.utc(2026, 8, 1),
-        timezone: 'UTC',
+        timezone: 'Europe/London',
       );
 
       expect(result?.isIdempotentAlreadyEnrolled, isTrue);

@@ -7,6 +7,7 @@ import 'package:cohort_platform/features/athlete_profile/models/athlete_profile.
 import 'package:cohort_platform/features/athlete_profile/services/athlete_profile_session.dart';
 import 'package:cohort_platform/features/athlete_profile/widgets/athlete_generated_today_section.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_programme_continuity_copy.dart';
 import 'package:cohort_platform/features/home/services/athlete_home_runtime_authority.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
@@ -278,7 +279,10 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text('Unable to confirm programme.'), findsOneWidget);
+        expect(
+          find.text(AthleteProgrammeContinuityCopy.pinnedUnavailable),
+          findsOneWidget,
+        );
                 expect(find.text('NEED TO ADAPT?'), findsNothing);
         expect(find.byType(AthleteProgrammeTodaySection), findsNothing);
         expect(find.text('Choose a programme'), findsNothing);

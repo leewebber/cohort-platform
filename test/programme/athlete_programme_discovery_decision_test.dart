@@ -6,6 +6,7 @@ import 'package:cohort_platform/features/programme/presentation/programme_discov
 import 'package:cohort_platform/main_programme_discovery_decision_preview.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_comparison_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_detail_screen.dart';
+import 'package:cohort_platform/features/programme/domain/enrolment_timezone_capture.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_enrolment_review_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_selection_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
@@ -449,7 +450,7 @@ void main() {
     controller.selectProgramme(controller.programmes.last);
     final result = await controller.confirmEnrol(
       startedAt: DateTime.utc(2026, 9, 22),
-      timezone: 'UTC',
+      timezone: 'Europe/London',
       replaceActive: true,
     );
     expect(store.calls, 0);
@@ -478,12 +479,12 @@ void main() {
       controller.selectProgramme(controller.programmes.first);
       final first = controller.confirmEnrol(
         startedAt: DateTime.utc(2026, 9, 22),
-        timezone: 'UTC',
+        timezone: 'Europe/London',
         replaceActive: true,
       );
       final second = await controller.confirmEnrol(
         startedAt: DateTime.utc(2026, 9, 22),
-        timezone: 'UTC',
+        timezone: 'Europe/London',
       );
       final firstResult = await first;
       expect(second, isNull);
@@ -552,6 +553,10 @@ void main() {
         home: AthleteProgrammeEnrolmentReviewScreen(
           controller: controller,
           versionId: 'v-apollo',
+          timezoneSource: const StaticDeviceIanaTimezoneSource(
+            'Asia/Makassar',
+          ),
+          clock: () => DateTime.utc(2026, 6, 15, 12),
         ),
       ),
     );
@@ -592,6 +597,10 @@ void main() {
         home: AthleteProgrammeEnrolmentReviewScreen(
           controller: controller,
           versionId: 'v-apollo',
+          timezoneSource: const StaticDeviceIanaTimezoneSource(
+            'Asia/Makassar',
+          ),
+          clock: () => DateTime.utc(2026, 6, 15, 12),
         ),
       ),
     );
@@ -603,7 +612,8 @@ void main() {
       findsOneWidget,
     );
     expect(find.text(AthleteProgrammeDecisionCopy.enrol), findsNothing);
-    expect(find.text('Apollo'), findsNothing);
+    expect(find.text('Programme'), findsOneWidget);
+    expect(find.text('Training timezone'), findsOneWidget);
     expect(find.text('Enrol in this programme?'), findsNothing);
     expect(
       find.text(

@@ -10,6 +10,7 @@ import 'package:cohort_platform/features/programme/models/fixed_programme_occurr
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_programme_continuity_copy.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_lifecycle_presentation.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_schedule_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_calendar_screen.dart';
@@ -2038,7 +2039,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Calendar unavailable'), findsOneWidget);
+      expect(
+        find.text(
+          AthleteProgrammeContinuityCopy.pinnedUnavailable,
+        ),
+        findsWidgets,
+      );
       expect(find.text('No programme scheduled'), findsNothing);
       expect(find.text('Retry'), findsOneWidget);
     },
@@ -2097,7 +2103,12 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Calendar unavailable'), findsOneWidget);
+      expect(
+        find.text(
+          AthleteProgrammeContinuityCopy.pinnedUnavailable,
+        ),
+        findsWidgets,
+      );
       expect(find.text('transport'), findsNothing);
       await tester.tap(find.text('Retry'));
       await tester.pumpAndSettle();
