@@ -2,8 +2,8 @@
 
 **Status:** Binding milestone definition. Architecture **approved**.
 Sprint 1 **Programme Discovery and Decision** is **complete** on
-`origin/main` `a3cd351`. Sprint 2 is **approved, not started**.
-Sprint 2 implementation is **not** authorised.
+`origin/main` `a3cd351`. Sprint 2 is **implemented, awaiting founder
+approval**. It is **not** complete.
 **Recorded:** 2026-09-22
 **Live pointer:** 2026-09-23
 **Decisions bound:** 2026-09-22
@@ -17,7 +17,7 @@ Sprint 2 implementation is **not** authorised.
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -370,8 +370,9 @@ Sprint 1 is **complete** on `origin/main` `a3cd351`.
 
 ## 8. Recommended later sequence (not authorised)
 
-**Sprint 2** binding (**approved, not started**):
-[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md).
+**Sprint 2** binding (**implemented, awaiting founder approval**):
+[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
 Slice: IANA enrol + athlete-local start date + pinned-versus-default
 status. Replacement remains architecture only. Pin rules must not change.
 
@@ -415,7 +416,7 @@ erase the production-route audit.
 
 Live binding:
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
-§3. Sprint 2 is **approved, not started**. End+create replacement is
+§3. Sprint 2 is **implemented, awaiting founder approval**. End+create replacement is
 architecture only. Enrol `started_at` is IANA-local in the enrol
 transaction, not session `CURRENT_DATE`.
 

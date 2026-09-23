@@ -14,13 +14,14 @@
 > and Decision** is **complete** on `origin/main` `a3cd351`
 > (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
 > `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 **Enrolment
-> Start Integrity and Programme Continuity** is **approved, not started**
-> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED`).
+> Start Integrity and Programme Continuity** is **implemented, awaiting
+> founder approval**
+> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
 > Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`../architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
-> [`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
-> Sprint 2 implementation is **not** authorised. Daily Journey Sprint 1 `e646f11`, Sprint 2
+> [`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
+> Sprint 2 is **not** complete. Daily Journey Sprint 1 `e646f11`, Sprint 2
 > `5b584a6`, Sprint 3 `5329343`, whitespace `6796cb2`. Contracts:
 > [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md),
 > [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md),

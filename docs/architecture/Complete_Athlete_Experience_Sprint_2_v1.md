@@ -1,7 +1,7 @@
 # Complete Athlete Experience Sprint 2 v1
 
 **Status:** Binding architecture for Sprint 2. Founder decisions
-**approved**. Sprint 2 is **approved, not started, not implemented.**
+**approved**. Local implementation is **awaiting founder approval.**
 **Recorded:** 2026-09-23
 **Decisions bound:** 2026-09-23
 **Evidence:**
@@ -13,7 +13,7 @@
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 NEXT_IMPLEMENTATION_AUTHORISED=false
 REPLACEMENT_TRANSACTION_AUTHORISED=false
 HOSTED_REPAIR_AUTHORISED=false
@@ -128,8 +128,8 @@ production-path evidence.
 - Wearables
 - Offline completion queue
 
-**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED`.
-Not implemented. Not started. Implementation requires a later task.
+**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`.
+Local implementation is **not** complete until founder approval.
 
 ### 3.2 Timezone authority
 

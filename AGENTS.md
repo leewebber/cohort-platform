@@ -155,14 +155,15 @@ Daily Journey Integrity is **COMPLETE**
 architecture is **approved**. Sprint 1 **Programme Discovery and
 Decision** is **complete** on `origin/main` `a3cd351`
 (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **approved,
-not started**
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=APPROVED_NOT_STARTED`).
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **implemented,
+awaiting founder approval**
+(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_2_v1.md),
-[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md).
-Sprint 2 implementation is **not** authorised. M9 is **closed**
+[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
+Sprint 2 is **not** complete and is **not** on `origin/main` until a later
+fast-forward. M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).
