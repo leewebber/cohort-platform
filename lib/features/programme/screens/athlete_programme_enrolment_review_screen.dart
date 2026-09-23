@@ -151,11 +151,6 @@ class _AthleteProgrammeEnrolmentReviewScreenState
               AthleteProgrammeDecisionCopy.enrolReviewBody(facts.title),
               style: CohortTextStyles.body,
             ),
-            const SizedBox(height: CohortSpacing.sm),
-            const Text(
-              AthleteProgrammeDecisionCopy.enrolReviewPinned,
-              style: CohortTextStyles.body,
-            ),
             const SizedBox(height: CohortSpacing.xl),
             if (blockedByAssignment)
               const CohortCard(

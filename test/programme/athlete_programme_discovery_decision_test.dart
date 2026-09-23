@@ -2,6 +2,8 @@ import 'package:cohort_platform/features/programme/controllers/athlete_programme
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_decision_copy.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_decision_facts.dart';
+import 'package:cohort_platform/features/programme/presentation/programme_discovery_decision_preview_catalog.dart';
+import 'package:cohort_platform/main_programme_discovery_decision_preview.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_comparison_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_detail_screen.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_enrolment_review_screen.dart';
@@ -568,6 +570,80 @@ void main() {
     await tester.pumpAndSettle();
     expect(store.calls, 1);
     expect(find.text('Hosted enrolment is unavailable.'), findsWidgets);
+    expect(find.text(AthleteProgrammeDecisionCopy.retry), findsOneWidget);
+  });
+
+  testWidgets('enrolment review uses one version-commitment statement', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final controller = _controller(
+      entries: [_entry('v-apollo', name: 'Apollo')],
+    );
+    await controller.load();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeEnrolmentReviewScreen(
+          controller: controller,
+          versionId: 'v-apollo',
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(
+        'Apollo becomes your current programme. Your training stays '
+        'pinned to this exact programme version.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Later sessions stay'), findsNothing);
+    expect(find.textContaining('You are choosing'), findsNothing);
+    expect(
+      find.textContaining('It becomes your current programme'),
+      findsNothing,
+    );
+    expect(find.text('Goal'), findsOneWidget);
+    expect(find.text('Duration'), findsOneWidget);
+    expect(find.text('Sessions per week'), findsOneWidget);
+    expect(find.text('Intended level'), findsOneWidget);
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.enrolConfirm),
+      findsOneWidget,
+    );
+    expect(find.text(AthleteProgrammeDecisionCopy.cancel), findsOneWidget);
+  });
+
+  testWidgets('preview enrolment review cannot perform a real enrolment', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      const ProgrammeDiscoveryDecisionPreviewApp(
+        initialState: ProgrammeDiscoveryDecisionPreviewState.enrolmentReview,
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text(AthleteProgrammeDecisionCopy.enrolConfirm),
+      findsOneWidget,
+    );
+    await tester.ensureVisible(
+      find.text(AthleteProgrammeDecisionCopy.enrolConfirm),
+    );
+    await tester.tap(find.text(AthleteProgrammeDecisionCopy.enrolConfirm));
+    await tester.pumpAndSettle();
+    expect(find.text('Preview does not enrol.'), findsWidgets);
+    expect(find.text(AthleteProgrammeDecisionCopy.enrolSuccess), findsNothing);
     expect(find.text(AthleteProgrammeDecisionCopy.retry), findsOneWidget);
   });
 

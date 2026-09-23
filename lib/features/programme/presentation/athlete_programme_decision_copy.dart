@@ -22,9 +22,6 @@ abstract final class AthleteProgrammeDecisionCopy {
       'Programme switching is not available here yet.';
   static const enrol = 'Enrol';
   static const enrolReviewTitle = 'Enrol in this programme?';
-  static const enrolReviewPinned =
-      'It becomes your current programme and stays pinned to this exact '
-      'programme version.';
   static const enrolConfirm = 'Confirm enrolment';
   static const cancel = 'Cancel';
   static const retry = 'Retry';
@@ -45,8 +42,8 @@ abstract final class AthleteProgrammeDecisionCopy {
       'You now have a current programme. Enrolment is not available here.';
 
   static String enrolReviewBody(String programmeName) {
-    return 'You are choosing $programmeName. It becomes your current '
-        'programme. Later sessions stay on this exact programme version.';
+    return '$programmeName becomes your current programme. Your training '
+        'stays pinned to this exact programme version.';
   }
 
   static String comparisonAnnouncement({

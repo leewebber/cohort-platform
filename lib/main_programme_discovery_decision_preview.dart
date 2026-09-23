@@ -23,7 +23,11 @@ import 'package:flutter/material.dart';
 ///     -t lib/main_programme_discovery_decision_preview.dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProgrammeDiscoveryDecisionPreviewApp());
+  runApp(
+    const ProgrammeDiscoveryDecisionPreviewApp(
+      initialState: ProgrammeDiscoveryDecisionPreviewState.enrolmentReview,
+    ),
+  );
 }
 
 class ProgrammeDiscoveryDecisionPreviewApp extends StatelessWidget {
