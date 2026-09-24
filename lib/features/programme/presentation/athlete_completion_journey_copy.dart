@@ -3,6 +3,7 @@
 /// Status chips, headlines, and supporting lines only. Not architecture.
 abstract final class AthleteCompletionJourneyCopy {
   static const complete = 'Complete';
+  static const completedProgramme = 'Completed programme';
   static const calendarSupporting =
       'You can review this completed programme and its sessions.';
 

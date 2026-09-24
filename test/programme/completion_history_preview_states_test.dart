@@ -33,20 +33,75 @@ void main() {
       CompletionHistoryPreviewFixtures.completedProgrammesScreen(),
     );
     expect(find.byType(AthleteProgrammeScreen), findsOneWidget);
+    expect(find.text('COMPLETED PROGRAMME'), findsOneWidget);
+    expect(find.text('Apollo Strength'), findsWidgets);
     expect(find.text('Complete'), findsWidgets);
     expect(find.text('You completed Apollo Strength.'), findsOneWidget);
     expect(
       find.text('You can still review the programme and your results.'),
       findsOneWidget,
     );
+    expect(find.text('Completed 1 September'), findsOneWidget);
+    expect(find.text('12 weeks'), findsOneWidget);
     expect(find.text('Browse programmes'), findsOneWidget);
     expect(find.text('View Programme Calendar'), findsOneWidget);
+    expect(find.text('CURRENT PROGRAMME'), findsNothing);
+    expect(find.text('Week 1 · Day 1'), findsNothing);
+    expect(find.textContaining('Week 1'), findsNothing);
+    expect(find.textContaining("Today's authored session"), findsNothing);
+    expect(find.textContaining('available on Home'), findsNothing);
+    expect(find.textContaining('Completed-programme preview fixture'), findsNothing);
     expect(find.text('Begin'), findsNothing);
     expect(find.text('Resume'), findsNothing);
     expect(find.text('Start Programme'), findsNothing);
-    expect(find.byType(SizedBox), findsWidgets);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('active Programmes composition stays current', (tester) async {
+    await pumpBounded(
+      tester,
+      CompletionHistoryPreviewFixtures.activeProgrammesScreen(),
+    );
+    expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
+    expect(find.text('Apollo Strength'), findsWidgets);
+    expect(find.text('Week 1 · Day 1'), findsOneWidget);
+    expect(
+      find.text("Today's authored session is available on Home."),
+      findsOneWidget,
+    );
+    expect(find.text('COMPLETED PROGRAMME'), findsNothing);
+    expect(find.text('You completed Apollo Strength.'), findsNothing);
+    expect(
+      find.text('You can still review the programme and your results.'),
+      findsNothing,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'completed plus new active keeps current assignment and historical completed',
+    (tester) async {
+      await pumpBounded(
+        tester,
+        CompletionHistoryPreviewFixtures.completedPlusNewActiveProgrammesScreen(),
+      );
+      expect(find.text('CURRENT PROGRAMME'), findsOneWidget);
+      expect(find.text('Spartan'), findsWidgets);
+      expect(find.text('Spartan is your current programme.'), findsOneWidget);
+      expect(
+        find.text('Your completed Apollo Strength results remain in History.'),
+        findsOneWidget,
+      );
+      expect(find.text('Week 2 · Day 1'), findsOneWidget);
+      expect(find.text('COMPLETED PROGRAMME'), findsNothing);
+      expect(find.text('You completed Apollo Strength.'), findsNothing);
+      expect(find.text('Week 1 · Day 1'), findsNothing);
+      expect(find.text('Completed-programme preview fixture.'), findsNothing);
+      expect(find.text('Begin'), findsNothing);
+      expect(find.text('Resume'), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('progressRefreshFailed fixture keeps last-good and Retry', (
     tester,
@@ -154,7 +209,10 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    expect(find.text('COMPLETED PROGRAMME'), findsOneWidget);
     expect(find.text('You completed Apollo Strength.'), findsOneWidget);
+    expect(find.text('CURRENT PROGRAMME'), findsNothing);
+    expect(find.text('Week 1 · Day 1'), findsNothing);
     expect(find.text('Begin'), findsNothing);
     expect(tester.takeException(), isNull);
 

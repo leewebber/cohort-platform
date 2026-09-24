@@ -43,7 +43,6 @@ abstract final class CompletionHistoryPreviewFixtures {
       libraryScope: ProgrammeLibraryScope.cohortGlobal,
       ownerType: ProgrammeOwnerType.global,
       name: 'Apollo Strength',
-      description: 'Completed-programme preview fixture.',
       durationWeeks: 12,
       approvedForGlobal: true,
       packageContentHash: previewPackageHash,
@@ -129,6 +128,152 @@ abstract final class CompletionHistoryPreviewFixtures {
       assignmentStore: PreviewAssignmentStore(assignment),
       fixedOccurrenceStore: PreviewProjectionStore(
         completedCalendar(assignment),
+      ),
+    );
+  }
+
+  static ProgrammeAssignment activeAssignment() {
+    return ProgrammeAssignment(
+      id: previewAssignmentId,
+      athleteId: previewAthleteId,
+      programmeVersionId: previewVersionId,
+      lineageCode: 'APOLLO-BUILD-12-WEEK',
+      status: ProgrammeAssignmentStatus.active,
+      startedAt: DateTime.utc(2026, 8, 1),
+      timezone: 'Atlantic/Canary',
+      scheduleMode: 'fixed_schedule',
+      materialisedAt: DateTime.utc(2026, 8, 1),
+      materialisedPackageContentHash: previewPackageHash,
+    );
+  }
+
+  static ProgrammeAssignment laterActiveSpartanAssignment() {
+    return ProgrammeAssignment(
+      id: 'assignment-spartan-preview',
+      athleteId: previewAthleteId,
+      programmeVersionId: 'version-spartan-preview',
+      lineageCode: 'SPARTAN',
+      status: ProgrammeAssignmentStatus.active,
+      startedAt: DateTime.utc(2026, 9, 8),
+      timezone: 'Atlantic/Canary',
+      scheduleMode: 'fixed_schedule',
+      materialisedAt: DateTime.utc(2026, 9, 8),
+      materialisedPackageContentHash: previewPackageHash,
+    );
+  }
+
+  static ProgrammeVersion spartanVersion() {
+    return const ProgrammeVersion(
+      id: 'version-spartan-preview',
+      lineageId: 'lineage-spartan-preview',
+      versionNumber: 1,
+      lifecycleStatus: ProgrammeLifecycleStatus.published,
+      libraryScope: ProgrammeLibraryScope.cohortGlobal,
+      ownerType: ProgrammeOwnerType.global,
+      name: 'Spartan',
+      durationWeeks: 8,
+      approvedForGlobal: true,
+      packageContentHash: previewPackageHash,
+    );
+  }
+
+  static FixedProgrammeCalendarProjection activeCalendar(
+    ProgrammeAssignment assignment, {
+    String programmeName = 'Apollo Strength',
+    int weekNumber = 1,
+    String dayKey = 'day_1',
+  }) {
+    final calendar = completedCalendar(assignment);
+    return FixedProgrammeCalendarProjection(
+      assignmentId: assignment.id,
+      programmeName: programmeName,
+      timezone: calendar.timezone,
+      scheduleMode: calendar.scheduleMode,
+      startDate: calendar.startDate,
+      today: calendar.today,
+      weekStart: calendar.weekStart,
+      weekEnd: calendar.weekEnd,
+      assignmentStatus: 'active',
+      occurrences: [
+        FixedProgrammeOccurrenceProjection(
+          assignmentId: assignment.id,
+          occurrenceId: 'occ-today',
+          sessionSlotId: previewSlotStrength,
+          programmeVersionId: assignment.programmeVersionId,
+          protocolId: 'BW-001',
+          programmedSessionKey: 'psk-preview-today',
+          weekNumber: weekNumber,
+          dayKey: dayKey,
+          sessionOrder: 1,
+          scheduledDate: calendar.today,
+          originalScheduledDate: calendar.today,
+          state: FixedProgrammeOccurrenceState.today,
+          sessionTitle: programmeName,
+        ),
+      ],
+      currentWeek: calendar.currentWeek,
+    );
+  }
+
+  static Widget activeProgrammesScreen() {
+    final assignment = activeAssignment();
+    final assignments = PreviewAssignmentStore(assignment);
+    final versions = apolloStrengthVersionStore();
+    return AthleteProgrammeScreen(
+      athleteId: previewAthleteId,
+      assignmentStore: assignments,
+      controller: AthleteProgrammeScreenController(
+        athleteId: previewAthleteId,
+        assignmentStore: assignments,
+        versionStore: versions,
+      ),
+      fixedOccurrenceStore: PreviewProjectionStore(activeCalendar(assignment)),
+    );
+  }
+
+  static Widget completedPlusNewActiveProgrammesScreen() {
+    final completed = completedAssignment();
+    final active = laterActiveSpartanAssignment();
+    final assignments = PreviewAssignmentStore(active, others: [completed]);
+    final apollo = apolloStrengthVersion();
+    final spartan = spartanVersion();
+    final versions = PreviewVersionStore(
+      lineage: const ProgrammeLineage(id: 'lineage-spartan-preview', code: 'SPARTAN'),
+      version: spartan,
+      tree: ProgrammeTemplateTree(
+        template: ProgrammeTemplate(version: spartan),
+        weekNodes: const [],
+      ),
+      catalogue: [
+        ProgrammeCatalogEntry(
+          versionId: spartan.id,
+          lineageCode: 'SPARTAN',
+          versionNumber: 1,
+          name: spartan.name,
+          lifecycleStatus: spartan.lifecycleStatus,
+          libraryScope: spartan.libraryScope,
+          ownerType: spartan.ownerType,
+          durationWeeks: spartan.durationWeeks,
+          approvedForGlobal: true,
+        ),
+      ],
+      extraVersions: [apollo],
+    );
+    return AthleteProgrammeScreen(
+      athleteId: previewAthleteId,
+      assignmentStore: assignments,
+      controller: AthleteProgrammeScreenController(
+        athleteId: previewAthleteId,
+        assignmentStore: assignments,
+        versionStore: versions,
+      ),
+      fixedOccurrenceStore: PreviewProjectionStore(
+        activeCalendar(
+          active,
+          programmeName: 'Spartan',
+          weekNumber: 2,
+          dayKey: 'day_1',
+        ),
       ),
     );
   }

@@ -229,6 +229,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      expect(find.text('COMPLETED PROGRAMME'), findsOneWidget);
       expect(find.text('Complete'), findsWidgets);
       expect(find.text('You completed Apollo Strength.'), findsOneWidget);
       expect(
@@ -236,6 +237,9 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Browse programmes'), findsOneWidget);
+      expect(find.text('CURRENT PROGRAMME'), findsNothing);
+      expect(find.text('Week 1 · Day 1'), findsNothing);
+      expect(find.textContaining("Today's authored session"), findsNothing);
       expect(find.textContaining('Pinned version'), findsNothing);
     });
   });

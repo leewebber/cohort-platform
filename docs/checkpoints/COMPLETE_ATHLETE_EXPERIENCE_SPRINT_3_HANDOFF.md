@@ -77,5 +77,9 @@ strings; authority and RPCs are unchanged.
 - Production Programmes: completed continuity no longer waits on the
   catalogue default service.
 
-Approved Home, Calendar, coach-only, 320, and large-text states are
-unchanged. RPC/migration unchanged.
+Approved Home, Calendar, coach-only, 320, large-text, and Progress
+refresh-failed states are unchanged. RPC/migration unchanged.
+
+Programmes completed continuity is a dedicated completed composition
+(`COMPLETED PROGRAMME`). It no longer reuses the active overview card
+(current week/day, today’s session, or catalogue/preview descriptions).

@@ -18,6 +18,7 @@ import '../models/fixed_programme_occurrence_projection.dart';
 import '../domain/athlete_programme_context.dart';
 import '../domain/athlete_programme_continuity.dart';
 import '../models/programme_catalog_entry.dart';
+import '../presentation/athlete_completion_journey_copy.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../widgets/athlete_programme_status_state.dart';
@@ -380,12 +381,77 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                       ),
                       const SizedBox(height: CohortSpacing.lg),
                     ],
-                    const SectionTitle('Current programme'),
+                    SectionTitle(
+                      _isCompletedProjection
+                          ? AthleteCompletionJourneyCopy.completedProgramme
+                          : AthleteCompletionJourneyCopy.currentProgramme,
+                    ),
                     const SizedBox(height: CohortSpacing.md),
-                    _buildCurrentProgrammeCard(),
+                    _isCompletedProjection
+                        ? _buildCompletedProgrammeCard()
+                        : _buildCurrentProgrammeCard(),
                   ],
                 ),
               ),
+      ),
+    );
+  }
+
+  bool get _isCompletedProjection {
+    final assignment = _controller.currentAssignment;
+    return assignment != null &&
+        assignment.status == ProgrammeAssignmentStatus.completed;
+  }
+
+  Widget _buildCompletedProgrammeCard() {
+    final assignment = _controller.currentAssignment;
+    if (assignment == null) {
+      return _buildCurrentProgrammeCard();
+    }
+    final version = _controller.activeVersion;
+    final name = AthleteCompletionJourneyCopy.displayTitle(
+      _fixedCalendar?.programmeName,
+      fallback: version?.name ?? assignment.lineageCode,
+    );
+    final duration = version?.durationWeeks;
+    final completedAt = assignment.completedAt;
+
+    return CohortCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(name, style: CohortTextStyles.h2),
+          if (duration != null) ...[
+            const SizedBox(height: CohortSpacing.xs),
+            Text('$duration weeks', style: CohortTextStyles.small),
+          ],
+          if (completedAt != null) ...[
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              'Completed ${AthleteProgrammeDateFormatter.dayMonth(completedAt)}',
+              style: CohortTextStyles.small,
+            ),
+          ],
+          const SizedBox(height: CohortSpacing.md),
+          AthleteProgrammeStatusState.fromContinuity(_continuity),
+          if (assignment.isMaterialised) ...[
+            const SizedBox(height: CohortSpacing.md),
+            TextButton(
+              onPressed: () => _openCalendar(assignment),
+              child: Text(
+                assignment.isFixedSchedule
+                    ? 'View Programme Calendar'
+                    : 'Manage schedule',
+              ),
+            ),
+          ],
+          const SizedBox(height: CohortSpacing.md),
+          CohortButton(
+            label: 'Browse programmes',
+            variant: CohortButtonVariant.secondary,
+            onPressed: _openStartNewProgramme,
+          ),
+        ],
       ),
     );
   }

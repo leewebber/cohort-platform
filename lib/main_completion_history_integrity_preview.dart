@@ -24,7 +24,11 @@ import 'package:flutter/material.dart';
 ///     -t lib/main_completion_history_integrity_preview.dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const CompletionHistoryIntegrityPreviewApp());
+  runApp(
+    const CompletionHistoryIntegrityPreviewApp(
+      initialState: CompletionPreviewState.completedProgrammes,
+    ),
+  );
 }
 
 enum CompletionPreviewState {
@@ -91,6 +95,8 @@ class _CompletionHistoryIntegrityPreviewScreenState
       CompletionHistoryPreviewFixtures.completedCalendarScreen();
   late final Widget _completedProgrammes =
       CompletionHistoryPreviewFixtures.completedProgrammesScreen();
+  late final Widget _completedPlusNewActive =
+      CompletionHistoryPreviewFixtures.completedPlusNewActiveProgrammesScreen();
   late final Widget _progressRefreshFailed =
       CompletionHistoryPreviewFixtures.progressRefreshFailed();
 
@@ -148,6 +154,7 @@ class _CompletionHistoryIntegrityPreviewScreenState
     switch (state) {
       case CompletionPreviewState.completedCalendar:
       case CompletionPreviewState.completedProgrammes:
+      case CompletionPreviewState.completedPlusNewActive:
       case CompletionPreviewState.progressData:
       case CompletionPreviewState.progressEmpty:
       case CompletionPreviewState.progressRefreshFailed:
@@ -164,7 +171,6 @@ class _CompletionHistoryIntegrityPreviewScreenState
       case CompletionPreviewState.missingAthlete:
       case CompletionPreviewState.coachOnlyDenied:
       case CompletionPreviewState.noActiveWithHistory:
-      case CompletionPreviewState.completedPlusNewActive:
       case CompletionPreviewState.unavailableCompletedPin:
       case CompletionPreviewState.narrow320CompletedHome:
       case CompletionPreviewState.largeTextCompletedHome:
@@ -271,15 +277,7 @@ class _CompletionHistoryIntegrityPreviewScreenState
           ),
         );
       case CompletionPreviewState.completedPlusNewActive:
-        return AthleteProgrammeStatusState.fromContinuity(
-          const AthleteProgrammeContinuity(
-            status: AthleteProgrammeContinuityStatus.currentDefault,
-            timezoneHealth: AssignmentTimezoneHealth.valid,
-            pinnedTitle: 'Spartan',
-            lineageCode: 'SPARTAN',
-          ),
-          completedProgrammeTitle: 'Apollo Strength',
-        );
+        return _completedPlusNewActive;
       case CompletionPreviewState.unavailableCompletedPin:
         return AthleteProgrammeStatusState.fromContinuity(
           const AthleteProgrammeContinuity(

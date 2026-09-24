@@ -66,12 +66,14 @@ class PreviewVersionStore implements ProgrammeVersionStore {
     required this.version,
     required this.tree,
     required this.catalogue,
+    this.extraVersions = const [],
   });
 
   final ProgrammeLineage lineage;
   final ProgrammeVersion version;
   final ProgrammeTemplateTree tree;
   final List<ProgrammeCatalogEntry> catalogue;
+  final List<ProgrammeVersion> extraVersions;
 
   @override
   Future<ProgrammeLineage?> getLineageByCode(String code) async {
@@ -90,7 +92,11 @@ class PreviewVersionStore implements ProgrammeVersionStore {
 
   @override
   Future<ProgrammeVersion?> getVersionById(String versionId) async {
-    return version.id == versionId ? version : null;
+    if (version.id == versionId) return version;
+    for (final extra in extraVersions) {
+      if (extra.id == versionId) return extra;
+    }
+    return null;
   }
 
   @override
