@@ -5,7 +5,6 @@ import '../../core/persistence/models/execution_result_models.dart';
 import '../../core/theme/colors.dart';
 import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
-import '../athlete_profile/services/athlete_profile_session.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/athlete_surface_identity.dart';
 import '../../core/services/authenticated_identity.dart';

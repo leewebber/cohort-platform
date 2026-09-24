@@ -9,8 +9,8 @@ NEXT_IMPLEMENTATION_AUTHORISED=false
 HOSTED_APPLY=false
 ```
 
-**Branch:** `feat/programme-completion-history-integrity-v1`  
-**Base:** `origin/main` `8d7606d0c43b4b3b499dfbdc2f5ba9b0caa151ce`  
+**Branch:** `feat/programme-completion-history-integrity-v1`
+**Base:** `origin/main` `8d7606d0c43b4b3b499dfbdc2f5ba9b0caa151ce`
 **HEAD:** local only — see the founder stop report.
 
 ## RPC design
@@ -25,8 +25,8 @@ includes `assignment_status`. `resolve_active_fixed_programme_calendar`
 remains active-only.
 
 Migration:
-`supabase/migrations/20260924120000_completed_fixed_programme_calendar_inspection.sql`  
-SHA-256: `3df3970c7951c2b3b1bdfec81959a58dfb690f5c7711f2954d7c9b466f6a9f26`  
+`supabase/migrations/20260924120000_completed_fixed_programme_calendar_inspection.sql`
+SHA-256: `3df3970c7951c2b3b1bdfec81959a58dfb690f5c7711f2954d7c9b466f6a9f26`
 Not applied to hosted systems.
 
 Assignment status domain remains
