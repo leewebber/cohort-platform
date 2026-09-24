@@ -1,6 +1,5 @@
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/domain/athlete_programme_continuity.dart';
-import 'package:cohort_platform/features/programme/domain/enrolment_iana_timezone.dart';
 import 'package:cohort_platform/features/programme/domain/enrolment_timezone_capture.dart';
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_programme_continuity_copy.dart';
