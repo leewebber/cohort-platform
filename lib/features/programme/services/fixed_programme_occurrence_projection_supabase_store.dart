@@ -31,4 +31,25 @@ class FixedProgrammeOccurrenceProjectionSupabaseStore
     }
     return FixedProgrammeCalendarProjection.fromMap(map);
   }
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) async {
+    final raw = await SupabaseService.client.rpc(
+      'resolve_fixed_programme_calendar',
+      params: {'p_assignment_id': assignmentId.trim()},
+    );
+    if (raw is! Map) {
+      throw StateError('Malformed fixed schedule projection');
+    }
+    final map = Map<String, dynamic>.from(raw);
+    final status = map['status']?.toString();
+    if (status != 'ok') {
+      throw FixedProgrammeCalendarUnavailableException(
+        map['code']?.toString() ?? 'Fixed schedule projection failed',
+      );
+    }
+    return FixedProgrammeCalendarProjection.fromMap(map);
+  }
 }

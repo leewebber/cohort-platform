@@ -13,19 +13,28 @@ import '../models/programme_lineage.dart';
 import '../models/programme_version.dart';
 
 class PreviewAssignmentStore implements ProgrammeAssignmentStore {
-  PreviewAssignmentStore(this.assignment);
+  PreviewAssignmentStore(this.assignment, {List<ProgrammeAssignment>? others})
+    : others = others ?? <ProgrammeAssignment>[];
 
   ProgrammeAssignment assignment;
+  final List<ProgrammeAssignment> others;
+
+  List<ProgrammeAssignment> get _all => [assignment, ...others];
 
   @override
   Future<ProgrammeAssignment?> getActiveAssignment(String athleteId) async {
-    if (assignment.athleteId != athleteId) return null;
-    return assignment;
+    for (final row in _all) {
+      if (row.athleteId == athleteId && row.isActive) return row;
+    }
+    return null;
   }
 
   @override
   Future<ProgrammeAssignment?> getById(String assignmentId) async {
-    return assignment.id == assignmentId ? assignment : null;
+    for (final row in _all) {
+      if (row.id == assignmentId) return row;
+    }
+    return null;
   }
 
   @override
@@ -42,7 +51,7 @@ class PreviewAssignmentStore implements ProgrammeAssignmentStore {
 
   @override
   Future<List<ProgrammeAssignment>> listForAthlete(String athleteId) async {
-    return assignment.athleteId == athleteId ? [assignment] : const [];
+    return _all.where((row) => row.athleteId == athleteId).toList();
   }
 
   @override
@@ -148,7 +157,21 @@ class PreviewProjectionStore implements FixedProgrammeOccurrenceProjectionStore 
   FixedProgrammeCalendarProjection? projection;
 
   @override
-  Future<FixedProgrammeCalendarProjection?> resolveActive() async => projection;
+  Future<FixedProgrammeCalendarProjection?> resolveActive() async =>
+      projection?.isInspectionOnly == true ? null : projection;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) async {
+    final loaded = projection;
+    if (loaded == null || loaded.assignmentId != assignmentId) {
+      throw const FixedProgrammeCalendarUnavailableException(
+        'assignment_not_found',
+      );
+    }
+    return loaded;
+  }
 }
 
 class PreviewSwapStore implements FutureProgrammeSessionSwapStore {

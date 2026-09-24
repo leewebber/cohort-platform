@@ -14,4 +14,23 @@ class FixedProgrammeCalendarUnavailableException implements Exception {
 
 abstract class FixedProgrammeOccurrenceProjectionStore {
   Future<FixedProgrammeCalendarProjection?> resolveActive();
+
+  /// Exact-assignment read. Active and completed may succeed.
+  /// Completed calendars are inspection-only in the client.
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  );
+}
+
+Future<FixedProgrammeCalendarProjection> resolveAssignmentFromActiveFallback(
+  FixedProgrammeOccurrenceProjectionStore store,
+  String assignmentId,
+) async {
+  final active = await store.resolveActive();
+  if (active != null && active.assignmentId == assignmentId) {
+    return active;
+  }
+  throw const FixedProgrammeCalendarUnavailableException(
+    'assignment_not_found',
+  );
 }

@@ -190,9 +190,12 @@ class FixedProgrammeCalendarProjection {
     required this.weekEnd,
     required this.occurrences,
     required this.currentWeek,
+    this.assignmentStatus = 'active',
   });
 
   final String assignmentId;
+  /// Persisted assignment status: `active` or `completed`.
+  final String assignmentStatus;
   final String programmeName;
   final String timezone;
   final String scheduleMode;
@@ -272,6 +275,7 @@ class FixedProgrammeCalendarProjection {
       weekEnd: weekEnd,
       occurrences: occurrences ?? this.occurrences,
       currentWeek: currentWeek ?? this.currentWeek,
+      assignmentStatus: assignmentStatus,
     );
   }
 
@@ -335,6 +339,8 @@ class FixedProgrammeCalendarProjection {
 
   bool get startsInFuture => startDate.compareTo(today) > 0;
 
+  bool get isInspectionOnly => assignmentStatus == 'completed';
+
   static const int futureTrainTodayHorizonDays = 7;
 
   /// Calendar days from athlete-local today to [selected], ignoring clock time.
@@ -359,6 +365,7 @@ class FixedProgrammeCalendarProjection {
   bool canOfferFutureTrainTodaySwap(
     FixedProgrammeOccurrenceProjection selected,
   ) {
+    if (isInspectionOnly) return false;
     if (selected.assignmentId != assignmentId) return false;
     if (selected.state != FixedProgrammeOccurrenceState.planned) return false;
     if (!isWithinFutureTrainTodayHorizon(selected)) return false;
@@ -415,6 +422,12 @@ class FixedProgrammeCalendarProjection {
     if (currentWeek.length != 7) {
       throw const FormatException('Malformed fixed schedule current week');
     }
+    final assignmentStatus = _optionalString(map['assignment_status']) ?? 'active';
+    if (assignmentStatus != 'active' && assignmentStatus != 'completed') {
+      throw FormatException(
+        'Unsupported assignment status: $assignmentStatus',
+      );
+    }
     return FixedProgrammeCalendarProjection(
       assignmentId: assignmentId,
       programmeName: _requiredString(map, 'programme_name'),
@@ -426,6 +439,7 @@ class FixedProgrammeCalendarProjection {
       weekEnd: _requiredDate(map, 'week_end'),
       occurrences: List.unmodifiable(occurrences),
       currentWeek: List.unmodifiable(currentWeek),
+      assignmentStatus: assignmentStatus,
     );
   }
 }
