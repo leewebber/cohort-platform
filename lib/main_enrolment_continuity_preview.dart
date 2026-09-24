@@ -1,23 +1,24 @@
 import 'package:cohort_platform/app/theme.dart';
 import 'package:cohort_platform/core/theme/spacing.dart';
 import 'package:cohort_platform/core/theme/text_styles.dart';
-import 'package:cohort_platform/core/widgets/cohort_card.dart';
 import 'package:cohort_platform/core/widgets/local_preview_banner.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
+import 'package:cohort_platform/features/programme/domain/athlete_programme_continuity.dart';
+import 'package:cohort_platform/features/programme/domain/enrolment_iana_timezone.dart';
 import 'package:cohort_platform/features/programme/domain/enrolment_timezone_capture.dart';
 import 'package:cohort_platform/features/programme/models/athlete_catalogue_enrolment.dart';
-import 'package:cohort_platform/features/programme/presentation/athlete_programme_continuity_copy.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_enrolment_review_screen.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_service.dart';
 import 'package:cohort_platform/features/programme/services/athlete_catalogue_enrolment_store.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_switch_catalog_service.dart';
 import 'package:cohort_platform/features/programme/services/programme_catalog_service.dart';
+import 'package:cohort_platform/features/programme/widgets/athlete_programme_status_state.dart';
 import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:flutter/material.dart';
 
 /// Fixture-only Sprint 2 preview. Not imported by `lib/main.dart`.
 ///
-///   flutter run -d chrome --web-port 4193 \
+///   flutter run -d chrome --web-port 4193 --web-hostname 127.0.0.1 \
 ///     -t lib/main_enrolment_continuity_preview.dart
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +55,10 @@ class EnrolmentContinuityPreviewApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: cohortTheme,
-      home: EnrolmentContinuityPreviewScreen(initialState: initialState),
+      home: EnrolmentContinuityPreviewScreen(
+        key: ValueKey(initialState),
+        initialState: initialState,
+      ),
     );
   }
 }
@@ -75,46 +79,61 @@ class EnrolmentContinuityPreviewScreen extends StatefulWidget {
 class _EnrolmentContinuityPreviewScreenState
     extends State<EnrolmentContinuityPreviewScreen> {
   late EnrolmentContinuityPreviewState _state = widget.initialState;
+  final _controllers = <EnrolmentContinuityPreviewState,
+      Future<AthleteProgrammeSelectionController>>{};
+
+  Future<AthleteProgrammeSelectionController> _controllerFor(
+    EnrolmentContinuityPreviewState state,
+  ) {
+    return _controllers.putIfAbsent(state, () => _loadedController(state));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final narrow =
-        _state == EnrolmentContinuityPreviewState.narrow320 ||
-        _state == EnrolmentContinuityPreviewState.largeText;
+    final narrow = _state == EnrolmentContinuityPreviewState.narrow320;
     final large = _state == EnrolmentContinuityPreviewState.largeText;
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(
-        size: narrow ? const Size(320, 800) : MediaQuery.of(context).size,
         textScaler: TextScaler.linear(large ? 2 : 1),
       ),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Enrolment continuity preview'),
-          actions: [
-            DropdownButton<EnrolmentContinuityPreviewState>(
-              value: _state,
-              onChanged: (value) {
-                if (value != null) setState(() => _state = value);
-              },
-              items: EnrolmentContinuityPreviewState.values
-                  .map(
-                    (state) => DropdownMenuItem(
-                      value: state,
-                      child: Text(state.name),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ],
         ),
         body: Column(
           children: [
             const LocalPreviewBanner(),
             const Padding(
-              padding: EdgeInsets.all(CohortSpacing.sm),
+              padding: EdgeInsets.symmetric(horizontal: CohortSpacing.md),
               child: Text('PREVIEW ONLY', style: CohortTextStyles.small),
             ),
-            Expanded(child: _body()),
+            SizedBox(
+              height: 48,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: CohortSpacing.md),
+                children: [
+                  for (final state in EnrolmentContinuityPreviewState.values)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(state.name),
+                        selected: _state == state,
+                        onSelected: (_) => setState(() => _state = state),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: SizedBox(
+                  width: narrow ? 320 : 390,
+                  child: _body(),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -124,31 +143,86 @@ class _EnrolmentContinuityPreviewScreenState
   Widget _body() {
     switch (_state) {
       case EnrolmentContinuityPreviewState.currentDefault:
-        return _message(AthleteProgrammeContinuityCopy.currentProgramme);
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            AthleteProgrammeStatusState.fromContinuity(
+              const AthleteProgrammeContinuity(
+                status: AthleteProgrammeContinuityStatus.currentDefault,
+                timezoneHealth: AssignmentTimezoneHealth.valid,
+              ),
+            ),
+          ],
+        );
       case EnrolmentContinuityPreviewState.currentPinned:
-        return _message(
-          AthleteProgrammeContinuityCopy.continuingStartedVersion,
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            AthleteProgrammeStatusState.fromContinuity(
+              const AthleteProgrammeContinuity(
+                status: AthleteProgrammeContinuityStatus.currentPinned,
+                timezoneHealth: AssignmentTimezoneHealth.valid,
+              ),
+            ),
+          ],
         );
       case EnrolmentContinuityPreviewState.differentVersionAvailable:
-        return _message(
-          AthleteProgrammeContinuityCopy.differentVersionAvailable,
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            AthleteProgrammeStatusState.fromContinuity(
+              const AthleteProgrammeContinuity(
+                status: AthleteProgrammeContinuityStatus
+                    .currentPinnedWithDifferentAvailable,
+                timezoneHealth: AssignmentTimezoneHealth.valid,
+              ),
+            ),
+          ],
         );
       case EnrolmentContinuityPreviewState.pinnedUnavailable:
-        return _message(AthleteProgrammeContinuityCopy.pinnedUnavailable);
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            AthleteProgrammeStatusState.fromContinuity(
+              const AthleteProgrammeContinuity(
+                status: AthleteProgrammeContinuityStatus.pinnedUnavailable,
+                timezoneHealth: AssignmentTimezoneHealth.valid,
+              ),
+            ),
+          ],
+        );
       case EnrolmentContinuityPreviewState.timezoneRepairRequired:
-        return _message(AthleteProgrammeContinuityCopy.timezoneRepairRequired);
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            AthleteProgrammeStatusState.fromContinuity(
+              const AthleteProgrammeContinuity(
+                status: AthleteProgrammeContinuityStatus.currentPinned,
+                timezoneHealth: AssignmentTimezoneHealth.repairRequired,
+              ),
+            ),
+          ],
+        );
       case EnrolmentContinuityPreviewState.enrolmentSuccess:
-        return _message(
-          '${AthleteProgrammeDecisionSuccess.confirmed} Starts 2026-06-16.',
+        return ListView(
+          padding: const EdgeInsets.all(CohortSpacing.md),
+          children: [
+            EnrolmentSuccessState(
+              programmeTitle: 'Apollo',
+              startDate: DateTime(2026, 6, 16),
+              timezoneIana: EnrolmentIanaTimezone.bali,
+            ),
+          ],
         );
       default:
         return FutureBuilder<AthleteProgrammeSelectionController>(
-          future: _loadedController(_state),
+          future: _controllerFor(_state),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
             return AthleteProgrammeEnrolmentReviewScreen(
+              key: ValueKey(_state),
               controller: snapshot.data!,
               versionId: 'preview-apollo',
               timezoneSource: _sourceFor(_state),
@@ -158,17 +232,6 @@ class _EnrolmentContinuityPreviewScreenState
         );
     }
   }
-
-  Widget _message(String text) {
-    return Padding(
-      padding: const EdgeInsets.all(CohortSpacing.lg),
-      child: CohortCard(child: Text(text, style: CohortTextStyles.body)),
-    );
-  }
-}
-
-abstract final class AthleteProgrammeDecisionSuccess {
-  static const confirmed = 'Enrolled. Your programme is ready.';
 }
 
 DeviceIanaTimezoneSource _sourceFor(EnrolmentContinuityPreviewState state) {
@@ -256,7 +319,7 @@ class _PreviewEnrolmentStore implements AthleteCatalogueEnrolmentStore {
       programmeVersionId: programmeVersionId,
       athleteId: 'preview-athlete',
       startedAt: DateTime(2026, 6, 16),
-      timezone: timezone,
+      timezone: timezone ?? EnrolmentIanaTimezone.bali,
     );
   }
 }
