@@ -33,12 +33,12 @@ Sprint 3+ coaching product is not the next milestone.
    ([`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
    Complete Athlete Experience architecture is **approved**. Sprint 1
    **Programme Discovery and Decision** is **complete** at `a3cd351`.
-   Sprint 2 is **complete** at `8405421`. Sprint 3 is **audited,
-   awaiting founder approval**
+   Sprint 2 is **complete** at `8405421`. Sprint 3 is **approved, not
+   started**
    (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`,
-   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL`).
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED`).
    Binding:
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
    [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),

@@ -1,8 +1,8 @@
 # Complete Athlete Experience Sprint 3 — audit
 
 **Recorded:** 2026-09-24
-**Status:** Read-only production audit. Architecture **awaiting founder
-approval**. Implementation **not started**.
+**Live pointer:** Founder decisions bound 2026-09-24.
+Sprint 3 is **approved, not started, not implemented.**
 **Base / start SHA:** `origin/main` `840542170137c4e75ffe663bbc08d7b98be3faac`
 **Branch:** `docs/complete-athlete-experience-sprint-3-audit` (local only)
 
@@ -10,7 +10,7 @@ approval**. Implementation **not started**.
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 HOSTED_WRITES=false
 PUSHED=false
@@ -215,19 +215,35 @@ on athlete History/Progress; agreement tests.
 **Sprint 3 can close Complete Athlete Experience.** Sprint 4 is not
 required for this milestone.
 
+The live approved boundary is architecture §8–§9.2. This section
+remains the audit proposal.
+
 ---
 
-## 8. Unresolved founder decisions
+## 8. Historical founder questions (audit)
 
-See architecture §9. Only three product choices need founder input:
+See architecture §9.1. Only three product choices needed founder
+input at audit time:
 
 1. Home complete primary CTA ranking (recommend View results).
 2. Whether Home invites immediate enrol (recommend allow, do not force).
 3. Celebration tone (recommend factual title, no claims).
 
-Implementation of the projection and integrity work can begin after
-architecture approval even if CTA ranking is settled at visual
-correction.
+### 8.1 Resolved founder decisions (2026-09-24)
+
+Live answers are in
+[`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md)
+§9.2. Summary:
+
+| Decision | Binding |
+|----------|---------|
+| Architecture | **Approved** (`APPROVED_NOT_STARTED`) |
+| Name | Programme Completion and History Integrity |
+| Implementation | Approved, **not started** |
+| Home | “You finished {authored title}.” Primary View results. Secondary Browse programmes. No unsupported claims |
+| Next programme | Completed is not active. Existing no-active enrol allowed. No force, auto-enrol, recommend, repin, urgency, or hiding results |
+| Continuity | Completed assignment is historical context until a later active assignment. Surfaces agree. Later enrol creates a new row |
+| Identity / errors | Architectural requirements as listed in architecture §9.2 |
 
 ---
 

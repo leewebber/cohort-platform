@@ -15,7 +15,7 @@ NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
@@ -60,8 +60,8 @@ Daily Journey Integrity is **closed**. Binding:
 
 `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. Complete Athlete Experience
 architecture is **approved**. Sprint 1 and Sprint 2 are **complete** on
-`origin/main` `8405421`. Sprint 3 is **audited, awaiting founder
-approval**
+`origin/main` `8405421`. Sprint 3 is **approved, not
+started**
 ([`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
 [`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)).
 Implementation is **not** authorised.

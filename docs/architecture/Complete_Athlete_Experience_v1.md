@@ -3,7 +3,7 @@
 **Status:** Binding milestone definition. Architecture **approved**.
 Sprint 1 **Programme Discovery and Decision** is **complete** on
 `origin/main` `a3cd351`. Sprint 2 is **complete** on `origin/main`
-`8405421`. Sprint 3 is **audited, awaiting founder approval**.
+`8405421`. Sprint 3 is **approved, not started**.
 **Recorded:** 2026-09-22
 **Live pointer:** 2026-09-24
 **Decisions bound:** 2026-09-22
@@ -11,7 +11,7 @@ Sprint 1 **Programme Discovery and Decision** is **complete** on
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)
 **Sprint 2 binding (complete):**
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
-**Sprint 3 binding (audited, not approved):**
+**Sprint 3 binding (approved, not started):**
 [`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)
 **Historical architecture base:** `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
@@ -20,7 +20,7 @@ Sprint 1 **Programme Discovery and Decision** is **complete** on
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -378,7 +378,8 @@ Sprint 1 is **complete** on `origin/main` `a3cd351`.
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
 Replacement remains architecture only. Pin rules must not change.
 
-**Sprint 3** binding (**audited, awaiting approval, not authorised**):
+**Sprint 3** binding (**approved, not started, not authorised to
+implement here**):
 [`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
 Slice: programme-complete Home, completed-assignment projection,
@@ -386,8 +387,7 @@ Progress error-versus-empty, removal of production `athlete.local`,
 truthful History identity, cross-surface agreement.
 
 Complete Athlete Experience **cannot close** until Sprint 3 is
-implemented and tested. Sprint 3 architecture is **not** approved by
-this live-pointer update.
+implemented and tested. Sprint 3 is **not** implemented.
 
 These outlines do not authorise work.
 
@@ -421,8 +421,8 @@ transaction, not session `CURRENT_DATE`.
 
 Live binding:
 [`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md)
-§9. Sprint 3 is **audited, awaiting founder approval**. Implementation
-is **not** started.
+§9.2. Sprint 3 is **approved, not started**. Implementation is **not**
+started.
 
 ---
 

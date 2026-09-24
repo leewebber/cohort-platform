@@ -1,8 +1,9 @@
 # Complete Athlete Experience Sprint 3 v1
 
-**Status:** Binding architecture for Sprint 3. **Audited. Awaiting founder
-approval.** Implementation is **not** authorised.
+**Status:** Binding architecture for Sprint 3. Founder decisions
+**approved**. Implementation is **approved, not started**.
 **Recorded:** 2026-09-24
+**Decisions bound:** 2026-09-24
 **Parent:**
 [`Complete_Athlete_Experience_v1.md`](./Complete_Athlete_Experience_v1.md)
 **Evidence:**
@@ -13,16 +14,16 @@ approval.** Implementation is **not** authorised.
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 REPLACEMENT_TRANSACTION_AUTHORISED=false
 PERFORMANCE_PORTFOLIO_AUTHORISED=false
 ```
 
-This document binds the proposed Sprint 3 product. It is **not** an
+This document binds the approved Sprint 3 product. It is **not** an
 implementation licence. A later task must separately authorise code
-changes. It does **not** start Sprint 3, approve a replacement
-transaction, or open Athlete-defined Performance Portfolio.
+changes. Sprint 3 is **not** implemented. Complete Athlete Experience
+is **not** closed.
 
 ---
 
@@ -204,10 +205,19 @@ assignment” or “no today session”.
 
 **Home.** After the final session, Home may still show the completed
 today card until the assignment refresh lands. After refresh, Home
-must **not** become `ChoosePlanEntryCard`. It must show a
-programme-complete state: factual title, completed status, no Begin.
-Primary and secondary actions are a founder decision (§9). No invented
-progress, streaks-as-improvement, or programme recommendations.
+must **not** become `ChoosePlanEntryCard`. It must show a factual
+completed-programme state:
+
+```text
+You finished {authored programme title}.
+```
+
+Primary action: **View results** (authoritative completed evidence).
+Secondary action: **Browse programmes** (existing no-active-programme
+journey). No Begin. Do not claim improvement, transformation, goal
+achievement, readiness, fitness gain, or personal best unless
+separately supported by authoritative evidence. Do not recommend a
+programme or create urgency.
 
 **Calendar.** The completed assignment’s occurrences remain
 inspectable (completed / rest). No new scheduled Begin. Empty
@@ -374,8 +384,9 @@ failed read.
 ## 8. Scope decision
 
 **Sprint 3 name:** Programme Completion and History Integrity
+**(approved 2026-09-24)**
 
-**Smallest coherent boundary**
+**Approved implementation boundary**
 
 - Current-assignment projection (active vs completed vs none vs error)
 - Programme-complete Home (and Programmes Continuity `completed`)
@@ -387,7 +398,7 @@ failed read.
 - Coach-only must not authorise athlete History / Progress
 - Cross-surface agreement tests for the matrix above
 
-This is the expected candidate, **confirmed** by production tracing.
+This boundary is **approved**. Production tracing confirmed it.
 The Home gap is caused by the same active-only read that empties
 Calendar and Programmes. Progress empty-as-error and History fallback
 are the integrity half of the same athlete-context contract.
@@ -414,25 +425,69 @@ are the integrity half of the same athlete-context contract.
 | Full coach product shell | **Deferred**; coach platform frozen. Sprint 3 only fail-closes athlete surfaces |
 | Programme library authorship | **Out** (next roadmap item after CAE) |
 
+**Included when implementation is later authorised**
+
+- Authoritative current-assignment projection: active, most-recent
+  completed, and none
+- Completed-programme Home state with View results / Browse programmes
+- Assignment-specific completed Calendar inspection using existing
+  `resolve_fixed_programme_calendar(assignment_id)`
+- Completed continuity on Programmes
+- Progress error-versus-empty correction and safe last-good retention
+- Removal of production `athlete.local` fallbacks
+- Fail-closed History and Progress identity; coach-only denial
+- Sign-out and account-switch isolation
+- Cross-surface agreement and restart tests
+
+**Excluded**
+
+- New completion mutation authority
+- Replacement or repinning
+- Programme recommendation or matching
+- Automatic next programme
+- Progress metric redesign
+- Athlete-defined Performance Portfolio
+- Adaptation, payments, offline completion queue, wearables
+- WOD Timer, Whiteboard, blue-brand work
+- Hosted data repair
+
 **Can Sprint 3 close Complete Athlete Experience?** **Yes**, if the
 required row is implemented and tested. A Sprint 4 is **not** required
 for this milestone. Remaining athlete-launch gaps (library depth,
 adaptation engine, wearables, commercial) are **later roadmap items**,
-not a fourth CAE sprint.
+not a fourth CAE sprint. Sprint 3 is **not** implemented and the
+milestone is **not** closed.
 
 ---
 
 ## 9. Founder decisions
 
-Repository authority already binds error≠empty, no fallback identity,
-no invented claims, completed≠active for enrol, and no replacement
-transaction. Those are not reopened.
+### 9.1 Historical options (audit, 2026-09-24)
 
-| # | Choice | Recommended | Alternatives | Consequences | Can implementation start without it? |
-|---|--------|-------------|--------------|--------------|--------------------------------------|
-| 1 | Home complete **primary** action | **View results** (last session / History). Secondary: **Browse programmes** (existing no-active enrol). | Primary “Choose next programme”; or “View programme” (Programmes completed overview) | Ranking only. All three destinations already exist. | **Yes**, if both View results and Browse programmes are present. Founder picks which is primary before visual approval. |
-| 2 | Invite immediate new enrol from Home | **Allow**, do not force. Completed is not active. | Hide enrol until Profile/Programmes; or auto-open catalogue | Hide would still leave enrol on Programmes. Auto-open is not allowed (no implicit enrol). | **Yes**. Transaction already exists. |
-| 3 | Celebration level | **Factual:** “You finished {authored title}.” No scores, streaks-as-fitness, or recommendations. | Warmer celebration with the same facts; or no celebration (status only) | Copy only. Invented claims remain forbidden. | **Yes** with factual copy. Warmer wording can wait for visual correction. |
+The audit listed three product choices. They are preserved here and
+are superseded by §9.2.
+
+| # | Choice | Then recommended |
+|---|--------|------------------|
+| 1 | Home complete primary action | View results; secondary Browse programmes |
+| 2 | Immediate new enrol from Home | Allow, do not force |
+| 3 | Celebration level | Factual “You finished {authored title}.” |
+
+Identity, error-versus-empty, completed≠active for enrol, and no
+replacement transaction were already repository authority, not
+founder options.
+
+### 9.2 Resolved (2026-09-24)
+
+| Decision | Binding |
+|----------|---------|
+| Architecture | **Approved.** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED` |
+| Sprint name | **Programme Completion and History Integrity** |
+| Implementation | **Approved, not started.** `NEXT_IMPLEMENTATION_AUTHORISED=false` until a later implementation task |
+| Completed Home | Factual state: “You finished {authored programme title}.” Primary **View results**. Secondary **Browse programmes**. No improvement, transformation, goal, readiness, fitness, or personal-best claims unless separately supported by authoritative evidence |
+| Next programme | Completed assignment is **not** active. Immediate browse/enrol through the **existing** no-active-programme flow is allowed. Do **not** force enrol, auto-enrol, recommend a programme, repin/replace, create urgency, or hide completed results behind enrolment |
+| Completion continuity | Completed assignment remains the current historical programme context until a later **active** assignment exists. Home complete; View results → authoritative completed evidence; Calendar inspect via existing assignment-specific resolver; Programmes completed continuity; Progress keeps that assignment’s evidence; History keeps athlete-scoped records; later enrol creates a **new** active assignment and must not rewrite the completed assignment or its history |
+| Identity and errors | Architectural requirements, not options: remove production `athlete.local`; authoritative athlete identity only; coach-only does not authorise athlete Progress/History; absent context fails closed; genuine empty only after successful empty read; loading/auth/repository/parse/offline failures must not masquerade as empty; retain last truthful Progress/History on refresh failure where safe; never mix athletes, assignments, sessions, or programme versions |
 
 ---
 
@@ -473,6 +528,6 @@ transaction. Those are not reopened.
 
 ## 12. Explicit non-actions
 
-This audit task must not and did not implement Sprint 3, change
+This approval task must not and did not implement Sprint 3, change
 Dart/SQL/fixtures, create a preview, contact hosted systems, install a
-phone build, push, or mark architecture approved.
+phone build, push, or mark Sprint 3 implemented.

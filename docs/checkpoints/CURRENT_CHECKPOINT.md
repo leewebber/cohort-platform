@@ -17,14 +17,13 @@
 > Start Integrity and Programme Continuity** is **complete** on
 > `origin/main` `8405421`
 > (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`). Sprint 3 **Programme
-> Completion and History Integrity** is **audited, awaiting founder
-> approval**
-> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL`).
+> Completion and History Integrity** is **approved, not started**
+> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED`).
 > Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
 > [`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
-> Sprint 3 is **not** approved and is **not** started. Daily Journey Sprint 1 `e646f11`, Sprint 2
+> Sprint 3 is **not** implemented. Daily Journey Sprint 1 `e646f11`, Sprint 2
 > `5b584a6`, Sprint 3 `5329343`, whitespace `6796cb2`. Contracts:
 > [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md),
 > [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md),
