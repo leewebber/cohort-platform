@@ -19,6 +19,7 @@ import '../programme/screens/athlete_programme_schedule_screen.dart';
 import 'presentation/athlete_home_today_presentation.dart';
 import 'widgets/athlete_home_completed_today_card.dart';
 import '../programme/presentation/athlete_programme_continuity_copy.dart';
+import '../programme/widgets/athlete_programme_status_state.dart';
 import '../programme/screens/athlete_programme_screen.dart';
 import '../programme/screens/scheduled_programme_session_preview_screen.dart';
 import '../programme/services/athlete_catalogue_enrolment_services.dart';
@@ -275,14 +276,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         return [
           const Text('TODAY', style: CohortTextStyles.sectionLabel),
           const SizedBox(height: CohortSpacing.md),
-          const Text(
-            AthleteProgrammeContinuityCopy.pinnedUnavailable,
-            style: CohortTextStyles.muted,
-          ),
-          const SizedBox(height: CohortSpacing.sm),
-          TextButton(
-            onPressed: _openProgrammeCatalogue,
-            child: const Text('VIEW PROGRAMMES'),
+          AthleteProgrammeStatusState(
+            badge: 'Unavailable',
+            headline: AthleteProgrammeContinuityCopy.pinnedUnavailableHeadline,
+            explanation: AthleteProgrammeContinuityCopy.pinnedUnavailable,
+            action: TextButton(
+              onPressed: _openProgrammeCatalogue,
+              child: const Text('VIEW PROGRAMMES'),
+            ),
           ),
         ];
       case AthleteHomeRuntimeAuthority.none:

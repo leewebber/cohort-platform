@@ -18,6 +18,7 @@ import '../domain/athlete_programme_continuity.dart';
 import '../models/programme_catalog_entry.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
+import '../widgets/athlete_programme_status_state.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
 import '../services/athlete_plan_materialisation_service.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
@@ -389,10 +390,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
             Text('$sessions sessions per week', style: CohortTextStyles.small),
           ],
           const SizedBox(height: CohortSpacing.md),
-          Text(
-            AthleteProgrammeContinuityCopy.overviewMessage(_continuity),
-            style: CohortTextStyles.body,
-          ),
+          AthleteProgrammeStatusState.fromContinuity(_continuity),
           const SizedBox(height: CohortSpacing.md),
           _buildLifecycleStatus(assignment),
           if (assignment.isFixedSchedule && _fixedCalendar != null) ...[

@@ -23,6 +23,7 @@ import '../services/future_programme_session_swap_store.dart';
 import '../services/incomplete_session_train_today.dart';
 import '../services/scheduled_programme_session_preview_service.dart';
 import '../widgets/athlete_calendar_month_grid.dart';
+import '../widgets/athlete_programme_status_state.dart';
 import '../widgets/incomplete_session_recovery_actions.dart';
 import 'backfill_programme_session_flow.dart';
 import 'scheduled_programme_session_preview_screen.dart';
@@ -221,20 +222,14 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
   Widget _errorState() => Center(
     child: Padding(
       padding: const EdgeInsets.all(CohortSpacing.lg),
-      child: CohortCard(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AthleteProgrammeContinuityCopy.pinnedUnavailable,
-              style: CohortTextStyles.h2,
-            ),
-            const SizedBox(height: CohortSpacing.sm),
-            Text(_error!, style: CohortTextStyles.body),
-            const SizedBox(height: CohortSpacing.md),
-            TextButton(onPressed: _load, child: const Text('Retry')),
-          ],
+      child: AthleteProgrammeStatusState(
+        badge: 'Unavailable',
+        headline: AthleteProgrammeContinuityCopy.pinnedUnavailableHeadline,
+        explanation: AthleteProgrammeContinuityCopy.pinnedUnavailable,
+        technical: _error,
+        action: TextButton(
+          onPressed: _load,
+          child: const Text(AthleteProgrammeContinuityCopy.retry),
         ),
       ),
     ),
