@@ -1,5 +1,9 @@
 # Complete Athlete Experience Sprint 3 — implementation handoff
 
+> **Historical.** Sprint 3 is complete and integrated. Milestone closeout:
+> [`COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+> Flags below are the implementation-handoff record and are not rewritten.
+
 **Status:** Implemented locally. Awaiting founder architectural and
 visual approval. **Not complete.** **Not integrated.** **Not pushed.**
 

@@ -1,34 +1,36 @@
 # Complete Athlete Experience v1
 
-**Status:** Binding milestone definition. Architecture **approved**.
-Sprint 1 **Programme Discovery and Decision** is **complete** on
-`origin/main` `a3cd351`. Sprint 2 is **complete** on `origin/main`
-`8405421`. Sprint 3 is **approved, not started**.
+**Status:** Binding milestone definition. Complete Athlete Experience is
+**complete**. Closeout:
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+This does **not** mean the entire Cohort product is complete or
+launch-ready.
 **Recorded:** 2026-09-22
 **Live pointer:** 2026-09-24
 **Decisions bound:** 2026-09-22
-**Audit evidence:**
+**Audit evidence (historical):**
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)
 **Sprint 2 binding (complete):**
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
-**Sprint 3 binding (approved, not started):**
-[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
-[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)
+**Sprint 3 binding (complete):**
+[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md)
 **Historical architecture base:** `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
 
 ```text
-COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE
+HOSTED_MIGRATION_APPLIED=true
+SPRINT_2_HOSTED_MIGRATION_APPLIED=true
+SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
-NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-This document defines the approved milestone. It is not an implementation
-licence. Product code must not change until a later task separately
-authorises Sprint 1 implementation.
+This document remains the milestone definition. Implementation of Sprints
+1–3 is complete and integrated. It does not authorise the next product
+milestone.
 
 ---
 
@@ -211,8 +213,8 @@ These rules are binding for every Complete Athlete Experience sprint.
     Progress must not present a hosted/query failure as a legitimate empty
     state. History must not use `athlete.local` or another fallback
     identity as athlete authority. Failure must be honest and retryable.
-    These are launch blockers owned by Sprint 3. Complete Athlete
-    Experience cannot close until both are corrected and tested.
+    These were launch blockers owned by Sprint 3. Sprint 3 delivered
+    them; Complete Athlete Experience is now **complete**.
 
 ---
 
@@ -378,18 +380,17 @@ Sprint 1 is **complete** on `origin/main` `a3cd351`.
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
 Replacement remains architecture only. Pin rules must not change.
 
-**Sprint 3** binding (**approved, not started, not authorised to
-implement here**):
+**Sprint 3** is **complete** on `origin/main` `8dcf58e` (cleanup
+`fc73ae0`):
 [`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
-[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
-Slice: programme-complete Home, completed-assignment projection,
-Progress error-versus-empty, removal of production `athlete.local`,
-truthful History identity, cross-surface agreement.
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+Slice delivered: programme-complete Home, completed-assignment Calendar
+inspection, Progress error-versus-empty, removal of production
+`athlete.local`, truthful History identity, cross-surface agreement.
 
-Complete Athlete Experience **cannot close** until Sprint 3 is
-implemented and tested. Sprint 3 is **not** implemented.
-
-These outlines do not authorise work.
+Complete Athlete Experience is **complete**. The outlines below do not
+authorise later product work.
 
 ---
 
@@ -419,10 +420,12 @@ transaction, not session `CURRENT_DATE`.
 
 ### 9.2 Sprint 3 decisions (2026-09-24)
 
-Live binding:
+Recorded when Sprint 3 architecture was approved. Sprint 3 and the
+milestone are now **complete**. Closeout:
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+Sprint 3 architecture:
 [`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md)
-§9.2. Sprint 3 is **approved, not started**. Implementation is **not**
-started.
+§9.2.
 
 ---
 

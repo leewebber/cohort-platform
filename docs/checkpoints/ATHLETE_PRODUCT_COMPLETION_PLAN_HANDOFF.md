@@ -2,21 +2,24 @@
 
 **Recorded:** 2026-09-20
 
-**Status:** Binding next-task authority after M10 infrastructure closeout.
-Implementation of the next sprint is **not** authorised until founder
-roadmap approval.
+**Status:** Binding next-task authority after M10 infrastructure closeout
+and Complete Athlete Experience closeout. The next sequenced item is
+launch programme library. Implementation is **not** authorised.
 
 ```text
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
 M10_CLOSED=true
 COACH_PLATFORM_FROZEN=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
-NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
-COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED
-NEXT_IMPLEMENTATION_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE
+HOSTED_MIGRATION_APPLIED=true
+SPRINT_2_HOSTED_MIGRATION_APPLIED=true
+SPRINT_3_HOSTED_MIGRATION_APPLIED=true
+NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
+NEXT_IMPLEMENTATION_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 HOSTED_WRITES_THIS_TASK=false
@@ -58,13 +61,11 @@ M10 migration. Phone **build 7** untouched. No hosted consent smoke.
 Daily Journey Integrity is **closed**. Binding:
 [`DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`. Complete Athlete Experience
-architecture is **approved**. Sprint 1 and Sprint 2 are **complete** on
-`origin/main` `8405421`. Sprint 3 is **approved, not
-started**
-([`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
-[`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)).
-Implementation is **not** authorised.
+Complete Athlete Experience is **complete**. Closeout:
+[`COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+The next sequenced item is **launch programme library**. It has **not**
+started. Implementation requires a new audit/architecture decision and
+explicit founder approval.
 
 ## Frozen / deferred coach scope
 

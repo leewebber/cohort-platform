@@ -31,20 +31,20 @@ Sprint 3+ coaching product is not the next milestone.
    frozen)
 5. **Athlete Experience Completion** — Daily Journey Integrity **closed**
    ([`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
-   Complete Athlete Experience architecture is **approved**. Sprint 1
-   **Programme Discovery and Decision** is **complete** at `a3cd351`.
-   Sprint 2 is **complete** at `8405421`. Sprint 3 is **approved, not
-   started**
-   (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
+   Complete Athlete Experience is **complete**
+   ([`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md);
+   `COMPLETE_ATHLETE_EXPERIENCE=COMPLETE`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`,
-   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE`,
+   `HOSTED_MIGRATION_APPLIED=true`,
+   `SPRINT_2_HOSTED_MIGRATION_APPLIED=true`,
+   `SPRINT_3_HOSTED_MIGRATION_APPLIED=true`,
+   `NEXT_IMPLEMENTATION_AUTHORISED=false`).
+   Closeout base `fc73ae0`. This does **not** make Cohort launch-ready.
    Binding:
-   [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
-   [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
-   [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
-   Sprint 3 implementation is **not** authorised.
-6. **Launch programme library**
+   [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
+6. **Launch programme library** (not started; not authorised)
 7. **Adaptation Engine v1**
 8. **Progression and tracking** — later includes the deferred
    **Athlete-defined Performance Portfolio**

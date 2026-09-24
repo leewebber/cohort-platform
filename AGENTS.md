@@ -150,22 +150,28 @@ The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
 and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).
 Daily Journey Integrity is **COMPLETE**
-([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md);
-`NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete Experience
-architecture is **approved**. Sprint 1 **Programme Discovery and
-Decision** is **complete** on `origin/main` `a3cd351`
-(`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **complete**
-on `origin/main` `8405421`
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`). Sprint 3 is **implemented,
-awaiting founder approval**
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
-Binding:
+([`docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](docs/checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)).
+Complete Athlete Experience is **COMPLETE**
+([`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md);
+`COMPLETE_ATHLETE_EXPERIENCE=COMPLETE`,
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`,
+`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE`,
+`HOSTED_MIGRATION_APPLIED=true`,
+`SPRINT_2_HOSTED_MIGRATION_APPLIED=true`,
+`SPRINT_3_HOSTED_MIGRATION_APPLIED=true`,
+`NEXT_IMPLEMENTATION_AUTHORISED=false`).
+Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
+`8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
+is launch-ready. The next sequenced item is **launch programme library**;
+it has **not** started and requires a new audit/architecture decision and
+explicit founder approval. Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
-[`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
+[`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
+Historical Sprint 3 evidence:
 [`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md),
 [`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md).
-Sprint 3 is **not** marked complete. M9 is **closed**
+M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).

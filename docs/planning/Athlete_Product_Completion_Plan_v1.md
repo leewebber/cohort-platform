@@ -11,16 +11,20 @@ ATHLETE_FIRST_LAUNCH=true
 COACH_PLATFORM_FROZEN=true
 M10_CLOSED=true
 DAILY_JOURNEY_INTEGRITY=COMPLETE
-NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
-COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE
+HOSTED_MIGRATION_APPLIED=true
+SPRINT_2_HOSTED_MIGRATION_APPLIED=true
+SPRINT_3_HOSTED_MIGRATION_APPLIED=true
+NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
 
 Binding parents:
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md),
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md),
@@ -1073,8 +1077,7 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 ### Critical path
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
-architecture approved; Sprint 1 complete at `a3cd351`; Sprint 2
-approved, not started; implementation not authorised)
+**complete** at `fc73ae0`; next `M-LIB` not started, not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1144,26 +1147,30 @@ explicit footnote.
 Daily Journey Integrity is **COMPLETE**. Binding:
 [`../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md).
 
-Complete Athlete Experience architecture is **approved**. Sprint 1
-**Programme Discovery and Decision** is **complete** at `a3cd351`.
-Sprint 2 is **complete** at `8405421`. Sprint 3 is **approved, not started**. Binding:
+Complete Athlete Experience is **complete**. Closeout:
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
+Sprint 1 `a3cd351`, Sprint 2 `8405421`, Sprint 3 `8dcf58e`, cleanup
+`fc73ae0`. Binding:
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
-[`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
-[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
+[`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
 
 ```text
 DAILY_JOURNEY_INTEGRITY=COMPLETE
-NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
-COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
+COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE
+HOSTED_MIGRATION_APPLIED=true
+SPRINT_2_HOSTED_MIGRATION_APPLIED=true
+SPRINT_3_HOSTED_MIGRATION_APPLIED=true
+NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-Sprint 3 implementation is **not** authorised until a separate task. The
-milestone is **not** complete. Active-programme replacement remains out
-of Complete Athlete Experience until separately approved.
+The next sequenced item is **launch programme library**. It has **not**
+started. Implementation requires a new audit/architecture decision and
+explicit founder approval. This does **not** make Cohort launch-ready.
+Active-programme replacement remains future work.
 
 **Standalone WOD Timer and Whiteboard** is a pre-launch utility candidate
 **after** the core athlete journey is complete. Do not promote it ahead of

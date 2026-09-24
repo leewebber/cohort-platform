@@ -8,24 +8,25 @@
 > and [`../planning/Athlete_Product_Completion_Plan_v1.md`](../planning/Athlete_Product_Completion_Plan_v1.md).
 > **Daily Journey Integrity is COMPLETE.** Closeout:
 > [`./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md`](./DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md)
-> (`DAILY_JOURNEY_INTEGRITY=COMPLETE`,
-> `NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE`). Complete Athlete
-> Experience architecture is **approved**. Sprint 1 **Programme Discovery
-> and Decision** is **complete** on `origin/main` `a3cd351`
-> (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
-> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 **Enrolment
-> Start Integrity and Programme Continuity** is **complete** on
-> `origin/main` `8405421`
-> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`). Sprint 3 **Programme
-> Completion and History Integrity** is **implemented, awaiting founder
-> approval**
-> (`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
-> Binding:
+> (`DAILY_JOURNEY_INTEGRITY=COMPLETE`). Complete Athlete Experience is
+> **COMPLETE**. Closeout:
+> [`./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md)
+> (`COMPLETE_ATHLETE_EXPERIENCE=COMPLETE`,
+> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
+> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`,
+> `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=COMPLETE`,
+> `HOSTED_MIGRATION_APPLIED=true`,
+> `SPRINT_2_HOSTED_MIGRATION_APPLIED=true`,
+> `SPRINT_3_HOSTED_MIGRATION_APPLIED=true`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`).
+> Closeout base `fc73ae0`. This does **not** make the Cohort product
+> launch-ready. Launch programme library has **not** started. Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
-> [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
+> [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
+> Historical Sprint 3 evidence:
 > [`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md),
 > [`./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md).
-> Sprint 3 is **not** marked complete. Daily Journey Sprint 1 `e646f11`, Sprint 2
+> Daily Journey Sprint 1 `e646f11`, Sprint 2
 > `5b584a6`, Sprint 3 `5329343`, whitespace `6796cb2`. Contracts:
 > [`../architecture/Daily_Journey_Integrity_v1.md`](../architecture/Daily_Journey_Integrity_v1.md),
 > [`../architecture/Daily_Journey_Execution_Reliability_v1.md`](../architecture/Daily_Journey_Execution_Reliability_v1.md),
