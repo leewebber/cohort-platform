@@ -7,8 +7,8 @@ import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../adaptive_progression/models/capability_timeline.dart';
 import '../../app_shell/presentation/athlete_time_aware_greeting.dart';
-import '../../athlete_profile/services/athlete_profile_session.dart';
-import '../../auth/services/current_user_session.dart';
+import '../../../core/services/authenticated_identity.dart';
+import '../../auth/services/athlete_surface_identity.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../models/progress_summary.dart';
 import '../services/athlete_progress_summary_builder.dart';
@@ -52,15 +52,21 @@ class _ProgressScreenState extends State<ProgressScreen>
     with WidgetsBindingObserver {
   ProgressSummary? _resolved;
   bool _loading = false;
+  bool _refreshFailed = false;
+  bool _blocked = false;
+  bool _unauthorized = false;
+  String? _scopedAthleteId;
   HomeTodaySessionRefreshController? _attachedController;
   String? _bootstrappedWallDate;
 
-  String get _athleteId {
-    final override = widget.athleteIdOverride?.trim();
-    if (override != null && override.isNotEmpty) return override;
-    return AthleteProfileSession.profile?.athleteId ??
-        CurrentUserSession.maybeInstance?.athleteId ??
-        'athlete.local';
+  String? _requireAthleteId() {
+    try {
+      return AthleteSurfaceIdentity.require(
+        override: widget.athleteIdOverride,
+      );
+    } on AuthenticatedIdentityException {
+      return null;
+    }
   }
 
   @override
@@ -131,22 +137,49 @@ class _ProgressScreenState extends State<ProgressScreen>
       return;
     }
 
-    setState(() => _loading = true);
+    final athleteId = _requireAthleteId();
+    if (athleteId == null) {
+      setState(() {
+        _unauthorized = true;
+        _blocked = false;
+        _refreshFailed = false;
+        _loading = false;
+        _resolved = null;
+        _scopedAthleteId = null;
+        _bootstrappedWallDate = null;
+      });
+      return;
+    }
+    if (_scopedAthleteId != athleteId) {
+      _resolved = null;
+      _scopedAthleteId = athleteId;
+    }
+    setState(() {
+      _loading = _resolved == null;
+      _unauthorized = false;
+    });
     final builder = widget.progressBuilder ?? AthleteProgressSummaryBuilder();
     try {
-      final summary = await builder.build(athleteId: _athleteId);
+      final summary = await builder.build(athleteId: athleteId);
       if (!mounted) return;
       setState(() {
         _resolved = summary;
         _loading = false;
+        _refreshFailed = false;
+        _blocked = false;
         _bootstrappedWallDate = _wallDate(summary.compliance.timezone);
       });
     } catch (_) {
       if (!mounted) return;
       setState(() {
-        _resolved = AthleteProgressSummaryBuilder.emptySummary();
         _loading = false;
-        _bootstrappedWallDate = _wallDate(null);
+        if (_resolved != null) {
+          _refreshFailed = true;
+          _blocked = false;
+        } else {
+          _blocked = true;
+          _refreshFailed = false;
+        }
       });
     }
   }
@@ -169,6 +202,49 @@ class _ProgressScreenState extends State<ProgressScreen>
   @override
   Widget build(BuildContext context) {
     _invalidateIfLocalDateMoved();
+    if (_unauthorized || _blocked) {
+      return Scaffold(
+        backgroundColor: CohortColors.background,
+        appBar: widget.embeddedInShell
+            ? null
+            : AppBar(
+                backgroundColor: CohortColors.background,
+                elevation: 0,
+                title: const Text('PROGRESS', style: CohortTextStyles.eyebrow),
+                centerTitle: false,
+              ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(CohortSpacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _unauthorized
+                      ? 'Athlete access is required'
+                      : 'Progress could not be loaded',
+                  style: CohortTextStyles.h1,
+                ),
+                const SizedBox(height: CohortSpacing.md),
+                Text(
+                  _unauthorized
+                      ? 'This account cannot open athlete Progress.'
+                      : 'Recorded evidence is unavailable. This is not an empty history.',
+                  style: CohortTextStyles.body,
+                ),
+                if (_blocked) ...[
+                  const SizedBox(height: CohortSpacing.md),
+                  CohortButton(
+                    label: 'Retry',
+                    onPressed: _bootstrap,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     if (_loading || _resolved == null) {
       return Scaffold(
         backgroundColor: CohortColors.background,
@@ -220,6 +296,8 @@ class _ProgressScreenState extends State<ProgressScreen>
           metrics: metrics,
           onChoosePlan: widget.onChoosePlan,
           onStartToday: widget.onStartToday,
+          refreshFailed: _refreshFailed,
+          onRetry: _refreshFailed ? _bootstrap : null,
         ),
       ),
     );
@@ -234,6 +312,8 @@ class _ProgressBody extends StatelessWidget {
     this.onChoosePlan,
     this.onStartToday,
     this.loading = false,
+    this.refreshFailed = false,
+    this.onRetry,
   });
 
   final ProgressSummary summary;
@@ -242,6 +322,8 @@ class _ProgressBody extends StatelessWidget {
   final VoidCallback? onChoosePlan;
   final VoidCallback? onStartToday;
   final bool loading;
+  final bool refreshFailed;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -264,11 +346,17 @@ class _ProgressBody extends StatelessWidget {
           Text(
             loading
                 ? 'Loading recorded sessions…'
+                : refreshFailed
+                ? 'Refresh failed. Showing last loaded evidence.'
                 : summary.sessionsCompleted == 0
-                ? 'Complete your first session to begin'
+                ? 'No recorded sessions yet.'
                 : 'Recorded sessions and exercise bests from completed work.',
             style: CohortTextStyles.body,
           ),
+          if (refreshFailed && onRetry != null) ...[
+            const SizedBox(height: CohortSpacing.md),
+            CohortButton(label: 'Retry', onPressed: onRetry),
+          ],
           if (!summary.hasActivePlan) ...[
             const SizedBox(height: CohortSpacing.lg),
             CohortButton(

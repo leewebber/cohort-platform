@@ -12,7 +12,9 @@ import '../../home/services/athlete_home_runtime_authority.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/repositories/performance_record_store.dart';
 import '../../performance/repositories/supabase_performance_record_store.dart';
+import '../../programme/domain/athlete_programme_context.dart';
 import '../../programme/models/fixed_programme_occurrence_projection.dart';
+import '../../programme/services/athlete_programme_context_resolver.dart';
 import '../../programme/models/programme_progress_summary.dart';
 import '../../programme/services/fixed_programme_occurrence_projection_store.dart';
 import '../../programme/services/fixed_programme_occurrence_projection_supabase_store.dart';
@@ -29,6 +31,16 @@ import 'time_eligible_discipline.dart';
 ///
 /// Training Discipline uses Calendar occurrence eligibility, not total
 /// programme length.
+class AthleteProgressEvidenceFailure implements Exception {
+  const AthleteProgressEvidenceFailure(this.code, [this.cause]);
+
+  final String code;
+  final Object? cause;
+
+  @override
+  String toString() => 'AthleteProgressEvidenceFailure($code)';
+}
+
 class AthleteProgressSummaryBuilder {
   AthleteProgressSummaryBuilder({
     ProgrammeAssignmentStore? assignmentStore,
@@ -64,21 +76,25 @@ class AthleteProgressSummaryBuilder {
   final DateTime Function()? utcNow;
 
   Future<ProgressSummary> build({required String athleteId}) async {
-    bool? materialised;
-    var unavailable = false;
-    ProgrammeAssignment? assignment;
-
+    if (athleteId.trim().isEmpty) {
+      throw const AthleteProgressEvidenceFailure('athlete_required');
+    }
+    late final AthleteProgrammeContext context;
     try {
-      assignment = await _assignmentStore.getActiveAssignment(athleteId);
-      materialised = assignment?.isMaterialised ?? false;
-    } catch (_) {
-      unavailable = true;
-      materialised = null;
+      context = await AthleteProgrammeContextResolver(
+        _assignmentStore,
+      ).resolve(athleteId);
+    } catch (error) {
+      throw AthleteProgressEvidenceFailure('assignment_unavailable', error);
     }
 
+    final assignment = context.assignment;
+    final materialised = context.isNone
+        ? false
+        : assignment?.isMaterialised ?? false;
     final authority = _authorityResolver.resolve(
       materialisedProgramme: materialised,
-      programmeEvidenceUnavailable: unavailable,
+      programmeEvidenceUnavailable: false,
     );
 
     switch (authority) {
@@ -114,7 +130,7 @@ class AthleteProgressSummaryBuilder {
       if (summary == null) {
         return programmePlaceholder(assignment);
       }
-      final calendar = await _tryLoadCalendar();
+      final calendar = await _tryLoadCalendar(assignment);
       return fromProgrammeSummary(
         assignment: assignment,
         programme: summary,
@@ -128,8 +144,13 @@ class AthleteProgressSummaryBuilder {
     }
   }
 
-  Future<FixedProgrammeCalendarProjection?> _tryLoadCalendar() async {
+  Future<FixedProgrammeCalendarProjection?> _tryLoadCalendar(
+    ProgrammeAssignment assignment,
+  ) async {
     try {
+      if (!assignment.isActive) {
+        return await _occurrenceStore.resolveForAssignment(assignment.id);
+      }
       return await _occurrenceStore.resolveActive();
     } catch (_) {
       return null;
@@ -207,8 +228,8 @@ class AthleteProgressSummaryBuilder {
         athleteId: athleteId,
         limit: 40,
       );
-    } catch (_) {
-      history = const [];
+    } catch (error) {
+      throw AthleteProgressEvidenceFailure('history_unavailable', error);
     }
     final completed = AthleteProgressEvidenceProjection.completedRecords(
       history,
