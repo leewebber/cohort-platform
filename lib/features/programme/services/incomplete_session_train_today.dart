@@ -19,7 +19,8 @@ abstract final class IncompleteSessionTrainToday {
     ProgrammeSessionExecutionLauncher? executionLauncher,
     HomeTodaySessionRefreshController? refreshController,
   }) async {
-    if (!occurrence.isExecutable ||
+    if (calendar.isInspectionOnly ||
+        !occurrence.isExecutable ||
         occurrence.assignmentId != calendar.assignmentId) {
       return false;
     }

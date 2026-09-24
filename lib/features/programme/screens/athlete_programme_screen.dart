@@ -110,7 +110,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   }
 
   Future<void> _refreshContinuity() async {
-    final assignment = _controller.activeAssignment;
+    final assignment = _controller.currentAssignment;
     List<ProgrammeCatalogEntry> catalogue = const [];
     try {
       catalogue = await AthleteCatalogueEnrolmentServices.createCatalogService()
@@ -131,7 +131,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   }
 
   Future<void> _loadFixedCalendar() async {
-    final assignment = _controller.activeAssignment;
+    final assignment = _controller.currentAssignment;
     if (assignment == null ||
         !assignment.isMaterialised ||
         !assignment.isFixedSchedule) {
@@ -154,8 +154,8 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       final projection =
           await (widget.fixedOccurrenceStore ??
                   const FixedProgrammeOccurrenceProjectionSupabaseStore())
-              .resolveActive();
-      if (projection == null || projection.assignmentId != assignment.id) {
+              .resolveForAssignment(assignment.id);
+      if (projection.assignmentId != assignment.id) {
         throw StateError(
           'The fixed programme calendar is unavailable for this assignment.',
         );
@@ -344,7 +344,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
   }
 
   Widget _buildCurrentProgrammeCard() {
-    final assignment = _controller.activeAssignment;
+    final assignment = _controller.currentAssignment;
     final version = _controller.activeVersion;
 
     if (assignment == null) {

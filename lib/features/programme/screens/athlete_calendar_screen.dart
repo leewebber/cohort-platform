@@ -7,6 +7,7 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
+import '../services/athlete_programme_context_resolver.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
@@ -116,11 +117,33 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
       });
     }
     try {
-      final calendar =
-          await (widget.fixedOccurrenceStore ??
-                  const FixedProgrammeOccurrenceProjectionSupabaseStore())
-              .resolveActive()
-              .timeout(const Duration(seconds: 12));
+      final store =
+          widget.fixedOccurrenceStore ??
+          const FixedProgrammeOccurrenceProjectionSupabaseStore();
+      FixedProgrammeCalendarProjection? calendar;
+      final assignments = widget.assignmentStore;
+      if (assignments != null) {
+        final context = await AthleteProgrammeContextResolver(
+          assignments,
+        ).resolve(widget.athleteId);
+        final assignment = context.assignment;
+        if (assignment == null) {
+          if (!mounted) return;
+          setState(() {
+            _calendar = null;
+            _loadState = _CalendarLoadState.empty;
+            _error = null;
+          });
+          return;
+        }
+        calendar = await store
+            .resolveForAssignment(assignment.id)
+            .timeout(const Duration(seconds: 12));
+      } else {
+        calendar = await store.resolveActive().timeout(
+          const Duration(seconds: 12),
+        );
+      }
       if (!mounted) {
         return;
       }
@@ -172,7 +195,12 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
                     style: CohortTextStyles.h2,
                   ),
                   const SizedBox(height: CohortSpacing.xs),
-                  Text('Training schedule', style: CohortTextStyles.muted),
+                  Text(
+                    calendar.isInspectionOnly
+                        ? 'Complete · inspect only'
+                        : 'Training schedule',
+                    style: CohortTextStyles.muted,
+                  ),
                   const SizedBox(height: CohortSpacing.md),
                   _monthControls(calendar),
                   const SizedBox(height: CohortSpacing.md),
@@ -383,6 +411,7 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
     FixedProgrammeCalendarProjection calendar,
     FixedProgrammeOccurrenceProjection occurrence,
   ) {
+    if (calendar.isInspectionOnly) return false;
     return IncompleteSessionRecovery.canTrainToday(
       occurrence: occurrence,
       calendar: calendar,

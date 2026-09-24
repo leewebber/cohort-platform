@@ -50,7 +50,7 @@ abstract final class AthleteProgrammeContinuityCopy {
       case AthleteProgrammeContinuityStatus.currentPinnedWithDifferentAvailable:
         return currentProgramme;
       case AthleteProgrammeContinuityStatus.completed:
-        return 'Completed';
+        return 'Complete';
       case AthleteProgrammeContinuityStatus.pinnedUnavailable:
         return 'Unavailable';
       case AthleteProgrammeContinuityStatus.none:

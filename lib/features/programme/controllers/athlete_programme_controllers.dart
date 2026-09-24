@@ -4,7 +4,9 @@ import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../data/repositories/programme_version_store.dart';
 import '../../../models/programme_assignment.dart';
 import '../../../models/programme_version.dart';
+import '../domain/athlete_programme_context.dart';
 import '../domain/athlete_programme_continuity.dart';
+import '../services/athlete_programme_context_resolver.dart';
 import '../domain/enrolment_iana_timezone.dart';
 import '../models/athlete_catalogue_enrolment.dart';
 import '../models/athlete_plan_materialisation.dart';
@@ -33,6 +35,7 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
   bool _loading = true;
   bool _starting = false;
   bool _preparing = false;
+  AthleteProgrammeContext _context = const AthleteProgrammeContext.none();
   ProgrammeAssignment? _assignment;
   ProgrammeVersion? _version;
   String? _errorMessage;
@@ -42,10 +45,13 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
   bool get isLoading => _loading;
   bool get isStarting => _starting;
   bool get isPreparing => _preparing;
-  ProgrammeAssignment? get activeAssignment => _assignment;
+  AthleteProgrammeContext get programmeContext => _context;
+  ProgrammeAssignment? get activeAssignment =>
+      _context.isActive ? _assignment : null;
+  ProgrammeAssignment? get currentAssignment => _assignment;
   ProgrammeVersion? get activeVersion => _version;
   String? get errorMessage => _errorMessage;
-  bool get hasActiveProgramme => _assignment != null;
+  bool get hasActiveProgramme => _context.isActive && _assignment != null;
   bool get canStartProgramme => _assignment?.canStartProgramme ?? false;
   bool get isMaterialised => _assignment?.isMaterialised ?? false;
   AthletePlanMaterialisationResult? get lastMaterialisationResult =>
@@ -67,15 +73,22 @@ class AthleteProgrammeScreenController extends ChangeNotifier {
     }
 
     try {
-      final assignment = await assignments.getActiveAssignment(_athleteId);
+      final context = await AthleteProgrammeContextResolver(
+        assignments,
+      ).resolve(_athleteId);
       ProgrammeVersion? version;
+      final assignment = context.assignment;
       if (assignment != null) {
         version = await versions.getVersionById(assignment.programmeVersionId);
       }
+      _context = context;
       _assignment = assignment;
       _version = version;
     } catch (error) {
       _errorMessage = error.toString();
+      _context = const AthleteProgrammeContext.none();
+      _assignment = null;
+      _version = null;
     }
 
     _loading = false;

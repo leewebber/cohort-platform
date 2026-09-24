@@ -364,6 +364,7 @@ class _ScheduledProgrammeSessionPreviewScreenState
   List<Widget> _executionAction(ScheduledProgrammeSessionPreview preview) {
     final occurrence = preview.occurrence;
     if (occurrence == null) return const [];
+    if (preview.calendar.isInspectionOnly) return const [];
     if (occurrence.isResumable) {
       return [
         const SizedBox(height: CohortSpacing.md),
@@ -580,7 +581,10 @@ class _ScheduledProgrammeSessionPreviewScreenState
 
   Future<void> _execute(ScheduledProgrammeSessionPreview preview) async {
     final occurrence = preview.occurrence;
-    if (occurrence == null || !occurrence.isExecutable || _isOpeningSession) {
+    if (occurrence == null ||
+        preview.calendar.isInspectionOnly ||
+        !occurrence.isExecutable ||
+        _isOpeningSession) {
       return;
     }
     setState(() => _isOpeningSession = true);

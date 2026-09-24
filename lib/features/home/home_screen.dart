@@ -10,8 +10,13 @@ import '../../data/repositories/programme_assignment_store.dart';
 import '../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../models/programme_assignment.dart';
 import '../auth/controllers/auth_controller.dart';
+import '../auth/services/athlete_surface_identity.dart';
 import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
+import '../../core/services/authenticated_identity.dart';
+import '../performance/screens/training_history_screen.dart';
+import '../programme/services/athlete_programme_context_resolver.dart';
+import 'widgets/athlete_home_completed_programme_card.dart';
 import '../athlete_profile/widgets/athlete_generated_today_section.dart';
 import '../programme/models/fixed_programme_occurrence_projection.dart';
 import '../programme/presentation/athlete_programme_lifecycle_presentation.dart';
@@ -110,12 +115,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   String? _calendarError;
   final Map<String, TrainingSessionRecord> _completedTodayRecords = {};
 
-  String get _athleteId {
-    final override = widget.athleteIdOverride?.trim();
-    if (override != null && override.isNotEmpty) return override;
-    return AthleteProfileSession.profile?.athleteId ??
-        CurrentUserSession.maybeInstance?.athleteId ??
-        'athlete.local';
+  String? _resolvedAthleteId;
+
+  String get _athleteId => _resolvedAthleteId ?? '';
+
+  String? _requireAthleteId() {
+    try {
+      return AthleteSurfaceIdentity.require(
+        override: widget.athleteIdOverride,
+      );
+    } on AuthenticatedIdentityException {
+      return null;
+    }
   }
 
   String? get _greetingDisplayName =>
@@ -162,41 +173,64 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _refreshMaterialisedGate() async {
-    try {
-      final assignment = await _assignmentStore.getActiveAssignment(_athleteId);
+    final athleteId = _requireAthleteId();
+    if (athleteId == null) {
       if (!mounted) return;
       setState(() {
+        _resolvedAthleteId = null;
+        _programmeEvidenceUnavailable = true;
+        _hasMaterialisedProgramme = null;
+        _assignment = null;
+        _calendar = null;
+        _calendarError = 'Athlete access is required.';
+      });
+      return;
+    }
+    try {
+      final context = await AthleteProgrammeContextResolver(
+        _assignmentStore,
+      ).resolve(athleteId);
+      if (!mounted) return;
+      final assignment = context.assignment;
+      setState(() {
+        _resolvedAthleteId = athleteId;
         _programmeEvidenceUnavailable = false;
-        _hasMaterialisedProgramme = assignment?.isMaterialised ?? false;
+        _hasMaterialisedProgramme = context.isNone
+            ? false
+            : assignment?.isMaterialised ?? false;
         _assignment = assignment;
         _calendar = null;
         _calendarError = null;
         _completedTodayRecords.clear();
       });
       if (assignment?.isFixedSchedule == true) {
-        final calendar =
-            await (widget.fixedOccurrenceStore ??
-                    const FixedProgrammeOccurrenceProjectionSupabaseStore())
-                .resolveActive();
+        final store =
+            widget.fixedOccurrenceStore ??
+            const FixedProgrammeOccurrenceProjectionSupabaseStore();
+        final calendar = context.isCompleted
+            ? await store.resolveForAssignment(assignment!.id)
+            : await store.resolveActive();
         if (calendar == null || calendar.assignmentId != assignment!.id) {
           throw StateError(
             'Fixed schedule projection is incomplete for this assignment.',
           );
         }
-        final homeCalendar = calendar.forHomeToday();
+        final homeCalendar = context.isCompleted
+            ? calendar
+            : calendar.forHomeToday();
         if (mounted) {
           setState(() => _calendar = homeCalendar);
         }
-        await _loadCompletedTodayRecords(homeCalendar);
+        if (context.isActive) {
+          await _loadCompletedTodayRecords(homeCalendar);
+        }
       }
     } catch (error) {
       if (!mounted) return;
-      // Fail closed: do not invent programme runtime from bad evidence.
       setState(() {
         _programmeEvidenceUnavailable = true;
         _hasMaterialisedProgramme = null;
-        _calendarError =
-            AthleteProgrammeContinuityCopy.failureMessage(error);
+        _calendarError = AthleteProgrammeContinuityCopy.failureMessage(error);
       });
     }
   }
@@ -292,6 +326,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   List<Widget> _fixedProgrammeHome(ProgrammeAssignment assignment) {
+    if (!assignment.isActive) {
+      final title =
+          _calendar?.programmeName.trim().isNotEmpty == true
+          ? _calendar!.programmeName
+          : assignment.lineageCode;
+      return [
+        AthleteHomeCompletedProgrammeCard(
+          programmeTitle: title,
+          supportingLine:
+              'This programme is complete. Your results stay in History.',
+          onViewResults: _openHistory,
+          onBrowseProgrammes: _openProgrammeCatalogue,
+        ),
+      ];
+    }
     final calendar = _calendar;
     if (calendar == null) {
       return [
@@ -442,6 +491,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         date: DateTime.parse(occurrence.scheduledDate),
         state: occurrence.state,
         occurrence: occurrence,
+      ),
+    );
+  }
+
+  Future<void> _openHistory() async {
+    if (_athleteId.isEmpty) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => TrainingHistoryScreen(athleteId: _athleteId),
       ),
     );
   }

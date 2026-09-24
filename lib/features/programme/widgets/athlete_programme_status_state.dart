@@ -79,7 +79,7 @@ class AthleteProgrammeStatusState extends StatelessWidget {
         );
       case AthleteProgrammeContinuityStatus.completed:
         return AthleteProgrammeStatusState(
-          badge: 'Completed',
+          badge: 'Complete',
           headline: 'This programme is complete.',
           explanation: AthleteProgrammeContinuityCopy.overviewMessage(
             continuity,
