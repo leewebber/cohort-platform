@@ -7,8 +7,10 @@ import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_brand_lockup.dart';
 import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
+import '../../../core/services/authenticated_identity.dart';
 import '../../athlete_profile/services/athlete_profile_session.dart';
 import '../../auth/controllers/auth_controller.dart';
+import '../../auth/services/athlete_surface_identity.dart';
 import '../../auth/services/current_user_session.dart';
 import '../../beta_support/beta_support_screen.dart';
 import '../../performance/screens/training_history_screen.dart';
@@ -19,10 +21,13 @@ class AthleteProfileScreen extends StatelessWidget {
 
   final AuthController? authController;
 
-  String get _athleteId =>
-      AthleteProfileSession.profile?.athleteId ??
-      CurrentUserSession.maybeInstance?.athleteId ??
-      'athlete.local';
+  String get _athleteId {
+    try {
+      return AthleteSurfaceIdentity.require();
+    } on AuthenticatedIdentityException {
+      return '';
+    }
+  }
 
   String get _displayName =>
       AthleteProfileSession.profile?.displayName ??
@@ -104,14 +109,16 @@ class AthleteProfileScreen extends StatelessWidget {
             const SizedBox(height: CohortSpacing.lg),
             _SectionHeader('History'),
             CohortCard(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        TrainingHistoryScreen(athleteId: _athleteId),
-                  ),
-                );
-              },
+              onTap: _athleteId.isEmpty
+                  ? null
+                  : () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              TrainingHistoryScreen(athleteId: _athleteId),
+                        ),
+                      );
+                    },
               child: const _ProfileRow(
                 title: 'Training History',
                 subtitle:

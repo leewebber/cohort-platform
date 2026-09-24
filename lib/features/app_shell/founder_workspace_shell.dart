@@ -35,7 +35,7 @@ class _FounderWorkspaceShellState extends State<FounderWorkspaceShell> {
   String get _athleteId =>
       AthleteProfileSession.profile?.athleteId ??
       CurrentUserSession.maybeInstance?.athleteId ??
-      'athlete.local';
+      '';
 
   static const _destinations = [
     _FounderNav('Overview', Icons.dashboard_outlined),

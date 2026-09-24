@@ -104,6 +104,10 @@ class _AuthGateState extends State<AuthGate> {
     if (role == AppAccessRole.founder) {
       return FounderWorkspaceShell(authController: widget.controller);
     }
+    final session = CurrentUserSession.maybeInstance;
+    if (session == null || !session.isAthlete) {
+      return const _AthleteAccessDeniedScreen();
+    }
     return AthleteAppShell(
       authController: widget.controller,
       pendingWorkoutProgress: _hydration?.pendingWorkoutProgress,
@@ -139,6 +143,40 @@ class _AuthGateState extends State<AuthGate> {
         controller: widget.controller,
       ),
     };
+  }
+}
+
+class _AthleteAccessDeniedScreen extends StatelessWidget {
+  const _AthleteAccessDeniedScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: CohortColors.background,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('COHORT', style: CohortTextStyles.eyebrow),
+              const SizedBox(height: 16),
+              Text(
+                'Athlete access is required',
+                style: CohortTextStyles.h2,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'This account cannot open athlete Home, Progress, or History.',
+                style: CohortTextStyles.body,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

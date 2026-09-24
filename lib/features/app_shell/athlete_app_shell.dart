@@ -7,7 +7,8 @@ import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_athlete_bottom_nav_bar.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../auth/controllers/auth_controller.dart';
-import '../auth/services/current_user_session.dart';
+import '../auth/services/athlete_surface_identity.dart';
+import '../../core/services/authenticated_identity.dart';
 import '../home/controllers/home_today_session_refresh_controller.dart';
 import '../home/home_screen.dart';
 import '../programme/controllers/athlete_programme_controllers.dart';
@@ -51,6 +52,7 @@ class AthleteAppShell extends StatefulWidget {
     this.swapStore,
     this.backfillStore,
     this.progressBuilder,
+    this.athleteIdOverride,
   });
 
   final AuthController? authController;
@@ -68,6 +70,7 @@ class AthleteAppShell extends StatefulWidget {
   final FutureProgrammeSessionSwapStore? swapStore;
   final BackfillProgrammeSessionStore? backfillStore;
   final AthleteProgressSummaryBuilder? progressBuilder;
+  final String? athleteIdOverride;
 
   static const destinations = [
     CohortAthleteNavDestination(
@@ -115,10 +118,15 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
       widget.fixedOccurrenceStore ??
       const FixedProgrammeOccurrenceProjectionSupabaseStore();
 
-  String get _athleteId =>
-      AthleteProfileSession.profile?.athleteId ??
-      CurrentUserSession.maybeInstance?.athleteId ??
-      'athlete.local';
+  String get _athleteId {
+    try {
+      return AthleteSurfaceIdentity.require(
+        override: widget.athleteIdOverride,
+      );
+    } on AuthenticatedIdentityException {
+      return '';
+    }
+  }
 
   BackfillProgrammeSessionStore get _backfillStore =>
       widget.backfillStore ??
@@ -227,6 +235,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           HomeScreen(
             authController: widget.authController,
             embeddedInShell: true,
+            athleteIdOverride: _athleteId.isEmpty ? null : _athleteId,
             refreshController: _surfaceRefresh,
             assignmentStore: widget.assignmentStore,
             prepareService: widget.prepareService,
@@ -268,6 +277,7 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
           ),
           ProgressScreen(
             key: ValueKey(_progressEpoch),
+            athleteIdOverride: _athleteId.isEmpty ? null : _athleteId,
             embeddedInShell: true,
             progressBuilder: widget.progressBuilder ??
                 AthleteProgressSummaryBuilder(

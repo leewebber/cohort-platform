@@ -19,7 +19,7 @@ class WorkoutPlayerController extends ChangeNotifier
     WorkoutPlayerPlanFlattener flattener = const WorkoutPlayerPlanFlattener(),
   }) : _athleteId = athleteId ??
            AthleteProfileSession.profile?.athleteId ??
-           'athlete.local',
+           '',
        _state = WorkoutPlayerState(
          plan: plan,
          brief: brief,

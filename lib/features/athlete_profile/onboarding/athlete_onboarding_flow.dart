@@ -53,9 +53,7 @@ class _AthleteOnboardingFlowState extends State<AthleteOnboardingFlow> {
     super.dispose();
   }
 
-  String get _athleteId =>
-      widget.athleteId ??
-      'athlete.local.${DateTime.now().toUtc().millisecondsSinceEpoch}';
+  String get _athleteId => widget.athleteId?.trim() ?? '';
 
   void _go(AthleteOnboardingStep step) {
     setState(() {
