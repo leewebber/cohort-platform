@@ -257,28 +257,28 @@ BEGIN
     materialised_package_content_hash
   )
   SELECT
-    'ba200000-0000-4000-8000-0000000000p1'::UUID,
+    'ba200000-0000-4000-8000-0000000000d1'::UUID,
     v_athlete, v_version, 'APOLLO-BUILD-12-WEEK', 'paused',
     v_start, 'Atlantic/Canary', 'fixed_schedule', NOW(), v_hash
   WHERE NOT EXISTS (
     SELECT 1 FROM programme_assignments
-    WHERE id = 'ba200000-0000-4000-8000-0000000000p1'
+    WHERE id = 'ba200000-0000-4000-8000-0000000000d1'
   );
-  v_paused := 'ba200000-0000-4000-8000-0000000000p1';
+  v_paused := 'ba200000-0000-4000-8000-0000000000d1';
 
   INSERT INTO programme_assignments (
     id, athlete_id, programme_version_id, lineage_code, status,
     started_at, timezone, schedule_mode
   )
   SELECT
-    'ba200000-0000-4000-8000-0000000000u1'::UUID,
+    'ba200000-0000-4000-8000-0000000000e1'::UUID,
     v_athlete, v_version, 'APOLLO-BUILD-12-WEEK', 'active',
     v_start, 'Atlantic/Canary', 'fixed_schedule'
   WHERE NOT EXISTS (
     SELECT 1 FROM programme_assignments
-    WHERE id = 'ba200000-0000-4000-8000-0000000000u1'
+    WHERE id = 'ba200000-0000-4000-8000-0000000000e1'
   );
-  v_unmat := 'ba200000-0000-4000-8000-0000000000u1';
+  v_unmat := 'ba200000-0000-4000-8000-0000000000e1';
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
   PERFORM set_config('role', 'authenticated', true);
@@ -300,17 +300,42 @@ BEGIN
     NULL, v_res->>'code' = 'fixed_assignment_ineligible', v_res::TEXT
   );
 
-  UPDATE programme_assignments
-  SET status = 'cancelled'
-  WHERE id = v_paused;
+  INSERT INTO programme_assignments (
+    id, athlete_id, programme_version_id, lineage_code, status,
+    started_at, timezone, schedule_mode, materialised_at,
+    materialised_package_content_hash
+  )
+  SELECT
+    'ba200000-0000-4000-8000-0000000000f1'::UUID,
+    v_athlete, v_version, 'APOLLO-BUILD-12-WEEK', 'reassigned',
+    v_start, 'Atlantic/Canary', 'fixed_schedule', NOW(), v_hash
+  WHERE NOT EXISTS (
+    SELECT 1 FROM programme_assignments
+    WHERE id = 'ba200000-0000-4000-8000-0000000000f1'
+  );
+
   PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
   PERFORM set_config('role', 'authenticated', true);
-  v_res := public.resolve_fixed_programme_calendar(v_paused);
+  v_res := public.resolve_fixed_programme_calendar(
+    'ba200000-0000-4000-8000-0000000000f1'::UUID
+  );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'BA', 'cancelled_rejected', 'fixed_assignment_ineligible',
+    'BA', 'reassigned_rejected', 'fixed_assignment_ineligible',
     COALESCE(v_res->>'code', v_res->>'status'),
     NULL, v_res->>'code' = 'fixed_assignment_ineligible', v_res::TEXT
+  );
+
+  PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_res := public.resolve_fixed_programme_calendar(
+    'ba200000-0000-4000-8000-0000000000aa'::UUID
+  );
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'BA', 'missing_assignment_rejected', 'assignment_not_found',
+    COALESCE(v_res->>'code', v_res->>'status'),
+    NULL, v_res->>'code' = 'assignment_not_found', v_res::TEXT
   );
 END $$;
 
