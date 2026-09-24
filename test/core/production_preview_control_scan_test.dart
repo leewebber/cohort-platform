@@ -48,6 +48,7 @@ void main() {
       'lib/main_week2_previous_strength_preview.dart',
       'lib/main_progression_mechanics_preview.dart',
       'lib/main_enrolment_continuity_preview.dart',
+      'lib/main_completion_history_integrity_preview.dart',
     ];
     for (final path in previewMains) {
       expect(File(path).existsSync(), isTrue, reason: path);

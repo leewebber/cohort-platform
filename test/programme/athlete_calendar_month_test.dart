@@ -267,4 +267,11 @@ class _Store implements FixedProgrammeOccurrenceProjectionStore {
     resolveCount += 1;
     return projection;
   }
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }

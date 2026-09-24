@@ -122,6 +122,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             prepareService: _localPrepare(tables),
@@ -144,6 +145,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             ),
@@ -176,6 +178,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: InMemoryProgrammeAssignmentStore(tables),
               prepareService: _localPrepare(tables),
@@ -196,6 +199,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           ),
@@ -215,6 +219,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             ),
@@ -222,11 +227,12 @@ void main() {
         );
         await tester.pumpAndSettle();
         expect(find.text('Choose a programme'), findsOneWidget);
-        
+
         _bindLegacyActivePlan();
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             ),
@@ -246,6 +252,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: _PendingAssignmentStore(pending.future),
             ),
@@ -272,6 +279,7 @@ void main() {
         await tester.pumpWidget(
           const MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: _ThrowingAssignmentStore(),
             ),
@@ -298,6 +306,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
               embeddedInShell: true,
               assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             ),

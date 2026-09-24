@@ -399,6 +399,13 @@ class _Projection implements FixedProgrammeOccurrenceProjectionStore {
   final FixedProgrammeCalendarProjection? projection;
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() async => projection;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _Loader extends SessionExecutionLoader {

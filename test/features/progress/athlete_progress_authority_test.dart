@@ -6,6 +6,7 @@ import 'package:cohort_platform/features/plans/data/plan_catalog.dart';
 import 'package:cohort_platform/features/plans/models/plan_assignment.dart';
 import 'package:cohort_platform/features/progress/screens/progress_screen.dart';
 import 'package:cohort_platform/features/progress/services/athlete_progress_summary_builder.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
 import 'package:cohort_platform/features/workout_player/services/coach_brain_workout_plan_service.dart';
@@ -41,6 +42,8 @@ void main() {
         );
 
         final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           versionStore: InMemoryProgrammeVersionStore(tables),
           slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -70,6 +73,8 @@ void main() {
       _bindLegacyActivePlan(sessionsInStore: 5);
 
       final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: InMemoryProgrammeVersionStore(tables),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -91,6 +96,8 @@ void main() {
         _bindLegacyActivePlan(sessionsInStore: 3);
 
         final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           versionStore: InMemoryProgrammeVersionStore(tables),
           slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -109,14 +116,15 @@ void main() {
         _bindLegacyActivePlan(sessionsInStore: 4);
 
         final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
           assignmentStore: const _ThrowingAssignmentStore(),
         );
 
-        final summary = await builder.build(athleteId: 'lee');
-
-        expect(summary.hasActivePlan, isFalse);
-        expect(summary.sessionsCompleted, 0);
-        expect(summary.planName, isNull);
+        expect(
+          () => builder.build(athleteId: 'lee'),
+          throwsA(isA<AthleteProgressEvidenceFailure>()),
+        );
       },
     );
 
@@ -127,6 +135,8 @@ void main() {
         _bindLegacyActivePlan(sessionsInStore: 2);
 
         final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           versionStore: InMemoryProgrammeVersionStore(tables),
           slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -147,6 +157,8 @@ void main() {
       final before = AthleteProfileSession.activeAssignment!;
 
       final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: InMemoryProgrammeVersionStore(tables),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -171,6 +183,8 @@ void main() {
     ) async {
       final tables = await _seedProgrammeTables(completedSessions: 1);
       final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: InMemoryProgrammeVersionStore(tables),
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),

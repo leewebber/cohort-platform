@@ -33,7 +33,8 @@ void main() {
       final controller = _controller(tables);
       await tester.pumpWidget(
         MaterialApp(
-          home: AthleteAppShell(programmeScreenController: controller),
+          home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
         ),
       );
       await tester.pumpAndSettle();
@@ -56,7 +57,8 @@ void main() {
         final controller = _controller(tables);
         await tester.pumpWidget(
           MaterialApp(
-            home: AthleteAppShell(programmeScreenController: controller),
+            home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
           ),
         );
         await tester.pumpAndSettle();
@@ -76,7 +78,8 @@ void main() {
         final controller = _controller(tables);
         await tester.pumpWidget(
           MaterialApp(
-            home: AthleteAppShell(programmeScreenController: controller),
+            home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
           ),
         );
         await tester.pumpAndSettle();
@@ -100,7 +103,8 @@ void main() {
         );
         await tester.pumpWidget(
           MaterialApp(
-            home: AthleteAppShell(programmeScreenController: controller),
+            home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
           ),
         );
         await tester.pumpAndSettle();
@@ -120,7 +124,8 @@ void main() {
         final controller = _controller(tables);
         await tester.pumpWidget(
           MaterialApp(
-            home: AthleteAppShell(programmeScreenController: controller),
+            home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
           ),
         );
         await tester.pumpAndSettle();
@@ -147,7 +152,8 @@ void main() {
         final controller = _controller(tables);
         await tester.pumpWidget(
           MaterialApp(
-            home: AthleteAppShell(programmeScreenController: controller),
+            home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: controller),
           ),
         );
         await tester.pumpAndSettle();
@@ -187,7 +193,8 @@ void main() {
     final tables = InMemoryProgrammeTables();
     await tester.pumpWidget(
       MaterialApp(
-        home: AthleteAppShell(programmeScreenController: _controller(tables)),
+        home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', programmeScreenController: _controller(tables)),
       ),
     );
     await tester.pumpAndSettle();

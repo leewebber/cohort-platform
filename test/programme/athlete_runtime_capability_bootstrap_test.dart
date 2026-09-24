@@ -160,7 +160,8 @@ void main() {
     testWidgets(
       'production AthleteAppShell survives missing capability RPC',
       (tester) async {
-        await tester.pumpWidget(const MaterialApp(home: AthleteAppShell()));
+        await tester.pumpWidget(const MaterialApp(home: AthleteAppShell(
+          athleteIdOverride: 'athlete.local', )));
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 50));
         expect(find.byType(AthleteAppShell), findsOneWidget);

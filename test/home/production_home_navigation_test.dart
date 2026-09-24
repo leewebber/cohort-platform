@@ -51,7 +51,8 @@ void main() {
         ),
       );
       await tester.pumpWidget(
-        const MaterialApp(home: HomeScreen(embeddedInShell: true)),
+        const MaterialApp(home: HomeScreen(
+            athleteIdOverride: 'athlete.local', embeddedInShell: true)),
       );
       await tester.pumpAndSettle();
 
@@ -91,7 +92,8 @@ void main() {
           ),
         );
         await tester.pumpWidget(
-          const MaterialApp(home: HomeScreen(embeddedInShell: true)),
+          const MaterialApp(home: HomeScreen(
+            athleteIdOverride: 'athlete.local', embeddedInShell: true)),
         );
         await tester.pumpAndSettle();
 

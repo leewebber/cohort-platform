@@ -828,6 +828,13 @@ class _MutableProjectionStore
 
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() async => value;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _RecordingSwapStore implements FutureProgrammeSessionSwapStore {

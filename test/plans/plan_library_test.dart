@@ -176,6 +176,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           ),
         ),

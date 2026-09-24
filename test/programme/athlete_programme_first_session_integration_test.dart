@@ -592,6 +592,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           ),
@@ -613,6 +614,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: _PendingAssignmentStore(pending.future),
           ),
@@ -650,6 +652,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             prepareService: prepare,
@@ -714,6 +717,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             refreshController: refresh,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
@@ -731,6 +735,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             key: const ValueKey('home-after-materialise'),
             embeddedInShell: true,
             refreshController: refresh,

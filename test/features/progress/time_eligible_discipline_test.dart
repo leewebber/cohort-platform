@@ -3,6 +3,7 @@ import 'package:cohort_platform/features/home/controllers/home_today_session_ref
 import 'package:cohort_platform/features/progress/models/progress_summary.dart';
 import 'package:cohort_platform/features/progress/screens/progress_screen.dart';
 import 'package:cohort_platform/features/progress/services/athlete_progress_summary_builder.dart';
+import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/progress/services/capability_radar_projection_service.dart';
 import 'package:cohort_platform/features/progress/services/time_eligible_discipline.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
@@ -409,6 +410,8 @@ void main() {
         ),
       );
       final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: versionStore,
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -572,6 +575,8 @@ void main() {
         tree: ProgrammeScheduleTestFixtures.foundationWeekOneTree(),
       );
       final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
         assignmentStore: InMemoryProgrammeAssignmentStore(tables),
         versionStore: versionStore,
         slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -631,6 +636,8 @@ void main() {
           ],
         );
         final builder = AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           versionStore: versionStore,
           slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -693,6 +700,8 @@ void main() {
               home: ProgressScreen(
                 athleteIdOverride: 'lee',
                 progressBuilder: AthleteProgressSummaryBuilder(
+          performanceRecordStore: InMemoryPerformanceRecordStore(),
+
                   assignmentStore: InMemoryProgrammeAssignmentStore(tables),
                   versionStore: versionStore,
                   slotOutcomeStore: InMemoryProgrammeSlotOutcomeStore(tables),
@@ -844,6 +853,13 @@ class _StaticOccurrenceStore
 
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() async => calendar;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _MutatingOccurrenceStore
@@ -852,4 +868,11 @@ class _MutatingOccurrenceStore
 
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() async => calendar;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }

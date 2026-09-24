@@ -26,6 +26,10 @@ void main() {
     expect(main.contains('main_programme_discovery_decision_preview'), isFalse);
     expect(main.contains('main_enrolment_continuity_preview'), isFalse);
     expect(
+      main.contains('main_completion_history_integrity_preview'),
+      isFalse,
+    );
+    expect(
       File(
         'lib/features/programme/screens/athlete_programme_enrolment_review_screen.dart',
       ).readAsStringSync().contains('timeZoneName'),

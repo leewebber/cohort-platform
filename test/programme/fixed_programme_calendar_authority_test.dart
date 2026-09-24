@@ -58,6 +58,13 @@ class _ProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
     calls++;
     return projection;
   }
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _SequenceProjectionStore
@@ -76,12 +83,26 @@ class _SequenceProjectionStore
     }
     return result as FixedProgrammeCalendarProjection?;
   }
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _ThrowingProjectionStore
     implements FixedProgrammeOccurrenceProjectionStore {
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() {
+    throw StateError('legacy path must not resolve fixed projection');
+  }
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
     throw StateError('legacy path must not resolve fixed projection');
   }
 }
@@ -803,6 +824,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             fixedOccurrenceStore: store,
@@ -1114,6 +1136,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             prepareService: prepare,
@@ -1192,6 +1215,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             fixedOccurrenceStore: store,
@@ -1354,6 +1378,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             key: UniqueKey(),
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
@@ -1401,6 +1426,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             fixedOccurrenceStore: _ProjectionStore(restProjection),
@@ -1986,6 +2012,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
           embeddedInShell: true,
           assignmentStore: InMemoryProgrammeAssignmentStore(
             await _tablesWith(assignment),
@@ -2277,6 +2304,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
           embeddedInShell: true,
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           prepareService: prepare,
@@ -2331,6 +2359,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: 'athlete.local',
           embeddedInShell: true,
           assignmentStore: InMemoryProgrammeAssignmentStore(tables),
           prepareService: _prepareService(
@@ -2387,6 +2416,7 @@ void main() {
             textScaler: TextScaler.linear(1.3),
           ),
           child: HomeScreen(
+            athleteIdOverride: 'athlete.local',
             embeddedInShell: true,
             assignmentStore: InMemoryProgrammeAssignmentStore(tables),
             prepareService: _prepareService(

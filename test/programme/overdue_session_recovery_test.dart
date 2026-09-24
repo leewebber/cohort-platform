@@ -453,6 +453,13 @@ class _HomeProjectionStore implements FixedProgrammeOccurrenceProjectionStore {
 
   @override
   Future<FixedProgrammeCalendarProjection?> resolveActive() async => projection;
+
+  @override
+  Future<FixedProgrammeCalendarProjection> resolveForAssignment(
+    String assignmentId,
+  ) {
+    return resolveAssignmentFromActiveFallback(this, assignmentId);
+  }
 }
 
 class _RecordingRecoveryStore implements OverdueProgrammeRecoveryStore {

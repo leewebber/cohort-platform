@@ -32,6 +32,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: previewAthleteId,
           embeddedInShell: true,
           assignmentStore: bundle.assignmentStore,
           fixedOccurrenceStore: bundle.projectionStore,
@@ -73,6 +74,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: previewAthleteId,
           embeddedInShell: true,
           assignmentStore: bundle.assignmentStore,
           fixedOccurrenceStore: bundle.projectionStore,
@@ -97,6 +99,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: previewAthleteId,
           embeddedInShell: true,
           assignmentStore: bundle.assignmentStore,
           fixedOccurrenceStore: bundle.projectionStore,
@@ -118,6 +121,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: HomeScreen(
+            athleteIdOverride: previewAthleteId,
           embeddedInShell: true,
           assignmentStore: bundle.assignmentStore,
           fixedOccurrenceStore: bundle.projectionStore,
