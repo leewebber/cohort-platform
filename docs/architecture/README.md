@@ -14,12 +14,14 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 
 | Document | Purpose |
 |----------|---------|
-| [Complete_Athlete_Experience_v1.md](./Complete_Athlete_Experience_v1.md) | **Complete Athlete Experience** milestone (architecture approved) |
+| [Complete_Athlete_Experience_v1.md](./Complete_Athlete_Experience_v1.md) | **Complete Athlete Experience** milestone (architecture approved; Sprint 1–2 complete) |
 | [Athlete_Programme_Discovery_and_Decision_v1.md](./Athlete_Programme_Discovery_and_Decision_v1.md) | **CAE Sprint 1** (complete at `a3cd351`) |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1_HANDOFF.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1_HANDOFF.md) | Sprint 1 historical handoff (integrated at `a3cd351`) |
-| [Complete_Athlete_Experience_Sprint_2_v1.md](./Complete_Athlete_Experience_Sprint_2_v1.md) | **CAE Sprint 2** enrolment start integrity and continuity (implemented, awaiting approval) |
-| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md) | Sprint 2 local handoff |
+| [Complete_Athlete_Experience_Sprint_2_v1.md](./Complete_Athlete_Experience_Sprint_2_v1.md) | **CAE Sprint 2** (complete at `8405421`) |
+| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md) | Sprint 2 historical handoff |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md) | Sprint 2 audit evidence |
+| [Complete_Athlete_Experience_Sprint_3_v1.md](./Complete_Athlete_Experience_Sprint_3_v1.md) | **CAE Sprint 3** programme completion and history integrity (audited, awaiting approval) |
+| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md) | Sprint 3 audit evidence |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md) | Production-route audit, scoreboard, resolved founder decisions |
 | [Daily_Journey_Integrity_v1.md](./Daily_Journey_Integrity_v1.md) | **Sprint 1** production auth, session entry, resumable draft |
 | [Daily_Journey_Execution_Reliability_v1.md](./Daily_Journey_Execution_Reliability_v1.md) | **Sprint 2** interruption, serialized restart, completion reconciliation |

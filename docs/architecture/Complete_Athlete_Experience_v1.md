@@ -2,22 +2,25 @@
 
 **Status:** Binding milestone definition. Architecture **approved**.
 Sprint 1 **Programme Discovery and Decision** is **complete** on
-`origin/main` `a3cd351`. Sprint 2 is **implemented, awaiting founder
-approval**. It is **not** complete.
+`origin/main` `a3cd351`. Sprint 2 is **complete** on `origin/main`
+`8405421`. Sprint 3 is **audited, awaiting founder approval**.
 **Recorded:** 2026-09-22
-**Live pointer:** 2026-09-23
+**Live pointer:** 2026-09-24
 **Decisions bound:** 2026-09-22
 **Audit evidence:**
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md)
-**Sprint 2 binding:**
-[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md),
-[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md)
+**Sprint 2 binding (complete):**
+[`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
+**Sprint 3 binding (audited, not approved):**
+[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)
 **Historical architecture base:** `c4d3dcbb2656c99e0773427ca6f31944d8ca1e73`
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
 DAILY_JOURNEY_INTEGRITY=COMPLETE
 NEXT_MILESTONE=COMPLETE_ATHLETE_EXPERIENCE
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -370,27 +373,21 @@ Sprint 1 is **complete** on `origin/main` `a3cd351`.
 
 ## 8. Recommended later sequence (not authorised)
 
-**Sprint 2** binding (**implemented, awaiting founder approval**):
+**Sprint 2** is **complete** on `origin/main` `8405421`:
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md).
-Slice: IANA enrol + athlete-local start date + pinned-versus-default
-status. Replacement remains architecture only. Pin rules must not change.
+Replacement remains architecture only. Pin rules must not change.
 
-Historical outline (2026-09-22): IANA timezone, superseded-pin honesty,
-replacement **design**, historical preservation, aftermath. Listing
-replacement does **not** approve the transaction.
+**Sprint 3** binding (**audited, awaiting approval, not authorised**):
+[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md),
+[`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
+Slice: programme-complete Home, completed-assignment projection,
+Progress error-versus-empty, removal of production `athlete.local`,
+truthful History identity, cross-surface agreement.
 
-**Sprint 3 (outline, not authorised):** Programme-complete Home and
-cross-surface agreement —
-
-- programme-complete Home
-- Progress / History using programme name not only `lineageCode`
-- Progress must not present hosted/query failure as empty
-- History must not use `athlete.local` or another fallback identity
-- honest retryable failure; missing identity fails closed
-
-Complete Athlete Experience **cannot close** until the Progress and
-History launch blockers are corrected and tested.
+Complete Athlete Experience **cannot close** until Sprint 3 is
+implemented and tested. Sprint 3 architecture is **not** approved by
+this live-pointer update.
 
 These outlines do not authorise work.
 
@@ -416,9 +413,16 @@ erase the production-route audit.
 
 Live binding:
 [`Complete_Athlete_Experience_Sprint_2_v1.md`](./Complete_Athlete_Experience_Sprint_2_v1.md)
-§3. Sprint 2 is **implemented, awaiting founder approval**. End+create replacement is
+§3. Sprint 2 is **complete** at `8405421`. End+create replacement is
 architecture only. Enrol `started_at` is IANA-local in the enrol
 transaction, not session `CURRENT_DATE`.
+
+### 9.2 Sprint 3 decisions (2026-09-24)
+
+Live binding:
+[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md)
+§9. Sprint 3 is **audited, awaiting founder approval**. Implementation
+is **not** started.
 
 ---
 

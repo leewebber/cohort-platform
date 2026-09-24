@@ -5,9 +5,11 @@
 | [Delivery_Roadmap_v1.md](./Delivery_Roadmap_v1.md) | **Active** product milestone sequence (athlete-first after M10 close) |
 | [Athlete_Product_Completion_Plan_v1.md](./Athlete_Product_Completion_Plan_v1.md) | **Binding** athlete-launch doctrine, audit, library, and gates |
 | [../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md) | Daily Journey Integrity **COMPLETE**; next = Complete Athlete Experience |
-| [../architecture/Complete_Athlete_Experience_v1.md](../architecture/Complete_Athlete_Experience_v1.md) | Complete Athlete Experience **architecture approved**; Sprint 1 complete |
-| [../architecture/Complete_Athlete_Experience_Sprint_2_v1.md](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md) | Sprint 2 **implemented, awaiting founder approval** |
-| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md) | Sprint 2 local handoff |
+| [../architecture/Complete_Athlete_Experience_v1.md](../architecture/Complete_Athlete_Experience_v1.md) | Complete Athlete Experience **architecture approved**; Sprint 1–2 complete |
+| [../architecture/Complete_Athlete_Experience_Sprint_3_v1.md](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md) | Sprint 3 **audited, awaiting founder approval** |
+| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md) | Sprint 3 audit evidence |
+| [../architecture/Complete_Athlete_Experience_Sprint_2_v1.md](../architecture/Complete_Athlete_Experience_Sprint_2_v1.md) | Sprint 2 **complete** at `8405421` |
+| [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_HANDOFF.md) | Sprint 2 historical handoff |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md) | Sprint 2 audit evidence |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_AUDIT.md) | Production audit and scoreboard |
 | [../architecture/Planning_Engine_v1.md](../architecture/Planning_Engine_v1.md) | Canonical planning architecture (Phase 3.5) |

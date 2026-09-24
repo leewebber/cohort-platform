@@ -1,19 +1,24 @@
 # Complete Athlete Experience Sprint 2 v1
 
 **Status:** Binding architecture for Sprint 2. Founder decisions
-**approved**. Local implementation is **awaiting founder approval.**
+**approved**. Implementation is **complete** on `origin/main`
+`840542170137c4e75ffe663bbc08d7b98be3faac`.
 **Recorded:** 2026-09-23
 **Decisions bound:** 2026-09-23
+**Live pointer:** 2026-09-24
 **Evidence:**
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2_AUDIT.md)
 **Parent:**
 [`Complete_Athlete_Experience_v1.md`](./Complete_Athlete_Experience_v1.md)
 **Sprint 1 (complete on `origin/main`):** `a3cd3512093f4dc96843e01ab0efe311671e4db9`
+**Next:**
+[`Complete_Athlete_Experience_Sprint_3_v1.md`](./Complete_Athlete_Experience_Sprint_3_v1.md)
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
 NEXT_IMPLEMENTATION_AUTHORISED=false
 REPLACEMENT_TRANSACTION_AUTHORISED=false
 HOSTED_REPAIR_AUTHORISED=false
@@ -128,8 +133,9 @@ production-path evidence.
 - Wearables
 - Offline completion queue
 
-**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`.
-Local implementation is **not** complete until founder approval.
+**Flag:** `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE` on
+`origin/main` `8405421`. Historical implementation/visual records remain
+in the Sprint 2 handoff.
 
 ### 3.2 Timezone authority
 

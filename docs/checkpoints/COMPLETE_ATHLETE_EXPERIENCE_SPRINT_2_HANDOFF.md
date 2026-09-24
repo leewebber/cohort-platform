@@ -1,15 +1,19 @@
 # Complete Athlete Experience Sprint 2 — handoff
 
 **Recorded:** 2026-09-24
-**Status:** Local implementation complete. Architecture accepted in
-principle. **Visual approval withheld pending this correction.** Do **not**
-mark Sprint 2 complete.
-**Branch:** `feat/enrolment-continuity-v1` (local only)
+**Status:** Historical Sprint 2 handoff. Sprint 2 is **complete** on
+`origin/main` `840542170137c4e75ffe663bbc08d7b98be3faac`. Live next task
+is Sprint 3 audit
+([`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](./COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md)).
+The body below remains the Sprint 2 implementation/visual-correction
+record and is not rewritten.
+**Branch (historical):** `feat/enrolment-continuity-v1`
 **Base / start SHA:** `origin/main` `76d792dde237cb035364f76e8e977d2bba2295b6`
 
 ```text
 COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE
-COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE
+COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=AUDITED_AWAITING_APPROVAL
 NEXT_IMPLEMENTATION_AUTHORISED=false
 REPLACEMENT_TRANSACTION_AUTHORISED=false
 HOSTED_REPAIR_AUTHORISED=false
