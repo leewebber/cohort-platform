@@ -38,7 +38,7 @@ Sprint 3+ coaching product is not the next milestone.
    (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`,
    `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`,
-   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED`).
+   `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
    Binding:
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
    [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),

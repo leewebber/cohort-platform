@@ -157,14 +157,15 @@ Decision** is **complete** on `origin/main` `a3cd351`
 (`COMPLETE_ATHLETE_EXPERIENCE=ARCHITECTURE_APPROVED`,
 `COMPLETE_ATHLETE_EXPERIENCE_SPRINT_1=COMPLETE`). Sprint 2 is **complete**
 on `origin/main` `8405421`
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`). Sprint 3 is **approved,
-not started**
-(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=APPROVED_NOT_STARTED`).
+(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_2=COMPLETE`). Sprint 3 is **implemented,
+awaiting founder approval**
+(`COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`).
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
-[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md).
-Sprint 3 is **not** implemented. M9 is **closed**
+[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_AUDIT.md),
+[`docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md`](docs/checkpoints/COMPLETE_ATHLETE_EXPERIENCE_SPRINT_3_HANDOFF.md).
+Sprint 3 is **not** marked complete. M9 is **closed**
 ([`docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](docs/checkpoints/M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md)).
 M10 infrastructure is **closed**
 ([`docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](docs/checkpoints/M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md)).
