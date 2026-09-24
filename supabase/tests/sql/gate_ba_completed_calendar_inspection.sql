@@ -160,7 +160,7 @@ BEGIN
   SELECT COUNT(*) INTO v_outcome_after
   FROM programme_slot_outcomes WHERE assignment_id = v_assignment;
   SELECT COUNT(*) INTO v_session_after
-  FROM training_sessions WHERE assignment_id = v_assignment;
+  FROM training_session_records WHERE assignment_id = v_assignment;
   SELECT status || '|' || programme_version_id::TEXT || '|' ||
          COALESCE(materialised_package_content_hash, '')
   INTO v_assign_after
@@ -240,9 +240,11 @@ BEGIN
   );
 
   PERFORM set_config('request.jwt.claim.sub', '', true);
-  PERFORM set_config('role', 'anon', true);
-  v_res := public.resolve_fixed_programme_calendar(v_assignment);
   PERFORM set_config('role', 'postgres', true);
+  v_res := public.cohort_resolve_fixed_programme_calendar_at(
+    v_assignment,
+    NOW()
+  );
   PERFORM sprint12_record(
     'BA', 'anonymous_denied', 'athlete_role_required',
     COALESCE(v_res->>'code', v_res->>'status'),
