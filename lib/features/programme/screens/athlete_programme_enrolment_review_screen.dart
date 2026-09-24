@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
-import '../../../core/widgets/cohort_card.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../controllers/athlete_programme_controllers.dart';
 import '../domain/enrolment_iana_timezone.dart';
@@ -13,6 +13,9 @@ import '../domain/flutter_device_iana_timezone_source.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_decision_copy.dart';
 import '../presentation/athlete_programme_decision_facts.dart';
+import '../presentation/enrolment_date_presentation.dart';
+import '../widgets/athlete_programme_fact_list.dart';
+import '../widgets/athlete_programme_status_state.dart';
 import '../widgets/enrolment_timezone_picker_sheet.dart';
 
 class AthleteProgrammeEnrolmentReviewScreen extends StatefulWidget {
@@ -39,6 +42,7 @@ class AthleteProgrammeEnrolmentReviewScreen extends StatefulWidget {
 class _AthleteProgrammeEnrolmentReviewScreenState
     extends State<AthleteProgrammeEnrolmentReviewScreen> {
   EnrolmentTimezoneCapture _timezone = EnrolmentTimezoneCapture.detecting;
+  final _changeFocus = FocusNode();
 
   DateTime get _utcNow => (widget.clock ?? DateTime.now)().toUtc();
 
@@ -52,6 +56,7 @@ class _AthleteProgrammeEnrolmentReviewScreenState
   @override
   void dispose() {
     widget.controller.removeListener(_onChanged);
+    _changeFocus.dispose();
     super.dispose();
   }
 
@@ -78,11 +83,17 @@ class _AthleteProgrammeEnrolmentReviewScreenState
     final selected = await showEnrolmentTimezonePicker(
       context: context,
       selectedIana: _timezone.iana,
+      suggestedIana: EnrolmentIanaTimezone.canonicalize(
+        _timezone.deviceSuggestion,
+      ),
     );
-    if (!mounted || selected == null) return;
-    setState(() {
-      _timezone = _timezone.select(selected);
-    });
+    if (!mounted) return;
+    if (selected != null) {
+      setState(() {
+        _timezone = _timezone.select(selected);
+      });
+    }
+    _changeFocus.requestFocus();
   }
 
   Future<void> _confirm() async {
@@ -105,14 +116,15 @@ class _AthleteProgrammeEnrolmentReviewScreenState
         0,
         10,
       );
+      final facing = EnrolmentDatePresentation.fromIso(confirmedDate);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
             result.isIdempotentAlreadyEnrolled
                 ? AthleteProgrammeDecisionCopy.alreadyEnrolled
-                : confirmedDate == null
+                : facing == null
                 ? AthleteProgrammeDecisionCopy.enrolSuccess
-                : '${AthleteProgrammeDecisionCopy.enrolSuccess} Starts $confirmedDate.',
+                : '${AthleteProgrammeDecisionCopy.enrolSuccess} Starts $facing.',
           ),
         ),
       );
@@ -143,11 +155,10 @@ class _AthleteProgrammeEnrolmentReviewScreenState
         body: const SafeArea(
           child: Padding(
             padding: EdgeInsets.all(CohortSpacing.lg),
-            child: CohortCard(
-              child: Text(
-                AthleteProgrammeDecisionCopy.detailUnavailable,
-                style: CohortTextStyles.body,
-              ),
+            child: AthleteProgrammeStatusState(
+              badge: 'Unavailable',
+              headline: AthleteProgrammeDecisionCopy.detailUnavailable,
+              explanation: AthleteProgrammeDecisionCopy.detailUnavailable,
             ),
           ),
         ),
@@ -162,14 +173,14 @@ class _AthleteProgrammeEnrolmentReviewScreenState
     final blockedByAssignment =
         controller.hasActiveAssignment && !facts.isCurrentProgramme;
     final rejected = last != null && !last.isSuccess;
-    final intendedDate = _timezone.iana == null
+    final intendedIso = _timezone.iana == null
         ? null
         : EnrolmentLocalDate.isoDate(iana: _timezone.iana!, utcNow: _utcNow);
     final canConfirm =
         !controller.isSubmitting &&
         !blockedByAssignment &&
         _timezone.canConfirm &&
-        intendedDate != null;
+        intendedIso != null;
 
     return Scaffold(
       appBar: AppBar(
@@ -177,187 +188,251 @@ class _AthleteProgrammeEnrolmentReviewScreenState
       ),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
+          padding: const EdgeInsets.fromLTRB(
+            CohortSpacing.lg,
+            CohortSpacing.md,
+            CohortSpacing.lg,
+            CohortSpacing.xxl,
+          ),
           children: [
-            Semantics(
-              header: true,
-              child: Text(
-                AthleteProgrammeDecisionCopy.enrolReviewTitle(facts.title),
-                style: CohortTextStyles.h1,
-              ),
-            ),
-            const SizedBox(height: CohortSpacing.lg),
-            _ReviewFact(
-              label: 'Programme',
-              value: facts.title,
-            ),
-            _ReviewFact(
-              label: 'Goal',
-              value: facts.glanceValue(facts.primaryGoal),
-            ),
-            _ReviewFact(
-              label: 'Duration',
-              value: facts.glanceValue(facts.durationDisplay),
-            ),
-            _ReviewFact(
-              label: 'Sessions per week',
-              value: facts.glanceValue(facts.frequencyDisplay),
-            ),
-            _ReviewFact(
-              label: 'Intended level',
-              value: facts.glanceValue(facts.intendedLevel),
-            ),
-            _TimezoneFact(
+            _ProgrammeSection(facts: facts),
+            const SizedBox(height: CohortSpacing.xl),
+            _ScheduleSection(
               capture: _timezone,
+              intendedIso: intendedIso,
+              confirmedIso: last?.isSuccess == true
+                  ? last!.startedAt?.toIso8601String().substring(0, 10)
+                  : null,
               onChange: controller.isSubmitting ? null : _changeTimezone,
-            ),
-            _ReviewFact(
-              label: last?.startedAt != null && last!.isSuccess
-                  ? AthleteProgrammeContinuityCopy.confirmedStartDate
-                  : AthleteProgrammeContinuityCopy.intendedStartProvisional,
-              value: last?.startedAt != null && last!.isSuccess
-                  ? last.startedAt!.toIso8601String().substring(0, 10)
-                  : (intendedDate ?? AthleteProgrammeDecisionCopy.notSpecified),
-            ),
-            const SizedBox(height: CohortSpacing.md),
-            Text(
-              AthleteProgrammeDecisionCopy.enrolReviewBody(facts.title),
-              style: CohortTextStyles.body,
-            ),
-            const SizedBox(height: CohortSpacing.sm),
-            Text(
-              AthleteProgrammeContinuityCopy.travelAnchor,
-              style: CohortTextStyles.small,
+              changeFocus: _changeFocus,
             ),
             const SizedBox(height: CohortSpacing.xl),
+            EnrolmentContinuityPanel(programmeTitle: facts.title),
+            const SizedBox(height: CohortSpacing.xl),
             if (blockedByAssignment)
-              const CohortCard(
-                child: Text(
-                  AthleteProgrammeDecisionCopy.assignedDuringFlow,
-                  style: CohortTextStyles.body,
-                ),
+              const AthleteProgrammeStatusState(
+                badge: 'Unavailable',
+                headline: AthleteProgrammeDecisionCopy.assignedDuringFlow,
+                explanation: AthleteProgrammeDecisionCopy.switchingUnavailable,
               )
             else if (_timezone.needsExplicitSelection &&
                 _timezone.kind != EnrolmentTimezoneCaptureKind.detecting)
-              const CohortCard(
-                child: Text(
-                  AthleteProgrammeContinuityCopy.timezoneRequired,
-                  style: CohortTextStyles.body,
+              AthleteProgrammeStatusState(
+                badge: 'Required',
+                headline: AthleteProgrammeContinuityCopy.timezoneRepairHeadline,
+                explanation: AthleteProgrammeContinuityCopy.timezoneRequired,
+                action: CohortButton(
+                  label: AthleteProgrammeContinuityCopy.selectTimezone,
+                  onPressed: _changeTimezone,
                 ),
               )
             else if (controller.isSubmitting)
-              const CohortCard(
-                child: Text(
-                  AthleteProgrammeDecisionCopy.enrolPending,
-                  style: CohortTextStyles.body,
-                ),
+              const AthleteProgrammeStatusState(
+                badge: 'Working',
+                headline: AthleteProgrammeDecisionCopy.enrolPending,
+                explanation: AthleteProgrammeDecisionCopy.enrolPending,
               )
             else if (rejected)
-              CohortCard(
-                child: Text(
-                  last.message ??
-                      AthleteProgrammeDecisionCopy.catalogueUnavailable,
-                  style: CohortTextStyles.body,
-                ),
+              AthleteProgrammeStatusState(
+                badge: 'Could not enrol',
+                headline: 'Enrolment could not be completed',
+                explanation:
+                    last.message ??
+                    AthleteProgrammeDecisionCopy.catalogueUnavailable,
               ),
-            const SizedBox(height: CohortSpacing.xl),
-            CohortButton(
-              label: controller.isSubmitting
-                  ? AthleteProgrammeDecisionCopy.enrolPending
-                  : rejected
-                  ? AthleteProgrammeDecisionCopy.retry
-                  : AthleteProgrammeDecisionCopy.enrolConfirm,
-              onPressed: canConfirm ? _confirm : null,
-            ),
-            const SizedBox(height: CohortSpacing.md),
-            CohortButton(
-              label: AthleteProgrammeDecisionCopy.cancel,
-              variant: CohortButtonVariant.secondary,
-              onPressed: controller.isSubmitting
-                  ? null
-                  : () => Navigator.of(context).pop(false),
-            ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _TimezoneFact extends StatelessWidget {
-  const _TimezoneFact({required this.capture, required this.onChange});
-
-  final EnrolmentTimezoneCapture capture;
-  final VoidCallback? onChange;
-
-  @override
-  Widget build(BuildContext context) {
-    final iana = capture.iana;
-    final value = capture.kind == EnrolmentTimezoneCaptureKind.detecting
-        ? 'Detecting timezone…'
-        : iana == null
-        ? AthleteProgrammeDecisionCopy.notSpecified
-        : EnrolmentIanaLabels.display(iana);
-    final changeLabel = iana == null
-        ? AthleteProgrammeContinuityCopy.selectTimezone
-        : AthleteProgrammeContinuityCopy.changeTimezone;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Semantics(
-            container: true,
-            label:
-                '${AthleteProgrammeContinuityCopy.trainingTimezone}, $value',
-            child: ExcludeSemantics(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    AthleteProgrammeContinuityCopy.trainingTimezone,
-                    style: CohortTextStyles.small,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(value, style: CohortTextStyles.body),
-                ],
-              ),
-            ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            CohortSpacing.lg,
+            CohortSpacing.sm,
+            CohortSpacing.lg,
+            CohortSpacing.md,
           ),
-          TextButton(
-            onPressed: onChange,
-            child: Text(changeLabel),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReviewFact extends StatelessWidget {
-  const _ReviewFact({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-      child: Semantics(
-        container: true,
-        label: '$label, $value',
-        child: ExcludeSemantics(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label, style: CohortTextStyles.small),
-              const SizedBox(height: 2),
-              Text(value, style: CohortTextStyles.body),
+              CohortButton(
+                label: controller.isSubmitting
+                    ? AthleteProgrammeDecisionCopy.enrolPending
+                    : rejected
+                    ? AthleteProgrammeDecisionCopy.retry
+                    : AthleteProgrammeDecisionCopy.enrolConfirm,
+                onPressed: canConfirm ? _confirm : null,
+              ),
+              const SizedBox(height: CohortSpacing.sm),
+              CohortButton(
+                label: AthleteProgrammeDecisionCopy.cancel,
+                variant: CohortButtonVariant.secondary,
+                onPressed: controller.isSubmitting
+                    ? null
+                    : () => Navigator.of(context).pop(false),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ProgrammeSection extends StatelessWidget {
+  const _ProgrammeSection({required this.facts});
+
+  final AthleteProgrammeDecisionFacts facts;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Programme', style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.sm),
+        Semantics(
+          header: true,
+          child: Text(
+            AthleteProgrammeDecisionCopy.enrolReviewTitle(facts.title),
+            style: CohortTextStyles.h2,
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        Semantics(
+          container: true,
+          label: 'Goal, ${facts.glanceValue(facts.primaryGoal)}',
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Goal', style: CohortTextStyles.tileLabel),
+                const SizedBox(height: 4),
+                Text(
+                  facts.glanceValue(facts.primaryGoal),
+                  style: CohortTextStyles.cardTitle,
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        AthleteProgrammeGlanceTiles(
+          facts: facts,
+          showHeading: false,
+          includeEquipment: false,
+          sessionsLabel: 'Sessions per week',
+          uppercaseLabels: false,
+        ),
+      ],
+    );
+  }
+}
+
+class _ScheduleSection extends StatelessWidget {
+  const _ScheduleSection({
+    required this.capture,
+    required this.intendedIso,
+    required this.confirmedIso,
+    required this.onChange,
+    required this.changeFocus,
+  });
+
+  final EnrolmentTimezoneCapture capture;
+  final String? intendedIso;
+  final String? confirmedIso;
+  final VoidCallback? onChange;
+  final FocusNode changeFocus;
+
+  @override
+  Widget build(BuildContext context) {
+    final iana = capture.iana;
+    final detecting = capture.kind == EnrolmentTimezoneCaptureKind.detecting;
+    final friendly = detecting
+        ? 'Detecting timezone…'
+        : iana == null
+        ? AthleteProgrammeDecisionCopy.notSpecified
+        : EnrolmentIanaLabels.labelFor(iana);
+    final dateIso = confirmedIso ?? intendedIso;
+    final dateFacing =
+        EnrolmentDatePresentation.fromIso(dateIso) ??
+        AthleteProgrammeDecisionCopy.notSpecified;
+    final dateLabel = confirmedIso != null
+        ? AthleteProgrammeContinuityCopy.confirmedStartDate
+        : AthleteProgrammeContinuityCopy.intendedStartProvisional;
+    final changeLabel = iana == null
+        ? AthleteProgrammeContinuityCopy.selectTimezone
+        : AthleteProgrammeContinuityCopy.changeTimezone;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Schedule', style: CohortTextStyles.sectionLabel),
+        const SizedBox(height: CohortSpacing.md),
+        Semantics(
+          container: true,
+          label:
+              '${AthleteProgrammeContinuityCopy.trainingTimezone}, $friendly'
+              '${iana == null ? '' : ', $iana'}',
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: CohortColors.surfaceRaised,
+              border: Border.all(color: CohortColors.border),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(CohortSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ExcludeSemantics(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          AthleteProgrammeContinuityCopy.trainingTimezone,
+                          style: CohortTextStyles.tileLabel,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(friendly, style: CohortTextStyles.cardTitle),
+                        if (iana != null) ...[
+                          const SizedBox(height: 2),
+                          Text(iana, style: CohortTextStyles.muted),
+                        ],
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      focusNode: changeFocus,
+                      onPressed: onChange,
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(48, 48),
+                      ),
+                      child: Text(changeLabel),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        Semantics(
+          container: true,
+          label: '$dateLabel, $dateFacing',
+          child: ExcludeSemantics(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(dateLabel, style: CohortTextStyles.tileLabel),
+                const SizedBox(height: 4),
+                Text(dateFacing, style: CohortTextStyles.body),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

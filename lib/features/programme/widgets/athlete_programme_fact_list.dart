@@ -34,30 +34,44 @@ class AthleteProgrammeStatusChip extends StatelessWidget {
 }
 
 class AthleteProgrammeGlanceTiles extends StatelessWidget {
-  const AthleteProgrammeGlanceTiles({super.key, required this.facts});
+  const AthleteProgrammeGlanceTiles({
+    super.key,
+    required this.facts,
+    this.showHeading = true,
+    this.includeEquipment = true,
+    this.sessionsLabel = 'Sessions / week',
+    this.uppercaseLabels = true,
+  });
 
   final AthleteProgrammeDecisionFacts facts;
+  final bool showHeading;
+  final bool includeEquipment;
+  final String sessionsLabel;
+  final bool uppercaseLabels;
 
   @override
   Widget build(BuildContext context) {
     final tiles = <(String, String)>[
       ('Duration', facts.glanceValue(facts.durationDisplay)),
-      ('Sessions / week', facts.glanceValue(facts.frequencyDisplay)),
+      (sessionsLabel, facts.glanceValue(facts.frequencyDisplay)),
       ('Intended level', facts.glanceValue(facts.intendedLevel)),
-      ('Equipment', facts.glanceValue(facts.equipment)),
+      if (includeEquipment)
+        ('Equipment', facts.glanceValue(facts.equipment)),
     ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Semantics(
-          header: true,
-          child: Text(
-            AthleteProgrammeDecisionCopy.atAGlance,
-            style: CohortTextStyles.h2,
+        if (showHeading) ...[
+          Semantics(
+            header: true,
+            child: Text(
+              AthleteProgrammeDecisionCopy.atAGlance,
+              style: CohortTextStyles.h2,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
+          const SizedBox(height: 12),
+        ],
         LayoutBuilder(
           builder: (context, constraints) {
             final scale = MediaQuery.textScalerOf(context).scale(16) / 16;
@@ -73,7 +87,10 @@ class AthleteProgrammeGlanceTiles extends StatelessWidget {
                 for (final tile in tiles)
                   SizedBox(
                     width: width,
-                    child: _GlanceTile(label: tile.$1, value: tile.$2),
+                    child: _GlanceTile(
+                      label: uppercaseLabels ? tile.$1.toUpperCase() : tile.$1,
+                      value: tile.$2,
+                    ),
                   ),
               ],
             );
@@ -107,7 +124,7 @@ class _GlanceTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label.toUpperCase(), style: CohortTextStyles.tileLabel),
+                Text(label, style: CohortTextStyles.tileLabel),
                 const SizedBox(height: 6),
                 Text(value, style: CohortTextStyles.body),
               ],

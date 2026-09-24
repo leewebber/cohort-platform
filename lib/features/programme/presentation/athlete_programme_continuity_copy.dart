@@ -21,12 +21,27 @@ abstract final class AthleteProgrammeContinuityCopy {
   static const timezoneRequired =
       'A training timezone is required to schedule this programme correctly.';
   static const selectTimezone = 'Select timezone';
+  static const useSelectedTimezone = 'Use selected timezone';
   static const changeTimezone = 'Change';
   static const trainingTimezone = 'Training timezone';
+  static const suggestedTimezones = 'Suggested';
+  static const allTimezones = 'All timezones';
+  static const searchResults = 'Search results';
   static const intendedStartDate = 'Intended start date';
   static const intendedStartProvisional = 'Intended local start (to confirm)';
   static const confirmedStartDate = 'Confirmed start date';
   static const searchTimezones = 'Search timezones';
+  static const programmeUnchangedHeadline = 'Your programme is unchanged';
+  static const pinnedUnavailableHeadline = 'Programme temporarily unavailable';
+  static const timezoneRepairHeadline = 'Confirm your training timezone';
+  static const enrolledHeadline = 'You’re enrolled';
+  static const currentProgrammeHeadline = 'Current programme';
+  static const scheduleUnresolved =
+      'Scheduled training cannot be resolved until this timezone is a '
+      'validated IANA identifier.';
+  static const repairNotApplied =
+      'Your assignment has not been changed. No timezone repair has been '
+      'applied.';
 
   static String statusChip(AthleteProgrammeContinuityStatus status) {
     switch (status) {
