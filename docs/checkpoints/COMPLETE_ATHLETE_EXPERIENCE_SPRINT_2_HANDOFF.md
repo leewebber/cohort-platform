@@ -1,7 +1,9 @@
 # Complete Athlete Experience Sprint 2 — handoff
 
-**Recorded:** 2026-09-23
-**Status:** Local implementation complete. **Awaiting founder approval.**
+**Recorded:** 2026-09-24
+**Status:** Local implementation complete. Architecture accepted in
+principle. **Visual approval withheld pending this correction.** Do **not**
+mark Sprint 2 complete.
 **Branch:** `feat/enrolment-continuity-v1` (local only)
 **Base / start SHA:** `origin/main` `76d792dde237cb035364f76e8e977d2bba2295b6`
 
@@ -32,9 +34,26 @@ e04b089 feat(programmes): validate enrolment timezone and local start
 bb184a8 test(programmes): close enrolment continuity gate fixtures
 ```
 
-End SHA is the `docs(programmes): record sprint two handoff` commit on this
-branch. Sprint 1 and the approved Sprint 2 documentation commits were not
-amended.
+Implementation end SHA was `24159f1`. Visual-correction commits follow that
+SHA and must not amend the original eight. Current branch HEAD is the
+visual-correction handoff commit.
+
+## Visual correction (2026-09-24)
+
+Founder withheld visual approval. Hierarchy only; authority unchanged.
+
+- Enrolment review is Programme / Schedule / Continuity, not a flat
+  label/value list. Goal is prominent. Duration, sessions/week, and level
+  use glance tiles. Timezone shows friendly name first and IANA second.
+  Intended start is athlete-facing (`16 June 2026`). Confirm/Cancel sit in
+  a sticky action bar.
+- Timezone sheet: filled search, Suggested + All/Search results, checkmark
+  plus accent on the selected row, **Use selected timezone**.
+- Continuity, unavailable, repair-required, and enrolment-success states
+  use badge + headline + explanation. Repair remains detect-only.
+- Preview fixtures were checked: Makassar/`Asia/Makassar`,
+  London/`Europe/London`, missing blocks confirm, success date and timezone
+  agree. Preview port remains `4193`.
 
 ## Migration
 
