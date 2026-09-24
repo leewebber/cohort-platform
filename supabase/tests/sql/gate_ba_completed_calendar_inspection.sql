@@ -113,7 +113,7 @@ BEGIN
   SELECT COUNT(*) INTO v_outcome_before
   FROM programme_slot_outcomes WHERE assignment_id = v_assignment;
   SELECT COUNT(*) INTO v_session_before
-  FROM training_sessions WHERE assignment_id = v_assignment;
+  FROM training_session_records WHERE assignment_id = v_assignment;
   SELECT status || '|' || programme_version_id::TEXT || '|' ||
          COALESCE(materialised_package_content_hash, '')
   INTO v_assign_before
