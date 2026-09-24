@@ -1,4 +1,5 @@
 import '../domain/athlete_programme_continuity.dart';
+import 'athlete_completion_journey_copy.dart';
 
 /// Single athlete-facing continuity vocabulary. Not colour-only.
 abstract final class AthleteProgrammeContinuityCopy {
@@ -70,7 +71,7 @@ abstract final class AthleteProgrammeContinuityCopy {
       case AthleteProgrammeContinuityStatus.pinnedUnavailable:
         return pinnedUnavailable;
       case AthleteProgrammeContinuityStatus.completed:
-        return 'This programme is complete.';
+        return AthleteCompletionJourneyCopy.completedProgrammesSupporting;
       case AthleteProgrammeContinuityStatus.none:
         return 'You are not enrolled in a programme yet.';
     }

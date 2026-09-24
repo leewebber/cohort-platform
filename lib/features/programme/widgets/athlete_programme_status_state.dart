@@ -5,6 +5,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../domain/athlete_programme_continuity.dart';
 import '../domain/enrolment_iana_timezone.dart';
+import '../presentation/athlete_completion_journey_copy.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_decision_copy.dart';
 import '../presentation/enrolment_date_presentation.dart';
@@ -32,6 +33,7 @@ class AthleteProgrammeStatusState extends StatelessWidget {
   factory AthleteProgrammeStatusState.fromContinuity(
     AthleteProgrammeContinuity continuity, {
     Widget? action,
+    String? completedProgrammeTitle,
   }) {
     if (continuity.needsTimezoneRepair) {
       return AthleteProgrammeStatusState(
@@ -49,24 +51,31 @@ class AthleteProgrammeStatusState extends StatelessWidget {
       case AthleteProgrammeContinuityStatus.currentDefault:
         return AthleteProgrammeStatusState(
           badge: AthleteProgrammeContinuityCopy.currentProgramme,
-          headline: AthleteProgrammeContinuityCopy.currentProgrammeHeadline,
-          explanation: AthleteProgrammeContinuityCopy.currentProgramme,
+          headline: _currentHeadline(continuity, completedProgrammeTitle),
+          explanation: _currentExplanation(continuity, completedProgrammeTitle),
           action: action,
         );
       case AthleteProgrammeContinuityStatus.currentPinned:
         return AthleteProgrammeStatusState(
           badge: AthleteProgrammeContinuityCopy.currentProgramme,
-          headline: AthleteProgrammeContinuityCopy.programmeUnchangedHeadline,
-          explanation: AthleteProgrammeContinuityCopy.continuingStartedVersion,
+          headline: completedProgrammeTitle == null
+              ? AthleteProgrammeContinuityCopy.programmeUnchangedHeadline
+              : _currentHeadline(continuity, completedProgrammeTitle),
+          explanation: completedProgrammeTitle == null
+              ? AthleteProgrammeContinuityCopy.continuingStartedVersion
+              : _currentExplanation(continuity, completedProgrammeTitle),
           action: action,
         );
       case AthleteProgrammeContinuityStatus.currentPinnedWithDifferentAvailable:
         return AthleteProgrammeStatusState(
           badge: AthleteProgrammeContinuityCopy.currentProgramme,
-          headline: AthleteProgrammeContinuityCopy.programmeUnchangedHeadline,
-          explanation:
-              '${AthleteProgrammeContinuityCopy.continuingStartedVersion} '
-              '${AthleteProgrammeContinuityCopy.differentVersionAvailable}',
+          headline: completedProgrammeTitle == null
+              ? AthleteProgrammeContinuityCopy.programmeUnchangedHeadline
+              : _currentHeadline(continuity, completedProgrammeTitle),
+          explanation: completedProgrammeTitle == null
+              ? '${AthleteProgrammeContinuityCopy.continuingStartedVersion} '
+                    '${AthleteProgrammeContinuityCopy.differentVersionAvailable}'
+              : _currentExplanation(continuity, completedProgrammeTitle),
           action: action,
         );
       case AthleteProgrammeContinuityStatus.pinnedUnavailable:
@@ -79,11 +88,15 @@ class AthleteProgrammeStatusState extends StatelessWidget {
         );
       case AthleteProgrammeContinuityStatus.completed:
         return AthleteProgrammeStatusState(
-          badge: 'Complete',
-          headline: 'This programme is complete.',
-          explanation: AthleteProgrammeContinuityCopy.overviewMessage(
-            continuity,
+          badge: AthleteCompletionJourneyCopy.complete,
+          headline: AthleteCompletionJourneyCopy.completedProgrammesHeadline(
+            AthleteCompletionJourneyCopy.displayTitle(
+              continuity.pinnedTitle,
+              fallback: continuity.lineageCode,
+            ),
           ),
+          explanation:
+              AthleteCompletionJourneyCopy.completedProgrammesSupporting,
           action: action,
         );
       case AthleteProgrammeContinuityStatus.none:
@@ -96,6 +109,33 @@ class AthleteProgrammeStatusState extends StatelessWidget {
           action: action,
         );
     }
+  }
+
+  static String _currentHeadline(
+    AthleteProgrammeContinuity continuity,
+    String? completedProgrammeTitle,
+  ) {
+    if (completedProgrammeTitle == null) {
+      return AthleteProgrammeContinuityCopy.currentProgrammeHeadline;
+    }
+    return AthleteCompletionJourneyCopy.currentAfterCompletedHeadline(
+      AthleteCompletionJourneyCopy.displayTitle(
+        continuity.pinnedTitle,
+        fallback: continuity.lineageCode,
+      ),
+    );
+  }
+
+  static String _currentExplanation(
+    AthleteProgrammeContinuity continuity,
+    String? completedProgrammeTitle,
+  ) {
+    if (completedProgrammeTitle == null) {
+      return AthleteProgrammeContinuityCopy.currentProgramme;
+    }
+    return AthleteCompletionJourneyCopy.currentAfterCompletedSupporting(
+      AthleteCompletionJourneyCopy.displayTitle(completedProgrammeTitle),
+    );
   }
 
   @override

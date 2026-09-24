@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/presentation/athlete_safe_error_presenter.dart';
 import '../../../core/services/authenticated_identity.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -8,6 +7,9 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../auth/services/athlete_surface_identity.dart';
+import '../../auth/widgets/athlete_identity_access_state.dart';
+import '../../programme/presentation/athlete_completion_journey_copy.dart';
+import '../../programme/widgets/athlete_programme_status_state.dart';
 import '../models/training_session_record.dart';
 import '../services/performance_record_save_coordinator.dart';
 import '../widgets/performance_capture_widgets.dart';
@@ -18,10 +20,16 @@ class TrainingHistoryScreen extends StatefulWidget {
     super.key,
     required this.athleteId,
     this.saveCoordinator,
+    this.initialRecords,
+    this.initialFailure = false,
   });
 
   final String athleteId;
   final PerformanceRecordSaveCoordinator? saveCoordinator;
+
+  /// Preview/test injection for last-good or blocked chrome.
+  final List<TrainingSessionRecord>? initialRecords;
+  final bool initialFailure;
 
   @override
   State<TrainingHistoryScreen> createState() => _TrainingHistoryScreenState();
@@ -33,11 +41,19 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
   List<TrainingSessionRecord>? _lastGood;
   Object? _error;
   bool _loading = true;
+  bool _identityDenied = false;
   String? _scopedAthleteId;
 
   @override
   void initState() {
     super.initState();
+    if (widget.initialFailure || widget.initialRecords != null) {
+      _lastGood = widget.initialRecords;
+      _error = widget.initialFailure ? StateError('history_unavailable') : null;
+      _loading = false;
+      _identityDenied = false;
+      return;
+    }
     _reload();
   }
 
@@ -66,8 +82,9 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
         _scopedAthleteId = null;
         _lastGood = null;
         _loading = false;
+        _identityDenied = true;
         _error = const AuthenticatedIdentityException(
-          'Athlete access is required to open History.',
+          AthleteCompletionJourneyCopy.missingAthleteHeadline,
         );
       });
       return;
@@ -79,6 +96,7 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
     setState(() {
       _loading = _lastGood == null;
       _error = null;
+      _identityDenied = false;
     });
     try {
       final records = await _coordinator.listHistory(athleteId: athleteId);
@@ -119,29 +137,29 @@ class _TrainingHistoryScreenState extends State<TrainingHistoryScreen> {
     if (_loading) {
       return const [Center(child: Text('Loading history…'))];
     }
+    if (_identityDenied) {
+      return const [AthleteIdentityAccessState.missingProfile()];
+    }
     if (_error != null && _lastGood == null) {
-      final message = AthleteSafeErrorPresenter.message(
-        _error!,
-        logTag: 'training_history',
-      );
       return [
-        Text('Could not load history', style: CohortTextStyles.h1),
-        const SizedBox(height: CohortSpacing.md),
-        Text(message, style: CohortTextStyles.body),
-        const SizedBox(height: CohortSpacing.md),
-        CohortButton(label: 'Retry', onPressed: _reload),
+        AthleteProgrammeStatusState(
+          badge: AthleteCompletionJourneyCopy.unavailable,
+          headline: AthleteCompletionJourneyCopy.historyBlockedHeadline,
+          explanation: AthleteCompletionJourneyCopy.tryAgainWhenReady,
+          icon: Icons.cloud_off_outlined,
+          action: CohortButton(label: 'Retry', onPressed: _reload),
+        ),
       ];
     }
     if (_error != null && _lastGood != null) {
       return [
-        Text('Refresh failed', style: CohortTextStyles.h2),
-        const SizedBox(height: CohortSpacing.sm),
-        const Text(
-          'Showing last loaded history. This list may not be current.',
-          style: CohortTextStyles.body,
+        AthleteProgrammeStatusState(
+          badge: AthleteCompletionJourneyCopy.refreshFailed,
+          headline: AthleteCompletionJourneyCopy.historyRefreshHeadline,
+          explanation: AthleteCompletionJourneyCopy.historyRefreshSupporting,
+          icon: Icons.refresh,
+          action: CohortButton(label: 'Retry', onPressed: _reload),
         ),
-        const SizedBox(height: CohortSpacing.md),
-        CohortButton(label: 'Retry', onPressed: _reload),
         const SizedBox(height: CohortSpacing.lg),
         ..._records(_lastGood!),
       ];

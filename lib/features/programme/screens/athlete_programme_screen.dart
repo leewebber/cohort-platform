@@ -14,6 +14,7 @@ import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/athlete_programme_controllers.dart';
 import '../models/athlete_plan_materialisation.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
+import '../domain/athlete_programme_context.dart';
 import '../domain/athlete_programme_continuity.dart';
 import '../models/programme_catalog_entry.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
@@ -80,6 +81,7 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     status: AthleteProgrammeContinuityStatus.none,
     timezoneHealth: AssignmentTimezoneHealth.valid,
   );
+  String? _priorCompletedTitle;
 
   @override
   void initState() {
@@ -118,11 +120,36 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
     } catch (_) {
       catalogue = const [];
     }
+    String? priorCompletedTitle;
+    final assignments = widget.assignmentStore ?? _controller.assignmentStore;
+    final versions = _controller.versionStore;
+    if (assignment != null &&
+        assignment.isActive &&
+        assignments != null &&
+        versions != null) {
+      try {
+        final rows = await assignments.listForAthlete(widget.athleteId);
+        final prior = AthleteProgrammeContext.mostRecentCompleted(rows);
+        if (prior != null) {
+          final version = await versions.getVersionById(
+            prior.programmeVersionId,
+          );
+          priorCompletedTitle = version?.name;
+        }
+      } catch (_) {
+        priorCompletedTitle = null;
+      }
+    }
     if (!mounted) return;
+    final authoredTitle =
+        _fixedCalendar?.programmeName.trim().isNotEmpty == true
+        ? _fixedCalendar!.programmeName
+        : _controller.activeVersion?.name;
     setState(() {
+      _priorCompletedTitle = priorCompletedTitle;
       _continuity = AthleteProgrammeContinuity.project(
         assignment: assignment,
-        pinnedTitle: _controller.activeVersion?.name,
+        pinnedTitle: authoredTitle,
         pinResolvable: assignment == null || _controller.activeVersion != null,
         catalogue: catalogue,
         executionUnavailable: _fixedCalendarError != null,
@@ -390,7 +417,10 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
             Text('$sessions sessions per week', style: CohortTextStyles.small),
           ],
           const SizedBox(height: CohortSpacing.md),
-          AthleteProgrammeStatusState.fromContinuity(_continuity),
+          AthleteProgrammeStatusState.fromContinuity(
+            _continuity,
+            completedProgrammeTitle: _priorCompletedTitle,
+          ),
           const SizedBox(height: CohortSpacing.md),
           _buildLifecycleStatus(assignment),
           if (assignment.isFixedSchedule && _fixedCalendar != null) ...[

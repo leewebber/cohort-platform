@@ -13,6 +13,7 @@ import '../../session/services/programme_session_execution_launcher.dart';
 import '../models/fixed_programme_occurrence_projection.dart';
 import '../presentation/athlete_calendar_agenda_presentation.dart';
 import '../presentation/athlete_calendar_month_presentation.dart';
+import '../presentation/athlete_completion_journey_copy.dart';
 import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
@@ -197,10 +198,17 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
                   const SizedBox(height: CohortSpacing.xs),
                   Text(
                     calendar.isInspectionOnly
-                        ? 'Complete · inspect only'
+                        ? AthleteCompletionJourneyCopy.complete
                         : 'Training schedule',
                     style: CohortTextStyles.muted,
                   ),
+                  if (calendar.isInspectionOnly) ...[
+                    const SizedBox(height: CohortSpacing.sm),
+                    Text(
+                      AthleteCompletionJourneyCopy.calendarSupporting,
+                      style: CohortTextStyles.body,
+                    ),
+                  ],
                   const SizedBox(height: CohortSpacing.md),
                   _monthControls(calendar),
                   const SizedBox(height: CohortSpacing.md),

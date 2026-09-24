@@ -40,8 +40,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(ProgressScreen), findsOneWidget);
     expect(
-      find.text('PROGRESS').evaluate().isNotEmpty ||
-          find.text('Progress could not be loaded').evaluate().isNotEmpty,
+          find.text('PROGRESS').evaluate().isNotEmpty ||
+          find.text('Progress couldn’t be loaded').evaluate().isNotEmpty,
       isTrue,
     );
 

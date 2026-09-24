@@ -4,17 +4,23 @@ import 'package:cohort_platform/core/services/authenticated_identity.dart';
 import 'package:cohort_platform/data/repositories/programme_assignment_store.dart';
 import 'package:cohort_platform/features/auth/models/user_profile.dart';
 import 'package:cohort_platform/features/auth/services/athlete_surface_identity.dart';
+import 'package:cohort_platform/features/auth/widgets/athlete_identity_access_state.dart';
+import 'package:cohort_platform/features/programme/presentation/athlete_completion_journey_copy.dart';
 import 'package:cohort_platform/features/auth/services/current_user_session.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_home_completed_programme_card.dart';
 import 'package:cohort_platform/features/performance/screens/training_history_screen.dart';
 import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/programme/domain/athlete_programme_context.dart';
+import 'package:cohort_platform/features/programme/domain/athlete_programme_continuity.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_calendar_screen.dart';
 import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
+import 'package:cohort_platform/features/programme/widgets/athlete_programme_status_state.dart';
+import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
+import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/progress/models/progress_summary.dart';
 import 'package:cohort_platform/features/programme/services/athlete_programme_context_resolver.dart';
 import 'package:cohort_platform/features/programme/services/fixed_programme_occurrence_projection_store.dart';
@@ -187,7 +193,13 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Complete · inspect only'), findsOneWidget);
+      expect(find.text('Apollo Strength'), findsOneWidget);
+      expect(find.text('Complete'), findsWidgets);
+      expect(
+        find.text('You can review this completed programme and its sessions.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('inspect only'), findsNothing);
       expect(find.text('Begin'), findsNothing);
       expect(find.text('Resume'), findsNothing);
     });
@@ -218,7 +230,13 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Complete'), findsWidgets);
+      expect(find.text('You completed Apollo Strength.'), findsOneWidget);
+      expect(
+        find.text('You can still review the programme and your results.'),
+        findsOneWidget,
+      );
       expect(find.text('Browse programmes'), findsOneWidget);
+      expect(find.textContaining('Pinned version'), findsNothing);
     });
   });
 
@@ -233,8 +251,10 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Progress could not be loaded'), findsOneWidget);
+      expect(find.text('Progress couldn’t be loaded'), findsOneWidget);
+      expect(find.text('Try again when you’re ready.'), findsOneWidget);
       expect(find.text('No recorded sessions yet.'), findsNothing);
+      expect(find.textContaining('not an empty history'), findsNothing);
       expect(find.text('Retry'), findsOneWidget);
     });
 
@@ -248,10 +268,199 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Could not load history'), findsOneWidget);
+      expect(find.text('History couldn’t be loaded'), findsOneWidget);
+      expect(find.text('Try again when you’re ready.'), findsOneWidget);
       expect(find.text('Retry'), findsOneWidget);
       expect(find.text('Completed sessions will appear here.'), findsNothing);
     });
+  });
+
+  testWidgets('Progress refresh failure keeps last-good and Retry', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ProgressScreen(
+          athleteIdOverride: 'athlete-s3',
+          summary: ProgressSummary(
+            hasActivePlan: true,
+            planName: 'Apollo Strength',
+            sessionsCompleted: 8,
+            compliance: const ProgressCompliance(
+              completed: 8,
+              planned: 12,
+              percentage: 67,
+              currentStreak: 0,
+              longestStreak: 0,
+            ),
+            recentImprovements: const [],
+            timeline: const [],
+            history: const [],
+            upcoming: null,
+          ),
+          refreshFailed: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Couldn’t refresh progress'), findsOneWidget);
+    expect(
+      find.text('Showing your most recently loaded progress.'),
+      findsOneWidget,
+    );
+    expect(find.text('Retry'), findsOneWidget);
+    expect(find.text('No recorded sessions yet.'), findsNothing);
+  });
+
+  testWidgets('History refresh failure keeps last-good and Retry', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: TrainingHistoryScreen(
+          athleteId: 'athlete-s3',
+          initialRecords: [
+            TrainingSessionRecord(
+              recordId: 'hist-1',
+              athleteId: 'athlete-s3',
+              status: TrainingSessionRecordStatus.completed,
+              sessionSnapshot: const SessionPerformanceSnapshot(
+                sourceProtocolId: 'BW-001',
+                sessionTitle: 'Apollo Strength',
+              ),
+              startedAt: DateTime.utc(2026, 9, 1),
+              completedAt: DateTime.utc(2026, 9, 1),
+            ),
+          ],
+          initialFailure: true,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Couldn’t refresh history'), findsOneWidget);
+    expect(
+      find.text('Showing your most recently loaded history.'),
+      findsOneWidget,
+    );
+    expect(find.text('Retry'), findsOneWidget);
+    expect(find.text('Completed sessions will appear here.'), findsNothing);
+  });
+
+  testWidgets('missing athlete and coach-only copy stay distinct', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: Column(
+            children: [
+              AthleteIdentityAccessState.missingProfile(),
+              AthleteIdentityAccessState.coachOnly(),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(
+      find.text(AthleteCompletionJourneyCopy.missingAthleteHeadline),
+      findsOneWidget,
+    );
+    expect(
+      find.text(AthleteCompletionJourneyCopy.coachOnlyHeadline),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Home, Progress, or History'), findsNothing);
+  });
+
+  testWidgets('completed plus later active uses authored names', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AthleteProgrammeStatusState.fromContinuity(
+          const AthleteProgrammeContinuity(
+            status: AthleteProgrammeContinuityStatus.currentDefault,
+            timezoneHealth: AssignmentTimezoneHealth.valid,
+            pinnedTitle: 'Spartan',
+            lineageCode: 'SPARTAN',
+          ),
+          completedProgrammeTitle: 'Apollo Strength',
+        ),
+      ),
+    );
+    expect(find.text('Spartan is your current programme.'), findsOneWidget);
+    expect(
+      find.text('Your completed Apollo Strength results remain in History.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('later enrolment'), findsNothing);
+    expect(find.textContaining('not rewritten'), findsNothing);
+  });
+
+  testWidgets('320px and large-text completed Home copy is unchanged', (
+    tester,
+  ) async {
+    Future<void> pumpAt({required Size size, required double scale}) async {
+      await tester.pumpWidget(
+        MediaQuery(
+          data: MediaQueryData(size: size, textScaler: TextScaler.linear(scale)),
+          child: MaterialApp(
+            home: SingleChildScrollView(
+              child: AthleteHomeCompletedProgrammeCard(
+              programmeTitle: 'Apollo Strength',
+              supportingLine:
+                  'This programme is complete. Your results stay in History.',
+              onViewResults: () {},
+              onBrowseProgrammes: () {},
+            ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Complete'), findsOneWidget);
+      expect(find.text('You finished Apollo Strength.'), findsOneWidget);
+      expect(
+        find.text('This programme is complete. Your results stay in History.'),
+        findsOneWidget,
+      );
+      expect(find.text('View results'), findsOneWidget);
+      expect(find.text('Browse programmes'), findsOneWidget);
+    }
+
+    await pumpAt(size: const Size(320, 700), scale: 1);
+    await pumpAt(size: const Size(390, 844), scale: 1.9);
+  });
+
+  test('production athlete-facing copy has no architecture language', () {
+    const forbidden = [
+      'inspect only',
+      'pinned version facts',
+      'not an empty history',
+      'later enrolment',
+      'not rewritten',
+    ];
+    const paths = [
+      'lib/features/home/home_screen.dart',
+      'lib/features/home/widgets/athlete_home_completed_programme_card.dart',
+      'lib/features/programme/screens/athlete_calendar_screen.dart',
+      'lib/features/programme/screens/athlete_programme_screen.dart',
+      'lib/features/programme/widgets/athlete_programme_status_state.dart',
+      'lib/features/programme/presentation/athlete_completion_journey_copy.dart',
+      'lib/features/programme/presentation/athlete_programme_continuity_copy.dart',
+      'lib/features/progress/screens/progress_screen.dart',
+      'lib/features/performance/screens/training_history_screen.dart',
+      'lib/features/auth/screens/auth_gate.dart',
+      'lib/features/auth/widgets/athlete_identity_access_state.dart',
+    ];
+    for (final path in paths) {
+      final source = File(path).readAsStringSync();
+      for (final phrase in forbidden) {
+        expect(
+          source.toLowerCase().contains(phrase),
+          isFalse,
+          reason: '$path contains "$phrase"',
+        );
+      }
+    }
   });
 
   test('production main does not import completion preview', () {

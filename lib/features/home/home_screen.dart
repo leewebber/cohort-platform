@@ -11,6 +11,8 @@ import '../../data/repositories/programme_assignment_supabase_store.dart';
 import '../../models/programme_assignment.dart';
 import '../auth/controllers/auth_controller.dart';
 import '../auth/services/athlete_surface_identity.dart';
+import '../auth/widgets/athlete_identity_access_state.dart';
+import '../programme/presentation/athlete_completion_journey_copy.dart';
 import '../auth/services/current_user_session.dart';
 import '../athlete_profile/services/athlete_profile_session.dart';
 import '../../core/services/authenticated_identity.dart';
@@ -182,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _hasMaterialisedProgramme = null;
         _assignment = null;
         _calendar = null;
-        _calendarError = 'Athlete access is required.';
+        _calendarError = AthleteCompletionJourneyCopy.missingAthleteHeadline;
       });
       return;
     }
@@ -307,6 +309,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           Text('Checking programme…', style: CohortTextStyles.muted),
         ];
       case AthleteHomeRuntimeAuthority.unavailable:
+        if (_requireAthleteId() == null) {
+          return const [AthleteIdentityAccessState.missingProfile()];
+        }
         return [
           const Text('TODAY', style: CohortTextStyles.sectionLabel),
           const SizedBox(height: CohortSpacing.md),

@@ -62,3 +62,7 @@ not run.
 
 Push, integrate, apply hosted migrations, mark Sprint 3 complete, or
 begin the next milestone until founder approval.
+
+Founder visual design for completed Home is approved. A later local
+copy-only correction replaced remaining architectural athlete-facing
+strings; authority and RPCs are unchanged.

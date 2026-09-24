@@ -9,6 +9,9 @@ import '../../adaptive_progression/models/capability_timeline.dart';
 import '../../app_shell/presentation/athlete_time_aware_greeting.dart';
 import '../../../core/services/authenticated_identity.dart';
 import '../../auth/services/athlete_surface_identity.dart';
+import '../../auth/widgets/athlete_identity_access_state.dart';
+import '../../programme/presentation/athlete_completion_journey_copy.dart';
+import '../../programme/widgets/athlete_programme_status_state.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../models/progress_summary.dart';
 import '../services/athlete_progress_summary_builder.dart';
@@ -26,6 +29,7 @@ class ProgressScreen extends StatefulWidget {
     this.onChoosePlan,
     this.onStartToday,
     this.utcNow,
+    this.refreshFailed = false,
   });
 
   /// Sync override for tests / precomputed summaries.
@@ -43,6 +47,9 @@ class ProgressScreen extends StatefulWidget {
 
   /// Assignment-local clock for tests. Production uses UTC wall time.
   final DateTime Function()? utcNow;
+
+  /// When [summary] is injected, present last-good refresh-failed chrome.
+  final bool refreshFailed;
 
   @override
   State<ProgressScreen> createState() => _ProgressScreenState();
@@ -100,7 +107,8 @@ class _ProgressScreenState extends State<ProgressScreen>
   void didUpdateWidget(covariant ProgressScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.summary != oldWidget.summary ||
-        widget.progressBuilder != oldWidget.progressBuilder) {
+        widget.progressBuilder != oldWidget.progressBuilder ||
+        widget.refreshFailed != oldWidget.refreshFailed) {
       _bootstrap();
     }
   }
@@ -132,6 +140,9 @@ class _ProgressScreenState extends State<ProgressScreen>
       setState(() {
         _resolved = injected;
         _loading = false;
+        _refreshFailed = widget.refreshFailed;
+        _blocked = false;
+        _unauthorized = false;
         _bootstrappedWallDate = _wallDate(injected.compliance.timezone);
       });
       return;
@@ -216,31 +227,20 @@ class _ProgressScreenState extends State<ProgressScreen>
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(CohortSpacing.xl),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _unauthorized
-                      ? 'Athlete access is required'
-                      : 'Progress could not be loaded',
-                  style: CohortTextStyles.h1,
-                ),
-                const SizedBox(height: CohortSpacing.md),
-                Text(
-                  _unauthorized
-                      ? 'This account cannot open athlete Progress.'
-                      : 'Recorded evidence is unavailable. This is not an empty history.',
-                  style: CohortTextStyles.body,
-                ),
-                if (_blocked) ...[
-                  const SizedBox(height: CohortSpacing.md),
-                  CohortButton(
-                    label: 'Retry',
-                    onPressed: _bootstrap,
+            child: _unauthorized
+                ? const AthleteIdentityAccessState.missingProfile()
+                : AthleteProgrammeStatusState(
+                    badge: AthleteCompletionJourneyCopy.unavailable,
+                    headline:
+                        AthleteCompletionJourneyCopy.progressBlockedHeadline,
+                    explanation:
+                        AthleteCompletionJourneyCopy.tryAgainWhenReady,
+                    icon: Icons.cloud_off_outlined,
+                    action: CohortButton(
+                      label: 'Retry',
+                      onPressed: _bootstrap,
+                    ),
                   ),
-                ],
-              ],
-            ),
           ),
         ),
       );
@@ -341,21 +341,28 @@ class _ProgressBody extends StatelessWidget {
           const SizedBox(height: CohortSpacing.md),
           Text('PROGRESS', style: CohortTextStyles.eyebrow),
           const SizedBox(height: CohortSpacing.md),
-          Text('Am I getting better?', style: CohortTextStyles.h1),
-          const SizedBox(height: CohortSpacing.sm),
-          Text(
-            loading
-                ? 'Loading recorded sessions…'
-                : refreshFailed
-                ? 'Refresh failed. Showing last loaded evidence.'
-                : summary.sessionsCompleted == 0
-                ? 'No recorded sessions yet.'
-                : 'Recorded sessions and exercise bests from completed work.',
-            style: CohortTextStyles.body,
-          ),
-          if (refreshFailed && onRetry != null) ...[
-            const SizedBox(height: CohortSpacing.md),
-            CohortButton(label: 'Retry', onPressed: onRetry),
+          if (refreshFailed)
+            AthleteProgrammeStatusState(
+              badge: AthleteCompletionJourneyCopy.refreshFailed,
+              headline: AthleteCompletionJourneyCopy.progressRefreshHeadline,
+              explanation:
+                  AthleteCompletionJourneyCopy.progressRefreshSupporting,
+              icon: Icons.refresh,
+              action: onRetry == null
+                  ? null
+                  : CohortButton(label: 'Retry', onPressed: onRetry),
+            )
+          else ...[
+            Text('Am I getting better?', style: CohortTextStyles.h1),
+            const SizedBox(height: CohortSpacing.sm),
+            Text(
+              loading
+                  ? 'Loading recorded sessions…'
+                  : summary.sessionsCompleted == 0
+                  ? 'No recorded sessions yet.'
+                  : 'Recorded sessions and exercise bests from completed work.',
+              style: CohortTextStyles.body,
+            ),
           ],
           if (!summary.hasActivePlan) ...[
             const SizedBox(height: CohortSpacing.lg),

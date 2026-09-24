@@ -13,6 +13,7 @@ import '../controllers/auth_controller.dart';
 import '../models/production_auth_phase.dart';
 import '../services/current_user_session.dart';
 import '../services/production_auth_authority.dart';
+import '../widgets/athlete_identity_access_state.dart';
 import 'email_verification_screen.dart';
 import 'login_screen.dart';
 import 'profile_setup_screen.dart';
@@ -161,17 +162,7 @@ class _AthleteAccessDeniedScreen extends StatelessWidget {
             children: [
               Text('COHORT', style: CohortTextStyles.eyebrow),
               const SizedBox(height: 16),
-              Text(
-                'Athlete access is required',
-                style: CohortTextStyles.h2,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'This account cannot open athlete Home, Progress, or History.',
-                style: CohortTextStyles.body,
-                textAlign: TextAlign.center,
-              ),
+              const AthleteIdentityAccessState.coachOnly(),
             ],
           ),
         ),
