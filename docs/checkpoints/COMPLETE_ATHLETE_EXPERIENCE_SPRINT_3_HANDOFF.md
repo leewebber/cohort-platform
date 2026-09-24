@@ -66,3 +66,16 @@ begin the next milestone until founder approval.
 Founder visual design for completed Home is approved. A later local
 copy-only correction replaced remaining architectural athlete-facing
 strings; authority and RPCs are unchanged.
+
+`completedProgrammes` and `progressRefreshFailed` blanks:
+
+- Preview: full production `Scaffold`s were nested in an unbounded
+  `ListView`, so those two states collapsed to empty below the selector.
+- Production Progress: an injected last-good summary could skip the
+  builder, so refresh-failed chrome and Retry were not genuine. Last-good
+  is now hydrated, then refreshed; failure keeps same-athlete data.
+- Production Programmes: completed continuity no longer waits on the
+  catalogue default service.
+
+Approved Home, Calendar, coach-only, 320, and large-text states are
+unchanged. RPC/migration unchanged.

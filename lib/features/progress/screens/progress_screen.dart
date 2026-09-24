@@ -63,6 +63,7 @@ class _ProgressScreenState extends State<ProgressScreen>
   bool _blocked = false;
   bool _unauthorized = false;
   String? _scopedAthleteId;
+  String? _injectedForAthlete;
   HomeTodaySessionRefreshController? _attachedController;
   String? _bootstrappedWallDate;
 
@@ -108,7 +109,8 @@ class _ProgressScreenState extends State<ProgressScreen>
     super.didUpdateWidget(oldWidget);
     if (widget.summary != oldWidget.summary ||
         widget.progressBuilder != oldWidget.progressBuilder ||
-        widget.refreshFailed != oldWidget.refreshFailed) {
+        widget.refreshFailed != oldWidget.refreshFailed ||
+        widget.athleteIdOverride != oldWidget.athleteIdOverride) {
       _bootstrap();
     }
   }
@@ -136,9 +138,57 @@ class _ProgressScreenState extends State<ProgressScreen>
 
   Future<void> _bootstrap() async {
     final injected = widget.summary;
-    if (injected != null) {
+    final builder = widget.progressBuilder;
+    final athleteId = _requireAthleteId();
+
+    // Display-only injected summaries (tests / static preview) do not need
+    // an athlete id. A refresh builder always requires identity.
+    if (athleteId == null) {
+      if (!mounted) return;
+      if (injected != null && builder == null) {
+        setState(() {
+          _resolved = injected;
+          _loading = false;
+          _refreshFailed = widget.refreshFailed;
+          _blocked = false;
+          _unauthorized = false;
+          _scopedAthleteId = null;
+          _injectedForAthlete = null;
+          _bootstrappedWallDate = _wallDate(injected.compliance.timezone);
+        });
+        return;
+      }
       setState(() {
-        _resolved = injected;
+        _unauthorized = true;
+        _blocked = false;
+        _refreshFailed = false;
+        _loading = false;
+        _resolved = null;
+        _scopedAthleteId = null;
+        _injectedForAthlete = null;
+        _bootstrappedWallDate = null;
+      });
+      return;
+    }
+
+    if (_scopedAthleteId != athleteId) {
+      _resolved = null;
+      _refreshFailed = false;
+      _blocked = false;
+      _scopedAthleteId = athleteId;
+    }
+
+    if (injected != null &&
+        _resolved == null &&
+        (_injectedForAthlete == null || _injectedForAthlete == athleteId)) {
+      _resolved = injected;
+      _injectedForAthlete = athleteId;
+      _bootstrappedWallDate = _wallDate(injected.compliance.timezone);
+    }
+
+    if (builder == null && injected != null) {
+      if (!mounted) return;
+      setState(() {
         _loading = false;
         _refreshFailed = widget.refreshFailed;
         _blocked = false;
@@ -148,30 +198,15 @@ class _ProgressScreenState extends State<ProgressScreen>
       return;
     }
 
-    final athleteId = _requireAthleteId();
-    if (athleteId == null) {
-      setState(() {
-        _unauthorized = true;
-        _blocked = false;
-        _refreshFailed = false;
-        _loading = false;
-        _resolved = null;
-        _scopedAthleteId = null;
-        _bootstrappedWallDate = null;
-      });
-      return;
-    }
-    if (_scopedAthleteId != athleteId) {
-      _resolved = null;
-      _scopedAthleteId = athleteId;
-    }
+    if (!mounted) return;
     setState(() {
       _loading = _resolved == null;
       _unauthorized = false;
     });
-    final builder = widget.progressBuilder ?? AthleteProgressSummaryBuilder();
     try {
-      final summary = await builder.build(athleteId: athleteId);
+      final summary = await (builder ?? AthleteProgressSummaryBuilder()).build(
+        athleteId: athleteId,
+      );
       if (!mounted) return;
       setState(() {
         _resolved = summary;
@@ -190,6 +225,7 @@ class _ProgressScreenState extends State<ProgressScreen>
         } else {
           _blocked = true;
           _refreshFailed = false;
+          _resolved = null;
         }
       });
     }

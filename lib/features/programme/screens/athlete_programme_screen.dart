@@ -9,6 +9,7 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../../core/widgets/section_title.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
 import '../../../models/programme_assignment.dart';
+import '../../../models/programme_vocabulary.dart';
 import '../../home/controllers/home_today_session_refresh_controller.dart';
 import '../../session/services/programme_session_execution_launcher.dart';
 import '../controllers/athlete_programme_controllers.dart';
@@ -113,6 +114,29 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
 
   Future<void> _refreshContinuity() async {
     final assignment = _controller.currentAssignment;
+    final authoredTitle =
+        _fixedCalendar?.programmeName.trim().isNotEmpty == true
+        ? _fixedCalendar!.programmeName
+        : _controller.activeVersion?.name;
+
+    // Completed continuity is assignment-authoritative. Do not wait on the
+    // catalogue default or replace the completed pin with a published default.
+    if (assignment != null &&
+        assignment.status == ProgrammeAssignmentStatus.completed) {
+      if (!mounted) return;
+      setState(() {
+        _priorCompletedTitle = authoredTitle;
+        _continuity = AthleteProgrammeContinuity.project(
+          assignment: assignment,
+          pinnedTitle: authoredTitle,
+          pinResolvable: true,
+          catalogue: const [],
+          executionUnavailable: _fixedCalendarError != null,
+        );
+      });
+      return;
+    }
+
     List<ProgrammeCatalogEntry> catalogue = const [];
     try {
       catalogue = await AthleteCatalogueEnrolmentServices.createCatalogService()
@@ -141,10 +165,6 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
       }
     }
     if (!mounted) return;
-    final authoredTitle =
-        _fixedCalendar?.programmeName.trim().isNotEmpty == true
-        ? _fixedCalendar!.programmeName
-        : _controller.activeVersion?.name;
     setState(() {
       _priorCompletedTitle = priorCompletedTitle;
       _continuity = AthleteProgrammeContinuity.project(

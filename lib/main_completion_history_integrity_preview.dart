@@ -8,20 +8,14 @@ import 'package:cohort_platform/features/performance/models/session_result_entry
 import 'package:cohort_platform/features/performance/models/training_session_record.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
 import 'package:cohort_platform/features/performance/screens/training_history_screen.dart';
-import 'package:cohort_platform/features/programme/controllers/athlete_programme_controllers.dart';
 import 'package:cohort_platform/features/programme/domain/athlete_programme_continuity.dart';
-import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/presentation/athlete_completion_journey_copy.dart';
-import 'package:cohort_platform/features/programme/screens/athlete_calendar_screen.dart';
-import 'package:cohort_platform/features/programme/screens/athlete_programme_screen.dart';
 import 'package:cohort_platform/features/programme/widgets/athlete_programme_status_state.dart';
 import 'package:cohort_platform/features/progress/models/progress_summary.dart';
 import 'package:cohort_platform/features/progress/screens/progress_screen.dart';
 import 'package:cohort_platform/features/progress/services/athlete_progress_summary_builder.dart';
-import 'package:cohort_platform/models/programme_assignment.dart';
-import 'package:cohort_platform/models/programme_vocabulary.dart';
 import 'package:cohort_platform/preview/athlete_shell_preview_fixture.dart';
-import 'package:cohort_platform/preview/athlete_shell_preview_stores.dart';
+import 'package:cohort_platform/preview/completion_history_integrity_preview_fixtures.dart';
 import 'package:flutter/material.dart';
 
 /// Fixture-only Sprint 3 preview. Not imported by `lib/main.dart`.
@@ -93,6 +87,12 @@ class CompletionHistoryIntegrityPreviewScreen extends StatefulWidget {
 class _CompletionHistoryIntegrityPreviewScreenState
     extends State<CompletionHistoryIntegrityPreviewScreen> {
   late CompletionPreviewState _state = widget.initialState;
+  late final Widget _completedCalendar =
+      CompletionHistoryPreviewFixtures.completedCalendarScreen();
+  late final Widget _completedProgrammes =
+      CompletionHistoryPreviewFixtures.completedProgrammesScreen();
+  late final Widget _progressRefreshFailed =
+      CompletionHistoryPreviewFixtures.progressRefreshFailed();
 
   @override
   Widget build(BuildContext context) {
@@ -106,35 +106,87 @@ class _CompletionHistoryIntegrityPreviewScreenState
       ),
       child: Scaffold(
         appBar: AppBar(title: const Text('Sprint 3 preview')),
-        body: ListView(
-          padding: const EdgeInsets.all(CohortSpacing.lg),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const LocalPreviewBanner(),
-            const SizedBox(height: CohortSpacing.md),
-            DropdownButton<CompletionPreviewState>(
-              value: _state,
-              isExpanded: true,
-              items: [
-                for (final state in CompletionPreviewState.values)
-                  DropdownMenuItem(
-                    value: state,
-                    child: Text(state.name, overflow: TextOverflow.ellipsis),
+            Padding(
+              padding: const EdgeInsets.all(CohortSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const LocalPreviewBanner(),
+                  const SizedBox(height: CohortSpacing.md),
+                  DropdownButton<CompletionPreviewState>(
+                    value: _state,
+                    isExpanded: true,
+                    items: [
+                      for (final state in CompletionPreviewState.values)
+                        DropdownMenuItem(
+                          value: state,
+                          child: Text(
+                            state.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                    onChanged: (next) {
+                      if (next == null) return;
+                      setState(() => _state = next);
+                    },
                   ),
-              ],
-              onChanged: (next) {
-                if (next == null) return;
-                setState(() => _state = next);
-              },
+                ],
+              ),
             ),
-            const SizedBox(height: CohortSpacing.lg),
-            _previewBody(_state),
+            Expanded(child: _previewBody(_state)),
           ],
         ),
       ),
     );
   }
 
+  bool _isFullSurface(CompletionPreviewState state) {
+    switch (state) {
+      case CompletionPreviewState.completedCalendar:
+      case CompletionPreviewState.completedProgrammes:
+      case CompletionPreviewState.progressData:
+      case CompletionPreviewState.progressEmpty:
+      case CompletionPreviewState.progressRefreshFailed:
+      case CompletionPreviewState.progressBlocked:
+      case CompletionPreviewState.historyData:
+      case CompletionPreviewState.historyEmpty:
+      case CompletionPreviewState.historyRefreshFailed:
+      case CompletionPreviewState.historyBlocked:
+        return true;
+      case CompletionPreviewState.activeProgramme:
+      case CompletionPreviewState.todayCompleteProgrammeContinues:
+      case CompletionPreviewState.programmeJustCompleted:
+      case CompletionPreviewState.completedHome:
+      case CompletionPreviewState.missingAthlete:
+      case CompletionPreviewState.coachOnlyDenied:
+      case CompletionPreviewState.noActiveWithHistory:
+      case CompletionPreviewState.completedPlusNewActive:
+      case CompletionPreviewState.unavailableCompletedPin:
+      case CompletionPreviewState.narrow320CompletedHome:
+      case CompletionPreviewState.largeTextCompletedHome:
+        return false;
+    }
+  }
+
   Widget _previewBody(CompletionPreviewState state) {
+    final child = _previewSurface(state);
+    if (_isFullSurface(state)) return child;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        CohortSpacing.lg,
+        0,
+        CohortSpacing.lg,
+        CohortSpacing.lg,
+      ),
+      children: [child],
+    );
+  }
+
+  Widget _previewSurface(CompletionPreviewState state) {
     final completedHome = AthleteHomeCompletedProgrammeCard(
       programmeTitle: 'Apollo Strength',
       supportingLine:
@@ -166,12 +218,9 @@ class _CompletionHistoryIntegrityPreviewScreenState
       case CompletionPreviewState.largeTextCompletedHome:
         return completedHome;
       case CompletionPreviewState.completedCalendar:
-        return SizedBox(
-          height: 640,
-          child: _completedCalendarScreen(),
-        );
+        return _completedCalendar;
       case CompletionPreviewState.completedProgrammes:
-        return _completedProgrammesScreen();
+        return _completedProgrammes;
       case CompletionPreviewState.progressData:
         return ProgressScreen(
           athleteIdOverride: previewAthleteId,
@@ -183,48 +232,32 @@ class _CompletionHistoryIntegrityPreviewScreenState
           summary: AthleteProgressSummaryBuilder.emptySummary(),
         );
       case CompletionPreviewState.progressRefreshFailed:
-        return ProgressScreen(
-          athleteIdOverride: previewAthleteId,
-          summary: _progressSummary(sessionsCompleted: 8),
-          refreshFailed: true,
-        );
+        return _progressRefreshFailed;
       case CompletionPreviewState.progressBlocked:
         return ProgressScreen(
           athleteIdOverride: previewAthleteId,
-          progressBuilder: _FailingProgressBuilder(),
+          progressBuilder: RefreshFailingProgressBuilder(),
         );
       case CompletionPreviewState.historyData:
-        return SizedBox(
-          height: 420,
-          child: TrainingHistoryScreen(
-            athleteId: previewAthleteId,
-            initialRecords: [_historyRecord()],
-          ),
+        return TrainingHistoryScreen(
+          athleteId: previewAthleteId,
+          initialRecords: [_historyRecord()],
         );
       case CompletionPreviewState.historyEmpty:
-        return SizedBox(
-          height: 280,
-          child: TrainingHistoryScreen(
-            athleteId: previewAthleteId,
-            initialRecords: const [],
-          ),
+        return TrainingHistoryScreen(
+          athleteId: previewAthleteId,
+          initialRecords: const [],
         );
       case CompletionPreviewState.historyRefreshFailed:
-        return SizedBox(
-          height: 420,
-          child: TrainingHistoryScreen(
-            athleteId: previewAthleteId,
-            initialRecords: [_historyRecord()],
-            initialFailure: true,
-          ),
+        return TrainingHistoryScreen(
+          athleteId: previewAthleteId,
+          initialRecords: [_historyRecord()],
+          initialFailure: true,
         );
       case CompletionPreviewState.historyBlocked:
-        return SizedBox(
-          height: 280,
-          child: TrainingHistoryScreen(
-            athleteId: previewAthleteId,
-            initialFailure: true,
-          ),
+        return TrainingHistoryScreen(
+          athleteId: previewAthleteId,
+          initialFailure: true,
         );
       case CompletionPreviewState.missingAthlete:
         return const AthleteIdentityAccessState.missingProfile();
@@ -257,94 +290,6 @@ class _CompletionHistoryIntegrityPreviewScreenState
         );
     }
   }
-
-  Widget _completedCalendarScreen() {
-    final assignment = _completedAssignment();
-    final calendar = _completedCalendar(assignment);
-    return AthleteCalendarScreen(
-      athleteId: previewAthleteId,
-      assignmentStore: PreviewAssignmentStore(assignment),
-      fixedOccurrenceStore: PreviewProjectionStore(calendar),
-    );
-  }
-
-  Widget _completedProgrammesScreen() {
-    final assignment = _completedAssignment();
-    final calendar = _completedCalendar(assignment);
-    final bundle = AthleteShellPreviewBundle.seed(
-      AthleteShellPreviewScenario.todayComplete,
-    );
-    bundle.assignmentStore.assignment = assignment;
-    bundle.projectionStore.projection = calendar;
-    return AthleteProgrammeScreen(
-      athleteId: previewAthleteId,
-      assignmentStore: bundle.assignmentStore,
-      controller: AthleteProgrammeScreenController(
-        athleteId: previewAthleteId,
-        assignmentStore: bundle.assignmentStore,
-        versionStore: bundle.versionStore,
-      ),
-      fixedOccurrenceStore: bundle.projectionStore,
-    );
-  }
-}
-
-ProgrammeAssignment _completedAssignment() {
-  return ProgrammeAssignment(
-    id: previewAssignmentId,
-    athleteId: previewAthleteId,
-    programmeVersionId: previewVersionId,
-    lineageCode: 'APOLLO-BUILD-12-WEEK',
-    status: ProgrammeAssignmentStatus.completed,
-    startedAt: DateTime.utc(2026, 8, 1),
-    completedAt: DateTime.utc(2026, 9, 1),
-    timezone: 'Atlantic/Canary',
-    scheduleMode: 'fixed_schedule',
-    materialisedAt: DateTime.utc(2026, 8, 1),
-    materialisedPackageContentHash: previewPackageHash,
-  );
-}
-
-FixedProgrammeCalendarProjection _completedCalendar(
-  ProgrammeAssignment assignment,
-) {
-  return FixedProgrammeCalendarProjection(
-    assignmentId: assignment.id,
-    programmeName: 'Apollo Strength',
-    timezone: 'Atlantic/Canary',
-    scheduleMode: 'fixed_schedule',
-    startDate: '2026-08-01',
-    today: '2026-09-10',
-    weekStart: '2026-09-07',
-    weekEnd: '2026-09-13',
-    assignmentStatus: 'completed',
-    occurrences: [
-      FixedProgrammeOccurrenceProjection(
-        assignmentId: assignment.id,
-        occurrenceId: 'occ-complete',
-        sessionSlotId: previewSlotStrength,
-        programmeVersionId: assignment.programmeVersionId,
-        protocolId: 'BW-001',
-        programmedSessionKey: 'psk-preview-complete',
-        weekNumber: 1,
-        dayKey: 'day_1',
-        sessionOrder: 1,
-        scheduledDate: '2026-09-10',
-        originalScheduledDate: '2026-09-10',
-        state: FixedProgrammeOccurrenceState.completed,
-        sessionTitle: 'Strength',
-      ),
-    ],
-    currentWeek: [
-      for (var i = 0; i < 7; i++)
-        FixedProgrammeCalendarDayProjection(
-          date: '2026-09-${(7 + i).toString().padLeft(2, '0')}',
-          state: i == 3
-              ? FixedProgrammeOccurrenceState.completed
-              : FixedProgrammeOccurrenceState.rest,
-        ),
-    ],
-  );
 }
 
 ProgressSummary _progressSummary({required int sessionsCompleted}) {
@@ -383,11 +328,4 @@ TrainingSessionRecord _historyRecord() {
     performedPrecision: SessionPerformedPrecision.date,
     recordedAt: at,
   );
-}
-
-class _FailingProgressBuilder extends AthleteProgressSummaryBuilder {
-  @override
-  Future<ProgressSummary> build({required String athleteId}) {
-    throw const AthleteProgressEvidenceFailure('history_unavailable');
-  }
 }
