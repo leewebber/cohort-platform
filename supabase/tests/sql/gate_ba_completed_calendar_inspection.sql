@@ -254,16 +254,21 @@ BEGIN
   INSERT INTO programme_assignments (
     id, athlete_id, programme_version_id, lineage_code, status,
     started_at, timezone, schedule_mode, materialised_at,
-    materialised_package_content_hash
+    materialised_package_content_hash, materialisation_source,
+    materialised_package_schema_version
   )
   SELECT
     'ba200000-0000-4000-8000-0000000000d1'::UUID,
-    v_athlete, v_version, 'APOLLO-BUILD-12-WEEK', 'paused',
-    v_start, 'Atlantic/Canary', 'fixed_schedule', NOW(), v_hash
-  WHERE NOT EXISTS (
-    SELECT 1 FROM programme_assignments
-    WHERE id = 'ba200000-0000-4000-8000-0000000000d1'
-  );
+    athlete_id, programme_version_id, lineage_code, 'paused',
+    started_at, timezone, schedule_mode, materialised_at,
+    materialised_package_content_hash, materialisation_source,
+    materialised_package_schema_version
+  FROM programme_assignments
+  WHERE id = v_assignment
+    AND NOT EXISTS (
+      SELECT 1 FROM programme_assignments
+      WHERE id = 'ba200000-0000-4000-8000-0000000000d1'
+    );
   v_paused := 'ba200000-0000-4000-8000-0000000000d1';
 
   INSERT INTO programme_assignments (
@@ -303,16 +308,21 @@ BEGIN
   INSERT INTO programme_assignments (
     id, athlete_id, programme_version_id, lineage_code, status,
     started_at, timezone, schedule_mode, materialised_at,
-    materialised_package_content_hash
+    materialised_package_content_hash, materialisation_source,
+    materialised_package_schema_version
   )
   SELECT
     'ba200000-0000-4000-8000-0000000000f1'::UUID,
-    v_athlete, v_version, 'APOLLO-BUILD-12-WEEK', 'reassigned',
-    v_start, 'Atlantic/Canary', 'fixed_schedule', NOW(), v_hash
-  WHERE NOT EXISTS (
-    SELECT 1 FROM programme_assignments
-    WHERE id = 'ba200000-0000-4000-8000-0000000000f1'
-  );
+    athlete_id, programme_version_id, lineage_code, 'reassigned',
+    started_at, timezone, schedule_mode, materialised_at,
+    materialised_package_content_hash, materialisation_source,
+    materialised_package_schema_version
+  FROM programme_assignments
+  WHERE id = v_assignment
+    AND NOT EXISTS (
+      SELECT 1 FROM programme_assignments
+      WHERE id = 'ba200000-0000-4000-8000-0000000000f1'
+    );
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::TEXT, true);
   PERFORM set_config('role', 'authenticated', true);
