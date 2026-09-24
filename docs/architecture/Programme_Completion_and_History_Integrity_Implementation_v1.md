@@ -49,10 +49,25 @@ exists. Pin facts come only from the pinned version. Catalogue default
 must not substitute. Unavailable pin and Sprint 2 timezone
 repair-required remain fail-closed on **active** rows.
 
-Calendar after complete calls existing
-`resolve_fixed_programme_calendar(assignment_id)`. No Begin/Resume.
-Later enrol switches current Calendar to the new active assignment
-without rewriting completed history.
+Calendar after complete calls
+`resolve_fixed_programme_calendar(assignment_id)`.
+
+**RPC design A (audit 2026-09-24):** Execution independently requires
+an active assignment (`prepareFixedOccurrence`,
+`IncompleteSessionTrainToday`, create/resume and completion RPCs).
+Zero production Dart callers of the assignment-specific resolver
+existed before this sprint. Widening
+`cohort_resolve_fixed_programme_calendar_at` is therefore safe.
+
+The assignment-specific resolver accepts `active` or `completed`
+when `materialised_at IS NOT NULL`. Other statuses stay ineligible.
+Completed inspection skips `ensure` and `reconcile` so it cannot
+create or rewrite occurrences. Success payload includes
+`assignment_status`. Completed responses are inspection-only in the
+client. `resolve_active_fixed_programme_calendar` remains active-only.
+
+No Begin/Resume. Later enrol switches current Calendar to the new
+active assignment without rewriting completed history.
 
 ## Identity
 
@@ -89,7 +104,9 @@ claims. Hosted completion wins over stale local drafts.
 New completion mutation; replacement/repin; recommendations;
 automatic next programme; Progress metric redesign; Performance
 Portfolio; adaptation; payments; wearables; offline completion queue;
-WOD Timer/Whiteboard; blue brand; hosted repair; schema/RPC changes.
+WOD Timer/Whiteboard; blue brand; hosted repair.
+Authorised local RPC widening only: completed assignment-specific
+calendar inspection. No new column. No hosted apply.
 
 ## Acceptance gates
 
