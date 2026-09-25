@@ -26,7 +26,8 @@ PUSHED=false
 
 Internal, read-only Programme Studio. Deterministic review projection from
 committed Plan Package YAML, Spartan founder YAML, Apollo executable-protocol
-SQL `INSERT` artifacts, and M9 publication JSON. Dedicated preview
+SQL `INSERT` artifacts plus the ordered warmup/capture/format correction
+chain, and M9 publication JSON. Dedicated preview
 `lib/main_programme_studio_preview.dart` on port **4195**. Not imported by
 `lib/main.dart`.
 
@@ -42,7 +43,9 @@ SQL `INSERT` artifacts, and M9 publication JSON. Dedicated preview
 ## Limitations shown honestly
 
 - Plan Package v1 has no intended-level or equipment fields.
-- Later Apollo warmup/capture SQL corrections are not replayed without a database.
+- Apollo warmup, prescription-encoding, continuous-conditioning, and W5
+  capture corrections are replayed in migration order from committed SQL.
+  Unsupported relevant SQL fails closed.
 - Hosted catalogue default cannot be established locally.
 - Version comparison is unavailable (one local version per lineage).
 - Running/pace, metrics profile, and Garmin/device checks are not implemented.

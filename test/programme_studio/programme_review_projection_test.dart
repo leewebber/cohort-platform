@@ -26,7 +26,10 @@ void main() {
       'spartan-physique-v3',
     ]);
     final apollo = first.programmes.first;
-    expect(apollo.classification, ProgrammeReviewClassification.internalPersonal);
+    expect(
+      apollo.classification,
+      ProgrammeReviewClassification.internalPersonal,
+    );
     expect(apollo.lineageCode, 'APOLLO-BUILD-12-WEEK');
     expect(apollo.versionNumber, 2);
     expect(apollo.sessionsPerWeek, 7);
@@ -41,15 +44,18 @@ void main() {
     expect(apollo.weeks.first.days, hasLength(7));
 
     final spartan = first.programmes.last;
-    expect(spartan.classification, ProgrammeReviewClassification.legacyWithheld);
+    expect(
+      spartan.classification,
+      ProgrammeReviewClassification.legacyWithheld,
+    );
     expect(spartan.durationWeeks, 1);
     expect(spartan.sessionsPerWeek, 6);
     expect(spartan.scheduledWeekCount, 1);
+    expect(spartan.compile.contentHashSha256, isNot(isEmpty));
     expect(
-      spartan.compile.contentHashSha256,
-      isNot(isEmpty),
+      spartan.findings.any((item) => item.code == 'single_week_programme'),
+      isTrue,
     );
-    expect(spartan.findings.any((item) => item.code == 'single_week_programme'), isTrue);
 
     final apolloSessions = apollo.weeks
         .expand((week) => week.days)
@@ -65,6 +71,21 @@ void main() {
     expect(spartanSessions.every((session) => session.bodiesResolved), isTrue);
 
     expect(
+      apollo.findings.any(
+        (item) => item.code == 'sql_correction_migrations_not_replayed',
+      ),
+      isFalse,
+    );
+    expect(
+      apollo.findings.where((item) => item.code == 'sql_correction_applied'),
+      hasLength(ProgrammeReviewCatalogRegistry.apolloCorrectionSql.length),
+    );
+    expect(
+      apollo.sourcePaths,
+      containsAll(ProgrammeReviewCatalogRegistry.apolloCorrectionSql),
+    );
+
+    expect(
       projector.projectCanonicalJson(_realRequest()),
       projector.projectCanonicalJson(_realRequest()),
     );
@@ -73,19 +94,28 @@ void main() {
   test('excludes fixtures from default real inventory', () {
     final catalog = realCatalog();
     expect(
-      catalog.realInventory(includeFixtures: false).map((item) => item.catalogId),
+      catalog
+          .realInventory(includeFixtures: false)
+          .map((item) => item.catalogId),
       ['apollo-build-v2', 'spartan-physique-v3'],
     );
     expect(
-      catalog.realInventory(includeFixtures: false).any(
-        (item) =>
-            item.classification == ProgrammeReviewClassification.fixtureTestExample,
-      ),
+      catalog
+          .realInventory(includeFixtures: false)
+          .any(
+            (item) =>
+                item.classification ==
+                ProgrammeReviewClassification.fixtureTestExample,
+          ),
       isFalse,
     );
     expect(catalog.plannedFamilies, isNotEmpty);
     expect(
-      catalog.plannedFamilies.every((item) => item.toJson()['weeks'] == const <Never>[] || (item.toJson()['weeks'] as List).isEmpty),
+      catalog.plannedFamilies.every(
+        (item) =>
+            item.toJson()['weeks'] == const <Never>[] ||
+            (item.toJson()['weeks'] as List).isEmpty,
+      ),
       isTrue,
     );
   });
@@ -119,7 +149,10 @@ INSERT INTO public.session_blocks(block_id,session_id,block_type,title,content,w
 ''';
     final protocols = const ExecutableProtocolSqlReader().read([sql]);
     expect(protocols['PROTO-X']!.blocks, hasLength(1));
-    expect(protocols['PROTO-X']!.blocks.single.unsupportedReason, contains('unknown_format'));
+    expect(
+      protocols['PROTO-X']!.blocks.single.unsupportedReason,
+      contains('unknown_format'),
+    );
     expect(protocols['PROTO-X']!.blocks.single.title, 'Mystery block');
   });
 
@@ -130,7 +163,10 @@ INSERT INTO public.session_blocks(block_id,session_id,block_type,title,content,w
     final protocols = const ExecutableProtocolSqlReader().read([sql]);
     expect(protocols.keys, contains('APOLLO-W1-THU-R1'));
     final engine = protocols['APOLLO-W1-THU-R1']!;
-    expect(engine.blocks.map((item) => item.title), contains('5K-effort intervals'));
+    expect(
+      engine.blocks.map((item) => item.title),
+      contains('5K-effort intervals'),
+    );
     expect(
       engine.blocks.any((item) => item.workoutFormat == 'intervals'),
       isTrue,
@@ -143,7 +179,8 @@ ProgrammeReviewProjectionRequest _realRequest() {
     bundles: [
       for (final spec in ProgrammeReviewCatalogRegistry.realSpecs)
         ProgrammeReviewWorkspace(
-          readAsset: (path) => File('${Directory.current.path}/$path').readAsStringSync(),
+          readAsset: (path) =>
+              File('${Directory.current.path}/$path').readAsStringSync(),
         ).loadBundle(spec),
     ],
     plannedFamilies: ProgrammeReviewCatalogRegistry.plannedFamilies,

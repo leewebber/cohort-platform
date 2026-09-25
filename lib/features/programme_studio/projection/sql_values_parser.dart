@@ -124,25 +124,40 @@ class SqlInsertExtractor {
   String? valuesClause({
     required String sql,
     required String table,
+    bool publicQualified = true,
   }) {
+    final clauses = valuesClauses(
+      sql: sql,
+      table: table,
+      publicQualified: publicQualified,
+    );
+    return clauses.isEmpty ? null : clauses.first;
+  }
+
+  List<String> valuesClauses({
+    required String sql,
+    required String table,
+    bool publicQualified = true,
+  }) {
+    final qualified = publicQualified ? 'public\\.$table' : table;
     final marker = RegExp(
-      'INSERT\\s+INTO\\s+public\\.$table\\b',
+      'INSERT\\s+INTO\\s+$qualified\\b',
       caseSensitive: false,
     );
-    final match = marker.firstMatch(sql);
-    if (match == null) {
-      return null;
+    final clauses = <String>[];
+    for (final match in marker.allMatches(sql)) {
+      final valuesAt = RegExp(
+        '\\bVALUES\\b',
+        caseSensitive: false,
+      ).firstMatch(sql.substring(match.end));
+      if (valuesAt == null) {
+        continue;
+      }
+      final from = match.end + valuesAt.end;
+      final end = _statementEnd(sql, from);
+      clauses.add(sql.substring(from, end));
     }
-    final valuesAt = RegExp(
-      '\\bVALUES\\b',
-      caseSensitive: false,
-    ).firstMatch(sql.substring(match.end));
-    if (valuesAt == null) {
-      return null;
-    }
-    final from = match.end + valuesAt.end;
-    final end = _statementEnd(sql, from);
-    return sql.substring(from, end);
+    return clauses;
   }
 
   int _statementEnd(String sql, int from) {

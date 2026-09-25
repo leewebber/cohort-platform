@@ -8,7 +8,7 @@ class ProgrammeReviewSourceSpec {
     this.founderYamlPath,
     this.publicationJsonPath,
     this.executableProtocolSqlPaths = const [],
-    this.unreplayedSqlPaths = const [],
+    this.correctionSqlPaths = const [],
     this.fixture = false,
   });
 
@@ -18,7 +18,7 @@ class ProgrammeReviewSourceSpec {
   final String? founderYamlPath;
   final String? publicationJsonPath;
   final List<String> executableProtocolSqlPaths;
-  final List<String> unreplayedSqlPaths;
+  final List<String> correctionSqlPaths;
   final bool fixture;
 }
 
@@ -29,6 +29,7 @@ class ProgrammeReviewSourceBundle {
     this.founderYaml,
     this.publicationJson,
     this.executableProtocolSql = const [],
+    this.correctionSql = const [],
   });
 
   final ProgrammeReviewSourceSpec spec;
@@ -36,6 +37,14 @@ class ProgrammeReviewSourceBundle {
   final String? founderYaml;
   final String? publicationJson;
   final List<String> executableProtocolSql;
+  final List<ProgrammeSqlSource> correctionSql;
+}
+
+class ProgrammeSqlSource {
+  const ProgrammeSqlSource({required this.path, required this.sql});
+
+  final String path;
+  final String sql;
 }
 
 class ProgrammeReviewProjectionRequest {

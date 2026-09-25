@@ -39,6 +39,10 @@ class ProgrammeReviewWorkspace {
       executableProtocolSql: [
         for (final path in spec.executableProtocolSqlPaths) readAsset(path),
       ],
+      correctionSql: [
+        for (final path in spec.correctionSqlPaths)
+          ProgrammeSqlSource(path: path, sql: readAsset(path)),
+      ],
     );
   }
 }

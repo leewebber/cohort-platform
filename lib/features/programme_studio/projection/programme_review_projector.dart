@@ -38,7 +38,7 @@ class ProgrammeReviewProjector {
         inputs.add(bundle.spec.publicationJsonPath!);
       }
       inputs.addAll(bundle.spec.executableProtocolSqlPaths);
-      inputs.addAll(bundle.spec.unreplayedSqlPaths);
+      inputs.addAll(bundle.spec.correctionSqlPaths);
       final projected = projectBundle(bundle);
       if (bundle.spec.fixture) {
         fixtures.add(projected);
@@ -100,22 +100,15 @@ class ProgrammeReviewProjector {
       }
     }
 
-    final protocols = protocolReader.read(bundle.executableProtocolSql);
+    final protocolRead = protocolReader.readWithCorrections(
+      insertSql: bundle.executableProtocolSql,
+      corrections: bundle.correctionSql,
+    );
+    final protocols = protocolRead.protocols;
+    findings.addAll(protocolRead.findings);
     final publication = _publication(bundle, compile.contentHashSha256);
 
     _metadataFindings(manifest, founder, findings);
-    if (bundle.spec.unreplayedSqlPaths.isNotEmpty) {
-      findings.add(
-        ProgrammeReviewFinding(
-          code: 'sql_correction_migrations_not_replayed',
-          severity: ProgrammeReviewFindingSeverity.warning,
-          message:
-              'Later executable-protocol SQL corrections are not replayed '
-              'locally without a database. Initial INSERT artifacts are shown.',
-          sourceContext: bundle.spec.unreplayedSqlPaths.join(', '),
-        ),
-      );
-    }
 
     final weeks = _weeks(
       manifest: manifest,
@@ -245,7 +238,9 @@ class ProgrammeReviewProjector {
     );
   }
 
-  ProgrammeReviewCompileReport _compileReport(PlanPackageCompileResult compile) {
+  ProgrammeReviewCompileReport _compileReport(
+    PlanPackageCompileResult compile,
+  ) {
     if (compile.isValid) {
       return ProgrammeReviewCompileReport(
         parseOk: true,
@@ -295,7 +290,8 @@ class ProgrammeReviewProjector {
       }
       final versionId = decoded['programme_version_id']?.toString();
       final hash = decoded['source_package_hash']?.toString();
-      final hashMatches = hash != null && compileHash != null && hash == compileHash;
+      final hashMatches =
+          hash != null && compileHash != null && hash == compileHash;
       return ProgrammeReviewPublicationEvidence(
         establishedLocally: versionId != null && hash != null,
         programmeVersionId: versionId,
@@ -369,8 +365,7 @@ class ProgrammeReviewProjector {
       const ProgrammeReviewFinding(
         code: 'package_missing_intended_level',
         severity: ProgrammeReviewFindingSeverity.warning,
-        message:
-            'Intended level is not a Plan Package v1 field. Not invented.',
+        message: 'Intended level is not a Plan Package v1 field. Not invented.',
       ),
     );
     findings.add(
@@ -551,6 +546,7 @@ class ProgrammeReviewProjector {
       if (spec.founderYamlPath != null) spec.founderYamlPath!,
       if (spec.publicationJsonPath != null) spec.publicationJsonPath!,
       ...spec.executableProtocolSqlPaths,
+      ...spec.correctionSqlPaths,
     ]..sort();
   }
 
@@ -662,7 +658,8 @@ class ProgrammeReviewProjector {
         id: 'coaching_approval',
         label: 'Coaching approval',
         status: ProgrammeReviewCheckStatus.notAssessed,
-        detail: 'Human coaching review remains required. Compiler success is not approval.',
+        detail:
+            'Human coaching review remains required. Compiler success is not approval.',
       ),
       const ProgrammeReviewCheck(
         id: 'execution_device_test',

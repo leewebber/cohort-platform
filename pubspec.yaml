@@ -89,6 +89,11 @@ flutter:
     - supabase/migrations/20260821133000_apollo_build_week10_executable_protocols.sql
     - supabase/migrations/20260821134000_apollo_build_week11_executable_protocols.sql
     - supabase/migrations/20260821135000_apollo_build_week12_executable_protocols.sql
+    - supabase/migrations/20260823121000_structure_apollo_week1_monday_warmup_exercises.sql
+    - supabase/migrations/20260824121000_correct_apollo_structured_warmup_prescriptions.sql
+    - supabase/migrations/20260825120000_structure_all_apollo_warmups_and_athlete_details.sql
+    - supabase/migrations/20260903120000_classify_continuous_conditioning_as_steady_state.sql
+    - supabase/migrations/20260906160000_apollo_w5_fixed_work_rounds_capture.sql
 
   # To add assets to your application, add an assets section, like this:
   # assets:

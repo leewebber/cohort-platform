@@ -34,13 +34,13 @@ Read-only, committed artifacts only:
 | Programme / version identity, metadata, duration, schedule, week/day/session order | Plan Package v1 YAML via `PlanPackageCompiler` |
 | Package validation, canonical JSON, SHA-256 | Same compiler (parse → validate → canonicalise) |
 | Spartan session bodies | Founder programme YAML via `FounderProgrammeYamlParser` |
-| Apollo session bodies | Committed executable-protocol SQL `INSERT` artifacts for `performance_protocols`, `session_blocks`, and `session_block_exercises` |
+| Apollo session bodies | Committed executable-protocol SQL `INSERT` artifacts for `performance_protocols`, `session_blocks`, and `session_block_exercises`, plus the later ordered correction migrations that mutate those tables |
 | Publication / version UUID / package-hash evidence | Committed M9 publication JSON (not a live hosted SELECT) |
 
 SQL seeds, discovery previews, tests, and documentation examples are
-**not** canonical programmes. Later Apollo correction migrations that
-cannot be replayed without a database are **findings**, not silent
-rewrites.
+**not** canonical programmes. Later Apollo correction migrations are
+replayed in filename order by a bounded artifact applicator. Unsupported
+relevant SQL fails closed; it is not silently skipped.
 
 ## Derived review model
 
