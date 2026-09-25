@@ -16,10 +16,11 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 |----------|---------|
 | [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** (strategy + infrastructure approved; Studio Stage 1 COMPLETE) |
 | [Programme_Studio_v1.md](./Programme_Studio_v1.md) | Internal Programme Studio |
-| [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace audit (awaiting approval) |
+| [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace audit (historical) |
+| [../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md) | Structured running approved; B1 approved, not started |
 | [Programme_Studio_Stage_1_Implementation_v1.md](./Programme_Studio_Stage_1_Implementation_v1.md) | Stage 1 implementation contract |
 | [../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md) | Stage 1 implementation handoff |
-| [Running_Workout_and_Device_Interop_v1.md](./Running_Workout_and_Device_Interop_v1.md) | Vendor-neutral running workout / device interop (audited, awaiting approval) |
+| [Running_Workout_and_Device_Interop_v1.md](./Running_Workout_and_Device_Interop_v1.md) | Vendor-neutral running workout / device interop (approved; B1 not started) |
 | [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md) | Per-version metrics profile (architecture only) |
 | [../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md) | Launch library readiness audit |
 | [Complete_Athlete_Experience_v1.md](./Complete_Athlete_Experience_v1.md) | **Complete Athlete Experience** milestone definition (**complete**) |

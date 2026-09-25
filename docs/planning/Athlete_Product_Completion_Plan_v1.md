@@ -22,7 +22,9 @@ NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -35,6 +37,7 @@ FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 
 Binding parents:
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+[`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
 [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
 [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md),
@@ -1094,8 +1097,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
 **complete** at `fc73ae0`; next `M-LIB` strategy approved,
-infrastructure approved, Studio Stage 1 COMPLETE, Sprint B audited
-awaiting approval; Sprint B–D implementation not authorised)
+infrastructure approved, Studio Stage 1 COMPLETE, Sprint B1 approved
+not started; B2–D not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1185,7 +1188,9 @@ NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -1197,12 +1202,13 @@ NEXT_IMPLEMENTATION_AUTHORISED=false
 
 The next sequenced item is **launch programme library**. Strategy and
 infrastructure architecture are **approved**. Programme Studio Stage 1
-is **COMPLETE**. Sprint B is **audited, awaiting approval**. Binding:
+is **COMPLETE**. Sprint B1 is **approved, not started**. Binding:
 [`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
+[`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
 [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md).
-Sprint B–D remain unauthorised. This does
+B2–D remain unauthorised. This does
 **not** make Cohort launch-ready.
 Active-programme replacement remains future work.
 

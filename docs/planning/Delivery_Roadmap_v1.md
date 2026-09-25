@@ -46,15 +46,19 @@ Sprint 3+ coaching product is not the next milestone.
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
 6. **Launch programme library** — strategy **approved**;
    infrastructure architecture **approved**; Programme Studio Stage 1
-   **COMPLETE**; Sprint B running/pace **audited, awaiting approval**
+   **COMPLETE**; structured running **approved**; B1 **approved, not
+   started**
    ([`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+   [`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
    [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
    [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
    [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md);
    `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
    `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
    `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-   `RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL`,
+   `RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED`,
+   `RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED`,
+   `PACE_CALCULATION_B2=NOT_AUTHORISED`,
    `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
    `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 7. **Adaptation Engine v1**

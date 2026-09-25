@@ -4,9 +4,9 @@
 
 **Status:** Binding next-task authority after M10 infrastructure closeout
 and Complete Athlete Experience closeout. Launch programme library strategy and infrastructure architecture are
-**approved**. Programme Studio Stage 1 is **COMPLETE**. Sprint B
-running/pace foundation is **audited, awaiting approval**. Sprint B–D
-implementation remains unauthorised.
+**approved**. Programme Studio Stage 1 is **COMPLETE**. Structured
+running architecture is **approved**. Sprint B1 is **approved, not
+started**. B2–D remain unauthorised.
 
 ```text
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
@@ -24,7 +24,9 @@ NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -77,11 +79,13 @@ Complete Athlete Experience is **complete**. Closeout:
 [`COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
 The next sequenced item is **launch programme library**. Strategy and
 infrastructure architecture are **approved**. Programme Studio Stage 1
-is **approved, not started**
+is **COMPLETE**. Structured running is **approved**. Sprint B1 is
+**approved, not started**
 ([`LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+[`RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
 [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md)).
-Programme content is **not** authorised. Sprint A has **not** started.
+Programme content is **not** authorised. B1 has **not** started.
 
 ## Frozen / deferred coach scope
 

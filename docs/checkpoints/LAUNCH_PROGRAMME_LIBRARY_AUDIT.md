@@ -3,14 +3,16 @@
 **Recorded:** 2026-09-25
 **Status:** Original audit preserved. Strategy **approved**.
 Infrastructure architecture **approved**. Programme Studio Stage 1
-**COMPLETE**. Sprint B **audited, awaiting approval**. Programme
-content **not** authorised.
+**COMPLETE**. Structured running **approved**. B1 **approved, not
+started**. Programme content **not** authorised.
 
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -420,11 +422,15 @@ direction:
 - [`../architecture/Running_Workout_and_Device_Interop_v1.md`](../architecture/Running_Workout_and_Device_Interop_v1.md)
 - [`../architecture/Programme_Performance_Metrics_Profile_v1.md`](../architecture/Programme_Performance_Metrics_Profile_v1.md)
 
-Infrastructure may proceed **sequentially**. Sprint A is the next
-slice: **approved, not started**. This approval does **not** start
-implementation.
+Infrastructure may proceed **sequentially**. The 2026-09-25
+infrastructure-approval wording below is **historical**. Live status
+is `PROGRAMME_STUDIO_STAGE_1=COMPLETE` and
+`RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED`. See
+[`RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md).
 
-| Sprint | Authorised to begin now |
+Historical table as recorded at infrastructure approval:
+
+| Sprint | Authorised to begin then |
 |--------|-------------------------|
 | A Programme Studio Stage 1 | Next slice only (separate implementation task) |
 | B Running / pace foundation | No — after A accepted |

@@ -166,8 +166,10 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
 Programme Studio Stage 1 is **COMPLETE** on `origin/main` `82ddb17`.
-Sprint B running/pace foundation is **audited, awaiting approval**
+Structured running architecture is **approved**. Sprint B1 is
+**approved, not started**
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
+[`docs/checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](docs/checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
 [`docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
 [`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md),
@@ -176,15 +178,16 @@ Sprint B running/pace foundation is **audited, awaiting approval**
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-`RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL`,
+`RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED`,
+`RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED`,
+`PACE_CALCULATION_B2=NOT_AUTHORISED`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
-`RUNNING_PACE_FOUNDATION_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
 `STRUCTURED_AUTHORING_AUTHORISED=false`,
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not implement Sprint B without founder approval of the audit.
+Do not implement B1 until a separately authorised implementation task.
 Do not author programme content.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),

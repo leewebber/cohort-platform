@@ -1,9 +1,12 @@
 # Running Workout and Device Interop v1
 
-**Status:** Binding vendor-neutral running architecture. **Audited.
-Awaiting founder approval. Not implemented.**
+**Status:** Binding vendor-neutral running architecture.
+**Approved.** Sprint B1 **approved, not started**. B2–B4 not
+authorised. **Not implemented.**
 **Recorded:** 2026-09-25
-**Audit:**
+**Approval:**
+[`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md)
+**Audit (historical):**
 [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md)
 **Parent:**
 [`Launch_Programme_Library_v1.md`](./Launch_Programme_Library_v1.md)
@@ -19,8 +22,9 @@ Awaiting founder approval. Not implemented.**
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
-RUNNING_PACE_FOUNDATION_AUTHORISED=false
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -160,10 +164,11 @@ Keep five layers distinct:
    benchmarks, staleness. Owned by the programme version.
 3. **Athlete benchmark input** — type, result, capture date, unit,
    eligibility.
-4. **Calculated target** — numbers for *this* occurrence, frozen at
-   first start (recommended).
-5. **Actual completed result** — in-app capture or later matched
-   import.
+4. **Frozen calculated target** — numbers for *this* occurrence,
+   frozen at the earliest execution commitment (successful device
+   export or first in-app start; until export exists, first in-app
+   start).
+5. **Completed result** — in-app capture or later matched import.
 
 Missing or stale benchmarks **fail closed** to “intent only”. They
 must not invent a pace. Existing
@@ -180,8 +185,10 @@ completed results.
 Cohort remains the execution authority.
 
 - Render structured steps in Daily Journey / Active Session.
-- Timers implement time-based steps; distance-based steps are
-  treadmill/manual until a later device slice.
+- Timers implement time-based steps. Distance steps without trusted
+  automatic distance require deliberate **manual**
+  advance/lap/evidence and must be labelled manual evidence.
+  Treadmill/manual execution must work without GPS or a wearable.
 - Interval transitions follow authored work/recovery pairs.
 - Partial completion, skipped steps, and extra intervals are
   first-class (`completed` / `skipped` / `pace_unavailable` already
@@ -203,28 +210,36 @@ Required inputs to calculate a target safely:
 
 | Input | Role |
 |-------|------|
-| Benchmark type | Programme-defined (recommended v1: 5 km TT or race) |
-| Benchmark result | Value + unit |
+| Benchmark type | Programme-defined evidence. Initial direction: Cohort 5 km time trial **or** recent trusted 5 km performance. A 5 km result is **not** automatically threshold pace. |
+| Benchmark result | Value + canonical unit + source + athlete identity |
 | Captured date | Athlete-local date |
-| Validity / staleness policy | Programme-version rule (recommended default 90 days) |
-| Calculation method / version | Named, testable, reproducible |
-| Unit | Canonical store vs display |
-| Confidence / eligibility | Fail closed if ineligible |
+| Validity / staleness policy | Programme-version rule (initial window **90 days**) |
+| Calculation method / version | Named, testable, reproducible. Candidate family: **transparent, versioned percentage of benchmark speed**. Exact percentages and physiological labels are **unresolved until B2**. |
+| Unit | Canonical store vs presentation (versioned conversion) |
+| Confidence / eligibility | Fail closed if missing/stale; never invent a pace |
 
 **Shared running infrastructure** owns: unit conversion, step
 identity, timer semantics, result shapes, matching keys.
 
 **Programme version** owns: which benchmarks, which method version,
-zone names, and whether an override is allowed.
+and whether an override is allowed.
 
-Recommended v1 method family: Cohort-owned **percentage of
-threshold pace** derived from the selected TT, published in tests.
-Do not copy Daniels VDOT or World Athletics scoring tables.
+Do not copy Daniels VDOT or World Athletics scoring tables. Do not
+use “threshold”, “easy”, “interval”, or other zone labels
+**numerically** unless the selected B2 method explicitly defines
+them. Authored session labels may stay descriptive; they are not
+numeric calculation authority.
 
-Override: only where the programme policy allows; record as athlete
-override, not a rewrite of authored intent.
+Override: only where the programme policy allows; record original
+calculated target, override, reason/source, and time. Do not mutate
+authored intent or the benchmark.
 
-HR and RPE are **guidance** in v1, not pace authority.
+HR and RPE may be authored guidance or fallback. They are **not**
+converted into pace unless a future approved method defines that
+calculation. Missing HR/device data must not block an executable
+workout.
+
+B1 must **not** implement this calculation engine.
 
 Do not ship a method without tests that replay the same inputs to
 the same outputs.
@@ -283,9 +298,9 @@ Routes and live location remain prohibited.
 
 **Deferred.** No API paths, workout file formats, or OAuth details
 are specified here. A later integration task must discover them.
-Sprint B may implement only the **vendor-neutral** DTO and
-idempotency rules. `RUNNING_DEVICE_INTEGRATION_AUTHORISED` remains
-false.
+Device provider implementation remains unauthorised.
+`RUNNING_DEVICE_INTEGRATION_AUTHORISED` remains false. B1 must not
+implement export/import.
 
 **Export-readiness preview** (Studio B4): a workout is
 “structurally exportable” only if every step has duration type +
@@ -296,16 +311,22 @@ target type the neutral model supports. It is **not**
 
 ## 8. Implementation boundary
 
-Approved slices after founder approval of this audit:
+**B1 is approved, not started.** Scope and gates:
+[`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md).
 
-- **B1** domain, validation, backward-compatible projection
-- **B2** versioned benchmark + calculation engine
-- **B3** in-app structured execution and evidence
-- **B4** Programme Studio structured-running preview / readiness
+B1 is the immutable RunningWorkout v1 domain, validation,
+deterministic JSON, and backward-compatible projection from
+supported steady-state and time-based interval timers. It must not
+calculate athlete targets, change execution UI, migrate schema, or
+author content.
+
+B2 (calculation), B3 (execution changes), and B4 (full Studio
+preview) remain **not authorised**.
 
 Infrastructure must **not** author HYROX run sessions, contact
 Garmin, select programme metrics, or make wearables required for
 Daily Journey.
 
 Hard stop: no launch-programme running prescriptions until content
-authoring is separately approved.
+authoring is separately approved. If B1 cannot preserve authority
+in existing JSONB, stop for a new schema decision.

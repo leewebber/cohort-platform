@@ -7,7 +7,8 @@
 | [../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md) | Daily Journey Integrity **COMPLETE** |
 | [../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md) | Launch programme library (strategy + infrastructure approved; Stage 1 COMPLETE) |
 | [../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md) | Programme Studio Stage 1 **COMPLETE** |
-| [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace foundation audit (awaiting approval) |
+| [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace foundation audit (historical) |
+| [../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md) | Structured running approved; B1 approved, not started |
 | [../architecture/Launch_Programme_Library_v1.md](../architecture/Launch_Programme_Library_v1.md) | Launch programme library architecture |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md) | Complete Athlete Experience **COMPLETE** |
 | [../architecture/Complete_Athlete_Experience_v1.md](../architecture/Complete_Athlete_Experience_v1.md) | Complete Athlete Experience milestone definition (**complete**) |

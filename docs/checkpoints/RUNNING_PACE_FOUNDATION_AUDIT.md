@@ -1,7 +1,9 @@
 # Running / Pace Foundation — pre-implementation audit
 
 **Recorded:** 2026-09-25
-**Status:** Architecture and decision record only. **Not implemented.**
+**Status:** Historical audit. Architecture later **approved**; B1
+**approved, not started**. See
+[`RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md).
 **Branch:** `docs/running-pace-foundation-audit`
 **Base / `origin/main`:** `82ddb176d4df9f493d577001091ee9c1d6c404ad`
 **Binding architecture:**
@@ -15,8 +17,9 @@
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
-RUNNING_PACE_FOUNDATION_AUTHORISED=false
+RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
+RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 STRUCTURED_AUTHORING_AUTHORISED=false
@@ -25,9 +28,19 @@ HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-This document is the focused Sprint B audit. It does **not** authorise
-implementation, HYROX content, Garmin contact, metrics-profile
-selection, or schema change.
+### Historical audit flags (as recorded 2026-09-25 at `1853f51`)
+
+```text
+RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
+RUNNING_PACE_FOUNDATION_AUTHORISED=false
+NEXT_IMPLEMENTATION_AUTHORISED=false
+```
+
+This document remains the current-state authority trace. Founder
+resolutions, terminology correction, and B1 scope live in the
+approval record. Earlier audit wording that described the candidate
+method as “percentage of threshold pace derived from a 5 km test”
+is **superseded**.
 
 ---
 
