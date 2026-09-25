@@ -29,6 +29,8 @@ void main() {
       main.contains('main_completion_history_integrity_preview'),
       isFalse,
     );
+    expect(main.contains('main_programme_studio_preview'), isFalse);
+    expect(main.contains('programme_studio'), isFalse);
     expect(
       File(
         'lib/features/programme/screens/athlete_programme_enrolment_review_screen.dart',
