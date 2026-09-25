@@ -357,4 +357,3 @@ class _DecodedPrescription {
   final String? notes;
   final String? unsupported;
 }
-
