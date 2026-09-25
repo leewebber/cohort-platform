@@ -1092,7 +1092,7 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
 **complete** at `fc73ae0`; next `M-LIB` strategy approved,
-infrastructure approved, Studio Stage 1 approved not started;
+infrastructure approved, Studio Stage 1 awaiting founder approval;
 implementation not started)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
