@@ -3,8 +3,9 @@
 **Recorded:** 2026-09-20
 
 **Status:** Binding next-task authority after M10 infrastructure closeout
-and Complete Athlete Experience closeout. Launch programme library strategy is **approved**; infrastructure is
-**not** started. Implementation is **not** authorised.
+and Complete Athlete Experience closeout. Launch programme library strategy and infrastructure architecture are
+**approved**. Programme Studio Stage 1 is **approved, not started**.
+Implementation of Sprint A has **not** started.
 
 ```text
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
@@ -19,10 +20,13 @@ HOSTED_MIGRATION_APPLIED=true
 SPRINT_2_HOSTED_MIGRATION_APPLIED=true
 SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
-LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
-LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
+LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=APPROVED_NOT_STARTED
+PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
-PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_PACE_FOUNDATION_AUTHORISED=false
+PROGRAMME_METRICS_PROFILE_AUTHORISED=false
+STRUCTURED_AUTHORING_AUTHORISED=false
 RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
@@ -69,12 +73,13 @@ Daily Journey Integrity is **closed**. Binding:
 
 Complete Athlete Experience is **complete**. Closeout:
 [`COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
-The next sequenced item is **launch programme library**. Strategy is
-**approved**; infrastructure is **not** started
+The next sequenced item is **launch programme library**. Strategy and
+infrastructure architecture are **approved**. Programme Studio Stage 1
+is **approved, not started**
 ([`LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
-[`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md)).
-Programme content is **not** authorised. Implementation is **not**
-authorised.
+[`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
+[`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md)).
+Programme content is **not** authorised. Sprint A has **not** started.
 
 ## Frozen / deferred coach scope
 

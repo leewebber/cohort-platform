@@ -14,7 +14,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 
 | Document | Purpose |
 |----------|---------|
-| [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** (strategy approved; infrastructure not started) |
+| [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** (strategy + infrastructure approved; Studio Stage 1 approved, not started) |
 | [Programme_Studio_v1.md](./Programme_Studio_v1.md) | Internal Programme Studio (architecture only) |
 | [Running_Workout_and_Device_Interop_v1.md](./Running_Workout_and_Device_Interop_v1.md) | Vendor-neutral running workout / device interop (architecture only) |
 | [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md) | Per-version metrics profile (architecture only) |

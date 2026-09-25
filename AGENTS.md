@@ -164,17 +164,23 @@ Complete Athlete Experience is **COMPLETE**
 Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 `8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
 is launch-ready. The next sequenced item is **launch programme library**.
-Strategy is **approved**; infrastructure is **not** started
+Strategy is **approved**. Infrastructure architecture is **approved**.
+Programme Studio Stage 1 is **approved, not started**
 ([`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
-[`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md);
-`LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED`,
+[`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md),
+[`docs/architecture/Programme_Studio_v1.md`](docs/architecture/Programme_Studio_v1.md);
+`LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
+`LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=APPROVED_NOT_STARTED`,
+`PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
-`PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false`,
+`RUNNING_PACE_FOUNDATION_AUTHORISED=false`,
+`PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
+`STRUCTURED_AUTHORING_AUTHORISED=false`,
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Programme content, Studio, Garmin, and hosted publication are **not**
-authorised. Binding:
+Do not start Sprint A in a docs task. Do not author programme content.
+Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
 Historical Sprint 3 evidence:

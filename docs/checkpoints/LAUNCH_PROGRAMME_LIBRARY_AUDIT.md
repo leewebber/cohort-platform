@@ -1,14 +1,18 @@
 # Launch Programme Library — architecture and readiness audit
 
 **Recorded:** 2026-09-25
-**Status:** Original audit preserved. Founder strategy **bound**
-2026-09-25. Infrastructure architecture defined; **not** started.
-Programme content **not** authorised.
+**Status:** Original audit preserved. Strategy **approved**.
+Infrastructure architecture **approved**. Programme Studio Stage 1
+**approved, not started**. Programme content **not** authorised.
 
 ```text
-LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
+LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=APPROVED_NOT_STARTED
+PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
-PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_PACE_FOUNDATION_AUTHORISED=false
+PROGRAMME_METRICS_PROFILE_AUTHORISED=false
+STRUCTURED_AUTHORING_AUTHORISED=false
 RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -397,3 +401,39 @@ change infrastructure sprints A–C.
 - No Studio or Garmin implementation
 - No hosted publish/withdraw/delete
 - No payments, beta, or launch work
+
+Dated live flags at resolution time (superseded by §13):
+`LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED`,
+`PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false`.
+
+---
+
+## 13. Infrastructure approval (2026-09-25)
+
+Founder approved the infrastructure architecture as governing
+direction:
+
+- [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md)
+- [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md)
+- [`../architecture/Running_Workout_and_Device_Interop_v1.md`](../architecture/Running_Workout_and_Device_Interop_v1.md)
+- [`../architecture/Programme_Performance_Metrics_Profile_v1.md`](../architecture/Programme_Performance_Metrics_Profile_v1.md)
+
+Infrastructure may proceed **sequentially**. Sprint A is the next
+slice: **approved, not started**. This approval does **not** start
+implementation.
+
+| Sprint | Authorised to begin now |
+|--------|-------------------------|
+| A Programme Studio Stage 1 | Next slice only (separate implementation task) |
+| B Running / pace foundation | No — after A accepted |
+| C Metrics-profile foundation | No — after B accepted |
+| D Structured authoring | No — after C accepted |
+
+HYROX Base authoring may not even be proposed until A, B, and C are
+accepted. Real programme content remains unauthorised.
+
+Sprint A boundary and acceptance: Programme Studio §5 / §8 / §9.
+
+Deferred (do not block A): pace/zone formulas → B; metrics storage →
+C; optional third session → before Strength for Endurance; Garmin
+provider → later device approval.

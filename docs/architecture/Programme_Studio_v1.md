@@ -1,25 +1,34 @@
 # Programme Studio v1
 
-**Status:** Binding internal-tool architecture. **Not implemented.**
+**Status:** Infrastructure architecture **approved**. Stage 1 is the
+**next** implementation slice: **approved, not started**.
 **Recorded:** 2026-09-25
+**Infrastructure approved:** 2026-09-25
 **Parent:**
 [`Launch_Programme_Library_v1.md`](./Launch_Programme_Library_v1.md)
 **Related:**
 [`Running_Workout_and_Device_Interop_v1.md`](./Running_Workout_and_Device_Interop_v1.md),
 [`Programme_Performance_Metrics_Profile_v1.md`](./Programme_Performance_Metrics_Profile_v1.md)
 **Base:** `docs/launch-programme-library-audit` after
-`28432212b4cba125cead523754850b3be844aac5`
+`2b72739602fbc887337c15b489a8919ac8c451b4`
 
 ```text
-PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
+LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=APPROVED_NOT_STARTED
+PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
+RUNNING_PACE_FOUNDATION_AUTHORISED=false
+PROGRAMME_METRICS_PROFILE_AUTHORISED=false
+STRUCTURED_AUTHORING_AUTHORISED=false
+RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-This document defines an internal desktop/web-friendly Programme Studio
-for founder and head-coach review. It is **not** a licence to implement
-Studio, author programmes, or publish catalogue content.
+This document governs Programme Studio. **Stage 1** is approved as the
+next infrastructure slice and must start in a **separate**
+implementation task. This file does not start that task. Stages 2–3,
+running/pace, metrics, content, and publication remain unauthorised.
 
 ---
 
@@ -102,16 +111,31 @@ lifecycle that the RPCs cannot express.
 
 ## 5. Delivery stages
 
-### Stage 1 — read-only review and validation
+### Stage 1 — read-only review and validation (Sprint A)
 
-Local or internal desktop/web. Load a Plan Package path and resolve
-referenced protocols from local fixtures or a **read-only** projection.
-Show compile result, hash, week map, session bodies, metadata, and gate
-checklist. No hosted mutation.
+**Approved, not started.** Internal, local, desktop-first on Lee’s Mac.
+Dedicated **non-production** entry point only. Must not be imported by
+`lib/main.dart` or appear in athlete navigation. No auth or hosted
+deployment. No hosted SELECT or mutation. No SQL, migration, or
+dependency change expected.
 
-**This is the minimum Studio stage before any new launch-family
-authoring is reviewed.** Command-line compile/hash may remain the
-operator path for import.
+If Stage 1 unexpectedly requires a schema/database change or a second
+authoring authority, **stop** for a new founder decision.
+
+It may read and project existing **canonical local**
+programme / package / protocol artifacts. It must **not** edit
+canonical source, write to the database, publish versions, change
+defaults, or create programme content.
+
+Prefer a **deterministic generated review model** if the UI cannot
+safely read repository sources directly. Any generated review artifact
+must be reproducible, derived, and **excluded from publication
+authority**. Do not duplicate or manually transcribe programme facts
+into preview fixtures merely to look complete. If a genuine programme
+cannot be projected, show the limitation and fail honestly. Fixtures
+may test error/empty states only.
+
+Command-line compile/hash remains the operator path for import.
 
 ### Stage 2 — structured authoring against one canonical source
 
@@ -160,9 +184,40 @@ do not exist.
 
 ---
 
-## 8. Acceptance (when later implemented)
+## 8. Sprint A required capabilities
 
-Stage 1 is accepted when a founder can review Apollo v2 week structure
-and protocol bodies without writing hosted data, and can see compile
-hash plus validation issues. No launch-family content is created by
-that acceptance.
+| Capability | Rule |
+|------------|------|
+| Inventory classification | Honest: production-published / internal-personal / legacy-withheld / fixture-test-example |
+| Identity | Programme + immutable version |
+| Metadata | Authored facts from the version / package |
+| Structure | Week-by-week overview; day/session navigation |
+| Prescriptions | Full protocol/session inspection |
+| Modalities | Honest strength, run, erg, mixed-modal, recovery, assessment **already present** |
+| Compiler | Validation status + canonical package hash |
+| Comparison | Version-to-version where existing artifacts permit |
+| Athlete preview | Discovery/detail metadata projection |
+| Quality gate | Checklist projection (not a pass mark) |
+| Readiness | Structured running, pace calculations, metrics profile, device/Garmin — **missing must show as missing/not implemented**, never simulated |
+| Formulas / metrics | No final pace formulas; no real programme metrics selected |
+
+## 9. Sprint A acceptance (implementation sprint, later)
+
+The implementation sprint must prove:
+
+- deterministic projection from authoritative artifacts
+- stable package / version / hash identity
+- complete navigation across available weeks / days / sessions
+- no silent omission of unsupported prescriptions
+- clear validation failures
+- no source or hosted mutation
+- no production entry-point import
+- desktop layout and keyboard/mouse usability
+- narrow viewport does not crash (desktop remains primary)
+- large text remains readable
+- accessible labels and status wording
+
+**Visual founder review is required** before Sprint A is complete.
+
+Complete and review Sprint A before beginning Sprint B. HYROX Base
+authoring may not even be proposed until A, B, and C are accepted.

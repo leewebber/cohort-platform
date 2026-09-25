@@ -1,10 +1,11 @@
 # Launch Programme Library v1
 
-**Status:** Strategy **approved**. Infrastructure architecture defined.
-Infrastructure **not** started. Programme content **not** authorised.
-Hosted publication **not** authorised.
+**Status:** Strategy **approved**. Infrastructure architecture
+**approved**. Programme Studio Stage 1 **approved, not started**.
+Programme content **not** authorised.
 **Recorded:** 2026-09-25
 **Strategy bound:** 2026-09-25
+**Infrastructure approved:** 2026-09-25
 **Audit:**
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md)
 **Children:**
@@ -14,9 +15,13 @@ Hosted publication **not** authorised.
 **Base:** `origin/main` `a2faba6740d55359822689e5cc8c907185ebc97c`
 
 ```text
-LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
+LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=APPROVED_NOT_STARTED
+PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
-PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_PACE_FOUNDATION_AUTHORISED=false
+PROGRAMME_METRICS_PROFILE_AUTHORISED=false
+STRUCTURED_AUTHORING_AUTHORISED=false
 RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
@@ -24,9 +29,10 @@ COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 ```
 
 This document binds the founder-approved launch-library **strategy** and
-the supporting infrastructure architecture. It is **not** a licence to
-implement Studio, running/device code, metrics schema, or any programme
-content. Compilation alone is not launch approval.
+the approved infrastructure architecture. Programme Studio Stage 1 is
+the next slice and must start in a **separate** implementation task.
+Sprints B–D, programme content, and publication remain unauthorised.
+Compilation alone is not launch approval.
 
 Parents:
 [`Authored_Plan_Package_v1.md`](./Authored_Plan_Package_v1.md),
@@ -376,12 +382,14 @@ Compile/import/hash is necessary and **not sufficient**.
 
 ## 11. Implementation boundaries
 
-**Strategy is approved. Infrastructure is not authorised by this
-document.** A later founder task may authorise infrastructure sprints
-only.
+**Strategy is approved. Infrastructure architecture is approved.**
+Infrastructure proceeds **sequentially**. Only Sprint A (Programme
+Studio Stage 1) is the next authorised **slice**; it is **not** started
+here. Complete and review each slice before the next. HYROX Base
+authoring may not even be proposed until A, B, and C are accepted.
 
-Those sprints may implement Studio Stage 1, the running workout model,
-and metrics-profile **foundation**. They must **stop before** any real
+Sprints B–D remain architecture-only until separately started after
+the prior slice is accepted. All sprints must **stop before** any real
 HYROX Base (or other launch-family) session prescription, source file,
 or metrics selection.
 
@@ -404,8 +412,10 @@ metrics selection may be created until a later founder
 
 | Layer | Status |
 |-------|--------|
-| Strategy | **Approved** (this revision) |
-| Infrastructure architecture | Defined; **not implemented**; awaits founder approval of the infrastructure docs |
+| Strategy | **Approved** |
+| Infrastructure architecture | **Approved** (governing direction; not implemented) |
+| Programme Studio Stage 1 | **Approved, not started** |
+| Sprints B–D | Approved sequence; **not** started or authorised to begin |
 | Programme content | **Not authorised** |
 | Hosted publication | **Not authorised** |
 
@@ -429,23 +439,20 @@ The Cohort product remains not launch-ready.
 
 ---
 
-## 14. Infrastructure-only slices (recommended)
+## 14. Approved implementation sequence
 
-Safer order than “Studio first” because HYROX Base cannot be authored
-on ambiguous pace/zone encoding, and a metrics bind must exist before
-any family claims outcomes. Studio Stage 1 can still proceed in
-parallel as read-only over **existing** Apollo/Spartan.
+| Sprint | Scope | Live flag | Status |
+|--------|-------|-----------|--------|
+| **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=APPROVED_NOT_STARTED` | Next slice |
+| **B** | Structured running + pace-calculation foundation | `RUNNING_PACE_FOUNDATION_AUTHORISED=false` | After A accepted |
+| **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | After B accepted |
+| **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |
 
-| Sprint | Scope | Stops before |
-|--------|-------|--------------|
-| **A** | Programme Studio Stage 1 — read-only review / validation | Writes, publish, new content |
-| **B** | Structured running workout + versioned pace-calculation **foundation** (no formulas without later approval; no Garmin) | Launch run prescriptions; provider APIs |
-| **C** | Programme-version metrics-profile **foundation** (schema/bind description → later additive package or companion hash) | Selecting real HYROX metrics |
-| **D** | Controlled structured authoring workflow (Studio Stage 2 emitting canonical YAML only) | Real launch-family prescriptions |
+Deferred (do not block Sprint A): final pace/zone formulas (B);
+metrics-profile storage (C); optional third-session semantics (before
+Strength for Endurance); Garmin as first provider (later device
+approval).
 
 **Minimum before HYROX Base content authoring is even proposed:** A + B
 + C complete and founder-accepted; content still requires a **separate**
 authoring approval.
-
-Garmin provider implementation remains a separately approved future
-integration. Sprint B may add a vendor-neutral DTO only.
