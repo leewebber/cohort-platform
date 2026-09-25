@@ -109,20 +109,21 @@ class _ProgrammeStudioPreviewScreenState
       child: Scaffold(
         body: Column(
           children: [
-            DropdownButton<ProgrammeStudioPreviewState>(
-              value: _state,
-              items: [
-                for (final state in ProgrammeStudioPreviewState.values)
-                  DropdownMenuItem(
-                    value: state,
-                    child: Text(_label(state)),
-                  ),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _state = value);
-                }
-              },
+            Align(
+              alignment: Alignment.centerRight,
+              child: PopupMenuButton<ProgrammeStudioPreviewState>(
+                tooltip: 'Preview fixture states',
+                initialValue: _state,
+                onSelected: (value) => setState(() => _state = value),
+                itemBuilder: (context) => [
+                  for (final state in ProgrammeStudioPreviewState.values)
+                    PopupMenuItem(value: state, child: Text(_label(state))),
+                ],
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.more_horiz),
+                ),
+              ),
             ),
             Expanded(child: _body()),
           ],
@@ -157,13 +158,15 @@ class _ProgrammeStudioPreviewScreenState
   String _label(ProgrammeStudioPreviewState state) {
     return switch (state) {
       ProgrammeStudioPreviewState.realReview => 'Fixture: real review data',
-      ProgrammeStudioPreviewState.malformedSource => 'Fixture: malformed source',
+      ProgrammeStudioPreviewState.malformedSource =>
+        'Fixture: malformed source',
       ProgrammeStudioPreviewState.validationFailure =>
         'Fixture: validation failure',
       ProgrammeStudioPreviewState.unsupportedPrescription =>
         'Fixture: unsupported prescription',
       ProgrammeStudioPreviewState.emptyInventory => 'Fixture: empty inventory',
-      ProgrammeStudioPreviewState.missingProtocol => 'Fixture: missing protocol',
+      ProgrammeStudioPreviewState.missingProtocol =>
+        'Fixture: missing protocol',
       ProgrammeStudioPreviewState.narrowViewport => 'Fixture: narrow viewport',
       ProgrammeStudioPreviewState.largeText => 'Fixture: large text',
     };

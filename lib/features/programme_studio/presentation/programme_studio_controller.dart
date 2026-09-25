@@ -3,12 +3,10 @@ import 'package:flutter/foundation.dart';
 import '../domain/programme_review_models.dart';
 
 enum ProgrammeStudioView {
-  overview,
-  structure,
-  session,
-  validation,
-  athlete,
-  readiness,
+  coachReview,
+  qualityGate,
+  athletePreview,
+  technicalIntegrity,
 }
 
 class ProgrammeStudioSelection {
@@ -17,7 +15,8 @@ class ProgrammeStudioSelection {
     this.weekNumber,
     this.dayKey,
     this.sessionKey,
-    this.view = ProgrammeStudioView.overview,
+    this.view = ProgrammeStudioView.coachReview,
+    this.plannedFamilyId,
   });
 
   final String catalogId;
@@ -25,6 +24,7 @@ class ProgrammeStudioSelection {
   final String? dayKey;
   final String? sessionKey;
   final ProgrammeStudioView view;
+  final String? plannedFamilyId;
 
   ProgrammeStudioSelection copyWith({
     String? catalogId,
@@ -32,14 +32,20 @@ class ProgrammeStudioSelection {
     String? dayKey,
     String? sessionKey,
     ProgrammeStudioView? view,
+    String? plannedFamilyId,
     bool clearSession = false,
+    bool clearPlannedFamily = false,
+    bool clearProgramme = false,
   }) {
     return ProgrammeStudioSelection(
-      catalogId: catalogId ?? this.catalogId,
+      catalogId: clearProgramme ? '' : (catalogId ?? this.catalogId),
       weekNumber: weekNumber ?? this.weekNumber,
       dayKey: dayKey ?? this.dayKey,
       sessionKey: clearSession ? null : (sessionKey ?? this.sessionKey),
       view: view ?? this.view,
+      plannedFamilyId: clearPlannedFamily
+          ? null
+          : (plannedFamilyId ?? this.plannedFamilyId),
     );
   }
 }
@@ -51,18 +57,21 @@ class ProgrammeStudioController extends ChangeNotifier {
     ProgrammeStudioSelection? initialSelection,
   }) : _catalog = catalog,
        _showDeveloperFixtures = showDeveloperFixtures,
-       _selection = initialSelection ??
+       _selection =
+           initialSelection ??
            ProgrammeStudioSelection(
-             catalogId: catalog
-                 .realInventory(includeFixtures: showDeveloperFixtures)
-                 .firstOrNull
-                 ?.catalogId ??
-               '',
+             catalogId:
+                 catalog
+                     .realInventory(includeFixtures: showDeveloperFixtures)
+                     .firstOrNull
+                     ?.catalogId ??
+                 '',
            );
 
   ProgrammeReviewCatalog _catalog;
   bool _showDeveloperFixtures;
   ProgrammeStudioSelection _selection;
+  bool narrowSidebarOpen = false;
 
   ProgrammeReviewCatalog get catalog => _catalog;
   bool get showDeveloperFixtures => _showDeveloperFixtures;
@@ -72,12 +81,28 @@ class ProgrammeStudioController extends ChangeNotifier {
       _catalog.realInventory(includeFixtures: _showDeveloperFixtures);
 
   ProgrammeReviewProgramme? get selectedProgramme {
+    if (_selection.plannedFamilyId != null) {
+      return null;
+    }
     for (final item in inventory) {
       if (item.catalogId == _selection.catalogId) {
         return item;
       }
     }
     return inventory.firstOrNull;
+  }
+
+  ProgrammeReviewPlannedFamily? get selectedPlannedFamily {
+    final id = _selection.plannedFamilyId;
+    if (id == null) {
+      return null;
+    }
+    for (final family in _catalog.plannedFamilies) {
+      if (family.id == id) {
+        return family;
+      }
+    }
+    return null;
   }
 
   ProgrammeReviewWeek? get selectedWeek {
@@ -118,15 +143,33 @@ class ProgrammeStudioController extends ChangeNotifier {
 
   void setShowDeveloperFixtures(bool value) {
     _showDeveloperFixtures = value;
-    if (selectedProgramme == null && inventory.isNotEmpty) {
-      _selection = ProgrammeStudioSelection(catalogId: inventory.first.catalogId);
+    if (selectedProgramme == null &&
+        selectedPlannedFamily == null &&
+        inventory.isNotEmpty) {
+      _selection = ProgrammeStudioSelection(
+        catalogId: inventory.first.catalogId,
+      );
     }
+    notifyListeners();
+  }
+
+  void toggleSidebar() {
+    narrowSidebarOpen = !narrowSidebarOpen;
     notifyListeners();
   }
 
   void selectProgramme(String catalogId) {
     _selection = ProgrammeStudioSelection(
       catalogId: catalogId,
+      view: _selection.view,
+    );
+    notifyListeners();
+  }
+
+  void selectPlannedFamily(String familyId) {
+    _selection = ProgrammeStudioSelection(
+      catalogId: '',
+      plannedFamilyId: familyId,
       view: _selection.view,
     );
     notifyListeners();
@@ -148,7 +191,7 @@ class ProgrammeStudioController extends ChangeNotifier {
   void selectSession(String sessionKey) {
     _selection = _selection.copyWith(
       sessionKey: sessionKey,
-      view: ProgrammeStudioView.session,
+      view: ProgrammeStudioView.coachReview,
     );
     notifyListeners();
   }

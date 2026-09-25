@@ -5,11 +5,15 @@ import '../../../app/theme.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
-import '../../../features/programme/presentation/athlete_programme_decision_facts.dart';
-import '../../../features/programme/widgets/athlete_programme_fact_list.dart';
 import '../domain/programme_review_models.dart';
+import 'programme_studio_athlete_view.dart';
+import 'programme_studio_coach_review.dart';
 import 'programme_studio_controller.dart';
 import 'programme_studio_copy.dart';
+import 'programme_studio_integrity_view.dart';
+import 'programme_studio_labels.dart';
+import 'programme_studio_quality.dart';
+import 'programme_studio_quality_view.dart';
 
 class ProgrammeStudioApp extends StatelessWidget {
   const ProgrammeStudioApp({
@@ -81,18 +85,42 @@ class _ProgrammeStudioScreenState extends State<ProgrammeStudioScreen> {
       builder: (context, _) {
         return Shortcuts(
           shortcuts: const {
-            SingleActivator(LogicalKeyboardKey.arrowUp): _MoveIntent(-1, _MoveAxis.session),
-            SingleActivator(LogicalKeyboardKey.arrowDown): _MoveIntent(1, _MoveAxis.session),
-            SingleActivator(LogicalKeyboardKey.arrowLeft): _MoveIntent(-1, _MoveAxis.day),
-            SingleActivator(LogicalKeyboardKey.arrowRight): _MoveIntent(1, _MoveAxis.day),
-            SingleActivator(LogicalKeyboardKey.keyJ): _MoveIntent(1, _MoveAxis.week),
-            SingleActivator(LogicalKeyboardKey.keyK): _MoveIntent(-1, _MoveAxis.week),
-            SingleActivator(LogicalKeyboardKey.digit1): _ViewIntent(ProgrammeStudioView.overview),
-            SingleActivator(LogicalKeyboardKey.digit2): _ViewIntent(ProgrammeStudioView.structure),
-            SingleActivator(LogicalKeyboardKey.digit3): _ViewIntent(ProgrammeStudioView.session),
-            SingleActivator(LogicalKeyboardKey.digit4): _ViewIntent(ProgrammeStudioView.validation),
-            SingleActivator(LogicalKeyboardKey.digit5): _ViewIntent(ProgrammeStudioView.athlete),
-            SingleActivator(LogicalKeyboardKey.digit6): _ViewIntent(ProgrammeStudioView.readiness),
+            SingleActivator(LogicalKeyboardKey.arrowUp): _MoveIntent(
+              -1,
+              _MoveAxis.session,
+            ),
+            SingleActivator(LogicalKeyboardKey.arrowDown): _MoveIntent(
+              1,
+              _MoveAxis.session,
+            ),
+            SingleActivator(LogicalKeyboardKey.arrowLeft): _MoveIntent(
+              -1,
+              _MoveAxis.day,
+            ),
+            SingleActivator(LogicalKeyboardKey.arrowRight): _MoveIntent(
+              1,
+              _MoveAxis.day,
+            ),
+            SingleActivator(LogicalKeyboardKey.keyJ): _MoveIntent(
+              1,
+              _MoveAxis.week,
+            ),
+            SingleActivator(LogicalKeyboardKey.keyK): _MoveIntent(
+              -1,
+              _MoveAxis.week,
+            ),
+            SingleActivator(LogicalKeyboardKey.digit1): _ViewIntent(
+              ProgrammeStudioView.coachReview,
+            ),
+            SingleActivator(LogicalKeyboardKey.digit2): _ViewIntent(
+              ProgrammeStudioView.qualityGate,
+            ),
+            SingleActivator(LogicalKeyboardKey.digit3): _ViewIntent(
+              ProgrammeStudioView.athletePreview,
+            ),
+            SingleActivator(LogicalKeyboardKey.digit4): _ViewIntent(
+              ProgrammeStudioView.technicalIntegrity,
+            ),
           },
           child: Actions(
             actions: {
@@ -125,11 +153,9 @@ class _ProgrammeStudioScreenState extends State<ProgrammeStudioScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _StudioHeader(
+                        controller: controller,
                         previewStateLabel: widget.previewStateLabel,
-                        showFixtures: controller.showDeveloperFixtures,
-                        onToggleFixtures: controller.setShowDeveloperFixtures,
                       ),
-                      const Divider(height: 1, color: CohortColors.border),
                       Expanded(child: _StudioBody(controller: controller)),
                     ],
                   ),
@@ -157,18 +183,14 @@ class _ViewIntent extends Intent {
 }
 
 class _StudioHeader extends StatelessWidget {
-  const _StudioHeader({
-    required this.showFixtures,
-    required this.onToggleFixtures,
-    this.previewStateLabel,
-  });
+  const _StudioHeader({required this.controller, this.previewStateLabel});
 
+  final ProgrammeStudioController controller;
   final String? previewStateLabel;
-  final bool showFixtures;
-  final ValueChanged<bool> onToggleFixtures;
 
   @override
   Widget build(BuildContext context) {
+    final narrow = MediaQuery.sizeOf(context).width < 900;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         CohortSpacing.lg,
@@ -176,29 +198,71 @@ class _StudioHeader extends StatelessWidget {
         CohortSpacing.lg,
         CohortSpacing.md,
       ),
-      child: Wrap(
-        spacing: CohortSpacing.lg,
-        runSpacing: CohortSpacing.sm,
-        crossAxisAlignment: WrapCrossAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(ProgrammeStudioCopy.appTitle, style: CohortTextStyles.h2),
+          Wrap(
+            spacing: CohortSpacing.md,
+            runSpacing: CohortSpacing.sm,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              if (narrow)
+                IconButton(
+                  tooltip: 'Programmes',
+                  onPressed: controller.toggleSidebar,
+                  icon: const Icon(Icons.menu),
+                ),
+              Text(
+                ProgrammeStudioCopy.appTitle,
+                style: CohortTextStyles.h2,
+                softWrap: true,
+              ),
+              Semantics(
+                label: ProgrammeStudioCopy.internalBadge,
+                child: Text(
+                  ProgrammeStudioCopy.internalBadge,
+                  style: CohortTextStyles.eyebrow,
+                ),
+              ),
+              PopupMenuButton<String>(
+                tooltip: ProgrammeStudioCopy.developerMenu,
+                itemBuilder: (context) => [
+                  if (previewStateLabel != null)
+                    PopupMenuItem(
+                      enabled: false,
+                      child: Text(previewStateLabel!),
+                    ),
+                  CheckedPopupMenuItem(
+                    value: 'fixtures',
+                    checked: controller.showDeveloperFixtures,
+                    child: const Text(ProgrammeStudioCopy.fixturesToggle),
+                  ),
+                ],
+                onSelected: (_) {
+                  controller.setShowDeveloperFixtures(
+                    !controller.showDeveloperFixtures,
+                  );
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: CohortSpacing.md),
           Semantics(
-            label: ProgrammeStudioCopy.internalBadge,
-            child: Text(
-              ProgrammeStudioCopy.internalBadge,
-              style: CohortTextStyles.eyebrow,
+            label: 'Review mode navigation',
+            container: true,
+            child: Wrap(
+              spacing: CohortSpacing.sm,
+              runSpacing: CohortSpacing.sm,
+              children: [
+                for (final view in ProgrammeStudioView.values)
+                  ChoiceChip(
+                    label: Text(_viewLabel(view)),
+                    selected: controller.selection.view == view,
+                    selectedColor: CohortColors.oliveSoft,
+                    onSelected: (_) => controller.selectView(view),
+                  ),
+              ],
             ),
-          ),
-          if (previewStateLabel != null)
-            Text(previewStateLabel!, style: CohortTextStyles.small),
-          FilterChip(
-            label: const Text(ProgrammeStudioCopy.fixturesToggle),
-            selected: showFixtures,
-            onSelected: onToggleFixtures,
-          ),
-          Text(
-            ProgrammeStudioCopy.plannedTitle,
-            style: CohortTextStyles.small,
           ),
         ],
       ),
@@ -214,25 +278,24 @@ class _StudioBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final narrow = MediaQuery.sizeOf(context).width < 900;
-    if (controller.inventory.isEmpty) {
+    if (controller.inventory.isEmpty &&
+        controller.catalog.plannedFamilies.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(CohortSpacing.lg),
-        child: Text(ProgrammeStudioCopy.emptyInventory, style: CohortTextStyles.body),
+        child: Text(
+          ProgrammeStudioCopy.emptyInventory,
+          style: CohortTextStyles.body,
+        ),
       );
     }
+    final sidebar = _ProgrammeSidebar(controller: controller);
+    final workspace = _Workspace(controller: controller);
     if (narrow) {
       return ListView(
         padding: const EdgeInsets.all(CohortSpacing.lg),
         children: [
-          _InventoryPanel(controller: controller, compact: true),
-          const SizedBox(height: CohortSpacing.lg),
-          _StructureNav(controller: controller),
-          const SizedBox(height: CohortSpacing.lg),
-          _ViewTabs(controller: controller),
-          const SizedBox(height: CohortSpacing.md),
-          _SelectedView(controller: controller),
-          const SizedBox(height: CohortSpacing.xl),
-          _PlannedFamilies(families: controller.catalog.plannedFamilies),
+          if (controller.narrowSidebarOpen) sidebar,
+          workspace,
         ],
       );
     }
@@ -240,33 +303,26 @@ class _StudioBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SizedBox(
-          width: 320,
-          child: ListView(
-            padding: const EdgeInsets.all(CohortSpacing.lg),
-            children: [
-              _InventoryPanel(controller: controller, compact: false),
-              const SizedBox(height: CohortSpacing.xl),
-              _PlannedFamilies(families: controller.catalog.plannedFamilies),
-            ],
+            width: 300,
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(
+                CohortSpacing.lg,
+                0,
+                CohortSpacing.md,
+                CohortSpacing.lg,
+              ),
+              children: [sidebar],
+            ),
           ),
-        ),
-        const VerticalDivider(width: 1, color: CohortColors.border),
-        SizedBox(
-          width: 280,
-          child: ListView(
-            padding: const EdgeInsets.all(CohortSpacing.lg),
-            children: [_StructureNav(controller: controller)],
-          ),
-        ),
-        const VerticalDivider(width: 1, color: CohortColors.border),
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.all(CohortSpacing.lg),
-            children: [
-              _ViewTabs(controller: controller),
-              const SizedBox(height: CohortSpacing.md),
-              _SelectedView(controller: controller),
-            ],
+            padding: const EdgeInsets.fromLTRB(
+              CohortSpacing.lg,
+              0,
+              CohortSpacing.lg,
+              CohortSpacing.xl,
+            ),
+            children: [workspace],
           ),
         ),
       ],
@@ -274,42 +330,59 @@ class _StudioBody extends StatelessWidget {
   }
 }
 
-class _InventoryPanel extends StatelessWidget {
-  const _InventoryPanel({required this.controller, required this.compact});
+class _ProgrammeSidebar extends StatelessWidget {
+  const _ProgrammeSidebar({required this.controller});
 
   final ProgrammeStudioController controller;
-  final bool compact;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(ProgrammeStudioCopy.inventoryTitle, style: CohortTextStyles.sectionLabel),
-        const SizedBox(height: CohortSpacing.sm),
-        for (final item in controller.inventory)
-          _InventoryCard(
-            programme: item,
-            selected: item.catalogId == controller.selectedProgramme?.catalogId,
-            compact: compact,
-            onTap: () => controller.selectProgramme(item.catalogId),
+    return Semantics(
+      label: 'Programme navigation',
+      container: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            ProgrammeStudioCopy.existingProgrammes,
+            style: CohortTextStyles.sectionLabel,
           ),
-      ],
+          const SizedBox(height: CohortSpacing.sm),
+          for (final item in controller.inventory)
+            _ProgrammeCard(
+              programme: item,
+              selected:
+                  controller.selectedPlannedFamily == null &&
+                  item.catalogId == controller.selectedProgramme?.catalogId,
+              onTap: () => controller.selectProgramme(item.catalogId),
+            ),
+          const SizedBox(height: CohortSpacing.xl),
+          Text(
+            ProgrammeStudioCopy.plannedTitle,
+            style: CohortTextStyles.sectionLabel,
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          for (final family in controller.catalog.plannedFamilies)
+            _PlannedCard(
+              family: family,
+              selected: family.id == controller.selectedPlannedFamily?.id,
+              onTap: () => controller.selectPlannedFamily(family.id),
+            ),
+        ],
+      ),
     );
   }
 }
 
-class _InventoryCard extends StatelessWidget {
-  const _InventoryCard({
+class _ProgrammeCard extends StatelessWidget {
+  const _ProgrammeCard({
     required this.programme,
     required this.selected,
-    required this.compact,
     required this.onTap,
   });
 
   final ProgrammeReviewProgramme programme;
   final bool selected;
-  final bool compact;
   final VoidCallback onTap;
 
   @override
@@ -317,7 +390,7 @@ class _InventoryCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
       child: Material(
-        color: selected ? CohortColors.oliveSoft : CohortColors.surface,
+        color: selected ? CohortColors.oliveSoft : Colors.transparent,
         child: InkWell(
           onTap: onTap,
           child: Padding(
@@ -328,30 +401,22 @@ class _InventoryCard extends StatelessWidget {
                 Text(programme.title, style: CohortTextStyles.cardTitle),
                 const SizedBox(height: 4),
                 Text(
-                  _classificationLabel(programme.classification),
+                  classificationLabel(programme.classification),
                   style: CohortTextStyles.small,
                 ),
-                if (!compact) ...[
-                  const SizedBox(height: CohortSpacing.sm),
-                  Text(
-                    _inventoryFacts(programme),
-                    style: CohortTextStyles.small,
-                  ),
-                  ExpansionTile(
-                    tilePadding: EdgeInsets.zero,
-                    title: const Text(ProgrammeStudioCopy.sourceDetails),
-                    children: [
-                      SelectableText(
-                        programme.sourcePaths.join('\n'),
-                        style: CohortTextStyles.small,
-                      ),
-                      Text(
-                        '${programme.lineageCode} · v${programme.versionNumber}',
-                        style: CohortTextStyles.small,
-                      ),
-                    ],
-                  ),
-                ],
+                Text(
+                  [
+                    if (programme.durationWeeks != null)
+                      '${programme.durationWeeks} weeks',
+                    if (programme.sessionsPerWeek != null)
+                      '${programme.sessionsPerWeek} sessions / week',
+                  ].join(' · '),
+                  style: CohortTextStyles.small,
+                ),
+                Text(
+                  programmeCardStatus(programme),
+                  style: CohortTextStyles.eyebrow,
+                ),
               ],
             ),
           ),
@@ -361,304 +426,52 @@ class _InventoryCard extends StatelessWidget {
   }
 }
 
-class _PlannedFamilies extends StatelessWidget {
-  const _PlannedFamilies({required this.families});
+class _PlannedCard extends StatelessWidget {
+  const _PlannedCard({
+    required this.family,
+    required this.selected,
+    required this.onTap,
+  });
 
-  final List<ProgrammeReviewPlannedFamily> families;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(ProgrammeStudioCopy.plannedTitle, style: CohortTextStyles.sectionLabel),
-        const SizedBox(height: CohortSpacing.sm),
-        for (final family in families)
-          Padding(
-            padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: CohortColors.border),
-                color: CohortColors.surfaceRaised,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(CohortSpacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(family.title, style: CohortTextStyles.cardTitle),
-                    Text(
-                      '${family.durationWeeks} weeks · planned family',
-                      style: CohortTextStyles.small,
-                    ),
-                    Text(
-                      ProgrammeStudioCopy.plannedEmptySessions,
-                      style: CohortTextStyles.small,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _StructureNav extends StatelessWidget {
-  const _StructureNav({required this.controller});
-
-  final ProgrammeStudioController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final programme = controller.selectedProgramme;
-    if (programme == null) {
-      return const SizedBox.shrink();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Training structure', style: CohortTextStyles.sectionLabel),
-        const SizedBox(height: CohortSpacing.sm),
-        for (final week in programme.weeks)
-          ExpansionTile(
-            initiallyExpanded: week.weekNumber == controller.selectedWeek?.weekNumber,
-            title: Text(week.title ?? 'Week ${week.weekNumber}'),
-            onExpansionChanged: (open) {
-              if (open) {
-                controller.selectWeek(week.weekNumber);
-              }
-            },
-            children: [
-              for (final day in week.days)
-                ListTile(
-                  dense: true,
-                  selected: day.dayKey == controller.selectedDay?.dayKey,
-                  title: Text(day.title ?? 'Day ${day.dayOrder}'),
-                  subtitle: Text(day.dayType),
-                  onTap: () {
-                    controller.selectWeek(week.weekNumber);
-                    controller.selectDay(day.dayKey);
-                    controller.selectView(ProgrammeStudioView.structure);
-                  },
-                ),
-            ],
-          ),
-      ],
-    );
-  }
-}
-
-class _ViewTabs extends StatelessWidget {
-  const _ViewTabs({required this.controller});
-
-  final ProgrammeStudioController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: CohortSpacing.sm,
-      children: [
-        for (final view in ProgrammeStudioView.values)
-          ChoiceChip(
-            label: Text(_viewLabel(view)),
-            selected: controller.selection.view == view,
-            onSelected: (_) => controller.selectView(view),
-          ),
-      ],
-    );
-  }
-}
-
-class _SelectedView extends StatelessWidget {
-  const _SelectedView({required this.controller});
-
-  final ProgrammeStudioController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final programme = controller.selectedProgramme;
-    if (programme == null) {
-      return const Text(ProgrammeStudioCopy.emptyInventory);
-    }
-    return switch (controller.selection.view) {
-      ProgrammeStudioView.overview => _OverviewPanel(programme: programme),
-      ProgrammeStudioView.structure => _WeekPanel(controller: controller),
-      ProgrammeStudioView.session => _SessionPanel(controller: controller),
-      ProgrammeStudioView.validation => _ValidationPanel(programme: programme),
-      ProgrammeStudioView.athlete => _AthletePreviewPanel(programme: programme),
-      ProgrammeStudioView.readiness => _ReadinessPanel(programme: programme),
-    };
-  }
-}
-
-class _OverviewPanel extends StatelessWidget {
-  const _OverviewPanel({required this.programme});
-
-  final ProgrammeReviewProgramme programme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(programme.title, style: CohortTextStyles.h2),
-        const SizedBox(height: CohortSpacing.sm),
-        Text(_classificationLabel(programme.classification)),
-        const SizedBox(height: CohortSpacing.md),
-        Text(programme.description ?? 'No description authored.'),
-        const SizedBox(height: CohortSpacing.md),
-        Text('Goal: ${programme.primaryGoal ?? 'Not provided'}'),
-        Text(
-          'Duration: ${programme.durationWeeks ?? 'Not provided'} weeks · '
-          'Schedule: ${programme.scheduledWeekCount ?? 0} week(s) · '
-          '${programme.sessionsPerWeek ?? 'Not provided'} sessions / week',
-        ),
-        Text('Intended level: ${programme.intendedLevel ?? 'Not provided on Plan Package'}'),
-        Text('Equipment: ${programme.equipment ?? 'Not provided on Plan Package'}'),
-        Text('Lineage ${programme.lineageCode} · version ${programme.versionNumber}'),
-        Text('Hash: ${programme.compile.contentHashSha256 ?? 'None'}'),
-        Text(
-          'Publication: ${programme.publication.detail ?? 'Not established locally'}',
-        ),
-        const SizedBox(height: CohortSpacing.md),
-        const Text(ProgrammeStudioCopy.comparisonUnavailable),
-        const SizedBox(height: CohortSpacing.md),
-        const Text(
-          ProgrammeStudioCopy.futureLifecycle,
-          style: CohortTextStyles.small,
-        ),
-        const SizedBox(height: CohortSpacing.md),
-        _FindingsList(findings: programme.findings),
-      ],
-    );
-  }
-}
-
-class _WeekPanel extends StatelessWidget {
-  const _WeekPanel({required this.controller});
-
-  final ProgrammeStudioController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final week = controller.selectedWeek;
-    final day = controller.selectedDay;
-    if (week == null || day == null) {
-      return const Text('No scheduled week is available.');
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(week.title ?? 'Week ${week.weekNumber}', style: CohortTextStyles.h2),
-        if (week.coachNote != null) Text(week.coachNote!),
-        const SizedBox(height: CohortSpacing.md),
-        Text(day.title ?? 'Day ${day.dayOrder}', style: CohortTextStyles.cardTitle),
-        Text(day.dayType),
-        if (day.coachNote != null) Text(day.coachNote!),
-        const SizedBox(height: CohortSpacing.md),
-        for (final session in day.sessions)
-          ListTile(
-            title: Text(session.displayTitle ?? session.title),
-            subtitle: Text(session.protocolId),
-            onTap: () => controller.selectSession(session.sessionKey),
-          ),
-      ],
-    );
-  }
-}
-
-class _SessionPanel extends StatelessWidget {
-  const _SessionPanel({required this.controller});
-
-  final ProgrammeStudioController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final session = controller.selectedSession;
-    if (session == null) {
-      return const Text('No session selected.');
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(session.displayTitle ?? session.title, style: CohortTextStyles.h2),
-        Text(
-          '${session.protocolId} · ${session.sessionLineageId} · '
-          'rev ${session.revisionNumber}',
-        ),
-        if (session.coachNote != null) Text(session.coachNote!),
-        if (!session.bodiesResolved)
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: CohortSpacing.sm),
-            child: Text(ProgrammeStudioCopy.missingProtocol),
-          ),
-        if (session.prescriptionSummary != null)
-          Text(session.prescriptionSummary!),
-        const SizedBox(height: CohortSpacing.md),
-        for (final block in session.blocks) _BlockCard(block: block),
-        _FindingsList(findings: session.findings),
-      ],
-    );
-  }
-}
-
-class _BlockCard extends StatelessWidget {
-  const _BlockCard({required this.block});
-
-  final ProgrammeReviewBlock block;
+  final ProgrammeReviewPlannedFamily family;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: CohortSpacing.md),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: CohortColors.surface,
-          border: Border.all(color: CohortColors.border),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(CohortSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(block.title, style: CohortTextStyles.cardTitle),
-              Text('${block.blockType} · ${block.workoutFormat ?? 'no format'}'),
-              if (block.content != null) Text(block.content!),
-              if (block.timerConfiguration != null)
-                Text('Timer: ${block.timerConfiguration}'),
-              if (block.coachNotes != null) Text(block.coachNotes!),
-              if (block.unsupportedReason != null)
-                Semantics(
-                  label: '${ProgrammeStudioCopy.unsupportedWarning}: ${block.unsupportedReason}',
-                  child: Text(
-                    '${ProgrammeStudioCopy.unsupportedWarning}: ${block.unsupportedReason}',
+      padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(
+                  color: selected ? CohortColors.olive : Colors.transparent,
+                  width: 2,
+                ),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(CohortSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    family.title,
                     style: CohortTextStyles.small.copyWith(
-                      color: CohortColors.warning,
+                      color: CohortColors.textSecondary,
                     ),
                   ),
-                ),
-              for (final movement in block.movements) ...[
-                const SizedBox(height: CohortSpacing.sm),
-                Text(movement.name, style: CohortTextStyles.body),
-                Text(
-                  [
-                    if (movement.sets != null) 'sets ${movement.sets}',
-                    if (movement.reps != null) 'reps ${movement.reps}',
-                    if (movement.duration != null) 'duration ${movement.duration}',
-                    if (movement.distance != null) 'distance ${movement.distance}',
-                    if (movement.recovery != null) 'recovery ${movement.recovery}',
-                  ].join(' · '),
-                  style: CohortTextStyles.small,
-                ),
-                if (movement.notes != null) Text(movement.notes!),
-                if (movement.unsupportedReason != null)
-                  Text(
-                    '${ProgrammeStudioCopy.unsupportedWarning}: ${movement.unsupportedReason}',
+                  const Text(
+                    ProgrammeStudioCopy.plannedBadge,
+                    style: CohortTextStyles.eyebrow,
                   ),
-              ],
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -666,70 +479,31 @@ class _BlockCard extends StatelessWidget {
   }
 }
 
-class _ValidationPanel extends StatelessWidget {
-  const _ValidationPanel({required this.programme});
+class _Workspace extends StatelessWidget {
+  const _Workspace({required this.controller});
 
-  final ProgrammeReviewProgramme programme;
+  final ProgrammeStudioController controller;
 
   @override
   Widget build(BuildContext context) {
-    final compile = programme.compile;
+    final family = controller.selectedPlannedFamily;
+    final programme = controller.selectedProgramme;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Parse: ${compile.parseOk ? 'passed' : 'failed'}'),
-        Text('Validation: ${compile.validationOk ? 'passed' : 'failed'}'),
-        Text(
-          'Canonicalisation: ${compile.canonicalisationOk ? 'passed' : 'failed'}',
-        ),
-        Text('Package identity: ${programme.lineageCode} v${programme.versionNumber}'),
-        Text('SHA-256: ${compile.contentHashSha256 ?? 'None'}'),
-        Text(
-          'Version UUID: ${programme.programmeVersionId ?? 'Not available locally'}',
-        ),
-        const SizedBox(height: CohortSpacing.md),
-        const Text(ProgrammeStudioCopy.compilerNotLaunch),
-        const SizedBox(height: CohortSpacing.md),
-        _FindingsList(findings: [...compile.issues, ...programme.findings]),
+        if (family != null)
+          _PlannedHeader(family: family)
+        else if (programme != null)
+          _ProgrammeHeader(programme: programme),
+        const SizedBox(height: CohortSpacing.xl),
+        _SelectedDestination(controller: controller),
       ],
     );
   }
 }
 
-class _AthletePreviewPanel extends StatelessWidget {
-  const _AthletePreviewPanel({required this.programme});
-
-  final ProgrammeReviewProgramme programme;
-
-  @override
-  Widget build(BuildContext context) {
-    final facts = AthleteProgrammeDecisionFacts(
-      versionId: programme.programmeVersionId ?? programme.catalogId,
-      title: programme.title,
-      catalogueAvailable: false,
-      isCurrentProgramme: false,
-      primaryGoal: programme.primaryGoal,
-      intendedLevel: programme.intendedLevel,
-      durationWeeks: programme.durationWeeks,
-      sessionsPerWeek: programme.sessionsPerWeek,
-      equipment: programme.equipment,
-      summary: programme.description,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(ProgrammeStudioCopy.athletePreviewBanner),
-        const SizedBox(height: CohortSpacing.md),
-        AthleteProgrammeGlanceTiles(facts: facts),
-        const SizedBox(height: CohortSpacing.md),
-        Text(facts.summaryLabel, style: CohortTextStyles.body),
-      ],
-    );
-  }
-}
-
-class _ReadinessPanel extends StatelessWidget {
-  const _ReadinessPanel({required this.programme});
+class _ProgrammeHeader extends StatelessWidget {
+  const _ProgrammeHeader({required this.programme});
 
   final ProgrammeReviewProgramme programme;
 
@@ -738,95 +512,101 @@ class _ReadinessPanel extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(ProgrammeStudioCopy.compilerNotLaunch),
-        const SizedBox(height: CohortSpacing.md),
-        for (final check in programme.readiness)
-          Padding(
-            padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-            child: Semantics(
-              label: '${check.label}: ${_statusLabel(check.status)}. ${check.detail}',
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${check.label} — ${_statusLabel(check.status)}',
-                    style: CohortTextStyles.cardTitle,
-                  ),
-                  Text(check.detail, style: CohortTextStyles.small),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _FindingsList extends StatelessWidget {
-  const _FindingsList({required this.findings});
-
-  final List<ProgrammeReviewFinding> findings;
-
-  @override
-  Widget build(BuildContext context) {
-    if (findings.isEmpty) {
-      return const SizedBox.shrink();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Findings', style: CohortTextStyles.sectionLabel),
+        Text(programme.title, style: CohortTextStyles.h1),
         const SizedBox(height: CohortSpacing.sm),
-        for (final finding in findings)
-          Padding(
-            padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
-            child: Text(
-              '${finding.severity.name}: ${finding.message}'
-              '${finding.sourceContext == null ? '' : ' (${finding.sourceContext})'}',
-            ),
-          ),
+        Text(
+          classificationLabel(programme.classification),
+          style: CohortTextStyles.eyebrow.copyWith(color: CohortColors.olive),
+        ),
+        const SizedBox(height: CohortSpacing.md),
+        Text(
+          [
+            '${programme.durationWeeks ?? ProgrammeStudioCopy.notSpecified} weeks',
+            '${programme.sessionsPerWeek ?? ProgrammeStudioCopy.notSpecified} sessions / week',
+            'Level ${authoredOrUnspecified(programme.intendedLevel)}',
+            'Equipment ${authoredOrUnspecified(programme.equipment)}',
+          ].join('  ·  '),
+          style: CohortTextStyles.small,
+        ),
+        const SizedBox(height: CohortSpacing.sm),
+        Text(
+          authoredOrUnspecified(programme.primaryGoal),
+          style: CohortTextStyles.body,
+        ),
       ],
     );
   }
 }
 
-String _classificationLabel(ProgrammeReviewClassification value) {
-  return switch (value) {
-    ProgrammeReviewClassification.productionPublished => 'Production-published',
-    ProgrammeReviewClassification.internalPersonal => 'Internal / personal',
-    ProgrammeReviewClassification.legacyWithheld => 'Legacy / withheld',
-    ProgrammeReviewClassification.fixtureTestExample => 'Fixture / test / example',
-    ProgrammeReviewClassification.plannedFamily => 'Approved planned family',
-  };
+class _PlannedHeader extends StatelessWidget {
+  const _PlannedHeader({required this.family});
+
+  final ProgrammeReviewPlannedFamily family;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(family.title, style: CohortTextStyles.h1),
+        const SizedBox(height: CohortSpacing.sm),
+        Text(ProgrammeStudioCopy.plannedBadge, style: CohortTextStyles.eyebrow),
+      ],
+    );
+  }
 }
 
-String _inventoryFacts(ProgrammeReviewProgramme programme) {
-  return [
-    if (programme.durationWeeks != null) '${programme.durationWeeks} weeks',
-    if (programme.sessionsPerWeek != null)
-      '${programme.sessionsPerWeek} sessions / week',
-    if (programme.compile.contentHashSha256 != null)
-      'hash ${programme.compile.contentHashSha256!.substring(0, 8)}…',
-    programme.compile.validationOk ? 'compiler passed' : 'compiler failed',
-  ].join(' · ');
+class _SelectedDestination extends StatelessWidget {
+  const _SelectedDestination({required this.controller});
+
+  final ProgrammeStudioController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    if (controller.selectedPlannedFamily != null) {
+      if (controller.selection.view == ProgrammeStudioView.coachReview) {
+        return ProgrammeStudioCoachReview(controller: controller);
+      }
+      return const Text(
+        ProgrammeStudioCopy.plannedEmptySessions,
+        style: CohortTextStyles.body,
+      );
+    }
+    final programme = controller.selectedProgramme;
+    if (programme == null) {
+      return const Text(
+        ProgrammeStudioCopy.emptyInventory,
+        style: CohortTextStyles.body,
+      );
+    }
+    return switch (controller.selection.view) {
+      ProgrammeStudioView.coachReview => ProgrammeStudioCoachReview(
+        controller: controller,
+      ),
+      ProgrammeStudioView.qualityGate => ProgrammeStudioQualityView(
+        programme: programme,
+        onOpenIntegrity: () {
+          controller.selectView(ProgrammeStudioView.technicalIntegrity);
+        },
+      ),
+      ProgrammeStudioView.athletePreview => ProgrammeStudioAthleteView(
+        programme: programme,
+      ),
+      ProgrammeStudioView.technicalIntegrity => ProgrammeStudioIntegrityView(
+        programme: programme,
+        sourceInputs: controller.catalog.sourceInputs,
+        authority: controller.catalog.authority,
+      ),
+    };
+  }
 }
 
 String _viewLabel(ProgrammeStudioView view) {
   return switch (view) {
-    ProgrammeStudioView.overview => ProgrammeStudioCopy.overview,
-    ProgrammeStudioView.structure => ProgrammeStudioCopy.structure,
-    ProgrammeStudioView.session => ProgrammeStudioCopy.session,
-    ProgrammeStudioView.validation => ProgrammeStudioCopy.validation,
-    ProgrammeStudioView.athlete => ProgrammeStudioCopy.athlete,
-    ProgrammeStudioView.readiness => ProgrammeStudioCopy.readiness,
-  };
-}
-
-String _statusLabel(ProgrammeReviewCheckStatus status) {
-  return switch (status) {
-    ProgrammeReviewCheckStatus.passed => 'Passed',
-    ProgrammeReviewCheckStatus.failed => 'Failed',
-    ProgrammeReviewCheckStatus.notImplemented => 'Not implemented',
-    ProgrammeReviewCheckStatus.notAssessed => 'Not assessed',
+    ProgrammeStudioView.coachReview => ProgrammeStudioCopy.coachReview,
+    ProgrammeStudioView.qualityGate => ProgrammeStudioCopy.qualityGate,
+    ProgrammeStudioView.athletePreview => ProgrammeStudioCopy.athletePreview,
+    ProgrammeStudioView.technicalIntegrity =>
+      ProgrammeStudioCopy.technicalIntegrity,
   };
 }
