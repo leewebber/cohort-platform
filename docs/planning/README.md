@@ -5,7 +5,7 @@
 | [Delivery_Roadmap_v1.md](./Delivery_Roadmap_v1.md) | **Active** product milestone sequence (athlete-first after M10 close) |
 | [Athlete_Product_Completion_Plan_v1.md](./Athlete_Product_Completion_Plan_v1.md) | **Binding** athlete-launch doctrine, audit, library, and gates |
 | [../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md](../checkpoints/DAILY_JOURNEY_INTEGRITY_CLOSEOUT.md) | Daily Journey Integrity **COMPLETE** |
-| [../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md) | Launch programme library **audited, awaiting approval** |
+| [../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md) | Launch programme library (strategy approved; infrastructure not started) |
 | [../architecture/Launch_Programme_Library_v1.md](../architecture/Launch_Programme_Library_v1.md) | Launch programme library architecture |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md) | Complete Athlete Experience **COMPLETE** |
 | [../architecture/Complete_Athlete_Experience_v1.md](../architecture/Complete_Athlete_Experience_v1.md) | Complete Athlete Experience milestone definition (**complete**) |

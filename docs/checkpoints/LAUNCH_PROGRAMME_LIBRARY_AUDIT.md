@@ -1,12 +1,16 @@
 # Launch Programme Library — architecture and readiness audit
 
 **Recorded:** 2026-09-25
-**Status:** Audited. Awaiting founder architectural approval.
-**Not started. Not implemented. Not launch-ready.**
+**Status:** Original audit preserved. Founder strategy **bound**
+2026-09-25. Infrastructure architecture defined; **not** started.
+Programme content **not** authorised.
 
 ```text
-LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL
-LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
+PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
+PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
+HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 HOSTED_INSPECTION=false
@@ -270,10 +274,126 @@ Device coaching review and a publish runbook do not.
 
 ---
 
-## 11. Explicit non-actions (this task)
+## 11. Explicit non-actions (original audit task)
 
 - No Dart, SQL, migrations, tests, fixtures, or config changes
 - No hosted SELECT / push / publication
 - No athlete contact
 - No programme authorship
 - No next-milestone implementation
+
+---
+
+## 12. Founder resolution (2026-09-25)
+
+Strategy is **approved**. Infrastructure is **architected only**.
+Programme content, Studio implementation, Garmin, and hosted
+publication remain **unauthorised**.
+
+Children:
+[`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md),
+[`../architecture/Running_Workout_and_Device_Interop_v1.md`](../architecture/Running_Workout_and_Device_Interop_v1.md),
+[`../architecture/Programme_Performance_Metrics_Profile_v1.md`](../architecture/Programme_Performance_Metrics_Profile_v1.md).
+
+§9 recommendations above are **historical**. They are not the live
+catalogue plan.
+
+### 12.1 Bound decisions
+
+- Cohort = integrated performance platform for hybrid athletes
+- HYROX = initial acquisition wedge
+- Product unites strength, running, erg, conditioning, and evidence
+- No Garmin/Whoop claims before implementation
+- Intended families A–G and build order 1–7 as in
+  [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md)
+  §7
+- Public HYROX proposition = four-programme family, authored sequentially
+- Apollo = internal/test; not commercial
+- Spartan = legacy, withheld; not deleted
+- No Hybrid Foundation
+- Paid programmes; trial/free is later commercial work
+- Fixed authored programmes remain authority; generated plans deferred
+
+### 12.2 Current running capability verdict
+
+Block-native production path is a **strong foundation** for time-based
+steady-state and interval running with manual capture. Authored pace,
+zone, HR, power, cadence, nested repeats, laps, treadmill substitution,
+and device export/import are **missing or unsafe/ambiguous**. Legacy
+`IntervalSessionPlanBuilder` is **not** the production launcher.
+
+HYROX Base must not be authored on prose zone/pace strings.
+
+### 12.3 Programme Studio
+
+Internal desktop/web. Stage 1 read-only over canonical Plan Package +
+protocols. Stage 2 writes the same canonical source. Stage 3 explicit
+publish. No unrestricted DB editing. Minimum review stage before
+content review: Stage 1. Compile/publish may stay CLI.
+
+### 12.4 Structured workout / device interop
+
+Vendor-neutral `RunningWorkout` + steps. Garmin is not authority.
+Cohort works without wearables. Provider APIs deferred. Athletes
+should not re-enter reliable matched device data once import exists.
+
+### 12.5 Pace-calculation verdict
+
+Separate authored intent, programme policy, athlete benchmark,
+calculated target, and actual. Methods must be versioned and tested.
+**No final physiological formulas** chosen.
+
+### 12.6 Metrics-profile verdict
+
+Profile owned by the immutable programme version. Plan Package
+assessments/evidence are a **hook**, not sufficient. A later additive
+package field or companion hashed artifact is likely. Do not implement
+schema now. Do not select real metrics now. Fail-closed publish once
+the rule is introduced.
+
+### 12.7 Revised readiness scoreboard
+
+| Area | Score |
+|------|-------|
+| Programme Studio review | Architecture only |
+| Structured authoring | Architecture only |
+| Running workout model | Architecture only; current execution = time-based foundation |
+| Pace calculations | Contract only; no approved formulas |
+| In-app interval execution | Production-complete for time-based block intervals |
+| Garmin export readiness | Not started; preview flags only |
+| Activity import / reconciliation | Not started |
+| Metrics-profile binding | Hook only; foundation not implemented |
+| Programme-specific Progress projection | Not started (CAE last-good still applies) |
+| Publication quality gate | Defined; not run for any launch family |
+
+### 12.8 Infrastructure slices
+
+**A** Studio Stage 1 → **B** running + pace foundation → **C**
+metrics-profile foundation → **D** structured authoring workflow.
+Hard stop after D: no real launch-programme source, prescription, or
+metrics selection until later content-authoring approval.
+
+### 12.9 Unresolved decisions that still change infrastructure
+
+1. **Final pace/zone formulas** — require evidence + head-coach
+   approval (not an infrastructure-start blocker if methods stay
+   versioned stubs).
+2. **Metrics profile storage** — additive Plan Package field vs
+   companion hashed artifact (compatibility review).
+3. **Strength for Endurance optional third session** — whether Plan
+   Package needs an honest optional-slot primitive.
+4. **First wearable provider** — Garmin vs other; adapter remains a
+   separate integration.
+
+Trial/free, pricing, and exact HYROX kit substitutions do **not**
+change infrastructure sprints A–C.
+
+### 12.10 Non-actions (this resolution task)
+
+- No programme sessions authored
+- No Apollo commercial conversion
+- No HYROX Base content
+- No Dart/SQL/schema/dependency changes
+- No Studio or Garmin implementation
+- No hosted publish/withdraw/delete
+- No payments, beta, or launch work

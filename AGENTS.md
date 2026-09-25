@@ -164,13 +164,17 @@ Complete Athlete Experience is **COMPLETE**
 Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 `8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
 is launch-ready. The next sequenced item is **launch programme library**.
-It is **audited, awaiting approval**
+Strategy is **approved**; infrastructure is **not** started
 ([`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md);
-`LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL`,
-`LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false`,
+`LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED`,
+`PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
+`PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false`,
+`RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
+`HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-It is **not** started, implemented, complete, or launch-ready. Binding:
+Programme content, Studio, Garmin, and hosted publication are **not**
+authorised. Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
 Historical Sprint 3 evidence:

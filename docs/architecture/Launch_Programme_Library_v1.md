@@ -1,23 +1,32 @@
 # Launch Programme Library v1
 
-**Status:** Binding architecture for the launch programme library
-milestone. Audited; **not** approved for implementation.
+**Status:** Strategy **approved**. Infrastructure architecture defined.
+Infrastructure **not** started. Programme content **not** authorised.
+Hosted publication **not** authorised.
 **Recorded:** 2026-09-25
+**Strategy bound:** 2026-09-25
 **Audit:**
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md)
+**Children:**
+[`Programme_Studio_v1.md`](./Programme_Studio_v1.md),
+[`Running_Workout_and_Device_Interop_v1.md`](./Running_Workout_and_Device_Interop_v1.md),
+[`Programme_Performance_Metrics_Profile_v1.md`](./Programme_Performance_Metrics_Profile_v1.md)
 **Base:** `origin/main` `a2faba6740d55359822689e5cc8c907185ebc97c`
 
 ```text
-LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL
-LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
+PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
+PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
+HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 ```
 
-This document defines the smallest excellent authored catalogue that can
-make Cohort useful for beta and launch. It is **not** an implementation
-licence. It does **not** mark any programme launch-ready. Compilation
-alone is not launch approval.
+This document binds the founder-approved launch-library **strategy** and
+the supporting infrastructure architecture. It is **not** a licence to
+implement Studio, running/device code, metrics schema, or any programme
+content. Compilation alone is not launch approval.
 
 Parents:
 [`Authored_Plan_Package_v1.md`](./Authored_Plan_Package_v1.md),
@@ -59,8 +68,11 @@ This milestone must **not**:
 - start payments, wearables, Android, or commercial launch
 - reopen Complete Athlete Experience
 - treat fixtures, previews, or seeds as launch programmes
-- treat Apollo or HYROX planning names as approved inclusion
-- implement coach-authoring product UI
+- convert Apollo into a commercial programme
+- create HYROX Base or any other launch-family content
+- implement Programme Studio, Garmin integration, or payments
+- claim Garmin, Whoop, or other integrations before they exist
+- delete or mutate hosted Spartan / Apollo rows
 - contact Field Manual except optional founder-authorised SELECT
 
 ---
@@ -222,53 +234,66 @@ will feel repetitive without filters (filters are later).
 
 ---
 
-## 7. Recommended launch catalogue
+## 7. Founder-resolved launch catalogue (2026-09-25)
 
-### Strategy
+The 2026-09-25 audit recommendation (Hybrid Foundation first; Apollo as
+a commercial advanced SKU; one later HYROX Foundation) is **superseded**
+as strategy. Historical text remains in
+[`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md)
+§9.
 
-Choose a **small curated library**, not an 8–12 family first drop.
-The product plan’s 8–12 table remains a **later horizon**, not the first
-implementation slice.
+### Positioning
 
-Avoid title clones. Variants exist only when prescription, volume, or
-equipment actually differ.
+Cohort is the **integrated performance platform for hybrid athletes**.
+HYROX is the **initial acquisition wedge**. The athlete-facing product
+goal is to unite high-quality strength, running, erg, conditioning, and
+performance evidence in one coherent system.
 
-### Coverage target (first useful library)
+Do **not** claim Garmin, Whoop, or other integrations before they are
+implemented and verified.
 
-| Goal / domain | Beginner–int. | Advanced | Duration | d/w | Equipment |
-|---------------|---------------|----------|----------|-----|-----------|
-| Concurrent hybrid | **Hybrid Foundation (new)** | Apollo Build (existing, experienced 7 d/w) | 12w | 4 vs 7 | Gym + run vs full concurrent kit |
-| Race (HYROX-style) | **HYROX Foundation (later)** | — | 12w | 4–5 | Gym + run; stations or substitutes |
-| Physique / relative strength | — | Spartan (complete or withhold) | ≥8w if sold | 4–6 | Gym |
+### Intended families (content not authorised)
 
-**Do not** launch a running-only app. Hybrid Foundation must include
-strength + running + at least one mixed-modal or conditioning session
-type the execution path already captures.
+| Family | Duration | Audience / intent |
+|--------|----------|-------------------|
+| **A. HYROX Base** | 8 weeks | Physical preparation before race-specific training: aerobic development, running durability, foundational strength, tissue resilience, movement quality, erg technique, controlled race-specific introduction |
+| **B. HYROX First Race** | 16 weeks | First or second race; beginner in HYROX experience, not necessarily sedentary; education, technique, conservative progression, pacing, completion confidence |
+| **C. HYROX Performance** | 16 weeks | Experienced racer seeking a meaningful improvement; progressive running, strength, compromised running, station specificity, race execution |
+| **D. HYROX Pro Performance** | 16 weeks | Experienced high-capacity athlete preparing for Pro / high performance; sub-60 **oriented**, never guaranteed; scale via benchmark-derived targets, zones, percentages, prerequisites; useful whether ~15 min or ~2 min from sub-60 |
+| **E. Tactical Athlete 365** | 16 weeks (proposed) | Existing tactical professionals, year-round all-round fitness; **not** selection, recruitment, or generic “military fitness” |
+| **F. Strength for Endurance** | 12 weeks (proposed add-on) | Runners, cyclists, triathletes; two core strength sessions; optional third only if optionality can be represented honestly; must not pretend to manage the full endurance plan |
+| **G. Strength for Life 55+** | 12 weeks, 3 days (proposed) | Muscle, strength, movement, balance, resilience, independence; **later** because it needs distinct suitability, regression, accessibility, and safety treatment |
 
-### Recommendations (subject to founder decisions)
+### Build order
 
-1. **Hybrid Foundation — first new family.** 12 weeks, 4 sessions/week,
-   beginner–intermediate, gym or limited gym + run surface. This is the
-   programme that makes beta useful. It does not exist in the repo.
-2. **Apollo Build v2 — include as experienced concurrent hybrid**, not
-   as the default beginner card. It is the only fully encoded 12-week
-   hybrid. It is 7 days/week and founder-dogfood positioned. It needs a
-   **launch-quality pass** (metadata honesty, prescription normalisation,
-   assessment declaration) before it is sold as a product SKU.
-3. **Spartan v3 — do not treat the current 1-week package as a launch
-   family.** Either author a complete physique block or keep it
-   founder-only and stop implying multi-week duration in athlete copy.
-4. **HYROX Base and Elite — not launch programmes.** There is no
-   authored source. Recommend **one** later HYROX Foundation family after
-   Hybrid Foundation passes the gate — not two race SKUs at once.
-5. Strength-for-runners, endurance-emphasis, and standalone mobility
-   remain **horizon** families. Embed recovery inside Hybrid Foundation.
+1. HYROX Base
+2. HYROX Pro Performance
+3. HYROX First Race
+4. HYROX Performance
+5. Strength for Endurance
+6. Tactical Athlete 365
+7. Strength for Life 55+
+
+The intended **public HYROX proposition** is the coherent
+**four-programme family**. Families are authored and validated
+**sequentially**.
+
+### Catalogue exclusions (bound)
+
+- **Apollo** remains a personal / internal programme and test case — not
+  a commercial launch programme. Do not convert it in this milestone.
+- **Spartan** is legacy and **withheld** from the launch catalogue. Do
+  not delete or mutate it in this task.
+- **No generic Hybrid Foundation** is currently planned.
+- Programmes are intended to be **paid**. Trial / free utility belongs
+  to later commercial / payments architecture.
+- **Fixed authored programmes** remain product authority.
+  Generated / bespoke plans are deferred.
 
 ### Build Your Own later
 
-Launch families become the **approved component library**. BYO may later
-assemble sessions the quality gate has already seen. This milestone must
-not start a generator.
+Launch families become the approved component library for a later BYO
+engine. This milestone must not start a generator.
 
 ---
 
@@ -290,14 +315,18 @@ not start a generator.
 11. **Withdraw:** archive / unapprove via replacement RPC so enrolled
     athletes keep the pinned version.
 
-**Missing tooling (recommend only what the first library needs):**
+**Infrastructure (architecture only; not started):**
 
-- a documented founder checklist (this gate)
-- a local compile + hash command already implied by the package tests
-- **not** a coach studio, catalogue CMS, or BYO builder
+- Programme Studio Stage 1 — read-only review
+  ([`Programme_Studio_v1.md`](./Programme_Studio_v1.md))
+- Structured running workout + pace-calculation foundation
+  ([`Running_Workout_and_Device_Interop_v1.md`](./Running_Workout_and_Device_Interop_v1.md))
+- Programme-version metrics profile
+  ([`Programme_Performance_Metrics_Profile_v1.md`](./Programme_Performance_Metrics_Profile_v1.md))
 
-Trusted import deployment verification is a later operational task, not
-this audit.
+Compile/hash, import, and publish RPCs may remain command-line until
+Studio Stage 3. Trusted import deployment verification remains a later
+operational task.
 
 ---
 
@@ -347,47 +376,76 @@ Compile/import/hash is necessary and **not sufficient**.
 
 ## 11. Implementation boundaries
 
-If later authorised, implementation may:
+**Strategy is approved. Infrastructure is not authorised by this
+document.** A later founder task may authorise infrastructure sprints
+only.
 
-- author Hybrid Foundation (and optionally an Apollo quality pass)
-- populate truthful catalogue metadata on the pinned version
-- use existing import / publish / approve / replace RPCs
-- add tests for the new family’s compile/hash and discovery facts
+Those sprints may implement Studio Stage 1, the running workout model,
+and metrics-profile **foundation**. They must **stop before** any real
+HYROX Base (or other launch-family) session prescription, source file,
+or metrics selection.
 
 Implementation must **not**:
 
+- author launch-programme content
+- convert Apollo or withdraw/delete Spartan
 - manufacture Plan Package exercise IDs
-- publish without the quality gate
-- replace enrolled athletes onto a new default
-- start HYROX station identity work as a silent Phase 3 reopen
-- start BYO, adaptation engine, payments, or beta recruitment
+- publish or change hosted catalogue defaults
+- implement Garmin or Whoop
+- start payments, beta, BYO, or adaptation engine
+
+**Hard stop:** no real launch-programme source, session prescription, or
+metrics selection may be created until a later founder
+**content-authoring** approval.
 
 ---
 
 ## 12. Acceptance gates
 
-Architecture is accepted when the founder records decisions in §13 of
-the audit and sets
-`LAUNCH_PROGRAMME_LIBRARY=ARCHITECTURE_APPROVED` in a later docs
-task.
+| Layer | Status |
+|-------|--------|
+| Strategy | **Approved** (this revision) |
+| Infrastructure architecture | Defined; **not implemented**; awaits founder approval of the infrastructure docs |
+| Programme content | **Not authorised** |
+| Hosted publication | **Not authorised** |
 
-The **library** is not complete until at least Hybrid Foundation is
-quality-gated and published, and Apollo (if included) has an honest
-product pass.
-
-The **Cohort product** remains not launch-ready.
+The Cohort product remains not launch-ready.
 
 ---
 
 ## 13. Deferred work
 
-- 8–12 family catalogue
-- HYROX Base / Elite / Intermediate / sub-60
-- Spartan multi-week completion (unless separately chosen)
-- catalogue filters, imagery, family taxonomy
-- wired emphasis / progression / recovery comparison rows
-- parametric progression
+- Any HYROX / Tactical / Strength family content
+- Apollo commercial conversion
+- Spartan launch inclusion or deletion
+- Hybrid Foundation
+- Studio Stage 2–3 implementation until separately authorised
+- Garmin / Whoop / wearable provider adapters
+- Payments, trial, beta, BYO, matching, adaptation
 - Exercise Knowledge / media in athlete UI
-- adaptation, matching, BYO, coach authoring, B2B
-- payments, wearables, Android, offline queue, blue brand
-- hosted publication of any new version
+- catalogue filters, imagery
+- Final physiological pace formulas
+- Final per-programme metric selections
+
+---
+
+## 14. Infrastructure-only slices (recommended)
+
+Safer order than “Studio first” because HYROX Base cannot be authored
+on ambiguous pace/zone encoding, and a metrics bind must exist before
+any family claims outcomes. Studio Stage 1 can still proceed in
+parallel as read-only over **existing** Apollo/Spartan.
+
+| Sprint | Scope | Stops before |
+|--------|-------|--------------|
+| **A** | Programme Studio Stage 1 — read-only review / validation | Writes, publish, new content |
+| **B** | Structured running workout + versioned pace-calculation **foundation** (no formulas without later approval; no Garmin) | Launch run prescriptions; provider APIs |
+| **C** | Programme-version metrics-profile **foundation** (schema/bind description → later additive package or companion hash) | Selecting real HYROX metrics |
+| **D** | Controlled structured authoring workflow (Studio Stage 2 emitting canonical YAML only) | Real launch-family prescriptions |
+
+**Minimum before HYROX Base content authoring is even proposed:** A + B
++ C complete and founder-accepted; content still requires a **separate**
+authoring approval.
+
+Garmin provider implementation remains a separately approved future
+integration. Sprint B may add a vendor-neutral DTO only.

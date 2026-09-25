@@ -19,8 +19,12 @@ HOSTED_MIGRATION_APPLIED=true
 SPRINT_2_HOSTED_MIGRATION_APPLIED=true
 SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
-LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
 LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
+PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
+PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
+HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 ```
@@ -28,6 +32,9 @@ FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
 Binding parents:
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
+[`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md),
+[`../architecture/Running_Workout_and_Device_Interop_v1.md`](../architecture/Running_Workout_and_Device_Interop_v1.md),
+[`../architecture/Programme_Performance_Metrics_Profile_v1.md`](../architecture/Programme_Performance_Metrics_Profile_v1.md),
 [`../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md),
 [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md),
@@ -1081,8 +1088,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 ### Critical path
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
-**complete** at `fc73ae0`; next `M-LIB` audited, awaiting approval;
-implementation not authorised)
+**complete** at `fc73ae0`; next `M-LIB` strategy approved,
+infrastructure not started; implementation not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1169,13 +1176,17 @@ HOSTED_MIGRATION_APPLIED=true
 SPRINT_2_HOSTED_MIGRATION_APPLIED=true
 SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
-LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL
+LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED
 LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
+PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
+PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false
+RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
+HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-The next sequenced item is **launch programme library**. It is
-**audited, awaiting approval**. Binding:
+The next sequenced item is **launch programme library**. Strategy is
+**approved**; infrastructure is **not** started. Binding:
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md).
 It has **not** started. Implementation is **not** authorised. This does

@@ -20,13 +20,16 @@
 > `SPRINT_3_HOSTED_MIGRATION_APPLIED=true`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 > Closeout base `fc73ae0`. This does **not** make the Cohort product
-> launch-ready. Launch programme library is **audited, awaiting
-> approval**
+> launch-ready. Launch programme library strategy is **approved**;
+> infrastructure is **not** started
 > ([`./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 > [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md);
-> `LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL`,
-> `LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false`).
-> It is **not** started, implemented, or launch-ready. Binding:
+> `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED_INFRASTRUCTURE_NOT_STARTED`,
+> `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
+> `PROGRAMME_STUDIO_IMPLEMENTATION_AUTHORISED=false`,
+> `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
+> `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`).
+> Programme content is **not** authorised. Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
 > Historical Sprint 3 evidence:
