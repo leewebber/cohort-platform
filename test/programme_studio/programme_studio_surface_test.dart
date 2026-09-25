@@ -27,7 +27,39 @@ void main() {
     ).loadRealCatalog();
   }
 
-  testWidgets('shows honest inventory and no mutation controls', (tester) async {
+  testWidgets('Coach Review is the default coaching workstation', (
+    tester,
+  ) async {
+    await setDesktop(tester);
+    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpAndSettle();
+    expect(find.text(ProgrammeStudioCopy.coachReview), findsWidgets);
+    expect(find.textContaining('Week 1 of 12'), findsWidgets);
+    expect(find.text('Monday'), findsWidgets);
+    expect(
+      find.textContaining('Thoracic extension over foam roller'),
+      findsWidgets,
+    );
+    expect(find.textContaining('Open-book rotation'), findsWidgets);
+    expect(find.text('Serratus wall slide + reach'), findsWidgets);
+    expect(find.text('Wall Y/lower-trap raise'), findsWidgets);
+    expect(
+      find.textContaining('Single-arm cable/band row with reach'),
+      findsWidgets,
+    );
+    expect(find.textContaining('81033429'), findsNothing);
+    expect(find.textContaining('supabase/migrations'), findsNothing);
+    expect(find.textContaining('sql_correction'), findsNothing);
+    expect(find.text('Save'), findsNothing);
+    expect(find.text('Publish'), findsNothing);
+    expect(find.text('Approve'), findsNothing);
+    expect(find.text('Replace default'), findsNothing);
+    expect(find.text('Enrol'), findsNothing);
+  });
+
+  testWidgets('shows honest inventory and planned families without hashes', (
+    tester,
+  ) async {
     await setDesktop(tester);
     await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
     await tester.pumpAndSettle();
@@ -35,15 +67,13 @@ void main() {
     expect(find.textContaining('Internal / personal'), findsWidgets);
     expect(find.textContaining('Spartan Physique Block 1'), findsWidgets);
     expect(find.textContaining('Legacy / withheld'), findsWidgets);
+    expect(find.textContaining('1 week'), findsWidgets);
+    expect(find.textContaining('6 sessions / week'), findsWidgets);
     expect(find.text(ProgrammeStudioCopy.plannedTitle), findsWidgets);
-    expect(find.textContaining('HYROX'), findsWidgets);
+    expect(find.textContaining('HYROX Base'), findsWidgets);
+    expect(find.textContaining(ProgrammeStudioCopy.plannedBadge), findsWidgets);
     expect(find.text('PROG-FIXTURE-01'), findsNothing);
-    expect(find.text('Save'), findsNothing);
-    expect(find.text('Publish'), findsNothing);
-    expect(find.text('Approve'), findsNothing);
-    expect(find.text('Replace default'), findsNothing);
-    expect(find.text('Enrol'), findsNothing);
-    expect(find.textContaining('enrol_athlete'), findsNothing);
+    expect(find.textContaining('hash '), findsNothing);
   });
 
   testWidgets('fixtures stay out of real inventory until the filter is on', (
@@ -71,42 +101,160 @@ void main() {
     await setDesktop(tester);
     await tester.pumpWidget(ProgrammeStudioApp(catalog: catalog));
     expect(find.text('fixture-hidden'), findsNothing);
-    await tester.tap(find.text(ProgrammeStudioCopy.fixturesToggle));
+    await tester.tap(find.byTooltip(ProgrammeStudioCopy.developerMenu));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(ProgrammeStudioCopy.fixturesToggle));
+    await tester.tap(
+      find.text(ProgrammeStudioCopy.fixturesToggle),
+      warnIfMissed: false,
+    );
     await tester.pumpAndSettle();
     expect(find.text('fixture-hidden'), findsOneWidget);
   });
 
-  testWidgets('navigates week day session and distinguishes launch readiness', (
+  testWidgets('week and day controls reveal corrected Apollo sessions', (
     tester,
   ) async {
     await setDesktop(tester);
     await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text(ProgrammeStudioCopy.validation));
+    await tester.tap(find.text(ProgrammeStudioCopy.nextWeek));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Compiler success is not launch approval'), findsWidgets);
-    await tester.tap(find.text(ProgrammeStudioCopy.readiness));
+    expect(find.textContaining('Week 2 of 12'), findsWidgets);
+    await tester.tap(find.text(ProgrammeStudioCopy.previousWeek));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Not implemented'), findsWidgets);
-    expect(find.textContaining('Pace-calculation readiness'), findsOneWidget);
-    expect(find.textContaining('Device / Garmin readiness'), findsOneWidget);
-    await tester.tap(find.text(ProgrammeStudioCopy.session));
+    expect(find.textContaining('Week 1 of 12'), findsWidgets);
+    for (var i = 0; i < 4; i++) {
+      await tester.tap(find.text(ProgrammeStudioCopy.nextWeek));
+      await tester.pumpAndSettle();
+    }
+    expect(find.textContaining('Week 5 of 12'), findsWidgets);
+    await tester.ensureVisible(find.text('Thursday'));
+    await tester.tap(find.text('Thursday'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('APOLLO-W'), findsWidgets);
+    expect(find.textContaining('Zone 2'), findsWidgets);
+    expect(find.textContaining('60 min'), findsWidgets);
+    await tester.ensureVisible(find.text('Saturday'));
+    await tester.tap(find.text('Saturday'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Fixed-work capture'), findsWidgets);
+    expect(find.textContaining('athlete selected'), findsWidgets);
+    expect(find.textContaining('Sled Push'), findsWidgets);
   });
 
-  testWidgets('keyboard focus can change views', (tester) async {
+  testWidgets(
+    'Quality Gate uses readable statuses and is not launch approved',
+    (tester) async {
+      await setDesktop(tester);
+      await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(ProgrammeStudioCopy.qualityGate));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(ProgrammeStudioCopy.technicallyValid),
+        findsWidgets,
+      );
+      expect(
+        find.textContaining(ProgrammeStudioCopy.notLaunchApproved),
+        findsWidgets,
+      );
+      expect(find.textContaining('Source compiled — Passed'), findsOneWidget);
+      expect(
+        find.textContaining('Package identity stable — Passed'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Coaching review — Not assessed'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Athlete device execution — Not assessed'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Running pace calculations — Not implemented'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Programme metrics profile — Not implemented'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Garmin/device interoperability — Not implemented'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('Launch approval — Not assessed'),
+        findsOneWidget,
+      );
+      expect(find.text('Ready to launch'), findsNothing);
+    },
+  );
+
+  testWidgets('Technical Integrity retains hashes and correction evidence', (
+    tester,
+  ) async {
+    await setDesktop(tester);
+    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(ProgrammeStudioCopy.technicalIntegrity));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Canonical hash'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining(
+        '810334293c72aa2804ebd8bc2a426ca9f3e4977aed3da00989f67ae949dd0b83',
+      ),
+      findsWidgets,
+    );
+    await tester.tap(find.text('Applied Apollo correction chain'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('sql_correction_applied'), findsWidgets);
+    expect(find.textContaining('supabase/migrations'), findsWidgets);
+  });
+
+  testWidgets('Athlete Preview contains no technical evidence', (tester) async {
+    await setDesktop(tester);
+    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(ProgrammeStudioCopy.athletePreview));
+    await tester.pumpAndSettle();
+    expect(find.text(ProgrammeStudioCopy.athletePreviewBanner), findsOneWidget);
+    expect(find.textContaining('SHA-256'), findsNothing);
+    expect(find.textContaining('sql_correction'), findsNothing);
+    expect(find.textContaining('lineage'), findsNothing);
+  });
+
+  testWidgets('planned family shows an empty planning state', (tester) async {
+    await setDesktop(tester);
+    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('HYROX Base'));
+    await tester.pumpAndSettle();
+    expect(find.text(ProgrammeStudioCopy.plannedEmptySessions), findsWidgets);
+    expect(find.text(ProgrammeStudioCopy.plannedAuthoringClosed), findsWidgets);
+    expect(find.text('Monday'), findsNothing);
+  });
+
+  testWidgets('keyboard can change week and review mode', (tester) async {
     await setDesktop(tester);
     await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.appTitle));
     await tester.pump();
-    await tester.sendKeyEvent(LogicalKeyboardKey.digit6);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyJ);
     await tester.pumpAndSettle();
-    expect(find.textContaining('Coaching approval'), findsOneWidget);
+    expect(find.textContaining('Week 2 of 12'), findsWidgets);
+    await tester.sendKeyEvent(LogicalKeyboardKey.digit2);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Source compiled — Passed'), findsOneWidget);
   });
 
   testWidgets('narrow viewport and large text remain usable', (tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       MediaQuery(
         data: const MediaQueryData(
@@ -116,8 +264,10 @@ void main() {
         child: ProgrammeStudioApp(catalog: realCatalog()),
       ),
     );
+    await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     expect(find.text(ProgrammeStudioCopy.appTitle), findsOneWidget);
+    expect(find.textContaining('Week 1 of 12'), findsWidgets);
     expect(find.text(ProgrammeStudioCopy.emptyInventory), findsNothing);
   });
 
@@ -204,8 +354,6 @@ comparison_identities: []
       find.textContaining(missing.developerFixtures.single.title),
       findsWidgets,
     );
-    await tester.tap(find.widgetWithText(ChoiceChip, ProgrammeStudioCopy.session));
-    await tester.pumpAndSettle();
     expect(find.text(ProgrammeStudioCopy.missingProtocol), findsOneWidget);
   });
 }

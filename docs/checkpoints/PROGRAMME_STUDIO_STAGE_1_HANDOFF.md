@@ -1,7 +1,10 @@
 # Programme Studio Stage 1 — implementation handoff
 
 **Recorded:** 2026-09-25
-**Status:** Implemented locally. Awaiting founder visual review.
+**Status:** Implemented locally. Founder visual review found the first
+shell mixed coaching inspection with engineering evidence. The Stage 1
+presentation is now a coaching workstation. Awaiting founder visual
+review of the redesigned shell.
 **Branch:** `feat/programme-studio-review-v1`
 **Base / start SHA:** `origin/main` `3df1442ce035df5d45370cd0a528cc18f14bdfe3`
 **Contract:**
@@ -27,9 +30,10 @@ PUSHED=false
 Internal, read-only Programme Studio. Deterministic review projection from
 committed Plan Package YAML, Spartan founder YAML, Apollo executable-protocol
 SQL `INSERT` artifacts plus the ordered warmup/capture/format correction
-chain, and M9 publication JSON. Dedicated preview
-`lib/main_programme_studio_preview.dart` on port **4195**. Not imported by
-`lib/main.dart`.
+chain, and M9 publication JSON. Default destination is **Coach Review**
+(week/day/session). Quality Gate, Athlete Preview, and Technical Integrity
+are separate. Dedicated preview `lib/main_programme_studio_preview.dart`
+on port **4195**. Not imported by `lib/main.dart`.
 
 ## Honest inventory
 
@@ -58,8 +62,9 @@ flutter run -d chrome --web-port 4195 \
   -t lib/main_programme_studio_preview.dart
 ```
 
-Inspect inventory, overview, week/day/session, validation, athlete preview,
-and readiness. Do not treat this as Sprint A complete until visual approval.
+Inspect Coach Review (Apollo Week 1 Monday warmup, Week 5 Tuesday Zone 2,
+Week 5 Saturday fixed-work), Quality Gate, Athlete Preview, and Technical
+Integrity. Do not treat this as Sprint A complete until visual approval.
 
 ## Non-actions
 
