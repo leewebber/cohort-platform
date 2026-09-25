@@ -21,7 +21,7 @@ SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -1092,8 +1092,8 @@ Effort bands: **XS / S / M / L / XL**. No false dates.
 
 `M-AEC` (Daily Journey Integrity **closed**; Complete Athlete Experience
 **complete** at `fc73ae0`; next `M-LIB` strategy approved,
-infrastructure approved, Studio Stage 1 awaiting founder approval;
-implementation not started)
+infrastructure approved, Studio Stage 1 complete awaiting integration;
+Sprint B–D not authorised)
 → (`M-LIB` parallel with founder authorship) → `M-ADP` + `M-PRG` →
 `M-MED` (film parallel earlier) → `M-INT` (research **now**) → `M-ONB` →
 `M-COM` → `M-BET` → `M-PUB`.
@@ -1182,7 +1182,7 @@ SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -1194,7 +1194,7 @@ NEXT_IMPLEMENTATION_AUTHORISED=false
 
 The next sequenced item is **launch programme library**. Strategy and
 infrastructure architecture are **approved**. Programme Studio Stage 1
-is **implemented, awaiting founder approval**. Binding:
+is **complete, awaiting integration**. Binding:
 [`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md).

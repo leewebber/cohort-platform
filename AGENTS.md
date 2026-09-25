@@ -165,14 +165,14 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 `8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
-Programme Studio Stage 1 is **implemented, awaiting founder approval**
+Programme Studio Stage 1 is **complete, awaiting integration**
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md),
 [`docs/architecture/Programme_Studio_v1.md`](docs/architecture/Programme_Studio_v1.md);
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
-`PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+`PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 `RUNNING_PACE_FOUNDATION_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,

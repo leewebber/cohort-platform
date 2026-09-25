@@ -14,7 +14,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 
 | Document | Purpose |
 |----------|---------|
-| [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** (strategy + infrastructure approved; Studio Stage 1 awaiting founder approval) |
+| [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** (strategy + infrastructure approved; Studio Stage 1 complete, awaiting integration) |
 | [Programme_Studio_v1.md](./Programme_Studio_v1.md) | Internal Programme Studio |
 | [Programme_Studio_Stage_1_Implementation_v1.md](./Programme_Studio_Stage_1_Implementation_v1.md) | Stage 1 implementation contract |
 | [../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md) | Stage 1 implementation handoff |

@@ -1,8 +1,8 @@
 # Launch Programme Library v1
 
 **Status:** Strategy **approved**. Infrastructure architecture
-**approved**. Programme Studio Stage 1 **implemented, awaiting founder
-approval**. Programme content **not** authorised.
+**approved**. Programme Studio Stage 1 **complete, awaiting
+integration**. Programme content **not** authorised.
 **Recorded:** 2026-09-25
 **Strategy bound:** 2026-09-25
 **Infrastructure approved:** 2026-09-25
@@ -17,7 +17,7 @@ approval**. Programme content **not** authorised.
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -30,7 +30,7 @@ COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 
 This document binds the founder-approved launch-library **strategy** and
 the approved infrastructure architecture. Programme Studio Stage 1 is
-implemented and awaits founder visual review
+complete and awaits integration
 ([`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md)).
 Sprints B–D, programme content, and publication remain unauthorised.
 Compilation alone is not launch approval.
@@ -444,7 +444,7 @@ The Cohort product remains not launch-ready.
 
 | Sprint | Scope | Live flag | Status |
 |--------|-------|-----------|--------|
-| **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL` | Awaiting visual review |
+| **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION` | Visually approved; awaiting integration |
 | **B** | Structured running + pace-calculation foundation | `RUNNING_PACE_FOUNDATION_AUTHORISED=false` | After A accepted |
 | **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | After B accepted |
 | **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |

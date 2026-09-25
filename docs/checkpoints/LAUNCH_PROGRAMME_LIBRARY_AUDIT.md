@@ -3,13 +3,13 @@
 **Recorded:** 2026-09-25
 **Status:** Original audit preserved. Strategy **approved**.
 Infrastructure architecture **approved**. Programme Studio Stage 1
-**implemented, awaiting founder approval**. Programme content **not**
+**complete, awaiting integration**. Programme content **not**
 authorised.
 
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false

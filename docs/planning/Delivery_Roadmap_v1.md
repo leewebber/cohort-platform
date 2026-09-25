@@ -46,13 +46,13 @@ Sprint 3+ coaching product is not the next milestone.
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
 6. **Launch programme library** — strategy **approved**;
    infrastructure architecture **approved**; Programme Studio Stage 1
-   **approved, not started**
+   **complete, awaiting integration**
    ([`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
    [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
    [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md);
    `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
    `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
-   `PROGRAMME_STUDIO_STAGE_1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+   `PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION`,
    `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
    `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 7. **Adaptation Engine v1**
