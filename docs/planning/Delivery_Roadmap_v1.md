@@ -44,7 +44,12 @@ Sprint 3+ coaching product is not the next milestone.
    Closeout base `fc73ae0`. This does **not** make Cohort launch-ready.
    Binding:
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
-6. **Launch programme library** (not started; not authorised)
+6. **Launch programme library** — **audited, awaiting approval**
+   ([`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+   [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md);
+   `LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL`,
+   `LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false`).
+   **Not** started, implemented, or launch-ready.
 7. **Adaptation Engine v1**
 8. **Progression and tracking** — later includes the deferred
    **Athlete-defined Performance Portfolio**

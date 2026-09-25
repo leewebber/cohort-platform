@@ -20,7 +20,13 @@
 > `SPRINT_3_HOSTED_MIGRATION_APPLIED=true`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 > Closeout base `fc73ae0`. This does **not** make the Cohort product
-> launch-ready. Launch programme library has **not** started. Binding:
+> launch-ready. Launch programme library is **audited, awaiting
+> approval**
+> ([`./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+> [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md);
+> `LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL`,
+> `LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false`).
+> It is **not** started, implemented, or launch-ready. Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),
 > [`../architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](../architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
 > Historical Sprint 3 evidence:

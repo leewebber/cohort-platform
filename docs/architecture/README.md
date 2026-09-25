@@ -14,6 +14,8 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 
 | Document | Purpose |
 |----------|---------|
+| [Launch_Programme_Library_v1.md](./Launch_Programme_Library_v1.md) | **Launch programme library** architecture (**audited, awaiting approval**) |
+| [../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md) | Launch library readiness audit |
 | [Complete_Athlete_Experience_v1.md](./Complete_Athlete_Experience_v1.md) | **Complete Athlete Experience** milestone definition (**complete**) |
 | [../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md](../checkpoints/COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md) | **CAE closeout** (`COMPLETE_ATHLETE_EXPERIENCE=COMPLETE`) |
 | [Athlete_Programme_Discovery_and_Decision_v1.md](./Athlete_Programme_Discovery_and_Decision_v1.md) | **CAE Sprint 1** (complete at `a3cd351`) |

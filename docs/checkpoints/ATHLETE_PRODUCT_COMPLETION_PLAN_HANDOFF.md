@@ -3,8 +3,8 @@
 **Recorded:** 2026-09-20
 
 **Status:** Binding next-task authority after M10 infrastructure closeout
-and Complete Athlete Experience closeout. The next sequenced item is
-launch programme library. Implementation is **not** authorised.
+and Complete Athlete Experience closeout. Launch programme library is
+**audited, awaiting approval**. Implementation is **not** authorised.
 
 ```text
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
@@ -19,6 +19,8 @@ HOSTED_MIGRATION_APPLIED=true
 SPRINT_2_HOSTED_MIGRATION_APPLIED=true
 SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
+LAUNCH_PROGRAMME_LIBRARY=AUDITED_AWAITING_APPROVAL
+LAUNCH_PROGRAMME_LIBRARY_IMPLEMENTATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 NEXT_IMPLEMENTATION_AUTHORISED=false
 FOUNDER_ROADMAP_APPROVAL_REQUIRED=true
@@ -63,9 +65,11 @@ Daily Journey Integrity is **closed**. Binding:
 
 Complete Athlete Experience is **complete**. Closeout:
 [`COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md`](./COMPLETE_ATHLETE_EXPERIENCE_CLOSEOUT.md).
-The next sequenced item is **launch programme library**. It has **not**
-started. Implementation requires a new audit/architecture decision and
-explicit founder approval.
+The next sequenced item is **launch programme library**. It is
+**audited, awaiting approval**
+([`LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+[`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md)).
+It has **not** started. Implementation is **not** authorised.
 
 ## Frozen / deferred coach scope
 
