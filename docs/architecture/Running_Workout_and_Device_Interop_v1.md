@@ -1,11 +1,15 @@
 # Running Workout and Device Interop v1
 
 **Status:** Binding vendor-neutral running architecture.
-**Approved.** Sprint B1 **approved, not started**. B2–B4 not
-authorised. **Not implemented.**
+**Approved.** Sprint B1 **implemented, awaiting founder approval**.
+B2–B4 not authorised.
 **Recorded:** 2026-09-25
 **Approval:**
 [`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md)
+**B1 handoff:**
+[`../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md)
+**B1 contract:**
+[`Running_Workout_B1_Implementation_v1.md`](./Running_Workout_B1_Implementation_v1.md)
 **Audit (historical):**
 [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md)
 **Parent:**
@@ -22,8 +26,8 @@ authorised. **Not implemented.**
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
-RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 PACE_CALCULATION_B2=NOT_AUTHORISED
 RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -128,7 +132,7 @@ genuinely authors them.
 
 | Quantity | Canonical store | Display |
 |----------|-----------------|---------|
-| Distance | millimetres (int) | km or miles |
+| Distance | millimetres (int) — **B1 resolved** | km or miles |
 | Duration | milliseconds (int) | clock |
 | Pace | milliseconds per kilometre (int) | min:ss /km or /mi |
 | Power | watts (int) | watts |
@@ -311,7 +315,7 @@ target type the neutral model supports. It is **not**
 
 ## 8. Implementation boundary
 
-**B1 is approved, not started.** Scope and gates:
+**B1 is implemented, awaiting founder approval.** Scope and gates:
 [`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md).
 
 B1 is the immutable RunningWorkout v1 domain, validation,

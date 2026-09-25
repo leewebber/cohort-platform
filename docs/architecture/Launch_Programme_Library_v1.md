@@ -19,8 +19,8 @@ content **not** authorised.
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
-RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
@@ -36,7 +36,8 @@ This document binds the founder-approved launch-library **strategy** and
 the approved infrastructure architecture. Programme Studio Stage 1 is
 **COMPLETE**
 ([`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md)).
-Structured running is **approved**; B1 is **approved, not started**
+Structured running is **approved**; B1 is **implemented, awaiting
+founder approval**
 ([`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md)).
 B2–D implementation, programme content, and publication remain
 unauthorised.
@@ -452,7 +453,7 @@ The Cohort product remains not launch-ready.
 | Sprint | Scope | Live flag | Status |
 |--------|-------|-----------|--------|
 | **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=COMPLETE` | Integrated at `82ddb17` |
-| **B1** | RunningWorkout v1 domain, validation, projection | `RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED` | Approved; not started |
+| **B1** | RunningWorkout v1 domain, validation, projection | `RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL` | Implemented; awaiting approval |
 | **B2** | Versioned benchmark / pace calculation | `PACE_CALCULATION_B2=NOT_AUTHORISED` | Not authorised |
 | **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | After B accepted |
 | **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |

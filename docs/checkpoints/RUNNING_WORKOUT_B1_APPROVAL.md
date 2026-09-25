@@ -1,8 +1,10 @@
 # Structured Running — founder approval and Sprint B1 authorisation
 
 **Recorded:** 2026-09-25
-**Status:** Architecture **approved**. Sprint **B1 approved, not
-started**. B2–B4 **not authorised**.
+**Status:** Historical approval. B1 was later **implemented**; live
+status is in
+[`RUNNING_WORKOUT_B1_HANDOFF.md`](./RUNNING_WORKOUT_B1_HANDOFF.md).
+Architecture **approved**. B2–B4 **not authorised**.
 **Branch:** `docs/running-pace-foundation-audit`
 **Base / `origin/main`:** `82ddb176d4df9f493d577001091ee9c1d6c404ad`
 **Audit (historical):**
@@ -14,8 +16,8 @@ started**. B2–B4 **not authorised**.
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
 PROGRAMME_STUDIO_STAGE_1=COMPLETE
-RUNNING_PACE_FOUNDATION=APPROVED_B1_NOT_STARTED
-RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED
+RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 PACE_CALCULATION_B2=NOT_AUTHORISED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -238,4 +240,7 @@ NEXT_IMPLEMENTATION_AUTHORISED=false
 
 Those flags remain dated evidence in
 [`RUNNING_PACE_FOUNDATION_AUDIT.md`](./RUNNING_PACE_FOUNDATION_AUDIT.md).
-This record is the live approval pointer.
+
+This approval record originally set
+`RUNNING_WORKOUT_B1=APPROVED_NOT_STARTED`. Live implementation status
+is [`RUNNING_WORKOUT_B1_HANDOFF.md`](./RUNNING_WORKOUT_B1_HANDOFF.md).
