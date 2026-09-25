@@ -284,8 +284,8 @@ class RunningWorkoutValidator {
         }
       case RunningTargetKind.rpeRange:
         range(target.rpeCr10Low, target.rpeCr10High, 'RPE');
-        if (target.rpeCr10Low != null && target.rpeCr10Low! > 10 ||
-            target.rpeCr10High != null && target.rpeCr10High! > 10) {
+        if ((target.rpeCr10Low != null && target.rpeCr10Low! > 10) ||
+            (target.rpeCr10High != null && target.rpeCr10High! > 10)) {
           error('invalid_target', 'RPE range must stay within 1–10.', path);
         }
     }

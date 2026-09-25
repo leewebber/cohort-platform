@@ -1,4 +1,4 @@
-/// Immutable RunningWorkout v1. Not execution or calculation authority.
+// Immutable RunningWorkout v1. Not execution or calculation authority.
 
 enum RunningWorkoutProvenanceKind { authored, projected, unsupported }
 
