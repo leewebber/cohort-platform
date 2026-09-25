@@ -1194,10 +1194,11 @@ NEXT_IMPLEMENTATION_AUTHORISED=false
 
 The next sequenced item is **launch programme library**. Strategy and
 infrastructure architecture are **approved**. Programme Studio Stage 1
-is **approved, not started**. Binding:
+is **implemented, awaiting founder approval**. Binding:
+[`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md).
-It has **not** started. Implementation is **not** authorised. This does
+Sprint B–D remain unauthorised. This does
 **not** make Cohort launch-ready.
 Active-programme replacement remains future work.
 
