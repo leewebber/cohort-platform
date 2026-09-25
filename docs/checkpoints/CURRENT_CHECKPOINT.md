@@ -22,14 +22,18 @@
 > Closeout base `fc73ae0`. This does **not** make the Cohort product
 > launch-ready. Launch programme library strategy is **approved**.
 > Infrastructure architecture is **approved**. Programme Studio Stage 1
-> is **complete, awaiting integration**
+> is **COMPLETE** on `origin/main` `82ddb17`. Sprint B running/pace
+> foundation is **audited, awaiting approval**
 > ([`./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
+> [`./RUNNING_PACE_FOUNDATION_AUDIT.md`](./RUNNING_PACE_FOUNDATION_AUDIT.md),
 > [`./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 > [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
-> [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md);
+> [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md),
+> [`../architecture/Running_Workout_and_Device_Interop_v1.md`](../architecture/Running_Workout_and_Device_Interop_v1.md);
 > `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 > `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
-> `PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION`,
+> `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
+> `RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL`,
 > `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 > Programme content is **not** authorised. Binding:

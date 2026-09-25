@@ -1,7 +1,7 @@
 # Programme Studio v1
 
 **Status:** Infrastructure architecture **approved**. Stage 1 is
-**complete, awaiting integration**.
+**COMPLETE**.
 **Recorded:** 2026-09-25
 **Infrastructure approved:** 2026-09-25
 **Parent:**
@@ -15,7 +15,7 @@
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
+PROGRAMME_STUDIO_STAGE_1=COMPLETE
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -25,11 +25,12 @@ HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-This document governs Programme Studio. **Stage 1** is visually
-approved and awaits integration
+This document governs Programme Studio. **Stage 1** is complete on
+`origin/main` `82ddb17`
 ([`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md)).
 Stages 2–3, running/pace, metrics, content, and publication remain
-unauthorised.
+unauthorised. Sprint B audit:
+[`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md).
 
 ---
 
@@ -114,7 +115,7 @@ lifecycle that the RPCs cannot express.
 
 ### Stage 1 — read-only review and validation (Sprint A)
 
-**Complete, awaiting integration.** Internal, local, desktop-first on Lee’s Mac.
+**Complete** on `origin/main` `82ddb17`. Internal, local, desktop-first on Lee’s Mac.
 Dedicated **non-production** entry point only. Must not be imported by
 `lib/main.dart` or appear in athlete navigation. No auth or hosted
 deployment. No hosted SELECT or mutation. No SQL, migration, or

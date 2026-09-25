@@ -1,20 +1,19 @@
 # Programme Studio Stage 1 — closeout handoff
 
 **Recorded:** 2026-09-25
-**Status:** Visually approved. Complete locally. Awaiting integration
-into `origin/main`.
-**Branch:** `feat/programme-studio-review-v1`
-**Base:** `origin/main` `3df1442ce035df5d45370cd0a528cc18f14bdfe3`
-**Implementation range start:** `b91daae`
-**Closeout recorded on:** `feat/programme-studio-review-v1` after
-`6adb7d80ae7c13323e4b0fe9ae932dd10aebaaf6`
+**Status:** Visually approved. Integrated to `origin/main`
+`82ddb176d4df9f493d577001091ee9c1d6c404ad`. Live flag
+`PROGRAMME_STUDIO_STAGE_1=COMPLETE`.
+**Branch (implementation):** `feat/programme-studio-review-v1`
+**Base:** former `origin/main` `3df1442ce035df5d45370cd0a528cc18f14bdfe3`
+**Implementation range:** `b91daae`…`82ddb17`
 **Contract (historical):**
 [`../architecture/Programme_Studio_Stage_1_Implementation_v1.md`](../architecture/Programme_Studio_Stage_1_Implementation_v1.md)
 
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
+PROGRAMME_STUDIO_STAGE_1=COMPLETE
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -23,6 +22,18 @@ RUNNING_DEVICE_INTEGRATION_AUTHORISED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
+INTEGRATED=true
+INTEGRATED_SHA=82ddb176d4df9f493d577001091ee9c1d6c404ad
+```
+
+### Historical closeout flags (preserved)
+
+The closeout commit `82ddb17` recorded these flags **before** the
+fast-forward of `origin/main`. They are evidence, not the live
+pointer.
+
+```text
+PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
 PUSHED=false
 PREVIEW_STOPPED=true
 PORT_4195_FREE=true
@@ -97,8 +108,8 @@ was not changed by the workstation redesign.
 - Coaching review, athlete device execution, and launch approval
   remain Not assessed
 - Compiler success is not launch approval
-- Stage 1 is not integrated to `origin/main` until a separate
-  approval
+- Stage 1 is integrated at `82ddb17`. Sprint B is not authorised
+  by this closeout
 
 ## Verification
 
@@ -131,7 +142,7 @@ flutter run -d chrome --web-port 4195 \
 
 ## Non-actions
 
-No push. No integration to `origin/main`. No Sprint B–D. No HYROX
+Integrated to `origin/main` at `82ddb17`. No Sprint B–D. No HYROX
 authoring. No programme-source edits. No metrics selection. No pace
 formulas. No Garmin contact. No catalogue publication. Launch
 programme library infrastructure remains **in progress**.

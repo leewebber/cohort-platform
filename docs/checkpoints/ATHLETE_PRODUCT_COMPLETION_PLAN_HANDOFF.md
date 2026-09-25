@@ -4,8 +4,9 @@
 
 **Status:** Binding next-task authority after M10 infrastructure closeout
 and Complete Athlete Experience closeout. Launch programme library strategy and infrastructure architecture are
-**approved**. Programme Studio Stage 1 is **complete, awaiting
-integration**. Sprint B–D remain unauthorised.
+**approved**. Programme Studio Stage 1 is **COMPLETE**. Sprint B
+running/pace foundation is **audited, awaiting approval**. Sprint B–D
+implementation remains unauthorised.
 
 ```text
 PLAN_AUTHORITY=docs/planning/Athlete_Product_Completion_Plan_v1.md
@@ -22,7 +23,8 @@ SPRINT_3_HOSTED_MIGRATION_APPLIED=true
 NEXT_MILESTONE=LAUNCH_PROGRAMME_LIBRARY
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
+PROGRAMME_STUDIO_STAGE_1=COMPLETE
+RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false

@@ -1,8 +1,9 @@
 # Launch Programme Library v1
 
 **Status:** Strategy **approved**. Infrastructure architecture
-**approved**. Programme Studio Stage 1 **complete, awaiting
-integration**. Programme content **not** authorised.
+**approved**. Programme Studio Stage 1 **COMPLETE**. Sprint B
+running/pace foundation **audited, awaiting approval**. Programme
+content **not** authorised.
 **Recorded:** 2026-09-25
 **Strategy bound:** 2026-09-25
 **Infrastructure approved:** 2026-09-25
@@ -17,7 +18,8 @@ integration**. Programme content **not** authorised.
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS
-PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION
+PROGRAMME_STUDIO_STAGE_1=COMPLETE
+RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 RUNNING_PACE_FOUNDATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
@@ -30,9 +32,12 @@ COMPLETE_ATHLETE_EXPERIENCE=COMPLETE
 
 This document binds the founder-approved launch-library **strategy** and
 the approved infrastructure architecture. Programme Studio Stage 1 is
-complete and awaits integration
+**COMPLETE**
 ([`../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md)).
-Sprints B–D, programme content, and publication remain unauthorised.
+Sprint B is audited and awaits approval
+([`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md)).
+Sprints B–D implementation, programme content, and publication remain
+unauthorised.
 Compilation alone is not launch approval.
 
 Parents:
@@ -444,8 +449,8 @@ The Cohort product remains not launch-ready.
 
 | Sprint | Scope | Live flag | Status |
 |--------|-------|-----------|--------|
-| **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION` | Visually approved; awaiting integration |
-| **B** | Structured running + pace-calculation foundation | `RUNNING_PACE_FOUNDATION_AUTHORISED=false` | After A accepted |
+| **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=COMPLETE` | Integrated at `82ddb17` |
+| **B** | Structured running + pace-calculation foundation | `RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL` | Audit only; implementation not authorised |
 | **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | After B accepted |
 | **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |
 

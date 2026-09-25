@@ -165,14 +165,18 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 `8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
-Programme Studio Stage 1 is **complete, awaiting integration**
+Programme Studio Stage 1 is **COMPLETE** on `origin/main` `82ddb17`.
+Sprint B running/pace foundation is **audited, awaiting approval**
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
+[`docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
 [`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 [`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md),
-[`docs/architecture/Programme_Studio_v1.md`](docs/architecture/Programme_Studio_v1.md);
+[`docs/architecture/Programme_Studio_v1.md`](docs/architecture/Programme_Studio_v1.md),
+[`docs/architecture/Running_Workout_and_Device_Interop_v1.md`](docs/architecture/Running_Workout_and_Device_Interop_v1.md);
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
-`PROGRAMME_STUDIO_STAGE_1=COMPLETE_AWAITING_INTEGRATION`,
+`PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
+`RUNNING_PACE_FOUNDATION=AUDITED_AWAITING_APPROVAL`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 `RUNNING_PACE_FOUNDATION_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
@@ -180,7 +184,8 @@ Programme Studio Stage 1 is **complete, awaiting integration**
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not begin Sprint B in a docs task. Do not author programme content.
+Do not implement Sprint B without founder approval of the audit.
+Do not author programme content.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
