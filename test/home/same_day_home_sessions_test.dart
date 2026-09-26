@@ -111,6 +111,56 @@ void main() {
     expect(cards.last.isResumable, isFalse);
   });
 
+  test(
+    'hosted Bali shape: Saturday complete does not hide Sunday AM/PM grouping',
+    () {
+      final saturday = occ(
+        id: 'sat',
+        state: FixedProgrammeOccurrenceState.completed,
+        sessionOrder: 1,
+        timeOfDay: ProgrammeSessionTimeOfDay.morning,
+        title: 'Strength A',
+        date: '2026-09-26',
+      );
+      final calendar = FixedProgrammeCalendarProjection(
+        assignmentId: 'assign-1',
+        programmeName: 'Lee Bali Hybrid Base',
+        timezone: 'Asia/Makassar',
+        scheduleMode: 'fixed_schedule',
+        startDate: '2026-09-26',
+        today: '2026-09-27',
+        weekStart: '2026-09-21',
+        weekEnd: '2026-09-27',
+        occurrences: [
+          saturday,
+          ...sunday(
+            am: FixedProgrammeOccurrenceState.today,
+            pm: FixedProgrammeOccurrenceState.planned,
+          ).occurrences,
+        ],
+        currentWeek: const [],
+      );
+      expect(calendar.scheduleMode, 'fixed_schedule');
+      expect(
+        calendar.occurrences
+            .where((e) => e.scheduledDate == '2026-09-26')
+            .single
+            .state,
+        FixedProgrammeOccurrenceState.completed,
+      );
+      final cards = AthleteHomeTodayFormatter.authoredTodaySessions(calendar);
+      expect(cards.map((e) => e.occurrenceId), ['am', 'pm']);
+      expect(cards.every((e) => e.scheduledDate == '2026-09-27'), isTrue);
+      expect(
+        cards.every(
+          (e) => e.state != FixedProgrammeOccurrenceState.completed,
+        ),
+        isTrue,
+      );
+      expect(calendar.todayOccurrence?.occurrenceId, 'am');
+    },
+  );
+
   test('completing AM leaves PM incomplete on Sunday', () {
     final calendar = sunday(
       am: FixedProgrammeOccurrenceState.completed,

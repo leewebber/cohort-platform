@@ -158,7 +158,9 @@ BEGIN
   PERFORM sprint12_record(
     'BC', 'explicit_start', '2026-09-26', v_res->>'started_at',
     NULL,
-    (v_res->>'status') = 'enrolled' AND (v_res->>'started_at') = '2026-09-26',
+    (v_res->>'status') = 'enrolled'
+      AND (v_res->>'started_at') = '2026-09-26'
+      AND (v_res->>'schedule_mode') = 'fixed_schedule',
     v_res::text
   );
 

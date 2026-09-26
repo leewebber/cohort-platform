@@ -176,7 +176,8 @@ BEGIN
     NULL,
     (v_res->>'status') = 'enrolled'
       AND (v_res->>'replaced_enrolment_id') = v_old::text
-      AND (v_res->>'enrolment_source') = 'dual_role_self',
+      AND (v_res->>'enrolment_source') = 'dual_role_self'
+      AND (v_res->>'schedule_mode') = 'fixed_schedule',
     v_res::text
   );
 
@@ -189,7 +190,8 @@ BEGIN
   PERFORM sprint12_record('BB', 'prior_evidence_retained', '1', v_count::text, NULL, v_count = 1, NULL);
   SELECT count(*) INTO v_count FROM programme_assignments
   WHERE athlete_id = v_athlete AND status = 'active' AND id = v_new
-    AND programme_version_id = v_priv AND materialised_at IS NOT NULL;
+    AND programme_version_id = v_priv AND materialised_at IS NOT NULL
+    AND schedule_mode = 'fixed_schedule';
   PERFORM sprint12_record('BB', 'new_sole_active_materialised', '1', v_count::text, NULL, v_count = 1, NULL);
 
   SELECT o.scheduled_date::text INTO v_date

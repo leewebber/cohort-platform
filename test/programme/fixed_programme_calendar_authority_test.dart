@@ -386,6 +386,7 @@ FixedProgrammeOccurrenceProjection _occurrence({
   required FixedProgrammeOccurrenceState state,
   int? trainingSessionId,
   String? sessionTitle,
+  int sessionOrder = 1,
 }) => FixedProgrammeOccurrenceProjection(
   assignmentId: assignment.id,
   occurrenceId: id,
@@ -393,10 +394,10 @@ FixedProgrammeOccurrenceProjection _occurrence({
   programmeVersionId: assignment.programmeVersionId,
   protocolId: protocolId,
   programmedSessionKey:
-      'prog:${assignment.id}@${assignment.programmeVersionId}:w1:$dayKey:s1:$protocolId',
+      'prog:${assignment.id}@${assignment.programmeVersionId}:w1:$dayKey:s$sessionOrder:$protocolId',
   weekNumber: 1,
   dayKey: dayKey,
-  sessionOrder: 1,
+  sessionOrder: sessionOrder,
   scheduledDate: date,
   originalScheduledDate: date,
   state: state,
@@ -686,6 +687,71 @@ void main() {
         expect(result.isReady, isFalse);
         expect(result.code, 'ambiguous_same_day_today');
         expect(result.message, contains('specific session'));
+      },
+    );
+
+    test(
+      'Bali Sunday exact occurrences prepare independently; legacy cannot',
+      () async {
+        final fixed = _assignment();
+        final legacy = _assignment(fixed: false);
+        final morning = _occurrence(
+          assignment: fixed,
+          id: '00000000-0000-4000-8000-000000000801',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_1',
+          date: '2026-09-27',
+          state: FixedProgrammeOccurrenceState.today,
+          sessionTitle: 'Long Aerobic — BikeErg',
+        );
+        final evening = _occurrence(
+          assignment: fixed,
+          id: '00000000-0000-4000-8000-000000000802',
+          slotId: ProgrammeScheduleTestFixtures.slot2Id,
+          protocolId: 'RN-006',
+          dayKey: 'day_1',
+          date: '2026-09-27',
+          sessionOrder: 2,
+          state: FixedProgrammeOccurrenceState.today,
+          sessionTitle: 'Strength B — Upper Strength',
+        );
+        final tables = InMemoryProgrammeTables();
+        final version = _version();
+        await InMemoryProgrammeVersionStore(tables).saveTemplateTree(
+          version: version,
+          tree: ProgrammeScheduleTestFixtures.twoSlotDayTree(),
+        );
+        final versionIndex = tables.versions.indexWhere(
+          (row) => row.id == version.id,
+        );
+        if (versionIndex >= 0) {
+          tables.versions[versionIndex] = version;
+        } else {
+          tables.versions.add(version);
+        }
+        tables.assignments.add(fixed);
+        final loader = _EchoLoader();
+        final service = _prepareService(
+          tables: tables,
+          loader: loader,
+          projectionStore: _ProjectionStore(null),
+        );
+
+        final denied = await service.prepareFixedOccurrence(legacy, morning);
+        expect(denied.isReady, isFalse);
+        expect(denied.code, 'fixed_schedule_required');
+
+        final am = await service.prepareFixedOccurrence(fixed, morning);
+        expect(am.isReady, isTrue);
+        expect(am.executionContext?.occurrenceId, morning.occurrenceId);
+        expect(loader.lastProtocolId, 'BW-001');
+
+        final pm = await service.prepareFixedOccurrence(fixed, evening);
+        expect(pm.isReady, isTrue);
+        expect(pm.executionContext?.occurrenceId, evening.occurrenceId);
+        expect(loader.lastProtocolId, 'RN-006');
+        expect(am.executionContext?.occurrenceId, isNot(pm.executionContext?.occurrenceId));
       },
     );
 

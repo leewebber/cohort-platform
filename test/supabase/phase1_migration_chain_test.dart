@@ -20,7 +20,7 @@ void main() {
       expect(files, equals(List<String>.from(files)..sort()));
       expect(
         files.last,
-        '20260926190000_fixed_occurrence_time_of_day.sql',
+        '20260926200000_private_assignment_fixed_schedule.sql',
       );
       expect(
         files,
