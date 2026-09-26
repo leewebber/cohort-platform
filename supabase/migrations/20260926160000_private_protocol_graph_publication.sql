@@ -716,7 +716,7 @@ BEGIN
       )
       OR EXISTS (
         SELECT 1 FROM public.training_sessions t
-        WHERE t.athlete_id = a.athlete_id
+        WHERE t.athlete_id::text = a.athlete_id::text
           AND t.protocol_id IN (
             SELECT trim(s.value->>'protocol_id')
             FROM jsonb_array_elements(payload->'sessions') s(value)
