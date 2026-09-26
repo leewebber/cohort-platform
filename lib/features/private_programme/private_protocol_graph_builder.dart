@@ -107,7 +107,7 @@ class PrivateProtocolGraphBuilder {
             'workout_format': _workoutFormat(block),
             'timer_config': null,
             'coach_notes': _nonEmpty(block.coachNotes),
-            'performance_capture_mode': 'manual',
+            'performance_capture_mode': 'auto',
             'exercises': [
               for (final exercise
                   in ([...block.exercises]

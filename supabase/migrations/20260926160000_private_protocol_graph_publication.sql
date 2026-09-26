@@ -172,7 +172,7 @@ BEGIN
         v_block->'timer_config',
         nullif(trim(COALESCE(v_block->>'coach_notes', '')), ''),
         (v_block->>'position')::INT,
-        COALESCE(nullif(trim(v_block->>'performance_capture_mode'), ''), 'manual')
+        COALESCE(nullif(trim(v_block->>'performance_capture_mode'), ''), 'auto')
       );
       FOR v_ex IN SELECT value FROM jsonb_array_elements(COALESCE(v_block->'exercises', '[]'::JSONB))
       LOOP

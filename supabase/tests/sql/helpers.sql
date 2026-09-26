@@ -233,7 +233,7 @@ BEGIN
             'workout_format', 'none',
             'timer_config', NULL,
             'coach_notes', 'Gate executable block',
-            'performance_capture_mode', 'manual',
+            'performance_capture_mode', 'auto',
             'exercises', jsonb_build_array(
               jsonb_build_object(
                 'exercise_id', 'gate-movement',
