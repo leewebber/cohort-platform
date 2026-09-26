@@ -165,32 +165,35 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 `8dcf58e`, cleanup at `fc73ae0`. This does **not** mean the Cohort product
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
-Programme Studio Stage 1 is **COMPLETE** on `origin/main` `82ddb17`.
-Structured running architecture is **approved**. Sprint B1 is
-**implemented, awaiting founder approval**
+Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
+**COMPLETE** on `origin/main` `ae5028a`. Lee Bali Hybrid Base Phase 1
+**stopped before authoring**
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
-[`docs/checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](docs/checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
-[`docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
-[`docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](docs/checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+[`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
+[`docs/checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md),
+[`docs/architecture/Lee_Bali_Hybrid_Base_Implementation_v1.md`](docs/architecture/Lee_Bali_Hybrid_Base_Implementation_v1.md),
 [`docs/architecture/Launch_Programme_Library_v1.md`](docs/architecture/Launch_Programme_Library_v1.md),
 [`docs/architecture/Programme_Studio_v1.md`](docs/architecture/Programme_Studio_v1.md),
 [`docs/architecture/Running_Workout_and_Device_Interop_v1.md`](docs/architecture/Running_Workout_and_Device_Interop_v1.md);
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-`RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
-`RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+`RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
+`RUNNING_WORKOUT_B1=COMPLETE`,
+`LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+`LEE_BALI_HYBRID_BASE_PRIVATE=true`,
+`LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
 `PACE_CALCULATION_B2=NOT_AUTHORISED`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
+`COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
 `STRUCTURED_AUTHORING_AUTHORISED=false`,
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not start B2 or treat B1 as founder-approved until visual/architecture
-acceptance of this implementation.
-Do not author programme content.
+Do not start B2. Do not author Bali or commercial programme content
+until the Phase 1 blocking gaps are authorised.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).

@@ -22,10 +22,11 @@
 > Closeout base `fc73ae0`. This does **not** make the Cohort product
 > launch-ready. Launch programme library strategy is **approved**.
 > Infrastructure architecture is **approved**. Programme Studio Stage 1
-> is **COMPLETE** on `origin/main` `82ddb17`. Structured running
-> architecture is **approved**. Sprint B1 is **implemented, awaiting
-> founder approval**
-> ([`./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
+> is **COMPLETE**. Structured running B1 is **COMPLETE** on
+> `origin/main` `ae5028a`. Lee Bali Hybrid Base Phase 1 **stopped
+> before authoring**
+> ([`./LEE_BALI_HYBRID_BASE_HANDOFF.md`](./LEE_BALI_HYBRID_BASE_HANDOFF.md),
+> [`./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 > [`./RUNNING_WORKOUT_B1_HANDOFF.md`](./RUNNING_WORKOUT_B1_HANDOFF.md),
 > [`./RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md),
 > [`./RUNNING_PACE_FOUNDATION_AUDIT.md`](./RUNNING_PACE_FOUNDATION_AUDIT.md),
@@ -36,10 +37,14 @@
 > `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 > `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 > `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-> `RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
-> `RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+> `RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
+> `RUNNING_WORKOUT_B1=COMPLETE`,
+> `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+> `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
+> `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
 > `PACE_CALCULATION_B2=NOT_AUTHORISED`,
 > `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
+> `COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 > Programme content is **not** authorised. Binding:
 > [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md),

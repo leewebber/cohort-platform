@@ -46,18 +46,20 @@ Sprint 3+ coaching product is not the next milestone.
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
 6. **Launch programme library** — strategy **approved**;
    infrastructure architecture **approved**; Programme Studio Stage 1
-   **COMPLETE**; structured running **approved**; B1 **approved, not
-   started**
+   **COMPLETE**; structured running B1 **COMPLETE**; Lee Bali Phase 1
+   **stopped before authoring**
    ([`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
+   [`../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
    [`../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md`](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md),
-   [`../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md`](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md),
    [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
    [`../architecture/Programme_Studio_v1.md`](../architecture/Programme_Studio_v1.md);
    `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
    `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
    `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-   `RUNNING_PACE_FOUNDATION=B1_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
-   `RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+   `RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
+   `RUNNING_WORKOUT_B1=COMPLETE`,
+   `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+   `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
    `PACE_CALCULATION_B2=NOT_AUTHORISED`,
    `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
    `NEXT_IMPLEMENTATION_AUTHORISED=false`).

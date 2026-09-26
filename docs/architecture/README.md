@@ -18,7 +18,10 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [Programme_Studio_v1.md](./Programme_Studio_v1.md) | Internal Programme Studio |
 | [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace audit (historical) |
 | [../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md) | Structured running approved |
-| [../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md](../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md) | B1 implemented, awaiting founder approval |
+| [../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md](../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md) | B1 historical implementation handoff |
+| [Lee_Bali_Hybrid_Base_Implementation_v1.md](./Lee_Bali_Hybrid_Base_Implementation_v1.md) | Lee Bali private programme — Phase 1 stop |
+| [../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md](../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md) | Bali model-capability audit |
+| [../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md) | Bali Phase 1 handoff |
 | [Running_Workout_B1_Implementation_v1.md](./Running_Workout_B1_Implementation_v1.md) | B1 implementation contract |
 | [Programme_Studio_Stage_1_Implementation_v1.md](./Programme_Studio_Stage_1_Implementation_v1.md) | Stage 1 implementation contract |
 | [../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md](../checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md) | Stage 1 implementation handoff |
