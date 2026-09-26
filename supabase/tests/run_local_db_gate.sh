@@ -216,6 +216,7 @@ docker cp "${TESTS_DIR}/sql/gate_ay_publisher_athlete_membership.sql" "${SPRINT1
 docker cp "${TESTS_DIR}/sql/gate_az_enrolment_iana_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_az.sql"
 docker cp "${TESTS_DIR}/sql/gate_ba_completed_calendar_inspection.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ba.sql"
 docker cp "${TESTS_DIR}/sql/gate_bb_private_enrolment_and_authored_dates.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_bb.sql"
+docker cp "${TESTS_DIR}/sql/gate_bc_private_publication_and_activation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_bc.sql"
 docker cp "${TESTS_DIR}/../manual/content_graph_bootstrap_cohort_global.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_content_graph_bootstrap.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905120000_interval_set_result_integrity.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_interval_integrity_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905121000_correct_interval_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_interval_correction_migration.sql"
@@ -300,6 +301,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_az.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ba.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_bb.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_bc.sql
 
 echo "=== Repeat run (db reset + fidelity + fresh helpers/gates; no stale dependence) ==="
 sprint12_assert_command_is_local "supabase db reset --local --no-seed --workdir ..."
@@ -356,6 +358,7 @@ docker cp "${TESTS_DIR}/sql/gate_ay_publisher_athlete_membership.sql" "${SPRINT1
 docker cp "${TESTS_DIR}/sql/gate_az_enrolment_iana_start.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_az.sql"
 docker cp "${TESTS_DIR}/sql/gate_ba_completed_calendar_inspection.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_ba.sql"
 docker cp "${TESTS_DIR}/sql/gate_bb_private_enrolment_and_authored_dates.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_bb.sql"
+docker cp "${TESTS_DIR}/sql/gate_bc_private_publication_and_activation.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_bc.sql"
 docker cp "${TESTS_DIR}/../manual/content_graph_bootstrap_cohort_global.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_content_graph_bootstrap.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905120000_interval_set_result_integrity.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_interval_integrity_migration.sql"
 docker cp "${TESTS_DIR}/../migrations/20260905121000_correct_interval_performance_record.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_interval_correction_migration.sql"
@@ -440,6 +443,7 @@ docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERR
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_az.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_ba.sql
 docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_bb.sql
+docker exec -i "${SPRINT12_DB_CONTAINER}" psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/sprint12_gate_bc.sql
 
 echo "=== Negative control: deliberate failing assertion must exit non-zero ==="
 set +e
