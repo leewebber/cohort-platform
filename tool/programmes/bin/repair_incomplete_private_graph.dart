@@ -6,16 +6,13 @@ import 'package:supabase/supabase.dart';
 
 import 'package:cohort_platform/features/private_programme/private_protocol_graph_builder.dart';
 
-/// Service-role private publication. Does not enrol athletes.
-///
-/// Required: --owner-id, --url, --service-role-key
-/// Optional: --package, --publication
+/// Service-role incomplete private graph repair. Does not enrol or mutate assignments.
 Future<void> main(List<String> args) async {
-  final ownerId = _arg(args, '--owner-id');
   final url = _arg(args, '--url') ?? Platform.environment['SUPABASE_URL'];
   final serviceKey =
       _arg(args, '--service-role-key') ??
       Platform.environment['SUPABASE_SERVICE_ROLE_KEY'];
+  final ownerId = _arg(args, '--owner-id');
   final packagePath =
       _arg(args, '--package') ??
       'tool/programmes/bali_hybrid_base_v1.plan-package.yaml';
@@ -45,14 +42,8 @@ Future<void> main(List<String> args) async {
       jsonDecode(File(publicationPath).readAsStringSync()) as Map<String, dynamic>;
   final expectedHash = publication['source_package_hash']?.toString();
   final expectedId = publication['programme_version_id']?.toString();
-  final expectedKind = publication['publication_kind']?.toString();
-  final expectedScope = publication['library_scope']?.toString();
   if (expectedHash == null || expectedId == null) {
     stderr.writeln('Publication artifact missing identity/hash');
-    exit(2);
-  }
-  if (expectedKind != 'private_exact_version' || expectedScope != 'coach_private') {
-    stderr.writeln('Publication artifact is not a private exact version');
     exit(2);
   }
 
@@ -72,32 +63,31 @@ Future<void> main(List<String> args) async {
     compileResult: compiled,
     founderYaml: File(founderPath).readAsStringSync(),
   );
-  if (graphs.missingProtocolIds.isNotEmpty || graphs.graphs.isEmpty) {
-    stderr.writeln('Founder YAML is missing executable bodies for scheduled sessions');
+  if (graphs.missingProtocolIds.isNotEmpty) {
+    stderr.writeln('Founder YAML is missing executable bodies');
     exit(2);
   }
   payload['protocol_graphs'] = graphs.graphs;
-  payload['publication_kind'] = expectedKind;
+  payload['publication_kind'] = 'private_exact_version';
   payload['programme_version_id'] = expectedId;
-  payload['library_scope'] = expectedScope;
+  payload['library_scope'] = 'coach_private';
   payload['owner_id'] = ownerId;
-  payload['authorised_timezone'] = 'Asia/Makassar';
-  payload['authorised_local_start_date'] = '2026-09-26';
 
   final client = SupabaseClient(url, serviceKey);
   try {
     final response = await client.rpc(
-      'publish_private_exact_programme_version',
+      'repair_incomplete_private_programme_graph',
       params: {'payload': payload},
     );
     final map = response is Map
         ? Map<String, dynamic>.from(response)
         : <String, dynamic>{'raw': response.toString()};
     stdout.writeln('status=${map['status']}');
-    stdout.writeln('programme_version_id=${map['programme_version_id']}');
-    stdout.writeln('session_count=${map['session_count']}');
-    stdout.writeln('library_scope=${map['library_scope']}');
-    if (map['status'] != 'published' && map['status'] != 'already_published') {
+    stdout.writeln('inserted_blocks=${map['inserted_blocks']}');
+    stdout.writeln('existing_blocks=${map['existing_blocks']}');
+    stdout.writeln('inserted_exercises=${map['inserted_exercises']}');
+    stdout.writeln('existing_exercises=${map['existing_exercises']}');
+    if (map['status'] != 'repaired') {
       stderr.writeln('code=${map['code']}');
       exit(1);
     }

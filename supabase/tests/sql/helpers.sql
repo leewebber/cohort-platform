@@ -219,6 +219,35 @@ BEGIN
         'session_lineage_id', v_lineage,
         'label', 'Like-for-like'
       )
+    ),
+    'protocol_graphs', jsonb_build_array(
+      jsonb_build_object(
+        'protocol_id', p_protocol_id,
+        'revision_number', p_revision,
+        'blocks', jsonb_build_array(
+          jsonb_build_object(
+            'position', 1,
+            'block_type', 'strength',
+            'title', 'Main',
+            'content', '',
+            'workout_format', 'none',
+            'timer_config', NULL,
+            'coach_notes', 'Gate executable block',
+            'performance_capture_mode', 'manual',
+            'exercises', jsonb_build_array(
+              jsonb_build_object(
+                'exercise_id', 'gate-movement',
+                'position', 1,
+                'display_label_override', 'Gate movement',
+                'prescription', jsonb_build_object(
+                  'sets', 3,
+                  'reps', jsonb_build_object('type', 'exact', 'exact_reps', 5)
+                )
+              )
+            )
+          )
+        )
+      )
     )
   );
 END;
