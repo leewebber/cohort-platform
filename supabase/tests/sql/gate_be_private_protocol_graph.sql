@@ -163,11 +163,13 @@ BEGIN
     NULL, (v_res->>'code') = 'protocol_graph_conflict', v_res::text
   );
 
-  SELECT has_function_privilege('anon', 'public.repair_incomplete_private_programme_graph(jsonb)', 'EXECUTE')
+  SELECT CASE WHEN
+    has_function_privilege('anon', 'public.repair_incomplete_private_programme_graph(jsonb)', 'EXECUTE')
     OR has_function_privilege('authenticated', 'public.repair_incomplete_private_programme_graph(jsonb)', 'EXECUTE')
+  THEN 1 ELSE 0 END
   INTO v_count;
   PERFORM sprint12_record(
-    'BE', 'repair_not_client_executable', 'false', v_count::text, NULL, v_count = 0, NULL
+    'BE', 'repair_not_client_executable', '0', v_count::text, NULL, v_count = 0, NULL
   );
 END $$;
 
