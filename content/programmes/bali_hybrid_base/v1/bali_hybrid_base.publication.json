@@ -1,0 +1,12 @@
+{
+  "programme_version_id": "b1a1b001-0000-4000-8000-ba11b0010001",
+  "publication_kind": "private_exact_version",
+  "library_scope": "coach_private",
+  "public_catalogue": false,
+  "lineage_code": "BALI-HYBRID-BASE",
+  "version_number": 1,
+  "compiler_version": "plan-package/v1",
+  "source_package_hash": "f5da4085c0ea8b4c6eec93859451db624aaa52cd4af79ca702278518ea227b5b",
+  "assignable_after": "private_publication",
+  "hosted_publication_established": false
+}

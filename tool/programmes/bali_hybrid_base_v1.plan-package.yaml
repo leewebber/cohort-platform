@@ -1,0 +1,1766 @@
+package_schema_version: 1
+programme:
+  lineage_code: "BALI-HYBRID-BASE"
+  version_number: 1
+  name: "Bali Hybrid Base"
+  description: "Internal Lee-specific 8-week endurance-led hybrid base. 71 sessions across 58 calendar days including Week 8 testing spillover. No running required. Not commercial HYROX Base. Withheld from the public catalogue."
+  library_scope: "coach_private"
+  owner_type: "coach"
+  coaching_intent: "Build the aerobic engine, useful force and running-ready tissues required to enter a later 16-week elite HYROX race-preparation phase. Forget HYROX movements and random WODs during this block."
+  duration_weeks: 8
+  sessions_per_week: 9
+  primary_goal: "Large aerobic engine, higher sustainable power, retained functional strength, improved relative power, and running-ready tissues."
+sessions:
+  - session_key: "SES-BALI-W01-D01-S01"
+    protocol_id: "BALI-W01-D01-S01-R1"
+    session_lineage_id: "b1010101-0000-4000-8000-010101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W01-D02-S01"
+    protocol_id: "BALI-W01-D02-S01-R1"
+    session_lineage_id: "b1010201-0000-4000-8000-010201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W01-D02-S02"
+    protocol_id: "BALI-W01-D02-S02-R1"
+    session_lineage_id: "b1010202-0000-4000-8000-010202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W01-D03-S01"
+    protocol_id: "BALI-W01-D03-S01-R1"
+    session_lineage_id: "b1010301-0000-4000-8000-010301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W01-D03-S02"
+    protocol_id: "BALI-W01-D03-S02-R1"
+    session_lineage_id: "b1010302-0000-4000-8000-010302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W01-D04-S01"
+    protocol_id: "BALI-W01-D04-S01-R1"
+    session_lineage_id: "b1010401-0000-4000-8000-010401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W01-D05-S01"
+    protocol_id: "BALI-W01-D05-S01-R1"
+    session_lineage_id: "b1010501-0000-4000-8000-010501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W01-D06-S01"
+    protocol_id: "BALI-W01-D06-S01-R1"
+    session_lineage_id: "b1010601-0000-4000-8000-010601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W01-D07-S01"
+    protocol_id: "BALI-W01-D07-S01-R1"
+    session_lineage_id: "b1010701-0000-4000-8000-010701000000"
+    revision_number: 1
+    title: "Sub-threshold — RowErg"
+  - session_key: "SES-BALI-W02-D01-S01"
+    protocol_id: "BALI-W02-D01-S01-R1"
+    session_lineage_id: "b1020101-0000-4000-8000-020101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W02-D02-S01"
+    protocol_id: "BALI-W02-D02-S01-R1"
+    session_lineage_id: "b1020201-0000-4000-8000-020201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W02-D02-S02"
+    protocol_id: "BALI-W02-D02-S02-R1"
+    session_lineage_id: "b1020202-0000-4000-8000-020202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W02-D03-S01"
+    protocol_id: "BALI-W02-D03-S01-R1"
+    session_lineage_id: "b1020301-0000-4000-8000-020301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W02-D03-S02"
+    protocol_id: "BALI-W02-D03-S02-R1"
+    session_lineage_id: "b1020302-0000-4000-8000-020302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W02-D04-S01"
+    protocol_id: "BALI-W02-D04-S01-R1"
+    session_lineage_id: "b1020401-0000-4000-8000-020401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W02-D05-S01"
+    protocol_id: "BALI-W02-D05-S01-R1"
+    session_lineage_id: "b1020501-0000-4000-8000-020501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W02-D06-S01"
+    protocol_id: "BALI-W02-D06-S01-R1"
+    session_lineage_id: "b1020601-0000-4000-8000-020601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W02-D07-S01"
+    protocol_id: "BALI-W02-D07-S01-R1"
+    session_lineage_id: "b1020701-0000-4000-8000-020701000000"
+    revision_number: 1
+    title: "Sub-threshold — RowErg"
+  - session_key: "SES-BALI-W03-D01-S01"
+    protocol_id: "BALI-W03-D01-S01-R1"
+    session_lineage_id: "b1030101-0000-4000-8000-030101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W03-D02-S01"
+    protocol_id: "BALI-W03-D02-S01-R1"
+    session_lineage_id: "b1030201-0000-4000-8000-030201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W03-D02-S02"
+    protocol_id: "BALI-W03-D02-S02-R1"
+    session_lineage_id: "b1030202-0000-4000-8000-030202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W03-D03-S01"
+    protocol_id: "BALI-W03-D03-S01-R1"
+    session_lineage_id: "b1030301-0000-4000-8000-030301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W03-D03-S02"
+    protocol_id: "BALI-W03-D03-S02-R1"
+    session_lineage_id: "b1030302-0000-4000-8000-030302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W03-D04-S01"
+    protocol_id: "BALI-W03-D04-S01-R1"
+    session_lineage_id: "b1030401-0000-4000-8000-030401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W03-D05-S01"
+    protocol_id: "BALI-W03-D05-S01-R1"
+    session_lineage_id: "b1030501-0000-4000-8000-030501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W03-D06-S01"
+    protocol_id: "BALI-W03-D06-S01-R1"
+    session_lineage_id: "b1030601-0000-4000-8000-030601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W03-D07-S01"
+    protocol_id: "BALI-W03-D07-S01-R1"
+    session_lineage_id: "b1030701-0000-4000-8000-030701000000"
+    revision_number: 1
+    title: "Sub-threshold — RowErg"
+  - session_key: "SES-BALI-W05-D01-S01"
+    protocol_id: "BALI-W05-D01-S01-R1"
+    session_lineage_id: "b1050101-0000-4000-8000-050101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W05-D02-S01"
+    protocol_id: "BALI-W05-D02-S01-R1"
+    session_lineage_id: "b1050201-0000-4000-8000-050201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W05-D02-S02"
+    protocol_id: "BALI-W05-D02-S02-R1"
+    session_lineage_id: "b1050202-0000-4000-8000-050202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W05-D03-S01"
+    protocol_id: "BALI-W05-D03-S01-R1"
+    session_lineage_id: "b1050301-0000-4000-8000-050301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W05-D03-S02"
+    protocol_id: "BALI-W05-D03-S02-R1"
+    session_lineage_id: "b1050302-0000-4000-8000-050302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W05-D04-S01"
+    protocol_id: "BALI-W05-D04-S01-R1"
+    session_lineage_id: "b1050401-0000-4000-8000-050401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W05-D05-S01"
+    protocol_id: "BALI-W05-D05-S01-R1"
+    session_lineage_id: "b1050501-0000-4000-8000-050501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W05-D06-S01"
+    protocol_id: "BALI-W05-D06-S01-R1"
+    session_lineage_id: "b1050601-0000-4000-8000-050601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W05-D07-S01"
+    protocol_id: "BALI-W05-D07-S01-R1"
+    session_lineage_id: "b1050701-0000-4000-8000-050701000000"
+    revision_number: 1
+    title: "Threshold B — RowErg"
+  - session_key: "SES-BALI-W06-D01-S01"
+    protocol_id: "BALI-W06-D01-S01-R1"
+    session_lineage_id: "b1060101-0000-4000-8000-060101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W06-D02-S01"
+    protocol_id: "BALI-W06-D02-S01-R1"
+    session_lineage_id: "b1060201-0000-4000-8000-060201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W06-D02-S02"
+    protocol_id: "BALI-W06-D02-S02-R1"
+    session_lineage_id: "b1060202-0000-4000-8000-060202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W06-D03-S01"
+    protocol_id: "BALI-W06-D03-S01-R1"
+    session_lineage_id: "b1060301-0000-4000-8000-060301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W06-D03-S02"
+    protocol_id: "BALI-W06-D03-S02-R1"
+    session_lineage_id: "b1060302-0000-4000-8000-060302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W06-D04-S01"
+    protocol_id: "BALI-W06-D04-S01-R1"
+    session_lineage_id: "b1060401-0000-4000-8000-060401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W06-D05-S01"
+    protocol_id: "BALI-W06-D05-S01-R1"
+    session_lineage_id: "b1060501-0000-4000-8000-060501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W06-D06-S01"
+    protocol_id: "BALI-W06-D06-S01-R1"
+    session_lineage_id: "b1060601-0000-4000-8000-060601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W06-D07-S01"
+    protocol_id: "BALI-W06-D07-S01-R1"
+    session_lineage_id: "b1060701-0000-4000-8000-060701000000"
+    revision_number: 1
+    title: "Threshold B — RowErg"
+  - session_key: "SES-BALI-W07-D01-S01"
+    protocol_id: "BALI-W07-D01-S01-R1"
+    session_lineage_id: "b1070101-0000-4000-8000-070101000000"
+    revision_number: 1
+    title: "Strength A — Heavy Lower + Pull"
+  - session_key: "SES-BALI-W07-D02-S01"
+    protocol_id: "BALI-W07-D02-S01-R1"
+    session_lineage_id: "b1070201-0000-4000-8000-070201000000"
+    revision_number: 1
+    title: "Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W07-D02-S02"
+    protocol_id: "BALI-W07-D02-S02-R1"
+    session_lineage_id: "b1070202-0000-4000-8000-070202000000"
+    revision_number: 1
+    title: "Strength B — Upper Strength"
+  - session_key: "SES-BALI-W07-D03-S01"
+    protocol_id: "BALI-W07-D03-S01-R1"
+    session_lineage_id: "b1070301-0000-4000-8000-070301000000"
+    revision_number: 1
+    title: "Threshold A — BikeErg"
+  - session_key: "SES-BALI-W07-D03-S02"
+    protocol_id: "BALI-W07-D03-S02-R1"
+    session_lineage_id: "b1070302-0000-4000-8000-070302000000"
+    revision_number: 1
+    title: "Muscular Endurance — Structural Capacity"
+  - session_key: "SES-BALI-W07-D04-S01"
+    protocol_id: "BALI-W07-D04-S01-R1"
+    session_lineage_id: "b1070401-0000-4000-8000-070401000000"
+    revision_number: 1
+    title: "Aerobic Efficiency — BikeErg"
+  - session_key: "SES-BALI-W07-D05-S01"
+    protocol_id: "BALI-W07-D05-S01-R1"
+    session_lineage_id: "b1070501-0000-4000-8000-070501000000"
+    revision_number: 1
+    title: "VO2max — BikeErg"
+  - session_key: "SES-BALI-W07-D06-S01"
+    protocol_id: "BALI-W07-D06-S01-R1"
+    session_lineage_id: "b1070601-0000-4000-8000-070601000000"
+    revision_number: 1
+    title: "Strength C — Lower + Pull + Running Prep"
+  - session_key: "SES-BALI-W07-D07-S01"
+    protocol_id: "BALI-W07-D07-S01-R1"
+    session_lineage_id: "b1070701-0000-4000-8000-070701000000"
+    revision_number: 1
+    title: "Threshold B — RowErg"
+  - session_key: "SES-BALI-W04-D01-S01"
+    protocol_id: "BALI-W04-D01-S01-R1"
+    session_lineage_id: "b1040101-0000-4000-8000-040101000000"
+    revision_number: 1
+    title: "Strength A — Deload"
+  - session_key: "SES-BALI-W04-D02-S01"
+    protocol_id: "BALI-W04-D02-S01-R1"
+    session_lineage_id: "b1040201-0000-4000-8000-040201000000"
+    revision_number: 1
+    title: "Easy Long Aerobic — BikeErg"
+  - session_key: "SES-BALI-W04-D02-S02"
+    protocol_id: "BALI-W04-D02-S02-R1"
+    session_lineage_id: "b1040202-0000-4000-8000-040202000000"
+    revision_number: 1
+    title: "Upper Strength — Deload"
+  - session_key: "SES-BALI-W04-D03-S01"
+    protocol_id: "BALI-W04-D03-S01-R1"
+    session_lineage_id: "b1040301-0000-4000-8000-040301000000"
+    revision_number: 1
+    title: "BikeErg 20-min Benchmark"
+  - session_key: "SES-BALI-W04-D04-S01"
+    protocol_id: "BALI-W04-D04-S01-R1"
+    session_lineage_id: "b1040401-0000-4000-8000-040401000000"
+    revision_number: 1
+    title: "Recovery aerobic"
+  - session_key: "SES-BALI-W04-D05-S01"
+    protocol_id: "BALI-W04-D05-S01-R1"
+    session_lineage_id: "b1040501-0000-4000-8000-040501000000"
+    revision_number: 1
+    title: "2 km Row Test"
+  - session_key: "SES-BALI-W04-D06-S01"
+    protocol_id: "BALI-W04-D06-S01-R1"
+    session_lineage_id: "b1040601-0000-4000-8000-040601000000"
+    revision_number: 1
+    title: "Strength C — Deload + Running Prep"
+  - session_key: "SES-BALI-W04-D07-S01"
+    protocol_id: "BALI-W04-D07-S01-R1"
+    session_lineage_id: "b1040701-0000-4000-8000-040701000000"
+    revision_number: 1
+    title: "Aerobic Efficiency Test"
+  - session_key: "SES-BALI-W08-D01-S01"
+    protocol_id: "BALI-W08-D01-S01-R1"
+    session_lineage_id: "b1080101-0000-4000-8000-080101000000"
+    revision_number: 1
+    title: "Strength primer"
+  - session_key: "SES-BALI-W08-D02-S01"
+    protocol_id: "BALI-W08-D02-S01-R1"
+    session_lineage_id: "b1080201-0000-4000-8000-080201000000"
+    revision_number: 1
+    title: "Easy aerobic — BikeErg"
+  - session_key: "SES-BALI-W08-D03-S01"
+    protocol_id: "BALI-W08-D03-S01-R1"
+    session_lineage_id: "b1080301-0000-4000-8000-080301000000"
+    revision_number: 1
+    title: "20-min BikeErg test"
+  - session_key: "SES-BALI-W08-D04-S01"
+    protocol_id: "BALI-W08-D04-S01-R1"
+    session_lineage_id: "b1080401-0000-4000-8000-080401000000"
+    revision_number: 1
+    title: "Recovery + mobility"
+  - session_key: "SES-BALI-W08-D05-S01"
+    protocol_id: "BALI-W08-D05-S01-R1"
+    session_lineage_id: "b1080501-0000-4000-8000-080501000000"
+    revision_number: 1
+    title: "2 km Row test"
+  - session_key: "SES-BALI-W08-D06-S01"
+    protocol_id: "BALI-W08-D06-S01-R1"
+    session_lineage_id: "b1080601-0000-4000-8000-080601000000"
+    revision_number: 1
+    title: "Easy aerobic + running prep"
+  - session_key: "SES-BALI-W08-D07-S01"
+    protocol_id: "BALI-W08-D07-S01-R1"
+    session_lineage_id: "b1080701-0000-4000-8000-080701000000"
+    revision_number: 1
+    title: "Relative-strength testing"
+  - session_key: "SES-BALI-W08-D08-S01"
+    protocol_id: "BALI-W08-D08-S01-R1"
+    session_lineage_id: "b1080801-0000-4000-8000-080801000000"
+    revision_number: 1
+    title: "Recovery"
+  - session_key: "SES-BALI-W08-D09-S01"
+    protocol_id: "BALI-W08-D09-S01-R1"
+    session_lineage_id: "b1080901-0000-4000-8000-080901000000"
+    revision_number: 1
+    title: "Aerobic Efficiency Test"
+phases:
+  - phase_key: "PHASE-BALI-BASE"
+    phase_order: 1
+    title: "Bali Hybrid Base"
+    intent: "build"
+    coach_note: "Eight labelled weeks. Week 8 includes day_order 8 and 9 spillover. Duration remains 8 weeks."
+weeks:
+  - week_number: 1
+    phase_key: "PHASE-BALI-BASE"
+    title: "Calibration + Productive Training"
+    intent: "build"
+    coach_note: "Calibration + Productive Training"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: moderately hard."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "moderately hard"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "60 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W01-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W01-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "3 × 8 min BikeErg threshold"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W01-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W01-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "4 × 4 min BikeErg VO2"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W01-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W01-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Sub-threshold — RowErg"
+            coach_note: "Work between LT1 and LT2; not Threshold B yet. Primary adaptation: Whole-body aerobic development. Load: moderately hard."
+            progression:
+              prescription_summary: "3 × 10 min RowErg sub-threshold"
+              volume_note: "Work between LT1 and LT2; not Threshold B yet."
+              intensity_note: "moderately hard"
+              coach_note: "Whole-body aerobic development"
+  - week_number: 2
+    phase_key: "PHASE-BALI-BASE"
+    title: "First Progression Week"
+    intent: "build"
+    coach_note: "First Progression Week"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: moderately hard."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "moderately hard"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "70 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W02-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W02-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "3 × 10 min BikeErg threshold"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W02-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W02-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "4 × 4 min BikeErg VO2 — higher quality"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W02-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W02-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Sub-threshold — RowErg"
+            coach_note: "Work between LT1 and LT2; not Threshold B yet. Primary adaptation: Whole-body aerobic development. Load: moderately hard."
+            progression:
+              prescription_summary: "3 × 12 min RowErg sub-threshold"
+              volume_note: "Work between LT1 and LT2; not Threshold B yet."
+              intensity_note: "moderately hard"
+              coach_note: "Whole-body aerobic development"
+  - week_number: 3
+    phase_key: "PHASE-BALI-BASE"
+    title: "Peak Loading Week — Block I"
+    intent: "build"
+    coach_note: "Peak Loading Week — Block I"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: moderately hard."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "moderately hard"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "80 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W03-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W03-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "3 × 12 min BikeErg threshold"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W03-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W03-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "5 × 4 min BikeErg VO2"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W03-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W03-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Sub-threshold — RowErg"
+            coach_note: "Work between LT1 and LT2; not Threshold B yet. Primary adaptation: Whole-body aerobic development. Load: moderately hard."
+            progression:
+              prescription_summary: "3 × 15 min RowErg sub-threshold"
+              volume_note: "Work between LT1 and LT2; not Threshold B yet."
+              intensity_note: "moderately hard"
+              coach_note: "Whole-body aerobic development"
+  - week_number: 4
+    phase_key: "PHASE-BALI-BASE"
+    title: "Consolidation + Testing"
+    intent: "test"
+    coach_note: "Consolidation + Testing"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W04-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Deload"
+            coach_note: "Deload Strength A. No farmer carries. Primary adaptation: Strength maintenance. Load: easy-moderate."
+            progression:
+              prescription_summary: "Deload Strength A. No farmer carries."
+              volume_note: "Deload Strength A. No farmer carries."
+              intensity_note: "easy-moderate"
+              coach_note: "Strength maintenance"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W04-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Easy Long Aerobic — BikeErg"
+            coach_note: "60 min easy Z2. Primary adaptation: Aerobic maintenance/recovery. Load: easy."
+            progression:
+              prescription_summary: "60 min easy BikeErg Z2"
+              volume_note: "60 min easy Z2."
+              intensity_note: "easy"
+              coach_note: "Aerobic maintenance/recovery"
+          - slot_key: "BALI-W04-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W04-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Upper Strength — Deload"
+            coach_note: "Deload upper strength. Primary adaptation: Upper strength maintenance. Load: easy-moderate."
+            progression:
+              prescription_summary: "Deload upper strength."
+              volume_note: "Deload upper strength."
+              intensity_note: "easy-moderate"
+              coach_note: "Upper strength maintenance"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W04-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D03-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "BikeErg 20-min Benchmark"
+            coach_note: "TEST 1 — 20-minute BikeErg. Primary adaptation: Threshold/power test. Load: test."
+            progression:
+              prescription_summary: "20-min BikeErg benchmark"
+              volume_note: "TEST 1 — 20-minute BikeErg."
+              intensity_note: "test"
+              coach_note: "Threshold/power test"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W04-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Recovery aerobic"
+            coach_note: "Protect Wednesday's test. Primary adaptation: Absorb/test preparation. Load: easy."
+            progression:
+              prescription_summary: "Protect Wednesday's test."
+              volume_note: "Protect Wednesday's test."
+              intensity_note: "easy"
+              coach_note: "Absorb/test preparation"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W04-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "2 km Row Test"
+            coach_note: "TEST 2 — 2 km Row. Manual distance test. Primary adaptation: Primary performance benchmark. Load: test."
+            progression:
+              prescription_summary: "2 km Row test"
+              volume_note: "TEST 2 — 2 km Row. Manual distance test."
+              intensity_note: "test"
+              coach_note: "Primary performance benchmark"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W04-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Deload + Running Prep"
+            coach_note: "Deload Strength C plus low-dose elastic work. Primary adaptation: Tissue/strength maintenance. Load: easy-moderate."
+            progression:
+              prescription_summary: "Deload Strength C plus low-dose elastic work."
+              volume_note: "Deload Strength C plus low-dose elastic work."
+              intensity_note: "easy-moderate"
+              coach_note: "Tissue/strength maintenance"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W04-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W04-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency Test"
+            coach_note: "TEST 3 — fixed-output BikeErg. Primary adaptation: Quantify aerobic adaptation. Load: test."
+            progression:
+              prescription_summary: "45 min fixed-output BikeErg efficiency test"
+              volume_note: "TEST 3 — fixed-output BikeErg."
+              intensity_note: "test"
+              coach_note: "Quantify aerobic adaptation"
+  - week_number: 5
+    phase_key: "PHASE-BALI-BASE"
+    title: "Block II Begins"
+    intent: "build"
+    coach_note: "Block II Begins"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: high intensity controlled volume."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "high intensity controlled volume"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "85 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W05-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W05-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "2 × 15 min BikeErg threshold ~90–95% P20 guidance"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W05-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W05-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "6 × 3 min BikeErg VO2"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W05-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W05-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold B — RowErg"
+            coach_note: "Second genuine weekly threshold exposure. Primary adaptation: LT2 / whole-body aerobic development. Load: hard."
+            progression:
+              prescription_summary: "3 × 10 min RowErg threshold"
+              volume_note: "Second genuine weekly threshold exposure."
+              intensity_note: "hard"
+              coach_note: "LT2 / whole-body aerobic development"
+  - week_number: 6
+    phase_key: "PHASE-BALI-BASE"
+    title: "Main Development Week — Block II"
+    intent: "build"
+    coach_note: "Main Development Week — Block II"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: high intensity controlled volume."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "high intensity controlled volume"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "95 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W06-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W06-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "3 × 12 min BikeErg threshold"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W06-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W06-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "5 × 4 min BikeErg VO2"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W06-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W06-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold B — RowErg"
+            coach_note: "Second genuine weekly threshold exposure. Primary adaptation: LT2 / whole-body aerobic development. Load: hard."
+            progression:
+              prescription_summary: "3 × 12 min RowErg threshold"
+              volume_note: "Second genuine weekly threshold exposure."
+              intensity_note: "hard"
+              coach_note: "LT2 / whole-body aerobic development"
+  - week_number: 7
+    phase_key: "PHASE-BALI-BASE"
+    title: "Peak Week"
+    intent: "build"
+    coach_note: "Peak Week"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength A — Heavy Lower + Pull"
+            coach_note: "Maintain/develop high force production. Primary adaptation: Maximum / relative strength. Load: high intensity controlled volume."
+            progression:
+              prescription_summary: "Maintain/develop high force production."
+              volume_note: "Maintain/develop high force production."
+              intensity_note: "high intensity controlled volume"
+              coach_note: "Maximum / relative strength"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D02-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Long Aerobic — BikeErg"
+            coach_note: "Engine-building continuous BikeErg. Primary adaptation: Aerobic capacity. Load: easy."
+            progression:
+              prescription_summary: "105 min BikeErg Z2"
+              volume_note: "Engine-building continuous BikeErg."
+              intensity_note: "easy"
+              coach_note: "Aerobic capacity"
+          - slot_key: "BALI-W07-D02-S02"
+            session_order: 2
+            session_key: "SES-BALI-W07-D02-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength B — Upper Strength"
+            coach_note: "Useful upper-body strength without unnecessary hypertrophy volume. Primary adaptation: Upper strength / shoulder robustness. Load: moderate."
+            progression:
+              prescription_summary: "Useful upper-body strength without unnecessary hypertrophy volume."
+              volume_note: "Useful upper-body strength without unnecessary hypertrophy volume."
+              intensity_note: "moderate"
+              coach_note: "Upper strength / shoulder robustness"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D03-S01"
+            time_of_day: "morning"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold A — BikeErg"
+            coach_note: "Flagship aerobic-quality session. Primary adaptation: LT2 / sustainable power. Load: hard."
+            progression:
+              prescription_summary: "2 × 20 min BikeErg threshold"
+              volume_note: "Flagship aerobic-quality session."
+              intensity_note: "hard"
+              coach_note: "LT2 / sustainable power"
+          - slot_key: "BALI-W07-D03-S02"
+            session_order: 2
+            session_key: "SES-BALI-W07-D03-S02"
+            time_of_day: "afternoon"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Muscular Endurance — Structural Capacity"
+            coach_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold. Primary adaptation: Repeatable functional force. Load: moderate."
+            progression:
+              prescription_summary: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              volume_note: "Loaded movement, repeated force and aerobic recovery; at least 6 hours after threshold."
+              intensity_note: "moderate"
+              coach_note: "Repeatable functional force"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D04-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency — BikeErg"
+            coach_note: "Standardised fixed-output aerobic session. Primary adaptation: Aerobic efficiency / recovery. Load: easy."
+            progression:
+              prescription_summary: "Standardised fixed-output aerobic session."
+              volume_note: "Standardised fixed-output aerobic session."
+              intensity_note: "easy"
+              coach_note: "Aerobic efficiency / recovery"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "VO2max — BikeErg"
+            coach_note: "Hard cardiovascular intervals. No lifting afterwards. Primary adaptation: Aerobic ceiling. Load: hard."
+            progression:
+              prescription_summary: "6 × 3 min BikeErg VO2"
+              volume_note: "Hard cardiovascular intervals. No lifting afterwards."
+              intensity_note: "hard"
+              coach_note: "Aerobic ceiling"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength C — Lower + Pull + Running Prep"
+            coach_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme. Primary adaptation: Unilateral/posterior-chain strength + tissue capacity. Load: moderately hard."
+            progression:
+              prescription_summary: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              volume_note: "Unilateral/posterior-chain robustness and tissues that will later tolerate running. No running required in this programme."
+              intensity_note: "moderately hard"
+              coach_note: "Unilateral/posterior-chain strength + tissue capacity"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W07-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W07-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Threshold B — RowErg"
+            coach_note: "Second genuine weekly threshold exposure. Primary adaptation: LT2 / whole-body aerobic development. Load: hard."
+            progression:
+              prescription_summary: "3 × 15 min RowErg threshold"
+              volume_note: "Second genuine weekly threshold exposure."
+              intensity_note: "hard"
+              coach_note: "LT2 / whole-body aerobic development"
+  - week_number: 8
+    phase_key: "PHASE-BALI-BASE"
+    title: "Taper + Bali Exit Testing"
+    intent: "test"
+    coach_note: "Taper + Bali Exit Testing"
+    days:
+      - day_key: "day_1"
+        day_order: 1
+        day_type: "training"
+        title: "Saturday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W08-D01-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D01-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Strength primer"
+            coach_note: "Strength primer. Finish ~45–55 min. Primary adaptation: Maintain neural strength; remove fatigue. Load: easy."
+            progression:
+              prescription_summary: "Strength primer. Finish ~45–55 min."
+              volume_note: "Strength primer. Finish ~45–55 min."
+              intensity_note: "easy"
+              coach_note: "Maintain neural strength; remove fatigue"
+      - day_key: "day_2"
+        day_order: 2
+        day_type: "training"
+        title: "Sunday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W08-D02-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D02-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Easy aerobic — BikeErg"
+            coach_note: "No PM strength. Primary adaptation: Recovery / aerobic maintenance. Load: easy."
+            progression:
+              prescription_summary: "No PM strength."
+              volume_note: "No PM strength."
+              intensity_note: "easy"
+              coach_note: "Recovery / aerobic maintenance"
+      - day_key: "day_3"
+        day_order: 3
+        day_type: "training"
+        title: "Monday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W08-D03-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D03-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "20-min BikeErg test"
+            coach_note: "EXIT TEST 1. Primary adaptation: Sustained aerobic power. Load: test."
+            progression:
+              prescription_summary: "Week 8 20-min BikeErg exit test"
+              volume_note: "EXIT TEST 1."
+              intensity_note: "test"
+              coach_note: "Sustained aerobic power"
+      - day_key: "day_4"
+        day_order: 4
+        day_type: "training"
+        title: "Tuesday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W08-D04-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D04-S01"
+            time_of_day: "any"
+            is_optional: true
+            completion_expectation: "optional"
+            display_title: "Recovery + mobility"
+            coach_note: "Optional 30–40 min extremely easy BikeErg at RPE 1–2, or walk. Primary adaptation: Freshen up. Load: easy."
+            progression:
+              prescription_summary: "Optional 30–40 min extremely easy BikeErg at RPE 1–2, or walk."
+              volume_note: "Optional 30–40 min extremely easy BikeErg at RPE 1–2, or walk."
+              intensity_note: "easy"
+              coach_note: "Freshen up"
+      - day_key: "day_5"
+        day_order: 5
+        day_type: "training"
+        title: "Wednesday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W08-D05-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D05-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "2 km Row test"
+            coach_note: "EXIT TEST 2. Primary adaptation: Whole-body aerobic power. Load: test."
+            progression:
+              prescription_summary: "Week 8 2 km Row exit test"
+              volume_note: "EXIT TEST 2."
+              intensity_note: "test"
+              coach_note: "Whole-body aerobic power"
+      - day_key: "day_6"
+        day_order: 6
+        day_type: "training"
+        title: "Thursday"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W08-D06-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D06-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Easy aerobic + running prep"
+            coach_note: "No lower-body lifting. Primary adaptation: Recovery / tissue prep. Load: easy."
+            progression:
+              prescription_summary: "No lower-body lifting."
+              volume_note: "No lower-body lifting."
+              intensity_note: "easy"
+              coach_note: "Recovery / tissue prep"
+      - day_key: "day_7"
+        day_order: 7
+        day_type: "training"
+        title: "Friday"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W08-D07-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D07-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Relative-strength testing"
+            coach_note: "EXIT TEST 3. Primary adaptation: Front squat + weighted pull-up. Load: test."
+            progression:
+              prescription_summary: "Front squat 3RM and weighted pull-up 1RM"
+              volume_note: "EXIT TEST 3."
+              intensity_note: "test"
+              coach_note: "Front squat + weighted pull-up"
+      - day_key: "day_8"
+        day_order: 8
+        day_type: "training"
+        title: "Saturday (spillover)"
+        intent: "build"
+        slots:
+          - slot_key: "BALI-W08-D08-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D08-S01"
+            time_of_day: "any"
+            is_optional: true
+            completion_expectation: "optional"
+            display_title: "Recovery"
+            coach_note: "Walk, swim, easy mobility. Optional 20–30 min recovery spin. Primary adaptation: Shed testing fatigue. Load: easy."
+            progression:
+              prescription_summary: "Walk, swim, easy mobility. Optional 20–30 min recovery spin."
+              volume_note: "Walk, swim, easy mobility. Optional 20–30 min recovery spin."
+              intensity_note: "easy"
+              coach_note: "Shed testing fatigue"
+      - day_key: "day_9"
+        day_order: 9
+        day_type: "training"
+        title: "Sunday (spillover)"
+        intent: "test"
+        slots:
+          - slot_key: "BALI-W08-D09-S01"
+            session_order: 1
+            session_key: "SES-BALI-W08-D09-S01"
+            time_of_day: "any"
+            is_optional: false
+            completion_expectation: "required"
+            display_title: "Aerobic Efficiency Test"
+            coach_note: "EXIT TEST 4. Primary adaptation: Final aerobic-base measurement. Load: test."
+            progression:
+              prescription_summary: "Week 8 fixed-output efficiency test"
+              volume_note: "EXIT TEST 4."
+              intensity_note: "test"
+              coach_note: "Final aerobic-base measurement"
+adaptation_permissions: []
+protected_invariants:
+  - id: "INV-BALI-TESTS-IMMUTABLE"
+    kind: "assessment_immutable"
+    target_ref: "ASM-BALI-BIKE-P20-W4"
+    description: "Benchmark sessions must not be automatically rewritten."
+assessments:
+  - id: "ASM-BALI-BIKE-P20-W4"
+    slot_ref: "BALI-W04-D03-S01"
+    evidence_requirement: "manual_bike_20min_profile"
+    comparison_identity_id: "CMP-BALI-BIKE-P20"
+    label: "Week 4 BikeErg 20-min"
+  - id: "ASM-BALI-ROW-2K-W4"
+    slot_ref: "BALI-W04-D05-S01"
+    evidence_requirement: "manual_row_2k_profile"
+    comparison_identity_id: "CMP-BALI-ROW-2K"
+    label: "Week 4 2 km Row"
+  - id: "ASM-BALI-EFF-W4"
+    slot_ref: "BALI-W04-D07-S01"
+    evidence_requirement: "manual_fixed_power_hr"
+    comparison_identity_id: "CMP-BALI-EFF"
+    label: "Week 4 aerobic efficiency"
+  - id: "ASM-BALI-BIKE-P20-W8"
+    slot_ref: "BALI-W08-D03-S01"
+    evidence_requirement: "manual_bike_20min_profile"
+    comparison_identity_id: "CMP-BALI-BIKE-P20"
+    label: "Week 8 BikeErg 20-min"
+  - id: "ASM-BALI-ROW-2K-W8"
+    slot_ref: "BALI-W08-D05-S01"
+    evidence_requirement: "manual_row_2k_profile"
+    comparison_identity_id: "CMP-BALI-ROW-2K"
+    label: "Week 8 2 km Row"
+  - id: "ASM-BALI-FS-3RM-W8"
+    slot_ref: "BALI-W08-D07-S01"
+    evidence_requirement: "manual_front_squat_3rm"
+    comparison_identity_id: "CMP-BALI-FS-3RM"
+    label: "Week 8 front squat 3RM"
+  - id: "ASM-BALI-WPU-W8"
+    slot_ref: "BALI-W08-D07-S01"
+    evidence_requirement: "manual_weighted_pullup"
+    comparison_identity_id: "CMP-BALI-WPU"
+    label: "Week 8 weighted pull-up"
+  - id: "ASM-BALI-EFF-W8"
+    slot_ref: "BALI-W08-D09-S01"
+    evidence_requirement: "manual_fixed_power_hr"
+    comparison_identity_id: "CMP-BALI-EFF"
+    label: "Week 8 aerobic efficiency"
+performance_evidence_requirements:
+  - id: "EVD-BALI-P20"
+    comparison_identity_id: "CMP-BALI-BIKE-P20"
+    metric: "average_watts"
+    required: true
+  - id: "EVD-BALI-ROW"
+    comparison_identity_id: "CMP-BALI-ROW-2K"
+    metric: "total_time"
+    required: true
+comparison_identities:
+  - id: "CMP-BALI-BIKE-P20"
+    session_lineage_id: "b1040301-0000-4000-8000-040301000000"
+    label: "BikeErg 20-min like-for-like"
+  - id: "CMP-BALI-ROW-2K"
+    session_lineage_id: "b1040501-0000-4000-8000-040501000000"
+    label: "2 km Row like-for-like"
+  - id: "CMP-BALI-EFF"
+    session_lineage_id: "b1040701-0000-4000-8000-040701000000"
+    label: "Fixed-power aerobic efficiency"
+  - id: "CMP-BALI-FS-3RM"
+    session_lineage_id: "b1080701-0000-4000-8000-080701000000"
+    label: "Front squat 3RM"
+  - id: "CMP-BALI-WPU"
+    session_lineage_id: "b1080701-0000-4000-8000-080701000000"
+    label: "Weighted pull-up"
