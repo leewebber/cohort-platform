@@ -105,4 +105,4 @@ BEGIN
   );
 END $$;
 
-SELECT sprint12_assert_gate('BF');
+SELECT sprint12_fail_if_any_failed();
