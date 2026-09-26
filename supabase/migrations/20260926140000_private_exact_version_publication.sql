@@ -566,7 +566,7 @@ BEGIN
     v_version_id,
     v_lineage.id,
     v_version_number,
-    'published',
+    'draft',
     v_scope,
     'coach',
     v_owner::text,
@@ -585,7 +585,7 @@ BEGIN
     v_imported_by,
     FALSE,
     FALSE,
-    NOW(),
+    NULL,
     v_tz,
     v_start
   );
@@ -684,6 +684,13 @@ BEGIN
       trim(v_item->>'label')
     );
   END LOOP;
+
+  UPDATE public.programme_versions
+  SET lifecycle_status = 'published',
+      published_at = NOW(),
+      updated_at = NOW()
+  WHERE id = v_version_id
+    AND lifecycle_status = 'draft';
 
   RETURN jsonb_build_object(
     'status', 'published',
