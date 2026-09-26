@@ -46,9 +46,9 @@ Sprint 3+ coaching product is not the next milestone.
    [`../architecture/Complete_Athlete_Experience_v1.md`](../architecture/Complete_Athlete_Experience_v1.md).
 6. **Launch programme library** — strategy **approved**;
    infrastructure architecture **approved**; Programme Studio Stage 1
-   **COMPLETE**; structured running B1 **COMPLETE**; Lee Bali Phase 1
-   **stopped before authoring**; private calendar/enrol infrastructure
-   **implemented, awaiting founder approval**
+   **COMPLETE**; structured running B1    **COMPLETE**; Lee Bali Hybrid Base **authored locally**, awaiting
+   founder visual review; private calendar/enrol infrastructure
+   **approved**
    ([`../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](../checkpoints/LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
    [`../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
    [`../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
@@ -60,10 +60,11 @@ Sprint 3+ coaching product is not the next milestone.
    `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
    `RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
    `RUNNING_WORKOUT_B1=COMPLETE`,
-   `LEE_BALI_HYBRID_BASE=INFRASTRUCTURE_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+   `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
+   `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
    `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
    `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
-   `BALI_PROGRAMME_CONTENT_AUTHORISED=false`,
+   `BALI_PROGRAMME_CONTENT_AUTHORISED=true`,
    `PACE_CALCULATION_B2=NOT_AUTHORISED`,
    `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
    `NEXT_IMPLEMENTATION_AUTHORISED=false`).

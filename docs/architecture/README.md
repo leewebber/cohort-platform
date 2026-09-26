@@ -19,7 +19,8 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md](../checkpoints/RUNNING_PACE_FOUNDATION_AUDIT.md) | Sprint B running/pace audit (historical) |
 | [../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md](../checkpoints/RUNNING_WORKOUT_B1_APPROVAL.md) | Structured running approved |
 | [../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md](../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md) | B1 historical implementation handoff |
-| [Lee_Bali_Hybrid_Base_Implementation_v1.md](./Lee_Bali_Hybrid_Base_Implementation_v1.md) | Lee Bali private programme — Phase 1 stop |
+| [Lee_Bali_Hybrid_Base_Implementation_v1.md](./Lee_Bali_Hybrid_Base_Implementation_v1.md) | Lee Bali private programme |
+| [../checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md](../checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md) | Bali local authoring handoff |
 | [Private_Programme_Infrastructure_v1.md](./Private_Programme_Infrastructure_v1.md) | Same-day calendar + private enrol |
 | [../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md](../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md) | Private infra handoff |
 | [../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md](../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md) | Bali model-capability audit |

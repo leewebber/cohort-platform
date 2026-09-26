@@ -166,11 +166,12 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
 Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
-**COMPLETE** on `origin/main` `ae5028a`. Lee Bali Hybrid Base Phase 1
-**stopped before authoring**
+**COMPLETE** on `origin/main` `ae5028a`. Lee Bali Hybrid Base is
+**authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
 [`docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
+[`docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md),
 [`docs/architecture/Lee_Bali_Hybrid_Base_Implementation_v1.md`](docs/architecture/Lee_Bali_Hybrid_Base_Implementation_v1.md),
@@ -182,10 +183,11 @@ Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
 `RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
 `RUNNING_WORKOUT_B1=COMPLETE`,
-`LEE_BALI_HYBRID_BASE=INFRASTRUCTURE_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`,
+`PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
+`LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
 `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
-`BALI_PROGRAMME_CONTENT_AUTHORISED=false`,
+`BALI_PROGRAMME_CONTENT_AUTHORISED=true`,
 `PACE_CALCULATION_B2=NOT_AUTHORISED`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 `COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
@@ -194,8 +196,8 @@ Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not start B2. Do not author Bali until this infrastructure is
-founder-approved. Do not author commercial programme content.
+Do not start B2. Do not author commercial programme content. Do not
+publish hosted Bali or change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).

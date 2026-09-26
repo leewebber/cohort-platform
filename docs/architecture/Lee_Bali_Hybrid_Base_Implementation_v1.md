@@ -1,6 +1,7 @@
 # Lee Bali Hybrid Base — implementation contract
 
-**Status:** Phase 1 model-capability audit complete. **Authoring stopped.**
+**Status:** Local programme authored. Awaiting founder visual review.
+Do not publish hosted or change Lee’s assignment.
 **Base:** `origin/main` `ae5028a02229d8c6b8f15d4fedf1f6dcbf350b61`
 **Source authority:** founder-supplied DOCX
 `Cohort_Bali_8_Week_Hybrid_Base_Programme.docx` (not edited; not copied
@@ -11,9 +12,11 @@ into the repository).
 [`../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md)
 
 ```text
-LEE_BALI_HYBRID_BASE=BLOCKED_PENDING_INFRASTRUCTURE
+PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED
+LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL
 LEE_BALI_HYBRID_BASE_PRIVATE=true
 LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false
+BALI_PROGRAMME_CONTENT_AUTHORISED=true
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false
 PACE_CALCULATION_B2=NOT_AUTHORISED
