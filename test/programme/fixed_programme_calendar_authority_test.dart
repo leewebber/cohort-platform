@@ -648,6 +648,47 @@ void main() {
       },
     );
 
+    test(
+      'generic Train today fails closed when two incomplete same-day sessions exist',
+      () async {
+        final assignment = _assignment();
+        final morning = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000701',
+          slotId: ProgrammeScheduleTestFixtures.slot1Id,
+          protocolId: 'BW-001',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.today,
+        );
+        final evening = _occurrence(
+          assignment: assignment,
+          id: '00000000-0000-4000-8000-000000000702',
+          slotId: ProgrammeScheduleTestFixtures.slot2Id,
+          protocolId: 'RN-006',
+          dayKey: 'day_2',
+          date: '2026-09-02',
+          state: FixedProgrammeOccurrenceState.planned,
+        );
+        final tables = await _tablesWith(assignment);
+        final result = await _prepareService(
+          tables: tables,
+          loader: _EchoLoader(),
+          projectionStore: _ProjectionStore(
+            _calendar(
+              assignment: assignment,
+              today: '2026-09-02',
+              occurrences: [morning, evening],
+            ),
+          ),
+        ).prepareForAthlete(assignment.athleteId);
+
+        expect(result.isReady, isFalse);
+        expect(result.code, 'ambiguous_same_day_today');
+        expect(result.message, contains('specific session'));
+      },
+    );
+
     test('legacy assignment retains cursor compatibility path', () async {
       final assignment = _assignment(fixed: false);
       final tables = await _tablesWith(assignment);

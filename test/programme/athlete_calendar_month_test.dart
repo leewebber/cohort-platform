@@ -19,6 +19,7 @@ void main() {
       required FixedProgrammeOccurrenceState state,
       required String title,
       String dayKey = 'day_1',
+      int sessionOrder = 1,
     }) {
       return FixedProgrammeOccurrenceProjection(
         assignmentId: 'assignment-1',
@@ -26,10 +27,10 @@ void main() {
         sessionSlotId: 'slot-$id',
         programmeVersionId: 'version-1',
         protocolId: 'BW-001',
-        programmedSessionKey: 'prog:assignment-1@version-1:w1:$dayKey:s1:BW-001',
+        programmedSessionKey: 'prog:assignment-1@version-1:w1:$dayKey:s$sessionOrder:BW-001',
         weekNumber: 1,
         dayKey: dayKey,
-        sessionOrder: 1,
+        sessionOrder: sessionOrder,
         scheduledDate: date,
         originalScheduledDate: date,
         state: state,
@@ -72,6 +73,7 @@ void main() {
           state: FixedProgrammeOccurrenceState.planned,
           title: 'Accessory Circuit',
           dayKey: 'day_2',
+          sessionOrder: 2,
         ),
         occ(
           id: 'long',
@@ -119,7 +121,7 @@ void main() {
     final today = cells.firstWhere((cell) => cell.isoDate == '2026-09-10');
     expect(today.isToday, isTrue);
     expect(today.isSelected, isTrue);
-    expect(today.statusLabel, 'Planned');
+    expect(today.statusLabel, contains('2 sessions'));
     expect(today.compactTitle, contains('Apollo Strength'));
     expect(today.compactTitle, contains('+1 session'));
     expect(today.semanticsLabel, contains('Apollo Strength'));
@@ -161,15 +163,18 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(AthleteCalendarMonthGrid), findsOneWidget);
+    expect(
+      find.byType(AthleteCalendarMonthGrid, skipOffstage: false),
+      findsOneWidget,
+    );
     expect(find.byType(AthleteProgrammeWeekAgenda), findsNothing);
     expect(find.text('THIS WEEK'), findsNothing);
     expect(find.text('September 2026'), findsOneWidget);
     expect(find.text('Apollo Strength'), findsWidgets);
-    expect(find.text('Intervals'), findsWidgets);
-    expect(find.text('Complete'), findsWidgets);
-    expect(find.text('Incomplete'), findsWidgets);
-    expect(find.text('Today'), findsWidgets);
+    expect(find.text('Intervals', skipOffstage: false), findsWidgets);
+    expect(find.text('Complete', skipOffstage: false), findsWidgets);
+    expect(find.text('Incomplete', skipOffstage: false), findsWidgets);
+    expect(find.text('Today', skipOffstage: false), findsWidgets);
 
     await tester.tap(find.byKey(const ValueKey('calendar-month-next')));
     await tester.pumpAndSettle();
@@ -179,7 +184,7 @@ void main() {
     expect(find.text('September 2026'), findsOneWidget);
 
     await _tapMonthDay(tester, '2026-09-08');
-    expect(find.text('View session'), findsWidgets);
+    expect(find.text('View session', skipOffstage: false), findsWidgets);
     expect(find.text('Intervals'), findsWidgets);
   });
 
@@ -229,7 +234,10 @@ void main() {
 
     await revealCalendarFinder(
       tester,
-      find.byKey(const ValueKey('calendar-month-day-2026-09-11')),
+      find.byKey(
+        const ValueKey('calendar-month-day-2026-09-11'),
+        skipOffstage: false,
+      ),
     );
     expect(
       tester.getSemantics(
@@ -239,13 +247,20 @@ void main() {
     );
     await revealCalendarFinder(
       tester,
-      find.byKey(const ValueKey('calendar-month-day-2026-09-10')),
+      find.byKey(
+        const ValueKey('calendar-month-day-2026-09-10'),
+        skipOffstage: false,
+      ),
     );
     expect(
       tester.getSemantics(
         find.byKey(const ValueKey('calendar-month-day-2026-09-10')),
       ).label,
-      allOf(contains('Today'), contains('Accessory Circuit'), contains('Planned')),
+      allOf(
+        contains('Today'),
+        contains('Accessory Circuit'),
+        contains('sessions'),
+      ),
     );
   });
 }
@@ -253,7 +268,7 @@ void main() {
 Future<void> _tapMonthDay(WidgetTester tester, String isoDate) async {
   await tapCalendarFinder(
     tester,
-    find.byKey(ValueKey('calendar-month-day-$isoDate')),
+    find.byKey(ValueKey('calendar-month-day-$isoDate'), skipOffstage: false),
   );
 }
 
