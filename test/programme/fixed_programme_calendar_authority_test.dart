@@ -2228,7 +2228,8 @@ void main() {
     final home = calendar.forHomeToday();
     expect(home.occurrences.map((o) => o.sessionTitle), ['Today A', 'Today B']);
     expect(home.todaySessions, hasLength(2));
-    expect(home.nextPlannedOccurrence, isNull);
+    expect(home.nextPlannedOccurrence?.sessionTitle, 'Today A');
+    expect(home.nextPlannedOccurrence?.scheduledDate, '2026-09-02');
 
     final rest = _calendar(
       assignment: assignment,

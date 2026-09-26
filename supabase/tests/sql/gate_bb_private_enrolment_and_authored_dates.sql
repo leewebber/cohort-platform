@@ -1,6 +1,13 @@
 -- Gate BB — authored calendar dates + private exact-version enrolment.
 TRUNCATE sprint12_gate_results;
 
+DROP TABLE IF EXISTS sprint12_gate_bb_fixture;
+CREATE TABLE sprint12_gate_bb_fixture (
+  fixture_key TEXT PRIMARY KEY,
+  athlete_id UUID NOT NULL,
+  programme_version_id UUID NOT NULL
+);
+
 DO $$
 DECLARE
   v_protocol TEXT := 'PROT-GATE-BB-R1';
@@ -16,6 +23,7 @@ DECLARE
   v_athlete UUID := 'b2b2b2b2-b2b2-42b2-82b2-b2b2b2b2b2b2';
   v_coach UUID := 'b3b3b3b3-b3b3-43b3-83b3-b3b3b3b3b3b3';
   v_other UUID := 'b4b4b4b4-b4b4-44b4-84b4-b4b4b4b4b4b4';
+  v_conc UUID := 'b5b5b5b5-b5b5-45b5-85b5-b5b5b5b5b5b5';
   v_old UUID;
   v_new UUID;
   v_count INT;
@@ -52,7 +60,7 @@ BEGIN
     public.cohort_authored_occurrence_date(DATE '2026-03-28', 1, 2)::text
   );
 
-  DELETE FROM programme_assignments WHERE athlete_id IN (v_athlete, v_other);
+  DELETE FROM programme_assignments WHERE athlete_id IN (v_athlete, v_other, v_conc);
   PERFORM sprint12_ensure_published_session(v_protocol, v_lineage, 1, 'Gate BB session');
 
   v_payload := sprint12_build_package('PROG-GATE-BB-CAT', 1, v_hash_cat, v_protocol, v_lineage);
@@ -73,18 +81,30 @@ BEGIN
   SET library_scope = 'coach_private',
       owner_type = 'coach',
       owner_id = v_athlete::text,
-      approved_for_global = FALSE,
-      lifecycle_status = 'published',
-      archived_at = NULL
+      approved_for_global = FALSE
+  WHERE id = v_priv;
+
+  INSERT INTO programme_version_session_slots (
+    day_id, session_order, protocol_id, display_title, time_of_day
+  )
+  SELECT s.day_id, 2, s.protocol_id, 'PM slot', 'afternoon'
+  FROM programme_version_session_slots s
+  JOIN programme_version_days d ON d.id = s.day_id
+  JOIN programme_version_weeks w ON w.id = d.week_id
+  WHERE w.version_id = v_priv AND s.session_order = 1
+  LIMIT 1;
+
+  UPDATE programme_versions
+  SET lifecycle_status = 'published',
+      published_at = NOW(),
+      updated_at = NOW()
   WHERE id = v_priv;
 
   UPDATE programme_versions
   SET library_scope = 'coach_private',
       owner_type = 'coach',
       owner_id = v_athlete::text,
-      approved_for_global = FALSE,
-      lifecycle_status = 'draft',
-      archived_at = NULL
+      approved_for_global = FALSE
   WHERE id = v_draft;
 
   INSERT INTO auth.users (
@@ -100,15 +120,26 @@ BEGIN
      '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
     ('00000000-0000-0000-0000-000000000000', v_other, 'authenticated', 'authenticated',
      'gate-bb-other@example.invalid', crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
+     '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', ''),
+    ('00000000-0000-0000-0000-000000000000', v_conc, 'authenticated', 'authenticated',
+     'gate-bb-conc@example.invalid', crypt('x', gen_salt('bf')), NOW(), NOW(), NOW(),
      '{"provider":"email","providers":["email"]}', '{}', FALSE, '', '', '', '')
   ON CONFLICT (id) DO NOTHING;
   INSERT INTO profiles (id, display_name, is_athlete, is_coach)
   VALUES
     (v_athlete, 'Gate BB Dual', TRUE, TRUE),
     (v_coach, 'Gate BB Coach', FALSE, TRUE),
-    (v_other, 'Gate BB Other', TRUE, FALSE)
+    (v_other, 'Gate BB Other', TRUE, FALSE),
+    (v_conc, 'Gate BB Conc', TRUE, TRUE)
   ON CONFLICT (id) DO UPDATE
     SET is_athlete = EXCLUDED.is_athlete, is_coach = EXCLUDED.is_coach;
+  INSERT INTO coach_athlete_relationships (coach_id, athlete_id, status)
+  SELECT v_athlete, v_conc, 'active'
+  WHERE NOT EXISTS (
+    SELECT 1
+    FROM coach_athlete_relationships
+    WHERE athlete_id = v_conc AND status = 'active'
+  );
 
   PERFORM sprint12_record(
     'BB', 'private_not_catalogue_eligible', 'false',
@@ -168,7 +199,13 @@ BEGIN
   LIMIT 1;
   SELECT count(*) INTO v_count FROM programme_schedule_occurrences WHERE assignment_id = v_new;
   PERFORM sprint12_record(
-    'BB', 'projection_created', '1+', v_count::text, NULL, v_count >= 1 AND v_date IS NOT NULL, v_date
+    'BB', 'projection_created', '2', v_count::text, NULL, v_count = 2 AND v_date IS NOT NULL, v_date
+  );
+  SELECT count(DISTINCT scheduled_date) INTO v_count
+  FROM programme_schedule_occurrences
+  WHERE assignment_id = v_new;
+  PERFORM sprint12_record(
+    'BB', 'same_day_slots_share_date', '1', v_count::text, NULL, v_count = 1, NULL
   );
 
   PERFORM set_config('request.jwt.claim.sub', v_athlete::text, true);
@@ -229,6 +266,16 @@ BEGIN
     'BB', 'anon_denied', '42501', v_error, NULL, v_error = '42501', NULL
   );
 
+  PERFORM set_config('request.jwt.claim.sub', '', true);
+  PERFORM set_config('request.jwt.claims', '{}', true);
+  PERFORM set_config('role', 'authenticated', true);
+  v_res := public.enrol_athlete_in_private_programme_version(v_priv, 'Asia/Makassar', TRUE);
+  PERFORM set_config('role', 'postgres', true);
+  PERFORM sprint12_record(
+    'BB', 'missing_identity_denied', 'not_authenticated', coalesce(v_res->>'code', v_res->>'status'),
+    NULL, (v_res->>'code') = 'not_authenticated', v_res::text
+  );
+
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_install_fail_trigger(
     'public.programme_assignments'::regclass, 'sprint12_bb_replace_fail', 'check_violation'
@@ -255,8 +302,12 @@ BEGIN
   SET library_scope = 'coach_private',
       owner_type = 'coach',
       owner_id = v_athlete::text,
-      approved_for_global = FALSE,
-      lifecycle_status = 'published'
+      approved_for_global = FALSE
+  WHERE id = v_draft;
+  UPDATE programme_versions
+  SET lifecycle_status = 'published',
+      published_at = NOW(),
+      updated_at = NOW()
   WHERE id = v_draft;
 
   PERFORM sprint12_install_fail_trigger(
@@ -286,8 +337,14 @@ BEGIN
   FROM programme_schedule_occurrences
   WHERE assignment_id = v_new;
   PERFORM sprint12_record(
-    'BB', 'single_slot_programme_one_date', v_date, v_date2, NULL, v_date IS NOT DISTINCT FROM v_date2, NULL
+    'BB', 'same_day_programme_one_date', v_date, v_date2, NULL, v_date IS NOT DISTINCT FROM v_date2, NULL
   );
+
+  INSERT INTO sprint12_gate_bb_fixture (fixture_key, athlete_id, programme_version_id)
+  VALUES ('concurrency', v_conc, v_priv)
+  ON CONFLICT (fixture_key) DO UPDATE
+    SET athlete_id = EXCLUDED.athlete_id,
+        programme_version_id = EXCLUDED.programme_version_id;
 END;
 $$;
 

@@ -471,6 +471,9 @@ bash "${TESTS_DIR}/concurrency/gate_q_programme_training_session_start.sh"
 echo "=== Gate R atomic catalogue-replacement concurrency ==="
 bash "${TESTS_DIR}/concurrency/gate_r_catalogue_version_replacement.sh"
 
+echo "=== Gate BB private enrolment concurrency ==="
+bash "${TESTS_DIR}/concurrency/gate_bb_private_enrolment.sh"
+
 echo "=== PostgREST catalogue privilege controls (anon negative + auth positive) ==="
 # Use status from disposable workdir only.
 STATUS_JSON="$(supabase status -o json --workdir "${SPRINT12_WORKDIR}")"
