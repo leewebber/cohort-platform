@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cohort_platform/features/programme_studio/domain/programme_review_models.dart';
 import 'package:cohort_platform/features/programme_studio/presentation/programme_studio_app.dart';
+import 'package:cohort_platform/features/programme_studio/presentation/programme_studio_controller.dart';
 import 'package:cohort_platform/features/programme_studio/presentation/programme_studio_copy.dart';
 import 'package:cohort_platform/features/programme_studio/projection/programme_review_catalog.dart';
 import 'package:cohort_platform/features/programme_studio/projection/programme_review_projector.dart';
@@ -31,7 +32,10 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     expect(find.text(ProgrammeStudioCopy.coachReview), findsWidgets);
     expect(find.textContaining('Week 1 of 12'), findsWidgets);
@@ -61,10 +65,15 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     expect(find.text('Apollo Build — 12-Week Initial Block'), findsWidgets);
+    expect(find.text('Bali Hybrid Base'), findsWidgets);
     expect(find.textContaining('Internal / personal'), findsWidgets);
+    expect(find.textContaining('Internal / Lee-specific'), findsWidgets);
     expect(find.textContaining('Spartan Physique Block 1'), findsWidgets);
     expect(find.textContaining('Legacy / withheld'), findsWidgets);
     expect(find.textContaining('1 week'), findsWidgets);
@@ -116,7 +125,10 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.nextWeek));
     await tester.pumpAndSettle();
@@ -146,7 +158,10 @@ void main() {
     'Quality Gate uses readable statuses and is not launch approved',
     (tester) async {
       await setDesktop(tester);
-      await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+      await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
       await tester.pumpAndSettle();
       await tester.tap(find.text(ProgrammeStudioCopy.qualityGate));
       await tester.pumpAndSettle();
@@ -164,7 +179,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.textContaining('Coaching review — Not assessed'),
+        find.textContaining('Founder coaching review — Not assessed'),
         findsOneWidget,
       );
       expect(
@@ -195,7 +210,10 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.technicalIntegrity));
     await tester.pumpAndSettle();
@@ -215,7 +233,10 @@ void main() {
 
   testWidgets('Athlete Preview contains no technical evidence', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.athletePreview));
     await tester.pumpAndSettle();
@@ -227,7 +248,10 @@ void main() {
 
   testWidgets('planned family shows an empty planning state', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text('HYROX Base'));
     await tester.pumpAndSettle();
@@ -238,7 +262,10 @@ void main() {
 
   testWidgets('keyboard can change week and review mode', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(catalog: realCatalog()));
+    await tester.pumpWidget(ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.appTitle));
     await tester.pump();
@@ -261,7 +288,10 @@ void main() {
           size: Size(390, 844),
           textScaler: TextScaler.linear(1.7),
         ),
-        child: ProgrammeStudioApp(catalog: realCatalog()),
+        child: ProgrammeStudioApp(
+      catalog: realCatalog(),
+      initialSelection: apolloStudioSelection,
+    ),
       ),
     );
     await tester.pumpAndSettle();

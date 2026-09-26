@@ -23,6 +23,7 @@ void main() {
     expect(first.authority, ProgrammeReviewCatalog.derivedAuthority);
     expect(first.programmes.map((item) => item.catalogId), [
       'apollo-build-v2',
+      'bali-hybrid-base-v1',
       'spartan-physique-v3',
     ]);
     final apollo = first.programmes.first;
@@ -97,7 +98,7 @@ void main() {
       catalog
           .realInventory(includeFixtures: false)
           .map((item) => item.catalogId),
-      ['apollo-build-v2', 'spartan-physique-v3'],
+      ['apollo-build-v2', 'bali-hybrid-base-v1', 'spartan-physique-v3'],
     );
     expect(
       catalog
