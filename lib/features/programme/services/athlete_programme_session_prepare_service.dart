@@ -88,19 +88,6 @@ class AthleteProgrammeSessionPrepareService {
     }
 
     try {
-      if (assignment.isFixedSchedule) {
-        final projection = await fixedOccurrenceStore.resolveActive();
-        if (projection != null &&
-            projection.assignmentId == assignment.id &&
-            projection.incompleteTodaySessions.length > 1) {
-          return const AthleteProgrammePrepareResult(
-            status: AthleteProgrammePrepareStatus.failure,
-            code: 'ambiguous_same_day_today',
-            message:
-                'Multiple incomplete sessions are scheduled today. Open a specific session.',
-          );
-        }
-      }
       final fixedOccurrence = assignment.isFixedSchedule
           ? await _resolveFixedTodayOccurrence(assignment)
           : null;
@@ -108,6 +95,13 @@ class AthleteProgrammeSessionPrepareService {
         assignment,
         fixedOccurrence: fixedOccurrence,
         allowReconstruct: allowReconstruct,
+      );
+    } on _AmbiguousSameDayToday {
+      return const AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.failure,
+        code: 'ambiguous_same_day_today',
+        message:
+            'Multiple incomplete sessions are scheduled today. Open a specific session.',
       );
     } on ProgrammeScheduleException catch (error) {
       return AthleteProgrammePrepareResult(
@@ -373,6 +367,9 @@ class AthleteProgrammeSessionPrepareService {
         'Fixed schedule projection is missing for this assignment.',
       );
     }
+    if (projection.incompleteTodaySessions.length > 1) {
+      throw const _AmbiguousSameDayToday();
+    }
     final occurrence = projection.todayOccurrence;
     if (occurrence == null) {
       throw StateError(
@@ -582,4 +579,8 @@ class AthleteProgrammeSessionPrepareService {
       await repo.clearGeneratedSession(trimmedAthlete);
     }
   }
+}
+
+class _AmbiguousSameDayToday implements Exception {
+  const _AmbiguousSameDayToday();
 }
