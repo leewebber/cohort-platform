@@ -122,7 +122,7 @@ class AthleteCatalogueEnrolmentResult {
           enrolmentId: _trim(map['enrolment_id']),
           programmeVersionId: _trim(map['programme_version_id']),
           code: code,
-          message: 'Programme switching is not available here yet.',
+          message: _conflictMessage(code),
         );
       case 'authorization_failure':
         return AthleteCatalogueEnrolmentResult(
@@ -161,6 +161,10 @@ class AthleteCatalogueEnrolmentResult {
         return 'That programme is not available in the catalogue.';
       case 'catalogue_enrolment_not_authorised':
         return 'Programme enrolment is not available for this account.';
+      case 'private_enrolment_not_authorised':
+        return 'This private programme is not available to your account.';
+      case 'version_not_private_eligible':
+        return 'That private programme cannot be activated.';
       default:
         return 'You do not have access to enrol in that programme.';
     }
@@ -176,8 +180,21 @@ class AthleteCatalogueEnrolmentResult {
         return 'Choose a programme to enrol.';
       case 'invalid_timezone':
         return 'Choose a valid training timezone to enrol.';
+      case 'start_date_mismatch':
+        return 'This programme is already active with a different start date.';
       default:
         return 'Enrolment could not be validated. Please try again.';
+    }
+  }
+
+  static String _conflictMessage(String? code) {
+    switch (code) {
+      case 'start_date_mismatch':
+        return 'This programme is already active with a different start date.';
+      case 'active_enrolment_exists':
+        return 'Another programme is already current.';
+      default:
+        return 'Programme switching is not available here yet.';
     }
   }
 

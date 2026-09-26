@@ -23,6 +23,9 @@ import '../presentation/athlete_programme_continuity_copy.dart';
 import '../presentation/athlete_programme_lifecycle_presentation.dart';
 import '../widgets/athlete_programme_status_state.dart';
 import '../services/athlete_catalogue_enrolment_services.dart';
+import '../services/private_programme_discovery_store.dart';
+import '../services/private_programme_enrolment_store.dart';
+import '../widgets/athlete_private_programmes_section.dart';
 import '../services/athlete_plan_materialisation_service.dart';
 import '../services/athlete_programme_session_prepare_service.dart';
 import '../services/fixed_programme_occurrence_projection_store.dart';
@@ -390,6 +393,18 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                     _isCompletedProjection
                         ? _buildCompletedProgrammeCard()
                         : _buildCurrentProgrammeCard(),
+                    const SizedBox(height: CohortSpacing.lg),
+                    AthletePrivateProgrammesSection(
+                      discoveryStore:
+                          const PrivateProgrammeDiscoverySupabaseStore(),
+                      enrolmentStore:
+                          const PrivateProgrammeEnrolmentSupabaseStore(),
+                      currentProgrammeTitle:
+                          _controller.activeVersion?.name ??
+                          _controller.currentAssignment?.lineageCode,
+                      refreshController: widget.refreshController,
+                      onActivated: _loadProgramme,
+                    ),
                   ],
                 ),
               ),
