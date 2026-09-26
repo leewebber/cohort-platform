@@ -97,7 +97,7 @@ BEGIN
     owner_id, created_by, name, coaching_intent, package_schema_version,
     package_content_hash, approved_for_global
   )
-  SELECT v_incomplete, l.id, 1, 'published', 'coach_private', 'coach',
+  SELECT v_incomplete, l.id, 1, 'draft', 'coach_private', 'coach',
          v_owner::text, 'gate-be', 'Incomplete', 'Intent', 1, v_hash_inc, FALSE
   FROM programme_lineages l WHERE l.code = 'PROG-GATE-BE-INC';
 
@@ -110,6 +110,9 @@ BEGIN
   ) VALUES (
     'be9be9be-be9b-49be-89be-be9be9be9be9', 1, 'PROT-GATE-BE-INC-R1', 'BE-INC', 'required'
   );
+  UPDATE programme_versions
+  SET lifecycle_status = 'published', published_at = NOW()
+  WHERE id = v_incomplete AND lifecycle_status = 'draft';
 
   PERFORM sprint12_record(
     'BE', 'incomplete_not_executable', 'false',
