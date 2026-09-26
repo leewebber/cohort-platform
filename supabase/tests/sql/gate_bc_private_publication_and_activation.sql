@@ -141,12 +141,13 @@ BEGIN
 
   PERFORM set_config('request.jwt.claim.sub', v_other::text, true);
   PERFORM set_config('role', 'authenticated', true);
+  v_has_exec := public.cohort_private_programme_visible_to_caller(v_version);
+  PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
     'BC', 'guessed_id_hidden', 'false',
-    public.cohort_private_programme_visible_to_caller(v_version)::text,
-    NULL, NOT public.cohort_private_programme_visible_to_caller(v_version), NULL
+    v_has_exec::text,
+    NULL, NOT v_has_exec, NULL
   );
-  PERFORM set_config('role', 'postgres', true);
 
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
