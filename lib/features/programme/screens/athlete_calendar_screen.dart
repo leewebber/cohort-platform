@@ -356,6 +356,9 @@ class _AthleteCalendarScreenState extends State<AthleteCalendarScreen> {
             ),
             subtitle: Text(
               [
+                ?occurrence.timeOfDayLabel(
+                  sameDayGroup: occurrences.length > 1,
+                ),
                 AthleteCalendarStatusCopy.forOccurrence(occurrence),
                 if (occurrence.sessionType?.trim().isNotEmpty == true)
                   occurrence.sessionType!,

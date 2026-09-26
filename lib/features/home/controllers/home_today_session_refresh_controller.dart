@@ -12,16 +12,24 @@ typedef AthleteProgrammeSurfaceReload =
 /// authoritative calendar / Home / programme reload after a committed swap or
 /// completion so sibling tabs cannot keep stale occurrence state.
 class HomeTodaySessionRefreshController {
-  HomeTodaySessionRefreshCallback? _onRefreshRequested;
+  final Map<Object, HomeTodaySessionRefreshCallback> _listeners = {};
   final Map<Object, AthleteProgrammeSurfaceReload> _surfaceReloads = {};
 
-  /// Binds the Today section state. Detach in [State.dispose].
-  void attach(HomeTodaySessionRefreshCallback onRefreshRequested) {
-    _onRefreshRequested = onRefreshRequested;
+  /// Binds a Today section. Detach the same [owner] in [State.dispose].
+  void attach(
+    HomeTodaySessionRefreshCallback onRefreshRequested, {
+    Object? owner,
+  }) {
+    _listeners[owner ?? onRefreshRequested] = onRefreshRequested;
   }
 
-  void detach() {
-    _onRefreshRequested = null;
+  void detach([Object? owner]) {
+    if (owner != null) {
+      _listeners.remove(owner);
+      _listeners.removeWhere((_, callback) => identical(callback, owner));
+      return;
+    }
+    _listeners.clear();
   }
 
   void attachSurface(Object owner, AthleteProgrammeSurfaceReload reload) {
@@ -32,17 +40,21 @@ class HomeTodaySessionRefreshController {
     _surfaceReloads.remove(owner);
   }
 
-  bool get hasListener => _onRefreshRequested != null;
+  bool get hasListener => _listeners.isNotEmpty;
 
   bool get hasSurfaceListeners => _surfaceReloads.isNotEmpty;
 
-  /// Requests a fresh programme resolution for the Today card.
+  /// Requests a fresh programme resolution for every Today card.
   void requestRefresh({required String source}) {
     debugPrint(
       '[HomeRefresh] requested source=$source '
-      'callbackAttached=${_onRefreshRequested != null}',
+      'callbackAttached=${_listeners.isNotEmpty}',
     );
-    _onRefreshRequested?.call(source: source);
+    for (final callback in List<HomeTodaySessionRefreshCallback>.from(
+      _listeners.values,
+    )) {
+      callback(source: source);
+    }
   }
 
   /// Reloads every attached Home / Calendar / Current Programme surface from
@@ -51,7 +63,7 @@ class HomeTodaySessionRefreshController {
     debugPrint(
       '[HomeRefresh] authoritative reload source=$source '
       'surfaces=${_surfaceReloads.length} '
-      'todayAttached=${_onRefreshRequested != null}',
+      'todayAttached=${_listeners.isNotEmpty}',
     );
     final reloads = _surfaceReloads.values
         .map((reload) => reload(source: source))

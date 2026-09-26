@@ -68,7 +68,7 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   @override
   void initState() {
     super.initState();
-    widget.refreshController?.attach(refresh);
+    widget.refreshController?.attach(refresh, owner: this);
     _sessionFuture = _loadSession(source: 'initial');
   }
 
@@ -76,14 +76,14 @@ class HomeTodaySessionSectionState extends State<HomeTodaySessionSection> {
   void didUpdateWidget(covariant HomeTodaySessionSection oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.refreshController != widget.refreshController) {
-      oldWidget.refreshController?.detach();
+      oldWidget.refreshController?.detach(this);
     }
-    widget.refreshController?.attach(refresh);
+    widget.refreshController?.attach(refresh, owner: this);
   }
 
   @override
   void dispose() {
-    widget.refreshController?.detach();
+    widget.refreshController?.detach(this);
     super.dispose();
   }
 

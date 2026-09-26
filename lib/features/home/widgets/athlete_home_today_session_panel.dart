@@ -29,6 +29,7 @@ class AthleteHomeTodaySessionPanel extends StatefulWidget {
     this.adaptEnabled = false,
     this.revertLabel,
     this.onRevert,
+    this.grouped = false,
   });
 
   final PreparedExecutionPackage package;
@@ -47,6 +48,7 @@ class AthleteHomeTodaySessionPanel extends StatefulWidget {
   final bool adaptEnabled;
   final String? revertLabel;
   final VoidCallback? onRevert;
+  final bool grouped;
 
   @override
   State<AthleteHomeTodaySessionPanel> createState() =>
@@ -81,33 +83,56 @@ class _AthleteHomeTodaySessionPanelState
     final title = (widget.occurrence?.sessionTitle.trim().isNotEmpty == true)
         ? widget.occurrence!.sessionTitle
         : package.brief.sessionName;
+    final timeLabel = widget.occurrence == null
+        ? null
+        : AthleteHomeTodayFormatter.timeOfDayLabel(
+            widget.occurrence!.timeOfDay,
+            sameDayGroup: widget.grouped,
+          );
+    final timeSpoken = widget.occurrence == null
+        ? null
+        : AthleteHomeTodayFormatter.timeOfDaySpoken(
+            widget.occurrence!.timeOfDay,
+            sameDayGroup: widget.grouped,
+          );
 
     return CohortCard(
         variant: CohortCardVariant.premium,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('TODAY', style: CohortTextStyles.sectionLabel),
-            if (widget.dateLabel != null) ...[
-              const SizedBox(height: CohortSpacing.xs),
-              Text(
-                widget.dateLabel!,
-                style: CohortTextStyles.small.copyWith(
-                  color: CohortColors.textSecondary,
+            if (!widget.grouped) ...[
+              Text('TODAY', style: CohortTextStyles.sectionLabel),
+              if (widget.dateLabel != null) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  widget.dateLabel!,
+                  style: CohortTextStyles.small.copyWith(
+                    color: CohortColors.textSecondary,
+                  ),
+                ),
+              ],
+              if (widget.programmeName != null &&
+                  widget.programmeName!.trim().isNotEmpty) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                Text(widget.programmeName!, style: CohortTextStyles.small),
+              ],
+              if (widget.weekDayLabel != null &&
+                  widget.weekDayLabel!.trim().isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(widget.weekDayLabel!, style: CohortTextStyles.small),
+              ],
+              const SizedBox(height: CohortSpacing.md),
+            ],
+            if (timeLabel != null) ...[
+              Semantics(
+                label: timeSpoken ?? timeLabel,
+                child: ExcludeSemantics(
+                  child: Text(timeLabel, style: CohortTextStyles.sectionLabel),
                 ),
               ),
+              const SizedBox(height: CohortSpacing.xs),
             ],
-            if (widget.programmeName != null &&
-                widget.programmeName!.trim().isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.sm),
-              Text(widget.programmeName!, style: CohortTextStyles.small),
-            ],
-            if (widget.weekDayLabel != null &&
-                widget.weekDayLabel!.trim().isNotEmpty) ...[
-              const SizedBox(height: 2),
-              Text(widget.weekDayLabel!, style: CohortTextStyles.small),
-            ],
-            const SizedBox(height: CohortSpacing.md),
             Text(title, style: CohortTextStyles.h2),
             if (meta != null) ...[
               const SizedBox(height: CohortSpacing.xs),
@@ -156,7 +181,11 @@ class _AthleteHomeTodaySessionPanelState
               ),
             const SizedBox(height: CohortSpacing.md),
             CohortButton(
-              key: const ValueKey('home-today-primary-action'),
+              key: ValueKey(
+                widget.grouped && widget.occurrence != null
+                    ? 'home-today-primary-${widget.occurrence!.occurrenceId}'
+                    : 'home-today-primary-action',
+              ),
               label: widget.primaryBusy ? 'Starting…' : widget.primaryLabel,
               semanticLabel:
                   '${widget.primaryLabel}. $title. Status $status',

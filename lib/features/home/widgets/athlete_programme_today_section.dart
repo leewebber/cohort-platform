@@ -37,6 +37,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
     this.onExecutionReturned,
     this.onViewFullSession,
     this.dateLabel,
+    this.grouped = false,
   });
 
   final String athleteId;
@@ -50,6 +51,7 @@ class AthleteProgrammeTodaySection extends StatefulWidget {
   final Future<void> Function()? onExecutionReturned;
   final VoidCallback? onViewFullSession;
   final String? dateLabel;
+  final bool grouped;
 
   /// Test seam: when set, used instead of [prepareService] for load.
   final Future<AthleteProgrammePrepareResult> Function(String athleteId)?
@@ -89,7 +91,7 @@ class _AthleteProgrammeTodaySectionState
   @override
   void initState() {
     super.initState();
-    widget.refreshController?.attach(_onRefresh);
+    widget.refreshController?.attach(_onRefresh, owner: this);
     _load(source: 'initial');
   }
 
@@ -97,8 +99,8 @@ class _AthleteProgrammeTodaySectionState
   void didUpdateWidget(covariant AthleteProgrammeTodaySection oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.refreshController != widget.refreshController) {
-      oldWidget.refreshController?.detach();
-      widget.refreshController?.attach(_onRefresh);
+      oldWidget.refreshController?.detach(this);
+      widget.refreshController?.attach(_onRefresh, owner: this);
     }
     final occurrenceChanged =
         oldWidget.fixedOccurrence?.occurrenceId !=
@@ -115,7 +117,7 @@ class _AthleteProgrammeTodaySectionState
 
   @override
   void dispose() {
-    widget.refreshController?.detach();
+    widget.refreshController?.detach(this);
     super.dispose();
   }
 
@@ -337,7 +339,8 @@ class _AthleteProgrammeTodaySectionState
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          if (!widget.grouped)
+            const Text('TODAY', style: CohortTextStyles.sectionLabel),
           if (occurrence != null) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
@@ -357,14 +360,21 @@ class _AthleteProgrammeTodaySectionState
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('TODAY', style: CohortTextStyles.sectionLabel),
+          if (!widget.grouped)
+            const Text('TODAY', style: CohortTextStyles.sectionLabel),
           if (occurrence != null) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
           ],
           const SizedBox(height: CohortSpacing.md),
           Text(
-            _error ?? 'Today\'s session could not be prepared.',
+            key: occurrence == null
+                ? null
+                : ValueKey('home-today-failure-${occurrence.occurrenceId}'),
+            _error ??
+                (occurrence == null
+                    ? 'Today\'s session could not be prepared.'
+                    : '${occurrence.sessionTitle} could not be prepared.'),
             style: CohortTextStyles.body,
           ),
           const SizedBox(height: CohortSpacing.md),
@@ -402,6 +412,7 @@ class _AthleteProgrammeTodaySectionState
       children: [
         AthleteHomeTodaySessionPanel(
           package: package,
+          grouped: widget.grouped,
           dateLabel: dateLabel,
           programmeName: ctx?.programmeName,
           weekDayLabel: weekDayLabel,

@@ -1,4 +1,5 @@
 import '../../../models/protocol.dart';
+import '../../../models/programme_vocabulary.dart';
 import '../../../models/strength_prescription_formatter.dart';
 import '../../programme/models/fixed_programme_occurrence_projection.dart';
 import '../../programme/presentation/athlete_programme_lifecycle_presentation.dart';
@@ -139,9 +140,11 @@ abstract final class AthleteHomeTodayFormatter {
   }
 
   static String? nextSessionHint(FixedProgrammeCalendarProjection calendar) {
-    if (!calendar.isRestToday) return null;
+    if (!calendar.isRestToday && !calendar.todaySessionsAreComplete) {
+      return null;
+    }
     final next = calendar.nextPlannedOccurrence;
-    if (next == null) return null;
+    if (next == null || next.scheduledDate == calendar.today) return null;
     final when = _relativeWhen(
       today: DateTime.parse(calendar.today),
       scheduled: DateTime.parse(next.scheduledDate),
@@ -152,25 +155,47 @@ abstract final class AthleteHomeTodayFormatter {
   static List<FixedProgrammeOccurrenceProjection> prioritizedTodaySessions(
     FixedProgrammeCalendarProjection calendar,
   ) {
+    return authoredTodaySessions(calendar);
+  }
+
+  /// Display order is authored `session_order`, not resume priority.
+  static List<FixedProgrammeOccurrenceProjection> authoredTodaySessions(
+    FixedProgrammeCalendarProjection calendar,
+  ) {
     final sessions = [...calendar.todaySessions];
-    sessions.sort((a, b) {
-      final rank = _priority(a).compareTo(_priority(b));
-      if (rank != 0) return rank;
-      return a.sessionOrder.compareTo(b.sessionOrder);
-    });
+    sessions.sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
     return List.unmodifiable(sessions);
   }
 
-  static int _priority(FixedProgrammeOccurrenceProjection occurrence) {
-    if (occurrence.isResumable) return 0;
-    if (occurrence.state == FixedProgrammeOccurrenceState.today ||
-        occurrence.state == FixedProgrammeOccurrenceState.planned) {
-      return 1;
-    }
-    if (occurrence.state == FixedProgrammeOccurrenceState.completed) {
-      return 2;
-    }
-    return 3;
+  static String sessionCountCopy(int count) {
+    if (count == 1) return '1 session scheduled';
+    return '$count sessions scheduled';
+  }
+
+  static String? timeOfDayLabel(
+    ProgrammeSessionTimeOfDay timeOfDay, {
+    required bool sameDayGroup,
+  }) {
+    return switch (timeOfDay) {
+      ProgrammeSessionTimeOfDay.morning => 'AM',
+      ProgrammeSessionTimeOfDay.afternoon => 'PM',
+      ProgrammeSessionTimeOfDay.evening => 'Evening',
+      ProgrammeSessionTimeOfDay.any =>
+        sameDayGroup ? 'Unspecified time' : null,
+    };
+  }
+
+  static String? timeOfDaySpoken(
+    ProgrammeSessionTimeOfDay timeOfDay, {
+    required bool sameDayGroup,
+  }) {
+    return switch (timeOfDay) {
+      ProgrammeSessionTimeOfDay.morning => 'Morning',
+      ProgrammeSessionTimeOfDay.afternoon => 'Afternoon',
+      ProgrammeSessionTimeOfDay.evening => 'Evening',
+      ProgrammeSessionTimeOfDay.any =>
+        sameDayGroup ? 'Unspecified time' : null,
+    };
   }
 
   static String _relativeWhen({

@@ -8,6 +8,7 @@ import '../../../core/widgets/cohort_card.dart';
 import '../../performance/models/training_session_record.dart';
 import '../../performance/services/completed_session_result_projection.dart';
 import '../../programme/models/fixed_programme_occurrence_projection.dart';
+import '../presentation/athlete_home_today_presentation.dart';
 
 class AthleteHomeCompletedTodayCard extends StatelessWidget {
   const AthleteHomeCompletedTodayCard({
@@ -18,6 +19,7 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
     required this.weekDayLabel,
     required this.onViewResults,
     this.record,
+    this.grouped = false,
   });
 
   final FixedProgrammeOccurrenceProjection occurrence;
@@ -26,6 +28,7 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
   final String weekDayLabel;
   final VoidCallback onViewResults;
   final TrainingSessionRecord? record;
+  final bool grouped;
 
   @override
   Widget build(BuildContext context) {
@@ -43,27 +46,45 @@ class AthleteHomeCompletedTodayCard extends StatelessWidget {
         .take(3)
         .map((block) => '${block.title} · ${block.summary}')
         .toList(growable: false);
+    final timeLabel = AthleteHomeTodayFormatter.timeOfDayLabel(
+      occurrence.timeOfDay,
+      sameDayGroup: grouped,
+    );
     return CohortCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('TODAY', style: CohortTextStyles.sectionLabel),
-            const SizedBox(height: CohortSpacing.xs),
-            Text(
-              dateLabel,
-              style: CohortTextStyles.small.copyWith(
-                color: CohortColors.textSecondary,
+            if (!grouped) ...[
+              const Text('TODAY', style: CohortTextStyles.sectionLabel),
+              const SizedBox(height: CohortSpacing.xs),
+              Text(
+                dateLabel,
+                style: CohortTextStyles.small.copyWith(
+                  color: CohortColors.textSecondary,
+                ),
               ),
-            ),
-            if (programmeName.trim().isNotEmpty) ...[
-              const SizedBox(height: CohortSpacing.sm),
-              Text(programmeName, style: CohortTextStyles.small),
+              if (programmeName.trim().isNotEmpty) ...[
+                const SizedBox(height: CohortSpacing.sm),
+                Text(programmeName, style: CohortTextStyles.small),
+              ],
+              if (weekDayLabel.trim().isNotEmpty) ...[
+                const SizedBox(height: 2),
+                Text(weekDayLabel, style: CohortTextStyles.small),
+              ],
+              const SizedBox(height: CohortSpacing.md),
             ],
-            if (weekDayLabel.trim().isNotEmpty) ...[
-              const SizedBox(height: 2),
-              Text(weekDayLabel, style: CohortTextStyles.small),
+            if (timeLabel != null) ...[
+              Semantics(
+                label: AthleteHomeTodayFormatter.timeOfDaySpoken(
+                  occurrence.timeOfDay,
+                  sameDayGroup: grouped,
+                ) ?? timeLabel,
+                child: ExcludeSemantics(
+                  child: Text(timeLabel, style: CohortTextStyles.sectionLabel),
+                ),
+              ),
+              const SizedBox(height: CohortSpacing.xs),
             ],
-            const SizedBox(height: CohortSpacing.md),
             Text(occurrence.sessionTitle, style: CohortTextStyles.h2),
             const SizedBox(height: CohortSpacing.xs),
             Semantics(

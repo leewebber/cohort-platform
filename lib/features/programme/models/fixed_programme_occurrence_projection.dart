@@ -1,3 +1,5 @@
+import '../../../models/programme_vocabulary.dart';
+
 enum FixedProgrammeOccurrenceState {
   planned('PLANNED', 'Planned'),
   today('TODAY', 'Today'),
@@ -38,6 +40,7 @@ class FixedProgrammeOccurrenceProjection {
     required this.originalScheduledDate,
     required this.state,
     required this.sessionTitle,
+    this.timeOfDay = ProgrammeSessionTimeOfDay.any,
     this.sessionType,
     this.sessionLineageId,
     this.sessionRevisionNumber,
@@ -57,10 +60,21 @@ class FixedProgrammeOccurrenceProjection {
   final String originalScheduledDate;
   final FixedProgrammeOccurrenceState state;
   final String sessionTitle;
+  final ProgrammeSessionTimeOfDay timeOfDay;
   final String? sessionType;
   final String? sessionLineageId;
   final int? sessionRevisionNumber;
   final int? trainingSessionId;
+
+  /// Authored time-of-day chip. Never derived from session_order or title.
+  String? timeOfDayLabel({required bool sameDayGroup}) {
+    return switch (timeOfDay) {
+      ProgrammeSessionTimeOfDay.morning => 'AM',
+      ProgrammeSessionTimeOfDay.afternoon => 'PM',
+      ProgrammeSessionTimeOfDay.evening => 'Evening',
+      ProgrammeSessionTimeOfDay.any => sameDayGroup ? 'Unspecified time' : null,
+    };
+  }
 
   bool get isToday => state == FixedProgrammeOccurrenceState.today;
 
@@ -103,6 +117,9 @@ class FixedProgrammeOccurrenceProjection {
       originalScheduledDate: _requiredDate(map, 'original_scheduled_date'),
       state: FixedProgrammeOccurrenceState.parse(map['state']),
       sessionTitle: _requiredString(map, 'session_title'),
+      timeOfDay: ProgrammeSessionTimeOfDayDb.fromDb(
+        map['time_of_day']?.toString(),
+      ),
       sessionType: _optionalString(map['session_type']),
       sessionLineageId: _optionalString(map['session_lineage_id']),
       sessionRevisionNumber: _optionalPositiveInt(
@@ -131,6 +148,7 @@ class FixedProgrammeOccurrenceProjection {
       originalScheduledDate: originalScheduledDate,
       state: state ?? this.state,
       sessionTitle: sessionTitle,
+      timeOfDay: timeOfDay,
       sessionType: sessionType,
       sessionLineageId: sessionLineageId,
       sessionRevisionNumber: sessionRevisionNumber,
@@ -276,6 +294,27 @@ class FixedProgrammeCalendarProjection {
         .toList(growable: false);
   }
 
+  /// Incomplete executable work still due on [today].
+  List<FixedProgrammeOccurrenceProjection> get incompleteTodaySessions {
+    return todaySessions
+        .where(
+          (occurrence) =>
+              occurrence.isResumable ||
+              occurrence.state == FixedProgrammeOccurrenceState.today ||
+              occurrence.state == FixedProgrammeOccurrenceState.planned,
+        )
+        .toList(growable: false);
+  }
+
+  bool get todaySessionsAreComplete {
+    final sessions = todaySessions;
+    return sessions.isNotEmpty &&
+        sessions.every(
+          (occurrence) =>
+              occurrence.state == FixedProgrammeOccurrenceState.completed,
+        );
+  }
+
   /// Home consumes only today plus an optional rest-day next-session hint.
   FixedProgrammeCalendarProjection forHomeToday() {
     if (startsInFuture) {
@@ -292,7 +331,7 @@ class FixedProgrammeCalendarProjection {
           (occurrence) => occurrence.state == FixedProgrammeOccurrenceState.rest,
         );
     final kept = <FixedProgrammeOccurrenceProjection>[...todaySessions];
-    if (restToday) {
+    if (restToday || todaySessionsAreComplete) {
       final next = nextPlannedOccurrence;
       if (next != null &&
           !kept.any((occurrence) => occurrence.occurrenceId == next.occurrenceId)) {
@@ -350,7 +389,11 @@ class FixedProgrammeCalendarProjection {
     final matches = occurrences
         .where((occurrence) => occurrence.scheduledDate == isoDate)
         .toList();
-    matches.sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
+    matches.sort((a, b) {
+      final byOrder = a.sessionOrder.compareTo(b.sessionOrder);
+      if (byOrder != 0) return byOrder;
+      return a.occurrenceId.compareTo(b.occurrenceId);
+    });
     return List.unmodifiable(matches);
   }
 

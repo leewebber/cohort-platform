@@ -88,6 +88,19 @@ class AthleteProgrammeSessionPrepareService {
     }
 
     try {
+      if (assignment.isFixedSchedule) {
+        final projection = await fixedOccurrenceStore.resolveActive();
+        if (projection != null &&
+            projection.assignmentId == assignment.id &&
+            projection.incompleteTodaySessions.length > 1) {
+          return const AthleteProgrammePrepareResult(
+            status: AthleteProgrammePrepareStatus.failure,
+            code: 'ambiguous_same_day_today',
+            message:
+                'Multiple incomplete sessions are scheduled today. Open a specific session.',
+          );
+        }
+      }
       final fixedOccurrence = assignment.isFixedSchedule
           ? await _resolveFixedTodayOccurrence(assignment)
           : null;

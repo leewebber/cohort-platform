@@ -25,6 +25,7 @@ import '../programme/presentation/athlete_programme_lifecycle_presentation.dart'
 import '../programme/screens/athlete_programme_schedule_screen.dart';
 import 'presentation/athlete_home_today_presentation.dart';
 import 'widgets/athlete_home_completed_today_card.dart';
+import 'widgets/athlete_home_same_day_sessions_section.dart';
 import '../programme/presentation/athlete_programme_continuity_copy.dart';
 import '../programme/widgets/athlete_programme_status_state.dart';
 import '../programme/screens/athlete_programme_screen.dart';
@@ -407,46 +408,66 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ];
     }
 
-    final todaySessions = AthleteHomeTodayFormatter.prioritizedTodaySessions(
+    final todaySessions = AthleteHomeTodayFormatter.authoredTodaySessions(
       calendar,
     );
-    final widgets = <Widget>[];
-    for (var index = 0; index < todaySessions.length; index++) {
-      if (index > 0) {
-        widgets.add(const SizedBox(height: CohortSpacing.lg));
-      }
-      final occurrence = todaySessions[index];
-      if (occurrence.state == FixedProgrammeOccurrenceState.completed) {
-        widgets.add(_completedTodayCard(calendar, occurrence));
-      } else {
-        widgets.add(
+    final grouped = todaySessions.length > 1;
+    final cards = <Widget>[
+      for (final occurrence in todaySessions)
+        if (occurrence.state == FixedProgrammeOccurrenceState.completed)
+          _completedTodayCard(calendar, occurrence, grouped: grouped)
+        else
           AthleteProgrammeTodaySection(
             key: ValueKey(occurrence.occurrenceId),
             athleteId: _athleteId,
-            refreshController: index == 0 ? _refreshController : null,
+            refreshController: _refreshController,
             prepareService: _prepareService,
             executionLauncher: widget.executionLauncher,
             fixedAssignment: assignment,
             fixedOccurrence: occurrence,
             dateLabel: dateLabel,
+            grouped: grouped,
             onExecutionReturned: _refreshMaterialisedGate,
             onViewFullSession: () => _openOccurrence(occurrence),
           ),
-        );
-      }
+    ];
+    if (!grouped) {
+      return [
+        ...cards,
+        ?_nextDateHint(calendar),
+      ];
     }
-    return widgets;
+    return [
+      AthleteHomeSameDaySessionsSection(
+        dateLabel: dateLabel,
+        sessionCount: todaySessions.length,
+        children: cards,
+      ),
+      ?_nextDateHint(calendar),
+    ];
+  }
+
+  Widget? _nextDateHint(FixedProgrammeCalendarProjection calendar) {
+    if (calendar.isRestToday) return null;
+    final hint = AthleteHomeTodayFormatter.nextSessionHint(calendar);
+    if (hint == null) return null;
+    return Padding(
+      padding: const EdgeInsets.only(top: CohortSpacing.md),
+      child: Text(hint, style: CohortTextStyles.muted),
+    );
   }
 
   Widget _completedTodayCard(
     FixedProgrammeCalendarProjection calendar,
-    FixedProgrammeOccurrenceProjection occurrence,
-  ) {
+    FixedProgrammeOccurrenceProjection occurrence, {
+    bool grouped = false,
+  }) {
     final lifecycle = AthleteProgrammeLifecycleFormatter.fromFixedProjection(
       calendar,
     );
     return AthleteHomeCompletedTodayCard(
       occurrence: occurrence,
+      grouped: grouped,
       dateLabel: AthleteHomeTodayFormatter.fullDate(DateTime.parse(calendar.today)),
       programmeName: lifecycle.programmeName,
       weekDayLabel: AthleteHomeTodayFormatter.weekDayLabel(

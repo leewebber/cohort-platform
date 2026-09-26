@@ -45,7 +45,7 @@ class AthleteCalendarMonthCell {
     if (occurrences.length == 1) {
       return AthleteCalendarStatusCopy.forOccurrence(occurrences.first);
     }
-    return AthleteCalendarStatusCopy.forOccurrence(occurrences.first);
+    return '${AthleteCalendarStatusCopy.forOccurrence(occurrences.first)} · ${occurrences.length} sessions';
   }
 
   String get semanticsLabel {
