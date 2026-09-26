@@ -94,6 +94,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Full controlled depth, strong brace, fast concentric intent, no grinders. Final set ~3 RIR."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -105,6 +108,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Slow controlled eccentric, strong hip extension. Do not chase DOMS."
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
@@ -116,6 +122,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                     notes: "Dead hang → chest high → controlled descent. Clean reps. Record load."
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
@@ -126,6 +136,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "DBs at sides. Controlled eccentric. Also serves future running-preparation work."
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
@@ -136,6 +149,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Full scapular movement."
                   - exercise_name: "Ab wheel"
                     exercise_slug: "ab-wheel"
@@ -143,6 +159,8 @@ weeks:
                     prescription:
                       sets: 3
                       reps: "8-12"
+                      load:
+                        type: "bodyweight"
                     notes: "Stop before lumbar extension substitutes for abdominal control."
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
@@ -150,6 +168,10 @@ weeks:
                     prescription:
                       sets: 3
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Heavy. Challenge grip/posture without compromising walking mechanics."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -244,6 +266,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "No leg drive."
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
@@ -261,6 +286,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported/cable row"
                     exercise_slug: "chest-supported-cable-row"
                     order: 4
@@ -388,22 +416,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "10 DB step-ups (5/leg)"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -574,6 +617,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -583,6 +629,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -599,6 +648,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Cable/chest-supported row"
                     exercise_slug: "cable-chest-supported-row"
                     order: 5
@@ -776,6 +829,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-7.5"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "If Week 1 ≤RPE 7 and clean, +2.5–5 kg; otherwise repeat load."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -787,6 +843,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-7.5"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Modest load increase only if justified."
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
@@ -798,6 +857,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                     notes: "Add ~1.25–2.5 kg if all Week 1 reps were strict."
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
@@ -808,6 +871,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -817,6 +883,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "If 10/10/10 cleanly, increase load."
                   - exercise_name: "Ab wheel"
                     exercise_slug: "ab-wheel"
@@ -824,12 +893,18 @@ weeks:
                     prescription:
                       sets: 3
                       reps: "10-12"
+                      load:
+                        type: "bodyweight"
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 7
                     prescription:
                       sets: 3
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Progress load rather than distance."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -924,6 +999,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-7.5"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
                     order: 2
@@ -940,6 +1018,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported/cable row"
                     exercise_slug: "chest-supported-cable-row"
                     order: 4
@@ -949,6 +1030,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Face pull"
                     exercise_slug: "face-pull"
                     order: 5
@@ -1069,22 +1153,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "10 DB step-ups (5/leg)"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -1274,6 +1373,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-7.5"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -1283,6 +1385,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -1299,6 +1404,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -1475,6 +1584,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Heavier strength, no grinders."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -1486,6 +1598,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Add a set rather than chasing large load."
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
@@ -1497,6 +1612,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -1506,6 +1625,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -1515,6 +1637,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Heavy."
                   - exercise_name: "Ab wheel"
                     exercise_slug: "ab-wheel"
@@ -1522,12 +1647,18 @@ weeks:
                     prescription:
                       sets: 3
                       reps: "10-12"
+                      load:
+                        type: "bodyweight"
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 7
                     prescription:
                       sets: 4
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Heavy."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -1621,6 +1752,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
                     order: 2
@@ -1637,6 +1771,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Cable/chest-supported row"
                     exercise_slug: "cable-chest-supported-row"
                     order: 4
@@ -1763,22 +1900,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "10 DB step-ups (5/leg)"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -1972,6 +2124,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -1981,6 +2136,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -1997,6 +2155,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -2173,6 +2335,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Use ~80–90% of Week 3 5×4 load depending on feel."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -2183,6 +2348,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
                     order: 3
@@ -2192,6 +2360,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -2201,6 +2373,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -2213,6 +2388,8 @@ weeks:
                     prescription:
                       sets: 2
                       reps: 10
+                      load:
+                        type: "bodyweight"
               - title: "Cooldown"
                 block_type: "cool_down"
                 order: 99
@@ -2305,6 +2482,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
                     order: 2
@@ -2514,6 +2694,10 @@ weeks:
                     order: 3
                     prescription:
                       distance: "500 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                       modality: "RowErg"
                       runtime: "manual_distance_test"
                       numeric_target: "none"
@@ -2559,6 +2743,10 @@ weeks:
                     order: 1
                     prescription:
                       distance: "2000 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                       modality: "RowErg"
                       runtime: "manual_distance_test"
                       numeric_target: "none"
@@ -2637,6 +2825,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -2646,6 +2837,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -2662,6 +2856,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Row"
                     exercise_slug: "row"
                     order: 5
@@ -2830,6 +3028,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Heavier high-force work. No grinders."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -2840,6 +3041,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
                     order: 3
@@ -2849,6 +3053,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -2858,6 +3066,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -2867,18 +3078,27 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Ab wheel"
                     exercise_slug: "ab-wheel"
                     order: 6
                     prescription:
                       sets: 3
                       reps: "10-12"
+                      load:
+                        type: "bodyweight"
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 7
                     prescription:
                       sets: 4
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Heavy."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -2972,6 +3192,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Weighted/lightly weighted pull-up"
                     exercise_slug: "weighted-lightly-weighted-pull-up"
                     order: 2
@@ -2987,6 +3210,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported/cable row"
                     exercise_slug: "chest-supported-cable-row"
                     order: 4
@@ -3115,22 +3341,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "10 DB step-ups (5/leg)"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -3330,6 +3571,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -3339,6 +3583,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -3354,6 +3601,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -3531,6 +3782,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "+2.5–5 kg only if Week 5 was crisp."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -3541,6 +3795,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "One set removed versus Week 5."
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
@@ -3551,6 +3808,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -3560,6 +3821,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -3569,18 +3833,27 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Ab wheel"
                     exercise_slug: "ab-wheel"
                     order: 6
                     prescription:
                       sets: 3
                       reps: "10-12"
+                      load:
+                        type: "bodyweight"
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 7
                     prescription:
                       sets: 3
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Heavy."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -3674,6 +3947,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
                     order: 2
@@ -3690,6 +3966,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Cable/chest-supported row"
                     exercise_slug: "cable-chest-supported-row"
                     order: 4
@@ -3818,22 +4097,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "12 DB step-ups (6/leg)"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -4039,6 +4333,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -4048,6 +4345,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -4063,6 +4363,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -4240,6 +4544,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "One fewer set than Week 6."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -4250,6 +4557,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
                     order: 3
@@ -4259,6 +4569,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -4268,6 +4582,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7.5"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -4280,12 +4597,18 @@ weeks:
                     prescription:
                       sets: 3
                       reps: 10
+                      load:
+                        type: "bodyweight"
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 7
                     prescription:
                       sets: 2
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Heavy."
               - title: "Cooldown"
                 block_type: "cool_down"
@@ -4379,6 +4702,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 7-8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Pull-up"
                     exercise_slug: "pull-up"
                     order: 2
@@ -4520,22 +4846,37 @@ weeks:
                     order: 1
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                     notes: "Each working block."
                   - exercise_name: "Sled pull"
                     exercise_slug: "sled-pull"
                     order: 2
                     prescription:
                       distance: "20 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "Farmer carry"
                     exercise_slug: "farmer-carry"
                     order: 3
                     prescription:
                       distance: "40 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                   - exercise_name: "DB step-up"
                     exercise_slug: "db-step-up"
                     order: 4
                     prescription:
                       reps: "10 DB step-ups"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Easy/moderate SkiErg"
                     exercise_slug: "easy-moderate-skierg"
                     order: 5
@@ -4748,6 +5089,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Hip thrust"
                     exercise_slug: "hip-thrust"
                     order: 2
@@ -4757,6 +5101,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Nordic hamstring curl"
                     exercise_slug: "nordic-hamstring-curl"
                     order: 3
@@ -4772,6 +5119,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 8"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Chest-supported row"
                     exercise_slug: "chest-supported-row"
                     order: 5
@@ -4948,6 +5299,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                     notes: "Fast reps."
                   - exercise_name: "Romanian deadlift"
                     exercise_slug: "romanian-deadlift"
@@ -4958,6 +5312,9 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6"
+                      performance_capture:
+                        load_unit: "kg"
+                        rpe: true
                   - exercise_name: "Weighted pull-up"
                     exercise_slug: "weighted-pull-up"
                     order: 3
@@ -4967,6 +5324,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 6-7"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                   - exercise_name: "Rear-foot-elevated split squat"
                     exercise_slug: "rear-foot-elevated-split-squat"
                     order: 4
@@ -5228,6 +5589,10 @@ weeks:
                     order: 3
                     prescription:
                       distance: "500 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                       modality: "RowErg"
                       runtime: "manual_distance_test"
                       numeric_target: "none"
@@ -5273,6 +5638,10 @@ weeks:
                     order: 1
                     prescription:
                       distance: "2000 m"
+                      performance_capture:
+                        load_unit: "kg"
+                        distance_unit: "m"
+                        rpe: false
                       modality: "RowErg"
                       runtime: "manual_distance_test"
                       numeric_target: "none"
@@ -5381,6 +5750,10 @@ weeks:
                       load:
                         type: "freeText"
                         text: "RPE 9-9.5, not failure"
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "Load"
+                        rpe: true
                     notes: "Heaviest load for 3 technically excellent reps. No collapsed torso or ugly grinder. Record 3RM load, bodyweight and load/bodyweight ratio. Suggested build: bar × several; ~40% ×5; ~55% ×4; ~70% ×3; ~80% ×2; then heavier singles/doubles as appropriate."
               - title: "Test B — Weighted pull-up 1RM"
                 block_type: "strength"
@@ -5392,6 +5765,10 @@ weeks:
                     prescription:
                       sets: 1
                       reps: 1
+                      performance_capture:
+                        load_unit: "kg"
+                        load_label: "External load"
+                        rpe: true
                     notes: "Warm up with bodyweight reps, then progressive loading (e.g. +10, +20, +25 kg) with long rests. Standard: dead hang, no kip, chin clearly over bar. Record external load and system load (bodyweight + external)."
               - title: "Optional post-test"
                 block_type: "accessory"

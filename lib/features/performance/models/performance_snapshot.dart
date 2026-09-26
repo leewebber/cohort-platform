@@ -41,7 +41,9 @@ enum StrengthActualLoadKind {
     }
     if (blockType == SessionBlockType.strength ||
         blockType == SessionBlockType.accessory) {
-      return load == null
+      // freeText is authored effort (e.g. "RPE 7"), not a capture-suppression
+      // signal. Only an explicit non-external load type hides kg.
+      return load == null || load.type == StrengthLoadType.freeText
           ? StrengthActualLoadKind.external
           : StrengthActualLoadKind.none;
     }

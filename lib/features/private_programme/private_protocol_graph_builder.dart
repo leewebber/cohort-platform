@@ -173,9 +173,12 @@ class PrivateProtocolGraphBuilder {
     };
     final load = _load(loadRaw);
     if (load != null) map['load'] = load;
-    final rest = _asInt(restRaw);
+    final rest = _asInt(restRaw) ?? _rangeMin(restRaw);
     if (rest != null) map['rest_seconds'] = rest;
     if (distance != null && distance.isNotEmpty) map['distance_m'] = distance;
+    if (yaml['per_side'] == true) map['per_side'] = true;
+    final capture = _performanceCapture(yaml['performance_capture']);
+    if (capture != null) map['performance_capture'] = capture;
     final cue = notes.where((item) => item.trim().isNotEmpty).join(' ').trim();
     if (cue.isNotEmpty) map['coach_cue'] = cue;
     return map;
@@ -218,10 +221,51 @@ class PrivateProtocolGraphBuilder {
     final map = Map<String, dynamic>.from(raw);
     final type = map['type']?.toString().trim().toLowerCase();
     final text = map['text']?.toString().trim();
+    if (type == 'bodyweight') {
+      return {'type': 'bodyweight'};
+    }
+    if (type == 'athleteselected' || type == 'athlete_selected') {
+      return {'type': 'athleteSelected'};
+    }
+    if (type == 'rpe') {
+      final rpe = _asInt(map['rpe']) ?? _asInt(map['value']);
+      if (rpe != null && rpe > 0) return {'type': 'rpe', 'rpe': rpe};
+    }
+    if (type == 'rir') {
+      final rir = _asInt(map['rir']) ?? _asInt(map['value']);
+      if (rir != null && rir >= 0) return {'type': 'rir', 'rir': rir};
+    }
     if (type == 'freetext' && text != null && text.isNotEmpty) {
+      final exactRpe = RegExp(r'^RPE\s*(\d+)$', caseSensitive: false)
+          .firstMatch(text);
+      if (exactRpe != null) {
+        return {'type': 'rpe', 'rpe': int.parse(exactRpe.group(1)!)};
+      }
       return {'type': 'freeText', 'text': text};
     }
     return null;
+  }
+
+  Map<String, Object?>? _performanceCapture(Object? raw) {
+    if (raw is! Map) return null;
+    final map = Map<String, dynamic>.from(raw);
+    final out = <String, Object?>{};
+    final loadUnit = _nonEmpty(map['load_unit']?.toString());
+    final loadLabel = _nonEmpty(map['load_label']?.toString());
+    final distanceUnit = _nonEmpty(map['distance_unit']?.toString());
+    if (loadUnit != null) out['load_unit'] = loadUnit;
+    if (loadLabel != null) out['load_label'] = loadLabel;
+    if (distanceUnit != null) out['distance_unit'] = distanceUnit;
+    if (map['rpe'] == true) out['rpe'] = true;
+    if (map['duration_optional'] == true) out['duration_optional'] = true;
+    return out.isEmpty ? null : out;
+  }
+
+  static int? _rangeMin(Object? value) {
+    if (value == null) return null;
+    final match = RegExp(r'^(\d+)\s*[–-]\s*\d+$').firstMatch(value.toString().trim());
+    if (match == null) return null;
+    return int.tryParse(match.group(1)!);
   }
 
   String _workoutFormat(FounderProgrammeYamlBlock block) {

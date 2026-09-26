@@ -100,7 +100,22 @@ def ids(week, day, slot):
     }
 
 
-def mv(name, order, sets=None, reps=None, rest=None, notes=None, duration=None, distance=None, load=None, extra=None):
+def mv(
+    name,
+    order,
+    sets=None,
+    reps=None,
+    rest=None,
+    notes=None,
+    duration=None,
+    distance=None,
+    load=None,
+    extra=None,
+    bodyweight=False,
+    load_label=None,
+    capture_rpe=None,
+    require_load_capture=False,
+):
     prescription = {}
     if sets is not None:
         prescription["sets"] = sets
@@ -112,10 +127,32 @@ def mv(name, order, sets=None, reps=None, rest=None, notes=None, duration=None, 
         prescription["distance"] = distance
     if rest is not None:
         prescription["rest_seconds"] = rest
-    if load is not None:
+    if bodyweight:
+        prescription["load"] = {"type": "bodyweight"}
+    elif load is not None:
         prescription["load"] = load
+    capture = {}
+    if extra and extra.get("performance_capture"):
+        capture.update(extra["performance_capture"])
+    needs_load = require_load_capture or load is not None or distance is not None
+    if bodyweight:
+        capture = {}
+    elif needs_load:
+        capture.setdefault("load_unit", "kg")
+        if load_label:
+            capture["load_label"] = load_label
+        if distance is not None:
+            capture.setdefault("distance_unit", "m")
+        if capture_rpe is None:
+            capture.setdefault("rpe", load is not None)
+        else:
+            capture["rpe"] = bool(capture_rpe)
+    if capture:
+        prescription["performance_capture"] = capture
     if extra:
-        prescription.update(extra)
+        merged = dict(extra)
+        merged.pop("performance_capture", None)
+        prescription.update(merged)
     return {
         "exercise_name": name,
         "exercise_slug": name.lower().replace(" ", "-").replace("/", "-"),
@@ -191,76 +228,76 @@ def strength_a(week):
         main = [
             mv("Front squat", 1, sets=4, reps=5, rest="180-240", load=rpe("RPE 7"), notes="Full controlled depth, strong brace, fast concentric intent, no grinders. Final set ~3 RIR."),
             mv("Romanian deadlift", 2, sets=3, reps=6, rest="150-180", load=rpe("RPE 7"), notes="Slow controlled eccentric, strong hip extension. Do not chase DOMS."),
-            mv("Weighted pull-up", 3, sets=4, reps=5, rest="150-180", load=rpe("RPE 7"), notes="Dead hang → chest high → controlled descent. Clean reps. Record load."),
+            mv("Weighted pull-up", 3, load_label="External load", sets=4, reps=5, rest="150-180", load=rpe("RPE 7"), notes="Dead hang → chest high → controlled descent. Clean reps. Record load."),
             mv("Rear-foot-elevated split squat", 4, sets=3, reps="8/leg", load=rpe("RPE 7"), notes="DBs at sides. Controlled eccentric. Also serves future running-preparation work."),
             mv("Chest-supported row", 5, sets=3, reps="8-10", load=rpe("RPE 7-8"), notes="Full scapular movement."),
-            mv("Ab wheel", 6, sets=3, reps="8-12", notes="Stop before lumbar extension substitutes for abdominal control."),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps="8-12", notes="Stop before lumbar extension substitutes for abdominal control."),
             mv("Farmer carry", 7, sets=3, distance="40 m", notes="Heavy. Challenge grip/posture without compromising walking mechanics."),
         ]
     elif week == 2:
         main = [
             mv("Front squat", 1, sets=4, reps=5, rest="180-240", load=rpe("RPE 7-7.5"), notes="If Week 1 ≤RPE 7 and clean, +2.5–5 kg; otherwise repeat load."),
             mv("Romanian deadlift", 2, sets=3, reps=6, rest="150-180", load=rpe("RPE 7-7.5"), notes="Modest load increase only if justified."),
-            mv("Weighted pull-up", 3, sets=4, reps=5, rest="150-180", load=rpe("RPE 7-8"), notes="Add ~1.25–2.5 kg if all Week 1 reps were strict."),
+            mv("Weighted pull-up", 3, load_label="External load", sets=4, reps=5, rest="150-180", load=rpe("RPE 7-8"), notes="Add ~1.25–2.5 kg if all Week 1 reps were strict."),
             mv("Rear-foot-elevated split squat", 4, sets=3, reps="8/leg", load=rpe("RPE 7-8")),
             mv("Chest-supported row", 5, sets=3, reps="8-10", load=rpe("RPE 8"), notes="If 10/10/10 cleanly, increase load."),
-            mv("Ab wheel", 6, sets=3, reps="10-12"),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps="10-12"),
             mv("Farmer carry", 7, sets=3, distance="40 m", notes="Progress load rather than distance."),
         ]
     elif week == 3:
         main = [
             mv("Front squat", 1, sets=5, reps=4, rest="180-240", load=rpe("RPE 7.5-8"), notes="Heavier strength, no grinders."),
             mv("Romanian deadlift", 2, sets=4, reps=6, rest="150-180", load=rpe("RPE 7-8"), notes="Add a set rather than chasing large load."),
-            mv("Weighted pull-up", 3, sets=5, reps=4, rest="150-180", load=rpe("RPE 7.5-8")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=5, reps=4, rest="150-180", load=rpe("RPE 7.5-8")),
             mv("Rear-foot-elevated split squat", 4, sets=3, reps="8/leg", load=rpe("RPE 8")),
             mv("Chest-supported row", 5, sets=3, reps=8, load=rpe("RPE 8"), notes="Heavy."),
-            mv("Ab wheel", 6, sets=3, reps="10-12"),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps="10-12"),
             mv("Farmer carry", 7, sets=4, distance="40 m", notes="Heavy."),
         ]
     elif week == 4:
         main = [
             mv("Front squat", 1, sets=3, reps=4, load=rpe("RPE 6-7"), notes="Use ~80–90% of Week 3 5×4 load depending on feel."),
             mv("Romanian deadlift", 2, sets=2, reps=6, load=rpe("RPE 6-7")),
-            mv("Weighted pull-up", 3, sets=3, reps=4, load=rpe("RPE 6-7")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=3, reps=4, load=rpe("RPE 6-7")),
             mv("Rear-foot-elevated split squat", 4, sets=2, reps="6/leg", load=rpe("RPE 6")),
             mv("Chest-supported row", 5, sets=2, reps=8),
-            mv("Ab wheel", 6, sets=2, reps=10),
+            mv("Ab wheel", 6, bodyweight=True, sets=2, reps=10),
         ]
     elif week == 5:
         main = [
             mv("Front squat", 1, sets=5, reps=3, rest="180-240", load=rpe("RPE 8"), notes="Heavier high-force work. No grinders."),
             mv("Romanian deadlift", 2, sets=4, reps=5, load=rpe("RPE 7.5-8")),
-            mv("Weighted pull-up", 3, sets=5, reps=3, load=rpe("RPE 8")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=5, reps=3, load=rpe("RPE 8")),
             mv("Rear-foot-elevated split squat", 4, sets=3, reps="6/leg", load=rpe("RPE 8")),
             mv("Chest-supported row", 5, sets=3, reps=8, load=rpe("RPE 8")),
-            mv("Ab wheel", 6, sets=3, reps="10-12"),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps="10-12"),
             mv("Farmer carry", 7, sets=4, distance="40 m", notes="Heavy."),
         ]
     elif week == 6:
         main = [
             mv("Front squat", 1, sets=5, reps=3, rest="180-240", load=rpe("RPE 8"), notes="+2.5–5 kg only if Week 5 was crisp."),
             mv("Romanian deadlift", 2, sets=3, reps=5, load=rpe("RPE 8"), notes="One set removed versus Week 5."),
-            mv("Weighted pull-up", 3, sets=5, reps=3, load=rpe("RPE 8")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=5, reps=3, load=rpe("RPE 8")),
             mv("Rear-foot-elevated split squat", 4, sets=3, reps="6/leg", load=rpe("RPE 7.5-8")),
             mv("Chest-supported row", 5, sets=3, reps=8, load=rpe("RPE 8")),
-            mv("Ab wheel", 6, sets=3, reps="10-12"),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps="10-12"),
             mv("Farmer carry", 7, sets=3, distance="40 m", notes="Heavy."),
         ]
     elif week == 7:
         main = [
             mv("Front squat", 1, sets=4, reps=3, rest="180-240", load=rpe("RPE 8"), notes="One fewer set than Week 6."),
             mv("Romanian deadlift", 2, sets=3, reps=5, load=rpe("RPE 7.5-8")),
-            mv("Weighted pull-up", 3, sets=4, reps=3, load=rpe("RPE 8")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=4, reps=3, load=rpe("RPE 8")),
             mv("Rear-foot-elevated split squat", 4, sets=2, reps="6/leg", load=rpe("RPE 7.5")),
             mv("Chest-supported row", 5, sets=3, reps=8),
-            mv("Ab wheel", 6, sets=3, reps=10),
+            mv("Ab wheel", 6, bodyweight=True, sets=3, reps=10),
             mv("Farmer carry", 7, sets=2, distance="40 m", notes="Heavy."),
         ]
     else:
         main = [
             mv("Front squat", 1, sets=3, reps=3, load=rpe("RPE 6-7"), notes="Fast reps."),
             mv("Romanian deadlift", 2, sets=2, reps=5, load=rpe("RPE 6")),
-            mv("Weighted pull-up", 3, sets=3, reps=3, load=rpe("RPE 6-7")),
+            mv("Weighted pull-up", 3, load_label="External load", sets=3, reps=3, load=rpe("RPE 6-7")),
             mv("Rear-foot-elevated split squat", 4, sets=2, reps="5/leg", notes="Easy."),
             mv("Row", 5, sets=2, reps=8),
             mv("Standing calf raise", 6, sets=2, reps=8),
@@ -445,7 +482,7 @@ def muscular_endurance(week):
                 mv("Sled push", 1, distance="20 m", notes="Each working block."),
                 mv("Sled pull", 2, distance="20 m"),
                 mv("Farmer carry", 3, distance="40 m"),
-                mv("DB step-up", 4, reps=steps),
+                mv("DB step-up", 4, reps=steps, require_load_capture=True, capture_rpe=True),
                 mv("Easy/moderate SkiErg", 5, notes="Remaining time in the working block. Controlled."),
             ],
             notes=f"{rounds}. Each working block is {work}, then {rec}. {note} Manual capture — not an automated running workout.",
@@ -517,7 +554,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=4, reps="6/leg", load=rpe("RPE 7")),
             mv("Hip thrust", 2, sets=3, reps=8, load=rpe("RPE 7-8")),
             mv("Nordic hamstring curl", 3, sets=3, reps="4-6", notes="Assisted if necessary; quality eccentric control."),
-            mv("Weighted chin-up", 4, sets=3, reps=6, load=rpe("RPE 7")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=3, reps=6, load=rpe("RPE 7")),
             mv("Cable/chest-supported row", 5, sets=3, reps=10),
             mv("Standing calf raise", 6, sets=3, reps="8-10", notes="Heavy, full ROM."),
             mv("Seated/bent-knee calf raise", 7, sets=3, reps="12-15"),
@@ -528,7 +565,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=4, reps="6/leg", load=rpe("RPE 7-7.5")),
             mv("Hip thrust", 2, sets=3, reps=8, load=rpe("RPE 7-8")),
             mv("Nordic hamstring curl", 3, sets=3, reps="5-6", notes="Only if Week 1 tolerated."),
-            mv("Weighted chin-up", 4, sets=3, reps=6, load=rpe("RPE 7-8")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=3, reps=6, load=rpe("RPE 7-8")),
             mv("Chest-supported row", 5, sets=3, reps=10),
             mv("Standing calf raise", 6, sets=4, reps="8-10"),
             mv("Bent-knee/soleus raise", 7, sets=3, reps="12-15"),
@@ -539,7 +576,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=4, reps="6/leg", load=rpe("RPE 8")),
             mv("Hip thrust", 2, sets=4, reps=6, load=rpe("RPE 7.5-8")),
             mv("Nordic hamstring curl", 3, sets=3, reps=6, notes="If tolerated."),
-            mv("Weighted chin-up", 4, sets=4, reps=5, load=rpe("RPE 7.5-8")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=4, reps=5, load=rpe("RPE 7.5-8")),
             mv("Chest-supported row", 5, sets=3, reps=10),
             mv("Standing calf raise", 6, sets=4, reps=8, notes="Heavy."),
             mv("Bent-knee soleus", 7, sets=4, reps=12),
@@ -550,7 +587,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=2, reps="6/leg", load=rpe("RPE 6-7")),
             mv("Hip thrust", 2, sets=2, reps=6, load=rpe("RPE 6-7")),
             mv("Nordic hamstring curl", 3, sets=2, reps=4, notes="Controlled."),
-            mv("Weighted chin-up", 4, sets=2, reps=5, load=rpe("RPE 6-7")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=2, reps=5, load=rpe("RPE 6-7")),
             mv("Row", 5, sets=2, reps=8),
             mv("Standing calf raise", 6, sets=3, reps=8),
             mv("Bent-knee soleus", 7, sets=3, reps=12),
@@ -561,7 +598,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=4, reps="5/leg", load=rpe("RPE 8")),
             mv("Hip thrust", 2, sets=4, reps=6, load=rpe("RPE 8")),
             mv("Nordic hamstring curl", 3, sets=3, reps=6),
-            mv("Weighted chin-up", 4, sets=4, reps=5, load=rpe("RPE 8")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=4, reps=5, load=rpe("RPE 8")),
             mv("Chest-supported row", 5, sets=3, reps="8-10"),
             mv("Standing calf raise", 6, sets=4, reps=8, notes="Heavy."),
             mv("Bent-knee soleus", 7, sets=4, reps="12-15"),
@@ -572,7 +609,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=4, reps="5/leg", load=rpe("RPE 8")),
             mv("Hip thrust", 2, sets=3, reps=6, load=rpe("RPE 8")),
             mv("Nordic hamstring curl", 3, sets=3, reps=6),
-            mv("Weighted chin-up", 4, sets=4, reps=5, load=rpe("RPE 8")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=4, reps=5, load=rpe("RPE 8")),
             mv("Chest-supported row", 5, sets=3, reps=8),
             mv("Standing calf raise", 6, sets=4, reps="6-8", notes="Heavy."),
             mv("Bent-knee soleus", 7, sets=4, reps="12-15"),
@@ -583,7 +620,7 @@ def strength_c(week):
             mv("Bulgarian split squat", 1, sets=3, reps="5/leg", load=rpe("RPE 8")),
             mv("Hip thrust", 2, sets=3, reps=5, load=rpe("RPE 8")),
             mv("Nordic hamstring curl", 3, sets=3, reps=5),
-            mv("Weighted chin-up", 4, sets=3, reps=5, load=rpe("RPE 8")),
+            mv("Weighted chin-up", 4, load_label="External load", sets=3, reps=5, load=rpe("RPE 8")),
             mv("Chest-supported row", 5, sets=3, reps=8),
             mv("Standing calf raise", 6, sets=4, reps=6, notes="Heavy. Calf/soleus volume remains deliberately protected."),
             mv("Bent-knee soleus", 7, sets=4, reps=12),
@@ -723,7 +760,7 @@ def relative_strength_tests():
             "strength",
             2,
             [
-                mv("Front squat 3RM", 1, sets=1, reps=3, load=rpe("RPE 9-9.5, not failure"), notes="Heaviest load for 3 technically excellent reps. No collapsed torso or ugly grinder. Record 3RM load, bodyweight and load/bodyweight ratio. Suggested build: bar × several; ~40% ×5; ~55% ×4; ~70% ×3; ~80% ×2; then heavier singles/doubles as appropriate."),
+                mv("Front squat 3RM", 1, load_label="Load", sets=1, reps=3, load=rpe("RPE 9-9.5, not failure"), notes="Heaviest load for 3 technically excellent reps. No collapsed torso or ugly grinder. Record 3RM load, bodyweight and load/bodyweight ratio. Suggested build: bar × several; ~40% ×5; ~55% ×4; ~70% ×3; ~80% ×2; then heavier singles/doubles as appropriate."),
             ],
         ),
         blk(
@@ -731,7 +768,7 @@ def relative_strength_tests():
             "strength",
             3,
             [
-                mv("Weighted pull-up 1RM", 1, sets=1, reps=1, notes="Warm up with bodyweight reps, then progressive loading (e.g. +10, +20, +25 kg) with long rests. Standard: dead hang, no kip, chin clearly over bar. Record external load and system load (bodyweight + external)."),
+                mv("Weighted pull-up 1RM", 1, sets=1, reps=1, require_load_capture=True, load_label="External load", capture_rpe=True, notes="Warm up with bodyweight reps, then progressive loading (e.g. +10, +20, +25 kg) with long rests. Standard: dead hang, no kip, chin clearly over bar. Record external load and system load (bodyweight + external)."),
             ],
         ),
         blk(

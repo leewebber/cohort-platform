@@ -142,18 +142,21 @@ class ExercisePerformanceCapture {
     this.loadLabel,
     this.distanceUnit,
     this.durationOptional = false,
+    this.rpe = false,
   });
 
   final String? loadUnit;
   final String? loadLabel;
   final String? distanceUnit;
   final bool durationOptional;
+  final bool rpe;
 
   Map<String, dynamic> toJson() => {
     if (loadUnit?.trim().isNotEmpty == true) 'load_unit': loadUnit!.trim(),
     if (loadLabel?.trim().isNotEmpty == true) 'load_label': loadLabel!.trim(),
     if (distanceUnit?.trim().isNotEmpty == true)
       'distance_unit': distanceUnit!.trim(),
+    if (rpe) 'rpe': true,
     'duration_optional': durationOptional,
   };
 
@@ -163,6 +166,7 @@ class ExercisePerformanceCapture {
       loadLabel: json['load_label']?.toString(),
       distanceUnit: json['distance_unit']?.toString(),
       durationOptional: json['duration_optional'] == true,
+      rpe: json['rpe'] == true,
     );
   }
 }

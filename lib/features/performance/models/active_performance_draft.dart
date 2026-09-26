@@ -51,6 +51,7 @@ class SetPerformanceDraft {
     bool clearLoad = false,
     bool clearDistance = false,
     bool clearDurationSeconds = false,
+    bool clearRpe = false,
     bool clearNote = false,
   }) {
     return SetPerformanceDraft(
@@ -66,7 +67,7 @@ class SetPerformanceDraft {
           ? null
           : (durationSeconds ?? this.durationSeconds),
       completed: completed ?? this.completed,
-      rpe: rpe ?? this.rpe,
+      rpe: clearRpe ? null : (rpe ?? this.rpe),
       note: clearNote ? null : (note ?? this.note),
     );
   }

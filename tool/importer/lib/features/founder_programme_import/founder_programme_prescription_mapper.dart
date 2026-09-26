@@ -170,6 +170,7 @@ class FounderProgrammePrescriptionMapper {
       loadLabel: map['load_label']?.toString(),
       distanceUnit: map['distance_unit']?.toString(),
       durationOptional: map['duration_optional'] == true,
+      rpe: map['rpe'] == true,
     );
     return capture.toJson().length == 1 && !capture.durationOptional
         ? null

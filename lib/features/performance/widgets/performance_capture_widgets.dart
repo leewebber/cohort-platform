@@ -1282,6 +1282,12 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                           ?.performanceCapture,
                                       loadKind:
                                           exercise.exerciseSnapshot.loadKind,
+                                      captureRpe:
+                                          summary
+                                              ?.prescription
+                                              ?.performanceCapture
+                                              ?.rpe ==
+                                          true,
                                       onUpdateSet: widget.onUpdateSet,
                                       previousSet: _hostedPrevious(
                                         summary,
@@ -1633,6 +1639,7 @@ class _ExerciseActualRow extends StatelessWidget {
     required this.capture,
     required this.loadKind,
     required this.onUpdateSet,
+    this.captureRpe = false,
     this.previousSet,
   });
 
@@ -1640,6 +1647,7 @@ class _ExerciseActualRow extends StatelessWidget {
   final SetPerformanceDraft set;
   final ExercisePerformanceCapture? capture;
   final StrengthActualLoadKind loadKind;
+  final bool captureRpe;
   final PreviousStrengthSetEvidence? previousSet;
   final void Function(
     String exerciseId,
@@ -1650,123 +1658,48 @@ class _ExerciseActualRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (capture != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Set ${set.setNumber}', style: CohortTextStyles.small),
-          if (previousSet != null)
-            Text(previousSet!.ghostLine, style: CohortTextStyles.small),
-          _SetCaptureFields(
-            stackedChildren: [
-              PerformanceNumericField(
-                key: ValueKey('${set.setResultId}-load'),
-                label: _label(
-                  capture!.loadLabel,
-                  DailyJourneyAccessibility.setLoadLabel(
-                    set.setNumber,
-                    set.loadUnit,
-                  ),
-                ),
-                semanticLabel: DailyJourneyAccessibility.setLoadLabel(
-                  set.setNumber,
-                  set.loadUnit,
-                ),
-                value: set.load?.toString() ?? '',
-                allowDecimal: true,
-                autofocus: set.setNumber == 1 && !set.completed,
-                onChanged: (value) {
-                  final parsed = double.tryParse(value);
-                  onUpdateSet(
-                    exerciseId,
-                    set.setResultId,
-                    (current) => current.copyWith(
-                      load: parsed,
-                      clearLoad: parsed == null,
-                    ),
-                  );
-                },
-              ),
-              PerformanceNumericField(
-                key: ValueKey('${set.setResultId}-distance'),
-                label:
-                    'Completed distance (${set.distanceUnit ?? capture!.distanceUnit ?? 'm'})',
-                semanticLabel: DailyJourneyAccessibility.setDistanceLabel(
-                  set.setNumber,
-                  set.distanceUnit ?? capture!.distanceUnit,
-                ),
-                value: set.distance?.toString() ?? '',
-                allowDecimal: true,
-                onChanged: (value) {
-                  final parsed = double.tryParse(value);
-                  onUpdateSet(
-                    exerciseId,
-                    set.setResultId,
-                    (current) => current.copyWith(
-                      distance: parsed,
-                      clearDistance: parsed == null,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          if (capture!.durationOptional)
-            EnduranceDurationField(
-              key: ValueKey('${set.setResultId}-duration'),
-              label: 'Duration (optional)',
-              durationSeconds: set.durationSeconds,
-              onDurationSecondsChanged: (seconds) => onUpdateSet(
-                exerciseId,
-                set.setResultId,
-                (current) => current.copyWith(
-                  durationSeconds: seconds,
-                  clearDurationSeconds: seconds == null,
-                ),
-              ),
-            ),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: const Text('Completed'),
-            value: set.completed,
-            onChanged: (value) => onUpdateSet(
-              exerciseId,
-              set.setResultId,
-              (current) => current.copyWith(completed: value ?? false),
-            ),
-          ),
-        ],
-      );
-    }
-
-    final loadField = loadKind.expectsExternalLoad
+    final showDistance =
+        set.distanceUnit?.trim().isNotEmpty == true ||
+        capture?.distanceUnit?.trim().isNotEmpty == true;
+    final showLoad =
+        loadKind.expectsExternalLoad ||
+        capture?.loadUnit?.trim().isNotEmpty == true;
+    final showReps = !showDistance;
+    final loadUnit = set.loadUnit ?? capture?.loadUnit ?? 'kg';
+    final loadField = showLoad
         ? PerformanceNumericField(
             key: ValueKey('${set.setResultId}-load'),
-            label: DailyJourneyAccessibility.setLoadLabel(
+            label: _label(
+              capture?.loadLabel,
+              DailyJourneyAccessibility.setLoadLabel(set.setNumber, loadUnit),
+            ),
+            semanticLabel: DailyJourneyAccessibility.setLoadLabel(
               set.setNumber,
-              set.loadUnit ?? 'kg',
+              loadUnit,
             ),
             value: set.load?.toString() ?? '',
             allowDecimal: true,
-            autofocus: set.setNumber == 1 && !set.completed,
+            autofocus: set.setNumber == 1 && !set.completed && !showReps,
             onChanged: (value) {
               final parsed = double.tryParse(value);
               onUpdateSet(
                 exerciseId,
                 set.setResultId,
-                (current) =>
-                    current.copyWith(load: parsed, clearLoad: parsed == null),
+                (current) => current.copyWith(
+                  load: parsed,
+                  loadUnit: current.loadUnit ?? loadUnit,
+                  clearLoad: parsed == null,
+                ),
               );
             },
           )
         : null;
-    final distanceField =
-        set.distanceUnit?.trim().isNotEmpty == true ||
-            capture?.distanceUnit?.trim().isNotEmpty == true
+    final distanceField = showDistance
         ? PerformanceNumericField(
             key: ValueKey('${set.setResultId}-distance'),
-            label: DailyJourneyAccessibility.setDistanceLabel(
+            label:
+                'Completed distance (${set.distanceUnit ?? capture?.distanceUnit ?? 'm'})',
+            semanticLabel: DailyJourneyAccessibility.setDistanceLabel(
               set.setNumber,
               set.distanceUnit ?? capture?.distanceUnit,
             ),
@@ -1787,37 +1720,76 @@ class _ExerciseActualRow extends StatelessWidget {
             },
           )
         : null;
+    final repsField = showReps
+        ? PerformanceNumericField(
+            key: ValueKey('${set.setResultId}-reps'),
+            label: DailyJourneyAccessibility.setRepsLabel(set.setNumber),
+            value: set.reps?.toString() ?? '',
+            autofocus: set.setNumber == 1 && !set.completed && loadField == null,
+            onChanged: (value) {
+              final parsed = int.tryParse(value);
+              onUpdateSet(
+                exerciseId,
+                set.setResultId,
+                (current) =>
+                    current.copyWith(reps: parsed, clearReps: parsed == null),
+              );
+            },
+          )
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (showDistance)
+          Text('Set ${set.setNumber}', style: CohortTextStyles.small),
         if (previousSet != null)
           Text(previousSet!.ghostLine, style: CohortTextStyles.small),
         _SetCaptureFields(
           stackedChildren: [
-            PerformanceNumericField(
-              key: ValueKey('${set.setResultId}-reps'),
-              label: DailyJourneyAccessibility.setRepsLabel(set.setNumber),
-              value: set.reps?.toString() ?? '',
-              autofocus: set.setNumber == 1 &&
-                  !set.completed &&
-                  loadField == null,
-              onChanged: (value) {
-                final parsed = int.tryParse(value);
-                onUpdateSet(
-                  exerciseId,
-                  set.setResultId,
-                  (current) =>
-                      current.copyWith(reps: parsed, clearReps: parsed == null),
-                );
-              },
-            ),
+            ?repsField,
             ?distanceField,
             ?loadField,
             if (loadKind == StrengthActualLoadKind.bodyweight)
               const Text('Bodyweight'),
           ],
         ),
+        if (capture?.durationOptional == true)
+          EnduranceDurationField(
+            key: ValueKey('${set.setResultId}-duration'),
+            label: 'Duration (optional)',
+            durationSeconds: set.durationSeconds,
+            onDurationSecondsChanged: (seconds) => onUpdateSet(
+              exerciseId,
+              set.setResultId,
+              (current) => current.copyWith(
+                durationSeconds: seconds,
+                clearDurationSeconds: seconds == null,
+              ),
+            ),
+          ),
+        if (captureRpe) ...[
+          const SizedBox(height: CohortSpacing.xs),
+          Text('RPE', style: CohortTextStyles.small),
+          Wrap(
+            spacing: CohortSpacing.sm,
+            children: [
+              for (var rpe = 1; rpe <= 10; rpe++)
+                ChoiceChip(
+                  label: Text('$rpe'),
+                  selected: set.rpe == rpe,
+                  onSelected: (_) => onUpdateSet(
+                    exerciseId,
+                    set.setResultId,
+                    (current) => current.copyWith(
+                      rpe: current.rpe == rpe ? null : rpe,
+                      clearRpe: current.rpe == rpe,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
         CheckboxListTile(
           contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading,
