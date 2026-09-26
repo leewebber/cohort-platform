@@ -51,7 +51,7 @@ class _EnrolStore implements PrivateProgrammeEnrolmentStore {
   }
 }
 
-const _bali = PrivateProgrammeSummary(
+final _bali = PrivateProgrammeSummary(
   versionId: 'from-discovery-not-constant-ui',
   title: 'Bali Hybrid Base',
   summary: 'Internal hybrid base',
@@ -85,7 +85,7 @@ void main() {
         theme: cohortTheme,
         home: Scaffold(
           body: AthletePrivateProgrammesSection(
-            discoveryStore: _ListStore(const [_bali]),
+            discoveryStore: _ListStore([_bali]),
             enrolmentStore: _EnrolStore(),
             currentProgrammeTitle: 'Apollo Build',
           ),
@@ -93,7 +93,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('My private programmes'), findsOneWidget);
+    expect(find.text('MY PRIVATE PROGRAMMES'), findsOneWidget);
     expect(find.text('Bali Hybrid Base'), findsOneWidget);
     expect(find.textContaining('b1a1b001'), findsNothing);
   });

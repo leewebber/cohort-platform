@@ -63,7 +63,7 @@ class _PreviewEnrolmentStore implements PrivateProgrammeEnrolmentStore {
   }
 }
 
-const _bali = PrivateProgrammeSummary(
+final _bali = PrivateProgrammeSummary(
   versionId: 'preview-private-version',
   title: 'Bali Hybrid Base',
   summary: 'Internal 8-week hybrid base. 71 sessions. Not a public catalogue programme.',
@@ -162,11 +162,11 @@ class _PrivateActivationPreviewScreenState
       case PrivateActivationPreviewState.listWithBali:
       case PrivateActivationPreviewState.narrowViewport:
       case PrivateActivationPreviewState.largeText:
-        return const Padding(
-          padding: EdgeInsets.all(24),
+        return Padding(
+          padding: const EdgeInsets.all(24),
           child: AthletePrivateProgrammesSection(
             discoveryStore: _PreviewDiscoveryStore([_bali]),
-            enrolmentStore: _PreviewEnrolmentStore(),
+            enrolmentStore: const _PreviewEnrolmentStore(),
             currentProgrammeTitle: 'Apollo Build',
           ),
         );

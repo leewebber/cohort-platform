@@ -92,14 +92,7 @@ class _AthletePrivateProgrammeActivationScreenState
   Widget build(BuildContext context) {
     final startLabel = _start == null
         ? null
-        : _weekday(_start!) +
-              ' ' +
-              (EnrolmentDatePresentation.fromIso(
-                    '${_start!.year.toString().padLeft(4, '0')}-'
-                    '${_start!.month.toString().padLeft(2, '0')}-'
-                    '${_start!.day.toString().padLeft(2, '0')}',
-                  ) ??
-                  '');
+        : '${_weekday(_start!)} ${EnrolmentDatePresentation.fromIso('${_start!.year.toString().padLeft(4, '0')}-${_start!.month.toString().padLeft(2, '0')}-${_start!.day.toString().padLeft(2, '0')}') ?? ''}';
     final current = widget.currentProgrammeTitle?.trim();
     return Scaffold(
       appBar: AppBar(title: const Text('Activate private programme')),
