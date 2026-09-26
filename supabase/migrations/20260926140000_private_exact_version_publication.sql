@@ -501,7 +501,7 @@ BEGIN
       protocol_id, name, published, content_kind, authoring_scope, endorsement_status,
       session_lineage_id, revision_number, lifecycle_status, published_at, owner_id
     ) VALUES (
-      v_protocol_id, v_title, 'true', 'session', 'coach_private', 'none',
+      v_protocol_id, v_title, 'true', 'session', 'coach_private', 'coach_authored',
       v_session_lineage_id, v_revision, 'published', NOW(), v_owner::text
     )
     ON CONFLICT (protocol_id) DO UPDATE SET
