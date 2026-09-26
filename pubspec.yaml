@@ -73,8 +73,11 @@ flutter:
     - knowledge/reference/
     - knowledge/schemas/
     - tool/programmes/apollo_build_12_week_v1.plan-package.yaml
+    - tool/programmes/bali_hybrid_base_v1.plan-package.yaml
+    - tool/programmes/bali_hybrid_base_v1.founder.yaml
     - tool/programmes/spartan_physique_block1_week1.plan-package.yaml
     - tool/programmes/spartan_physique_block1_week1.yaml
+    - content/programmes/bali_hybrid_base/v1/bali_hybrid_base.publication.json
     - content/content_graph/v1/cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.publication.json
     - content/content_graph/v1/cohort_global/spartan/32986922-47d1-46b0-b391-a7931d73033e.publication.json
     - supabase/migrations/20260821120000_apollo_build_week1_executable_protocols.sql

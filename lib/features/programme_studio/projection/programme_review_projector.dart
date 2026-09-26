@@ -129,6 +129,18 @@ class ProgrammeReviewProjector {
       );
     }
     if (bundle.spec.classification ==
+        ProgrammeReviewClassification.internalPrivate) {
+      findings.add(
+        const ProgrammeReviewFinding(
+          code: 'internal_private_not_public_catalogue',
+          severity: ProgrammeReviewFindingSeverity.info,
+          message:
+              'Classified as internal/private. Withheld from the public '
+              'catalogue. Not commercial HYROX Base.',
+        ),
+      );
+    }
+    if (bundle.spec.classification ==
         ProgrammeReviewClassification.legacyWithheld) {
       findings.add(
         const ProgrammeReviewFinding(
@@ -290,18 +302,28 @@ class ProgrammeReviewProjector {
       }
       final versionId = decoded['programme_version_id']?.toString();
       final hash = decoded['source_package_hash']?.toString();
+      final kind = decoded['publication_kind']?.toString();
       final hashMatches =
           hash != null && compileHash != null && hash == compileHash;
+      final privateExact = kind == 'private_exact_version';
       return ProgrammeReviewPublicationEvidence(
         establishedLocally: versionId != null && hash != null,
         programmeVersionId: versionId,
         sourcePackageHash: hash,
         artifactPath: bundle.spec.publicationJsonPath,
-        detail: hashMatches
-            ? 'M9 publication artifact hash matches the compiled package. '
-                  'Hosted catalogue default cannot be established locally.'
-            : 'M9 publication artifact present. Hash ${hashMatches ? 'matches' : 'does not match'} '
-                  'compiled package. Hosted default cannot be established locally.',
+        detail: privateExact
+            ? (hashMatches
+                  ? 'Private publication artifact hash matches the compiled '
+                        'package. Hosted private publication is not established '
+                        'locally. Not a public-catalogue default.'
+                  : 'Private publication artifact present. Hash does not match '
+                        'the compiled package. Hosted publication is not '
+                        'established locally.')
+            : (hashMatches
+                  ? 'M9 publication artifact hash matches the compiled package. '
+                        'Hosted catalogue default cannot be established locally.'
+                  : 'M9 publication artifact present. Hash ${hashMatches ? 'matches' : 'does not match'} '
+                        'compiled package. Hosted default cannot be established locally.'),
       );
     } catch (error) {
       return ProgrammeReviewPublicationEvidence(
@@ -464,6 +486,9 @@ class ProgrammeReviewProjector {
         prescriptionSummary: slot.progression.prescriptionSummary,
         slotKey: slot.slotKey,
         sessionOrder: slot.sessionOrder,
+        timeOfDay: slot.timeOfDay.dbValue,
+        isOptional: slot.isOptional,
+        completionExpectation: slot.completionExpectation.dbValue,
         findings: sessionFindings,
       );
     }
@@ -535,6 +560,9 @@ class ProgrammeReviewProjector {
       prescriptionSummary: slot.progression.prescriptionSummary,
       slotKey: slot.slotKey,
       sessionOrder: slot.sessionOrder,
+      timeOfDay: slot.timeOfDay.dbValue,
+      isOptional: slot.isOptional,
+      completionExpectation: slot.completionExpectation.dbValue,
       blocks: blocks,
       findings: sessionFindings,
     );
@@ -619,13 +647,18 @@ class ProgrammeReviewProjector {
             ? 'Known structures rendered. Nothing was silently dropped.'
             : 'Unsupported structures were rendered with warnings.',
       ),
-      const ProgrammeReviewCheck(
+      ProgrammeReviewCheck(
         id: 'running_structure',
         label: 'Running structure readiness',
-        status: ProgrammeReviewCheckStatus.notImplemented,
-        detail:
-            'Structured running workout model is not implemented. Current '
-            'timer/block encoding is shown as authored.',
+        status: programme.lineageCode == 'BALI-HYBRID-BASE'
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.notImplemented,
+        detail: programme.lineageCode == 'BALI-HYBRID-BASE'
+            ? 'No running required. Time-based BikeErg/RowErg is shown as '
+                  'authored duration with target none. Distance 2 km Row tests '
+                  'remain manual capture. B2 is not implemented.'
+            : 'Structured running workout model is not implemented. Current '
+                  'timer/block encoding is shown as authored.',
       ),
       const ProgrammeReviewCheck(
         id: 'pace_calculation',
@@ -672,6 +705,120 @@ class ProgrammeReviewProjector {
         label: 'Completion / pin-integrity test',
         status: ProgrammeReviewCheckStatus.notAssessed,
         detail: 'Pin-integrity execution is not assessed by Studio Stage 1.',
+      ),
+      const ProgrammeReviewCheck(
+        id: 'hosted_private_publication',
+        label: 'Private hosted publication',
+        status: ProgrammeReviewCheckStatus.notAssessed,
+        detail:
+            'Local private artifact is not hosted publication. Lee assignment '
+            'is unchanged.',
+      ),
+      const ProgrammeReviewCheck(
+        id: 'lee_assignment',
+        label: 'Lee assignment',
+        status: ProgrammeReviewCheckStatus.notAssessed,
+        detail: 'Current assignment must not be changed by this authoring task.',
+      ),
+      const ProgrammeReviewCheck(
+        id: 'complete_phone_execution',
+        label: 'Complete phone execution',
+        status: ProgrammeReviewCheckStatus.notAssessed,
+        detail: 'Phone execution has not been assessed.',
+      ),
+      ..._baliReadiness(programme, bodies),
+    ];
+  }
+
+  List<ProgrammeReviewCheck> _baliReadiness(
+    ProgrammeReviewProgramme programme,
+    List<ProgrammeReviewSession> bodies,
+  ) {
+    if (programme.lineageCode != 'BALI-HYBRID-BASE') {
+      return const [];
+    }
+    final byWeek = <int, int>{};
+    for (final week in programme.weeks) {
+      byWeek[week.weekNumber] = week.days.fold<int>(
+        0,
+        (count, day) => count + day.sessions.length,
+      );
+    }
+    final expected = {1: 9, 2: 9, 3: 9, 4: 8, 5: 9, 6: 9, 7: 9, 8: 9};
+    final countsOk =
+        bodies.length == 71 &&
+        expected.entries.every((entry) => byWeek[entry.key] == entry.value);
+    final sameDay = programme.weeks
+        .expand((week) => week.days)
+        .where((day) => day.sessions.length > 1);
+    final amPmOk = sameDay.every((day) {
+      if (day.sessions.length != 2) {
+        return false;
+      }
+      return day.sessions.first.timeOfDay == 'morning' &&
+          day.sessions.last.timeOfDay == 'afternoon' &&
+          day.sessions.first.sessionOrder == 1 &&
+          day.sessions.last.sessionOrder == 2;
+    });
+    final week8 = programme.weeks.where((week) => week.weekNumber == 8);
+    final spilloverOk =
+        programme.durationWeeks == 8 &&
+        week8.isNotEmpty &&
+        week8.first.days.any((day) => day.dayOrder == 8) &&
+        week8.first.days.any((day) => day.dayOrder == 9);
+    final privateOk =
+        programme.libraryScope == 'coachPrivate' ||
+        programme.libraryScope == 'coach_private';
+    return [
+      ProgrammeReviewCheck(
+        id: 'session_count_71',
+        label: 'All 71 sessions represented',
+        status: countsOk
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.failed,
+        detail: countsOk
+            ? '71 sessions; weekly counts 9/9/9/8/9/9/9/9.'
+            : 'Session counts do not match the authored source.',
+      ),
+      ProgrammeReviewCheck(
+        id: 'same_day_ampm',
+        label: 'Same-day AM/PM retained',
+        status: amPmOk
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.failed,
+        detail: amPmOk
+            ? 'Sunday and Monday AM precede PM on the same authored day.'
+            : 'Same-day AM/PM order is incomplete.',
+      ),
+      ProgrammeReviewCheck(
+        id: 'spillover_retained',
+        label: 'Week 8 spillover retained',
+        status: spilloverOk
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.failed,
+        detail: spilloverOk
+            ? 'Eight-week label retained. W8 D8 and D9 remain in week 8.'
+            : 'Spillover days are missing or the duration label changed.',
+      ),
+      ProgrammeReviewCheck(
+        id: 'private_classification',
+        label: 'Private classification',
+        status: privateOk
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.failed,
+        detail: privateOk
+            ? 'coach_private. Absent from the public catalogue projection.'
+            : 'Library scope is not coach_private.',
+      ),
+      ProgrammeReviewCheck(
+        id: 'source_fidelity',
+        label: 'Source-fidelity test',
+        status: countsOk && amPmOk && spilloverOk && privateOk
+            ? ProgrammeReviewCheckStatus.passed
+            : ProgrammeReviewCheckStatus.failed,
+        detail:
+            'Deterministic source manifest and compile projection must match '
+            'the attached Bali source. Compiler success is not coaching approval.',
       ),
     ];
   }

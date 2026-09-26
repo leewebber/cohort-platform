@@ -7,6 +7,7 @@ library;
 enum ProgrammeReviewClassification {
   productionPublished,
   internalPersonal,
+  internalPrivate,
   legacyWithheld,
   fixtureTestExample,
   plannedFamily,
@@ -166,6 +167,9 @@ class ProgrammeReviewSession {
     this.slotKey,
     this.sessionOrder = 1,
     this.dayType,
+    this.timeOfDay,
+    this.isOptional = false,
+    this.completionExpectation,
     this.blocks = const [],
     this.findings = const [],
   });
@@ -182,6 +186,9 @@ class ProgrammeReviewSession {
   final String? slotKey;
   final int sessionOrder;
   final String? dayType;
+  final String? timeOfDay;
+  final bool isOptional;
+  final String? completionExpectation;
   final List<ProgrammeReviewBlock> blocks;
   final List<ProgrammeReviewFinding> findings;
 
@@ -198,6 +205,10 @@ class ProgrammeReviewSession {
     if (slotKey != null) 'slot_key': slotKey,
     'session_order': sessionOrder,
     if (dayType != null) 'day_type': dayType,
+    if (timeOfDay != null) 'time_of_day': timeOfDay,
+    'is_optional': isOptional,
+    if (completionExpectation != null)
+      'completion_expectation': completionExpectation,
     'blocks': blocks.map((item) => item.toJson()).toList(growable: false),
     'findings': findings.map((item) => item.toJson()).toList(growable: false),
   };
@@ -368,6 +379,7 @@ class ProgrammeReviewProgramme {
 
   bool get isRealInventoryItem =>
       classification == ProgrammeReviewClassification.internalPersonal ||
+      classification == ProgrammeReviewClassification.internalPrivate ||
       classification == ProgrammeReviewClassification.legacyWithheld ||
       classification == ProgrammeReviewClassification.productionPublished;
 

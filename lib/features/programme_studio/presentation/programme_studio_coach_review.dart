@@ -32,7 +32,11 @@ class ProgrammeStudioCoachReview extends StatelessWidget {
     final schedule = _WeekSchedule(
       week: week,
       selectedDayKey: controller.selectedDay?.dayKey,
+      selectedSessionKey: controller.selectedSession?.sessionKey,
       onSelectDay: controller.selectDay,
+      onSelectSession: (dayKey, sessionKey) {
+        controller.selectDaySession(dayKey: dayKey, sessionKey: sessionKey);
+      },
     );
     final detail = _SessionDetail(controller: controller);
     if (narrow) {
@@ -164,12 +168,16 @@ class _WeekSchedule extends StatelessWidget {
   const _WeekSchedule({
     required this.week,
     required this.selectedDayKey,
+    required this.selectedSessionKey,
     required this.onSelectDay,
+    required this.onSelectSession,
   });
 
   final ProgrammeReviewWeek week;
   final String? selectedDayKey;
+  final String? selectedSessionKey;
   final ValueChanged<String> onSelectDay;
+  final void Function(String dayKey, String sessionKey) onSelectSession;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +191,9 @@ class _WeekSchedule extends StatelessWidget {
             _DayRow(
               day: day,
               selected: day.dayKey == selectedDayKey,
+              selectedSessionKey: selectedSessionKey,
               onTap: () => onSelectDay(day.dayKey),
+              onSelectSession: onSelectSession,
             ),
         ],
       ),
@@ -195,16 +205,19 @@ class _DayRow extends StatelessWidget {
   const _DayRow({
     required this.day,
     required this.selected,
+    required this.selectedSessionKey,
     required this.onTap,
+    required this.onSelectSession,
   });
 
   final ProgrammeReviewDay day;
   final bool selected;
+  final String? selectedSessionKey;
   final VoidCallback onTap;
+  final void Function(String dayKey, String sessionKey) onSelectSession;
 
   @override
   Widget build(BuildContext context) {
-    final session = day.sessions.firstOrNull;
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
       child: Material(
@@ -237,24 +250,40 @@ class _DayRow extends StatelessWidget {
                         style: CohortTextStyles.cardTitle,
                       ),
                       const SizedBox(height: 4),
-                      if (session == null)
+                      if (day.sessions.isEmpty)
                         const Text(
                           ProgrammeStudioCopy.restDay,
                           style: CohortTextStyles.small,
                         )
-                      else ...[
-                        Text(
-                          session.displayTitle ?? session.title,
-                          style: CohortTextStyles.body,
-                        ),
-                        Text(
-                          [
-                            trainingDomain(session),
-                            ?safeWorkloadSummary(session),
-                          ].join(' · '),
-                          style: CohortTextStyles.small,
-                        ),
-                      ],
+                      else
+                        for (final session in day.sessions) ...[
+                          InkWell(
+                            onTap: () =>
+                                onSelectSession(day.dayKey, session.sessionKey),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                [
+                                  sessionScheduleLabel(session),
+                                  if (session.isOptional) 'optional',
+                                ].join(' · '),
+                                style: CohortTextStyles.body.copyWith(
+                                  fontWeight:
+                                      session.sessionKey == selectedSessionKey
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            [
+                              trainingDomain(session),
+                              ?safeWorkloadSummary(session),
+                            ].join(' · '),
+                            style: CohortTextStyles.small,
+                          ),
+                        ],
                     ],
                   ),
                 ),
@@ -295,7 +324,13 @@ class _SessionDetail extends StatelessWidget {
         Text(session.displayTitle ?? session.title, style: CohortTextStyles.h2),
         const SizedBox(height: CohortSpacing.xs),
         Text(
-          weekdayLabel(day),
+          [
+            weekdayLabel(day),
+            if (timeOfDayLabel(session.timeOfDay).isNotEmpty)
+              timeOfDayLabel(session.timeOfDay),
+            if (session.isOptional) 'Optional',
+            'order ${session.sessionOrder}',
+          ].join(' · '),
           style: CohortTextStyles.eyebrow.copyWith(color: CohortColors.olive),
         ),
         if (coachFacingNote(session.coachNote) != null) ...[

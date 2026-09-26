@@ -7,6 +7,8 @@ String classificationLabel(ProgrammeReviewClassification value) {
   return switch (value) {
     ProgrammeReviewClassification.productionPublished => 'Production-published',
     ProgrammeReviewClassification.internalPersonal => 'Internal / personal',
+    ProgrammeReviewClassification.internalPrivate =>
+      'Internal / Lee-specific · Private',
     ProgrammeReviewClassification.legacyWithheld => 'Legacy / withheld',
     ProgrammeReviewClassification.fixtureTestExample =>
       'Fixture / test / example',
@@ -21,6 +23,24 @@ String weekLabel({required int weekNumber, required int weekCount}) {
 
 String weekdayLabel(ProgrammeReviewDay day) {
   return day.title ?? 'Day ${day.dayOrder}';
+}
+
+String timeOfDayLabel(String? timeOfDay) {
+  return switch (timeOfDay) {
+    'morning' => 'AM',
+    'afternoon' => 'PM',
+    'evening' => 'Evening',
+    _ => '',
+  };
+}
+
+String sessionScheduleLabel(ProgrammeReviewSession session) {
+  final tod = timeOfDayLabel(session.timeOfDay);
+  final title = session.displayTitle ?? session.title;
+  if (tod.isEmpty) {
+    return title;
+  }
+  return '$tod · $title';
 }
 
 String authoredOrUnspecified(String? value) {

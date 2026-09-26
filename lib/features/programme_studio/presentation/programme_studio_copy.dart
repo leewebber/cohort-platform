@@ -35,4 +35,13 @@ abstract final class ProgrammeStudioCopy {
   static const contentReady = 'Content ready';
   static const needsAttention = 'Needs attention';
   static const weekOf = 'Week';
+  static const baliSummaryTitle = 'Programme summary';
+  static const baliDurationLabel = '8-week label';
+  static const baliCalendarSpan = '58-day calendar span including Week 8 spillover';
+  static const baliSessionCount = '71 sessions';
+  static const baliStandardWeek = '9-session standard week';
+  static const baliWeek4 = 'Week 4 consolidation / testing (8 sessions)';
+  static const baliWeek8 = 'Week 8 taper / testing, including spillover Saturday and Sunday';
+  static const baliNoRunning = 'No running required';
+  static const baliPrivate = 'Private / internal — not in the public catalogue';
 }

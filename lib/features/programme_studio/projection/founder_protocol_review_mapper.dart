@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
 
 import '../domain/programme_review_models.dart';
@@ -62,7 +64,7 @@ class FounderProtocolReviewMapper {
       distance: prescription['distance']?.toString(),
       recovery: prescription['rest_seconds']?.toString(),
       notes: exercise.notes ?? exercise.executionGroup?.label,
-      rawPrescription: prescription.isEmpty ? null : prescription.toString(),
+      rawPrescription: prescription.isEmpty ? null : jsonEncode(prescription),
     );
   }
 

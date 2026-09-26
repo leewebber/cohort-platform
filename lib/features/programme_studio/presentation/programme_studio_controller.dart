@@ -59,13 +59,9 @@ class ProgrammeStudioController extends ChangeNotifier {
        _showDeveloperFixtures = showDeveloperFixtures,
        _selection =
            initialSelection ??
-           ProgrammeStudioSelection(
-             catalogId:
-                 catalog
-                     .realInventory(includeFixtures: showDeveloperFixtures)
-                     .firstOrNull
-                     ?.catalogId ??
-                 '',
+           defaultStudioSelection(
+             catalog,
+             showDeveloperFixtures: showDeveloperFixtures,
            );
 
   ProgrammeReviewCatalog _catalog;
@@ -225,6 +221,15 @@ class ProgrammeStudioController extends ChangeNotifier {
     selectDay(week.days[next].dayKey);
   }
 
+  void selectDaySession({required String dayKey, required String sessionKey}) {
+    _selection = _selection.copyWith(
+      dayKey: dayKey,
+      sessionKey: sessionKey,
+      view: ProgrammeStudioView.coachReview,
+    );
+    notifyListeners();
+  }
+
   void moveSession(int delta) {
     final day = selectedDay;
     if (day == null || day.sessions.isEmpty) {
@@ -238,3 +243,32 @@ class ProgrammeStudioController extends ChangeNotifier {
     selectSession(day.sessions[next].sessionKey);
   }
 }
+
+ProgrammeStudioSelection defaultStudioSelection(
+  ProgrammeReviewCatalog catalog, {
+  bool showDeveloperFixtures = false,
+}) {
+  final inventory = catalog.realInventory(
+    includeFixtures: showDeveloperFixtures,
+  );
+  const baliId = 'bali-hybrid-base-v1';
+  for (final item in inventory) {
+    if (item.catalogId == baliId) {
+      return const ProgrammeStudioSelection(
+        catalogId: baliId,
+        weekNumber: 1,
+        dayKey: 'day_1',
+        sessionKey: 'SES-BALI-W01-D01-S01',
+        view: ProgrammeStudioView.coachReview,
+      );
+    }
+  }
+  return ProgrammeStudioSelection(
+    catalogId: inventory.firstOrNull?.catalogId ?? '',
+  );
+}
+
+const apolloStudioSelection = ProgrammeStudioSelection(
+  catalogId: 'apollo-build-v2',
+  weekNumber: 1,
+);

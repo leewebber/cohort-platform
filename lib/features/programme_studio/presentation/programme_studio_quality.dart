@@ -95,7 +95,16 @@ StudioQualityReport buildStudioQualityReport(
       ),
       StudioQualityGroup(
         title: 'Training content',
-        items: [mapped('protocol_bodies', 'Session content available')],
+        items: [
+          mapped('protocol_bodies', 'Session content available'),
+          if (programme.lineageCode == 'BALI-HYBRID-BASE') ...[
+            mapped('session_count_71', 'All 71 sessions represented'),
+            mapped('same_day_ampm', 'Same-day AM/PM retained'),
+            mapped('spillover_retained', 'Week 8 spillover retained'),
+            mapped('private_classification', 'Private classification'),
+            mapped('source_fidelity', 'Source-fidelity test'),
+          ],
+        ],
       ),
       StudioQualityGroup(
         title: 'Athlete experience',
@@ -112,8 +121,11 @@ StudioQualityReport buildStudioQualityReport(
       StudioQualityGroup(
         title: 'Release approval',
         items: [
-          mapped('coaching_approval', 'Coaching review'),
+          mapped('coaching_approval', 'Founder coaching review'),
           mapped('execution_device_test', 'Athlete device execution'),
+          mapped('hosted_private_publication', 'Private hosted publication'),
+          mapped('lee_assignment', 'Lee assignment'),
+          mapped('complete_phone_execution', 'Complete phone execution'),
           const StudioQualityItem(
             id: 'launch_approval',
             label: 'Launch approval',

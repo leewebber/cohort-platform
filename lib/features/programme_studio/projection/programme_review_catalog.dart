@@ -8,6 +8,8 @@ abstract final class ProgrammeReviewCatalogRegistry {
   static const apolloCorrectionSql =
       ApolloSqlArtifactChain.correctionRelativePaths;
 
+  static const baliCatalogId = 'bali-hybrid-base-v1';
+
   static const realSpecs = [
     ProgrammeReviewSourceSpec(
       catalogId: 'apollo-build-v2',
@@ -18,6 +20,14 @@ abstract final class ProgrammeReviewCatalogRegistry {
           'content/content_graph/v1/cohort_global/apollo/2ba018bd-7dc2-4dfd-8d8e-e35823158920.publication.json',
       executableProtocolSqlPaths: apolloWeekSql,
       correctionSqlPaths: apolloCorrectionSql,
+    ),
+    ProgrammeReviewSourceSpec(
+      catalogId: baliCatalogId,
+      classification: ProgrammeReviewClassification.internalPrivate,
+      planPackagePath: 'tool/programmes/bali_hybrid_base_v1.plan-package.yaml',
+      founderYamlPath: 'tool/programmes/bali_hybrid_base_v1.founder.yaml',
+      publicationJsonPath:
+          'content/programmes/bali_hybrid_base/v1/bali_hybrid_base.publication.json',
     ),
     ProgrammeReviewSourceSpec(
       catalogId: 'spartan-physique-v3',

@@ -21,11 +21,13 @@ class ProgrammeStudioApp extends StatelessWidget {
     required this.catalog,
     this.showDeveloperFixtures = false,
     this.previewStateLabel,
+    this.initialSelection,
   });
 
   final ProgrammeReviewCatalog catalog;
   final bool showDeveloperFixtures;
   final String? previewStateLabel;
+  final ProgrammeStudioSelection? initialSelection;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,7 @@ class ProgrammeStudioApp extends StatelessWidget {
         catalog: catalog,
         showDeveloperFixtures: showDeveloperFixtures,
         previewStateLabel: previewStateLabel,
+        initialSelection: initialSelection,
       ),
     );
   }
@@ -46,11 +49,13 @@ class ProgrammeStudioScreen extends StatefulWidget {
     required this.catalog,
     this.showDeveloperFixtures = false,
     this.previewStateLabel,
+    this.initialSelection,
   });
 
   final ProgrammeReviewCatalog catalog;
   final bool showDeveloperFixtures;
   final String? previewStateLabel;
+  final ProgrammeStudioSelection? initialSelection;
 
   @override
   State<ProgrammeStudioScreen> createState() => _ProgrammeStudioScreenState();
@@ -60,6 +65,7 @@ class _ProgrammeStudioScreenState extends State<ProgrammeStudioScreen> {
   late final ProgrammeStudioController controller = ProgrammeStudioController(
     catalog: widget.catalog,
     showDeveloperFixtures: widget.showDeveloperFixtures,
+    initialSelection: widget.initialSelection,
   );
 
   @override
@@ -533,6 +539,25 @@ class _ProgrammeHeader extends StatelessWidget {
           authoredOrUnspecified(programme.primaryGoal),
           style: CohortTextStyles.body,
         ),
+        if (programme.catalogId == 'bali-hybrid-base-v1') ...[
+          const SizedBox(height: CohortSpacing.lg),
+          Text(
+            ProgrammeStudioCopy.baliSummaryTitle,
+            style: CohortTextStyles.sectionLabel,
+          ),
+          const SizedBox(height: CohortSpacing.sm),
+          for (final line in [
+            ProgrammeStudioCopy.baliDurationLabel,
+            ProgrammeStudioCopy.baliCalendarSpan,
+            ProgrammeStudioCopy.baliSessionCount,
+            ProgrammeStudioCopy.baliStandardWeek,
+            ProgrammeStudioCopy.baliWeek4,
+            ProgrammeStudioCopy.baliWeek8,
+            ProgrammeStudioCopy.baliNoRunning,
+            ProgrammeStudioCopy.baliPrivate,
+          ])
+            Text(line, style: CohortTextStyles.small),
+        ],
       ],
     );
   }
