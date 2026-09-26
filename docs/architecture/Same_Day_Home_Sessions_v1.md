@@ -1,6 +1,7 @@
 # Same-day Home sessions
 
-**Status:** Implementation contract for Bali Sunday/Monday doubles.
+**Status:** Implemented. Handoff:
+[`../checkpoints/SAME_DAY_HOME_SESSIONS_HANDOFF.md`](../checkpoints/SAME_DAY_HOME_SESSIONS_HANDOFF.md)
 **Base:** `origin/main` `e3bf1a237f63f806a7b3ce0f8387a7004d16a288`
 
 ```text
