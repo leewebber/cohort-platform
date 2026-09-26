@@ -144,11 +144,13 @@ class FixedProgrammeCalendarDayProjection {
     required this.date,
     required this.state,
     this.occurrence,
+    this.occurrences = const [],
   });
 
   final String date;
   final FixedProgrammeOccurrenceState state;
   final FixedProgrammeOccurrenceProjection? occurrence;
+  final List<FixedProgrammeOccurrenceProjection> occurrences;
 
   bool get isRest => state == FixedProgrammeOccurrenceState.rest;
 
@@ -157,23 +159,53 @@ class FixedProgrammeCalendarDayProjection {
     required String assignmentId,
   }) {
     final state = FixedProgrammeOccurrenceState.parse(map['state']);
+    final parsed = <FixedProgrammeOccurrenceProjection>[];
+    final rawList = map['occurrences'];
+    if (rawList is List) {
+      for (final entry in rawList) {
+        if (entry is! Map) {
+          throw const FormatException('Malformed calendar day occurrences');
+        }
+        parsed.add(
+          FixedProgrammeOccurrenceProjection.fromMap(
+            Map<String, dynamic>.from(entry),
+            assignmentId: assignmentId,
+          ),
+        );
+      }
+      parsed.sort((a, b) => a.sessionOrder.compareTo(b.sessionOrder));
+    }
     final rawOccurrence = map['occurrence'];
     final occurrence = rawOccurrence is Map
         ? FixedProgrammeOccurrenceProjection.fromMap(
             Map<String, dynamic>.from(rawOccurrence),
             assignmentId: assignmentId,
           )
-        : null;
-    if (state == FixedProgrammeOccurrenceState.rest && occurrence != null) {
+        : (parsed.isEmpty ? null : parsed.first);
+    if (parsed.isEmpty && occurrence != null) {
+      parsed.add(occurrence);
+    }
+    if (parsed.length >= 2) {
+      final orders = <int>{};
+      for (final item in parsed) {
+        if (!orders.add(item.sessionOrder)) {
+          throw const FormatException(
+            'Same-day sessions have duplicate session_order',
+          );
+        }
+      }
+    }
+    if (state == FixedProgrammeOccurrenceState.rest && parsed.isNotEmpty) {
       throw const FormatException('Rest day cannot contain an occurrence');
     }
-    if (state != FixedProgrammeOccurrenceState.rest && occurrence == null) {
+    if (state != FixedProgrammeOccurrenceState.rest && parsed.isEmpty) {
       throw const FormatException('Executable calendar day missing occurrence');
     }
     return FixedProgrammeCalendarDayProjection(
       date: _requiredDate(map, 'date'),
       state: state,
       occurrence: occurrence,
+      occurrences: List.unmodifiable(parsed),
     );
   }
 }
@@ -206,9 +238,22 @@ class FixedProgrammeCalendarProjection {
   final List<FixedProgrammeOccurrenceProjection> occurrences;
   final List<FixedProgrammeCalendarDayProjection> currentWeek;
 
+  /// Next actionable session due today, not merely the first row on the date.
+  ///
+  /// Completing an earlier same-day session must not conceal a later one.
   FixedProgrammeOccurrenceProjection? get todayOccurrence {
-    final matches = occurrencesOnDate(today);
-    return matches.isEmpty ? null : matches.first;
+    final sessions = todaySessions;
+    if (sessions.isEmpty) return null;
+    for (final occurrence in sessions) {
+      if (occurrence.isResumable) return occurrence;
+    }
+    for (final occurrence in sessions) {
+      if (occurrence.state == FixedProgrammeOccurrenceState.today ||
+          occurrence.state == FixedProgrammeOccurrenceState.planned) {
+        return occurrence;
+      }
+    }
+    return sessions.first;
   }
 
   /// True when today is an authored rest day, not an executable session.
@@ -325,12 +370,23 @@ class FixedProgrammeCalendarProjection {
   FixedProgrammeOccurrenceProjection? get nextPlannedOccurrence {
     FixedProgrammeOccurrenceProjection? next;
     for (final occurrence in occurrences) {
-      if (occurrence.scheduledDate.compareTo(today) <= 0 ||
-          occurrence.state != FixedProgrammeOccurrenceState.planned) {
+      if (occurrence.state != FixedProgrammeOccurrenceState.planned &&
+          occurrence.state != FixedProgrammeOccurrenceState.today) {
         continue;
       }
-      if (next == null ||
-          occurrence.scheduledDate.compareTo(next.scheduledDate) < 0) {
+      if (occurrence.scheduledDate.compareTo(today) < 0) continue;
+      if (occurrence.scheduledDate == today &&
+          (occurrence.state == FixedProgrammeOccurrenceState.completed ||
+              occurrence.state == FixedProgrammeOccurrenceState.skipped)) {
+        continue;
+      }
+      if (next == null) {
+        next = occurrence;
+        continue;
+      }
+      final dateCmp = occurrence.scheduledDate.compareTo(next.scheduledDate);
+      if (dateCmp < 0 ||
+          (dateCmp == 0 && occurrence.sessionOrder < next.sessionOrder)) {
         next = occurrence;
       }
     }
@@ -369,8 +425,15 @@ class FixedProgrammeCalendarProjection {
     if (selected.assignmentId != assignmentId) return false;
     if (selected.state != FixedProgrammeOccurrenceState.planned) return false;
     if (!isWithinFutureTrainTodayHorizon(selected)) return false;
-    final todaySession = todayOccurrence;
-    if (todaySession == null) return false;
+    final incompleteToday = todaySessions
+        .where(
+          (occurrence) =>
+              occurrence.state != FixedProgrammeOccurrenceState.completed &&
+              occurrence.state != FixedProgrammeOccurrenceState.skipped,
+        )
+        .toList(growable: false);
+    if (incompleteToday.length != 1) return false;
+    final todaySession = incompleteToday.single;
     if (todaySession.occurrenceId == selected.occurrenceId) return false;
     if (todaySession.trainingSessionId != null || todaySession.isResumable) {
       return false;
