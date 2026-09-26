@@ -173,4 +173,4 @@ BEGIN
   );
 END $$;
 
-SELECT sprint12_assert_gate('BE');
+SELECT sprint12_fail_if_any_failed();
