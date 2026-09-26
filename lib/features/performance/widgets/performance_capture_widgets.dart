@@ -1794,7 +1794,9 @@ class _ExerciseActualRow extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           controlAffinity: ListTileControlAffinity.leading,
           title: Text(
-            DailyJourneyAccessibility.setCompletedLabel(set.setNumber),
+            showDistance
+                ? 'Completed'
+                : DailyJourneyAccessibility.setCompletedLabel(set.setNumber),
           ),
           value: set.completed,
           onChanged: (value) => onUpdateSet(
