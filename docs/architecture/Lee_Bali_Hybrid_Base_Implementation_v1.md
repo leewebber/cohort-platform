@@ -11,7 +11,7 @@ into the repository).
 [`../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md)
 
 ```text
-LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+LEE_BALI_HYBRID_BASE=BLOCKED_PENDING_INFRASTRUCTURE
 LEE_BALI_HYBRID_BASE_PRIVATE=true
 LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -22,10 +22,9 @@ HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-`IMPLEMENTED_AWAITING_FOUNDER_APPROVAL` here means the **Phase 1
-decision record** is ready for founder approval of the smallest
-integrity-preserving follow-on. It does **not** mean the programme was
-authored, compiled, published, or assigned.
+Live status is `BLOCKED_PENDING_INFRASTRUCTURE` until the authorised
+calendar and private-enrol slice lands. This contract does **not** mean
+the programme was authored, compiled, published, or assigned.
 
 This is **not** commercial HYROX Base. Do not name or classify it as
 such. The general `PROGRAMME_CONTENT_AUTHORING_AUTHORISED` flag remains

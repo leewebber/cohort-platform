@@ -8,11 +8,15 @@
 **Verdict:** **STOP before authoring.**
 
 ```text
-LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
+LEE_BALI_HYBRID_BASE=BLOCKED_PENDING_INFRASTRUCTURE
 LEE_BALI_HYBRID_BASE_PRIVATE=true
 LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false
 HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false
 ```
+
+> Historical note: an earlier draft of this file used
+> `IMPLEMENTED_AWAITING_FOUNDER_APPROVAL`. That overstated Phase 1.
+> The stop was infrastructure-blocked, not an authored programme.
 
 ---
 
