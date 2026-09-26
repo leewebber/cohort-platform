@@ -21,6 +21,7 @@ the next product milestone. Phase 3.2E/F/G remain unallocated.
 | [../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md](../checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md) | B1 historical implementation handoff |
 | [Lee_Bali_Hybrid_Base_Implementation_v1.md](./Lee_Bali_Hybrid_Base_Implementation_v1.md) | Lee Bali private programme — Phase 1 stop |
 | [Private_Programme_Infrastructure_v1.md](./Private_Programme_Infrastructure_v1.md) | Same-day calendar + private enrol |
+| [../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md](../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md) | Private infra handoff |
 | [../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md](../checkpoints/LEE_BALI_HYBRID_BASE_PHASE_1_AUDIT.md) | Bali model-capability audit |
 | [../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md) | Bali Phase 1 handoff |
 | [Running_Workout_B1_Implementation_v1.md](./Running_Workout_B1_Implementation_v1.md) | B1 implementation contract |

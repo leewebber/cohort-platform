@@ -1,12 +1,14 @@
 # Private programme infrastructure — implementation contract
 
-**Status:** Authorised enabling slice. Not programme authoring.
+**Status:** Implemented locally. Awaiting founder approval. Not programme authoring.
+**Handoff:**
+[`../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](../checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md)
 **Base:** `feat/lee-bali-hybrid-base-v1` `70afeb3a5b256be520f04fc324d566f6ab909142`
 **Parent stop (superseded status only):**
 [`../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](../checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md)
 
 ```text
-LEE_BALI_HYBRID_BASE=INFRASTRUCTURE_IN_PROGRESS
+LEE_BALI_HYBRID_BASE=INFRASTRUCTURE_IMPLEMENTED_AWAITING_FOUNDER_APPROVAL
 LEE_BALI_HYBRID_BASE_PRIVATE=true
 LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false
 BALI_PROGRAMME_CONTENT_AUTHORISED=false
