@@ -72,9 +72,12 @@ In-place capture correction is authorised only when:
 - hosted graph identities (protocol, block position, exercise id/order)
   still match the approved graph
 - only prescription/capture metadata is updated
-- no Bali session, record, or outcome exists
 - assignment, pin, schedule, dates, occurrences, and Apollo are
   unchanged
+- terminal outcomes, skipped occurrences, or any logged set load still
+  block
+- an empty-load in-progress Strength A does not block capture-only
+  repair; the session/outcome rows are not modified
 
 ---
 

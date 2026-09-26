@@ -41,6 +41,16 @@ class StrengthExercisePrescription {
       prescribedDistanceMeters != null ||
       (prescribedDistanceText?.trim().isNotEmpty == true);
 
+  /// RPE chips follow authored capture or an explicit RPE load, not names.
+  bool get requiresRpeCapture {
+    if (performanceCapture?.rpe == true) return true;
+    if (load?.type == StrengthLoadType.rpe) return true;
+    final text = load?.text?.trim().toUpperCase();
+    return load?.type == StrengthLoadType.freeText &&
+        text != null &&
+        text.startsWith('RPE');
+  }
+
   StrengthExercisePrescription copyWith({
     int? sets,
     StrengthRepPrescription? reps,

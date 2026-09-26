@@ -1268,6 +1268,18 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                   onRetry: widget.onRetryPreviousStrength,
                                   useProvidedPrevious: true,
                                 ),
+                                if (StrengthPrescriptionFormatter.formatRest(
+                                      summary?.prescription?.restSeconds,
+                                    ) !=
+                                    null) ...[
+                                  const SizedBox(height: CohortSpacing.sm),
+                                  Text(
+                                    StrengthPrescriptionFormatter.formatRest(
+                                      summary!.prescription!.restSeconds,
+                                    )!,
+                                    style: CohortTextStyles.small,
+                                  ),
+                                ],
                                 const SizedBox(height: CohortSpacing.sm),
                                 for (final set in exercise.sets)
                                   Padding(
@@ -1280,13 +1292,19 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                       capture: summary
                                           ?.prescription
                                           ?.performanceCapture,
-                                      loadKind:
-                                          exercise.exerciseSnapshot.loadKind,
+                                      loadKind: summary?.prescription != null
+                                          ? StrengthActualLoadKind.fromPrescription(
+                                              blockType: widget
+                                                  .blockDraft
+                                                  .blockSnapshot
+                                                  .blockType,
+                                              prescription:
+                                                  summary!.prescription,
+                                            )
+                                          : exercise.exerciseSnapshot.loadKind,
                                       captureRpe:
-                                          summary
-                                              ?.prescription
-                                              ?.performanceCapture
-                                              ?.rpe ==
+                                          summary?.prescription
+                                              ?.requiresRpeCapture ==
                                           true,
                                       onUpdateSet: widget.onUpdateSet,
                                       previousSet: _hostedPrevious(

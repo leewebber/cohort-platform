@@ -31,7 +31,11 @@ load / distance / RPE from authored dimensions, not from exercise names.
 Repair: `repair_private_programme_exercise_capture(jsonb)` service-role
 only. CLI: `tool/programmes/bin/repair_private_exercise_capture.dart`.
 
-Migration:
+Migrations:
 `supabase/migrations/20260926170000_private_exercise_capture_repair.sql`
+`supabase/migrations/20260926180000_private_exercise_capture_repair_in_progress.sql`
 
-Do not re-enrol Bali. Do not start Strength A automatically.
+An already-open Strength A with completed reps and no logged loads does
+not block capture-only repair. Session and outcome rows stay untouched.
+
+Do not re-enrol Bali. Do not tap Begin automatically.

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
+import 'package:cohort_platform/features/performance/models/active_performance_draft.dart';
 import 'package:cohort_platform/features/performance/models/performance_snapshot.dart';
 import 'package:cohort_platform/features/performance/services/performance_snapshot_builder.dart';
 import 'package:cohort_platform/features/performance/widgets/performance_capture_widgets.dart';
@@ -203,7 +204,95 @@ void main() {
     expect(find.text('Set 1 reps'), findsWidgets);
     expect(find.textContaining('load'), findsWidgets);
     expect(find.text('RPE'), findsWidgets);
+    expect(find.textContaining('Rest'), findsWidgets);
     expect(find.text('Bodyweight'), findsNothing);
+  });
+
+  test('freeText RPE load still requires RPE chips', () {
+    const broken = StrengthExercisePrescription(
+      sets: 4,
+      reps: StrengthRepPrescription(type: StrengthRepType.exact, exactReps: 5),
+      load: StrengthLoadPrescription(type: StrengthLoadType.freeText, text: 'RPE 7'),
+    );
+    expect(broken.requiresRpeCapture, isTrue);
+  });
+
+  testWidgets('stale none snapshot still shows kg from live prescription', (
+    tester,
+  ) async {
+    final prescription = const StrengthExercisePrescription(
+      sets: 4,
+      reps: StrengthRepPrescription(type: StrengthRepType.exact, exactReps: 5),
+      load: StrengthLoadPrescription(type: StrengthLoadType.freeText, text: 'RPE 7'),
+    );
+    final block = SessionExecutionBlock.fromSessionBlock(
+      SessionBlock(
+        localId: 'main',
+        blockType: SessionBlockType.strength,
+        title: 'Main strength',
+        content: '',
+        workoutFormat: WorkoutFormat.none,
+        position: 2,
+        linkedExercises: [
+          SessionBlockExerciseLink(
+            localId: 'fs',
+            exerciseId: 'front-squat',
+            position: 1,
+            displayLabelOverride: 'Front squat',
+            prescription: prescription,
+          ),
+        ],
+      ),
+      exercisesById: const {},
+    );
+    final built = const PerformanceSnapshotBuilder()
+        .buildInitialBlockDrafts(
+          SessionExecutionPlan(
+            sessionId: 'BALI-W01-D01-S01-R1',
+            sessionTitle: 'Strength A',
+            blocks: [block],
+          ),
+        )
+        .single;
+    final original = built.exerciseResults.single;
+    final frozen = built.copyWith(
+      exerciseResults: [
+        ExercisePerformanceDraft(
+          exerciseResultId: original.exerciseResultId,
+          sourceExerciseId: original.sourceExerciseId,
+          exerciseSnapshot: const ExercisePerformanceSnapshot(
+            sourceExerciseId: 'front-squat',
+            displayName: 'Front squat',
+            position: 1,
+            loadKind: StrengthActualLoadKind.none,
+          ),
+          position: original.position,
+          sets: original.sets,
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SingleChildScrollView(
+            child: BlockResultEditor(
+              blockDraft: frozen,
+              linkedExercises: block.linkedExercises,
+              onResultChanged: (_) {},
+              onAddSet: (_) {},
+              onUpdateSet: (_, _, _) {},
+              onDuplicateSet: (_, _) {},
+              onRemoveSet: (_, _) {},
+              onOpenExercise: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('load'), findsWidgets);
+    expect(find.text('RPE'), findsWidgets);
   });
 
   testWidgets('Ab wheel does not render a kg field', (tester) async {
