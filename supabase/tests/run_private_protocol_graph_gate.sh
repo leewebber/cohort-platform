@@ -48,10 +48,13 @@ run_be() {
   docker cp "${TESTS_DIR}/sql/helpers.sql" "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_helpers.sql"
   docker cp "${TESTS_DIR}/sql/gate_be_private_protocol_graph.sql" \
     "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_be.sql"
+  docker cp "${TESTS_DIR}/sql/gate_bf_private_exercise_capture.sql" \
+    "${SPRINT12_DB_CONTAINER}:/tmp/sprint12_gate_bf.sql"
   docker exec -i "${SPRINT12_DB_CONTAINER}" \
     psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
     -f /tmp/sprint12_helpers.sql \
-    -f /tmp/sprint12_gate_be.sql
+    -f /tmp/sprint12_gate_be.sql \
+    -f /tmp/sprint12_gate_bf.sql
 }
 
 echo "=== Private protocol graph gate pass 1 ==="
