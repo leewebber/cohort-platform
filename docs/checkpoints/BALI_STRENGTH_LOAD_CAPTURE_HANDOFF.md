@@ -9,7 +9,7 @@
 ```text
 LEE_BALI_HYBRID_BASE=ACTIVE_PRIVATE
 LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=true
-BALI_STRENGTH_CAPTURE_INCIDENT=IMPLEMENTATION_COMPLETE
+BALI_STRENGTH_CAPTURE_INCIDENT=RESOLVED
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
@@ -38,4 +38,12 @@ Migrations:
 An already-open Strength A with completed reps and no logged loads does
 not block capture-only repair. Session and outcome rows stay untouched.
 
-Do not re-enrol Bali. Do not tap Begin automatically.
+Hosted capture repair on Field Manual: status=repaired, 114
+updated / 413 unchanged. Version and package hash unchanged.
+Assignment, start date, timezone, and 71 occurrences unchanged.
+Strength A was already in_progress with one session record and
+no logged loads; those rows were not modified. Catalogue remains
+private. Apollo occurrences remain 84.
+
+Do not re-enrol Bali. Do not tap Begin automatically. Rebuild the
+production iOS app so live prescriptions show kg, reps, and RPE.
