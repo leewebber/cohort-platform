@@ -14,7 +14,7 @@ AS $$
 BEGIN
   IF p_week_number IS NULL OR p_week_number < 1
      OR p_day_order IS NULL OR p_day_order < 1 THEN
-    RAISE EXCEPTION week_number and day_order must be >= 1
+    RAISE EXCEPTION 'week_number and day_order must be >= 1'
       USING ERRCODE = 22023;
   END IF;
   RETURN ((p_week_number - 1) * 7) + (p_day_order - 1);
@@ -27,7 +27,7 @@ GRANT EXECUTE ON FUNCTION public.cohort_authored_calendar_offset_days(INT, INT)
   TO authenticated, service_role;
 
 COMMENT ON FUNCTION public.cohort_authored_calendar_offset_days(INT, INT) IS
-  Civil-day offset: ((week_number - 1) * 7) + (day_order - 1). day_order is not clamped to 7.;
+  'Civil-day offset: ((week_number - 1) * 7) + (day_order - 1). day_order is not clamped to 7.';
 
 CREATE OR REPLACE FUNCTION public.cohort_authored_occurrence_date(
   p_started_at DATE,
@@ -51,7 +51,7 @@ GRANT EXECUTE ON FUNCTION public.cohort_authored_occurrence_date(DATE, INT, INT)
   TO authenticated, service_role;
 
 COMMENT ON FUNCTION public.cohort_authored_occurrence_date(DATE, INT, INT) IS
-  Assignment local start date plus authored week/day offset. No slot-index dating.;
+  'Assignment local start date plus authored week/day offset. No slot-index dating.';
 
 
 CREATE OR REPLACE FUNCTION public.ensure_programme_schedule_projection(
