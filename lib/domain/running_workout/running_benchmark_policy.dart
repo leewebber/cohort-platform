@@ -7,6 +7,8 @@ enum RunningBenchmarkDeclaration {
   fiveKilometreActivity,
 }
 
+enum RunningBenchmarkSurfaceContext { outdoor, treadmill, unspecified }
+
 class RunningBenchmarkDomainException implements Exception {
   const RunningBenchmarkDomainException(this.code, this.message);
 
@@ -103,6 +105,7 @@ class RunningBenchmarkEvidence {
     required String ianaTimezone,
     required RunningBenchmarkProvenance provenance,
     required RunningBenchmarkDeclaration declaration,
+    required RunningBenchmarkSurfaceContext surfaceContext,
   }) {
     final canonicalEvidenceId = evidenceId.trim();
     final canonicalAthleteId = athleteId.trim();
@@ -146,6 +149,7 @@ class RunningBenchmarkEvidence {
       ianaTimezone: canonicalTimezone,
       provenance: provenance,
       declaration: declaration,
+      surfaceContext: surfaceContext,
     );
   }
 
@@ -158,6 +162,7 @@ class RunningBenchmarkEvidence {
     required this.ianaTimezone,
     required this.provenance,
     required this.declaration,
+    required this.surfaceContext,
   });
 
   static const fiveKilometres = 5000;
@@ -170,6 +175,7 @@ class RunningBenchmarkEvidence {
   final String ianaTimezone;
   final RunningBenchmarkProvenance provenance;
   final RunningBenchmarkDeclaration declaration;
+  final RunningBenchmarkSurfaceContext surfaceContext;
 }
 
 class RunningBenchmarkEligibilityRules {

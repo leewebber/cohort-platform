@@ -15,6 +15,8 @@ void main() {
     RunningBenchmarkSourceKind sourceKind = RunningBenchmarkSourceKind.cohort,
     RunningBenchmarkDeclaration declaration =
         RunningBenchmarkDeclaration.completedFiveKilometreTest,
+    RunningBenchmarkSurfaceContext surfaceContext =
+        RunningBenchmarkSurfaceContext.outdoor,
   }) {
     return RunningBenchmarkEvidence(
       evidenceId: evidenceId,
@@ -28,6 +30,7 @@ void main() {
         sourceReference: 'source:$evidenceId',
       ),
       declaration: declaration,
+      surfaceContext: surfaceContext,
     );
   }
 
@@ -70,6 +73,7 @@ void main() {
     expect(result.ianaTimezone, 'Asia/Makassar');
     expect(result.provenance.sourceKind, RunningBenchmarkSourceKind.cohort);
     expect(result.provenance.sourceReference, 'source:benchmark-a');
+    expect(result.surfaceContext, RunningBenchmarkSurfaceContext.outdoor);
   });
 
   test('impossible and incomplete evidence fails with typed codes', () {

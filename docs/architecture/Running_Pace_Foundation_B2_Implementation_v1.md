@@ -1,7 +1,8 @@
 # Running / Pace Foundation B2 — first-pass implementation contract
 
-**Status:** Pure-domain foundation implemented. Percentage policy awaits
-founder review.
+**Status:** Pure-domain calculation, evidence, policy, and frozen-snapshot
+foundation implemented. Persistence awaits a separately approved schema/RPC
+slice.
 **Recorded:** 2026-09-27
 **Branch:** `feat/running-pace-foundation-b2`
 **Base:** `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030`
@@ -11,7 +12,7 @@ founder review.
 [`Running_Workout_B1_Implementation_v1.md`](./Running_Workout_B1_Implementation_v1.md)
 
 ```text
-RUNNING_PACE_FOUNDATION=B2_PURE_DOMAIN_FOUNDATION_IMPLEMENTED
+RUNNING_PACE_FOUNDATION=B2_PURE_DOMAIN_SNAPSHOT_IMPLEMENTED
 RUNNING_WORKOUT_B1=COMPLETE
 PACE_CALCULATION_B2=AUTHORISED_FIRST_PASS
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -67,51 +68,100 @@ The code slice is pure Dart and in-memory. It now:
 - requires an explicit rounding choice at the caller boundary; and
 - exposes stable validation failures.
 
-It contains no selected/default policy. Callers must explicitly supply every
-eligibility, freshness, percentage, and rounding value. It must not contain
-zone names, athlete or programme lookup, persistence, occurrence freeze,
-override, UI, SQL, or hosted integration.
+It contains no selected/default percentage policy. A coach must explicitly
+author the method version, exact percentage range, and stable step scope. The
+calculated result is advisory. It must not contain zone names, athlete or
+programme lookup, persistence, runtime composition, override, UI, SQL, or
+hosted integration.
+
+## Founder decision — explicit authored targets only
+
+- No automatic workout-type-to-band mapping.
+- No global or default percentage bands.
+- Easy, recovery, open, and new-test sessions have no numeric pace by default.
+- A coach-authored numeric target must name its policy/method versions, exact
+  percentage range, and step scope.
+- The target is advisory and cannot replace authored intent.
+- Initial evidence is a completed Cohort 5 km test or an explicitly declared
+  completed manual 5 km test. Elapsed time includes pauses.
+- Freshness is 90 athlete-local civil days inclusive; day 90 is valid.
+- Exact calculation is retained internally; display rounds to the nearest
+  second per kilometre.
+- Treadmill/outdoor context is retained and is not automatic equivalence.
+- External import remains deferred.
 
 ## Decisions still open
 
 | Decision | Bound direction | Founder decision still required |
 |---|---|---|
-| Benchmark eligibility | exact 5 km completed tests only; source kinds and manual eligibility are explicit policy fields; arbitrary activities fail | which source kinds the first production policy admits; what makes external evidence trusted; treatment of treadmill results, pauses, and course conditions |
-| Percentages and ranges | transparent percentage of benchmark **speed** | exact bands, target keys, which authored steps may reference each band, and whether any point target is permitted |
-| Freshness | stale, future-dated, or missing evidence fails closed; the supplied window is inclusive in athlete-local civil days; 90 days is the existing candidate | bind 90 days or another programme-owned window in the first production policy |
-| Units and rounding | evidence is exact 5000 m plus elapsed ms; calculation remains exact rational ms/km; display rounding is explicit policy | select the first production display increment/direction and later mile-presentation version |
-| Freeze | earliest execution commitment: successful device export or first in-app start; today only first start exists | persistence owner, atomic/idempotent transaction, retry identity, and preparation-versus-start boundary |
+| Authored attachment | no defaults; coach supplies method version, exact range, and step scope | canonical programme-version representation and stable authored step identity |
+| Treadmill/outdoor | evidence context is retained | whether a policy may explicitly permit cross-context use and what warning is required |
+| Freeze | earliest execution commitment: successful device export or first in-app start; today only first start exists | approve the occurrence-scoped storage and RPC proposal below |
 | Override | only when immutable programme policy permits; preserve original, override, source/reason, and time | actor, bounds, mandatory reason set, pre/post-freeze timing, and whether an override itself is immutable |
 
 No production calculator may be composed until the applicable rows above
 are approved and encoded in an immutable programme policy.
 
-## Founder-review proposal — not executable authority
+## Frozen target snapshot
 
-Propose method id `cohort_5k_speed_percentage`, version `1`, with an exact
-5 km TT or trusted 5 km performance, a 90 athlete-local-day inclusive
-freshness window, and these deliberately neutral target keys:
+The pure-domain snapshot is schema-versioned, immutable, and advisory. A
+calculated snapshot retains:
 
-| Target key | Benchmark-speed range |
-|---|---:|
-| `b5k_65_75` | 65–75% |
-| `b5k_75_85` | 75–85% |
-| `b5k_85_92` | 85–92% |
-| `b5k_92_100` | 92–100% |
-| `b5k_100` | 100% point target, benchmark-replay contexts only |
+- policy id/version and method id/version;
+- exact authored minimum/maximum speed basis points;
+- exact workout and step scope;
+- selected benchmark identity, athlete, exact 5000 m, elapsed milliseconds,
+  local test date, IANA timezone, provenance, declaration, and surface context;
+- exact rational faster/slower pace bounds;
+- display rounding increment/direction; and
+- UTC freeze timestamp and source (`inAppStart` or future `deviceExport`).
 
-The neutral keys avoid claiming that a 5 km performance defines easy,
-threshold, interval, or any other physiological zone. The bands are
-continuous and intentionally overlap at their boundaries so programme
-authors can select a transparent intensity envelope without a hidden
-table. A 20:00 5 km would yield, before presentation rounding:
-`5:20–6:09/km`, `4:42–5:20/km`, `4:21–4:42/km`, and
-`4:00–4:21/km` respectively.
+No authored policy, or missing/stale/ineligible evidence, freezes an explicit
+`intent_only` snapshot. It never fabricates numbers. Once a calculated or
+intent-only snapshot exists, retry returns that snapshot unchanged even when
+new evidence or a later policy is supplied.
 
-This is a review proposal only. It must receive founder coaching review
-before the values or keys appear in executable policy, programme content,
-or athlete UI. Approval must also choose explicit rounding. No authored
-word such as “easy” or “threshold” is automatically mapped to a band.
+## Storage and transaction audit
+
+Current storage cannot persist this snapshot safely:
+
+- `programme_schedule_occurrences` explicitly has no prescription payload.
+- `programme_slot_outcomes` links occurrence to execution but has no JSONB
+  snapshot column.
+- `training_sessions` has no suitable JSONB authority and cannot represent a
+  future device export before an in-app session exists.
+- `training_session_records.session_snapshot` is created later, outside the
+  authoritative create/resume transaction.
+- no device-export boundary exists.
+
+The current fixed-schedule start authority is
+`cohort_create_or_resume_fixed_occurrence_at`. It locks the occurrence and
+assignment, validates the immutable pin and authored graph, locks the outcome,
+then creates and links one `training_sessions` row in the same transaction.
+Retries return the existing linked session.
+
+The smallest persistence proposal is an additive, occurrence-scoped table:
+
+```text
+programme_occurrence_running_target_snapshots
+  occurrence_id UUID PRIMARY KEY REFERENCES programme_schedule_occurrences(id)
+  athlete_id UUID NOT NULL
+  assignment_id UUID NOT NULL
+  snapshot JSONB NOT NULL
+  frozen_at TIMESTAMPTZ NOT NULL
+  freeze_source TEXT NOT NULL
+    CHECK (freeze_source IN ('in_app_start', 'device_export'))
+  training_session_id BIGINT NULL REFERENCES training_sessions(id)
+```
+
+The table is insert-once and not client-writable. The fixed start RPC would,
+after every authority check but before returning success, lock/select the row,
+insert the server-validated snapshot only when absent, create/link the session,
+and return the same snapshot on retry. Snapshot insertion and session creation
+must share one transaction so any failed start rolls both back. A later device
+export boundary would reuse the same insert-once helper only after successful
+export. This requires schema and RPC changes and is therefore **proposed, not
+implemented** in this slice.
 
 ## Acceptance for this first pass
 
@@ -125,12 +175,14 @@ word such as “easy” or “threshold” is automatically mapped to a band.
 - Manual completed-test evidence can qualify; an arbitrary 5 km activity
   cannot.
 - Multiple eligible benchmarks select newest date then stable identity.
+- Snapshot retry never recalculates from a later benchmark.
+- Intent-only is itself frozen at execution commitment.
+- Example percentage bands are not encoded in production policy or content.
 - B1 model, timers, programme sources, Bali pin/graph/occurrences/evidence,
   database, hosted systems, and production composition remain unchanged.
 
 ## Deferred next slice
 
-After founder policy approval, encode the approved values as an immutable
-programme-policy artifact and add deterministic serialization/replay tests.
-Persistence and an atomic occurrence freeze remain a later, separately
-reviewed slice.
+Approve or revise the occurrence-scoped storage/RPC proposal. Only then add an
+additive migration and transactional local database gate. Runtime composition,
+device export, overrides, programme content, and Bali remain later slices.
