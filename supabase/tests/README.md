@@ -64,6 +64,15 @@ Negative controls:
 ./supabase/tests/run_local_db_gate.sh token-invalid
 ```
 
+Plan Package v2 private publication has a narrower disposable reset/replay
+gate. It validates the compiler's committed canonical bytes and hash, immutable
+slot persistence, fail-closed mutations, transaction rollback, v1 compatibility,
+and RPC grants without contacting hosted systems:
+
+```bash
+./supabase/tests/run_plan_package_v2_publication_gate.sh
+```
+
 ## Exact execution
 
 ```bash

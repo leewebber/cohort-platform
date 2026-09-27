@@ -1,8 +1,8 @@
 # Running / Pace Foundation B2 — first-pass implementation contract
 
-**Status:** Pure-domain calculation, evidence, policy, and frozen-snapshot
-foundation implemented. Persistence awaits a separately approved schema/RPC
-slice.
+**Status:** Pure-domain calculation, evidence, policy, frozen-snapshot, and
+Plan Package v2 authored-running publication foundation implemented locally.
+Occurrence freeze persistence remains a later schema/RPC slice.
 **Recorded:** 2026-09-27
 **Branch:** `feat/running-pace-foundation-b2`
 **Base:** `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030`
@@ -13,6 +13,7 @@ slice.
 
 ```text
 RUNNING_PACE_FOUNDATION=B2_PURE_DOMAIN_SNAPSHOT_IMPLEMENTED
+PLAN_PACKAGE_V2_AUTHORED_RUNNING=IMPLEMENTED_LOCAL_UNPUBLISHED
 RUNNING_WORKOUT_B1=COMPLETE
 PACE_CALCULATION_B2=AUTHORISED_FIRST_PASS
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -120,6 +121,24 @@ No authored policy, or missing/stale/ineligible evidence, freezes an explicit
 `intent_only` snapshot. It never fabricates numbers. Once a calculated or
 intent-only snapshot exists, retry returns that snapshot unchanged even when
 new evidence or a later policy is supplied.
+
+## Plan Package v2 authored-running authority
+
+Plan Package v1 canonical output and publication payloads remain unchanged.
+Version 2 may add one optional `authored_running_v1` document to a session
+slot. The document explicitly declares a stable workout identity, all stable
+step identities, and one or more advisory attachments. Every attachment names
+its stable step scope and supplies its policy/method versions, benchmark-source
+eligibility, athlete-local freshness, exact speed-percentage range, and display
+rounding. There are no workout-type mappings or default bands.
+
+The private v2 publication payload carries the compiler's exact canonical JSON.
+Its service-role-only RPC recomputes SHA-256 from those exact bytes, compares
+the compiler-owned payload structures with the canonical document, validates
+the authored-running shape independently in SQL, and persists it on the
+immutable published session slot. A post-publication mismatch raises and rolls
+back the transaction. The existing v1 RPC is not replaced and Apollo/Bali stay
+on that unchanged path.
 
 ## Storage and transaction audit
 

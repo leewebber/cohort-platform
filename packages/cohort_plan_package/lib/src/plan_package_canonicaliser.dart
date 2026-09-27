@@ -7,7 +7,7 @@ import 'plan_package_schema.dart';
 
 /// Deterministic canonical representation of a validated Plan Package.
 ///
-/// # Canonicalisation contract (package schema v1)
+/// # Canonicalisation contract (package schemas v1 and v2)
 ///
 /// 1. Input is a validated [PlanPackageManifest] only — never raw YAML.
 /// 2. Optional / default values are normalised:
@@ -25,7 +25,9 @@ import 'plan_package_schema.dart';
 ///    - YAML comments / whitespace / key order / line endings
 ///    - local file paths, import timestamps, builder localIds
 ///    - athlete execution / previous-performance evidence
-/// 7. Equivalent programme meaning ⇒ identical bytes ⇒ identical SHA-256.
+/// 7. Version 2 includes an optional authored-running slot document; version 1
+///    emits precisely its established canonical shape.
+/// 8. Equivalent programme meaning ⇒ identical bytes ⇒ identical SHA-256.
 class PlanPackageCanonicaliser {
   const PlanPackageCanonicaliser();
 
@@ -141,6 +143,56 @@ class PlanPackageCanonicaliser {
       if (s.displayTitle != null) 'display_title': s.displayTitle,
       if (s.coachNote != null) 'coach_note': s.coachNote,
       'progression': _progression(s.progression),
+      if (s.authoredRunningV1 != null)
+        'authored_running_v1': _authoredRunning(s.authoredRunningV1!),
+    });
+  }
+
+  Map<String, Object?> _authoredRunning(PlanPackageAuthoredRunningV1 running) {
+    return _sortedMap({
+      'schema_version': running.schemaVersion,
+      'workout_id': running.workoutId,
+      'step_ids': running.stepIds,
+      'advisory_attachments': _sortedBy(
+        running.advisoryAttachments,
+        (attachment) => attachment.attachmentId,
+        _runningAttachment,
+      ),
+    });
+  }
+
+  Map<String, Object?> _runningAttachment(
+    PlanPackageRunningAdvisoryAttachment attachment,
+  ) {
+    return _sortedMap({
+      'attachment_id': attachment.attachmentId,
+      'step_ids': attachment.stepIds,
+      'policy': _runningPolicy(attachment.policy),
+    });
+  }
+
+  Map<String, Object?> _runningPolicy(PlanPackageRunningAdvisoryPolicy policy) {
+    return _sortedMap({
+      'policy_id': policy.policyId,
+      'policy_version': policy.policyVersion,
+      'method_id': policy.methodId,
+      'method_version': policy.methodVersion,
+      'benchmark_eligibility': _sortedMap({
+        'cohort_completed_tests_eligible':
+            policy.benchmarkEligibility.cohortCompletedTestsEligible,
+        'manual_completed_tests_eligible':
+            policy.benchmarkEligibility.manualCompletedTestsEligible,
+        'external_completed_tests_eligible':
+            policy.benchmarkEligibility.externalCompletedTestsEligible,
+      }),
+      'freshness_local_civil_days': policy.freshnessLocalCivilDays,
+      'minimum_speed_basis_points': policy.minimumSpeedBasisPoints,
+      'maximum_speed_basis_points': policy.maximumSpeedBasisPoints,
+      'display_rounding': _sortedMap({
+        'increment_milliseconds_per_kilometre':
+            policy.displayRounding.incrementMillisecondsPerKilometre,
+        'direction': policy.displayRounding.direction.name,
+      }),
     });
   }
 

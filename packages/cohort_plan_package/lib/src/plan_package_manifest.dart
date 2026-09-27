@@ -161,6 +161,7 @@ class PlanPackageSessionSlot {
     this.completionExpectation = ProgrammeSessionCompletionExpectation.required,
     this.displayTitle,
     this.coachNote,
+    this.authoredRunningV1,
   });
 
   final String slotKey;
@@ -177,7 +178,85 @@ class PlanPackageSessionSlot {
   final ProgrammeSessionCompletionExpectation completionExpectation;
   final String? displayTitle;
   final String? coachNote;
+  final PlanPackageAuthoredRunningV1? authoredRunningV1;
 }
+
+/// Optional Plan Package v2 slot authority for benchmark-derived advisory
+/// running targets. Every value is authored explicitly; there are no bands or
+/// workout-type defaults in this contract.
+class PlanPackageAuthoredRunningV1 {
+  const PlanPackageAuthoredRunningV1({
+    required this.schemaVersion,
+    required this.workoutId,
+    required this.stepIds,
+    required this.advisoryAttachments,
+  });
+
+  final int schemaVersion;
+  final String workoutId;
+  final List<String> stepIds;
+  final List<PlanPackageRunningAdvisoryAttachment> advisoryAttachments;
+}
+
+class PlanPackageRunningAdvisoryAttachment {
+  const PlanPackageRunningAdvisoryAttachment({
+    required this.attachmentId,
+    required this.stepIds,
+    required this.policy,
+  });
+
+  final String attachmentId;
+  final List<String> stepIds;
+  final PlanPackageRunningAdvisoryPolicy policy;
+}
+
+class PlanPackageRunningAdvisoryPolicy {
+  const PlanPackageRunningAdvisoryPolicy({
+    required this.policyId,
+    required this.policyVersion,
+    required this.methodId,
+    required this.methodVersion,
+    required this.benchmarkEligibility,
+    required this.freshnessLocalCivilDays,
+    required this.minimumSpeedBasisPoints,
+    required this.maximumSpeedBasisPoints,
+    required this.displayRounding,
+  });
+
+  final String policyId;
+  final int policyVersion;
+  final String methodId;
+  final int methodVersion;
+  final PlanPackageRunningBenchmarkEligibility benchmarkEligibility;
+  final int freshnessLocalCivilDays;
+  final int minimumSpeedBasisPoints;
+  final int maximumSpeedBasisPoints;
+  final PlanPackageRunningDisplayRounding displayRounding;
+}
+
+class PlanPackageRunningBenchmarkEligibility {
+  const PlanPackageRunningBenchmarkEligibility({
+    required this.cohortCompletedTestsEligible,
+    required this.manualCompletedTestsEligible,
+    required this.externalCompletedTestsEligible,
+  });
+
+  final bool cohortCompletedTestsEligible;
+  final bool manualCompletedTestsEligible;
+  final bool externalCompletedTestsEligible;
+}
+
+class PlanPackageRunningDisplayRounding {
+  const PlanPackageRunningDisplayRounding({
+    required this.incrementMillisecondsPerKilometre,
+    required this.direction,
+  });
+
+  final int incrementMillisecondsPerKilometre;
+  final PlanPackageRunningRoundingDirection direction;
+}
+
+enum PlanPackageRunningRoundingDirection { down, nearest, up }
 
 /// Authored progression already contained in the programme — not invented.
 class PlanPackageAuthoredProgression {

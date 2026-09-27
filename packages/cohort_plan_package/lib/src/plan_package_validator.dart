@@ -1,6 +1,7 @@
 import 'programme_vocabulary.dart';
 import 'adaptation_policy_gate.dart';
 import 'plan_package_manifest.dart';
+import 'plan_package_schema.dart';
 import 'plan_package_validation_issue.dart';
 
 /// Semantic validation for a parsed [PlanPackageManifest].
@@ -20,9 +21,222 @@ class PlanPackageValidator {
     _validateAssessmentsAndComparisons(manifest, issues);
     _validateAdaptationsAndInvariants(manifest, issues);
     _validateAuthoredProgressionCompleteness(manifest, issues);
+    _validateAuthoredRunning(manifest, issues);
     _validateNoMutableBuilderSemantics(manifest, issues);
 
     return List.unmodifiable(issues);
+  }
+
+  void _validateAuthoredRunning(
+    PlanPackageManifest manifest,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    for (var wi = 0; wi < manifest.weeks.length; wi++) {
+      final week = manifest.weeks[wi];
+      for (var di = 0; di < week.days.length; di++) {
+        final day = week.days[di];
+        for (var si = 0; si < day.slots.length; si++) {
+          final running = day.slots[si].authoredRunningV1;
+          if (running == null) continue;
+          final path = 'weeks[$wi].days[$di].slots[$si].authored_running_v1';
+
+          if (manifest.packageSchemaVersion <
+              PlanPackageSchema.authoredRunningPackageSchemaVersion) {
+            issues.add(
+              PlanPackageValidationIssue(
+                path: path,
+                code: 'unsupported_field',
+                message: 'authored_running_v1 requires Plan Package v2.',
+              ),
+            );
+          }
+          if (running.schemaVersion != 1) {
+            issues.add(
+              PlanPackageValidationIssue(
+                path: '$path.schema_version',
+                code: 'unsupported_running_schema_version',
+                message: 'authored_running_v1.schema_version must be 1.',
+              ),
+            );
+          }
+          _validateIdentity(running.workoutId, '$path.workout_id', issues);
+          _validateIdentityList(running.stepIds, '$path.step_ids', issues);
+          if (running.advisoryAttachments.isEmpty) {
+            issues.add(
+              PlanPackageValidationIssue(
+                path: '$path.advisory_attachments',
+                code: 'empty_list',
+                message:
+                    'At least one explicit advisory attachment is required.',
+              ),
+            );
+          }
+
+          final attachmentIds = <String>{};
+          final declaredSteps = running.stepIds.toSet();
+          for (var ai = 0; ai < running.advisoryAttachments.length; ai++) {
+            final attachment = running.advisoryAttachments[ai];
+            final attachmentPath = '$path.advisory_attachments[$ai]';
+            _validateIdentity(
+              attachment.attachmentId,
+              '$attachmentPath.attachment_id',
+              issues,
+            );
+            if (!attachmentIds.add(attachment.attachmentId)) {
+              issues.add(
+                PlanPackageValidationIssue(
+                  path: '$attachmentPath.attachment_id',
+                  code: 'duplicate_id',
+                  message:
+                      'Duplicate advisory attachment identity "${attachment.attachmentId}".',
+                ),
+              );
+            }
+            _validateIdentityList(
+              attachment.stepIds,
+              '$attachmentPath.step_ids',
+              issues,
+            );
+            for (
+              var stepIndex = 0;
+              stepIndex < attachment.stepIds.length;
+              stepIndex++
+            ) {
+              final stepId = attachment.stepIds[stepIndex];
+              if (!declaredSteps.contains(stepId)) {
+                issues.add(
+                  PlanPackageValidationIssue(
+                    path: '$attachmentPath.step_ids[$stepIndex]',
+                    code: 'broken_reference',
+                    message:
+                        'Advisory attachment references undeclared step "$stepId".',
+                  ),
+                );
+              }
+            }
+            _validateRunningPolicy(
+              attachment.policy,
+              '$attachmentPath.policy',
+              issues,
+            );
+          }
+        }
+      }
+    }
+  }
+
+  void _validateRunningPolicy(
+    PlanPackageRunningAdvisoryPolicy policy,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _validateIdentity(policy.policyId, '$path.policy_id', issues);
+    _validateIdentity(policy.methodId, '$path.method_id', issues);
+    if (policy.policyVersion < 1 || policy.methodVersion < 1) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: path,
+          code: 'invalid_value',
+          message: 'Policy and method versions must both be positive.',
+        ),
+      );
+    }
+    if (policy.freshnessLocalCivilDays < 0) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.freshness_local_civil_days',
+          code: 'invalid_value',
+          message:
+              'Freshness must be a non-negative athlete-local civil day count.',
+        ),
+      );
+    }
+    if (policy.minimumSpeedBasisPoints < 1 ||
+        policy.maximumSpeedBasisPoints <= policy.minimumSpeedBasisPoints) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: path,
+          code: 'invalid_percentage_range',
+          message:
+              'The exact maximum speed percentage must exceed the minimum.',
+        ),
+      );
+    }
+    final eligibility = policy.benchmarkEligibility;
+    if (!eligibility.cohortCompletedTestsEligible &&
+        !eligibility.manualCompletedTestsEligible) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.benchmark_eligibility',
+          code: 'no_eligible_evidence_source',
+          message: 'At least one approved completed-test source is required.',
+        ),
+      );
+    }
+    if (eligibility.externalCompletedTestsEligible) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.benchmark_eligibility.external_completed_tests_eligible',
+          code: 'unsupported_evidence_source',
+          message: 'External benchmark imports are deferred.',
+        ),
+      );
+    }
+    if (policy.displayRounding.incrementMillisecondsPerKilometre < 1) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.display_rounding.increment_milliseconds_per_kilometre',
+          code: 'invalid_value',
+          message: 'Display rounding increment must be positive.',
+        ),
+      );
+    }
+  }
+
+  void _validateIdentity(
+    String value,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    if (!PlanPackageSchema.identityPattern.hasMatch(value)) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: path,
+          code: 'invalid_identifier',
+          message: 'Value "$value" is not a stable identity.',
+        ),
+      );
+    }
+  }
+
+  void _validateIdentityList(
+    List<String> values,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    if (values.isEmpty) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: path,
+          code: 'empty_list',
+          message: 'At least one stable identity is required.',
+        ),
+      );
+      return;
+    }
+    final seen = <String>{};
+    for (var i = 0; i < values.length; i++) {
+      _validateIdentity(values[i], '$path[$i]', issues);
+      if (!seen.add(values[i])) {
+        issues.add(
+          PlanPackageValidationIssue(
+            path: '$path[$i]',
+            code: 'duplicate_id',
+            message: 'Duplicate identity "${values[i]}".',
+          ),
+        );
+      }
+    }
   }
 
   void _validateUniqueIdentities(

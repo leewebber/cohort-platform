@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'plan_package_compiler.dart';
 import 'plan_package_manifest.dart';
 import 'plan_package_schema.dart';
@@ -28,27 +30,45 @@ class PlanPackageImportPayloadBuilder {
       throw StateError('Compile hash is not lowercase SHA-256 hex.');
     }
 
+    final canonical =
+        manifest.packageSchemaVersion >=
+            PlanPackageSchema.authoredRunningPackageSchemaVersion
+        ? jsonDecode(compileResult.canonicalJson!) as Map<String, Object?>
+        : null;
+
     return {
       'package_schema_version': manifest.packageSchemaVersion,
       'package_content_hash': hash,
+      if (manifest.packageSchemaVersion >=
+          PlanPackageSchema.authoredRunningPackageSchemaVersion)
+        'package_canonical_json': compileResult.canonicalJson!,
       'imported_by': actor,
       'programme': _programme(manifest.programme),
-      'sessions': [for (final s in manifest.sessions) _session(s)],
-      'phases': [for (final p in manifest.phases) _phase(p)],
-      'weeks': [for (final w in manifest.weeks) _week(w)],
-      'adaptation_permissions': [
-        for (final a in manifest.adaptationPermissions) _adaptation(a),
-      ],
-      'protected_invariants': [
-        for (final i in manifest.protectedInvariants) _invariant(i),
-      ],
-      'assessments': [for (final a in manifest.assessments) _assessment(a)],
-      'performance_evidence_requirements': [
-        for (final e in manifest.performanceEvidenceRequirements) _evidence(e),
-      ],
-      'comparison_identities': [
-        for (final c in manifest.comparisonIdentities) _comparison(c),
-      ],
+      'sessions':
+          canonical?['sessions'] ??
+          [for (final s in manifest.sessions) _session(s)],
+      'phases':
+          canonical?['phases'] ?? [for (final p in manifest.phases) _phase(p)],
+      'weeks':
+          canonical?['weeks'] ?? [for (final w in manifest.weeks) _week(w)],
+      'adaptation_permissions':
+          canonical?['adaptation_permissions'] ??
+          [for (final a in manifest.adaptationPermissions) _adaptation(a)],
+      'protected_invariants':
+          canonical?['protected_invariants'] ??
+          [for (final i in manifest.protectedInvariants) _invariant(i)],
+      'assessments':
+          canonical?['assessments'] ??
+          [for (final a in manifest.assessments) _assessment(a)],
+      'performance_evidence_requirements':
+          canonical?['performance_evidence_requirements'] ??
+          [
+            for (final e in manifest.performanceEvidenceRequirements)
+              _evidence(e),
+          ],
+      'comparison_identities':
+          canonical?['comparison_identities'] ??
+          [for (final c in manifest.comparisonIdentities) _comparison(c)],
     };
   }
 

@@ -8,8 +8,11 @@ import 'adaptation_policy_gate.dart';
 class PlanPackageSchema {
   PlanPackageSchema._();
 
-  /// Only this package schema version is accepted by the Sprint 1.1 compiler.
-  static const int supportedPackageSchemaVersion = 1;
+  /// Accepted interchange schemas. Version 1 remains byte-frozen; version 2
+  /// adds an optional, hashed authored-running document on session slots.
+  static const Set<int> supportedPackageSchemaVersions = {1, 2};
+
+  static const int authoredRunningPackageSchemaVersion = 2;
 
   /// Stable identifier pattern for package-local keys and comparison IDs.
   static final RegExp identityPattern = RegExp(r'^[A-Za-z][A-Za-z0-9._:-]*$');

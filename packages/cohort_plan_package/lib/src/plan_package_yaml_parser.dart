@@ -69,14 +69,16 @@ class PlanPackageYamlParser {
       issues,
     );
     if (schemaVersion != null &&
-        schemaVersion != PlanPackageSchema.supportedPackageSchemaVersion) {
+        !PlanPackageSchema.supportedPackageSchemaVersions.contains(
+          schemaVersion,
+        )) {
       issues.add(
         PlanPackageValidationIssue(
           path: 'package_schema_version',
           code: 'unsupported_schema_version',
           message:
               'Unsupported package_schema_version $schemaVersion; '
-              'supported: ${PlanPackageSchema.supportedPackageSchemaVersion}.',
+              'supported: [1, 2].',
         ),
       );
     }
@@ -149,7 +151,7 @@ class PlanPackageYamlParser {
       final path = 'weeks[$i]';
       final itemMap = _asMap(weeksList[i], path, issues);
       if (itemMap == null) continue;
-      final parsed = _parseWeek(itemMap, path, issues);
+      final parsed = _parseWeek(itemMap, path, schemaVersion!, issues);
       if (parsed != null) weeks.add(parsed);
     }
 
@@ -364,6 +366,7 @@ class PlanPackageYamlParser {
   PlanPackageWeek? _parseWeek(
     Map<String, Object?> map,
     String path,
+    int packageSchemaVersion,
     List<PlanPackageValidationIssue> issues,
   ) {
     _rejectForbiddenKeys(map, path, issues);
@@ -382,7 +385,7 @@ class PlanPackageYamlParser {
         final dayPath = '$path.days[$i]';
         final dayMap = _asMap(daysRaw[i], dayPath, issues);
         if (dayMap == null) continue;
-        final day = _parseDay(dayMap, dayPath, issues);
+        final day = _parseDay(dayMap, dayPath, packageSchemaVersion, issues);
         if (day != null) days.add(day);
       }
     }
@@ -402,6 +405,7 @@ class PlanPackageYamlParser {
   PlanPackageDay? _parseDay(
     Map<String, Object?> map,
     String path,
+    int packageSchemaVersion,
     List<PlanPackageValidationIssue> issues,
   ) {
     _rejectForbiddenKeys(map, path, issues);
@@ -436,7 +440,7 @@ class PlanPackageYamlParser {
       final slotPath = '$path.slots[$i]';
       final slotMap = _asMap(slotsRaw[i], slotPath, issues);
       if (slotMap == null) continue;
-      final slot = _parseSlot(slotMap, slotPath, issues);
+      final slot = _parseSlot(slotMap, slotPath, packageSchemaVersion, issues);
       if (slot != null) slots.add(slot);
     }
 
@@ -456,10 +460,19 @@ class PlanPackageYamlParser {
   PlanPackageSessionSlot? _parseSlot(
     Map<String, Object?> map,
     String path,
+    int packageSchemaVersion,
     List<PlanPackageValidationIssue> issues,
   ) {
     _rejectForbiddenKeys(map, path, issues);
-    _rejectUnknownKeys(map, path, _slotKeys, issues);
+    _rejectUnknownKeys(
+      map,
+      path,
+      packageSchemaVersion >=
+              PlanPackageSchema.authoredRunningPackageSchemaVersion
+          ? _slotKeysV2
+          : _slotKeysV1,
+      issues,
+    );
 
     final slotKey = _requireIdentity(map, 'slot_key', path, issues);
     final sessionOrder = _requirePositiveInt(
@@ -490,6 +503,23 @@ class PlanPackageYamlParser {
       );
     }
 
+    PlanPackageAuthoredRunningV1? authoredRunningV1;
+    if (map.containsKey('authored_running_v1')) {
+      final runningMap = _requireMap(
+        map,
+        'authored_running_v1',
+        '$path.authored_running_v1',
+        issues,
+      );
+      if (runningMap != null) {
+        authoredRunningV1 = _parseAuthoredRunningV1(
+          runningMap,
+          '$path.authored_running_v1',
+          issues,
+        );
+      }
+    }
+
     if (slotKey == null ||
         sessionOrder == null ||
         sessionKey == null ||
@@ -508,6 +538,228 @@ class PlanPackageYamlParser {
           expectation ?? ProgrammeSessionCompletionExpectation.required,
       displayTitle: displayTitle,
       coachNote: coachNote,
+      authoredRunningV1: authoredRunningV1,
+    );
+  }
+
+  PlanPackageAuthoredRunningV1? _parseAuthoredRunningV1(
+    Map<String, Object?> map,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _rejectForbiddenKeys(map, path, issues);
+    _rejectUnknownKeys(map, path, _authoredRunningKeys, issues);
+    final schemaVersion = _requireInt(map, 'schema_version', path, issues);
+    if (schemaVersion != null && schemaVersion != 1) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.schema_version',
+          code: 'unsupported_running_schema_version',
+          message: 'authored_running_v1.schema_version must be 1.',
+        ),
+      );
+    }
+    final workoutId = _requireIdentity(map, 'workout_id', path, issues);
+    final stepIds = _requireIdentityList(map, 'step_ids', path, issues);
+    final attachmentsRaw = _requireList(
+      map,
+      'advisory_attachments',
+      '$path.advisory_attachments',
+      issues,
+    );
+    final attachments = <PlanPackageRunningAdvisoryAttachment>[];
+    if (attachmentsRaw != null) {
+      for (var i = 0; i < attachmentsRaw.length; i++) {
+        final attachmentPath = '$path.advisory_attachments[$i]';
+        final attachmentMap = _asMap(attachmentsRaw[i], attachmentPath, issues);
+        if (attachmentMap == null) continue;
+        final attachment = _parseRunningAttachment(
+          attachmentMap,
+          attachmentPath,
+          issues,
+        );
+        if (attachment != null) attachments.add(attachment);
+      }
+    }
+    if (schemaVersion != 1 || workoutId == null || stepIds == null) return null;
+    return PlanPackageAuthoredRunningV1(
+      schemaVersion: schemaVersion!,
+      workoutId: workoutId,
+      stepIds: List.unmodifiable(stepIds),
+      advisoryAttachments: List.unmodifiable(attachments),
+    );
+  }
+
+  PlanPackageRunningAdvisoryAttachment? _parseRunningAttachment(
+    Map<String, Object?> map,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _rejectForbiddenKeys(map, path, issues);
+    _rejectUnknownKeys(map, path, _runningAttachmentKeys, issues);
+    final attachmentId = _requireIdentity(map, 'attachment_id', path, issues);
+    final stepIds = _requireIdentityList(map, 'step_ids', path, issues);
+    final policyMap = _requireMap(map, 'policy', '$path.policy', issues);
+    final policy = policyMap == null
+        ? null
+        : _parseRunningPolicy(policyMap, '$path.policy', issues);
+    if (attachmentId == null || stepIds == null || policy == null) return null;
+    return PlanPackageRunningAdvisoryAttachment(
+      attachmentId: attachmentId,
+      stepIds: List.unmodifiable(stepIds),
+      policy: policy,
+    );
+  }
+
+  PlanPackageRunningAdvisoryPolicy? _parseRunningPolicy(
+    Map<String, Object?> map,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _rejectForbiddenKeys(map, path, issues);
+    _rejectUnknownKeys(map, path, _runningPolicyKeys, issues);
+    final policyId = _requireIdentity(map, 'policy_id', path, issues);
+    final policyVersion = _requirePositiveInt(
+      map,
+      'policy_version',
+      path,
+      issues,
+    );
+    final methodId = _requireIdentity(map, 'method_id', path, issues);
+    final methodVersion = _requirePositiveInt(
+      map,
+      'method_version',
+      path,
+      issues,
+    );
+    final eligibilityMap = _requireMap(
+      map,
+      'benchmark_eligibility',
+      '$path.benchmark_eligibility',
+      issues,
+    );
+    final eligibility = eligibilityMap == null
+        ? null
+        : _parseRunningEligibility(
+            eligibilityMap,
+            '$path.benchmark_eligibility',
+            issues,
+          );
+    final freshness = _requireNonNegativeInt(
+      map,
+      'freshness_local_civil_days',
+      path,
+      issues,
+    );
+    final minimum = _requirePositiveInt(
+      map,
+      'minimum_speed_basis_points',
+      path,
+      issues,
+    );
+    final maximum = _requirePositiveInt(
+      map,
+      'maximum_speed_basis_points',
+      path,
+      issues,
+    );
+    final roundingMap = _requireMap(
+      map,
+      'display_rounding',
+      '$path.display_rounding',
+      issues,
+    );
+    final rounding = roundingMap == null
+        ? null
+        : _parseRunningRounding(roundingMap, '$path.display_rounding', issues);
+    if (policyId == null ||
+        policyVersion == null ||
+        methodId == null ||
+        methodVersion == null ||
+        eligibility == null ||
+        freshness == null ||
+        minimum == null ||
+        maximum == null ||
+        rounding == null) {
+      return null;
+    }
+    return PlanPackageRunningAdvisoryPolicy(
+      policyId: policyId,
+      policyVersion: policyVersion,
+      methodId: methodId,
+      methodVersion: methodVersion,
+      benchmarkEligibility: eligibility,
+      freshnessLocalCivilDays: freshness,
+      minimumSpeedBasisPoints: minimum,
+      maximumSpeedBasisPoints: maximum,
+      displayRounding: rounding,
+    );
+  }
+
+  PlanPackageRunningBenchmarkEligibility? _parseRunningEligibility(
+    Map<String, Object?> map,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _rejectUnknownKeys(map, path, _runningEligibilityKeys, issues);
+    final cohort = _requireBool(
+      map,
+      'cohort_completed_tests_eligible',
+      path,
+      issues,
+    );
+    final manual = _requireBool(
+      map,
+      'manual_completed_tests_eligible',
+      path,
+      issues,
+    );
+    final external = _requireBool(
+      map,
+      'external_completed_tests_eligible',
+      path,
+      issues,
+    );
+    if (cohort == null || manual == null || external == null) return null;
+    return PlanPackageRunningBenchmarkEligibility(
+      cohortCompletedTestsEligible: cohort,
+      manualCompletedTestsEligible: manual,
+      externalCompletedTestsEligible: external,
+    );
+  }
+
+  PlanPackageRunningDisplayRounding? _parseRunningRounding(
+    Map<String, Object?> map,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    _rejectUnknownKeys(map, path, _runningRoundingKeys, issues);
+    final increment = _requirePositiveInt(
+      map,
+      'increment_milliseconds_per_kilometre',
+      path,
+      issues,
+    );
+    final rawDirection = _requireNonEmptyString(map, 'direction', path, issues);
+    final direction = switch (rawDirection) {
+      'down' => PlanPackageRunningRoundingDirection.down,
+      'nearest' => PlanPackageRunningRoundingDirection.nearest,
+      'up' => PlanPackageRunningRoundingDirection.up,
+      _ => null,
+    };
+    if (rawDirection != null && direction == null) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.direction',
+          code: 'invalid_value',
+          message: 'direction must be down, nearest, or up.',
+        ),
+      );
+    }
+    if (increment == null || direction == null) return null;
+    return PlanPackageRunningDisplayRounding(
+      incrementMillisecondsPerKilometre: increment,
+      direction: direction,
     );
   }
 
@@ -779,7 +1031,7 @@ class PlanPackageYamlParser {
     'slots',
   };
 
-  static const _slotKeys = {
+  static const _slotKeysV1 = {
     'slot_key',
     'session_order',
     'session_key',
@@ -789,6 +1041,40 @@ class PlanPackageYamlParser {
     'completion_expectation',
     'display_title',
     'coach_note',
+  };
+
+  static const _slotKeysV2 = {..._slotKeysV1, 'authored_running_v1'};
+
+  static const _authoredRunningKeys = {
+    'schema_version',
+    'workout_id',
+    'step_ids',
+    'advisory_attachments',
+  };
+
+  static const _runningAttachmentKeys = {'attachment_id', 'step_ids', 'policy'};
+
+  static const _runningPolicyKeys = {
+    'policy_id',
+    'policy_version',
+    'method_id',
+    'method_version',
+    'benchmark_eligibility',
+    'freshness_local_civil_days',
+    'minimum_speed_basis_points',
+    'maximum_speed_basis_points',
+    'display_rounding',
+  };
+
+  static const _runningEligibilityKeys = {
+    'cohort_completed_tests_eligible',
+    'manual_completed_tests_eligible',
+    'external_completed_tests_eligible',
+  };
+
+  static const _runningRoundingKeys = {
+    'increment_milliseconds_per_kilometre',
+    'direction',
   };
 
   static const _progressionKeys = {
@@ -1046,6 +1332,66 @@ class PlanPackageYamlParser {
       return null;
     }
     return value;
+  }
+
+  int? _requireNonNegativeInt(
+    Map<String, Object?> map,
+    String key,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    final value = _requireInt(map, key, path, issues);
+    if (value != null && value < 0) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.$key',
+          code: 'invalid_value',
+          message: 'Field "$key" must be >= 0.',
+        ),
+      );
+      return null;
+    }
+    return value;
+  }
+
+  List<String>? _requireIdentityList(
+    Map<String, Object?> map,
+    String key,
+    String path,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    final values = _requireList(map, key, '$path.$key', issues);
+    if (values == null) return null;
+    if (values.isEmpty) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: '$path.$key',
+          code: 'empty_list',
+          message: 'Field "$key" must contain at least one identity.',
+        ),
+      );
+      return null;
+    }
+    final result = <String>[];
+    var valid = true;
+    for (var i = 0; i < values.length; i++) {
+      final value = values[i];
+      if (value is! String ||
+          value.trim().isEmpty ||
+          !PlanPackageSchema.identityPattern.hasMatch(value.trim())) {
+        issues.add(
+          PlanPackageValidationIssue(
+            path: '$path.$key[$i]',
+            code: 'invalid_identifier',
+            message: 'Field "$key" must contain only valid identities.',
+          ),
+        );
+        valid = false;
+        continue;
+      }
+      result.add(value.trim());
+    }
+    return valid ? result : null;
   }
 
   int? _optionalPositiveInt(

@@ -42,7 +42,8 @@ Future<void> main(List<String> args) async {
   }
 
   final publication =
-      jsonDecode(File(publicationPath).readAsStringSync()) as Map<String, dynamic>;
+      jsonDecode(File(publicationPath).readAsStringSync())
+          as Map<String, dynamic>;
   final expectedHash = publication['source_package_hash']?.toString();
   final expectedId = publication['programme_version_id']?.toString();
   final expectedKind = publication['publication_kind']?.toString();
@@ -51,7 +52,8 @@ Future<void> main(List<String> args) async {
     stderr.writeln('Publication artifact missing identity/hash');
     exit(2);
   }
-  if (expectedKind != 'private_exact_version' || expectedScope != 'coach_private') {
+  if (expectedKind != 'private_exact_version' ||
+      expectedScope != 'coach_private') {
     stderr.writeln('Publication artifact is not a private exact version');
     exit(2);
   }
@@ -60,7 +62,9 @@ Future<void> main(List<String> args) async {
     File(packagePath).readAsStringSync(),
   );
   if (!compiled.isValid || compiled.contentHashSha256 != expectedHash) {
-    stderr.writeln('Compiled package hash does not match the approved artifact');
+    stderr.writeln(
+      'Compiled package hash does not match the approved artifact',
+    );
     exit(2);
   }
 
@@ -73,7 +77,9 @@ Future<void> main(List<String> args) async {
     founderYaml: File(founderPath).readAsStringSync(),
   );
   if (graphs.missingProtocolIds.isNotEmpty || graphs.graphs.isEmpty) {
-    stderr.writeln('Founder YAML is missing executable bodies for scheduled sessions');
+    stderr.writeln(
+      'Founder YAML is missing executable bodies for scheduled sessions',
+    );
     exit(2);
   }
   payload['protocol_graphs'] = graphs.graphs;
@@ -86,10 +92,12 @@ Future<void> main(List<String> args) async {
 
   final client = SupabaseClient(url, serviceKey);
   try {
-    final response = await client.rpc(
-      'publish_private_exact_programme_version',
-      params: {'payload': payload},
-    );
+    final rpcName =
+        compiled.manifest!.packageSchemaVersion >=
+            PlanPackageSchema.authoredRunningPackageSchemaVersion
+        ? 'publish_private_exact_programme_version_v2'
+        : 'publish_private_exact_programme_version';
+    final response = await client.rpc(rpcName, params: {'payload': payload});
     final map = response is Map
         ? Map<String, dynamic>.from(response)
         : <String, dynamic>{'raw': response.toString()};
