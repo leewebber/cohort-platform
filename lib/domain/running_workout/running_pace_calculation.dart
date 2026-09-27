@@ -48,14 +48,29 @@ class ExactCanonicalPace {
   final int denominator;
 
   int round(CanonicalPaceRounding rounding) {
-    final quotient = numeratorMillisecondsPerKilometre ~/ denominator;
-    final remainder = numeratorMillisecondsPerKilometre % denominator;
-    return switch (rounding) {
+    return roundToIncrement(1, rounding);
+  }
+
+  int roundToIncrement(
+    int incrementMillisecondsPerKilometre,
+    CanonicalPaceRounding rounding,
+  ) {
+    if (incrementMillisecondsPerKilometre <= 0) {
+      throw const RunningPaceCalculationException(
+        'invalid_rounding_increment',
+        'Pace rounding increment must be positive.',
+      );
+    }
+    final scaledDenominator = denominator * incrementMillisecondsPerKilometre;
+    final quotient = numeratorMillisecondsPerKilometre ~/ scaledDenominator;
+    final remainder = numeratorMillisecondsPerKilometre % scaledDenominator;
+    final roundedQuotient = switch (rounding) {
       CanonicalPaceRounding.down => quotient,
       CanonicalPaceRounding.nearest =>
-        remainder * 2 < denominator ? quotient : quotient + 1,
+        remainder * 2 < scaledDenominator ? quotient : quotient + 1,
       CanonicalPaceRounding.up => remainder == 0 ? quotient : quotient + 1,
     };
+    return roundedQuotient * incrementMillisecondsPerKilometre;
   }
 
   @override
