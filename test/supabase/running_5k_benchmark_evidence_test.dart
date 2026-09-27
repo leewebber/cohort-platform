@@ -6,6 +6,9 @@ void main() {
   final migration = File(
     'supabase/migrations/20260927130000_running_5k_benchmark_evidence.sql',
   ).readAsStringSync();
+  final paceFoundationMigration = File(
+    'supabase/migrations/20260927140000_running_pace_sql_foundation.sql',
+  ).readAsStringSync();
   final gate = File(
     'supabase/tests/sql/gate_bi_running_5k_benchmark_evidence.sql',
   ).readAsStringSync();
@@ -48,10 +51,16 @@ void main() {
       ),
     );
     expect(
-      migration,
-      contains(
-        'GRANT EXECUTE ON FUNCTION public.record_cohort_completed_5k_benchmark(JSONB) TO service_role;',
+      paceFoundationMigration,
+      matches(
+        RegExp(
+          r'GRANT EXECUTE ON FUNCTION public\.record_cohort_completed_5k_benchmark\(JSONB\)\s+TO service_role;',
+        ),
       ),
+    );
+    expect(
+      paceFoundationMigration,
+      contains("'code', 'cohort_test_completion_unproven'"),
     );
   });
 
@@ -68,8 +77,8 @@ void main() {
         'idempotency_reuse_fails_closed',
         'correction_history_append_only',
         'correction_preserves_identity',
-        'cohort_completed_test_eligible',
-        'incomplete_cohort_session_rejected',
+        'cohort_ingestion_blocked_unproven',
+        'cohort_ingestion_does_not_trust_session_status',
         'service_role_cannot_bypass_commands',
       ]) {
         expect(gate, contains("'$caseId'"));

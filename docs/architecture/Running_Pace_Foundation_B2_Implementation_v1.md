@@ -1,8 +1,9 @@
 # Running / Pace Foundation B2 — first-pass implementation contract
 
-**Status:** Pure-domain calculation, evidence, policy, frozen-snapshot, and
-Plan Package v2 authored-running publication foundation implemented locally.
-Occurrence freeze persistence remains a later schema/RPC slice.
+**Status:** Pure-domain calculation, evidence, policy, frozen-snapshot, Plan
+Package v2 authored-running publication foundation, manual benchmark evidence,
+and side-effect-free SQL selection/calculation implemented locally. Occurrence
+freeze persistence remains a later schema/RPC slice.
 **Recorded:** 2026-09-27
 **Branch:** `feat/running-pace-foundation-b2`
 **Base:** `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030`
@@ -46,12 +47,12 @@ not create physiological zone authority.
 | Structured run intent | `RunningWorkout` v1 in `lib/domain/running_workout/` | calculated values remain outside authored targets until freeze composition is approved |
 | Executable prescription | `performance_protocols` + `session_blocks` | no runtime wiring |
 | Occurrence | fixed-schedule occurrence / Daily Journey identity | future freeze owner; unchanged now |
-| Benchmark evidence | no B2 canonical store exists | pure input facts only in this pass; no persistence or capture UI |
+| Benchmark evidence | dedicated athlete-scoped 5 km evidence and append-only revisions | authenticated explicit manual-test command remains authoritative; unproven Cohort ingestion is blocked |
 | Actuals | `training_block_results.result_data` and immutable snapshots | never read as prescription and never rewritten |
 | Display calculations | `EnduranceMetricsCalculator` and `IntervalResultMath` | actual/display helpers are not B2 methods |
 | Device evidence | not implemented | no provider types, export, import, or Garmin work |
 
-The code slice is pure Dart and in-memory. It now:
+The calculation domain is pure Dart and in-memory. It now:
 
 - represents an exact 5 km benchmark duration;
 - retains stable athlete-scoped evidence identity, exact distance, elapsed
@@ -69,11 +70,12 @@ The code slice is pure Dart and in-memory. It now:
 - requires an explicit rounding choice at the caller boundary; and
 - exposes stable validation failures.
 
-It contains no selected/default percentage policy. A coach must explicitly
-author the method version, exact percentage range, and stable step scope. The
-calculated result is advisory. It must not contain zone names, athlete or
-programme lookup, persistence, runtime composition, override, UI, SQL, or
-hosted integration.
+The SQL foundation applies the same selection and calculation rules through
+shared golden vectors. It contains no selected/default percentage policy. A
+coach must explicitly author the method version, exact percentage range, and
+stable step scope. The
+calculated result is advisory. Neither foundation may contain zone names,
+programme lookup, runtime composition, override, UI, or hosted integration.
 
 ## Founder decision — explicit authored targets only
 
@@ -181,6 +183,33 @@ must share one transaction so any failed start rolls both back. A later device
 export boundary would reuse the same insert-once helper only after successful
 export. This requires schema and RPC changes and is therefore **proposed, not
 implemented** in this slice.
+
+## Cohort benchmark ingestion boundary
+
+Authenticated athletes may retain an explicitly declared manual completed
+5 km test as distinct manual provenance. Cohort test ingestion is fail-closed:
+the service-only command returns `cohort_test_completion_unproven` and creates
+no evidence.
+
+The blocker is structural, not a title or distance heuristic. The hashed
+`authored_running_v1.step_ids` do not map to executable
+`session_blocks.block_id`, and the server completion authority does not prove
+that one declared running step completed with an exact 5,000 m elapsed result.
+Cohort ingestion remains blocked until both are implemented:
+
+1. one immutable authored benchmark step maps exactly to one executable block;
+2. terminal completion server-validates that mapped block and its exact
+   5,000 m elapsed-including-pauses result.
+
+Neither a session title, athlete assertion, nor an arbitrary logged 5 km
+distance may substitute for those authorities.
+
+The SQL selector and calculator are read-only foundations. Stored selection
+currently admits only the manual provenance rows created by the explicit
+manual command. Pure SQL golden functions mirror the Dart source-eligibility,
+athlete/timezone scope, civil-day freshness, stable tie-break, percentage
+inversion, exact rational reduction, and explicit display-rounding rules. They
+are not wired to session start or target freezing.
 
 ## Acceptance for this first pass
 

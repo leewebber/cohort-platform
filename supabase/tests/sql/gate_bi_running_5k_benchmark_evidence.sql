@@ -170,17 +170,24 @@ BEGIN
     'iana_timezone', 'Asia/Makassar',
     'surface_context', 'treadmill'
   );
+  SELECT count(*) INTO v_count
+  FROM public.running_5k_benchmark_evidence
+  WHERE source_kind = 'cohort';
   PERFORM set_config('request.jwt.claim.sub', '', TRUE);
   PERFORM set_config('request.jwt.claim.role', 'service_role', TRUE);
   PERFORM set_config('role', 'service_role', TRUE);
   v_result := public.record_cohort_completed_5k_benchmark(v_payload);
   PERFORM set_config('role', 'postgres', TRUE);
-  SELECT surface_context INTO v_value
-  FROM public.running_5k_benchmark_evidence_revisions
-  WHERE revision_id = (v_result->>'revision_id')::UUID;
-  PERFORM sprint12_record('BI', 'cohort_completed_test_eligible', 'recorded|treadmill',
-    v_result->>'status' || '|' || v_value, NULL,
-    v_result->>'status' = 'recorded' AND v_value = 'treadmill', v_result::TEXT);
+  SELECT count(*)::TEXT INTO v_value
+  FROM public.running_5k_benchmark_evidence
+  WHERE source_kind = 'cohort';
+  PERFORM sprint12_record('BI', 'cohort_ingestion_blocked_unproven',
+    'blocked|cohort_test_completion_unproven|' || v_count::TEXT,
+    (v_result->>'status') || '|' || (v_result->>'code') || '|' || v_value,
+    NULL,
+    v_result->>'status' = 'blocked'
+      AND v_result->>'code' = 'cohort_test_completion_unproven'
+      AND v_value = v_count::TEXT, v_result::TEXT);
 
   PERFORM set_config('request.jwt.claim.role', 'service_role', TRUE);
   PERFORM set_config('role', 'service_role', TRUE);
@@ -191,9 +198,11 @@ BEGIN
     )
   );
   PERFORM set_config('role', 'postgres', TRUE);
-  PERFORM sprint12_record('BI', 'incomplete_cohort_session_rejected',
-    'completed_cohort_test_missing', v_retry->>'code', NULL,
-    v_retry->>'code' = 'completed_cohort_test_missing', v_retry::TEXT);
+  PERFORM sprint12_record('BI', 'cohort_ingestion_does_not_trust_session_status',
+    'blocked|cohort_test_completion_unproven',
+    (v_retry->>'status') || '|' || (v_retry->>'code'), NULL,
+    v_retry->>'status' = 'blocked'
+      AND v_retry->>'code' = 'cohort_test_completion_unproven', v_retry::TEXT);
 
   SELECT has_function_privilege('authenticated',
     'public.record_cohort_completed_5k_benchmark(jsonb)', 'EXECUTE')
