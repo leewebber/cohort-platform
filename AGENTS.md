@@ -174,6 +174,7 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
+[`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
 [`docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
 [`docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
@@ -194,7 +195,11 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `RUNNING_DEVICE_EXPORT=false`,
 `RUNNING_TARGET_OVERRIDES=false`,
 `RUNNING_PACE_B2_PROGRAMME_ADOPTION=false`,
-`B3_STARTED=false`,
+`B3_STARTED=true`,
+`STRUCTURED_RUNNING_B3_SLICE_1=IMPLEMENTED_LOCAL`,
+`B3_HOSTED_MIGRATION_APPLIED=false`,
+`B3_ATHLETE_UI=false`,
+`B3_STRUCTURED_RUNNER=false`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
@@ -208,9 +213,10 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not start B3 without separate authority. Do not author commercial programme
-content. Do not publish hosted Bali or change Lee’s assignment until visual
-approval.
+Do not apply the local B3 migration to a hosted environment, adopt it in a
+programme, build athlete UI or a structured runner, or start B3 slice 2 without
+separate authority. Do not author commercial programme content. Do not publish
+hosted Bali or change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).

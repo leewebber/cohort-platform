@@ -3,8 +3,11 @@
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,
 > and all four hosted migrations (`20260927120000` through `20260927150000`)
-> are applied on Cohort Field Manual. Handoff:
-> [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md).
+> are applied on Cohort Field Manual. Structured Running B3 slice 1 is
+> implemented and verified locally on `codex/b3-structured-running-slice-1`;
+> its migration is local-only and no programme adopts it. Handoffs:
+> [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
+> [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md).
 > Phase 1 Integration Closeout remains historical binding authority:
 > [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
 > **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
@@ -40,6 +43,7 @@
 > [`./RUNNING_WORKOUT_B1_HANDOFF.md`](./RUNNING_WORKOUT_B1_HANDOFF.md),
 > [`./RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md),
 > [`./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
+> [`./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
 > [`./RUNNING_PACE_FOUNDATION_AUDIT.md`](./RUNNING_PACE_FOUNDATION_AUDIT.md),
 > [`./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 > [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
@@ -57,7 +61,11 @@
 > `RUNNING_DEVICE_EXPORT=false`,
 > `RUNNING_TARGET_OVERRIDES=false`,
 > `RUNNING_PACE_B2_PROGRAMME_ADOPTION=false`,
-> `B3_STARTED=false`,
+> `B3_STARTED=true`,
+> `STRUCTURED_RUNNING_B3_SLICE_1=IMPLEMENTED_LOCAL`,
+> `B3_HOSTED_MIGRATION_APPLIED=false`,
+> `B3_ATHLETE_UI=false`,
+> `B3_STRUCTURED_RUNNER=false`,
 > `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 > `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 > `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
