@@ -166,10 +166,14 @@ Sprint 1 integrated at `a3cd351`, Sprint 2 at `8405421`, Sprint 3 at
 is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
 Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
-**COMPLETE** on `origin/main` `ae5028a`. Lee Bali Hybrid Base is
-**authored locally** and awaiting founder visual review
+**COMPLETE** on `origin/main` `ae5028a`. Running Pace Foundation B2
+infrastructure is **integrated on `origin/main`** at `a275223`; its four
+hosted migrations (`20260927120000` through `20260927150000`) are pending and
+have not been applied. Lee Bali Hybrid Base is **authored locally** and
+awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
+[`docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 [`docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
 [`docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
@@ -181,14 +185,22 @@ Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-`RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
+`RUNNING_PACE_FOUNDATION=B2_INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
 `RUNNING_WORKOUT_B1=COMPLETE`,
+`RUNNING_PACE_FOUNDATION_B2_HOSTED_MIGRATIONS_APPLIED=false`,
+`APPROVED_PERCENTAGE_BANDS=false`,
+`ATHLETE_PACE_TARGET_UI=false`,
+`COHORT_5K_TEST_INGESTION=BLOCKED`,
+`RUNNING_DEVICE_EXPORT=false`,
+`RUNNING_TARGET_OVERRIDES=false`,
+`RUNNING_PACE_B2_PROGRAMME_ADOPTION=false`,
+`B3_STARTED=false`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
 `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
 `BALI_PROGRAMME_CONTENT_AUTHORISED=true`,
-`PACE_CALCULATION_B2=NOT_AUTHORISED`,
+`PACE_CALCULATION_B2=INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 `COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
@@ -196,8 +208,9 @@ Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not start B2. Do not author commercial programme content. Do not
-publish hosted Bali or change Lee’s assignment until visual approval.
+Do not apply the hosted B2 migrations without separate authority or start B3.
+Do not author commercial programme content. Do not publish hosted Bali or
+change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).

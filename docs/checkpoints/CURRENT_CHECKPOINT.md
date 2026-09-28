@@ -1,6 +1,11 @@
 # Current repository checkpoint
 
-> **Live delivery pointer:** Phase 1 Integration Closeout is
+> **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
+> **integrated on `origin/main`** at `a275223`; its four hosted migrations
+> (`20260927120000` through `20260927150000`) are pending and have not been
+> applied. Handoff:
+> [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md).
+> Phase 1 Integration Closeout remains historical binding authority:
 > [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
 > **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
 > **M10 authority (closed):** [`M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md`](./M10_ATHLETE_COACH_MANAGEMENT_CLOSEOUT.md).
@@ -23,14 +28,17 @@
 > launch-ready. Launch programme library strategy is **approved**.
 > Infrastructure architecture is **approved**. Programme Studio Stage 1
 > is **COMPLETE**. Structured running B1 is **COMPLETE** on
-> `origin/main` `ae5028a`. Lee Bali Hybrid Base is **authored locally**
-> and awaiting founder visual review
+> `origin/main` `ae5028a`. Running Pace Foundation B2 infrastructure is
+> integrated on `origin/main` at `a275223`, with hosted migrations pending.
+> Lee Bali Hybrid Base is **authored locally** and awaiting founder visual
+> review
 > ([`./PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](./PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
 > [`./BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](./BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 > [`./LEE_BALI_HYBRID_BASE_HANDOFF.md`](./LEE_BALI_HYBRID_BASE_HANDOFF.md),
 > [`./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](./PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 > [`./RUNNING_WORKOUT_B1_HANDOFF.md`](./RUNNING_WORKOUT_B1_HANDOFF.md),
 > [`./RUNNING_WORKOUT_B1_APPROVAL.md`](./RUNNING_WORKOUT_B1_APPROVAL.md),
+> [`./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`./RUNNING_PACE_FOUNDATION_AUDIT.md`](./RUNNING_PACE_FOUNDATION_AUDIT.md),
 > [`./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md`](./LAUNCH_PROGRAMME_LIBRARY_AUDIT.md),
 > [`../architecture/Launch_Programme_Library_v1.md`](../architecture/Launch_Programme_Library_v1.md),
@@ -39,14 +47,22 @@
 > `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 > `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 > `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-> `RUNNING_PACE_FOUNDATION=B1_COMPLETE`,
+> `RUNNING_PACE_FOUNDATION=B2_INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
 > `RUNNING_WORKOUT_B1=COMPLETE`,
+> `RUNNING_PACE_FOUNDATION_B2_HOSTED_MIGRATIONS_APPLIED=false`,
+> `APPROVED_PERCENTAGE_BANDS=false`,
+> `ATHLETE_PACE_TARGET_UI=false`,
+> `COHORT_5K_TEST_INGESTION=BLOCKED`,
+> `RUNNING_DEVICE_EXPORT=false`,
+> `RUNNING_TARGET_OVERRIDES=false`,
+> `RUNNING_PACE_B2_PROGRAMME_ADOPTION=false`,
+> `B3_STARTED=false`,
 > `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 > `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 > `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
 > `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
 > `BALI_PROGRAMME_CONTENT_AUTHORISED=true`,
-> `PACE_CALCULATION_B2=NOT_AUTHORISED`,
+> `PACE_CALCULATION_B2=INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
 > `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 > `COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`).
