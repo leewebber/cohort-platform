@@ -2,8 +2,8 @@
 
 **Status:** Pure-domain calculation, evidence, policy, frozen-snapshot, Plan
 Package v2 authored-running publication foundation, manual benchmark evidence,
-and side-effect-free SQL selection/calculation implemented locally. Occurrence
-freeze persistence remains a later schema/RPC slice.
+side-effect-free SQL selection/calculation, and atomic occurrence freeze
+persistence implemented locally.
 **Recorded:** 2026-09-27
 **Branch:** `feat/running-pace-foundation-b2`
 **Base:** `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030`
@@ -13,8 +13,9 @@ freeze persistence remains a later schema/RPC slice.
 [`Running_Workout_B1_Implementation_v1.md`](./Running_Workout_B1_Implementation_v1.md)
 
 ```text
-RUNNING_PACE_FOUNDATION=B2_PURE_DOMAIN_SNAPSHOT_IMPLEMENTED
+RUNNING_PACE_FOUNDATION=B2_OCCURRENCE_FREEZE_IMPLEMENTED_LOCAL
 PLAN_PACKAGE_V2_AUTHORED_RUNNING=IMPLEMENTED_LOCAL_UNPUBLISHED
+RUNNING_TARGET_OCCURRENCE_FREEZE=IMPLEMENTED_LOCAL
 RUNNING_WORKOUT_B1=COMPLETE
 PACE_CALCULATION_B2=AUTHORISED_FIRST_PASS
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -44,9 +45,9 @@ not create physiological zone authority.
 | Concern | Existing authority | B2 first-pass rule |
 |---|---|---|
 | Programme and policy ownership | immutable `programme_versions` pin plus protocol revision | no Plan Package, programme, protocol, or pin change |
-| Structured run intent | `RunningWorkout` v1 in `lib/domain/running_workout/` | calculated values remain outside authored targets until freeze composition is approved |
-| Executable prescription | `performance_protocols` + `session_blocks` | no runtime wiring |
-| Occurrence | fixed-schedule occurrence / Daily Journey identity | future freeze owner; unchanged now |
+| Structured run intent | `RunningWorkout` v1 in `lib/domain/running_workout/` | authored intent remains immutable; advisory calculations freeze separately at execution commitment |
+| Executable prescription | `performance_protocols` + `session_blocks` | advisory snapshot does not rewrite executable prescription |
+| Occurrence | fixed-schedule occurrence / Daily Journey identity | owns one immutable advisory aggregate when an attached v2 slot first starts |
 | Benchmark evidence | dedicated athlete-scoped 5 km evidence and append-only revisions | authenticated explicit manual-test command remains authoritative; unproven Cohort ingestion is blocked |
 | Actuals | `training_block_results.result_data` and immutable snapshots | never read as prescription and never rewritten |
 | Display calculations | `EnduranceMetricsCalculator` and `IntervalResultMath` | actual/display helpers are not B2 methods |
@@ -75,7 +76,7 @@ shared golden vectors. It contains no selected/default percentage policy. A
 coach must explicitly author the method version, exact percentage range, and
 stable step scope. The
 calculated result is advisory. Neither foundation may contain zone names,
-programme lookup, runtime composition, override, UI, or hosted integration.
+override behavior, UI, or hosted integration.
 
 ## Founder decision — explicit authored targets only
 
@@ -97,13 +98,12 @@ programme lookup, runtime composition, override, UI, or hosted integration.
 
 | Decision | Bound direction | Founder decision still required |
 |---|---|---|
-| Authored attachment | no defaults; coach supplies method version, exact range, and step scope | canonical programme-version representation and stable authored step identity |
 | Treadmill/outdoor | evidence context is retained | whether a policy may explicitly permit cross-context use and what warning is required |
-| Freeze | earliest execution commitment: successful device export or first in-app start; today only first start exists | approve the occurrence-scoped storage and RPC proposal below |
+| Device export freeze | earliest execution commitment remains successful device export or first in-app start | provider/export transaction boundary remains deferred |
 | Override | only when immutable programme policy permits; preserve original, override, source/reason, and time | actor, bounds, mandatory reason set, pre/post-freeze timing, and whether an override itself is immutable |
 
-No production calculator may be composed until the applicable rows above
-are approved and encoded in an immutable programme policy.
+No cross-context or override behavior may be inferred from the implemented
+first-start calculation boundary.
 
 ## Frozen target snapshot
 
@@ -142,18 +142,7 @@ immutable published session slot. A post-publication mismatch raises and rolls
 back the transaction. The existing v1 RPC is not replaced and Apollo/Bali stay
 on that unchanged path.
 
-## Storage and transaction audit
-
-Current storage cannot persist this snapshot safely:
-
-- `programme_schedule_occurrences` explicitly has no prescription payload.
-- `programme_slot_outcomes` links occurrence to execution but has no JSONB
-  snapshot column.
-- `training_sessions` has no suitable JSONB authority and cannot represent a
-  future device export before an in-app session exists.
-- `training_session_records.session_snapshot` is created later, outside the
-  authoritative create/resume transaction.
-- no device-export boundary exists.
+## Storage and transaction boundary
 
 The current fixed-schedule start authority is
 `cohort_create_or_resume_fixed_occurrence_at`. It locks the occurrence and
@@ -161,7 +150,7 @@ assignment, validates the immutable pin and authored graph, locks the outcome,
 then creates and links one `training_sessions` row in the same transaction.
 Retries return the existing linked session.
 
-The smallest persistence proposal is an additive, occurrence-scoped table:
+The additive occurrence-scoped authority is:
 
 ```text
 programme_occurrence_running_target_snapshots
@@ -175,14 +164,20 @@ programme_occurrence_running_target_snapshots
   training_session_id BIGINT NULL REFERENCES training_sessions(id)
 ```
 
-The table is insert-once and not client-writable. The fixed start RPC would,
-after every authority check but before returning success, lock/select the row,
-insert the server-validated snapshot only when absent, create/link the session,
-and return the same snapshot on retry. Snapshot insertion and session creation
-must share one transaction so any failed start rolls both back. A later device
-export boundary would reuse the same insert-once helper only after successful
-export. This requires schema and RPC changes and is therefore **proposed, not
-implemented** in this slice.
+The table is insert-once, immutable, and not client-readable or writable. Only
+a published Plan Package v2 slot with a non-null, validated, hash-attested
+`authored_running_v1` document participates. Plan Package v1 and v2 slots
+without an advisory attachment retain the exact prior start response and write
+no snapshot.
+
+On first start, after all existing authority checks, the fixed-start RPC
+creates and links the training session, calculates one aggregate for all
+explicit advisory attachments, and inserts it before returning success. These
+writes share one transaction, so a snapshot failure rolls back the session and
+outcome link. The existing occurrence advisory lock serialises concurrent
+starts. Retry reads and returns the stored aggregate without selecting newer
+evidence. Missing or stale eligible manual evidence freezes `intent_only`.
+A future device-export boundary remains deferred.
 
 ## Cohort benchmark ingestion boundary
 
@@ -204,12 +199,12 @@ Cohort ingestion remains blocked until both are implemented:
 Neither a session title, athlete assertion, nor an arbitrary logged 5 km
 distance may substitute for those authorities.
 
-The SQL selector and calculator are read-only foundations. Stored selection
-currently admits only the manual provenance rows created by the explicit
-manual command. Pure SQL golden functions mirror the Dart source-eligibility,
-athlete/timezone scope, civil-day freshness, stable tie-break, percentage
-inversion, exact rational reduction, and explicit display-rounding rules. They
-are not wired to session start or target freezing.
+Stored selection admits only the manual provenance rows created by the
+explicit manual command. Pure SQL golden functions mirror the Dart
+source-eligibility, athlete/timezone scope, civil-day freshness, stable
+tie-break, percentage inversion, exact rational reduction, and explicit
+display-rounding rules. The fixed-occurrence start transaction composes those
+functions only for explicit hash-attested v2 attachments.
 
 ## Acceptance for this first pass
 
@@ -227,10 +222,9 @@ are not wired to session start or target freezing.
 - Intent-only is itself frozen at execution commitment.
 - Example percentage bands are not encoded in production policy or content.
 - B1 model, timers, programme sources, Bali pin/graph/occurrences/evidence,
-  database, hosted systems, and production composition remain unchanged.
+  hosted systems, and athlete UI remain unchanged.
 
 ## Deferred next slice
 
-Approve or revise the occurrence-scoped storage/RPC proposal. Only then add an
-additive migration and transactional local database gate. Runtime composition,
-device export, overrides, programme content, and Bali remain later slices.
+Athlete UI, device export, overrides, Cohort-test ingestion, programme content,
+and any Bali adoption remain later, separately authorised slices.
