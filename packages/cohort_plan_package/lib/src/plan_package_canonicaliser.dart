@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'programme_vocabulary.dart';
 import 'plan_package_manifest.dart';
 import 'plan_package_schema.dart';
+import 'running_execution_mapping_hash.dart';
 
 /// Deterministic canonical representation of a validated Plan Package.
 ///
@@ -149,10 +150,29 @@ class PlanPackageCanonicaliser {
   }
 
   Map<String, Object?> _authoredRunning(PlanPackageAuthoredRunningV1 running) {
+    final bindings = running.executableStepBindings;
     return _sortedMap({
       'schema_version': running.schemaVersion,
       'workout_id': running.workoutId,
       'step_ids': running.stepIds,
+      if (bindings != null)
+        'executable_step_bindings': [
+          for (final binding in bindings)
+            _sortedMap({
+              'step_id': binding.stepId,
+              'session_block_id': binding.sessionBlockId,
+            }),
+        ],
+      if (bindings != null)
+        'execution_mapping_sha256': RunningExecutionMappingHash.compute(
+          workoutId: running.workoutId,
+          bindings: bindings.map(
+            (binding) => (
+              stepId: binding.stepId,
+              sessionBlockId: binding.sessionBlockId,
+            ),
+          ),
+        ),
       'advisory_attachments': _sortedBy(
         running.advisoryAttachments,
         (attachment) => attachment.attachmentId,

@@ -1,0 +1,66 @@
+package_schema_version: 2
+
+programme:
+  lineage_code: PROG-RUNNING-B3-FIXTURE
+  version_number: 1
+  name: Running execution mapping fixture
+  library_scope: coach_private
+  owner_type: coach
+  coaching_intent: Exercise the B3 structured-running execution mapping contract.
+  duration_weeks: 1
+  sessions_per_week: 1
+
+sessions:
+  - session_key: SES-RUN-A
+    protocol_id: PROT-RUN-A-R1
+    session_lineage_id: b3000000-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Running execution fixture
+
+phases: []
+
+weeks:
+  - week_number: 1
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-RUN-A
+            progression:
+              prescription_summary: Fixture only; no production prescription.
+            authored_running_v1:
+              schema_version: 1
+              workout_id: rw1:p:7e50ec7208a5dd0f
+              step_ids:
+                - rw1:p:7e50ec7208a5dd0f:s:0
+              executable_step_bindings:
+                - step_id: rw1:p:7e50ec7208a5dd0f:s:0
+                  session_block_id: 2d8f9c46-60dc-422b-8d0e-4d94028617ca
+              advisory_attachments:
+                - attachment_id: TARGET-WORK-STEP
+                  step_ids:
+                    - rw1:p:7e50ec7208a5dd0f:s:0
+                  policy:
+                    policy_id: POLICY-FIXTURE
+                    policy_version: 1
+                    method_id: PERCENT-BENCHMARK-SPEED
+                    method_version: 1
+                    benchmark_eligibility:
+                      cohort_completed_tests_eligible: true
+                      manual_completed_tests_eligible: true
+                      external_completed_tests_eligible: false
+                    freshness_local_civil_days: 90
+                    minimum_speed_basis_points: 8123
+                    maximum_speed_basis_points: 9345
+                    display_rounding:
+                      increment_milliseconds_per_kilometre: 1000
+                      direction: nearest
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []

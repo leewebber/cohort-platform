@@ -190,12 +190,26 @@ class PlanPackageAuthoredRunningV1 {
     required this.workoutId,
     required this.stepIds,
     required this.advisoryAttachments,
+    this.executableStepBindings,
   });
 
   final int schemaVersion;
   final String workoutId;
   final List<String> stepIds;
   final List<PlanPackageRunningAdvisoryAttachment> advisoryAttachments;
+  final List<PlanPackageRunningStepBlockBinding>? executableStepBindings;
+}
+
+/// Explicit B3 binding. The UUID is the persisted `session_blocks.block_id`;
+/// titles and positions are deliberately absent from the contract.
+class PlanPackageRunningStepBlockBinding {
+  const PlanPackageRunningStepBlockBinding({
+    required this.stepId,
+    required this.sessionBlockId,
+  });
+
+  final String stepId;
+  final String sessionBlockId;
 }
 
 class PlanPackageRunningAdvisoryAttachment {

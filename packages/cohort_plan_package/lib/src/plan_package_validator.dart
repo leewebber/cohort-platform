@@ -61,6 +61,59 @@ class PlanPackageValidator {
           }
           _validateIdentity(running.workoutId, '$path.workout_id', issues);
           _validateIdentityList(running.stepIds, '$path.step_ids', issues);
+          final bindings = running.executableStepBindings;
+          if (bindings != null) {
+            if (bindings.length != running.stepIds.length) {
+              issues.add(
+                PlanPackageValidationIssue(
+                  path: '$path.executable_step_bindings',
+                  code: 'incomplete_execution_mapping',
+                  message:
+                      'Every authored running step must bind exactly once to an executable block.',
+                ),
+              );
+            }
+            final blockIds = <String>{};
+            for (var bi = 0; bi < bindings.length; bi++) {
+              final binding = bindings[bi];
+              final bindingPath = '$path.executable_step_bindings[$bi]';
+              _validateIdentity(binding.stepId, '$bindingPath.step_id', issues);
+              if (!PlanPackageSchema.canonicalSessionBlockUuidPattern.hasMatch(
+                binding.sessionBlockId,
+              )) {
+                issues.add(
+                  PlanPackageValidationIssue(
+                    path: '$bindingPath.session_block_id',
+                    code: 'invalid_identifier',
+                    message:
+                        'Executable block identity must be a canonical lowercase UUID.',
+                  ),
+                );
+              }
+              blockIds.add(binding.sessionBlockId);
+              if (bi >= running.stepIds.length ||
+                  binding.stepId != running.stepIds[bi]) {
+                issues.add(
+                  PlanPackageValidationIssue(
+                    path: '$bindingPath.step_id',
+                    code: 'execution_mapping_order_mismatch',
+                    message:
+                        'Execution bindings must follow the authored step_ids order exactly.',
+                  ),
+                );
+              }
+            }
+            if (bindings.isEmpty || blockIds.length != 1) {
+              issues.add(
+                PlanPackageValidationIssue(
+                  path: '$path.executable_step_bindings',
+                  code: 'unsupported_execution_mapping',
+                  message:
+                      'B3 slice 1 supports one exact B1 executable block per running workout.',
+                ),
+              );
+            }
+          }
           if (running.advisoryAttachments.isEmpty) {
             issues.add(
               PlanPackageValidationIssue(

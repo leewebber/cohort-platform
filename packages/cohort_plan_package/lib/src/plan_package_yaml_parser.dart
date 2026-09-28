@@ -561,6 +561,52 @@ class PlanPackageYamlParser {
     }
     final workoutId = _requireIdentity(map, 'workout_id', path, issues);
     final stepIds = _requireIdentityList(map, 'step_ids', path, issues);
+    List<PlanPackageRunningStepBlockBinding>? executableStepBindings;
+    if (map.containsKey('executable_step_bindings')) {
+      final bindingsRaw = _requireList(
+        map,
+        'executable_step_bindings',
+        '$path.executable_step_bindings',
+        issues,
+      );
+      if (bindingsRaw != null) {
+        final parsed = <PlanPackageRunningStepBlockBinding>[];
+        for (var i = 0; i < bindingsRaw.length; i++) {
+          final bindingPath = '$path.executable_step_bindings[$i]';
+          final bindingMap = _asMap(bindingsRaw[i], bindingPath, issues);
+          if (bindingMap == null) continue;
+          _rejectForbiddenKeys(bindingMap, bindingPath, issues);
+          _rejectUnknownKeys(
+            bindingMap,
+            bindingPath,
+            _runningStepBlockBindingKeys,
+            issues,
+          );
+          final stepId = _requireIdentity(
+            bindingMap,
+            'step_id',
+            bindingPath,
+            issues,
+          );
+          final blockId = _requireIdentity(
+            bindingMap,
+            'session_block_id',
+            bindingPath,
+            issues,
+            pattern: PlanPackageSchema.canonicalSessionBlockUuidPattern,
+          );
+          if (stepId != null && blockId != null) {
+            parsed.add(
+              PlanPackageRunningStepBlockBinding(
+                stepId: stepId,
+                sessionBlockId: blockId,
+              ),
+            );
+          }
+        }
+        executableStepBindings = List.unmodifiable(parsed);
+      }
+    }
     final attachmentsRaw = _requireList(
       map,
       'advisory_attachments',
@@ -587,6 +633,7 @@ class PlanPackageYamlParser {
       workoutId: workoutId,
       stepIds: List.unmodifiable(stepIds),
       advisoryAttachments: List.unmodifiable(attachments),
+      executableStepBindings: executableStepBindings,
     );
   }
 
@@ -1050,7 +1097,10 @@ class PlanPackageYamlParser {
     'workout_id',
     'step_ids',
     'advisory_attachments',
+    'executable_step_bindings',
   };
+
+  static const _runningStepBlockBindingKeys = {'step_id', 'session_block_id'};
 
   static const _runningAttachmentKeys = {'attachment_id', 'step_ids', 'policy'};
 

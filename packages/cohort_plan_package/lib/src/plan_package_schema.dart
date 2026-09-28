@@ -26,6 +26,10 @@ class PlanPackageSchema {
     r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
   );
 
+  /// Execution mappings address persisted session blocks only.
+  static final RegExp canonicalSessionBlockUuidPattern =
+      canonicalSessionLineageUuidPattern;
+
   static final RegExp _uuidLikePattern = RegExp(r'^\{?[0-9A-Fa-f-]+\}?$');
 
   /// Whether [value] is an existing symbolic Session Lineage identity or an
