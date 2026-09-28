@@ -28,8 +28,18 @@ void main() {
       expect(
         migration,
         contains(
-          'persisted.authored_running_v1 IS DISTINCT FROM staged.authored_running_v1',
+          'persisted.authored_running_v1 IS DISTINCT FROM\n'
+          '              (v_running_slots -> persisted.package_slot_key)',
         ),
+      );
+      expect(migration, contains('v_slot_keys JSONB'));
+      expect(
+        migration,
+        contains('ELSE persisted.authored_running_v1 IS NOT NULL'),
+      );
+      expect(
+        migration,
+        contains("'cohort.plan_package_v2_running_slots'"),
       );
       expect(
         migration,

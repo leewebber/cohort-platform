@@ -196,10 +196,9 @@ SET search_path = public, pg_temp
 AS $$
 BEGIN
   IF current_setting('cohort.plan_package_v2_publication', TRUE) = 'on' THEN
-    SELECT staged.authored_running_v1
-    INTO NEW.authored_running_v1
-    FROM pg_temp.cohort_plan_package_v2_running_slots staged
-    WHERE staged.package_slot_key = NEW.package_slot_key;
+    NEW.authored_running_v1 := (
+      current_setting('cohort.plan_package_v2_running_slots', TRUE)::JSONB
+    )->NEW.package_slot_key;
   END IF;
   RETURN NEW;
 END;
@@ -225,6 +224,8 @@ DECLARE
   v_result JSONB;
   v_version_id UUID;
   v_slot JSONB;
+  v_slot_keys JSONB := '{}'::JSONB;
+  v_running_slots JSONB := '{}'::JSONB;
 BEGIN
   IF payload IS NULL OR jsonb_typeof(payload) <> 'object'
      OR payload->>'package_schema_version' IS DISTINCT FROM '2' THEN
@@ -259,12 +260,6 @@ BEGIN
     RETURN jsonb_build_object('status', 'validation_failure', 'code', 'canonical_hash_mismatch');
   END IF;
 
-  CREATE TEMP TABLE IF NOT EXISTS cohort_plan_package_v2_running_slots (
-    package_slot_key TEXT PRIMARY KEY,
-    authored_running_v1 JSONB
-  ) ON COMMIT DROP;
-  TRUNCATE pg_temp.cohort_plan_package_v2_running_slots;
-
   FOR v_slot IN
     SELECT slot.value
     FROM jsonb_array_elements(payload->'weeks') week(value)
@@ -278,20 +273,27 @@ BEGIN
        AND NOT public.cohort_authored_running_v1_is_valid(v_slot->'authored_running_v1') THEN
       RETURN jsonb_build_object('status', 'validation_failure', 'code', 'invalid_authored_running_v1');
     END IF;
-    BEGIN
-      INSERT INTO pg_temp.cohort_plan_package_v2_running_slots (
-        package_slot_key,
-        authored_running_v1
-      ) VALUES (
+    IF v_slot_keys ? trim(v_slot->>'slot_key') THEN
+      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_slot_key');
+    END IF;
+    v_slot_keys := v_slot_keys || jsonb_build_object(
+      trim(v_slot->>'slot_key'),
+      TRUE
+    );
+    IF v_slot ? 'authored_running_v1' THEN
+      v_running_slots := v_running_slots || jsonb_build_object(
         trim(v_slot->>'slot_key'),
         v_slot->'authored_running_v1'
       );
-    EXCEPTION WHEN unique_violation THEN
-      RETURN jsonb_build_object('status', 'validation_failure', 'code', 'duplicate_slot_key');
-    END;
+    END IF;
   END LOOP;
 
   PERFORM set_config('cohort.plan_package_v2_publication', 'on', TRUE);
+  PERFORM set_config(
+    'cohort.plan_package_v2_running_slots',
+    v_running_slots::TEXT,
+    TRUE
+  );
   v_result := public.publish_private_exact_programme_version(payload);
   PERFORM set_config('cohort.plan_package_v2_publication', 'off', TRUE);
 
@@ -310,10 +312,16 @@ BEGIN
     FROM public.programme_version_session_slots persisted
     JOIN public.programme_version_days day ON day.id = persisted.day_id
     JOIN public.programme_version_weeks week ON week.id = day.week_id
-    LEFT JOIN pg_temp.cohort_plan_package_v2_running_slots staged
-      ON staged.package_slot_key = persisted.package_slot_key
     WHERE week.version_id = v_version_id
-      AND persisted.authored_running_v1 IS DISTINCT FROM staged.authored_running_v1
+      AND (
+        NOT (v_slot_keys ? persisted.package_slot_key)
+        OR CASE
+          WHEN v_running_slots ? persisted.package_slot_key THEN
+            persisted.authored_running_v1 IS DISTINCT FROM
+              (v_running_slots -> persisted.package_slot_key)
+          ELSE persisted.authored_running_v1 IS NOT NULL
+        END
+      )
   ) OR (
     SELECT count(*)
     FROM public.programme_version_session_slots persisted
@@ -321,7 +329,7 @@ BEGIN
     JOIN public.programme_version_weeks week ON week.id = day.week_id
     WHERE week.version_id = v_version_id
   ) IS DISTINCT FROM (
-    SELECT count(*) FROM pg_temp.cohort_plan_package_v2_running_slots
+    SELECT count(*) FROM jsonb_object_keys(v_slot_keys)
   ) THEN
     RAISE EXCEPTION 'Plan Package v2 publication did not preserve canonical authored running authority'
       USING ERRCODE = 'integrity_constraint_violation';

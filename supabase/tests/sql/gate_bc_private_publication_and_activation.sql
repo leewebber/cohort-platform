@@ -16,6 +16,7 @@ DECLARE
   v_count INT;
   v_date TEXT;
   v_has_exec BOOLEAN;
+  v_start DATE := (NOW() AT TIME ZONE 'Asia/Makassar')::DATE;
 BEGIN
   PERFORM sprint12_ensure_published_session(v_protocol, v_lineage, 1, 'Gate BC session');
 
@@ -49,7 +50,7 @@ BEGIN
       'library_scope', 'coach_private',
       'owner_id', v_owner,
       'authorised_timezone', 'Asia/Makassar',
-      'authorised_local_start_date', '2026-09-26'
+      'authorised_local_start_date', v_start
     );
 
   PERFORM set_config('role', 'service_role', true);
@@ -95,7 +96,7 @@ BEGIN
     AND approved_for_global IS NOT TRUE
     AND lifecycle_status = 'published'
     AND owner_id = v_owner::text
-    AND authorised_local_start_date = DATE '2026-09-26'
+    AND authorised_local_start_date = v_start
     AND authorised_timezone = 'Asia/Makassar';
   PERFORM sprint12_record(
     'BC', 'private_row', '1', v_count::text, NULL, v_count = 1, NULL
@@ -152,14 +153,14 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_private_programme_version(
-    v_version, 'Asia/Makassar', DATE '2026-09-26', TRUE
+    v_version, 'Asia/Makassar', v_start, TRUE
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'BC', 'explicit_start', '2026-09-26', v_res->>'started_at',
+    'BC', 'explicit_start', v_start::TEXT, v_res->>'started_at',
     NULL,
     (v_res->>'status') = 'enrolled'
-      AND (v_res->>'started_at') = '2026-09-26'
+      AND (v_res->>'started_at') = v_start::TEXT
       AND (v_res->>'schedule_mode') = 'fixed_schedule',
     v_res::text
   );
@@ -171,13 +172,13 @@ BEGIN
   ORDER BY scheduled_date, session_order
   LIMIT 1;
   PERFORM sprint12_record(
-    'BC', 'w1d1', '2026-09-26', v_date, NULL, v_date = '2026-09-26', NULL
+    'BC', 'w1d1', v_start::TEXT, v_date, NULL, v_date = v_start::TEXT, NULL
   );
 
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_private_programme_version(
-    v_version, 'Asia/Makassar', DATE '2026-09-26', TRUE
+    v_version, 'Asia/Makassar', v_start, TRUE
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
@@ -188,7 +189,7 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_private_programme_version(
-    v_version, 'Asia/Makassar', DATE '2026-09-27', TRUE
+    v_version, 'Asia/Makassar', v_start + 1, TRUE
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
@@ -199,7 +200,7 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_private_programme_version(
-    v_version, 'Not/AZone', DATE '2026-09-26', TRUE
+    v_version, 'Not/AZone', v_start, TRUE
   );
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(

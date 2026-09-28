@@ -42,6 +42,7 @@ DECLARE
   v_sunday INT;
   v_day1 UUID;
   v_day2 UUID;
+  v_start DATE := (NOW() AT TIME ZONE 'Asia/Makassar')::DATE;
 BEGIN
   PERFORM sprint12_ensure_published_session(v_protocol_a, v_lineage_a, 1, 'Strength A');
   PERFORM sprint12_ensure_published_session(v_protocol_b, v_lineage_b, 1, 'Strength B');
@@ -122,7 +123,7 @@ BEGIN
   PERFORM set_config('request.jwt.claim.sub', v_owner::text, true);
   PERFORM set_config('role', 'authenticated', true);
   v_res := public.enrol_athlete_in_private_programme_version(
-    v_priv, 'Asia/Makassar', DATE '2026-09-26', TRUE
+    v_priv, 'Asia/Makassar', v_start, TRUE
   );
   PERFORM set_config('role', 'postgres', true);
   v_assign := (v_res->>'enrolment_id')::uuid;
@@ -152,18 +153,18 @@ BEGIN
   WHERE o.assignment_id = v_assign AND o.day_key = 'day_2' AND o.session_order = 2;
 
   PERFORM sprint12_record(
-    'BG', 'sat_date', '2026-09-26',
+    'BG', 'sat_date', v_start::TEXT,
     (SELECT scheduled_date::text FROM programme_schedule_occurrences WHERE id = v_sat),
     NULL,
-    (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sat) = DATE '2026-09-26',
+    (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sat) = v_start,
     NULL
   );
   PERFORM sprint12_record(
-    'BG', 'sunday_shared', '2026-09-27',
+    'BG', 'sunday_shared', (v_start + 1)::TEXT,
     (SELECT scheduled_date::text FROM programme_schedule_occurrences WHERE id = v_sun_am),
     NULL,
-    (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sun_am) = DATE '2026-09-27'
-      AND (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sun_pm) = DATE '2026-09-27',
+    (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sun_am) = v_start + 1
+      AND (SELECT scheduled_date FROM programme_schedule_occurrences WHERE id = v_sun_pm) = v_start + 1,
     NULL
   );
 
@@ -284,11 +285,11 @@ BEGIN
   );
 
   v_cal := public.cohort_resolve_fixed_programme_calendar_at(
-    v_assign, TIMESTAMPTZ '2026-09-27 01:00:00+08'
+    v_assign, (v_start + 1 + TIME '01:00') AT TIME ZONE 'Asia/Makassar'
   );
   SELECT count(*) INTO v_sunday
   FROM jsonb_array_elements(v_cal->'occurrences') occ
-  WHERE occ->>'scheduled_date' = '2026-09-27';
+  WHERE occ->>'scheduled_date' = (v_start + 1)::TEXT;
   PERFORM sprint12_record(
     'BG', 'calendar_sunday_group', '2', v_sunday::text,
     NULL,
@@ -314,7 +315,7 @@ BEGIN
   v_res := public.enrol_athlete_in_catalogue_programme_version(v_cat, 'Asia/Makassar', FALSE);
   v_cat_assign := (v_res->>'enrolment_id')::uuid;
   v_res := public.start_fixed_programme_from_enrolment(
-    v_cat_assign, DATE '2026-09-26', 'Asia/Makassar'
+    v_cat_assign, v_start, 'Asia/Makassar'
   );
   PERFORM set_config('role', 'postgres', true);
   SELECT programme_version_id, materialised_package_content_hash
@@ -343,7 +344,7 @@ BEGIN
     enrolment_source, schedule_mode, materialised_at, materialisation_source,
     materialised_package_content_hash
   ) VALUES (
-    v_incomplete, v_stray, v_priv, 'PROG-GATE-BG-PRIV', 'active', DATE '2026-09-26',
+    v_incomplete, v_stray, v_priv, 'PROG-GATE-BG-PRIV', 'active', v_start,
     'Asia/Makassar', 1, 'day_1', 1,
     'dual_role_self', 'legacy_cursor', NOW(), 'athlete_start_programme',
     v_hash

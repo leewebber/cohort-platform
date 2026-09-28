@@ -19,8 +19,8 @@ void main() {
       expect(files, isNotEmpty);
       expect(files, equals(List<String>.from(files)..sort()));
       expect(
-        files.last,
-        '20260926200000_private_assignment_fixed_schedule.sql',
+        files,
+        contains('20260926200000_private_assignment_fixed_schedule.sql'),
       );
       expect(
         files,
