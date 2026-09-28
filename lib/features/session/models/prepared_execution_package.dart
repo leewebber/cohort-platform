@@ -23,6 +23,7 @@ class PreparedExecutionPackage {
     this.dayKey,
     this.slotOrder,
     this.protocolId,
+    this.authoredRunningV1,
     this.acceptedAdaptation,
     this.coachBrainPlan,
   });
@@ -45,6 +46,7 @@ class PreparedExecutionPackage {
   final String? dayKey;
   final int? slotOrder;
   final String? protocolId;
+  final Map<String, dynamic>? authoredRunningV1;
   final AcceptedAdaptationDecision? acceptedAdaptation;
   final CoachBrainWorkoutPlan? coachBrainPlan;
 
@@ -76,6 +78,7 @@ class PreparedExecutionPackage {
       dayKey: dayKey,
       slotOrder: slotOrder,
       protocolId: protocolId,
+      authoredRunningV1: authoredRunningV1,
       acceptedAdaptation: decision,
       coachBrainPlan: coachBrainPlan,
     );
@@ -95,6 +98,7 @@ class PreparedExecutionPackage {
       dayKey: dayKey,
       slotOrder: slotOrder,
       protocolId: protocolId,
+      authoredRunningV1: authoredRunningV1,
       coachBrainPlan: coachBrainPlan,
     );
   }
@@ -132,6 +136,7 @@ class PreparedExecutionPackage {
       dayKey: dayKey,
       slotOrder: slotOrder,
       protocolId: protocolId,
+      authoredRunningV1: authoredRunningV1,
       acceptedAdaptation: null,
       coachBrainPlan: coachBrainPlan,
     );

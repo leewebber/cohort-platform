@@ -170,6 +170,7 @@ class GeneratedSessionRecord {
     this.dayKey,
     this.slotOrder,
     this.protocolId,
+    this.authoredRunningV1,
     this.acceptedAdaptation,
   });
 
@@ -193,6 +194,7 @@ class GeneratedSessionRecord {
   final String? dayKey;
   final int? slotOrder;
   final String? protocolId;
+  final Map<String, dynamic>? authoredRunningV1;
   final Map<String, dynamic>? acceptedAdaptation;
 
   /// Calendar-day match in local time.
@@ -223,6 +225,7 @@ class GeneratedSessionRecord {
       'dayKey': dayKey,
       'slotOrder': slotOrder,
       'protocolId': protocolId,
+      'authoredRunningV1': authoredRunningV1,
       'acceptedAdaptation': acceptedAdaptation,
       'plan': codec.encodePlan(plan),
       'brief': codec.encodeBrief(brief),
@@ -251,6 +254,7 @@ class GeneratedSessionRecord {
     }
 
     final adaptationRaw = map['acceptedAdaptation'];
+    final authoredRunningRaw = map['authoredRunningV1'];
     return GeneratedSessionRecord(
       athleteId: map['athleteId']?.toString() ?? '',
       planId: optionalId('planId'),
@@ -270,6 +274,9 @@ class GeneratedSessionRecord {
       dayKey: optionalId('dayKey'),
       slotOrder: (map['slotOrder'] as num?)?.toInt(),
       protocolId: optionalId('protocolId'),
+      authoredRunningV1: authoredRunningRaw is Map
+          ? Map<String, dynamic>.from(authoredRunningRaw)
+          : null,
       acceptedAdaptation: adaptationRaw is Map
           ? Map<String, dynamic>.from(adaptationRaw)
           : null,

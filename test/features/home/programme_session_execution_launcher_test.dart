@@ -10,8 +10,11 @@ import 'package:cohort_platform/features/session/services/programme_session_exec
 import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
 import 'package:cohort_platform/features/session/services/session_execution_launcher.dart';
 import 'package:cohort_platform/features/workout_player/models/workout_session_brief.dart';
+import 'package:cohort_platform/domain/running_workout/running_workout.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
+import 'package:cohort_platform/models/timer_configuration.dart';
 import 'package:cohort_platform/models/workout_format.dart';
+import 'package:cohort_plan_package/cohort_plan_package.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -19,6 +22,9 @@ const _hashA =
     'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 const _hashB =
     'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
+const _runningBlockId = '2d8f9c46-60dc-422b-8d0e-4d94028617ca';
+const _runningWorkoutId = 'rw1:p:7e50ec7208a5dd0f';
+const _runningStepId = 'rw1:p:7e50ec7208a5dd0f:s:0';
 
 void main() {
   testWidgets(
@@ -267,6 +273,141 @@ void main() {
       ),
     );
   });
+
+  test(
+    'typed B3 launch resumes the identical intent-only B2 snapshot',
+    () async {
+      final snapshot = _intentOnlySnapshot();
+      final starts = _InMemoryAtomicStartStore(runningSnapshot: snapshot);
+      final launcher = ProgrammeSessionExecutionLauncher(startStore: starts);
+      final prepared = _structuredPrepared();
+
+      final first = await launcher.createOrResumeLaunchResult(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      );
+      final resumed = await launcher.createOrResumeLaunchResult(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      );
+
+      expect(first.isStructuredRunningReady, isTrue);
+      expect(first.wasResumed, isFalse);
+      expect(resumed.wasResumed, isTrue);
+      expect(
+        resumed.runningTargetSnapshot!.frozenAtUtc,
+        first.runningTargetSnapshot!.frozenAtUtc,
+      );
+      expect(
+        resumed.runningTargetSnapshot!.targets.single.state,
+        RunningLaunchTargetState.intentOnly,
+      );
+      expect(
+        resumed.runningTargetSnapshot!.targets.single.reason,
+        'no_evidence',
+      );
+    },
+  );
+
+  test('B3 launch fails closed when frozen step scope differs', () async {
+    final snapshot = _intentOnlySnapshot()
+      ..['targets'] = [
+        ...(_intentOnlySnapshot()['targets'] as List)
+            .cast<Map<String, dynamic>>()
+            .map(
+              (target) => {
+                ...target,
+                'scope': {
+                  'workout_id': _runningWorkoutId,
+                  'step_ids': ['STEP-OTHER'],
+                },
+              },
+            ),
+      ];
+    final starts = _InMemoryAtomicStartStore(runningSnapshot: snapshot);
+    final prepared = _structuredPrepared();
+
+    await expectLater(
+      ProgrammeSessionExecutionLauncher(
+        startStore: starts,
+      ).createOrResumeLaunchResult(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      ),
+      throwsA(
+        isA<ProgrammeSessionExecutionException>().having(
+          (error) => error.code,
+          'code',
+          ProgrammeSessionExecutionFailureCode.runningTargetSnapshotMismatch,
+        ),
+      ),
+    );
+  });
+
+  test('B3 launch validates calculated benchmark and pace units', () async {
+    final prepared = _structuredPrepared();
+    final valid =
+        await ProgrammeSessionExecutionLauncher(
+          startStore: _InMemoryAtomicStartStore(
+            runningSnapshot: _calculatedSnapshot(),
+          ),
+        ).createOrResumeLaunchResult(
+          athleteId: 'athlete-1',
+          programmeContext: prepared.executionContext!,
+          package: prepared.package!,
+        );
+    expect(
+      valid.runningTargetSnapshot!.targets.single.state,
+      RunningLaunchTargetState.calculated,
+    );
+    expect(
+      valid.runningTargetSnapshot!.targets.single.paceUnit,
+      'milliseconds_per_kilometre',
+    );
+
+    await expectLater(
+      ProgrammeSessionExecutionLauncher(
+        startStore: _InMemoryAtomicStartStore(
+          runningSnapshot: _calculatedSnapshot(paceUnit: 'seconds_per_mile'),
+        ),
+      ).createOrResumeLaunchResult(
+        athleteId: 'athlete-1',
+        programmeContext: prepared.executionContext!,
+        package: prepared.package!,
+      ),
+      throwsA(
+        isA<ProgrammeSessionExecutionException>().having(
+          (error) => error.code,
+          'code',
+          ProgrammeSessionExecutionFailureCode.runningTargetSnapshotMismatch,
+        ),
+      ),
+    );
+  });
+
+  test(
+    'unattached v2 keeps legacy launch path without structured readiness',
+    () async {
+      final prepared = _structuredPrepared(attachMapping: false);
+      final result =
+          await ProgrammeSessionExecutionLauncher(
+            startStore: _InMemoryAtomicStartStore(
+              runningSnapshot: _intentOnlySnapshot(),
+            ),
+          ).createOrResumeLaunchResult(
+            athleteId: 'athlete-1',
+            programmeContext: prepared.executionContext!,
+            package: prepared.package!,
+          );
+      expect(result.trainingSession.id, 1);
+      expect(result.runningTargetSnapshot, isNotNull);
+      expect(result.runningExecutionAuthority?.isAttachedForExecution, isFalse);
+      expect(result.isStructuredRunningReady, isFalse);
+    },
+  );
 }
 
 Future<void> _expectProvenanceFailure({
@@ -358,6 +499,137 @@ AthleteProgrammePrepareResult _prepared({
   );
 }
 
+AthleteProgrammePrepareResult _structuredPrepared({bool attachMapping = true}) {
+  final mappingHash = RunningExecutionMappingHash.compute(
+    workoutId: _runningWorkoutId,
+    bindings: const [(stepId: _runningStepId, sessionBlockId: _runningBlockId)],
+  );
+  final base = _prepared();
+  final baseContext = base.executionContext!;
+  final context = baseContext.copyWith(occurrenceId: 'occurrence-1');
+  return AthleteProgrammePrepareResult(
+    status: AthleteProgrammePrepareStatus.prepared,
+    programmedSessionKey: base.programmedSessionKey,
+    executionContext: context,
+    package: PreparedExecutionPackage(
+      programmedSessionKey: base.package!.programmedSessionKey,
+      plan: const SessionExecutionPlan(
+        sessionId: 'protocol-1',
+        sessionTitle: 'Structured run',
+        blocks: [
+          SessionExecutionBlock(
+            blockId: _runningBlockId,
+            title: 'Display title is not authority',
+            blockType: SessionBlockType.conditioning,
+            content: '',
+            workoutFormat: WorkoutFormat.steadyState,
+            position: 99,
+            timerConfiguration: TimerConfiguration(durationSeconds: 60),
+          ),
+        ],
+      ),
+      brief: const WorkoutSessionBrief(sessionName: 'Structured run'),
+      preparedAt: DateTime.utc(2026, 9, 28),
+      assignmentId: context.assignmentId,
+      programmeVersionId: context.programmeVersionId,
+      packageContentHash: context.packageContentHash,
+      dayKey: context.dayKey,
+      slotOrder: context.sessionOrder,
+      protocolId: context.effectiveProtocolId,
+      authoredRunningV1: {
+        'schema_version': 1,
+        'workout_id': _runningWorkoutId,
+        'step_ids': [_runningStepId],
+        if (attachMapping) ...{
+          'executable_step_bindings': [
+            {'step_id': _runningStepId, 'session_block_id': _runningBlockId},
+          ],
+          'execution_mapping_sha256': mappingHash,
+        },
+        'advisory_attachments': [
+          {
+            'attachment_id': 'TARGET-WORK-STEP',
+            'step_ids': [_runningStepId],
+            'policy': const <String, dynamic>{},
+          },
+        ],
+      },
+    ),
+  );
+}
+
+Map<String, dynamic> _intentOnlySnapshot() => {
+  'schema_version': 1,
+  'authority': 'advisory',
+  'occurrence_id': 'occurrence-1',
+  'athlete_id': 'athlete-1',
+  'assignment_id': 'assignment-1',
+  'programme_version_id': 'version-1',
+  'session_slot_id': 'slot-1',
+  'package_content_hash': _hashA,
+  'workout_id': _runningWorkoutId,
+  'frozen_at_utc': '2026-09-28T01:00:00.000Z',
+  'freeze_source': 'in_app_start',
+  'targets': [
+    {
+      'schema_version': 1,
+      'authority': 'advisory',
+      'attachment_id': 'TARGET-WORK-STEP',
+      'scope': {
+        'workout_id': _runningWorkoutId,
+        'step_ids': [_runningStepId],
+      },
+      'frozen_at_utc': '2026-09-28T01:00:00.000Z',
+      'freeze_source': 'in_app_start',
+      'policy': {
+        'display_rounding': {
+          'increment_milliseconds_per_kilometre': 1000,
+          'direction': 'nearest',
+        },
+      },
+      'state': 'intent_only',
+      'reason': 'no_evidence',
+    },
+  ],
+};
+
+Map<String, dynamic> _calculatedSnapshot({
+  String paceUnit = 'milliseconds_per_kilometre',
+}) => {
+  ..._intentOnlySnapshot(),
+  'targets': [
+    {
+      'schema_version': 1,
+      'authority': 'advisory',
+      'attachment_id': 'TARGET-WORK-STEP',
+      'scope': {
+        'workout_id': _runningWorkoutId,
+        'step_ids': [_runningStepId],
+      },
+      'frozen_at_utc': '2026-09-28T01:00:00.000Z',
+      'freeze_source': 'in_app_start',
+      'policy': {
+        'display_rounding': {
+          'increment_milliseconds_per_kilometre': 1000,
+          'direction': 'nearest',
+        },
+      },
+      'state': 'calculated',
+      'benchmark': {
+        'athlete_id': 'athlete-1',
+        'distance_metres': 5000,
+        'elapsed_duration_milliseconds': 1200000,
+        'duration_basis': 'elapsed_including_pauses',
+      },
+      'calculated_exact_range': {
+        'unit': paceUnit,
+        'faster': {'numerator': 230000, 'denominator': 1},
+        'slower': {'numerator': 250000, 'denominator': 1},
+      },
+    },
+  ],
+};
+
 ProgrammeExecutionContext _context({String? packageHash = _hashA}) {
   const key = ProgrammedSessionKey(
     planId: 'lineage-1',
@@ -387,9 +659,10 @@ ProgrammeExecutionContext _context({String? packageHash = _hashA}) {
 }
 
 class _InMemoryAtomicStartStore implements ProgrammeTrainingSessionStartStore {
-  _InMemoryAtomicStartStore({this.forcedResponse});
+  _InMemoryAtomicStartStore({this.forcedResponse, this.runningSnapshot});
 
   final Map<String, dynamic>? forcedResponse;
+  final Map<String, dynamic>? runningSnapshot;
   final calls = <Map<String, dynamic>>[];
   final Map<String, int> _ids = {};
   int createdCount = 0;
@@ -419,6 +692,7 @@ class _InMemoryAtomicStartStore implements ProgrammeTrainingSessionStartStore {
         'day': payload['expected_day_key'],
         'started_at': DateTime.utc(2026, 8, 13, 9).toIso8601String(),
       },
+      if (runningSnapshot != null) 'running_target_snapshot': runningSnapshot,
     };
   }
 }

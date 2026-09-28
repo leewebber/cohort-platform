@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../../../core/persistence/athlete_local_repository.dart';
 import '../../../core/persistence/session_execution_plan_codec.dart';
 import '../../../data/repositories/programme_assignment_store.dart';
@@ -283,6 +285,7 @@ class AthleteProgrammeSessionPrepareService {
       dayKey: resolvedWithOccurrence.assignment.currentDayKey,
       slotOrder: resolvedWithOccurrence.assignment.currentSessionOrder,
       protocolId: resolvedWithOccurrence.executionContext.effectiveProtocolId,
+      authoredRunningV1: resolvedWithOccurrence.slot.authoredRunningV1,
       coachBrainPlan: null,
     );
 
@@ -395,7 +398,8 @@ class AthleteProgrammeSessionPrepareService {
         package.programmedSessionKey.value ==
             resolved.programmedSessionKey.value &&
         package.dayKey == resolved.assignment.currentDayKey &&
-        package.slotOrder == resolved.assignment.currentSessionOrder;
+        package.slotOrder == resolved.assignment.currentSessionOrder &&
+        _sameJson(package.authoredRunningV1, resolved.slot.authoredRunningV1);
   }
 
   bool _recordMatchesAuthority(
@@ -416,6 +420,9 @@ class AthleteProgrammeSessionPrepareService {
     }
     if (record.dayKey != resolved.assignment.currentDayKey) return false;
     if (record.slotOrder != resolved.assignment.currentSessionOrder) {
+      return false;
+    }
+    if (!_sameJson(record.authoredRunningV1, resolved.slot.authoredRunningV1)) {
       return false;
     }
     return true;
@@ -452,6 +459,7 @@ class AthleteProgrammeSessionPrepareService {
         dayKey: record.dayKey,
         slotOrder: record.slotOrder,
         protocolId: record.protocolId,
+        authoredRunningV1: record.authoredRunningV1,
         acceptedAdaptation: record.acceptedAdaptation == null
             ? null
             : AcceptedAdaptationDecision.fromPersistenceMap(
@@ -499,6 +507,7 @@ class AthleteProgrammeSessionPrepareService {
       dayKey: package.dayKey,
       slotOrder: package.slotOrder,
       protocolId: package.protocolId,
+      authoredRunningV1: package.authoredRunningV1,
       phaseLabel: 'Programme',
       ontologyVersion: 'programme.authored.v1',
       acceptedAdaptation: package.acceptedAdaptation?.toPersistenceMap(),
@@ -579,6 +588,23 @@ class AthleteProgrammeSessionPrepareService {
       await repo.clearGeneratedSession(trimmedAthlete);
     }
   }
+}
+
+bool _sameJson(Object? left, Object? right) =>
+    jsonEncode(_canonicalJsonValue(left)) ==
+    jsonEncode(_canonicalJsonValue(right));
+
+Object? _canonicalJsonValue(Object? value) {
+  if (value is Map) {
+    final keys = value.keys.map((key) => key.toString()).toList()..sort();
+    return <String, Object?>{
+      for (final key in keys) key: _canonicalJsonValue(value[key]),
+    };
+  }
+  if (value is List) {
+    return value.map(_canonicalJsonValue).toList(growable: false);
+  }
+  return value;
 }
 
 class _AmbiguousSameDayToday implements Exception {

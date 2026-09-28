@@ -17,6 +17,7 @@ class ProgrammeVersionSessionSlot {
     this.completionExpectation = ProgrammeSessionCompletionExpectation.required,
     this.coachNote,
     this.athleteNote,
+    this.authoredRunningV1,
     this.createdAt,
   });
 
@@ -30,6 +31,7 @@ class ProgrammeVersionSessionSlot {
   final ProgrammeSessionCompletionExpectation completionExpectation;
   final String? coachNote;
   final String? athleteNote;
+  final Map<String, dynamic>? authoredRunningV1;
   final DateTime? createdAt;
 
   bool get isRequiredForProgression {
@@ -55,6 +57,7 @@ class ProgrammeVersionSessionSlot {
       ),
       coachNote: _trimString(map['coach_note']),
       athleteNote: _trimString(map['athlete_note']),
+      authoredRunningV1: _optionalMap(map['authored_running_v1']),
       createdAt: _parseDateTime(map['created_at']),
     );
   }
@@ -70,6 +73,7 @@ class ProgrammeVersionSessionSlot {
       'completion_expectation': completionExpectation.dbValue,
       if (coachNote != null) 'coach_note': coachNote,
       if (athleteNote != null) 'athlete_note': athleteNote,
+      if (authoredRunningV1 != null) 'authored_running_v1': authoredRunningV1,
     }, id);
   }
 
@@ -89,5 +93,10 @@ class ProgrammeVersionSessionSlot {
     if (value is DateTime) return value;
 
     return DateTime.tryParse(value.toString());
+  }
+
+  static Map<String, dynamic>? _optionalMap(dynamic value) {
+    if (value is! Map) return null;
+    return Map<String, dynamic>.unmodifiable(Map<String, dynamic>.from(value));
   }
 }

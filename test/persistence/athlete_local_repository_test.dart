@@ -51,7 +51,10 @@ PlanAssignment _assignment(String athleteId) {
   );
 }
 
-GeneratedSessionRecord _generated(String athleteId) {
+GeneratedSessionRecord _generated(
+  String athleteId, {
+  Map<String, dynamic>? authoredRunningV1,
+}) {
   return GeneratedSessionRecord(
     athleteId: athleteId,
     planId: 'plan.hyrox_race_ready',
@@ -84,6 +87,7 @@ GeneratedSessionRecord _generated(String athleteId) {
     ),
     phaseLabel: 'Foundation',
     programmeName: 'HYROX Plan',
+    authoredRunningV1: authoredRunningV1,
   );
 }
 
@@ -125,10 +129,7 @@ void main() {
     test('plan assignment save / clear', () async {
       final assignment = _assignment('athlete.a');
       await repo.savePlanAssignment(assignment);
-      expect(
-        (await repo.readPlanAssignment('athlete.a'))?.currentWeek,
-        2,
-      );
+      expect((await repo.readPlanAssignment('athlete.a'))?.currentWeek, 2);
       await repo.clearPlanAssignment('athlete.a');
       expect(await repo.readPlanAssignment('athlete.a'), isNull);
     });
@@ -191,7 +192,10 @@ void main() {
         envelope.encode(),
       );
       expect(await repo.readProfile('athlete.a'), isNull);
-      expect(await store.readString(PersistenceKeys.profile('athlete.a')), isNull);
+      expect(
+        await store.readString(PersistenceKeys.profile('athlete.a')),
+        isNull,
+      );
     });
 
     test('corrupt JSON fails safely', () async {
@@ -226,10 +230,7 @@ void main() {
         lastUpdatedAt: DateTime.utc(2026, 7, 30, 9, 10),
       );
       await repo.saveWorkoutProgress(snap);
-      expect(
-        (await repo.readWorkoutProgress('athlete.a'))?.currentSet,
-        2,
-      );
+      expect((await repo.readWorkoutProgress('athlete.a'))?.currentSet, 2);
       await repo.clearWorkoutProgress('athlete.a');
       expect(await repo.readWorkoutProgress('athlete.a'), isNull);
     });
@@ -268,6 +269,33 @@ void main() {
       expect(result.regeneratedSession, isFalse);
       expect(AthleteProfileSession.programme?.sessionTitle, "Today's Training");
     });
+
+    test(
+      'generated session preserves authored running execution authority',
+      () async {
+        const authority = <String, dynamic>{
+          'schema_version': 1,
+          'workout_id': 'rw1:p:example',
+          'step_ids': ['rw1:p:example:s:0'],
+          'executable_step_bindings': [
+            {
+              'step_id': 'rw1:p:example:s:0',
+              'session_block_id': '2d8f9c46-60dc-422b-8d0e-4d94028617ca',
+            },
+          ],
+          'execution_mapping_sha256':
+              'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+          'advisory_attachments': <Map<String, dynamic>>[],
+        };
+        await repo.saveGeneratedSession(
+          _generated('athlete.a', authoredRunningV1: authority),
+        );
+
+        final restored = await repo.readGeneratedSession('athlete.a');
+
+        expect(restored?.authoredRunningV1, authority);
+      },
+    );
 
     test('repeated hydration does not duplicate timeline events', () async {
       await repo.saveProfile(_profile('athlete.a'));
