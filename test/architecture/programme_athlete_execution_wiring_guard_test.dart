@@ -39,7 +39,7 @@ void main() {
     ).readAsStringSync();
     final provenanceCheck = source.indexOf('_validatePreparedIdentity(');
     final createOrResume = source.indexOf(
-      'final trainingSession = await createOrResumeTrainingSession(',
+      'final launchResult = await createOrResumeLaunchResult(',
     );
     final atomicStart = source.indexOf('_startStore.createOrResume');
     final activeLaunch = source.indexOf('launchActiveSessionWithPlan');
