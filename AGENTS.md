@@ -167,10 +167,10 @@ is launch-ready. The next sequenced item is **launch programme library**.
 Strategy is **approved**. Infrastructure architecture is **approved**.
 Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 **COMPLETE** on `origin/main` `ae5028a`. Running Pace Foundation B2
-infrastructure is **integrated on `origin/main`** at `a275223`; its four
-hosted migrations (`20260927120000` through `20260927150000`) are pending and
-have not been applied. Lee Bali Hybrid Base is **authored locally** and
-awaiting founder visual review
+infrastructure is **COMPLETE**. Its implementation is integrated on
+`origin/main` at `a275223`, and all four hosted migrations
+(`20260927120000` through `20260927150000`) are applied on Cohort Field Manual.
+Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
@@ -185,9 +185,9 @@ awaiting founder visual review
 `LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED`,
 `LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS`,
 `PROGRAMME_STUDIO_STAGE_1=COMPLETE`,
-`RUNNING_PACE_FOUNDATION=B2_INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
+`RUNNING_PACE_FOUNDATION=B2_INFRASTRUCTURE_COMPLETE`,
 `RUNNING_WORKOUT_B1=COMPLETE`,
-`RUNNING_PACE_FOUNDATION_B2_HOSTED_MIGRATIONS_APPLIED=false`,
+`RUNNING_PACE_FOUNDATION_B2_HOSTED_MIGRATIONS_APPLIED=true`,
 `APPROVED_PERCENTAGE_BANDS=false`,
 `ATHLETE_PACE_TARGET_UI=false`,
 `COHORT_5K_TEST_INGESTION=BLOCKED`,
@@ -200,7 +200,7 @@ awaiting founder visual review
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
 `LEE_BALI_CURRENT_ASSIGNMENT_APPLIED=false`,
 `BALI_PROGRAMME_CONTENT_AUTHORISED=true`,
-`PACE_CALCULATION_B2=INFRASTRUCTURE_INTEGRATED_HOSTED_MIGRATIONS_PENDING`,
+`PACE_CALCULATION_B2=INFRASTRUCTURE_COMPLETE`,
 `PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false`,
 `COMMERCIAL_HYROX_BASE_AUTHORING_AUTHORISED=false`,
 `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
@@ -208,9 +208,9 @@ awaiting founder visual review
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not apply the hosted B2 migrations without separate authority or start B3.
-Do not author commercial programme content. Do not publish hosted Bali or
-change Lee’s assignment until visual approval.
+Do not start B3 without separate authority. Do not author commercial programme
+content. Do not publish hosted Bali or change Lee’s assignment until visual
+approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
