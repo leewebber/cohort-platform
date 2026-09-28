@@ -1,9 +1,9 @@
 # Running Pace Foundation B2 — integration handoff
 
-**Recorded:** 2026-09-28  
-**Status:** Implemented and locally integration-verified; not deployed  
-**Branch:** `feat/running-pace-foundation-b2`  
-**Implementation range:** local `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030` through `5416155cc62380d5b3928cd7a02476b1f64c676e`, plus the review fixes recorded in this handoff  
+**Recorded:** 2026-09-28
+**Status:** Implemented and locally integration-verified; not deployed
+**Branch:** `feat/running-pace-foundation-b2`
+**Implementation range:** local `origin/main` `eed04352e00f3d2605507ce8bf9711d2de8b4030` through `5416155cc62380d5b3928cd7a02476b1f64c676e`, plus the review fixes recorded in this handoff
 **Contract:**
 [`../architecture/Running_Pace_Foundation_B2_Implementation_v1.md`](../architecture/Running_Pace_Foundation_B2_Implementation_v1.md)
 
