@@ -175,6 +175,7 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 [`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
+[`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md),
 [`docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
 [`docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
@@ -196,10 +197,15 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `RUNNING_TARGET_OVERRIDES=false`,
 `RUNNING_PACE_B2_PROGRAMME_ADOPTION=false`,
 `B3_STARTED=true`,
-`STRUCTURED_RUNNING_B3_SLICE_1=IMPLEMENTED_LOCAL`,
-`B3_HOSTED_MIGRATION_APPLIED=false`,
-`B3_ATHLETE_UI=false`,
-`B3_STRUCTURED_RUNNER=false`,
+`STRUCTURED_RUNNING_B3_SLICE_1=INTEGRATED`,
+`B3_HOSTED_MIGRATION_APPLIED=true`,
+`STRUCTURED_RUNNING_B3_SLICE_2=IMPLEMENTED_LOCAL`,
+`B3_ATHLETE_UI=LOCAL_TIME_ONLY`,
+`B3_STRUCTURED_RUNNER=IMPLEMENTED_LOCAL_TIME_ONLY`,
+`B3_PROGRAMME_ADOPTION=false`,
+`B3_DISTANCE_EXECUTION=false`,
+`B3_MANUAL_LAP_EXECUTION=false`,
+`B3_SLICE_3_STARTED=false`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
@@ -213,10 +219,12 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `RUNNING_DEVICE_INTEGRATION_AUTHORISED=false`,
 `HOSTED_PROGRAMME_PUBLICATION_AUTHORISED=false`,
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
-Do not apply the local B3 migration to a hosted environment, adopt it in a
-programme, build athlete UI or a structured runner, or start B3 slice 2 without
-separate authority. Do not author commercial programme content. Do not publish
-hosted Bali or change Lee’s assignment until visual approval.
+Structured Running B3 slice 1 is integrated at `686ddcdf`; migration
+`20260928120000_b3_running_execution_mapping.sql` is applied on Cohort Field
+Manual. Slice 2's time-only structured runner is local and unadopted. Do not
+publish or adopt it, add pace-target UI, distance or manual-lap execution, start
+B3 slice 3, or author commercial programme content without separate authority.
+Do not publish hosted Bali or change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
 [`docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md`](docs/architecture/Complete_Athlete_Experience_Sprint_3_v1.md).
