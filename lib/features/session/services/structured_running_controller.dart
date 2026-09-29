@@ -3,26 +3,32 @@ import 'dart:async';
 import '../../../domain/running_workout/running_workout.dart';
 import '../models/structured_running_execution.dart';
 
+typedef StructuredRunningElapsedTime = Duration Function();
+
 class StructuredRunningController {
   StructuredRunningController.fresh({
     required VerifiedStructuredRunningExecution execution,
     this.onCheckpoint,
+    StructuredRunningElapsedTime? elapsedTime,
   }) : _execution = execution,
        _frames = _flatten(execution.workout),
+       _elapsedTime = elapsedTime ?? _defaultElapsedTime,
        _frameIndex = 0,
-       _remainingMilliseconds =
-           _flatten(execution.workout).first.durationMilliseconds,
+       _remainingMilliseconds = _flatten(
+         execution.workout,
+       ).first.durationMilliseconds,
        _isPaused = true,
-       _manualEvidenceState =
-           StructuredRunningManualEvidenceState.notCaptured,
+       _manualEvidenceState = StructuredRunningManualEvidenceState.notCaptured,
        _isFinished = false;
 
   StructuredRunningController.restore({
     required VerifiedStructuredRunningExecution execution,
     required StructuredRunningCursor cursor,
     this.onCheckpoint,
+    StructuredRunningElapsedTime? elapsedTime,
   }) : _execution = execution,
        _frames = _flatten(execution.workout),
+       _elapsedTime = elapsedTime ?? _defaultElapsedTime,
        _frameIndex = _restoreIndex(execution, cursor),
        _remainingMilliseconds = cursor.remainingMilliseconds,
        _isPaused = cursor.isPaused,
@@ -39,10 +45,18 @@ class StructuredRunningController {
         'The saved running time does not match the pinned workout.',
       );
     }
+    if (!_isPaused && !_isFinished) {
+      _startTicker();
+    }
   }
+
+  static final Stopwatch _monotonicClock = Stopwatch()..start();
+
+  static Duration _defaultElapsedTime() => _monotonicClock.elapsed;
 
   final VerifiedStructuredRunningExecution _execution;
   final List<_StructuredRunningFrame> _frames;
+  final StructuredRunningElapsedTime _elapsedTime;
   final void Function(StructuredRunningCursor cursor)? onCheckpoint;
   int _frameIndex;
   int _remainingMilliseconds;
@@ -50,6 +64,7 @@ class StructuredRunningController {
   StructuredRunningManualEvidenceState _manualEvidenceState;
   bool _isFinished;
   Timer? _timer;
+  Duration? _lastRunningAt;
 
   VerifiedStructuredRunningExecution get execution => _execution;
   StructuredRunningCursor get cursor {
@@ -70,20 +85,20 @@ class StructuredRunningController {
   }
 
   void start() {
-    if (_isFinished) return;
-    _isPaused = false;
-    _timer ??= Timer.periodic(
-      const Duration(seconds: 1),
-      (_) => elapse(const Duration(seconds: 1)),
-    );
+    if (_isFinished || !_isPaused) return;
+    _startTicker();
     _checkpoint();
   }
 
   void pause() {
     if (_isFinished) return;
+    if (!_isPaused) {
+      _consumeClockElapsed();
+    }
     _isPaused = true;
     _timer?.cancel();
     _timer = null;
+    _lastRunningAt = null;
     _checkpoint();
   }
 
@@ -97,6 +112,12 @@ class StructuredRunningController {
 
   void elapse(Duration duration) {
     if (_isPaused || _isFinished || duration <= Duration.zero) return;
+    _advance(duration);
+    _lastRunningAt = _elapsedTime();
+    _checkpoint();
+  }
+
+  void _advance(Duration duration) {
     var elapsed = duration.inMilliseconds;
     while (elapsed > 0 && !_isFinished) {
       if (elapsed < _remainingMilliseconds) {
@@ -110,6 +131,7 @@ class StructuredRunningController {
           _isPaused = true;
           _timer?.cancel();
           _timer = null;
+          _lastRunningAt = null;
         } else {
           _frameIndex++;
           _remainingMilliseconds = _frames[_frameIndex].durationMilliseconds;
@@ -118,12 +140,33 @@ class StructuredRunningController {
         }
       }
     }
-    _checkpoint();
+  }
+
+  void _startTicker() {
+    _isPaused = false;
+    _lastRunningAt = _elapsedTime();
+    _timer ??= Timer.periodic(const Duration(seconds: 1), (_) {
+      _consumeClockElapsed(minimum: const Duration(seconds: 1));
+      _checkpoint();
+    });
+  }
+
+  void _consumeClockElapsed({Duration minimum = Duration.zero}) {
+    if (_isPaused || _isFinished) return;
+    final now = _elapsedTime();
+    final previous = _lastRunningAt ?? now;
+    _lastRunningAt = now;
+    final measured = now - previous;
+    final elapsed = measured < minimum ? minimum : measured;
+    if (elapsed > Duration.zero) {
+      _advance(elapsed);
+    }
   }
 
   void dispose() {
     _timer?.cancel();
     _timer = null;
+    _lastRunningAt = null;
   }
 
   void _checkpoint() => onCheckpoint?.call(cursor);
@@ -198,7 +241,8 @@ class StructuredRunningController {
     return _StructuredRunningFrame(
       step: step,
       repeatOrdinal: repeatOrdinal,
-      phase: step.role == RunningStepRole.recovery ||
+      phase:
+          step.role == RunningStepRole.recovery ||
               step.role == RunningStepRole.rest
           ? StructuredRunningPhase.recovery
           : StructuredRunningPhase.work,

@@ -76,6 +76,61 @@ void main() {
       expect(restored.cursor.phase, StructuredRunningPhase.recovery);
     });
 
+    test('background checkpoints exact elapsed time during recovery', () {
+      var elapsed = Duration.zero;
+      final execution = _execution();
+      final controller = StructuredRunningController.fresh(
+        execution: execution,
+        elapsedTime: () => elapsed,
+      );
+
+      controller.start();
+      elapsed = const Duration(milliseconds: 5750);
+      controller.background();
+
+      final cursor = controller.cursor;
+      expect(cursor.authoredStepId, endsWith(':s:recovery'));
+      expect(cursor.repeatOrdinal, 1);
+      expect(cursor.phase, StructuredRunningPhase.recovery);
+      expect(cursor.remainingMilliseconds, 2250);
+      expect(cursor.isPaused, isTrue);
+
+      final restored = StructuredRunningController.restore(
+        execution: execution,
+        cursor: StructuredRunningCursor.fromJson(cursor.toJson()),
+        elapsedTime: () => elapsed,
+      );
+      expect(restored.cursor.toJson(), cursor.toJson());
+    });
+
+    testWidgets(
+      'cold restore of running cursor restarts ticker without lost time',
+      (tester) async {
+        var elapsed = Duration.zero;
+        final execution = _execution();
+        final original = StructuredRunningController.fresh(
+          execution: execution,
+          elapsedTime: () => elapsed,
+        );
+        original.start();
+        final running = original.cursor;
+        original.dispose();
+
+        final restored = StructuredRunningController.restore(
+          execution: execution,
+          cursor: running,
+          elapsedTime: () => elapsed,
+        );
+        expect(restored.cursor.isPaused, isFalse);
+
+        elapsed = const Duration(milliseconds: 1250);
+        await tester.pump(const Duration(seconds: 1));
+        restored.background();
+        expect(restored.cursor.remainingMilliseconds, 3750);
+        expect(restored.cursor.isPaused, isTrue);
+      },
+    );
+
     test(
       'final recovery restores and timer finish does not complete anything',
       () {
@@ -172,12 +227,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start'));
     await tester.pump(const Duration(seconds: 2));
-    tester.binding.handleAppLifecycleStateChanged(
-      AppLifecycleState.paused,
-    );
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     await tester.pump();
     expect(checkpoints.last.isPaused, isTrue);
-    expect(checkpoints.last.remainingMilliseconds, 3000);
+    expect(
+      checkpoints.last.remainingMilliseconds,
+      inInclusiveRange(2500, 3000),
+    );
     await tester.tap(find.byTooltip('Exit timer'));
     await tester.pumpAndSettle();
     expect(returned?.toJson(), checkpoints.last.toJson());
