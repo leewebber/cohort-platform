@@ -15,6 +15,7 @@ import '../models/production_restore_envelope.dart';
 import '../models/production_restore_outcome.dart';
 import '../models/production_session_draft.dart';
 import '../models/session_execution_plan.dart';
+import '../models/structured_running_execution.dart';
 import '../models/workout_session_launch_context.dart';
 import '../presentation/production_restore_athlete_copy.dart';
 import '../screens/active_session_screen.dart';
@@ -23,6 +24,7 @@ import 'circuit_block_timer_bridge.dart';
 import 'production_restore_envelope_store.dart';
 import 'production_restore_resolver.dart';
 import 'session_execution_loader.dart';
+import 'structured_running_controller.dart';
 
 /// Launches [ActiveSessionScreen] with the same wiring as session overview.
 class SessionExecutionLauncher {
@@ -98,6 +100,7 @@ class SessionExecutionLauncher {
     required String athleteId,
     ProgrammeExecutionContext? programmeContext,
     ProgrammeProgressSummary? programmeProgress,
+    VerifiedStructuredRunningExecution? structuredRunningExecution,
   }) {
     return _pushActiveSession(
       context: context,
@@ -107,6 +110,7 @@ class SessionExecutionLauncher {
       athleteId: athleteId,
       programmeContext: programmeContext,
       programmeProgress: programmeProgress,
+      structuredRunningExecution: structuredRunningExecution,
     );
   }
 
@@ -119,6 +123,7 @@ class SessionExecutionLauncher {
     ProgrammeExecutionContext? programmeContext,
     ProgrammeProgressSummary? programmeProgress,
     WorkoutSessionLaunchContext? workoutLaunchContext,
+    VerifiedStructuredRunningExecution? structuredRunningExecution,
   }) async {
     final sessionKey = AthleteSessionMemoryStore.sessionKey(
       protocolId: protocolId,
@@ -129,6 +134,7 @@ class SessionExecutionLauncher {
       athleteId: athleteId,
       trainingSessionId: trainingSessionId,
     );
+    var envelopeCorrupt = false;
     if (envelope == null && AthletePersistence.isInitialized) {
       final payload = await AthletePersistence.repository
           .readProductionRestoreEnvelope(
@@ -141,6 +147,7 @@ class SessionExecutionLauncher {
           _restoreEnvelopeStore.write(envelope);
         } catch (_) {
           envelope = null;
+          envelopeCorrupt = true;
         }
       }
     }
@@ -171,12 +178,28 @@ class SessionExecutionLauncher {
       actuals: actuals,
       envelope: envelope,
       hostedCompleted: hostedCompleted,
+      envelopeCorrupt: envelopeCorrupt,
     );
     _applyRestorePolicy(
       sessionKey: sessionKey,
       memoryPresent: memory != null,
       decision: decision,
     );
+
+    final structuredCursor = decision.cursor?.structuredRunning;
+    if (structuredCursor != null) {
+      if (structuredRunningExecution == null) {
+        throw _structuredRestoreFailure();
+      }
+      try {
+        StructuredRunningController.restore(
+          execution: structuredRunningExecution,
+          cursor: structuredCursor,
+        ).dispose();
+      } on StructuredRunningExecutionException {
+        throw _structuredRestoreFailure();
+      }
+    }
 
     final controller = SessionExecutionController(
       plan: plan,
@@ -236,6 +259,9 @@ class SessionExecutionLauncher {
 
     var openRestoredTimer = false;
     if (decision.mayEnterWithRestoredActuals) {
+      if (structuredCursor != null) {
+        openRestoredTimer = true;
+      }
       for (final block in plan.blocks) {
         final result = performanceController.draft
             .blockDraftFor(block.blockId)
@@ -264,6 +290,8 @@ class SessionExecutionLauncher {
           workoutLaunchContext: workoutLaunchContext,
           restoreEnvelopeStore: _restoreEnvelopeStore,
           openRestoredTimer: openRestoredTimer,
+          structuredRunningExecution: structuredRunningExecution,
+          restoredStructuredRunningCursor: structuredCursor,
         ),
       ),
     );
@@ -276,7 +304,16 @@ class SessionExecutionLauncher {
     required ActivePerformanceDraft? actuals,
     required ProductionRestoreEnvelope? envelope,
     required bool hostedCompleted,
+    bool envelopeCorrupt = false,
   }) {
+    if (envelopeCorrupt) {
+      return ProductionRestoreDecision(
+        outcome: ProductionRestoreOutcome.corrupt,
+        athleteMessage: ProductionRestoreAthleteCopy.message(
+          ProductionRestoreOutcome.corrupt,
+        ),
+      );
+    }
     if (programmeContext == null || !programmeContext.isProgrammeBacked) {
       if (hostedCompleted) {
         return ProductionRestoreDecision(
@@ -375,6 +412,13 @@ class SessionExecutionLauncher {
     return ProductionRestoreException(
       decision.outcome,
       decision.athleteMessage,
+    );
+  }
+
+  ProductionRestoreException _structuredRestoreFailure() {
+    return ProductionRestoreException(
+      ProductionRestoreOutcome.conflict,
+      ProductionRestoreAthleteCopy.message(ProductionRestoreOutcome.conflict),
     );
   }
 }

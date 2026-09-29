@@ -1,13 +1,13 @@
-import 'package:cohort_platform/domain/running_workout/running_execution_authority.dart';
 import 'package:cohort_platform/domain/running_workout/running_workout.dart';
-import 'package:cohort_platform/domain/running_workout/running_workout_projection.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
+import 'package:cohort_platform/features/session/screens/structured_running_timer_screen.dart';
 import 'package:cohort_platform/features/session/services/structured_running_controller.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/timer_configuration.dart';
 import 'package:cohort_platform/models/workout_format.dart';
 import 'package:cohort_plan_package/cohort_plan_package.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -86,7 +86,7 @@ void main() {
           onCheckpoint: checkpoints.add,
         );
         controller.start();
-      controller.elapse(const Duration(seconds: 22));
+        controller.elapse(const Duration(seconds: 22));
         controller.pause();
         final finalRecovery = controller.cursor;
         expect(finalRecovery.repeatOrdinal, 3);
@@ -141,6 +141,46 @@ void main() {
         ),
       );
     });
+  });
+
+  testWidgets('production timer checkpoints background and exit', (
+    tester,
+  ) async {
+    StructuredRunningCursor? returned;
+    final checkpoints = <StructuredRunningCursor>[];
+    final execution = _execution();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () async {
+              returned = await Navigator.of(context).push(
+                MaterialPageRoute<StructuredRunningCursor>(
+                  builder: (_) => StructuredRunningTimerScreen(
+                    execution: execution,
+                    onCheckpoint: (cursor) async => checkpoints.add(cursor),
+                  ),
+                ),
+              );
+            },
+            child: const Text('Open'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Start'));
+    await tester.pump(const Duration(seconds: 2));
+    tester.binding.handleAppLifecycleStateChanged(
+      AppLifecycleState.paused,
+    );
+    await tester.pump();
+    expect(checkpoints.last.isPaused, isTrue);
+    expect(checkpoints.last.remainingMilliseconds, 3000);
+    await tester.tap(find.byTooltip('Exit timer'));
+    await tester.pumpAndSettle();
+    expect(returned?.toJson(), checkpoints.last.toJson());
   });
 }
 

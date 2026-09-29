@@ -9,6 +9,7 @@ import '../../programme/models/athlete_programme_prepared_session.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../models/prepared_execution_package.dart';
 import '../models/session_execution_plan.dart';
+import '../models/structured_running_execution.dart';
 import 'programme_training_session_start_store.dart';
 import 'programme_training_session_start_supabase_store.dart';
 import '../models/production_restore_outcome.dart';
@@ -112,6 +113,22 @@ class ProgrammeSessionExecutionLauncher {
       package: package,
     );
     final trainingSession = launchResult.trainingSession;
+    VerifiedStructuredRunningExecution? structuredRunningExecution;
+    if (launchResult.isStructuredRunningReady) {
+      try {
+        structuredRunningExecution =
+            VerifiedStructuredRunningExecution.fromLaunch(
+              plan: package.plan,
+              authority: launchResult.runningExecutionAuthority!,
+              frozenSnapshot: launchResult.runningTargetSnapshot!,
+            );
+      } on StructuredRunningExecutionException catch (error) {
+        throw ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.invalidRunningExecutionMapping,
+          'Structured running is unavailable (${error.code}). Re-prepare this session.',
+        );
+      }
+    }
 
     if (!context.mounted) return;
     try {
@@ -122,6 +139,7 @@ class ProgrammeSessionExecutionLauncher {
         trainingSessionId: trainingSession.id,
         athleteId: athleteId,
         programmeContext: programmeContext,
+        structuredRunningExecution: structuredRunningExecution,
       );
     } on ProductionRestoreException catch (error) {
       throw ProgrammeSessionExecutionException(

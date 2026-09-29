@@ -4,6 +4,7 @@ import 'package:cohort_platform/features/performance/models/training_session_rec
 import 'package:cohort_platform/features/session/models/production_restore_outcome.dart';
 import 'package:cohort_platform/features/session/models/production_session_draft.dart';
 import 'package:cohort_platform/features/session/models/production_session_ui_cursor.dart';
+import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
 import 'package:cohort_platform/features/session/presentation/production_restore_athlete_copy.dart';
 import 'package:cohort_platform/features/session/services/production_restore_resolver.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -241,5 +242,32 @@ void main() {
       ),
     );
     expect(decision.restoreCursor, isFalse);
+  });
+
+  test('version 2 cursor round-trips lossless structured running state', () {
+    final cursor = ProductionSessionUiCursor(
+      schemaVersion: ProductionSessionUiCursor.currentSchemaVersion,
+      athleteId: 'athlete-1',
+      assignmentId: 'assign-1',
+      trainingSessionId: 9,
+      occurrenceId: 'occ-1',
+      activeBlockId: 'block-2',
+      structuredRunning: const StructuredRunningCursor(
+        schemaVersion: StructuredRunningCursor.currentSchemaVersion,
+        workoutId: 'workout-1',
+        executionMappingSha256: 'mapping-hash',
+        sessionBlockId: 'block-2',
+        authoredStepId: 'step-2',
+        repeatOrdinal: 3,
+        phase: StructuredRunningPhase.recovery,
+        remainingMilliseconds: 1750,
+        isPaused: true,
+        manualEvidenceState: StructuredRunningManualEvidenceState.captured,
+        isFinished: false,
+      ),
+    );
+
+    final decoded = ProductionSessionUiCursor.fromJson(cursor.toJson());
+    expect(decoded.toJson(), cursor.toJson());
   });
 }

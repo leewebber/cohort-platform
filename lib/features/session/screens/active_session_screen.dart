@@ -32,6 +32,7 @@ import '../models/production_restore_outcome.dart';
 import '../models/production_session_draft.dart';
 import '../models/production_session_ui_cursor.dart';
 import '../models/session_execution_plan.dart';
+import '../models/structured_running_execution.dart';
 import '../models/workout_session_launch_context.dart';
 import '../services/production_restore_envelope_store.dart';
 import '../services/production_restore_resolver.dart';
@@ -41,6 +42,7 @@ import '../services/session_finish_eligibility.dart';
 import '../widgets/athlete/athlete_block_card.dart';
 import '../widgets/athlete/athlete_session_components.dart';
 import 'block_timer_screen.dart';
+import 'structured_running_timer_screen.dart';
 
 class ActiveSessionScreen extends StatefulWidget {
   const ActiveSessionScreen({
@@ -58,6 +60,8 @@ class ActiveSessionScreen extends StatefulWidget {
     this.restoreEnvelopeStore,
     this.openRestoredTimer = false,
     this.restoredTimerOverride,
+    this.structuredRunningExecution,
+    this.restoredStructuredRunningCursor,
   });
 
   final SessionExecutionController controller;
@@ -73,6 +77,8 @@ class ActiveSessionScreen extends StatefulWidget {
   final ProductionRestoreEnvelopeStore? restoreEnvelopeStore;
   final bool openRestoredTimer;
   final BlockTimerState? restoredTimerOverride;
+  final VerifiedStructuredRunningExecution? structuredRunningExecution;
+  final StructuredRunningCursor? restoredStructuredRunningCursor;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -97,6 +103,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
       const PreviousStrengthHistoryState.loading();
   late final PreviousStrengthPerformanceService _previousStrengthService;
   late final ProductionRestoreEnvelopeStore _restoreEnvelopeStore;
+  StructuredRunningCursor? _structuredRunningCursor;
 
   @override
   void initState() {
@@ -107,6 +114,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         widget.previousStrengthService ?? PreviousStrengthPerformanceService();
     _restoreEnvelopeStore =
         widget.restoreEnvelopeStore ?? ProductionRestoreEnvelopeStore.instance;
+    _structuredRunningCursor = widget.restoredStructuredRunningCursor;
     WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
@@ -281,6 +289,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         activeBlockIndex: state.activeBlockIndex,
         expandedBlockIds: state.expandedBlockIds,
         savedAt: DateTime.now().toUtc(),
+        structuredRunning: _structuredRunningCursor,
       ),
     );
     _restoreEnvelopeStore.write(envelope);
@@ -415,6 +424,28 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           content: Text('Timer is not configured for this block.'),
         ),
       );
+      return;
+    }
+
+    final structured = widget.structuredRunningExecution;
+    if (structured != null && block.blockId == structured.sessionBlockId) {
+      final popped = await Navigator.of(context).push<StructuredRunningCursor>(
+        MaterialPageRoute(
+          builder: (_) => StructuredRunningTimerScreen(
+            execution: structured,
+            initialCursor: _structuredRunningCursor,
+            onCheckpoint: (cursor) async {
+              _structuredRunningCursor = cursor;
+              await _persistDraft();
+            },
+          ),
+        ),
+      );
+      if (popped != null) {
+        _structuredRunningCursor = popped;
+        await _persistDraft();
+      }
+      _refresh();
       return;
     }
 

@@ -18,6 +18,7 @@ import 'package:cohort_platform/features/programme/services/future_programme_ses
 import 'package:cohort_platform/features/programme/services/future_programme_session_swap_store.dart';
 import 'package:cohort_platform/features/programme/services/scheduled_programme_session_preview_service.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
+import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
 import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
 import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
@@ -896,6 +897,7 @@ class _NoopLauncher extends SessionExecutionLauncher {
     required String athleteId,
     ProgrammeExecutionContext? programmeContext,
     ProgrammeProgressSummary? programmeProgress,
+    VerifiedStructuredRunningExecution? structuredRunningExecution,
   }) async {
     calls++;
     lastOccurrenceId = programmeContext?.occurrenceId;

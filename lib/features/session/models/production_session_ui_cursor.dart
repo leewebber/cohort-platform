@@ -1,3 +1,5 @@
+import 'structured_running_execution.dart';
+
 /// Versioned production UI cursor. Never changes athletic result semantics.
 class ProductionSessionUiCursor {
   const ProductionSessionUiCursor({
@@ -14,9 +16,10 @@ class ProductionSessionUiCursor {
     this.expandedBlockIds = const {},
     this.capturePage,
     this.savedAt,
+    this.structuredRunning,
   });
 
-  static const currentSchemaVersion = 1;
+  static const currentSchemaVersion = 2;
 
   final int schemaVersion;
   final String athleteId;
@@ -31,9 +34,9 @@ class ProductionSessionUiCursor {
   final Set<String> expandedBlockIds;
   final String? capturePage;
   final DateTime? savedAt;
+  final StructuredRunningCursor? structuredRunning;
 
-  bool get isUnsupportedFutureVersion =>
-      schemaVersion > currentSchemaVersion;
+  bool get isUnsupportedFutureVersion => schemaVersion > currentSchemaVersion;
 
   Map<String, dynamic> toJson() {
     return {
@@ -51,6 +54,8 @@ class ProductionSessionUiCursor {
       'expanded_block_ids': expandedBlockIds.toList()..sort(),
       if (capturePage != null) 'capture_page': capturePage,
       if (savedAt != null) 'saved_at': savedAt!.toUtc().toIso8601String(),
+      if (structuredRunning != null)
+        'structured_running': structuredRunning!.toJson(),
     };
   }
 
@@ -72,6 +77,11 @@ class ProductionSessionUiCursor {
           : const {},
       capturePage: json['capture_page'] as String?,
       savedAt: DateTime.tryParse(json['saved_at'] as String? ?? ''),
+      structuredRunning: json['structured_running'] is Map
+          ? StructuredRunningCursor.fromJson(
+              Map<String, dynamic>.from(json['structured_running'] as Map),
+            )
+          : null,
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:cohort_platform/features/programme/models/programme_execution_co
 import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
 import 'package:cohort_platform/features/session/models/prepared_execution_package.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
+import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
 import 'package:cohort_platform/features/session/models/workout_session_launch_context.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
 import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
@@ -60,6 +61,7 @@ void main() {
       expect(starts.createdCount, 1);
       expect(activeLauncher.trainingSessionIds, [1, 1]);
       expect(activeLauncher.plans.first.blocks.length, 3);
+      expect(activeLauncher.structuredExecutions, [null, null]);
       expect(starts.calls[1], starts.calls[0]);
     },
   );
@@ -307,6 +309,45 @@ void main() {
       expect(
         resumed.runningTargetSnapshot!.targets.single.reason,
         'no_evidence',
+      );
+    },
+  );
+
+  testWidgets(
+    'verified v2 running launch opts into exact structured authority',
+    (tester) async {
+      final activeLauncher = _RecordingSessionExecutionLauncher();
+      final prepared = _structuredPrepared();
+      final launcher = ProgrammeSessionExecutionLauncher(
+        startStore: _InMemoryAtomicStartStore(
+          runningSnapshot: _intentOnlySnapshot(),
+        ),
+        sessionExecutionLauncher: activeLauncher,
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => launcher.launch(
+                context: context,
+                athleteId: 'athlete-1',
+                prepared: prepared,
+              ),
+              child: const Text('Launch'),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Launch'));
+      await tester.pumpAndSettle();
+
+      final execution = activeLauncher.structuredExecutions.single!;
+      expect(execution.sessionBlockId, _runningBlockId);
+      expect(execution.workout.workoutId, _runningWorkoutId);
+      expect(
+        execution.frozenSnapshot.frozenAtUtc,
+        DateTime.utc(2026, 9, 28, 1),
       );
     },
   );
@@ -700,6 +741,7 @@ class _InMemoryAtomicStartStore implements ProgrammeTrainingSessionStartStore {
 class _RecordingSessionExecutionLauncher extends SessionExecutionLauncher {
   final List<int> trainingSessionIds = [];
   final List<SessionExecutionPlan> plans = [];
+  final List<VerifiedStructuredRunningExecution?> structuredExecutions = [];
 
   @override
   Future<void> launchActiveSessionWithPlan({
@@ -710,9 +752,11 @@ class _RecordingSessionExecutionLauncher extends SessionExecutionLauncher {
     required String athleteId,
     ProgrammeExecutionContext? programmeContext,
     ProgrammeProgressSummary? programmeProgress,
+    VerifiedStructuredRunningExecution? structuredRunningExecution,
   }) async {
     trainingSessionIds.add(trainingSessionId);
     plans.add(plan);
+    structuredExecutions.add(structuredRunningExecution);
   }
 
   @override

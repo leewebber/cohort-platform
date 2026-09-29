@@ -1,6 +1,4 @@
-import '../../../domain/running_workout/running_execution_authority.dart';
 import '../../../domain/running_workout/running_workout.dart';
-import '../../../domain/running_workout/running_workout_projection.dart';
 import '../models/session_execution_plan.dart';
 
 enum StructuredRunningPhase { work, recovery }
@@ -217,6 +215,7 @@ class StructuredRunningCursor {
       }
       return value;
     }
+
     return StructuredRunningCursor(
       schemaVersion: currentSchemaVersion,
       workoutId: identity('workout_id'),
