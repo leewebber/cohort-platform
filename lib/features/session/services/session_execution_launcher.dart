@@ -151,6 +151,9 @@ class SessionExecutionLauncher {
         }
       }
     }
+    if (envelope?.cursor?.hasInvalidStructuredScope == true) {
+      envelopeCorrupt = true;
+    }
 
     var hostedCompleted = false;
     var existingRecord = await _saveCoordinator.loadInProgressDraftAsRecord(

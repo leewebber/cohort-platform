@@ -38,6 +38,11 @@ class ProductionSessionUiCursor {
 
   bool get isUnsupportedFutureVersion => schemaVersion > currentSchemaVersion;
 
+  bool get hasInvalidStructuredScope =>
+      structuredRunning != null &&
+      (schemaVersion != currentSchemaVersion ||
+          activeBlockId != structuredRunning!.sessionBlockId);
+
   Map<String, dynamic> toJson() {
     return {
       'schema_version': schemaVersion,
@@ -61,7 +66,11 @@ class ProductionSessionUiCursor {
 
   factory ProductionSessionUiCursor.fromJson(Map<String, dynamic> json) {
     final expandedRaw = json['expanded_block_ids'];
-    return ProductionSessionUiCursor(
+    final structuredRaw = json['structured_running'];
+    if (json.containsKey('structured_running') && structuredRaw is! Map) {
+      throw const FormatException('invalid structured running cursor payload');
+    }
+    final cursor = ProductionSessionUiCursor(
       schemaVersion: json['schema_version'] as int? ?? 0,
       athleteId: json['athlete_id'] as String? ?? '',
       assignmentId: json['assignment_id'] as String? ?? '',
@@ -77,11 +86,15 @@ class ProductionSessionUiCursor {
           : const {},
       capturePage: json['capture_page'] as String?,
       savedAt: DateTime.tryParse(json['saved_at'] as String? ?? ''),
-      structuredRunning: json['structured_running'] is Map
+      structuredRunning: structuredRaw is Map
           ? StructuredRunningCursor.fromJson(
-              Map<String, dynamic>.from(json['structured_running'] as Map),
+              Map<String, dynamic>.from(structuredRaw),
             )
           : null,
     );
+    if (cursor.hasInvalidStructuredScope) {
+      throw const FormatException('invalid structured running cursor scope');
+    }
+    return cursor;
   }
 }

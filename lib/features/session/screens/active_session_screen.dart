@@ -434,9 +434,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           builder: (_) => StructuredRunningTimerScreen(
             execution: structured,
             initialCursor: _structuredRunningCursor,
-            onCheckpoint: (cursor) async {
+            onCheckpoint: (cursor) {
               _structuredRunningCursor = cursor;
-              await _persistDraft();
+              return _persistDraft();
             },
           ),
         ),

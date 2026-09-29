@@ -90,7 +90,14 @@ class StructuredRunningController {
     _checkpoint();
   }
 
-  void pause() {
+  void pause() => _pause();
+
+  void background() => _pause();
+
+  void exit({bool emitCheckpoint = true}) =>
+      _pause(emitCheckpoint: emitCheckpoint);
+
+  void _pause({bool emitCheckpoint = true}) {
     if (_isFinished) return;
     if (!_isPaused) {
       _consumeClockElapsed();
@@ -99,11 +106,10 @@ class StructuredRunningController {
     _timer?.cancel();
     _timer = null;
     _lastRunningAt = null;
-    _checkpoint();
+    if (emitCheckpoint) {
+      _checkpoint();
+    }
   }
-
-  void background() => pause();
-  void exit() => pause();
 
   void markManualEvidenceCaptured() {
     _manualEvidenceState = StructuredRunningManualEvidenceState.captured;

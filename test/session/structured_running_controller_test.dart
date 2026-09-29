@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cohort_platform/domain/running_workout/running_workout.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
@@ -213,7 +215,10 @@ void main() {
                 MaterialPageRoute<StructuredRunningCursor>(
                   builder: (_) => StructuredRunningTimerScreen(
                     execution: execution,
-                    onCheckpoint: (cursor) async => checkpoints.add(cursor),
+                    onCheckpoint: (cursor) async {
+                      checkpoints.add(cursor);
+                      return true;
+                    },
                   ),
                 ),
               );
@@ -237,6 +242,59 @@ void main() {
     await tester.tap(find.byTooltip('Exit timer'));
     await tester.pumpAndSettle();
     expect(returned?.toJson(), checkpoints.last.toJson());
+  });
+
+  testWidgets('timer exit is single-flight and blocks on save failure', (
+    tester,
+  ) async {
+    StructuredRunningCursor? returned;
+    var allowExit = false;
+    var exitCheckpoints = 0;
+    final firstExit = Completer<bool>();
+    final execution = _execution();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) => TextButton(
+            onPressed: () async {
+              returned = await Navigator.of(context).push(
+                MaterialPageRoute<StructuredRunningCursor>(
+                  builder: (_) => StructuredRunningTimerScreen(
+                    execution: execution,
+                    onCheckpoint: (cursor) {
+                      exitCheckpoints++;
+                      if (exitCheckpoints == 1) return firstExit.future;
+                      return Future.value(allowExit);
+                    },
+                  ),
+                ),
+              );
+            },
+            child: const Text('Open'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Exit timer'));
+    await tester.tap(find.byTooltip('Exit timer'), warnIfMissed: false);
+    await tester.pump();
+    expect(exitCheckpoints, 1);
+    expect(find.text('Structured run'), findsOneWidget);
+    expect(returned, isNull);
+
+    firstExit.complete(false);
+    await tester.pumpAndSettle();
+    expect(find.text('Structured run'), findsOneWidget);
+
+    allowExit = true;
+    await tester.tap(find.byTooltip('Exit timer'));
+    await tester.pumpAndSettle();
+    expect(exitCheckpoints, 2);
+    expect(returned, isNotNull);
+    expect(find.text('Open'), findsOneWidget);
   });
 }
 

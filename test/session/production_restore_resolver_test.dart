@@ -99,11 +99,7 @@ void main() {
 
   test('hosted completion wins over local draft', () {
     final decision = resolver.resolve(
-      request(
-        identity: identity(),
-        actuals: actuals(),
-        hostedCompleted: true,
-      ),
+      request(identity: identity(), actuals: actuals(), hostedCompleted: true),
     );
     expect(decision.outcome, ProductionRestoreOutcome.completedHosted);
     expect(decision.mayEnterWithRestoredActuals, isFalse);
@@ -111,7 +107,10 @@ void main() {
 
   test('foreign athlete is rejected', () {
     final decision = resolver.resolve(
-      request(identity: identity(athleteId: 'other'), actuals: actuals()),
+      request(
+        identity: identity(athleteId: 'other'),
+        actuals: actuals(),
+      ),
     );
     expect(decision.outcome, ProductionRestoreOutcome.foreignAthlete);
     expect(
@@ -158,9 +157,7 @@ void main() {
 
   test('transient network without draft stays pending', () {
     expect(
-      resolver
-          .resolve(request(transientNetworkFailure: true))
-          .outcome,
+      resolver.resolve(request(transientNetworkFailure: true)).outcome,
       ProductionRestoreOutcome.transientFailure,
     );
   });
@@ -269,5 +266,62 @@ void main() {
 
     final decoded = ProductionSessionUiCursor.fromJson(cursor.toJson());
     expect(decoded.toJson(), cursor.toJson());
+  });
+
+  test('malformed structured running payload fails closed', () {
+    expect(
+      () => ProductionSessionUiCursor.fromJson({
+        'schema_version': ProductionSessionUiCursor.currentSchemaVersion,
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assign-1',
+        'training_session_id': 9,
+        'active_block_id': 'block-2',
+        'expanded_block_ids': <String>[],
+        'structured_running': 'not-a-cursor',
+      }),
+      throwsFormatException,
+    );
+  });
+
+  test('structured cursor must match current schema and active block', () {
+    final structured = const StructuredRunningCursor(
+      schemaVersion: StructuredRunningCursor.currentSchemaVersion,
+      workoutId: 'workout-1',
+      executionMappingSha256: 'mapping-hash',
+      sessionBlockId: 'block-2',
+      authoredStepId: 'step-2',
+      repeatOrdinal: 1,
+      phase: StructuredRunningPhase.recovery,
+      remainingMilliseconds: 1750,
+      isPaused: true,
+      manualEvidenceState: StructuredRunningManualEvidenceState.notCaptured,
+      isFinished: false,
+    ).toJson();
+
+    for (final json in [
+      {
+        'schema_version': 1,
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assign-1',
+        'training_session_id': 9,
+        'active_block_id': 'block-2',
+        'expanded_block_ids': <String>[],
+        'structured_running': structured,
+      },
+      {
+        'schema_version': ProductionSessionUiCursor.currentSchemaVersion,
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assign-1',
+        'training_session_id': 9,
+        'active_block_id': 'different-block',
+        'expanded_block_ids': <String>[],
+        'structured_running': structured,
+      },
+    ]) {
+      expect(
+        () => ProductionSessionUiCursor.fromJson(json),
+        throwsFormatException,
+      );
+    }
   });
 }

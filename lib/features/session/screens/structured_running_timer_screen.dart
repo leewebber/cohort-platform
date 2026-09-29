@@ -15,7 +15,7 @@ class StructuredRunningTimerScreen extends StatefulWidget {
 
   final VerifiedStructuredRunningExecution execution;
   final StructuredRunningCursor? initialCursor;
-  final Future<void> Function(StructuredRunningCursor cursor) onCheckpoint;
+  final Future<bool> Function(StructuredRunningCursor cursor) onCheckpoint;
 
   @override
   State<StructuredRunningTimerScreen> createState() =>
@@ -26,6 +26,7 @@ class _StructuredRunningTimerScreenState
     extends State<StructuredRunningTimerScreen>
     with WidgetsBindingObserver {
   late final StructuredRunningController _controller;
+  bool _isExiting = false;
 
   @override
   void initState() {
@@ -66,9 +67,21 @@ class _StructuredRunningTimerScreenState
   }
 
   Future<void> _exit() async {
-    _controller.exit();
-    await widget.onCheckpoint(_controller.cursor);
-    if (mounted) Navigator.of(context).pop(_controller.cursor);
+    if (_isExiting) return;
+    setState(() => _isExiting = true);
+    _controller.exit(emitCheckpoint: false);
+    final saved = await widget.onCheckpoint(_controller.cursor);
+    if (!mounted) return;
+    if (saved) {
+      Navigator.of(context).pop(_controller.cursor);
+      return;
+    }
+    setState(() => _isExiting = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Could not save the timer. Retry before exiting.'),
+      ),
+    );
   }
 
   @override
@@ -85,7 +98,7 @@ class _StructuredRunningTimerScreenState
           title: const Text('Structured run'),
           leading: IconButton(
             tooltip: 'Exit timer',
-            onPressed: _exit,
+            onPressed: _isExiting ? null : _exit,
             icon: const Icon(Icons.close),
           ),
         ),
