@@ -11,6 +11,10 @@
 **Implementation commits:** `c35234f16a3ad80401b95afdbb9e3d1a91c0559f`,
 `02c2d144c819af5d9fc93be6d180ef968357ecda`
 
+**Independent-review fixes:**
+`5b5b9981a0bb625b905d8a84128c466672acb1b4`,
+`1c5cf3d6f2b212b5ff22bb4dfbae9f4bc554d60b`
+
 ```text
 STRUCTURED_RUNNING_B3_SLICE_1=INTEGRATED
 B3_HOSTED_MIGRATION_APPLIED=true
@@ -82,9 +86,37 @@ and fail-closed mapping and authored-step disagreement.
   structured-controller compatibility set: 76 passed.
 - Changed-file Flutter analysis: no issues.
 - Phase 2 consolidation safety gate: 6/6 groups passed.
-- Full authoritative `flutter test`: 3,427 passed, 6 expected
-  environment-gated skips.
+- Full authoritative `flutter test` at the original slice-2 handoff
+  (`bff292b`): 3,427 passed, 6 expected environment-gated skips.
 - `git diff --check`: passed before each implementation commit.
+
+## Independent review follow-up
+
+The 2026-09-29 independent production-path review found and fixed three
+execution defects before integration:
+
+- a running cold-restore cursor retained `is_paused=false` but did not restart
+  its ticker;
+- background/exit used whole timer callbacks instead of monotonic elapsed time,
+  which could retain stale sub-second time or miss multiple transitions after
+  a delayed callback; and
+- malformed or cross-block structured cursor payloads could be treated as an
+  absent cursor, while timer exit could pop before a failed durable save and
+  could be invoked concurrently.
+
+The fixes restart a non-paused restored ticker, consume monotonic elapsed time
+atomically across work/recovery transitions, validate the structured cursor's
+schema and enclosing active block, and make timer exit single-flight and
+durable-save-gated.
+
+Post-review verification:
+
+- production launch, restore, navigation, timer, and cursor matrix: 61 passed;
+- v1 block timer, production restart, Bali, Apollo, fixed/future scheduling,
+  programme launch, and structured-running compatibility matrix: 134 passed;
+- changed-file Flutter analysis: no issues;
+- Phase 2 consolidation safety gate: 6/6 groups passed; and
+- `git diff --check`: passed.
 
 ## Remaining authority and product gaps
 
