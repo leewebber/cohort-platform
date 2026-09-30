@@ -4,11 +4,13 @@ import 'package:cohort_platform/features/performance/mappers/performance_record_
 import 'package:cohort_platform/features/performance/models/interval_work_result.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
+import 'package:cohort_platform/features/performance/screens/session_finish_review_screen.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
 import 'package:cohort_platform/features/performance/widgets/performance_capture_widgets.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
+import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
 import 'package:cohort_platform/models/session_block_type.dart';
 import 'package:cohort_platform/models/timer_configuration.dart';
 import 'package:cohort_platform/models/workout_format.dart';
@@ -271,6 +273,64 @@ void main() {
     expect(find.text('Completed + actual pace'), findsOneWidget);
     expect(find.text('Completed — pace unavailable'), findsOneWidget);
     expect(find.text('Skipped'), findsOneWidget);
+  });
+
+  testWidgets('Review Session keeps frozen target separate from each actual', (
+    tester,
+  ) async {
+    final fixture = _controlledFixture();
+    final controller =
+        PerformanceCaptureController.initializeFromExecutionPlan(
+          plan: fixture.plan,
+          athleteId: 'athlete-1',
+          trainingSessionId: 306,
+        )..bindStructuredRunning(
+          execution: fixture.execution,
+          allowInitialize: true,
+        );
+    var result =
+        controller.draft.blockDrafts.single.resultData as IntervalResultData;
+    result = result.replaceInterval(
+      result.intervals[0].copyWith(
+        state: IntervalWorkState.completed,
+        paceSecondsPerKm: 240,
+      ),
+    );
+    result = result.replaceInterval(
+      result.intervals[1].copyWith(
+        state: IntervalWorkState.paceUnavailable,
+        clearPace: true,
+      ),
+    );
+    result = result.replaceInterval(
+      result.intervals[2].copyWith(
+        state: IntervalWorkState.skipped,
+        clearPace: true,
+      ),
+    );
+    controller
+      ..updateBlockResultData(_blockId, result)
+      ..markBlockComplete(_blockId);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: SessionFinishReviewScreen(
+          performanceController: controller,
+          executionController: SessionExecutionController(
+            plan: fixture.plan,
+            sessionKey: 'controlled-review',
+          ),
+          trainingSessionId: 306,
+          athleteId: 'athlete-1',
+        ),
+      ),
+    );
+
+    expect(find.text('Review Session'), findsOneWidget);
+    expect(find.text('Target · 3:50 /km–4:10 /km'), findsNWidgets(3));
+    expect(find.text('Actual · 4:00 /km'), findsOneWidget);
+    expect(find.text('Actual · Pace unavailable'), findsOneWidget);
+    expect(find.text('Actual · Skipped'), findsOneWidget);
   });
 }
 
