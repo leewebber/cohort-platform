@@ -310,6 +310,8 @@ void main() {
     );
 
     expect(find.text('Work'), findsOneWidget);
+    expect(find.text('Work repetition 1'), findsOneWidget);
+    expect(find.textContaining(':s:work'), findsNothing);
     expect(find.text('Run smoothly; keep the recovery easy.'), findsOneWidget);
     expect(find.text('Pace target unavailable'), findsOneWidget);
     expect(
@@ -360,6 +362,8 @@ void main() {
     );
 
     expect(find.text('Recovery'), findsOneWidget);
+    expect(find.text('Recovery · repetition 1'), findsOneWidget);
+    expect(find.textContaining(':s:recovery'), findsNothing);
     expect(find.text('No pace target'), findsOneWidget);
     expect(find.text('Advisory pace target'), findsNothing);
     expect(find.text('Pace target unavailable'), findsNothing);

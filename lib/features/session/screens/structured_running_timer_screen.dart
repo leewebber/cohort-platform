@@ -118,7 +118,8 @@ class _StructuredRunningTimerScreenState
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '${cursor.authoredStepId} · repeat ${cursor.repeatOrdinal}',
+                    _positionLabel(step.role, cursor.repeatOrdinal),
+                    key: const ValueKey('structured-running-position'),
                     textAlign: TextAlign.center,
                   ),
                   if (widget.execution.authoredGuidance
@@ -214,6 +215,11 @@ class _StructuredRunningTimerScreenState
     RunningStepRole.coolDown => 'Cool-down',
     RunningStepRole.open => 'Open',
   };
+
+  static String _positionLabel(RunningStepRole role, int repeatOrdinal) =>
+      role == RunningStepRole.work
+      ? 'Work repetition $repeatOrdinal'
+      : '${_roleLabel(role)} · repetition $repeatOrdinal';
 
   static String _formatPace(int milliseconds) {
     final totalSeconds = (milliseconds / 1000).round();
