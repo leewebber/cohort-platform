@@ -11,6 +11,7 @@ import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_session_record.dart';
+import '../models/training_session_record_status.dart';
 import '../repositories/in_memory_performance_record_store.dart';
 import '../repositories/performance_record_store.dart';
 import '../services/completed_session_result_projection.dart';
@@ -82,7 +83,9 @@ class _CompletedSessionResultViewState
       padding: const EdgeInsets.all(CohortSpacing.lg),
       children: [
         Text(
-          editing ? 'EDIT RESULTS' : 'COMPLETED SESSION',
+          editing
+              ? 'EDIT RESULTS'
+              : '${projection.status.displayLabel.toUpperCase()} SESSION',
           style: CohortTextStyles.sectionLabel,
         ),
         const SizedBox(height: CohortSpacing.sm),
@@ -100,7 +103,8 @@ class _CompletedSessionResultViewState
               if (projection.completedAt case final completedAt?) ...[
                 const SizedBox(height: CohortSpacing.sm),
                 Text(
-                  'Completed ${formatCompletedClock(completedAt)}',
+                  '${projection.status.displayLabel} '
+                  '${formatCompletedClock(completedAt)}',
                   style: CohortTextStyles.body,
                 ),
               ],
@@ -127,11 +131,22 @@ class _CompletedSessionResultViewState
               ],
               const SizedBox(height: CohortSpacing.xs),
               Text(
-                '${projection.completedBlockCount} completed · '
+                'Blocks · ${projection.completedBlockCount} completed · '
                 '${projection.skippedBlockCount} skipped · '
                 '${projection.incompleteBlockCount} incomplete',
                 style: CohortTextStyles.small,
               ),
+              if (projection.workRepetitions case final repetitions?) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text(
+                  'Work repetitions · '
+                  '${repetitions.completedCount} completed · '
+                  '${repetitions.paceUnavailableCount} pace unavailable · '
+                  '${repetitions.skippedCount} skipped · '
+                  '${repetitions.incompleteCount} incomplete',
+                  style: CohortTextStyles.small,
+                ),
+              ],
               if (widget.statusMessage != null) ...[
                 const SizedBox(height: CohortSpacing.md),
                 Text(widget.statusMessage!, style: CohortTextStyles.body),
@@ -157,11 +172,12 @@ class _CompletedSessionResultViewState
             _CompletedBlockCard(block: block),
             const SizedBox(height: CohortSpacing.md),
           ],
-          TextButton(
-            key: const ValueKey('edit-results'),
-            onPressed: _enterCorrection,
-            child: const Text('Edit results'),
-          ),
+          if (_record.status == TrainingSessionRecordStatus.completed)
+            TextButton(
+              key: const ValueKey('edit-results'),
+              onPressed: _enterCorrection,
+              child: const Text('Edit results'),
+            ),
         ],
       ],
     );

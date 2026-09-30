@@ -6,6 +6,7 @@ import '../models/performance_result_type.dart';
 import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
+import '../models/training_session_record_status.dart';
 import '../progression/personal_bests.dart';
 import 'completed_session_duration.dart';
 import 'endurance_metrics_calculator.dart';
@@ -21,6 +22,7 @@ export 'strength_result_comparison.dart';
 class CompletedSessionResultProjection {
   const CompletedSessionResultProjection({
     required this.sessionTitle,
+    required this.status,
     required this.completedAt,
     required this.durationSeconds,
     required this.overallRpe,
@@ -28,10 +30,12 @@ class CompletedSessionResultProjection {
     required this.completedBlockCount,
     required this.skippedBlockCount,
     required this.incompleteBlockCount,
+    this.workRepetitions,
     required this.blocks,
   });
 
   final String sessionTitle;
+  final TrainingSessionRecordStatus status;
   final DateTime? completedAt;
   final int? durationSeconds;
   final int? overallRpe;
@@ -39,6 +43,7 @@ class CompletedSessionResultProjection {
   final int completedBlockCount;
   final int skippedBlockCount;
   final int incompleteBlockCount;
+  final CompletedWorkRepetitionSummary? workRepetitions;
   final List<CompletedBlockResultProjection> blocks;
 
   factory CompletedSessionResultProjection.fromRecords({
@@ -56,6 +61,7 @@ class CompletedSessionResultProjection {
         .toList(growable: false);
     return CompletedSessionResultProjection(
       sessionTitle: record.sessionSnapshot.sessionTitle,
+      status: record.status,
       completedAt: record.completedAt,
       durationSeconds: CompletedSessionDuration.fromRecord(record),
       overallRpe: record.overallRpe,
@@ -71,7 +77,59 @@ class CompletedSessionResultProjection {
                 block.status != TrainingBlockResultStatus.skipped,
           )
           .length,
+      workRepetitions: CompletedWorkRepetitionSummary.tryFrom(
+        record.blockResults,
+      ),
       blocks: blocks,
+    );
+  }
+}
+
+class CompletedWorkRepetitionSummary {
+  const CompletedWorkRepetitionSummary({
+    required this.completedCount,
+    required this.paceUnavailableCount,
+    required this.skippedCount,
+    required this.incompleteCount,
+  });
+
+  final int completedCount;
+  final int paceUnavailableCount;
+  final int skippedCount;
+  final int incompleteCount;
+
+  static CompletedWorkRepetitionSummary? tryFrom(
+    List<TrainingBlockResult> blocks,
+  ) {
+    var foundStructuredRunning = false;
+    var completed = 0;
+    var paceUnavailable = 0;
+    var skipped = 0;
+    var incomplete = 0;
+    for (final block in blocks) {
+      if (block.blockSnapshot.structuredRunning == null) continue;
+      final result = block.resultData;
+      if (result is! IntervalResultData) continue;
+      foundStructuredRunning = true;
+      for (final row in result.intervals) {
+        switch (row.state) {
+          case IntervalWorkState.completed:
+            completed += 1;
+          case IntervalWorkState.paceUnavailable:
+            paceUnavailable += 1;
+          case IntervalWorkState.skipped:
+            skipped += 1;
+          case IntervalWorkState.pending:
+            incomplete += 1;
+        }
+      }
+    }
+    if (!foundStructuredRunning) return null;
+    return CompletedWorkRepetitionSummary(
+      completedCount: completed,
+      paceUnavailableCount: paceUnavailable,
+      skippedCount: skipped,
+      incompleteCount: incomplete,
     );
   }
 }

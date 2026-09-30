@@ -201,16 +201,25 @@ void main() {
           status: TrainingSessionRecordStatus.partiallyCompleted,
         ),
       );
-      final rows = CompletedSessionResultProjection.fromRecords(
-        record: record,
-      ).blocks.single.interval!.rows;
-      expect(rows.map((row) => row.targetLabel).toSet(), {'3:50 /km–4:10 /km'});
-      expect(rows.map((row) => row.paceLabel), [
+      final rows = CompletedSessionResultProjection.fromRecords(record: record);
+      expect(rows.status, TrainingSessionRecordStatus.partiallyCompleted);
+      expect(rows.completedBlockCount, 1);
+      expect(rows.skippedBlockCount, 0);
+      expect(rows.incompleteBlockCount, 0);
+      expect(rows.workRepetitions?.completedCount, 1);
+      expect(rows.workRepetitions?.paceUnavailableCount, 1);
+      expect(rows.workRepetitions?.skippedCount, 1);
+      expect(rows.workRepetitions?.incompleteCount, 0);
+      final intervalRows = rows.blocks.single.interval!.rows;
+      expect(intervalRows.map((row) => row.targetLabel).toSet(), {
+        '3:50 /km–4:10 /km',
+      });
+      expect(intervalRows.map((row) => row.paceLabel), [
         '4:00 /km',
         'Pace unavailable',
         'Skipped',
       ]);
-      expect(rows.map((row) => row.repetitionLabel), [
+      expect(intervalRows.map((row) => row.repetitionLabel), [
         'Work repetition 1',
         'Work repetition 2',
         'Work repetition 3',

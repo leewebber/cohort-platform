@@ -64,6 +64,19 @@ void main() {
       find.text('Skipped work makes this session partially completed.'),
       findsOneWidget,
     );
+    expect(find.text('PARTIALLY COMPLETED SESSION'), findsOneWidget);
+    expect(find.textContaining('Partially completed '), findsOneWidget);
+    expect(
+      find.text('Blocks · 1 completed · 0 skipped · 0 incomplete'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(
+        'Work repetitions · 1 completed · 1 pace unavailable · 1 skipped · 0 incomplete',
+      ),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('edit-results')), findsNothing);
     await tester.drag(
       find.byKey(const ValueKey('completed-session-result')),
       const Offset(0, -500),
