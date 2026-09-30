@@ -408,6 +408,21 @@ void main() {
       valid.runningTargetSnapshot!.targets.single.paceUnit,
       'milliseconds_per_kilometre',
     );
+    final target = valid.runningTargetSnapshot!.targets.single;
+    expect(target.policy.policyId, 'POLICY-FIXTURE');
+    expect(target.policy.policyVersion, 1);
+    expect(target.policy.minimumSpeedBasisPoints, 8123);
+    expect(target.policy.maximumSpeedBasisPoints, 9345);
+    expect(target.benchmark!.distanceMetres, 5000);
+    expect(target.benchmark!.elapsedDurationMilliseconds, 1200000);
+    expect(target.fasterPace!.toJson(), {
+      'numerator': 230000,
+      'denominator': 1,
+    });
+    expect(target.slowerPace!.toJson(), {
+      'numerator': 250000,
+      'denominator': 1,
+    });
 
     await expectLater(
       ProgrammeSessionExecutionLauncher(
@@ -623,6 +638,18 @@ Map<String, dynamic> _intentOnlySnapshot() => {
       'frozen_at_utc': '2026-09-28T01:00:00.000Z',
       'freeze_source': 'in_app_start',
       'policy': {
+        'policy_id': 'POLICY-FIXTURE',
+        'policy_version': 1,
+        'method_id': 'PERCENT-BENCHMARK-SPEED',
+        'method_version': 1,
+        'minimum_speed_basis_points': 8123,
+        'maximum_speed_basis_points': 9345,
+        'freshness_local_civil_days': 90,
+        'benchmark_eligibility': {
+          'cohort_completed_tests_eligible': true,
+          'manual_completed_tests_eligible': true,
+          'external_completed_tests_eligible': false,
+        },
         'display_rounding': {
           'increment_milliseconds_per_kilometre': 1000,
           'direction': 'nearest',
@@ -650,6 +677,18 @@ Map<String, dynamic> _calculatedSnapshot({
       'frozen_at_utc': '2026-09-28T01:00:00.000Z',
       'freeze_source': 'in_app_start',
       'policy': {
+        'policy_id': 'POLICY-FIXTURE',
+        'policy_version': 1,
+        'method_id': 'PERCENT-BENCHMARK-SPEED',
+        'method_version': 1,
+        'minimum_speed_basis_points': 8123,
+        'maximum_speed_basis_points': 9345,
+        'freshness_local_civil_days': 90,
+        'benchmark_eligibility': {
+          'cohort_completed_tests_eligible': true,
+          'manual_completed_tests_eligible': true,
+          'external_completed_tests_eligible': false,
+        },
         'display_rounding': {
           'increment_milliseconds_per_kilometre': 1000,
           'direction': 'nearest',
@@ -664,8 +703,8 @@ Map<String, dynamic> _calculatedSnapshot({
       },
       'calculated_exact_range': {
         'unit': paceUnit,
-        'faster': {'numerator': 230000, 'denominator': 1},
-        'slower': {'numerator': 250000, 'denominator': 1},
+        'faster': {'numerator': 230000.0, 'denominator': 1.0},
+        'slower': {'numerator': 250000.0, 'denominator': 1.0},
       },
     },
   ],

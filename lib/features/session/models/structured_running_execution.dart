@@ -15,6 +15,24 @@ class StructuredRunningExecutionException implements Exception {
   String toString() => 'StructuredRunningExecutionException($code): $message';
 }
 
+class StructuredRunningWorkRepetition {
+  const StructuredRunningWorkRepetition({
+    required this.workoutId,
+    required this.sessionBlockId,
+    required this.authoredStepId,
+    required this.repeatOrdinal,
+    required this.workSeconds,
+    this.target,
+  });
+
+  final String workoutId;
+  final String sessionBlockId;
+  final String authoredStepId;
+  final int repeatOrdinal;
+  final int workSeconds;
+  final RunningLaunchTarget? target;
+}
+
 /// Identity-bound authority for the opt-in B3 structured runner.
 ///
 /// It is constructed only from the already validated B3 slice 1 launch result
@@ -26,12 +44,35 @@ class VerifiedStructuredRunningExecution {
     required this.executionMappingSha256,
     required this.workout,
     required this.frozenSnapshot,
+    required this.authoredGuidance,
+    required this.targetsByStepId,
+    required this.workRepetitions,
   });
 
   final String sessionBlockId;
   final String executionMappingSha256;
   final RunningWorkout workout;
   final RunningTargetSnapshotAggregate frozenSnapshot;
+  final String? authoredGuidance;
+  final Map<String, RunningLaunchTarget> targetsByStepId;
+  final List<StructuredRunningWorkRepetition> workRepetitions;
+
+  RunningAtomicStep stepForCursor(StructuredRunningCursor cursor) {
+    for (final node in workout.steps) {
+      switch (node) {
+        case RunningAtomicStep():
+          if (node.stepId == cursor.authoredStepId) return node;
+        case RunningRepeatGroup():
+          for (final step in node.steps) {
+            if (step.stepId == cursor.authoredStepId) return step;
+          }
+      }
+    }
+    throw const StructuredRunningExecutionException(
+      'cursor_step_mismatch',
+      'The saved running step is not present in the pinned workout.',
+    );
+  }
 
   factory VerifiedStructuredRunningExecution.fromLaunch({
     required SessionExecutionPlan plan,
@@ -100,11 +141,111 @@ class VerifiedStructuredRunningExecution {
           }
       }
     }
+    final stepsById = <String, RunningAtomicStep>{};
+    for (final node in workout.steps) {
+      switch (node) {
+        case RunningAtomicStep():
+          stepsById[node.stepId] = node;
+        case RunningRepeatGroup():
+          for (final step in node.steps) {
+            stepsById[step.stepId] = step;
+          }
+      }
+    }
+    final targetsByStepId = <String, RunningLaunchTarget>{};
+    final targetsByAttachmentId = <String>{};
+    final attachmentScopes = {
+      for (final attachment in authority.attachmentScopes)
+        attachment.attachmentId: attachment.stepIds,
+    };
+    for (final target in frozenSnapshot.targets) {
+      final authoredScope = attachmentScopes[target.attachmentId];
+      if (target.workoutId != workout.workoutId ||
+          authoredScope == null ||
+          !_sameIds(target.stepIds, authoredScope) ||
+          !targetsByAttachmentId.add(target.attachmentId)) {
+        throw const StructuredRunningExecutionException(
+          'target_identity_mismatch',
+          'A frozen target does not match one exact authored attachment.',
+        );
+      }
+      for (final stepId in target.stepIds) {
+        final step = stepsById[stepId];
+        if (step == null) {
+          throw const StructuredRunningExecutionException(
+            'target_step_mismatch',
+            'A frozen target references a step outside the pinned workout.',
+          );
+        }
+        if (targetsByStepId.containsKey(stepId)) {
+          throw const StructuredRunningExecutionException(
+            'overlapping_target_scope',
+            'A running step may be covered by only one frozen target.',
+          );
+        }
+        if (target.state == RunningLaunchTargetState.calculated &&
+            step.role != RunningStepRole.work) {
+          throw const StructuredRunningExecutionException(
+            'numeric_target_on_non_work_step',
+            'Numeric pace targets may be scoped only to authored work steps.',
+          );
+        }
+        targetsByStepId[stepId] = target;
+      }
+    }
+    final repetitions = <StructuredRunningWorkRepetition>[];
+    for (final node in workout.steps) {
+      switch (node) {
+        case RunningAtomicStep():
+          if (node.role == RunningStepRole.work) {
+            repetitions.add(
+              StructuredRunningWorkRepetition(
+                workoutId: workout.workoutId,
+                sessionBlockId: blockId,
+                authoredStepId: node.stepId,
+                repeatOrdinal: 1,
+                workSeconds: node.duration.milliseconds! ~/ 1000,
+                target: targetsByStepId[node.stepId],
+              ),
+            );
+          }
+        case RunningRepeatGroup():
+          for (var repeat = 1; repeat <= node.count; repeat++) {
+            for (final step in node.steps) {
+              if (step.role != RunningStepRole.work) continue;
+              repetitions.add(
+                StructuredRunningWorkRepetition(
+                  workoutId: workout.workoutId,
+                  sessionBlockId: blockId,
+                  authoredStepId: step.stepId,
+                  repeatOrdinal: repeat,
+                  workSeconds: step.duration.milliseconds! ~/ 1000,
+                  target: targetsByStepId[step.stepId],
+                ),
+              );
+            }
+          }
+      }
+    }
+    if (repetitions.isEmpty) {
+      throw const StructuredRunningExecutionException(
+        'missing_work_step',
+        'Structured running requires at least one authored work step.',
+      );
+    }
+    final guidance = [block.content, block.coachNotes]
+        .whereType<String>()
+        .map((value) => value.trim())
+        .where((value) => value.isNotEmpty)
+        .join('\n');
     return VerifiedStructuredRunningExecution._(
       sessionBlockId: blockId,
       executionMappingSha256: mappingHash,
       workout: workout,
       frozenSnapshot: frozenSnapshot,
+      authoredGuidance: guidance.isEmpty ? null : guidance,
+      targetsByStepId: Map.unmodifiable(targetsByStepId),
+      workRepetitions: List.unmodifiable(repetitions),
     );
   }
 

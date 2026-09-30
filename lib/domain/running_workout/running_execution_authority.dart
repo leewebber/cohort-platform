@@ -204,6 +204,134 @@ class AuthoredRunningExecutionAuthority {
 
 enum RunningLaunchTargetState { calculated, intentOnly }
 
+enum RunningDisplayRoundingDirection { down, nearest, up }
+
+class RunningExactPace {
+  const RunningExactPace({required this.numerator, required this.denominator});
+
+  final int numerator;
+  final int denominator;
+
+  int roundedMilliseconds({
+    required int increment,
+    required RunningDisplayRoundingDirection direction,
+  }) {
+    final scaledNumerator = numerator;
+    final scaledDenominator = denominator * increment;
+    final quotient = scaledNumerator ~/ scaledDenominator;
+    final remainder = scaledNumerator.remainder(scaledDenominator);
+    final units = switch (direction) {
+      RunningDisplayRoundingDirection.down => quotient,
+      RunningDisplayRoundingDirection.up => quotient + (remainder == 0 ? 0 : 1),
+      RunningDisplayRoundingDirection.nearest =>
+        quotient + (remainder * 2 >= scaledDenominator ? 1 : 0),
+    };
+    return units * increment;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'numerator': numerator,
+    'denominator': denominator,
+  };
+}
+
+class RunningDisplayRounding {
+  const RunningDisplayRounding({
+    required this.incrementMillisecondsPerKilometre,
+    required this.direction,
+  });
+
+  final int incrementMillisecondsPerKilometre;
+  final RunningDisplayRoundingDirection direction;
+
+  Map<String, dynamic> toJson() => {
+    'increment_milliseconds_per_kilometre': incrementMillisecondsPerKilometre,
+    'direction': direction.name,
+  };
+}
+
+class RunningFrozenTargetPolicy {
+  const RunningFrozenTargetPolicy({
+    required this.displayRounding,
+    this.policyId,
+    this.policyVersion,
+    this.methodId,
+    this.methodVersion,
+    this.minimumSpeedBasisPoints,
+    this.maximumSpeedBasisPoints,
+    this.freshnessLocalCivilDays,
+    this.benchmarkEligibility = const {},
+  });
+
+  final RunningDisplayRounding displayRounding;
+  final String? policyId;
+  final int? policyVersion;
+  final String? methodId;
+  final int? methodVersion;
+  final int? minimumSpeedBasisPoints;
+  final int? maximumSpeedBasisPoints;
+  final int? freshnessLocalCivilDays;
+  final Map<String, bool> benchmarkEligibility;
+
+  Map<String, dynamic> toJson() => {
+    if (policyId != null) 'policy_id': policyId,
+    if (policyVersion != null) 'policy_version': policyVersion,
+    if (methodId != null) 'method_id': methodId,
+    if (methodVersion != null) 'method_version': methodVersion,
+    if (minimumSpeedBasisPoints != null)
+      'minimum_speed_basis_points': minimumSpeedBasisPoints,
+    if (maximumSpeedBasisPoints != null)
+      'maximum_speed_basis_points': maximumSpeedBasisPoints,
+    if (freshnessLocalCivilDays != null)
+      'freshness_local_civil_days': freshnessLocalCivilDays,
+    if (benchmarkEligibility.isNotEmpty)
+      'benchmark_eligibility': benchmarkEligibility,
+    'display_rounding': displayRounding.toJson(),
+  };
+}
+
+class RunningFrozenBenchmark {
+  const RunningFrozenBenchmark({
+    required this.athleteId,
+    required this.distanceMetres,
+    required this.elapsedDurationMilliseconds,
+    required this.durationBasis,
+    this.evidenceId,
+    this.localTestDate,
+    this.ianaTimezone,
+    this.sourceKind,
+    this.sourceReference,
+    this.declaration,
+    this.surfaceContext,
+  });
+
+  final String athleteId;
+  final int distanceMetres;
+  final int elapsedDurationMilliseconds;
+  final String durationBasis;
+  final String? evidenceId;
+  final String? localTestDate;
+  final String? ianaTimezone;
+  final String? sourceKind;
+  final String? sourceReference;
+  final String? declaration;
+  final String? surfaceContext;
+
+  Map<String, dynamic> toJson() => {
+    'athlete_id': athleteId,
+    'distance_metres': distanceMetres,
+    'elapsed_duration_milliseconds': elapsedDurationMilliseconds,
+    'duration_basis': durationBasis,
+    if (evidenceId != null) 'evidence_id': evidenceId,
+    if (localTestDate != null) 'local_test_date': localTestDate,
+    if (ianaTimezone != null) 'iana_timezone': ianaTimezone,
+    if (sourceKind != null) 'source_kind': sourceKind,
+    if (sourceReference != null) 'source_reference': sourceReference,
+    if (declaration != null) 'declaration': declaration,
+    if (surfaceContext != null) 'surface_context': surfaceContext,
+  };
+}
+
 class RunningLaunchTarget {
   const RunningLaunchTarget({
     required this.attachmentId,
@@ -211,9 +339,12 @@ class RunningLaunchTarget {
     required this.stepIds,
     required this.state,
     required this.frozenAtUtc,
+    required this.policy,
     this.reason,
     this.paceUnit,
-    this.benchmarkAthleteId,
+    this.benchmark,
+    this.fasterPace,
+    this.slowerPace,
   });
 
   final String attachmentId;
@@ -221,9 +352,47 @@ class RunningLaunchTarget {
   final List<String> stepIds;
   final RunningLaunchTargetState state;
   final DateTime frozenAtUtc;
+  final RunningFrozenTargetPolicy policy;
   final String? reason;
   final String? paceUnit;
-  final String? benchmarkAthleteId;
+  final RunningFrozenBenchmark? benchmark;
+  final RunningExactPace? fasterPace;
+  final RunningExactPace? slowerPace;
+
+  String? get benchmarkAthleteId => benchmark?.athleteId;
+
+  int? get fasterDisplayMillisecondsPerKilometre =>
+      fasterPace?.roundedMilliseconds(
+        increment: policy.displayRounding.incrementMillisecondsPerKilometre,
+        direction: policy.displayRounding.direction,
+      );
+
+  int? get slowerDisplayMillisecondsPerKilometre =>
+      slowerPace?.roundedMilliseconds(
+        increment: policy.displayRounding.incrementMillisecondsPerKilometre,
+        direction: policy.displayRounding.direction,
+      );
+
+  Map<String, dynamic> toJson() => {
+    'schema_version': 1,
+    'authority': 'advisory',
+    'attachment_id': attachmentId,
+    'scope': {'workout_id': workoutId, 'step_ids': stepIds},
+    'frozen_at_utc': frozenAtUtc.toIso8601String(),
+    'freeze_source': 'in_app_start',
+    'policy': policy.toJson(),
+    'state': state == RunningLaunchTargetState.calculated
+        ? 'calculated'
+        : 'intent_only',
+    if (reason != null) 'reason': reason,
+    if (benchmark != null) 'benchmark': benchmark!.toJson(),
+    if (fasterPace != null && slowerPace != null)
+      'calculated_exact_range': {
+        'unit': paceUnit,
+        'faster': fasterPace!.toJson(),
+        'slower': slowerPace!.toJson(),
+      },
+  };
 }
 
 /// Exact B2 frozen aggregate returned by the authoritative start/resume RPC.
@@ -249,6 +418,21 @@ class RunningTargetSnapshotAggregate {
   final String workoutId;
   final DateTime frozenAtUtc;
   final List<RunningLaunchTarget> targets;
+
+  Map<String, dynamic> toJson() => {
+    'schema_version': 1,
+    'authority': 'advisory',
+    'occurrence_id': occurrenceId,
+    'athlete_id': athleteId,
+    'assignment_id': assignmentId,
+    'programme_version_id': programmeVersionId,
+    'session_slot_id': sessionSlotId,
+    'package_content_hash': packageContentHash,
+    'workout_id': workoutId,
+    'frozen_at_utc': frozenAtUtc.toIso8601String(),
+    'freeze_source': 'in_app_start',
+    'targets': targets.map((target) => target.toJson()).toList(),
+  };
 
   factory RunningTargetSnapshotAggregate.fromJson(Map<String, dynamic> json) {
     const aggregateKeys = {
@@ -292,6 +476,19 @@ class RunningTargetSnapshotAggregate {
     final targets = targetsRaw
         .map((target) => _parseTarget(_map(target, 'target')))
         .toList(growable: false);
+    final workoutId = _identity(json['workout_id'], 'workout_id');
+    final attachmentIds = <String>{};
+    if (targets.any(
+      (target) =>
+          target.workoutId != workoutId ||
+          target.frozenAtUtc != frozenAt ||
+          !attachmentIds.add(target.attachmentId),
+    )) {
+      throw const RunningExecutionAuthorityException(
+        'snapshot_target_identity_mismatch',
+        'Frozen targets must uniquely match the aggregate workout and timestamp.',
+      );
+    }
     return RunningTargetSnapshotAggregate._(
       occurrenceId: _requiredString(json['occurrence_id'], 'occurrence_id'),
       athleteId: _requiredString(json['athlete_id'], 'athlete_id'),
@@ -308,7 +505,7 @@ class RunningTargetSnapshotAggregate {
         json['package_content_hash'],
         'package_content_hash',
       ),
-      workoutId: _identity(json['workout_id'], 'workout_id'),
+      workoutId: workoutId,
       frozenAtUtc: frozenAt,
       targets: List.unmodifiable(targets),
     );
@@ -370,14 +567,58 @@ RunningLaunchTarget _parseTarget(Map<String, dynamic> target) {
   final policy = _map(target['policy'], 'policy');
   final rounding = _map(policy['display_rounding'], 'display_rounding');
   final increment = rounding['increment_milliseconds_per_kilometre'];
-  if (increment is! int ||
-      increment < 1 ||
-      !const {'down', 'nearest', 'up'}.contains(rounding['direction'])) {
+  final roundingDirection = switch (rounding['direction']) {
+    'down' => RunningDisplayRoundingDirection.down,
+    'nearest' => RunningDisplayRoundingDirection.nearest,
+    'up' => RunningDisplayRoundingDirection.up,
+    _ => null,
+  };
+  if (increment is! int || increment < 1 || roundingDirection == null) {
     throw const RunningExecutionAuthorityException(
       'invalid_snapshot_display_units',
       'Frozen display rounding must use positive milliseconds per kilometre.',
     );
   }
+  final eligibilityRaw = policy['benchmark_eligibility'];
+  final eligibility = <String, bool>{};
+  if (eligibilityRaw != null) {
+    final map = _map(eligibilityRaw, 'benchmark_eligibility');
+    for (final entry in map.entries) {
+      if (entry.value is! bool) {
+        throw const RunningExecutionAuthorityException(
+          'invalid_snapshot_policy',
+          'Frozen benchmark eligibility values must be booleans.',
+        );
+      }
+      eligibility[entry.key] = entry.value as bool;
+    }
+  }
+  int? optionalPositiveInt(String key) {
+    final value = policy[key];
+    if (value == null) return null;
+    if (value is! int || value < 1) {
+      throw const RunningExecutionAuthorityException(
+        'invalid_snapshot_policy',
+        'Frozen policy numeric values must be positive integers.',
+      );
+    }
+    return value;
+  }
+
+  final frozenPolicy = RunningFrozenTargetPolicy(
+    displayRounding: RunningDisplayRounding(
+      incrementMillisecondsPerKilometre: increment,
+      direction: roundingDirection,
+    ),
+    policyId: _optionalString(policy['policy_id']),
+    policyVersion: optionalPositiveInt('policy_version'),
+    methodId: _optionalString(policy['method_id']),
+    methodVersion: optionalPositiveInt('method_version'),
+    minimumSpeedBasisPoints: optionalPositiveInt('minimum_speed_basis_points'),
+    maximumSpeedBasisPoints: optionalPositiveInt('maximum_speed_basis_points'),
+    freshnessLocalCivilDays: optionalPositiveInt('freshness_local_civil_days'),
+    benchmarkEligibility: Map.unmodifiable(eligibility),
+  );
 
   if (state == 'intent_only') {
     final reason = target['reason']?.toString() ?? '';
@@ -400,6 +641,7 @@ RunningLaunchTarget _parseTarget(Map<String, dynamic> target) {
       stepIds: List.unmodifiable(stepIds),
       state: RunningLaunchTargetState.intentOnly,
       frozenAtUtc: targetFrozenAt,
+      policy: frozenPolicy,
       reason: reason,
     );
   }
@@ -407,7 +649,7 @@ RunningLaunchTarget _parseTarget(Map<String, dynamic> target) {
   final benchmark = _map(target['benchmark'], 'benchmark');
   if (benchmark['duration_basis'] != 'elapsed_including_pauses' ||
       benchmark['distance_metres'] is! int ||
-      (benchmark['distance_metres'] as int) < 1 ||
+      benchmark['distance_metres'] != 5000 ||
       benchmark['elapsed_duration_milliseconds'] is! int ||
       (benchmark['elapsed_duration_milliseconds'] as int) < 1) {
     throw const RunningExecutionAuthorityException(
@@ -425,30 +667,71 @@ RunningLaunchTarget _parseTarget(Map<String, dynamic> target) {
       'Calculated running targets must use milliseconds per kilometre.',
     );
   }
+  final exactPaces = <String, RunningExactPace>{};
   for (final key in const ['faster', 'slower']) {
     final pace = _map(range[key], key);
-    if (pace['numerator'] is! int ||
-        (pace['numerator'] as int) < 1 ||
-        pace['denominator'] is! int ||
-        (pace['denominator'] as int) < 1) {
+    final numerator = _positiveExactInteger(pace['numerator']);
+    final denominator = _positiveExactInteger(pace['denominator']);
+    if (numerator == null || denominator == null) {
       throw const RunningExecutionAuthorityException(
         'invalid_snapshot_exact_pace',
         'Exact pace values require positive integer numerator and denominator.',
       );
     }
+    exactPaces[key] = RunningExactPace(
+      numerator: numerator,
+      denominator: denominator,
+    );
   }
+  final faster = exactPaces['faster']!;
+  final slower = exactPaces['slower']!;
+  if (faster.numerator * slower.denominator >
+      slower.numerator * faster.denominator) {
+    throw const RunningExecutionAuthorityException(
+      'invalid_snapshot_pace_order',
+      'Frozen pace range must be ordered from faster to slower.',
+    );
+  }
+  final frozenBenchmark = RunningFrozenBenchmark(
+    athleteId: _requiredString(benchmark['athlete_id'], 'benchmark_athlete_id'),
+    distanceMetres: benchmark['distance_metres'] as int,
+    elapsedDurationMilliseconds:
+        benchmark['elapsed_duration_milliseconds'] as int,
+    durationBasis: benchmark['duration_basis'] as String,
+    evidenceId: _optionalString(benchmark['evidence_id']),
+    localTestDate: _optionalString(benchmark['local_test_date']),
+    ianaTimezone: _optionalString(benchmark['iana_timezone']),
+    sourceKind: _optionalString(benchmark['source_kind']),
+    sourceReference: _optionalString(benchmark['source_reference']),
+    declaration: _optionalString(benchmark['declaration']),
+    surfaceContext: _optionalString(benchmark['surface_context']),
+  );
   return RunningLaunchTarget(
     attachmentId: _identity(target['attachment_id'], 'attachment_id'),
     workoutId: scopeWorkoutId,
     stepIds: List.unmodifiable(stepIds),
     state: RunningLaunchTargetState.calculated,
     frozenAtUtc: targetFrozenAt,
+    policy: frozenPolicy,
     paceUnit: 'milliseconds_per_kilometre',
-    benchmarkAthleteId: _requiredString(
-      benchmark['athlete_id'],
-      'benchmark_athlete_id',
-    ),
+    benchmark: frozenBenchmark,
+    fasterPace: faster,
+    slowerPace: slower,
   );
+}
+
+int? _positiveExactInteger(Object? value) {
+  if (value is int) return value > 0 ? value : null;
+  if (value is double && value.isFinite && value > 0) {
+    final integer = value.toInt();
+    return value == integer ? integer : null;
+  }
+  return null;
+}
+
+String? _optionalString(Object? value) {
+  final result = value?.toString().trim();
+  return result == null || result.isEmpty ? null : result;
 }
 
 Map<String, dynamic> _map(Object? value, String field) {

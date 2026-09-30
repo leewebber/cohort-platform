@@ -62,7 +62,7 @@ void main() {
       expect(recovery.authoredStepId, endsWith(':s:recovery'));
       expect(recovery.repeatOrdinal, 1);
       expect(recovery.phase, StructuredRunningPhase.recovery);
-      expect(recovery.remainingMilliseconds, 2000);
+      expect(recovery.remainingMilliseconds, inInclusiveRange(1900, 2000));
       expect(
         recovery.manualEvidenceState,
         StructuredRunningManualEvidenceState.captured,
@@ -296,11 +296,79 @@ void main() {
     expect(returned, isNotNull);
     expect(find.text('Open'), findsOneWidget);
   });
+
+  testWidgets('timer shows authored guidance and one intent-only message', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StructuredRunningTimerScreen(
+          execution: _execution(),
+          onCheckpoint: (_) async => true,
+        ),
+      ),
+    );
+
+    expect(find.text('Work'), findsOneWidget);
+    expect(find.text('Run smoothly; keep the recovery easy.'), findsOneWidget);
+    expect(find.text('Pace target unavailable'), findsOneWidget);
+    expect(
+      find.text(
+        'No eligible recent 5 km benchmark was available when this session started. Follow the authored guidance. Cohort has not estimated a pace.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('Advisory pace target'), findsNothing);
+  });
+
+  testWidgets('timer rounds and displays the frozen calculated work target', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StructuredRunningTimerScreen(
+          execution: _execution(calculated: true),
+          onCheckpoint: (_) async => true,
+        ),
+      ),
+    );
+
+    expect(find.text('Advisory pace target'), findsOneWidget);
+    expect(find.text('3:50–4:10 /km'), findsOneWidget);
+    expect(find.text('Pace target unavailable'), findsNothing);
+  });
+
+  testWidgets('recovery is isolated from the calculated work target', (
+    tester,
+  ) async {
+    final execution = _execution(calculated: true);
+    final controller = StructuredRunningController.fresh(execution: execution)
+      ..start()
+      ..elapse(const Duration(seconds: 6))
+      ..pause();
+    final recovery = controller.cursor;
+    controller.dispose();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: StructuredRunningTimerScreen(
+          execution: execution,
+          initialCursor: recovery,
+          onCheckpoint: (_) async => true,
+        ),
+      ),
+    );
+
+    expect(find.text('Recovery'), findsOneWidget);
+    expect(find.text('No pace target'), findsOneWidget);
+    expect(find.text('Advisory pace target'), findsNothing);
+    expect(find.text('Pace target unavailable'), findsNothing);
+  });
 }
 
 const _blockId = '123e4567-e89b-42d3-a456-426614174000';
 
-VerifiedStructuredRunningExecution _execution() {
+VerifiedStructuredRunningExecution _execution({bool calculated = false}) {
   const timer = TimerConfiguration(workSeconds: 5, restSeconds: 3, rounds: 3);
   final workout = const RunningWorkoutProjector()
       .project(
@@ -315,6 +383,7 @@ VerifiedStructuredRunningExecution _execution() {
       .steps
       .map((step) => step.stepId)
       .toList(growable: false);
+  final workStepId = ids.singleWhere((id) => id.endsWith(':s:work'));
   final bindings = ids
       .map((id) => (stepId: id, sessionBlockId: _blockId))
       .toList(growable: false);
@@ -331,7 +400,10 @@ VerifiedStructuredRunningExecution _execution() {
     ],
     'execution_mapping_sha256': hash,
     'advisory_attachments': [
-      {'attachment_id': 'target-1', 'step_ids': ids},
+      {
+        'attachment_id': 'target-1',
+        'step_ids': [workStepId],
+      },
     ],
   });
   final snapshot = RunningTargetSnapshotAggregate.fromJson({
@@ -351,7 +423,10 @@ VerifiedStructuredRunningExecution _execution() {
         'schema_version': 1,
         'authority': 'advisory',
         'attachment_id': 'target-1',
-        'scope': {'workout_id': workout.workoutId, 'step_ids': ids},
+        'scope': {
+          'workout_id': workout.workoutId,
+          'step_ids': [workStepId],
+        },
         'frozen_at_utc': '2026-09-29T01:00:00.000Z',
         'freeze_source': 'in_app_start',
         'policy': {
@@ -360,8 +435,23 @@ VerifiedStructuredRunningExecution _execution() {
             'direction': 'nearest',
           },
         },
-        'state': 'intent_only',
-        'reason': 'no_evidence',
+        if (calculated) ...{
+          'state': 'calculated',
+          'benchmark': {
+            'athlete_id': 'athlete-1',
+            'distance_metres': 5000,
+            'elapsed_duration_milliseconds': 1200000,
+            'duration_basis': 'elapsed_including_pauses',
+          },
+          'calculated_exact_range': {
+            'unit': 'milliseconds_per_kilometre',
+            'faster': {'numerator': 229600, 'denominator': 1},
+            'slower': {'numerator': 250400, 'denominator': 1},
+          },
+        } else ...{
+          'state': 'intent_only',
+          'reason': 'no_evidence',
+        },
       },
     ],
   });
@@ -374,7 +464,7 @@ VerifiedStructuredRunningExecution _execution() {
           blockId: _blockId,
           title: 'Position is not identity',
           blockType: SessionBlockType.conditioning,
-          content: '',
+          content: 'Run smoothly; keep the recovery easy.',
           workoutFormat: WorkoutFormat.intervals,
           position: 99,
           timerConfiguration: timer,

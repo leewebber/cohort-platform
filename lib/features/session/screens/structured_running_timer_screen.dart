@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../domain/running_workout/running_workout.dart';
 import '../models/structured_running_execution.dart';
 import '../services/structured_running_controller.dart';
 
@@ -87,6 +88,8 @@ class _StructuredRunningTimerScreenState
   @override
   Widget build(BuildContext context) {
     final cursor = _controller.cursor;
+    final step = widget.execution.stepForCursor(cursor);
+    final target = widget.execution.targetsByStepId[step.stepId];
     final seconds = (cursor.remainingMilliseconds / 1000).ceil();
     return PopScope(
       canPop: false,
@@ -110,9 +113,7 @@ class _StructuredRunningTimerScreenState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    cursor.phase == StructuredRunningPhase.work
-                        ? 'Work'
-                        : 'Recovery',
+                    _roleLabel(step.role),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   const SizedBox(height: 12),
@@ -120,6 +121,17 @@ class _StructuredRunningTimerScreenState
                     '${cursor.authoredStepId} · repeat ${cursor.repeatOrdinal}',
                     textAlign: TextAlign.center,
                   ),
+                  if (widget.execution.authoredGuidance
+                      case final guidance?) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      guidance,
+                      key: const ValueKey('structured-running-guidance'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  ..._targetWidgets(step: step, target: target),
                   const SizedBox(height: 24),
                   Text(
                     cursor.isFinished ? 'Timer finished' : '$seconds s',
@@ -140,6 +152,12 @@ class _StructuredRunningTimerScreenState
                       'Timer finished. Record evidence before completing the block.',
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 12),
+                    FilledButton(
+                      key: const ValueKey('review-running-repetitions'),
+                      onPressed: _isExiting ? null : _exit,
+                      child: const Text('Review repetitions'),
+                    ),
                   ],
                 ],
               ),
@@ -148,5 +166,59 @@ class _StructuredRunningTimerScreenState
         ),
       ),
     );
+  }
+
+  List<Widget> _targetWidgets({
+    required RunningAtomicStep step,
+    required RunningLaunchTarget? target,
+  }) {
+    if (step.role != RunningStepRole.work || target == null) {
+      return const [Text('No pace target')];
+    }
+    if (target.state == RunningLaunchTargetState.intentOnly) {
+      return const [
+        Text(
+          'Pace target unavailable',
+          key: ValueKey('structured-running-target-unavailable'),
+        ),
+        SizedBox(height: 4),
+        Text(
+          'No eligible recent 5 km benchmark was available when this session started. Follow the authored guidance. Cohort has not estimated a pace.',
+          textAlign: TextAlign.center,
+        ),
+      ];
+    }
+    final faster = target.fasterDisplayMillisecondsPerKilometre;
+    final slower = target.slowerDisplayMillisecondsPerKilometre;
+    if (faster == null || slower == null) {
+      throw const StructuredRunningExecutionException(
+        'missing_calculated_target_range',
+        'A calculated running target is missing its frozen pace range.',
+      );
+    }
+    return [
+      const Text('Advisory pace target'),
+      const SizedBox(height: 4),
+      Text(
+        '${_formatPace(faster)}–${_formatPace(slower)} /km',
+        key: const ValueKey('structured-running-target-range'),
+      ),
+    ];
+  }
+
+  static String _roleLabel(RunningStepRole role) => switch (role) {
+    RunningStepRole.warmUp => 'Warm-up',
+    RunningStepRole.work => 'Work',
+    RunningStepRole.recovery => 'Recovery',
+    RunningStepRole.rest => 'Rest',
+    RunningStepRole.coolDown => 'Cool-down',
+    RunningStepRole.open => 'Open',
+  };
+
+  static String _formatPace(int milliseconds) {
+    final totalSeconds = (milliseconds / 1000).round();
+    final minutes = totalSeconds ~/ 60;
+    final seconds = totalSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 }
