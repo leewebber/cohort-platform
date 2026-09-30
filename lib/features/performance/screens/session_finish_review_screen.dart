@@ -9,6 +9,7 @@ import '../../../core/persistence/athlete_persistence.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../core/widgets/cohort_button.dart';
+import '../../../domain/running_workout/running_workout.dart';
 import '../../session/presentation/daily_journey_accessibility.dart';
 import '../../session/presentation/production_restore_athlete_copy.dart';
 import '../../programme/models/athlete_programme_completion.dart';
@@ -17,6 +18,10 @@ import '../../programme/models/programme_progress_summary.dart';
 import '../controllers/performance_capture_controller.dart';
 import '../mappers/workout_execution_outcome_mapper.dart';
 import '../models/training_session_record_status.dart';
+import '../models/interval_work_result.dart';
+import '../models/performance_result_data.dart';
+import '../models/performance_snapshot.dart';
+import '../services/interval_pace_format.dart';
 import '../services/performance_record_save_coordinator.dart';
 import '../services/running_pace_plausibility.dart';
 import '../widgets/implausible_running_pace_warning.dart';
@@ -173,18 +178,18 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
         if (alreadyCommitted) {
           // Hosted truth won; fall through to cleanup.
         } else {
-        final uncertain =
-            programmeCompletion?.status ==
-            AthleteProgrammeCompletionStatus.networkUncertain;
-        setState(() {
-          // Uncertain is retryable pending — not an in-flight lock.
-          _saveState = PerformanceSaveState.error;
-          _errorMessage = uncertain
-              ? 'Completion pending. Your results are still saved on this phone.'
-              : (programmeCompletion?.message ??
-                    UserFacingErrorMessages.sessionProgressionWarning());
-        });
-        return;
+          final uncertain =
+              programmeCompletion?.status ==
+              AthleteProgrammeCompletionStatus.networkUncertain;
+          setState(() {
+            // Uncertain is retryable pending — not an in-flight lock.
+            _saveState = PerformanceSaveState.error;
+            _errorMessage = uncertain
+                ? 'Completion pending. Your results are still saved on this phone.'
+                : (programmeCompletion?.message ??
+                      UserFacingErrorMessages.sessionProgressionWarning());
+          });
+          return;
         }
       }
 
@@ -281,6 +286,14 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
                 '${draft.incompleteBlockCount} incomplete',
                 style: CohortTextStyles.body,
               ),
+              for (final block in draft.blockDrafts)
+                if (block.blockSnapshot.structuredRunning case final authority?)
+                  _StructuredRunningCompletionReview(
+                    authority: authority,
+                    result: block.resultData is IntervalResultData
+                        ? block.resultData as IntervalResultData
+                        : const IntervalResultData(),
+                  ),
               const SizedBox(height: CohortSpacing.lg),
               SessionRpeSelector(
                 value: draft.overallRpe,
@@ -310,7 +323,8 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
                 state: _saveState,
                 errorMessage: _errorMessage,
                 pendingRetained: true,
-                onRetry: _saveState == PerformanceSaveState.error ||
+                onRetry:
+                    _saveState == PerformanceSaveState.error ||
                         _saveState == PerformanceSaveState.completing
                     ? () => unawaited(_saveAndFinish())
                     : null,
@@ -340,4 +354,75 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
       ),
     );
   }
+}
+
+class _StructuredRunningCompletionReview extends StatelessWidget {
+  const _StructuredRunningCompletionReview({
+    required this.authority,
+    required this.result,
+  });
+
+  final StructuredRunningPerformanceSnapshot authority;
+  final IntervalResultData result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      key: const ValueKey('structured-running-completion-review'),
+      margin: const EdgeInsets.only(top: CohortSpacing.lg),
+      child: Padding(
+        padding: const EdgeInsets.all(CohortSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Running repetitions', style: CohortTextStyles.cardTitle),
+            const SizedBox(height: CohortSpacing.sm),
+            for (final row in result.intervals) ...[
+              Text(
+                'Work repetition ${row.repeatOrdinal ?? row.ordinal}',
+                style: CohortTextStyles.body,
+              ),
+              Text(
+                'Target · ${_targetLabel(row)}',
+                style: CohortTextStyles.small,
+              ),
+              Text(
+                'Actual · ${_actualLabel(row)}',
+                style: CohortTextStyles.small,
+              ),
+              const SizedBox(height: CohortSpacing.sm),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _targetLabel(IntervalWorkResult row) {
+    final stepId = row.authoredStepId;
+    if (stepId == null) return 'No pace target';
+    final target = authority.targetForStep(stepId);
+    if (target == null) return 'No pace target';
+    if (target.state == RunningLaunchTargetState.intentOnly) {
+      return 'Pace target unavailable';
+    }
+    final faster = target.fasterDisplayMillisecondsPerKilometre;
+    final slower = target.slowerDisplayMillisecondsPerKilometre;
+    if (faster == null || slower == null) return 'Pace target unavailable';
+    String pace(int value) {
+      final seconds = (value / 1000).round();
+      return '${seconds ~/ 60}:${seconds.remainder(60).toString().padLeft(2, '0')} /km';
+    }
+
+    return '${pace(faster)}–${pace(slower)}';
+  }
+
+  static String _actualLabel(IntervalWorkResult row) => switch (row.state) {
+    IntervalWorkState.completed => IntervalPaceFormat.display(
+      row.paceSecondsPerKm,
+    ),
+    IntervalWorkState.paceUnavailable => 'Pace unavailable',
+    IntervalWorkState.skipped => 'Skipped',
+    IntervalWorkState.pending => 'Pending',
+  };
 }

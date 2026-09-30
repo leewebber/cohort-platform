@@ -1,4 +1,5 @@
 import '../../../models/session_block_type.dart';
+import '../../../domain/running_workout/running_workout.dart';
 import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
@@ -173,12 +174,16 @@ class CompletedIntervalRowProjection {
     required this.ordinal,
     required this.paceLabel,
     required this.isFastest,
+    this.repetitionLabel,
+    this.targetLabel,
     this.previousPaceLabel,
   });
 
   final int ordinal;
   final String paceLabel;
   final bool isFastest;
+  final String? repetitionLabel;
+  final String? targetLabel;
   final String? previousPaceLabel;
 }
 
@@ -217,7 +222,8 @@ class CompletedIntervalBlockProjection {
     );
     final fastest = IntervalResultMath.fastest(data);
     final previousByOrdinal = {
-      for (final row in comparison.previous?.intervals ?? const <IntervalWorkResult>[])
+      for (final row
+          in comparison.previous?.intervals ?? const <IntervalWorkResult>[])
         row.ordinal: row,
     };
     final rows = [
@@ -237,7 +243,15 @@ class CompletedIntervalBlockProjection {
               fastest != null &&
               row.ordinal == fastest.ordinal &&
               row.hasValidPace,
-          previousPaceLabel: previousByOrdinal[row.ordinal]?.hasValidPace == true
+          repetitionLabel: row.repeatOrdinal == null
+              ? null
+              : 'Work repetition ${row.repeatOrdinal}',
+          targetLabel: _structuredRunningTargetLabel(
+            block.blockSnapshot.structuredRunning,
+            row.authoredStepId,
+          ),
+          previousPaceLabel:
+              previousByOrdinal[row.ordinal]?.hasValidPace == true
               ? IntervalPaceFormat.display(
                   previousByOrdinal[row.ordinal]!.paceSecondsPerKm,
                 )
@@ -287,12 +301,14 @@ class CompletedIntervalBlockProjection {
           deltaLabel:
               fastest != null && previousFastest?.paceSecondsPerKm != null
               ? _paceDelta(
-                  previousFastest!.paceSecondsPerKm! - fastest.paceSecondsPerKm!,
+                  previousFastest!.paceSecondsPerKm! -
+                      fastest.paceSecondsPerKm!,
                 )
               : null,
           tone: fastest != null && previousFastest?.paceSecondsPerKm != null
               ? _paceTone(
-                  previousFastest!.paceSecondsPerKm! - fastest.paceSecondsPerKm!,
+                  previousFastest!.paceSecondsPerKm! -
+                      fastest.paceSecondsPerKm!,
                 )
               : StrengthMetricTone.none,
         ),
@@ -610,6 +626,27 @@ class CompletedSetResultProjection {
       isBestSet: isBestSet,
     );
   }
+}
+
+String? _structuredRunningTargetLabel(
+  StructuredRunningPerformanceSnapshot? structured,
+  String? authoredStepId,
+) {
+  if (structured == null || authoredStepId == null) return null;
+  final target = structured.targetForStep(authoredStepId);
+  if (target == null) return 'No pace target';
+  if (target.state == RunningLaunchTargetState.intentOnly) {
+    return 'Pace target unavailable';
+  }
+  final faster = target.fasterDisplayMillisecondsPerKilometre;
+  final slower = target.slowerDisplayMillisecondsPerKilometre;
+  if (faster == null || slower == null) return 'Pace target unavailable';
+  String pace(int milliseconds) {
+    final total = (milliseconds / 1000).round();
+    return '${total ~/ 60}:${total.remainder(60).toString().padLeft(2, '0')} /km';
+  }
+
+  return '${pace(faster)}–${pace(slower)}';
 }
 
 String formatCompletedClock(DateTime value) {

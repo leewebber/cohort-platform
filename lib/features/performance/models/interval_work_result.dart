@@ -25,12 +25,18 @@ enum IntervalWorkState {
       this == IntervalWorkState.paceUnavailable;
 
   bool get hasComparablePace => this == IntervalWorkState.completed;
+
+  bool get isResolved => this != IntervalWorkState.pending;
 }
 
 class IntervalWorkResult {
   const IntervalWorkResult({
     required this.ordinal,
     required this.workSeconds,
+    this.workoutId,
+    this.sessionBlockId,
+    this.authoredStepId,
+    this.repeatOrdinal,
     this.paceSecondsPerKm,
     this.paceUnit = IntervalPaceUnit.secondsPerKm,
     this.state = IntervalWorkState.pending,
@@ -38,6 +44,10 @@ class IntervalWorkResult {
 
   final int ordinal;
   final int workSeconds;
+  final String? workoutId;
+  final String? sessionBlockId;
+  final String? authoredStepId;
+  final int? repeatOrdinal;
   final double? paceSecondsPerKm;
   final String paceUnit;
   final IntervalWorkState state;
@@ -48,6 +58,12 @@ class IntervalWorkResult {
       paceSecondsPerKm! > 0 &&
       workSeconds > 0;
 
+  bool get hasStructuredIdentity =>
+      workoutId != null ||
+      sessionBlockId != null ||
+      authoredStepId != null ||
+      repeatOrdinal != null;
+
   double? get impliedDistanceKm {
     if (!hasValidPace) return null;
     return workSeconds / paceSecondsPerKm!;
@@ -56,6 +72,10 @@ class IntervalWorkResult {
   IntervalWorkResult copyWith({
     int? ordinal,
     int? workSeconds,
+    String? workoutId,
+    String? sessionBlockId,
+    String? authoredStepId,
+    int? repeatOrdinal,
     double? paceSecondsPerKm,
     String? paceUnit,
     IntervalWorkState? state,
@@ -64,6 +84,10 @@ class IntervalWorkResult {
     return IntervalWorkResult(
       ordinal: ordinal ?? this.ordinal,
       workSeconds: workSeconds ?? this.workSeconds,
+      workoutId: workoutId ?? this.workoutId,
+      sessionBlockId: sessionBlockId ?? this.sessionBlockId,
+      authoredStepId: authoredStepId ?? this.authoredStepId,
+      repeatOrdinal: repeatOrdinal ?? this.repeatOrdinal,
       paceSecondsPerKm: clearPace
           ? null
           : (paceSecondsPerKm ?? this.paceSecondsPerKm),
@@ -75,6 +99,10 @@ class IntervalWorkResult {
   Map<String, dynamic> toJson() => {
     'ordinal': ordinal,
     'workSeconds': workSeconds,
+    if (workoutId != null) 'workoutId': workoutId,
+    if (sessionBlockId != null) 'sessionBlockId': sessionBlockId,
+    if (authoredStepId != null) 'authoredStepId': authoredStepId,
+    if (repeatOrdinal != null) 'repeatOrdinal': repeatOrdinal,
     if (paceSecondsPerKm != null) 'paceSecondsPerKm': paceSecondsPerKm,
     'paceUnit': paceUnit,
     'state': state.dbValue,
@@ -84,11 +112,14 @@ class IntervalWorkResult {
     return IntervalWorkResult(
       ordinal: _int(json['ordinal']) ?? 0,
       workSeconds: _int(json['workSeconds'] ?? json['work_seconds']) ?? 0,
+      workoutId: _trim(json['workoutId'] ?? json['workout_id']),
+      sessionBlockId: _trim(json['sessionBlockId'] ?? json['session_block_id']),
+      authoredStepId: _trim(json['authoredStepId'] ?? json['authored_step_id']),
+      repeatOrdinal: _int(json['repeatOrdinal'] ?? json['repeat_ordinal']),
       paceSecondsPerKm: _double(
         json['paceSecondsPerKm'] ?? json['pace_seconds_per_km'],
       ),
-      paceUnit:
-          json['paceUnit']?.toString() ?? IntervalPaceUnit.secondsPerKm,
+      paceUnit: json['paceUnit']?.toString() ?? IntervalPaceUnit.secondsPerKm,
       state: IntervalWorkState.fromDb(json['state']?.toString()),
     );
   }
@@ -103,6 +134,11 @@ class IntervalWorkResult {
     if (value is double) return value;
     if (value is int) return value.toDouble();
     return double.tryParse(value.toString());
+  }
+
+  static String? _trim(dynamic value) {
+    final result = value?.toString().trim();
+    return result == null || result.isEmpty ? null : result;
   }
 }
 

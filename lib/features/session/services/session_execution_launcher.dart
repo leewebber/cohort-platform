@@ -216,6 +216,12 @@ class SessionExecutionLauncher {
       performanceController = PerformanceCaptureController(
         draft: decision.actuals!,
       );
+      if (structuredRunningExecution != null) {
+        performanceController.bindStructuredRunning(
+          execution: structuredRunningExecution,
+          allowInitialize: false,
+        );
+      }
       final durableDraft = performanceController.draft;
       controller.restoreFromDurableDraft(
         completedBlockIds: durableDraft.blockDrafts
@@ -236,6 +242,12 @@ class SessionExecutionLauncher {
             trainingSessionId: trainingSessionId,
             programmeContext: programmeContext,
           );
+      if (structuredRunningExecution != null) {
+        performanceController.bindStructuredRunning(
+          execution: structuredRunningExecution,
+          allowInitialize: true,
+        );
+      }
       await _saveCoordinator.createOrResumeInProgress(
         controller: performanceController,
       );

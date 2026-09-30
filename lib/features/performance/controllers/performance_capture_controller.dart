@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import '../../../core/utils/database_uuid.dart';
 import '../../programme/models/programme_execution_context.dart';
 import '../../session/models/session_execution_plan.dart';
+import '../../session/models/structured_running_execution.dart';
 import '../models/active_performance_draft.dart';
 import '../models/block_capture_mode_resolver.dart';
+import '../models/interval_work_result.dart';
 import '../models/performance_result_data.dart';
 import '../models/performance_result_type.dart';
+import '../models/performance_snapshot.dart';
 import '../models/training_block_result_status.dart';
 import '../models/training_session_record_status.dart';
 import '../services/circuit_set_sync.dart';
@@ -14,16 +19,16 @@ import '../services/performance_snapshot_builder.dart';
 import '../services/performance_validation_service.dart';
 
 class PerformanceCaptureController {
-  PerformanceCaptureController({
+  factory PerformanceCaptureController({
     required ActivePerformanceDraft draft,
-    PerformanceSnapshotBuilder? snapshotBuilder,
     PerformanceValidationService? validationService,
-  }) : _draft = draft,
-       _snapshotBuilder = snapshotBuilder ?? const PerformanceSnapshotBuilder(),
-       _validationService =
-           validationService ?? const PerformanceValidationService();
+  }) => PerformanceCaptureController._(
+    draft,
+    validationService ?? const PerformanceValidationService(),
+  );
 
-  final PerformanceSnapshotBuilder _snapshotBuilder;
+  PerformanceCaptureController._(this._draft, this._validationService);
+
   final PerformanceValidationService _validationService;
   ActivePerformanceDraft _draft;
 
@@ -107,7 +112,8 @@ class PerformanceCaptureController {
   ) {
     return _updateBlock(sourceBlockId, (block) {
       var next = block.copyWith(resultData: resultData);
-      if (resultData is IntervalResultData && resultData.usesPerIntervalCapture) {
+      if (resultData is IntervalResultData &&
+          resultData.usesPerIntervalCapture) {
         next = next.copyWith(
           exerciseResults: IntervalSetSync.ensureAuthoredRows(
             exercises: next.exerciseResults,
@@ -125,6 +131,133 @@ class PerformanceCaptureController {
       }
       return next;
     });
+  }
+
+  PerformanceCaptureController bindStructuredRunning({
+    required VerifiedStructuredRunningExecution execution,
+    required bool allowInitialize,
+  }) {
+    final expectedSnapshot = StructuredRunningPerformanceSnapshot(
+      workoutId: execution.workout.workoutId,
+      executionMappingSha256: execution.executionMappingSha256,
+      sessionBlockId: execution.sessionBlockId,
+      packageContentHash: execution.frozenSnapshot.packageContentHash,
+      frozenTargetSnapshot: execution.frozenSnapshot,
+      workRepetitions: execution.workRepetitions
+          .map(
+            (item) => StructuredRunningRepetitionSnapshot(
+              workoutId: item.workoutId,
+              sessionBlockId: item.sessionBlockId,
+              authoredStepId: item.authoredStepId,
+              repeatOrdinal: item.repeatOrdinal,
+              workSeconds: item.workSeconds,
+            ),
+          )
+          .toList(growable: false),
+    );
+    final blocks = _draft.blockDrafts
+        .map((block) {
+          if (block.sourceBlockId != execution.sessionBlockId) return block;
+          final existingAuthority = block.blockSnapshot.structuredRunning;
+          final expectedRows = execution.workRepetitions;
+          final existingResult = block.resultData;
+          if (existingAuthority != null) {
+            if (!_sameStructuredAuthority(
+                  existingAuthority,
+                  expectedSnapshot,
+                ) ||
+                existingResult is! IntervalResultData ||
+                !_sameStructuredRows(existingResult.intervals, expectedRows)) {
+              throw const StructuredRunningExecutionException(
+                'structured_actuals_authority_mismatch',
+                'Saved structured running actuals do not match launch authority.',
+              );
+            }
+            return block;
+          }
+          if (!allowInitialize) {
+            throw const StructuredRunningExecutionException(
+              'missing_structured_actuals_authority',
+              'Saved structured running actuals are missing immutable authority.',
+            );
+          }
+          final rows = expectedRows
+              .asMap()
+              .entries
+              .map(
+                (entry) => IntervalWorkResult(
+                  ordinal: entry.key + 1,
+                  workSeconds: entry.value.workSeconds,
+                  workoutId: entry.value.workoutId,
+                  sessionBlockId: entry.value.sessionBlockId,
+                  authoredStepId: entry.value.authoredStepId,
+                  repeatOrdinal: entry.value.repeatOrdinal,
+                ),
+              )
+              .toList(growable: false);
+          return block.copyWith(
+            blockSnapshot: block.blockSnapshot.withStructuredRunning(
+              expectedSnapshot,
+            ),
+            resultType: PerformanceResultType.interval,
+            resultData: IntervalResultData(
+              totalIntervals: rows.length,
+              paceUnit: IntervalPaceUnit.secondsPerKm,
+              comparisonFamily: existingResult is IntervalResultData
+                  ? existingResult.comparisonFamily
+                  : null,
+              intervals: rows,
+            ),
+          );
+        })
+        .toList(growable: false);
+    if (!blocks.any(
+      (block) => block.sourceBlockId == execution.sessionBlockId,
+    )) {
+      throw const StructuredRunningExecutionException(
+        'mapped_block_mismatch',
+        'Structured running actuals require the exact mapped block.',
+      );
+    }
+    _draft = _draft.copyWith(blockDrafts: blocks);
+    return this;
+  }
+
+  static bool _sameStructuredAuthority(
+    StructuredRunningPerformanceSnapshot left,
+    StructuredRunningPerformanceSnapshot right,
+  ) => jsonEncode(left.toJson()) == jsonEncode(right.toJson());
+
+  static bool _sameStructuredRows(
+    List<IntervalWorkResult> rows,
+    List<StructuredRunningWorkRepetition> expected,
+  ) {
+    if (rows.length != expected.length) return false;
+    final byIdentity = <String, StructuredRunningWorkRepetition>{};
+    for (final item in expected) {
+      final key =
+          '${item.workoutId}|${item.sessionBlockId}|'
+          '${item.authoredStepId}|${item.repeatOrdinal}';
+      if (byIdentity.containsKey(key)) return false;
+      byIdentity[key] = item;
+    }
+    final identities = <String>{};
+    for (final row in rows) {
+      final identity =
+          '${row.workoutId}|${row.sessionBlockId}|'
+          '${row.authoredStepId}|${row.repeatOrdinal}';
+      final item = byIdentity[identity];
+      if (item == null ||
+          !identities.add(identity) ||
+          row.workoutId != item.workoutId ||
+          row.sessionBlockId != item.sessionBlockId ||
+          row.authoredStepId != item.authoredStepId ||
+          row.repeatOrdinal != item.repeatOrdinal ||
+          row.workSeconds != item.workSeconds) {
+        return false;
+      }
+    }
+    return identities.length == byIdentity.length;
   }
 
   PerformanceCaptureController updateBlockNote(

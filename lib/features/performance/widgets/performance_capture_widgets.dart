@@ -8,6 +8,7 @@ import '../../../core/widgets/cohort_button.dart';
 import '../../../core/widgets/cohort_card.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/strength_prescription_formatter.dart';
+import '../../../domain/running_workout/running_workout.dart';
 import '../services/strength_exercise_capture_completion.dart';
 import '../../session/models/session_execution_plan.dart';
 import '../../session/presentation/daily_journey_accessibility.dart';
@@ -58,8 +59,7 @@ class PerformanceSaveIndicator extends StatelessWidget {
       PerformanceSaveState.completing => 'Completion pending',
       PerformanceSaveState.saved =>
         pendingRetained ? 'Completion confirmed' : 'Saved',
-      PerformanceSaveState.error =>
-        errorMessage ?? 'Couldn’t save — Retry',
+      PerformanceSaveState.error => errorMessage ?? 'Couldn’t save — Retry',
     };
     if (label.isEmpty) return const SizedBox.shrink();
 
@@ -340,6 +340,7 @@ class _ResultEditorBody extends StatelessWidget {
               blockDraft.resultData as IntervalResultData? ??
               const IntervalResultData(),
           onChanged: onResultChanged,
+          structuredRunning: blockDraft.blockSnapshot.structuredRunning,
         );
       case BlockCaptureMode.endurance:
         return _EnduranceEditor(
@@ -491,9 +492,11 @@ class _IntervalEditor extends StatefulWidget {
     super.key,
     required this.result,
     required this.onChanged,
+    this.structuredRunning,
   });
   final IntervalResultData result;
   final ValueChanged<PerformanceResultData> onChanged;
+  final StructuredRunningPerformanceSnapshot? structuredRunning;
 
   @override
   State<_IntervalEditor> createState() => _IntervalEditorState();
@@ -518,7 +521,7 @@ class _IntervalEditorState extends State<_IntervalEditor> {
 
   void _persistRow(IntervalWorkResult next, {required bool advanceIfRecorded}) {
     widget.onChanged(_result.replaceInterval(next));
-    if (!advanceIfRecorded || !next.state.countsAsCompleted) return;
+    if (!advanceIfRecorded || !next.state.isResolved) return;
     setState(() {
       _openOrdinal = _nextPendingOrdinal(next.ordinal);
       _focusOrdinal = _openOrdinal;
@@ -559,7 +562,9 @@ class _IntervalEditorState extends State<_IntervalEditor> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'INTERVAL PERFORMANCE',
+                        widget.structuredRunning == null
+                            ? 'INTERVAL PERFORMANCE'
+                            : 'REPETITION REVIEW',
                         style: CohortTextStyles.sectionLabel,
                       ),
                       const SizedBox(height: 2),
@@ -589,6 +594,7 @@ class _IntervalEditorState extends State<_IntervalEditor> {
               }),
               onPersist: (next) => _persistRow(next, advanceIfRecorded: false),
               onRecorded: (next) => _persistRow(next, advanceIfRecorded: true),
+              structuredRunning: widget.structuredRunning,
             ),
         ],
       ],
@@ -605,6 +611,7 @@ class _IntervalWorkRow extends StatefulWidget {
     required this.onPersist,
     required this.onRecorded,
     this.autofocus = false,
+    this.structuredRunning,
   });
 
   final IntervalWorkResult row;
@@ -613,6 +620,7 @@ class _IntervalWorkRow extends StatefulWidget {
   final VoidCallback onToggle;
   final ValueChanged<IntervalWorkResult> onPersist;
   final ValueChanged<IntervalWorkResult> onRecorded;
+  final StructuredRunningPerformanceSnapshot? structuredRunning;
 
   @override
   State<_IntervalWorkRow> createState() => _IntervalWorkRowState();
@@ -662,6 +670,13 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
     final workLabel = row.workSeconds >= 60 && row.workSeconds % 60 == 0
         ? '${row.workSeconds ~/ 60}:00 work'
         : '${row.workSeconds}s work';
+    final target = row.authoredStepId == null
+        ? null
+        : widget.structuredRunning?.targetForStep(row.authoredStepId!);
+    final targetLabel = _targetLabel(target);
+    final repetitionLabel = row.repeatOrdinal == null
+        ? 'Interval ${row.ordinal}'
+        : 'Work repetition ${row.repeatOrdinal}';
     return Padding(
       padding: const EdgeInsets.only(bottom: CohortSpacing.sm),
       child: CohortCard(
@@ -673,13 +688,14 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
               child: Semantics(
                 button: true,
                 expanded: widget.expanded,
-                label: 'Interval ${row.ordinal}, $workLabel, $_stateLabel',
+                label:
+                    '$repetitionLabel, $workLabel, target $targetLabel, actual $_stateLabel',
                 hint: widget.expanded ? 'Collapse interval' : 'Expand interval',
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
-                        'Interval ${row.ordinal} · $workLabel',
+                        '$repetitionLabel · $workLabel',
                         style: CohortTextStyles.body,
                       ),
                     ),
@@ -723,10 +739,19 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
                 },
                 onSubmitted: (_) => _tryRecordCompleted(),
               ),
+              if (widget.structuredRunning != null) ...[
+                const SizedBox(height: CohortSpacing.xs),
+                Text('Target · $targetLabel', style: CohortTextStyles.small),
+                Text('Actual · $_stateLabel', style: CohortTextStyles.small),
+              ],
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 controlAffinity: ListTileControlAffinity.leading,
-                title: const Text('Completed'),
+                title: Text(
+                  widget.structuredRunning == null
+                      ? 'Completed'
+                      : 'Completed + actual pace',
+                ),
                 value: row.state.countsAsCompleted,
                 onChanged: (value) {
                   if (value == true) {
@@ -745,7 +770,11 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 controlAffinity: ListTileControlAffinity.leading,
-                title: const Text('Pace unavailable'),
+                title: Text(
+                  widget.structuredRunning == null
+                      ? 'Pace unavailable'
+                      : 'Completed — pace unavailable',
+                ),
                 value: row.state == IntervalWorkState.paceUnavailable,
                 onChanged: (value) {
                   setState(() => _errorText = null);
@@ -763,11 +792,48 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
                   );
                 },
               ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                controlAffinity: ListTileControlAffinity.leading,
+                title: const Text('Skipped'),
+                value: row.state == IntervalWorkState.skipped,
+                onChanged: (value) {
+                  setState(() => _errorText = null);
+                  if (value == true) {
+                    widget.onRecorded(
+                      row.copyWith(
+                        state: IntervalWorkState.skipped,
+                        clearPace: true,
+                      ),
+                    );
+                    return;
+                  }
+                  widget.onPersist(
+                    row.copyWith(state: IntervalWorkState.pending),
+                  );
+                },
+              ),
             ],
           ],
         ),
       ),
     );
+  }
+
+  static String _targetLabel(RunningLaunchTarget? target) {
+    if (target == null) return 'No pace target';
+    if (target.state == RunningLaunchTargetState.intentOnly) {
+      return 'Pace target unavailable';
+    }
+    final faster = target.fasterDisplayMillisecondsPerKilometre;
+    final slower = target.slowerDisplayMillisecondsPerKilometre;
+    if (faster == null || slower == null) return 'Pace target unavailable';
+    String pace(int milliseconds) {
+      final total = (milliseconds / 1000).round();
+      return '${total ~/ 60}:${total.remainder(60).toString().padLeft(2, '0')} /km';
+    }
+
+    return '${pace(faster)}–${pace(slower)}';
   }
 }
 
@@ -1303,7 +1369,8 @@ class _StrengthEditorState extends State<_StrengthEditor> {
                                             )
                                           : exercise.exerciseSnapshot.loadKind,
                                       captureRpe:
-                                          summary?.prescription
+                                          summary
+                                              ?.prescription
                                               ?.requiresRpeCapture ==
                                           true,
                                       onUpdateSet: widget.onUpdateSet,
@@ -1473,16 +1540,16 @@ class _StrengthExerciseAccordionCard extends StatelessWidget {
                   : const SizedBox(width: double.infinity)
             else
               AnimatedSize(
-              duration: const Duration(milliseconds: 180),
-              curve: Curves.easeOutCubic,
-              alignment: Alignment.topCenter,
-              child: isExpanded && expandedBody != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: CohortSpacing.sm),
-                      child: expandedBody,
-                    )
-                  : const SizedBox(width: double.infinity),
-            ),
+                duration: const Duration(milliseconds: 180),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.topCenter,
+                child: isExpanded && expandedBody != null
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: CohortSpacing.sm),
+                        child: expandedBody,
+                      )
+                    : const SizedBox(width: double.infinity),
+              ),
           ],
         ),
       ),
@@ -1584,23 +1651,15 @@ class _ExerciseTargetComparison extends StatelessWidget {
             'Couldn’t load previous performance',
             style: CohortTextStyles.small,
           ),
-          Text(
-            'You can still record this set.',
-            style: CohortTextStyles.small,
-          ),
+          Text('You can still record this set.', style: CohortTextStyles.small),
           JourneyMinTap(
-            child: TextButton(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
+            child: TextButton(onPressed: onRetry, child: const Text('Retry')),
           ),
         ],
       );
     }
     if (hosted != null) {
-      final extra = hosted!.completedSetCount > 0
-          ? hosted!.summaryLine
-          : null;
+      final extra = hosted!.completedSetCount > 0 ? hosted!.summaryLine : null;
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1608,16 +1667,12 @@ class _ExerciseTargetComparison extends StatelessWidget {
             formatCompletedDate(hosted!.performedAt),
             style: CohortTextStyles.small,
           ),
-          if (extra != null)
-            Text(extra, style: CohortTextStyles.small),
+          if (extra != null) Text(extra, style: CohortTextStyles.small),
         ],
       );
     }
     if (history != null && history!.isReady) {
-      return Text(
-        'First recorded performance',
-        style: CohortTextStyles.small,
-      );
+      return Text('First recorded performance', style: CohortTextStyles.small);
     }
     final resolvedPrevious = useProvidedPrevious
         ? previous
@@ -1743,7 +1798,8 @@ class _ExerciseActualRow extends StatelessWidget {
             key: ValueKey('${set.setResultId}-reps'),
             label: DailyJourneyAccessibility.setRepsLabel(set.setNumber),
             value: set.reps?.toString() ?? '',
-            autofocus: set.setNumber == 1 && !set.completed && loadField == null,
+            autofocus:
+                set.setNumber == 1 && !set.completed && loadField == null,
             onChanged: (value) {
               final parsed = int.tryParse(value);
               onUpdateSet(

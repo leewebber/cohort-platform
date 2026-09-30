@@ -57,7 +57,9 @@ class PerformanceValidationService {
       return TrainingSessionRecordStatus.abandoned;
     }
 
-    if (draft.incompleteBlockCount > 0 || draft.skippedBlockCount > 0) {
+    if (draft.incompleteBlockCount > 0 ||
+        draft.skippedBlockCount > 0 ||
+        draft.blockDrafts.any(_hasSkippedStructuredWork)) {
       return TrainingSessionRecordStatus.partiallyCompleted;
     }
 
@@ -117,6 +119,32 @@ class PerformanceValidationService {
               'Completed intervals need a valid pace or Pace unavailable.';
         }
       }
+      final structured = block.blockSnapshot.structuredRunning;
+      if (structured != null) {
+        final expected = {
+          for (final repetition in structured.workRepetitions)
+            '${repetition.workoutId}|${repetition.sessionBlockId}|'
+                    '${repetition.authoredStepId}|${repetition.repeatOrdinal}':
+                repetition,
+        };
+        final seen = <String>{};
+        for (final row in resultData.intervals) {
+          final identity =
+              '${row.workoutId}|${row.sessionBlockId}|'
+              '${row.authoredStepId}|${row.repeatOrdinal}';
+          final authored = expected[identity];
+          if (authored == null ||
+              !seen.add(identity) ||
+              row.workSeconds != authored.workSeconds) {
+            errors['$prefix.structuredIdentity'] =
+                'Running repetition identity does not match the authored workout.';
+          }
+        }
+        if (seen.length != expected.length) {
+          errors['$prefix.structuredIdentity'] =
+              'Every authored work repetition must be recorded exactly once.';
+        }
+      }
     } else if (resultData is DistanceResultData) {
       if (resultData.distance != null && resultData.distance! <= 0) {
         errors['$prefix.distance'] = 'Distance must be greater than zero.';
@@ -166,6 +194,14 @@ class PerformanceValidationService {
         errors['$prefix.amrap'] =
             'Enter performed rounds or reps before completing this block.';
       } else if (resultData is IntervalResultData &&
+          block.blockSnapshot.structuredRunning != null &&
+          resultData.intervals.any(
+            (row) => row.state == IntervalWorkState.pending,
+          )) {
+        errors['$prefix.intervals'] =
+            'Review every work repetition before completing this block.';
+      } else if (resultData is IntervalResultData &&
+          block.blockSnapshot.structuredRunning == null &&
           !resultData.entered &&
           resultData.recordedCount == 0) {
         errors['$prefix.intervals'] =
@@ -255,6 +291,13 @@ class PerformanceValidationService {
     }
   }
 
+  static bool _hasSkippedStructuredWork(BlockPerformanceDraft block) {
+    final data = block.resultData;
+    return block.blockSnapshot.structuredRunning != null &&
+        data is IntervalResultData &&
+        data.intervals.any((row) => row.state == IntervalWorkState.skipped);
+  }
+
   void _validateEmomScore(
     CircuitResultData result,
     String prefix,
@@ -271,8 +314,7 @@ class PerformanceValidationService {
       return;
     }
     if (total != null && completed > total) {
-      errors['$prefix.intervals'] =
-          'Intervals completed cannot exceed $total.';
+      errors['$prefix.intervals'] = 'Intervals completed cannot exceed $total.';
       return;
     }
     if (completed == 0 && !result.endedEarly) {

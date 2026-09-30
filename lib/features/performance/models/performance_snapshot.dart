@@ -1,6 +1,106 @@
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/workout_format.dart';
+import '../../../domain/running_workout/running_workout.dart';
+
+class StructuredRunningRepetitionSnapshot {
+  const StructuredRunningRepetitionSnapshot({
+    required this.workoutId,
+    required this.sessionBlockId,
+    required this.authoredStepId,
+    required this.repeatOrdinal,
+    required this.workSeconds,
+  });
+
+  final String workoutId;
+  final String sessionBlockId;
+  final String authoredStepId;
+  final int repeatOrdinal;
+  final int workSeconds;
+
+  Map<String, dynamic> toJson() => {
+    'workout_id': workoutId,
+    'session_block_id': sessionBlockId,
+    'authored_step_id': authoredStepId,
+    'repeat_ordinal': repeatOrdinal,
+    'work_seconds': workSeconds,
+  };
+
+  factory StructuredRunningRepetitionSnapshot.fromJson(
+    Map<String, dynamic> json,
+  ) => StructuredRunningRepetitionSnapshot(
+    workoutId: json['workout_id']?.toString() ?? '',
+    sessionBlockId: json['session_block_id']?.toString() ?? '',
+    authoredStepId: json['authored_step_id']?.toString() ?? '',
+    repeatOrdinal: BlockPerformanceSnapshot._int(json['repeat_ordinal']) ?? 0,
+    workSeconds: BlockPerformanceSnapshot._int(json['work_seconds']) ?? 0,
+  );
+}
+
+class StructuredRunningPerformanceSnapshot {
+  const StructuredRunningPerformanceSnapshot({
+    required this.workoutId,
+    required this.executionMappingSha256,
+    required this.sessionBlockId,
+    required this.packageContentHash,
+    required this.frozenTargetSnapshot,
+    required this.workRepetitions,
+  });
+
+  final String workoutId;
+  final String executionMappingSha256;
+  final String sessionBlockId;
+  final String packageContentHash;
+  final RunningTargetSnapshotAggregate frozenTargetSnapshot;
+  final List<StructuredRunningRepetitionSnapshot> workRepetitions;
+
+  RunningLaunchTarget? targetForStep(String stepId) {
+    for (final target in frozenTargetSnapshot.targets) {
+      if (target.stepIds.contains(stepId)) return target;
+    }
+    return null;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'schema_version': 1,
+    'workout_id': workoutId,
+    'execution_mapping_sha256': executionMappingSha256,
+    'session_block_id': sessionBlockId,
+    'package_content_hash': packageContentHash,
+    'frozen_target_snapshot': frozenTargetSnapshot.toJson(),
+    'work_repetitions': workRepetitions
+        .map((repetition) => repetition.toJson())
+        .toList(),
+  };
+
+  factory StructuredRunningPerformanceSnapshot.fromJson(
+    Map<String, dynamic> json,
+  ) {
+    final target = json['frozen_target_snapshot'];
+    final repetitions = json['work_repetitions'];
+    if (json['schema_version'] != 1 || target is! Map || repetitions is! List) {
+      throw const FormatException('invalid structured running snapshot');
+    }
+    return StructuredRunningPerformanceSnapshot(
+      workoutId: json['workout_id']?.toString() ?? '',
+      executionMappingSha256:
+          json['execution_mapping_sha256']?.toString() ?? '',
+      sessionBlockId: json['session_block_id']?.toString() ?? '',
+      packageContentHash: json['package_content_hash']?.toString() ?? '',
+      frozenTargetSnapshot: RunningTargetSnapshotAggregate.fromJson(
+        Map<String, dynamic>.from(target),
+      ),
+      workRepetitions: repetitions
+          .whereType<Map>()
+          .map(
+            (item) => StructuredRunningRepetitionSnapshot.fromJson(
+              Map<String, dynamic>.from(item),
+            ),
+          )
+          .toList(growable: false),
+    );
+  }
+}
 
 /// How an exercise should persist and display load.
 enum StrengthActualLoadKind {
@@ -111,6 +211,7 @@ class BlockPerformanceSnapshot {
     this.recoverySeconds,
     this.tracking = const [],
     this.comparisonFamily,
+    this.structuredRunning,
   });
 
   final String sourceBlockId;
@@ -127,6 +228,7 @@ class BlockPerformanceSnapshot {
   final int? recoverySeconds;
   final List<String> tracking;
   final String? comparisonFamily;
+  final StructuredRunningPerformanceSnapshot? structuredRunning;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -144,6 +246,8 @@ class BlockPerformanceSnapshot {
     if (recoverySeconds != null) 'recoverySeconds': recoverySeconds,
     if (tracking.isNotEmpty) 'tracking': tracking,
     if (comparisonFamily != null) 'comparisonFamily': comparisonFamily,
+    if (structuredRunning != null)
+      'structuredRunningV1': structuredRunning!.toJson(),
     'exercises': exercises.map((e) => e.toJson()).toList(),
   };
 
@@ -169,6 +273,11 @@ class BlockPerformanceSnapshot {
       ),
       tracking: _stringList(json['tracking']),
       comparisonFamily: _trim(json['comparisonFamily']),
+      structuredRunning: json['structuredRunningV1'] is Map
+          ? StructuredRunningPerformanceSnapshot.fromJson(
+              Map<String, dynamic>.from(json['structuredRunningV1'] as Map),
+            )
+          : null,
       exercises: exercisesJson is List
           ? exercisesJson
                 .whereType<Map>()
@@ -181,6 +290,26 @@ class BlockPerformanceSnapshot {
           : const [],
     );
   }
+
+  BlockPerformanceSnapshot withStructuredRunning(
+    StructuredRunningPerformanceSnapshot structuredRunning,
+  ) => BlockPerformanceSnapshot(
+    sourceBlockId: sourceBlockId,
+    title: title,
+    blockType: blockType,
+    content: content,
+    workoutFormat: workoutFormat,
+    position: position,
+    timerSummary: timerSummary,
+    coachNotes: coachNotes,
+    exercises: exercises,
+    performanceCaptureMode: performanceCaptureMode,
+    workSeconds: workSeconds,
+    recoverySeconds: recoverySeconds,
+    tracking: tracking,
+    comparisonFamily: comparisonFamily,
+    structuredRunning: structuredRunning,
+  );
 
   static String? _trim(dynamic value) {
     final trimmed = value?.toString().trim();

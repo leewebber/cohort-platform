@@ -107,8 +107,7 @@ class _CompletedSessionResultViewState
               if (projection.lastCorrectedAt case final correctedAt?) ...[
                 const SizedBox(height: CohortSpacing.xs),
                 Semantics(
-                  label:
-                      'Edited ${formatCompletedClock(correctedAt)}',
+                  label: 'Edited ${formatCompletedClock(correctedAt)}',
                   child: Text(
                     'Edited · ${formatCompletedClock(correctedAt)}',
                     style: CohortTextStyles.small,
@@ -178,7 +177,8 @@ class _CompletedSessionResultViewState
       for (final block in draft.blockResults) ...[
         _CorrectionBlockEditor(
           block: block,
-          onResultChanged: (data) => _replaceBlockResult(block.blockResultId, data),
+          onResultChanged: (data) =>
+              _replaceBlockResult(block.blockResultId, data),
           onSetChanged: _replaceSet,
         ),
         const SizedBox(height: CohortSpacing.md),
@@ -305,9 +305,7 @@ class _CompletedSessionResultViewState
                     ? exercise.copyWith(
                         setResults: [
                           for (final set in exercise.setResults)
-                            set.setResultId == setResultId
-                                ? update(set)
-                                : set,
+                            set.setResultId == setResultId ? update(set) : set,
                         ],
                       )
                     : exercise,
@@ -353,9 +351,9 @@ class _CompletedSessionResultViewState
     } catch (error) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.toString())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
     }
   }
 }
@@ -414,7 +412,8 @@ class _CompletedCircuitAccordion extends StatefulWidget {
       _CompletedCircuitAccordionState();
 }
 
-class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> {
+class _CompletedCircuitAccordionState
+    extends State<_CompletedCircuitAccordion> {
   bool _expanded = true;
 
   @override
@@ -529,7 +528,9 @@ class _CompletedCircuitAccordionState extends State<_CompletedCircuitAccordion> 
           for (final round in rounds) ...[
             const SizedBox(height: CohortSpacing.sm),
             Text(
-              circuit.result.format == 'emom' ? 'Minute $round' : 'Round $round',
+              circuit.result.format == 'emom'
+                  ? 'Minute $round'
+                  : 'Round $round',
               style: CohortTextStyles.body,
             ),
             for (final row in grouped[round]!)
@@ -645,8 +646,9 @@ class _CompletedIntervalAccordionState
                 ),
                 child: Semantics(
                   label: [
-                    'Interval ${row.ordinal}',
-                    row.paceLabel,
+                    row.repetitionLabel ?? 'Interval ${row.ordinal}',
+                    if (row.targetLabel != null) 'Target ${row.targetLabel}',
+                    'Actual ${row.paceLabel}',
                     if (row.isFastest) 'Fastest interval',
                     if (row.previousPaceLabel != null)
                       'Previous ${row.previousPaceLabel}',
@@ -654,14 +656,26 @@ class _CompletedIntervalAccordionState
                   child: Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          'Interval ${row.ordinal}',
-                          style: CohortTextStyles.muted,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              row.repetitionLabel ?? 'Interval ${row.ordinal}',
+                              style: CohortTextStyles.muted,
+                            ),
+                            if (row.targetLabel != null)
+                              Text(
+                                'Target · ${row.targetLabel}',
+                                style: CohortTextStyles.small,
+                              ),
+                          ],
                         ),
                       ),
                       Expanded(
                         child: Text(
-                          row.paceLabel,
+                          row.targetLabel == null
+                              ? row.paceLabel
+                              : 'Actual · ${row.paceLabel}',
                           style: CohortTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -891,9 +905,7 @@ class _CompletedExerciseDetail extends StatelessWidget {
           final previous = exercise.previousSets.isEmpty
               ? null
               : _SetHistoryPanel(
-                  key: ValueKey(
-                    'last-time-panel-${exercise.sourceExerciseId}',
-                  ),
+                  key: ValueKey('last-time-panel-${exercise.sourceExerciseId}'),
                   title: 'LAST TIME',
                   subtitle: exercise.previousCompletedAt == null
                       ? null
@@ -1134,7 +1146,10 @@ class _PerformanceMetricTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(metric.title.toUpperCase(), style: CohortTextStyles.tileLabel),
+              Text(
+                metric.title.toUpperCase(),
+                style: CohortTextStyles.tileLabel,
+              ),
               const SizedBox(height: CohortSpacing.xs),
               Text(
                 metric.value,
@@ -1278,8 +1293,8 @@ class _CorrectionIntervalFields extends StatelessWidget {
                 row.copyWith(
                   paceSecondsPerKm: pace,
                   clearPace: pace == null,
-                  state: pace == null &&
-                          row.state == IntervalWorkState.completed
+                  state:
+                      pace == null && row.state == IntervalWorkState.completed
                       ? IntervalWorkState.pending
                       : row.state,
                 ),
@@ -1352,7 +1367,10 @@ class _CorrectionEnduranceFields extends StatelessWidget {
         ),
         if (liveMetric != null) ...[
           const SizedBox(height: CohortSpacing.xs),
-          Text('${liveMetric.label}: ${liveMetric.value}', style: CohortTextStyles.body),
+          Text(
+            '${liveMetric.label}: ${liveMetric.value}',
+            style: CohortTextStyles.body,
+          ),
         ],
         if (warning != null) ...[
           const SizedBox(height: CohortSpacing.sm),
@@ -1361,9 +1379,8 @@ class _CorrectionEnduranceFields extends StatelessWidget {
         PerformanceNumericField(
           label: 'Average heart rate',
           value: result.averageHeartRate?.toString() ?? '',
-          onChanged: (value) => onChanged(
-            result.copyWith(averageHeartRate: int.tryParse(value)),
-          ),
+          onChanged: (value) =>
+              onChanged(result.copyWith(averageHeartRate: int.tryParse(value))),
         ),
       ],
     );

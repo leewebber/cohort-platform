@@ -152,6 +152,7 @@ class BlockPerformanceDraft {
   final List<ExercisePerformanceDraft> exerciseResults;
 
   BlockPerformanceDraft copyWith({
+    BlockPerformanceSnapshot? blockSnapshot,
     TrainingBlockResultStatus? status,
     BlockCaptureMode? captureMode,
     PerformanceResultType? resultType,
@@ -165,7 +166,7 @@ class BlockPerformanceDraft {
     return BlockPerformanceDraft(
       blockResultId: blockResultId,
       sourceBlockId: sourceBlockId,
-      blockSnapshot: blockSnapshot,
+      blockSnapshot: blockSnapshot ?? this.blockSnapshot,
       position: position,
       status: status ?? this.status,
       captureMode: captureMode ?? this.captureMode,

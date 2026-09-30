@@ -64,6 +64,16 @@ class PerformanceCorrectionService {
       throw const PerformanceCorrectionException('invalid_rpe');
     }
     for (final block in draft.blockResults) {
+      final originalBlock = draft.record.blockResults
+          .where((candidate) => candidate.blockResultId == block.blockResultId)
+          .firstOrNull;
+      if (originalBlock == null ||
+          originalBlock.blockSnapshot.toJson().toString() !=
+              block.blockSnapshot.toJson().toString()) {
+        throw const PerformanceCorrectionException(
+          'structured_running_authority_changed',
+        );
+      }
       final data = block.resultData;
       if (data is EnduranceResultData) {
         _validateEndurance(data);
@@ -75,7 +85,9 @@ class PerformanceCorrectionService {
         final seen = <int>{};
         for (final row in data.stations) {
           if (row.ordinal < 1 || seen.contains(row.ordinal)) {
-            throw const PerformanceCorrectionException('invalid_circuit_ordinal');
+            throw const PerformanceCorrectionException(
+              'invalid_circuit_ordinal',
+            );
           }
           seen.add(row.ordinal);
         }
@@ -124,11 +136,41 @@ class PerformanceCorrectionService {
         for (final row in data.intervals) {
           if (prescribed != null &&
               (row.ordinal < 1 || row.ordinal > prescribed)) {
-            throw const PerformanceCorrectionException('invalid_interval_ordinal');
+            throw const PerformanceCorrectionException(
+              'invalid_interval_ordinal',
+            );
           }
           if (row.state == IntervalWorkState.completed &&
               (row.paceSecondsPerKm == null || row.paceSecondsPerKm! <= 0)) {
             throw const PerformanceCorrectionException('invalid_pace');
+          }
+        }
+        final structured = block.blockSnapshot.structuredRunning;
+        if (structured != null) {
+          final expected = {
+            for (final repetition in structured.workRepetitions)
+              '${repetition.workoutId}|${repetition.sessionBlockId}|'
+                      '${repetition.authoredStepId}|${repetition.repeatOrdinal}':
+                  repetition,
+          };
+          final seen = <String>{};
+          for (final row in data.intervals) {
+            final identity =
+                '${row.workoutId}|${row.sessionBlockId}|'
+                '${row.authoredStepId}|${row.repeatOrdinal}';
+            final authored = expected[identity];
+            if (authored == null ||
+                !seen.add(identity) ||
+                row.workSeconds != authored.workSeconds) {
+              throw const PerformanceCorrectionException(
+                'structured_running_identity_mismatch',
+              );
+            }
+          }
+          if (seen.length != expected.length) {
+            throw const PerformanceCorrectionException(
+              'structured_running_identity_mismatch',
+            );
           }
         }
       }
@@ -221,7 +263,10 @@ class PerformanceCorrectionService {
     return false;
   }
 
-  static bool _setChanged(TrainingSessionRecord original, TrainingSetResult set) {
+  static bool _setChanged(
+    TrainingSessionRecord original,
+    TrainingSetResult set,
+  ) {
     for (final block in original.blockResults) {
       for (final exercise in block.exerciseResults) {
         for (final current in exercise.setResults) {
