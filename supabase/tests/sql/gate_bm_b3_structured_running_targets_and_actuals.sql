@@ -25,6 +25,7 @@ DECLARE
   v_failed BOOLEAN;
   v_count INT;
   v_has_exec BOOLEAN;
+  v_status TEXT;
 BEGIN
   INSERT INTO auth.users (
     instance_id,id,aud,role,email,encrypted_password,email_confirmed_at,
@@ -180,6 +181,43 @@ BEGIN
   );
 
   v_failed := FALSE;
+  PERFORM set_config('request.jwt.claim.sub', v_skip_athlete::TEXT, TRUE);
+  PERFORM set_config('role', 'authenticated', TRUE);
+  BEGIN
+    PERFORM public.correct_completed_performance_record(jsonb_build_object(
+      'record_id', v_record,
+      'blocks', jsonb_build_array(jsonb_build_object(
+        'block_result_id', v_block_result,
+        'result_data', jsonb_set(
+          v_result,
+          '{intervals,0,paceSecondsPerKm}',
+          '242'::JSONB
+        )
+      )),
+      'sets', '[]'::JSONB
+    ));
+  EXCEPTION WHEN insufficient_privilege THEN
+    v_failed := TRUE;
+  END;
+  PERFORM set_config('role', 'postgres', TRUE);
+  PERFORM sprint12_record(
+    'BM', 'cross_athlete_correction_rejected', 'true', v_failed::TEXT,
+    NULL, v_failed, NULL
+  );
+
+  SELECT block_snapshot INTO v_before
+  FROM public.training_block_results WHERE block_result_id = v_block_result;
+  UPDATE public.training_session_records
+  SET status = 'completed'
+  WHERE record_id = v_record;
+  SELECT block_snapshot INTO v_after
+  FROM public.training_block_results WHERE block_result_id = v_block_result;
+  PERFORM sprint12_record(
+    'BM', 'terminal_retry_is_idempotent', 'true',
+    (v_before = v_after)::TEXT, NULL, v_before = v_after, NULL
+  );
+
+  v_failed := FALSE;
   BEGIN
     UPDATE public.training_block_results
     SET block_snapshot = jsonb_set(
@@ -193,6 +231,23 @@ BEGIN
   END;
   PERFORM sprint12_record(
     'BM', 'target_mutation_rejected', 'true', v_failed::TEXT,
+    NULL, v_failed, NULL
+  );
+
+  v_failed := FALSE;
+  BEGIN
+    UPDATE public.training_block_results
+    SET result_data = jsonb_set(
+      result_data,
+      '{intervals,0,ordinal}',
+      '2'::JSONB
+    )
+    WHERE block_result_id = v_block_result;
+  EXCEPTION WHEN integrity_constraint_violation THEN
+    v_failed := TRUE;
+  END;
+  PERFORM sprint12_record(
+    'BM', 'malformed_actual_ordinal_rejected', 'true', v_failed::TEXT,
     NULL, v_failed, NULL
   );
 
@@ -241,15 +296,17 @@ BEGIN
   EXCEPTION WHEN integrity_constraint_violation THEN
     v_failed := TRUE;
   END;
+  SELECT status INTO v_status
+  FROM public.training_session_records WHERE record_id = v_record;
   UPDATE public.training_session_records
   SET status = 'partially_completed', completed_at = NOW()
   WHERE record_id = v_record;
   PERFORM sprint12_record(
     'BM', 'skipped_requires_partial_session', 'true|partially_completed',
-    v_failed::TEXT || '|' || (
+    (v_failed AND v_status = 'in_progress')::TEXT || '|' || (
       SELECT status FROM public.training_session_records WHERE record_id = v_record
     ), NULL,
-    v_failed AND (
+    v_failed AND v_status = 'in_progress' AND (
       SELECT status = 'partially_completed'
       FROM public.training_session_records WHERE record_id = v_record
     ), NULL
@@ -292,6 +349,17 @@ BEGIN
   ) INTO v_has_exec;
   PERFORM sprint12_record(
     'BM', 'athlete_helpers_denied', 'false', v_has_exec::TEXT,
+    NULL, NOT v_has_exec, NULL
+  );
+
+  SELECT bool_or(has_function_privilege(
+    role_name,
+    'public.cohort_b3_running_completion_authority(bigint,uuid)',
+    'EXECUTE'
+  )) INTO v_has_exec
+  FROM unnest(ARRAY['anon', 'authenticated', 'service_role']) role_name;
+  PERFORM sprint12_record(
+    'BM', 'all_api_roles_denied_helpers', 'false', v_has_exec::TEXT,
     NULL, NOT v_has_exec, NULL
   );
 END $$;

@@ -189,6 +189,7 @@ DECLARE
   v_seen TEXT[] := ARRAY[]::TEXT[];
   v_state TEXT;
   v_pace NUMERIC;
+  v_completed INT := 0;
 BEGIN
   IF p_result IS NULL OR jsonb_typeof(p_result) <> 'object'
      OR p_result->>'resultType' IS DISTINCT FROM 'interval'
@@ -197,7 +198,9 @@ BEGIN
      OR jsonb_typeof(p_result->'intervals') <> 'array'
      OR jsonb_typeof(p_authority->'work_repetitions') <> 'array'
      OR jsonb_array_length(p_result->'intervals')
-        <> jsonb_array_length(p_authority->'work_repetitions') THEN
+        <> jsonb_array_length(p_authority->'work_repetitions')
+     OR NULLIF(p_result->>'totalIntervals', '')::INT
+        IS DISTINCT FROM jsonb_array_length(p_authority->'work_repetitions') THEN
     RETURN FALSE;
   END IF;
 
@@ -223,6 +226,8 @@ BEGIN
     IF v_expected IS NULL
        OR (v_expected->>'work_seconds')::INT
           IS DISTINCT FROM NULLIF(v_row->>'workSeconds', '')::INT
+       OR (v_expected->>'repeat_ordinal')::INT
+          IS DISTINCT FROM NULLIF(v_row->>'ordinal', '')::INT
        OR COALESCE(v_row->>'paceUnit', 'sec_per_km')
           NOT IN ('sec_per_km', 's/km', 'sec/km') THEN
       RETURN FALSE;
@@ -235,10 +240,15 @@ BEGIN
        OR (v_state <> 'completed' AND v_pace IS NOT NULL) THEN
       RETURN FALSE;
     END IF;
+    IF v_state IN ('completed', 'pace_unavailable') THEN
+      v_completed := v_completed + 1;
+    END IF;
   END LOOP;
   RETURN cardinality(v_seen) = jsonb_array_length(
-    p_authority->'work_repetitions'
-  );
+      p_authority->'work_repetitions'
+    )
+    AND NULLIF(p_result->>'intervalsCompleted', '')::INT
+      IS NOT DISTINCT FROM v_completed;
 EXCEPTION WHEN others THEN
   RETURN FALSE;
 END;

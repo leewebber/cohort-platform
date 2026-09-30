@@ -233,27 +233,31 @@ class PerformanceCaptureController {
     List<StructuredRunningWorkRepetition> expected,
   ) {
     if (rows.length != expected.length) return false;
-    final byIdentity = <String, StructuredRunningWorkRepetition>{};
-    for (final item in expected) {
+    final byIdentity =
+        <String, ({StructuredRunningWorkRepetition item, int ordinal})>{};
+    for (var index = 0; index < expected.length; index++) {
+      final item = expected[index];
       final key =
           '${item.workoutId}|${item.sessionBlockId}|'
           '${item.authoredStepId}|${item.repeatOrdinal}';
       if (byIdentity.containsKey(key)) return false;
-      byIdentity[key] = item;
+      byIdentity[key] = (item: item, ordinal: index + 1);
     }
     final identities = <String>{};
     for (final row in rows) {
       final identity =
           '${row.workoutId}|${row.sessionBlockId}|'
           '${row.authoredStepId}|${row.repeatOrdinal}';
-      final item = byIdentity[identity];
-      if (item == null ||
+      final expectedRow = byIdentity[identity];
+      if (expectedRow == null ||
           !identities.add(identity) ||
-          row.workoutId != item.workoutId ||
-          row.sessionBlockId != item.sessionBlockId ||
-          row.authoredStepId != item.authoredStepId ||
-          row.repeatOrdinal != item.repeatOrdinal ||
-          row.workSeconds != item.workSeconds) {
+          row.workoutId != expectedRow.item.workoutId ||
+          row.sessionBlockId != expectedRow.item.sessionBlockId ||
+          row.authoredStepId != expectedRow.item.authoredStepId ||
+          row.repeatOrdinal != expectedRow.item.repeatOrdinal ||
+          row.ordinal != expectedRow.ordinal ||
+          row.workSeconds != expectedRow.item.workSeconds ||
+          !IntervalPaceUnit.isSupported(row.paceUnit)) {
         return false;
       }
     }

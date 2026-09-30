@@ -69,7 +69,7 @@ void main() {
     },
   );
 
-  test('pending, duplicate and stale structured actuals fail closed', () {
+  test('pending, duplicate, stale and malformed actuals fail closed', () {
     final fixture = _controlledFixture();
     final controller =
         PerformanceCaptureController.initializeFromExecutionPlan(
@@ -113,6 +113,44 @@ void main() {
           'structured_actuals_authority_mismatch',
         ),
       ),
+    );
+
+    final malformedOrdinal = result.replaceInterval(
+      result.intervals[1].copyWith(ordinal: 1),
+    );
+    expect(
+      () =>
+          PerformanceCaptureController(
+            draft: controller.draft.copyWith(
+              blockDrafts: [block.copyWith(resultData: malformedOrdinal)],
+            ),
+          ).bindStructuredRunning(
+            execution: fixture.execution,
+            allowInitialize: false,
+          ),
+      throwsA(
+        isA<StructuredRunningExecutionException>().having(
+          (error) => error.code,
+          'code',
+          'structured_actuals_authority_mismatch',
+        ),
+      ),
+    );
+
+    final malformedUnit = result.replaceInterval(
+      result.intervals[1].copyWith(paceUnit: 'minutes_per_mile'),
+    );
+    expect(
+      () =>
+          PerformanceCaptureController(
+            draft: controller.draft.copyWith(
+              blockDrafts: [block.copyWith(resultData: malformedUnit)],
+            ),
+          ).bindStructuredRunning(
+            execution: fixture.execution,
+            allowInitialize: false,
+          ),
+      throwsA(isA<StructuredRunningExecutionException>()),
     );
   });
 

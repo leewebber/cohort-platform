@@ -118,14 +118,21 @@ class PerformanceValidationService {
           errors['$prefix.interval:${row.ordinal}'] =
               'Completed intervals need a valid pace or Pace unavailable.';
         }
+        if (!IntervalPaceUnit.isSupported(row.paceUnit)) {
+          errors['$prefix.interval:${row.ordinal}.paceUnit'] =
+              'Unsupported interval pace unit.';
+        }
       }
       final structured = block.blockSnapshot.structuredRunning;
       if (structured != null) {
         final expected = {
-          for (final repetition in structured.workRepetitions)
-            '${repetition.workoutId}|${repetition.sessionBlockId}|'
-                    '${repetition.authoredStepId}|${repetition.repeatOrdinal}':
-                repetition,
+          for (final entry in structured.workRepetitions.indexed)
+            if (entry case (final index, final repetition))
+              '${repetition.workoutId}|${repetition.sessionBlockId}|'
+                  '${repetition.authoredStepId}|${repetition.repeatOrdinal}': (
+                repetition: repetition,
+                ordinal: index + 1,
+              ),
         };
         final seen = <String>{};
         for (final row in resultData.intervals) {
@@ -135,7 +142,9 @@ class PerformanceValidationService {
           final authored = expected[identity];
           if (authored == null ||
               !seen.add(identity) ||
-              row.workSeconds != authored.workSeconds) {
+              row.ordinal != authored.ordinal ||
+              row.workSeconds != authored.repetition.workSeconds ||
+              !IntervalPaceUnit.isSupported(row.paceUnit)) {
             errors['$prefix.structuredIdentity'] =
                 'Running repetition identity does not match the authored workout.';
           }
