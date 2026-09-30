@@ -106,63 +106,73 @@ class _StructuredRunningTimerScreenState
           ),
         ),
         body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    _roleLabel(step.role),
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    _positionLabel(step.role, cursor.repeatOrdinal),
-                    key: const ValueKey('structured-running-position'),
-                    textAlign: TextAlign.center,
-                  ),
-                  if (widget.execution.authoredGuidance
-                      case final guidance?) ...[
-                    const SizedBox(height: 12),
-                    Text(
-                      guidance,
-                      key: const ValueKey('structured-running-guidance'),
-                      textAlign: TextAlign.center,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final minimumHeight = constraints.maxHeight > 48
+                  ? constraints.maxHeight - 48
+                  : 0.0;
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: minimumHeight),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _roleLabel(step.role),
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          _positionLabel(step.role, cursor.repeatOrdinal),
+                          key: const ValueKey('structured-running-position'),
+                          textAlign: TextAlign.center,
+                        ),
+                        if (widget.execution.authoredGuidance
+                            case final guidance?) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            guidance,
+                            key: const ValueKey('structured-running-guidance'),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        const SizedBox(height: 12),
+                        ..._targetWidgets(step: step, target: target),
+                        const SizedBox(height: 24),
+                        Text(
+                          cursor.isFinished ? 'Timer finished' : '$seconds s',
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton(
+                          onPressed: cursor.isFinished
+                              ? null
+                              : cursor.isPaused
+                              ? _controller.start
+                              : _controller.pause,
+                          child: Text(cursor.isPaused ? 'Start' : 'Pause'),
+                        ),
+                        if (cursor.isFinished) ...[
+                          const SizedBox(height: 12),
+                          const Text(
+                            'Timer finished. Record evidence before completing the block.',
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          FilledButton(
+                            key: const ValueKey('review-running-repetitions'),
+                            onPressed: _isExiting ? null : _exit,
+                            child: const Text('Review repetitions'),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                  const SizedBox(height: 12),
-                  ..._targetWidgets(step: step, target: target),
-                  const SizedBox(height: 24),
-                  Text(
-                    cursor.isFinished ? 'Timer finished' : '$seconds s',
-                    style: Theme.of(context).textTheme.displayMedium,
                   ),
-                  const SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: cursor.isFinished
-                        ? null
-                        : cursor.isPaused
-                        ? _controller.start
-                        : _controller.pause,
-                    child: Text(cursor.isPaused ? 'Start' : 'Pause'),
-                  ),
-                  if (cursor.isFinished) ...[
-                    const SizedBox(height: 12),
-                    const Text(
-                      'Timer finished. Record evidence before completing the block.',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton(
-                      key: const ValueKey('review-running-repetitions'),
-                      onPressed: _isExiting ? null : _exit,
-                      child: const Text('Review repetitions'),
-                    ),
-                  ],
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

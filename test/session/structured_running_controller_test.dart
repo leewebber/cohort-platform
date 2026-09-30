@@ -300,6 +300,10 @@ void main() {
   testWidgets('timer shows authored guidance and one intent-only message', (
     tester,
   ) async {
+    tester.view.physicalSize = const Size(390, 520);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
       MaterialApp(
         home: StructuredRunningTimerScreen(
