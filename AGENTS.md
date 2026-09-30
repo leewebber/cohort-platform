@@ -170,12 +170,19 @@ Programme Studio Stage 1 is **COMPLETE**. Structured running B1 is
 infrastructure is **COMPLETE**. Its implementation is integrated on
 `origin/main` at `a275223`, and all four hosted migrations
 (`20260927120000` through `20260927150000`) are applied on Cohort Field Manual.
+Structured Running B3 slice 1 is integrated and its migration is applied on
+Cohort Field Manual through `20260928120000`. B3 slice 2 is integrated on
+`origin/main` at `a83583ef`. B3 slice 3 is implemented locally on
+`codex/b3-structured-running-slice-3`; its migration is not applied on any
+hosted project, it has no programme adoption, and it awaits founder visual and
+integration review.
 Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](docs/checkpoints/RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 [`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
 [`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md),
+[`docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md`](docs/checkpoints/STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md),
 [`docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md`](docs/checkpoints/PRIVATE_PROGRAMME_INFRASTRUCTURE_HANDOFF.md),
 [`docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md`](docs/checkpoints/BALI_HYBRID_BASE_PROGRAMME_HANDOFF.md),
 [`docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md`](docs/checkpoints/LEE_BALI_HYBRID_BASE_HANDOFF.md),
@@ -191,7 +198,7 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `RUNNING_WORKOUT_B1=COMPLETE`,
 `RUNNING_PACE_FOUNDATION_B2_HOSTED_MIGRATIONS_APPLIED=true`,
 `APPROVED_PERCENTAGE_BANDS=false`,
-`ATHLETE_PACE_TARGET_UI=false`,
+`ATHLETE_PACE_TARGET_UI=IMPLEMENTED_LOCAL_VERIFIED_V2_ONLY`,
 `COHORT_5K_TEST_INGESTION=BLOCKED`,
 `RUNNING_DEVICE_EXPORT=false`,
 `RUNNING_TARGET_OVERRIDES=false`,
@@ -199,13 +206,16 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `B3_STARTED=true`,
 `STRUCTURED_RUNNING_B3_SLICE_1=INTEGRATED`,
 `B3_HOSTED_MIGRATION_APPLIED=true`,
-`STRUCTURED_RUNNING_B3_SLICE_2=IMPLEMENTED_LOCAL`,
-`B3_ATHLETE_UI=LOCAL_TIME_ONLY`,
-`B3_STRUCTURED_RUNNER=IMPLEMENTED_LOCAL_TIME_ONLY`,
+`B3_SLICE_1_HOSTED_MIGRATION_APPLIED=true`,
+`STRUCTURED_RUNNING_B3_SLICE_2=INTEGRATED`,
+`STRUCTURED_RUNNING_B3_SLICE_3=IMPLEMENTED_LOCAL`,
+`B3_SLICE_3_HOSTED_MIGRATION_APPLIED=false`,
+`B3_ATHLETE_UI=LOCAL_TARGETS_AND_ACTUALS_VERIFIED_V2_ONLY`,
+`B3_STRUCTURED_RUNNER=IMPLEMENTED_LOCAL_TIME_TARGETS_AND_ACTUALS`,
 `B3_PROGRAMME_ADOPTION=false`,
 `B3_DISTANCE_EXECUTION=false`,
 `B3_MANUAL_LAP_EXECUTION=false`,
-`B3_SLICE_3_STARTED=false`,
+`B3_SLICE_3_STARTED=true`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
