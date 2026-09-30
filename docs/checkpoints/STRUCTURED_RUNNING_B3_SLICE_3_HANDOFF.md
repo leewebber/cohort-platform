@@ -84,3 +84,53 @@ review choices, Review Session target/actual separation, and completed History.
 No programme currently adopts this local feature. Do not apply the migration,
 publish a programme or fixture, change Lee's assignment, build the phone app,
 or begin distance/manual-lap/Garmin work without separate approval.
+
+## Independent review follow-up — 2026-09-30
+
+The founder-review pass started from `79109e9f1ee6722e4bc20adc0172a7d2227d4354`
+against `origin/main` at `a83583ef6e618ccaee7131e28d6cd0f087ad881a`.
+It confirmed three defects and fixed each in a separate follow-up commit:
+
+- `801772c` removes authored technical step identities from the athlete timer
+  while retaining them in the typed execution binding.
+- `377ffc3` rejects malformed actual rows whose display ordinal, total count,
+  recorded count, or pace unit disagrees with the exact authored repetition.
+  The SQL History matcher now enforces the same constraints.
+- `c8a3fbb` makes the timer vertically scrollable on short displays so the
+  complete pace-unavailable guidance cannot overflow.
+
+`ab7fe83` adds a local-only founder preview entry point and widget coverage.
+It is not imported by the production application and does not publish or
+assign programme content. While the local preview process is running, review
+it at `http://127.0.0.1:4196/` and use the scenario selector to inspect the
+calculated work target, recovery isolation, repetition capture, Review
+Session, History and correction, pace unavailable, and skipped work states.
+
+The reviewed migration SHA-256 is now:
+
+`d0c52cb54dec13bbf40aeef9754f144d202bd6117c8e3ccfa0f572abac6383bf`
+
+The expanded disposable database gate passed mapping 5/5 and target/actual
+authority 11/11. In addition to the original cases, it proves malformed
+ordinal rejection, cross-athlete correction rejection, exact helper grant
+denial, transaction rollback, and idempotent terminal retry. The migration
+remains local only.
+
+Review verification:
+
+- Focused production execution, target/actual, legacy timer, Bali, Apollo,
+  unattached-v2, and preview matrix: 123 passed.
+- Canonical Plan Package suite: 37 passed.
+- Phase 2 consolidation safety gate: 6/6 groups passed.
+- Changed-file Flutter analysis: no issues.
+- Full authoritative `flutter test`: 3,445 passed with 6 expected
+  environment-gated skips.
+- `git diff --check origin/main...HEAD`: passed before this documentation-only
+  addendum; rerun at the final review HEAD.
+
+No further defect was found in exact mapping ownership, frozen B2 target
+preservation, pending/skipped completion, correction immutability, trigger
+rollback, retry idempotency, helper grants, or v1/Bali/Apollo isolation.
+Completed-session corrections remain intentionally limited to completed
+records by the existing correction RPC; partially completed/skipped History
+is reviewable but not editable in this slice.
