@@ -95,7 +95,8 @@ activate a past-dated fixture and treat missed occurrences as device evidence.
 
 This plan is not yet authorised to run.
 
-1. Reconfirm a clean approved commit, the three identities above, Cohort Field
+1. Reconfirm a clean approved commit, the artifact identities and hashes above,
+   Cohort Field
    Manual project `otnhhdxstdnwccehacku`, health, ledger through
    `20260929120000`, and zero pending migrations in a disposable linked
    workdir.
@@ -154,8 +155,8 @@ completion mechanism.
    block, four slots, workout/step mappings, test-only policies, authorised
    date/timezone, and no assignment or benchmark write. A returned
    `already_published` still requires every SELECT-only object check.
-4. **Build and install after separate approval.** Use an external secret-free
-   path from Git containing the development environment, Field Manual HTTPS URL,
+4. **Build and install after separate approval.** Use an external config path
+   outside Git containing the development environment, Field Manual HTTPS URL,
    and anonymous client key. From the integrated SHA run
    `./tool/release/build_app.sh --env development --target ios --config
    <absolute-external-config.json> --enable-internal-tools`. Require the exact
