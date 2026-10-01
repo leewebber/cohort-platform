@@ -109,8 +109,26 @@ void main() {
         )..writeAsStringSync(
           '{"COHORT_BUILD_ENV":"production",'
           '"COHORT_SUPABASE_URL":"https://otnhhdxstdnwccehacku.supabase.co",'
-          '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}"}',
+          '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}",'
+          '"ENABLE_INTERNAL_TOOLS":true}',
         );
+    final injectionIgnored = await Process.run('bash', [
+      script.path,
+      '--env',
+      'production',
+      '--target',
+      'ios',
+      '--config',
+      productionConfig.path,
+      '--dry-run',
+    ]);
+    expect(
+      injectionIgnored.exitCode,
+      0,
+      reason: injectionIgnored.stderr.toString(),
+    );
+    expect(injectionIgnored.stdout, contains('INTERNAL_TOOLS=disabled'));
+
     final refused = await Process.run('bash', [
       script.path,
       '--env',

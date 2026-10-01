@@ -14,7 +14,9 @@ DECLARE
   v_athlete UUID := 'b3d00000-0000-4000-8000-000000000003';
   v_version UUID := 'b3d00000-0000-4000-8000-000000000001';
   v_old_version UUID := 'b3d00000-0000-4000-8000-000000000004';
+  v_old_record UUID := 'b3d00000-0000-4000-8000-000000000006';
   v_old_assignment UUID;
+  v_old_slot UUID;
   v_assignment UUID;
   v_occurrence UUID;
   v_unavailable_occurrence UUID;
@@ -26,6 +28,7 @@ DECLARE
   v_snapshot JSONB;
   v_graphs JSONB;
   v_old_occurrences INT;
+  v_history_digest TEXT;
   v_today DATE := (NOW() AT TIME ZONE 'Asia/Makassar')::DATE;
 BEGIN
   SELECT canonical_text INTO STRICT v_canonical_text FROM gate_bn_canonical_fixture;
@@ -156,6 +159,26 @@ BEGIN
   PERFORM set_config('role', 'postgres', TRUE);
   SELECT count(*) INTO v_old_occurrences
   FROM public.programme_schedule_occurrences WHERE assignment_id = v_old_assignment;
+  SELECT session_slot_id INTO STRICT v_old_slot
+  FROM public.programme_schedule_occurrences
+  WHERE assignment_id = v_old_assignment;
+  INSERT INTO public.training_session_records(
+    record_id, athlete_id, source_protocol_id, programme_id, assignment_id,
+    programme_session_id, status, session_snapshot, started_at, completed_at,
+    athlete_note
+  ) VALUES (
+    v_old_record, v_athlete::TEXT, 'PROT-GATE-BN-PRIOR-R1',
+    v_old_version::TEXT, v_old_assignment, v_old_slot, 'completed',
+    '{"gate":"bn","preserved":true}'::JSONB, NOW() - INTERVAL '5 minutes',
+    NOW(), 'historical evidence must survive replacement'
+  );
+  SELECT md5(string_agg(
+    record_id::TEXT || '|' || status || '|' || session_snapshot::TEXT || '|' ||
+      COALESCE(athlete_note, ''),
+    ',' ORDER BY record_id
+  )) INTO STRICT v_history_digest
+  FROM public.training_session_records
+  WHERE assignment_id = v_old_assignment;
 
   PERFORM set_config('role', 'authenticated', TRUE);
   v_result := public.enrol_athlete_in_private_programme_version(
@@ -164,19 +187,58 @@ BEGIN
   v_assignment := (v_result->>'enrolment_id')::UUID;
   PERFORM set_config('role', 'postgres', TRUE);
   PERFORM sprint12_record(
-    'BN', 'supported_replace_preserves_prior_assignment', 'enrolled|reassigned|4',
+    'BN', 'supported_replace_preserves_prior_assignment_and_evidence',
+    'enrolled|reassigned|4|evidence-identical',
     COALESCE(v_result->>'status', '') || '|' ||
       (SELECT status FROM public.programme_assignments WHERE id = v_old_assignment) || '|' ||
-      (SELECT count(*) FROM public.programme_schedule_occurrences WHERE assignment_id = v_assignment)::TEXT,
+      (SELECT count(*) FROM public.programme_schedule_occurrences WHERE assignment_id = v_assignment)::TEXT || '|' ||
+      CASE WHEN v_history_digest = (
+        SELECT md5(string_agg(
+          record_id::TEXT || '|' || status || '|' || session_snapshot::TEXT || '|' ||
+            COALESCE(athlete_note, ''),
+          ',' ORDER BY record_id
+        ))
+        FROM public.training_session_records
+        WHERE assignment_id = v_old_assignment
+      ) THEN 'evidence-identical' ELSE 'evidence-changed' END,
     (SELECT count(*) FROM public.programme_schedule_occurrences
-       WHERE assignment_id = v_old_assignment) = v_old_occurrences,
+       WHERE assignment_id = v_old_assignment) = v_old_occurrences
+      AND EXISTS (
+        SELECT 1 FROM public.training_session_records
+        WHERE record_id = v_old_record AND assignment_id = v_old_assignment
+      ),
     v_result->>'status' = 'enrolled'
       AND v_result->>'replaced_enrolment_id' = v_old_assignment::TEXT
       AND (SELECT status FROM public.programme_assignments WHERE id = v_old_assignment) = 'reassigned'
       AND (SELECT count(*) FROM public.programme_schedule_occurrences WHERE assignment_id = v_assignment) = 4
       AND (SELECT count(*) FROM public.programme_schedule_occurrences
-           WHERE assignment_id = v_old_assignment) = v_old_occurrences,
+           WHERE assignment_id = v_old_assignment) = v_old_occurrences
+      AND v_history_digest = (
+        SELECT md5(string_agg(
+          record_id::TEXT || '|' || status || '|' || session_snapshot::TEXT || '|' ||
+            COALESCE(athlete_note, ''),
+          ',' ORDER BY record_id
+        ))
+        FROM public.training_session_records
+        WHERE assignment_id = v_old_assignment
+      ),
     v_result::TEXT
+  );
+  PERFORM sprint12_record(
+    'BN', 'four_occurrences_are_exercisable_on_activation_date',
+    '4|1|' || v_today::TEXT,
+    (SELECT count(*)::TEXT || '|' || count(DISTINCT scheduled_date)::TEXT || '|' ||
+       min(scheduled_date)::TEXT
+     FROM public.programme_schedule_occurrences
+     WHERE assignment_id = v_assignment),
+    NULL,
+    (SELECT count(*) = 4
+       AND count(DISTINCT scheduled_date) = 1
+       AND min(scheduled_date) = v_today
+       AND max(scheduled_date) = v_today
+     FROM public.programme_schedule_occurrences
+     WHERE assignment_id = v_assignment),
+    NULL
   );
 
   PERFORM set_config('role', 'authenticated', TRUE);
