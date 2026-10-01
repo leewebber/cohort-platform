@@ -12,11 +12,15 @@ class StructuredRunningTimerScreen extends StatefulWidget {
     required this.execution,
     required this.onCheckpoint,
     this.initialCursor,
+    this.elapsedTime,
+    this.wallClock,
   });
 
   final VerifiedStructuredRunningExecution execution;
   final StructuredRunningCursor? initialCursor;
   final Future<bool> Function(StructuredRunningCursor cursor) onCheckpoint;
+  final StructuredRunningElapsedTime? elapsedTime;
+  final StructuredRunningWallClock? wallClock;
 
   @override
   State<StructuredRunningTimerScreen> createState() =>
@@ -43,11 +47,15 @@ class _StructuredRunningTimerScreenState
         ? StructuredRunningController.fresh(
             execution: widget.execution,
             onCheckpoint: checkpoint,
+            elapsedTime: widget.elapsedTime,
+            wallClock: widget.wallClock,
           )
         : StructuredRunningController.restore(
             execution: widget.execution,
             cursor: initial,
             onCheckpoint: checkpoint,
+            elapsedTime: widget.elapsedTime,
+            wallClock: widget.wallClock,
           );
   }
 
@@ -57,6 +65,10 @@ class _StructuredRunningTimerScreenState
         state == AppLifecycleState.hidden ||
         state == AppLifecycleState.paused) {
       _controller.background();
+      return;
+    }
+    if (state == AppLifecycleState.resumed) {
+      _controller.resumeFromBackground();
     }
   }
 

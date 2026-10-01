@@ -282,9 +282,10 @@ class StructuredRunningCursor {
     required this.isPaused,
     required this.manualEvidenceState,
     required this.isFinished,
+    this.lastReconciledAtUtc,
   });
 
-  static const currentSchemaVersion = 1;
+  static const currentSchemaVersion = 2;
 
   final int schemaVersion;
   final String workoutId;
@@ -297,6 +298,7 @@ class StructuredRunningCursor {
   final bool isPaused;
   final StructuredRunningManualEvidenceState manualEvidenceState;
   final bool isFinished;
+  final DateTime? lastReconciledAtUtc;
 
   Map<String, dynamic> toJson() => {
     'schema_version': schemaVersion,
@@ -310,10 +312,12 @@ class StructuredRunningCursor {
     'is_paused': isPaused,
     'manual_evidence_state': manualEvidenceState.name,
     'is_finished': isFinished,
+    if (schemaVersion >= 2)
+      'last_reconciled_at_utc': lastReconciledAtUtc?.toIso8601String(),
   };
 
   factory StructuredRunningCursor.fromJson(Map<String, dynamic> json) {
-    const keys = {
+    const commonKeys = {
       'schema_version',
       'workout_id',
       'execution_mapping_sha256',
@@ -326,9 +330,16 @@ class StructuredRunningCursor {
       'manual_evidence_state',
       'is_finished',
     };
-    if (json.keys.toSet().difference(keys).isNotEmpty ||
-        !json.keys.toSet().containsAll(keys) ||
-        json['schema_version'] != currentSchemaVersion) {
+    final schemaVersion = json['schema_version'];
+    if (schemaVersion != 1 && schemaVersion != currentSchemaVersion) {
+      throw const FormatException('unsupported structured running cursor');
+    }
+    final allowedKeys = {
+      ...commonKeys,
+      if (schemaVersion == currentSchemaVersion) 'last_reconciled_at_utc',
+    };
+    if (json.keys.toSet().difference(allowedKeys).isNotEmpty ||
+        !json.keys.toSet().containsAll(allowedKeys)) {
       throw const FormatException('unsupported structured running cursor');
     }
     final phase = StructuredRunningPhase.values
@@ -339,15 +350,38 @@ class StructuredRunningCursor {
         .firstOrNull;
     final remaining = json['remaining_milliseconds'];
     final ordinal = json['repeat_ordinal'];
+    final savedPaused = json['is_paused'];
+    final savedFinished = json['is_finished'];
+    DateTime? lastReconciledAtUtc;
+    if (schemaVersion == currentSchemaVersion) {
+      final anchor = json['last_reconciled_at_utc'];
+      if (anchor != null) {
+        if (anchor is! String ||
+            !RegExp(
+              r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$',
+            ).hasMatch(anchor)) {
+          throw const FormatException('invalid structured running timestamp');
+        }
+        lastReconciledAtUtc = DateTime.tryParse(anchor);
+        if (lastReconciledAtUtc == null || !lastReconciledAtUtc.isUtc) {
+          throw const FormatException('invalid structured running timestamp');
+        }
+      }
+    }
     if (phase == null ||
         evidence == null ||
         remaining is! int ||
         remaining < 0 ||
         ordinal is! int ||
         ordinal < 1 ||
-        json['is_paused'] is! bool ||
-        json['is_finished'] is! bool) {
+        savedPaused is! bool ||
+        savedFinished is! bool) {
       throw const FormatException('invalid structured running cursor');
+    }
+    if (schemaVersion == currentSchemaVersion &&
+        ((!savedPaused && !savedFinished && lastReconciledAtUtc == null) ||
+            ((savedPaused || savedFinished) && lastReconciledAtUtc != null))) {
+      throw const FormatException('invalid structured running timestamp state');
     }
     String identity(String key) {
       final value = json[key];
@@ -366,9 +400,12 @@ class StructuredRunningCursor {
       repeatOrdinal: ordinal,
       phase: phase,
       remainingMilliseconds: remaining,
-      isPaused: json['is_paused'] as bool,
+      // Schema 1 could not account durably for time while the process was
+      // suspended. A running legacy cursor therefore migrates safely paused.
+      isPaused: schemaVersion == 1 ? true : savedPaused,
       manualEvidenceState: evidence,
-      isFinished: json['is_finished'] as bool,
+      isFinished: savedFinished,
+      lastReconciledAtUtc: lastReconciledAtUtc,
     );
   }
 }

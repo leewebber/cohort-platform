@@ -42,8 +42,8 @@ void main() {
       restored.elapse(const Duration(seconds: 1));
       restored.background();
       expect(restored.cursor.remainingMilliseconds, 2000);
-      expect(restored.cursor.isPaused, isTrue);
-      restored.start();
+      expect(restored.cursor.isPaused, isFalse);
+      restored.resumeFromBackground();
       restored.exit();
       expect(restored.cursor.isPaused, isTrue);
     });
@@ -76,14 +76,17 @@ void main() {
       restored.start();
       restored.background();
       expect(restored.cursor.phase, StructuredRunningPhase.recovery);
+      expect(restored.cursor.isPaused, isFalse);
     });
 
     test('background checkpoints exact elapsed time during recovery', () {
       var elapsed = Duration.zero;
+      final wall = DateTime.utc(2026, 10, 1, 2);
       final execution = _execution();
       final controller = StructuredRunningController.fresh(
         execution: execution,
         elapsedTime: () => elapsed,
+        wallClock: () => wall,
       );
 
       controller.start();
@@ -95,24 +98,172 @@ void main() {
       expect(cursor.repeatOrdinal, 1);
       expect(cursor.phase, StructuredRunningPhase.recovery);
       expect(cursor.remainingMilliseconds, 2250);
-      expect(cursor.isPaused, isTrue);
+      expect(cursor.isPaused, isFalse);
 
       final restored = StructuredRunningController.restore(
         execution: execution,
         cursor: StructuredRunningCursor.fromJson(cursor.toJson()),
         elapsedTime: () => elapsed,
+        wallClock: () => wall,
       );
       expect(restored.cursor.toJson(), cursor.toJson());
+    });
+
+    test(
+      'cold reopen reconciles wall time across several transitions into final recovery',
+      () {
+        var monotonic = Duration.zero;
+        var wall = DateTime.utc(2026, 10, 1, 2);
+        final execution = _execution();
+        final controller = StructuredRunningController.fresh(
+          execution: execution,
+          elapsedTime: () => monotonic,
+          wallClock: () => wall,
+        );
+
+        controller.start();
+        monotonic = const Duration(seconds: 2);
+        wall = wall.add(const Duration(seconds: 2));
+        controller.background();
+        final saved = StructuredRunningCursor.fromJson(
+          controller.cursor.toJson(),
+        );
+        controller.dispose();
+
+        wall = wall.add(const Duration(seconds: 20));
+        monotonic = Duration.zero;
+        final restored = StructuredRunningController.restore(
+          execution: execution,
+          cursor: saved,
+          elapsedTime: () => monotonic,
+          wallClock: () => wall,
+        );
+
+        expect(restored.cursor.repeatOrdinal, 3);
+        expect(restored.cursor.phase, StructuredRunningPhase.recovery);
+        expect(restored.cursor.remainingMilliseconds, 2000);
+        expect(restored.cursor.isPaused, isFalse);
+        expect(
+          identical(
+            restored.execution.frozenSnapshot,
+            execution.frozenSnapshot,
+          ),
+          isTrue,
+        );
+        restored.dispose();
+      },
+    );
+
+    test('explicit pause remains paused across background time', () {
+      var monotonic = Duration.zero;
+      var wall = DateTime.utc(2026, 10, 1, 2);
+      final controller = StructuredRunningController.fresh(
+        execution: _execution(),
+        elapsedTime: () => monotonic,
+        wallClock: () => wall,
+      );
+
+      controller.start();
+      monotonic = const Duration(seconds: 1);
+      wall = wall.add(const Duration(seconds: 1));
+      controller.pause();
+      final paused = controller.cursor;
+      controller.background();
+      monotonic = const Duration(seconds: 31);
+      wall = wall.add(const Duration(seconds: 30));
+      controller.resumeFromBackground();
+
+      expect(controller.cursor.toJson(), paused.toJson());
+      expect(controller.cursor.isPaused, isTrue);
+      expect(controller.cursor.remainingMilliseconds, 4000);
+    });
+
+    test('live resume uses monotonic time across a wall-clock change', () {
+      var monotonic = Duration.zero;
+      var wall = DateTime.utc(2026, 10, 1, 2);
+      final controller = StructuredRunningController.fresh(
+        execution: _execution(),
+        elapsedTime: () => monotonic,
+        wallClock: () => wall,
+      );
+
+      controller.start();
+      monotonic = const Duration(seconds: 1);
+      wall = wall.add(const Duration(seconds: 1));
+      controller.background();
+
+      monotonic = const Duration(seconds: 7);
+      wall = wall.subtract(const Duration(hours: 1));
+      controller.resumeFromBackground();
+
+      expect(controller.cursor.repeatOrdinal, 1);
+      expect(controller.cursor.phase, StructuredRunningPhase.recovery);
+      expect(controller.cursor.remainingMilliseconds, 1000);
+      expect(controller.cursor.isPaused, isFalse);
+      controller.dispose();
+    });
+
+    test('invalid timestamp fails closed and backward clock pauses safely', () {
+      var monotonic = Duration.zero;
+      var wall = DateTime.utc(2026, 10, 1, 2);
+      final execution = _execution();
+      final controller = StructuredRunningController.fresh(
+        execution: execution,
+        elapsedTime: () => monotonic,
+        wallClock: () => wall,
+      )..start();
+      final runningJson = controller.cursor.toJson();
+      controller.dispose();
+
+      expect(
+        () => StructuredRunningCursor.fromJson({
+          ...runningJson,
+          'last_reconciled_at_utc': 'not-a-timestamp',
+        }),
+        throwsFormatException,
+      );
+
+      wall = wall.subtract(const Duration(minutes: 1));
+      final restored = StructuredRunningController.restore(
+        execution: execution,
+        cursor: StructuredRunningCursor.fromJson(runningJson),
+        elapsedTime: () => monotonic,
+        wallClock: () => wall,
+      );
+      expect(restored.cursor.isPaused, isTrue);
+      expect(restored.cursor.remainingMilliseconds, 5000);
+      expect(restored.cursor.lastReconciledAtUtc, isNull);
+    });
+
+    test('legacy running cursor migrates safely paused', () {
+      final current = StructuredRunningController.fresh(
+        execution: _execution(),
+      ).cursor;
+      final legacyJson = <String, dynamic>{
+        ...current.toJson(),
+        'schema_version': 1,
+      }..remove('last_reconciled_at_utc');
+      legacyJson['is_paused'] = false;
+
+      final migrated = StructuredRunningCursor.fromJson(legacyJson);
+      expect(
+        migrated.schemaVersion,
+        StructuredRunningCursor.currentSchemaVersion,
+      );
+      expect(migrated.isPaused, isTrue);
+      expect(migrated.lastReconciledAtUtc, isNull);
     });
 
     testWidgets(
       'cold restore of running cursor restarts ticker without lost time',
       (tester) async {
         var elapsed = Duration.zero;
+        final wall = DateTime.utc(2026, 10, 1, 2);
         final execution = _execution();
         final original = StructuredRunningController.fresh(
           execution: execution,
           elapsedTime: () => elapsed,
+          wallClock: () => wall,
         );
         original.start();
         final running = original.cursor;
@@ -122,6 +273,7 @@ void main() {
           execution: execution,
           cursor: running,
           elapsedTime: () => elapsed,
+          wallClock: () => wall,
         );
         expect(restored.cursor.isPaused, isFalse);
 
@@ -129,7 +281,7 @@ void main() {
         await tester.pump(const Duration(seconds: 1));
         restored.background();
         expect(restored.cursor.remainingMilliseconds, 3750);
-        expect(restored.cursor.isPaused, isTrue);
+        expect(restored.cursor.isPaused, isFalse);
       },
     );
 
@@ -200,12 +352,14 @@ void main() {
     });
   });
 
-  testWidgets('production timer checkpoints background and exit', (
+  testWidgets('production timer reconciles screen lock and then exits paused', (
     tester,
   ) async {
     StructuredRunningCursor? returned;
     final checkpoints = <StructuredRunningCursor>[];
     final execution = _execution();
+    var monotonic = Duration.zero;
+    var wall = DateTime.utc(2026, 10, 1, 2);
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
@@ -219,6 +373,8 @@ void main() {
                       checkpoints.add(cursor);
                       return true;
                     },
+                    elapsedTime: () => monotonic,
+                    wallClock: () => wall,
                   ),
                 ),
               );
@@ -231,16 +387,25 @@ void main() {
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Start'));
-    await tester.pump(const Duration(seconds: 2));
+    monotonic = const Duration(seconds: 2);
+    wall = wall.add(const Duration(seconds: 2));
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     await tester.pump();
-    expect(checkpoints.last.isPaused, isTrue);
-    expect(
-      checkpoints.last.remainingMilliseconds,
-      inInclusiveRange(2500, 3000),
-    );
+    expect(checkpoints.last.isPaused, isFalse);
+    expect(checkpoints.last.remainingMilliseconds, 3000);
+
+    monotonic = const Duration(seconds: 22);
+    wall = wall.add(const Duration(seconds: 20));
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(checkpoints.last.repeatOrdinal, 3);
+    expect(checkpoints.last.phase, StructuredRunningPhase.recovery);
+    expect(checkpoints.last.remainingMilliseconds, 2000);
+    expect(checkpoints.last.isPaused, isFalse);
+
     await tester.tap(find.byTooltip('Exit timer'));
     await tester.pumpAndSettle();
+    expect(checkpoints.last.isPaused, isTrue);
     expect(returned?.toJson(), checkpoints.last.toJson());
   });
 
@@ -502,5 +667,6 @@ StructuredRunningCursor _copy(
     isPaused: cursor.isPaused,
     manualEvidenceState: cursor.manualEvidenceState,
     isFinished: cursor.isFinished,
+    lastReconciledAtUtc: cursor.lastReconciledAtUtc,
   );
 }

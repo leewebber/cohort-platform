@@ -4,36 +4,43 @@ import '../../../domain/running_workout/running_workout.dart';
 import '../models/structured_running_execution.dart';
 
 typedef StructuredRunningElapsedTime = Duration Function();
+typedef StructuredRunningWallClock = DateTime Function();
 
 class StructuredRunningController {
   StructuredRunningController.fresh({
     required VerifiedStructuredRunningExecution execution,
     this.onCheckpoint,
     StructuredRunningElapsedTime? elapsedTime,
+    StructuredRunningWallClock? wallClock,
   }) : _execution = execution,
        _frames = _flatten(execution.workout),
        _elapsedTime = elapsedTime ?? _defaultElapsedTime,
+       _wallClock = wallClock ?? _defaultWallClock,
        _frameIndex = 0,
        _remainingMilliseconds = _flatten(
          execution.workout,
        ).first.durationMilliseconds,
        _isPaused = true,
        _manualEvidenceState = StructuredRunningManualEvidenceState.notCaptured,
-       _isFinished = false;
+       _isFinished = false,
+       _lastReconciledAtUtc = null;
 
   StructuredRunningController.restore({
     required VerifiedStructuredRunningExecution execution,
     required StructuredRunningCursor cursor,
     this.onCheckpoint,
     StructuredRunningElapsedTime? elapsedTime,
+    StructuredRunningWallClock? wallClock,
   }) : _execution = execution,
        _frames = _flatten(execution.workout),
        _elapsedTime = elapsedTime ?? _defaultElapsedTime,
+       _wallClock = wallClock ?? _defaultWallClock,
        _frameIndex = _restoreIndex(execution, cursor),
        _remainingMilliseconds = cursor.remainingMilliseconds,
        _isPaused = cursor.isPaused,
        _manualEvidenceState = cursor.manualEvidenceState,
-       _isFinished = cursor.isFinished {
+       _isFinished = cursor.isFinished,
+       _lastReconciledAtUtc = cursor.lastReconciledAtUtc {
     final frame = _frames[_frameIndex];
     if (cursor.remainingMilliseconds > frame.durationMilliseconds ||
         (cursor.isFinished &&
@@ -46,17 +53,23 @@ class StructuredRunningController {
       );
     }
     if (!_isPaused && !_isFinished) {
-      _startTicker();
+      _reconcilePersistedElapsed();
+      if (!_isPaused && !_isFinished) {
+        _startTicker();
+      }
+      _checkpoint();
     }
   }
 
   static final Stopwatch _monotonicClock = Stopwatch()..start();
 
   static Duration _defaultElapsedTime() => _monotonicClock.elapsed;
+  static DateTime _defaultWallClock() => DateTime.now().toUtc();
 
   final VerifiedStructuredRunningExecution _execution;
   final List<_StructuredRunningFrame> _frames;
   final StructuredRunningElapsedTime _elapsedTime;
+  final StructuredRunningWallClock _wallClock;
   final void Function(StructuredRunningCursor cursor)? onCheckpoint;
   int _frameIndex;
   int _remainingMilliseconds;
@@ -65,6 +78,8 @@ class StructuredRunningController {
   bool _isFinished;
   Timer? _timer;
   Duration? _lastRunningAt;
+  DateTime? _lastReconciledAtUtc;
+  bool _isBackgrounded = false;
 
   VerifiedStructuredRunningExecution get execution => _execution;
   StructuredRunningCursor get cursor {
@@ -81,6 +96,7 @@ class StructuredRunningController {
       isPaused: _isPaused,
       manualEvidenceState: _manualEvidenceState,
       isFinished: _isFinished,
+      lastReconciledAtUtc: _lastReconciledAtUtc,
     );
   }
 
@@ -92,7 +108,27 @@ class StructuredRunningController {
 
   void pause() => _pause();
 
-  void background() => _pause();
+  void background() {
+    if (_isBackgrounded) return;
+    if (!_isPaused && !_isFinished) {
+      _consumeClockElapsed();
+      _timer?.cancel();
+      _timer = null;
+      _isBackgrounded = true;
+    }
+    _checkpoint();
+  }
+
+  void resumeFromBackground() {
+    if (!_isBackgrounded) return;
+    _isBackgrounded = false;
+    if (_isPaused || _isFinished) return;
+    _consumeClockElapsed();
+    if (!_isFinished) {
+      _startTicker();
+    }
+    _checkpoint();
+  }
 
   void exit({bool emitCheckpoint = true}) =>
       _pause(emitCheckpoint: emitCheckpoint);
@@ -106,6 +142,8 @@ class StructuredRunningController {
     _timer?.cancel();
     _timer = null;
     _lastRunningAt = null;
+    _lastReconciledAtUtc = null;
+    _isBackgrounded = false;
     if (emitCheckpoint) {
       _checkpoint();
     }
@@ -120,6 +158,9 @@ class StructuredRunningController {
     if (_isPaused || _isFinished || duration <= Duration.zero) return;
     _advance(duration);
     _lastRunningAt = _elapsedTime();
+    if (!_isFinished) {
+      _lastReconciledAtUtc = _utcNow();
+    }
     _checkpoint();
   }
 
@@ -138,6 +179,8 @@ class StructuredRunningController {
           _timer?.cancel();
           _timer = null;
           _lastRunningAt = null;
+          _lastReconciledAtUtc = null;
+          _isBackgrounded = false;
         } else {
           _frameIndex++;
           _remainingMilliseconds = _frames[_frameIndex].durationMilliseconds;
@@ -150,7 +193,9 @@ class StructuredRunningController {
 
   void _startTicker() {
     _isPaused = false;
+    _isBackgrounded = false;
     _lastRunningAt = _elapsedTime();
+    _lastReconciledAtUtc = _utcNow();
     _timer ??= Timer.periodic(const Duration(seconds: 1), (_) {
       _consumeClockElapsed(minimum: const Duration(seconds: 1));
       _checkpoint();
@@ -167,12 +212,38 @@ class StructuredRunningController {
     if (elapsed > Duration.zero) {
       _advance(elapsed);
     }
+    if (!_isFinished) {
+      _lastReconciledAtUtc = _utcNow();
+    }
   }
+
+  void _reconcilePersistedElapsed() {
+    final anchor = _lastReconciledAtUtc;
+    if (anchor == null) {
+      _isPaused = true;
+      return;
+    }
+    final now = _utcNow();
+    if (now.isBefore(anchor)) {
+      // A backward wall-clock change cannot be converted into trustworthy
+      // workout time. Preserve the saved position and require explicit Start.
+      _isPaused = true;
+      _lastReconciledAtUtc = null;
+      return;
+    }
+    _advance(now.difference(anchor));
+    if (!_isFinished) {
+      _lastReconciledAtUtc = now;
+    }
+  }
+
+  DateTime _utcNow() => _wallClock().toUtc();
 
   void dispose() {
     _timer?.cancel();
     _timer = null;
     _lastRunningAt = null;
+    _isBackgrounded = false;
   }
 
   void _checkpoint() => onCheckpoint?.call(cursor);
