@@ -15,8 +15,7 @@ void main() {
     );
     expect(command.toRpcPayload(), {
       'command_id': 'b3d00000-0000-4000-8000-000000000099',
-      'source_reference':
-          'b3-device-validation:b3d00000-0000-4000-8000-000000000099',
+      'source_reference': 'b3-device-validation:2026-09-29:1200000:treadmill',
       'source': 'manual',
       'declaration': 'completed_five_kilometre_test',
       'distance_metres': 5000,
@@ -79,6 +78,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(store.command, isNotNull);
+      expect(store.calls, 1);
       expect(store.command!.elapsedDurationMilliseconds, 1230000);
       expect(store.command!.localTestDate, DateTime(2026, 9, 29));
       expect(
@@ -87,17 +87,23 @@ void main() {
         ),
         findsOne,
       );
+      expect(find.text('Recorded'), findsOne);
+      await tester.tap(find.text('Recorded'), warnIfMissed: false);
+      await tester.pump();
+      expect(store.calls, 1);
     },
   );
 }
 
 class _FakeStore implements B3DeviceBenchmarkEvidenceStore {
   B3DeviceBenchmarkCommand? command;
+  int calls = 0;
 
   @override
   Future<B3DeviceBenchmarkWriteResult> record(
     B3DeviceBenchmarkCommand command,
   ) async {
+    calls += 1;
     this.command = command;
     return const B3DeviceBenchmarkWriteResult(isSuccess: true);
   }

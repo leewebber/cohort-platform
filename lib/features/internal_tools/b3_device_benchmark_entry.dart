@@ -32,15 +32,17 @@ class B3DeviceBenchmarkCommand {
     final y = localTestDate.year.toString().padLeft(4, '0');
     final m = localTestDate.month.toString().padLeft(2, '0');
     final d = localTestDate.day.toString().padLeft(2, '0');
+    final date = '$y-$m-$d';
     return {
       'command_id': commandId,
-      'source_reference': 'b3-device-validation:$commandId',
+      'source_reference':
+          'b3-device-validation:$date:$elapsedDurationMilliseconds:${surface.name}',
       'source': 'manual',
       'declaration': 'completed_five_kilometre_test',
       'distance_metres': 5000,
       'elapsed_duration_milliseconds': elapsedDurationMilliseconds,
       'duration_basis': 'elapsed_including_pauses',
-      'local_test_date': '$y-$m-$d',
+      'local_test_date': date,
       'iana_timezone': timezone,
       'surface_context': surface.name,
     };
@@ -122,6 +124,7 @@ class _B3DeviceBenchmarkEntryScreenState
   B3DeviceBenchmarkSurface _surface = B3DeviceBenchmarkSurface.outdoor;
   bool _confirmed = false;
   bool _submitting = false;
+  bool _recorded = false;
   String? _message;
   String? _commandId;
 
@@ -130,13 +133,21 @@ class _B3DeviceBenchmarkEntryScreenState
     super.initState();
     final value = widget.initialDate ?? DateTime.now();
     _date = DateTime(value.year, value.month, value.day);
+    _minutes.addListener(_invalidatePendingCommand);
+    _seconds.addListener(_invalidatePendingCommand);
   }
 
   @override
   void dispose() {
+    _minutes.removeListener(_invalidatePendingCommand);
+    _seconds.removeListener(_invalidatePendingCommand);
     _minutes.dispose();
     _seconds.dispose();
     super.dispose();
+  }
+
+  void _invalidatePendingCommand() {
+    if (!_submitting && !_recorded) _commandId = null;
   }
 
   Future<void> _pickDate() async {
@@ -146,11 +157,16 @@ class _B3DeviceBenchmarkEntryScreenState
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    if (selected != null && mounted) setState(() => _date = selected);
+    if (selected != null && mounted) {
+      setState(() {
+        _date = selected;
+        _commandId = null;
+      });
+    }
   }
 
   Future<void> _submit() async {
-    if (_submitting) return;
+    if (_submitting || _recorded) return;
     final minutes = int.tryParse(_minutes.text.trim());
     final seconds = int.tryParse(_seconds.text.trim());
     if (!_confirmed ||
@@ -184,7 +200,10 @@ class _B3DeviceBenchmarkEntryScreenState
       _message = result.isSuccess
           ? 'Eligible completed 5 km evidence recorded for this athlete.'
           : result.message;
-      if (result.isSuccess) _commandId = null;
+      if (result.isSuccess) {
+        _recorded = true;
+        _commandId = null;
+      }
     });
   }
 
@@ -221,6 +240,7 @@ class _B3DeviceBenchmarkEntryScreenState
                 child: TextField(
                   key: const ValueKey('b3-benchmark-minutes'),
                   controller: _minutes,
+                  enabled: !_submitting && !_recorded,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: 'Minutes'),
                 ),
@@ -230,6 +250,7 @@ class _B3DeviceBenchmarkEntryScreenState
                 child: TextField(
                   key: const ValueKey('b3-benchmark-seconds'),
                   controller: _seconds,
+                  enabled: !_submitting && !_recorded,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(labelText: 'Seconds'),
                 ),
@@ -242,7 +263,7 @@ class _B3DeviceBenchmarkEntryScreenState
             title: const Text('Test date'),
             subtitle: Text(_iso(_date)),
             trailing: const Icon(Icons.calendar_today_outlined),
-            onTap: _pickDate,
+            onTap: _submitting || _recorded ? null : _pickDate,
           ),
           DropdownButtonFormField<B3DeviceBenchmarkSurface>(
             initialValue: _surface,
@@ -257,9 +278,12 @@ class _B3DeviceBenchmarkEntryScreenState
                 child: Text('Treadmill'),
               ),
             ],
-            onChanged: _submitting
+            onChanged: _submitting || _recorded
                 ? null
-                : (value) => setState(() => _surface = value ?? _surface),
+                : (value) => setState(() {
+                    _surface = value ?? _surface;
+                    _commandId = null;
+                  }),
           ),
           const SizedBox(height: CohortSpacing.md),
           CheckboxListTile(
@@ -269,7 +293,7 @@ class _B3DeviceBenchmarkEntryScreenState
             title: const Text(
               'I completed exactly 5 km and this is elapsed time including pauses.',
             ),
-            onChanged: _submitting
+            onChanged: _submitting || _recorded
                 ? null
                 : (value) => setState(() => _confirmed = value == true),
           ),
@@ -279,8 +303,12 @@ class _B3DeviceBenchmarkEntryScreenState
           ],
           const SizedBox(height: CohortSpacing.lg),
           CohortButton(
-            label: _submitting ? 'Recording…' : 'Record completed 5 km test',
-            onPressed: _submitting ? null : _submit,
+            label: _recorded
+                ? 'Recorded'
+                : _submitting
+                ? 'Recording…'
+                : 'Record completed 5 km test',
+            onPressed: _submitting || _recorded ? null : _submit,
           ),
         ],
       ),
