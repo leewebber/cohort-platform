@@ -131,17 +131,68 @@ Future<void> main(List<String> args) async {
     final map = response is Map
         ? Map<String, dynamic>.from(response)
         : <String, dynamic>{'raw': response.toString()};
+    final slotCount = compiled.manifest!.weeks.fold<int>(
+      0,
+      (total, week) =>
+          total +
+          week.days.fold<int>(
+            0,
+            (dayTotal, day) => dayTotal + day.slots.length,
+          ),
+    );
+    final responseError = validatePrivateExactPublicationResponse(
+      map,
+      expectedProgrammeVersionId: expectedId,
+      expectedPackageHash: expectedHash,
+      expectedLibraryScope: expectedScope!,
+      expectedPackageSchemaVersion: compiled.manifest!.packageSchemaVersion,
+      expectedSessionCount: slotCount,
+    );
     stdout.writeln('status=${map['status']}');
     stdout.writeln('programme_version_id=${map['programme_version_id']}');
     stdout.writeln('session_count=${map['session_count']}');
     stdout.writeln('library_scope=${map['library_scope']}');
-    if (map['status'] != 'published' && map['status'] != 'already_published') {
+    if (responseError != null) {
+      stderr.writeln('publication_response_error=$responseError');
       stderr.writeln('code=${map['code']}');
       exit(1);
     }
   } finally {
     client.dispose();
   }
+}
+
+String? validatePrivateExactPublicationResponse(
+  Map<String, dynamic> response, {
+  required String expectedProgrammeVersionId,
+  required String expectedPackageHash,
+  required String expectedLibraryScope,
+  required int expectedPackageSchemaVersion,
+  required int expectedSessionCount,
+}) {
+  final status = response['status']?.toString();
+  if (status != 'published' && status != 'already_published') {
+    return 'publication_not_accepted';
+  }
+  if (response['programme_version_id']?.toString() !=
+      expectedProgrammeVersionId) {
+    return 'programme_version_id_mismatch';
+  }
+  if (response['package_content_hash']?.toString() != expectedPackageHash) {
+    return 'package_content_hash_mismatch';
+  }
+  if (response['library_scope']?.toString() != expectedLibraryScope) {
+    return 'library_scope_mismatch';
+  }
+  if (int.tryParse(response['package_schema_version']?.toString() ?? '') !=
+      expectedPackageSchemaVersion) {
+    return 'package_schema_version_mismatch';
+  }
+  if (int.tryParse(response['session_count']?.toString() ?? '') !=
+      expectedSessionCount) {
+    return 'session_count_mismatch';
+  }
+  return null;
 }
 
 String? _arg(List<String> args, String name) {

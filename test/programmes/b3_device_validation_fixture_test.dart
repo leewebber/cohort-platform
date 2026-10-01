@@ -5,6 +5,8 @@ import 'package:cohort_plan_package/cohort_plan_package.dart';
 import 'package:cohort_platform/features/private_programme/reviewed_protocol_graph_artifact.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
+import '../../tool/programmes/bin/publish_private_exact_version.dart'
+    as publisher;
 
 void main() {
   const packagePath =
@@ -145,6 +147,42 @@ void main() {
         ),
       ),
     );
+  });
+
+  test('publisher accepts only the exact attested response identity', () {
+    final exact = <String, dynamic>{
+      'status': 'published',
+      'programme_version_id': publication['programme_version_id'],
+      'package_content_hash': compiled.contentHashSha256,
+      'package_schema_version': 2,
+      'library_scope': 'coach_private',
+      'session_count': 4,
+    };
+    String? validate(Map<String, dynamic> response) =>
+        publisher.validatePrivateExactPublicationResponse(
+          response,
+          expectedProgrammeVersionId:
+              publication['programme_version_id'] as String,
+          expectedPackageHash: compiled.contentHashSha256!,
+          expectedLibraryScope: 'coach_private',
+          expectedPackageSchemaVersion: 2,
+          expectedSessionCount: 4,
+        );
+
+    expect(validate(exact), isNull);
+    expect(
+      validate({...exact, 'programme_version_id': 'wrong'}),
+      'programme_version_id_mismatch',
+    );
+    expect(
+      validate({...exact, 'package_content_hash': List.filled(64, '0').join()}),
+      'package_content_hash_mismatch',
+    );
+    expect(
+      validate({...exact, 'package_schema_version': 1}),
+      'package_schema_version_mismatch',
+    );
+    expect(validate({...exact, 'session_count': 3}), 'session_count_mismatch');
   });
 }
 
