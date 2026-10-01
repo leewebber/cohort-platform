@@ -54,6 +54,40 @@ All artifact hashes must be rechecked against the final approved commit before
 hosted publication. The service-role credential and client configuration stay
 outside the repository.
 
+## Independent review closeout
+
+The 2026-10-01 review confirmed the canonical compiler/package hash and exact
+reviewed protocol graph, private/non-catalogue publication inputs, authenticated
+athlete ownership for manual benchmark evidence, production rejection of the
+internal-tools build switch, and assignment replacement without deletion of the
+prior assignment, occurrences, or logged session evidence.
+
+Three defects were corrected in separate follow-up commits:
+
+- benchmark entry now uses a deterministic athlete-scoped source reference,
+  preserves its command identity for a retry, and becomes terminal after a
+  successful record instead of allowing an accidental second evidence row;
+- the exact publisher now rejects a success response whose version, package
+  hash, scope, schema version, or slot count differs from the reviewed request;
+- the database fixture gate now includes an existing completed session record
+  and proves its count and digest are unchanged after assignment replacement.
+
+All four fixture slots materialise on `2026-10-01` with their authored
+`session_order`. Home exposes the next actionable same-day occurrence after an
+earlier occurrence completes. Each start freezes its own B2 snapshot. Slots
+1-3 accept an eligible athlete-owned manual 5 km result and remain calculated
+on retry. Slot 4 permits cohort evidence only; because the current athlete
+evidence projection exposes trusted manual evidence and cohort ingestion
+remains unavailable, it remains deterministically intent-only even after the
+manual result exists. Enabling cohort ingestion would require this assumption
+and fixture to be reviewed again.
+
+The authorised local date is a hard rollout boundary. If publication or device
+validation cannot occur on `2026-10-01` in `Asia/Makassar`, stop. Amend the
+publication artifact to a newly approved date, recompute its hash, rerun the
+gates, and obtain approval for the new commit before any hosted action. Do not
+activate a past-dated fixture and treat missed occurrences as device evidence.
+
 ## Proposed hosted publication and activation plan
 
 This plan is not yet authorised to run.
@@ -85,6 +119,66 @@ This plan is not yet authorised to run.
 
 No manual hosted SQL is an approved publication, activation, benchmark, or
 completion mechanism.
+
+### Exact approved-order sequence
+
+1. **Integrate.** Fetch `origin`; require a clean reviewed branch, the approved
+   final review SHA, `origin/main` still at
+   `1f6017d84f8de40d039df253c56dc8b339b61e82`, a linear no-merge range, and the
+   exact artifact hashes above. Strict-fast-forward only `HEAD` to
+   `refs/heads/main`, fetch again, and require `HEAD = origin/main`, divergence
+   `0/0`, and a clean worktree.
+2. **Hosted preflight.** In a disposable linked workdir, require Cohort Field
+   Manual `otnhhdxstdnwccehacku`, healthy services, migration ledger through
+   `20260929120000`, the committed B2/B3 functions, triggers, and grants, and
+   `db push --linked --dry-run` with zero pending migrations. Capture SELECT-only
+   Lee/Bali assignment, occurrence, session, result, outcome, and History counts
+   and digests. Stop on any mismatch.
+3. **Publish the exact private version.** With the service-role credential
+   supplied outside the repository, run:
+
+   ```text
+   dart run tool/programmes/bin/publish_private_exact_version.dart \
+     --package tool/programmes/b3_device_validation_v1.plan-package.yaml \
+     --publication content/programmes/b3_device_validation/v1/b3_device_validation.publication.json \
+     --owner-id <approved-coach-owner-uuid> \
+     --url https://otnhhdxstdnwccehacku.supabase.co
+   ```
+
+   Require `published`, or an identity-exact `already_published`, and the exact
+   response identity validation. Then verify by SELECT only: coach-private and
+   non-catalogue scope, owner, version and package hash, reviewed graph, stable
+   block, four slots, workout/step mappings, test-only policies, authorised
+   date/timezone, and no assignment or benchmark write. A returned
+   `already_published` still requires every SELECT-only object check.
+4. **Build and install after separate approval.** Use an external secret-free
+   path from Git containing the development environment, Field Manual HTTPS URL,
+   and anonymous client key. From the integrated SHA run
+   `./tool/release/build_app.sh --env development --target ios --config
+   <absolute-external-config.json> --enable-internal-tools`. Require the exact
+   commit provenance, development environment, internal tools enabled, and a
+   successful signed `build/ios/iphoneos/Runner.app`. Confirm Apple signing,
+   provisioning, and the approved device before installing with Xcode Devices
+   and Simulators (or the equivalent approved `xcrun devicectl device install
+   app` command). The repository has no separate phone-install authority.
+5. **Record only real benchmark evidence.** Lee signs in on the development
+   build and uses Diagnostics -> B3 device validation benchmark. Record an
+   actual completed 5 km only, before starting any calculated occurrence.
+   Recheck the athlete-owned row and eligibility by SELECT only; never create
+   or promote activity evidence manually.
+6. **Activate through the authenticated product action.** In Programmes -> My
+   private programmes, open the exact TEST ONLY version, review the replacement
+   warning/date/timezone, and activate. Verify by SELECT only that Bali is
+   `reassigned`, the new assignment alone is active, all four occurrences share
+   the authorised date, and every captured historical count/digest is unchanged.
+7. **Run the founder device script below.** Complete the four occurrences in
+   order, then recheck session/History authority. Return to Bali only through
+   the supported private-programme activation action after separate approval.
+
+No migration is introduced by this branch. The required hosted prerequisite is
+the already-integrated migration ledger through
+`20260929120000_b3_structured_running_targets_and_actuals.sql`; its current
+hosted state must still be revalidated during step 2.
 
 ## Development phone build requirements
 
@@ -135,15 +229,18 @@ that mechanism with SQL.
 
 - Focused fixture/compiler, publication/activation, internal benchmark,
   release-build, structured-runner, target/actual, and Bali compatibility
-  matrix: 51 passed.
-- Canonical Plan Package package suite: 37 passed.
-- Exact disposable database gate: 6/6 passed after a full local reset.
+  matrix: 127 passed.
+- Canonical Plan Package and private-publication suite: 59 passed.
+- Exact disposable device fixture database gate: 7/7 passed after a full local
+  reset, including prior completion-evidence digest preservation.
+- Independent B2 benchmark-evidence database gate: 15/15 passed after a full
+  local reset, including athlete ownership, cross-athlete denial, grants,
+  idempotent retry, correction, and arbitrary-activity rejection.
 - Changed-file Flutter analysis: no issues.
 - Phase 2 consolidation safety gate: 6/6 groups passed.
-- Full authoritative `flutter test`: 3,452 passed with 6 expected
+- Full authoritative `flutter test`: 3,453 passed with 6 expected
   environment-gated skips.
-- `git diff --check`: passed before local commits; rerun against the final
-  branch HEAD for closeout.
+- `git diff --check origin/main...HEAD`: passed at review closeout.
 
 ## Stop condition
 
