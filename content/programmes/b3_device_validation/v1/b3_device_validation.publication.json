@@ -1,0 +1,18 @@
+{
+  "programme_version_id": "b3d00000-0000-4000-8000-000000000001",
+  "publication_kind": "private_exact_version",
+  "library_scope": "coach_private",
+  "public_catalogue": false,
+  "lineage_code": "B3-DEVICE-VALIDATION-TEST-ONLY",
+  "version_number": 1,
+  "compiler_version": "plan-package/v2",
+  "source_package_hash": "fe8d2bb2dfa5479a43062deb2974c9106640d652db6e29fa5b3dd02495e6cb4a",
+  "protocol_graph_path": "content/programmes/b3_device_validation/v1/protocol_graphs.json",
+  "protocol_graph_sha256": "44e00cacd3e86d6c440279c58aca44f50d46d1af102020bdd6636310ca1f4a17",
+  "authorised_timezone": "Asia/Makassar",
+  "authorised_local_start_date": "2026-10-01",
+  "assignable_after": "founder_approved_private_publication",
+  "hosted_publication_established": false,
+  "classification": "developer_validation_test_only",
+  "commercial_percentage_bands_approved": false
+}

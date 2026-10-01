@@ -1,0 +1,24 @@
+[
+  {
+    "protocol_id": "B3-DEV-RUN-VALIDATION-R1",
+    "revision_number": 1,
+    "blocks": [
+      {
+        "position": 1,
+        "block_type": "conditioning",
+        "title": "[TEST ONLY] Short run repetitions",
+        "content": "Developer validation only. Run smoothly during work and keep recovery easy.",
+        "workout_format": "intervals",
+        "timer_config": {
+          "format": "intervals",
+          "work_seconds": 20,
+          "rest_seconds": 15,
+          "rounds": 3
+        },
+        "coach_notes": "Test-only device validation. This is not a commercial pace prescription.",
+        "performance_capture_mode": "auto",
+        "exercises": []
+      }
+    ]
+  }
+]

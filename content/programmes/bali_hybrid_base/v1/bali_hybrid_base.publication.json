@@ -7,6 +7,8 @@
   "version_number": 1,
   "compiler_version": "plan-package/v1",
   "source_package_hash": "f5da4085c0ea8b4c6eec93859451db624aaa52cd4af79ca702278518ea227b5b",
+  "authorised_timezone": "Asia/Makassar",
+  "authorised_local_start_date": "2026-09-26",
   "assignable_after": "private_publication",
   "hosted_publication_established": false
 }

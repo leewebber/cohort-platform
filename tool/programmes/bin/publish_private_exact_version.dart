@@ -5,6 +5,7 @@ import 'package:cohort_plan_package/cohort_plan_package.dart';
 import 'package:supabase/supabase.dart';
 
 import 'package:cohort_platform/features/private_programme/private_protocol_graph_builder.dart';
+import 'package:cohort_platform/features/private_programme/reviewed_protocol_graph_artifact.dart';
 
 /// Service-role private publication. Does not enrol athletes.
 ///
@@ -48,6 +49,9 @@ Future<void> main(List<String> args) async {
   final expectedId = publication['programme_version_id']?.toString();
   final expectedKind = publication['publication_kind']?.toString();
   final expectedScope = publication['library_scope']?.toString();
+  final authorisedTimezone = publication['authorised_timezone']?.toString();
+  final authorisedStart = publication['authorised_local_start_date']
+      ?.toString();
   if (expectedHash == null || expectedId == null) {
     stderr.writeln('Publication artifact missing identity/hash');
     exit(2);
@@ -55,6 +59,13 @@ Future<void> main(List<String> args) async {
   if (expectedKind != 'private_exact_version' ||
       expectedScope != 'coach_private') {
     stderr.writeln('Publication artifact is not a private exact version');
+    exit(2);
+  }
+  if (authorisedTimezone == null ||
+      authorisedTimezone.trim().isEmpty ||
+      authorisedStart == null ||
+      !RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(authorisedStart)) {
+    stderr.writeln('Publication artifact missing authorised activation values');
     exit(2);
   }
 
@@ -72,23 +83,42 @@ Future<void> main(List<String> args) async {
     compileResult: compiled,
     importedBy: 'private-exact-publisher',
   );
-  final graphs = const PrivateProtocolGraphBuilder().build(
-    compileResult: compiled,
-    founderYaml: File(founderPath).readAsStringSync(),
-  );
-  if (graphs.missingProtocolIds.isNotEmpty || graphs.graphs.isEmpty) {
-    stderr.writeln(
-      'Founder YAML is missing executable bodies for scheduled sessions',
+  final reviewedGraphPath = publication['protocol_graph_path']?.toString();
+  if (reviewedGraphPath != null && reviewedGraphPath.trim().isNotEmpty) {
+    final graphHash = publication['protocol_graph_sha256']?.toString();
+    if (graphHash == null || !RegExp(r'^[0-9a-f]{64}$').hasMatch(graphHash)) {
+      stderr.writeln('Publication artifact missing protocol graph hash');
+      exit(2);
+    }
+    try {
+      payload['protocol_graphs'] = const ReviewedProtocolGraphArtifact().decode(
+        compileResult: compiled,
+        source: File(reviewedGraphPath).readAsStringSync(),
+        expectedSha256: graphHash,
+      );
+    } on ReviewedProtocolGraphArtifactException catch (error) {
+      stderr.writeln(error);
+      exit(2);
+    }
+  } else {
+    final graphs = const PrivateProtocolGraphBuilder().build(
+      compileResult: compiled,
+      founderYaml: File(founderPath).readAsStringSync(),
     );
-    exit(2);
+    if (graphs.missingProtocolIds.isNotEmpty || graphs.graphs.isEmpty) {
+      stderr.writeln(
+        'Founder YAML is missing executable bodies for scheduled sessions',
+      );
+      exit(2);
+    }
+    payload['protocol_graphs'] = graphs.graphs;
   }
-  payload['protocol_graphs'] = graphs.graphs;
   payload['publication_kind'] = expectedKind;
   payload['programme_version_id'] = expectedId;
   payload['library_scope'] = expectedScope;
   payload['owner_id'] = ownerId;
-  payload['authorised_timezone'] = 'Asia/Makassar';
-  payload['authorised_local_start_date'] = '2026-09-26';
+  payload['authorised_timezone'] = authorisedTimezone.trim();
+  payload['authorised_local_start_date'] = authorisedStart;
 
   final client = SupabaseClient(url, serviceKey);
   try {

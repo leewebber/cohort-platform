@@ -1,0 +1,123 @@
+package_schema_version: 2
+
+programme:
+  lineage_code: B3-DEVICE-VALIDATION-TEST-ONLY
+  version_number: 1
+  name: "[TEST ONLY] B3 structured running validation"
+  description: "Private developer validation only. Four short structured-running sessions for device review. Not a training prescription and not commercial programme content."
+  library_scope: coach_private
+  owner_type: coach
+  coaching_intent: "Validate the B3 structured-running product path on a real device without establishing commercial pace bands."
+  duration_weeks: 1
+  sessions_per_week: 4
+
+sessions:
+  - session_key: SES-B3-DEVICE-VALIDATION
+    protocol_id: B3-DEV-RUN-VALIDATION-R1
+    session_lineage_id: b3d00000-0000-4000-8000-000000000010
+    revision_number: 1
+    title: "[TEST ONLY] 3 × 20 sec run / 15 sec recovery"
+
+phases: []
+
+weeks:
+  - week_number: 1
+    title: "Developer validation only"
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        title: "B3 device validation"
+        slots:
+          - slot_key: W1D1S1-CALCULATED-COMPLETE
+            session_order: 1
+            session_key: SES-B3-DEVICE-VALIDATION
+            display_title: "[TEST ONLY] Calculated target + restore + correction"
+            progression:
+              prescription_summary: "Developer validation only: test calculated target, work/recovery restore, completion, History, and actual correction."
+            authored_running_v1: &calculated_running
+              schema_version: 1
+              workout_id: rw1:p:5b3e7ec49df769e8
+              step_ids:
+                - rw1:p:5b3e7ec49df769e8:s:work
+                - rw1:p:5b3e7ec49df769e8:s:recovery
+              executable_step_bindings:
+                - step_id: rw1:p:5b3e7ec49df769e8:s:work
+                  session_block_id: b1ea0297-6f2d-4b5b-8774-6421f01472a9
+                - step_id: rw1:p:5b3e7ec49df769e8:s:recovery
+                  session_block_id: b1ea0297-6f2d-4b5b-8774-6421f01472a9
+              advisory_attachments:
+                - attachment_id: B3-DEV-TEST-ONLY-MANUAL-5K-WORK
+                  step_ids:
+                    - rw1:p:5b3e7ec49df769e8:s:work
+                  policy:
+                    policy_id: B3-DEV-TEST-ONLY-90-100-PERCENT
+                    policy_version: 1
+                    method_id: PERCENT-BENCHMARK-SPEED
+                    method_version: 1
+                    benchmark_eligibility:
+                      cohort_completed_tests_eligible: false
+                      manual_completed_tests_eligible: true
+                      external_completed_tests_eligible: false
+                    freshness_local_civil_days: 90
+                    minimum_speed_basis_points: 9000
+                    maximum_speed_basis_points: 10000
+                    display_rounding:
+                      increment_milliseconds_per_kilometre: 1000
+                      direction: nearest
+          - slot_key: W1D1S2-PACE-UNAVAILABLE
+            session_order: 2
+            session_key: SES-B3-DEVICE-VALIDATION
+            display_title: "[TEST ONLY] Completed — pace unavailable"
+            progression:
+              prescription_summary: "Developer validation only: capture a completed work repetition without pace."
+            authored_running_v1: *calculated_running
+          - slot_key: W1D1S3-SKIPPED
+            session_order: 3
+            session_key: SES-B3-DEVICE-VALIDATION
+            display_title: "[TEST ONLY] Skipped work → partial"
+            progression:
+              prescription_summary: "Developer validation only: skip one work repetition and verify partial completion."
+            authored_running_v1: *calculated_running
+          - slot_key: W1D1S4-NO-ELIGIBLE-BENCHMARK
+            session_order: 4
+            session_key: SES-B3-DEVICE-VALIDATION
+            display_title: "[TEST ONLY] Pace target unavailable"
+            progression:
+              prescription_summary: "Developer validation only: verify intent-only behavior when the policy has no eligible evidence."
+            authored_running_v1:
+              schema_version: 1
+              workout_id: rw1:p:5b3e7ec49df769e8
+              step_ids:
+                - rw1:p:5b3e7ec49df769e8:s:work
+                - rw1:p:5b3e7ec49df769e8:s:recovery
+              executable_step_bindings:
+                - step_id: rw1:p:5b3e7ec49df769e8:s:work
+                  session_block_id: b1ea0297-6f2d-4b5b-8774-6421f01472a9
+                - step_id: rw1:p:5b3e7ec49df769e8:s:recovery
+                  session_block_id: b1ea0297-6f2d-4b5b-8774-6421f01472a9
+              advisory_attachments:
+                - attachment_id: B3-DEV-TEST-ONLY-COHORT-5K-WORK
+                  step_ids:
+                    - rw1:p:5b3e7ec49df769e8:s:work
+                  policy:
+                    policy_id: B3-DEV-TEST-ONLY-COHORT-EVIDENCE-ONLY
+                    policy_version: 1
+                    method_id: PERCENT-BENCHMARK-SPEED
+                    method_version: 1
+                    benchmark_eligibility:
+                      cohort_completed_tests_eligible: true
+                      manual_completed_tests_eligible: false
+                      external_completed_tests_eligible: false
+                    freshness_local_civil_days: 90
+                    minimum_speed_basis_points: 9000
+                    maximum_speed_basis_points: 10000
+                    display_rounding:
+                      increment_milliseconds_per_kilometre: 1000
+                      direction: nearest
+
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []
