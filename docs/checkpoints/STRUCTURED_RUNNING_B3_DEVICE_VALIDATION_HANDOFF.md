@@ -62,7 +62,7 @@ athlete ownership for manual benchmark evidence, production rejection of the
 internal-tools build switch, and assignment replacement without deletion of the
 prior assignment, occurrences, or logged session evidence.
 
-Three defects were corrected in separate follow-up commits:
+Four defects were corrected in separate follow-up commits:
 
 - benchmark entry now uses a deterministic athlete-scoped source reference,
   preserves its command identity for a retry, and becomes terminal after a
@@ -71,6 +71,9 @@ Three defects were corrected in separate follow-up commits:
   hash, scope, schema version, or slot count differs from the reviewed request;
 - the database fixture gate now includes an existing completed session record
   and proves its count and digest are unchanged after assignment replacement.
+- internal-tools visibility now requires the app's build environment itself to
+  be `development`; a raw define or manual override cannot enable the tools in
+  production, loopback preview, or an unclassified build.
 
 All four fixture slots materialise on `2026-10-01` with their authored
 `session_order`. Home exposes the next actionable same-day occurrence after an
@@ -229,7 +232,7 @@ that mechanism with SQL.
 
 - Focused fixture/compiler, publication/activation, internal benchmark,
   release-build, structured-runner, target/actual, and Bali compatibility
-  matrix: 127 passed.
+  matrix: 128 passed.
 - Canonical Plan Package and private-publication suite: 59 passed.
 - Exact disposable device fixture database gate: 7/7 passed after a full local
   reset, including prior completion-evidence digest preservation.
@@ -238,7 +241,7 @@ that mechanism with SQL.
   idempotent retry, correction, and arbitrary-activity rejection.
 - Changed-file Flutter analysis: no issues.
 - Phase 2 consolidation safety gate: 6/6 groups passed.
-- Full authoritative `flutter test`: 3,453 passed with 6 expected
+- Full authoritative `flutter test`: 3,454 passed with 6 expected
   environment-gated skips.
 - `git diff --check origin/main...HEAD`: passed at review closeout.
 
