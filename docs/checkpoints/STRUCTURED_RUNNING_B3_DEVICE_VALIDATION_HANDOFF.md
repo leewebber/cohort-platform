@@ -1,8 +1,8 @@
 # Structured Running B3 device validation — local handoff
 
-**Recorded:** 2026-10-01  
-**Branch:** `codex/b3-device-validation`  
-**Base:** `1f6017d84f8de40d039df253c56dc8b339b61e82`  
+**Recorded:** 2026-10-01
+**Branch:** `codex/b3-device-validation`
+**Base:** `1f6017d84f8de40d039df253c56dc8b339b61e82`
 **Status:** Prepared locally; awaiting approval for hosted publication,
 assignment transition, and development phone installation.
 

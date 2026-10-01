@@ -1,6 +1,6 @@
 # Structured Running B3 device validation v1
 
-**Recorded:** 2026-10-01  
+**Recorded:** 2026-10-01
 **Status:** Local preparation only; hosted publication, assignment replacement,
 and phone installation require separate founder approval.
 
@@ -104,4 +104,3 @@ by this local slice. Founder approval must name the exact programme version and
 package/graph hashes, approve publication to Cohort Field Manual, approve Lee's
 replacement activation, and approve an internal-tools development phone build.
 The athlete must enter only real benchmark evidence.
-
