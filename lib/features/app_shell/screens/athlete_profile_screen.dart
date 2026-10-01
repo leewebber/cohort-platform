@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/config/app_build_provenance.dart';
+import '../../../core/config/production_navigation_policy.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
@@ -14,6 +15,7 @@ import '../../auth/services/athlete_surface_identity.dart';
 import '../../auth/services/current_user_session.dart';
 import '../../beta_support/beta_support_screen.dart';
 import '../../performance/screens/training_history_screen.dart';
+import '../../internal_tools/internal_tools_screen.dart';
 
 /// Athlete Profile — settings and identity (not founder tools).
 class AthleteProfileScreen extends StatelessWidget {
@@ -138,6 +140,25 @@ class AthleteProfileScreen extends StatelessWidget {
                   '${AppBuildProvenance.current.environmentLabel} · '
                   '${AppBuildProvenance.current.shortCommit}',
             ),
+            if (ProductionNavigationPolicy.showInternalToolsEntry()) ...[
+              const SizedBox(height: CohortSpacing.lg),
+              _SectionHeader('Developer tools'),
+              CohortCard(
+                key: const ValueKey('athlete-profile-diagnostics'),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const InternalToolsScreen(),
+                    ),
+                  );
+                },
+                child: const _ProfileRow(
+                  title: 'Diagnostics',
+                  subtitle: 'Internal engineering utilities.',
+                  showChevron: true,
+                ),
+              ),
+            ],
             const SizedBox(height: CohortSpacing.lg),
             _SectionHeader('Support'),
             CohortCard(
