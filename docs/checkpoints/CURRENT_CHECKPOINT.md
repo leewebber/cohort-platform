@@ -6,14 +6,17 @@
 > are applied on Cohort Field Manual. Structured Running B3 slice 1 is
 > integrated on `origin/main` at `686ddcdf`; its migration is applied on Cohort
 > Field Manual through `20260928120000`. B3 slice 2 is integrated on
-> `origin/main` at `a83583ef`. B3 slice 3 is implemented and verified locally
-> on `codex/b3-structured-running-slice-3`; its local migration is not applied
-> on any hosted project, and no programme adopts it.
+> `origin/main` at `a83583ef`. B3 slice 3 is integrated on `origin/main` at
+> `1f6017d`; its migration is applied on Cohort Field Manual through
+> `20260929120000`. A private TEST ONLY B3 device-validation programme is
+> prepared locally on `codex/b3-device-validation`; it is not published,
+> assigned, built, or installed.
 > Handoffs:
 > [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_2_HANDOFF.md),
-> [`STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md).
+> [`STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_3_HANDOFF.md),
+> [`STRUCTURED_RUNNING_B3_DEVICE_VALIDATION_HANDOFF.md`](./STRUCTURED_RUNNING_B3_DEVICE_VALIDATION_HANDOFF.md).
 > Phase 1 Integration Closeout remains historical binding authority:
 > [`PHASE_1_INTEGRATION_CLOSEOUT.md`](./PHASE_1_INTEGRATION_CLOSEOUT.md).
 > **M9 authority:** [`M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md`](./M9_CONTENT_RELATIONSHIP_GRAPH_CLOSEOUT.md).
@@ -74,11 +77,12 @@
 > `B3_HOSTED_MIGRATION_APPLIED=true`,
 > `B3_SLICE_1_HOSTED_MIGRATION_APPLIED=true`,
 > `STRUCTURED_RUNNING_B3_SLICE_2=INTEGRATED`,
-> `STRUCTURED_RUNNING_B3_SLICE_3=IMPLEMENTED_LOCAL`,
-> `B3_SLICE_3_HOSTED_MIGRATION_APPLIED=false`,
-> `B3_ATHLETE_UI=LOCAL_TARGETS_AND_ACTUALS_VERIFIED_V2_ONLY`,
-> `B3_STRUCTURED_RUNNER=IMPLEMENTED_LOCAL_TIME_TARGETS_AND_ACTUALS`,
+> `STRUCTURED_RUNNING_B3_SLICE_3=INTEGRATED`,
+> `B3_SLICE_3_HOSTED_MIGRATION_APPLIED=true`,
+> `B3_ATHLETE_UI=VERIFIED_V2_ONLY`,
+> `B3_STRUCTURED_RUNNER=TIME_TARGETS_AND_ACTUALS`,
 > `B3_PROGRAMME_ADOPTION=false`,
+> `B3_DEVICE_VALIDATION=PREPARED_LOCAL_AWAITING_APPROVAL`,
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,
