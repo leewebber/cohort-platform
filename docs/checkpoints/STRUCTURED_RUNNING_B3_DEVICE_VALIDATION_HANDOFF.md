@@ -186,7 +186,7 @@ hosted state must still be revalidated during step 2.
   URL and anonymous key; never put or print secrets in the repository.
 - Build from the exact approved commit with:
   `tool/release/build_app.sh --env development --target ios --config <external-defines.json> --enable-internal-tools`.
-- Confirm the output states `ENVIRONMENT=development` and
+- Confirm the output states `ENV=development` and
   `INTERNAL_TOOLS=enabled`. Production plus internal tools must fail before a
   build.
 - Normal Apple signing/provisioning and the physical device registration must
