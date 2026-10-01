@@ -9,49 +9,53 @@ void main() {
   final script = File('$root/tool/release/build_app.sh');
   final runDev = File('$root/tool/release/run_development.sh');
 
-  test('build script dry-run keeps repo .env untouched and hides keys', () async {
-    final envFile = File('$root/.env');
-    final before = envFile.existsSync() ? envFile.lastModifiedSync() : null;
-    final config = File('${Directory.systemTemp.path}/cohort-script-test.json')
-      ..writeAsStringSync(
-        '{"COHORT_BUILD_ENV":"loopbackPreview",'
-        '"COHORT_SUPABASE_URL":"http://127.0.0.1:54321",'
-        '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}"}',
-      );
+  test(
+    'build script dry-run keeps repo .env untouched and hides keys',
+    () async {
+      final envFile = File('$root/.env');
+      final before = envFile.existsSync() ? envFile.lastModifiedSync() : null;
+      final config =
+          File('${Directory.systemTemp.path}/cohort-script-test.json')
+            ..writeAsStringSync(
+              '{"COHORT_BUILD_ENV":"loopbackPreview",'
+              '"COHORT_SUPABASE_URL":"http://127.0.0.1:54321",'
+              '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}"}',
+            );
 
-    final first = await Process.run('bash', [
-      script.path,
-      '--env',
-      'loopbackPreview',
-      '--target',
-      'macos',
-      '--config',
-      config.path,
-      '--dry-run',
-    ]);
-    final second = await Process.run('bash', [
-      script.path,
-      '--env',
-      'loopbackPreview',
-      '--target',
-      'ios',
-      '--config',
-      config.path,
-      '--dry-run',
-    ]);
+      final first = await Process.run('bash', [
+        script.path,
+        '--env',
+        'loopbackPreview',
+        '--target',
+        'macos',
+        '--config',
+        config.path,
+        '--dry-run',
+      ]);
+      final second = await Process.run('bash', [
+        script.path,
+        '--env',
+        'loopbackPreview',
+        '--target',
+        'ios',
+        '--config',
+        config.path,
+        '--dry-run',
+      ]);
 
-    expect(first.exitCode, 0, reason: first.stderr.toString());
-    expect(second.exitCode, 0, reason: second.stderr.toString());
-    expect(first.stdout, contains('ENV=loopbackPreview'));
-    expect(first.stdout, contains('TARGET=macos'));
-    expect(second.stdout, contains('TARGET=ios'));
-    expect(first.stdout, isNot(contains(SyntheticJwts.anon)));
-    expect(second.stdout, isNot(contains(SyntheticJwts.anon)));
-    expect(first.stdout.toLowerCase(), isNot(contains('service_role')));
-    if (before != null) {
-      expect(envFile.lastModifiedSync(), before);
-    }
-  });
+      expect(first.exitCode, 0, reason: first.stderr.toString());
+      expect(second.exitCode, 0, reason: second.stderr.toString());
+      expect(first.stdout, contains('ENV=loopbackPreview'));
+      expect(first.stdout, contains('TARGET=macos'));
+      expect(second.stdout, contains('TARGET=ios'));
+      expect(first.stdout, isNot(contains(SyntheticJwts.anon)));
+      expect(second.stdout, isNot(contains(SyntheticJwts.anon)));
+      expect(first.stdout.toLowerCase(), isNot(contains('service_role')));
+      if (before != null) {
+        expect(envFile.lastModifiedSync(), before);
+      }
+    },
+  );
 
   test('production dry-run rejects loopback config before flutter', () async {
     final config = File('${Directory.systemTemp.path}/cohort-invalid-prod.json')
@@ -76,6 +80,55 @@ void main() {
     expect(result.stderr, isNot(contains(SyntheticJwts.anon)));
   });
 
+  test('internal tools require an explicit development build', () async {
+    final config =
+        File('${Directory.systemTemp.path}/cohort-internal-tools.json')
+          ..writeAsStringSync(
+            '{"COHORT_BUILD_ENV":"development",'
+            '"COHORT_SUPABASE_URL":"https://otnhhdxstdnwccehacku.supabase.co",'
+            '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}"}',
+          );
+    final enabled = await Process.run('bash', [
+      script.path,
+      '--env',
+      'development',
+      '--target',
+      'ios',
+      '--config',
+      config.path,
+      '--enable-internal-tools',
+      '--dry-run',
+    ]);
+    expect(enabled.exitCode, 0, reason: enabled.stderr.toString());
+    expect(enabled.stdout, contains('INTERNAL_TOOLS=enabled'));
+    expect(enabled.stdout, isNot(contains(SyntheticJwts.anon)));
+
+    final productionConfig =
+        File(
+          '${Directory.systemTemp.path}/cohort-internal-tools-production.json',
+        )..writeAsStringSync(
+          '{"COHORT_BUILD_ENV":"production",'
+          '"COHORT_SUPABASE_URL":"https://otnhhdxstdnwccehacku.supabase.co",'
+          '"COHORT_SUPABASE_ANON_KEY":"${SyntheticJwts.anon}"}',
+        );
+    final refused = await Process.run('bash', [
+      script.path,
+      '--env',
+      'production',
+      '--target',
+      'ios',
+      '--config',
+      productionConfig.path,
+      '--enable-internal-tools',
+      '--dry-run',
+    ]);
+    expect(refused.exitCode, isNot(0));
+    expect(
+      refused.stderr,
+      contains('internal tools are allowed only in development builds'),
+    );
+  });
+
   test('development runner dry-run does not rewrite .env', () async {
     final repoEnv = File('$root/.env');
     final before = repoEnv.existsSync() ? repoEnv.lastModifiedSync() : null;
@@ -84,10 +137,14 @@ void main() {
         'SUPABASE_URL=http://127.0.0.1:54321\n'
         'SUPABASE_ANON_KEY=${SyntheticJwts.anon}\n',
       );
-    final result = await Process.run('bash', [
-      runDev.path,
-      '--dry-run',
-    ], environment: {...Platform.environment, 'COHORT_DEV_ENV_FILE': tempEnv.path});
+    final result = await Process.run(
+      'bash',
+      [runDev.path, '--dry-run'],
+      environment: {
+        ...Platform.environment,
+        'COHORT_DEV_ENV_FILE': tempEnv.path,
+      },
+    );
     expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
     expect(result.stdout, contains('ENV=development'));
     expect(result.stdout, isNot(contains(SyntheticJwts.anon)));

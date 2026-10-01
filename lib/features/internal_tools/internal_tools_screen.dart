@@ -5,6 +5,7 @@ import '../../core/theme/text_styles.dart';
 import '../../core/widgets/cohort_card.dart';
 import '../../core/widgets/section_title.dart';
 import 'adaptation_metadata_completeness_screen.dart';
+import 'b3_device_benchmark_entry.dart';
 import '../admin/admin_protocol_editor_screen.dart';
 import '../auth/services/current_user_session.dart';
 import 'internal_tools_debug_actions.dart';
@@ -63,6 +64,16 @@ class _InternalToolsScreenState extends State<InternalToolsScreen> {
                     MaterialPageRoute(
                       builder: (_) =>
                           const AdaptationMetadataCompletenessScreen(),
+                    ),
+                  );
+                },
+              ),
+              _toolCard(
+                title: 'B3 device validation benchmark',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const B3DeviceBenchmarkEntryScreen(),
                     ),
                   );
                 },

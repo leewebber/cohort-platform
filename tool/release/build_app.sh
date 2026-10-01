@@ -8,6 +8,7 @@ ENV_NAME=""
 CONFIG_PATH=""
 TARGET="macos"
 DRY_RUN=0
+ENABLE_INTERNAL_TOOLS=0
 DEFINES_DIR=""
 
 cleanup() {
@@ -22,7 +23,7 @@ usage() {
 Usage:
   tool/release/build_app.sh --env production|loopbackPreview|development \
     --config /absolute/path/to/client.defines.json \
-    [--target macos|ios] [--dry-run]
+    [--target macos|ios] [--dry-run] [--enable-internal-tools]
 
 The config file must live outside Git or be an untracked local file.
 Required JSON keys: COHORT_SUPABASE_URL, COHORT_SUPABASE_ANON_KEY
@@ -35,6 +36,7 @@ while [[ $# -gt 0 ]]; do
     --config) CONFIG_PATH="${2:-}"; shift 2 ;;
     --target) TARGET="${2:-}"; shift 2 ;;
     --dry-run) DRY_RUN=1; shift ;;
+    --enable-internal-tools) ENABLE_INTERNAL_TOOLS=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) echo "unknown argument" >&2; exit 2 ;;
   esac
@@ -48,6 +50,10 @@ case "$TARGET" in
   macos|ios) ;;
   *) echo "target must be macos or ios" >&2; exit 2 ;;
 esac
+if [[ "$ENABLE_INTERNAL_TOOLS" -eq 1 && "$ENV_NAME" != "development" ]]; then
+  echo "internal tools are allowed only in development builds" >&2
+  exit 2
+fi
 [[ -n "$CONFIG_PATH" && -f "$CONFIG_PATH" ]] || {
   echo "config file is required" >&2
   exit 2
@@ -68,11 +74,11 @@ APP_VERSION="${VERSION_LINE%%+*}"
 BUILD_NUMBER="${VERSION_LINE##*+}"
 [[ "$BUILD_NUMBER" != "$VERSION_LINE" ]] || BUILD_NUMBER="1"
 
-python3 - <<'PY' "$CONFIG_PATH" "$ENV_NAME" "$DEFINES_FILE" "$COMMIT" "$APP_VERSION" "$BUILD_NUMBER"
+python3 - <<'PY' "$CONFIG_PATH" "$ENV_NAME" "$DEFINES_FILE" "$COMMIT" "$APP_VERSION" "$BUILD_NUMBER" "$ENABLE_INTERNAL_TOOLS"
 import json, sys
 from pathlib import Path
 from urllib.parse import urlparse
-src, env_name, dest, commit, version, build = sys.argv[1:7]
+src, env_name, dest, commit, version, build, internal_tools = sys.argv[1:8]
 data = json.loads(Path(src).read_text())
 if not isinstance(data, dict):
     raise SystemExit("config must be a JSON object")
@@ -111,6 +117,8 @@ merged = {
     "COHORT_APP_VERSION": version,
     "COHORT_BUILD_NUMBER": build,
 }
+if internal_tools == "1":
+    merged["ENABLE_INTERNAL_TOOLS"] = True
 Path(dest).write_text(json.dumps(merged))
 if parsed.hostname in {"127.0.0.1", "localhost", "::1"}:
     print("HOST_CLASS=loopback")
@@ -124,6 +132,11 @@ echo "ENV=${ENV_NAME}"
 echo "TARGET=${TARGET}"
 echo "COMMIT=${COMMIT}"
 echo "DEFINES_READY=true"
+if [[ "$ENABLE_INTERNAL_TOOLS" -eq 1 ]]; then
+  echo "INTERNAL_TOOLS=enabled"
+else
+  echo "INTERNAL_TOOLS=disabled"
+fi
 
 if [[ "$DRY_RUN" -eq 1 ]]; then
   echo "DRY_RUN=true"
