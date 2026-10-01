@@ -6,6 +6,35 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   tearDown(InternalToolsPolicy.reset);
 
+  test('raw build defines enable internal tools only in development', () {
+    expect(
+      InternalToolsPolicy.enabledForBuild(
+        environment: 'development',
+        requested: true,
+      ),
+      isTrue,
+    );
+    for (final environment in ['production', 'loopbackPreview', '']) {
+      expect(
+        InternalToolsPolicy.enabledForBuild(
+          environment: environment,
+          requested: true,
+        ),
+        isFalse,
+        reason: environment,
+      );
+      expect(
+        InternalToolsPolicy.enabledForBuild(
+          environment: environment,
+          requested: false,
+          manualOverride: true,
+        ),
+        isFalse,
+        reason: '$environment manual override',
+      );
+    }
+  });
+
   test('command sends only an explicit exact completed 5 km declaration', () {
     final command = B3DeviceBenchmarkCommand(
       commandId: 'b3d00000-0000-4000-8000-000000000099',

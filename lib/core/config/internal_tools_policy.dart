@@ -1,3 +1,5 @@
+import 'build_environment.dart';
+
 /// Controls whether internal engineering tooling may appear in the app UI.
 ///
 /// Production athlete and coach experiences default to hidden.
@@ -15,8 +17,27 @@ class InternalToolsPolicy {
   static bool _manualOverride = false;
 
   static bool get enabled {
-    if (_testOverride || _manualOverride) return true;
-    return const bool.fromEnvironment(_dartDefineKey, defaultValue: false);
+    if (_testOverride) return true;
+    return enabledForBuild(
+      environment: const String.fromEnvironment('COHORT_BUILD_ENV'),
+      requested: const bool.fromEnvironment(
+        _dartDefineKey,
+        defaultValue: false,
+      ),
+      manualOverride: _manualOverride,
+    );
+  }
+
+  /// Build-time fail-closed boundary. A raw internal-tools define cannot enable
+  /// engineering surfaces in production, preview, or an unclassified build.
+  static bool enabledForBuild({
+    required String environment,
+    required bool requested,
+    bool manualOverride = false,
+  }) {
+    return BuildEnvironment.tryParse(environment) ==
+            BuildEnvironment.development &&
+        (requested || manualOverride);
   }
 
   /// Explicit opt-in for unit/widget tests that cover internal tooling.
@@ -24,7 +45,8 @@ class InternalToolsPolicy {
     _testOverride = true;
   }
 
-  /// Explicit opt-in for local engineering sessions.
+  /// Explicit opt-in for local engineering sessions. Still requires a
+  /// `development` build environment.
   static void enable() {
     _manualOverride = true;
   }
