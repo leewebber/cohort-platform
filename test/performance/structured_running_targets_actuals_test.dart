@@ -4,10 +4,15 @@ import 'package:cohort_platform/features/performance/mappers/performance_record_
 import 'package:cohort_platform/features/performance/models/interval_work_result.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
+import 'package:cohort_platform/features/performance/repositories/performance_record_store.dart';
 import 'package:cohort_platform/features/performance/screens/session_finish_review_screen.dart';
 import 'package:cohort_platform/features/performance/services/completed_session_result_projection.dart';
 import 'package:cohort_platform/features/performance/services/performance_correction_service.dart';
+import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
 import 'package:cohort_platform/features/performance/widgets/performance_capture_widgets.dart';
+import 'package:cohort_platform/features/programme/models/athlete_programme_completion.dart';
+import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
+import 'package:cohort_platform/features/programme/services/athlete_programme_completion_service.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
 import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
@@ -227,6 +232,93 @@ void main() {
     },
   );
 
+  test(
+    'exact-occurrence skipped work may submit partial without widening legacy',
+    () async {
+      final fixture = _controlledFixture();
+      final controller =
+          PerformanceCaptureController.initializeFromExecutionPlan(
+            plan: fixture.plan,
+            athleteId: 'athlete-1',
+            trainingSessionId: 307,
+          )..bindStructuredRunning(
+            execution: fixture.execution,
+            allowInitialize: true,
+          );
+      var result =
+          controller.draft.blockDrafts.single.resultData as IntervalResultData;
+      result = result.replaceInterval(
+        result.intervals[0].copyWith(
+          state: IntervalWorkState.skipped,
+          clearPace: true,
+        ),
+      );
+      result = result.replaceInterval(
+        result.intervals[1].copyWith(
+          state: IntervalWorkState.completed,
+          paceSecondsPerKm: 270,
+        ),
+      );
+      result = result.replaceInterval(
+        result.intervals[2].copyWith(
+          state: IntervalWorkState.skipped,
+          clearPace: true,
+        ),
+      );
+      controller
+        ..updateBlockResultData(_blockId, result)
+        ..markBlockComplete(_blockId);
+
+      expect(controller.validateForCompletion().isValid, isTrue);
+      expect(
+        controller.resolveCompletionStatus(),
+        TrainingSessionRecordStatus.partiallyCompleted,
+      );
+      final completionService = _CapturingCompletionService();
+      final coordinator = PerformanceRecordSaveCoordinator(
+        programmeCompletionService: completionService,
+      );
+      final completion = await coordinator.completeSession(
+        controller: controller,
+        trainingSessionId: 307,
+        athleteId: 'athlete-1',
+        programmeContext: _programmeContext(
+          occurrenceId: 'occurrence-controlled',
+        ),
+      );
+      expect(completion.progressionFailed, isTrue);
+      expect(completionService.calls, 1);
+      expect(
+        completionService.submittedStatus,
+        TrainingSessionRecordStatus.partiallyCompleted,
+      );
+      await expectLater(
+        coordinator.completeSession(
+          controller: controller,
+          trainingSessionId: 307,
+          athleteId: 'athlete-1',
+          programmeContext: _programmeContext(),
+        ),
+        throwsA(isA<PerformanceRecordStoreException>()),
+      );
+      expect(completionService.calls, 1);
+
+      controller.markBlockSkipped(_blockId);
+      await expectLater(
+        coordinator.completeSession(
+          controller: controller,
+          trainingSessionId: 307,
+          athleteId: 'athlete-1',
+          programmeContext: _programmeContext(
+            occurrenceId: 'occurrence-controlled',
+          ),
+        ),
+        throwsA(isA<PerformanceRecordStoreException>()),
+      );
+      expect(completionService.calls, 1);
+    },
+  );
+
   test('actual correction preserves frozen target and exact identity', () {
     final fixture = _controlledFixture();
     final controller =
@@ -379,6 +471,57 @@ void main() {
     expect(find.text('Actual · Pace unavailable'), findsOneWidget);
     expect(find.text('Actual · Skipped'), findsOneWidget);
   });
+}
+
+class _CapturingCompletionService extends AthleteProgrammeCompletionService {
+  int calls = 0;
+  TrainingSessionRecordStatus? submittedStatus;
+
+  @override
+  String buildLogicalCompletionKey(ProgrammeExecutionContext context) {
+    return context.programmedSessionKey!;
+  }
+
+  @override
+  String buildIdempotencyKey({
+    required String logicalCompletionKey,
+    required String requestNonce,
+  }) {
+    return 'test-idempotency';
+  }
+
+  @override
+  Future<AthleteProgrammeCompletionResult> submit({
+    required PerformanceCaptureController controller,
+    required ProgrammeExecutionContext programmeContext,
+    required int trainingSessionId,
+    required String idempotencyKey,
+    String? frozenLogicalKey,
+    String? frozenActualsFingerprint,
+  }) async {
+    calls += 1;
+    submittedStatus = controller.resolveCompletionStatus();
+    return const AthleteProgrammeCompletionResult(
+      status: AthleteProgrammeCompletionStatus.failure,
+      code: 'captured_without_commit',
+    );
+  }
+}
+
+ProgrammeExecutionContext _programmeContext({String? occurrenceId}) {
+  return ProgrammeExecutionContext(
+    assignmentId: 'assignment-controlled',
+    programmeVersionId: 'version-controlled',
+    sessionSlotId: 'slot-controlled',
+    weekNumber: 1,
+    dayKey: 'day_1',
+    sessionOrder: 3,
+    plannedProtocolId: 'controlled-v2-running-fixture',
+    effectiveProtocolId: 'controlled-v2-running-fixture',
+    packageContentHash: _packageHash,
+    programmedSessionKey: 'controlled-session-3',
+    occurrenceId: occurrenceId,
+  );
 }
 
 ({SessionExecutionPlan plan, VerifiedStructuredRunningExecution execution})

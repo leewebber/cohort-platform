@@ -10,6 +10,9 @@ import '../../adaptation/models/adaptation_execution_result.dart';
 import '../../adaptation/services/adaptation_execution_coordinator.dart';
 import '../controllers/performance_capture_controller.dart';
 import '../mappers/performance_record_mapper.dart';
+import '../models/interval_work_result.dart';
+import '../models/performance_result_data.dart';
+import '../models/training_block_result_status.dart';
 import '../models/training_session_record.dart';
 import '../models/training_session_record_status.dart';
 import '../repositories/performance_record_store.dart';
@@ -92,8 +95,10 @@ class PerformanceRecordSaveCoordinator {
 
     // Sprint 1.5A programme path: one atomic RPC for completion + cursor.
     if (programmeContext != null && programmeContext.isProgrammeBacked) {
-      if (controller.resolveCompletionStatus() !=
-          TrainingSessionRecordStatus.completed) {
+      if (!_allowsProgrammeCompletion(
+        controller: controller,
+        programmeContext: programmeContext,
+      )) {
         throw PerformanceRecordStoreException(
           'Complete every required programme block before saving and finishing.',
         );
@@ -253,6 +258,53 @@ class PerformanceRecordSaveCoordinator {
     PreviousStrengthPerformanceService.invalidateAfterWrite(record.athleteId);
     return record;
   }
+}
+
+/// Limits programme completion to fully completed sessions, plus the one
+/// server-supported partial case: an exact-occurrence structured run whose
+/// completed block contains resolved skipped work repetitions.
+///
+/// A skipped programme block or an incomplete/pending work repetition remains
+/// ineligible. This keeps legacy programme completion fail-closed while
+/// allowing B3's server-required `partially_completed` terminal state.
+bool _allowsProgrammeCompletion({
+  required PerformanceCaptureController controller,
+  required ProgrammeExecutionContext programmeContext,
+}) {
+  final status = controller.resolveCompletionStatus();
+  if (status == TrainingSessionRecordStatus.completed) return true;
+  if (status != TrainingSessionRecordStatus.partiallyCompleted ||
+      programmeContext.occurrenceId?.trim().isNotEmpty != true) {
+    return false;
+  }
+
+  final draft = controller.draft;
+  if (draft.incompleteBlockCount != 0 ||
+      draft.skippedBlockCount != 0 ||
+      draft.blockDrafts.any(
+        (block) => block.status != TrainingBlockResultStatus.completed,
+      )) {
+    return false;
+  }
+
+  var hasStructuredSkippedWork = false;
+  for (final block in draft.blockDrafts) {
+    if (block.blockSnapshot.structuredRunning == null) continue;
+    final result = block.resultData;
+    if (result is! IntervalResultData ||
+        result.intervals.isEmpty ||
+        result.intervals.any(
+          (interval) => interval.state == IntervalWorkState.pending,
+        )) {
+      return false;
+    }
+    if (result.intervals.any(
+      (interval) => interval.state == IntervalWorkState.skipped,
+    )) {
+      hasStructuredSkippedWork = true;
+    }
+  }
+  return hasStructuredSkippedWork;
 }
 
 extension PerformanceRecordRestore on PerformanceRecordSaveCoordinator {
