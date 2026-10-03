@@ -8,9 +8,16 @@
 > Field Manual through `20260928120000`. B3 slice 2 is integrated on
 > `origin/main` at `a83583ef`. B3 slice 3 is integrated on `origin/main` at
 > `1f6017d`; its migration is applied on Cohort Field Manual through
-> `20260929120000`. A private TEST ONLY B3 device-validation programme is
-> prepared locally on `codex/b3-device-validation`; it is not published,
-> assigned, built, or installed.
+> `20260929120000`. The private TEST ONLY B3 device-validation programme is
+> published on Cohort Field Manual, Lee's replacement assignment is active,
+> and the approved development build was installed. Lee reported the complete
+> device walkthrough passing on 2026-10-03, including the screen-lock retest at
+> local fix `8f1ccfa`. The closeout is **blocked**, not complete: SELECT-only
+> hosted evidence currently contains terminal outcomes, immutable snapshots,
+> and History for fixture sessions 1 and 2 only. Sessions 3 and 4 remain
+> scheduled with no frozen snapshot or History row, and there is no hosted
+> correction audit row. See the device-validation handoff for the exact
+> disagreement and preserved-history evidence.
 > Handoffs:
 > [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
@@ -82,7 +89,12 @@
 > `B3_ATHLETE_UI=VERIFIED_V2_ONLY`,
 > `B3_STRUCTURED_RUNNER=TIME_TARGETS_AND_ACTUALS`,
 > `B3_PROGRAMME_ADOPTION=false`,
-> `B3_DEVICE_VALIDATION=PREPARED_LOCAL_AWAITING_APPROVAL`,
+> `B3_DEVICE_VALIDATION=HOSTED_EVIDENCE_MISMATCH_CLOSEOUT_BLOCKED`,
+> `B3_DEVICE_VALIDATION_HOSTED_PUBLICATION=true`,
+> `B3_DEVICE_VALIDATION_ASSIGNMENT_ACTIVATED=true`,
+> `B3_DEVICE_VALIDATION_PHONE_INSTALLED=true`,
+> `B3_DEVICE_VALIDATION_DEVICE_WALKTHROUGH_REPORTED=true`,
+> `B3_DEVICE_VALIDATION_HOSTED_CLOSEOUT_VERIFIED=false`,
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,

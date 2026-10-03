@@ -3,8 +3,12 @@
 **Recorded:** 2026-10-01
 **Branch:** `codex/b3-device-validation`
 **Base:** `1f6017d84f8de40d039df253c56dc8b339b61e82`
-**Status:** Prepared locally; awaiting approval for hosted publication,
-assignment transition, and development phone installation.
+**Live status:** Hosted fixture active and device walkthrough reported; final
+closeout blocked by a hosted-evidence disagreement recorded on 2026-10-03.
+
+The original 2026-10-01 preparation, review, rollout plan, and verification
+records below are retained as dated historical evidence. They no longer
+describe the live publication, assignment, or installation state.
 
 Binding contract:
 [`../architecture/Structured_Running_B3_Device_Validation_v1.md`](../architecture/Structured_Running_B3_Device_Validation_v1.md).
@@ -251,3 +255,111 @@ that mechanism with SQL.
 Do not publish the fixture, activate Lee, enter hosted benchmark evidence,
 build/install the phone app, push the branch, resume Bali, or perform any other
 hosted write without the corresponding concrete approval.
+
+## Device-validation closeout attempt — 2026-10-03
+
+### Founder-confirmed device evidence
+
+Lee confirmed the following behavior on the approved development build:
+
+- a calculated target derived from the real completed 5 km benchmark of
+  `22:00` elapsed including pauses;
+- exact work/recovery restore, screen-lock transitions, explicit Pause, and
+  cold reopen;
+- countdown expiry without automatic block or session completion;
+- completed work captured with pace unavailable;
+- skipped work presented as partial completion;
+- History actual correction with the frozen target unchanged; and
+- fixture session 4 remaining intent-only despite the manual benchmark.
+
+Local commit `648790dff06b9efb385d5a473c8d4d5e0352f1cd` exposes the
+development-only Diagnostics navigation. Local commit
+`8f1ccfadcf753c938457de12115c2e6a44b658f0` adds durable elapsed-time
+reconciliation across screen lock, background, and cold reopen. Both commits
+remain unchanged and linear above `origin/main` at `bb1fd500a430b306707954fd3e95562ddb8da52f`.
+
+### SELECT-only Cohort Field Manual evidence
+
+The 2026-10-03 read-only check reconfirmed Cohort Field Manual
+`otnhhdxstdnwccehacku` as `ACTIVE_HEALTHY`. It found one athlete-owned manual
+benchmark at exactly 5,000 m and 1,320,000 ms with
+`elapsed_including_pauses` authority.
+
+The fixture has one active assignment and four scheduled occurrences, but its
+authoritative hosted execution state is:
+
+| Fixture session | Hosted outcome | Frozen target | Hosted History actuals |
+| --- | --- | --- | --- |
+| 1 | `completed` | calculated from the 22:00 manual benchmark; exact 264,000–880,000/3 ms/km range | three completed repetitions at 270, 275, and 280 s/km |
+| 2 | `completed` | the same occurrence-owned calculated range | three `pace_unavailable` repetitions |
+| 3 | no outcome; occurrence remains `scheduled` | no snapshot | no History row |
+| 4 | no outcome; occurrence remains `scheduled` | no snapshot | no History row |
+
+For sessions 1 and 2, occurrence, assignment, training-session, package,
+session-slot, and completion-record identities agree exactly. The frozen target
+embedded in each History block is byte-equal to the authoritative occurrence
+snapshot. There are two snapshots, two terminal outcomes, two structured
+History blocks, and zero `performance_result_corrections` rows for this
+assignment.
+
+This disagrees with the device report for skipped-to-partial session 3,
+intent-only session 4, and History correction. A canonical start for session 4
+would transactionally create its occurrence snapshot, so its absence cannot be
+treated as hosted proof of the reported intent-only result. The device report
+is retained as founder evidence, but the hosted closeout is not inferred from
+it.
+
+### Preserved prior evidence
+
+All non-B3 training evidence is unchanged since the B3 assignment activation:
+
+- 155 prior occurrences, digest `6610435a7dec7507d94dae1cdbd83461`;
+- 15 prior outcomes, digest `0747fe71152e8591d81a7bf25192aeea`;
+- 43 prior training sessions, digest `9d47414c60ede759527cfca9c4ee3373`;
+- 20 prior History records, digest `892a1b7b1f91b680932bfa9dec7b36f4`.
+
+The immutable Bali version digest remains
+`a821dc6b0d24b5f2e5f872621c33bb3b`; its 71 occurrences remain
+`4e9c7e6f655ec685cb9934c2870a6a45`. Bali has four preserved outcomes,
+sessions, and History records. One Bali completion occurred after the original
+publication baseline and before B3 activation, accounting for the change from
+the earlier 3/3/3 counts. The Bali assignment is `reassigned` and points to the
+active B3 replacement; it was not deleted or resumed.
+
+### Closeout decision
+
+```text
+B3_DEVICE_VALIDATION=HOSTED_EVIDENCE_MISMATCH_CLOSEOUT_BLOCKED
+B3_DEVICE_VALIDATION_DEVICE_WALKTHROUGH_REPORTED=true
+B3_DEVICE_VALIDATION_HOSTED_PUBLICATION=true
+B3_DEVICE_VALIDATION_ASSIGNMENT_ACTIVATED=true
+B3_DEVICE_VALIDATION_PHONE_INSTALLED=true
+B3_DEVICE_VALIDATION_HOSTED_CLOSEOUT_VERIFIED=false
+B3_DEVICE_VALIDATION_SESSION_1_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_2_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_3_HOSTED_VERIFIED=false
+B3_DEVICE_VALIDATION_SESSION_4_HOSTED_VERIFIED=false
+B3_DEVICE_VALIDATION_CORRECTION_AUDIT_VERIFIED=false
+PRIOR_TRAINING_EVIDENCE_PRESERVED=true
+```
+
+Local closeout verification at code HEAD
+`8f1ccfadcf753c938457de12115c2e6a44b658f0`:
+
+- one uncontended authoritative `flutter test`: 3,461 passed with 6 expected
+  environment-gated skips;
+- changed-file analysis across the six Dart files in `648790d` and `8f1ccfa`:
+  no issues;
+- Phase 2 consolidation safety gate: 6/6 groups passed; and
+- `git diff --check`: passed.
+
+Do not approve integration of the two local follow-up commits as a completed
+device-validation closeout until sessions 3 and 4 and the correction audit are
+reconciled through supported product behavior, or the founder explicitly
+changes the acceptance contract. This record authorises no hosted write,
+assignment change, fixture replacement, phone rebuild, Bali return, or next
+milestone.
+
+Commercial percentage bands, Cohort-test ingestion, distance execution,
+manual-lap execution, device export/Garmin, target overrides, and real programme
+adoption remain open and unavailable.
