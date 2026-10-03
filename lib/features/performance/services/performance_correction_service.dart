@@ -55,6 +55,56 @@ class PerformanceCorrectionDraft {
 class PerformanceCorrectionService {
   const PerformanceCorrectionService();
 
+  bool hasChanges(PerformanceCorrectionDraft draft) {
+    if (draft.overallRpe != draft.record.overallRpe ||
+        draft.athleteNote != draft.record.athleteNote) {
+      return true;
+    }
+    for (final block in draft.blockResults) {
+      if (_blockChanged(draft.record, block)) return true;
+      for (final exercise in block.exerciseResults) {
+        for (final set in exercise.setResults) {
+          if (_setChanged(draft.record, set)) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  void validateAuthoritativeResponse(
+    Object? response, {
+    required TrainingSessionRecord original,
+  }) {
+    if (response is! Map) {
+      throw const PerformanceCorrectionException(
+        'unexpected_correction_response',
+        'This result could not be corrected.',
+      );
+    }
+    final status = response['status']?.toString();
+    if (status == 'unchanged') {
+      throw const PerformanceCorrectionException(
+        'no_correction_changes',
+        'Change at least one recorded result before saving.',
+      );
+    }
+    final completedAt = DateTime.tryParse(
+      response['completed_at']?.toString() ?? '',
+    );
+    if (status != 'corrected' ||
+        response['record_id']?.toString() != original.recordId ||
+        response['correction_id']?.toString().trim().isEmpty != false ||
+        response['session_status']?.toString() != original.status.dbValue ||
+        completedAt == null ||
+        original.completedAt == null ||
+        !completedAt.isAtSameMomentAs(original.completedAt!)) {
+      throw const PerformanceCorrectionException(
+        'correction_response_mismatch',
+        'This result could not be corrected.',
+      );
+    }
+  }
+
   void validate(PerformanceCorrectionDraft draft) {
     if (draft.record.status != TrainingSessionRecordStatus.completed) {
       throw const PerformanceCorrectionException('session_not_completed');

@@ -185,6 +185,7 @@ class _CompletedSessionResultViewState
 
   List<Widget> _editChildren(PerformanceCorrectionDraft draft) {
     final warning = draft.runningWarning();
+    final hasChanges = const PerformanceCorrectionService().hasChanges(draft);
     return [
       if (warning != null) ...[
         ImplausibleRunningPaceWarning(warning: warning),
@@ -216,8 +217,15 @@ class _CompletedSessionResultViewState
       CohortButton(
         key: const ValueKey('save-corrected-results'),
         label: _saving ? 'Saving…' : 'Save results',
-        onPressed: _saving ? null : _saveCorrection,
+        onPressed: _saving || !hasChanges ? null : _saveCorrection,
       ),
+      if (!hasChanges) ...[
+        const SizedBox(height: CohortSpacing.xs),
+        Text(
+          'Change at least one recorded result before saving.',
+          style: CohortTextStyles.muted,
+        ),
+      ],
       const SizedBox(height: CohortSpacing.sm),
       TextButton(
         key: const ValueKey('cancel-edit-results'),
@@ -334,6 +342,7 @@ class _CompletedSessionResultViewState
   Future<void> _saveCorrection() async {
     final draft = _draft;
     if (draft == null || _saving) return;
+    if (!const PerformanceCorrectionService().hasChanges(draft)) return;
     final warning = draft.runningWarning();
     if (warning != null && !draft.acknowledgeImplausibleRunningPace) {
       final confirmed = await confirmImplausibleRunningPace(

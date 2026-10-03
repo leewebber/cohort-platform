@@ -131,10 +131,13 @@ class SupabasePerformanceRecordStore extends PerformanceRecordStore {
     const service = PerformanceCorrectionService();
     final payload = service.toPayload(draft);
     try {
-      await SupabaseService.client.rpc(
+      final response = await SupabaseService.client.rpc(
         'correct_completed_performance_record',
         params: {'payload': payload},
       );
+      service.validateAuthoritativeResponse(response, original: draft.record);
+    } on PerformanceCorrectionException {
+      rethrow;
     } catch (error) {
       throw PerformanceCorrectionException(
         error.toString(),

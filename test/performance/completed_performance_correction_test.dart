@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cohort_platform/core/widgets/cohort_button.dart';
 import 'package:cohort_platform/features/performance/models/interval_work_result.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/services/interval_pace_format.dart';
@@ -22,15 +23,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('correction migration does not add a broad completed-set UPDATE policy', () {
-    final sql = File(
-      'supabase/migrations/20260904120000_correct_completed_performance_record.sql',
-    ).readAsStringSync();
-    expect(sql, contains('correct_completed_performance_record'));
-    expect(sql, contains('performance_result_corrections'));
-    expect(sql, isNot(contains('CREATE POLICY performance_set_results')));
-    expect(sql, contains("status IS DISTINCT FROM 'completed'"));
-  });
+  test(
+    'correction migration does not add a broad completed-set UPDATE policy',
+    () {
+      final sql = File(
+        'supabase/migrations/20260904120000_correct_completed_performance_record.sql',
+      ).readAsStringSync();
+      expect(sql, contains('correct_completed_performance_record'));
+      expect(sql, contains('performance_result_corrections'));
+      expect(sql, isNot(contains('CREATE POLICY performance_set_results')));
+      expect(sql, contains("status IS DISTINCT FROM 'completed'"));
+    },
+  );
 
   test('9 km in 5:00 is an implausible running pace', () {
     final warning = RunningPacePlausibility.warning(
@@ -80,7 +84,9 @@ void main() {
     );
   });
 
-  testWidgets('completed result is read-only until Edit results', (tester) async {
+  testWidgets('completed result is read-only until Edit results', (
+    tester,
+  ) async {
     final record = _apolloBase(durationSeconds: 300);
     await tester.pumpWidget(_app(record: record));
 
@@ -103,34 +109,106 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('correction-duration')), findsOneWidget);
 
-    await tester.ensureVisible(find.byKey(const ValueKey('cancel-edit-results')));
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('cancel-edit-results')),
+    );
     await tester.tap(find.byKey(const ValueKey('cancel-edit-results')));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('correction-duration')), findsNothing);
     expect(find.textContaining('0:33'), findsOneWidget);
   });
 
-  testWidgets('correction pace field accepts 410 without completing a new row', (
+  testWidgets('unchanged correction cannot present a successful save', (
     tester,
   ) async {
-    tester.view.physicalSize = const Size(800, 1800);
+    tester.view.physicalSize = const Size(800, 1600);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(_app(record: _apolloEngineCompleted()));
+    await tester.pumpWidget(_app(record: _apolloBase(durationSeconds: 3000)));
+
     await tester.ensureVisible(find.byKey(const ValueKey('edit-results')));
     await tester.tap(find.byKey(const ValueKey('edit-results')));
     await tester.pumpAndSettle();
-    expect(find.text(IntervalPaceFormat.helperCopy), findsWidgets);
-    final field = find.byType(TextField).first;
-    await tester.enterText(field, '4');
-    await tester.pump();
-    expect(tester.widget<TextField>(field).controller!.text, '4');
-    await tester.enterText(field, '410');
-    await tester.pump();
-    expect(tester.widget<TextField>(field).controller!.text, '4:10');
-    expect(find.byType(TextField), findsWidgets);
+
+    expect(
+      find.text('Change at least one recorded result before saving.'),
+      findsOneWidget,
+    );
+    final save = tester.widget<CohortButton>(
+      find.byKey(const ValueKey('save-corrected-results')),
+    );
+    expect(save.onPressed, isNull);
+    expect(find.text('Results updated'), findsNothing);
   });
+
+  test('authoritative correction response must prove an audit write', () {
+    const service = PerformanceCorrectionService();
+    final original = _apolloBase(durationSeconds: 3000);
+
+    expect(
+      () => service.validateAuthoritativeResponse({
+        'status': 'unchanged',
+        'record_id': original.recordId,
+        'completed_at': original.completedAt!.toIso8601String(),
+        'session_status': 'completed',
+      }, original: original),
+      throwsA(
+        isA<PerformanceCorrectionException>().having(
+          (error) => error.code,
+          'code',
+          'no_correction_changes',
+        ),
+      ),
+    );
+
+    service.validateAuthoritativeResponse({
+      'status': 'corrected',
+      'record_id': original.recordId,
+      'correction_id': 'audit-1',
+      'completed_at': original.completedAt!.toIso8601String(),
+      'session_status': 'completed',
+    }, original: original);
+
+    expect(
+      () => service.validateAuthoritativeResponse({
+        'status': 'corrected',
+        'record_id': original.recordId,
+        'completed_at': original.completedAt!.toIso8601String(),
+        'session_status': 'completed',
+      }, original: original),
+      throwsA(
+        isA<PerformanceCorrectionException>().having(
+          (error) => error.code,
+          'code',
+          'correction_response_mismatch',
+        ),
+      ),
+    );
+  });
+
+  testWidgets(
+    'correction pace field accepts 410 without completing a new row',
+    (tester) async {
+      tester.view.physicalSize = const Size(800, 1800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(_app(record: _apolloEngineCompleted()));
+      await tester.ensureVisible(find.byKey(const ValueKey('edit-results')));
+      await tester.tap(find.byKey(const ValueKey('edit-results')));
+      await tester.pumpAndSettle();
+      expect(find.text(IntervalPaceFormat.helperCopy), findsWidgets);
+      final field = find.byType(TextField).first;
+      await tester.enterText(field, '4');
+      await tester.pump();
+      expect(tester.widget<TextField>(field).controller!.text, '4');
+      await tester.enterText(field, '410');
+      await tester.pump();
+      expect(tester.widget<TextField>(field).controller!.text, '4:10');
+      expect(find.byType(TextField), findsWidgets);
+    },
+  );
 
   test('valid correction updates the existing result and audit', () async {
     final store = InMemoryPerformanceRecordStore();
@@ -155,7 +233,8 @@ void main() {
     expect(corrected.status, TrainingSessionRecordStatus.completed);
     expect(corrected.completedAt, original.completedAt);
     expect(corrected.trainingSessionId, original.trainingSessionId);
-    final data = corrected.blockResults.single.resultData as EnduranceResultData;
+    final data =
+        corrected.blockResults.single.resultData as EnduranceResultData;
     expect(data.durationSeconds, 3000);
     expect(data.distance, 9);
     expect(data.averageHeartRate, 145);
@@ -174,7 +253,10 @@ void main() {
       3000,
     );
     expect(store.corrections, hasLength(1));
-    expect((await store.listHistory(athleteId: original.athleteId)), hasLength(1));
+    expect(
+      (await store.listHistory(athleteId: original.athleteId)),
+      hasLength(1),
+    );
   });
 
   test('anonymous and other-athlete corrections are denied', () async {
@@ -221,8 +303,7 @@ void main() {
     final store = InMemoryPerformanceRecordStore();
     final original = _apolloBase(durationSeconds: 3000);
     store.put(original);
-    final draft = PerformanceCorrectionDraft(original)
-      ..overallRpe = 99;
+    final draft = PerformanceCorrectionDraft(original)..overallRpe = 99;
     expect(
       () => store.correctCompleted(draft),
       throwsA(isA<PerformanceCorrectionException>()),
@@ -231,7 +312,9 @@ void main() {
 
     final valid = PerformanceCorrectionDraft(original)..overallRpe = 8;
     await store.correctCompleted(valid);
-    await store.correctCompleted(PerformanceCorrectionDraft(original)..overallRpe = 7);
+    await store.correctCompleted(
+      PerformanceCorrectionDraft(original)..overallRpe = 7,
+    );
     expect(store.corrections, hasLength(2));
   });
 
@@ -244,7 +327,13 @@ void main() {
         exerciseResults: [
           record.blockResults.single.exerciseResults.single.copyWith(
             setResults: [
-              record.blockResults.single.exerciseResults.single.setResults.single
+              record
+                  .blockResults
+                  .single
+                  .exerciseResults
+                  .single
+                  .setResults
+                  .single
                   .copyWith(reps: 15, load: 40, loadUnit: 'kg'),
             ],
           ),
@@ -258,8 +347,16 @@ void main() {
 
   test('strength comparison metrics refresh after a load correction', () async {
     final store = InMemoryPerformanceRecordStore();
-    final previous = _strength(recordId: 'prev', load: 80, completedAt: DateTime.utc(2026, 9, 1));
-    final current = _strength(recordId: 'curr', load: 70, completedAt: DateTime.utc(2026, 9, 3));
+    final previous = _strength(
+      recordId: 'prev',
+      load: 80,
+      completedAt: DateTime.utc(2026, 9, 1),
+    );
+    final current = _strength(
+      recordId: 'curr',
+      load: 70,
+      completedAt: DateTime.utc(2026, 9, 3),
+    );
     store
       ..put(previous)
       ..put(current);
@@ -267,7 +364,10 @@ void main() {
       record: current,
       athleteHistory: [previous, current],
     );
-    expect(before.blocks.last.exercises.single.comparisonStatus.label, 'Below last performance');
+    expect(
+      before.blocks.last.exercises.single.comparisonStatus.label,
+      'Below last performance',
+    );
 
     final draft = PerformanceCorrectionDraft(current);
     draft.blockResults = [
@@ -289,7 +389,10 @@ void main() {
       record: corrected,
       athleteHistory: [previous, corrected],
     );
-    expect(after.blocks.last.exercises.single.comparisonStatus.label, 'Improved');
+    expect(
+      after.blocks.last.exercises.single.comparisonStatus.label,
+      'Improved',
+    );
     expect(after.blocks.last.exercises.single.estimated1RmLabel, isNotNull);
   });
 
@@ -308,28 +411,45 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('edit-results')));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const ValueKey('correction-duration')), '5:00');
+    await tester.enterText(
+      find.byKey(const ValueKey('correction-duration')),
+      '5:00',
+    );
     await tester.pump();
     expect(
       find.textContaining('This result implies an average pace of 0:33/km'),
       findsWidgets,
     );
 
-    await tester.ensureVisible(find.byKey(const ValueKey('save-corrected-results')));
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('save-corrected-results')),
+    );
     await tester.tap(find.byKey(const ValueKey('save-corrected-results')));
     await tester.pumpAndSettle();
-    expect(find.byKey(const ValueKey('implausible-pace-save-anyway')), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('implausible-pace-save-anyway')));
+    expect(
+      find.byKey(const ValueKey('implausible-pace-save-anyway')),
+      findsOneWidget,
+    );
+    await tester.tap(
+      find.byKey(const ValueKey('implausible-pace-save-anyway')),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('correction-confirmation')), findsOneWidget);
-    expect(store.corrections.single['implausible_running_pace_acknowledged'], isTrue);
-    final saved =
-        (store.corrections.single['after'] as Map)['blocks'] as List;
+    expect(
+      find.byKey(const ValueKey('correction-confirmation')),
+      findsOneWidget,
+    );
+    expect(
+      store.corrections.single['implausible_running_pace_acknowledged'],
+      isTrue,
+    );
+    final saved = (store.corrections.single['after'] as Map)['blocks'] as List;
     expect(saved, isNotEmpty);
   });
 
-  testWidgets('implausible pace dialog offers edit and save anyway', (tester) async {
+  testWidgets('implausible pace dialog offers edit and save anyway', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
