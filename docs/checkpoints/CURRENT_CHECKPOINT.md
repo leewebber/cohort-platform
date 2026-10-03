@@ -10,14 +10,17 @@
 > `1f6017d`; its migration is applied on Cohort Field Manual through
 > `20260929120000`. The private TEST ONLY B3 device-validation programme is
 > published on Cohort Field Manual, Lee's replacement assignment is active,
-> and the approved development build was installed. Lee reported the complete
-> device walkthrough passing on 2026-10-03, including the screen-lock retest at
-> local fix `8f1ccfa`. The closeout is **blocked**, not complete: SELECT-only
-> hosted evidence currently contains terminal outcomes, immutable snapshots,
-> and History for fixture sessions 1 and 2 only. Sessions 3 and 4 remain
-> scheduled with no frozen snapshot or History row, and there is no hosted
-> correction audit row. See the device-validation handoff for the exact
-> disagreement and preserved-history evidence.
+> and the approved development build was installed. The B3 device-validation
+> walkthrough is **COMPLETE, AWAITING INTEGRATION APPROVAL** on local branch
+> `codex/b3-device-validation`. Lee confirmed calculated targets for sessions
+> 1–2, partial completion with skipped work for session 3, an intent-only
+> snapshot for session 4, lifecycle/restore behavior, and the corrected
+> completion → Done return to a usable Home screen. Later SELECT-only evidence
+> reconciled all four hosted outcomes, immutable snapshots, and History rows.
+> No genuinely changed correction was submitted, so correction-audit creation
+> was not device-validated and the absence of an audit row is expected. The
+> dated 2026-10-03 mismatch attempt remains preserved in the device-validation
+> handoff and is superseded by its final closeout section.
 > Handoffs:
 > [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
@@ -89,12 +92,13 @@
 > `B3_ATHLETE_UI=VERIFIED_V2_ONLY`,
 > `B3_STRUCTURED_RUNNER=TIME_TARGETS_AND_ACTUALS`,
 > `B3_PROGRAMME_ADOPTION=false`,
-> `B3_DEVICE_VALIDATION=HOSTED_EVIDENCE_MISMATCH_CLOSEOUT_BLOCKED`,
+> `B3_DEVICE_VALIDATION=COMPLETE_AWAITING_INTEGRATION_APPROVAL`,
 > `B3_DEVICE_VALIDATION_HOSTED_PUBLICATION=true`,
 > `B3_DEVICE_VALIDATION_ASSIGNMENT_ACTIVATED=true`,
 > `B3_DEVICE_VALIDATION_PHONE_INSTALLED=true`,
 > `B3_DEVICE_VALIDATION_DEVICE_WALKTHROUGH_REPORTED=true`,
-> `B3_DEVICE_VALIDATION_HOSTED_CLOSEOUT_VERIFIED=false`,
+> `B3_DEVICE_VALIDATION_HOSTED_CLOSEOUT_VERIFIED=true`,
+> `B3_DEVICE_VALIDATION_CORRECTION_AUDIT_DEVICE_VALIDATED=false`,
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,

@@ -3,8 +3,9 @@
 **Recorded:** 2026-10-01
 **Branch:** `codex/b3-device-validation`
 **Base:** `1f6017d84f8de40d039df253c56dc8b339b61e82`
-**Live status:** Hosted fixture active and device walkthrough reported; final
-closeout blocked by a hosted-evidence disagreement recorded on 2026-10-03.
+**Live status:** Device validation complete and awaiting founder integration
+approval. The hosted-evidence disagreement recorded earlier on 2026-10-03 is
+retained below as dated history and superseded by the final closeout.
 
 The original 2026-10-01 preparation, review, rollout plan, and verification
 records below are retained as dated historical evidence. They no longer
@@ -269,7 +270,9 @@ Lee confirmed the following behavior on the approved development build:
 - countdown expiry without automatic block or session completion;
 - completed work captured with pace unavailable;
 - skipped work presented as partial completion;
-- History actual correction with the frozen target unchanged; and
+- a correction-path presentation with the frozen target unchanged (later
+  reconciliation established that no genuinely changed correction was
+  submitted, so correction-audit creation was not device-validated); and
 - fixture session 4 remaining intent-only despite the manual benchmark.
 
 Local commit `648790dff06b9efb385d5a473c8d4d5e0352f1cd` exposes the
@@ -363,3 +366,106 @@ milestone.
 Commercial percentage bands, Cohort-test ingestion, distance execution,
 manual-lap execution, device export/Garmin, target overrides, and real programme
 adoption remain open and unavailable.
+
+## Final device-validation closeout — 2026-10-03
+
+This section supersedes the closeout decision above without deleting that
+dated mismatch record. Supported product actions subsequently produced the
+missing hosted evidence, and founder review confirmed the corrected completion
+navigation on the installed development build.
+
+### Founder-confirmed device behavior
+
+- sessions 1 and 2 completed with occurrence-owned calculated targets derived
+  from Lee's real `22:00` completed 5 km benchmark;
+- work and recovery restore, screen-lock transitions, explicit Pause, cold
+  reopen, and multi-transition elapsed-time reconciliation returned to the
+  exact step, repetition, phase, and remaining time;
+- countdown expiry did not complete a block or session;
+- session 2 retained completed work with pace unavailable;
+- session 3 saved as partially completed with skipped work;
+- session 4 saved with an intent-only target despite the manual benchmark,
+  because that slot accepts only unavailable Cohort-completed-test evidence;
+- frozen targets remained distinct from captured actuals in Review Session and
+  History; and
+- Calendar → overdue occurrence → Train today → Review Session → Save and
+  finish → Done returned to a usable Home screen after local navigation fix
+  `7175ae2d80544bbf2e6360e9961c51cfe46e4f4b`.
+
+### Reconciled SELECT-only hosted evidence
+
+The final read-only inspection found all four fixture occurrences terminal and
+their completion, snapshot, and History authority aligned:
+
+| Fixture session | Hosted outcome | Frozen target | Hosted History actuals |
+| --- | --- | --- | --- |
+| 1 | `completed` | calculated from the real 22:00 manual benchmark | three completed repetitions at 270, 275, and 280 s/km |
+| 2 | `completed` | calculated from the same eligible benchmark | three `pace_unavailable` repetitions |
+| 3 | `completed_partial` | calculated occurrence snapshot | `skipped`, `completed`, `skipped` |
+| 4 | `completed` | `intent_only` / `no_eligible_completed_test` | three `pace_unavailable` repetitions |
+
+Session 3 is linked to training session `50`; session 4 is linked to training
+session `51`. Their occurrence, assignment, training-session, package,
+session-slot, completion-record, frozen-snapshot, and structured History
+identities agree. No hosted row was fabricated or repaired.
+
+There are zero `performance_result_corrections` rows for the fixture. This is
+the expected result: Lee did not submit a genuinely changed correction during
+the final walkthrough. The correction flow's requirement to preserve frozen
+target authority has automated coverage, but creation of a real correction
+audit row is **not device-validated** and must not be claimed as part of this
+closeout.
+
+The earlier preserved-history baselines remain the closeout comparison: prior
+training and Bali evidence were not rewritten, deleted, or resumed, and Lee's
+B3 assignment state was not changed during reconciliation.
+
+### Final local verification
+
+At final code HEAD `7175ae2d80544bbf2e6360e9961c51cfe46e4f4b`:
+
+- one uncontended authoritative `flutter test` passed **3,466 tests** with
+  **6 expected environment-gated skips**;
+- changed-file analysis covered all 18 Dart files in
+  `origin/main...7175ae2`: it reported no errors or warnings and one
+  pre-existing informational `use_null_aware_elements` diagnostic in
+  `session_complete_screen.dart`, unchanged from the base implementation;
+- the Phase 2 consolidation safety gate passed all **6/6 groups**; and
+- `git diff --check` passed for both the integration range and the closeout
+  documentation changes.
+
+### Local follow-up range and closeout decision
+
+The reviewable local range above `origin/main` at
+`bb1fd500a430b306707954fd3e95562ddb8da52f` is linear and preserves all six
+follow-up commits:
+
+1. `648790dff06b9efb385d5a473c8d4d5e0352f1cd` — expose Diagnostics only in the approved development build;
+2. `8f1ccfadcf753c938457de12115c2e6a44b658f0` — reconcile structured timer elapsed time after screen lock/background/cold reopen;
+3. `7af3abd48ba4e75f35753fdaa6c08bcb53ed6123` — preserve the initial hosted-evidence mismatch;
+4. `df297a30b944192a89575162252772449ecb4cb2` — require authoritative correction-audit confirmation;
+5. `c5246b5d182839c55e0c8db07fd557bce8412912` — allow authoritative skipped-work partial completion; and
+6. `7175ae2d80544bbf2e6360e9961c51cfe46e4f4b` — return Calendar-launched completions to Home.
+
+```text
+B3_DEVICE_VALIDATION=COMPLETE_AWAITING_INTEGRATION_APPROVAL
+B3_DEVICE_VALIDATION_DEVICE_WALKTHROUGH_REPORTED=true
+B3_DEVICE_VALIDATION_HOSTED_PUBLICATION=true
+B3_DEVICE_VALIDATION_ASSIGNMENT_ACTIVATED=true
+B3_DEVICE_VALIDATION_PHONE_INSTALLED=true
+B3_DEVICE_VALIDATION_HOSTED_CLOSEOUT_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_1_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_2_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_3_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_SESSION_4_HOSTED_VERIFIED=true
+B3_DEVICE_VALIDATION_COMPLETION_HOME_NAVIGATION_VERIFIED=true
+B3_DEVICE_VALIDATION_CORRECTION_AUDIT_DEVICE_VALIDATED=false
+PRIOR_TRAINING_EVIDENCE_PRESERVED=true
+NEXT_IMPLEMENTATION_AUTHORISED=false
+```
+
+This closeout authorises no push, hosted write, assignment change, programme
+publication, Bali return, phone rebuild, commercial pace policy, or next
+structured-running slice. Commercial percentage bands, Cohort-test ingestion,
+distance execution, manual-lap execution, device export/Garmin, target
+overrides, and real programme adoption remain open and unavailable.
