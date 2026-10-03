@@ -62,6 +62,7 @@ class ActiveSessionScreen extends StatefulWidget {
     this.restoredTimerOverride,
     this.structuredRunningExecution,
     this.restoredStructuredRunningCursor,
+    this.onSessionCompleted,
   });
 
   final SessionExecutionController controller;
@@ -79,6 +80,7 @@ class ActiveSessionScreen extends StatefulWidget {
   final BlockTimerState? restoredTimerOverride;
   final VerifiedStructuredRunningExecution? structuredRunningExecution;
   final StructuredRunningCursor? restoredStructuredRunningCursor;
+  final VoidCallback? onSessionCompleted;
 
   @override
   State<ActiveSessionScreen> createState() => _ActiveSessionScreenState();
@@ -614,6 +616,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                     widget.refreshController)
                 ?.reloadAuthoritativeSurfaces(source: 'session_completed');
           },
+          onSessionCompleted: widget.onSessionCompleted,
         ),
       ),
     );

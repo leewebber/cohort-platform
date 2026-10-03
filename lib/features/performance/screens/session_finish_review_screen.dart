@@ -43,6 +43,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
     this.homeWorkoutExecution,
     this.flushPendingTree,
     this.onAuthoritativeReload,
+    this.onSessionCompleted,
   });
 
   final PerformanceCaptureController performanceController;
@@ -55,6 +56,7 @@ class SessionFinishReviewScreen extends StatefulWidget {
   final HomeWorkoutExecutionContext? homeWorkoutExecution;
   final Future<bool> Function()? flushPendingTree;
   final Future<void>? Function()? onAuthoritativeReload;
+  final VoidCallback? onSessionCompleted;
 
   @override
   State<SessionFinishReviewScreen> createState() =>
@@ -246,6 +248,7 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             adaptationMessage: result.adaptationResult?.athleteMessage,
             progressionResult: result.progressionResult,
             programmeProgress: widget.programmeProgress,
+            onDone: widget.onSessionCompleted,
           ),
         ),
       );

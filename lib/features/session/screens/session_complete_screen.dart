@@ -48,10 +48,8 @@ class SessionCompleteScreen extends StatelessWidget {
       progressionResult?.nextResolvedSession;
 
   void _handleDone(BuildContext context) {
-    if (onDone != null) {
-      onDone!();
-      return;
-    }
+    onDone?.call();
+    if (!context.mounted) return;
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 

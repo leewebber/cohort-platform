@@ -23,6 +23,7 @@ import '../programme/services/supabase_backfill_programme_session_store.dart';
 import '../programme/services/future_programme_session_swap_store.dart';
 import '../programme/services/scheduled_programme_session_preview_service.dart';
 import '../session/services/programme_session_execution_launcher.dart';
+import '../session/services/session_execution_launcher.dart';
 import '../session/services/workout_progress_snapshot_policy.dart';
 import '../progress/screens/progress_screen.dart';
 import '../progress/services/athlete_progress_summary_builder.dart';
@@ -222,6 +223,14 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
     }
   }
 
+  void _returnHomeAfterSessionCompletion() {
+    if (!mounted) return;
+    setState(() => _index = 0);
+    _surfaceRefresh.reloadAuthoritativeSurfaces(
+      source: 'calendar_session_completed_home',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AthleteProgrammeSurfaceRefreshScope(
@@ -246,18 +255,21 @@ class _AthleteAppShellState extends State<AthleteAppShell> {
             scrollController: _homeScroll,
             onOpenCalendar: () => setState(() => _index = 1),
           ),
-          AthleteCalendarScreen(
-            athleteId: _athleteId,
-            fixedOccurrenceStore: _fixedOccurrenceStore,
-            refreshController: _surfaceRefresh,
-            assignmentStore: widget.assignmentStore,
-            prepareService: widget.prepareService,
-            executionLauncher: widget.executionLauncher,
-            previewService: widget.previewService,
-            swapStore: widget.swapStore,
-            backfillStore: _backfillStore,
-            onOpenProgrammes: () => setState(() => _index = 2),
-            authRefreshListenable: widget.authController,
+          SessionCompletionDestinationScope(
+            onSessionCompleted: _returnHomeAfterSessionCompletion,
+            child: AthleteCalendarScreen(
+              athleteId: _athleteId,
+              fixedOccurrenceStore: _fixedOccurrenceStore,
+              refreshController: _surfaceRefresh,
+              assignmentStore: widget.assignmentStore,
+              prepareService: widget.prepareService,
+              executionLauncher: widget.executionLauncher,
+              previewService: widget.previewService,
+              swapStore: widget.swapStore,
+              backfillStore: _backfillStore,
+              onOpenProgrammes: () => setState(() => _index = 2),
+              authRefreshListenable: widget.authController,
+            ),
           ),
           // Phase 2.6: athlete Programmes tab is canonical programme catalogue entry.
           // Plan Library start UI is no longer mounted here (RETIRE decision).

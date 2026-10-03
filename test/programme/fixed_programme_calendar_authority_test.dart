@@ -3,9 +3,14 @@ import 'package:cohort_platform/core/persistence/local_kv_store.dart';
 import 'package:cohort_platform/features/home/home_screen.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
+import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
 import 'package:cohort_platform/features/performance/models/performance_result_data.dart';
 import 'package:cohort_platform/features/performance/repositories/in_memory_performance_record_store.dart';
 import 'package:cohort_platform/features/performance/models/training_session_record_status.dart';
+import 'package:cohort_platform/features/performance/screens/session_finish_review_screen.dart';
+import 'package:cohort_platform/features/performance/services/performance_record_save_coordinator.dart';
+import 'package:cohort_platform/features/programme/models/athlete_programme_completion.dart';
+import 'package:cohort_platform/features/programme/models/athlete_programme_prepared_session.dart';
 import 'package:cohort_platform/features/programme/models/fixed_programme_occurrence_projection.dart';
 import 'package:cohort_platform/features/programme/models/programme_execution_context.dart';
 import 'package:cohort_platform/features/programme/models/programme_progress_summary.dart';
@@ -26,6 +31,7 @@ import 'package:cohort_platform/features/programme/widgets/fixed_programme_week_
 import 'package:cohort_platform/features/exercises/exercise_detail/exercise_detail_screen.dart';
 import 'package:cohort_platform/features/session/models/session_execution_plan.dart';
 import 'package:cohort_platform/features/session/models/structured_running_execution.dart';
+import 'package:cohort_platform/features/session/controllers/session_execution_controller.dart';
 import 'package:cohort_platform/features/session/services/programme_session_execution_launcher.dart';
 import 'package:cohort_platform/features/session/services/programme_training_session_start_store.dart';
 import 'package:cohort_platform/features/session/services/session_execution_loader.dart';
@@ -321,6 +327,107 @@ class _NoopSessionExecutionLauncher extends SessionExecutionLauncher {
   }) async {
     calls++;
     lastOccurrenceId = programmeContext?.occurrenceId;
+  }
+}
+
+class _CalendarCompletionCoordinator extends PerformanceRecordSaveCoordinator {
+  _CalendarCompletionCoordinator({required this.fail});
+
+  final bool fail;
+  int calls = 0;
+
+  @override
+  Future<PerformanceCompletionResult> completeSession({
+    required PerformanceCaptureController controller,
+    required int trainingSessionId,
+    required String athleteId,
+    ProgrammeExecutionContext? programmeContext,
+    TrainingSessionRecordStatus? forcedStatus,
+    String? idempotencyKey,
+  }) async {
+    calls += 1;
+    final record = const PerformanceRecordMapper().fromDraft(
+      controller.buildPersistableDraft(
+        status: controller.resolveCompletionStatus(),
+      ),
+    );
+    if (fail) {
+      return PerformanceCompletionResult(
+        record: record,
+        progressionFailed: true,
+        programmeCompletion: const AthleteProgrammeCompletionResult(
+          status: AthleteProgrammeCompletionStatus.networkUncertain,
+          code: 'network_uncertain',
+        ),
+      );
+    }
+    return PerformanceCompletionResult(
+      record: record,
+      programmeCompletion: AthleteProgrammeCompletionResult(
+        status: AthleteProgrammeCompletionStatus.committed,
+        code: 'committed',
+        record: record,
+      ),
+    );
+  }
+}
+
+class _CalendarReviewLauncher extends ProgrammeSessionExecutionLauncher {
+  _CalendarReviewLauncher(this.coordinator);
+
+  final _CalendarCompletionCoordinator coordinator;
+
+  @override
+  Future<void> launch({
+    required BuildContext context,
+    required String athleteId,
+    required AthleteProgrammePrepareResult prepared,
+  }) async {
+    final onSessionCompleted = SessionCompletionDestinationScope.maybeOf(
+      context,
+    );
+    final programmeContext = prepared.executionContext!;
+    const plan = SessionExecutionPlan(
+      sessionId: 'CALENDAR-NAVIGATION-TEST',
+      sessionTitle: 'Calendar navigation test',
+      blocks: [
+        SessionExecutionBlock(
+          blockId: 'block-1',
+          title: 'Work',
+          blockType: SessionBlockType.conditioning,
+          content: 'Completed work',
+          workoutFormat: WorkoutFormat.none,
+          position: 0,
+        ),
+      ],
+    );
+    final performance =
+        PerformanceCaptureController.initializeFromExecutionPlan(
+          plan: plan,
+          athleteId: athleteId,
+          trainingSessionId: 9401,
+          programmeContext: programmeContext,
+        )..markBlockComplete('block-1');
+    final execution =
+        SessionExecutionController(
+            plan: plan,
+            sessionKey: 'calendar-navigation-test',
+          )
+          ..startSession()
+          ..markBlockComplete('block-1');
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SessionFinishReviewScreen(
+          performanceController: performance,
+          executionController: execution,
+          trainingSessionId: 9401,
+          athleteId: athleteId,
+          programmeContext: programmeContext,
+          saveCoordinator: coordinator,
+          onSessionCompleted: onSessionCompleted,
+        ),
+      ),
+    );
   }
 }
 
@@ -2101,6 +2208,147 @@ void main() {
       expect(find.text('Session'), findsOneWidget);
       expect(find.textContaining('Scheduled for'), findsOneWidget);
       expect(find.text('Begin'), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Calendar overdue Train today completion returns to usable Home',
+    (tester) async {
+      final assignment = _assignment(athleteId: 'athlete-1');
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000941',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.overdue,
+      );
+      final projection = _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [occurrence],
+      );
+      final store = _ProjectionStore(projection);
+      final tables = await _tablesWith(assignment);
+      final coordinator = _CalendarCompletionCoordinator(fail: false);
+      var atHome = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              if (atHome) {
+                return const Scaffold(
+                  key: ValueKey('usable-athlete-home'),
+                  body: Text('Home ready'),
+                );
+              }
+              return SessionCompletionDestinationScope(
+                onSessionCompleted: () {
+                  setState(() => atHome = true);
+                },
+                child: AthleteCalendarScreen(
+                  athleteId: assignment.athleteId,
+                  fixedOccurrenceStore: store,
+                  assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+                  prepareService: _prepareService(
+                    tables: tables,
+                    loader: _EchoLoader(),
+                    projectionStore: store,
+                  ),
+                  executionLauncher: _CalendarReviewLauncher(coordinator),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tapCalendarFinder(
+        tester,
+        find.byKey(const ValueKey('calendar-month-day-2026-09-01')),
+      );
+      await tester.tap(find.text('Train today').first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Review Session'), findsOneWidget);
+      await tester.ensureVisible(find.text('Save and finish'));
+      await tester.tap(find.text('Save and finish'));
+      await tester.pumpAndSettle();
+      expect(find.text('SESSION COMPLETE'), findsOneWidget);
+
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
+
+      expect(coordinator.calls, 1);
+      expect(find.byKey(const ValueKey('usable-athlete-home')), findsOneWidget);
+      expect(find.text('Home ready'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'Calendar overdue failed save remains on Review with capture intact',
+    (tester) async {
+      final assignment = _assignment(athleteId: 'athlete-1');
+      final occurrence = _occurrence(
+        assignment: assignment,
+        id: '00000000-0000-4000-8000-000000000942',
+        slotId: ProgrammeScheduleTestFixtures.slot1Id,
+        protocolId: 'BW-001',
+        dayKey: 'day_1',
+        date: '2026-09-01',
+        state: FixedProgrammeOccurrenceState.overdue,
+      );
+      final projection = _calendar(
+        assignment: assignment,
+        today: '2026-09-02',
+        occurrences: [occurrence],
+      );
+      final store = _ProjectionStore(projection);
+      final tables = await _tablesWith(assignment);
+      final coordinator = _CalendarCompletionCoordinator(fail: true);
+      var completionDestinationCalls = 0;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: SessionCompletionDestinationScope(
+            onSessionCompleted: () => completionDestinationCalls += 1,
+            child: AthleteCalendarScreen(
+              athleteId: assignment.athleteId,
+              fixedOccurrenceStore: store,
+              assignmentStore: InMemoryProgrammeAssignmentStore(tables),
+              prepareService: _prepareService(
+                tables: tables,
+                loader: _EchoLoader(),
+                projectionStore: store,
+              ),
+              executionLauncher: _CalendarReviewLauncher(coordinator),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tapCalendarFinder(
+        tester,
+        find.byKey(const ValueKey('calendar-month-day-2026-09-01')),
+      );
+      await tester.tap(find.text('Train today').first);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Save and finish'));
+      await tester.tap(find.text('Save and finish'));
+      await tester.pumpAndSettle();
+
+      expect(coordinator.calls, 1);
+      expect(completionDestinationCalls, 0);
+      expect(find.text('Review Session'), findsOneWidget);
+      expect(
+        find.text('1 completed · 0 skipped · 0 incomplete'),
+        findsOneWidget,
+      );
+      expect(find.text('Save and finish'), findsOneWidget);
+      expect(find.text('SESSION COMPLETE'), findsNothing);
     },
   );
 

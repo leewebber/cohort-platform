@@ -26,6 +26,32 @@ import 'production_restore_resolver.dart';
 import 'session_execution_loader.dart';
 import 'structured_running_controller.dart';
 
+/// Optional destination owned by the surface that launched a session.
+///
+/// Calendar uses this to select athlete Home after a confirmed completion.
+/// The callback changes only the shell destination; the completion route
+/// remains the sole owner of Navigator stack unwinding.
+class SessionCompletionDestinationScope extends InheritedWidget {
+  const SessionCompletionDestinationScope({
+    super.key,
+    required this.onSessionCompleted,
+    required super.child,
+  });
+
+  final VoidCallback onSessionCompleted;
+
+  static VoidCallback? maybeOf(BuildContext context) {
+    return context
+        .getInheritedWidgetOfExactType<SessionCompletionDestinationScope>()
+        ?.onSessionCompleted;
+  }
+
+  @override
+  bool updateShouldNotify(SessionCompletionDestinationScope oldWidget) {
+    return onSessionCompleted != oldWidget.onSessionCompleted;
+  }
+}
+
 /// Launches [ActiveSessionScreen] with the same wiring as session overview.
 class SessionExecutionLauncher {
   SessionExecutionLauncher({
@@ -271,6 +297,9 @@ class SessionExecutionLauncher {
     }
 
     if (!context.mounted) return;
+    final onSessionCompleted = SessionCompletionDestinationScope.maybeOf(
+      context,
+    );
 
     var openRestoredTimer = false;
     if (decision.mayEnterWithRestoredActuals) {
@@ -307,6 +336,7 @@ class SessionExecutionLauncher {
           openRestoredTimer: openRestoredTimer,
           structuredRunningExecution: structuredRunningExecution,
           restoredStructuredRunningCursor: structuredCursor,
+          onSessionCompleted: onSessionCompleted,
         ),
       ),
     );
