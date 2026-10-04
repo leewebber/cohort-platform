@@ -14,10 +14,14 @@
 
 > **Current continuation (2026-10-04):** Stage 1 remains complete. B1–B3
 > structured running and the B3 device-validation closeout are integrated on
-> `origin/main` through `d1585af`. B4 is inspection/proposal only; no Studio
-> structured-running implementation or programme authoring is authorised.
-> See
-> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](./Programme_Studio_Structured_Running_B4_Proposal_v1.md).
+> `origin/main` through `d1585af`. The bounded B4 read-only structured-running
+> review is implemented locally and awaits founder visual review; programme
+> authoring, publication, and commercial policy approval remain unauthorised.
+> Cross-attachment advisory scope overlap remains a separately proposed
+> canonical Dart/SQL authority correction. See
+> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](./Programme_Studio_Structured_Running_B4_Proposal_v1.md),
+> [`B4_Overlapping_Running_Advisory_Scope_Authority_Proposal.md`](./B4_Overlapping_Running_Advisory_Scope_Authority_Proposal.md), and
+> [`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md`](../checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
 
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED

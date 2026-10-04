@@ -177,9 +177,13 @@ Cohort Field Manual through `20260928120000`. B3 slice 2 is integrated on
 through `20260929120000`. The private TEST ONLY B3 device-validation programme
 and device closeout are integrated on `origin/main` at `d1585af`. They prove
 the verified v2 time-based path but do not establish commercial programme
-adoption. B4 Programme Studio structured running is audited and proposed for
-founder review; implementation is not authorised
-([`docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md`](docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md)).
+adoption. B4 Programme Studio structured-running review is implemented locally
+and awaits founder visual review. It remains a read-only derived surface and
+does not author or approve programme content
+([`docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md`](docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md),
+[`docs/checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md)).
+Cross-attachment advisory scope overlap still requires a coordinated Dart/SQL
+authority correction and separately approved migration.
 Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
@@ -222,8 +226,10 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `B3_DISTANCE_EXECUTION=false`,
 `B3_MANUAL_LAP_EXECUTION=false`,
 `B3_SLICE_3_STARTED=true`,
-`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=AUDIT_PROPOSED_FOR_FOUNDER_REVIEW`,
-`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=false`,
+`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=IMPLEMENTED_LOCAL_AWAITING_FOUNDER_VISUAL_REVIEW`,
+`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=true`,
+`B4_OVERLAPPING_ADVISORY_SCOPE_CANONICAL_REJECTION=false`,
+`B4_OVERLAPPING_ADVISORY_SCOPE_MIGRATION_AUTHORISED=false`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
@@ -241,9 +247,10 @@ Structured Running B3 slice 1 is integrated at `686ddcdf`; migration
 `20260928120000_b3_running_execution_mapping.sql` is applied on Cohort Field
 Manual. Slice 2, slice 3, and the private TEST ONLY device-validation closeout
 are integrated; the time-only verified v2 runner remains commercially
-unadopted. Do not implement B4, adopt the test fixture as commercial content,
-add distance or manual-lap execution, or author commercial programme content
-without separate authority.
+unadopted. Do not integrate or extend B4, adopt the test fixture as commercial
+content, add distance or manual-lap execution, or author commercial programme
+content without separate authority. Do not implement the B4 overlap authority
+proposal without explicit migration approval.
 Do not publish hosted Bali or change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),

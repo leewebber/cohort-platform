@@ -21,9 +21,13 @@
 > was not device-validated and the absence of an audit row is expected. The
 > dated 2026-10-03 mismatch attempt remains preserved in the device-validation
 > handoff and is superseded by its final closeout section.
-> B4 Programme Studio structured-running work is now **AUDITED AND PROPOSED FOR
-> FOUNDER REVIEW**; implementation is not authorised. Proposal:
-> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](../architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md).
+> B4 Programme Studio structured-running review is **IMPLEMENTED LOCALLY AND
+> AWAITING FOUNDER VISUAL REVIEW**. It is a read-only derived surface and does
+> not author or approve programme content. Cross-attachment advisory scope
+> overlap remains a canonical Dart/SQL authority gap requiring separate
+> migration approval. Proposal and handoff:
+> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](../architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md),
+> [`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md`](./PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
 > Handoffs:
 > [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
@@ -106,8 +110,10 @@
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,
-> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=AUDIT_PROPOSED_FOR_FOUNDER_REVIEW`,
-> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=false`,
+> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=IMPLEMENTED_LOCAL_AWAITING_FOUNDER_VISUAL_REVIEW`,
+> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=true`,
+> `B4_OVERLAPPING_ADVISORY_SCOPE_CANONICAL_REJECTION=false`,
+> `B4_OVERLAPPING_ADVISORY_SCOPE_MIGRATION_AUTHORISED=false`,
 > `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 > `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 > `LEE_BALI_HYBRID_BASE_PRIVATE=true`,

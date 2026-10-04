@@ -1,6 +1,6 @@
 # Programme Studio structured running B4 proposal
 
-**Status:** `PROPOSED_FOR_FOUNDER_REVIEW`
+**Status:** `APPROVED_AND_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW`
 
 **Recorded:** 2026-10-04
 
