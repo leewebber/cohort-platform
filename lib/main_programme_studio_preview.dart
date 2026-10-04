@@ -17,12 +17,13 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProgrammeStudioPreviewApp(
-      initialState: ProgrammeStudioPreviewState.baliOverview,
+      initialState: ProgrammeStudioPreviewState.b4StructuredRun,
     ),
   );
 }
 
 enum ProgrammeStudioPreviewState {
+  b4StructuredRun,
   baliOverview,
   week1SaturdayStrengthA,
   week1SundayAmPm,
@@ -89,12 +90,12 @@ class _ProgrammeStudioPreviewScreenState
   Future<void> _loadReal() async {
     try {
       final assets = <String, String>{};
-      for (final path in ProgrammeReviewCatalogRegistry.realReadablePaths) {
+      for (final path in ProgrammeReviewCatalogRegistry.previewReadablePaths) {
         assets[path] = await rootBundle.loadString(path);
       }
       final catalog = ProgrammeReviewWorkspace(
         readAsset: (path) => assets[path]!,
-      ).loadRealCatalog();
+      ).loadRealCatalog(includeDeveloperFixtures: true);
       if (!mounted) {
         return;
       }
@@ -155,6 +156,8 @@ class _ProgrammeStudioPreviewScreenState
       return ProgrammeStudioScreen(
         key: ValueKey(_state),
         catalog: _realCatalog!,
+        showDeveloperFixtures:
+            _state == ProgrammeStudioPreviewState.b4StructuredRun,
         previewStateLabel: _label(_state),
         initialSelection: _selectionFor(_state),
       );
@@ -169,6 +172,7 @@ class _ProgrammeStudioPreviewScreenState
 
   String _label(ProgrammeStudioPreviewState state) {
     return switch (state) {
+      ProgrammeStudioPreviewState.b4StructuredRun => 'B4 structured run review',
       ProgrammeStudioPreviewState.baliOverview => 'Bali overview',
       ProgrammeStudioPreviewState.week1SaturdayStrengthA =>
         'Week 1 Saturday Strength A',
@@ -204,6 +208,7 @@ class _ProgrammeStudioPreviewScreenState
 
 bool _usesRealCatalog(ProgrammeStudioPreviewState state) {
   return switch (state) {
+    ProgrammeStudioPreviewState.b4StructuredRun => true,
     ProgrammeStudioPreviewState.malformedSource ||
     ProgrammeStudioPreviewState.validationFailure ||
     ProgrammeStudioPreviewState.unsupportedPrescription ||
@@ -229,6 +234,13 @@ ProgrammeStudioSelection _selectionFor(ProgrammeStudioPreviewState state) {
   }
 
   return switch (state) {
+    ProgrammeStudioPreviewState.b4StructuredRun =>
+      const ProgrammeStudioSelection(
+        catalogId: 'b3-device-validation-v1',
+        weekNumber: 1,
+        dayKey: 'day_1',
+        sessionKey: 'SES-B3-DEVICE-VALIDATION',
+      ),
     ProgrammeStudioPreviewState.week1SundayAmPm => baliAt(
       week: 1,
       dayKey: 'day_2',

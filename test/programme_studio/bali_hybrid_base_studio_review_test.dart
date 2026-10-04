@@ -33,7 +33,10 @@ void main() {
 
   test('Bali review projection keeps 71 sessions and AM/PM', () {
     final programme = bali();
-    expect(programme.classification, ProgrammeReviewClassification.internalPrivate);
+    expect(
+      programme.classification,
+      ProgrammeReviewClassification.internalPrivate,
+    );
     expect(programme.libraryScope, 'coachPrivate');
     expect(programme.durationWeeks, 8);
     expect(programme.weeks, hasLength(8));
@@ -79,10 +82,13 @@ void main() {
     expect(item('source_fidelity').status, StudioQualityStatus.passed);
     expect(item('coaching_approval').status, StudioQualityStatus.notAssessed);
     expect(item('metrics_profile').status, StudioQualityStatus.notImplemented);
-    expect(item('pace_calculation').status, StudioQualityStatus.notImplemented);
+    expect(item('pace_calculation').status, StudioQualityStatus.notAssessed);
     expect(item('device_garmin').status, StudioQualityStatus.notImplemented);
     expect(item('lee_assignment').status, StudioQualityStatus.notAssessed);
-    expect(item('hosted_private_publication').status, StudioQualityStatus.notAssessed);
+    expect(
+      item('hosted_private_publication').status,
+      StudioQualityStatus.notAssessed,
+    );
   });
 
   testWidgets('defaults to Bali Week 1 Saturday Strength A', (tester) async {
@@ -93,7 +99,10 @@ void main() {
     expect(find.text(ProgrammeStudioCopy.baliSessionCount), findsWidgets);
     expect(find.text(ProgrammeStudioCopy.baliNoRunning), findsOneWidget);
     expect(find.textContaining('Week 1 of 8'), findsWidgets);
-    expect(find.textContaining('Strength A — Heavy Lower + Pull'), findsWidgets);
+    expect(
+      find.textContaining('Strength A — Heavy Lower + Pull'),
+      findsWidgets,
+    );
     expect(find.text('Front squat'), findsWidgets);
     expect(find.text('Save'), findsNothing);
     expect(find.text('Publish'), findsNothing);
@@ -115,7 +124,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.textContaining('AM · Long Aerobic — BikeErg'), findsWidgets);
-    expect(find.textContaining('PM · Strength B — Upper Strength'), findsWidgets);
+    expect(
+      find.textContaining('PM · Strength B — Upper Strength'),
+      findsWidgets,
+    );
   });
 
   testWidgets('shows Week 8 spillover Saturday and Sunday', (tester) async {

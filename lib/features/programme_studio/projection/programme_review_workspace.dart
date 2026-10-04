@@ -14,12 +14,17 @@ class ProgrammeReviewWorkspace {
   final ProgrammeReviewAssetRead readAsset;
   final ProgrammeReviewProjector projector;
 
-  ProgrammeReviewCatalog loadRealCatalog() {
+  ProgrammeReviewCatalog loadRealCatalog({
+    bool includeDeveloperFixtures = false,
+  }) {
     return projector.project(
       ProgrammeReviewProjectionRequest(
         bundles: [
           for (final spec in ProgrammeReviewCatalogRegistry.realSpecs)
             loadBundle(spec),
+          if (includeDeveloperFixtures)
+            for (final spec in ProgrammeReviewCatalogRegistry.developerSpecs)
+              loadBundle(spec),
         ],
         plannedFamilies: ProgrammeReviewCatalogRegistry.plannedFamilies,
       ),
@@ -36,6 +41,9 @@ class ProgrammeReviewWorkspace {
       publicationJson: spec.publicationJsonPath == null
           ? null
           : readAsset(spec.publicationJsonPath!),
+      reviewedProtocolGraphJson: spec.reviewedProtocolGraphPath == null
+          ? null
+          : readAsset(spec.reviewedProtocolGraphPath!),
       executableProtocolSql: [
         for (final path in spec.executableProtocolSqlPaths) readAsset(path),
       ],

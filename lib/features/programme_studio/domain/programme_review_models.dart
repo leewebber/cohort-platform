@@ -15,12 +15,7 @@ enum ProgrammeReviewClassification {
 
 enum ProgrammeReviewFindingSeverity { error, warning, info }
 
-enum ProgrammeReviewCheckStatus {
-  passed,
-  failed,
-  notImplemented,
-  notAssessed,
-}
+enum ProgrammeReviewCheckStatus { passed, failed, notImplemented, notAssessed }
 
 enum ProgrammeReviewCompileState { valid, invalid, notCompiled }
 
@@ -153,6 +148,174 @@ class ProgrammeReviewBlock {
   };
 }
 
+enum ProgrammeReviewRunningStatus {
+  verified,
+  authoredUnattached,
+  invalidBinding,
+  unsupported,
+}
+
+class ProgrammeReviewRunningBinding {
+  const ProgrammeReviewRunningBinding({
+    required this.stepId,
+    required this.sessionBlockId,
+  });
+
+  final String stepId;
+  final String sessionBlockId;
+
+  Map<String, Object?> toJson() => {
+    'step_id': stepId,
+    'session_block_id': sessionBlockId,
+  };
+}
+
+class ProgrammeReviewRunningStep {
+  const ProgrammeReviewRunningStep({
+    required this.stepId,
+    required this.role,
+    required this.durationKind,
+    required this.durationValue,
+    required this.advisoryAttachmentIds,
+    this.guidance,
+  });
+
+  final String stepId;
+  final String role;
+  final String durationKind;
+  final int? durationValue;
+  final String? guidance;
+  final List<String> advisoryAttachmentIds;
+
+  bool get hasAdvisoryTarget => advisoryAttachmentIds.isNotEmpty;
+
+  Map<String, Object?> toJson() => {
+    'step_id': stepId,
+    'role': role,
+    'duration_kind': durationKind,
+    if (durationValue != null) 'duration_value': durationValue,
+    if (guidance != null) 'guidance': guidance,
+    'advisory_attachment_ids': advisoryAttachmentIds,
+  };
+}
+
+class ProgrammeReviewRunningGroup {
+  const ProgrammeReviewRunningGroup({
+    required this.groupId,
+    required this.repeatCount,
+    required this.steps,
+  });
+
+  final String? groupId;
+  final int repeatCount;
+  final List<ProgrammeReviewRunningStep> steps;
+
+  Map<String, Object?> toJson() => {
+    if (groupId != null) 'group_id': groupId,
+    'repeat_count': repeatCount,
+    'steps': steps.map((item) => item.toJson()).toList(growable: false),
+  };
+}
+
+class ProgrammeReviewRunningPolicy {
+  const ProgrammeReviewRunningPolicy({
+    required this.attachmentId,
+    required this.stepIds,
+    required this.policyId,
+    required this.policyVersion,
+    required this.methodId,
+    required this.methodVersion,
+    required this.cohortCompletedTestsEligible,
+    required this.manualCompletedTestsEligible,
+    required this.externalCompletedTestsEligible,
+    required this.freshnessLocalCivilDays,
+    required this.minimumSpeedBasisPoints,
+    required this.maximumSpeedBasisPoints,
+    required this.roundingIncrementMillisecondsPerKilometre,
+    required this.roundingDirection,
+  });
+
+  final String attachmentId;
+  final List<String> stepIds;
+  final String policyId;
+  final int policyVersion;
+  final String methodId;
+  final int methodVersion;
+  final bool cohortCompletedTestsEligible;
+  final bool manualCompletedTestsEligible;
+  final bool externalCompletedTestsEligible;
+  final int freshnessLocalCivilDays;
+  final int minimumSpeedBasisPoints;
+  final int maximumSpeedBasisPoints;
+  final int roundingIncrementMillisecondsPerKilometre;
+  final String roundingDirection;
+
+  Map<String, Object?> toJson() => {
+    'attachment_id': attachmentId,
+    'step_ids': stepIds,
+    'policy_id': policyId,
+    'policy_version': policyVersion,
+    'method_id': methodId,
+    'method_version': methodVersion,
+    'benchmark_eligibility': {
+      'cohort_completed_tests_eligible': cohortCompletedTestsEligible,
+      'manual_completed_tests_eligible': manualCompletedTestsEligible,
+      'external_completed_tests_eligible': externalCompletedTestsEligible,
+    },
+    'freshness_local_civil_days': freshnessLocalCivilDays,
+    'minimum_speed_basis_points': minimumSpeedBasisPoints,
+    'maximum_speed_basis_points': maximumSpeedBasisPoints,
+    'display_rounding': {
+      'increment_milliseconds_per_kilometre':
+          roundingIncrementMillisecondsPerKilometre,
+      'direction': roundingDirection,
+    },
+  };
+}
+
+class ProgrammeReviewStructuredRunning {
+  const ProgrammeReviewStructuredRunning({
+    required this.status,
+    required this.statusDetail,
+    required this.workoutId,
+    required this.groups,
+    required this.bindings,
+    required this.policies,
+    this.sessionBlockId,
+    this.executionMappingSha256,
+    this.protocolGraphSha256,
+    this.protocolGraphPath,
+  });
+
+  final ProgrammeReviewRunningStatus status;
+  final String statusDetail;
+  final String workoutId;
+  final String? sessionBlockId;
+  final String? executionMappingSha256;
+  final String? protocolGraphSha256;
+  final String? protocolGraphPath;
+  final List<ProgrammeReviewRunningGroup> groups;
+  final List<ProgrammeReviewRunningBinding> bindings;
+  final List<ProgrammeReviewRunningPolicy> policies;
+
+  bool get isVerified => status == ProgrammeReviewRunningStatus.verified;
+
+  Map<String, Object?> toJson() => {
+    'status': status.name,
+    'status_detail': statusDetail,
+    'workout_id': workoutId,
+    if (sessionBlockId != null) 'session_block_id': sessionBlockId,
+    if (executionMappingSha256 != null)
+      'execution_mapping_sha256': executionMappingSha256,
+    if (protocolGraphSha256 != null)
+      'protocol_graph_sha256': protocolGraphSha256,
+    if (protocolGraphPath != null) 'protocol_graph_path': protocolGraphPath,
+    'groups': groups.map((item) => item.toJson()).toList(growable: false),
+    'bindings': bindings.map((item) => item.toJson()).toList(growable: false),
+    'policies': policies.map((item) => item.toJson()).toList(growable: false),
+  };
+}
+
 class ProgrammeReviewSession {
   const ProgrammeReviewSession({
     required this.sessionKey,
@@ -171,6 +334,7 @@ class ProgrammeReviewSession {
     this.isOptional = false,
     this.completionExpectation,
     this.blocks = const [],
+    this.structuredRunning,
     this.findings = const [],
   });
 
@@ -190,6 +354,7 @@ class ProgrammeReviewSession {
   final bool isOptional;
   final String? completionExpectation;
   final List<ProgrammeReviewBlock> blocks;
+  final ProgrammeReviewStructuredRunning? structuredRunning;
   final List<ProgrammeReviewFinding> findings;
 
   Map<String, Object?> toJson() => {
@@ -201,7 +366,8 @@ class ProgrammeReviewSession {
     'bodies_resolved': bodiesResolved,
     if (displayTitle != null) 'display_title': displayTitle,
     if (coachNote != null) 'coach_note': coachNote,
-    if (prescriptionSummary != null) 'prescription_summary': prescriptionSummary,
+    if (prescriptionSummary != null)
+      'prescription_summary': prescriptionSummary,
     if (slotKey != null) 'slot_key': slotKey,
     'session_order': sessionOrder,
     if (dayType != null) 'day_type': dayType,
@@ -210,6 +376,8 @@ class ProgrammeReviewSession {
     if (completionExpectation != null)
       'completion_expectation': completionExpectation,
     'blocks': blocks.map((item) => item.toJson()).toList(growable: false),
+    if (structuredRunning != null)
+      'structured_running': structuredRunning!.toJson(),
     'findings': findings.map((item) => item.toJson()).toList(growable: false),
   };
 }
@@ -454,8 +622,7 @@ class ProgrammeReviewCatalog {
   final List<ProgrammeReviewPlannedFamily> plannedFamilies;
   final List<ProgrammeReviewProgramme> developerFixtures;
 
-  static const derivedAuthority =
-      'derived_non_authoritative_review_projection';
+  static const derivedAuthority = 'derived_non_authoritative_review_projection';
 
   List<ProgrammeReviewProgramme> realInventory({
     required bool includeFixtures,
@@ -473,7 +640,9 @@ class ProgrammeReviewCatalog {
     'authority': authority,
     'publication_input': false,
     'source_inputs': sourceInputs,
-    'programmes': programmes.map((item) => item.toJson()).toList(growable: false),
+    'programmes': programmes
+        .map((item) => item.toJson())
+        .toList(growable: false),
     'planned_families': plannedFamilies
         .map((item) => item.toJson())
         .toList(growable: false),

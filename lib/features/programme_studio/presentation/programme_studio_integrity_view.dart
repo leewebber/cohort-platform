@@ -26,6 +26,12 @@ class ProgrammeStudioIntegrityView extends StatelessWidget {
     final unsupported = programme.findings
         .where((item) => item.code == 'unsupported_sql_correction')
         .toList(growable: false);
+    final running = programme.weeks
+        .expand((week) => week.days)
+        .expand((day) => day.sessions)
+        .where((session) => session.structuredRunning != null)
+        .map((session) => (session, session.structuredRunning!))
+        .toList(growable: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,6 +92,31 @@ class ProgrammeStudioIntegrityView extends StatelessWidget {
             style: CohortTextStyles.small,
           ),
         ),
+        if (running.isNotEmpty)
+          _Section(
+            title: 'Structured running evidence',
+            child: _MonoBlock(
+              [
+                for (final item in running) ...[
+                  'slot ${item.$1.slotKey ?? 'none'}',
+                  'status ${item.$2.status.name}',
+                  'workout_id ${item.$2.workoutId}',
+                  'session_block_id ${item.$2.sessionBlockId ?? 'none'}',
+                  'execution_mapping_sha256 ${item.$2.executionMappingSha256 ?? 'none'}',
+                  'protocol_graph_sha256 ${item.$2.protocolGraphSha256 ?? 'none'}',
+                  'protocol_graph_path ${item.$2.protocolGraphPath ?? 'none'}',
+                  for (final binding in item.$2.bindings)
+                    'binding ${binding.stepId} -> ${binding.sessionBlockId}',
+                  for (final policy in item.$2.policies) ...[
+                    'attachment ${policy.attachmentId}: ${policy.stepIds.join(', ')}',
+                    'policy ${policy.policyId} v${policy.policyVersion}; method ${policy.methodId} v${policy.methodVersion}',
+                    'range_basis_points ${policy.minimumSpeedBasisPoints}-${policy.maximumSpeedBasisPoints}; freshness_days ${policy.freshnessLocalCivilDays}',
+                  ],
+                  '',
+                ],
+              ].join('\n'),
+            ),
+          ),
         _Section(
           title: 'Applied Apollo correction chain',
           child: corrections.isEmpty

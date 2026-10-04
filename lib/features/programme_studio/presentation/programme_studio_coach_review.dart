@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
+import '../../../domain/running_workout/running_workout.dart';
 import '../domain/programme_review_models.dart';
 import 'programme_studio_controller.dart';
 import 'programme_studio_copy.dart';
@@ -335,7 +336,10 @@ class _SessionDetail extends StatelessWidget {
         ),
         if (coachFacingNote(session.coachNote) != null) ...[
           const SizedBox(height: CohortSpacing.sm),
-          Text(coachFacingNote(session.coachNote)!, style: CohortTextStyles.body),
+          Text(
+            coachFacingNote(session.coachNote)!,
+            style: CohortTextStyles.body,
+          ),
         ],
         if (!session.bodiesResolved) ...[
           const SizedBox(height: CohortSpacing.md),
@@ -346,6 +350,8 @@ class _SessionDetail extends StatelessWidget {
         ],
         const SizedBox(height: CohortSpacing.lg),
         for (final block in grouped) _BlockSection(block: block),
+        if (session.structuredRunning != null)
+          _StructuredRunningSection(running: session.structuredRunning!),
       ],
     );
   }
@@ -372,6 +378,10 @@ class _BlockSection extends StatelessWidget {
           if (block.coachNotes != null) ...[
             const SizedBox(height: 6),
             Text(block.coachNotes!, style: CohortTextStyles.body),
+          ],
+          if (block.content != null) ...[
+            const SizedBox(height: 6),
+            Text(block.content!, style: CohortTextStyles.body),
           ],
           if (humanTimerSummary(block.timerConfiguration) != null) ...[
             const SizedBox(height: 6),
@@ -403,6 +413,303 @@ class _BlockSection extends StatelessWidget {
       ),
     );
   }
+}
+
+class _StructuredRunningSection extends StatelessWidget {
+  const _StructuredRunningSection({required this.running});
+
+  final ProgrammeReviewStructuredRunning running;
+
+  @override
+  Widget build(BuildContext context) {
+    final status = switch (running.status) {
+      ProgrammeReviewRunningStatus.verified =>
+        ProgrammeStudioCopy.verifiedStructuredRun,
+      ProgrammeReviewRunningStatus.authoredUnattached =>
+        ProgrammeStudioCopy.authoredUnattached,
+      ProgrammeReviewRunningStatus.invalidBinding =>
+        ProgrammeStudioCopy.invalidRunningBinding,
+      ProgrammeReviewRunningStatus.unsupported =>
+        ProgrammeStudioCopy.unsupportedRunning,
+    };
+    var stepOrdinal = 0;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: CohortSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(ProgrammeStudioCopy.structuredRun, style: CohortTextStyles.h2),
+          const SizedBox(height: CohortSpacing.xs),
+          Text(status, style: CohortTextStyles.cardTitle),
+          const SizedBox(height: 4),
+          Text(running.statusDetail, style: CohortTextStyles.small),
+          const SizedBox(height: CohortSpacing.md),
+          for (final group in running.groups) ...[
+            if (group.repeatCount > 1)
+              Text(
+                'Repeat ${group.repeatCount} times',
+                style: CohortTextStyles.cardTitle,
+              ),
+            for (final step in group.steps)
+              Builder(
+                builder: (context) {
+                  stepOrdinal += 1;
+                  return _RunningStepRow(step: step, ordinal: stepOrdinal);
+                },
+              ),
+            if (group.repeatCount > 1 &&
+                group.steps.isNotEmpty &&
+                group.steps.last.role == 'recovery')
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  'Final recovery is included.',
+                  style: CohortTextStyles.small,
+                ),
+              ),
+            const SizedBox(height: CohortSpacing.md),
+          ],
+          for (final policy in running.policies)
+            _AdvisoryPolicyCard(policy: policy, running: running),
+        ],
+      ),
+    );
+  }
+}
+
+class _RunningStepRow extends StatelessWidget {
+  const _RunningStepRow({required this.step, required this.ordinal});
+
+  final ProgrammeReviewRunningStep step;
+  final int ordinal;
+
+  @override
+  Widget build(BuildContext context) {
+    final role = switch (step.role) {
+      'warmUp' => 'Warm-up',
+      'work' => 'Work',
+      'recovery' => 'Recovery',
+      'rest' => 'Rest',
+      'coolDown' => 'Cool-down',
+      _ => 'Open',
+    };
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: CohortSpacing.sm,
+        left: CohortSpacing.md,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$ordinal. $role · ${_durationLabel(step)}',
+            style: CohortTextStyles.body,
+          ),
+          if (step.guidance != null)
+            Text(step.guidance!, style: CohortTextStyles.small),
+          if (step.hasAdvisoryTarget)
+            Text(
+              ProgrammeStudioCopy.advisoryPacePolicy,
+              style: CohortTextStyles.small,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdvisoryPolicyCard extends StatefulWidget {
+  const _AdvisoryPolicyCard({required this.policy, required this.running});
+
+  final ProgrammeReviewRunningPolicy policy;
+  final ProgrammeReviewStructuredRunning running;
+
+  @override
+  State<_AdvisoryPolicyCard> createState() => _AdvisoryPolicyCardState();
+}
+
+class _AdvisoryPolicyCardState extends State<_AdvisoryPolicyCard> {
+  final TextEditingController controller = TextEditingController();
+  String? result;
+  String? error;
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final policy = widget.policy;
+    return Card(
+      margin: const EdgeInsets.only(bottom: CohortSpacing.md),
+      child: Padding(
+        padding: const EdgeInsets.all(CohortSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              ProgrammeStudioCopy.advisoryPacePolicy,
+              style: CohortTextStyles.cardTitle,
+            ),
+            const SizedBox(height: CohortSpacing.xs),
+            Text(
+              'Scope: ${_scopeLabels(policy, widget.running)}',
+              style: CohortTextStyles.body,
+            ),
+            Text(
+              'Authored range: ${_percentage(policy.minimumSpeedBasisPoints)}–${_percentage(policy.maximumSpeedBasisPoints)} of benchmark speed',
+              style: CohortTextStyles.body,
+            ),
+            Text(
+              'Eligible completed tests: ${_eligibility(policy)} · fresh for ${policy.freshnessLocalCivilDays} local civil days',
+              style: CohortTextStyles.small,
+            ),
+            Text(
+              'Display rounding: ${_milliseconds(policy.roundingIncrementMillisecondsPerKilometre)} ${policy.roundingDirection}',
+              style: CohortTextStyles.small,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            Text(
+              ProgrammeStudioCopy.paceTargetUnavailable,
+              style: CohortTextStyles.cardTitle,
+            ),
+            const Text(
+              ProgrammeStudioCopy.noEvidenceBehavior,
+              style: CohortTextStyles.small,
+            ),
+            const SizedBox(height: CohortSpacing.md),
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              title: const Text(
+                ProgrammeStudioCopy.hypotheticalPreview,
+                style: CohortTextStyles.cardTitle,
+              ),
+              children: [
+                const Text(
+                  ProgrammeStudioCopy.hypotheticalPrompt,
+                  style: CohortTextStyles.small,
+                ),
+                const SizedBox(height: CohortSpacing.sm),
+                TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Hypothetical 5 km time (mm:ss)',
+                  ),
+                  keyboardType: TextInputType.datetime,
+                  onChanged: (_) => _calculate(),
+                ),
+                if (error != null) Text(error!, style: CohortTextStyles.small),
+                if (result != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: CohortSpacing.sm),
+                    child: Text(result!, style: CohortTextStyles.body),
+                  ),
+                const SizedBox(height: CohortSpacing.sm),
+                const Text(
+                  ProgrammeStudioCopy.hypotheticalSeparation,
+                  style: CohortTextStyles.small,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _calculate() {
+    final input = controller.text.trim();
+    if (input.isEmpty) {
+      setState(() {
+        result = null;
+        error = null;
+      });
+      return;
+    }
+    final parts = input.split(':');
+    final minutes = parts.length == 2 ? int.tryParse(parts[0]) : null;
+    final seconds = parts.length == 2 ? int.tryParse(parts[1]) : null;
+    if (minutes == null ||
+        seconds == null ||
+        minutes <= 0 ||
+        seconds < 0 ||
+        seconds >= 60) {
+      setState(() {
+        result = null;
+        error = 'Enter a valid time such as 22:00.';
+      });
+      return;
+    }
+    final policy = widget.policy;
+    final range = const FiveKilometreBenchmarkSpeedCalculator().calculateRange(
+      benchmarkDurationMilliseconds: (minutes * 60 + seconds) * 1000,
+      minimumSpeedBasisPoints: policy.minimumSpeedBasisPoints,
+      maximumSpeedBasisPoints: policy.maximumSpeedBasisPoints,
+    );
+    final direction = CanonicalPaceRounding.values.byName(
+      policy.roundingDirection,
+    );
+    final increment = policy.roundingIncrementMillisecondsPerKilometre;
+    final faster = range.fasterPace.roundToIncrement(increment, direction);
+    final slower = range.slowerPace.roundToIncrement(increment, direction);
+    setState(() {
+      error = null;
+      result =
+          'If an eligible 5 km result were $input, this authored policy would display ${_pace(faster)}–${_pace(slower)}.';
+    });
+  }
+}
+
+String _durationLabel(ProgrammeReviewRunningStep step) {
+  return switch (step.durationKind) {
+    'time' => '${(step.durationValue ?? 0) ~/ 1000} seconds',
+    'distance' => '${(step.durationValue ?? 0) / 1000} metres',
+    _ => 'Manual lap',
+  };
+}
+
+String _scopeLabels(
+  ProgrammeReviewRunningPolicy policy,
+  ProgrammeReviewStructuredRunning running,
+) {
+  final labels = <String>[];
+  var work = 0;
+  for (final step in running.groups.expand((group) => group.steps)) {
+    if (step.role == 'work') work += 1;
+    if (policy.stepIds.contains(step.stepId)) {
+      labels.add(step.role == 'work' ? 'Work step $work' : step.role);
+    }
+  }
+  return labels.isEmpty ? 'No matched step' : labels.join(', ');
+}
+
+String _eligibility(ProgrammeReviewRunningPolicy policy) {
+  final sources = <String>[];
+  if (policy.cohortCompletedTestsEligible) sources.add('Cohort 5 km');
+  if (policy.manualCompletedTestsEligible) sources.add('manual 5 km');
+  if (policy.externalCompletedTestsEligible) sources.add('external 5 km');
+  return sources.join(', ');
+}
+
+String _percentage(int basisPoints) {
+  final whole = basisPoints ~/ 100;
+  final fraction = basisPoints % 100;
+  return fraction == 0
+      ? '$whole%'
+      : '$whole.${fraction.toString().padLeft(2, '0')}%';
+}
+
+String _milliseconds(int value) => value % 1000 == 0
+    ? '${value ~/ 1000} s/km increment'
+    : '$value ms/km increment';
+
+String _pace(int millisecondsPerKilometre) {
+  final totalSeconds = millisecondsPerKilometre ~/ 1000;
+  final minutes = totalSeconds ~/ 60;
+  final seconds = totalSeconds % 60;
+  return '$minutes:${seconds.toString().padLeft(2, '0')}/km';
 }
 
 class _MovementLines extends StatelessWidget {

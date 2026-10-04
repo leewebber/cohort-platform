@@ -17,6 +17,52 @@ class ReviewedProtocolGraphArtifactException implements Exception {
   String toString() => '$code: $message';
 }
 
+/// Pure result shared by private publication and read-only review surfaces.
+///
+/// The result contains only data that has passed the same package, graph hash,
+/// protocol revision, block identity, workout identity, and step-order checks
+/// used by the canonical private publisher.
+class ReviewedProtocolGraphResult {
+  const ReviewedProtocolGraphResult({
+    required this.graphs,
+    required this.runningProjections,
+    required this.sha256,
+  });
+
+  final List<Map<String, Object?>> graphs;
+  final List<ReviewedRunningProjection> runningProjections;
+  final String sha256;
+
+  ReviewedRunningProjection? runningProjection({
+    required String protocolId,
+    required String workoutId,
+    required String sessionBlockId,
+  }) {
+    for (final projection in runningProjections) {
+      if (projection.protocolId == protocolId &&
+          projection.workout.workoutId == workoutId &&
+          projection.sessionBlockId == sessionBlockId) {
+        return projection;
+      }
+    }
+    return null;
+  }
+}
+
+class ReviewedRunningProjection {
+  const ReviewedRunningProjection({
+    required this.protocolId,
+    required this.sessionBlockId,
+    required this.block,
+    required this.workout,
+  });
+
+  final String protocolId;
+  final String sessionBlockId;
+  final Map<String, Object?> block;
+  final RunningWorkout workout;
+}
+
 /// Loads a separately reviewed protocol graph without weakening Plan Package
 /// or hosted publication authority.
 ///
@@ -27,6 +73,16 @@ class ReviewedProtocolGraphArtifact {
   const ReviewedProtocolGraphArtifact();
 
   List<Map<String, Object?>> decode({
+    required PlanPackageCompileResult compileResult,
+    required String source,
+    required String expectedSha256,
+  }) => inspect(
+    compileResult: compileResult,
+    source: source,
+    expectedSha256: expectedSha256,
+  ).graphs;
+
+  ReviewedProtocolGraphResult inspect({
     required PlanPackageCompileResult compileResult,
     required String source,
     required String expectedSha256,
@@ -93,6 +149,8 @@ class ReviewedProtocolGraphArtifact {
       }
       _blocks(graph);
     }
+    final projections = <ReviewedRunningProjection>[];
+    final projectionKeys = <String>{};
     for (final week in manifest.weeks) {
       for (final day in week.days) {
         for (final slot in day.slots) {
@@ -105,18 +163,28 @@ class ReviewedProtocolGraphArtifact {
               'A running slot references an unknown package session.',
             );
           }
-          _validateRunning(
+          final projection = _validateRunning(
             running: running!,
             protocolId: session.protocolId,
             graph: graphs[session.protocolId]!,
           );
+          final key =
+              '${projection.protocolId}|'
+              '${projection.workout.workoutId}|${projection.sessionBlockId}';
+          if (projectionKeys.add(key)) {
+            projections.add(projection);
+          }
         }
       }
     }
-    return [for (final graph in graphs.values) graph];
+    return ReviewedProtocolGraphResult(
+      graphs: List.unmodifiable(graphs.values),
+      runningProjections: List.unmodifiable(projections),
+      sha256: actualHash,
+    );
   }
 
-  void _validateRunning({
+  ReviewedRunningProjection _validateRunning({
     required PlanPackageAuthoredRunningV1 running,
     required String protocolId,
     required Map<String, Object?> graph,
@@ -172,6 +240,12 @@ class ReviewedProtocolGraphArtifact {
         'The reviewed timer does not reproduce the authored running identity.',
       );
     }
+    return ReviewedRunningProjection(
+      protocolId: protocolId,
+      sessionBlockId: blockIds.single,
+      block: Map.unmodifiable(matched),
+      workout: workout,
+    );
   }
 
   List<String> projectedStepIds(RunningWorkout workout) {

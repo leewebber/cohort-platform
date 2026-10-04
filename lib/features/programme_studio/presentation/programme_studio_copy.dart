@@ -34,14 +34,32 @@ abstract final class ProgrammeStudioCopy {
   static const viewEvidence = 'View evidence';
   static const contentReady = 'Content ready';
   static const needsAttention = 'Needs attention';
+  static const structuredRun = 'Structured run';
+  static const verifiedStructuredRun = 'Verified for current structured runner';
+  static const authoredUnattached =
+      'Authored, not attached to structured execution';
+  static const invalidRunningBinding = 'Invalid binding';
+  static const unsupportedRunning = 'Unsupported by current runner';
+  static const advisoryPacePolicy = 'Advisory pace policy';
+  static const hypotheticalPreview =
+      'Hypothetical preview — not an athlete target';
+  static const hypotheticalPrompt =
+      'Enter a hypothetical completed 5 km time to preview this authored policy.';
+  static const hypotheticalSeparation =
+      'This preview is not saved and does not create or read an athlete occurrence snapshot. Athlete targets freeze only when the verified session launch succeeds.';
+  static const paceTargetUnavailable = 'Pace target unavailable';
+  static const noEvidenceBehavior =
+      'If no eligible recent completed 5 km benchmark is available when the session starts, the athlete follows the authored guidance. Cohort does not estimate a pace.';
   static const weekOf = 'Week';
   static const baliSummaryTitle = 'Programme summary';
   static const baliDurationLabel = '8-week label';
-  static const baliCalendarSpan = '58-day calendar span including Week 8 spillover';
+  static const baliCalendarSpan =
+      '58-day calendar span including Week 8 spillover';
   static const baliSessionCount = '71 sessions';
   static const baliStandardWeek = '9-session standard week';
   static const baliWeek4 = 'Week 4 consolidation / testing (8 sessions)';
-  static const baliWeek8 = 'Week 8 taper / testing, including spillover Saturday and Sunday';
+  static const baliWeek8 =
+      'Week 8 taper / testing, including spillover Saturday and Sunday';
   static const baliNoRunning = 'No running required';
   static const baliPrivate = 'Private / internal — not in the public catalogue';
 }

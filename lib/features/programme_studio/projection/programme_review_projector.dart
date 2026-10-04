@@ -5,6 +5,8 @@ import 'package:founder_importer/features/founder_programme_import/founder_progr
 import 'package:founder_importer/features/founder_programme_import/founder_programme_import_models.dart';
 import 'package:founder_importer/features/founder_programme_import/founder_programme_yaml_parser.dart';
 
+import '../../../domain/running_workout/running_workout.dart';
+import '../../private_programme/reviewed_protocol_graph_artifact.dart';
 import '../domain/programme_review_models.dart';
 import 'executable_protocol_sql_reader.dart';
 import 'founder_protocol_review_mapper.dart';
@@ -36,6 +38,9 @@ class ProgrammeReviewProjector {
       }
       if (bundle.spec.publicationJsonPath != null) {
         inputs.add(bundle.spec.publicationJsonPath!);
+      }
+      if (bundle.spec.reviewedProtocolGraphPath != null) {
+        inputs.add(bundle.spec.reviewedProtocolGraphPath!);
       }
       inputs.addAll(bundle.spec.executableProtocolSqlPaths);
       inputs.addAll(bundle.spec.correctionSqlPaths);
@@ -107,6 +112,7 @@ class ProgrammeReviewProjector {
     final protocols = protocolRead.protocols;
     findings.addAll(protocolRead.findings);
     final publication = _publication(bundle, compile.contentHashSha256);
+    final reviewedGraph = _reviewedGraph(bundle, compile, findings);
 
     _metadataFindings(manifest, founder, findings);
 
@@ -114,6 +120,8 @@ class ProgrammeReviewProjector {
       manifest: manifest,
       founder: founder,
       protocols: protocols,
+      reviewedGraph: reviewedGraph,
+      reviewedGraphPath: bundle.spec.reviewedProtocolGraphPath,
       findings: findings,
     );
 
@@ -334,6 +342,70 @@ class ProgrammeReviewProjector {
     }
   }
 
+  ReviewedProtocolGraphResult? _reviewedGraph(
+    ProgrammeReviewSourceBundle bundle,
+    PlanPackageCompileResult compile,
+    List<ProgrammeReviewFinding> findings,
+  ) {
+    final graphSource = bundle.reviewedProtocolGraphJson;
+    final graphPath = bundle.spec.reviewedProtocolGraphPath;
+    if (graphSource == null && graphPath == null) return null;
+    if (graphSource == null || graphPath == null) {
+      findings.add(
+        const ProgrammeReviewFinding(
+          code: 'reviewed_protocol_graph_missing',
+          severity: ProgrammeReviewFindingSeverity.error,
+          message:
+              'The reviewed protocol graph path and bytes must both be present.',
+        ),
+      );
+      return null;
+    }
+    try {
+      final publication = jsonDecode(bundle.publicationJson ?? '');
+      if (publication is! Map) {
+        throw const FormatException('Publication artifact is not an object.');
+      }
+      final publishedPath = publication['protocol_graph_path']?.toString();
+      final expectedHash = publication['protocol_graph_sha256']?.toString();
+      final expectedPackageHash = publication['source_package_hash']
+          ?.toString();
+      if (publishedPath != graphPath ||
+          expectedHash == null ||
+          !RegExp(r'^[0-9a-f]{64}$').hasMatch(expectedHash) ||
+          expectedPackageHash != compile.contentHashSha256) {
+        throw const ReviewedProtocolGraphArtifactException(
+          'protocol_graph_attestation_missing',
+          'Publication evidence must pin the exact package hash, reviewed graph path, and graph SHA-256.',
+        );
+      }
+      return const ReviewedProtocolGraphArtifact().inspect(
+        compileResult: compile,
+        source: graphSource,
+        expectedSha256: expectedHash,
+      );
+    } on ReviewedProtocolGraphArtifactException catch (error) {
+      findings.add(
+        ProgrammeReviewFinding(
+          code: error.code,
+          severity: ProgrammeReviewFindingSeverity.error,
+          message: error.message,
+          sourceContext: graphPath,
+        ),
+      );
+    } catch (error) {
+      findings.add(
+        ProgrammeReviewFinding(
+          code: 'reviewed_protocol_graph_invalid',
+          severity: ProgrammeReviewFindingSeverity.error,
+          message: 'Reviewed protocol graph evidence is invalid: $error',
+          sourceContext: graphPath,
+        ),
+      );
+    }
+    return null;
+  }
+
   void _metadataFindings(
     PlanPackageManifest manifest,
     FounderProgrammeYamlDocument? founder,
@@ -414,6 +486,8 @@ class ProgrammeReviewProjector {
     required PlanPackageManifest manifest,
     required FounderProgrammeYamlDocument? founder,
     required Map<String, ExecutableProtocolRecord> protocols,
+    required ReviewedProtocolGraphResult? reviewedGraph,
+    required String? reviewedGraphPath,
     required List<ProgrammeReviewFinding> findings,
   }) {
     final sessionsByKey = {
@@ -445,6 +519,8 @@ class ProgrammeReviewProjector {
                       dayOrder: day.dayOrder,
                       founder: founder,
                       protocols: protocols,
+                      reviewedGraph: reviewedGraph,
+                      reviewedGraphPath: reviewedGraphPath,
                       findings: findings,
                     ),
                 ],
@@ -461,6 +537,8 @@ class ProgrammeReviewProjector {
     required int dayOrder,
     required FounderProgrammeYamlDocument? founder,
     required Map<String, ExecutableProtocolRecord> protocols,
+    required ReviewedProtocolGraphResult? reviewedGraph,
+    required String? reviewedGraphPath,
     required List<ProgrammeReviewFinding> findings,
   }) {
     final sessionFindings = <ProgrammeReviewFinding>[];
@@ -493,6 +571,17 @@ class ProgrammeReviewProjector {
       );
     }
 
+    final running = slot.authoredRunningV1;
+    ReviewedRunningProjection? runningProjection;
+    final bindings = running?.executableStepBindings;
+    if (bindings != null && bindings.isNotEmpty) {
+      runningProjection = reviewedGraph?.runningProjection(
+        protocolId: ref.protocolId,
+        workoutId: running!.workoutId,
+        sessionBlockId: bindings.first.sessionBlockId,
+      );
+    }
+
     var blocks = <ProgrammeReviewBlock>[];
     var resolved = false;
     if (founder != null) {
@@ -510,6 +599,10 @@ class ProgrammeReviewProjector {
         blocks = protocol.blocks;
         resolved = true;
       }
+    }
+    if (!resolved && runningProjection != null) {
+      blocks = [_reviewedRunningBlock(runningProjection.block)];
+      resolved = true;
     }
     if (!resolved) {
       sessionFindings.add(
@@ -548,6 +641,16 @@ class ProgrammeReviewProjector {
       }
     }
     findings.addAll(sessionFindings);
+    final structuredRunning = running == null
+        ? null
+        : _structuredRunning(
+            running: running,
+            projection: runningProjection,
+            reviewedGraph: reviewedGraph,
+            reviewedGraphPath: reviewedGraphPath,
+            findings: sessionFindings,
+          );
+    findings.addAll(sessionFindings.where((item) => !findings.contains(item)));
     return ProgrammeReviewSession(
       sessionKey: ref.sessionKey,
       protocolId: ref.protocolId,
@@ -564,8 +667,240 @@ class ProgrammeReviewProjector {
       isOptional: slot.isOptional,
       completionExpectation: slot.completionExpectation.dbValue,
       blocks: blocks,
+      structuredRunning: structuredRunning,
       findings: sessionFindings,
     );
+  }
+
+  ProgrammeReviewBlock _reviewedRunningBlock(Map<String, Object?> block) {
+    return ProgrammeReviewBlock(
+      position: int.tryParse(block['position']?.toString() ?? '') ?? 1,
+      title: block['title']?.toString() ?? 'Structured run',
+      blockType: block['block_type']?.toString() ?? 'conditioning',
+      sourceIdentity: 'reviewed_protocol_graph',
+      content: block['content']?.toString(),
+      workoutFormat: block['workout_format']?.toString(),
+      timerConfiguration: block['timer_config'] == null
+          ? null
+          : jsonEncode(block['timer_config']),
+      coachNotes: block['coach_notes']?.toString(),
+    );
+  }
+
+  ProgrammeReviewStructuredRunning _structuredRunning({
+    required PlanPackageAuthoredRunningV1 running,
+    required ReviewedRunningProjection? projection,
+    required ReviewedProtocolGraphResult? reviewedGraph,
+    required String? reviewedGraphPath,
+    required List<ProgrammeReviewFinding> findings,
+  }) {
+    final bindings = [
+      for (final binding in running.executableStepBindings ?? const [])
+        ProgrammeReviewRunningBinding(
+          stepId: binding.stepId,
+          sessionBlockId: binding.sessionBlockId,
+        ),
+    ];
+    final policies = [
+      for (final attachment in running.advisoryAttachments)
+        ProgrammeReviewRunningPolicy(
+          attachmentId: attachment.attachmentId,
+          stepIds: List.unmodifiable(attachment.stepIds),
+          policyId: attachment.policy.policyId,
+          policyVersion: attachment.policy.policyVersion,
+          methodId: attachment.policy.methodId,
+          methodVersion: attachment.policy.methodVersion,
+          cohortCompletedTestsEligible: attachment
+              .policy
+              .benchmarkEligibility
+              .cohortCompletedTestsEligible,
+          manualCompletedTestsEligible: attachment
+              .policy
+              .benchmarkEligibility
+              .manualCompletedTestsEligible,
+          externalCompletedTestsEligible: attachment
+              .policy
+              .benchmarkEligibility
+              .externalCompletedTestsEligible,
+          freshnessLocalCivilDays: attachment.policy.freshnessLocalCivilDays,
+          minimumSpeedBasisPoints: attachment.policy.minimumSpeedBasisPoints,
+          maximumSpeedBasisPoints: attachment.policy.maximumSpeedBasisPoints,
+          roundingIncrementMillisecondsPerKilometre: attachment
+              .policy
+              .displayRounding
+              .incrementMillisecondsPerKilometre,
+          roundingDirection: attachment.policy.displayRounding.direction.name,
+        ),
+    ];
+    final mappingHash = running.executableStepBindings == null
+        ? null
+        : RunningExecutionMappingHash.compute(
+            workoutId: running.workoutId,
+            bindings: running.executableStepBindings!.map(
+              (binding) => (
+                stepId: binding.stepId,
+                sessionBlockId: binding.sessionBlockId,
+              ),
+            ),
+          );
+    if (running.executableStepBindings == null) {
+      return ProgrammeReviewStructuredRunning(
+        status: ProgrammeReviewRunningStatus.authoredUnattached,
+        statusDetail:
+            'Authored running is present, but no exact executable mapping is attached.',
+        workoutId: running.workoutId,
+        groups: const [],
+        bindings: const [],
+        policies: policies,
+      );
+    }
+    if (projection == null || reviewedGraph == null) {
+      findings.add(
+        const ProgrammeReviewFinding(
+          code: 'running_review_binding_unverified',
+          severity: ProgrammeReviewFindingSeverity.error,
+          message:
+              'The exact running mapping could not be reproduced from a hash-pinned reviewed graph.',
+        ),
+      );
+      return ProgrammeReviewStructuredRunning(
+        status: ProgrammeReviewRunningStatus.invalidBinding,
+        statusDetail:
+            'Invalid binding — the reviewed executable structure is missing or disagrees.',
+        workoutId: running.workoutId,
+        sessionBlockId: bindings.isEmpty ? null : bindings.first.sessionBlockId,
+        executionMappingSha256: mappingHash,
+        protocolGraphPath: reviewedGraphPath,
+        groups: const [],
+        bindings: bindings,
+        policies: policies,
+      );
+    }
+
+    final attachmentIdsByStep = <String, List<String>>{};
+    for (final policy in policies) {
+      for (final stepId in policy.stepIds) {
+        attachmentIdsByStep
+            .putIfAbsent(stepId, () => [])
+            .add(policy.attachmentId);
+      }
+    }
+    var scopeInvalid = false;
+    final groups = <ProgrammeReviewRunningGroup>[];
+    for (final node in projection.workout.steps) {
+      switch (node) {
+        case RunningAtomicStep():
+          final step = _reviewRunningStep(
+            node,
+            attachmentIdsByStep,
+            projection.block['content']?.toString(),
+          );
+          scopeInvalid = _recordScopeFindings(step, findings) || scopeInvalid;
+          groups.add(
+            ProgrammeReviewRunningGroup(
+              groupId: null,
+              repeatCount: 1,
+              steps: [step],
+            ),
+          );
+        case RunningRepeatGroup():
+          final steps = [
+            for (final child in node.steps)
+              _reviewRunningStep(
+                child,
+                attachmentIdsByStep,
+                projection.block['content']?.toString(),
+              ),
+          ];
+          for (final step in steps) {
+            scopeInvalid = _recordScopeFindings(step, findings) || scopeInvalid;
+          }
+          groups.add(
+            ProgrammeReviewRunningGroup(
+              groupId: node.groupId,
+              repeatCount: node.count,
+              steps: steps,
+            ),
+          );
+      }
+    }
+    final unsupported = groups
+        .expand((group) => group.steps)
+        .any((step) => step.durationKind != RunningDurationKind.time.name);
+    return ProgrammeReviewStructuredRunning(
+      status: scopeInvalid
+          ? ProgrammeReviewRunningStatus.invalidBinding
+          : unsupported
+          ? ProgrammeReviewRunningStatus.unsupported
+          : ProgrammeReviewRunningStatus.verified,
+      statusDetail: scopeInvalid
+          ? 'Invalid target scope — review the blocking findings.'
+          : unsupported
+          ? 'Authored structure is valid but unsupported by the current runner.'
+          : 'Verified for the current time-based structured runner. This is not programme approval.',
+      workoutId: running.workoutId,
+      sessionBlockId: bindings.first.sessionBlockId,
+      executionMappingSha256: mappingHash,
+      protocolGraphSha256: reviewedGraph.sha256,
+      protocolGraphPath: reviewedGraphPath,
+      groups: groups,
+      bindings: bindings,
+      policies: policies,
+    );
+  }
+
+  ProgrammeReviewRunningStep _reviewRunningStep(
+    RunningAtomicStep step,
+    Map<String, List<String>> attachmentIdsByStep,
+    String? blockGuidance,
+  ) {
+    final value = switch (step.duration.kind) {
+      RunningDurationKind.time => step.duration.milliseconds,
+      RunningDurationKind.distance => step.duration.millimetres,
+      RunningDurationKind.manualLap => null,
+    };
+    return ProgrammeReviewRunningStep(
+      stepId: step.stepId,
+      role: step.role.name,
+      durationKind: step.duration.kind.name,
+      durationValue: value,
+      guidance: step.notes ?? blockGuidance,
+      advisoryAttachmentIds: List.unmodifiable(
+        attachmentIdsByStep[step.stepId] ?? const [],
+      ),
+    );
+  }
+
+  bool _recordScopeFindings(
+    ProgrammeReviewRunningStep step,
+    List<ProgrammeReviewFinding> findings,
+  ) {
+    var invalid = false;
+    if (step.advisoryAttachmentIds.length > 1) {
+      invalid = true;
+      findings.add(
+        ProgrammeReviewFinding(
+          code: 'overlapping_advisory_scope',
+          severity: ProgrammeReviewFindingSeverity.error,
+          message:
+              'One running step is scoped by multiple advisory attachments. Canonical rejection requires the separately proposed authority migration.',
+          sourceContext: step.stepId,
+        ),
+      );
+    }
+    if (step.hasAdvisoryTarget && step.role != RunningStepRole.work.name) {
+      invalid = true;
+      findings.add(
+        ProgrammeReviewFinding(
+          code: 'numeric_target_on_non_work_step',
+          severity: ProgrammeReviewFindingSeverity.error,
+          message:
+              'Advisory pace targets may apply only to authored work steps.',
+          sourceContext: step.stepId,
+        ),
+      );
+    }
+    return invalid;
   }
 
   List<String> _sourcePaths(ProgrammeReviewSourceSpec spec) {
@@ -573,6 +908,8 @@ class ProgrammeReviewProjector {
       spec.planPackagePath,
       if (spec.founderYamlPath != null) spec.founderYamlPath!,
       if (spec.publicationJsonPath != null) spec.publicationJsonPath!,
+      if (spec.reviewedProtocolGraphPath != null)
+        spec.reviewedProtocolGraphPath!,
       ...spec.executableProtocolSqlPaths,
       ...spec.correctionSqlPaths,
     ]..sort();
@@ -589,6 +926,15 @@ class ProgrammeReviewProjector {
     final missingBodies = bodies.where((session) => !session.bodiesResolved);
     final unsupported = programme.findings.where(
       (item) => item.code == 'unsupported_prescription',
+    );
+    final running = bodies
+        .map((session) => session.structuredRunning)
+        .whereType<ProgrammeReviewStructuredRunning>()
+        .toList(growable: false);
+    final invalidRunning = running.where(
+      (item) =>
+          item.status == ProgrammeReviewRunningStatus.invalidBinding ||
+          item.status == ProgrammeReviewRunningStatus.unsupported,
     );
     final metadataComplete =
         programme.intendedLevel != null && programme.equipment != null;
@@ -650,21 +996,30 @@ class ProgrammeReviewProjector {
       ProgrammeReviewCheck(
         id: 'running_structure',
         label: 'Running structure readiness',
-        status: programme.lineageCode == 'BALI-HYBRID-BASE'
-            ? ProgrammeReviewCheckStatus.passed
-            : ProgrammeReviewCheckStatus.notImplemented,
-        detail: programme.lineageCode == 'BALI-HYBRID-BASE'
-            ? 'No running required. Time-based BikeErg/RowErg is shown as '
-                  'authored duration with target none. Distance 2 km Row tests '
-                  'remain manual capture. B2 is not implemented.'
-            : 'Structured running workout model is not implemented. Current '
-                  'timer/block encoding is shown as authored.',
+        status: running.isEmpty
+            ? ProgrammeReviewCheckStatus.notAssessed
+            : invalidRunning.isNotEmpty
+            ? ProgrammeReviewCheckStatus.failed
+            : ProgrammeReviewCheckStatus.passed,
+        detail: running.isEmpty
+            ? 'No authored_running_v1 attachment is present; structured running is not assessed for this programme.'
+            : invalidRunning.isNotEmpty
+            ? '${invalidRunning.length} structured running slot(s) have invalid or unsupported execution evidence.'
+            : '${running.length} structured running slot(s) retain canonical authored structure and reviewed executable evidence. This is not programme approval.',
       ),
-      const ProgrammeReviewCheck(
+      ProgrammeReviewCheck(
         id: 'pace_calculation',
         label: 'Pace-calculation readiness',
-        status: ProgrammeReviewCheckStatus.notImplemented,
-        detail: 'Pace/zone formulas are not implemented. Not inferred.',
+        status: running.isEmpty
+            ? ProgrammeReviewCheckStatus.notAssessed
+            : invalidRunning.isNotEmpty
+            ? ProgrammeReviewCheckStatus.failed
+            : ProgrammeReviewCheckStatus.passed,
+        detail: running.isEmpty
+            ? 'No authored advisory running policy is present.'
+            : invalidRunning.isNotEmpty
+            ? 'Hypothetical calculation is unavailable until canonical structure and target scope validate.'
+            : 'Existing B2 arithmetic can preview an authored policy from explicit hypothetical input only. No athlete snapshot or programme approval is established.',
       ),
       ProgrammeReviewCheck(
         id: 'metrics_profile',
@@ -718,7 +1073,8 @@ class ProgrammeReviewProjector {
         id: 'lee_assignment',
         label: 'Lee assignment',
         status: ProgrammeReviewCheckStatus.notAssessed,
-        detail: 'Current assignment must not be changed by this authoring task.',
+        detail:
+            'Current assignment must not be changed by this authoring task.',
       ),
       const ProgrammeReviewCheck(
         id: 'complete_phone_execution',

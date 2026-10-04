@@ -32,10 +32,12 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text(ProgrammeStudioCopy.coachReview), findsWidgets);
     expect(find.textContaining('Week 1 of 12'), findsWidgets);
@@ -65,10 +67,12 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Apollo Build — 12-Week Initial Block'), findsWidgets);
     expect(find.text('Bali Hybrid Base'), findsWidgets);
@@ -125,10 +129,12 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.nextWeek));
     await tester.pumpAndSettle();
@@ -158,10 +164,12 @@ void main() {
     'Quality Gate uses readable statuses and is not launch approved',
     (tester) async {
       await setDesktop(tester);
-      await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+      await tester.pumpWidget(
+        ProgrammeStudioApp(
+          catalog: realCatalog(),
+          initialSelection: apolloStudioSelection,
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text(ProgrammeStudioCopy.qualityGate));
       await tester.pumpAndSettle();
@@ -187,7 +195,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.textContaining('Running pace calculations — Not implemented'),
+        find.textContaining('Running pace calculations — Not assessed'),
         findsOneWidget,
       );
       expect(
@@ -210,10 +218,12 @@ void main() {
     tester,
   ) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.technicalIntegrity));
     await tester.pumpAndSettle();
@@ -233,10 +243,12 @@ void main() {
 
   testWidgets('Athlete Preview contains no technical evidence', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.athletePreview));
     await tester.pumpAndSettle();
@@ -248,10 +260,12 @@ void main() {
 
   testWidgets('planned family shows an empty planning state', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('HYROX Base'));
     await tester.pumpAndSettle();
@@ -262,10 +276,12 @@ void main() {
 
   testWidgets('keyboard can change week and review mode', (tester) async {
     await setDesktop(tester);
-    await tester.pumpWidget(ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ));
+    await tester.pumpWidget(
+      ProgrammeStudioApp(
+        catalog: realCatalog(),
+        initialSelection: apolloStudioSelection,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text(ProgrammeStudioCopy.appTitle));
     await tester.pump();
@@ -289,9 +305,9 @@ void main() {
           textScaler: TextScaler.linear(1.7),
         ),
         child: ProgrammeStudioApp(
-      catalog: realCatalog(),
-      initialSelection: apolloStudioSelection,
-    ),
+          catalog: realCatalog(),
+          initialSelection: apolloStudioSelection,
+        ),
       ),
     );
     await tester.pumpAndSettle();

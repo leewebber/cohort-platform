@@ -40,6 +40,20 @@ abstract final class ProgrammeReviewCatalogRegistry {
     ),
   ];
 
+  static const developerSpecs = [
+    ProgrammeReviewSourceSpec(
+      catalogId: 'b3-device-validation-v1',
+      classification: ProgrammeReviewClassification.fixtureTestExample,
+      planPackagePath:
+          'tool/programmes/b3_device_validation_v1.plan-package.yaml',
+      publicationJsonPath:
+          'content/programmes/b3_device_validation/v1/b3_device_validation.publication.json',
+      reviewedProtocolGraphPath:
+          'content/programmes/b3_device_validation/v1/protocol_graphs.json',
+      fixture: true,
+    ),
+  ];
+
   static const plannedFamilies = [
     ProgrammeReviewPlannedFamily(
       id: 'hyrox-base',
@@ -110,6 +124,16 @@ abstract final class ProgrammeReviewCatalogRegistry {
       ],
     ];
   }
+
+  static List<String> get previewReadablePaths => [
+    ...realReadablePaths,
+    for (final spec in developerSpecs) ...[
+      spec.planPackagePath,
+      if (spec.publicationJsonPath != null) spec.publicationJsonPath!,
+      if (spec.reviewedProtocolGraphPath != null)
+        spec.reviewedProtocolGraphPath!,
+    ],
+  ];
 
   static const excludedFromRealInventory = [
     'packages/cohort_plan_package/test/fixtures/minimal_plan_package.yaml',

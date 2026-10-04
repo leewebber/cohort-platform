@@ -7,6 +7,7 @@ class ProgrammeReviewSourceSpec {
     required this.planPackagePath,
     this.founderYamlPath,
     this.publicationJsonPath,
+    this.reviewedProtocolGraphPath,
     this.executableProtocolSqlPaths = const [],
     this.correctionSqlPaths = const [],
     this.fixture = false,
@@ -17,6 +18,7 @@ class ProgrammeReviewSourceSpec {
   final String planPackagePath;
   final String? founderYamlPath;
   final String? publicationJsonPath;
+  final String? reviewedProtocolGraphPath;
   final List<String> executableProtocolSqlPaths;
   final List<String> correctionSqlPaths;
   final bool fixture;
@@ -28,6 +30,7 @@ class ProgrammeReviewSourceBundle {
     required this.planPackageYaml,
     this.founderYaml,
     this.publicationJson,
+    this.reviewedProtocolGraphJson,
     this.executableProtocolSql = const [],
     this.correctionSql = const [],
   });
@@ -36,6 +39,7 @@ class ProgrammeReviewSourceBundle {
   final String planPackageYaml;
   final String? founderYaml;
   final String? publicationJson;
+  final String? reviewedProtocolGraphJson;
   final List<String> executableProtocolSql;
   final List<ProgrammeSqlSource> correctionSql;
 }
