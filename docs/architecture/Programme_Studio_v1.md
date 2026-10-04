@@ -12,6 +12,13 @@
 **Base:** `docs/launch-programme-library-audit` after
 `2b72739602fbc887337c15b489a8919ac8c451b4`
 
+> **Current continuation (2026-10-04):** Stage 1 remains complete. B1–B3
+> structured running and the B3 device-validation closeout are integrated on
+> `origin/main` through `d1585af`. B4 is inspection/proposal only; no Studio
+> structured-running implementation or programme authoring is authorised.
+> See
+> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](./Programme_Studio_Structured_Running_B4_Proposal_v1.md).
+
 ```text
 LAUNCH_PROGRAMME_LIBRARY=STRATEGY_APPROVED
 LAUNCH_PROGRAMME_LIBRARY_INFRASTRUCTURE=IN_PROGRESS

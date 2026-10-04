@@ -11,8 +11,8 @@
 > `20260929120000`. The private TEST ONLY B3 device-validation programme is
 > published on Cohort Field Manual, Lee's replacement assignment is active,
 > and the approved development build was installed. The B3 device-validation
-> walkthrough is **COMPLETE, AWAITING INTEGRATION APPROVAL** on local branch
-> `codex/b3-device-validation`. Lee confirmed calculated targets for sessions
+> walkthrough is **COMPLETE AND INTEGRATED** on `origin/main` at `d1585af`.
+> Lee confirmed calculated targets for sessions
 > 1–2, partial completion with skipped work for session 3, an intent-only
 > snapshot for session 4, lifecycle/restore behavior, and the corrected
 > completion → Done return to a usable Home screen. Later SELECT-only evidence
@@ -21,6 +21,9 @@
 > was not device-validated and the absence of an audit row is expected. The
 > dated 2026-10-03 mismatch attempt remains preserved in the device-validation
 > handoff and is superseded by its final closeout section.
+> B4 Programme Studio structured-running work is now **AUDITED AND PROPOSED FOR
+> FOUNDER REVIEW**; implementation is not authorised. Proposal:
+> [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](../architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md).
 > Handoffs:
 > [`RUNNING_PACE_FOUNDATION_B2_HANDOFF.md`](./RUNNING_PACE_FOUNDATION_B2_HANDOFF.md),
 > [`STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md`](./STRUCTURED_RUNNING_B3_SLICE_1_HANDOFF.md),
@@ -92,7 +95,8 @@
 > `B3_ATHLETE_UI=VERIFIED_V2_ONLY`,
 > `B3_STRUCTURED_RUNNER=TIME_TARGETS_AND_ACTUALS`,
 > `B3_PROGRAMME_ADOPTION=false`,
-> `B3_DEVICE_VALIDATION=COMPLETE_AWAITING_INTEGRATION_APPROVAL`,
+> `B3_DEVICE_VALIDATION=COMPLETE_INTEGRATED`,
+> `B3_DEVICE_VALIDATION_INTEGRATED_HEAD=d1585aff2ae6ef4bfcd066927782ce349d8a6924`,
 > `B3_DEVICE_VALIDATION_HOSTED_PUBLICATION=true`,
 > `B3_DEVICE_VALIDATION_ASSIGNMENT_ACTIVATED=true`,
 > `B3_DEVICE_VALIDATION_PHONE_INSTALLED=true`,
@@ -102,6 +106,8 @@
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,
+> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=AUDIT_PROPOSED_FOR_FOUNDER_REVIEW`,
+> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=false`,
 > `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 > `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 > `LEE_BALI_HYBRID_BASE_PRIVATE=true`,

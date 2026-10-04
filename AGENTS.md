@@ -172,10 +172,14 @@ infrastructure is **COMPLETE**. Its implementation is integrated on
 (`20260927120000` through `20260927150000`) are applied on Cohort Field Manual.
 Structured Running B3 slice 1 is integrated and its migration is applied on
 Cohort Field Manual through `20260928120000`. B3 slice 2 is integrated on
-`origin/main` at `a83583ef`. B3 slice 3 is implemented locally on
-`codex/b3-structured-running-slice-3`; its migration is not applied on any
-hosted project, it has no programme adoption, and it awaits founder visual and
-integration review.
+`origin/main` at `a83583ef`. B3 slice 3 is integrated on `origin/main` at
+`1f6017d`; its migration is applied on Cohort Field Manual
+through `20260929120000`. The private TEST ONLY B3 device-validation programme
+and device closeout are integrated on `origin/main` at `d1585af`. They prove
+the verified v2 time-based path but do not establish commercial programme
+adoption. B4 Programme Studio structured running is audited and proposed for
+founder review; implementation is not authorised
+([`docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md`](docs/architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md)).
 Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 ([`docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md`](docs/checkpoints/PROGRAMME_STUDIO_STAGE_1_HANDOFF.md),
 [`docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md`](docs/checkpoints/RUNNING_WORKOUT_B1_HANDOFF.md),
@@ -208,14 +212,18 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `B3_HOSTED_MIGRATION_APPLIED=true`,
 `B3_SLICE_1_HOSTED_MIGRATION_APPLIED=true`,
 `STRUCTURED_RUNNING_B3_SLICE_2=INTEGRATED`,
-`STRUCTURED_RUNNING_B3_SLICE_3=IMPLEMENTED_LOCAL`,
-`B3_SLICE_3_HOSTED_MIGRATION_APPLIED=false`,
-`B3_ATHLETE_UI=LOCAL_TARGETS_AND_ACTUALS_VERIFIED_V2_ONLY`,
-`B3_STRUCTURED_RUNNER=IMPLEMENTED_LOCAL_TIME_TARGETS_AND_ACTUALS`,
+`STRUCTURED_RUNNING_B3_SLICE_3=INTEGRATED`,
+`B3_SLICE_3_HOSTED_MIGRATION_APPLIED=true`,
+`B3_ATHLETE_UI=VERIFIED_V2_ONLY`,
+`B3_STRUCTURED_RUNNER=TIME_TARGETS_AND_ACTUALS`,
 `B3_PROGRAMME_ADOPTION=false`,
+`B3_DEVICE_VALIDATION=COMPLETE_INTEGRATED`,
+`B3_DEVICE_VALIDATION_CORRECTION_AUDIT_DEVICE_VALIDATED=false`,
 `B3_DISTANCE_EXECUTION=false`,
 `B3_MANUAL_LAP_EXECUTION=false`,
 `B3_SLICE_3_STARTED=true`,
+`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=AUDIT_PROPOSED_FOR_FOUNDER_REVIEW`,
+`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=false`,
 `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 `LEE_BALI_HYBRID_BASE_PRIVATE=true`,
@@ -231,9 +239,11 @@ Lee Bali Hybrid Base is **authored locally** and awaiting founder visual review
 `NEXT_IMPLEMENTATION_AUTHORISED=false`).
 Structured Running B3 slice 1 is integrated at `686ddcdf`; migration
 `20260928120000_b3_running_execution_mapping.sql` is applied on Cohort Field
-Manual. Slice 2's time-only structured runner is local and unadopted. Do not
-publish or adopt it, add pace-target UI, distance or manual-lap execution, start
-B3 slice 3, or author commercial programme content without separate authority.
+Manual. Slice 2, slice 3, and the private TEST ONLY device-validation closeout
+are integrated; the time-only verified v2 runner remains commercially
+unadopted. Do not implement B4, adopt the test fixture as commercial content,
+add distance or manual-lap execution, or author commercial programme content
+without separate authority.
 Do not publish hosted Bali or change Lee’s assignment until visual approval.
 Binding:
 [`docs/architecture/Complete_Athlete_Experience_v1.md`](docs/architecture/Complete_Athlete_Experience_v1.md),
