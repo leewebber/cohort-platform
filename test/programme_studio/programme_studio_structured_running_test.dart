@@ -239,6 +239,63 @@ void main() {
     },
   );
 
+  for (final layout in <({String name, Size size, double textScale})>[
+    (name: 'short desktop', size: const Size(1440, 720), textScale: 1),
+    (name: 'narrow', size: const Size(520, 640), textScale: 1),
+    (name: 'large text', size: const Size(520, 640), textScale: 1.7),
+  ]) {
+    testWidgets(
+      '${layout.name} can scroll through policy and hypothetical controls',
+      (tester) async {
+        tester.view.physicalSize = layout.size;
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        await tester.pumpWidget(
+          MediaQuery(
+            data: MediaQueryData(
+              size: layout.size,
+              textScaler: TextScaler.linear(layout.textScale),
+            ),
+            child: ProgrammeStudioApp(
+              catalog: catalog(),
+              showDeveloperFixtures: true,
+              initialSelection: const ProgrammeStudioSelection(
+                catalogId: 'b3-device-validation-v1',
+                weekNumber: 1,
+                dayKey: 'day_1',
+                sessionKey: 'SES-B3-DEVICE-VALIDATION',
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+
+        final hypothetical = find.text(ProgrammeStudioCopy.hypotheticalPreview);
+        await tester.ensureVisible(hypothetical);
+        await tester.pumpAndSettle();
+        expect(hypothetical, findsOneWidget);
+        expect(tester.takeException(), isNull);
+
+        await tester.tap(hypothetical);
+        await tester.pumpAndSettle();
+        final input = find.byType(TextField);
+        await tester.ensureVisible(input);
+        await tester.enterText(input, '22:00');
+        await tester.pumpAndSettle();
+        final separation = find.text(
+          ProgrammeStudioCopy.hypotheticalSeparation,
+        );
+        await tester.ensureVisible(separation);
+        await tester.pumpAndSettle();
+        expect(separation, findsOneWidget);
+        expect(find.textContaining('4:24/km–4:53/km'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('technical IDs remain behind Technical Integrity', (
     tester,
   ) async {

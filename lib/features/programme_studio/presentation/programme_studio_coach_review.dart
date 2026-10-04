@@ -67,15 +67,13 @@ class ProgrammeStudioCoachReview extends StatelessWidget {
           onNext: () => controller.moveWeek(1),
         ),
         const SizedBox(height: CohortSpacing.lg),
-        IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(flex: 5, child: schedule),
-              const SizedBox(width: CohortSpacing.xl),
-              Expanded(flex: 6, child: detail),
-            ],
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 5, child: schedule),
+            const SizedBox(width: CohortSpacing.xl),
+            Expanded(flex: 6, child: detail),
+          ],
         ),
       ],
     );
