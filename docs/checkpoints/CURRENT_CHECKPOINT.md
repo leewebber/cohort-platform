@@ -1,7 +1,9 @@
 # Current repository checkpoint
 
 > **Sprint C1 continuation — 2026-10-05:** Revised tracking contract architecture
-> is **founder-approved**. C1 is **IMPLEMENTED_LOCAL_VERIFIED**, awaiting review;
+> is **founder-approved**. C1 is **IMPLEMENTED_LOCAL_VERIFIED**, locally reviewed
+> with scoped defects fixed; awaiting founder integration approval.
+> [Review](./PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md),
 > [handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
 > [approved contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 > and [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
@@ -10,7 +12,9 @@
 > `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=false`, `NEXT_IMPLEMENTATION_AUTHORISED=false`.
 > C1's previous pause was superseded by its explicit implementation authority.
 > Tracking cannot grant prescription eligibility; Cohort 5 km ingestion remains
-> blocked. Stop for founder review before proposed read-only History-adapter C2.
+> blocked. Stop for founder integration approval. Proposed C2 is a read-only
+> History adapter first; persistence, selection storage and manual entry remain
+> separately scoped and unauthorised.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,

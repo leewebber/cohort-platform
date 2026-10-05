@@ -147,15 +147,20 @@ record.
 ## Current delivery sequence
 
 Sprint C's revised contract architecture is **founder-approved**.
-**C1 is implemented and locally verified, awaiting founder review**, from clean
+**C1 is implemented, locally reviewed and verified, awaiting founder integration
+approval**, from clean
 `335c768` on `codex/sprint-c1-tracking-contracts`; both audit commits are preserved.
 See [C1 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
 [proposal](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 and [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
+The [C1 review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md) records
+scoped reference/coverage fixes at `2b241347ef543148474c5fbca2f550cb3764f726`.
 C1 contains pure contracts/validation and synthetic fixtures only, with no
 production consumer. Tracking cannot change programming, insert tests or grant
 prescription eligibility. Schema v3 remains outside C1. C2 and broader tracking
-implementation remain **unauthorised**; stop for founder review. No real profiles,
+implementation remain **unauthorised**; stop for founder integration approval.
+C2 is read-only History adaptation first; persistence, selection storage and
+manual entry remain separately scoped. No real profiles,
 tests, content authoring or hosted operations are authorised by this closeout.
 
 The active product sequence is

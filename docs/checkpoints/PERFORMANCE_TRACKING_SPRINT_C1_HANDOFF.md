@@ -9,6 +9,11 @@
 **Contract:** [revised Sprint C architecture](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 **Audit:** [Sprint C audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
+**Review continuation:** [local C1 review](./PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md)
+records scoped validation fixes at `2b241347ef543148474c5fbca2f550cb3764f726`,
+fresh 52-test verification and the unchanged compatibility evidence below.
+Awaiting founder integration approval; C2 remains unauthorised.
+
 ```text
 PERFORMANCE_TRACKING_CONTRACT_ARCHITECTURE=FOUNDER_APPROVED
 PROGRAMME_METRICS_PROFILE_C1_AUTHORISED=true
