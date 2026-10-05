@@ -1,11 +1,14 @@
 # Performance tracking profiles — revised Sprint C foundation proposal
 
 **Recorded / revised:** 2026-10-05
-**Status:** Revised contract architecture FOUNDER_APPROVED; C1
-IMPLEMENTED_LOCAL_VERIFIED, awaiting founder review. C2 not authorised.
+**Status:** Revised contract architecture FOUNDER_APPROVED; C1 INTEGRATED at
+`72c1281f0966f2a6485873f6071b0e000ba1e000`. C2's bounded local pure History
+adapter is implemented/verified, awaiting founder review; production read boundary deferred.
 **Handoff:** [C1 implementation and verification](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
-The founder's explicit C1 implementation authority supersedes the earlier pause;
-only the pure contract slice is delivered, with no broader tracking-product licence.
+and [C2 local adapter/gaps](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md).
+The explicit C1 and bounded C2 authorities superseded their earlier pauses;
+neither grants a broader tracking-product licence. C2 has no production reader,
+SQL, persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
@@ -248,7 +251,7 @@ The historical [assessment vision](../product/Plan_Assessments_Vision.md) is
 context only; its example test lists and legacy PlanDefinition path are not
 content or execution authority.
 
-## 8. Revised C1 boundary (implemented locally; awaiting review)
+## 8. Revised C1 boundary (integrated)
 
 The pure, UI-free [tracking domain library](../../lib/domain/performance_tracking/performance_tracking.dart)
 implements these contracts independently of programme runtime and the package
@@ -318,9 +321,10 @@ rationale, not pending approval questions:
    a second writable measurement ledger, with duplicate/correction drift risk.
    The source/reference contract is approved for C1; database mechanics can wait.
 
-C1 was separately authorised and is implemented locally; acceptance awaits
-founder review. The [handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
-proposes a read-only History source adapter as C2, not yet authorised. Full later
+C1 was separately authorised, reviewed and integrated. The bounded C2 request
+authorised an unwired read-only History adapter; its independent pure work is
+locally verified. The [C2 handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
+records the stopped production/database portion and concrete proposal. Full later
 storage/package choices remain deferred. C1 does not author real profiles/tests
 or release the strategic pause before content creation. Tracking confers no
 hosted publication, assignment, prescription-policy or B2 ingestion authority.

@@ -1,20 +1,25 @@
 # Current repository checkpoint
 
-> **Sprint C1 continuation — 2026-10-05:** Revised tracking contract architecture
-> is **founder-approved**. C1 is **IMPLEMENTED_LOCAL_VERIFIED**, locally reviewed
-> with scoped defects fixed; awaiting founder integration approval.
-> [Review](./PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md),
-> [handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
+> **Sprint C2 continuation — 2026-10-05:** Revised tracking contract architecture
+> is **founder-approved**. C1's seven reviewed commits are **INTEGRATED** on
+> `origin/main` at `72c1281f0966f2a6485873f6071b0e000ba1e000`.
+> C2's unwired pure History adapter is **LOCAL_VERIFIED**, awaiting founder review.
+> [C2 handoff](./PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md),
+> [coherent read proposal](../architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md),
+> [C1 review](./PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md),
+> [C1 handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
 > [approved contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 > and [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
-> Pure contracts/validation only; no production consumer, persistence, calculation,
-> UI or package change. `PROGRAMME_METRICS_PROFILE_C1_AUTHORISED=true`,
-> `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=false`, `NEXT_IMPLEMENTATION_AUTHORISED=false`.
-> C1's previous pause was superseded by its explicit implementation authority.
-> Tracking cannot grant prescription eligibility; Cohort 5 km ingestion remains
-> blocked. Stop for founder integration approval. Proposed C2 is a read-only
-> History adapter first; persistence, selection storage and manual entry remain
-> separately scoped and unauthorised.
+> C2's explicit authority superseded the previous C2 pause for this local adapter.
+> Existing multi-query hydration cannot certify coherence; the database/production
+> reader portion is stopped for separate authority/local proof. No RPC, SQL,
+> production consumer, storage, UI, calculation or package change.
+> `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true`,
+> `PERFORMANCE_TRACKING_C2_COHERENT_READER=PROPOSED_NOT_AUTHORISED`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. Tracking cannot grant prescription
+> eligibility or reconstruct unavailable historical inputs; Cohort 5 km ingestion
+> remains blocked. Persistence, selection storage, manual entry, real profiles/tests
+> and broader tracking remain separately scoped. Stop for founder review.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,

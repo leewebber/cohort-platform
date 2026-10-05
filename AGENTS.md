@@ -147,21 +147,27 @@ record.
 ## Current delivery sequence
 
 Sprint C's revised contract architecture is **founder-approved**.
-**C1 is implemented, locally reviewed and verified, awaiting founder integration
-approval**, from clean
-`335c768` on `codex/sprint-c1-tracking-contracts`; both audit commits are preserved.
+**C1 is integrated** on `origin/main` at
+`72c1281f0966f2a6485873f6071b0e000ba1e000`; all seven reviewed commits,
+including both audits and implementation, are preserved.
 See [C1 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
 [proposal](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 and [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
 The [C1 review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md) records
 scoped reference/coverage fixes at `2b241347ef543148474c5fbca2f550cb3764f726`.
-C1 contains pure contracts/validation and synthetic fixtures only, with no
-production consumer. Tracking cannot change programming, insert tests or grant
-prescription eligibility. Schema v3 remains outside C1. C2 and broader tracking
-implementation remain **unauthorised**; stop for founder integration approval.
-C2 is read-only History adaptation first; persistence, selection storage and
-manual entry remain separately scoped. No real profiles,
-tests, content authoring or hosted operations are authorised by this closeout.
+**C2's unwired pure History adapter is locally implemented and verified,
+awaiting founder review** on `codex/performance-tracking-c2-history-adapter`.
+See [C2 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
+and [coherent read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
+The existing multi-query hydration does not qualify as a coherent read.
+No production reader, RPC or SQL is implemented; that portion is stopped for
+separate authority/local proof. C1/C2 have no production consumer. Tracking
+cannot change programming, insert tests, reconstruct unavailable historical
+inputs or grant prescription eligibility. Schema v3 remains outside C1/C2.
+Persistence, selection storage, manual entry, calculations, UI and broader
+tracking implementation remain separately scoped and **unauthorised**.
+Stop for founder review. No real profiles/tests, content authoring or hosted
+operations are authorised by this closeout.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
