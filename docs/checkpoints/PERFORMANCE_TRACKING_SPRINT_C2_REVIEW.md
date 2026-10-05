@@ -2,7 +2,11 @@
 
 **Recorded:** 2026-10-05. **Verdict:** independent subset locally verified after
 one scoped bridge fix; programme attribution remains unimplemented and blocked.
-Stop for founder review/integration approval. No expansion of read authority.
+**Subsequent authorised integration/deployment:** reviewed independent range
+integrated at `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba`; its exact RPC migration
+is hosted SELECT-verified, ledger 115. [Deployment closeout](./PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
+records current authority and hosted session-SELECT discrepancy. Original review
+evidence below is preserved; no programme-witness expansion or consumer.
 
 **Reviewed clean HEAD:** `694b58155da66983c7ef5ef0b668ff25c7d5e3d1`.
 **Cached origin/main base:** `72c1281f0966f2a6485873f6071b0e000ba1e000`.

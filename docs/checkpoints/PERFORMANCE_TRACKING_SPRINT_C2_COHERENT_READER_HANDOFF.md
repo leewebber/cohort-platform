@@ -2,9 +2,18 @@
 
 **Recorded:** 2026-10-05
 
-**Status:** INDEPENDENT_HISTORY_READ_LOCAL_VERIFIED; awaiting founder review.
-Programme witness portion is STOPPED for existing access/artifact authority.
-No hosted apply, integration push or production registration is authorised.
+**Current status:** independent C2 is integrated through
+`144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba`; its RPC migration is applied and
+SELECT-verified on Cohort Field Manual, ledger 115. See
+[deployment closeout](./PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md).
+Programme attribution remains blocked; bridge/adapter remain unwired. Hosted
+session SELECT exists with RLS disabled and was preserved; complete joined
+witness/artifact delivery remains unimplemented. No further operation is implied.
+
+**Status at original local closeout:** INDEPENDENT_HISTORY_READ_LOCAL_VERIFIED;
+programme witness stopped for local access/artifact authority. The original
+continuation evidence below remains historical; later explicit founder authority
+superseded only its integration/deployment pauses.
 [Subsequent independent-reader review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
 fixes claim fallback for invisible records and proves denied training_sessions
 SELECT does not block independent reads. Its witness follow-up is proposal only;

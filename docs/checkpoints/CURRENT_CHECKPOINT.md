@@ -1,31 +1,30 @@
 # Current repository checkpoint
 
-> **Sprint C2 continuation — 2026-10-05:** Revised tracking contract architecture
-> is **founder-approved**. C1's seven reviewed commits are **INTEGRATED** on
-> `origin/main` at `72c1281f0966f2a6485873f6071b0e000ba1e000`.
-> C2's unwired pure History adapter is **LOCAL_VERIFIED**, awaiting founder review.
-> [C2 handoff](./PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md),
-> [coherent read proposal](../architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md),
-> [C1 review](./PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md),
-> [C1 handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
-> [approved contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> and [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
-> C2's explicit authority superseded the previous C2 pause for this local adapter.
-> The founder-authorised coherent read continuation now has a local RPC, strict
-> unwired bridge and disposable proof for independent History reads:
-> [coherent reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-> [Independent reader review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md) fixes
-> no-visible-record claim fallback and proves authenticated independent reads
-> succeed despite denied session SELECT. Programme witnesses remain stopped for
-> missing session read authority and canonical artifact delivery; no permissions
-> were widened. No hosted deployment, production
-> consumer, storage, UI, calculation or package change.
-> `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true`,
-> `PERFORMANCE_TRACKING_C2_COHERENT_READER=INDEPENDENT_LOCAL_VERIFIED_PROGRAMME_WITNESS_STOPPED`,
+> **Sprint C2 deployment — 2026-10-05:** C1's seven reviewed commits and C2's
+> four reviewed commits are integrated through
+> `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba` on origin/main.
+> The independent History RPC is **HOSTED SELECT-VERIFIED** on Cohort Field Manual,
+> ledger **115 / 20261005130000**; the bridge/adapter remain unwired.
+> [Deployment closeout](./PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md),
+> [reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md),
+> [independent review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md),
+> [C2 adapter handoff](./PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md),
+> [approved tracking contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> and [read proposal](../architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
+> Exact one-file apply, function properties/grants and unchanged existing data,
+> package/B2 hashes, ACL/RLS and correction authority were verified; final dry-run
+> has no pending migration. Hosted already grants training_sessions SELECT with
+> RLS disabled; this differs from local proof and was preserved, not repaired.
+> Programme attribution remains **BLOCKED** for an unimplemented complete witness
+> and canonical artifact delivery. No restricted validator execution/bypass.
+> `PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true`,
+> `PERFORMANCE_TRACKING_C2_COHERENT_READER=INDEPENDENT_HOSTED_VERIFIED_PROGRAMME_WITNESS_BLOCKED`,
+> `PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`. Tracking cannot grant prescription
 > eligibility or reconstruct unavailable historical inputs; Cohort 5 km ingestion
-> remains blocked. Persistence, selection storage, manual entry, real profiles/tests
-> and broader tracking remain separately scoped. Stop for founder review.
+> remains blocked. Selection persistence, manual entry, real profiles/tests, UI,
+> calculations, package changes and further witness implementation remain separate.
+> This deployment documentation is committed locally only; stop before pushing.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,

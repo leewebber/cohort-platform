@@ -2,9 +2,14 @@
 
 **Recorded:** 2026-10-05
 
-**Status:** Founder-authorised local RPC/bridge/proof implemented; independent
-History read LOCAL_VERIFIED. Programme witness portion STOPPED for access authority.
-Hosted deployment and production wiring remain unauthorised.
+**Current status:** reviewed independent C2 integrated through `144ba110`;
+exact RPC migration applied/SELECT-verified on Cohort Field Manual, ledger 115.
+[Deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
+records unchanged permissions/data. Programme witness remains BLOCKED; bridge/
+adapter remain unwired and production wiring unauthorised. Hosted session SELECT
+exists with RLS disabled; local denied-SELECT proof is not a hosted permission
+claim. Complete joined witness/artifact authority is not implemented. The original
+proposal and local continuation below are preserved as historical design evidence.
 [Independent reader review](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
 records the claim-absence fix, both authenticated permission paths and a concrete
 separately scoped owner-gated witness/artifact proposal. No authority expansion

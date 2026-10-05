@@ -3,7 +3,13 @@
 **Recorded:** 2026-10-05
 
 **Status at original closeout:** PURE_ADAPTER_LOCAL_VERIFIED.
-**Authorised continuation:** independent coherent RPC/bridge now LOCAL_VERIFIED;
+**Current continuation:** independent C2 is integrated through `144ba110`; RPC
+applied/SELECT-verified on Cohort Field Manual, ledger 115.
+[Deployment closeout](./PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md) records
+exact scope and preserved hosted/local permission discrepancy. Programme attribution
+is blocked and bridge/adapter remain unwired.
+
+**Original authorised continuation:** independent coherent RPC/bridge LOCAL_VERIFIED;
 [reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md) records
 proof and stopped programme authority. Original evidence below is preserved.
 

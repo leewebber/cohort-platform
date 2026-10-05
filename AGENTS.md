@@ -155,26 +155,26 @@ See [C1 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
 and [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
 The [C1 review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md) records
 scoped reference/coverage fixes at `2b241347ef543148474c5fbca2f550cb3764f726`.
-**C2's unwired pure History adapter is locally implemented and verified,
-awaiting founder review** on `codex/performance-tracking-c2-history-adapter`.
-See [C2 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
-and [coherent read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
-The existing multi-query hydration does not qualify as a coherent read.
-The founder-authorised local coherent RPC, strict unwired bridge and disposable
-proof are implemented for independent History reads; see
-[coherent reader handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-[C2 independent reader review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
-fixes claim fallback on invisible records and proves independent History succeeds
-with authenticated session SELECT denied. Programme witness admission remains
-stopped for session read authority and canonical artifact delivery. The narrow
-owner-gated witness proposal needs separate approval; no grants/RLS were widened.
-Hosted deployment and production wiring remain unauthorised. C1/C2 have no production consumer. Tracking
-cannot change programming, insert tests, reconstruct unavailable historical
-inputs or grant prescription eligibility. Schema v3 remains outside C1/C2.
-Persistence, selection storage, manual entry, calculations, UI and broader
-tracking implementation remain separately scoped and **unauthorised**.
-Stop for founder review. No real profiles/tests, content authoring or hosted
-operations are authorised by this closeout.
+**C2's reviewed four-commit independent History range is integrated** on
+origin/main through `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba`. The exact
+`20261005130000_performance_tracking_coherent_history_read.sql` migration is
+applied and SELECT-verified on Cohort Field Manual, ledger 115; see
+[deployment closeout](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md),
+[reader handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md),
+[independent review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
+and [read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
+Existing hydration is not coherent tracking authority. The independent adapter/
+bridge remain unwired; no production consumer is authorised. Programme attribution
+is blocked for an unimplemented complete witness and canonical artifact delivery.
+Hosted already grants training_sessions SELECT with RLS disabled; the local test
+baseline denies SELECT. Both facts are preserved; do not repair permissions or
+admit claims from the hosted grant. No restricted validator execution/bypass.
+Tracking cannot change programming, insert tests, reconstruct unavailable
+historical inputs or grant prescription eligibility. Schema v3 remains outside
+C1/C2. Persistence, selection storage, manual entry, calculations, UI, real
+profiles/tests, content authoring, witness expansion and further hosted operations
+remain separately scoped. Deployment documentation is local only; do not push or
+start the next slice without separate founder authority.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
