@@ -146,15 +146,17 @@ record.
 
 ## Current delivery sequence
 
-Sprint C's revised [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
-and [proposal](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-record founder direction: optional programme/curated/custom tracking, supported
-metric definitions and reusable athlete-owned measurement history. Tracking is
-observational; profile selection or result entry cannot change programming,
-insert tests or grant prescription eligibility. **C1 implementation is PAUSED**.
-The revised smallest C1 is pure tracking contracts; package schema v3 is deferred
-to a possible optional programme binding. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`.
-No real profiles/tests or implementation are authorised; strategic content pause remains.
+Sprint C's revised contract architecture is **founder-approved**.
+**C1 is implemented and locally verified, awaiting founder review**, from clean
+`335c768` on `codex/sprint-c1-tracking-contracts`; both audit commits are preserved.
+See [C1 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
+[proposal](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+and [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
+C1 contains pure contracts/validation and synthetic fixtures only, with no
+production consumer. Tracking cannot change programming, insert tests or grant
+prescription eligibility. Schema v3 remains outside C1. C2 and broader tracking
+implementation remain **unauthorised**; stop for founder review. No real profiles,
+tests, content authoring or hosted operations are authorised by this closeout.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

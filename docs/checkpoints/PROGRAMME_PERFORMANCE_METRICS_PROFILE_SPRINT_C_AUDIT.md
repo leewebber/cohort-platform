@@ -1,8 +1,12 @@
 # Sprint C audit — programme performance-metrics profiles
 
 **Recorded:** 2026-10-05
-**Status:** Revised audit complete; founder product clarification recorded;
-revised foundation design awaiting approval. C1 implementation PAUSED.
+**Status:** Revised audit complete; contract architecture FOUNDER_APPROVED.
+C1 implemented locally and verified; awaiting founder review.
+**Current implementation evidence:** [C1 handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md).
+The dated audit/revision observations below precede the explicit C1 authority;
+that authority supersedes their pause and pending-contract-decision wording.
+C2 and later work remain unauthorised.
 **Revision base:** `8347480c11cfb2b29cb90983f731f87bc251ece0`, clean worktree on
 `codex/sprint-c-metrics-profile-audit`. No fetch in this revision;
 `origin/main` remains the cached `031edc5da5d0b9961fb5030e0762f15e978e3f32`.
@@ -148,9 +152,9 @@ C1–C4 allocation is superseded; future slices must be separately scoped.
 Remaining material choices are immutable definition/profile pins versus latest
 content, no package change now with optional future v3 binding versus companion
 binding, and existing-result references versus duplicate writable measurement
-storage. The founder's product direction is already settled. Design approval
-and a later explicit resume/implementation instruction are still required;
-this documentation revision does not resume C1 or any broader Portfolio work.
+storage. The founder's product direction is already settled. Those contract decisions and C1 implementation were subsequently approved;
+C1 delivery and checks are in the handoff. No broader Portfolio implementation
+or C2 authority was granted.
 
 B2 safeguards remain unchanged: no promotion of tracking values into benchmark
 evidence, no Cohort 5 km ingestion enablement, no automatic training targets,
@@ -159,7 +163,7 @@ snapshots. Standalone tests are not programme completion. The strategic pause
 before content creation remains; Sprint D/hosted/publication/assignment actions
 are unauthorised.
 
-## Documentation verification and stop boundary
+## Historical documentation-audit verification and stop boundary
 
 Local relative Markdown file links in the changed documentation were checked
 for existing targets. `git diff --check` passed. The initial audit and this revision are Markdown

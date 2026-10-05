@@ -1,8 +1,11 @@
 # Performance tracking profiles — revised Sprint C foundation proposal
 
 **Recorded / revised:** 2026-10-05
-**Status:** Founder product clarification recorded; detailed foundation design
-PROPOSED_NOT_AUTHORISED. C1 implementation PAUSED at founder request.
+**Status:** Revised contract architecture FOUNDER_APPROVED; C1
+IMPLEMENTED_LOCAL_VERIFIED, awaiting founder review. C2 not authorised.
+**Handoff:** [C1 implementation and verification](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
+The founder's explicit C1 implementation authority supersedes the earlier pause;
+only the pure contract slice is delivered, with no broader tracking-product licence.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
@@ -16,8 +19,10 @@ to keep measurement history or select an independent profile.
 
 ```text
 PROGRAMME_METRICS_PROFILE_SPRINT_C_AUDIT=REVISED_COMPLETE
-PROGRAMME_METRICS_PROFILE_SPRINT_C_PROPOSAL=AWAITING_FOUNDER_APPROVAL
-PROGRAMME_METRICS_PROFILE_C1_IMPLEMENTATION=PAUSED
+PERFORMANCE_TRACKING_CONTRACT_ARCHITECTURE=FOUNDER_APPROVED
+PROGRAMME_METRICS_PROFILE_C1_AUTHORISED=true
+PROGRAMME_METRICS_PROFILE_C1_IMPLEMENTATION=IMPLEMENTED_LOCAL_VERIFIED
+PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -243,10 +248,11 @@ The historical [assessment vision](../product/Plan_Assessments_Vision.md) is
 context only; its example test lists and legacy PlanDefinition path are not
 content or execution authority.
 
-## 8. Revised smallest C1 (implementation remains paused)
+## 8. Revised C1 boundary (implemented locally; awaiting review)
 
-Recommend a pure, UI-free tracking domain contract library, independent of
-programme runtime and the package compiler. C1 should define:
+The pure, UI-free [tracking domain library](../../lib/domain/performance_tracking/performance_tracking.dart)
+implements these contracts independently of programme runtime and the package
+compiler. Its delivered checks and limits are recorded in the C1 handoff:
 
 1. Supported metric reference/definition contracts with stable ID, immutable
    version/digest, canonical units, typed source/context requirements and
@@ -271,14 +277,15 @@ fixtures demonstrate one definition reused by curated/custom compositions,
 a measurement reused without duplication, a correction reference and optional
 programme scoping; no real test procedure or profile membership is selected.
 
-Future C1 acceptance: deterministic dependency-aware digests; immutable-version
+C1 acceptance requirements (verified as recorded in the handoff): deterministic dependency-aware digests; immutable-version
 reference validation; ownership/context isolation; missing/partial/skipped/
 incomparable states; manual entry distinct from test proof; source identity
 reuse; definition incompatibility rejection; and no tracking-to-prescription
 promotion. Existing v1/v2 golden bytes/hashes remain exactly unchanged. Use
 focused unit checks/changed-file analysis and the required architecture safety
-gate when implementation is separately authorised. No warning-baseline
-exception carries forward. These are future requirements, not passes here.
+gate for implementation. No warning-baseline exception carries forward.
+The C1 handoff reports the actual current-task passes; broader slice gates
+remain future requirements.
 
 **Excluded:** persistence/migrations/RLS, compiler schema v3, live evidence
 queries or ingestion, runtime evaluation, correction writes, UI/Studio,
@@ -288,28 +295,32 @@ changes, builds, hosted work or push. The old C1–C4 implementation sequence is
 superseded; later persistence, source adapters, programme packaging and UI
 slices must be reallocated after revised C1 review rather than inherited.
 
-## 9. Material decisions remaining
+## 9. Founder-approved contract decisions
 
 The founder has already settled optional tracking, independent curated/custom
 composition, athlete-owned reusable history and observational defaults. Do not
-ask to reconfirm those product choices. Remaining design choices are:
+ask to reconfirm those product choices. The following contract decisions were
+also approved in the explicit C1 authorisation. Alternatives are retained for
+rationale, not pending approval questions:
 
 1. **Definition and profile version authority:** recommend immutable supported
    definition/profile versions with explicit athlete selection upgrades and
    custom composition revisions. Alternative: follow latest definitions/profile
-   content automatically, making historical meaning drift. Settle before C1.
+   content automatically, making historical meaning drift. Approved for C1.
 2. **Package boundary:** recommend no package change in C1; reserve future v3
    for optional authored programme bindings with only the content above hashed.
    Alternative: a later version-owned companion binding needs its own immutable
    hash and checks throughout review/read paths. Full later storage mechanics
-   can wait; settle C1's package exclusion now.
+   can wait; C1's package exclusion is approved.
 3. **Measurement source authority:** recommend references to existing History
    actuals/corrections, and append-only revisions for future new manual results,
    both forming one logical athlete history. Alternative: copy all actuals into
    a second writable measurement ledger, with duplicate/correction drift risk.
-   Settle the source/reference contract before C1; database mechanics can wait.
+   The source/reference contract is approved for C1; database mechanics can wait.
 
-A later explicit request must resume/authorise revised C1. This documentation
-revision does not resume implementation, author real profiles/tests or release
-the strategic pause before content creation. Tracking requirements confer no
+C1 was separately authorised and is implemented locally; acceptance awaits
+founder review. The [handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
+proposes a read-only History source adapter as C2, not yet authorised. Full later
+storage/package choices remain deferred. C1 does not author real profiles/tests
+or release the strategic pause before content creation. Tracking confers no
 hosted publication, assignment, prescription-policy or B2 ingestion authority.

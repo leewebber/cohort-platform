@@ -8,11 +8,11 @@
 > Sprint C [audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 > is complete and [foundation proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 > is revised for optional observational programme/curated/custom tracking and
-> reusable athlete-owned measurements. C1 implementation is **PAUSED**; pure
-> contracts are proposed and schema v3 is deferred to optional programme binding.
-> The detailed design awaits approval. C implementation, D, commercial authoring
-> and hosted
-> publication remain unauthorised. Earlier dated B1/B2 status text and tables
+> reusable athlete-owned measurements. Contract architecture is founder-approved;
+> C1 pure contracts are implemented/locally verified, awaiting founder review
+> ([handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)). Schema v3
+> remains outside C1. C2, broader C, D, commercial authoring and hosted publication
+> remain unauthorised. Earlier dated B1/B2 status text and tables
 > below are historical, superseded by this continuation and the live checkpoint.
 
 **Status:** Strategy **approved**. Infrastructure architecture
@@ -472,7 +472,7 @@ The Cohort product remains not launch-ready.
 | **B2** | Versioned benchmark / pace calculation | `PACE_CALCULATION_B2=INFRASTRUCTURE_COMPLETE` | Integrated; hosted migrations recorded applied; adoption/ingestion not granted |
 | **B3** | Verified v2 time execution, targets/actuals | `B3_DEVICE_VALIDATION=COMPLETE_INTEGRATED` | TEST ONLY device closeout; no commercial adoption |
 | **B4** | Read-only structured-running Studio review | `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=VISUALLY_APPROVED_INTEGRATED` | Bounded overlap migration recorded applied/verified |
-| **C** | Optional tracking profiles and reusable measurement contracts | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | Revised audit complete; optional observational tracking; C1 paused, pure contracts proposed |
+| **C** | Optional tracking profiles and reusable measurement contracts | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | Contract architecture approved; C1 implemented locally awaiting review; C2 unauthorised |
 | **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |
 
 Deferred (do not block Sprint A): final pace/zone formulas (B);

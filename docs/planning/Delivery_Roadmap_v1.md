@@ -5,9 +5,11 @@
 > Sprint C [metrics-profile audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 > is complete; [architecture proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 > is revised for optional observational programme/curated/custom tracking and
-> reusable athlete measurement history. C1 is **PAUSED**; pure contracts only
-> are recommended and schema v3 is deferred. Detailed design awaits approval.
-> C implementation and real metric/content authoring
+> reusable athlete measurement history. Contract architecture is founder-approved;
+> C1 pure contracts are implemented/locally verified, awaiting founder review
+> ([handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)). Schema v3
+> remains outside C1; C2 and broader C implementation remain unauthorised.
+> Broader tracking implementation and real metric/content authoring
 > remain unauthorised; earlier B1/B2 status wording below is superseded.
 
 **Status:** M10 Athlete/Coach Management and Isolation **closed**. Deeper

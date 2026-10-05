@@ -1,15 +1,16 @@
 # Current repository checkpoint
 
-> **Sprint C revised continuation — 2026-10-05:** Founder clarified optional,
-> observational tracking across programme, curated and athlete-created profiles,
-> using supported metric definitions and reusable athlete-owned measurements.
-> [Revised audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md) and
-> [foundation proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> record the design. C1 implementation is **PAUSED**; recommended C1 is pure
-> tracking contracts, not schema v3/compiler work. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
-> `NEXT_IMPLEMENTATION_AUTHORISED=false`, `COHORT_5K_TEST_INGESTION=BLOCKED`.
-> No profile selection/result entry may change programming, insert tests or
-> generate training targets. No real profile/test content or hosted work is authorised.
+> **Sprint C1 continuation — 2026-10-05:** Revised tracking contract architecture
+> is **founder-approved**. C1 is **IMPLEMENTED_LOCAL_VERIFIED**, awaiting review;
+> [handoff](./PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
+> [approved contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> and [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
+> Pure contracts/validation only; no production consumer, persistence, calculation,
+> UI or package change. `PROGRAMME_METRICS_PROFILE_C1_AUTHORISED=true`,
+> `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=false`, `NEXT_IMPLEMENTATION_AUTHORISED=false`.
+> C1's previous pause was superseded by its explicit implementation authority.
+> Tracking cannot grant prescription eligibility; Cohort 5 km ingestion remains
+> blocked. Stop for founder review before proposed read-only History-adapter C2.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,
