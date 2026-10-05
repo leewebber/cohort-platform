@@ -173,8 +173,14 @@ Tracking cannot change programming, insert tests, reconstruct unavailable
 historical inputs or grant prescription eligibility. Schema v3 remains outside
 C1/C2. Persistence, selection storage, manual entry, calculations, UI, real
 profiles/tests, content authoring, witness expansion and further hosted operations
-remain separately scoped. Deployment documentation is local only; do not push or
-start the next slice without separate founder authority.
+remain separately scoped. Deployment documentation is integrated at
+`005d53dc9b822d7e8075c75e5679324b93edebf2`.
+The [bounded programme-attribution authority proposal](docs/architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
+is documentation only, awaiting founder approval: narrow owner-gated combined
+read authority and prospective publication-artifact retention; legacy scope
+without proven original bytes remains unproven. Read-time client bytes/hash
+equality cannot supply that authority. No witness/retention implementation,
+permission remediation or next slice is authorised by this proposal.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

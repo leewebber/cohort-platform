@@ -2,6 +2,11 @@
 
 **Recorded:** 2026-10-05
 
+**Programme follow-up:** [bounded attribution authority proposal](./Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
+supersedes read-time client-artifact delivery as proof. Inspected publication
+paths do not retain full canonical bytes; prospective trusted retention and
+explicit legacy scope-unproven are proposed, not implemented or authorised.
+
 **Current status:** reviewed independent C2 integrated through `144ba110`;
 exact RPC migration applied/SELECT-verified on Cohort Field Manual, ledger 115.
 [Deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)

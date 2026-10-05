@@ -8,6 +8,13 @@ is hosted SELECT-verified, ledger 115. [Deployment closeout](./PERFORMANCE_TRACK
 records current authority and hosted session-SELECT discrepancy. Original review
 evidence below is preserved; no programme-witness expansion or consumer.
 
+**Subsequent bounded proposal:** [programme-attribution authority](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
+supersedes the read-time artifact-input recommendation below. Retention is not
+present in inspected publication paths; matching client bytes/hash cannot prove
+publication provenance. Prospective retention and honest legacy scope-unproven
+remain proposed only. Outcomes link occurrences via assignment + session slot,
+not an outcome occurrence_id column. Original verification below is unchanged.
+
 **Reviewed clean HEAD:** `694b58155da66983c7ef5ef0b668ff25c7d5e3d1`.
 **Cached origin/main base:** `72c1281f0966f2a6485873f6071b0e000ba1e000`.
 Branch: `codex/performance-tracking-c2-history-adapter`. No fetch or hosted contact.

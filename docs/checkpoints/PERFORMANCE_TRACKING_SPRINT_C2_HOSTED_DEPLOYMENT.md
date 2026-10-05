@@ -12,7 +12,11 @@ ACTIVE_HEALTHY before/after apply, PostgreSQL 17.6.
 The reviewed four linear C2 commits were integrated by founder-authorised strict
 fast-forward from `72c1281f0966f2a6485873f6071b0e000ba1e000`; zero merges.
 C1's seven reviewed commits, both audits and original implementation are preserved.
-This deployment documentation is a subsequent local-only commit; not pushed.
+Deployment documentation was subsequently integrated on origin/main at
+`005d53dc9b822d7e8075c75e5679324b93edebf2` by authorised strict fast-forward.
+The [bounded programme-attribution proposal](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
+is documentation only; it adds no deployment or permission authority. Recorded
+hosted evidence below was not refreshed for that proposal.
 
 Binding: [independent-reader review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md),
 [reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md),

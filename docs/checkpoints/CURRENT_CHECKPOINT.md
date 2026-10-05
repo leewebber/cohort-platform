@@ -24,7 +24,15 @@
 > eligibility or reconstruct unavailable historical inputs; Cohort 5 km ingestion
 > remains blocked. Selection persistence, manual entry, real profiles/tests, UI,
 > calculations, package changes and further witness implementation remain separate.
-> This deployment documentation is committed locally only; stop before pushing.
+> Deployment documentation is integrated on origin/main at
+> `005d53dc9b822d7e8075c75e5679324b93edebf2`.
+> [Bounded programme-attribution authority proposal](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
+> is **PROPOSED_NOT_AUTHORISED**, documentation only: one owner-gated combined
+> definer read and prospective immutable publication-artifact retention.
+> Original canonical bytes are not retained by inspected publication paths and
+> general exact reproduction is unproven; legacy scope must remain unproven.
+> Client bytes/hash equality cannot substitute. No hosted refresh, implementation,
+> permission remediation or production wiring is authorised by this proposal.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,
