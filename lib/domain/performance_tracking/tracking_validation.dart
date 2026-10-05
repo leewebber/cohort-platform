@@ -20,19 +20,62 @@ class TrackingValidator {
   List<TrackingValidationIssue> validate(List<TrackingArtifact> artifacts) {
     final issues = <TrackingValidationIssue>[];
     final index = <String, TrackingArtifact>{};
+    final ambiguous = <String>{};
     for (final a in artifacts) {
       final path = '${a.artifactKind}/${a.id}/${a.version}';
       if (!_text(a.id) || a.version < 1) {
         issues.add(TrackingValidationIssue(path, 'invalid_identity'));
       }
       if (index.containsKey(_key(a.artifactKind, a.id, a.version))) {
+        ambiguous.add(_key(a.artifactKind, a.id, a.version));
         issues.add(TrackingValidationIssue(path, 'duplicate_identity'));
       } else {
         index[_key(a.artifactKind, a.id, a.version)] = a;
       }
     }
-    final context = _TrackingValidationContext(index, issues, knownTimezoneIds);
-    final sourceOwners = <String, String>{};
+    final context = _TrackingValidationContext(
+      index,
+      ambiguous,
+      issues,
+      knownTimezoneIds,
+    );
+    final sourceOwners = <String, Set<String>>{};
+    final profileAuthorities = <String, Set<String>>{};
+    final historyParents = <String, Set<String>>{};
+    final auditParents = <String, Set<String>>{};
+    void declare(Map<String, Set<String>> map, String key, String value) {
+      map.putIfAbsent(key, () => <String>{}).add(value);
+    }
+
+    String measurementIdentity(TrackingMeasurementRevision a) => jsonEncode([
+      a.athleteId,
+      a.metric.id,
+      a.metric.version,
+      context.sourceIdentity(a.source),
+    ]);
+    for (final a in artifacts) {
+      if (a is TrackingProfile) {
+        declare(
+          profileAuthorities,
+          a.id,
+          jsonEncode([a.kind.name, a.athleteId]),
+        );
+      }
+      if (a is TrackingMeasurementRevision) {
+        declare(sourceOwners, measurementIdentity(a), a.id);
+        for (final entry in context.historyParents(a).entries) {
+          declare(historyParents, entry.key, entry.value);
+        }
+        final h = a.source.history;
+        if (h?.correctionId != null) {
+          declare(
+            auditParents,
+            h!.correctionId!,
+            jsonEncode([a.athleteId, h.recordId]),
+          );
+        }
+      }
+    }
     for (final a in artifacts) {
       context.path = '${a.artifactKind}/${a.id}/${a.version}';
       switch (a) {
@@ -42,6 +85,9 @@ class TrackingValidator {
           context.metric(a);
         case TrackingProfile():
           context.profile(a);
+          if (profileAuthorities[a.id]!.length > 1) {
+            context.issue('profile_authority_changed');
+          }
         case TrackingSelectionRevision():
           context.selection(a);
         case TrackingAssessmentDefinition():
@@ -50,17 +96,19 @@ class TrackingValidator {
           context.binding(a);
         case TrackingMeasurementRevision():
           context.measurement(a);
-          final identity = jsonEncode([
-            a.athleteId,
-            a.metric.id,
-            a.metric.version,
-            context.sourceIdentity(a.source),
-          ]);
-          final owner = sourceOwners[identity];
-          if (owner != null && owner != a.id) {
+          if (sourceOwners[measurementIdentity(a)]!.length > 1) {
             context.issue('duplicate_source_measurement');
           }
-          sourceOwners[identity] = a.id;
+          if (context
+              .historyParents(a)
+              .keys
+              .any((key) => historyParents[key]!.length > 1)) {
+            context.issue('history_parent_reference_conflict');
+          }
+          final audit = a.source.history?.correctionId;
+          if (audit != null && auditParents[audit]!.length > 1) {
+            context.issue('history_audit_reference_conflict');
+          }
       }
     }
     // Deterministic diagnostics regardless of registry enumeration order.
@@ -77,8 +125,14 @@ class TrackingValidator {
 }
 
 class _TrackingValidationContext {
-  _TrackingValidationContext(this.index, this.issues, this.zones);
+  _TrackingValidationContext(
+    this.index,
+    this.ambiguous,
+    this.issues,
+    this.zones,
+  );
   final Map<String, TrackingArtifact> index;
+  final Set<String> ambiguous;
   final List<TrackingValidationIssue> issues;
   final Set<String> zones;
   String path = '';
@@ -97,7 +151,12 @@ class _TrackingValidationContext {
       issue('invalid_reference');
       return null;
     }
-    final artifact = index[TrackingValidator._key(kind, ref.id, ref.version)];
+    final key = TrackingValidator._key(kind, ref.id, ref.version);
+    if (ambiguous.contains(key)) {
+      issue('ambiguous_$kind');
+      return null;
+    }
+    final artifact = index[key];
     if (artifact == null) {
       issue('unresolved_$kind');
       return null;
@@ -364,11 +423,14 @@ class _TrackingValidationContext {
     if (e.state != TrackingEvidenceState.available && !text(e.reason)) {
       issue('evidence_reason_required');
     }
-    if ((e.recordedCount == null) != (e.requiredCount == null) ||
-        (e.recordedCount != null &&
-            (e.recordedCount! < 0 ||
-                e.requiredCount! < 1 ||
-                e.recordedCount! > e.requiredCount!))) {
+    final recorded = e.recordedCount;
+    final required = e.requiredCount;
+    final invalidCoverage =
+        (recorded == null) != (required == null) ||
+        (recorded != null &&
+            required != null &&
+            (recorded < 0 || required < 1 || recorded > required));
+    if (invalidCoverage) {
       issue('invalid_coverage');
     }
     if (e.state == TrackingEvidenceState.available &&
@@ -376,7 +438,10 @@ class _TrackingValidationContext {
       issue('available_evidence_incomplete');
     }
     if (e.state == TrackingEvidenceState.partial &&
-        (e.recordedCount == null || e.recordedCount! >= e.requiredCount!)) {
+        (invalidCoverage ||
+            recorded == null ||
+            required == null ||
+            recorded >= required)) {
       issue('partial_coverage_required');
     }
   }
@@ -577,6 +642,9 @@ class _TrackingValidationContext {
       }
       final running =
           h.workoutId != null || h.stepId != null || h.repeatOrdinal != null;
+      if (running && (h.exerciseResultId != null || h.setResultId != null)) {
+        issue('ambiguous_history_row_scope');
+      }
       if (running &&
           (!text(h.workoutId) ||
               !text(h.stepId) ||
@@ -585,6 +653,48 @@ class _TrackingValidationContext {
         issue('incomplete_history_running_identity');
       }
     }
+  }
+
+  // Only consistency among supplied declarations; this does not attest to
+  // live row ownership, parentage, audit ordering or historical reconstruction.
+  Map<String, String> historyParents(TrackingMeasurementRevision a) {
+    final source = a.source;
+    final h = source.history;
+    if (h == null) return const {};
+    final scope = source.programmeScope;
+    return {
+      jsonEncode(['record', h.recordId]): jsonEncode([a.athleteId]),
+      if (source.assignmentId != null)
+        jsonEncode(['record_assignment', h.recordId]): jsonEncode([
+          source.assignmentId,
+        ]),
+      if (source.occurrenceId != null)
+        jsonEncode(['record_occurrence', h.recordId]): jsonEncode([
+          source.occurrenceId,
+        ]),
+      if (source.trainingSessionId != null)
+        jsonEncode(['record_session', h.recordId]): jsonEncode([
+          source.trainingSessionId,
+        ]),
+      if (scope != null)
+        jsonEncode(['record_programme', h.recordId]): jsonEncode([
+          scope.programmeVersionId,
+          scope.packageHash,
+          scope.slotKey,
+          scope.protocolId,
+          scope.protocolRevision,
+        ]),
+      jsonEncode(['block', h.blockResultId]): jsonEncode([
+        h.recordId,
+        h.sourceBlockId,
+      ]),
+      if (h.exerciseResultId != null)
+        jsonEncode(['exercise', h.exerciseResultId]): jsonEncode([
+          h.blockResultId,
+        ]),
+      if (h.setResultId != null)
+        jsonEncode(['set', h.setResultId]): jsonEncode([h.exerciseResultId]),
+    };
   }
 
   // Immutable declared origin envelope; correction cannot reclassify a source

@@ -22,6 +22,8 @@ Profiles pin metric versions. Custom composition and selection revisions pin
 predecessors; changing a selected profile version requires an explicit upgrade.
 No definition/profile update silently changes an existing reference. This is
 in-memory validation of immutable values, not storage enforcement.
+Duplicate artifact identities cannot be resolved by choosing the first supplied
+definition. A stable profile ID cannot change curated/custom authority or owner.
 
 A History source has a record ID, block-result and source-block IDs, field
 path, optional exercise/set IDs, optional exact running step/repeat IDs,
@@ -29,6 +31,11 @@ input digest and optional existing correction audit ID. Array positions or
 names cannot stand in for those identities. C1 does not resolve the field path
 against a live result shape; a future supported adapter must prove that scope.
 The contracts prohibit embedding copied History values in a measurement.
+Exercise/set row scopes and running repetition scopes cannot be combined into
+one field identity. Within the supplied closure, one History row cannot declare
+conflicting parents, athletes or programme origins; an audit ID cannot declare
+different records/athletes. One record audit may cover multiple distinct fields
+or blocks. Absent optional links remain unknown, not reconstructed.
 
 Manual values use nonnegative canonical decimal strings (no exponents, trailing
 fractional zeros, NaN or infinity; count is integral). Units are closed, with

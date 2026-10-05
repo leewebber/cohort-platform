@@ -815,6 +815,8 @@ void main() {
         contains('set_requires_exercise_result'),
       );
       final running = edit(a, (m) {
+        m['source']['history'].remove('exercise_result_id');
+        m['source']['history'].remove('set_result_id');
         m['source']['history']['workout_id'] = 'synthetic.workout';
         m['source']['history']['step_id'] = 'synthetic.step';
         m['source']['history']['repeat_ordinal'] = 2;
