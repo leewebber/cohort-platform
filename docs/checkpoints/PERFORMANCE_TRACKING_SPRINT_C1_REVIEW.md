@@ -1,9 +1,13 @@
 # Performance tracking Sprint C1 — local review
 
-**Recorded:** 2026-10-05  
-**Status:** REVIEWED_LOCAL_VERIFIED; awaiting founder integration approval.  
-**Branch:** `codex/sprint-c1-tracking-contracts`  
-**Reviewed clean HEAD:** `7673ea89a1877260df9444766b4a09270859a62d`  
+**Recorded:** 2026-10-05
+
+**Status:** REVIEWED_LOCAL_VERIFIED; awaiting founder integration approval.
+
+**Branch:** `codex/sprint-c1-tracking-contracts`
+
+**Reviewed clean HEAD:** `7673ea89a1877260df9444766b4a09270859a62d`
+
 **Verified fixes:** `2b241347ef543148474c5fbca2f550cb3764f726`
 
 Binding authority: [approved revised architecture](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md).
@@ -82,10 +86,12 @@ No remote-state freshness claim is made. Preserve this linear sequence:
 | 3 | `ac47f2ae78c65bb6b694da7ed50f385ddc708022` | Original C1 implementation |
 | 4 | `7673ea89a1877260df9444766b4a09270859a62d` | Original C1 handoff/live pointers |
 | 5 | `2b241347ef543148474c5fbca2f550cb3764f726` | Verified review fixes and regressions |
+| 6 | `d277fe506beeb1a09cbaa194efa756de60b1b246` | Review documentation/live pointers |
 
-This review documentation/live-pointer commit follows order 5. The final Git
-report supplies its full integration-tip SHA, the six-commit count above the
-cached base and post-commit worktree state. No rebase, amendment, squash, merge
+A final documentation correction removes Markdown line-break whitespace flagged
+by the final diff check and completes this manifest. The final Git report
+supplies its full integration-tip SHA, the seven-commit count above the cached
+base and post-commit worktree state. No rebase, amendment, squash, merge
 or remote ref mutation is authorised by this closeout.
 
 ## Remaining limitations and revised C2 sequence
