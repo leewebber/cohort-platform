@@ -64,7 +64,22 @@ SELECT public.c2_assert((SELECT NOT p.prosecdef AND p.provolatile='s' AND l.lann
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',false);
 DO $$ DECLARE r jsonb; claim jsonb := '{"assignment_id":"c2000000-0000-4000-8000-000000000020","occurrence_id":"c2000000-0000-4000-8000-000000000021","training_session_id":"987001","programme_version_id":"c2000000-0000-4000-8000-000000000022","package_hash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","slot_key":"synthetic.slot","protocol_id":"synthetic.protocol","protocol_revision":1,"block_id":"synthetic.block"}'; BEGIN
+ PERFORM public.c2_assert(current_user='authenticated', 'permission proof uses authenticated role');
+ -- Exercise the permission itself, not only pg_catalog ACL metadata. Catch only
+ -- insufficient_privilege; any other failure fails the gate. No grants change.
+ BEGIN
+   PERFORM id FROM public.training_sessions WHERE id=987001;
+   RAISE EXCEPTION 'C2_GATE_FAILURE: direct session read unexpectedly allowed';
+ EXCEPTION WHEN insufficient_privilege THEN NULL;
+ END;
  r:=public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010');
+ PERFORM public.c2_assert(r->>'status'='ok' AND r#>>'{record,training_session_id}'='987001',
+   'independent History with linked session succeeds while session SELECT denied');
+ PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010',claim)->>'code'='programme_authority_unavailable',
+   'same owned record with claim explicitly blocked, no fallback');
+ PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000030',claim)=
+   public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000099',claim),
+   'supplied claim does not distinguish foreign from absent');
  PERFORM public.c2_assert(r->>'status'='ok' AND jsonb_array_length(r->'blocks')=2
   AND jsonb_array_length(r->'exercises')=1 AND jsonb_array_length(r->'sets')=1001
   AND r#>>'{counts,sets}'='1001' AND r->>'complete_audit_set'='true', 'full tree beyond PostgREST max_rows');
@@ -92,6 +107,20 @@ DO $$ DECLARE r jsonb; BEGIN
  PERFORM public.c2_assert(jsonb_array_length(r->'corrections')=2, 'complete tied correction membership');
  PERFORM public.c2_assert(r#>>'{corrections,0,corrected_at}'=r#>>'{corrections,1,corrected_at}', 'timestamp ties preserved');
  PERFORM public.c2_assert(NOT (r#>'{corrections,0,after_values,set:c2100000-0000-4000-8000-000000000001}' ? 'duration_seconds'), 'incomplete audit not invented');
+END $$;
+RESET ROLE;
+SET ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000002',false);
+DO $$ BEGIN
+ BEGIN
+   PERFORM id FROM public.training_sessions WHERE id=987001;
+   RAISE EXCEPTION 'C2_GATE_FAILURE: second athlete direct session read allowed';
+ EXCEPTION WHEN insufficient_privilege THEN NULL;
+ END;
+ PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000030')->>'status'='ok',
+   'second athlete independent own History read succeeds without session SELECT');
+ PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010')->>'status'='no_visible_record',
+   'second athlete cannot read first athlete through RPC');
 END $$;
 RESET ROLE;
 SET ROLE authenticated;

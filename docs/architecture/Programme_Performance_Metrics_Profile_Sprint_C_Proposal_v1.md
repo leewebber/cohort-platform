@@ -11,6 +11,7 @@ The explicit C1 and bounded C2 authorities superseded their earlier pauses;
 neither grants a broader tracking-product licence. C2 has an unwired local read RPC/bridge; no production consumer,
 persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 **Coherent reader continuation:** [local proof and stopped programme authority](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
+**Independent reader review:** [scoped fix, authenticated permission proof and proposed witness boundary](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md). Programme attribution remains stopped.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 

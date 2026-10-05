@@ -14,8 +14,11 @@
 > The founder-authorised coherent read continuation now has a local RPC, strict
 > unwired bridge and disposable proof for independent History reads:
 > [coherent reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-> Programme witnesses are stopped for missing local session SELECT and canonical
-> artifact source; no permissions were widened. No hosted deployment, production
+> [Independent reader review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md) fixes
+> no-visible-record claim fallback and proves authenticated independent reads
+> succeed despite denied session SELECT. Programme witnesses remain stopped for
+> missing session read authority and canonical artifact delivery; no permissions
+> were widened. No hosted deployment, production
 > consumer, storage, UI, calculation or package change.
 > `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true`,
 > `PERFORMANCE_TRACKING_C2_COHERENT_READER=INDEPENDENT_LOCAL_VERIFIED_PROGRAMME_WITNESS_STOPPED`,

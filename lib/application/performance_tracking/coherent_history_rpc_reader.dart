@@ -52,6 +52,9 @@ final class CoherentHistoryRpcReader implements HistoryTrackingReadPort {
     if (status == 'no_visible_record') {
       _keys(wire, const ['status', 'athlete_id']);
       if (wire['athlete_id'] != actor) _fail('ownership_denied');
+      // The non-leaking absence envelope proves no programme attribution.
+      // Preserve a supplied claim as explicit failure, never independent absence.
+      if (claim != null) _fail('programme_scope_unproven');
       return HistoryReadFrame(
         athleteId: actor!,
         consistency: HistoryReadConsistency.singleStatementSnapshot,

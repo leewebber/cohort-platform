@@ -38,6 +38,10 @@ are distinguished, while the required actual-session SELECT is unavailable. No
 canonical package artifact or verified programme witness is admitted. Missing witnesses fail
 closed; the adapter does not silently drop a claim and return independent data.
 An independent observation makes no programme/test attribution claim.
+The bridge maps an invisible/absent record with a supplied claim to explicit
+`programme_scope_unproven`; only independent queries return ordinary missing.
+Authenticated local proof denies direct training_sessions SELECT while independent
+History succeeds. See the [review and proposed witness boundary](../../../docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md).
 
 ## Supported raw field scopes
 

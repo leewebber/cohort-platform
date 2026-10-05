@@ -163,8 +163,11 @@ The existing multi-query hydration does not qualify as a coherent read.
 The founder-authorised local coherent RPC, strict unwired bridge and disposable
 proof are implemented for independent History reads; see
 [coherent reader handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-Programme witness admission is stopped: local authenticated session SELECT and
-complete canonical artifact source are unavailable. No grants/RLS were widened.
+[C2 independent reader review](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
+fixes claim fallback on invisible records and proves independent History succeeds
+with authenticated session SELECT denied. Programme witness admission remains
+stopped for session read authority and canonical artifact delivery. The narrow
+owner-gated witness proposal needs separate approval; no grants/RLS were widened.
 Hosted deployment and production wiring remain unauthorised. C1/C2 have no production consumer. Tracking
 cannot change programming, insert tests, reconstruct unavailable historical
 inputs or grant prescription eligibility. Schema v3 remains outside C1/C2.

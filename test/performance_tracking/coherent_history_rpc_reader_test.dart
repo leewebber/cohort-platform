@@ -132,6 +132,45 @@ void main() {
     expect(f.record, isNull);
     expect(f.completeAuditSet, isTrue);
   });
+  test(
+    'a missing or inaccessible record cannot discard a supplied claim',
+    () async {
+      final rpc = FakeRpc({'status': 'no_visible_record', 'athlete_id': actor});
+      await expectLater(
+        CoherentHistoryRpcReader(
+          rpc,
+        ).readCurrentRecord(recordId, programmeClaim: claim()),
+        fails('programme_scope_unproven'),
+      );
+      expect(rpc.calls, 1);
+      expect(rpc.lastClaim, isNotNull);
+      final metric = SyntheticHistory.metric();
+      final adapter = HistoryTrackingAdapter(
+        reader: CoherentHistoryRpcReader(rpc),
+        definitions: [SyntheticHistory.method(TrackingUnit.seconds), metric],
+      );
+      final result = await adapter.read(
+        HistoryTrackingQuery(
+          athleteId: actor,
+          metric: metric.reference,
+          programmeClaim: claim(),
+          field: HistoryFieldSelection(
+            recordId: recordId,
+            blockResultId: blockId,
+            sourceBlockId: 'synthetic.block',
+            fieldPath: ['result_data', 'durationSeconds'],
+          ),
+        ),
+      );
+      expect(result, isA<HistoryTrackingFailure>());
+      expect(
+        (result as HistoryTrackingFailure).code,
+        'programme_scope_unproven',
+      );
+      expect(result.grantsPrescriptionEligibility, isFalse);
+      expect(result.canReconstructHistoricalInputs, isFalse);
+    },
+  );
   test('no auth or malformed identity never invokes RPC', () async {
     final r = FakeRpc(wire())..actorId = null;
     await expectLater(

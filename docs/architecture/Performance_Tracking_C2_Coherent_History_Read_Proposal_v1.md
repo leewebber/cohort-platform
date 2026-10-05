@@ -5,6 +5,10 @@
 **Status:** Founder-authorised local RPC/bridge/proof implemented; independent
 History read LOCAL_VERIFIED. Programme witness portion STOPPED for access authority.
 Hosted deployment and production wiring remain unauthorised.
+[Independent reader review](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
+records the claim-absence fix, both authenticated permission paths and a concrete
+separately scoped owner-gated witness/artifact proposal. No authority expansion
+is implemented.
 The independent [pure C2 adapter](../../lib/application/performance_tracking/history_tracking_adapter.dart)
 is implemented locally with synthetic fake-port proof. The original proposal below is preserved as design context; the continuation
 boundary below records what could be proven without widening permissions.

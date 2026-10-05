@@ -5,6 +5,10 @@
 **Status:** INDEPENDENT_HISTORY_READ_LOCAL_VERIFIED; awaiting founder review.
 Programme witness portion is STOPPED for existing access/artifact authority.
 No hosted apply, integration push or production registration is authorised.
+[Subsequent independent-reader review](./PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md)
+fixes claim fallback for invisible records and proves denied training_sessions
+SELECT does not block independent reads. Its witness follow-up is proposal only;
+original continuation evidence below is preserved.
 
 **Branch:** `codex/performance-tracking-c2-history-adapter`
 
