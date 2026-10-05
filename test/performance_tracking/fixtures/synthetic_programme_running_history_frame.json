@@ -1,0 +1,239 @@
+{
+  "sets": [],
+  "blocks": [
+    {
+      "status": "completed",
+      "position": 1,
+      "created_at": "2026-10-05T15:26:10.945193+00:00",
+      "started_at": null,
+      "updated_at": "2026-10-05T15:26:10.945193+00:00",
+      "result_data": {
+        "paceUnit": "sec_per_km",
+        "intervals": [
+          {
+            "state": "pace_unavailable",
+            "ordinal": 1,
+            "workoutId": "rw1:p:271e309e827dc7d4",
+            "workSeconds": 12,
+            "repeatOrdinal": 1,
+            "authoredStepId": "rw1:p:271e309e827dc7d4:s:0",
+            "sessionBlockId": "e170bb73-7a02-4604-8028-1d821b0199ec",
+            "paceSecondsPerKm": null
+          }
+        ],
+        "resultType": "interval",
+        "totalIntervals": 1,
+        "intervalsCompleted": 1
+      },
+      "result_type": "interval",
+      "athlete_note": null,
+      "completed_at": null,
+      "block_snapshot": {
+        "sourceBlockId": "e170bb73-7a02-4604-8028-1d821b0199ec",
+        "structuredRunningV1": {
+          "workout_id": "rw1:p:271e309e827dc7d4",
+          "schema_version": 1,
+          "session_block_id": "e170bb73-7a02-4604-8028-1d821b0199ec",
+          "work_repetitions": [
+            {
+              "workout_id": "rw1:p:271e309e827dc7d4",
+              "work_seconds": 12,
+              "repeat_ordinal": 1,
+              "authored_step_id": "rw1:p:271e309e827dc7d4:s:0",
+              "session_block_id": "e170bb73-7a02-4604-8028-1d821b0199ec"
+            }
+          ],
+          "package_content_hash": "1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e",
+          "frozen_target_snapshot": {
+            "targets": [
+              {
+                "scope": {
+                  "step_ids": [
+                    "rw1:p:271e309e827dc7d4:s:0"
+                  ]
+                },
+                "state": "intent_only"
+              }
+            ],
+            "authority": "advisory",
+            "athlete_id": "c2000000-0000-4000-8000-000000000001",
+            "workout_id": "rw1:p:271e309e827dc7d4",
+            "assignment_id": "c2000000-0000-4000-8000-000000000088",
+            "freeze_source": "in_app_start",
+            "frozen_at_utc": "2026-10-05T15:26:10.945193+00:00",
+            "occurrence_id": "c2000000-0000-4000-8000-000000000089",
+            "schema_version": 1,
+            "session_slot_id": "cc51abcf-9678-4649-873e-1e92d5372a79",
+            "package_content_hash": "1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e",
+            "programme_version_id": "c2000000-0000-4000-8000-000000000062"
+          },
+          "execution_mapping_sha256": "73ef46de9b6afa144e920d9f9ca4cec63cb63fd5b7d1c5b66a8838807fa7e327"
+        }
+      },
+      "block_result_id": "c2000000-0000-4000-8000-000000000079",
+      "source_block_id": "e170bb73-7a02-4604-8028-1d821b0199ec",
+      "duration_seconds": null,
+      "session_record_id": "c2000000-0000-4000-8000-000000000078"
+    }
+  ],
+  "counts": {
+    "sets": 0,
+    "blocks": 1,
+    "exercises": 0,
+    "corrections": 0
+  },
+  "record": {
+    "status": "completed",
+    "record_id": "c2000000-0000-4000-8000-000000000078",
+    "athlete_id": "c2000000-0000-4000-8000-000000000001",
+    "created_at": "2026-10-05T15:26:10.945193+00:00",
+    "entry_mode": "live",
+    "started_at": "2026-01-01T12:00:00+00:00",
+    "updated_at": "2026-10-05T15:26:10.945193+00:00",
+    "overall_rpe": null,
+    "athlete_note": null,
+    "completed_at": "2026-01-01T12:01:00+00:00",
+    "performed_on": null,
+    "programme_id": null,
+    "assignment_id": "c2000000-0000-4000-8000-000000000088",
+    "active_block_id": null,
+    "duration_seconds": null,
+    "session_snapshot": {},
+    "source_protocol_id": "c2.retained.synthetic.2",
+    "performed_precision": "timestamp",
+    "training_session_id": 987006,
+    "programme_session_id": "cc51abcf-9678-4649-873e-1e92d5372a79"
+  },
+  "status": "ok",
+  "exercises": [],
+  "programme": {
+    "claim": {
+      "step_id": "rw1:p:271e309e827dc7d4:s:0",
+      "block_id": "e170bb73-7a02-4604-8028-1d821b0199ec",
+      "slot_key": "synthetic-slot",
+      "workout_id": "rw1:p:271e309e827dc7d4",
+      "protocol_id": "c2.retained.synthetic.2",
+      "mapping_hash": "73ef46de9b6afa144e920d9f9ca4cec63cb63fd5b7d1c5b66a8838807fa7e327",
+      "package_hash": "1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e",
+      "assignment_id": "c2000000-0000-4000-8000-000000000088",
+      "occurrence_id": "c2000000-0000-4000-8000-000000000089",
+      "repeat_ordinal": 1,
+      "protocol_revision": 1,
+      "training_session_id": "987006",
+      "programme_version_id": "c2000000-0000-4000-8000-000000000062"
+    },
+    "artifact": {
+      "publisher": "publish_private_exact_programme_version_retained_v1",
+      "captured_at": "2026-10-05T15:26:10.619715+00:00",
+      "canonical_text": "{\"adaptation_permissions\":[],\"assessments\":[],\"comparison_identities\":[],\"package_schema_version\":2,\"performance_evidence_requirements\":[],\"phases\":[],\"programme\":{\"coaching_intent\":\"Synthetic observational fixture\",\"duration_weeks\":1,\"library_scope\":\"coach_private\",\"lineage_code\":\"C2-SYNTHETIC-RETENTION-2\",\"name\":\"Synthetic C2 scope\",\"owner_type\":\"coach\",\"sessions_per_week\":1,\"version_number\":1},\"protected_invariants\":[],\"sessions\":[{\"protocol_id\":\"c2.retained.synthetic.2\",\"revision_number\":1,\"session_key\":\"synthetic-session\",\"session_lineage_id\":\"c2000000-0000-4000-8000-000000000052\",\"title\":\"Synthetic session\"}],\"weeks\":[{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"authored_running_v1\":{\"advisory_attachments\":[{\"attachment_id\":\"SYNTHETIC-C2-ATTACHMENT\",\"policy\":{\"benchmark_eligibility\":{\"cohort_completed_tests_eligible\":false,\"external_completed_tests_eligible\":false,\"manual_completed_tests_eligible\":true},\"display_rounding\":{\"direction\":\"nearest\",\"increment_milliseconds_per_kilometre\":1000},\"freshness_local_civil_days\":90,\"maximum_speed_basis_points\":9345,\"method_id\":\"PERCENT-BENCHMARK-SPEED\",\"method_version\":1,\"minimum_speed_basis_points\":8123,\"policy_id\":\"SYNTHETIC-C2-POLICY\",\"policy_version\":1},\"step_ids\":[\"rw1:p:271e309e827dc7d4:s:0\"]}],\"executable_step_bindings\":[{\"session_block_id\":\"e170bb73-7a02-4604-8028-1d821b0199ec\",\"step_id\":\"rw1:p:271e309e827dc7d4:s:0\"}],\"execution_mapping_sha256\":\"73ef46de9b6afa144e920d9f9ca4cec63cb63fd5b7d1c5b66a8838807fa7e327\",\"schema_version\":1,\"step_ids\":[\"rw1:p:271e309e827dc7d4:s:0\"],\"workout_id\":\"rw1:p:271e309e827dc7d4\"},\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Synthetic source fixture\"},\"session_key\":\"synthetic-session\",\"session_order\":1,\"slot_key\":\"synthetic-slot\",\"time_of_day\":\"any\"}]}],\"week_number\":1}]}",
+      "scope_seal_hash": "8253193c147bf89d043a15c9293bd61bb82c247d1e3d0bb4d904a67fae194368",
+      "scope_seal_text": "{\"package_hash\":\"1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e\",\"programme_version_id\":\"c2000000-0000-4000-8000-000000000062\",\"schema_version\":1,\"sessions\":[{\"blocks\":[{\"block_id\":\"e170bb73-7a02-4604-8028-1d821b0199ec\",\"block_type\":\"conditioning\",\"coach_notes\":null,\"content\":\"Synthetic source\",\"exercises\":[{\"block_id\":\"e170bb73-7a02-4604-8028-1d821b0199ec\",\"display_label_override\":null,\"execution_group_key\":null,\"execution_group_label\":null,\"execution_group_rounds\":null,\"exercise_id\":\"c2.synthetic.movement\",\"id\":\"2a53603b-3d10-4fe1-83f8-1431969a4e6b\",\"position\":1,\"prescription\":{\"sets\":1}}],\"performance_capture_mode\":\"auto\",\"position\":1,\"session_id\":\"c2.retained.synthetic.2\",\"timer_config\":{\"duration_seconds\":12},\"title\":\"Synthetic observed block\",\"workout_format\":\"steady_state\"}],\"protocol_id\":\"c2.retained.synthetic.2\",\"revision_number\":1,\"session_key\":\"synthetic-session\",\"session_lineage_id\":\"c2000000-0000-4000-8000-000000000052\"}],\"slots\":[{\"authored_running_v1\":{\"advisory_attachments\":[{\"attachment_id\":\"SYNTHETIC-C2-ATTACHMENT\",\"policy\":{\"benchmark_eligibility\":{\"cohort_completed_tests_eligible\":false,\"external_completed_tests_eligible\":false,\"manual_completed_tests_eligible\":true},\"display_rounding\":{\"direction\":\"nearest\",\"increment_milliseconds_per_kilometre\":1000},\"freshness_local_civil_days\":90,\"maximum_speed_basis_points\":9345,\"method_id\":\"PERCENT-BENCHMARK-SPEED\",\"method_version\":1,\"minimum_speed_basis_points\":8123,\"policy_id\":\"SYNTHETIC-C2-POLICY\",\"policy_version\":1},\"step_ids\":[\"rw1:p:271e309e827dc7d4:s:0\"]}],\"executable_step_bindings\":[{\"session_block_id\":\"e170bb73-7a02-4604-8028-1d821b0199ec\",\"step_id\":\"rw1:p:271e309e827dc7d4:s:0\"}],\"execution_mapping_sha256\":\"73ef46de9b6afa144e920d9f9ca4cec63cb63fd5b7d1c5b66a8838807fa7e327\",\"schema_version\":1,\"step_ids\":[\"rw1:p:271e309e827dc7d4:s:0\"],\"workout_id\":\"rw1:p:271e309e827dc7d4\"},\"day_key\":\"day_1\",\"day_order\":1,\"protocol_id\":\"c2.retained.synthetic.2\",\"session_order\":1,\"slot_id\":\"cc51abcf-9678-4649-873e-1e92d5372a79\",\"slot_key\":\"synthetic-slot\",\"week_number\":1}]}",
+      "capture_contract": "tracking.publication.scope.v1",
+      "compiler_release": "cohort_plan_package@1.0.0",
+      "compiler_contract": "cohort_plan_package.v1-v2.canonical.v1",
+      "package_content_hash": "1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e",
+      "programme_version_id": "c2000000-0000-4000-8000-000000000062",
+      "package_schema_version": 2
+    },
+    "current_scope": {
+      "slots": [
+        {
+          "day_key": "day_1",
+          "slot_id": "cc51abcf-9678-4649-873e-1e92d5372a79",
+          "slot_key": "synthetic-slot",
+          "day_order": 1,
+          "protocol_id": "c2.retained.synthetic.2",
+          "week_number": 1,
+          "session_order": 1,
+          "authored_running_v1": {
+            "step_ids": [
+              "rw1:p:271e309e827dc7d4:s:0"
+            ],
+            "workout_id": "rw1:p:271e309e827dc7d4",
+            "schema_version": 1,
+            "advisory_attachments": [
+              {
+                "policy": {
+                  "method_id": "PERCENT-BENCHMARK-SPEED",
+                  "policy_id": "SYNTHETIC-C2-POLICY",
+                  "method_version": 1,
+                  "policy_version": 1,
+                  "display_rounding": {
+                    "direction": "nearest",
+                    "increment_milliseconds_per_kilometre": 1000
+                  },
+                  "benchmark_eligibility": {
+                    "cohort_completed_tests_eligible": false,
+                    "manual_completed_tests_eligible": true,
+                    "external_completed_tests_eligible": false
+                  },
+                  "freshness_local_civil_days": 90,
+                  "maximum_speed_basis_points": 9345,
+                  "minimum_speed_basis_points": 8123
+                },
+                "step_ids": [
+                  "rw1:p:271e309e827dc7d4:s:0"
+                ],
+                "attachment_id": "SYNTHETIC-C2-ATTACHMENT"
+              }
+            ],
+            "executable_step_bindings": [
+              {
+                "step_id": "rw1:p:271e309e827dc7d4:s:0",
+                "session_block_id": "e170bb73-7a02-4604-8028-1d821b0199ec"
+              }
+            ],
+            "execution_mapping_sha256": "73ef46de9b6afa144e920d9f9ca4cec63cb63fd5b7d1c5b66a8838807fa7e327"
+          }
+        }
+      ],
+      "sessions": [
+        {
+          "blocks": [
+            {
+              "title": "Synthetic observed block",
+              "content": "Synthetic source",
+              "block_id": "e170bb73-7a02-4604-8028-1d821b0199ec",
+              "position": 1,
+              "exercises": [
+                {
+                  "id": "2a53603b-3d10-4fe1-83f8-1431969a4e6b",
+                  "block_id": "e170bb73-7a02-4604-8028-1d821b0199ec",
+                  "position": 1,
+                  "exercise_id": "c2.synthetic.movement",
+                  "prescription": {
+                    "sets": 1
+                  },
+                  "execution_group_key": null,
+                  "execution_group_label": null,
+                  "display_label_override": null,
+                  "execution_group_rounds": null
+                }
+              ],
+              "block_type": "conditioning",
+              "session_id": "c2.retained.synthetic.2",
+              "coach_notes": null,
+              "timer_config": {
+                "duration_seconds": 12
+              },
+              "workout_format": "steady_state",
+              "performance_capture_mode": "auto"
+            }
+          ],
+          "protocol_id": "c2.retained.synthetic.2",
+          "session_key": "synthetic-session",
+          "revision_number": 1,
+          "session_lineage_id": "c2000000-0000-4000-8000-000000000052"
+        }
+      ],
+      "package_hash": "1e0dc2999da685d3c12714b7c958411fa989de4858010fbb99345ec68af0731e",
+      "schema_version": 1,
+      "programme_version_id": "c2000000-0000-4000-8000-000000000062"
+    }
+  },
+  "athlete_id": "c2000000-0000-4000-8000-000000000001",
+  "consistency": "single_statement_snapshot",
+  "corrections": [],
+  "complete_audit_set": true,
+  "complete_record_tree": true
+}

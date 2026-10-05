@@ -79,7 +79,7 @@ Future<void> main(List<String> args) async {
     exit(2);
   }
 
-  final payload = PlanPackageImportPayloadBuilder().build(
+  final payload = PlanPackageImportPayloadBuilder().buildRetainedPublication(
     compileResult: compiled,
     importedBy: 'private-exact-publisher',
   );
@@ -122,11 +122,7 @@ Future<void> main(List<String> args) async {
 
   final client = SupabaseClient(url, serviceKey);
   try {
-    final rpcName =
-        compiled.manifest!.packageSchemaVersion >=
-            PlanPackageSchema.authoredRunningPackageSchemaVersion
-        ? 'publish_private_exact_programme_version_v2'
-        : 'publish_private_exact_programme_version';
+    const rpcName = 'publish_private_exact_programme_version_retained_v1';
     final response = await client.rpc(rpcName, params: {'payload': payload});
     final map = response is Map
         ? Map<String, dynamic>.from(response)

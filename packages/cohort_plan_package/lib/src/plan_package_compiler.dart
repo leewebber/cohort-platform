@@ -24,6 +24,43 @@ class PlanPackageCompiler {
   final PlanPackageValidator validator;
   final PlanPackageCanonicaliser canonicaliser;
 
+  /// Verify retained compiler output, including generated mapping digests.
+  /// Authored input remains strict: only this artifact path removes the known
+  /// generated field, recomputes it, and requires exact canonical byte equality.
+  PlanPackageCompileResult verifyCanonicalArtifact(String canonicalText) {
+    try {
+      final tree = jsonDecode(canonicalText);
+      if (tree is! Map<String, dynamic>) throw const FormatException();
+      final weeks = tree['weeks'];
+      if (weeks is List) {
+        for (final week in weeks) {
+          if (week is! Map || week['days'] is! List) continue;
+          for (final day in week['days'] as List) {
+            if (day is! Map || day['slots'] is! List) continue;
+            for (final slot in day['slots'] as List) {
+              if (slot is! Map) continue;
+              final running = slot['authored_running_v1'];
+              if (running is Map) running.remove('execution_mapping_sha256');
+            }
+          }
+        }
+      }
+      final result = compile(jsonEncode(tree));
+      if (!result.isValid) return result;
+      if (result.canonicalJson == canonicalText) return result;
+    } catch (_) {
+      // Malformed artifacts are not repaired or accepted as authored input.
+    }
+    return PlanPackageCompileResult.invalid(const [
+      PlanPackageValidationIssue(
+        path: r'$',
+        code: 'invalid_canonical_artifact',
+        message:
+            'Retained bytes must equal independently recomputed canonical output.',
+      ),
+    ]);
+  }
+
   /// Compile [yamlSource] into a validated manifest + content hash, or issues.
   PlanPackageCompileResult compile(String yamlSource) {
     final parsed = parser.parse(yamlSource);

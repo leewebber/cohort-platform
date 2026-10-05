@@ -37,10 +37,7 @@ void main() {
         migration,
         contains('ELSE persisted.authored_running_v1 IS NOT NULL'),
       );
-      expect(
-        migration,
-        contains("'cohort.plan_package_v2_running_slots'"),
-      );
+      expect(migration, contains("'cohort.plan_package_v2_running_slots'"));
       expect(
         migration,
         contains(
@@ -75,13 +72,27 @@ void main() {
     );
   });
 
-  test('private publisher selects v2 only from the compiled schema', () {
-    expect(publisher, contains('compiled.manifest!.packageSchemaVersion'));
+  test('private publisher uses future-only retained publication boundary', () {
+    expect(publisher, contains('buildRetainedPublication('));
     expect(
       publisher,
-      contains("? 'publish_private_exact_programme_version_v2'"),
+      contains("'publish_private_exact_programme_version_retained_v1'"),
     );
-    expect(publisher, contains(": 'publish_private_exact_programme_version';"));
+    final retained = File(
+      'supabase/migrations/20261005140000_tracking_publication_artifact_retention.sql',
+    ).readAsStringSync();
+    expect(
+      retained,
+      contains(
+        "IF c->>'package_schema_version'='2' THEN result:=public.publish_private_exact_programme_version_v2(payload)",
+      ),
+    );
+    expect(
+      retained,
+      contains(
+        'ELSE result:=public.publish_private_exact_programme_version(payload)',
+      ),
+    );
   });
 
   test('disposable gate covers canonical integrity and full rollback', () {

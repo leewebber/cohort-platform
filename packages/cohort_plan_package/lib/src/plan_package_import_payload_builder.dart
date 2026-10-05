@@ -11,6 +11,22 @@ import 'plan_package_schema.dart';
 class PlanPackageImportPayloadBuilder {
   const PlanPackageImportPayloadBuilder();
 
+  /// Future trusted publication transport. Existing import payloads and every
+  /// v1/v2 canonical hash remain unchanged; retention has its own RPC boundary.
+  Map<String, Object?> buildRetainedPublication({
+    required PlanPackageCompileResult compileResult,
+    required String importedBy,
+  }) {
+    final payload = build(compileResult: compileResult, importedBy: importedBy);
+    final canonical =
+        jsonDecode(compileResult.canonicalJson!) as Map<String, Object?>;
+    for (final key in canonical.keys) {
+      if (key != 'programme') payload[key] = canonical[key];
+    }
+    payload['package_canonical_json'] = compileResult.canonicalJson!;
+    return payload;
+  }
+
   /// Throws [StateError] if [compileResult] is not valid.
   Map<String, Object?> build({
     required PlanPackageCompileResult compileResult,

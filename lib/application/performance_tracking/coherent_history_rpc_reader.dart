@@ -30,7 +30,9 @@ final class CoherentHistoryRpcReader implements HistoryTrackingReadPort {
     final actor = authenticatedAthleteId;
     if (!_uuid(actor)) _fail('ownership_denied');
     if (!_uuid(recordId)) _fail('invalid_record_id');
-    final claim = programmeClaim == null ? null : _claim(programmeClaim);
+    final claim = programmeClaim == null
+        ? null
+        : encodeHistoryProgrammeClaim(programmeClaim);
     Object? raw;
     try {
       raw = await client.readTrackingHistory(
@@ -192,7 +194,7 @@ Set<String> _identities(List<Map<String, Object?>> rows, String key) {
   return ids;
 }
 
-Map<String, Object?> _claim(HistoryProgrammeClaim claim) {
+Map<String, Object?> encodeHistoryProgrammeClaim(HistoryProgrammeClaim claim) {
   final s = claim.scope;
   final running =
       s.workoutId != null ||
