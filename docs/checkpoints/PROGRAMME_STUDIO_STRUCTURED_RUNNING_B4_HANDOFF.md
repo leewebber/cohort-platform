@@ -1,6 +1,6 @@
 # Programme Studio structured running B4 handoff
 
-**Status:** `VISUALLY_APPROVED; OVERLAP_AUTHORITY_IMPLEMENTED_LOCALLY_AWAITING_INTEGRATION`
+**Status:** `VISUALLY_APPROVED_INTEGRATED; OVERLAP_AUTHORITY_HOSTED_APPLIED_VERIFIED`
 
 **Base:** `f7297751e9fa5b047a2c9e5e279366de27b12f5c`
 
@@ -55,8 +55,43 @@ rationale remain at
 - The migration retains PostgreSQL ownership, immutable volatility, fixed
   `search_path`, service-role-only execution, B2 unattached validity, and B3
   execution-mapping validation.
-- The migration is local only. Cohort Field Manual remains at
-  `20260929120000`; no hosted preflight or apply was performed.
+- The six-commit B4 range was integrated by strict fast-forward on `origin/main`
+  through `d6cea8bc702c2ebd6441261fa9a5baba87a4fb34`.
+
+## Hosted deployment — 2026-10-05
+
+Founder authorised only the migration above on Cohort Field Manual
+`otnhhdxstdnwccehacku`. A fresh disposable linked workdir verified the clean
+integrated checkout, approved file hash, `ACTIVE_HEALTHY` target in `eu-west-1`,
+ledger `113 / 20260929120000`, prerequisite definitions/grants, and an exact
+one-file dry-run before apply. The CLI reported:
+
+```text
+Applying migration 20261005120000_reject_overlapping_running_advisory_scope.sql...
+Finished supabase db push.
+```
+
+Apply exited successfully. A catalog-cache warning reported a missing pg-delta
+certificate; it did not prevent the migration transaction. SELECT-only
+postchecks independently confirmed:
+
+- ledger `114 / 20261005120000`;
+- replacement validator owned by `postgres`, immutable, non-security-definer,
+  `search_path=public, extensions, pg_temp`, execute only for `service_role`;
+- validator definition SHA-256
+  `f870bafd92231115b6fe4e949d7d0ca7275583e886ae7a034709599f7592fdb2`;
+- the other three prerequisite definitions/grants unchanged;
+- authored-running CHECK still validated and mapping trigger unchanged/enabled;
+- 11 programme versions, 188 slots, 184 unstructured slots, four mapped
+  authored-running documents, zero invalid documents and zero overlaps;
+- unchanged authored-document digest
+  `408950b7bf90333d6dd97e056dca75b9b8a9c5754502202450b8610e17a13874`;
+- final dry-run: `Remote database is up to date.`
+
+Disposable files were removed. Repository `supabase/.temp` was unchanged.
+No programme or athlete data writes, publication, assignment change, build, or
+test run formed part of deployment. The verification above preserves the
+previously recorded local test evidence.
 
 ## Founder visual walkthrough
 
@@ -97,11 +132,11 @@ review**:
 
 ## Boundaries
 
-No hosted system, programme publication, assignment, athlete snapshot, phone
-build, metrics profile, Garmin path, commercial programme, or production entry
-point is changed. B4 remains a read-only derived review surface and never
-becomes canonical authoring authority. Integration and any later hosted
-migration preflight/apply require separate founder approval. Plan Package v2
+B4 remains a read-only derived review surface and never becomes canonical
+authoring authority. Its approved validator migration is applied; programme
+publication, assignments, athlete snapshots, phone builds, metrics profiles,
+Garmin, commercial content, and production entrypoints remain unchanged.
+Further implementation or deployment requires separate authority. Plan Package v2
 does not carry reviewed protocol-graph roles, so the package-level uniqueness
 rule is deliberately fail closed for every declared authored step; the graph
 and runtime continue to enforce that numeric targets attach only to work roles.

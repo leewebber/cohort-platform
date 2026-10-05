@@ -1,6 +1,6 @@
 # B4 overlapping running advisory scope authority proposal
 
-**Status:** `IMPLEMENTED_LOCALLY_AWAITING_INTEGRATION_AND_HOSTED_APPROVAL`
+**Status:** `INTEGRATED_HOSTED_APPLIED_VERIFIED`
 
 **Recorded:** 2026-10-04
 
@@ -74,3 +74,13 @@ once its migration is separately approved and applied.
 This record does not authorise hosted migration apply, programme publication,
 or programme-content adoption. The preceding proposal text is retained as the
 dated rationale and pre-implementation state.
+
+## Deployment record — 2026-10-05
+
+The approved B4 range is integrated at
+`d6cea8bc702c2ebd6441261fa9a5baba87a4fb34`. After separate founder apply
+approval, the exact migration was applied on Cohort Field Manual, with ledger
+`114 / 20261005120000` and SELECT-only preservation checks verified. All four
+hosted documents remain valid with zero overlaps. Deployment details and the
+unchanged compatibility digest are recorded in the
+[B4 handoff](../checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
