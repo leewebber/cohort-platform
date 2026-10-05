@@ -188,6 +188,36 @@ void main() {
     );
   });
 
+  test('shared advisory scope cases enforce one attachment per step', () {
+    final cases = const LineSplitter()
+        .convert(
+          File(
+            'test/fixtures/authored_running_advisory_scope_cases.jsonl',
+          ).readAsStringSync(),
+        )
+        .where((line) => line.trim().isNotEmpty)
+        .map((line) => jsonDecode(line) as Map<String, dynamic>);
+
+    for (final scopeCase in cases) {
+      final result = const PlanPackageCompiler().compile(
+        _scopeCaseYaml(scopeCase),
+      );
+      final expectedValid = scopeCase['expected_valid'] as bool;
+      expect(
+        result.isValid,
+        expectedValid,
+        reason: '${scopeCase['name']}: ${result.issues}',
+      );
+      if (!expectedValid) {
+        expect(
+          result.issues.map((issue) => issue.code),
+          contains('overlapping_advisory_step_scope'),
+          reason: scopeCase['name'] as String,
+        );
+      }
+    }
+  });
+
   test(
     'policy remains explicit and rejects deferred evidence or bad ranges',
     () {
@@ -216,4 +246,87 @@ void main() {
       );
     },
   );
+}
+
+String _scopeCaseYaml(Map<String, dynamic> scopeCase) {
+  final stepIds = (scopeCase['step_ids'] as List).cast<String>();
+  final scopes = (scopeCase['attachment_scopes'] as List)
+      .map((scope) => (scope as List).cast<String>())
+      .toList(growable: false);
+  final buffer = StringBuffer('''
+package_schema_version: 2
+
+programme:
+  lineage_code: PROG-RUNNING-SCOPE-FIXTURE
+  version_number: 1
+  name: Running advisory scope fixture
+  library_scope: coach_private
+  owner_type: coach
+  coaching_intent: Validate explicit advisory scope authority.
+  duration_weeks: 1
+  sessions_per_week: 1
+
+sessions:
+  - session_key: SES-RUN-SCOPE
+    protocol_id: PROT-RUN-SCOPE-R1
+    session_lineage_id: b4000000-0000-4000-8000-000000000001
+    revision_number: 1
+    title: Running scope fixture
+
+phases: []
+
+weeks:
+  - week_number: 1
+    days:
+      - day_key: day_1
+        day_order: 1
+        day_type: training
+        slots:
+          - slot_key: W1D1S1
+            session_order: 1
+            session_key: SES-RUN-SCOPE
+            progression:
+              prescription_summary: Synthetic validator fixture only.
+            authored_running_v1:
+              schema_version: 1
+              workout_id: RUN-SCOPE-FIXTURE
+              step_ids:
+''');
+  for (final stepId in stepIds) {
+    buffer.writeln('                - $stepId');
+  }
+  buffer.writeln('              advisory_attachments:');
+  for (var index = 0; index < scopes.length; index++) {
+    buffer
+      ..writeln('                - attachment_id: TARGET-${index + 1}')
+      ..writeln('                  step_ids:');
+    for (final stepId in scopes[index]) {
+      buffer.writeln('                    - $stepId');
+    }
+    buffer.write('''
+                  policy:
+                    policy_id: POLICY-${index + 1}
+                    policy_version: 1
+                    method_id: PERCENT-BENCHMARK-SPEED
+                    method_version: 1
+                    benchmark_eligibility:
+                      cohort_completed_tests_eligible: true
+                      manual_completed_tests_eligible: true
+                      external_completed_tests_eligible: false
+                    freshness_local_civil_days: 90
+                    minimum_speed_basis_points: 8123
+                    maximum_speed_basis_points: 9345
+                    display_rounding:
+                      increment_milliseconds_per_kilometre: 1000
+                      direction: nearest
+''');
+  }
+  buffer.write('''
+adaptation_permissions: []
+protected_invariants: []
+assessments: []
+performance_evidence_requirements: []
+comparison_identities: []
+''');
+  return buffer.toString();
 }

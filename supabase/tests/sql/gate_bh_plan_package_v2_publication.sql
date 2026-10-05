@@ -3,8 +3,53 @@ TRUNCATE sprint12_gate_results;
 
 CREATE TEMP TABLE gate_bh_canonical_fixture (canonical_text TEXT NOT NULL);
 CREATE TEMP TABLE gate_bh_hash_fixture (expected_hash TEXT NOT NULL);
+CREATE TEMP TABLE gate_bh_scope_cases (case_data JSONB NOT NULL);
 \copy gate_bh_canonical_fixture FROM '/tmp/plan_package_v2.canonical.json'
 \copy gate_bh_hash_fixture FROM '/tmp/plan_package_v2.sha256'
+\copy gate_bh_scope_cases FROM '/tmp/authored_running_advisory_scope_cases.jsonl'
+
+CREATE OR REPLACE FUNCTION pg_temp.gate_bh_scope_document(p_case JSONB)
+RETURNS JSONB
+LANGUAGE sql
+IMMUTABLE
+SET search_path = pg_temp
+AS $$
+  WITH attachments AS (
+    SELECT jsonb_agg(
+      jsonb_build_object(
+        'attachment_id', 'TARGET-' || scope.ordinality::TEXT,
+        'step_ids', scope.value,
+        'policy', jsonb_build_object(
+          'policy_id', 'POLICY-' || scope.ordinality::TEXT,
+          'policy_version', 1,
+          'method_id', 'PERCENT-BENCHMARK-SPEED',
+          'method_version', 1,
+          'benchmark_eligibility', jsonb_build_object(
+            'cohort_completed_tests_eligible', TRUE,
+            'manual_completed_tests_eligible', TRUE,
+            'external_completed_tests_eligible', FALSE
+          ),
+          'freshness_local_civil_days', 90,
+          'minimum_speed_basis_points', 8123,
+          'maximum_speed_basis_points', 9345,
+          'display_rounding', jsonb_build_object(
+            'increment_milliseconds_per_kilometre', 1000,
+            'direction', 'nearest'
+          )
+        )
+      ) ORDER BY scope.ordinality
+    ) AS value
+    FROM jsonb_array_elements(p_case->'attachment_scopes')
+      WITH ORDINALITY AS scope(value, ordinality)
+  )
+  SELECT jsonb_build_object(
+    'schema_version', 1,
+    'workout_id', 'RUN-SCOPE-FIXTURE',
+    'step_ids', p_case->'step_ids',
+    'advisory_attachments', attachments.value
+  )
+  FROM attachments;
+$$;
 
 CREATE OR REPLACE FUNCTION sprint12_build_v2_publication_payload(
   p_canonical_text TEXT,
@@ -81,6 +126,7 @@ DECLARE
   v_malformed_version UUID := 'b2000000-0000-4000-8000-000000000013';
   v_rollback_version UUID := 'b2000000-0000-4000-8000-000000000014';
   v_v1_version UUID := 'b2000000-0000-4000-8000-000000000015';
+  v_overlap_version UUID := 'b2000000-0000-4000-8000-000000000016';
   v_payload JSONB;
   v_res JSONB;
   v_canonical JSONB;
@@ -90,6 +136,9 @@ DECLARE
   v_count INT;
   v_failed BOOLEAN := FALSE;
   v_has_exec BOOLEAN;
+  v_case JSONB;
+  v_actual_valid BOOLEAN;
+  v_expected_valid BOOLEAN;
 BEGIN
   SELECT canonical_text INTO STRICT v_canonical_text
   FROM gate_bh_canonical_fixture;
@@ -99,6 +148,39 @@ BEGIN
   PERFORM sprint12_record(
     'BH', 'compiler_golden_hash', v_expected_hash, v_hash,
     NULL, v_hash = v_expected_hash, NULL
+  );
+
+  FOR v_case IN SELECT case_data FROM gate_bh_scope_cases
+  LOOP
+    v_expected_valid := (v_case->>'expected_valid')::BOOLEAN;
+    v_actual_valid := public.cohort_authored_running_v1_is_valid(
+      pg_temp.gate_bh_scope_document(v_case)
+    );
+    PERFORM sprint12_record(
+      'BH', 'advisory_scope_' || (v_case->>'name'),
+      v_expected_valid::TEXT, v_actual_valid::TEXT,
+      NULL, v_actual_valid = v_expected_valid,
+      pg_temp.gate_bh_scope_document(v_case)::TEXT
+    );
+  END LOOP;
+
+  SELECT
+    p.provolatile = 'i'
+      AND p.prosecdef = FALSE
+      AND p.proconfig = ARRAY['search_path=public, extensions, pg_temp']::TEXT[]
+      AND pg_get_userbyid(p.proowner) = 'postgres'
+      AND NOT has_function_privilege('anon', p.oid, 'EXECUTE')
+      AND NOT has_function_privilege('authenticated', p.oid, 'EXECUTE')
+      AND has_function_privilege('service_role', p.oid, 'EXECUTE')
+  INTO v_has_exec
+  FROM pg_proc p
+  JOIN pg_namespace n ON n.oid = p.pronamespace
+  WHERE n.nspname = 'public'
+    AND p.proname = 'cohort_authored_running_v1_is_valid'
+    AND pg_get_function_identity_arguments(p.oid) = 'document jsonb';
+  PERFORM sprint12_record(
+    'BH', 'advisory_scope_function_contract', 'true', v_has_exec::TEXT,
+    NULL, v_has_exec, NULL
   );
 
   v_payload := sprint12_build_v2_publication_payload(
@@ -228,6 +310,33 @@ BEGIN
   FROM public.programme_versions WHERE id = v_malformed_version;
   PERFORM sprint12_record(
     'BH', 'malformed_steps_rejected', 'invalid_authored_running_v1', v_res->>'code',
+    v_count = 0,
+    (v_res->>'code') = 'invalid_authored_running_v1' AND v_count = 0,
+    v_res::TEXT
+  );
+
+  SELECT pg_temp.gate_bh_scope_document(case_data) INTO STRICT v_running
+  FROM gate_bh_scope_cases
+  WHERE case_data->>'name' = 'partial_overlap';
+  v_canonical := v_canonical_text::JSONB;
+  v_canonical := jsonb_set(
+    v_canonical,
+    '{weeks,0,days,0,slots,0,authored_running_v1}',
+    v_running
+  );
+  v_payload := sprint12_build_v2_publication_payload(
+    v_canonical::TEXT,
+    v_overlap_version,
+    v_owner
+  );
+  PERFORM set_config('role', 'service_role', TRUE);
+  v_res := public.publish_private_exact_programme_version_v2(v_payload);
+  PERFORM set_config('role', 'postgres', TRUE);
+  SELECT count(*) INTO v_count
+  FROM public.programme_versions WHERE id = v_overlap_version;
+  PERFORM sprint12_record(
+    'BH', 'overlapping_advisory_scope_rejected',
+    'invalid_authored_running_v1', v_res->>'code',
     v_count = 0,
     (v_res->>'code') = 'invalid_authored_running_v1' AND v_count = 0,
     v_res::TEXT

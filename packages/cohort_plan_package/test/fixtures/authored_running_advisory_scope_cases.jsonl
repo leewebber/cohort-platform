@@ -1,0 +1,5 @@
+{"name":"single_attachment_multiple_work_steps","step_ids":["STEP-WORK-1","STEP-WORK-2"],"attachment_scopes":[["STEP-WORK-1","STEP-WORK-2"]],"expected_valid":true}
+{"name":"disjoint_scopes","step_ids":["STEP-WORK-1","STEP-WORK-2","STEP-WORK-3"],"attachment_scopes":[["STEP-WORK-1"],["STEP-WORK-2","STEP-WORK-3"]],"expected_valid":true}
+{"name":"repeated_work_step_execution","step_ids":["STEP-WORK-1"],"attachment_scopes":[["STEP-WORK-1"]],"repeat_count":3,"expected_valid":true}
+{"name":"partial_overlap","step_ids":["STEP-WORK-1","STEP-WORK-2","STEP-WORK-3"],"attachment_scopes":[["STEP-WORK-1","STEP-WORK-2"],["STEP-WORK-2","STEP-WORK-3"]],"expected_valid":false}
+{"name":"identical_scopes","step_ids":["STEP-WORK-1","STEP-WORK-2"],"attachment_scopes":[["STEP-WORK-1","STEP-WORK-2"],["STEP-WORK-1","STEP-WORK-2"]],"expected_valid":false}

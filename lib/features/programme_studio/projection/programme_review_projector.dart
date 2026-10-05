@@ -880,10 +880,10 @@ class ProgrammeReviewProjector {
       invalid = true;
       findings.add(
         ProgrammeReviewFinding(
-          code: 'overlapping_advisory_scope',
+          code: 'overlapping_advisory_step_scope',
           severity: ProgrammeReviewFindingSeverity.error,
           message:
-              'One running step is scoped by multiple advisory attachments. Canonical rejection requires the separately proposed authority migration.',
+              'One running step is scoped by multiple advisory attachments. Canonical authored-running validation rejects this package.',
           sourceContext: step.stepId,
         ),
       );

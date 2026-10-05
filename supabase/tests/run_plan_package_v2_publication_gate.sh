@@ -57,6 +57,9 @@ run_bh() {
   docker cp \
     "${REPO_ROOT}/packages/cohort_plan_package/test/fixtures/minimal_plan_package_v2.sha256" \
     "${SPRINT12_DB_CONTAINER}:/tmp/plan_package_v2.sha256"
+  docker cp \
+    "${REPO_ROOT}/packages/cohort_plan_package/test/fixtures/authored_running_advisory_scope_cases.jsonl" \
+    "${SPRINT12_DB_CONTAINER}:/tmp/authored_running_advisory_scope_cases.jsonl"
   docker exec -i "${SPRINT12_DB_CONTAINER}" \
     psql -U postgres -d postgres -v ON_ERROR_STOP=1 \
     -f /tmp/sprint12_helpers.sql \

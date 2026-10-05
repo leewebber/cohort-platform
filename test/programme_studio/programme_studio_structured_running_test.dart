@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
@@ -124,7 +123,7 @@ void main() {
     expect(running.policies, hasLength(1));
   });
 
-  test('overlap is visible but remains a proposed canonical authority fix', () {
+  test('overlap fails at canonical validation and remains visible', () {
     final spec = ProgrammeReviewCatalogRegistry.developerSpecs.single;
     final exact = workspace().loadBundle(spec);
     final overlappingYaml = exact.planPackageYaml.replaceFirst(
@@ -150,31 +149,25 @@ void main() {
           - slot_key: W1D1S2-PACE-UNAVAILABLE''',
     );
     final compiled = const PlanPackageCompiler().compile(overlappingYaml);
+    expect(compiled.isValid, isFalse);
     expect(
-      compiled.isValid,
-      isTrue,
-      reason: 'This documents the unresolved canonical overlap gap.',
+      compiled.issues.map((issue) => issue.code),
+      contains('overlapping_advisory_step_scope'),
     );
-    final publication = Map<String, dynamic>.from(
-      jsonDecode(exact.publicationJson!) as Map,
-    )..['source_package_hash'] = compiled.contentHashSha256;
     final programme = workspace().projector.projectBundle(
       ProgrammeReviewSourceBundle(
         spec: exact.spec,
         planPackageYaml: overlappingYaml,
-        publicationJson: jsonEncode(publication),
+        publicationJson: exact.publicationJson,
         reviewedProtocolGraphJson: exact.reviewedProtocolGraphJson,
       ),
     );
-    final first = programme.weeks.single.days.single.sessions.first;
+    expect(programme.compile.state, ProgrammeReviewCompileState.invalid);
     expect(
-      first.structuredRunning!.status,
-      ProgrammeReviewRunningStatus.invalidBinding,
+      programme.compile.issues.map((item) => item.code),
+      contains('overlapping_advisory_step_scope'),
     );
-    expect(
-      first.findings.map((item) => item.code),
-      contains('overlapping_advisory_scope'),
-    );
+    expect(programme.weeks, isEmpty);
   });
 
   testWidgets(

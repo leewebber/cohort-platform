@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cohort_platform/domain/running_workout/running_workout.dart';
 import 'package:cohort_platform/features/performance/controllers/performance_capture_controller.dart';
 import 'package:cohort_platform/features/performance/mappers/performance_record_mapper.dart';
@@ -31,6 +34,16 @@ void main() {
   test(
     'controlled v2 fixture binds exact repetitions and restores losslessly',
     () {
+      final repeatedScopeCase = const LineSplitter()
+          .convert(
+            File(
+              'packages/cohort_plan_package/test/fixtures/authored_running_advisory_scope_cases.jsonl',
+            ).readAsStringSync(),
+          )
+          .map((line) => jsonDecode(line) as Map<String, dynamic>)
+          .singleWhere(
+            (scopeCase) => scopeCase['name'] == 'repeated_work_step_execution',
+          );
       final fixture = _controlledFixture();
       final controller =
           PerformanceCaptureController.initializeFromExecutionPlan(
@@ -44,8 +57,12 @@ void main() {
 
       final original = controller.draft.blockDrafts.single;
       final result = original.resultData as IntervalResultData;
-      expect(result.intervals, hasLength(3));
+      expect(result.intervals, hasLength(repeatedScopeCase['repeat_count']));
       expect(result.intervals.map((row) => row.repeatOrdinal), [1, 2, 3]);
+      expect(
+        result.intervals.map((row) => row.authoredStepId).toSet(),
+        hasLength(1),
+      );
       expect(
         result.intervals.every(
           (row) =>

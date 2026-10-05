@@ -127,6 +127,7 @@ class PlanPackageValidator {
 
           final attachmentIds = <String>{};
           final declaredSteps = running.stepIds.toSet();
+          final advisoryScopedSteps = <String>{};
           for (var ai = 0; ai < running.advisoryAttachments.length; ai++) {
             final attachment = running.advisoryAttachments[ai];
             final attachmentPath = '$path.advisory_attachments[$ai]';
@@ -150,6 +151,7 @@ class PlanPackageValidator {
               '$attachmentPath.step_ids',
               issues,
             );
+            final attachmentSteps = <String>{};
             for (
               var stepIndex = 0;
               stepIndex < attachment.stepIds.length;
@@ -163,6 +165,17 @@ class PlanPackageValidator {
                     code: 'broken_reference',
                     message:
                         'Advisory attachment references undeclared step "$stepId".',
+                  ),
+                );
+              }
+              if (attachmentSteps.add(stepId) &&
+                  !advisoryScopedSteps.add(stepId)) {
+                issues.add(
+                  PlanPackageValidationIssue(
+                    path: '$attachmentPath.step_ids[$stepIndex]',
+                    code: 'overlapping_advisory_step_scope',
+                    message:
+                        'Each authored running step may be scoped by at most one advisory attachment; "$stepId" was already claimed.',
                   ),
                 );
               }
