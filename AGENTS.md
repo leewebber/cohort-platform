@@ -160,8 +160,12 @@ awaiting founder review** on `codex/performance-tracking-c2-history-adapter`.
 See [C2 handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
 and [coherent read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 The existing multi-query hydration does not qualify as a coherent read.
-No production reader, RPC or SQL is implemented; that portion is stopped for
-separate authority/local proof. C1/C2 have no production consumer. Tracking
+The founder-authorised local coherent RPC, strict unwired bridge and disposable
+proof are implemented for independent History reads; see
+[coherent reader handoff](docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
+Programme witness admission is stopped: local authenticated session SELECT and
+complete canonical artifact source are unavailable. No grants/RLS were widened.
+Hosted deployment and production wiring remain unauthorised. C1/C2 have no production consumer. Tracking
 cannot change programming, insert tests, reconstruct unavailable historical
 inputs or grant prescription eligibility. Schema v3 remains outside C1/C2.
 Persistence, selection storage, manual entry, calculations, UI and broader

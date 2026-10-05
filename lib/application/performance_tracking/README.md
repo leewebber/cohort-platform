@@ -17,7 +17,9 @@ record, complete block/exercise/set tree and complete correction audit set.
 `singleStatementSnapshot` and completeness flags are producer obligations, not
 proof that a client can create by labelling an arbitrary map. Unproven/multi-read
 hydration or truncation yields `coherent_read_required`, never a successful
-missing result. There is **no production port implementation in C2**.
+missing result. The [strict RPC reader](coherent_history_rpc_reader.dart) and
+[Supabase transport](../../infrastructure/performance_tracking/supabase_history_tracking_rpc_client.dart)
+are locally implemented and unwired. Neither is registered with a production consumer.
 See the [concrete read-boundary proposal](../../../docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 
 The adapter denies a different/missing authenticated athlete before reading,
@@ -30,7 +32,10 @@ Optional programme claims require both matching raw History origin links and a
 coherent verified witness from the future existing-authority join. That reader
 must verify assignment/version/hash/occurrence/outcome/session and immutable
 slot/protocol/block/running scope. C2 checks the witness exactly but does not
-implement the join or accept matching labels as proof. Missing witnesses fail
+implement the join or accept matching labels as proof. The concrete RPC refuses
+all supplied programme claims: retained History contradictions and missing links
+are distinguished, while the required actual-session SELECT is unavailable. No
+canonical package artifact or verified programme witness is admitted. Missing witnesses fail
 closed; the adapter does not silently drop a claim and return independent data.
 An independent observation makes no programme/test attribution claim.
 
@@ -104,3 +109,22 @@ unknown timezone, not an invented zone or audit date. No freshness/zone evaluati
 or new manual-entry chronology is implemented. `grantsPrescriptionEligibility`
 is always false, including for available observations. Existing B2 policies,
 frozen targets and blocked Cohort benchmark ingestion are unchanged.
+
+## Local RPC verification boundary
+
+`read_performance_tracking_history_v1(uuid,jsonb)` is a single STABLE SECURITY
+INVOKER statement over owner-filtered existing RLS reads. It never calls the
+legacy hydration, inserts results, locks for writes or falls back on a claim.
+Limits are 10,000 aggregate child/audit rows, 4 MiB response and 16 KiB claim.
+Counts, flags and markers are producer guarantees, not client-made certificates.
+The bridge validates the closed envelope, parent identities and typed failures.
+The Supabase transport makes exactly one RPC request and supplies no athlete ID.
+No UI, application wiring, cache, ledger, ingestion or prescription path exists.
+
+The [disposable gate](../../../supabase/tests/run_c2_coherent_history_read_gate.sh)
+replays unchanged migrations, compares existing ACL/RLS/function fingerprints,
+checks synthetic ownership/completeness/bounds and runs three two-session races
+with a statement-snapshot barrier. Existing correction transactions and permissions
+are preserved. This does not attest hosted permissions or privileged corruption.
+See the [handoff](../../../docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md)
+for stopped programme authority and canonical artifact gaps.

@@ -3,12 +3,14 @@
 **Recorded / revised:** 2026-10-05
 **Status:** Revised contract architecture FOUNDER_APPROVED; C1 INTEGRATED at
 `72c1281f0966f2a6485873f6071b0e000ba1e000`. C2's bounded local pure History
-adapter is implemented/verified, awaiting founder review; production read boundary deferred.
+adapter and independent coherent reader are implemented/verified, awaiting founder
+review; programme witnesses are stopped for existing session access/artifact authority.
 **Handoff:** [C1 implementation and verification](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
 and [C2 local adapter/gaps](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md).
 The explicit C1 and bounded C2 authorities superseded their earlier pauses;
-neither grants a broader tracking-product licence. C2 has no production reader,
-SQL, persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
+neither grants a broader tracking-product licence. C2 has an unwired local read RPC/bridge; no production consumer,
+persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
+**Coherent reader continuation:** [local proof and stopped programme authority](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 

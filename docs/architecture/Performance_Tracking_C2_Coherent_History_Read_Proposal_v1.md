@@ -2,10 +2,12 @@
 
 **Recorded:** 2026-10-05
 
-**Status:** PROPOSED_NOT_AUTHORISED for database/production reader work.
+**Status:** Founder-authorised local RPC/bridge/proof implemented; independent
+History read LOCAL_VERIFIED. Programme witness portion STOPPED for access authority.
+Hosted deployment and production wiring remain unauthorised.
 The independent [pure C2 adapter](../../lib/application/performance_tracking/history_tracking_adapter.dart)
-is implemented locally with synthetic fake-port proof. This document contains
-no executable SQL and does not authorise a migration, hosted access or wiring.
+is implemented locally with synthetic fake-port proof. The original proposal below is preserved as design context; the continuation
+boundary below records what could be proven without widening permissions.
 
 Binding: [revised Sprint C contract](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 and [C1 review](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_REVIEW.md).
@@ -126,3 +128,56 @@ only after meeting the same concrete guarantees and acceptance checks.
 Selection/custom-profile storage, manual entry/correction writes, derived metric
 calculation, comparison deltas, scoring, real profiles/tests, UI, production
 wiring and schema v3 remain separately scoped. Stop for founder review.
+
+## Authorised local continuation — 2026-10-05
+
+Founder authorised the local migration, unwired bridge and disposable proof from
+clean `5623a7975c583ef324ecc62d8ec7932bc60ea2fa`. See
+[coherent reader handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
+The additive [migration](../../supabase/migrations/20261005130000_performance_tracking_coherent_history_read.sql)
+implements one STABLE SECURITY INVOKER SQL statement with `pg_catalog, pg_temp`
+search path, schema-qualified existing tables, auth.uid ownership, complete raw
+result/audit collections and authenticated-only client execution. No existing
+relation grants, RLS, helpers or mutation functions change. Missing/inaccessible
+owned records share one response. Limits are 10,000 total child/audit rows,
+4 MiB returned JSON and 16 KiB optional claim JSON; excess fails explicitly.
+
+The [strict bridge](../../lib/application/performance_tracking/coherent_history_rpc_reader.dart)
+and [transport](../../lib/infrastructure/performance_tracking/supabase_history_tracking_rpc_client.dart)
+are explicitly constructed, with no production registration. Envelope keys,
+counts, UUIDs, ownership, graph parents, audit scope and actor changes are checked;
+unknown witnesses/artifacts and ignored claims are refused. Supported field,
+unit, chronology and correction validation stays in the existing adapter.
+
+**Stopped authority:** the fresh disposable baseline has no authenticated SELECT
+on `public.training_sessions`; that table has RLS disabled. No repository migration
+establishes this SELECT. Its historical baseline notes explicitly exclude hosted
+GRANT ALL, so this finding does not attest today's hosted ACL. The required actual
+session owner/protocol join cannot be proven here. No SECURITY DEFINER fallback,
+new helper, SELECT grant or RLS widening was implemented. The function checks
+retained History assignment/session/protocol references only: absent links return
+`programme_scope_unproven`, contradictory retained links return
+`programme_scope_conflict`, and otherwise a supplied claim returns
+`programme_authority_unavailable`. No supplied claim is dropped. This is not a
+verified programme witness, and complete assignment/occurrence/outcome/package/
+protocol/block/running joins remain unimplemented and unproven.
+
+Canonical package bytes are not retained as a complete artifact in these source
+tables (original phase/session keys are not persisted). The bridge admits no
+programme witness or purported canonical artifact, so it cannot claim package
+byte/hash validation. Resolving session access alone would not close this gap.
+A later, separately scoped witness design must provide an immutable hash-pinned
+artifact, reuse the canonical compiler, and prove exact authored scope against
+the same coherent authority frame; no package reconstruction by labels/ordinals.
+
+The next founder decision is a separately reviewed existing-authority read design
+for the missing session join, including row isolation, plus the immutable artifact
+source. A blanket SELECT grant on an RLS-disabled table is not the recommendation.
+Do not infer hosted parity, alter table permissions or enable full witnesses from
+this local proof. Hosted apply and production wiring remain separately gated.
+
+The focused local gate proves complete owned evidence under the existing policies
+and canonical correction path, not detection of privileged out-of-band database
+corruption or future policy drift. All audit IDs are retained without a timestamp
+ordering claim; incomplete old audit payloads remain incomplete. Tracking cannot
+grant prescription eligibility or reconstruct missing historical inputs.

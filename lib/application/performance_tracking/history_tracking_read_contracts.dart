@@ -1,5 +1,11 @@
 part of 'history_tracking_adapter.dart';
 
+/// Closed failure from a proven reader; transport details stay private.
+final class HistoryTrackingReadException implements Exception {
+  const HistoryTrackingReadException(this.code);
+  final String code;
+}
+
 enum HistoryReadConsistency { unproven, singleStatementSnapshot }
 
 /// A future authenticated reader must obtain the entire frame in one database

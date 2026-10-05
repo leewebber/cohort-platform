@@ -59,6 +59,8 @@ final class HistoryTrackingAdapter {
         throw const _HistoryProblem('coherent_read_required');
       }
       return _HistoryProjection(frame, query, metric).project();
+    } on HistoryTrackingReadException catch (problem) {
+      return HistoryTrackingFailure(problem.code);
     } on _HistoryProblem catch (problem) {
       return HistoryTrackingFailure(problem.code);
     } on FormatException {

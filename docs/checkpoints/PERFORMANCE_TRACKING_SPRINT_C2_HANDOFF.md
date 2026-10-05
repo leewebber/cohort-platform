@@ -2,8 +2,10 @@
 
 **Recorded:** 2026-10-05
 
-**Status:** PURE_ADAPTER_LOCAL_VERIFIED; awaiting founder review.
-Production coherent reader/database portion is proposed and not implemented.
+**Status at original closeout:** PURE_ADAPTER_LOCAL_VERIFIED.
+**Authorised continuation:** independent coherent RPC/bridge now LOCAL_VERIFIED;
+[reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md) records
+proof and stopped programme authority. Original evidence below is preserved.
 
 **Branch:** `codex/performance-tracking-c2-history-adapter`
 

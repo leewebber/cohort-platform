@@ -11,11 +11,14 @@
 > [approved contract](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 > and [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
 > C2's explicit authority superseded the previous C2 pause for this local adapter.
-> Existing multi-query hydration cannot certify coherence; the database/production
-> reader portion is stopped for separate authority/local proof. No RPC, SQL,
-> production consumer, storage, UI, calculation or package change.
+> The founder-authorised coherent read continuation now has a local RPC, strict
+> unwired bridge and disposable proof for independent History reads:
+> [coherent reader handoff](./PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
+> Programme witnesses are stopped for missing local session SELECT and canonical
+> artifact source; no permissions were widened. No hosted deployment, production
+> consumer, storage, UI, calculation or package change.
 > `PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true`,
-> `PERFORMANCE_TRACKING_C2_COHERENT_READER=PROPOSED_NOT_AUTHORISED`,
+> `PERFORMANCE_TRACKING_C2_COHERENT_READER=INDEPENDENT_LOCAL_VERIFIED_PROGRAMME_WITNESS_STOPPED`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`. Tracking cannot grant prescription
 > eligibility or reconstruct unavailable historical inputs; Cohort 5 km ingestion
 > remains blocked. Persistence, selection storage, manual entry, real profiles/tests
