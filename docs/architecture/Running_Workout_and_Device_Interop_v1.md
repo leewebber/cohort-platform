@@ -1,5 +1,12 @@
 # Running Workout and Device Interop v1
 
+> **Live continuation — 2026-10-05:** B1–B4 are complete within the
+> [current checkpoint's recorded scopes](../checkpoints/CURRENT_CHECKPOINT.md).
+> Earlier B1 pending/B2–B4 unauthorised status below is historical.
+> [Sprint C proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> does not enable Cohort-test ingestion, commercial policy or programme adoption,
+> distance/manual-lap execution, or device integration.
+
 **Status:** Binding vendor-neutral running architecture.
 **Approved.** Sprint B1 **implemented, awaiting founder approval**.
 B2–B4 not authorised.

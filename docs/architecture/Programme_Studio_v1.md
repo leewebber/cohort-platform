@@ -1,5 +1,13 @@
 # Programme Studio v1
 
+> **Live continuation — 2026-10-05:** B4 is visually approved and integrated;
+> its bounded overlap migration is recorded hosted-applied/verified in the
+> [B4 handoff](../checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
+> This supersedes the 2026-10-04 pending-review continuation below.
+> [Sprint C profile review](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> is proposed only; Studio remains read-only and no further implementation or
+> content authoring is authorised.
+
 **Status:** Infrastructure architecture **approved**. Stage 1 is
 **COMPLETE**.
 **Recorded:** 2026-09-25

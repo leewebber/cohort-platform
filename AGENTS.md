@@ -146,6 +146,14 @@ record.
 
 ## Current delivery sequence
 
+Sprint C performance-metrics profiles have a completed documentation audit
+and a foundation proposal **awaiting founder approval**. See
+[the Sprint C audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
+and [the proposed architecture](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md).
+`PROGRAMME_METRICS_PROFILE_AUTHORISED=false`; no implementation or real metric
+selection is authorised. The strategic pause before content authoring remains.
+
+
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
 and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).

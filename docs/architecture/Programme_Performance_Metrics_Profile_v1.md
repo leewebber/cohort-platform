@@ -1,5 +1,12 @@
 # Programme Performance Metrics Profile v1
 
+> **Sprint C continuation — 2026-10-05:** [Audit complete](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
+> [Foundation proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> recommends a v3 embedded profile, immutable version-row storage and read-only
+> evidence evaluation. Storage choice and implementation await founder approval;
+> §3 alternatives below remain the original binding direction until accepted.
+> No real metrics are selected and no implementation is authorised.
+
 **Status:** Binding metrics-profile architecture. **Not implemented.**
 No programme metrics are selected or authorised.
 **Recorded:** 2026-09-25

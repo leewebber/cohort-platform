@@ -1,5 +1,16 @@
 # Launch Programme Library v1
 
+> **Live infrastructure continuation — 2026-10-05:** Studio Stage 1 and B1–B4
+> are complete within their recorded scopes; B4 is visually approved/integrated
+> with its bounded overlap migration recorded applied. See
+> [CURRENT_CHECKPOINT](../checkpoints/CURRENT_CHECKPOINT.md) and
+> [B4 handoff](../checkpoints/PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
+> Sprint C [audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
+> is complete and [foundation proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> awaits founder approval. C implementation, D, commercial authoring and hosted
+> publication remain unauthorised. Earlier dated B1/B2 status text and tables
+> below are historical, superseded by this continuation and the live checkpoint.
+
 **Status:** Strategy **approved**. Infrastructure architecture
 **approved**. Programme Studio Stage 1 **COMPLETE**. Sprint B
 running architecture **approved**; B1 **approved, not started**. Programme
@@ -453,9 +464,11 @@ The Cohort product remains not launch-ready.
 | Sprint | Scope | Live flag | Status |
 |--------|-------|-----------|--------|
 | **A** | Programme Studio Stage 1 — read-only review / validation | `PROGRAMME_STUDIO_STAGE_1=COMPLETE` | Integrated at `82ddb17` |
-| **B1** | RunningWorkout v1 domain, validation, projection | `RUNNING_WORKOUT_B1=IMPLEMENTED_AWAITING_FOUNDER_APPROVAL` | Implemented; awaiting approval |
-| **B2** | Versioned benchmark / pace calculation | `PACE_CALCULATION_B2=NOT_AUTHORISED` | Not authorised |
-| **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | After B accepted |
+| **B1** | RunningWorkout v1 domain, validation, projection | `RUNNING_WORKOUT_B1=COMPLETE` | Complete; recorded scope only |
+| **B2** | Versioned benchmark / pace calculation | `PACE_CALCULATION_B2=INFRASTRUCTURE_COMPLETE` | Integrated; hosted migrations recorded applied; adoption/ingestion not granted |
+| **B3** | Verified v2 time execution, targets/actuals | `B3_DEVICE_VALIDATION=COMPLETE_INTEGRATED` | TEST ONLY device closeout; no commercial adoption |
+| **B4** | Read-only structured-running Studio review | `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=VISUALLY_APPROVED_INTEGRATED` | Bounded overlap migration recorded applied/verified |
+| **C** | Programme-version metrics-profile foundation | `PROGRAMME_METRICS_PROFILE_AUTHORISED=false` | Audit complete; proposal awaiting founder approval; not implemented |
 | **D** | Controlled structured authoring workflow | `STRUCTURED_AUTHORING_AUTHORISED=false` | After C accepted |
 
 Deferred (do not block Sprint A): final pace/zone formulas (B);

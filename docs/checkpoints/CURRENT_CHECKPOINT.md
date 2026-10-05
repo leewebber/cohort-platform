@@ -1,5 +1,12 @@
 # Current repository checkpoint
 
+> **Sprint C continuation — 2026-10-05:** Programme performance-metrics-profile
+> audit is complete; [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
+> and [foundation proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> await founder approval. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`, `COHORT_5K_TEST_INGESTION=BLOCKED`.
+> No real metric selection, commercial content or hosted operation is authorised.
+
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,
 > and all four hosted migrations (`20260927120000` through `20260927150000`)
