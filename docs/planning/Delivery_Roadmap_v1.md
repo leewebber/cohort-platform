@@ -4,7 +4,10 @@
 > complete within [their recorded scopes](../checkpoints/CURRENT_CHECKPOINT.md).
 > Sprint C [metrics-profile audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 > is complete; [architecture proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> awaits founder approval. C implementation and real metric/content authoring
+> is revised for optional observational programme/curated/custom tracking and
+> reusable athlete measurement history. C1 is **PAUSED**; pure contracts only
+> are recommended and schema v3 is deferred. Detailed design awaits approval.
+> C implementation and real metric/content authoring
 > remain unauthorised; earlier B1/B2 status wording below is superseded.
 
 **Status:** M10 Athlete/Coach Management and Isolation **closed**. Deeper

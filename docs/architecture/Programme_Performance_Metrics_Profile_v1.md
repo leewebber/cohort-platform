@@ -1,13 +1,19 @@
 # Programme Performance Metrics Profile v1
 
-> **Sprint C continuation — 2026-10-05:** [Audit complete](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md).
-> [Foundation proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> recommends a v3 embedded profile, immutable version-row storage and read-only
-> evidence evaluation. Storage choice and implementation await founder approval;
-> §3 alternatives below remain the original binding direction until accepted.
-> No real metrics are selected and no implementation is authorised.
+> **Founder clarification — 2026-10-05:** Tracking is optional and
+> observational: programme bindings, independently selected curated profiles and
+> athlete custom compositions use supported definitions and reusable athlete-owned
+> measurements. [Revised proposal](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> and [audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
+> record the direction; C1 implementation is **PAUSED** and the detailed design
+> awaits approval. This supersedes the earlier mandatory programme-owned profile,
+> same-version-only evidence and required-profile publication wording below.
+> The remaining dated contract is historical wherever it conflicts with this
+> founder direction. Profiles cannot insert tests, change programming or grant
+> prescription eligibility. No real profile/test content is authorised. Schema
+> v3 is deferred to an optional future programme binding, not revised C1.
 
-**Status:** Binding metrics-profile architecture. **Not implemented.**
+**Status:** Original metrics-profile contract, amended by founder direction above. **Not implemented.**
 No programme metrics are selected or authorised.
 **Recorded:** 2026-09-25
 **Parent:**

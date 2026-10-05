@@ -1,7 +1,12 @@
 # Sprint C audit — programme performance-metrics profiles
 
 **Recorded:** 2026-10-05
-**Status:** Audit complete; foundation proposal awaiting founder approval.
+**Status:** Revised audit complete; founder product clarification recorded;
+revised foundation design awaiting approval. C1 implementation PAUSED.
+**Revision base:** `8347480c11cfb2b29cb90983f731f87bc251ece0`, clean worktree on
+`codex/sprint-c-metrics-profile-audit`. No fetch in this revision;
+`origin/main` remains the cached `031edc5da5d0b9961fb5030e0762f15e978e3f32`.
+Original fetched-state evidence below belongs to the initial audit.
 **Proposal:** [Sprint C foundation architecture](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
 **Binding parent:** [Programme_Performance_Metrics_Profile_v1.md](../architecture/Programme_Performance_Metrics_Profile_v1.md)
 
@@ -68,38 +73,96 @@ contract review; session lineage or canonical exercise identity alone does not
 prove like-for-like test conditions. Prescription, measured actuals, derived
 metrics and coaching interpretation remain separate authorities.
 
-## Recommendation and bounded sequence
+## Founder clarification and revised recommendation
 
-Choose embedded schema v3 over a sibling artifact: one content hash already
-flows through pins, materialisation, B3 launch and Studio. An independently
-hashed sibling would add a second binding to all those consumers. V3 creates
-an explicit compatibility boundary while keeping established v1/v2 goldens.
-Canonical JSONB on the immutable version row is the verified storage projection.
-No published profile backfill, hash rewrite or inferred default profile.
+The founder's subsequent instruction supersedes the initial programme-only
+proposal at `8347480`: programme profiles are optional; independently selectable
+curated profiles and athlete custom compositions use supported metric
+definitions; athlete-owned history is reusable across profiles/programmes.
+Tracking is observational. Selecting a profile or entering a result cannot
+modify programming, insert tests or calculate training targets. Programme test
+weeks remain authored; standalone assessment attempts cannot silently change
+an active programme. Prescription policy and evidence eligibility remain
+separate from tracking eligibility.
 
-The [proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-contains the complete fields, exact authored/runtime binding, evidence-state
-matrix, correction/replay limits, synthetic example and acceptance checks.
-Recommended slices are C1 pure contracts/compiler; C2 local persistence and
-publication guards; C3 read-only evidence adapter/evaluator; C4 read-only Studio.
-Each is separately authorised and accepted. Later athlete presentation is
-separate. No full product score, general formula engine, commercial content or
-benchmark ingestion is hidden within the foundation.
+The [revised proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+now separates metric definitions, curated profile versions, optional programme
+bindings, athlete custom composition/selection revisions, measurement/source
+revisions and authored assessment procedures. A single observation can be shown
+in several profiles; that does not multiply attempts or imply programme
+attribution. Existing recorded results remain authoritative in History and its
+correction audit, read through exact source references; future manually entered
+results need athlete ownership, provenance and append-only correction revisions.
+No duplicate writable actuals ledger is recommended.
 
-Only three material founder decisions are requested: canonical v3 storage/hash
-choice, prospective profile requirement with legacy compatibility, and bounded
-C1–C4 scope followed by separate C1 implementation authority. Real programme
-metrics, weights, normative bands and prescriptions are deferred content
-choices; there are no HYROX/Bali selections in this audit.
+Metric identity moves from programme-local ownership to a shared supported
+definition registry. Shared identity means a common measurement contract, not a
+global fitness score. Profile composition cannot override units, comparability,
+source trust or calculation semantics. Cross-profile/programme history reuse
+is allowed; comparison still requires compatible exact definitions/procedures
+and context. Profile views may narrow eligibility. Older unprovable programme
+links prevent programme test claims, not all independent observational display.
 
-The strategic pause before content creation remains. A+B+C acceptance is a
-prerequisite to even proposing HYROX Base authoring, not permission to author.
-Sprint D and all hosted/publication/assignment actions remain unauthorised.
+Existing-result entry is distinct from actually performing a pinned authored
+assessment. Missing provenance, missing/partial/skipped values, unsupported
+sources and incomparable conditions remain honest states. Curated profile
+examples Longevity/Tactical/Hybrid have no authored membership in this task.
+No real HYROX/Bali metrics, weights, bands, profile content or tests are selected.
+
+The source trace above is retained from the initial audit. Its foundations
+remain reusable, but a fixed-occurrence-only evaluator and mandatory v3 profile
+would unnecessarily exclude independent tracking. No common supported metric
+registry, curated/custom composition revision contract or independent reusable
+measurement projection was established by that trace; these remain proposed.
+The [product plan's deferred Performance Portfolio](../planning/Athlete_Product_Completion_Plan_v1.md)
+provides context, not implementation permission. The legacy
+[assessment vision](../product/Plan_Assessments_Vision.md) is historical planning,
+not test content or a reason to use PlanDefinition runtime.
+
+## Reassessed package/hash and smallest C1
+
+Schema v3 is **not required for C1** or independently selected profiles. Keep
+v1/v2 bytes, hashes, published pins and execution unchanged. Definitions and
+curated profiles have independent immutable versioned digests. Athlete-owned
+custom composition, selection and measurement revisions never affect package
+identity. No published profile backfill or companion attachment to old pins.
+
+If later programme-authoring explicitly binds tracking, recommend an optional
+v3 binding pinning the profile/definition versions and digests plus exact
+authored tests/scopes/windows and programme-owned view rules. Only those authored
+bindings and their immutable dependencies participate in the package hash;
+athlete selections, evidence, evaluation time and independent curated profiles
+are excluded. Programme profiles are optional even for future packages; a
+malformed declared binding fails closed. Mandatory profiles and the former
+`no_performance_claim` publication rule are withdrawn. Honest programme promise
+review remains separately required.
+
+Revised C1 is pure tracking contracts/validation/canonical artifact digests with
+synthetic supplied definitions: profile composition/selection, measurement
+source/revision and assessment/programme-scope reference values. No compiler
+schema change, persistence, production source adapters, derivation engine, UI,
+real profiles/tests, formulas or scoring. Acceptance requirements are specified
+in proposal §8; no implementation gates were run in this revision. The old
+C1–C4 allocation is superseded; future slices must be separately scoped.
+
+Remaining material choices are immutable definition/profile pins versus latest
+content, no package change now with optional future v3 binding versus companion
+binding, and existing-result references versus duplicate writable measurement
+storage. The founder's product direction is already settled. Design approval
+and a later explicit resume/implementation instruction are still required;
+this documentation revision does not resume C1 or any broader Portfolio work.
+
+B2 safeguards remain unchanged: no promotion of tracking values into benchmark
+evidence, no Cohort 5 km ingestion enablement, no automatic training targets,
+no changes to manual benchmark eligibility/revisions or frozen occurrence
+snapshots. Standalone tests are not programme completion. The strategic pause
+before content creation remains; Sprint D/hosted/publication/assignment actions
+are unauthorised.
 
 ## Documentation verification and stop boundary
 
 Local relative Markdown file links in the changed documentation were checked
-for existing targets. `git diff --check` passed. The final change is Markdown
+for existing targets. `git diff --check` passed. The initial audit and this revision are Markdown
 only, committed locally on the documentation branch; final clean worktree and
 unchanged `origin/main` are verified after commit in the task response.
 

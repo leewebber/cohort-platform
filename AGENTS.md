@@ -146,13 +146,15 @@ record.
 
 ## Current delivery sequence
 
-Sprint C performance-metrics profiles have a completed documentation audit
-and a foundation proposal **awaiting founder approval**. See
-[the Sprint C audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
-and [the proposed architecture](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md).
-`PROGRAMME_METRICS_PROFILE_AUTHORISED=false`; no implementation or real metric
-selection is authorised. The strategic pause before content authoring remains.
-
+Sprint C's revised [audit](docs/checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
+and [proposal](docs/architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+record founder direction: optional programme/curated/custom tracking, supported
+metric definitions and reusable athlete-owned measurement history. Tracking is
+observational; profile selection or result entry cannot change programming,
+insert tests or grant prescription eligibility. **C1 implementation is PAUSED**.
+The revised smallest C1 is pure tracking contracts; package schema v3 is deferred
+to a possible optional programme binding. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`.
+No real profiles/tests or implementation are authorised; strategic content pause remains.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

@@ -1,258 +1,315 @@
-# Programme performance-metrics profiles — Sprint C foundation proposal
+# Performance tracking profiles — revised Sprint C foundation proposal
 
-**Recorded:** 2026-10-05
-**Status:** PROPOSED_NOT_AUTHORISED; documentation only, awaiting founder approval.
-**Parent:** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
+**Recorded / revised:** 2026-10-05
+**Status:** Founder product clarification recorded; detailed foundation design
+PROPOSED_NOT_AUTHORISED. C1 implementation PAUSED at founder request.
+**Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
-The recommendation is one immutable programme-owned definition, included in
-canonical programme content, and one read-only evidence evaluation boundary.
-It adds no global fitness score, prescription, adaptation or benchmark-ingestion
-authority. Every future published version should explicitly declare its profile;
-existing published versions without one remain valid and unchanged.
+This revision supersedes the programme-only recommendation at `8347480`.
+Tracking profiles are optional observational views over athlete-owned
+measurements. They can belong to a programme, be independently selected from
+curated profiles, or be composed by an athlete from supported definitions.
+Longevity, Tactical and Hybrid are product examples only: no real profiles,
+metric selections or tests are authored here. No programme enrolment is required
+to keep measurement history or select an independent profile.
 
 ```text
-PROGRAMME_METRICS_PROFILE_SPRINT_C_AUDIT=COMPLETE
+PROGRAMME_METRICS_PROFILE_SPRINT_C_AUDIT=REVISED_COMPLETE
 PROGRAMME_METRICS_PROFILE_SPRINT_C_PROPOSAL=AWAITING_FOUNDER_APPROVAL
+PROGRAMME_METRICS_PROFILE_C1_IMPLEMENTATION=PAUSED
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
 NEXT_IMPLEMENTATION_AUTHORISED=false
 ```
 
-## 1. Canonical storage and hash
+## 1. Product and authority boundaries
 
-Recommend **Plan Package schema v3** with a required `metrics_profile` object
-(`profile_schema_version: 1`). Do not extend the meaning or bytes of schema v1
-or v2. V3 preserves v2 running documents and introduces no exercise identities
-into v1. Keep the compiler in `packages/cohort_plan_package`; Flutter and
-trusted tooling continue consuming that single implementation.
+Selecting a profile organises observations; entering a measurement records a
+fact. Neither operation changes programming, inserts tests, schedules a
+retest, generates a training target, advances an assignment or invokes
+adaptation. Tracking eligibility and prescription eligibility are distinct
+policies. A valid tracking observation can remain wholly ineligible for
+prescription. No profile has permission to promote it automatically.
 
-Persist the canonical profile as JSONB on `programme_versions`, atomically
-with the imported package. This is a verified projection of the canonical
-package object, not a separately editable companion authority. The existing
-`package_content_hash` covers profile content as part of the v3 canonical
-UTF-8 JSON. A separate profile digest may aid diagnostics but cannot replace
-or bypass the package hash. Never hash a database-generated version UUID into
-the package: publication binds the hash and profile to the exact version row.
+Programme test weeks remain authored programme content. An optional tracking
+binding describes how to observe that content, not how to create it.
+Standalone assessments are separately authored and explicitly chosen by the
+athlete; they do not occupy, replace, complete or reschedule an active
+programme occurrence. Any later proposal to place one within a programme
+requires the existing explicit scheduling/content authority, outside Sprint C.
 
-Canonical rules must fix allowed fields, enum values, number representations,
-units, null/absence, stable-ID sorting for unordered collections, and authored
-order for display/test windows. Equivalent input gives identical bytes;
-changing a metric, evidence policy, test link, method, parameter, rounding,
-intent or display definition changes the hash. Athlete evidence is excluded.
+Measured results, supported derived metrics and coaching interpretation remain
+separate. Derivation records its inputs and method, not coaching advice.
+Interpretation requires later approved content. There are no global fitness
+scores, weights, normative bands, rankings, physiological estimates or automatic
+training targets in this foundation.
 
-Future v3 import/publication must verify canonical bytes/hash, payload parity,
-profile validity and exact references before any write. Freeze profile on
-publication/archive using the existing immutable-version protections. Published
-corrections require a new version; default replacement never repins athletes.
-Draft reads retain existing founder/service-role boundaries; athlete reads
-must enforce entitlement to the exact published pinned version, including
-historical private versions. No broad draft/catalogue or athlete-evidence grant.
+## 2. Authorities, identity and versioning
 
-For new v3 versions use an explicit `profile_kind`: `performance` or
-`no_performance_claim`. The latter requires a reason and zero performance
-metrics; it is not an omission escape hatch for a programme claiming outcomes.
-Future launch approval should reject absent/invalid profiles and a
-`no_performance_claim` declaration that contradicts the authored promise.
-Automated checks enforce structure; founder review judges that promise. This
-publication rule is prospective, not retroactive. Supporting the trusted global
-import and private publication paths requires separate reviewed v3 adapters;
-current v2 private publication does not prove a v3 global route.
-
-## 2. Small definition contract
-
-| Definition | Required meaning |
-|---|---|
-| Profile | Schema version, kind, authored intent, primary/secondary metric IDs, ordered assessment windows |
-| Metric identity | Stable authored ID within programme lineage; runtime key is exact version UUID + package hash + metric ID; label is never identity |
-| Classification | `measured` or `derived`; descriptive/diagnostic/outcome role; no inferred coaching interpretation |
-| Units | Closed canonical unit and dimension, explicit display conversion and rounding; reject unknown or inconsistent units |
-| Source policy | Explicit allowed source kinds and capture fields, manual/backfill permission, capability requirement; device sources deferred |
-| Scope | Exact slot/session revision and assessment references; exact block/result field and step/repetition scope when needed |
-| Method | Allowlisted method ID + immutable version + explicit parameters; input/output dimensions and deterministic failure rules |
-| Quality | Required inputs, completeness, supported plausibility/context checks, freshness policy (including explicit none), minimum coverage |
-| Comparison | Named baseline/checkpoint/final windows; compatible test definitions/context, selection/tie-break, improvement direction or none |
-| Presentation | Priority, honest authored label and intent; technical details available in Studio |
-
-Metric IDs cannot be reused for changed meaning. An unchanged ID across versions
-is not comparison permission. Unit codes such as `ms`, `m`, `kg` and `count`
-are a vocabulary proposal, not new capture formats. Each adapter must validate
-and convert existing units explicitly; display rounding is not calculation
-rounding. Band-based improvement requires later authored band authority; none
-is supplied here. Do not infer tests from names, proximity, lineage alone or
-relationship-graph adjacency.
-
-Windows must specify authored assessment membership, date/time precision and
-IANA timezone rules where time matters. Evidence selection is explicit (for
-example latest eligible observation in a named window), with a stable record-ID
-tie-break and duplicate rejection. Freshness uses the declared event time/civil
-date policy, never correction or ingestion time. Missing baseline suppresses
-the comparison while leaving the eligible final observation visible. No
-averaging or selection of a best attempt is implicit.
-
-Keep derivations small: typed measured-field extraction with versioned unit
-conversion, and a versioned difference between two eligible observations.
-No arbitrary expressions, user scripts, weights, composite scores, normative
-bands, rankings or physiological models. The method registry defines frozen
-semantics in code with golden vectors; package parameters are hashed. Unknown
-method versions fail validation/evaluation, never resolve to the newest method.
-Retain old implementations for historical replay. B2 arithmetic is reusable
-only for its existing explicit policy and eligible evidence; it is not a
-default performance metric or threshold estimator.
-
-## 3. Exact authored scope and evidence adapter
-
-Reuse package assessment/comparison IDs as reference hooks. Existing assessment
-`evidence_requirement` is text, not a proven typed evidence-key join. V3 must
-add explicit typed bindings and validate their consistency with existing arrays;
-never reinterpret legacy text or manufacture a relationship from labels.
-
-Compile validates slot keys, session lineage/revision references and declared
-assessment/comparison/evidence IDs. Import/publication then resolves exact
-published protocol UUID/revision, canonical block IDs and result capture shape.
-Running scopes require the B3 attested workout/step/block mapping, supported
-repeat identities and work role, not merely an `authored_running_v1` document.
-Strength/exercise scope uses the executable snapshot and explicit identity;
-Plan Package v1 acquires no exercise IDs. Unsupported scopes fail closed.
-
-At evaluation the authority envelope is: authenticated athlete → assignment
-→ exact programme version/hash → occurrence/slot → linked training session
-and terminal outcome → History record → block/set/step/repetition IDs →
-selected actual fields and correction provenance. Compare independent links;
-reject mismatch, duplicate/ambiguous result trees and incomplete scope. Do not
-join by date, title, display order, current default or `programme_id` alone.
-Start with existing fixed materialised occurrences. Unprovable older records
-stay visible in History but are ineligible for profile evaluation.
-
-A partial session may contain a fully measured eligible test scope only when
-the hashed metric policy explicitly permits it. Skipped required work cannot
-qualify as a complete test. Timer expiry, adherence, terminal slot disposition,
-planned load, frozen B2 target or a human-entered pace are never substitutes
-for actual evidence of the declared test.
-
-**Cohort 5 km benchmark ingestion remains blocked.** Profile declaration,
-B3 completion and exact step links do not enable the B2 ingestion command or
-prove elapsed-inclusive-pauses 5,000 m test eligibility. Manual B2 benchmark
-records remain their own evidence/revision authority; this foundation neither
-writes them nor converts ordinary session results into them. External/device
-sources remain unavailable until separately proven and authorised.
-
-## 4. Evidence states and corrections
-
-Evaluation returns typed states, a nullable value, unit, quality/context,
-selected evidence references, method/version and explicit reason codes. Numeric
-zero is valid only when actually measured and allowed by the field contract.
-
-| Condition | Required projection |
-|---|---|
-| Successful query, no qualifying evidence | `missing`; no zero or invented baseline |
-| Some required scope/fields absent | `partial`; show coverage, suppress whole-test result unless explicit policy permits it |
-| Authored scope skipped | `skipped`; excluded, never zero |
-| Completed scope with pace/value unavailable | `unavailable`; preserve completion fact |
-| Stale / implausible / unsupported source | `ineligible` with reason; no substitution |
-| Eligible individual values but incompatible test, unit or context | Show individual facts; `incomparable` comparison, no delta |
-| Changed actuals | `corrected` provenance alongside current quality state; recompute affected derivations |
-| Query/identity/hash failure | Typed failure; same-context last-good display labelled stale, never empty success |
-| Older version lacks profile | `profile_absent_legacy`; existing execution and History continue |
-
-Correction is an annotation, not a competing measurement status. Read current
-actuals through existing correction authority; do not append another actuals
-ledger. Existing `performance_result_corrections` stores append-only before/
-after changes while current result rows are updated. It is not a complete
-immutable revision API for every historical record.
-
-Every evaluation carries exact input record/result IDs, correction IDs where
-available, a deterministic digest of selected actual values, evaluation time,
-profile/package hash, and method version. Coherent reads must prevent mixing
-pre-correction fields with post-correction audit data. Before claiming historical
-replay, prove complete as-of reconstruction from original values and ordered
-correction chains (including ties and concurrent corrections); otherwise return
-`historical_inputs_unavailable`. Method freezing alone cannot reproduce a prior
-value after mutable actuals have changed.
-
-Use pure on-demand evaluation first, with no persisted metric cache. A later
-cache would require input digests and invalidation after correction; it is not
-part of this foundation. Corrections never modify profile, prescription,
-occurrence snapshot, completion chronology or assignment progression. Window
-selection uses performed date/time precision and authored scope; correction
-submission time must not move evidence into a different test window.
-
-## 5. Programme-specific read projection
-
-Keep measured facts (including manual source labels), derived values (method
-and inputs), and coaching interpretation separate. A difference is descriptive;
-it does not prove causation or improvement attributable to the programme.
-Interpretation is later authored coaching content with its own approval, not
-an evaluator output. No percentile, readiness, discipline or global fitness
-score is introduced. Existing generic Progress facts retain their meaning.
-
-Studio later renders the canonical profile read-only: intent, primary/secondary
-metrics, units, exact tests/windows, permitted sources, methods, quality policy,
-missing/legacy/unsupported findings, and technical binding. Use B4's validated
-artifact/hash and graph review path; derived review JSON never authors the
-profile. Synthetic evaluation preview starts empty, is clearly labelled and
-never persists or selects real athletes. A profile existing does not mean that
-its evidence source is available or that programme content is approved.
-
-Later athlete presentation loads the pinned profile and only that athlete's
-assignment evidence. Separate attempts on the same version by assignment;
-completed/replaced assignments remain inspectable. Baseline/checkpoint/final
-comparisons stay within the explicit scope. Cross-version and cross-programme
-comparison is deferred even when metric labels/IDs match. Identity/assignment
-changes clear last-good state; errors retain it only within the same scope.
-No athlete UI, refresh wiring or presentation is implemented in this audit.
-
-## 6. Synthetic contract example only
-
-A synthetic programme `SYNTHETIC-METRICS-DEMO`, with invented slots
-`test-start` and `test-end`, explicitly references their protocol revisions,
-assessment IDs and an exact test block. `synthetic.elapsed` extracts a captured
-elapsed-duration field into canonical milliseconds via `elapsed_field/v1`.
-`synthetic.elapsed_delta` uses `difference/v1` (final minus baseline) only when
-both exact test scopes and contexts agree. Synthetic inputs 12,000 ms and
-11,000 ms produce -1,000 ms. Missing final input gives `missing`; incompatible
-context gives `incomparable`; a corrected final of 11,500 ms gives -500 ms with
-correction provenance. A skipped test gives no value. This demonstrates only
-contract arithmetic, with no fitness interpretation, bands or prescription.
-
-No HYROX/Bali metrics or content files are created. No real benchmark is used
-as the example. Synthetic references must resolve in isolated future fixtures;
-they must never enter real inventory or publication operators.
-
-## 7. Bounded implementation slices (all require later authority)
-
-| Slice | Scope | Acceptance before next slice |
+| Entity | Authority and stable identity | Version/change rule |
 |---|---|---|
-| C1 | Pure v3 profile types, parser, validator, canonicaliser, method contracts and synthetic fixtures | Golden determinism; every profile edit changes hash; exact v1/v2 Apollo/Bali/B3 goldens unchanged; unknown fields/units/methods/refs rejected; no runtime or persistence |
-| C2 | Local canonical storage, trusted import/private publication adapters, prospective approval guard, exact executable validation | Disposable DB gates: atomic rollback, canonical/payload parity, repeat import idempotency/conflict, immutable profile, draft/RLS/grants, private historical pin reads, replacement without repin, legacy versions unchanged; no hosted apply or adoption |
-| C3 | Read-only fixed-occurrence evidence adapter and pure evaluator; correction provenance/coherent reads | Cross-athlete/assignment/version/hash/scope denial; missing/partial/skipped/unavailable/stale/invalid states; unit conversion; comparison determinism; correction/concurrency/as-of limitations; backfill chronology; no evidence writes or B2 ingestion enablement |
-| C4 | Read-only Studio profile review using synthetic inputs | Exact artifact/hash checks; legacy absence distinct from malformed profile; unsupported capability visible; no writes, real metric selections or athlete consumer |
+| Supported metric definition | Cohort-owned definition registry; stable metric ID + immutable definition version + content digest | Meaning, canonical unit, source contract, assessment requirements, quality/comparison semantics or method change requires a new version. A different concept gets a new ID; label is not identity |
+| Curated tracking profile | Cohort-authored collection; profile ID + immutable version/digest, exact metric-definition dependencies | Selection, ordering, intent or observational filter changes create a new profile version. Longevity/Tactical/Hybrid are not populated in this work; old versions remain resolvable |
+| Optional programme binding | Authored programme-version authority; exact profile version/digest plus authored slot/test/window links | Frozen with the programme version; changing it requires a new programme version. An independent curated selection is not a binding |
+| Athlete custom profile | Athlete-owned profile ID and immutable composition revisions referencing supported definition versions | Athletes may change name, supported metric membership/order and supported view options. Save creates a revision; they cannot author metric semantics, formulas, tests or units |
+| Athlete profile selection | Athlete-owned selection ID/revision referencing an exact curated/custom profile revision; optional programme-binding context | Select/deselect or explicitly upgrade a profile records a new selection state. No silent latest-version upgrade; no measurement copying/deletion or programme rewrite |
+| Athlete measurement | Athlete-owned measurement ID + append-only revision identity; exact metric-definition version, value/unit, performed time and source/context | Correction adds a revision and preserves earlier values. Removing a profile never removes history. Imported History facts remain owned by their original result/correction authority, not a second writable ledger |
+| Authored assessment/test | Separately approved assessment identity + immutable procedure version/digest, required capture/context and definition references | A performed attempt pins the version. Programme use also pins the exact authored slot/protocol revision/scope; standalone use creates its own attempt identity |
 
-Later athlete presentation is a separately allocated task after the foundation
-is accepted, not an implicit C5 licence. Structured authoring Sprint D, real
-profile selection, content authoring and hosted application each need separate
-authority. Accepting C does not release the strategic pause.
+All published artifact content is immutable, including labels and display
+metadata; editing it creates a new artifact version. A registry may mark a
+version deprecated without rewriting its historical meaning or references.
 
-Each implementation slice must run its focused checks and changed-file
-analysis. Architecture-affecting implementation also runs the Phase 2
-consolidation safety gate; broader verification follows repository guidance.
-No warning-baseline exception is inherited. The current documentation audit
-runs link validation and diff checks only; none of these future gates is
-claimed passed here.
+The registry is a shared vocabulary, not a global scoring engine. A profile
+references supported definitions; it does not redefine their meaning. An
+explicit authored programme filter may narrow eligibility but cannot relax
+required measurement validity. Custom profiles cannot invent test equivalence
+or source trust. Registry/profile updates preserve previously selected versions;
+unsupported historical method versions are unavailable, never replaced silently.
 
-## 8. Material founder decisions
+Future storage should preserve these ownership boundaries: definition/profile
+artifacts are canonical content; selections and custom compositions are private
+athlete state; measurements are private athlete evidence. Publication, RLS and
+historical private reads need later explicit design and local proof. No tables,
+columns or grants are added by this documentation task or revised C1.
 
-1. Approve or amend **v3 embedded profile + verified immutable version-row
-   projection**, preserving every existing v1/v2 hash, rather than a companion
-   artifact with a second content identity.
-2. Approve or amend the **prospective explicit profile requirement** for new v3
-   publication, with an honest `no_performance_claim` declaration and permanent
-   legacy compatibility; decide against any retroactive launch/pin mutation.
-3. Approve or amend **C1–C4 foundation scope**, limited derivations and current
-   corrected evidence with honest historical replay limits. Then separately
-   authorise a concrete implementation slice (recommended first: C1).
+## 3. Reusable athlete measurement history
 
-Real metric choices, test prescriptions, bands and weights belong to future
-content-authoring decisions and are not questions blocking this infrastructure
-proposal. There is no request to approve hosted work or programme changes.
+Maintain one logical athlete-owned measurement history, independent of profile
+or programme lifecycle. A profile queries eligible observations by definition,
+source and context; it does not own copies. Reusing a measurement across two
+profiles or programmes is reference reuse, not two attempts. Identity-based
+source deduplication prevents a manual import of an existing result from
+silently becoming another independent performance; unresolved duplicates stay
+visible with ambiguity rather than contributing twice.
+
+For new manually entered existing results, future capture records the original
+performed date/time precision, IANA timezone where required, canonical unit,
+metric-definition version, source declaration, context and any declared test
+procedure. Do not require a fictional programme or fabricate a completed
+assessment. Missing provenance can allow a labelled observation while making
+it ineligible for comparison or a test-specific metric. Unknown units and
+invalid values cannot be silently converted into valid measurements.
+
+Existing programme/session results are read through source adapters referencing
+record/block/set/step IDs, original result snapshots, correction audit and an
+input digest. Do not add another writable copy of actuals. Programme-specific
+claims require verified athlete → assignment → version/hash → occurrence/slot
+→ training session/outcome → History/result scope links. Older records with
+insufficient programme links can still be eligible for an independent metric
+when their metric/source contract is satisfied; they cannot be labelled a
+programme test by inference.
+
+Reuse across programmes does not imply attribution to each programme. A
+programme baseline may explicitly accept an earlier independent observation;
+a programme test-completion claim must use the bound authored scope. Programme
+windows default to their declared assignment context; broader observations
+require an explicit authored rule and are labelled as external to that attempt.
+Cross-profile display is allowed. Cross-definition-version or cross-test
+comparison requires an explicit supported equivalence rule; matching labels,
+movement identity or lineage alone do not establish it. No such equivalence
+rules are invented in C1.
+
+## 4. Entry and assessment routes
+
+| Route | Evidence produced | Boundary |
+|---|---|---|
+| Enter a result already performed | Athlete-declared observation with source, event chronology and context | Entry is not execution, proof of an authored test, trusted device evidence or programme completion |
+| Reuse a recorded session result | Read projection of exact result/correction identity | Never planned loads, timer expiry, frozen target or terminal-slot count used as measured performance |
+| Perform an authored programme test | Attempt linked to the exact authored slot, published protocol revision and required capture scope | Tests/test weeks must already be authored; a profile cannot insert them |
+| Explicitly perform a standalone authored assessment | Separate attempt, pinned procedure and capture scope | No implicit programme occurrence, completion, schedule change or target calculation |
+
+A tracking definition declares what sources and capture fields it accepts,
+canonical/display units, completeness/context checks, freshness (including
+explicit none), and any required assessment identity. Programme bindings can
+add exact baseline/checkpoint/final windows; independent profiles need not have
+programme windows or scheduled tests. Selection/tie-break rules must be explicit
+(for example latest eligible observation, then stable source ID), based on
+performed time rather than correction/entry time. Missing baseline does not
+hide an eligible current result. No implicit best-attempt choice or averaging.
+
+For a full-test result, incomplete required work cannot qualify. A partial
+session may contain an eligible complete measurement scope only when the
+supported contract and any programme filter permit it. Incomparable conditions
+keep individual facts visible without a delta. No test name, proximity,
+relationship adjacency or displayed ordinal can create evidence identity.
+
+## 5. Honest states, correction and prescription separation
+
+| Condition | Required observational state |
+|---|---|
+| No profile selected or programme has no binding | `not_selected` / `profile_not_configured`; valid optionality, not missing athlete data |
+| Successful query, no eligible observation | `missing`; no zero, placeholder score or inferred baseline |
+| Required scope/fields incomplete | `partial`; explicit coverage and no whole-test value unless allowed |
+| Assessment work skipped | `skipped`; no measured zero |
+| Performed work but requested value absent | `unavailable`; retain the completion fact |
+| Stale, invalid context or unsupported source | `ineligible` with reason; preserve honest original observation where safe |
+| Valid observations but incompatible procedure/definition/context | `incomparable`; individual facts, no comparison |
+| Corrected result | Current value/quality with correction provenance; prior revision retained where available |
+| Query, identity, hash or dependency failure | Typed failure, not successful emptiness; last-good state only for the same athlete/selection/scope |
+
+New manual measurements should have append-only revisions. Existing result
+corrections currently mutate result rows while appending before/after audit
+entries. Future adapters need coherent reads, selected-value digests and exact
+source correction references. Historical replay must prove complete input
+reconstruction; otherwise report `historical_inputs_unavailable`. A frozen
+method alone cannot reproduce a value after inputs change. No persistent metric
+cache or inferred immutable result revision is proposed for C1.
+
+Tracking validity is **not** prescription permission. Any future prescription
+consumer must independently validate an explicitly approved, versioned policy,
+eligible evidence, exact scope and its own freshness/source rules. A profile
+selection, manual observation, assessment label or tracking digest is not a
+credential for B2 target calculation. Do not extend B2 accepted sources,
+commands, percentage bands, correction semantics or snapshot eligibility.
+
+**Cohort 5 km ingestion remains blocked.** B3 completion and profile/assessment
+links do not prove the exact 5,000 m elapsed-inclusive-pauses test required by
+B2. Existing manual benchmark evidence/revisions and occurrence target freeze
+retain their current authority. A later observational adapter may reference a
+permitted existing benchmark without writing, promoting or reclassifying it.
+Corrections to tracking history cannot alter an already frozen target. Device
+trust/import, distance/manual-lap execution and commercial pace policy remain
+separately gated.
+
+## 6. Schema and hash reassessment
+
+**Schema v3 is not required for revised C1 or independent tracking.** Metric
+definitions and curated profiles need their own versioned canonical artifacts;
+custom profile revisions, selections and measurement revisions have independent
+identities. None of them requires changing a Plan Package.
+
+Recommend reserving a future **schema v3 optional `tracking_profile_binding`**
+for programme-authored tracking. Do not introduce it in C1 or extend existing
+v2 parsing/bytes. A new schema marks the future package capability clearly;
+there is no mandatory-profile rule and no `no_performance_claim` escape field.
+An absent binding is valid for both old and new versions. Malformed declared
+bindings fail closed; publication does not reject a programme simply for having
+no tracking profile. Programme promise/content review remains a human gate.
+
+If/when that binding is implemented, its programme content hash includes:
+
+- Binding schema version, exact profile ID/version/digest and recursively pinned
+  metric-definition versions/digests (including frozen method dependencies).
+- Programme-authored observation scope: assessment IDs/procedure versions,
+  slot keys and session protocol revisions, exact block/step/repetition links
+  where needed, evidence-source restrictions, comparison windows and selection
+  policy. Existing package assessment/session declarations remain hashed too.
+- Any programme-authored metric subset, ordering, display labels/intent or
+  allowed observational parameters that alter the bound view.
+
+Hash only present programme-owned fields; published dependency artifacts must
+remain immutable/resolvable and validators verify each digest. Registry changes
+cannot change a pinned package's effective meaning. The full external catalogue
+is not copied into every package. An optional version-row JSONB projection
+would be verified from the binding, not become independently editable authority.
+No generated row UUID or athlete ID participates in canonical package bytes.
+
+The programme hash **excludes** athlete profile selections/custom compositions,
+measurements/revisions, derived read results, evaluation timestamps, UI state,
+and independently selected curated profiles. A curated profile's own digest
+covers its selections, labels/order, observational rules and immutable definition
+dependency digests; definition digests cover measurement/method meaning, units,
+source/context requirements and comparability rules. Athlete revisions never
+change these authored digests or the programme hash.
+
+Preserve every published v1/v2 package, golden hash, pin, assignment, execution
+path and historical record. Do not backfill profiles/bindings into immutable
+versions or infer them from programme names. A later desire to bind tracking to
+an existing programme requires an explicitly authored new version, not a side
+artifact silently attaching new content to an old pin. That operational work
+remains unauthorised.
+
+## 7. Read-only review and later athlete presentation
+
+Studio later reviews optional programme binding, resolved immutable profile and
+metric dependencies, exact authored test/window scopes and unavailable sources.
+It uses B4 artifact/hash checks and never authors profiles from derived review
+JSON. Missing optional binding is distinct from invalid declared binding.
+Independent curated/custom views later work without an active programme;
+programme-specific views retain exact pin/assignment context. Explicit profile
+upgrades do not relabel older measurements or delete history. Auth/selection
+changes clear stale view state. UI, refresh wiring and assessment execution are
+not implemented or authorised here.
+
+The earlier athlete-defined Performance Portfolio remains deferred in the
+[product plan](../planning/Athlete_Product_Completion_Plan_v1.md). This founder
+clarification extends Sprint C's proposed data contracts to support composition
+and reusable history; it does not authorise that full feature, custom metric
+semantics, targets, radar, scoring or neglected-capability recommendations.
+The historical [assessment vision](../product/Plan_Assessments_Vision.md) is
+context only; its example test lists and legacy PlanDefinition path are not
+content or execution authority.
+
+## 8. Revised smallest C1 (implementation remains paused)
+
+Recommend a pure, UI-free tracking domain contract library, independent of
+programme runtime and the package compiler. C1 should define:
+
+1. Supported metric reference/definition contracts with stable ID, immutable
+   version/digest, canonical units, typed source/context requirements and
+   supported method references. Synthetic supplied registry only.
+2. One profile-composition contract with curated and athlete-owned variants;
+   exact metric references, order, supported view options, profile revision
+   and selection identity. No real registry/profile content or selection writes.
+3. Measurement/source-reference and revision contracts, ownership, performed
+   chronology, declared provenance and quality states; distinguish standalone
+   attempts, manual existing results and existing History references.
+4. Optional programme-binding and authored assessment reference contracts as
+   standalone values only, to exercise separation and future hash boundaries;
+   no Plan Package field, parser or publication change.
+5. Pure validation and deterministic artifact encoding/digests for these
+   contracts. Reject missing/ambiguous dependencies, unsupported units/methods,
+   formula fields and invalid composition/scope; no database/network resolver.
+
+C1 contains reference/type contracts for supported extraction or difference
+methods, not an executable derivation engine, calculation of training targets,
+historical replay implementation or production result importer. Its synthetic
+fixtures demonstrate one definition reused by curated/custom compositions,
+a measurement reused without duplication, a correction reference and optional
+programme scoping; no real test procedure or profile membership is selected.
+
+Future C1 acceptance: deterministic dependency-aware digests; immutable-version
+reference validation; ownership/context isolation; missing/partial/skipped/
+incomparable states; manual entry distinct from test proof; source identity
+reuse; definition incompatibility rejection; and no tracking-to-prescription
+promotion. Existing v1/v2 golden bytes/hashes remain exactly unchanged. Use
+focused unit checks/changed-file analysis and the required architecture safety
+gate when implementation is separately authorised. No warning-baseline
+exception carries forward. These are future requirements, not passes here.
+
+**Excluded:** persistence/migrations/RLS, compiler schema v3, live evidence
+queries or ingestion, runtime evaluation, correction writes, UI/Studio,
+assessment execution or scheduling, arbitrary custom formulas, scoring,
+real curated profiles/metric selections/test content, programme or assignment
+changes, builds, hosted work or push. The old C1–C4 implementation sequence is
+superseded; later persistence, source adapters, programme packaging and UI
+slices must be reallocated after revised C1 review rather than inherited.
+
+## 9. Material decisions remaining
+
+The founder has already settled optional tracking, independent curated/custom
+composition, athlete-owned reusable history and observational defaults. Do not
+ask to reconfirm those product choices. Remaining design choices are:
+
+1. **Definition and profile version authority:** recommend immutable supported
+   definition/profile versions with explicit athlete selection upgrades and
+   custom composition revisions. Alternative: follow latest definitions/profile
+   content automatically, making historical meaning drift. Settle before C1.
+2. **Package boundary:** recommend no package change in C1; reserve future v3
+   for optional authored programme bindings with only the content above hashed.
+   Alternative: a later version-owned companion binding needs its own immutable
+   hash and checks throughout review/read paths. Full later storage mechanics
+   can wait; settle C1's package exclusion now.
+3. **Measurement source authority:** recommend references to existing History
+   actuals/corrections, and append-only revisions for future new manual results,
+   both forming one logical athlete history. Alternative: copy all actuals into
+   a second writable measurement ledger, with duplicate/correction drift risk.
+   Settle the source/reference contract before C1; database mechanics can wait.
+
+A later explicit request must resume/authorise revised C1. This documentation
+revision does not resume implementation, author real profiles/tests or release
+the strategic pause before content creation. Tracking requirements confer no
+hosted publication, assignment, prescription-policy or B2 ingestion authority.

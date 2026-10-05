@@ -1,11 +1,15 @@
 # Current repository checkpoint
 
-> **Sprint C continuation — 2026-10-05:** Programme performance-metrics-profile
-> audit is complete; [audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
-> and [foundation proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> await founder approval. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
+> **Sprint C revised continuation — 2026-10-05:** Founder clarified optional,
+> observational tracking across programme, curated and athlete-created profiles,
+> using supported metric definitions and reusable athlete-owned measurements.
+> [Revised audit](./PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md) and
+> [foundation proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
+> record the design. C1 implementation is **PAUSED**; recommended C1 is pure
+> tracking contracts, not schema v3/compiler work. `PROGRAMME_METRICS_PROFILE_AUTHORISED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`, `COHORT_5K_TEST_INGESTION=BLOCKED`.
-> No real metric selection, commercial content or hosted operation is authorised.
+> No profile selection/result entry may change programming, insert tests or
+> generate training targets. No real profile/test content or hosted work is authorised.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,
