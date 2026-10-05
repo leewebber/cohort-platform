@@ -1,6 +1,6 @@
 # B4 overlapping running advisory scope authority proposal
 
-**Status:** `REQUIRES_SEPARATE_MIGRATION_APPROVAL`
+**Status:** `IMPLEMENTED_LOCALLY_AWAITING_INTEGRATION_AND_HOSTED_APPROVAL`
 
 **Recorded:** 2026-10-04
 
@@ -48,3 +48,29 @@ No migration file, compiler rule, hosted object, or package hash is changed by
 the current B4 implementation. Studio labels detected overlap as invalid for
 review, but that label is explicitly defence in depth and does not claim the
 canonical gap is closed.
+
+## Implementation record — 2026-10-05
+
+Founder approved the bounded proposal after visually approving B4 at
+`993e51649c2e6c82a740b97062456407a2f84a59`. Local implementation commit
+`fb8b6b65a668869d638c64043c3b3f87b94cc81d` now closes the Dart/SQL/Studio
+agreement gap for future publication once integrated and, for SQL authority,
+once its migration is separately approved and applied.
+
+- canonical Dart validation emits `overlapping_advisory_step_scope` when a
+  second attachment claims an authored step;
+- additive migration
+  `20261005120000_reject_overlapping_running_advisory_scope.sql` applies the
+  same rule to `public.cohort_authored_running_v1_is_valid(jsonb)` while
+  retaining its owner, immutable volatility, fixed `search_path`, and
+  service-role-only execution grant;
+- Programme Studio reports the canonical failure code and does not attempt to
+  soften or repair invalid content;
+- shared cases prove partial and identical overlap fail, while disjoint scopes,
+  one attachment spanning several steps, and repeated execution of one scoped
+  work step remain valid; and
+- unchanged valid canonical documents retain their existing bytes and hashes.
+
+This record does not authorise hosted migration apply, programme publication,
+or programme-content adoption. The preceding proposal text is retained as the
+dated rationale and pre-implementation state.

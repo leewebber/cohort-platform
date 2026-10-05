@@ -21,11 +21,12 @@
 > was not device-validated and the absence of an audit row is expected. The
 > dated 2026-10-03 mismatch attempt remains preserved in the device-validation
 > handoff and is superseded by its final closeout section.
-> B4 Programme Studio structured-running review is **IMPLEMENTED LOCALLY AND
-> AWAITING FOUNDER VISUAL REVIEW**. It is a read-only derived surface and does
-> not author or approve programme content. Cross-attachment advisory scope
-> overlap remains a canonical Dart/SQL authority gap requiring separate
-> migration approval. Proposal and handoff:
+> B4 Programme Studio structured-running review is **VISUALLY APPROVED** at
+> `993e51649c2e6c82a740b97062456407a2f84a59`. It remains a read-only derived
+> surface and does not author or approve programme content. The bounded
+> cross-attachment advisory-scope authority correction is implemented locally
+> in canonical Dart, Studio, and additive SQL migration form, but is not
+> integrated or applied on Cohort Field Manual. Proposal and handoff:
 > [`Programme_Studio_Structured_Running_B4_Proposal_v1.md`](../architecture/Programme_Studio_Structured_Running_B4_Proposal_v1.md),
 > [`PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md`](./PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_HANDOFF.md).
 > Handoffs:
@@ -110,10 +111,11 @@
 > `B3_DISTANCE_EXECUTION=false`,
 > `B3_MANUAL_LAP_EXECUTION=false`,
 > `B3_SLICE_3_STARTED=true`,
-> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=IMPLEMENTED_LOCAL_AWAITING_FOUNDER_VISUAL_REVIEW`,
+> `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4=VISUALLY_APPROVED_LOCAL_AWAITING_INTEGRATION`,
 > `PROGRAMME_STUDIO_STRUCTURED_RUNNING_B4_IMPLEMENTATION_AUTHORISED=true`,
-> `B4_OVERLAPPING_ADVISORY_SCOPE_CANONICAL_REJECTION=false`,
-> `B4_OVERLAPPING_ADVISORY_SCOPE_MIGRATION_AUTHORISED=false`,
+> `B4_OVERLAPPING_ADVISORY_SCOPE_CANONICAL_REJECTION=IMPLEMENTED_LOCAL`,
+> `B4_OVERLAPPING_ADVISORY_SCOPE_MIGRATION_AUTHORISED=true`,
+> `B4_OVERLAPPING_ADVISORY_SCOPE_HOSTED_MIGRATION_APPLIED=false`,
 > `PRIVATE_PROGRAMME_INFRASTRUCTURE=APPROVED`,
 > `LEE_BALI_HYBRID_BASE=IMPLEMENTED_AWAITING_FOUNDER_VISUAL_APPROVAL`,
 > `LEE_BALI_HYBRID_BASE_PRIVATE=true`,

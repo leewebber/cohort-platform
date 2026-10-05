@@ -1,6 +1,6 @@
 # Programme Studio structured running B4 handoff
 
-**Status:** `IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW`
+**Status:** `VISUALLY_APPROVED; OVERLAP_AUTHORITY_IMPLEMENTED_LOCALLY_AWAITING_INTEGRATION`
 
 **Base:** `f7297751e9fa5b047a2c9e5e279366de27b12f5c`
 
@@ -27,16 +27,36 @@
 - The B3 device-validation package is available only as a developer fixture;
   it is excluded from real inventory and production entrypoints.
 
-## Deliberately unresolved authority gap
+## Founder visual approval
 
-Cross-attachment advisory step overlap requires a coordinated Dart/SQL
-authority correction and therefore a migration. No partial compiler or schema
-change was made. The concrete proposal is
+Founder visually approved the B4 Coach Review at
+`993e51649c2e6c82a740b97062456407a2f84a59`, including the scrollable
+policy/hypothetical-calculation layout correction. The isolated preview was
+stopped before final full-suite verification and remains stopped.
+
+## Overlap authority implementation
+
+The separately approved bounded authority correction is implemented locally at
+`fb8b6b65a668869d638c64043c3b3f87b94cc81d`. The concrete proposal and dated
+rationale remain at
 [`B4_Overlapping_Running_Advisory_Scope_Authority_Proposal.md`](../architecture/B4_Overlapping_Running_Advisory_Scope_Authority_Proposal.md).
 
-Studio detects and labels overlap as invalid review evidence, while existing B3
-snapshot/runtime checks remain fail closed. Publication-time parity is not yet
-closed.
+- Canonical Dart compilation, SQL publication validation, and Studio use the
+  same `overlapping_advisory_step_scope` rule: an authored step may be claimed
+  by at most one advisory attachment.
+- Valid disjoint scopes and one attachment spanning multiple steps remain
+  valid. A repeated work step remains one authored identity and may execute
+  several repetitions under that one attachment.
+- Existing B3 snapshot/runtime overlap checks remain defence in depth.
+- Additive migration:
+  `20261005120000_reject_overlapping_running_advisory_scope.sql`.
+- Migration SHA-256:
+  `7e277ee064a2bff05eaea9056527754d476528ca7be35c21efceebc62c498643`.
+- The migration retains PostgreSQL ownership, immutable volatility, fixed
+  `search_path`, service-role-only execution, B2 unattached validity, and B3
+  execution-mapping validation.
+- The migration is local only. Cohort Field Manual remains at
+  `20260929120000`; no hosted preflight or apply was performed.
 
 ## Founder visual walkthrough
 
@@ -57,23 +77,31 @@ review**:
 
 ## Verification
 
-- Focused Studio, developer-fixture, and B2 calculation/golden tests:
-  **47 passed**.
-- Canonical Plan Package v2 authored-running package tests: **8 passed**.
-- Changed-file `flutter analyze`: **13 files, no issues**.
+- Founder visual review: approved at `993e51649c2e6c82a740b97062456407a2f84a59`.
+- Focused Studio/runtime/Bali/Apollo/B3 compatibility tests: **65 passed**.
+- Canonical Plan Package v2 authored-running package tests: **9 passed**;
+  existing golden hash remained
+  `0a71ff90239eddd9e00fecf77a39f580394fbe6c5e766d7bf1088407e9a2f806`.
+- Disposable Plan Package v2 publication gate: **19 checks passed on each of
+  two reset/replay passes**, including shared Dart/SQL scope cases, grants,
+  publication rollback, v1 compatibility, and unchanged canonical hash.
+- Disposable B3 device-validation fixture gate: **7 checks passed**; compiler
+  and mapping hashes remained unchanged.
+- Changed-file root Flutter analysis and canonical-package Dart analysis: no
+  issues.
 - Phase 2 consolidation safety gate: **6 groups passed, 0 failed**.
+- One uncontended full `flutter test` at the final code HEAD: **3,476 passed,
+  6 skipped, 0 failed**.
 - `git diff --check origin/main...HEAD`: passed at the final documentation
   commit.
-- Isolated local preview: `http://127.0.0.1:4197/` using
-  `lib/main_programme_studio_preview.dart`; no hosted service is contacted.
-
-No full Flutter suite was run: the task requested focused verification and the
-mandatory safety gate, and this local Studio-only surface remains isolated from
-the production entrypoint.
 
 ## Boundaries
 
 No hosted system, programme publication, assignment, athlete snapshot, phone
 build, metrics profile, Garmin path, commercial programme, or production entry
 point is changed. B4 remains a read-only derived review surface and never
-becomes canonical authoring authority.
+becomes canonical authoring authority. Integration and any later hosted
+migration preflight/apply require separate founder approval. Plan Package v2
+does not carry reviewed protocol-graph roles, so the package-level uniqueness
+rule is deliberately fail closed for every declared authored step; the graph
+and runtime continue to enforce that numeric targets attach only to work roles.
