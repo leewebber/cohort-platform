@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **C2 programme-attribution continuation — 2026-10-05:** Founder-approved
+> bounded infrastructure is **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW**
+> on `codex/c2-programme-attribution-authority`, implementation
+> `d0fef6d0e9f7ae3420bce3237dab7cc15265c58a`, preserving proposal `45dc57a`.
+> [Local handoff](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
+> records exact migrations/hashes and verification: 152 tracking/publication tests,
+> 32 compiler tests, zero changed-file diagnostics, local publication/correction
+> concurrency proof and six safety groups. New combined owner-gated read and
+> prospective private-publication canonical retention/separate scope seal remain
+> unwired and unapplied hosted. Legacy versions stay `programme_scope_unproven`;
+> no backfill. Existing package hashes and B2 eligibility boundaries are preserved.
+> `PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=LOCAL_VERIFIED_REVIEW_PENDING`,
+> `PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=false`,
+> `PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. Stop for founder review; no next slice.
+
 > **Sprint C2 deployment — 2026-10-05:** C1's seven reviewed commits and C2's
 > four reviewed commits are integrated through
 > `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba` on origin/main.
@@ -15,24 +31,22 @@
 > package/B2 hashes, ACL/RLS and correction authority were verified; final dry-run
 > has no pending migration. Hosted already grants training_sessions SELECT with
 > RLS disabled; this differs from local proof and was preserved, not repaired.
-> Programme attribution remains **BLOCKED** for an unimplemented complete witness
-> and canonical artifact delivery. No restricted validator execution/bypass.
+> Programme attribution remains **BLOCKED in the deployed reader**; the local
+> continuation above is not a hosted deployment. No restricted validator execution/bypass.
 > `PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true`,
 > `PERFORMANCE_TRACKING_C2_COHERENT_READER=INDEPENDENT_HOSTED_VERIFIED_PROGRAMME_WITNESS_BLOCKED`,
 > `PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false`,
 > `NEXT_IMPLEMENTATION_AUTHORISED=false`. Tracking cannot grant prescription
 > eligibility or reconstruct unavailable historical inputs; Cohort 5 km ingestion
 > remains blocked. Selection persistence, manual entry, real profiles/tests, UI,
-> calculations, package changes and further witness implementation remain separate.
+> calculations, package changes and further product implementation remain separate.
 > Deployment documentation is integrated on origin/main at
 > `005d53dc9b822d7e8075c75e5679324b93edebf2`.
 > [Bounded programme-attribution authority proposal](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
-> is **PROPOSED_NOT_AUTHORISED**, documentation only: one owner-gated combined
-> definer read and prospective immutable publication-artifact retention.
-> Original canonical bytes are not retained by inspected publication paths and
-> general exact reproduction is unproven; legacy scope must remain unproven.
-> Client bytes/hash equality cannot substitute. No hosted refresh, implementation,
-> permission remediation or production wiring is authorised by this proposal.
+> is now founder-approved and locally implemented as recorded above. Its forensic
+> legacy findings remain: original bytes were not retained, general exact
+> reproduction is unproven and matching client bytes/hash cannot substitute.
+> Hosted grants/RLS remain historical evidence; no permission repair or refresh.
 
 > **Live delivery pointer:** Running Pace Foundation B2 infrastructure is
 > **COMPLETE**. Its implementation is integrated on `origin/main` at `a275223`,

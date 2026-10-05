@@ -165,7 +165,8 @@ applied and SELECT-verified on Cohort Field Manual, ledger 115; see
 and [read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 Existing hydration is not coherent tracking authority. The independent adapter/
 bridge remain unwired; no production consumer is authorised. Programme attribution
-is blocked for an unimplemented complete witness and canonical artifact delivery.
+remains blocked in the deployed independent reader; the new local continuation
+is verified and awaiting founder review below.
 Hosted already grants training_sessions SELECT with RLS disabled; the local test
 baseline denies SELECT. Both facts are preserved; do not repair permissions or
 admit claims from the hosted grant. No restricted validator execution/bypass.
@@ -176,11 +177,16 @@ profiles/tests, content authoring, witness expansion and further hosted operatio
 remain separately scoped. Deployment documentation is integrated at
 `005d53dc9b822d7e8075c75e5679324b93edebf2`.
 The [bounded programme-attribution authority proposal](docs/architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
-is documentation only, awaiting founder approval: narrow owner-gated combined
-read authority and prospective publication-artifact retention; legacy scope
-without proven original bytes remains unproven. Read-time client bytes/hash
-equality cannot supply that authority. No witness/retention implementation,
-permission remediation or next slice is authorised by this proposal.
+is founder-approved and **implemented locally, awaiting review** on
+`codex/c2-programme-attribution-authority`; see the
+[local programme-attribution handoff](docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
+It adds a narrow owner-gated combined read and future-only immutable canonical
+artifact/separate authored-scope seal capture through trusted private publication.
+Legacy scope without retained proof remains unproven; no backfill. Package v1/v2
+hashes, original publication entrypoints and independent/correction authorities
+are preserved. The bridge remains unwired and tracking grants no prescription
+eligibility. No hosted apply, permission remediation, real publication, production
+wiring or next slice is authorised; stop for founder review.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

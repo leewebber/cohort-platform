@@ -29,19 +29,25 @@ orphaned rows, mismatched audit ownership/session/scope and malformed source
 fields are typed failures. Transport failures expose no exception details.
 
 Optional programme claims require both matching raw History origin links and a
-coherent verified witness from the future existing-authority join. That reader
-must verify assignment/version/hash/occurrence/outcome/session and immutable
-slot/protocol/block/running scope. C2 checks the witness exactly but does not
-implement the join or accept matching labels as proof. The concrete RPC refuses
-all supplied programme claims: retained History contradictions and missing links
-are distinguished, while the required actual-session SELECT is unavailable. No
-canonical package artifact or verified programme witness is admitted. Missing witnesses fail
-closed; the adapter does not silently drop a claim and return independent data.
-An independent observation makes no programme/test attribution claim.
-The bridge maps an invisible/absent record with a supplied claim to explicit
-`programme_scope_unproven`; only independent queries return ordinary missing.
-Authenticated local proof denies direct training_sessions SELECT while independent
-History succeeds. See the [review and proposed witness boundary](../../../docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md).
+coherent verified witness. The deployed independent reader still refuses those
+claims. The new local [programme reader](programme_history_rpc_reader.dart) uses
+one owner-gated combined RPC, independently recompiles retained canonical bytes,
+checks their original hash and validates the separately hashed publication scope
+seal. It then validates assignment/version/hash/occurrence/outcome/session and
+exact slot/protocol/block/running scope before admitting a witness. The seal
+attests supported authored identities and bodies observed at publication; the
+original package hash does not cover protocol bodies. Live supported-body drift
+fails closed. No second remote read or automatic independent fallback occurs.
+
+Future trusted private publication captures immutable artifacts atomically.
+Original unretained publication paths and legacy versions remain
+`programme_scope_unproven`; matching client bytes/hash strings cannot replace
+server retention. Neither reader is registered with a production consumer.
+Authenticated local proof denies direct training_sessions and artifact SELECT
+while the combined RPC resolves owned scope. Foreign IDs, coaches and malformed
+claims do not admit evidence. An independent observation makes no programme/test
+attribution claim. Programme attribution alone does not prove an assessment was
+performed. See the [local programme handoff](../../../docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
 
 ## Supported raw field scopes
 
@@ -131,4 +137,8 @@ checks synthetic ownership/completeness/bounds and runs three two-session races
 with a statement-snapshot barrier. Existing correction transactions and permissions
 are preserved. This does not attest hosted permissions or privileged corruption.
 See the [handoff](../../../docs/checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md)
-for stopped programme authority and canonical artifact gaps.
+for the historical independent boundary. The new
+[programme gate](../../../supabase/tests/run_c2_programme_attribution_gate.sh)
+adds v1/v2 publication rollback/retry/immutability, legacy gaps, owner isolation,
+response limits and concurrent publication/correction snapshot proofs. Its
+fixtures are synthetic; it does not attest hosted permissions or deployment.

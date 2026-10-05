@@ -4,7 +4,7 @@
 **Status:** Revised contract architecture FOUNDER_APPROVED; C1 INTEGRATED at
 `72c1281f0966f2a6485873f6071b0e000ba1e000`. C2's reviewed independent range is
 integrated through `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba`; its RPC is hosted
-SELECT-verified, ledger 115. Programme witnesses remain blocked; bridge/adapter
+SELECT-verified, ledger 115. Hosted programme witnesses remain blocked; bridge/adapter
 remain unwired. See [deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
 for exact scope and preserved hosted/local session-SELECT discrepancy.
 **Handoff:** [C1 implementation and verification](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
@@ -13,10 +13,12 @@ The explicit C1 and bounded C2 authorities superseded their earlier pauses;
 neither grants a broader tracking-product licence. C2 has a deployed independent
 RPC and unwired bridge; no production consumer, persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 **Coherent reader continuation:** [local proof and stopped programme authority](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-**Independent reader review:** [scoped fix, authenticated permission proof and proposed witness boundary](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md). Programme attribution remains stopped.
+**Independent reader review:** [scoped fix, authenticated permission proof and proposed witness boundary](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md). Programme attribution remains stopped in the deployed independent reader.
 **Programme-attribution follow-up:** [bounded authority and canonical-retention proposal](./Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md).
-Documentation only, awaiting approval; no client-byte/hash-only authority,
-legacy reconstruction or permission remediation. Schema v3 remains outside C2.
+Founder-approved bounded local continuation is now verified and awaiting review;
+see [implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
+No client-byte/hash-only authority, legacy reconstruction, permission remediation
+or hosted deployment. Schema v3 remains outside C2.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
@@ -36,7 +38,8 @@ PROGRAMME_METRICS_PROFILE_C1_IMPLEMENTATION=INTEGRATED
 PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true
 PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true
 PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false
-PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=BLOCKED
+PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=LOCAL_VERIFIED_REVIEW_PENDING
+PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -337,8 +340,9 @@ authorised an unwired read-only History adapter; its independent pure work is
 locally verified. The [C2 handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
 records the original stopped portions; the
 [deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
-now verifies only independent RPC deployment. Complete programme attribution and
-production wiring remain stopped. Full later
+now verifies only independent RPC deployment. Programme attribution is now locally verified in the bounded continuation
+[handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md);
+hosted deployment and production wiring remain stopped. Full later
 storage/package choices remain deferred. C1 does not author real profiles/tests
 or release the strategic pause before content creation. Tracking confers no
 hosted publication, assignment, prescription-policy or B2 ingestion authority.

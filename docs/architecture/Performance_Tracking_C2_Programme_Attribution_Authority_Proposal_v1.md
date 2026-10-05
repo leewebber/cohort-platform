@@ -1,12 +1,16 @@
 # Performance Tracking C2 — bounded programme-attribution authority
 
-**Recorded:** 2026-10-05. **Status:** PROPOSED_NOT_AUTHORISED; documentation only.
+**Recorded:** 2026-10-05. **Status:** FOUNDER_APPROVED; LOCAL_IMPLEMENTED_VERIFIED_AWAITING_REVIEW.
+[Implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
+records the exact local boundary, migrations and gates. No hosted apply or wiring.
+The inspection evidence below is the original proposal survey.
 Inspected clean, fetched HEAD/origin/main:
-`005d53dc9b822d7e8075c75e5679324b93edebf2`. No hosted contact or tests in this task.
+`005d53dc9b822d7e8075c75e5679324b93edebf2`. No hosted contact or tests during the original proposal inspection.
 The [C2 deployment record](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
 is historical verification, not a refreshed hosted survey. Independent coherent
 History reads are deployed; adapter/bridge remain unwired. Programme claims
-remain blocked. This refines the [existing witness proposal](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md#programme-witness-follow-up--proposal-only)
+remain blocked in the deployed independent reader; local attribution is now
+verified as recorded in the handoff. This refines the [existing witness proposal](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md#programme-witness-follow-up--proposal-only)
 and supersedes its read-time caller-supplied canonical-artifact option.
 Binding: [approved tracking architecture](./Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md),
 [C1 contracts](../../lib/domain/performance_tracking/README.md),
@@ -28,7 +32,7 @@ calculations and prescription policy remain outside this boundary.
 
 ## Combined RPC contract and ownership
 
-Proposed signature (not implemented):
+Approved signature (implemented locally, unwired):
 `public.read_performance_tracking_programme_history_v1(p_record_id uuid, p_programme_claim jsonb) returns jsonb`.
 The claim is required and closed. It pins assignment/occurrence UUIDs, actual
 training-session BIGINT as a decimal string, programme-version UUID, package
@@ -197,7 +201,9 @@ Prove the new definer path against denied parent SELECT, with explicit owner
 checks. Auditing/removing hosted grants, enabling RLS and checking other
 consumers requires separate security-remediation authority; no repair here.
 
-## Proposed local acceptance gates — not run for this proposal
+## Approved local acceptance gates
+
+Originally proposed without execution; current local results are in the handoff.
 
 1. Disposable DB replay: only approved function/artifact/future-capture deltas;
    preserve existing ACL/RLS, History/correction/completion mutation bodies,
@@ -242,6 +248,7 @@ consumers requires separate security-remediation authority; no repair here.
    original artifacts exist. Client bytes/hash equality and fabricated backfill
    are not acceptable substitutes.
 
-Both decisions precede implementation. Neither authorises hosted deployment,
+Founder approved both decisions for this bounded local implementation.
+Neither authorises hosted deployment,
 real programme publication, permission remediation, production wiring or the
 next tracking-product slice. B2 evidence policy/ingestion boundaries remain intact.
