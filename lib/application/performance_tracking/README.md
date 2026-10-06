@@ -34,7 +34,10 @@ claims. The new local [programme reader](programme_history_rpc_reader.dart) uses
 one owner-gated combined RPC, independently recompiles retained canonical bytes,
 checks their original hash and validates the separately hashed publication scope
 seal. It then validates assignment/version/hash/occurrence/outcome/session and
-exact slot/protocol/block/running scope before admitting a witness. The seal
+exact slot/protocol/block/running scope before admitting a witness. Closed
+resolved assignment/version/projection/occurrence/outcome/session/frozen-source
+projections are checked independently against History and the seal; an echoed
+claim cannot substitute. Missing proof remains unproven and contradictions fail. The seal
 attests supported authored identities and bodies observed at publication; the
 original package hash does not cover protocol bodies. Live supported-body drift
 fails closed. No second remote read or automatic independent fallback occurs.

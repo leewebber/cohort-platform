@@ -1,6 +1,6 @@
 # Performance Tracking C2 — bounded programme-attribution authority
 
-**Recorded:** 2026-10-05. **Status:** FOUNDER_APPROVED; LOCAL_IMPLEMENTED_VERIFIED_AWAITING_REVIEW.
+**Recorded:** 2026-10-05. **Status:** FOUNDER_APPROVED; LOCAL_REVIEW_FIXED_VERIFIED_AWAITING_INTEGRATION_APPROVAL.
 [Implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
 records the exact local boundary, migrations and gates. No hosted apply or wiring.
 The inspection evidence below is the original proposal survey.

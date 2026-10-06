@@ -177,7 +177,7 @@ profiles/tests, content authoring, witness expansion and further hosted operatio
 remain separately scoped. Deployment documentation is integrated at
 `005d53dc9b822d7e8075c75e5679324b93edebf2`.
 The [bounded programme-attribution authority proposal](docs/architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
-is founder-approved and **implemented locally, awaiting review** on
+is founder-approved and **locally reviewed with scoped fixes, awaiting integration approval** on
 `codex/c2-programme-attribution-authority`; see the
 [local programme-attribution handoff](docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
 It adds a narrow owner-gated combined read and future-only immutable canonical

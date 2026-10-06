@@ -1,6 +1,6 @@
 # Performance Tracking C2 — local programme-attribution handoff
 
-**Date:** 2026-10-05. **Status:** LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW.
+**Date:** 2026-10-05. **Status:** LOCAL_REVIEW_FIXED_VERIFIED_AWAITING_INTEGRATION_APPROVAL.
 Founder approved the [bounded proposal](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md): owner-gated combined read and future-only publication retention; legacy scope stays unproven, with no backfill.
 
 ## Integration boundary
@@ -11,7 +11,8 @@ Clean start/proposal commit: `45dc57a14efbcbcce74dfef9c2d17cf5d7ffd355`.
 Cached origin/main remained `005d53dc9b822d7e8075c75e5679324b93edebf2`;
 no fetch, push or hosted contact in this implementation task.
 Implementation commit: `d0fef6d0e9f7ae3420bce3237dab7cc15265c58a`.
-The following documentation commit closes this local slice. Integration starts
+Original closeout commit: `f52f9fa07930306e8b163c7285b46ea0f01b87a0`.
+The initial implementation integration range starts
 at the exclusive origin/main base above and includes the preserved proposal,
 implementation and documentation: three linear commits, no merges.
 Both Sprint C audits and the reviewed C1/independent C2 implementations remain
@@ -21,7 +22,7 @@ ancestors. No hosted migrations were applied: recorded hosted ledger remains
 | Additive migration | SHA-256 |
 |---|---|
 | `20261005140000_tracking_publication_artifact_retention.sql` | `b0380ba02c0e778b505019a7dc55e62a7d2c7a7642c4c9b454d5b595a62c4cdb` |
-| `20261005141000_tracking_programme_coherent_read.sql` | `8ac03ecbe3c8829bc73d60c2c8c83990e74fbb3c8f6ec03d3a433925fac95dc6` |
+| `20261005141000_tracking_programme_coherent_read.sql` | `a603d560108cc6a2d75f915e710948951e3a6c9ed5042f371d57af838583931d` |
 
 ## Retention and precise seal meaning
 
@@ -92,7 +93,7 @@ comparison eligibility or B2 prescription eligibility. Historical inputs missing
 from old audits remain unavailable; timestamp ties do not establish commit order.
 `canReconstructHistoricalInputs` and `grantsPrescriptionEligibility` remain false.
 
-## Verification in this task
+## Initial implementation verification (recorded at f52f9fa)
 
 - Focused root tracking, bridge and private-publication compatibility: **152 tests passed**.
 - Compiler golden/v2 authored-running/B3 mapping/UUID/retained transport tests: **32 passed**; original v1/v2 golden bytes/hashes unchanged.
@@ -124,3 +125,90 @@ administrator changing database authority. No claim of general legacy recovery.
 No real publication, athlete/programme changes, production consumer/UI, profile
 storage, manual entry, scoring, calculation, prescription policy, benchmark
 ingestion or next slice. Stop for founder review; no push.
+
+## Pre-integration review — 2026-10-06
+
+**Verdict:** scoped defects fixed; local review gates pass. Stop for founder
+integration approval. Started on exact expected branch/clean HEAD
+`f52f9fa07930306e8b163c7285b46ea0f01b87a0`, with cached origin/main/base
+`005d53dc9b822d7e8075c75e5679324b93edebf2`. No fetch or hosted refresh.
+All prior commits are preserved; no amend, rebase, merge or permission remediation.
+
+### Findings and separate fixes
+
+1. **Missing versus contradictory source proof:** a completed History record
+   with NULL outcome completion_record_id returned conflict, contrary to the
+   approved legacy-unproven contract. Duplicate exact History source blocks
+   were likewise labelled unproven rather than an ambiguous conflict.
+   `c338472d6378266db0618e2ffa9cf4ddf7e2537d` fixes both. A present wrong
+   completion link still fails explicitly. Synthetic authenticated regressions
+   cover absent/wrong completion and duplicate source identity. The missing-link
+   regression failed before the fix and passed afterward.
+2. **Bridge lacked resolved programme evidence:** the response echoed a claim
+   plus artifact/seal, but omitted the resolved assignment/projection/occurrence/
+   outcome/actual-session links needed for independent bridge validation. SQL
+   still checked those joins; no SQL ownership escape was found. A changed
+   occurrence echoed in both request and response could nevertheless be admitted
+   by a fake reader frame. That regression failed before the fix.
+   `7e1b12259a25364cf716d02d308e262d23d92160` returns closed minimal projections
+   of those already-authorised rows and the relevant owned frozen-source links,
+   all from the original statement snapshot. The bridge now checks every pin,
+   parent, athlete, authored order/programmed-session key and completion link
+   against History and the independently validated artifact/seal. Missing proof
+   remains unproven, contradictions fail, integer types stay strict, and sealed
+   exercise row identities cannot repeat across blocks. No extra read, ledger,
+   permission, production consumer or historical reconstruction was introduced.
+
+### Authority and publication conclusions
+
+The combined SQL remains one STABLE SECURITY DEFINER statement deriving actor
+only from auth.uid(), with qualified objects/fixed path and authenticated-only
+execution. All raw child rows follow owned parents; correction athlete/actor/
+record/session coherence is checked without silently filtering membership.
+The new witness projections come only from those same owner-gated joins.
+Foreign/absent records return identical bounded failures; no private artifacts
+are returned on failure. The 4 MiB final bound includes the witness projections.
+The local gate executes under authenticated roles with direct training_sessions
+SELECT denied; hosted permissiveness is not relied on or remediated.
+
+Retention required no code change. Exact canonical bytes/hash, separate supported
+scope seal, transactional rollback, retry/body conflicts and normal immutability
+were reconfirmed by the affected local gate. Unchanged original entrypoints
+create no artifacts for unretained versions; a legacy retry cannot backfill a
+seal. Supported live graph drift fails against a retained seal. Protocol bodies
+remain outside the original package hash. B2 prescription/ingestion and History
+mutation authorities remain unchanged; both eligibility/reconstruction flags
+stay false. This does not promise resistance to out-of-band privileged corruption.
+
+### Review verification and final range
+
+Current review verification: **51 affected programme bridge/transport tests
+passed**, two changed Dart files analysed with **zero issues**; corrected local
+DB/security gate passed, including ownership denial, complete collections,
+response bounds, absent legacy artifacts, original entrypoints and immutable
+capture/retry/rollback. **Three correction races and one publication race passed**
+on the final response contract; no torn committed actual/audit or version/artifact
+frames. **Safety gate: 6 groups passed, 0 failed**. Diff and documentation links
+checked. Disposable containers/workdirs were removed; repository environment
+files and supabase/.temp are untouched.
+
+Reuse the initial 32 compiler compatibility tests and unaffected tracking tests
+recorded at f52f9fa: no compiler, canonicaliser, publisher or existing independent
+reader/mutation changes in this review. No full Flutter suite or build: no shared
+runtime path changed and the reader remains unwired. Failures above were focused
+regressions proving defects, followed by passing affected gates.
+
+Reviewed implementation range (exclusive base through second fix):
+`005d53dc9b822d7e8075c75e5679324b93edebf2..7e1b12259a25364cf716d02d308e262d23d92160`.
+Five linear commits: preserved proposal, implementation, original closeout and
+two scoped fixes. The following review documentation closeout is the sixth
+commit; final branch HEAD identifies that complete integration tip. Zero merges.
+The migration hashes in the table above are final: retention unchanged, new
+unapplied combined-read migration updated for these fixes. Previous read hash
+at f52f9fa was `8ac03ecbe3c8829bc73d60c2c8c83990e74fbb3c8f6ec03d3a433925fac95dc6`;
+it is superseded for any future separately approved local integration/preflight.
+
+Remaining limits are unchanged: future trusted private publication only, legacy
+scope unproven, no general historical recovery, no hosted deployment or app
+wiring. No real publication/athlete-data writes, selection/manual storage, UI,
+scoring or next slice. Stop for founder integration approval; no push.

@@ -1,5 +1,17 @@
 # Current repository checkpoint
 
+> **C2 programme-attribution review — 2026-10-06:** Scoped defects are fixed and
+> locally verified; **AWAITING_FOUNDER_INTEGRATION_APPROVAL**. All original
+> commits through `f52f9fa` are preserved. Fixes: `c338472` (missing/conflicting
+> source proof) and `7e1b122` (resolved witness and independent bridge validation).
+> [Updated handoff](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
+> records findings, exact reviewed range and final migration hashes. Current
+> affected verification: 51 tests, zero diagnostics, disposable owner/security/
+> concurrency gate and six safety groups passed. Legacy scope remains unproven;
+> independent hosted reader unchanged, combined reader/retention remain local
+> and unwired. No hosted grant reliance/remediation, prescription eligibility,
+> integration/push or next-slice authority. Stop for founder integration approval.
+
 > **C2 programme-attribution continuation — 2026-10-05:** Founder-approved
 > bounded infrastructure is **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW**
 > on `codex/c2-programme-attribution-authority`, implementation
