@@ -1344,4 +1344,183 @@ void main() {
       );
     },
   );
+  for (final state in ['skipped', 'partial', 'missing']) {
+    test(
+      'C3 review rejects completed versus $state aliases across metrics',
+      () async {
+        final m = metric();
+        final other = metric(id: 'synthetic.other.capture', partial: true);
+        final p = profile(m);
+        final a = await input('a', m);
+        final block = SyntheticHistory.block();
+        block['status'] = switch (state) {
+          'partial' => 'in_progress',
+          'missing' => 'not_started',
+          _ => 'skipped',
+        };
+        final b = await input(
+          'b',
+          other,
+          frame: SyntheticHistory.frame(blockRow: block),
+        );
+        expect(b.result, isA<HistoryTrackingObservation>());
+        final defs = [...closure(m, p), other];
+        final forward = evaluate(m, p, [a, b], definitions: defs);
+        expect(forward.failureCode, 'conflicting_source_aliases');
+        expect(
+          evaluate(m, p, [b, a], definitions: defs).canonicalJson,
+          forward.canonicalJson,
+        );
+      },
+    );
+  }
+
+  test(
+    'C3 review rejects contradictory zero-coverage capture states across metrics',
+    () async {
+      final m = metric();
+      final other = metric(id: 'synthetic.other.capture');
+      final p = profile(m);
+      final skipped = SyntheticHistory.block()..['status'] = 'skipped';
+      final missing = SyntheticHistory.block()..['status'] = 'not_started';
+      final a = await input(
+        'a',
+        m,
+        frame: SyntheticHistory.frame(blockRow: skipped),
+      );
+      final b = await input(
+        'b',
+        other,
+        frame: SyntheticHistory.frame(blockRow: missing),
+      );
+      expect(
+        evaluate(
+          m,
+          p,
+          [a, b],
+          definitions: [...closure(m, p), other],
+        ).failureCode,
+        'conflicting_source_aliases',
+      );
+    },
+  );
+
+  test(
+    'C3 review rejects conflicting known units even without captured values',
+    () async {
+      final m = metric(field: 'distance', unit: TrackingUnit.metres);
+      final other = metric(
+        id: 'synthetic.other.distance',
+        field: 'distance',
+        unit: TrackingUnit.metres,
+      );
+      final p = profile(m);
+      HistoryReadFrame skippedDistance(String unit) {
+        final block = SyntheticHistory.block()
+          ..['status'] = 'skipped'
+          ..['result_type'] = 'distance';
+        block['result_data'] = {'resultType': 'distance', 'distanceUnit': unit};
+        return SyntheticHistory.frame(blockRow: block);
+      }
+
+      final a = await input('a', m, frame: skippedDistance('m'));
+      final b = await input('b', other, frame: skippedDistance('km'));
+      expect(a.result, isA<HistoryTrackingObservation>());
+      expect(b.result, isA<HistoryTrackingObservation>());
+      expect(
+        evaluate(
+          m,
+          p,
+          [a, b],
+          definitions: [...closure(m, p), other],
+        ).failureCode,
+        'conflicting_source_aliases',
+      );
+    },
+  );
+
+  test(
+    'C3 review rejects impossible completed coverage on unmeasured evidence',
+    () async {
+      final m = metric();
+      final p = profile(m);
+      final original = await input('a', m);
+      final o = original.result as HistoryTrackingObservation;
+      for (final state in [
+        TrackingEvidenceState.missing,
+        TrackingEvidenceState.skipped,
+        TrackingEvidenceState.unavailable,
+      ]) {
+        final impossible = HistoryTrackingObservation(
+          source: o.source,
+          sourceIdentity: o.sourceIdentity,
+          evidence: TrackingEvidence(
+            state: state,
+            reason: 'Synthetic only',
+            recordedCount: 1,
+            requiredCount: 1,
+          ),
+          unit: o.unit,
+          value: null,
+          context: o.context,
+          chronology: o.chronology,
+          correctionIds: o.correctionIds,
+          auditSetDigest: o.auditSetDigest,
+        );
+        expect(
+          evaluate(m, p, [replace(original, impossible)]).failureCode,
+          'malformed_observation',
+        );
+      }
+    },
+  );
+
+  test(
+    'C3 review keeps metric policy views and correction requests as one observation',
+    () async {
+      final m = metric(partial: true);
+      final p = profile(m);
+      final restricted = metric(
+        id: 'synthetic.restricted',
+        partial: true,
+        assessment: true,
+      );
+      final block = SyntheticHistory.block()..['status'] = 'in_progress';
+      final a = await input(
+        'a',
+        m,
+        frame: SyntheticHistory.frame(blockRow: block),
+      );
+      final b = await input(
+        'b',
+        restricted,
+        frame: SyntheticHistory.frame(blockRow: block),
+      );
+      final e = evaluate(
+        m,
+        p,
+        [a, b],
+        definitions: [...closure(m, p), restricted],
+        comparisons: [pair(m)],
+      );
+      expect(e.isFailure, isFalse);
+      expect(observations(e), hasLength(1));
+      expect(comparison(e)['state'], 'incomparable');
+      final corrected = SyntheticHistory.frame(
+        audits: [SyntheticHistory.audit()],
+      );
+      final c = await input('a', m, frame: corrected);
+      final d = await input(
+        'b',
+        m,
+        frame: corrected,
+        field: SyntheticHistory.field(correction: 'synthetic.audit'),
+      );
+      final same = evaluate(m, p, [c, d]);
+      expect(same.isFailure, isFalse);
+      expect(observations(same), hasLength(1));
+      expect((observations(same).first as Map)['views'], hasLength(2));
+      expect(same.canReconstructHistoricalInputs, isFalse);
+    },
+  );
 }

@@ -342,9 +342,12 @@ final class _EvaluationContext {
             a.auditSetDigest != b.auditSetDigest ||
             _hash(a.correctionIds.toList()..sort()) !=
                 _hash(b.correctionIds.toList()..sort()) ||
-            (a.value != null &&
-                b.value != null &&
-                (a.value != b.value || a.unit != b.unit)) ||
+            a.evidence.recordedCount != b.evidence.recordedCount ||
+            (_captureState(a) != null &&
+                _captureState(b) != null &&
+                _captureState(a) != _captureState(b)) ||
+            (a.unit != null && b.unit != null && a.unit != b.unit) ||
+            (a.value != null && b.value != null && a.value != b.value) ||
             (_same(
                   inputs[i].definition.reference,
                   other.definition.reference,
@@ -642,7 +645,7 @@ void _validateObservation(
             TrackingEvidenceState.skipped,
             TrackingEvidenceState.unavailable,
           ].contains(state) &&
-          value != null ||
+          (value != null || coverage.recordedCount != 0) ||
       state == TrackingEvidenceState.partial &&
           !metric.allowPartial &&
           value != null) {
@@ -659,6 +662,22 @@ void _validateObservation(
           ))) {
     throw const _Problem('contradictory_tracking_eligibility');
   }
+}
+
+/// C2 counts capture completeness before metric-specific eligibility policies.
+/// Ineligible/incomparable partial views may hide their original capture state;
+/// keep that uncertainty instead of inferring a missing/skipped classification.
+TrackingEvidenceState? _captureState(HistoryTrackingObservation observation) {
+  if (observation.evidence.recordedCount == 1) {
+    return TrackingEvidenceState.available;
+  }
+  return switch (observation.evidence.state) {
+    TrackingEvidenceState.partial ||
+    TrackingEvidenceState.missing ||
+    TrackingEvidenceState.skipped ||
+    TrackingEvidenceState.unavailable => observation.evidence.state,
+    _ => null,
+  };
 }
 
 bool _validDate(String value) {
