@@ -174,6 +174,27 @@ SELECT ('c2400000-0000-4000-8000-'||lpad(n::text,12,'0'))::uuid,'c2000000-0000-4
 SET LOCAL ROLE authenticated;
 SELECT public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',(SELECT claim FROM public.c2p_claim))->>'code'='evidence_limit_exceeded','combined row bound explicit');
 ROLLBACK;
+-- Review regressions: absent legacy completion authority is not contradictory;
+-- a present wrong link and duplicate exact source identity are contradictory.
+BEGIN;
+UPDATE public.programme_slot_outcomes SET completion_record_id=NULL WHERE assignment_id='c2000000-0000-4000-8000-000000000080';
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',true);
+SELECT public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',(SELECT claim FROM public.c2p_claim))->>'code'='programme_scope_unproven','missing completion authority stays unproven');
+ROLLBACK;
+BEGIN;
+UPDATE public.programme_slot_outcomes SET completion_record_id='c2000000-0000-4000-8000-000000000040' WHERE assignment_id='c2000000-0000-4000-8000-000000000080';
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',true);
+SELECT public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',(SELECT claim FROM public.c2p_claim))->>'code'='programme_scope_conflict','present contradictory completion authority fails');
+ROLLBACK;
+BEGIN;
+INSERT INTO public.training_block_results(block_result_id,session_record_id,source_block_id,block_snapshot,status,result_type,result_data,position)
+SELECT 'c2000000-0000-4000-8000-000000000069',session_record_id,source_block_id,block_snapshot,status,result_type,result_data,2 FROM public.training_block_results WHERE block_result_id='c2000000-0000-4000-8000-000000000071';
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',true);
+SELECT public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',(SELECT claim FROM public.c2p_claim))->>'code'='programme_scope_conflict','duplicate exact History source fails explicitly');
+ROLLBACK;
 CREATE TABLE public.c2p_running_claim AS SELECT public.c2p_make_links('c2000000-0000-4000-8000-000000000062','c2000000-0000-4000-8000-000000000088','c2000000-0000-4000-8000-000000000089','c2000000-0000-4000-8000-000000000078','c2000000-0000-4000-8000-000000000079',987006) || (SELECT jsonb_build_object('workout_id',authored_running_v1->>'workout_id','step_id',authored_running_v1#>>'{step_ids,0}','repeat_ordinal',1,'mapping_hash',authored_running_v1->>'execution_mapping_sha256') FROM public.programme_version_session_slots WHERE protocol_id='c2.retained.synthetic.2') claim;
 GRANT SELECT ON public.c2p_running_claim TO authenticated;
 SET ROLE authenticated;

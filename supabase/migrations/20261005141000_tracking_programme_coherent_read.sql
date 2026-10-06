@@ -159,12 +159,14 @@ checks AS MATERIALIZED (
    OR ot.programmed_session_key IS DISTINCT FROM o.programmed_session_key
    OR ot.week_number IS DISTINCT FROM s.week_number OR ot.day_key IS DISTINCT FROM s.day_key OR ot.session_order IS DISTINCT FROM s.session_order
    OR (ot.replacement_protocol_id IS NOT NULL AND ot.replacement_protocol_id IS DISTINCT FROM s.protocol_id)
-   OR (r.status IN ('completed','partially_completed') AND (ot.outcome_status NOT IN ('completed','completed_partial') OR ot.completion_record_id IS DISTINCT FROM r.record_id))
+   OR (r.status IN ('completed','partially_completed') AND (ot.outcome_status NOT IN ('completed','completed_partial') OR (ot.completion_record_id IS NOT NULL AND ot.completion_record_id IS DISTINCT FROM r.record_id)))
    OR (r.status='in_progress' AND ot.outcome_status IS DISTINCT FROM 'in_progress')) THEN 'programme_scope_conflict'
+ WHEN EXISTS(SELECT 1 FROM owned r,outcome ot WHERE r.status IN ('completed','partially_completed') AND ot.completion_record_id IS NULL) THEN 'programme_scope_unproven'
  WHEN NOT EXISTS(SELECT 1 FROM artifact) THEN 'programme_scope_unproven'
  WHEN EXISTS(SELECT 1 FROM artifact ar,version v,seal se WHERE ar.package_content_hash IS DISTINCT FROM v.package_content_hash
   OR ar.package_schema_version IS DISTINCT FROM v.package_schema_version
   OR se.current_scope IS DISTINCT FROM se.retained_scope) THEN 'programme_scope_conflict'
+ WHEN (SELECT count(*) FROM scope_block)>1 OR (SELECT count(*) FROM blocks WHERE source_block_id=p_programme_claim->>'block_id')>1 THEN 'programme_scope_conflict'
  WHEN (SELECT count(*) FROM scope_block)<>1 OR (SELECT count(*) FROM blocks WHERE source_block_id=p_programme_claim->>'block_id')<>1 THEN 'programme_scope_unproven'
  WHEN EXISTS(SELECT 1 FROM scope_block b WHERE b.authored_session->>'revision_number' IS DISTINCT FROM p_programme_claim->>'protocol_revision') THEN 'programme_scope_conflict'
  WHEN EXISTS(SELECT 1 FROM blocks b WHERE b.source_block_id=p_programme_claim->>'block_id'
