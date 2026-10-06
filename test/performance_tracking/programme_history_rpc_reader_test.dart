@@ -156,6 +156,38 @@ void main() {
     'response bound': (w) =>
         w['record']['session_snapshot'] = {'synthetic': 'x' * 4194304},
     'unknown success field': (w) => w['client_hash_authority'] = true,
+    'noninteger resolved authored order': (w) =>
+        w['programme']['witness']['occurrence']['week_number'] = 1.0,
+    'missing resolved witness': (w) => w['programme']['witness'] = null,
+    'foreign resolved assignment': (w) =>
+        w['programme']['witness']['assignment']['athlete_id'] =
+            'c2000000-0000-4000-8000-000000000002',
+    'wrong resolved pin': (w) =>
+        w['programme']['witness']['assignment']['programme_version_id'] =
+            'c2000000-0000-4000-8000-000000000099',
+    'wrong resolved schema': (w) =>
+        w['programme']['witness']['version']['package_schema_version'] = '1',
+    'draft resolved version': (w) =>
+        w['programme']['witness']['version']['lifecycle_status'] = 'draft',
+    'wrong resolved projection hash': (w) =>
+        w['programme']['witness']['projection']['package_hash'] = '0' * 64,
+    'wrong resolved occurrence parent': (w) =>
+        w['programme']['witness']['occurrence']['assignment_id'] =
+            'c2000000-0000-4000-8000-000000000099',
+    'wrong resolved occurrence key': (w) =>
+        w['programme']['witness']['occurrence']['programmed_session_key'] =
+            'wrong',
+    'wrong resolved slot': (w) =>
+        w['programme']['witness']['outcome']['session_slot_id'] =
+            'c2000000-0000-4000-8000-000000000099',
+    'wrong resolved completion': (w) =>
+        w['programme']['witness']['outcome']['completion_record_id'] =
+            'c2000000-0000-4000-8000-000000000099',
+    'foreign resolved actual session': (w) =>
+        w['programme']['witness']['session']['athlete_id'] =
+            'c2000000-0000-4000-8000-000000000002',
+    'unknown resolved field': (w) =>
+        w['programme']['witness']['trusted'] = true,
     'malformed raw seal': (w) =>
         w['programme']['artifact']['scope_seal_text'] = '[]',
   };
@@ -239,6 +271,95 @@ void main() {
         w['record']['record_id'] as String,
         programmeClaim: claim(w),
       ),
+      throwsA(isA<HistoryTrackingReadException>()),
+    );
+  });
+  test(
+    'echoed occurrence cannot replace resolved programme evidence',
+    () async {
+      final w = wire();
+      w['programme']['claim']['occurrence_id'] =
+          'c2000000-0000-4000-8000-000000000099';
+      await expectLater(
+        ProgrammeHistoryRpcReader(
+          FakeClient(w),
+        ).readCurrentRecord(recordId, programmeClaim: claim(w)),
+        throwsA(isA<HistoryTrackingReadException>()),
+      );
+    },
+  );
+  test('absent resolved completion is explicitly unproven', () async {
+    final w = wire();
+    w['programme']['witness']['outcome']['completion_record_id'] = null;
+    await expectLater(
+      ProgrammeHistoryRpcReader(
+        FakeClient(w),
+      ).readCurrentRecord(recordId, programmeClaim: claim(w)),
+      throwsA(
+        isA<HistoryTrackingReadException>().having(
+          (e) => e.code,
+          'code',
+          'programme_scope_unproven',
+        ),
+      ),
+    );
+  });
+  test('resolved frozen row must belong to the exact owned session', () async {
+    final w =
+        jsonDecode(
+              File(
+                'test/performance_tracking/fixtures/synthetic_programme_running_history_frame.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
+    w['programme']['witness']['frozen']['training_session_id'] = '987002';
+    await expectLater(
+      ProgrammeHistoryRpcReader(FakeClient(w)).readCurrentRecord(
+        w['record']['record_id'] as String,
+        programmeClaim: claim(w),
+      ),
+      throwsA(
+        isA<HistoryTrackingReadException>().having(
+          (e) => e.code,
+          'code',
+          'programme_scope_conflict',
+        ),
+      ),
+    );
+  });
+  for (final branch in ['version', 'outcome']) {
+    test('missing resolved $branch remains explicitly unproven', () async {
+      final w = wire();
+      w['programme']['witness'][branch] = null;
+      await expectLater(
+        ProgrammeHistoryRpcReader(
+          FakeClient(w),
+        ).readCurrentRecord(recordId, programmeClaim: claim(w)),
+        throwsA(
+          isA<HistoryTrackingReadException>().having(
+            (e) => e.code,
+            'code',
+            'programme_scope_unproven',
+          ),
+        ),
+      );
+    });
+  }
+  test('sealed exercise row identities are unique across blocks', () async {
+    final w = wire();
+    reseal(w, (s) {
+      final blocks = s['sessions'][0]['blocks'] as List;
+      final second =
+          jsonDecode(jsonEncode(blocks.single)) as Map<String, dynamic>;
+      second['block_id'] = 'c2000000-0000-4000-8000-000000000099';
+      second['position'] = 2;
+      second['exercises'][0]['block_id'] = second['block_id'];
+      blocks.add(second);
+    });
+    await expectLater(
+      ProgrammeHistoryRpcReader(
+        FakeClient(w),
+      ).readCurrentRecord(recordId, programmeClaim: claim(w)),
       throwsA(isA<HistoryTrackingReadException>()),
     );
   });

@@ -76,7 +76,7 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
       _fail('evidence_limit_exceeded');
     }
     final programme = _map(wire.remove('programme'));
-    _keys(programme, ['claim', 'artifact', 'current_scope']);
+    _keys(programme, ['claim', 'artifact', 'current_scope', 'witness']);
     if (_json(programme['claim']) != _json(claim)) {
       _fail('programme_scope_conflict');
     }
@@ -154,6 +154,7 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
     }
     final sessionKeys = <String>{};
     final allBlocks = <String>{};
+    final allExercises = <String>{};
     for (final session in sessions) {
       _keys(session, [
         'session_key',
@@ -205,7 +206,6 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
             block['performance_capture_mode'] is! String) {
           _fail('invalid_retained_artifact');
         }
-        final exerciseIds = <String>{};
         for (final exercise in _rows(block['exercises'])) {
           _keys(exercise, [
             'id',
@@ -224,7 +224,7 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
             _fail('invalid_retained_artifact');
           }
           if (!_uuid(exercise['id']) ||
-              !exerciseIds.add(exercise['id'] as String) ||
+              !allExercises.add(exercise['id'] as String) ||
               exercise['block_id'] != block['block_id']) {
             _fail('invalid_retained_artifact');
           }
@@ -319,6 +319,14 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
             1) {
       _fail('programme_scope_conflict');
     }
+    _validateProgrammeLinks(
+      programme['witness'],
+      actor,
+      record,
+      claim,
+      selectedSlots.single,
+      artifact['package_schema_version'] as int,
+    );
     if (claim.containsKey('workout_id')) {
       final running = _map(selectedSlots.single['authored_running_v1']);
       final b = frame.blocks.singleWhere(
@@ -377,6 +385,147 @@ final class ProgrammeHistoryRpcReader implements HistoryTrackingReadPort {
         scope: programmeClaim.scope,
       ),
     );
+  }
+}
+
+// These projections are derived from owned database rows in the same statement.
+// Claim echo, artifact attestation and complete History alone do not prove these
+// joins. No field is defaulted, and missing proof never grants a witness.
+void _validateProgrammeLinks(
+  Object? raw,
+  String actor,
+  Map<String, Object?> record,
+  Map<String, Object?> claim,
+  Map<String, Object?> slot,
+  int schema,
+) {
+  if (raw == null) _fail('programme_scope_unproven');
+  final witness = _map(raw);
+  _keys(witness, [
+    'assignment',
+    'version',
+    'projection',
+    'occurrence',
+    'outcome',
+    'session',
+    'frozen',
+  ]);
+  final pin = {
+    'programme_version_id': claim['programme_version_id'],
+    'package_hash': claim['package_hash'],
+  };
+  final assignment = {'assignment_id': claim['assignment_id']};
+  final placement = {
+    'session_slot_id': slot['slot_id'],
+    'week_number': slot['week_number'],
+    'day_key': slot['day_key'],
+    'session_order': slot['session_order'],
+    'programmed_session_key':
+        'prog:${claim['assignment_id']}@${claim['programme_version_id']}:w${slot['week_number']}:${slot['day_key']}:s${slot['session_order']}:${claim['protocol_id']}',
+  };
+  _exactLinks(witness['assignment'], {
+    'id': claim['assignment_id'],
+    'athlete_id': actor,
+    ...pin,
+    'package_schema_version': schema.toString(),
+  });
+  if (witness['version'] == null) _fail('programme_scope_unproven');
+  final version = _map(witness['version']);
+  _keys(version, [
+    'id',
+    'package_hash',
+    'package_schema_version',
+    'lifecycle_status',
+    'published_at',
+  ]);
+  if (version['id'] != claim['programme_version_id'] ||
+      version['package_hash'] != claim['package_hash'] ||
+      version['package_schema_version'] is! int ||
+      version['package_schema_version'] != schema ||
+      !['published', 'archived'].contains(version['lifecycle_status']) ||
+      version['published_at'] is! String ||
+      DateTime.tryParse(version['published_at'] as String) == null) {
+    _fail('programme_scope_conflict');
+  }
+  _exactLinks(witness['projection'], {
+    ...assignment,
+    'athlete_id': actor,
+    ...pin,
+  });
+  _exactLinks(witness['occurrence'], {
+    'id': claim['occurrence_id'],
+    ...assignment,
+    ...pin,
+    ...placement,
+    'protocol_id': claim['protocol_id'],
+  });
+  _exactLinks(witness['session'], {
+    'id': claim['training_session_id'],
+    'athlete_id': actor,
+    'protocol_id': claim['protocol_id'],
+  });
+  if (witness['outcome'] == null) _fail('programme_scope_unproven');
+  final outcome = _map(witness['outcome']);
+  _keys(outcome, [
+    ...assignment.keys,
+    ...pin.keys,
+    ...placement.keys,
+    'training_session_id',
+    'outcome_status',
+    'completion_record_id',
+    'replacement_protocol_id',
+  ]);
+  final outcomeLinks = {...outcome}
+    ..remove('outcome_status')
+    ..remove('completion_record_id')
+    ..remove('replacement_protocol_id');
+  _exactLinks(outcomeLinks, {
+    ...assignment,
+    ...pin,
+    ...placement,
+    'training_session_id': claim['training_session_id'],
+  });
+  if (outcome['replacement_protocol_id'] != null &&
+      outcome['replacement_protocol_id'] != claim['protocol_id']) {
+    _fail('programme_scope_conflict');
+  }
+  if (['completed', 'partially_completed'].contains(record['status'])) {
+    if (![
+      'completed',
+      'completed_partial',
+    ].contains(outcome['outcome_status'])) {
+      _fail('programme_scope_conflict');
+    }
+    if (outcome['completion_record_id'] == null) {
+      _fail('programme_scope_unproven');
+    }
+    if (outcome['completion_record_id'] != record['record_id']) {
+      _fail('programme_scope_conflict');
+    }
+  } else if (record['status'] == 'in_progress' &&
+      outcome['outcome_status'] != 'in_progress') {
+    _fail('programme_scope_conflict');
+  }
+  if (claim.containsKey('workout_id')) {
+    _exactLinks(witness['frozen'], {
+      'occurrence_id': claim['occurrence_id'],
+      'athlete_id': actor,
+      ...assignment,
+      'training_session_id': claim['training_session_id'],
+    });
+  } else if (witness['frozen'] != null) {
+    _fail('programme_scope_conflict');
+  }
+}
+
+void _exactLinks(Object? raw, Map<String, Object?> expected) {
+  if (raw == null) _fail('programme_scope_unproven');
+  final links = _map(raw);
+  _keys(links, expected.keys.toList());
+  if (expected.entries.any(
+    (e) => links[e.key] != e.value || (e.value is int && links[e.key] is! int),
+  )) {
+    _fail('programme_scope_conflict');
   }
 }
 

@@ -206,7 +206,18 @@ response AS (
  'sets',coalesce((SELECT jsonb_agg(to_jsonb(s) ORDER BY set_result_id) FROM sets s),'[]'::jsonb),
  'corrections',coalesce((SELECT jsonb_agg(to_jsonb(c) ORDER BY correction_id) FROM corrections c),'[]'::jsonb),
  'programme',jsonb_build_object('claim',p_programme_claim,'artifact',(SELECT to_jsonb(ar) FROM artifact ar),
-  'current_scope',(SELECT current_scope FROM seal))) END AS body FROM actor a CROSS JOIN checks ch
+  'current_scope',(SELECT current_scope FROM seal),
+  -- Resolved evidence, never an echoed claim. Closed minimal projections let
+  -- the unwired bridge independently check every programme/History link.
+  'witness',jsonb_build_object(
+   'assignment',(SELECT jsonb_build_object('id',x.id,'athlete_id',x.athlete_id,'programme_version_id',x.programme_version_id,'package_hash',x.materialised_package_content_hash,'package_schema_version',x.materialised_package_schema_version) FROM assignment x),
+   'version',(SELECT jsonb_build_object('id',x.id,'package_hash',x.package_content_hash,'package_schema_version',x.package_schema_version,'lifecycle_status',x.lifecycle_status,'published_at',x.published_at) FROM version x),
+   'projection',(SELECT jsonb_build_object('assignment_id',x.assignment_id,'athlete_id',x.athlete_id,'programme_version_id',x.programme_version_id,'package_hash',x.package_content_hash) FROM projection x),
+   'occurrence',(SELECT jsonb_build_object('id',x.id,'assignment_id',x.assignment_id,'session_slot_id',x.session_slot_id,'programme_version_id',x.programme_version_id,'package_hash',x.package_content_hash,'protocol_id',x.protocol_id,'week_number',x.week_number,'day_key',x.day_key,'session_order',x.session_order,'programmed_session_key',x.programmed_session_key) FROM occurrence x),
+   'outcome',(SELECT jsonb_build_object('assignment_id',x.assignment_id,'session_slot_id',x.session_slot_id,'programme_version_id',x.programme_version_id,'package_hash',x.materialised_package_content_hash,'training_session_id',x.training_session_id::text,'week_number',x.week_number,'day_key',x.day_key,'session_order',x.session_order,'programmed_session_key',x.programmed_session_key,'outcome_status',x.outcome_status,'completion_record_id',x.completion_record_id,'replacement_protocol_id',x.replacement_protocol_id) FROM outcome x),
+   'session',(SELECT jsonb_build_object('id',x.id::text,'athlete_id',x.athlete_id,'protocol_id',x.protocol_id) FROM session x),
+   'frozen',CASE WHEN p_programme_claim ? 'workout_id' THEN (SELECT jsonb_build_object('occurrence_id',x.occurrence_id,'athlete_id',x.athlete_id,'assignment_id',x.assignment_id,'training_session_id',x.training_session_id::text) FROM frozen x JOIN occurrence o ON o.id=x.occurrence_id) ELSE NULL END
+  ))) END AS body FROM actor a CROSS JOIN checks ch
 )
 SELECT CASE WHEN octet_length(body::text)>4194304 THEN jsonb_build_object('status','failure','code','evidence_limit_exceeded') ELSE body END FROM response;
 $function$;

@@ -4,9 +4,9 @@
     {
       "status": "completed",
       "position": 1,
-      "created_at": "2026-10-05T15:26:10.67275+00:00",
+      "created_at": "2026-10-06T00:54:38.894279+00:00",
       "started_at": null,
-      "updated_at": "2026-10-05T15:26:11.891475+00:00",
+      "updated_at": "2026-10-06T00:54:40.184609+00:00",
       "result_data": {
         "resultType": "duration",
         "durationSeconds": 15
@@ -33,10 +33,10 @@
     "status": "completed",
     "record_id": "c2000000-0000-4000-8000-000000000070",
     "athlete_id": "c2000000-0000-4000-8000-000000000001",
-    "created_at": "2026-10-05T15:26:10.67225+00:00",
+    "created_at": "2026-10-06T00:54:38.893677+00:00",
     "entry_mode": "live",
     "started_at": "2026-01-01T12:00:00+00:00",
-    "updated_at": "2026-10-05T15:26:10.67225+00:00",
+    "updated_at": "2026-10-06T00:54:38.893677+00:00",
     "overall_rpe": null,
     "athlete_note": null,
     "completed_at": "2026-01-01T12:01:00+00:00",
@@ -49,7 +49,7 @@
     "source_protocol_id": "c2.retained.synthetic.1",
     "performed_precision": "timestamp",
     "training_session_id": 987002,
-    "programme_session_id": "d2ee46c6-9c11-4194-aae6-7d1467bc5628"
+    "programme_session_id": "518ee3ae-2d2e-43a1-8d3b-ae1d3b594ce6"
   },
   "status": "ok",
   "exercises": [],
@@ -65,12 +65,66 @@
       "training_session_id": "987002",
       "programme_version_id": "c2000000-0000-4000-8000-000000000061"
     },
+    "witness": {
+      "frozen": null,
+      "outcome": {
+        "day_key": "day_1",
+        "week_number": 1,
+        "package_hash": "f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021",
+        "assignment_id": "c2000000-0000-4000-8000-000000000080",
+        "session_order": 1,
+        "outcome_status": "completed",
+        "session_slot_id": "518ee3ae-2d2e-43a1-8d3b-ae1d3b594ce6",
+        "training_session_id": "987002",
+        "completion_record_id": "c2000000-0000-4000-8000-000000000070",
+        "programme_version_id": "c2000000-0000-4000-8000-000000000061",
+        "programmed_session_key": "prog:c2000000-0000-4000-8000-000000000080@c2000000-0000-4000-8000-000000000061:w1:day_1:s1:c2.retained.synthetic.1",
+        "replacement_protocol_id": null
+      },
+      "session": {
+        "id": "987002",
+        "athlete_id": "c2000000-0000-4000-8000-000000000001",
+        "protocol_id": "c2.retained.synthetic.1"
+      },
+      "version": {
+        "id": "c2000000-0000-4000-8000-000000000061",
+        "package_hash": "f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021",
+        "published_at": "2026-10-06T00:54:38.834166+00:00",
+        "lifecycle_status": "published",
+        "package_schema_version": 1
+      },
+      "assignment": {
+        "id": "c2000000-0000-4000-8000-000000000080",
+        "athlete_id": "c2000000-0000-4000-8000-000000000001",
+        "package_hash": "f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021",
+        "programme_version_id": "c2000000-0000-4000-8000-000000000061",
+        "package_schema_version": "1"
+      },
+      "occurrence": {
+        "id": "c2000000-0000-4000-8000-000000000081",
+        "day_key": "day_1",
+        "protocol_id": "c2.retained.synthetic.1",
+        "week_number": 1,
+        "package_hash": "f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021",
+        "assignment_id": "c2000000-0000-4000-8000-000000000080",
+        "session_order": 1,
+        "session_slot_id": "518ee3ae-2d2e-43a1-8d3b-ae1d3b594ce6",
+        "programme_version_id": "c2000000-0000-4000-8000-000000000061",
+        "programmed_session_key": "prog:c2000000-0000-4000-8000-000000000080@c2000000-0000-4000-8000-000000000061:w1:day_1:s1:c2.retained.synthetic.1"
+      },
+      "projection": {
+        "athlete_id": "c2000000-0000-4000-8000-000000000001",
+        "package_hash": "f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021",
+        "assignment_id": "c2000000-0000-4000-8000-000000000080",
+        "programme_version_id": "c2000000-0000-4000-8000-000000000061"
+      }
+    },
     "artifact": {
       "publisher": "publish_private_exact_programme_version_retained_v1",
-      "captured_at": "2026-10-05T15:26:10.619715+00:00",
+      "captured_at": "2026-10-06T00:54:38.834166+00:00",
       "canonical_text": "{\"adaptation_permissions\":[],\"assessments\":[],\"comparison_identities\":[],\"package_schema_version\":1,\"performance_evidence_requirements\":[],\"phases\":[],\"programme\":{\"coaching_intent\":\"Synthetic observational fixture\",\"duration_weeks\":1,\"library_scope\":\"coach_private\",\"lineage_code\":\"C2-SYNTHETIC-RETENTION-1\",\"name\":\"Synthetic C2 scope\",\"owner_type\":\"coach\",\"sessions_per_week\":1,\"version_number\":1},\"protected_invariants\":[],\"sessions\":[{\"protocol_id\":\"c2.retained.synthetic.1\",\"revision_number\":1,\"session_key\":\"synthetic-session\",\"session_lineage_id\":\"c2000000-0000-4000-8000-000000000051\",\"title\":\"Synthetic session\"}],\"weeks\":[{\"days\":[{\"day_key\":\"day_1\",\"day_order\":1,\"day_type\":\"training\",\"slots\":[{\"completion_expectation\":\"required\",\"is_optional\":false,\"progression\":{\"prescription_summary\":\"Synthetic source fixture\"},\"session_key\":\"synthetic-session\",\"session_order\":1,\"slot_key\":\"synthetic-slot\",\"time_of_day\":\"any\"}]}],\"week_number\":1}]}",
-      "scope_seal_hash": "57836713b59767551ce6a9931f7ca962feb519286bde3328cb60e058536056b9",
-      "scope_seal_text": "{\"package_hash\":\"f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021\",\"programme_version_id\":\"c2000000-0000-4000-8000-000000000061\",\"schema_version\":1,\"sessions\":[{\"blocks\":[{\"block_id\":\"2c9174ba-a0d0-457c-84a9-bfbec75e3b8d\",\"block_type\":\"conditioning\",\"coach_notes\":null,\"content\":\"Synthetic source\",\"exercises\":[{\"block_id\":\"2c9174ba-a0d0-457c-84a9-bfbec75e3b8d\",\"display_label_override\":null,\"execution_group_key\":null,\"execution_group_label\":null,\"execution_group_rounds\":null,\"exercise_id\":\"c2.synthetic.movement\",\"id\":\"50a7868b-1e4e-41bd-81db-17e9f0833b4b\",\"position\":1,\"prescription\":{\"sets\":1}}],\"performance_capture_mode\":\"auto\",\"position\":1,\"session_id\":\"c2.retained.synthetic.1\",\"timer_config\":{\"duration_seconds\":12},\"title\":\"Synthetic observed block\",\"workout_format\":\"steady_state\"}],\"protocol_id\":\"c2.retained.synthetic.1\",\"revision_number\":1,\"session_key\":\"synthetic-session\",\"session_lineage_id\":\"c2000000-0000-4000-8000-000000000051\"}],\"slots\":[{\"authored_running_v1\":null,\"day_key\":\"day_1\",\"day_order\":1,\"protocol_id\":\"c2.retained.synthetic.1\",\"session_order\":1,\"slot_id\":\"d2ee46c6-9c11-4194-aae6-7d1467bc5628\",\"slot_key\":\"synthetic-slot\",\"week_number\":1}]}",
+      "scope_seal_hash": "6e9030fb07500eb033c8c4442c5e66baf087f73a38b6c47393c013653b590ba0",
+      "scope_seal_text": "{\"package_hash\":\"f82159392115107fff9bd05b3d52f3e8fd16222705f1000406d3b148f22a9021\",\"programme_version_id\":\"c2000000-0000-4000-8000-000000000061\",\"schema_version\":1,\"sessions\":[{\"blocks\":[{\"block_id\":\"2c9174ba-a0d0-457c-84a9-bfbec75e3b8d\",\"block_type\":\"conditioning\",\"coach_notes\":null,\"content\":\"Synthetic source\",\"exercises\":[{\"block_id\":\"2c9174ba-a0d0-457c-84a9-bfbec75e3b8d\",\"display_label_override\":null,\"execution_group_key\":null,\"execution_group_label\":null,\"execution_group_rounds\":null,\"exercise_id\":\"c2.synthetic.movement\",\"id\":\"50a7868b-1e4e-41bd-81db-17e9f0833b4b\",\"position\":1,\"prescription\":{\"sets\":1}}],\"performance_capture_mode\":\"auto\",\"position\":1,\"session_id\":\"c2.retained.synthetic.1\",\"timer_config\":{\"duration_seconds\":12},\"title\":\"Synthetic observed block\",\"workout_format\":\"steady_state\"}],\"protocol_id\":\"c2.retained.synthetic.1\",\"revision_number\":1,\"session_key\":\"synthetic-session\",\"session_lineage_id\":\"c2000000-0000-4000-8000-000000000051\"}],\"slots\":[{\"authored_running_v1\":null,\"day_key\":\"day_1\",\"day_order\":1,\"protocol_id\":\"c2.retained.synthetic.1\",\"session_order\":1,\"slot_id\":\"518ee3ae-2d2e-43a1-8d3b-ae1d3b594ce6\",\"slot_key\":\"synthetic-slot\",\"week_number\":1}]}",
       "capture_contract": "tracking.publication.scope.v1",
       "compiler_release": "cohort_plan_package@1.0.0",
       "compiler_contract": "cohort_plan_package.v1-v2.canonical.v1",
@@ -82,7 +136,7 @@
       "slots": [
         {
           "day_key": "day_1",
-          "slot_id": "d2ee46c6-9c11-4194-aae6-7d1467bc5628",
+          "slot_id": "518ee3ae-2d2e-43a1-8d3b-ae1d3b594ce6",
           "slot_key": "synthetic-slot",
           "day_order": 1,
           "protocol_id": "c2.retained.synthetic.1",
@@ -148,14 +202,36 @@
           "durationSeconds": 14
         }
       },
-      "corrected_at": "2026-10-05T15:26:11.542698+00:00",
+      "corrected_at": "2026-10-06T00:54:39.796869+00:00",
       "before_values": {
         "block:c2000000-0000-4000-8000-000000000071:result_data": {
           "resultType": "duration",
           "durationSeconds": 13
         }
       },
-      "correction_id": "3ff32d8c-3cce-44d3-801b-3a28641de5a5",
+      "correction_id": "25e941b9-8f97-49e7-a1c7-2952840f7f03",
+      "correction_note": null,
+      "training_session_id": 987002,
+      "implausible_running_pace_acknowledged": false
+    },
+    {
+      "actor_id": "c2000000-0000-4000-8000-000000000001",
+      "record_id": "c2000000-0000-4000-8000-000000000070",
+      "athlete_id": "c2000000-0000-4000-8000-000000000001",
+      "after_values": {
+        "block:c2000000-0000-4000-8000-000000000071:result_data": {
+          "resultType": "duration",
+          "durationSeconds": 13
+        }
+      },
+      "corrected_at": "2026-10-06T00:54:39.423531+00:00",
+      "before_values": {
+        "block:c2000000-0000-4000-8000-000000000071:result_data": {
+          "resultType": "duration",
+          "durationSeconds": 12
+        }
+      },
+      "correction_id": "da876942-34e2-4dbe-8150-7d9794ce44ea",
       "correction_note": null,
       "training_session_id": 987002,
       "implausible_running_pace_acknowledged": false
@@ -170,36 +246,14 @@
           "durationSeconds": 15
         }
       },
-      "corrected_at": "2026-10-05T15:26:11.891475+00:00",
+      "corrected_at": "2026-10-06T00:54:40.184609+00:00",
       "before_values": {
         "block:c2000000-0000-4000-8000-000000000071:result_data": {
           "resultType": "duration",
           "durationSeconds": 14
         }
       },
-      "correction_id": "7f0d1170-a138-4a44-8793-e86d84f0a4fe",
-      "correction_note": null,
-      "training_session_id": 987002,
-      "implausible_running_pace_acknowledged": false
-    },
-    {
-      "actor_id": "c2000000-0000-4000-8000-000000000001",
-      "record_id": "c2000000-0000-4000-8000-000000000070",
-      "athlete_id": "c2000000-0000-4000-8000-000000000001",
-      "after_values": {
-        "block:c2000000-0000-4000-8000-000000000071:result_data": {
-          "resultType": "duration",
-          "durationSeconds": 13
-        }
-      },
-      "corrected_at": "2026-10-05T15:26:11.168963+00:00",
-      "before_values": {
-        "block:c2000000-0000-4000-8000-000000000071:result_data": {
-          "resultType": "duration",
-          "durationSeconds": 12
-        }
-      },
-      "correction_id": "d1e00e6b-eeef-4185-a6e9-d8135d3a5a40",
+      "correction_id": "e6b92fe4-8e4a-4533-a447-5462e08df5b1",
       "correction_note": null,
       "training_session_id": 987002,
       "implausible_running_pace_acknowledged": false
