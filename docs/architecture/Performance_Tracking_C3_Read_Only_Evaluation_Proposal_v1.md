@@ -1,7 +1,11 @@
 # Performance Tracking C3 — read-only evaluation proposal
 
-**Recorded:** 2026-10-06. **Status:** PROPOSED_AWAITING_FOUNDER_APPROVAL;
-C3 implementation is not authorised.
+**Recorded:** 2026-10-06. **Current status:** FOUNDER_APPROVED;
+LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW.
+[Implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md)
+records exact scope/verification; proposal commit `b1a7ffd` is preserved. The
+founder's separate implementation authorisation superseded this proposal's pause
+for pure extraction/comparability only. No broader tracking/wiring authority.
 Verified repository `/Users/leewebber/Developer/cohort_platform`, clean HEAD and
 **cached** origin/main `66e94e010cef40d1743694371bb59b0940b3eb72`, without fetch.
 Local documentation branch: `codex/c3-tracking-evaluation-proposal`.
@@ -87,7 +91,7 @@ Implement one closed, versioned policy, proposed `same_metric_context_v1`, whose
 fixed rules are encoded and digested as evaluation-policy content. It is a
 comparison-admission policy, separate from the metric's extraction method; no
 arbitrary predicates or formulas. Both input references and policy version/digest
-travel with the output. This is new proposed C3 behaviour requiring approval,
+travel with the output. This is founder-approved bounded C3 behaviour,
 not already supplied by the C1 method signature. Keep its closed policy and
 ephemeral evaluation encoding separately versioned; do not add artifact kinds
 to the C1 codec or change existing hashes. A policy digest binds semantics, not
@@ -194,8 +198,8 @@ a separately requested independent observation is available.
 Later implementation verification: focused `test/performance_tracking/` tests,
 changed-file Dart analysis, required Phase 2 safety gate and diff check. Reuse
 committed C1/C2 compiler/database compatibility evidence; no DB or full Flutter
-suite unless a concrete changed shared path warrants it. None run in this
-proposal-only task; document links and `git diff --check` are the current checks.
+suite unless a concrete changed shared path warrants it. At the original proposal closeout none were run; links/diff were its checks.
+The implementation handoff now records the actual focused verification.
 
 ## Settled choices and founder approval
 
@@ -204,14 +208,15 @@ versions and explicit upgrades; athlete ownership/reusable History references;
 future append-only manual corrections; observational defaults; no prescription
 promotion; no package changes or fabricated legacy proof. Do not reopen them.
 
-**One material decision:** approve C3 as extraction plus explicit comparability
+**Approved material decision:** C3 is extraction plus explicit comparability
 only, deferring numeric `difference`. Recommended because existing method
 contracts do not define reproducible arithmetic/comparison semantics, and this
 slice validates the reusable observation/profile layer without enlarging C1.
 Alternative: include subtraction now, requiring separately versioned executable
 operand/direction/signed-decimal/context and precision rules, new semantics and
-regressions; a signature alone is insufficient. Settle before C3 implementation.
+regressions; a signature alone is insufficient. Arithmetic remains outside C3.
 No real profile membership, test procedure, units conversion, best/latest rule,
 programme-binding content or manual-entry policy needs selecting for this slice.
 
-This document authorises no implementation. Stop for founder approval; no push.
+The separately authorised C3 implementation is complete as recorded in the handoff.
+This document grants no further implementation. Stop for founder review; no push.

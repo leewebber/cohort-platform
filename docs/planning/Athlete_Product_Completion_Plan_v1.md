@@ -6,10 +6,11 @@
 > [deployment](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
 > Readers remain unwired; legacy scope is unproven. Tracking remains observational.
 > [C3 evaluation proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
-> recommends pure synthetic profile projection and explicit comparability, with
-> numeric derivations deferred. **Awaiting founder approval; C3 implementation
-> is unauthorised.** No real content, prescription eligibility, schema v3, storage,
-> wiring or next-slice work. No fresh hosted survey is implied by these pointers.
+> was founder-approved for pure synthetic profile projection and explicit
+> comparability; [C3 implementation](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md)
+> is locally verified, **awaiting founder review**. Numeric derivations remain
+> deferred. No real content, prescription eligibility, schema v3, storage,
+> wiring or further implementation authority. No fresh hosted survey is implied by these pointers.
 
 
 **Status:** Binding athlete-launch doctrine and milestone plan

@@ -194,10 +194,16 @@ permission remediation, production wiring or next slice is authorised by this
 closeout. Deployment documentation is integrated at
 `66e94e010cef40d1743694371bb59b0940b3eb72`.
 The [C3 read-only evaluation proposal](docs/architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
-is prepared on a local documentation branch, awaiting founder approval. It
-recommends pure synthetic profile projection and explicit comparability only;
-numeric differences remain deferred. C3 implementation, production wiring and
-further hosted work remain unauthorised. Stop for founder approval; no push.
+was founder-approved for bounded pure extraction/comparability. C3 is now
+**implemented and locally verified, awaiting founder review** on
+`codex/c3-tracking-evaluation`, implementation
+`c70a02a097c47ff74e57d132acfc6fd0876f8f00`, preserving proposal `b1a7ffd`.
+See [C3 handoff](docs/checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md).
+It projects trusted C2 outcomes onto exact profiles and explicit comparable pairs;
+no numeric differences, source reads, storage or production consumer. Programme
+attribution and prescription eligibility remain separate; legacy scope unproven.
+Further implementation, wiring and hosted operations remain unauthorised.
+Stop for founder review; no push.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

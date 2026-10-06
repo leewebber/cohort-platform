@@ -1,5 +1,23 @@
 # Current repository checkpoint
 
+> **C3 pure evaluation — 2026-10-06:** Founder-authorised extraction and
+> comparability are **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW** on
+> `codex/c3-tracking-evaluation`, preserving proposal `b1a7ffd` from exact clean
+> local base/cached origin main `66e94e010cef40d1743694371bb59b0940b3eb72`.
+> Implementation `c70a02a097c47ff74e57d132acfc6fd0876f8f00`;
+> [handoff](./PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md): 204 focused tracking
+> tests plus 41 final affected C3 tests (overlapping counts), zero diagnostics,
+> six safety groups passed, deterministic output and source/record consistency.
+> Exact profiles reuse C1 validation/C2 outcomes; no reads, numeric differences,
+> source writes or consumer. Unproven programme scope does not erase separately
+> supplied valid independent evidence; prescription/historical flags stay false.
+> `PERFORMANCE_TRACKING_C3=LOCAL_VERIFIED_AWAITING_FOUNDER_REVIEW`,
+> `PERFORMANCE_TRACKING_C3_PRODUCTION_WIRED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. No hosted refresh, SQL/package/B2 change,
+> storage/UI, real profiles, manual entry, push or next slice. Stop for review.
+> Dated proposal-only status below is superseded for this authorised slice.
+
+
 > **C3 evaluation proposal — 2026-10-06:** Local clean HEAD/cached origin main
 > were verified at `66e94e010cef40d1743694371bb59b0940b3eb72`, without fetch or
 > hosted contact. C2 deployment documentation is integrated at that tip; recorded

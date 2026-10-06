@@ -17,8 +17,10 @@ Legacy scope remains unproven; no client-byte/hash-only authority or backfill.
 [independent bridge](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md),
 [programme bridge](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
 [C3 evaluation proposal](./Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
-is documentation only, awaiting founder approval: synthetic profile projection
-and explicit comparability, with numeric derivations deferred. No C3 implementation,
+is founder-approved, implemented and locally verified: synthetic profile projection
+and explicit comparability, with numeric derivations deferred.
+[C3 handoff](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md) records
+the exact local boundary, awaiting founder review. No further implementation,
 production wiring, storage, real content or broader tracking licence. Schema v3
 remains outside these slices.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
@@ -42,8 +44,8 @@ PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true
 PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false
 PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=HOSTED_APPLIED_SELECT_VERIFIED
 PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=true
-PERFORMANCE_TRACKING_C3=PROPOSED_AWAITING_FOUNDER_APPROVAL
-PERFORMANCE_TRACKING_C3_IMPLEMENTATION_AUTHORISED=false
+PERFORMANCE_TRACKING_C3=LOCAL_VERIFIED_AWAITING_FOUNDER_REVIEW
+PERFORMANCE_TRACKING_C3_PRODUCTION_WIRED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -341,8 +343,9 @@ rationale, not pending approval questions:
 
 C1 was separately authorised, reviewed and integrated. Both bounded C2 readers
 and future-only private publication retention are integrated and deployed as
-recorded above; production wiring remains stopped. The C3 proposal requires
-separate founder approval. Later storage/package/product choices remain deferred.
+recorded above; production wiring remains stopped. Bounded C3 is implemented
+and locally verified, awaiting founder review; further implementation remains
+unauthorised. Later storage/package/product choices remain deferred.
 No real profiles/tests are authored and the strategic content pause remains.
 Tracking confers no publication, assignment, prescription-policy or B2 ingestion
 authority beyond the exact historical operations already recorded.

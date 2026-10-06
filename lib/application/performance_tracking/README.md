@@ -145,3 +145,50 @@ for the historical independent boundary. The new
 adds v1/v2 publication rollback/retry/immutability, legacy gaps, owner isolation,
 response limits and concurrent publication/correction snapshot proofs. Its
 fixtures are synthetic; it does not attest hosted permissions or deployment.
+
+## Pure profile evaluation (C3)
+
+[`profile_tracking_evaluator.dart`](profile_tracking_evaluator.dart) synchronously
+projects supplied C2 query/result envelopes onto exact curated/custom profile
+references, optional selection/binding revisions and explicit comparison pairs.
+It creates no reader and performs no IO. `TrackingValidator` checks the complete
+C1 dependency closure; C3 accepts only C2-supported field extraction. Difference
+methods, unsupported fields/units/sources, automatic latest/best selection and
+silent upgrades fail explicitly. A profile's `view` is metadata, not a selection
+algorithm in this slice.
+
+A `TrackingEvaluationInput` must contain the exact query associated with a trusted
+C2 adapter/bridge outcome. Its public constructor and structural checks are not
+an authentication or snapshot certificate. Production wiring and registry/source
+publication approval remain separate work. Failed claims are retained without
+fallback; a separately supplied valid independent outcome remains usable when
+programme scope is unproven. A binding declaration alone is not a scope witness.
+
+Results contain a shared physical-observation set, per-metric/query views with
+alias IDs, profile members in authored order, and explicit pair results. Physical
+identity excludes alias/profile/metric IDs and requested audit IDs but includes
+exact record/block-result/source-block, exercise/set or running step/repetition,
+field path and athlete. Per-metric input digests are preserved, not mistaken for
+physical identity. Aliases must agree on admitted actuals, context, chronology and
+audit membership; rows cannot contradict parents and fields of one record must
+share audit provenance. No timestamp chooses a conflict winner. Different records
+are not promised one combined database snapshot.
+
+`TrackingComparabilityPolicy.reference` pins the closed `same_metric_context_v1`
+policy. Both operands must be available/tracking-eligible and distinct, with the
+same exact metric/method, canonical unit, field-scope kind/path and explicit equal
+`comparison_family` plus all required context. Known mismatches remain explicit
+beside missing prerequisites. Outputs are `comparable`, `incomparable` or
+`comparison_unavailable`; no delta, ordering or improvement judgement is emitted.
+Partial values retain their label and never qualify for this comparison.
+
+`ProfileTrackingEvaluation.content` is deeply immutable. `canonicalJson` and
+`digest` use a separate evaluation schema, sorted unordered sets/maps and exact
+profile/policy/metric/method/input/audit digests; C1 and package codecs/hashes are
+unchanged. Serialization order is not event or correction order. Correction
+membership is provenance, not proof that a particular field was corrected or
+that omitted historical inputs can be reconstructed. Both prescription and
+historical-reconstruction flags remain false.
+
+See the [C3 handoff](../../../docs/checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md)
+for synthetic verification and the remaining boundaries.
