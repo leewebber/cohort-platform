@@ -169,10 +169,12 @@ alias IDs, profile members in authored order, and explicit pair results. Physica
 identity excludes alias/profile/metric IDs and requested audit IDs but includes
 exact record/block-result/source-block, exercise/set or running step/repetition,
 field path and athlete. Per-metric input digests are preserved, not mistaken for
-physical identity. Aliases must agree on admitted actuals, context, chronology and
-audit membership; rows cannot contradict parents and fields of one record must
-share audit provenance. No timestamp chooses a conflict winner. Different records
-are not promised one combined database snapshot.
+physical identity. Aliases must agree on admitted actuals, known units, captured
+coverage/known capture states, context, chronology and audit membership; rows cannot
+contradict parents and fields of one record must
+share audit provenance. Metric policy views may hide the original incomplete
+capture state; uncertainty is retained. No timestamp chooses a conflict winner.
+Different records are not promised one combined database snapshot.
 
 `TrackingComparabilityPolicy.reference` pins the closed `same_metric_context_v1`
 policy. Both operands must be available/tracking-eligible and distinct, with the

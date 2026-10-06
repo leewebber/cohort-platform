@@ -1,7 +1,7 @@
 # Performance Tracking C3 — read-only evaluation proposal
 
 **Recorded:** 2026-10-06. **Current status:** FOUNDER_APPROVED;
-LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW.
+LOCAL_REVIEW_VERIFIED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
 [Implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md)
 records exact scope/verification; proposal commit `b1a7ffd` is preserved. The
 founder's separate implementation authorisation superseded this proposal's pause
@@ -126,10 +126,13 @@ it is still one physical observation and cannot be both operands of a pair.
 
 C2 input digests include metric identity, so differing metric-dependent digests
 alone do not prove alias conflicts. Preserve per-metric input digests. Compare
-admitted actual value/unit, source context/chronology and audit-set provenance
-for alias consistency. Metric-specific ineligibility or withheld partial values
+admitted actual values, known canonical units, captured coverage/known capture
+states, source context/chronology and audit-set provenance for alias consistency.
+Metric-specific ineligibility or withheld partial values
 are not raw-source contradictions: compare actuals only where both are supplied.
-Different policy projections retain their own states while sharing physical identity. Programme attribution is a separate claim,
+Different policy projections retain their own states while sharing physical identity.
+Ineligible/incomparable zero-coverage views may hide their original capture state;
+unknown capture states remain unknown. Programme attribution is a separate claim,
 not a different physical measurement. Conflicting current frames or correction
 memberships for one physical identity fail with an explicit conflict; never
 choose the newest by timestamp. Multiple coherent record reads do not establish
@@ -219,4 +222,5 @@ No real profile membership, test procedure, units conversion, best/latest rule,
 programme-binding content or manual-entry policy needs selecting for this slice.
 
 The separately authorised C3 implementation is complete as recorded in the handoff.
-This document grants no further implementation. Stop for founder review; no push.
+This document grants no further implementation. Stop for founder integration
+approval; no push.

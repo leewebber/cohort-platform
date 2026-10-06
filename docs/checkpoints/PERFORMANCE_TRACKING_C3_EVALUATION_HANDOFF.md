@@ -1,6 +1,6 @@
 # Performance Tracking C3 — pure evaluation handoff
 
-**Recorded:** 2026-10-06. **Status:** LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW.
+**Recorded:** 2026-10-06. **Status:** LOCAL_REVIEW_VERIFIED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
 [Founder-approved proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md).
 
 Repository `/Users/leewebber/Developer/cohort_platform`; local branch
@@ -9,9 +9,74 @@ Repository `/Users/leewebber/Developer/cohort_platform`; local branch
 `66e94e010cef40d1743694371bb59b0940b3eb72`. Both exact refs, parentage and clean
 worktree verified without fetch or hosted contact. Proposal commit is preserved.
 Implementation: `c70a02a097c47ff74e57d132acfc6fd0876f8f00`.
-This handoff/live-pointer commit follows it; final reported HEAD identifies the
-complete **three linear commits** after the exclusive base (proposal,
-implementation, documentation), zero merges. No push or main-ref change.
+Original implementation/handoff tip: `d0ec8ea8dd6a79c2de44e619180dae290198bcfc`.
+Its three linear commits (proposal, implementation, documentation) are preserved.
+The review adds one scoped fix and this documentation closeout: **five linear
+commits**, zero merges, after the same exclusive base. No push or main-ref change.
+
+## Local review — 2026-10-06
+
+Clean starting HEAD and cached origin/main matched the exact requested refs;
+no fetch or hosted contact. Review verdict: confirmed defects below are fixed;
+no remaining integration blocker found within the bounded pure C3 authority.
+Founder integration approval remains required.
+
+**Confirmed finding, fixed in `1f46a9247e3484b115ea1197b92fa37380dc7658`:**
+metric-dependent C2 digests allowed aliases of one physical field to disagree on
+capture completeness/state. Completed versus partial/skipped/missing, and skipped
+versus missing, could be admitted together. Known canonical units could also
+conflict while both values were absent. C3 now rejects contradictory captured
+coverage, known capture states and known units with `conflicting_source_aliases`.
+It also rejects impossible completed coverage on missing/skipped/unavailable
+outcomes with `malformed_observation`.
+
+Six new failing regression cases reproduced these defects before the fix; all
+now pass. A seventh regression preserves legitimate partial/assessment policy
+views and different requested audit references as one physical observation.
+C2 capture coverage is independent of metric eligibility. An ineligible or
+incomparable zero-coverage view may not expose its original capture state; C3
+leaves that uncertainty intact rather than guessing missing/skipped status.
+
+Other reviewed boundaries hold: exact metric/profile/method versions and C1
+unit signatures; distinct row/field/repetition identities; explicit insufficient
+context/evidence and incompatible field scopes; correction references/membership
+without historical replay or cross-record snapshot claims. Existing shuffled-input
+fixtures use distinct observations with tied performed timestamps, and correction
+fixtures have tied audit timestamps: neither ties nor input order select a winner.
+Valid separately requested independent evidence remains usable beside an unproven
+programme claim, with the failed claim retained. No numeric derivation, conversion,
+ranking, improvement claim or prescription authority was added.
+
+### Review verification
+
+| Check | Current review evidence |
+|---|---|
+| Before-fix regressions | **6 defect cases failed**, legitimate policy/audit-alias case passed |
+| Affected C3 tests after fix | **48 passed**: original 41 plus 7 review regressions |
+| Changed-file analysis | **Zero diagnostics**, evaluator and test file |
+| Safety gate after fix | **6 groups passed, 0 failed** |
+| Diff, links and boundary | Working/range `git diff --check`; local links in changed Markdown checked; C1/C2/SQL/package/publication/B2/production paths unchanged |
+
+Commands: `flutter --suppress-analytics test --no-pub test/performance_tracking/profile_tracking_evaluator_test.dart`;
+`dart --suppress-analytics analyze lib/application/performance_tracking/profile_tracking_evaluator.dart test/performance_tracking/profile_tracking_evaluator_test.dart`;
+`FLUTTER_SUPPRESS_ANALYTICS=true ./tool/testing/run_phase2_consolidation_safety_gate.sh`.
+The committed 204-test tracking-group verification below is reused, not claimed
+as rerun. No DB gate/full Flutter suite/build: no shared source or read/publication
+path changed. No hosted contact, migrations, persistence, runtime wiring or next slice.
+
+### Integration range
+
+Exclusive base: `66e94e010cef40d1743694371bb59b0940b3eb72`.
+Preserved proposal: `b1a7ffddc6c2802107ac21a9c06cf545d5d53932`.
+Preserved implementation: `c70a02a097c47ff74e57d132acfc6fd0876f8f00`.
+Preserved original handoff: `d0ec8ea8dd6a79c2de44e619180dae290198bcfc`.
+Review fix: `1f46a9247e3484b115ea1197b92fa37380dc7658`.
+This following review-closeout commit is the fifth commit; its exact full SHA is
+reported with the final Git verification. The complete integration range is
+`66e94e010cef40d1743694371bb59b0940b3eb72..HEAD` on
+`codex/c3-tracking-evaluation`, with zero merges and no unrelated commits.
+Cached origin/main remains at the exclusive base; no remote freshness is claimed.
+
 
 ## Delivered boundary
 
@@ -60,7 +125,7 @@ publisher, infrastructure transport, B2 or runtime wiring changed.
   profile member order and explicit operand roles remain meaningful. Invalid
   unordered requests are also handled deterministically. No cache/results ledger.
 
-## Verification in this task
+## Original implementation verification (recorded at d0ec8ea)
 
 | Check | Result |
 |---|---|

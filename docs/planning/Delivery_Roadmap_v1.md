@@ -8,8 +8,9 @@
 > [C3 evaluation proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
 > was founder-approved for pure synthetic profile projection and explicit
 > comparability; [C3 implementation](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md)
-> is locally verified, **awaiting founder review**. Numeric derivations remain
-> deferred. No real content, prescription eligibility, schema v3, storage,
+> is locally reviewed/verified, **awaiting founder integration approval**.
+> Scoped alias-evidence fixes and 48 affected passing tests are recorded there.
+> Numeric derivations remain deferred. No real content, prescription eligibility, schema v3, storage,
 > wiring or further implementation authority. No fresh hosted survey is implied by these pointers.
 
 

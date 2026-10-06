@@ -1,21 +1,25 @@
 # Current repository checkpoint
 
-> **C3 pure evaluation — 2026-10-06:** Founder-authorised extraction and
-> comparability are **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_REVIEW** on
-> `codex/c3-tracking-evaluation`, preserving proposal `b1a7ffd` from exact clean
-> local base/cached origin main `66e94e010cef40d1743694371bb59b0940b3eb72`.
-> Implementation `c70a02a097c47ff74e57d132acfc6fd0876f8f00`;
-> [handoff](./PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md): 204 focused tracking
-> tests plus 41 final affected C3 tests (overlapping counts), zero diagnostics,
-> six safety groups passed, deterministic output and source/record consistency.
-> Exact profiles reuse C1 validation/C2 outcomes; no reads, numeric differences,
-> source writes or consumer. Unproven programme scope does not erase separately
-> supplied valid independent evidence; prescription/historical flags stay false.
-> `PERFORMANCE_TRACKING_C3=LOCAL_VERIFIED_AWAITING_FOUNDER_REVIEW`,
+> **C3 review — 2026-10-06:** Bounded extraction/comparability is
+> **LOCAL_REVIEW_VERIFIED_AWAITING_FOUNDER_INTEGRATION_APPROVAL** on
+> `codex/c3-tracking-evaluation`. Original proposal/implementation/handoff through
+> `d0ec8ea8dd6a79c2de44e619180dae290198bcfc` are preserved; review fix
+> `1f46a9247e3484b115ea1197b92fa37380dc7658` rejects contradictory alias capture
+> states/coverage/known units and impossible completed coverage on unmeasured
+> evidence. [Updated handoff](./PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md):
+> 48 affected C3 tests, zero changed-file diagnostics, six safety groups passed.
+> Earlier 204-test group verification is reused, not rerun. Five linear commits
+> including review closeout follow cached origin/main/exclusive base
+> `66e94e010cef40d1743694371bb59b0940b3eb72`; no fetch or hosted refresh.
+> Exact profiles reuse C1 validation/C2 outcomes; no reads, arithmetic, source
+> writes or consumer. Valid independent evidence remains usable beside unproven
+> programme scope; no fallback/replay/cross-record snapshot/prescription claim.
+> `PERFORMANCE_TRACKING_C3=LOCAL_REVIEW_VERIFIED_AWAITING_INTEGRATION_APPROVAL`,
 > `PERFORMANCE_TRACKING_C3_PRODUCTION_WIRED=false`,
-> `NEXT_IMPLEMENTATION_AUTHORISED=false`. No hosted refresh, SQL/package/B2 change,
-> storage/UI, real profiles, manual entry, push or next slice. Stop for review.
-> Dated proposal-only status below is superseded for this authorised slice.
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. No SQL/package/B2 change, storage/UI,
+> real profiles, manual entry, push or next slice. Stop for integration approval.
+> Earlier dated statuses below are historical.
+
 
 
 > **C3 evaluation proposal — 2026-10-06:** Local clean HEAD/cached origin main
