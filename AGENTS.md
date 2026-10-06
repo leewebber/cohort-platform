@@ -165,8 +165,8 @@ applied and SELECT-verified on Cohort Field Manual, ledger 115; see
 and [read-boundary proposal](docs/architecture/Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
 Existing hydration is not coherent tracking authority. The independent adapter/
 bridge remain unwired; no production consumer is authorised. Programme attribution
-remains blocked in the deployed independent reader; the new local continuation
-is verified and awaiting founder review below.
+remains blocked in the deployed independent reader; the reviewed combined
+continuation is integrated and hosted SELECT-verified below.
 Hosted already grants training_sessions SELECT with RLS disabled; the local test
 baseline denies SELECT. Both facts are preserved; do not repair permissions or
 admit claims from the hosted grant. No restricted validator execution/bypass.
@@ -177,16 +177,21 @@ profiles/tests, content authoring, witness expansion and further hosted operatio
 remain separately scoped. Deployment documentation is integrated at
 `005d53dc9b822d7e8075c75e5679324b93edebf2`.
 The [bounded programme-attribution authority proposal](docs/architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md)
-is founder-approved and **locally reviewed with scoped fixes, awaiting integration approval** on
-`codex/c2-programme-attribution-authority`; see the
-[local programme-attribution handoff](docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
-It adds a narrow owner-gated combined read and future-only immutable canonical
-artifact/separate authored-scope seal capture through trusted private publication.
-Legacy scope without retained proof remains unproven; no backfill. Package v1/v2
-hashes, original publication entrypoints and independent/correction authorities
-are preserved. The bridge remains unwired and tracking grants no prescription
-eligibility. No hosted apply, permission remediation, real publication, production
-wiring or next slice is authorised; stop for founder review.
+is founder-approved, **integrated and hosted SELECT-verified** through
+`79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`; see the
+[programme-attribution handoff](docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
+and [deployment record](docs/checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
+Both approved additive migrations are applied on Cohort Field Manual, ledger
+117 / 20261005141000. Exact function security/grants, artifact immutability,
+unchanged evidence/authority digests and final empty dry-run are SELECT-verified.
+The combined owner-gated read and future-only trusted private-publication
+canonical artifact/separate authored-scope seal capture remain unwired.
+Artifact table is empty; legacy scope without retained proof remains unproven,
+with no backfill. Package v1/v2 hashes, original publication entrypoints and
+independent/correction authorities are preserved; tracking grants no prescription
+eligibility. Existing permission discrepancy is preserved. No real publication,
+permission remediation, production wiring or next slice is authorised by this
+closeout. Documentation is local only; stop before push.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

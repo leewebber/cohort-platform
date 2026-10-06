@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **C2 programme-attribution deployment — 2026-10-06:** The reviewed six-commit
+> range is integrated through `79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`.
+> Both approved migrations are **HOSTED_APPLIED_SELECT_VERIFIED** on Cohort Field
+> Manual, ACTIVE_HEALTHY, ledger **117 / 20261005141000**.
+> [Deployment record](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md)
+> and [handoff](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md): exact
+> hashes/two-file apply, 43 SELECT-only checks, unchanged 24 evidence baselines
+> and existing authority fingerprints, zero artifacts, final dry-run up to date.
+> Combined owner-gated RPC/retention are deployed; adapter/bridge remain unwired.
+> Legacy scope remains unproven; independent reader still rejects programme claims.
+> Hosted permission discrepancy preserved, no remediation or validator bypass.
+> `PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=HOSTED_APPLIED_SELECT_VERIFIED`,
+> `PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=true`,
+> `PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. Tracking grants no prescription eligibility.
+> No real publication/backfill, athlete writes, tests/builds, wiring or next slice.
+> Documentation closeout is local only, awaiting push approval. Dated pending
+> integration/deployment statements below are historical and superseded here.
+
+
 > **C2 programme-attribution review — 2026-10-06:** Scoped defects are fixed and
 > locally verified; **AWAITING_FOUNDER_INTEGRATION_APPROVAL**. All original
 > commits through `f52f9fa` are preserved. Fixes: `c338472` (missing/conflicting

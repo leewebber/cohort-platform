@@ -1,16 +1,16 @@
 # Athlete Product Completion Plan v1
 
-> **Live launch-library continuation — 2026-10-05:** Studio and B1–B4 are
-> complete within [recorded scopes](../checkpoints/CURRENT_CHECKPOINT.md).
-> Sprint C [metrics-profile audit](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
-> is complete and [foundation proposal](../architecture/Programme_Performance_Metrics_Profile_Sprint_C_Proposal_v1.md)
-> is revised for optional observational programme/curated/custom tracking and
-> reusable athlete measurement history. Contract architecture is founder-approved;
-> C1 pure contracts are implemented/locally verified, awaiting founder review
-> ([handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)). Schema v3
-> remains outside C1; C2 and broader C implementation remain unauthorised.
-> Older B2–D status statements are historical;
-> D implementation and commercial content remain unauthorised.
+> **Live continuation — 2026-10-06:** Studio/B1–B4 remain complete within
+> [recorded scopes](../checkpoints/CURRENT_CHECKPOINT.md). C1 contracts and both
+> reviewed C2 ranges are integrated through `79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`.
+> Independent and combined History infrastructure plus future-only private
+> publication retention are deployed on Cohort Field Manual, ledger 117;
+> [SELECT-verified deployment](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
+> Readers remain unwired; legacy scope is unproven, with zero retained artifacts.
+> Tracking is observational and grants no prescription eligibility. Schema v3,
+> production wiring, profile/selection/manual storage, real content/tests,
+> calculations/UI and further implementation remain separately scoped and
+> unauthorised. No next slice is started by this deployment closeout.
 
 **Status:** Binding athlete-launch doctrine and milestone plan
 **Recorded:** 2026-09-20

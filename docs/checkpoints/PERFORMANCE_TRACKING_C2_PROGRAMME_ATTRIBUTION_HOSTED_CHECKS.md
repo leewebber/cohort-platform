@@ -1,0 +1,100 @@
+# C2 programme-attribution — executed hosted SELECT checks
+
+Verified 2026-10-06 on Cohort Field Manual `otnhhdxstdnwccehacku`: all **43** returned `pass=true`.
+[Deployment record](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
+These statements document the exact verification; they do not invoke mutation
+authority, validators or the new consumer RPC. Evidence digests sort whole-row
+`to_jsonb` text using the exact delimiter below; metadata fingerprints exclude
+only the reviewed new objects. No credentials or athlete rows are retained.
+
+```sql
+-- Executed SELECT-only after the authorised exact two-file apply, 2026-10-06.
+-- Every statement is SELECT-only; no validator, mutation or athlete RPC execution.
+-- Every pass value must be TRUE; this is metadata/data compatibility, not a hosted concurrency test.
+
+SELECT 'ledger_117_exact_versions' AS check_name,count(*)=117 AND max(version)='20261005141000' AND array_agg(version ORDER BY version)=ARRAY['20260713140000','20260714100000','20260714120000','20260715120000','20260715130000','20260715140000','20260715150000','20260715160000','20260716150000','20260717110000','20260717120000','20260718130000','20260719140000','20260719160000','20260719170000','20260721100000','20260721110000','20260721120000','20260721130000','20260721140000','20260721150000','20260721155000','20260721160000','20260722120000','20260722130000','20260722140000','20260722150000','20260722160000','20260722170000','20260723100000','20260724120000','20260724140000','20260725160000','20260730150000','20260731120000','20260801120000','20260801140000','20260801150000','20260801160000','20260803120000','20260803140000','20260803160000','20260803180000','20260809160000','20260813140000','20260813150000','20260813151000','20260813160000','20260813160500','20260813161000','20260817170000','20260821120000','20260821121000','20260821122000','20260821123000','20260821124000','20260821125000','20260821130000','20260821131000','20260821132000','20260821133000','20260821134000','20260821135000','20260822120000','20260822121000','20260822122000','20260822123000','20260823120000','20260823121000','20260824120000','20260824121000','20260825120000','20260902120000','20260903120000','20260904120000','20260905120000','20260905121000','20260905180000','20260906120000','20260906140000','20260906160000','20260911120000','20260913120000','20260914120000','20260914121000','20260918120000','20260918120100','20260918120200','20260918120300','20260918120400','20260919120000','20260919120100','20260919120200','20260919120300','20260919120400','20260920120000','20260923120000','20260924120000','20260926120000','20260926130000','20260926140000','20260926150000','20260926160000','20260926170000','20260926180000','20260926190000','20260926200000','20260927120000','20260927130000','20260927140000','20260927150000','20260928120000','20260929120000','20261005120000','20261005130000','20261005140000','20261005141000']::text[] AS pass FROM supabase_migrations.schema_migrations;
+
+SELECT 'cohort_tracking_artifact_immutable_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='plpgsql' AND p.provolatile='v' AND p.prosecdef=false AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='7f5be35f604e8b793ab4d80b4cd0dc24' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=false AND has_function_privilege('service_role',p.oid,'EXECUTE')=false AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.cohort_tracking_artifact_immutable()');
+
+SELECT 'cohort_tracking_canonical_text_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='sql' AND p.provolatile='i' AND p.prosecdef=false AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='11bfd80b6cfbac93453a8a117e9675c7' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=false AND has_function_privilege('service_role',p.oid,'EXECUTE')=false AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.cohort_tracking_canonical_text(jsonb)');
+
+SELECT 'cohort_tracking_scope_seal_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='sql' AND p.provolatile='s' AND p.prosecdef=false AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='6dc3232cc0c08632eebc2abcfd166fcc' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=false AND has_function_privilege('service_role',p.oid,'EXECUTE')=false AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.cohort_tracking_scope_seal(uuid,jsonb)');
+
+SELECT 'cohort_tracking_payload_graphs_match_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='plpgsql' AND p.provolatile='i' AND p.prosecdef=false AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='4d661c8e769ebd08fb6b4db7222c3d76' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=false AND has_function_privilege('service_role',p.oid,'EXECUTE')=false AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.cohort_tracking_payload_graphs_match(jsonb,jsonb)');
+
+SELECT 'publish_private_exact_programme_version_retained_v1_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='plpgsql' AND p.provolatile='v' AND p.prosecdef=true AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='4fe3b1f7a4d9a6d266972f9706a968d4' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=false AND has_function_privilege('service_role',p.oid,'EXECUTE')=true AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.publish_private_exact_programme_version_retained_v1(jsonb)');
+
+SELECT 'read_performance_tracking_programme_history_v1_exact_contract' AS check_name,count(*)=1 AND coalesce(bool_and(pg_get_userbyid(p.proowner)='postgres' AND l.lanname='sql' AND p.provolatile='s' AND p.prosecdef=true AND p.proconfig=ARRAY['search_path=pg_catalog, pg_temp'] AND md5(p.prosrc)='07f2506dadb5bbd1781a9c4944a2e5e3' AND has_function_privilege('authenticated',p.oid,'EXECUTE')=true AND has_function_privilege('service_role',p.oid,'EXECUTE')=false AND NOT has_function_privilege('anon',p.oid,'EXECUTE') AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a WHERE a.grantee=0 AND a.privilege_type='EXECUTE')),false) AS pass FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang WHERE p.oid=to_regprocedure('public.read_performance_tracking_programme_history_v1(uuid,jsonb)');
+
+SELECT 'read_signature' AS check_name,p.proargnames=ARRAY['p_record_id','p_programme_claim'] AND p.pronargs=2 AND p.pronargdefaults=0 AND p.prorettype='jsonb'::regtype AS pass FROM pg_proc p WHERE p.oid=to_regprocedure('public.read_performance_tracking_programme_history_v1(uuid,jsonb)');
+
+SELECT 'artifact_owner_rls_no_client_grants' AS check_name,c.relrowsecurity AND pg_get_userbyid(c.relowner)='postgres' AND NOT EXISTS(SELECT 1 FROM pg_policy p WHERE p.polrelid=c.oid) AND NOT EXISTS(SELECT 1 FROM aclexplode(coalesce(c.relacl,acldefault('r',c.relowner))) a WHERE a.grantee=0 OR a.grantee IN ('anon'::regrole,'authenticated'::regrole,'service_role'::regrole)) AND NOT EXISTS(SELECT 1 FROM unnest(ARRAY['anon','authenticated','service_role']) r CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER']) privilege WHERE has_table_privilege(r,c.oid,privilege)) AS pass FROM pg_class c WHERE c.oid=to_regclass('public.programme_publication_artifacts');
+
+SELECT 'artifact_immutable_trigger' AS check_name,count(*)=1 AND coalesce(bool_and(t.tgenabled='O' AND t.tgtype=27 AND t.tgfoid='public.cohort_tracking_artifact_immutable()'::regprocedure),false) AS pass FROM pg_trigger t WHERE t.tgrelid='public.programme_publication_artifacts'::regclass AND NOT t.tgisinternal AND t.tgname='tracking_artifact_immutable';
+
+SELECT 'artifact_constraints' AS check_name,count(*) FILTER(WHERE contype='c')=7 AND count(*) FILTER(WHERE contype='p')=1 AND count(*) FILTER(WHERE contype='f' AND confrelid='public.programme_versions'::regclass AND confdeltype='r')=1 AND bool_and(convalidated) AS pass FROM pg_constraint WHERE conrelid='public.programme_publication_artifacts'::regclass;
+
+SELECT 'no_legacy_artifact_backfill' AS check_name,count(*)=0 AS pass FROM public.programme_publication_artifacts;
+
+SELECT 'unchanged_existing_relations' AS check_name,digest='6aced221c1d48d960f94e2b46edb05b2' AS pass FROM (SELECT md5(coalesce(string_agg(concat_ws('|',c.relname,pg_get_userbyid(c.relowner),c.relacl::text,c.relrowsecurity::text,c.relforcerowsecurity::text),E'\n' ORDER BY c.relname),'')) AS digest FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relkind IN ('r','p','v','m','f','S') AND c.relname<>'programme_publication_artifacts') b;
+
+SELECT 'unchanged_existing_functions' AS check_name,digest='19d2b470cf1ec0e3d9de427140aadc65' AS pass FROM (SELECT md5(coalesce(string_agg(concat_ws('|',p.oid::regprocedure::text,pg_get_functiondef(p.oid),p.proacl::text,pg_get_userbyid(p.proowner)),E'\n' ORDER BY p.oid::regprocedure::text),'')) AS digest FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public' AND p.prokind IN ('f','p') AND p.proname NOT IN ('cohort_tracking_artifact_immutable','cohort_tracking_canonical_text','cohort_tracking_scope_seal','cohort_tracking_payload_graphs_match','publish_private_exact_programme_version_retained_v1','read_performance_tracking_programme_history_v1')) b;
+
+SELECT 'unchanged_existing_policies' AS check_name,digest='5b587989dc9f0a9dd1af89b2a4276437' AS pass FROM (SELECT md5(coalesce(string_agg(to_jsonb(p)::text,E'\n' ORDER BY p.schemaname,p.tablename,p.policyname),'')) AS digest FROM pg_policies p WHERE schemaname='public' AND tablename<>'programme_publication_artifacts') b;
+
+SELECT 'unchanged_existing_triggers' AS check_name,digest='ad7cff8ab29367ab16a970c86e64f5d4' AS pass FROM (SELECT md5(coalesce(string_agg(concat_ws('|',c.relname,t.tgname,t.tgenabled::text,pg_get_triggerdef(t.oid)),E'\n' ORDER BY c.relname,t.tgname),'')) AS digest FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND NOT t.tgisinternal AND c.relname<>'programme_publication_artifacts') b;
+
+SELECT 'unchanged_existing_columns' AS check_name,digest='feeb9d40daf7d52d1b62d8267f1d742c' AS pass FROM (SELECT md5(coalesce(string_agg(concat_ws('|',c.relname,a.attnum::text,a.attname,format_type(a.atttypid,a.atttypmod),a.attnotnull::text,pg_get_expr(d.adbin,d.adrelid)),E'\n' ORDER BY c.relname,a.attnum),'')) AS digest FROM pg_attribute a JOIN pg_class c ON c.oid=a.attrelid JOIN pg_namespace n ON n.oid=c.relnamespace LEFT JOIN pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum WHERE n.nspname='public' AND c.relkind IN ('r','p','v','m','f') AND c.relname<>'programme_publication_artifacts' AND a.attnum>0 AND NOT a.attisdropped) b;
+
+SELECT 'unchanged_existing_constraints' AS check_name,digest='2b1e4d6ff8bd2e10314dbc32d5326c62' AS pass FROM (SELECT md5(coalesce(string_agg(concat_ws('|',c.relname,x.conname,pg_get_constraintdef(x.oid),x.convalidated::text),E'\n' ORDER BY c.relname,x.conname),'')) AS digest FROM pg_constraint x JOIN pg_class c ON c.oid=x.conrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='public' AND c.relname<>'programme_publication_artifacts') b;
+
+SELECT 'unchanged_content_graph_manifests' AS check_name,rows=2 AND digest='79ca291a0373dcbca703200002ed6d5b' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.content_graph_manifests t) b;
+
+SELECT 'unchanged_performance_protocols' AS check_name,rows=317 AND digest='8b53719eaa6d4ba73c7519184dd6e6d0' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.performance_protocols t) b;
+
+SELECT 'unchanged_performance_result_corrections' AS check_name,rows=0 AND digest='d41d8cd98f00b204e9800998ecf8427e' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.performance_result_corrections t) b;
+
+SELECT 'unchanged_programme_assignments' AS check_name,rows=3 AND digest='93783bee2b6eea7303ffabf9ccf94107' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_assignments t) b;
+
+SELECT 'unchanged_programme_lineages' AS check_name,rows=10 AND digest='ec342621cd2c7ad7769ccd1ee8947133' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_lineages t) b;
+
+SELECT 'unchanged_programme_occurrence_running_target_snapshots' AS check_name,rows=4 AND digest='3051e0761c69f8dce4ad2fe3582f27ef' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_occurrence_running_target_snapshots t) b;
+
+SELECT 'unchanged_programme_schedule_occurrences' AS check_name,rows=159 AND digest='1e917b91142989e41e24ecb892b91adc' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_schedule_occurrences t) b;
+
+SELECT 'unchanged_programme_schedule_projections' AS check_name,rows=3 AND digest='4233c77490ecd2630930ee96c622b2b3' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_schedule_projections t) b;
+
+SELECT 'unchanged_programme_slot_outcomes' AS check_name,rows=19 AND digest='cef070f5ebb77ec823861d171e049f2b' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_slot_outcomes t) b;
+
+SELECT 'unchanged_programme_version_days' AS check_name,rows=181 AND digest='d2958bf65a61a706c74d7c6641b1ef72' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_version_days t) b;
+
+SELECT 'unchanged_programme_version_phases' AS check_name,rows=4 AND digest='345584b891b959a3c36d82ccf9d259a4' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_version_phases t) b;
+
+SELECT 'unchanged_programme_version_session_slots' AS check_name,rows=188 AND digest='d69b784c44a5dd655031c3ab78899814' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_version_session_slots t) b;
+
+SELECT 'unchanged_programme_version_weeks' AS check_name,rows=29 AND digest='aef4f0e0fb035197d98a84bfcc0eb6a8' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_version_weeks t) b;
+
+SELECT 'unchanged_programme_versions' AS check_name,rows=11 AND digest='efa3ffebac4022e49d79d80cbba79afe' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.programme_versions t) b;
+
+SELECT 'unchanged_running_5k_benchmark_evidence' AS check_name,rows=1 AND digest='ab4ab22a621bb2fdc4bb4f768280ddd0' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.running_5k_benchmark_evidence t) b;
+
+SELECT 'unchanged_running_5k_benchmark_evidence_revisions' AS check_name,rows=1 AND digest='601fd79026f98f49100aa08c39ecd3a3' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.running_5k_benchmark_evidence_revisions t) b;
+
+SELECT 'unchanged_session_block_exercises' AS check_name,rows=1648 AND digest='98685d8c71553379c3d8f31e5a8f8ae4' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.session_block_exercises t) b;
+
+SELECT 'unchanged_session_blocks' AS check_name,rows=495 AND digest='51e8b026a8a6c782bb2dfc9b49338ae3' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.session_blocks t) b;
+
+SELECT 'unchanged_session_lineages' AS check_name,rows=306 AND digest='b0e5d34b2e9bcfbffea94faef16dc948' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.session_lineages t) b;
+
+SELECT 'unchanged_training_block_results' AS check_name,rows=63 AND digest='09c061feae3a51d899b15cbe2e35cee3' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.training_block_results t) b;
+
+SELECT 'unchanged_training_exercise_results' AS check_name,rows=183 AND digest='95fa7f233464700beb2a462731b390ae' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.training_exercise_results t) b;
+
+SELECT 'unchanged_training_session_records' AS check_name,rows=24 AND digest='991c35c77cf81b5b966728c7bed3bf7f' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.training_session_records t) b;
+
+SELECT 'unchanged_training_sessions' AS check_name,rows=47 AND digest='8e4a15439d61ca42505bc4f34fba966e' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.training_sessions t) b;
+
+SELECT 'unchanged_training_set_results' AS check_name,rows=411 AND digest='ebe23fafe37ebed93134c1ab91196983' AS pass FROM (SELECT count(*)::integer AS rows,md5(coalesce(string_agg(to_jsonb(t)::text,E'\n' ORDER BY to_jsonb(t)::text),'')) AS digest FROM public.training_set_results t) b;
+
+SELECT 'preserved_training_sessions_discrepancy' AS check_name,has_table_privilege('authenticated',c.oid,'SELECT') AND NOT c.relrowsecurity AS pass FROM pg_class c WHERE c.oid='public.training_sessions'::regclass;
+```

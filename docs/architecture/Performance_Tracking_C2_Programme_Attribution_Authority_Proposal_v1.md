@@ -1,5 +1,14 @@
 # Performance Tracking C2 — bounded programme-attribution authority
 
+> **Current delivery — 2026-10-06:** Approved boundary integrated through
+> `79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`; both migrations applied and
+> [SELECT-verified](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md)
+> on Cohort Field Manual, ledger 117. Readers remain unwired; artifact table is
+> empty, legacy scope unproven. No real publication/backfill, permission repair
+> or next-slice authority. Original proposal/review statements below are dated
+> historical evidence, superseded only as to integration/deployment status.
+
+
 **Recorded:** 2026-10-05. **Status:** FOUNDER_APPROVED; LOCAL_REVIEW_FIXED_VERIFIED_AWAITING_INTEGRATION_APPROVAL.
 [Implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md)
 records the exact local boundary, migrations and gates. No hosted apply or wiring.

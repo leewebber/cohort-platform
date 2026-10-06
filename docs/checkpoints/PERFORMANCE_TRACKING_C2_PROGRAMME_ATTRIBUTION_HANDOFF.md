@@ -1,6 +1,7 @@
 # Performance Tracking C2 — local programme-attribution handoff
 
-**Date:** 2026-10-05. **Status:** LOCAL_REVIEW_FIXED_VERIFIED_AWAITING_INTEGRATION_APPROVAL.
+**Date:** 2026-10-05. **Current status (2026-10-06):** INTEGRATED_HOSTED_APPLIED_SELECT_VERIFIED; production unwired.
+The implementation/review sections below preserve their dated evidence; the deployment closeout supersedes their pending integration/apply wording.
 Founder approved the [bounded proposal](../architecture/Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md): owner-gated combined read and future-only publication retention; legacy scope stays unproven, with no backfill.
 
 ## Integration boundary
@@ -212,3 +213,20 @@ Remaining limits are unchanged: future trusted private publication only, legacy
 scope unproven, no general historical recovery, no hosted deployment or app
 wiring. No real publication/athlete-data writes, selection/manual storage, UI,
 scoring or next slice. Stop for founder integration approval; no push.
+
+## Hosted deployment closeout — 2026-10-06
+
+The complete six-commit reviewed range
+`005d53dc9b822d7e8075c75e5679324b93edebf2..79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`
+is integrated. Both exact migration hashes above were applied to Cohort Field
+Manual after clean exact HEAD/origin main, ACTIVE_HEALTHY, ledger 115, unchanged
+compatibility/security baselines and exact two-file dry-run guards. **43 SELECT-only
+postchecks passed**, ledger **117 / 20261005141000**, exact function bodies/security/
+grants and artifact immutability metadata; all 24 evidence counts/digests unchanged,
+zero retained artifacts, unchanged existing authorities and permission discrepancy.
+Final health ACTIVE_HEALTHY and dry-run up to date. CLI cache warning independently
+verified; no bypass. Disposable files removed; repository supabase/.temp unchanged.
+See [deployment record](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md)
+for hashes, source/authority digests, baselines and limitations. No tests/builds
+rerun, production wiring, publication/backfill, athlete writes, permission widening
+or next slice. Documentation committed locally; stop before push.
