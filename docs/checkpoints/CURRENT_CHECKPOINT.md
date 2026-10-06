@@ -1,5 +1,20 @@
 # Current repository checkpoint
 
+> **C4 internal visual review — 2026-10-06:** Founder-authorised bounded
+> synthetic preview is **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**
+> on `codex/c4-tracking-visual-review`, implementation `72024bb` after preserved
+> proposal `f1d244b`, base/cached origin/main
+> `ee2ebaeb14a809628a031b428ff9fee87b0c5e06`. No fetch/hosted refresh.
+> [C4 handoff](./PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.md): six scenarios,
+> actual C2/C3 outcomes, expandable evidence, independent tracking separated from
+> attribution; 96 focused tests, zero changed-file diagnostics, six safety groups
+> passed. Dedicated loopback entry remains unreachable from production and existing
+> Studio workflows. No arithmetic, historical replay/cross-record snapshot claim,
+> prescription eligibility, storage, real content or runtime wiring. Stop for
+> founder visual review; no integration/push or next-slice authority. Earlier dated
+> C3 integration pauses below are preserved; this explicit C4 authority covers only
+> the internal synthetic review surface.
+
 > **C3 review — 2026-10-06:** Bounded extraction/comparability is
 > **LOCAL_REVIEW_VERIFIED_AWAITING_FOUNDER_INTEGRATION_APPROVAL** on
 > `codex/c3-tracking-evaluation`. Original proposal/implementation/handoff through
