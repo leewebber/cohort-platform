@@ -106,3 +106,28 @@ persistence, manual entry, real profiles/content, programme/assignment/package/B
 changes, fetch/push or full suite. `.env` and `supabase/.temp` remain untouched.
 Visual acceptance, integration and any later product slice require separate
 authority.
+
+## 2026-10-06 bounded presentation review
+
+Direct browser review of the loopback preview covered all six scenarios at
+1118 × 768 and 390 × 844, including 200% Flutter text. A temporary text-scale
+override was used only for browser QA and removed before commit. The normal
+preview was restored. Expanded definition/observation, correction and authority
+evidence were inspected; narrow large-text evidence wraps and remains scrollable.
+
+The default view now names the metric alongside every observation, renders dates
+in plain form while preserving precision/timezone limits, and uses `Can compare`,
+`Cannot compare` or `Not enough evidence` with short refusal reasons. Missing,
+partial, skipped, corrected and refused requests remain explicit. Coverage,
+tracking eligibility, raw dates/IDs and authority diagnostics are expandable
+Evidence. Independent observations and programme claims remain distinct; the
+visible review limits retain prescription and historical/coherence boundaries.
+Synthetic labelling stays visible. No evaluator, fixtures or authority rules changed.
+
+Current-turn verification: **15 affected UI/isolation tests passed** (13 UI,
+2 isolation); **zero changed-file diagnostics** for the screen and UI test.
+All six UI scenarios still pass at 390 × 844 / 200% text, including evidence,
+menu focus and reset. Diff and local document links checked. Prior evaluator,
+Studio and safety-gate results above remain attributed to implementation
+72024bb; presentation-only edits do not change shared paths and did not rerun
+those gates or the full suite. Founder visual acceptance remains pending.

@@ -258,7 +258,6 @@ class _CaseView extends StatelessWidget {
     return _Panel(
       children: [
         Text(review.title, style: CohortTextStyles.h2),
-        Text(review.note, style: CohortTextStyles.body),
         const Divider(),
         Text(
           '${review.profile.name} · version ${review.profile.version}',
@@ -274,12 +273,8 @@ class _CaseView extends StatelessWidget {
             style: CohortTextStyles.cardTitle,
           ),
           Text(
-            '${_fieldLabel(metric.captureField)} · ${trackingUnitLabel(metric.unit.name)} · ${_methodLabel(review, metric)} version ${metric.method.version}',
+            '${_fieldLabel(metric.captureField)} · ${trackingUnitLabel(metric.unit.name)}',
             style: CohortTextStyles.body,
-          ),
-          Text(
-            '${metric.allowPartial ? 'Partial values may be shown, but are not comparison eligible.' : 'Incomplete selected fields withhold the value.'} Required comparison context: retained comparison family. No freshness rule or assessment requirement.',
-            style: CohortTextStyles.small,
           ),
         ],
         _Evidence(
@@ -318,26 +313,19 @@ class _CaseView extends StatelessWidget {
           for (final request in requests)
             if (request['outcome'] is Map)
               _FailedRequest(review: review, request: request),
-          const Text(
-            'Requested observation pairs',
-            style: CohortTextStyles.cardTitle,
-          ),
+          const Text('Comparison', style: CohortTextStyles.cardTitle),
           if (comparisons.isEmpty)
             const Text(
-              'No pair requested in this case.',
+              'No comparison requested.',
               style: CohortTextStyles.body,
             ),
           for (final pair in comparisons)
             _Pair(review: review, pair: pair, observations: observations),
         ],
-        const Text('Authority boundary', style: CohortTextStyles.cardTitle),
-        const Text(
-          'Prescription eligibility: not granted. Programme attribution and tracking eligibility are separate facts.',
-          style: CohortTextStyles.body,
-        ),
         _Evidence(
           title: 'Source and correction evidence',
           data: {
+            'review_note': review.note,
             'observations': observations,
             'requested_fields': [
               for (final i in review.inputs)
@@ -420,11 +408,7 @@ class _Observation extends StatelessWidget {
               style: CohortTextStyles.small,
             ),
           for (final view in views) ...[
-            if (views.length > 1)
-              Text(
-                _metricFor(review, view).label,
-                style: CohortTextStyles.small,
-              ),
+            Text(_metricFor(review, view).label, style: CohortTextStyles.small),
             Text(_valueLabel(view), style: CohortTextStyles.h2),
             Text(_dateLabel(view), style: CohortTextStyles.small),
             Text(
@@ -438,11 +422,6 @@ class _Observation extends StatelessWidget {
                 ),
                 style: CohortTextStyles.body,
               ),
-            Text(_coverageLabel(view), style: CohortTextStyles.small),
-            Text(
-              'Independent tracking eligibility: ${view['tracking_eligible'] == true ? 'eligible' : 'not eligible'}',
-              style: CohortTextStyles.body,
-            ),
             Text(
               _attributionLabel(view['programme_attribution'] as String),
               style: CohortTextStyles.body,
@@ -452,12 +431,34 @@ class _Observation extends StatelessWidget {
                 'Correction audit present; earlier inputs unavailable.',
                 style: CohortTextStyles.body,
               ),
-              Text(
-                'Recorded audit times (unordered): ${review.frames.expand((f) => f.corrections).map((a) => a['corrected_at']).toSet().join(', ')}. Membership does not prove this field changed or identify a latest revision.',
-                style: CohortTextStyles.small,
-              ),
             ],
           ],
+          _Evidence(
+            title: 'Evidence',
+            summaries: [
+              for (final view in views) ...[
+                Text(_coverageLabel(view), style: CohortTextStyles.small),
+                Text(
+                  'Independent tracking eligibility: ${view['tracking_eligible'] == true ? 'eligible' : 'not eligible'}',
+                  style: CohortTextStyles.small,
+                ),
+                Text(
+                  'Programme attribution: ${view['programme_attribution']}',
+                  style: CohortTextStyles.small,
+                ),
+              ],
+            ],
+            data: {
+              'observation': observation,
+              'audit_times_unordered': review.frames
+                  .expand((f) => f.corrections)
+                  .map((a) => a['corrected_at'])
+                  .toSet()
+                  .toList(),
+              'historical_inputs_available': false,
+              'audit_membership_proves_field_changed_or_latest_revision': false,
+            },
+          ),
         ],
       ),
     );
@@ -492,7 +493,7 @@ class _FailedRequest extends StatelessWidget {
               style: CohortTextStyles.body,
             ),
           const Text(
-            'No measured value admitted from this request. Independent tracking eligibility: not eligible.',
+            'No recorded value is available from this request.',
             style: CohortTextStyles.body,
           ),
           Text(
@@ -540,9 +541,9 @@ class _Pair extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(switch (pair['state']) {
-            'comparable' => 'Comparable',
-            'incomparable' => 'Not comparable',
-            _ => 'Comparison unavailable',
+            'comparable' => 'Can compare',
+            'incomparable' => 'Cannot compare',
+            _ => 'Not enough evidence',
           }, style: CohortTextStyles.cardTitle),
           const SizedBox(height: CohortSpacing.sm),
           LayoutBuilder(
@@ -569,7 +570,7 @@ class _Pair extends StatelessWidget {
           const SizedBox(height: CohortSpacing.sm),
           if ((pair['reasons'] as List).isEmpty)
             const Text(
-              'Same exact definition and method, matching unit, field scope and retained context; two distinct eligible observations.',
+              'Two distinct observations with matching definitions, units and context.',
               style: CohortTextStyles.body,
             ),
           for (final reason in pair['reasons'] as List)
@@ -609,9 +610,14 @@ class _Panel extends StatelessWidget {
 }
 
 class _Evidence extends StatelessWidget {
-  const _Evidence({required this.title, required this.data});
+  const _Evidence({
+    required this.title,
+    required this.data,
+    this.summaries = const [],
+  });
   final String title;
   final Object data;
+  final List<Widget> summaries;
   @override
   Widget build(BuildContext context) => Material(
     color: Colors.transparent,
@@ -621,6 +627,7 @@ class _Evidence extends StatelessWidget {
       childrenPadding: const EdgeInsets.only(bottom: CohortSpacing.md),
       expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        ...summaries,
         SelectableText(
           const JsonEncoder.withIndent('  ').convert(data),
           style: const TextStyle(
@@ -639,14 +646,6 @@ TrackingMetricDefinition _metricFor(TrackingReviewCase review, Map view) =>
     review.metrics.singleWhere(
       (m) => m.digest == (view['metric'] as Map)['digest'],
     );
-String _methodLabel(TrackingReviewCase review, TrackingMetricDefinition m) =>
-    review.definitions
-            .whereType<TrackingMethodDefinition>()
-            .singleWhere((a) => a.digest == m.method.digest)
-            .kind ==
-        TrackingMethodKind.fieldExtraction
-    ? 'Field extraction'
-    : 'Unsupported difference signature';
 String _fieldLabel(String field) => switch (field) {
   'duration_seconds' => 'Set duration',
   'distance' => 'Block distance',
@@ -667,10 +666,34 @@ String _valueLabel(Map view) => view['value'] == null
 String _dateLabel(Map view) {
   final chronology = view['chronology'] as Map?;
   if (chronology == null) return 'Performed date unavailable';
+  final raw =
+      (chronology['performed_on'] ?? chronology['performed_at']) as String?;
+  final date = raw == null ? null : DateTime.tryParse(raw);
+  if (date == null) return 'Performed date unavailable';
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+  final label = '${date.day} ${months[date.month - 1]} ${date.year}';
   if (chronology['precision'] == 'civil_date') {
-    return '${chronology['performed_on']} · date only · timezone unknown';
+    return '$label · date only · timezone unknown';
   }
-  return '${chronology['performed_at']} · timestamp (UTC) · civil timezone unknown';
+  final time = raw!
+      .split('T')
+      .last
+      .replaceFirst(RegExp(r'\.000Z$'), ' UTC')
+      .replaceFirst(RegExp(r'Z$'), ' UTC');
+  return '$label · $time · civil timezone unknown';
 }
 
 String _coverageLabel(Map view) {
@@ -693,45 +716,38 @@ String _stateLabel(String state) => switch (state) {
   _ => 'Unrecognised evidence state (see evidence)',
 };
 String _attributionLabel(String state) => switch (state) {
-  'not_requested' => 'Programme attribution not requested',
-  'proven' => 'Programme attribution: proven in this synthetic fixture',
+  'not_requested' => 'Independent observation · no programme link requested',
+  'proven' => 'Programme link proven in this synthetic fixture',
   'unproven' => 'Programme scope unproven',
-  _ => 'Programme attribution failed',
+  _ => 'Programme link refused',
 };
 
 /// Formatting only: returned codes remain intact in expandable evidence.
 String trackingReasonLabel(String reason) {
   if (reason.startsWith('context_incompatible:')) {
-    return 'Retained comparison context differs (${reason.split(':').last.replaceAll('_', ' ')}).';
+    return 'Comparison context differs (${reason.split(':').last.replaceAll('_', ' ')}).';
   }
   if (reason.startsWith('context_unavailable:')) {
-    return 'Required comparison context is missing (${reason.split(':').last.replaceAll('_', ' ')}).';
+    return 'Comparison context is missing (${reason.split(':').last.replaceAll('_', ' ')}).';
   }
   return switch (reason) {
-    'same_observation' =>
-      'Both references identify the same physical observation.',
-    'metric_version_incompatible' =>
-      'The exact metric definitions or versions differ.',
-    'method_incompatible' => 'The exact extraction methods differ.',
+    'same_observation' => 'The same observation is referenced twice.',
+    'metric_version_incompatible' => 'Metric definitions differ.',
+    'method_incompatible' => 'Measurement methods differ.',
     'unit_incompatible' || 'canonical_unit_incompatible' =>
-      'Recorded units do not match the required unit; no conversion is performed.',
+      'Units differ. No conversion is performed.',
     'field_scope_incompatible' => 'The selected field scopes differ.',
-    'evidence_not_available' =>
-      'At least one operand lacks an available, tracking-eligible value.',
-    'selected_scope_incomplete' =>
-      'The selected measurement scope is incomplete.',
-    'actual_not_captured' =>
-      'Work was completed, but this actual value was not captured.',
+    'evidence_not_available' => 'A complete, usable observation is missing.',
+    'selected_scope_incomplete' => 'This measurement is incomplete.',
+    'actual_not_captured' => 'Work was completed; the value was not recorded.',
     'block_not_started' => 'The selected scope has not been started.',
     'block_skipped' => 'The selected scope was skipped.',
-    'programme_scope_unproven' =>
-      'Retained programme scope proof is unavailable; no programme attribution is admitted.',
+    'programme_scope_unproven' => 'The programme link cannot be proven.',
     'programme_scope_mismatch' || 'programme_scope_conflict' =>
-      'The programme claim contradicts the supplied source proof.',
-    'conflicting_source_aliases' =>
-      'Aliases of one physical source contain conflicting evidence.',
+      'The programme claim conflicts with its evidence.',
+    'conflicting_source_aliases' => 'References to the same source disagree.',
     'unsupported_method' =>
-      'This method is not supported for observation extraction; no calculated result is produced.',
+      'This method is unsupported. No result is produced.',
     _ =>
       'Evidence cannot be admitted for an unrecognised reason. See expandable evidence for the exact diagnostic.',
   };

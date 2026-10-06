@@ -46,10 +46,18 @@ void main() {
     );
     expect(find.text('12 seconds'), findsWidgets);
     expect(find.text('14 seconds'), findsWidgets);
-    expect(find.textContaining('2026-01-08'), findsWidgets);
-    expect(find.text('Comparable'), findsOneWidget);
-    expect(find.text('Programme attribution not requested'), findsNWidgets(2));
+    expect(find.textContaining('8 Jan 2026 · 12:00:00 UTC'), findsWidgets);
+    expect(find.text('Can compare'), findsOneWidget);
+    expect(
+      find.text('Independent observation · no programme link requested'),
+      findsNWidgets(2),
+    );
     expect(find.byType(SelectableText), findsNothing);
+    expect(find.textContaining('Selected-field coverage:'), findsNothing);
+    expect(
+      find.textContaining('Independent tracking eligibility:'),
+      findsNothing,
+    );
     for (final label in [
       'Save',
       'Select profile',
@@ -80,9 +88,7 @@ void main() {
       expect(find.byType(SelectableText), findsNothing);
       expect(find.text('Evaluation refused'), findsOneWidget);
       expect(
-        find.text(
-          'Aliases of one physical source contain conflicting evidence.',
-        ),
+        find.text('References to the same source disagree.'),
         findsOneWidget,
       );
       expect(
@@ -90,7 +96,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.text('Both references identify the same physical observation.'),
+        find.text('The same observation is referenced twice.'),
         findsOneWidget,
       );
       expect(tester.takeException(), isNull);
@@ -138,8 +144,8 @@ void main() {
         find.text('Correction audit present; earlier inputs unavailable.'),
         findsWidgets,
       );
-      expect(find.textContaining('Tied audit times'), findsOneWidget);
-      expect(find.text('Comparable'), findsNothing);
+      expect(find.textContaining('Recorded audit times'), findsNothing);
+      expect(find.text('Can compare'), findsNothing);
       semantics.dispose();
       expect(tester.takeException(), isNull);
     },
@@ -154,29 +160,84 @@ void main() {
     expect(find.text('Skipped — no value'), findsOneWidget);
     expect(find.text('Value unavailable — no value'), findsOneWidget);
     expect(find.textContaining('date only · timezone unknown'), findsOneWidget);
-    expect(find.text('Comparison unavailable'), findsNWidgets(2));
-    expect(
-      find.textContaining('Selected-field coverage: 0 of 1'),
-      findsWidgets,
-    );
+    expect(find.text('Not enough evidence'), findsNWidgets(2));
+    expect(find.textContaining('Selected-field coverage:'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'observation Evidence retains coverage eligibility and exact facts',
+    (tester) async {
+      await mount(tester, TrackingReviewScenario.complete);
+      await tester.ensureVisible(find.text('Evidence').first);
+      await tester.tap(find.text('Evidence').first);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Selected-field coverage: 1 of 1 required complete fields'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Independent tracking eligibility: eligible'),
+        findsOneWidget,
+      );
+      final evidence = tester
+          .widget<SelectableText>(find.byType(SelectableText))
+          .data!;
+      expect(evidence, contains('"tracking_eligible": true'));
+      expect(evidence, contains('"grants_prescription_eligibility": false'));
+      expect(evidence, contains('"performed_at": "2026-01-01T12:00:00.000Z"'));
+      expect(
+        evidence,
+        contains(
+          '"audit_membership_proves_field_changed_or_latest_revision": false',
+        ),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'comparison refusals use short reasons and preserve every mismatch',
+    (tester) async {
+      await mount(tester, TrackingReviewScenario.incompatible);
+      expect(find.text('Cannot compare'), findsNWidgets(3));
+      expect(find.text('Not enough evidence'), findsOneWidget);
+      expect(
+        find.text('Units differ. No conversion is performed.'),
+        findsNWidgets(2),
+      );
+      expect(find.text('Measurement methods differ.'), findsOneWidget);
+      expect(find.text('Metric definitions differ.'), findsOneWidget);
+      expect(find.textContaining('Comparison context differs'), findsOneWidget);
+      expect(
+        find.textContaining('Comparison context is missing'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('A complete, usable observation is missing.'),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
   testWidgets(
     'independent and unproven scope remain visible without a fallback',
     (tester) async {
       await mount(tester, TrackingReviewScenario.attribution);
       expect(
-        find.text('Independent tracking eligibility: eligible'),
-        findsNWidgets(2),
+        find.textContaining('Independent tracking eligibility:'),
+        findsNothing,
       );
-      expect(find.text('Programme attribution not requested'), findsOneWidget);
-      expect(find.text('Programme scope unproven'), findsOneWidget);
       expect(
-        find.text('Programme attribution: proven in this synthetic fixture'),
+        find.text('Independent observation · no programme link requested'),
         findsOneWidget,
       );
-      expect(find.text('Programme attribution failed'), findsOneWidget);
+      expect(find.text('Programme scope unproven'), findsOneWidget);
+      expect(
+        find.text('Programme link proven in this synthetic fixture'),
+        findsOneWidget,
+      );
+      expect(find.text('Programme link refused'), findsOneWidget);
       expect(find.text('Request refused'), findsNWidgets(2));
       expect(tester.takeException(), isNull);
     },
