@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **C3 evaluation proposal — 2026-10-06:** Local clean HEAD/cached origin main
+> were verified at `66e94e010cef40d1743694371bb59b0940b3eb72`, without fetch or
+> hosted contact. C2 deployment documentation is integrated at that tip; recorded
+> hosted ledger is 117, both readers remain unwired, legacy scope unproven.
+> [C3 proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
+> recommends pure synthetic profile projection and explicitly requested
+> same-definition/context comparability, with numeric differences deferred.
+> Exact versions, deduplicated physical sources and correction provenance remain
+> observational; programme attribution and prescription eligibility are separate.
+> `PERFORMANCE_TRACKING_C3=PROPOSED_AWAITING_FOUNDER_APPROVAL`,
+> `PERFORMANCE_TRACKING_C3_IMPLEMENTATION_AUTHORISED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. No implementation or hosted refresh.
+> Proposal documentation is local only; stop for founder approval, no push.
+> Earlier dated integration/deployment pauses below are historical.
+
+
 > **C2 programme-attribution deployment — 2026-10-06:** The reviewed six-commit
 > range is integrated through `79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`.
 > Both approved migrations are **HOSTED_APPLIED_SELECT_VERIFIED** on Cohort Field

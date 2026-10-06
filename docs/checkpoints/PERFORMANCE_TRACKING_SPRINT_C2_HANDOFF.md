@@ -1,5 +1,17 @@
 # Performance Tracking C2 — local read-only adapter handoff
 
+> **Delivery pointer — 2026-10-06:** Both independent and combined C2
+> infrastructure are deployed as recorded in the
+> [combined deployment closeout](./PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md),
+> integrated through `66e94e010cef40d1743694371bb59b0940b3eb72`. Readers remain
+> unwired; the independent reader still refuses claims, and the combined reader
+> requires retained artifacts. Legacy scope stays unproven. No hosted refresh.
+> [C3 evaluation proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
+> is awaiting founder approval, with implementation unauthorised. Original
+> closeout/blocked-authority wording below is historical, superseded only for
+> the separately authorised combined authority and deployment.
+
+
 **Recorded:** 2026-10-05
 
 **Status at original closeout:** PURE_ADAPTER_LOCAL_VERIFIED.

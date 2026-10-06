@@ -1,16 +1,16 @@
 # Athlete Product Completion Plan v1
 
-> **Live continuation — 2026-10-06:** Studio/B1–B4 remain complete within
-> [recorded scopes](../checkpoints/CURRENT_CHECKPOINT.md). C1 contracts and both
-> reviewed C2 ranges are integrated through `79e4d9154c6d1dc6f6e69a468e917d6d00186cf0`.
-> Independent and combined History infrastructure plus future-only private
-> publication retention are deployed on Cohort Field Manual, ledger 117;
-> [SELECT-verified deployment](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
-> Readers remain unwired; legacy scope is unproven, with zero retained artifacts.
-> Tracking is observational and grants no prescription eligibility. Schema v3,
-> production wiring, profile/selection/manual storage, real content/tests,
-> calculations/UI and further implementation remain separately scoped and
-> unauthorised. No next slice is started by this deployment closeout.
+> **Live continuation — 2026-10-06:** C1 and reviewed C2 infrastructure are
+> integrated; deployment closeout is integrated at
+> `66e94e010cef40d1743694371bb59b0940b3eb72`. Recorded hosted ledger 117;
+> [deployment](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md).
+> Readers remain unwired; legacy scope is unproven. Tracking remains observational.
+> [C3 evaluation proposal](../architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
+> recommends pure synthetic profile projection and explicit comparability, with
+> numeric derivations deferred. **Awaiting founder approval; C3 implementation
+> is unauthorised.** No real content, prescription eligibility, schema v3, storage,
+> wiring or next-slice work. No fresh hosted survey is implied by these pointers.
+
 
 **Status:** Binding athlete-launch doctrine and milestone plan
 **Recorded:** 2026-09-20

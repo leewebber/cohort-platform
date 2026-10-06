@@ -1,24 +1,26 @@
 # Performance tracking profiles — revised Sprint C foundation proposal
 
-**Recorded / revised:** 2026-10-05
-**Status:** Revised contract architecture FOUNDER_APPROVED; C1 INTEGRATED at
-`72c1281f0966f2a6485873f6071b0e000ba1e000`. C2's reviewed independent range is
-integrated through `144ba110f8de938dc3fbd3e9cbb9a83fd21cf4ba`; its RPC is hosted
-SELECT-verified, ledger 115. Hosted programme witnesses remain blocked; bridge/adapter
-remain unwired. See [deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
-for exact scope and preserved hosted/local session-SELECT discrepancy.
-**Handoff:** [C1 implementation and verification](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md)
-and [C2 local adapter/gaps](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md).
-The explicit C1 and bounded C2 authorities superseded their earlier pauses;
-neither grants a broader tracking-product licence. C2 has a deployed independent
-RPC and unwired bridge; no production consumer, persistence or UI; see [coherent read proposal](./Performance_Tracking_C2_Coherent_History_Read_Proposal_v1.md).
-**Coherent reader continuation:** [local proof and stopped programme authority](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md).
-**Independent reader review:** [scoped fix, authenticated permission proof and proposed witness boundary](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_REVIEW.md). Programme attribution remains stopped in the deployed independent reader.
-**Programme-attribution follow-up:** [bounded authority and canonical-retention proposal](./Performance_Tracking_C2_Programme_Attribution_Authority_Proposal_v1.md).
-Founder-approved bounded local continuation is now verified and awaiting review;
-see [implementation handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
-No client-byte/hash-only authority, legacy reconstruction, permission remediation
-or hosted deployment. Schema v3 remains outside C2.
+**Recorded / revised:** 2026-10-05; delivery pointers updated 2026-10-06.
+**Status:** Revised contract architecture FOUNDER_APPROVED. C1 integrated at
+`72c1281f0966f2a6485873f6071b0e000ba1e000`; independent and combined C2
+infrastructure/deployment documentation integrated through
+`66e94e010cef40d1743694371bb59b0940b3eb72`.
+[Independent deployment](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
+records its earlier ledger 115 boundary; the
+[combined deployment](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HOSTED_DEPLOYMENT.md)
+records ledger 117, preserved permissions/evidence and zero retained artifacts.
+No hosted refresh in this proposal task. Readers remain unwired; independent
+reader refuses programme claims, combined authority requires retained proof.
+Legacy scope remains unproven; no client-byte/hash-only authority or backfill.
+[C1 handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C1_HANDOFF.md),
+[C2 adapter](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md),
+[independent bridge](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_COHERENT_READER_HANDOFF.md),
+[programme bridge](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md).
+[C3 evaluation proposal](./Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
+is documentation only, awaiting founder approval: synthetic profile projection
+and explicit comparability, with numeric derivations deferred. No C3 implementation,
+production wiring, storage, real content or broader tracking licence. Schema v3
+remains outside these slices.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
 **Audit:** [PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md](../checkpoints/PROGRAMME_PERFORMANCE_METRICS_PROFILE_SPRINT_C_AUDIT.md)
 
@@ -38,8 +40,10 @@ PROGRAMME_METRICS_PROFILE_C1_IMPLEMENTATION=INTEGRATED
 PROGRAMME_METRICS_PROFILE_C2_AUTHORISED=true
 PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true
 PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false
-PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=LOCAL_VERIFIED_REVIEW_PENDING
-PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=false
+PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=HOSTED_APPLIED_SELECT_VERIFIED
+PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=true
+PERFORMANCE_TRACKING_C3=PROPOSED_AWAITING_FOUNDER_APPROVAL
+PERFORMANCE_TRACKING_C3_IMPLEMENTATION_AUTHORISED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
 PROGRAMME_CONTENT_AUTHORING_AUTHORISED=false
@@ -335,14 +339,10 @@ rationale, not pending approval questions:
    a second writable measurement ledger, with duplicate/correction drift risk.
    The source/reference contract is approved for C1; database mechanics can wait.
 
-C1 was separately authorised, reviewed and integrated. The bounded C2 request
-authorised an unwired read-only History adapter; its independent pure work is
-locally verified. The [C2 handoff](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HANDOFF.md)
-records the original stopped portions; the
-[deployment closeout](../checkpoints/PERFORMANCE_TRACKING_SPRINT_C2_HOSTED_DEPLOYMENT.md)
-now verifies only independent RPC deployment. Programme attribution is now locally verified in the bounded continuation
-[handoff](../checkpoints/PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION_HANDOFF.md);
-hosted deployment and production wiring remain stopped. Full later
-storage/package choices remain deferred. C1 does not author real profiles/tests
-or release the strategic pause before content creation. Tracking confers no
-hosted publication, assignment, prescription-policy or B2 ingestion authority.
+C1 was separately authorised, reviewed and integrated. Both bounded C2 readers
+and future-only private publication retention are integrated and deployed as
+recorded above; production wiring remains stopped. The C3 proposal requires
+separate founder approval. Later storage/package/product choices remain deferred.
+No real profiles/tests are authored and the strategic content pause remains.
+Tracking confers no publication, assignment, prescription-policy or B2 ingestion
+authority beyond the exact historical operations already recorded.

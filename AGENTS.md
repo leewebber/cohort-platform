@@ -191,7 +191,13 @@ with no backfill. Package v1/v2 hashes, original publication entrypoints and
 independent/correction authorities are preserved; tracking grants no prescription
 eligibility. Existing permission discrepancy is preserved. No real publication,
 permission remediation, production wiring or next slice is authorised by this
-closeout. Documentation is local only; stop before push.
+closeout. Deployment documentation is integrated at
+`66e94e010cef40d1743694371bb59b0940b3eb72`.
+The [C3 read-only evaluation proposal](docs/architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
+is prepared on a local documentation branch, awaiting founder approval. It
+recommends pure synthetic profile projection and explicit comparability only;
+numeric differences remain deferred. C3 implementation, production wiring and
+further hosted work remain unauthorised. Stop for founder approval; no push.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
