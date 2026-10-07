@@ -1,5 +1,18 @@
 # History permission remediation — local candidate and blocking proof
 
+> **Completion ownership protection — locally proved, 2026-10-07:**
+> [Completion handoff](./PERFORMANCE_TRACKING_COMPLETION_OWNERSHIP_PROTECTION_HANDOFF.md) preserves the audit, table remediation and blocked
+> handoff from `ca3837946e526e29a0eb805665ec3e5aa0d29f1f` on
+> `codex/completion-ownership-protection`; base/cached origin/main remains
+> `b1d028fb33eb537391f307bb4eac22dddd98ebde`. Server ownership/exact-link
+> guards and independent parent protection are implemented locally. The former
+> completion-isolation failure and expanded actual-role/API proof pass; full DB
+> replay/compatibility, structured-running gate, 317 focused Flutter tests,
+> zero analysis issues and six safety groups pass. **AWAITING_FOUNDER_REVIEW**.
+> Prior blocked results below are historical. Hosted application and device
+> validation remain separately gated. No hosted contact/apply, push, release,
+> phone build/install or next slice. Stop for founder review.
+
 **Recorded:** 2026-10-07 (Asia/Makassar).
 **Status:** **BLOCKED_AWAITING_FOUNDER_REVIEW**. Table remediation is locally
 proved; complete server-side cross-athlete isolation is **not** proved and has a
