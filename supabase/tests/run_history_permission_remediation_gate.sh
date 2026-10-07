@@ -33,8 +33,10 @@ python3 "$TESTS_DIR/concurrency/gate_c2_history_read.py"
 python3 "$TESTS_DIR/concurrency/gate_c2_programme_read.py"
 psql_file "$TESTS_DIR/sql/history_permission_remediation_fixture.sql"
 psql_file "$MIGRATION"
+psql_file "$REPO_ROOT/supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql"
 psql_file "$TESTS_DIR/sql/gate_history_permission_remediation.sql"
 psql_file "$MIGRATION"
+psql_file "$REPO_ROOT/supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql"
 psql_file "$TESTS_DIR/sql/history_permission_remediation_preservation.sql"
 # Unknown permissive policies must reject remediation atomically, never coexist.
 docker exec "$SPRINT12_DB_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -57,4 +59,7 @@ echo 'HISTORY_PERMISSION_TABLE_REMEDIATION_LOCAL_GATE=PASS'
 psql_file "$TESTS_DIR/sql/helpers.sql"
 psql_file "$TESTS_DIR/sql/gate_q_programme_training_session_start.sql"
 psql_file "$TESTS_DIR/sql/gate_history_permission_completion_owner.sql"
+psql_file "$TESTS_DIR/sql/gate_l_programme_completion_advancement.sql"
+psql_file "$TESTS_DIR/sql/gate_completion_ownership_security.sql"
+python3 "$TESTS_DIR/completion_ownership_http.py" "$SPRINT12_WORKDIR"
 echo 'HISTORY_PERMISSION_REMEDIATION_LOCAL_GATE=PASS'

@@ -141,9 +141,15 @@ BEGIN
 
   v_key := format('prog:%s@%s:w%s:%s:s%s:%s', v_enrol_a, v_version, v_week, v_day, v_slot, v_protocol_a);
 
-  INSERT INTO training_sessions (athlete_id, protocol_id, status, started_at)
-  VALUES (v_athlete_a::text, v_protocol_a, 'in_progress', NOW())
-  RETURNING id INTO v_ts;
+  -- Exact canonical parent/outcome link, rather than a bare synthetic session.
+  PERFORM set_config('role','authenticated',true);
+  v_res:=public.create_or_resume_programme_training_session(jsonb_build_object(
+    'assignment_id',v_enrol_a,'session_slot_id',v_slot_a,'programme_version_id',v_version,
+    'materialised_package_content_hash',v_hash,'programmed_session_key',v_key,
+    'planned_protocol_id',v_protocol_a,'effective_protocol_id',v_protocol_a,
+    'expected_week',v_week,'expected_day_key',v_day,'expected_slot_order',v_slot));
+  v_ts:=(v_res#>>'{training_session,id}')::bigint;
+  PERFORM set_config('role','postgres',true);
 
   -- Anon denied
   BEGIN
@@ -328,8 +334,8 @@ BEGIN
   ));
   PERFORM set_config('role', 'postgres', true);
   PERFORM sprint12_record(
-    'L','conflict_rejects_overwrite','conflict', v_res->>'status',
-    NULL, (v_res->>'status') = 'conflict', v_res::text
+    'L','conflict_rejects_overwrite','authorization_failure', v_res->>'status',
+    NULL, (v_res->>'status') = 'authorization_failure', v_res::text
   );
 
   SELECT athlete_note INTO v_day

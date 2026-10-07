@@ -21,6 +21,9 @@ DECLARE
 BEGIN
   ALTER TABLE public.training_session_records
     DISABLE TRIGGER trg_sync_training_session_from_terminal_record;
+  -- Postgres-only historical seeding must also precede the new write guard.
+  -- Neither trigger is disabled for a client operation or a security proof.
+  ALTER TABLE public.training_session_records DISABLE TRIGGER guard_completion_record_identity_v1;
 
   INSERT INTO public.training_sessions (athlete_id, protocol_id, status, started_at, created_at, updated_at)
   VALUES ('gate-aw-athlete', 'GATE-AW-COMPLETE', 'in_progress', NOW() - INTERVAL '1 day', NOW(), NOW())
@@ -234,6 +237,7 @@ BEGIN
 
   ALTER TABLE public.training_session_records
     ENABLE TRIGGER trg_sync_training_session_from_terminal_record;
+  ALTER TABLE public.training_session_records ENABLE TRIGGER guard_completion_record_identity_v1;
 
   INSERT INTO public.training_sessions (athlete_id, protocol_id, status, started_at, created_at, updated_at)
   VALUES ('gate-aw-athlete', 'GATE-AW-FUTURE', 'in_progress', NOW(), NOW(), NOW())

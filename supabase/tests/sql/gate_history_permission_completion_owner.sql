@@ -28,6 +28,19 @@ DO $$ DECLARE p jsonb; actor uuid; started jsonb; resumed jsonb; result jsonb;
   RAISE EXCEPTION 'HISTORY_PERMISSION_BLOCKED: rpc_committed=% foreign_parent_changed=%',
    result->>'status'='committed', foreign_status IS DISTINCT FROM 'in_progress';
  END IF;
+ -- The same exact owned parent can still complete partially.
+ PERFORM set_config('role','authenticated',true);
+ p:=p||jsonb_build_object('protocol_id',p->>'planned_protocol_id',
+  'logical_completion_key',p->>'programmed_session_key','idempotency_key','permission-owned-partial',
+  'actuals_fingerprint','permission-owned-partial','training_session_id',own_session,
+  'record_id','d7300000-0000-4000-8000-000000000002','status','partially_completed',
+  'completion_record',jsonb_build_object('source_protocol_id',p->>'planned_protocol_id','session_snapshot','{}'::jsonb));
+ result:=public.complete_programme_session_and_advance(p);
+ PERFORM public.history_permission_assert(result->>'status'='committed','owned partial completion commits');
+ -- One-slot terminal assignments retain their existing inactive response; the
+ -- comprehensive security gate exercises retries on an active two-slot fixture.
+ PERFORM set_config('role','postgres',true);
+ PERFORM public.history_permission_assert((SELECT status='completed' AND ended_early FROM public.training_sessions WHERE id=own_session),'partial parent closes early');
 END $$;
 ROLLBACK;
 \echo HISTORY_PERMISSION_CANONICAL_COMPLETION_OWNER=PASS
