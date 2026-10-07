@@ -1,5 +1,16 @@
 # Current repository checkpoint
 
+> **First athlete metric decision — 2026-10-07:**
+> [Proposed metric/profile decision](../architecture/Performance_Tracking_First_Athlete_Metric_Decision_v1.md)
+> recommends complete-only **Recorded block distance**, in kilometres, inside
+> **Distance observations**. **PROPOSED_NOT_FOUNDER_APPROVED_NOT_PUBLISHED**;
+> documentation only from clean `1ec96aca963ed589cedbac4c02999a8135b9f9b7`.
+> Independent observations remain useful without retained comparison context;
+> C3 pair admission does not establish standardised performance or improvement.
+> The first-slice proposal is preserved. No content publication, implementation,
+> wiring or release authority; session-table discrepancy remains a separate
+> security gate. Stop for founder content decision; no fetch/hosted refresh.
+
 > **First athlete tracking slice proposal — 2026-10-07:**
 > [Bounded History-first proposal](../architecture/Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
 > is **PROPOSED_AWAITING_FOUNDER_APPROVAL**. Clean start HEAD/cached origin/main
