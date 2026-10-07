@@ -205,6 +205,63 @@ void main() {
     },
   );
   test(
+    'every block or record selection change clears the previous comparison',
+    () async {
+      await open(0);
+      await open(1);
+      await choose(0, 1);
+      await choose(1, 0);
+      c.compare();
+      expect(pair()['state'], 'comparable');
+      await choose(1, 1);
+      expect(c.evaluation!.content['comparisons'], isEmpty);
+      c.compare();
+      expect(pair()['state'], 'comparison_unavailable');
+      await c.toggleRecord(c.page[1]);
+      expect(c.evaluation!.content['comparisons'], isEmpty);
+      await open(2);
+      expect(c.views[1].selected, isNull);
+      expect(c.evaluation!.content['comparisons'], isEmpty);
+      await c.refresh();
+      expect(c.views, isEmpty);
+      expect(c.evaluation, isNull);
+    },
+  );
+  test(
+    'sign-out while block projection is pending cannot restore evidence',
+    () async {
+      await open(0);
+      final pending = choose(0, 1);
+      source.signOut();
+      await pending;
+      expect(c.page, isEmpty);
+      expect(c.views, isEmpty);
+      expect(c.evaluation, isNull);
+      expect(c.busy, isFalse);
+    },
+  );
+  test(
+    'old RPC response cannot restore selections after sign-out and sign-in',
+    () async {
+      await c.loadPage();
+      final waiting = Completer<void>();
+      source.beforeRead = () => waiting.future;
+      final pending = c.toggleRecord(c.page[0]);
+      source.signOut();
+      source.actor = syntheticDistanceActor;
+      source.changes.add(null);
+      await c.loadPage();
+      expect(c.page, hasLength(3));
+      waiting.complete();
+      await pending;
+      expect(c.page, hasLength(3));
+      expect(c.identityValid, isTrue);
+      expect(c.views, isEmpty);
+      expect(c.evaluation, isNull);
+      expect(c.busy, isFalse);
+    },
+  );
+  test(
     'missing context keeps independent observations while refusing comparison',
     () async {
       await open(0);

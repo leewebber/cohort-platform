@@ -1,20 +1,21 @@
 # Current repository checkpoint
 
-> **First athlete History slice — 2026-10-07:** Founder approved the exact
-> Distance observations v1 content and authorised its bounded local implementation.
-> [Local handoff](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_HANDOFF.md) records implementation `04016f2`, independent actual
-> C2/C3 wiring, at most two explicitly chosen owned records/blocks, ephemeral
-> choices and honest evidence/refusals. **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**.
-> 317 focused/regression tests, zero changed-file diagnostics and six safety groups
-> passed. Loopback preview `http://127.0.0.1:4197/` uses synthetic evidence only.
-> Presentation refinement: shorter introduction/comparison wording, Deselect,
-> recorded display names and expandable diagnostics; 37 affected tests and zero
-> changed-file diagnostics passed, with direct narrow/200% text browser review.
-> This is a local athlete consumer, not deployed tracking. Programme attribution
-> remains unwired; session-table discrepancy remains an open release security gate.
-> No persistence, arithmetic, prescription eligibility or further implementation.
-> Earlier proposal-only/unwired pointers below are historical for this bounded
-> independent consumer. No hosted refresh, publication, integration or release.
+> **First athlete History visual approval / final review — 2026-10-07:**
+> Founder approved the refined distance view at `86c6224` as a **bounded
+> foundation, not the finished performance dashboard**.
+> [Local handoff](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_HANDOFF.md) records exact owned record/block/field binding,
+> explicit choices, stale-result/account isolation and unchanged actual C2/C3.
+> **VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL** on
+> `codex/athlete-history-distance-slice`; integration base/cached origin/main
+> `f316a48ba529e98d408bf0acefc9ea2798eb9726`. All existing commits preserved.
+> Final review: 323 affected regressions, zero diagnostics across 13 range Dart
+> files, six safety groups passed; local links/diff checked. Preview stopped.
+> This is local independent wiring, not deployed tracking or rollout approval.
+> Permission-security review, real-source feasibility and authenticated device
+> validation remain release gates. Existing release configuration is unchanged.
+> No arithmetic, prescription eligibility, persistence, programme attribution,
+> hosted contact or next-slice work. Earlier dated proposal/visual-review pauses
+> are historical. Stop for founder integration approval; no fetch/push/release.
 
 > **First athlete metric decision — 2026-10-07:**
 > [Proposed metric/profile decision](../architecture/Performance_Tracking_First_Athlete_Metric_Decision_v1.md)

@@ -1,12 +1,17 @@
 # First athlete History distance slice — local handoff
 
-**Recorded:** 2026-10-07. **Status:** LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW.
+**Recorded:** 2026-10-07. **Status:** VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
 **Branch:** `codex/athlete-history-distance-slice`.
 **Exclusive implementation base:** `46a89b4571b903645c5f4863ff936fb321c234c2`.
 **Implementation:** `04016f2b5b93f21cd47e97d65f1ada91b3f726a7`.
 Cached origin/main remains `f316a48ba529e98d408bf0acefc9ea2798eb9726`;
 no fetch, hosted contact or remote publication. Starting checkout was clean.
 All prior commits and both proposal documents are preserved unchanged.
+
+Founder approved the refined view at `86c6224a54223df6005748761b24515c0155fee7`
+as a **bounded foundation, not the finished performance dashboard**. The final
+review below supersedes earlier visual-review pauses. Approval does not close
+security, real-source feasibility or authenticated device-validation gates.
 
 ## Approval and delivered boundary
 
@@ -187,3 +192,78 @@ addition is display metadata within the existing ownership boundary, covered by
 the loopback reader test. Local links and `git diff --check` passed. No hosted
 read, deployment, push or release-security verification occurred. All release
 gates above remain open. Stop for founder visual review.
+
+## Founder visual approval and final correctness review — 2026-10-07
+
+Verified clean checkout on the expected branch and reviewed HEAD
+`86c6224a54223df6005748761b24515c0155fee7`; cached origin/main/integration base
+is `f316a48ba529e98d408bf0acefc9ea2798eb9726`. No fetch. The five existing
+commits are preserved, linear and contain zero merges, in order:
+
+1. `1ec96aca963ed589cedbac4c02999a8135b9f9b7` — first-slice proposal.
+2. `46a89b4571b903645c5f4863ff936fb321c234c2` — metric decision.
+3. `04016f2b5b93f21cd47e97d65f1ada91b3f726a7` — local implementation.
+4. `4c27c8f939527207ac80d4d52a71288045a5084d` — implementation handoff.
+5. `86c6224a54223df6005748761b24515c0155fee7` — presentation refinement.
+
+This closeout adds only regression evidence and approval/live-pointer documents;
+no scoped implementation defect was confirmed and no product code was changed.
+Its sixth commit/final SHA is reported after committing rather than embedded
+as a self-referential hash here. Integration remains unapproved.
+
+Final source/test review confirms:
+
+- Ownership requires the active athlete role and matching authenticated reader
+  and discovery identities. Metadata proposes candidates only; actual strict C2
+  proves record identity and parent coherence. Explicit block-result/source-block
+  identity plus `['result_data', 'distance']` binds the field. Titles do not bind
+  or compare; duplicate titles stay distinct and no first block is chosen.
+- At most two records and one block each. Adding/removing records, changing
+  blocks and refreshing discard prior pair results. Comparison requires a fresh
+  explicit request. New regression covers an admitted pair, block replacement,
+  refused pair, deselection, third-record replacement and refresh.
+- Auth events synchronously reset data and advance the request generation;
+  identity is checked again after each awaited read. Existing account-change
+  tests and new pending-projection/sign-out and old-RPC-after-sign-in tests prove
+  late work cannot restore a prior visit's evidence, even if the actor returns.
+  Disposal and controller replacement invalidate the old visit.
+- Zero remains a recorded value; absent value is unavailable, not zero.
+  Missing/not-started, partial, skipped and incomplete-endurance states retain
+  their C2/C3 meaning. Partial values are withheld. Metres remain visibly
+  incompatible; unsupported units remain explicit failed evidence/candidates.
+  Corrections expose audit provenance with no prior-value/latest-field-revision
+  or historical reconstruction claim.
+- Production composition uses the actual independent RPC, strict bridge,
+  adapter and C3 evaluator. Import-reachability tests prove synthetic fixtures
+  are unreachable from production; the preview cannot reach Supabase composition.
+  No session-table shortcut, write, programme reader or extra result ledger.
+- Pair admission is only recorded-quantity comparability; every refusal remains
+  visible, with technical evidence expandable. No arithmetic, fitness-improvement
+  or prescription claim. Separate record snapshots remain separate.
+- History entry ownership checks, list/detail/back/correction behavior and
+  existing Studio workflows are covered by affected navigation/integrity and
+  internal-review regressions. Existing application release configuration guards
+  are untouched. This local feature has no dedicated rollout switch; its entry
+  composition must not be mistaken for release approval or deployed availability.
+
+Current final checks: **323 affected regressions passed**, using the focused
+command above; **zero analysis diagnostics across all 13 Dart files changed
+since the integration base**, including the new regression additions; **six
+safety groups passed, zero failed**. Local Markdown links and working/staged/range
+`git diff --check` passed. Earlier browser evidence is reused from the approved
+immutable presentation checkpoint, not claimed rerun. No full suite: shared
+changes remain bounded History entry points; affected History, correction,
+C1–C3, Studio/isolation tests and safety cover their concrete risk. No DB gate,
+build, hosted proof or athlete-data write was needed or performed.
+
+Only the distance preview's known Flutter session was quit; application exit
+and absence of a listener on loopback port 4197 were verified. Other processes
+were not stopped. The historical launcher above is retained for evidence, not
+a running preview.
+
+Release gates remain open: separately authorised permission-security disposition
+of the recorded `training_sessions` discrepancy and metadata/read access;
+real-source/unit/retained-context feasibility; authenticated athlete/device
+validation; integration and release approval. No real comparable pairs are
+promised. No permissions or release guard changed. Stop for founder integration
+approval; no fetch/push, rollout, hosted operation or next slice.
