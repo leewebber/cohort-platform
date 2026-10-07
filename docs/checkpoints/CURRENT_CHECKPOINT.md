@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **History permission remediation — local blocked candidate, 2026-10-07:**
+> [Permission handoff](./PERFORMANCE_TRACKING_HISTORY_PERMISSION_REMEDIATION_HANDOFF.md) preserves audit
+> `1b85fe3b1a54b436ee6aa9cb68a09c5cecabf1ff` on
+> `codex/history-permission-remediation`, base/cached origin/main
+> `b1d028fb33eb537391f307bb4eac22dddd98ebde`. Eight-table ACL/RLS remediation,
+> replay, disposable evidence preservation and actual local role/API/C2/C3 checks
+> pass. **BLOCKED_AWAITING_FOUNDER_REVIEW**: new canonical completion proof
+> confirms a caller with its own valid assignment can supply a foreign session ID;
+> the server commits and changes that foreign parent despite client RLS.
+> No RPC repair implemented; specific owner/link validation is proposed.
+> Existing full DB compatibility, 508 affected Flutter tests, zero changed-Dart
+> issues and six safety groups pass; these do not override the failing isolation
+> proof. No hosted contact/apply, release activation, phone build/install, push or
+> next slice. Stop for founder review; separately authorise the proposed local
+> server ownership slice. Earlier audit/visual snapshots below remain historical.
+
 > **First athlete History security/readiness audit — 2026-10-07:**
 > [Readiness audit](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_READINESS_AUDIT.md)
 > is **BLOCKED_FOR_AUTHENTICATED_DEVICE_VALIDATION**. Clean audit base and cached
