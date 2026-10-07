@@ -80,6 +80,27 @@ void main() {
     },
   );
   test(
+    'recorded display name changes do not change source binding or evaluator output',
+    () async {
+      await open(0);
+      await choose(0, 1);
+      final digest = c.evaluation!.digest;
+      final field = c.views.single.selected!.field.sourceIdentity;
+      final wire = source.envelopes[syntheticDistanceId(10)]!;
+      ((wire['record'] as Map)['session_snapshot'] as Map)['sessionTitle'] =
+          'Synthetic renamed session';
+      ((wire['blocks'] as List)[1]['block_snapshot'] as Map)['title'] =
+          'Synthetic renamed block';
+      await c.refresh();
+      await open(0);
+      await choose(0, 1);
+      expect(c.views.single.summary.displayName, 'Synthetic renamed session');
+      expect(c.views.single.selected!.label, 'Synthetic renamed block');
+      expect(c.views.single.selected!.field.sourceIdentity, field);
+      expect(c.evaluation!.digest, digest);
+    },
+  );
+  test(
     'adding/removing a record preserves independently evaluated chosen evidence',
     () async {
       await open(0);

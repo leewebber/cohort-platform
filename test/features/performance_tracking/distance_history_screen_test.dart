@@ -43,6 +43,39 @@ void main() {
     return source;
   }
 
+  testWidgets(
+    'session names are displayed and Deselect only clears the ephemeral choice',
+    (tester) async {
+      await mount(tester);
+      final c = tester
+          .widget<DistanceHistoryScreen>(find.byType(DistanceHistoryScreen))
+          .controller;
+      await visible(tester, find.text('Deselect'));
+      expect(find.text('Remove record'), findsNothing);
+      expect(find.text('Synthetic distance session'), findsWidgets);
+      await tester.tap(find.text('Deselect'));
+      await tester.pumpAndSettle();
+      expect(c.views, isEmpty);
+      expect(c.page, hasLength(3));
+    },
+  );
+  testWidgets(
+    'read diagnostics are collapsed and still available in Profile Evidence',
+    (tester) async {
+      await mount(tester);
+      expect(find.textContaining('bounded metadata'), findsNothing);
+      expect(
+        find.textContaining('No programme attribution is requested'),
+        findsNothing,
+      );
+      await visible(tester, find.text('Profile Evidence'));
+      await tester.tap(find.text('Profile Evidence'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('bounded_metadata_only'), findsOneWidget);
+      expect(find.textContaining('prescription_eligibility'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
   for (final width in [320.0, 800.0]) {
     testWidgets(
       'zero, source, dates and expandable evidence at width $width, 200 percent text',
@@ -50,14 +83,8 @@ void main() {
         await mount(tester, scale: 2, width: width);
         await visible(tester, find.text('0 kilometres'));
         expect(find.text('Recorded'), findsOneWidget);
-        expect(
-          find.textContaining('date only · timezone unknown'),
-          findsOneWidget,
-        );
-        expect(
-          find.textContaining('Source: owned History record'),
-          findsOneWidget,
-        );
+        expect(find.textContaining('date only'), findsOneWidget);
+        expect(find.textContaining('Source: History'), findsOneWidget);
         expect(
           find.textContaining('tracking_eligible'),
           findsNothing,
@@ -97,7 +124,7 @@ void main() {
     await c.selectBlock(c.views.first.summary.id, c.views.first.candidates[3]);
     await tester.pumpAndSettle();
     await visible(tester, find.text('Partial evidence'));
-    expect(find.text('No admitted value'), findsOneWidget);
+    expect(find.text('No usable value'), findsOneWidget);
     await c.selectBlock(c.views.first.summary.id, c.views.first.candidates[4]);
     await tester.pumpAndSettle();
     expect(find.text('Skipped'), findsOneWidget);
@@ -113,9 +140,9 @@ void main() {
     await visible(tester, find.byKey(const ValueKey('compare-distance')));
     await tester.tap(find.byKey(const ValueKey('compare-distance')));
     await tester.pumpAndSettle();
-    await visible(tester, find.text('Not enough evidence to compare'));
+    await visible(tester, find.text('Comparison unavailable'));
     expect(
-      find.text('Comparison context was not recorded for both blocks.'),
+      find.text('Comparison details were not recorded for both blocks.'),
       findsOneWidget,
     );
   });

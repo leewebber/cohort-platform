@@ -63,14 +63,12 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
             ),
             const Text('Recorded block distance · v1 · kilometres'),
             const SizedBox(height: 8),
-            const Text(DistanceObservationsProfile.description),
             const Text(
-              'Independent History observations. No programme attribution is requested. '
-              'Tracking does not grant training targets or prescription eligibility.',
+              'See independent distance observations from your History. '
+              'Choose up to two sessions and one block in each.',
             ),
             const Text(
-              'Choose at most two records, then explicitly choose one block in each. '
-              'Choices reset when you leave, refresh or your account changes.',
+              'Choices are not saved. These observations do not change your training targets.',
             ),
             const SizedBox(height: 12),
             Wrap(
@@ -78,12 +76,12 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
               children: [
                 OutlinedButton(
                   onPressed: c.busy ? null : c.refresh,
-                  child: const Text('Refresh and clear choices'),
+                  child: const Text('Refresh and reset'),
                 ),
                 if (!c.identityValid)
                   OutlinedButton(
                     onPressed: c.busy ? null : c.loadPage,
-                    child: const Text('Load owned History'),
+                    child: const Text('Load History'),
                   ),
               ],
             ),
@@ -98,11 +96,8 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
             if (c.identityValid) ...[
               const SizedBox(height: 12),
               Text(
-                'Owned History records · page ${c.offset ~/ 25 + 1}',
+                'Your History · page ${c.offset ~/ 25 + 1}',
                 style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const Text(
-                'A bounded metadata page, not all History. Records are rechecked through the independent reader.',
               ),
               if (!c.busy && c.page.isEmpty)
                 const Text('No records on this page.'),
@@ -113,6 +108,10 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          _sessionName(summary),
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         Text('Performed: ${summary.date}'),
                         Text('Session: ${sessionState(summary.status)}'),
                         TextButton(
@@ -127,7 +126,7 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
                               : () => c.toggleRecord(summary),
                           child: Text(
                             c.views.any((v) => v.summary.id == summary.id)
-                                ? 'Remove record'
+                                ? 'Deselect'
                                 : 'Choose record',
                           ),
                         ),
@@ -155,36 +154,44 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
                 ],
               ),
               if (data?['state'] == 'failure')
-                Text(
-                  'Evaluation refused: ${distanceReason(data!['reason'] as String)}',
-                ),
+                Text(distanceReason(data!['reason'] as String)),
               for (final view in c.views) _recordView(context, view, data),
               if (c.views.length == 2 && c.views.every((v) => v.input != null))
                 OutlinedButton(
                   key: const ValueKey('compare-distance'),
                   onPressed: c.busy ? null : c.compare,
-                  child: const Text('Check comparability'),
+                  child: const Text('Compare distances'),
                 ),
               for (final pair in _maps(data?['comparisons'])) ...[
                 Text(switch (pair['state']) {
-                  'comparable' => 'Can compare recorded distances',
+                  'comparable' => 'Can compare',
                   'incomparable' => 'Cannot compare',
-                  _ => 'Not enough evidence to compare',
+                  _ => 'Comparison unavailable',
                 }, style: Theme.of(context).textTheme.titleMedium),
                 for (final reason in pair['reasons'] as List)
                   Text(distanceReason(reason as String)),
                 const Text(
-                  'Admission applies to recorded quantities only; it does not prove equivalent exercise, '
-                  'equipment, elapsed time or route, and cannot show improvement.',
+                  'Comparable distances do not prove improved fitness or equivalent workout conditions.',
                 ),
-                _evidence('Comparison Evidence', pair),
+                _evidence('Comparison Evidence', {
+                  'evaluation': pair,
+                  'separate_record_snapshots': true,
+                  'cross_record_snapshot_proven': false,
+                  'exercise_equipment_elapsed_time_route_equivalence_proven':
+                      false,
+                }),
               ],
-              if (c.views.length > 1)
-                const Text(
-                  'These are separate record snapshots, not one cross-record snapshot.',
-                ),
             ],
             _evidence('Profile Evidence', {
+              'description': DistanceObservationsProfile.description,
+              'programme_attribution': 'not_requested',
+              'record_discovery': {
+                'page_size': 25,
+                'offset': c.offset,
+                'bounded_metadata_only': true,
+                'exact_owned_record_revalidated_by_C2': true,
+              },
+              'display_names_are_not_identity_or_comparison_authority': true,
               'definitions': DistanceObservationsProfile.definitions
                   .map((d) => d.toJson())
                   .toList(),
@@ -234,11 +241,11 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Selected record · ${record.summary.date}',
+              '${_sessionName(record.summary)} · ${record.summary.date}',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             if (record.candidates.isEmpty)
-              const Text('No supported distance block scopes in this record.'),
+              const Text('No supported distance blocks in this session.'),
             if (record.candidates.isNotEmpty)
               ExpansionTile(
                 key: ValueKey(
@@ -247,8 +254,8 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
                 initiallyExpanded: record.selected == null,
                 title: Text(
                   record.selected == null
-                      ? 'Block sources'
-                      : 'Block sources · chosen block ${record.candidates.indexOf(record.selected!) + 1}',
+                      ? 'Choose a block'
+                      : 'Block ${record.candidates.indexOf(record.selected!) + 1} · ${record.selected!.label}',
                 ),
                 children: [
                   for (var i = 0; i < record.candidates.length; i++)
@@ -269,35 +276,33 @@ class _DistanceHistoryScreenState extends State<DistanceHistoryScreen> {
                 ],
               ),
             if (record.selected == null && record.candidates.isNotEmpty)
-              const Text(
-                'Choose a block to see its evidence. No block is selected automatically.',
-              ),
+              const Text('Choose a block to see its recorded distance.'),
             if (projected != null) ...[
               const Text('Recorded block distance'),
               Text(
                 projected['value'] == null
-                    ? 'No admitted value'
+                    ? 'No usable value'
                     : '${projected['value']} ${distanceUnit(projected['unit'])}',
                 key: ValueKey('value-${record.summary.id}'),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               Text(evidenceState(state)),
               if (reason is String) Text(distanceReason(reason)),
+              Text(_performedDate(chronology)),
               Text(
-                chronology == null
-                    ? 'Performed date unavailable'
-                    : 'Performed: ${chronology['performed_on'] ?? chronology['performed_at']} · '
-                          '${chronology['precision'] == 'civil_date' ? 'date only · timezone unknown' : 'timestamp · civil timezone unknown'}',
-              ),
-              Text(
-                'Source: owned History record · ${record.selected?.label ?? 'selected block'} · recorded block distance',
+                'Source: History · ${_sessionName(record.summary)} · ${record.selected?.label ?? 'selected block'}',
               ),
               if (corrections.isNotEmpty)
                 const Text(
-                  'Correction audit present; earlier inputs unavailable. '
-                  'Audit membership does not prove this field changed or a latest revision.',
+                  'Correction history present. Earlier inputs unavailable.',
                 ),
-              _evidence('Evidence', projected),
+              _evidence('Evidence', {
+                'evaluation': projected,
+                'audit_membership_proves_field_changed_or_latest_revision':
+                    false,
+                'historical_inputs_available': false,
+                'civil_timezone_known': false,
+              }),
             ],
           ],
         ),
@@ -336,16 +341,15 @@ String evidenceState(String? state) => switch (state) {
 };
 String distanceReason(String code) {
   if (code.startsWith('context_unavailable:')) {
-    return 'Comparison context was not recorded for both blocks.';
+    return 'Comparison details were not recorded for both blocks.';
   }
   if (code.startsWith('context_incompatible:')) {
-    return 'Recorded comparison contexts differ.';
+    return 'Recorded comparison details differ.';
   }
   return switch (code) {
     'canonical_unit_incompatible' ||
     'unit_incompatible' => 'Units differ. No conversion is performed.',
-    'unsupported_source_unit' =>
-      'This source unit is unsupported. No value is admitted.',
+    'unsupported_source_unit' => 'This source unit is unsupported.',
     'selected_scope_incomplete' =>
       'This block is incomplete; its value is withheld.',
     'block_skipped' => 'This block was skipped.',
@@ -363,6 +367,19 @@ String distanceReason(String code) {
       'Owned History could not be loaded. Retry when ready.',
     'conflicting_source_aliases' => 'References to the same source disagree.',
     _ =>
-      'Evidence could not be admitted. Refresh to retry; see Evidence for the exact reason.',
+      'Evidence is unavailable. Refresh to retry or open Evidence for details.',
   };
+}
+
+String _sessionName(DistanceRecordSummary summary) {
+  final name = summary.displayName?.trim();
+  return name != null && name.isNotEmpty
+      ? name
+      : 'History session (name not recorded)';
+}
+
+String _performedDate(Map? chronology) {
+  if (chronology == null) return 'Performed date unavailable';
+  final value = chronology['performed_on'] ?? chronology['performed_at'];
+  return 'Performed: $value${chronology['precision'] == 'civil_date' ? ' · date only' : ''}';
 }

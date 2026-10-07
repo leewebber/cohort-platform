@@ -7,6 +7,9 @@
 > choices and honest evidence/refusals. **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**.
 > 317 focused/regression tests, zero changed-file diagnostics and six safety groups
 > passed. Loopback preview `http://127.0.0.1:4197/` uses synthetic evidence only.
+> Presentation refinement: shorter introduction/comparison wording, Deselect,
+> recorded display names and expandable diagnostics; 37 affected tests and zero
+> changed-file diagnostics passed, with direct narrow/200% text browser review.
 > This is a local athlete consumer, not deployed tracking. Programme attribution
 > remains unwired; session-table discrepancy remains an open release security gate.
 > No persistence, arithmetic, prescription eligibility or further implementation.

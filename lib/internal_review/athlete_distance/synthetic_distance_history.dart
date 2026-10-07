@@ -94,6 +94,10 @@ final class SyntheticDistanceHistory
           athleteId,
           (entry.value['record'] as Map)['performed_on'] as String,
           'completed',
+          displayName:
+              ((entry.value['record'] as Map)['session_snapshot']
+                      as Map)['sessionTitle']
+                  as String,
         ),
     ];
   }
@@ -176,6 +180,11 @@ Map<String, Object?> _wire(
     'athlete_id': syntheticDistanceActor,
     'status': 'completed',
     'training_session_id': id,
+    'session_snapshot': {
+      'sessionTitle': id == 30
+          ? 'Synthetic corrected session'
+          : 'Synthetic distance session',
+    },
     'performed_precision': 'date',
     'performed_on': id == 10
         ? '2026-09-01'

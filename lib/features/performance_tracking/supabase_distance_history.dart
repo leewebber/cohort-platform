@@ -32,7 +32,7 @@ final class SupabaseDistanceRecordList implements DistanceRecordListPort {
     final rows = await client
         .from('training_session_records')
         .select(
-          'record_id,athlete_id,started_at,performed_on,performed_precision,status',
+          'record_id,athlete_id,started_at,performed_on,performed_precision,status,session_name:session_snapshot->>sessionTitle',
         )
         .eq('athlete_id', athleteId)
         .inFilter('status', ['completed', 'partially_completed', 'abandoned'])
@@ -55,6 +55,9 @@ final class SupabaseDistanceRecordList implements DistanceRecordListPort {
         athleteId,
         date is String ? date : 'Date unavailable',
         row['status'] as String,
+        displayName: row['session_name'] is String
+            ? row['session_name'] as String
+            : null,
       );
     }).toList();
   }

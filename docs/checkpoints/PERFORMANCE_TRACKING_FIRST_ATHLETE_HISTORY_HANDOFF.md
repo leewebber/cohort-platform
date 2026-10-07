@@ -152,3 +152,38 @@ No conversions/deltas/scores, prescription eligibility, persisted selections,
 manual entry, custom editing, programme attribution/test weeks, programme changes,
 new result ledger, migrations, deployment or push. Stop for founder visual review;
 no integration, release or next-slice work follows from this handoff.
+
+## Presentation refinement — 2026-10-07
+
+Founder-authorised presentation work starts from clean
+`4c27c8f939527207ac80d4d52a71288045a5084d` on the existing implementation branch.
+The introduction and comparison labels/reasons are shorter; removal is labelled
+**Deselect**. Coverage, authority, eligibility, correction-audit and separate
+snapshot diagnostics remain accessible in expandable Evidence. Important evidence
+states, source units, dates, correction history and comparison limitations stay
+visible. The synthetic preview banner is preserved.
+
+The existing owner-filtered metadata read projects only the recorded
+`session_snapshot->>sessionTitle` scalar as a display name. Missing names use a
+neutral fallback. Existing recorded block labels remain display only. Neither
+name participates in source identity or comparison: a rename regression confirms
+unchanged exact binding and C3 evaluation digest. Definitions, evaluator rules,
+ownership, explicit source selection and ephemeral selections are unchanged.
+
+Current-task verification: all **37 affected feature tests passed** via
+`flutter --suppress-analytics test --no-pub test/features/performance_tracking`;
+`dart --suppress-analytics analyze` over the seven changed Dart files reported
+**No issues found**. Direct browser inspection at the loopback preview confirmed
+explicit duplicate-title/multi-block selection, recorded values/dates/provenance,
+missing-context comparison refusal and expandable evidence, including scrolling
+and wrapping at **320 pixels and 200% text**. Temporary viewport/text settings
+were restored. UI tests also cover missing/partial/skipped/corrected evidence,
+zero values, incompatible units and expanded evidence at narrow/large text.
+
+The implementation's recorded 317-test and six-group safety verification above
+is reused, not claimed rerun. No full suite or new safety run: this refinement
+does not change shared navigation or evaluator/authority paths; the sole reader
+addition is display metadata within the existing ownership boundary, covered by
+the loopback reader test. Local links and `git diff --check` passed. No hosted
+read, deployment, push or release-security verification occurred. All release
+gates above remain open. Stop for founder visual review.

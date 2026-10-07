@@ -14,11 +14,20 @@ abstract interface class DistanceRecordListPort {
 }
 
 final class DistanceRecordSummary {
-  const DistanceRecordSummary(this.id, this.athleteId, this.date, this.status);
+  const DistanceRecordSummary(
+    this.id,
+    this.athleteId,
+    this.date,
+    this.status, {
+    this.displayName,
+  });
   final String id;
   final String athleteId;
   final String date;
   final String status;
+
+  /// Recorded session title for display only; never participates in binding.
+  final String? displayName;
 }
 
 final class DistanceBlockCandidate {

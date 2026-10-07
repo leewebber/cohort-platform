@@ -29,11 +29,17 @@ void main() {
           );
           expect(
             request.uri.queryParameters['select'],
-            'record_id,athlete_id,started_at,performed_on,performed_precision,status',
+            'record_id,athlete_id,started_at,performed_on,performed_precision,status,session_name:session_snapshot->>sessionTitle',
           );
           expect(request.uri.queryParameters['limit'], '25');
           response = [
-            for (final wire in source.envelopes.values) wire['record'],
+            for (final wire in source.envelopes.values)
+              {
+                ...wire['record'] as Map,
+                'session_name':
+                    ((wire['record'] as Map)['session_snapshot']
+                        as Map)['sessionTitle'],
+              },
           ];
         } else if (request.uri.path ==
             '/rest/v1/rpc/read_performance_tracking_history_v1') {
@@ -91,6 +97,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       await c.loadPage();
       expect(c.page.first.date, '2026-09-01');
+      expect(c.page.first.displayName, 'Synthetic distance session');
       await c.toggleRecord(c.page[0]);
       await c.toggleRecord(c.page[1]);
       await c.selectBlock(c.views[0].summary.id, c.views[0].candidates[1]);
