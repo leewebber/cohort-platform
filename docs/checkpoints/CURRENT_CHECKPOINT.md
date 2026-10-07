@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **C4 visual approval / final review — 2026-10-07:** Founder approved the
+> isolated synthetic review surface, including refined presentation at
+> `0638046b33e7173f48001f62d4ff6a598b780cd8`, on
+> `codex/c4-tracking-visual-review`. Base/cached origin/main remains
+> `ee2ebaeb14a809628a031b428ff9fee87b0c5e06`; all prior commits preserved.
+> [C4 handoff](./PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.md) records final
+> review and verification: 27 C4 tests, zero C4 Dart diagnostics, six safety groups
+> passed; recorded C3/Studio verification reused. C4 is
+> **VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL**:
+> actual C2/C3 evaluation of six synthetic scenarios, accessible technical evidence,
+> preserved refusals and production/Studio isolation. It is not deployed athlete
+> tracking. `PERFORMANCE_TRACKING_C4_PRODUCTION_WIRED=false`,
+> `PERFORMANCE_TRACKING_C4_INTEGRATION_APPROVED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. C4 loopback preview stopped.
+> No arithmetic, persistence, real profiles or prescription eligibility.
+> Stop for founder integration approval; no merge/fetch/push, hosted operation,
+> build, runtime wiring or next slice. Earlier dated pauses below are historical.
+
+
 > **C4 internal visual review — 2026-10-06:** Founder-authorised bounded
 > synthetic preview is **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**
 > on `codex/c4-tracking-visual-review`, implementation `72024bb` after preserved

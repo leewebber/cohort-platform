@@ -1,6 +1,10 @@
 # Performance Tracking C4 — internal visual-review handoff
 
-**Recorded:** 2026-10-06. **Status:** LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW.
+**Recorded:** 2026-10-06. **Current status (2026-10-07):**
+VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
+Founder visual approval includes refined presentation at `0638046`.
+Earlier verification/range/stop sections below are dated implementation records;
+the final closeout section supersedes their visual-review pause only.
 The founder authorised the bounded [C4 proposal](../architecture/Performance_Tracking_C4_Visual_Review_Proposal_v1.md)
 for this synthetic-only preview. This does not authorise production tracking or
 another slice. Automated verification is not founder visual approval.
@@ -131,3 +135,72 @@ menu focus and reset. Diff and local document links checked. Prior evaluator,
 Studio and safety-gate results above remain attributed to implementation
 72024bb; presentation-only edits do not change shared paths and did not rerun
 those gates or the full suite. Founder visual acceptance remains pending.
+
+## 2026-10-07 founder visual approval and final integration review
+
+The founder explicitly approved C4, including the refined presentation at
+`0638046b33e7173f48001f62d4ff6a598b780cd8`. This approves an isolated internal
+synthetic review surface, not deployed athlete tracking, real curated definitions,
+production wiring or another product slice. Integration approval remains pending.
+
+Verified clean checkout on `codex/c4-tracking-visual-review` at that exact HEAD;
+base and cached origin/main both
+`ee2ebaeb14a809628a031b428ff9fee87b0c5e06`. No fetch or remote-freshness claim.
+All existing commits are preserved. This documentation closeout adds one commit
+for a total **five linear commits / zero merges** above the base, ordered:
+
+1. `f1d244bda42de754b4cb5bea6130a4d8af38f078` — proposal.
+2. `72024bbfa2882e1afbe4dc6c2b139f686383929f` — isolated implementation.
+3. `c77c6734cd4b087b74caef70454f676f9a2b5c64` — implementation handoff.
+4. `0638046b33e7173f48001f62d4ff6a598b780cd8` — refined presentation/evidence.
+5. This closeout commit — founder visual approval and final review; the final
+   task report supplies its exact SHA (not embedded self-referentially).
+
+Final review found no scoped integration defect:
+
+- Every one of the six scenarios / 12 cases calls the actual C2 adapter over
+  synthetic C1 definitions/in-memory frames, then actual C3 evaluation. The screen
+  projects returned observations, failures and explicit pairs; no copied result
+  ledger or alternate comparison engine.
+- Missing, partial, skipped, unavailable and corrected states remain visible;
+  incompatible units/methods/context, self-pairs, contradictory aliases and
+  unsupported methods retain refusal reasons. No unit conversion or difference.
+- Expandable evidence preserves exact definitions, references/digests, chronology,
+  coverage/eligibility, source/audit membership, evaluation and authority details.
+  Independent observations remain distinct from unproven/proven synthetic claims.
+- Production/Studio reachability tests pass. Existing Studio controller, defaults,
+  destinations and source workflows are untouched in the entire range. No shared
+  runtime, C1/C2/C3 evaluator, B2, SQL or package/publication path changed.
+- No arithmetic, scores/ranks, improvement claim, prescription eligibility,
+  persistence, real profiles, save actions, athlete data writes or production route.
+
+Verification for this final review: **27 C4 tests passed** (12 scenario,
+13 UI, 2 isolation); **zero diagnostics** analyzing all C4 Dart files in the
+range. **Phase 2 safety gate: 6 groups passed, 0 failed** in this final review.
+Local links and
+working/staged/range `git diff --check` checked before/after closeout. Reuse the
+96-test C4/C3/Studio record at `72024bb` and 15-test refinement record at
+`0638046`; unchanged C3/Studio checks were not rerun. No full Flutter suite:
+there is no concrete shared-path risk, and this closeout changes documentation
+only. No build, database gate, migration or hosted refresh was run.
+
+Only the identified C4 Flutter web-server process on loopback port 4196 was
+terminated; its command pinned the dedicated C4 entry. Port 4196 has no listener.
+No other preview or process was stopped. No browser inspection was needed for
+this documentation closeout; founder approval is direct user evidence, and the
+prior browser review remains attributed to the presentation review above.
+
+Historical inputs cannot be reconstructed from incomplete audits; unordered
+membership proves neither field changes nor a latest revision. Multiple fake
+frames do not attest one cross-record database snapshot. Synthetic witnesses
+prove no live authentication/publication, test completion or registry approval.
+Legacy scope remains unproven; Cohort 5 km ingestion remains blocked. Authored
+prescription and existing private programme/athlete authorities remain unchanged.
+
+`PERFORMANCE_TRACKING_C4=VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL`,
+`PERFORMANCE_TRACKING_C4_PRODUCTION_WIRED=false`,
+`PERFORMANCE_TRACKING_C4_INTEGRATION_APPROVED=false`,
+`NEXT_IMPLEMENTATION_AUTHORISED=false`.
+Stop for founder integration approval. No merge/rebase/amend, fetch/push, hosted
+operations, builds, production wiring or next slice. `.env` and `supabase/.temp`
+were untouched.

@@ -208,6 +208,16 @@ attribution and prescription eligibility remain separate; legacy scope unproven.
 Further implementation, wiring and hosted operations remain unauthorised.
 Stop for founder integration approval; no push.
 
+**C4's isolated synthetic visual-review surface is founder-approved**, including
+refined presentation at `0638046b33e7173f48001f62d4ff6a598b780cd8` (2026-10-07).
+See [C4 handoff](docs/checkpoints/PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.md).
+Its dedicated entry uses actual C2/C3 evaluation for six synthetic scenarios and
+remains unreachable from production and existing Studio entries. This is not
+deployed athlete tracking: no arithmetic, prescription eligibility, persistence,
+real profiles or production wiring. Preview is stopped; final local closeout
+awaits founder integration approval. No merge, fetch/push, hosted operation or
+next-slice authority follows from visual approval.
+
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)
 and [`docs/planning/Delivery_Roadmap_v1.md`](docs/planning/Delivery_Roadmap_v1.md).

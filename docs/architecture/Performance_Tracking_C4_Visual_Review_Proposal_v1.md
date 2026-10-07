@@ -1,7 +1,14 @@
 # Performance Tracking C4 — bounded visual-review proposal
 
-**Recorded:** 2026-10-06. **Status:** PROPOSED_AWAITING_FOUNDER_APPROVAL.
-Documentation only; C4 implementation is not authorised by this proposal.
+**Recorded:** 2026-10-06. **Current status (2026-10-07):**
+VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
+The founder separately authorised implementation and approved the isolated
+synthetic surface, including refined presentation at `0638046`. The
+[C4 handoff](../checkpoints/PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.md)
+records delivery and final review. No deployed athlete tracking, production
+wiring or next-slice authority. The proposal-time recommendations and pauses
+below are preserved as history; implementation/visual approval supersede only
+those bounded pauses. Integration still requires founder approval.
 
 Verified checkout: `/Users/leewebber/Developer/cohort_platform`, branch
 `codex/c3-tracking-evaluation`, clean worktree before edits; HEAD and **cached**
