@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/services/authenticated_identity.dart';
+import '../../../core/services/supabase_service.dart';
+import '../../performance_tracking/distance_history_screen.dart';
+import '../../performance_tracking/supabase_distance_history.dart';
 import '../services/performance_record_save_coordinator.dart';
 import '../widgets/completed_session_result_view.dart';
 
@@ -50,6 +54,25 @@ class _TrainingHistoryDetailScreenState
                   onPressed: () => Navigator.pop(context),
                   child: const Text('← Back'),
                 ),
+                if (AuthenticatedIdentity.maybeAthleteId() == widget.athleteId)
+                  TextButton(
+                    onPressed: () {
+                      if (AuthenticatedIdentity.maybeAthleteId() !=
+                          widget.athleteId) {
+                        return;
+                      }
+                      final controller = createDistanceHistoryController(
+                        SupabaseService.client,
+                      );
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              DistanceHistoryScreen(controller: controller),
+                        ),
+                      );
+                    },
+                    child: const Text('Open Distance observations'),
+                  ),
                 Expanded(
                   child: CompletedSessionResultView(
                     record: record,
