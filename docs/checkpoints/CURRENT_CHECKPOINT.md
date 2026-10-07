@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **First athlete History slice — 2026-10-07:** Founder approved the exact
+> Distance observations v1 content and authorised its bounded local implementation.
+> [Local handoff](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_HANDOFF.md) records implementation `04016f2`, independent actual
+> C2/C3 wiring, at most two explicitly chosen owned records/blocks, ephemeral
+> choices and honest evidence/refusals. **LOCAL_IMPLEMENTED_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**.
+> 317 focused/regression tests, zero changed-file diagnostics and six safety groups
+> passed. Loopback preview `http://127.0.0.1:4197/` uses synthetic evidence only.
+> This is a local athlete consumer, not deployed tracking. Programme attribution
+> remains unwired; session-table discrepancy remains an open release security gate.
+> No persistence, arithmetic, prescription eligibility or further implementation.
+> Earlier proposal-only/unwired pointers below are historical for this bounded
+> independent consumer. No hosted refresh, publication, integration or release.
+
 > **First athlete metric decision — 2026-10-07:**
 > [Proposed metric/profile decision](../architecture/Performance_Tracking_First_Athlete_Metric_Decision_v1.md)
 > recommends complete-only **Recorded block distance**, in kilometres, inside
