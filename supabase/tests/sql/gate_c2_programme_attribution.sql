@@ -99,7 +99,8 @@ CREATE TABLE public.c2p_claim AS SELECT jsonb_build_object('assignment_id',o.ass
 FROM public.programme_schedule_occurrences o JOIN public.session_blocks b ON b.session_id=o.protocol_id WHERE o.id='c2000000-0000-4000-8000-000000000081';
 SELECT set_config('cohort.allow_schedule_write','off',false);
 GRANT SELECT ON public.c2p_claim TO authenticated; -- Gate-only synthetic claim.
-SELECT public.c2_assert(NOT has_table_privilege('authenticated','public.training_sessions','SELECT'),'no broad SELECT grant');
+SELECT public.c2_assert(has_table_privilege('authenticated','public.training_sessions','SELECT')
+ AND (SELECT relrowsecurity FROM pg_class WHERE oid='public.training_sessions'::regclass), 'owner-only session RLS');
 SELECT public.c2_assert(NOT has_table_privilege('authenticated','public.programme_publication_artifacts','SELECT'),'private artifacts not directly visible');
 SELECT public.c2_assert(NOT has_function_privilege('authenticated','public.publish_private_exact_programme_version_retained_v1(jsonb)','EXECUTE'),'no athlete publication');
 SELECT public.c2_assert(NOT has_function_privilege('anon','public.read_performance_tracking_programme_history_v1(uuid,jsonb)','EXECUTE') AND NOT has_function_privilege('service_role','public.read_performance_tracking_programme_history_v1(uuid,jsonb)','EXECUTE'),'authenticated-only read');
@@ -111,7 +112,7 @@ CREATE TEMP TABLE programme_publication_artifacts(canonical_text text);
 DO $$ DECLARE c jsonb; r jsonb; BEGIN
  SELECT claim INTO c FROM public.c2p_claim;
  r:=public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',c);
- PERFORM public.c2_assert(r->>'status'='ok','own exact claim succeeds without training_sessions SELECT');
+ PERFORM public.c2_assert(r->>'status'='ok','own exact claim succeeds with owner-only session SELECT');
  PERFORM public.c2_assert(r#>>'{programme,artifact,canonical_text}' IS NOT NULL AND r->>'complete_audit_set'='true','complete coherent evidence and owner-gated artifact');
  PERFORM public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',c||'{"slot_key":"wrong"}')->>'code'='programme_scope_conflict','contradictory claim');
  PERFORM public.c2_assert(public.read_performance_tracking_programme_history_v1('c2000000-0000-4000-8000-000000000070',c||'{"unexpected":true}')->>'code'='invalid_programme_claim','unknown claim rejected');

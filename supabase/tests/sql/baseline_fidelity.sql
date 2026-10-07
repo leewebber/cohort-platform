@@ -287,7 +287,7 @@ BEGIN
   -- restrictive policy on each resolver table; a broad grant without those
   -- policies would expose draft or unrelated protocol content.
   -- -------------------------------------------------------------------------
-  FOREACH t IN ARRAY ARRAY['training_sessions', 'athlete_state'] LOOP
+  FOREACH t IN ARRAY ARRAY['athlete_state'] LOOP
     SELECT c.relrowsecurity INTO v_bool
     FROM pg_class c
     JOIN pg_namespace n ON n.oid = c.relnamespace
@@ -303,6 +303,17 @@ BEGIN
       'policies_zero_' || t, '0', v_count::text, v_count = 0, NULL
     );
   END LOOP;
+
+  -- The proposed permission migration intentionally replaces the historical
+  -- sessions exception; unrelated baseline tables retain their original checks.
+  SELECT c.relrowsecurity INTO v_bool FROM pg_class c
+  WHERE c.oid='public.training_sessions'::regclass;
+  PERFORM sprint12_baseline_record('rls_enabled_training_sessions','true',v_bool::text,v_bool IS TRUE,NULL);
+  SELECT count(*) INTO v_count FROM pg_policies
+  WHERE schemaname='public' AND tablename='training_sessions'
+    AND policyname='training_sessions_athlete_select' AND cmd='SELECT'
+    AND roles=ARRAY['authenticated']::name[];
+  PERFORM sprint12_baseline_record('owner_select_training_sessions','1',v_count::text,v_count=1,NULL);
 
   FOREACH t IN ARRAY ARRAY[
     'performance_protocols',

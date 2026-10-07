@@ -48,8 +48,9 @@ FROM pg_class c WHERE c.oid IN (
 CREATE TABLE public.c2_unchanged_mutation AS
 SELECT md5(pg_get_functiondef('public.correct_completed_performance_record(jsonb)'::regprocedure)) AS hash;
 
-SELECT public.c2_assert(NOT has_table_privilege('authenticated','public.training_sessions','SELECT'),
- 'programme session join stopped: existing SELECT unavailable');
+SELECT public.c2_assert(has_table_privilege('authenticated','public.training_sessions','SELECT')
+ AND (SELECT relrowsecurity FROM pg_class WHERE oid='public.training_sessions'::regclass),
+ 'owner session SELECT requires RLS; no programme attribution authority');
 SELECT public.c2_assert(NOT has_table_privilege('authenticated','public.performance_result_corrections','INSERT'), 'no audit insert grant');
 SELECT public.c2_assert(NOT has_table_privilege('authenticated','public.training_sessions','UPDATE'), 'no session update grant');
 SELECT public.c2_assert(NOT has_function_privilege('anon','public.read_performance_tracking_history_v1(uuid,jsonb)','EXECUTE'), 'anon execution denied');
@@ -65,16 +66,12 @@ SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',false);
 DO $$ DECLARE r jsonb; claim jsonb := '{"assignment_id":"c2000000-0000-4000-8000-000000000020","occurrence_id":"c2000000-0000-4000-8000-000000000021","training_session_id":"987001","programme_version_id":"c2000000-0000-4000-8000-000000000022","package_hash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","slot_key":"synthetic.slot","protocol_id":"synthetic.protocol","protocol_revision":1,"block_id":"synthetic.block"}'; BEGIN
  PERFORM public.c2_assert(current_user='authenticated', 'permission proof uses authenticated role');
- -- Exercise the permission itself, not only pg_catalog ACL metadata. Catch only
- -- insufficient_privilege; any other failure fails the gate. No grants change.
- BEGIN
-   PERFORM id FROM public.training_sessions WHERE id=987001;
-   RAISE EXCEPTION 'C2_GATE_FAILURE: direct session read unexpectedly allowed';
- EXCEPTION WHEN insufficient_privilege THEN NULL;
- END;
+ -- Exercise owner RLS itself, not only pg_catalog ACL metadata.
+ PERFORM public.c2_assert((SELECT count(*) FROM public.training_sessions WHERE id=987001)=1,
+   'owner session SELECT succeeds under RLS');
  r:=public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010');
  PERFORM public.c2_assert(r->>'status'='ok' AND r#>>'{record,training_session_id}'='987001',
-   'independent History with linked session succeeds while session SELECT denied');
+   'independent History with linked session succeeds with owner-only session SELECT');
  PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010',claim)->>'code'='programme_authority_unavailable',
    'same owned record with claim explicitly blocked, no fallback');
  PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000030',claim)=
@@ -112,11 +109,8 @@ RESET ROLE;
 SET ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000002',false);
 DO $$ BEGIN
- BEGIN
-   PERFORM id FROM public.training_sessions WHERE id=987001;
-   RAISE EXCEPTION 'C2_GATE_FAILURE: second athlete direct session read allowed';
- EXCEPTION WHEN insufficient_privilege THEN NULL;
- END;
+ PERFORM public.c2_assert((SELECT count(*) FROM public.training_sessions WHERE id=987001)=0,
+   'second athlete cannot read foreign session under RLS');
  PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000030')->>'status'='ok',
    'second athlete independent own History read succeeds without session SELECT');
  PERFORM public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010')->>'status'='no_visible_record',
@@ -144,5 +138,12 @@ UPDATE public.training_session_records SET session_snapshot=jsonb_build_object('
 SET LOCAL ROLE authenticated;
 SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',true);
 SELECT public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000040')->>'code'='evidence_limit_exceeded','byte bound fails without truncation');
+ROLLBACK;
+BEGIN;
+REVOKE SELECT ON public.training_sessions FROM authenticated;
+SET LOCAL ROLE authenticated;
+SELECT set_config('request.jwt.claim.sub','c2000000-0000-4000-8000-000000000001',true);
+SELECT public.c2_assert(public.read_performance_tracking_history_v1('c2000000-0000-4000-8000-000000000010')->>'status'='ok',
+ 'independent RPC still succeeds with session SELECT revoked');
 ROLLBACK;
 \echo C2_HISTORY_SQL_GATE=PASS
