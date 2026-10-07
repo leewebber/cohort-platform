@@ -1,5 +1,20 @@
 # First athlete History distance slice — local handoff
 
+> **Security and real-source audit — 2026-10-07:**
+> [Readiness audit](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_READINESS_AUDIT.md)
+> is **BLOCKED_FOR_AUTHENTICATED_DEVICE_VALIDATION**. Clean audit base and cached
+> origin/main: `b1d028fb33eb537391f307bb4eac22dddd98ebde`; no fetch.
+> Cohort Field Manual identity/health and ledger 117 were reconfirmed by bounded
+> SELECT-only inspection. New discovery/C2 ownership boundaries are intact in
+> inspected definitions; existing anon/authenticated unrestricted
+> `training_sessions` SELECT and excessive privileges require separate permission
+> remediation. Two profile-athlete-owned complete km observations are structurally
+> available; three values are absent, and all five candidates lack comparison
+> context. No authenticated role/device run occurred. Remediation is proposed
+> only; no permissions, release guard or product code changed. Earlier dated
+> integration pauses below are historical; the audit records local ref equality,
+> not a freshly fetched remote state or release approval.
+
 **Recorded:** 2026-10-07. **Status:** VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
 **Branch:** `codex/athlete-history-distance-slice`.
 **Exclusive implementation base:** `46a89b4571b903645c5f4863ff936fb321c234c2`.

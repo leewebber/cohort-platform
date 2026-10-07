@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **First athlete History security/readiness audit — 2026-10-07:**
+> [Readiness audit](./PERFORMANCE_TRACKING_FIRST_ATHLETE_HISTORY_READINESS_AUDIT.md)
+> is **BLOCKED_FOR_AUTHENTICATED_DEVICE_VALIDATION**. Clean audit base and cached
+> origin/main equal `b1d028fb33eb537391f307bb4eac22dddd98ebde`; no fetch.
+> SELECT-only Cohort Field Manual inspection reconfirmed ACTIVE_HEALTHY / ledger
+> 117. Existing anon/authenticated `training_sessions` SELECT with RLS disabled
+> and excessive table privileges require separately approved remediation.
+> Two complete owned km observations are structurally available; comparison
+> context is absent. New owner-gated C2 remains independent; runtime role/device
+> proof is still open. No remediation, release-guard change, build/install, hosted
+> write, push or next slice. Audit/handoff docs only on
+> `codex/athlete-history-readiness-audit`. Prior dated pauses remain historical.
+
 > **First athlete History visual approval / final review — 2026-10-07:**
 > Founder approved the refined distance view at `86c6224` as a **bounded
 > foundation, not the finished performance dashboard**.
