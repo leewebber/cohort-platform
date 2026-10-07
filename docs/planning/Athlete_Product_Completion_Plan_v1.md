@@ -1,5 +1,18 @@
 # Athlete Product Completion Plan v1
 
+> **Live tracking pointer — 2026-10-07:** C3 is integrated through `ee2ebaeb`;
+> approved C4 synthetic review is integrated through `f316a48`. C4 is not deployed
+> athlete tracking; C2/C3 have no production tracking consumer. The
+> [first athlete History slice proposal](../architecture/Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
+> is **PROPOSED_AWAITING_FOUNDER_APPROVAL**: separately approved real content,
+> transient profile opening, exact owned source discovery and independent C2/C3
+> read/UI composition. Saved selection, manual entry, programme test weeks and
+> arithmetic remain separate. Recorded training_sessions permission discrepancy
+> requires a separate target access/release review. No implementation, content
+> authoring, hosted operations or production wiring authorised; no milestone
+> resequencing. Earlier dated integration pauses below are historical.
+
+
 > **Live continuation — 2026-10-06:** C1 and reviewed C2 infrastructure are
 > integrated; deployment closeout is integrated at
 > `66e94e010cef40d1743694371bb59b0940b3eb72`. Recorded hosted ledger 117;

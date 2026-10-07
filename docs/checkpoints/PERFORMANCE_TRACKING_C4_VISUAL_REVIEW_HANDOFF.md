@@ -1,7 +1,14 @@
 # Performance Tracking C4 — internal visual-review handoff
 
 **Recorded:** 2026-10-06. **Current status (2026-10-07):**
-VISUALLY_APPROVED_AWAITING_FOUNDER_INTEGRATION_APPROVAL.
+INTEGRATED_VISUALLY_APPROVED_SYNTHETIC_ONLY.
+The founder-authorised five-commit range was pushed by strict fast-forward from
+`ee2ebaeb14a809628a031b428ff9fee87b0c5e06` through
+`f316a48ba529e98d408bf0acefc9ea2798eb9726` in the preceding integration task.
+That task fetched afterward and verified HEAD/origin main equality, divergence
+0/0 and a clean worktree; no feature branch/tags were published. This proposal
+task only observes the cached ref and performs no remote refresh. Later dated
+pending-integration text below is preserved history. Production remains unwired.
 Founder visual approval includes refined presentation at `0638046`.
 Earlier verification/range/stop sections below are dated implementation records;
 the final closeout section supersedes their visual-review pause only.
@@ -204,3 +211,12 @@ prescription and existing private programme/athlete authorities remain unchanged
 Stop for founder integration approval. No merge/rebase/amend, fetch/push, hosted
 operations, builds, production wiring or next slice. `.env` and `supabase/.temp`
 were untouched.
+
+## 2026-10-07 first athlete slice proposal pointer
+
+[First athlete History slice proposal](../architecture/Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
+is documentation only, awaiting founder approval. It distinguishes approved real
+content/delivery, ephemeral opening, exact source discovery, production read/evaluator
+composition and athlete UI from deferred selection/manual storage. C4 fixtures are
+not a real catalogue and must remain isolated. No new implementation or hosted
+operation is authorised; recorded session-table permission discrepancy is preserved.

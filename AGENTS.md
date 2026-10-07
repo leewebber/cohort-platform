@@ -195,8 +195,9 @@ closeout. Deployment documentation is integrated at
 `66e94e010cef40d1743694371bb59b0940b3eb72`.
 The [C3 read-only evaluation proposal](docs/architecture/Performance_Tracking_C3_Read_Only_Evaluation_Proposal_v1.md)
 was founder-approved for bounded pure extraction/comparability. C3 is now
-**implemented, reviewed and locally verified, awaiting founder integration approval**
-on `codex/c3-tracking-evaluation`. Original implementation
+**implemented, reviewed and integrated** through
+`ee2ebaeb14a809628a031b428ff9fee87b0c5e06`. The original local work was on
+`codex/c3-tracking-evaluation`. Original implementation
 `c70a02a097c47ff74e57d132acfc6fd0876f8f00` and proposal `b1a7ffd` are preserved;
 review fix `1f46a9247e3484b115ea1197b92fa37380dc7658` rejects contradictory alias
 capture states/coverage/known units and malformed unmeasured coverage.
@@ -206,7 +207,8 @@ It projects trusted C2 outcomes onto exact profiles and explicit comparable pair
 no numeric differences, source reads, storage or production consumer. Programme
 attribution and prescription eligibility remain separate; legacy scope unproven.
 Further implementation, wiring and hosted operations remain unauthorised.
-Stop for founder integration approval; no push.
+Earlier C3 integration pauses in handoffs are historical; no production wiring
+or further implementation is authorised.
 
 **C4's isolated synthetic visual-review surface is founder-approved**, including
 refined presentation at `0638046b33e7173f48001f62d4ff6a598b780cd8` (2026-10-07).
@@ -214,9 +216,19 @@ See [C4 handoff](docs/checkpoints/PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.
 Its dedicated entry uses actual C2/C3 evaluation for six synthetic scenarios and
 remains unreachable from production and existing Studio entries. This is not
 deployed athlete tracking: no arithmetic, prescription eligibility, persistence,
-real profiles or production wiring. Preview is stopped; final local closeout
-awaits founder integration approval. No merge, fetch/push, hosted operation or
-next-slice authority follows from visual approval.
+real profiles or production wiring. Preview is stopped. The approved five-commit
+range was integrated by strict fast-forward through
+`f316a48ba529e98d408bf0acefc9ea2798eb9726`; dated integration pauses are historical.
+No hosted operation, production wiring or next-slice authority follows from it.
+
+The [first athlete tracking slice proposal](docs/architecture/Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
+is **PROPOSED_AWAITING_FOUNDER_APPROVAL** (2026-10-07). It audits missing real
+profile approval/delivery, transient opening, exact source discovery, authenticated
+C2/C3 wiring and athlete presentation. Recommend content approval before a bounded
+independent History view; saved selection, manual entry, programme test integration
+and arithmetic remain separate. Recorded training_sessions permissions require
+separate target access/release review, not remediation in the proposal. No real
+profile authoring, implementation, hosted contact or production wiring is authorised.
 
 The active product sequence is
 [`docs/planning/Athlete_Product_Completion_Plan_v1.md`](docs/planning/Athlete_Product_Completion_Plan_v1.md)

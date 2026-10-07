@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **First athlete tracking slice proposal — 2026-10-07:**
+> [Bounded History-first proposal](../architecture/Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
+> is **PROPOSED_AWAITING_FOUNDER_APPROVAL**. Clean start HEAD/cached origin/main
+> `f316a48ba529e98d408bf0acefc9ea2798eb9726`, no fetch/hosted refresh.
+> C4's approved five-commit range is integrated through that tip; C3 is already
+> integrated in its base. C4 remains an isolated synthetic review surface;
+> C2/C3 remain unwired to production. Recommend separately approved content first,
+> then one independent History profile over at most two explicit owned records,
+> exact source discovery and actual C2/C3 projection. No saved selection/manual
+> entry, programme attribution/test weeks or arithmetic. Recorded session-table
+> permission discrepancy needs a separate release access review, not remediation
+> here. `ATHLETE_PERFORMANCE_TRACKING_FIRST_SLICE=PROPOSED_NOT_AUTHORISED`,
+> `PERFORMANCE_TRACKING_PRODUCTION_WIRED=false`,
+> `REAL_TRACKING_PROFILE_AUTHORING_AUTHORISED=false`,
+> `NEXT_IMPLEMENTATION_AUTHORISED=false`. Stop for founder proposal approval.
+> Earlier dated C3/C4 integration pauses below are historical; integration itself
+> grants no content, production wiring, hosted or next-slice authority.
+
+
 > **C4 visual approval / final review — 2026-10-07:** Founder approved the
 > isolated synthetic review surface, including refined presentation at
 > `0638046b33e7173f48001f62d4ff6a598b780cd8`, on

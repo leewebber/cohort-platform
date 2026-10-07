@@ -1,6 +1,6 @@
 # Performance tracking profiles — revised Sprint C foundation proposal
 
-**Recorded / revised:** 2026-10-05; delivery pointers updated 2026-10-06.
+**Recorded / revised:** 2026-10-05; delivery pointers updated 2026-10-07.
 **Status:** Revised contract architecture FOUNDER_APPROVED. C1 integrated at
 `72c1281f0966f2a6485873f6071b0e000ba1e000`; independent and combined C2
 infrastructure/deployment documentation integrated through
@@ -20,7 +20,13 @@ Legacy scope remains unproven; no client-byte/hash-only authority or backfill.
 is founder-approved, implemented and locally verified: synthetic profile projection
 and explicit comparability, with numeric derivations deferred.
 [C3 handoff](../checkpoints/PERFORMANCE_TRACKING_C3_EVALUATION_HANDOFF.md) records
-the exact local boundary, awaiting founder review. No further implementation,
+the bounded evaluator boundary, integrated through `ee2ebaeb`.
+[C4 handoff](../checkpoints/PERFORMANCE_TRACKING_C4_VISUAL_REVIEW_HANDOFF.md) records
+its approved synthetic surface, integrated through `f316a48`.
+[First athlete History slice proposal](./Performance_Tracking_First_Athlete_History_Slice_Proposal_v1.md)
+is proposed, not authorised: real content approval/delivery and exact source
+discovery are still required before production C2/C3 wiring and athlete UI.
+No further implementation,
 production wiring, storage, real content or broader tracking licence. Schema v3
 remains outside these slices.
 **Parent (amended direction):** [Programme_Performance_Metrics_Profile_v1.md](./Programme_Performance_Metrics_Profile_v1.md)
@@ -44,7 +50,9 @@ PERFORMANCE_TRACKING_C2_HOSTED_MIGRATION_APPLIED=true
 PERFORMANCE_TRACKING_C2_PRODUCTION_WIRED=false
 PERFORMANCE_TRACKING_C2_PROGRAMME_ATTRIBUTION=HOSTED_APPLIED_SELECT_VERIFIED
 PERFORMANCE_TRACKING_C2_PROGRAMME_HOSTED_MIGRATIONS_APPLIED=true
-PERFORMANCE_TRACKING_C3=LOCAL_VERIFIED_AWAITING_FOUNDER_REVIEW
+PERFORMANCE_TRACKING_C3=INTEGRATED
+PERFORMANCE_TRACKING_C4=INTEGRATED_VISUALLY_APPROVED_SYNTHETIC_ONLY
+ATHLETE_PERFORMANCE_TRACKING_FIRST_SLICE=PROPOSED_NOT_AUTHORISED
 PERFORMANCE_TRACKING_C3_PRODUCTION_WIRED=false
 PROGRAMME_METRICS_PROFILE_AUTHORISED=false
 COHORT_5K_TEST_INGESTION=BLOCKED
