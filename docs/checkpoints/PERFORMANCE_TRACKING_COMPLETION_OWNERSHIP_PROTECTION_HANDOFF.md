@@ -1,5 +1,19 @@
 # Completion ownership and parent protection — local handoff
 
+> **Combined permission/completion review — 2026-10-08:**
+> [Integration review](./PERFORMANCE_TRACKING_PERMISSION_COMPLETION_INTEGRATION_REVIEW.md) preserves all six commits through
+> `680b3ba86eaf5ef4cd46765ae24be7b5a834867a` on
+> `codex/history-permission-completion-review`. Separate local fixes close
+> elevated child-ID collisions, mutable result identities and ownership/link
+> races, including direct child parent locking. Final role/API/concurrency,
+> fresh/repeat DB compatibility and structured-running gates pass; 242 focused
+> Flutter tests, zero analysis issues and six safety groups pass.
+> **REVIEWED_LOCALLY_AWAITING_FOUNDER_INTEGRATION_APPROVAL**. Nine ordered
+> commits, zero merges; base/cached origin/main remains
+> `b1d028fb33eb537391f307bb4eac22dddd98ebde`. Earlier dated results below
+> remain historical. No fetch/push, hosted contact/apply, release activation,
+> phone build/install or next slice. Stop for founder integration approval.
+
 **Recorded:** 2026-10-07 (Asia/Makassar).
 **Status:** **LOCAL_OWNERSHIP_PROTECTION_PROVED_AWAITING_FOUNDER_REVIEW**.
 The formerly failing canonical completion-isolation gate passes. This is a local
