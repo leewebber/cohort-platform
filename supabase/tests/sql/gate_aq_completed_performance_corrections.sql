@@ -36,6 +36,12 @@ BEGIN
       '{"provider":"email","providers":["email"]}','{}',FALSE,'','','','')
   ON CONFLICT (id) DO NOTHING;
 
+  -- Current correction authority requires an authenticated athlete profile.
+  INSERT INTO public.profiles(id,display_name,is_athlete,is_coach)
+  VALUES(v_owner,'Synthetic correction owner',true,false),
+        (v_other,'Synthetic correction other',true,false)
+  ON CONFLICT (id) DO NOTHING;
+
   INSERT INTO public.training_session_records (
     record_id, athlete_id, status, session_snapshot, started_at, completed_at,
     duration_seconds, overall_rpe
