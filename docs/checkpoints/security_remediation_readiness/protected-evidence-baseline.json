@@ -1,0 +1,97 @@
+[
+  {
+    "relation": "coach_athlete_relationships",
+    "row_count": 0,
+    "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "relation": "performance_result_corrections",
+    "row_count": 0,
+    "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "relation": "profiles",
+    "row_count": 2,
+    "rowset_md5": "05bbbf7871edd474349c0dbdad0b966c"
+  },
+  {
+    "relation": "programme_assignments",
+    "row_count": 3,
+    "rowset_md5": "93783bee2b6eea7303ffabf9ccf94107"
+  },
+  {
+    "relation": "programme_occurrence_running_target_snapshots",
+    "row_count": 4,
+    "rowset_md5": "3051e0761c69f8dce4ad2fe3582f27ef"
+  },
+  {
+    "relation": "programme_publication_artifacts",
+    "row_count": 0,
+    "rowset_md5": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  {
+    "relation": "programme_schedule_occurrences",
+    "row_count": 159,
+    "rowset_md5": "1e917b91142989e41e24ecb892b91adc"
+  },
+  {
+    "relation": "programme_schedule_projections",
+    "row_count": 3,
+    "rowset_md5": "4233c77490ecd2630930ee96c622b2b3"
+  },
+  {
+    "relation": "programme_slot_outcomes",
+    "row_count": 19,
+    "rowset_md5": "cef070f5ebb77ec823861d171e049f2b"
+  },
+  {
+    "relation": "programme_version_days",
+    "row_count": 181,
+    "rowset_md5": "d2958bf65a61a706c74d7c6641b1ef72"
+  },
+  {
+    "relation": "programme_version_session_slots",
+    "row_count": 188,
+    "rowset_md5": "d69b784c44a5dd655031c3ab78899814"
+  },
+  {
+    "relation": "programme_version_weeks",
+    "row_count": 29,
+    "rowset_md5": "aef4f0e0fb035197d98a84bfcc0eb6a8"
+  },
+  {
+    "relation": "programme_versions",
+    "row_count": 11,
+    "rowset_md5": "efa3ffebac4022e49d79d80cbba79afe"
+  },
+  {
+    "relation": "session_blocks",
+    "row_count": 495,
+    "rowset_md5": "51e8b026a8a6c782bb2dfc9b49338ae3"
+  },
+  {
+    "relation": "training_block_results",
+    "row_count": 63,
+    "rowset_md5": "09c061feae3a51d899b15cbe2e35cee3"
+  },
+  {
+    "relation": "training_exercise_results",
+    "row_count": 183,
+    "rowset_md5": "95fa7f233464700beb2a462731b390ae"
+  },
+  {
+    "relation": "training_session_records",
+    "row_count": 24,
+    "rowset_md5": "991c35c77cf81b5b966728c7bed3bf7f"
+  },
+  {
+    "relation": "training_sessions",
+    "row_count": 47,
+    "rowset_md5": "8e4a15439d61ca42505bc4f34fba966e"
+  },
+  {
+    "relation": "training_set_results",
+    "row_count": 411,
+    "rowset_md5": "ebe23fafe37ebed93134c1ab91196983"
+  }
+]

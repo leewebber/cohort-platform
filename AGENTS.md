@@ -1,5 +1,19 @@
 # Cohort Platform repository guidance
 
+> **Public backfill ACL readiness fix — locally proved, 2026-10-09:**
+> [Readiness](docs/checkpoints/security_remediation_readiness/READINESS.md) and
+> [five-file postcheck plan](docs/checkpoints/security_remediation_readiness/POSTCHECK_PLAN.md)
+> retain the integrated nine-commit review at `1986ec1`. On
+> `codex/backfill-authenticated-acl`, additive exact-jsonb service EXECUTE
+> revocation preserves authenticated access and fails closed on unexpected
+> inherited/PUBLIC authority. Hosted SELECT-only default-grant investigation
+> confirms the direct retained grant; all 19 evidence invariants match. Reproduced
+> hosted-default role/API/replay/concurrency proof and six safety groups pass.
+> **LOCAL_ACL_FIX_PROVED_AWAITING_FOUNDER_REVIEW**. Five migrations remain
+> unapplied. No default-privilege change, integration/push, hosted apply, release
+> or device work. Stop for founder review; integration and deployment require
+> separate approvals. Earlier dated pauses below remain historical.
+
 > **Combined permission/completion review — 2026-10-08:**
 > [Integration review](docs/checkpoints/PERFORMANCE_TRACKING_PERMISSION_COMPLETION_INTEGRATION_REVIEW.md) preserves all six commits through
 > `680b3ba86eaf5ef4cd46765ae24be7b5a834867a` on

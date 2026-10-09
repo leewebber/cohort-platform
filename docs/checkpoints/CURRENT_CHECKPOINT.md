@@ -1,5 +1,20 @@
 # Current repository checkpoint
 
+> **Public backfill ACL readiness fix — locally proved, 2026-10-09:**
+> [Readiness](./security_remediation_readiness/READINESS.md) and
+> [five-file postcheck plan](./security_remediation_readiness/POSTCHECK_PLAN.md)
+> preserve integrated base/cached origin/main `1986ec1`; no fetch. Isolated
+> `codex/backfill-authenticated-acl` restores the exact public backfill jsonb
+> authenticated-only EXECUTE contract without changing function bodies, the
+> four integrated migrations, roles, defaults or ownership/link safeguards.
+> Hosted SELECT-only inspection confirms the retained direct service grant and
+> both public-function creation defaults; all 19 protected counts/digests match.
+> Hosted-default actual-role/API/replay/concurrency proof and six safety groups
+> pass. **LOCAL_ACL_FIX_PROVED_AWAITING_FOUNDER_REVIEW**. Five-file apply remains
+> unauthorised; require separate integration approval, fresh preflight and founder
+> deployment approval. No hosted write, push, release, phone or next slice.
+> Earlier dated review/integration pauses below are historical.
+
 > **Combined permission/completion review — 2026-10-08:**
 > [Integration review](./PERFORMANCE_TRACKING_PERMISSION_COMPLETION_INTEGRATION_REVIEW.md) preserves all six commits through
 > `680b3ba86eaf5ef4cd46765ae24be7b5a834867a` on
