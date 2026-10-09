@@ -15,6 +15,12 @@ cleanup() {
 trap cleanup EXIT
 sprint12_assert_no_hosted_intent "$@"
 sprint12_prepare_disposable_workdir
+ACL_MIGRATION="$REPO_ROOT/supabase/migrations/20261009120000_backfill_authenticated_execute.sql"
+# Reproduce hosted creation defaults only inside this disposable baseline. Delay
+# file five to prove that the four-file sequence actually retains the defect.
+cat "$TESTS_DIR/sql/backfill_hosted_default_grants_fixture.sql" >> \
+  "$SPRINT12_WORKDIR/supabase/migrations/20260701000000_local_test_baseline_prereq.sql"
+rm "$SPRINT12_WORKDIR/supabase/migrations/$(basename "$ACL_MIGRATION")"
 MIGRATION="$REPO_ROOT/supabase/migrations/20261007120000_history_read_permission_remediation.sql"
 DART_SUPPRESS_ANALYTICS=true FLUTTER_SUPPRESS_ANALYTICS=true dart --packages="$REPO_ROOT/.dart_tool/package_config.json" \
   "$TESTS_DIR/fixtures/c2_programme_publication_fixture.dart" "$SPRINT12_WORKDIR/payload.sql"
@@ -25,6 +31,9 @@ SPRINT12_DB_CONTAINER="$(sprint12_resolve_exact_db_container "$SPRINT12_PROJECT_
 sprint12_assert_local_container "$SPRINT12_DB_CONTAINER" "$SPRINT12_PROJECT_ID"
 supabase db reset --local --no-seed --yes --workdir "$SPRINT12_WORKDIR" >/dev/null
 psql_file() { docker exec -i "$SPRINT12_DB_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 < "$1"; }
+psql_file "$TESTS_DIR/sql/backfill_acl_before.sql"
+psql_file "$ACL_MIGRATION"
+psql_file "$TESTS_DIR/sql/gate_backfill_authenticated_execute.sql"
 psql_file "$TESTS_DIR/sql/gate_c2_coherent_history_read.sql"
 psql_file "$SPRINT12_WORKDIR/payload.sql"
 psql_file "$TESTS_DIR/sql/gate_c2_programme_attribution.sql"
@@ -36,11 +45,13 @@ psql_file "$MIGRATION"
 psql_file "$REPO_ROOT/supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql"
 psql_file "$REPO_ROOT/supabase/migrations/20261008120000_completion_result_identity.sql"
 psql_file "$REPO_ROOT/supabase/migrations/20261008121000_completion_link_locking.sql"
+psql_file "$ACL_MIGRATION"
 psql_file "$TESTS_DIR/sql/gate_history_permission_remediation.sql"
 psql_file "$MIGRATION"
 psql_file "$REPO_ROOT/supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql"
 psql_file "$REPO_ROOT/supabase/migrations/20261008120000_completion_result_identity.sql"
 psql_file "$REPO_ROOT/supabase/migrations/20261008121000_completion_link_locking.sql"
+psql_file "$ACL_MIGRATION"
 psql_file "$TESTS_DIR/sql/history_permission_remediation_preservation.sql"
 # Unknown permissive policies must reject remediation atomically, never coexist.
 docker exec "$SPRINT12_DB_CONTAINER" psql -X -U postgres -d postgres -v ON_ERROR_STOP=1 \
@@ -68,4 +79,5 @@ psql_file "$TESTS_DIR/sql/gate_completion_ownership_security.sql"
 psql_file "$TESTS_DIR/sql/gate_completion_child_identity.sql"
 python3 "$TESTS_DIR/concurrency/gate_completion_identity.py"
 python3 "$TESTS_DIR/completion_ownership_http.py" "$SPRINT12_WORKDIR"
+python3 "$TESTS_DIR/backfill_acl_ordering.py"
 echo 'HISTORY_PERMISSION_REMEDIATION_LOCAL_GATE=PASS'
