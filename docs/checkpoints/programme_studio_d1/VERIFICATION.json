@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-10",
+  "status": "LOCALLY_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW",
+  "base": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "implementation_commit": "9f7722bed691b2821e36bb0cbf8ad2655c3625e9",
+  "implementation_tree": "a51788e0745bbb79fb6bb97cf50be8b2e9dc229a",
+  "checks": {
+    "studio_and_authored_package": {
+      "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/authored_plan_package/ --reporter expanded",
+      "passed": 114,
+      "exit": 0
+    },
+    "canonical_package": {
+      "cwd": "packages/cohort_plan_package",
+      "command": "dart --suppress-analytics test --reporter expanded",
+      "passed": 41,
+      "exit": 0
+    },
+    "scoped_analysis": {
+      "command": "flutter --suppress-analytics analyze --no-pub lib/features/programme_studio/authoring lib/main_programme_studio_authoring_preview.dart test/programme_studio/programme_authoring_controller_test.dart test/programme_studio/programme_authoring_isolation_test.dart test/programme_studio/programme_authoring_screen_test.dart",
+      "diagnostics": 0,
+      "exit": 0
+    },
+    "full_analysis": {
+      "command": "flutter --suppress-analytics analyze --no-pub",
+      "before": {
+        "errors": 0,
+        "warnings": 110,
+        "info": 257
+      },
+      "after": {
+        "errors": 0,
+        "warnings": 110,
+        "info": 257
+      },
+      "all_diagnostic_lines_identical": true,
+      "exit": 1,
+      "full_analysis_pass": false
+    },
+    "safety": {
+      "command": "FLUTTER_SUPPRESS_ANALYTICS=true ./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "exit": 0,
+      "groups": {
+        "architectural_boundaries": 71,
+        "coaching_integrity": 17,
+        "adaptation_contracts": 62,
+        "programme_adapt_ui_contract": 8,
+        "completion_identity": 1,
+        "staging_production_isolation": 12
+      }
+    }
+  },
+  "implementation_file_sha256": {
+    "lib/features/programme_studio/authoring/plan_package_v1_yaml_writer.dart": "d07c7f16aa4b10c86facfdbfa501eb399c9125d7f55ff340b085cf82bdcfad65",
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "c0256d1802e921988b3e890c76ca11515e914dcc41160c1f000e1aac6d87e86a",
+    "lib/features/programme_studio/authoring/programme_authoring_fixtures.dart": "1806dd10f51383f56a2371c01699e98da8fecbfca79e980e9c7629245c06c0ae",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "017d957de4cf123f437b78366f3bc14c6fcdddf249334f546ad2eb37cb59e79a",
+    "lib/main_programme_studio_authoring_preview.dart": "34056b0b71cd5d316d91da3a46e3e67589600d1d02d125509db6c91b80191dea",
+    "test/programme_studio/programme_authoring_controller_test.dart": "ea2848e05ca23e74b3ee22945def4429dd934df66241e48dbe0e8bdc5c8537b5",
+    "test/programme_studio/programme_authoring_isolation_test.dart": "1fecc0e4160c5c222a15066edfbe5f1899e70e8f95c16d3f41df782e911f4a21",
+    "test/programme_studio/programme_authoring_screen_test.dart": "516b3666bb921b0fbe2299d8b71dae038e9d156acac7d0c9eb6eafff0cb6e4db"
+  },
+  "protected_baseline": {
+    "tracked_files": 2587,
+    "all_byte_identical_before_checkpoint_pointer_edit": true,
+    "compiler_schema_hash_code_unchanged": true,
+    "published_artifacts_and_goldens_unchanged": true
+  },
+  "original_checkout": {
+    "path": "/Users/leewebber/Developer/cohort_platform",
+    "branch": "main",
+    "head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "outstanding_paths": 95,
+    "all_original_file_hashes_and_status_unchanged": true,
+    "staged_paths": 0,
+    "temp_regular_file_count_before_and_after": 0
+  },
+  "preview": {
+    "address": "http://127.0.0.1:4195",
+    "entry": "lib/main_programme_studio_authoring_preview.dart",
+    "rendered_native_chrome_walkthrough_completed": true,
+    "left_running": true,
+    "state": "Original synthetic fixture restored by reload; not yet validated.",
+    "founder_approval": false
+  }
+}

@@ -1,5 +1,23 @@
 # Current repository checkpoint
 
+> **Sprint D1 / Programme Studio Stage 2 — local candidate, 2026-10-10:**
+> [Founder approval and approved allocation](./programme_studio_d1/APPROVAL.md),
+> [implementation handoff](./programme_studio_d1/HANDOFF.md) and
+> [fresh verification](./programme_studio_d1/VERIFICATION.json) record the isolated
+> synthetic v1 metadata/schedule editor, deterministic export and exact-byte
+> existing Studio review on `codex/programme-studio-stage2`, implementation
+> `9f7722b`, base `a331f52967e1887c4435cccc8f1ecfa192028cd6`.
+> **LOCALLY_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**. 114 Studio/root regressions,
+> 41 canonical-package tests, zero changed-file diagnostics and all six safety
+> groups pass. Full analysis retains the identical 367 inherited diagnostics
+> (zero errors); no full-analysis pass or reusable exception is claimed.
+> Chrome preview is running locally for review. Bounded C satisfies D1 only;
+> broader C/Stage 2 closure and four record-dependent phone checks remain open.
+> Original main's 95 outstanding files and `.temp` are preserved. No integration,
+> publication, hosted contact, fetch/push, migration or device build/install.
+> Earlier dated security/deployment pointers remain historical; the source main
+> checkout retains its separately owned, newer deployment/device evidence.
+
 > **Public backfill ACL readiness fix — locally proved, 2026-10-09:**
 > [Readiness](./security_remediation_readiness/READINESS.md) and
 > [five-file postcheck plan](./security_remediation_readiness/POSTCHECK_PLAN.md)
