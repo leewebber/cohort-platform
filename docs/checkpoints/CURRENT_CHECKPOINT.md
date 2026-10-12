@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **Programme Studio D2 — local implementation, 2026-10-12:**
+> [D2 handoff](./programme_studio_d2/HANDOFF.md) and
+> [fresh evidence](./programme_studio_d2/VERIFICATION.json) record the approved
+> isolated synthetic straight-sets editor, complete deterministic Founder YAML,
+> exact-source Studio bridge, immutable local revisions and explicit programme
+> selection. **D2_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW**.
+> 278 affected root and 41 canonical-package tests, zero changed-file diagnostics
+> and six safety groups pass. Full analysis remains non-green: exactly 367 inherited
+> diagnostics (110 warnings, 257 info, zero errors), no new diagnostics.
+> Protected compiler/schema/hash, published artifacts and v1/v2 goldens unchanged.
+> Chrome preview runs locally at 127.0.0.1:4195; agent workflow inspected and original
+> R1 restored. Founder visual acceptance remains pending. Local commits only from
+> exact published D1 base `6318f319db15ff7a42283c7719dc22a6dc28daa5` on
+> `codex/programme-studio-d2`; no integration/fetch/push/hosted operation.
+> Both older checkouts, original 95 paths/index/HEAD and `.temp` preserved.
+> Broader Stage 2/C and four record-dependent phone checks remain open.
+> No real content, persistence, athlete writes, production wiring, migrations,
+> release changes or device build/install. **NEXT_IMPLEMENTATION_AUTHORISED=false**.
+
 > **Sprint D1 / Programme Studio Stage 2 — accepted, 2026-10-12:**
 > [Final review and founder acceptance](./programme_studio_d1/FINAL_REVIEW_AND_ACCEPTANCE.md)
 > and [fresh verification](./programme_studio_d1/FINAL_REVIEW_VERIFICATION.json)

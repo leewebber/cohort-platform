@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-12",
+  "status": "D2_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW",
+  "base": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+  "branch": "codex/programme-studio-d2",
+  "worktree": "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform",
+  "checked_code_commit": "e3eb2508b773a45d6eac5b461347e9a9d8bd4379",
+  "approval_commit": "c95b26353ee681ba418034305c418404e8158472",
+  "affected_root_tests": {
+    "passed": 278,
+    "exit": 0,
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/founder_programme_import/ test/authored_plan_package/ test/architecture/founder_programme_identity_consumer_boundaries_test.dart test/models/strength_exercise_prescription_test.dart test/session_builder/session_block_validation_test.dart test/session/session_execution_projection_test.dart test/session_revision/session_revision_service_test.dart test/domain/exercise_knowledge/founder_approved_identity_mappings_phase_3_1f_test.dart"
+  },
+  "canonical_package_tests": {
+    "suite": "packages/cohort_plan_package/test",
+    "passed": 41,
+    "exit": 0
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "runner": "unchanged gate; shell flutter wrapper inserts --suppress-analytics and test --no-pub, uses cached dependencies",
+    "groups_passed": [
+      "architectural_boundaries",
+      "coaching_integrity",
+      "adaptation_contracts",
+      "programme_adapt_ui_contract",
+      "completion_identity",
+      "staging_production_isolation"
+    ],
+    "groups_failed": 0,
+    "exit": 0
+  },
+  "analysis": {
+    "full_exit": 1,
+    "green": false,
+    "diagnostics": 367,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "before_after_exact_diagnostic_lines_equal": true,
+    "new_diagnostics": 0,
+    "removed_diagnostics": 0,
+    "changed_dart_files": 18,
+    "changed_file_diagnostics": 0,
+    "scoped_exit": 0,
+    "configuration_investigation": "Initial incomplete fresh cache gave 705; four existing nested package config/graph pairs copied read-only from D1 restored fresh pre-edit 367; no source/dependency change or download."
+  },
+  "protected_files": {
+    "baseline_tracked_entries": 2612,
+    "unchanged_entries_including_absent": 2609,
+    "only_existing_paths_changed": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/presentation/programme_studio_coach_review.dart",
+      "lib/features/programme_studio/presentation/programme_studio_labels.dart"
+    ],
+    "shared_compiler_schema_hash_models_unchanged": true,
+    "published_artifacts_unchanged": true,
+    "v1_v2_goldens_unchanged": true,
+    "migrations_release_dependencies_production_entries_unchanged": true,
+    "nine_tracked_temp_entries_still_absent": true,
+    "manifest_sha256": "690f9c142b969ff91e728ba5556d0c572e6fbcb4832d5366b43bb78dae854ad0"
+  },
+  "approved_packet_byte_identical": true,
+  "diff_check": {
+    "command": "git diff --check; git diff --cached --check; final git diff base..HEAD --check",
+    "passed_before_checkpoint_commit": true
+  },
+  "local_links_and_line_targets_checked": 35,
+  "preservation": {
+    "/Users/leewebber/Developer/cohort_platform": {
+      "branch": "main",
+      "head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "dirty_path_count": 95,
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "files_and_status_exactly_equal": true,
+      "present_temp_regular_files": 0,
+      "temp_contents_and_absence_unchanged": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "branch": "codex/programme-studio-stage2",
+      "head": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "dirty_path_count": 0,
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "files_and_status_exactly_equal": true,
+      "present_temp_regular_files": 0,
+      "temp_contents_and_absence_unchanged": true
+    }
+  },
+  "preview": {
+    "url": "http://127.0.0.1:4195/",
+    "entry": "lib/main_programme_studio_protocol_authoring_preview.dart",
+    "running_for_founder_review": true,
+    "agent_rendered_checks": [
+      "R1 validation and dose",
+      "editing invalidation and required-title error",
+      "corrected same-title different-dose R2 review",
+      "Founder YAML export copy reopen and refresh",
+      "freeze leaves programme on R1",
+      "separate confirmed R2 selection",
+      "actual Studio R2 dose kg rest tempo cue",
+      "reload restored R1"
+    ],
+    "founder_visual_acceptance": "pending"
+  },
+  "qualifications": {
+    "broader_stage2": "open",
+    "broader_sprint_c": "open",
+    "record_dependent_phone_checks_pending": 4,
+    "real_content": false,
+    "hosted_contact": false,
+    "fetch_push": false,
+    "integration_publication": false,
+    "device_build_install": false,
+    "persistence": "transient in-memory only"
+  },
+  "adapter_deviation": "Tool-only repository port adapter outside Flutter lib boundary unchanged; D2 port wraps unchanged shared bridge with conformance tests against tool adapter.",
+  "log_sha256": {
+    "cohort-d2-analysis-before-ready.log": "2c416e5303a055e417dd38a42bfce5a167ba581a67b51879f9d01e45bcfedc2d",
+    "cohort-d2-analysis-final.log": "e94c17d66f735cd3ccd46ed4f5e6b965ae5f8e0aec005fd0d5cffd99967b17af",
+    "cohort-d2-scoped-analysis-confirmed.log": "85c2f6d08bbe3fa8446e037f7ab9f7036916ce5bf693036360933963ecf771dc",
+    "cohort-d2-affected-final.log": "55f2fa24109c57f6cf54ff1f9095763af43f681ea43fb8a5482b8ffeeac9f054",
+    "cohort-d2-package-tests.log": "abc7dd306d33ceae8b3d9728a1059c54158e76986515eaa6eafd7ba2367f119a",
+    "cohort-d2-safety-final.log": "b8eb48cb06cd6bfc6be59fd48ad9a6cbbe87ccbc659d280af971c07f18f422fd"
+  }
+}
