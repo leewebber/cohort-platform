@@ -23,3 +23,13 @@ state immediately. Invalid drafts never show an old successful result as current
 No shared compiler/schema/hash edit, real content, hosted contact, fetch/push,
 migration, production wiring, release-guard change or device build/install.
 Stop after local verification/commits and browser inspection for founder review.
+
+## Founder acceptance and publication authority — 2026-10-12
+
+Founder passed all four walkthrough steps and explicitly authorised final D1
+review, focused confirmed-defect fixes, fetch, clean linear integration and normal
+main publication if review passes. This supersedes the earlier D1 integration/
+fetch/push pause only. [Final review and acceptance](./FINAL_REVIEW_AND_ACCEPTANCE.md)
+records the resulting review and required publication postflight. The original 95
+files and `.temp` remain protected; real content/hosted project work, broader C/
+Stage 2 closure and the next task remain outside authority.

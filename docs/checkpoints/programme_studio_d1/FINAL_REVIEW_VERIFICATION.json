@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-12",
+  "status": "D1_ACCEPTED_FINAL_REVIEW_PASSED",
+  "base": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "reviewed_code_head": "8b6e4409eb32aea21730fca6af7181e02ce2562c",
+  "founder_visual_review": {
+    "accepted": true,
+    "preview_code_head": "c34c30b91b8c23e2f544f1061730ad01886134d0",
+    "steps": [
+      "validation/review",
+      "edit invalidation",
+      "refreshed diff/export/reopen",
+      "required-name error handling"
+    ],
+    "temporary_name": "Test Edit",
+    "restored_from_source": "Synthetic authoring \u2014 contracts",
+    "mechanism": "Reset to imported source",
+    "preview_stopped": true
+  },
+  "confirmed_defects": [
+    {
+      "fix_commit": "2d8588d660a5d186c0ae7b6b3caa741a49b5aab9",
+      "before": "rest-day move dialog RangeError; no-destination action enabled",
+      "after": "explicit available destination with confirmation; disabled without training days",
+      "new_widget_regressions": 2
+    },
+    {
+      "fix_commit": "8b6e4409eb32aea21730fca6af7181e02ce2562c",
+      "before": "malformed extra protocol tuple accepted after silent filtering",
+      "after": "fixture_source_unsupported prevents review/export",
+      "new_controller_regressions": 1
+    }
+  ],
+  "checks": {
+    "studio_and_authored_package": {
+      "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/authored_plan_package/ --reporter expanded",
+      "passed": 117,
+      "exit": 0
+    },
+    "canonical_package": {
+      "cwd": "packages/cohort_plan_package",
+      "command": "dart --suppress-analytics test --reporter expanded",
+      "passed": 41,
+      "exit": 0
+    },
+    "scoped_analysis": {
+      "command": "flutter --suppress-analytics analyze --no-pub lib/features/programme_studio/authoring lib/main_programme_studio_authoring_preview.dart test/programme_studio/programme_authoring_controller_test.dart test/programme_studio/programme_authoring_isolation_test.dart test/programme_studio/programme_authoring_screen_test.dart",
+      "diagnostics": 0,
+      "exit": 0
+    },
+    "full_analysis": {
+      "command": "flutter --suppress-analytics analyze --no-pub",
+      "before": {
+        "errors": 0,
+        "warnings": 110,
+        "info": 257
+      },
+      "after": {
+        "errors": 0,
+        "warnings": 110,
+        "info": 257
+      },
+      "diagnostic_lines_identical_to_fresh_before_and_oct10": true,
+      "diagnostic_sha256": "b03c46d64fa4ca8ad943817c9d288e81ea3d0f9eb4f4a9e9dd6918963af7b924",
+      "exit": 1,
+      "full_analysis_pass": false
+    },
+    "safety": {
+      "command": "FLUTTER_SUPPRESS_ANALYTICS=true bash ./tool/testing/run_phase2_consolidation_safety_gate.sh",
+      "runner_detail": "Exported shell flutter function passes --no-pub to each test invocation using resolved cached dependencies; repository gate/groups unchanged. Initial dependency-resolution attempt was terminated before tests.",
+      "exit": 0,
+      "groups": {
+        "architectural_boundaries": 71,
+        "coaching_integrity": 17,
+        "adaptation_contracts": 62,
+        "programme_adapt_ui_contract": 8,
+        "completion_identity": 1,
+        "staging_production_isolation": 12
+      }
+    },
+    "diff_and_links": {
+      "diff_check_exit": 0,
+      "local_links": 178,
+      "missing_links": 0
+    }
+  },
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/authoring/plan_package_v1_yaml_writer.dart": "d07c7f16aa4b10c86facfdbfa501eb399c9125d7f55ff340b085cf82bdcfad65",
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "e9feeef5c9d4ffa23bf5d3b61b0fc0e4b4c0d931660d40ad5de1937cd9d5a442",
+    "lib/features/programme_studio/authoring/programme_authoring_fixtures.dart": "1806dd10f51383f56a2371c01699e98da8fecbfca79e980e9c7629245c06c0ae",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "6c16899d3795e1b7e7000dfd8091b9c5c3b1528e52fc17e1434b1b7f88f50c14",
+    "lib/main_programme_studio_authoring_preview.dart": "34056b0b71cd5d316d91da3a46e3e67589600d1d02d125509db6c91b80191dea",
+    "test/programme_studio/programme_authoring_controller_test.dart": "0593a2ea14372efc1ec7a17c27752fc3721b2301b04aea6fbd57127924e6d551",
+    "test/programme_studio/programme_authoring_isolation_test.dart": "1fecc0e4160c5c222a15066edfbe5f1899e70e8f95c16d3f41df782e911f4a21",
+    "test/programme_studio/programme_authoring_screen_test.dart": "345cd6cb5532c5abc66d443b5c871698d5e2bd723006ea59966af33aa1614a05"
+  },
+  "protected_baseline": {
+    "tracked_files": 2587,
+    "only_existing_file_changed": "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "compiler_schema_hash_and_published_artifacts_and_v1_v2_goldens_unchanged": true
+  },
+  "original_checkout": {
+    "path": "/Users/leewebber/Developer/cohort_platform",
+    "branch": "main",
+    "head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "outstanding_paths": 95,
+    "file_bytes_status_index_and_temp_preserved": true,
+    "staged_paths": 0
+  },
+  "remote_preflight": {
+    "fetch_succeeded": true,
+    "origin_main": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "advanced": false,
+    "divergence_before_acceptance_commit": [
+      5,
+      0
+    ],
+    "merge_commits": 0
+  },
+  "publication_authority": "Founder authorised normal main publication after passing review. The acceptance documentation commit follows reviewed_code_head and is the final integration tip; verify its exact SHA after push.",
+  "next_implementation_authorised": false
+}

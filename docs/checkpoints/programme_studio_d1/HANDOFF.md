@@ -1,5 +1,15 @@
 # Sprint D1 implementation handoff — 2026-10-10
 
+> **Superseded review pause — 2026-10-12:** Founder visual acceptance and final
+> review are recorded in [FINAL_REVIEW_AND_ACCEPTANCE.md](./FINAL_REVIEW_AND_ACCEPTANCE.md)
+> and [FINAL_REVIEW_VERIFICATION.json](./FINAL_REVIEW_VERIFICATION.json). Preview
+> restored to its original synthetic fixture and stopped. Two focused defects
+> fixed; current Studio/root count is 117, with unchanged 41 package tests,
+> identical 367 inherited full-analysis diagnostics and six passing safety groups.
+> Founder now authorises normal main publication after review. The dated October
+> 10 record below remains historical; its pending-review/no-integration statements
+> no longer describe the accepted D1 status. Broader C/Stage 2 remain open.
+
 **LOCALLY_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW.** No integration or publication.
 Implementation commit: `9f7722bed691b2821e36bb0cbf8ad2655c3625e9`, preceded by
 allocation preservation `3933a39e95fa828bc31a64bab421d28e862a3420`. The final checkpoint

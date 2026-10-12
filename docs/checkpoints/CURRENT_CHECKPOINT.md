@@ -1,22 +1,23 @@
 # Current repository checkpoint
 
-> **Sprint D1 / Programme Studio Stage 2 — local candidate, 2026-10-10:**
-> [Founder approval and approved allocation](./programme_studio_d1/APPROVAL.md),
-> [implementation handoff](./programme_studio_d1/HANDOFF.md) and
-> [fresh verification](./programme_studio_d1/VERIFICATION.json) record the isolated
-> synthetic v1 metadata/schedule editor, deterministic export and exact-byte
-> existing Studio review on `codex/programme-studio-stage2`, implementation
-> `9f7722b`, base `a331f52967e1887c4435cccc8f1ecfa192028cd6`.
-> **LOCALLY_VERIFIED_AWAITING_FOUNDER_VISUAL_REVIEW**. 114 Studio/root regressions,
-> 41 canonical-package tests, zero changed-file diagnostics and all six safety
-> groups pass. Full analysis retains the identical 367 inherited diagnostics
-> (zero errors); no full-analysis pass or reusable exception is claimed.
-> Chrome preview is running locally for review. Bounded C satisfies D1 only;
-> broader C/Stage 2 closure and four record-dependent phone checks remain open.
-> Original main's 95 outstanding files and `.temp` are preserved. No integration,
-> publication, hosted contact, fetch/push, migration or device build/install.
-> Earlier dated security/deployment pointers remain historical; the source main
-> checkout retains its separately owned, newer deployment/device evidence.
+> **Sprint D1 / Programme Studio Stage 2 — accepted, 2026-10-12:**
+> [Final review and founder acceptance](./programme_studio_d1/FINAL_REVIEW_AND_ACCEPTANCE.md)
+> and [fresh verification](./programme_studio_d1/FINAL_REVIEW_VERIFICATION.json)
+> supersede the October 10 visual-review pause. **D1_ACCEPTED_FINAL_REVIEW_PASSED**:
+> four founder walkthrough steps passed; original synthetic fixture restored and
+> preview stopped. Two confirmed review defects fixed; 117 Studio/root and 41
+> canonical-package tests, zero changed-file diagnostics and all six safety groups
+> pass. Full analysis remains non-green: identical 367 inherited diagnostics,
+> zero errors. Compiler/schema/hash, published artifacts and v1/v2 goldens unchanged.
+> Founder authorises normal main publication of the six-commit linear D1 range
+> from exact base `a331f52967e1887c4435cccc8f1ecfa192028cd6`; fresh fetch confirms
+> origin/main has not advanced. Publish from the clean managed D1 worktree; keep
+> original dirty local main, all 95 files, index and `.temp` unchanged. Earlier
+> deployment pointers below are historical; original main retains its separately
+> owned newer deployment/device evidence. Bounded C satisfies D1 only; broader C,
+> Stage 2 and four record-dependent phone checks remain open. D2 allocation is
+> recommended for a new conversation; **NEXT_IMPLEMENTATION_AUTHORISED=false**.
+> No hosted project operation, migration, device build/install or real content.
 
 > **Public backfill ACL readiness fix — locally proved, 2026-10-09:**
 > [Readiness](./security_remediation_readiness/READINESS.md) and
