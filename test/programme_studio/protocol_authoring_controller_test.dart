@@ -45,6 +45,47 @@ Future<ProtocolAuthoringController> controller({
 }
 
 void main() {
+  for (final queued in [false, true]) {
+    for (final action in [
+      if (!queued) 'validate',
+      'exportFounder',
+      'exportPackage',
+      'freeze',
+    ]) {
+      test(
+        '$action refuses an edit at validation completion (queued=$queued)',
+        () async {
+          final c = await controller();
+          c.createDraft();
+          c.editExercise(0, 'reps', '6');
+          var edited = false;
+          c.addListener(() {
+            if (!edited && c.current != null) {
+              edited = true;
+              void edit() => c.editExercise(0, 'reps', '7');
+              if (queued) {
+                scheduleMicrotask(edit);
+              } else {
+                edit();
+              }
+            }
+          });
+          final result = await switch (action) {
+            'validate' => c.validate(),
+            'exportFounder' => c.exportFounder(),
+            'exportPackage' => c.exportPackage(),
+            _ => c.freeze(),
+          };
+          expect(edited, true);
+          expect(result, action.startsWith('export') ? isNull : false);
+          expect(c.current, isNull);
+          expect(c.revisions.length, 1);
+          expect(c.selectedRevision, 1);
+          expect(c.isEditing, true);
+        },
+      );
+    }
+  }
   test(
     'create/edit/freeze never changes R1 bytes or selected programme; selection is separate',
     () async {

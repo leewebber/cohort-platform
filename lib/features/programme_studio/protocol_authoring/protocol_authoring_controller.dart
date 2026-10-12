@@ -374,7 +374,10 @@ class ProtocolAuthoringController extends ChangeNotifier {
         );
       }
       notifyListeners();
-      return true;
+      // A listener can edit directly or queue an edit while observing success.
+      // Settle that notification before granting the validation receipt.
+      await Future<void>.value();
+      return !_disposed && token == _generation && current != null;
     } catch (error) {
       if (_disposed || token != _generation) return false;
       _busy = false;
@@ -384,14 +387,26 @@ class ProtocolAuthoringController extends ChangeNotifier {
     }
   }
 
-  Future<String?> exportFounder() async =>
-      await validate() ? current!.session.source : null;
-  Future<String?> exportPackage() async =>
-      await validate() ? current!.packageSource : null;
+  Future<String?> exportFounder() async {
+    final token = _generation + 1;
+    if (!await validate() || _disposed || token != _generation) return null;
+    return current?.session.source;
+  }
+
+  Future<String?> exportPackage() async {
+    final token = _generation + 1;
+    if (!await validate() || _disposed || token != _generation) return null;
+    return current?.packageSource;
+  }
+
   Future<bool> freeze() async {
-    if (!isEditing || !await validate()) return false;
-    final token = _generation;
-    final candidate = current!.session;
+    if (!isEditing) return false;
+    final token = _generation + 1;
+    if (!await validate() || _disposed || token != _generation || !isEditing) {
+      return false;
+    }
+    final candidate = current?.session;
+    if (candidate == null) return false;
     try {
       final frozen = await _catalogue!.freeze(
         candidate,

@@ -39,6 +39,29 @@ Future<void> tap(WidgetTester tester, String text) async {
 }
 
 void main() {
+  testWidgets('export refuses an edit triggered by validation completion', (
+    tester,
+  ) async {
+    final c = await mount(tester);
+    await tap(tester, 'Create local draft revision');
+    c.editExercise(0, 'reps', '6');
+    expect(await c.validate(), true);
+    await tester.pumpAndSettle();
+    var edited = false;
+    c.addListener(() {
+      if (!edited && c.current != null) {
+        edited = true;
+        c.editExercise(0, 'reps', '7');
+      }
+    });
+    await tap(tester, 'Export Founder YAML');
+    expect(edited, true);
+    expect(c.current, isNull);
+    expect(find.text('Founder YAML — exact validated bytes'), findsNothing);
+    expect(c.revisions.length, 1);
+    expect(c.selectedRevision, 1);
+    expect(tester.takeException(), isNull);
+  });
   testWidgets(
     'actual editor invalidation, missing title, export/reopen, freeze and explicit selection',
     (tester) async {
