@@ -380,6 +380,11 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
     final required =
         slot['is_optional'] == false &&
         slot['completion_expectation'] == 'required';
+    final canMove =
+        required &&
+        (tree['weeks'] as List).any(
+          (w) => (w['days'] as List).any((d) => d['day_type'] == 'training'),
+        );
     final sessions = tree['sessions'] as List;
     final key = slot['slot_key'] as String;
     return Padding(
@@ -468,7 +473,7 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
             spacing: 8,
             children: [
               TextButton.icon(
-                onPressed: required ? () => _move(index, tree) : null,
+                onPressed: canMove ? () => _move(index, tree) : null,
                 icon: const Icon(Icons.swap_vert),
                 label: const Text('Move / reorder'),
               ),
@@ -738,7 +743,10 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
         for (var d = 0; d < (tree['weeks'][w]['days'] as List).length; d++)
           if (tree['weeks'][w]['days'][d]['day_type'] == 'training') (w, d),
     ];
-    var destination = targets.indexOf((week, day));
+    if (targets.isEmpty) return;
+    final currentDestination = targets.indexOf((week, day));
+    // A rest-day draft keeps its slots until the author explicitly moves them.
+    var destination = currentDestination < 0 ? 0 : currentDestination;
     var position = 0;
     final confirmed = await showDialog<bool>(
       context: context,

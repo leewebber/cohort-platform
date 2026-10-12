@@ -222,6 +222,72 @@ void main() {
     },
   );
 
+  for (final noTrainingDay in [false, true]) {
+    testWidgets(
+      'rest-day invalid draft can recover slots; no destinations=$noTrainingDay',
+      (tester) async {
+        tester.view.physicalSize = const Size(1440, 1100);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final c = ProgrammeAuthoringController(
+          fixture: programmeAuthoringFixtures.first,
+        );
+        addTearDown(c.dispose);
+        expect(c.validateAndReview(), isTrue);
+        c.setDayType(0, 0, 'rest');
+        if (noTrainingDay) c.setDayType(1, 0, 'rest');
+        expect(c.currentReview, isNull);
+        expect(c.verifiedExport(), isNull);
+        final invalidSource = c.draftSource;
+        final slot = c.tree!['weeks'][0]['days'][0]['slots'][0];
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: cohortTheme,
+            home: ProgrammeAuthoringScreen(controller: c),
+          ),
+        );
+        final moves = find.text('Move / reorder').at(0);
+        await tester.scrollUntilVisible(
+          moves,
+          250,
+          scrollable: find.byType(Scrollable).at(1),
+        );
+        final move = moves.first;
+        await tester.ensureVisible(move);
+        await tester.pumpAndSettle();
+        final button = find.ancestor(
+          of: move,
+          matching: find.byType(TextButton),
+        );
+        if (noTrainingDay) {
+          expect(tester.widget<TextButton>(button).onPressed, isNull);
+          expect(c.draftSource, invalidSource);
+          expect(c.validateAndReview(), isFalse);
+        } else {
+          await tester.tap(move);
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          expect(find.text('Week 2 · Day 1'), findsOneWidget);
+          await tester.tap(find.text('Cancel'));
+          await tester.pumpAndSettle();
+          expect(c.draftSource, invalidSource);
+          await tester.tap(move);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('Confirm move'));
+          await tester.pumpAndSettle();
+          expect(c.tree!['weeks'][1]['days'][0]['slots'][0], slot);
+          expect(c.tree!['weeks'][0]['days'][0]['slots'].length, 1);
+          // The remaining rest-day slot stays an actionable validation error.
+          expect(c.validateAndReview(), isFalse);
+          expect(c.currentReview, isNull);
+          expect(c.verifiedExport(), isNull);
+        }
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets(
     '390 width and 200 percent text remain scrollable and reviewable',
     (tester) async {
