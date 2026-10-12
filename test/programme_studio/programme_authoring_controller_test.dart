@@ -245,6 +245,24 @@ void main() {
     },
   );
 
+  test('malformed extra fixture revision row is rejected, never dropped', () {
+    final malformed = ProgrammeAuthoringFixture(
+      id: fixture.id,
+      label: fixture.label,
+      source: fixture.source,
+      protocolSql: fixture.protocolSql.replaceFirst(
+        ";\nINSERT INTO public.session_blocks",
+        ", ('SYN-MALFORMED');\nINSERT INTO public.session_blocks",
+      ),
+    );
+    final c = ProgrammeAuthoringController(fixture: malformed);
+    addTearDown(c.dispose);
+    expect(c.validateAndReview(), isFalse);
+    expect(c.issues.any((i) => i.code == 'fixture_source_unsupported'), isTrue);
+    expect(c.currentReview, isNull);
+    expect(c.verifiedExport(), isNull);
+  });
+
   test(
     'invalid day transition and duplicate key fail closed without silent repair',
     () {

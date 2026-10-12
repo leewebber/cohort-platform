@@ -438,9 +438,13 @@ class ProgrammeAuthoringController extends ChangeNotifier {
         table: 'performance_protocols',
       );
       final tuples = const SqlValuesParser().parseTupleList(clause!);
+      if (tuples.any((tuple) => tuple.length != columns.length)) {
+        throw const FormatException(
+          'Every fixture revision row must match the declared source columns.',
+        );
+      }
       final records = [
-        for (final tuple in tuples)
-          if (tuple.length == columns.length) Map.fromIterables(columns, tuple),
+        for (final tuple in tuples) Map.fromIterables(columns, tuple),
       ];
       for (final ref in manifest.sessions) {
         final found = records
