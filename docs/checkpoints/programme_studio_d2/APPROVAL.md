@@ -1,0 +1,11 @@
+# D2 founder implementation authority — 2026-10-12
+
+Founder approves the bounded D2 allocation and scope in ALLOCATION.md and IMPLEMENTATION_HANDOFF.md. The original preparation documents are retained byte-identically; their proposed/unauthorised wording records preparation history and is superseded by this approval for D2 implementation only.
+
+Approved: one synthetic straight-sets strength session/block, one or two distinct fixture exercises; session/block titles and notes, exercise selection/order, positive integer sets/exact reps, optional positive rest/tempo/cue; unspecified/bodyweight/positive finite kg/integer RPE 1–10. RPE ceiling is D2-only. Existing transitional bridge/resolver, pure local adapters, narrow Studio presentation, complete deterministic Founder YAML, exact source/tuple catalogue binding, immutable revisions and explicit programme selection. Current review/hash/export invalidates on all edits/failures; stale asynchronous results are ignored. Names are display-only; all identity ambiguity fails closed.
+
+Create isolated managed worktree from exact 6318f319db15ff7a42283c7719dc22a6dc28daa5 on codex/programme-studio-d2. Preserve both existing checkouts, original 95 paths/index/HEAD and .temp. Local focused commits and checks are authorised. Start/inspect the local Chrome preview and stop for founder visual review. No integration/push, fetch, hosted contact/import/publication, migrations, production wiring, athlete writes, real content, v2 running editing, release changes or device build/install.
+
+Compiler/schema/hash/shared models, published artifacts and v1/v2 goldens stay protected. Zero new/changed-file diagnostics, honest non-green inherited full baseline, six safety groups and diff/link checks required. Broader Stage 2/Sprint C and four pending phone checks remain open. This authority grants the profile-free prescription/tracking separation for this bounded implementation; it does not accept broader C.
+
+No-op rule to implement and test: a candidate semantically equal to its source snapshot cannot freeze a redundant revision. Keep the draft available for explicit edit/cancel, show a no-change message and never select automatically. Abandoned revision reservations are not reused within the preview. Formatting-only differences do not manufacture a revision.
