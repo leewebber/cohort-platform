@@ -722,15 +722,17 @@ class _MovementLines extends StatelessWidget {
       if (movement.reps != null) '${movement.reps} reps',
       if (movement.duration != null) movement.duration,
       if (movement.distance != null) movement.distance,
-      if (movement.recovery != null) 'Rest ${movement.recovery}',
+      ?movementRestInstruction(movement),
     ].join(' · ');
     final load = movementLoadInstruction(movement);
+    final tempo = movementTempoInstruction(movement);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(movement.name, style: CohortTextStyles.body),
         if (dose.isNotEmpty) Text(dose, style: CohortTextStyles.small),
         if (load != null) Text(load, style: CohortTextStyles.small),
+        if (tempo != null) Text(tempo, style: CohortTextStyles.small),
         if (movement.notes != null)
           Text(movement.notes!, style: CohortTextStyles.small),
         if (movement.unsupportedReason != null)

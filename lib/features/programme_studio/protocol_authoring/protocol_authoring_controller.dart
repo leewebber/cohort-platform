@@ -1,0 +1,486 @@
+import 'dart:convert';
+
+import 'package:cohort_plan_package/cohort_plan_package.dart';
+import 'package:flutter/foundation.dart';
+
+import '../../session_revision/models/session_revision_usage_models.dart';
+import 'founder_strength_source_guard.dart';
+import 'founder_strength_yaml_writer.dart';
+import 'protocol_authoring_fixtures.dart';
+import 'synthetic_session_revision_catalogue.dart';
+import 'synthetic_strength_review_bridge.dart';
+import 'synthetic_strength_session_compiler.dart';
+
+class ProtocolAuthoringController extends ChangeNotifier {
+  ProtocolAuthoringController({SyntheticStrengthSessionCompiler? compiler})
+    : compiler = compiler ?? SyntheticStrengthSessionCompiler() {
+    ready = _initialize();
+  }
+  final SyntheticStrengthSessionCompiler compiler;
+  static const guard = FounderStrengthSourceGuard();
+  static const writer = FounderStrengthYamlWriter();
+  static const bridge = SyntheticStrengthReviewBridge();
+  late final Future<void> ready;
+  SyntheticSessionRevisionCatalogue? _catalogue;
+  final Set<int> _programmeEntries = {1};
+  int _selected = 1, _opened = 1, _parent = 1, _generation = 0;
+  SessionRevisionIdentity? _draftIdentity;
+  Map<String, dynamic>? _tree;
+  String? _rejectedSource;
+  D2ReviewReceipt? _current;
+  int? _reviewGeneration;
+  bool _disposed = false, _busy = false;
+  List<String> _errors = [];
+  Future<void> _initialize() async {
+    try {
+      final initial = await compiler.compileExact(
+        d2R1Source(),
+        const SessionRevisionIdentity(
+          protocolId: d2RootProtocolId,
+          sessionLineageId: d2LineageId,
+          revisionNumber: 1,
+        ),
+      );
+      if (_disposed) return;
+      _catalogue = SyntheticSessionRevisionCatalogue(initial);
+    } catch (error) {
+      if (!_disposed) _errors = ['$error'];
+    }
+    if (!_disposed) notifyListeners();
+  }
+
+  bool get initialized => _catalogue != null;
+  bool get isEditing => _draftIdentity != null;
+  bool get busy => _busy;
+  int get selectedRevision => _selected;
+  int get openedRevision => _opened;
+  int get generation => _generation;
+  SessionRevisionIdentity get activeIdentity =>
+      _draftIdentity ?? _catalogue!.at(_opened).identity;
+  List<D2LocalRevision> get revisions => _catalogue?.revisions ?? const [];
+  Map<String, dynamic>? get tree => _tree == null
+      ? null
+      : jsonDecode(jsonEncode(_tree)) as Map<String, dynamic>;
+  List<String> get errors => List.unmodifiable(_errors);
+  String get originalSource =>
+      _catalogue?.at(isEditing ? _parent : _opened).source ?? '';
+  String get source =>
+      _rejectedSource ??
+      (_tree == null ? originalSource : writer.write(_tree!));
+  D2ReviewReceipt? get current =>
+      _reviewGeneration == _generation ? _current : null;
+  bool get semanticChange =>
+      current != null &&
+      current!.session.semanticJson !=
+          _catalogue!.at(_parent).compiled.semanticJson;
+  String get status => busy
+      ? 'Validating exact source…'
+      : current != null
+      ? 'Validated and reviewed — current source'
+      : errors.isNotEmpty
+      ? 'Invalid draft — current review and export unavailable'
+      : 'Validate source to refresh review and export';
+  Iterable<D2CompiledSession> get _programmeSessions =>
+      _programmeEntries.map((n) => _catalogue!.at(n).compiled);
+  String get selectedProgrammeSource => bridge.packageSource(
+    _catalogue!.at(_selected).compiled,
+    _programmeSessions,
+  );
+  String get selectedProgrammeHash => const PlanPackageCompiler()
+      .compile(selectedProgrammeSource)
+      .contentHashSha256!;
+
+  void _invalidate() {
+    _generation++;
+    _current = null;
+    _reviewGeneration = null;
+    _errors = [];
+    _busy = false;
+  }
+
+  void _fail(Object error) {
+    _invalidate();
+    _errors = ['$error'];
+    notifyListeners();
+  }
+
+  void openRevision(int number) {
+    if (isEditing) {
+      _fail(
+        'Cancel or freeze the working draft before opening a frozen revision.',
+      );
+      return;
+    }
+    try {
+      _catalogue!.at(number);
+      _invalidate();
+      _opened = number;
+      _parent = number;
+      _rejectedSource = null;
+      notifyListeners();
+    } catch (error) {
+      _fail(error);
+    }
+  }
+
+  void createDraft() {
+    if (!initialized || isEditing) return;
+    _invalidate();
+    _parent = _opened;
+    _draftIdentity = _catalogue!.reserve(_parent);
+    _resetTree();
+    notifyListeners();
+  }
+
+  void _resetTree() {
+    final baseline = guard.canonicalTree(
+      _catalogue!.at(_parent).source,
+      importKey: d2ImportKey(_parent),
+    );
+    (baseline['programme'] as Map)['import_key'] = d2ImportKey(
+      _draftIdentity!.revisionNumber,
+    );
+    _tree = baseline;
+    _rejectedSource = null;
+  }
+
+  void resetDraft() {
+    if (!isEditing) return;
+    _invalidate();
+    _resetTree();
+    notifyListeners();
+  }
+
+  void cancelDraft() {
+    if (!isEditing) return;
+    _catalogue!.abandon(_draftIdentity!);
+    _invalidate();
+    _draftIdentity = null;
+    _tree = null;
+    _rejectedSource = null;
+    _opened = _parent;
+    notifyListeners();
+  }
+
+  bool reopen(String bytes) {
+    _invalidate();
+    if (!isEditing) {
+      _errors = [
+        'Frozen source is read-only. Create a new local draft revision first.',
+      ];
+      notifyListeners();
+      return false;
+    }
+    try {
+      final next = guard.canonicalTree(
+        bytes,
+        importKey: d2ImportKey(_draftIdentity!.revisionNumber),
+      );
+      final baseline = guard.canonicalTree(
+        _catalogue!.at(_parent).source,
+        importKey: d2ImportKey(_parent),
+      );
+      (baseline['programme'] as Map)['import_key'] = d2ImportKey(
+        _draftIdentity!.revisionNumber,
+      );
+      // All wrapper fields remain locked; only the complete session may differ.
+      final session = jsonDecode(
+        jsonEncode(FounderStrengthSourceGuard.session(next)),
+      );
+      FounderStrengthSourceGuard.session(next).clear();
+      FounderStrengthSourceGuard.session(baseline).clear();
+      if (jsonEncode(next) != jsonEncode(baseline)) {
+        // Compare canonical writer bytes so input map key order is irrelevant.
+        if (writer.write(next) != writer.write(baseline)) {
+          throw const FormatException(
+            'wrapper_locked: wrapper identity/schedule/notes are read-only.',
+          );
+        }
+      }
+      FounderStrengthSourceGuard.session(
+        next,
+      ).addAll(session as Map<String, dynamic>);
+      _tree = next;
+      _rejectedSource = null;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      _tree = null;
+      _rejectedSource = bytes;
+      _errors = ['$error'];
+      notifyListeners();
+      return false;
+    }
+  }
+
+  void _edit(void Function(Map<String, dynamic>) operation) {
+    if (!isEditing || _tree == null) return;
+    _invalidate();
+    _rejectedSource = null;
+    try {
+      operation(_tree!);
+    } catch (error) {
+      _errors = ['$error'];
+    }
+    notifyListeners();
+  }
+
+  void editSession(String field, String value) => _edit((tree) {
+    if (!{
+      'title',
+      'coach_notes',
+      'estimated_duration_minutes',
+    }.contains(field)) {
+      throw const FormatException('Unsupported session field.');
+    }
+    _set(
+      FounderStrengthSourceGuard.session(tree),
+      field,
+      value,
+      optional: field != 'title',
+      number: field == 'estimated_duration_minutes',
+    );
+  });
+  void editBlock(String field, String value) => _edit((tree) {
+    if (!{'title', 'coach_notes'}.contains(field)) {
+      throw const FormatException('Unsupported block field.');
+    }
+    _set(
+      FounderStrengthSourceGuard.block(tree),
+      field,
+      value,
+      optional: field != 'title',
+    );
+  });
+  void editExercise(int index, String field, String value) => _edit((tree) {
+    final row = FounderStrengthSourceGuard.exerciseRows(tree)[index];
+    if (field == 'exercise_name') {
+      _set(row, field, value, optional: true);
+      return;
+    }
+    if (!{'sets', 'reps', 'rest_seconds', 'tempo', 'notes'}.contains(field)) {
+      throw const FormatException('Unsupported prescription field.');
+    }
+    _set(
+      row['prescription'] as Map<String, dynamic>,
+      field,
+      value,
+      optional: !{'sets', 'reps'}.contains(field),
+      number: {'sets', 'reps', 'rest_seconds'}.contains(field),
+    );
+  });
+  void _set(
+    Map<String, dynamic> map,
+    String key,
+    String value, {
+    bool optional = false,
+    bool number = false,
+  }) {
+    if (optional && value.trim().isEmpty) {
+      map.remove(key);
+      return;
+    }
+    map[key] = number ? int.tryParse(value) ?? value : value;
+  }
+
+  void replaceExercise(int index, String transitionalId) => _edit((tree) {
+    final row = FounderStrengthSourceGuard.exerciseRows(tree)[index];
+    row['transitional_exercise_id'] = transitionalId;
+    row.remove('exercise_name');
+  });
+  void addExercise() => _edit((tree) {
+    final rows = FounderStrengthSourceGuard.block(tree)['exercises'] as List;
+    if (rows.length >= 2) {
+      throw const FormatException('D2 supports at most two exercises.');
+    }
+    rows.add(<String, dynamic>{
+      'transitional_exercise_id': '',
+      'order': rows.length + 1,
+      'prescription': <String, dynamic>{'sets': '', 'reps': ''},
+    });
+  });
+  void removeExercise(int index) => _edit((tree) {
+    final rows = FounderStrengthSourceGuard.block(tree)['exercises'] as List;
+    rows.removeAt(index);
+    _renumber(rows);
+  });
+  void moveExercise(int from, int to) => _edit((tree) {
+    final rows = FounderStrengthSourceGuard.block(tree)['exercises'] as List;
+    final row = rows.removeAt(from);
+    rows.insert(to, row);
+    _renumber(rows);
+  });
+  void _renumber(List rows) {
+    for (var i = 0; i < rows.length; i++) {
+      rows[i]['order'] = i + 1;
+    }
+  }
+
+  void setLoadMode(int index, String mode) => _edit((tree) {
+    final dose =
+        FounderStrengthSourceGuard.exerciseRows(tree)[index]['prescription']
+            as Map;
+    if (!{'unspecified', 'bodyweight', 'kg', 'rpe'}.contains(mode)) {
+      throw const FormatException('Unsupported load mode.');
+    }
+    dose.remove('target_rpe');
+    if (mode == 'unspecified') {
+      dose.remove('load');
+    } else {
+      dose['load'] = <String, dynamic>{
+        'unit': mode,
+        if (mode != 'bodyweight') 'value': '',
+      };
+    }
+  });
+  void editLoadValue(int index, String value) => _edit((tree) {
+    final load =
+        (FounderStrengthSourceGuard.exerciseRows(tree)[index]['prescription']
+                as Map)['load']
+            as Map;
+    final parsed = load['unit'] == 'rpe'
+        ? int.tryParse(value)
+        : double.tryParse(value);
+    load['value'] = parsed != null && parsed.isFinite ? parsed : value;
+  });
+  Future<bool> validate() async {
+    if (!initialized || _disposed) return false;
+    _invalidate();
+    final token = _generation;
+    final identity = activeIdentity;
+    _busy = true;
+    notifyListeners();
+    try {
+      final original = source;
+      final bytes = isEditing
+          ? writer.write(
+              guard.canonicalTree(
+                original,
+                importKey: d2ImportKey(identity.revisionNumber),
+              ),
+            )
+          : original;
+      final compiled = await compiler.compileExact(bytes, identity);
+      if (_disposed || token != _generation) return false;
+      final reviewed = bridge.project(compiled, _programmeSessions);
+      if (_disposed || token != _generation) return false;
+      _current = reviewed;
+      _reviewGeneration = token;
+      _busy = false;
+      if (isEditing) {
+        _tree = guard.canonicalTree(
+          bytes,
+          importKey: d2ImportKey(identity.revisionNumber),
+        );
+      }
+      notifyListeners();
+      return true;
+    } catch (error) {
+      if (_disposed || token != _generation) return false;
+      _busy = false;
+      _errors = ['$error'];
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<String?> exportFounder() async =>
+      await validate() ? current!.session.source : null;
+  Future<String?> exportPackage() async =>
+      await validate() ? current!.packageSource : null;
+  Future<bool> freeze() async {
+    if (!isEditing || !await validate()) return false;
+    final token = _generation;
+    final candidate = current!.session;
+    try {
+      final frozen = await _catalogue!.freeze(
+        candidate,
+        compiler,
+        isCurrent: () =>
+            !_disposed &&
+            token == _generation &&
+            _draftIdentity == candidate.identity,
+      );
+      if (_disposed || token != _generation) return false;
+      _invalidate();
+      _opened = frozen.identity.revisionNumber;
+      _parent = _opened;
+      _draftIdentity = null;
+      _tree = null;
+      _rejectedSource = null;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      if (token == _generation && !_disposed) _fail(error);
+      return false;
+    }
+  }
+
+  Future<bool> selectProgrammeRevision(int number) async {
+    if (isEditing) {
+      _fail('Freeze or cancel the working draft before programme selection.');
+      return false;
+    }
+    _invalidate();
+    final token = _generation;
+    try {
+      final snapshot = _catalogue!.at(number);
+      final verified = await compiler.compileExact(
+        snapshot.source,
+        snapshot.identity,
+      );
+      if (_disposed || token != _generation) return false;
+      if (verified.sourceDigest != snapshot.digest ||
+          verified.semanticJson != snapshot.compiled.semanticJson) {
+        throw StateError('revision_binding: frozen source changed.');
+      }
+      _selected = number;
+      _opened = number;
+      _parent = number;
+      _programmeEntries.add(number);
+      _rejectedSource = null;
+      return validate();
+    } catch (error) {
+      if (token == _generation && !_disposed) _fail(error);
+      return false;
+    }
+  }
+
+  List<String> get sourceDiff {
+    final before = originalSource.split('\n'), after = source.split('\n');
+    final table = List.generate(
+      before.length + 1,
+      (_) => List.filled(after.length + 1, 0),
+    );
+    for (var i = before.length - 1; i >= 0; i--) {
+      for (var j = after.length - 1; j >= 0; j--) {
+        table[i][j] = before[i] == after[j]
+            ? table[i + 1][j + 1] + 1
+            : (table[i + 1][j] >= table[i][j + 1]
+                  ? table[i + 1][j]
+                  : table[i][j + 1]);
+      }
+    }
+    var i = 0, j = 0;
+    final lines = <String>[];
+    while (i < before.length || j < after.length) {
+      if (i < before.length && j < after.length && before[i] == after[j]) {
+        i++;
+        j++;
+      } else if (i < before.length &&
+          (j == after.length || table[i + 1][j] >= table[i][j + 1])) {
+        lines.add('- ${i + 1}: ${before[i++]}');
+      } else {
+        lines.add('+ ${j + 1}: ${after[j++]}');
+      }
+    }
+    return lines;
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _generation++;
+    super.dispose();
+  }
+}
