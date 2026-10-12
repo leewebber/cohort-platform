@@ -1,5 +1,7 @@
 # Programme Studio D2 — locally verified, awaiting founder visual review
 
+> **Final review continuation — 2026-10-12:** [Founder acceptance and final review](./FINAL_REVIEW_AND_ACCEPTANCE.md) supersede the visual-review pause below. The demonstrated bounded workflow is accepted, the scoped completion race is fixed, R1 is restored and preview stopped. See [fresh final evidence](./FINAL_REVIEW_VERIFICATION.json). The original implementation facts below remain historical; broader Stage 2/C and four phone checks remain open.
+
 2026-10-12. **D2_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW**.
 No integration, fetch, push or publication. Base/cached origin/main:
 `6318f319db15ff7a42283c7719dc22a6dc28daa5`; cached ref is not a fresh remote check.

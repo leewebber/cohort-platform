@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **Programme Studio D2 — accepted final review, 2026-10-12:**
+> [Final review and founder acceptance](./programme_studio_d2/FINAL_REVIEW_AND_ACCEPTANCE.md)
+> and [fresh review evidence](./programme_studio_d2/FINAL_REVIEW_VERIFICATION.json)
+> supersede the D2 visual-review pause. **D2_ACCEPTED_FINAL_REVIEW_PASSED**:
+> demonstrated bounded synthetic workflow is founder-accepted, with no reported
+> visual defects. One confirmed validation-completion race fixed; 286 affected
+> root and 41 canonical-package tests, zero changed-file diagnostics and six
+> safety groups pass. Full analysis remains non-green: identical 367 inherited
+> diagnostics (110 warnings, 257 info, zero errors), with no additions/removals.
+> Protected compiler/schema/hash, published artifacts and v1/v2 goldens unchanged.
+> Original R1 restored; preview stopped. Founder authorises normal main publication
+> of the five-commit linear D2 range from exact
+> `6318f319db15ff7a42283c7719dc22a6dc28daa5`; fresh main-only fetch matches that base.
+> Publish from clean D2 worktree; preserve original local main/all 95 paths/index/
+> `.temp` and older D1 checkout. Broader Stage 2/C and four pending phone checks
+> remain open. [D3 synthetic composition allocation recommendation](./programme_studio_d2/NEXT_STAGE2_HANDOFF.md)
+> is for a new conversation only; **NEXT_IMPLEMENTATION_AUTHORISED=false**.
+> No hosted project operation, migration, production wiring, real content,
+> athlete write, release change or device build/install.
+
 > **Programme Studio D2 — local implementation, 2026-10-12:**
 > [D2 handoff](./programme_studio_d2/HANDOFF.md) and
 > [fresh evidence](./programme_studio_d2/VERIFICATION.json) record the approved

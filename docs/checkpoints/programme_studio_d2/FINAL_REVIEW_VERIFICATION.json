@@ -1,0 +1,176 @@
+{
+  "date": "2026-10-12",
+  "status": "D2_ACCEPTED_FINAL_REVIEW_PASSED",
+  "founder_visual_acceptance": {
+    "reviewed_head": "e0dddc1718f93e363f681f627dd7f45af833b8ba",
+    "result": "accepted demonstrated bounded workflow; no reported usability or behaviour defects",
+    "broader_stage2_or_sprint_c_closure": false
+  },
+  "review": {
+    "baseline": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+    "checked_code_head": "81ed6b61ef906f632a2e325dcfa63f853c72f5cd",
+    "complete_d2_diff_inspected": true,
+    "confirmed_defects_remaining": 0,
+    "fix": "Validation-completion re-entrant/queued edits could invalidate receipts before export/freeze consumed them. Notification settling and generation/current-receipt checks reject stale results; no compiler/grammar/hash/visual-layout change.",
+    "red_regressions_reproduced": true,
+    "new_controller_cases": 7,
+    "new_mounted_widget_export_case": 1,
+    "provisional_clipboard_probe": "Removed: copy occurred before its queued edit, so no separate clipboard defect was established."
+  },
+  "tests": {
+    "fresh_pre_fix_affected_root": {
+      "passed": 278,
+      "exit": 0
+    },
+    "focused_controller_widget_after_fix": {
+      "passed": 21,
+      "exit": 0
+    },
+    "final_affected_root": {
+      "passed": 286,
+      "exit": 0,
+      "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/founder_programme_import/ test/authored_plan_package/ test/architecture/founder_programme_identity_consumer_boundaries_test.dart test/models/strength_exercise_prescription_test.dart test/session_builder/session_block_validation_test.dart test/session/session_execution_projection_test.dart test/session_revision/session_revision_service_test.dart test/domain/exercise_knowledge/founder_approved_identity_mappings_phase_3_1f_test.dart"
+    },
+    "canonical_package": {
+      "passed": 41,
+      "exit": 0,
+      "cwd": "packages/cohort_plan_package",
+      "command": "dart test"
+    }
+  },
+  "analysis": {
+    "command": "flutter --suppress-analytics analyze --no-pub",
+    "full_exit": 1,
+    "green": false,
+    "errors": 0,
+    "warnings": 110,
+    "info": 257,
+    "total": 367,
+    "fresh_before_after_equal_established_baseline": true,
+    "exact_diagnostic_lines_equal": true,
+    "new_or_removed_diagnostics": 0,
+    "changed_file_analysis_exit": 0,
+    "changed_dart_files": 18,
+    "changed_file_diagnostics": 0
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "unchanged_gate_cached_runner": "Bash exported flutter wrapper delegates to /opt/homebrew/bin/flutter --suppress-analytics test --no-pub; all groups run",
+    "groups_passed": [
+      "architectural_boundaries",
+      "coaching_integrity",
+      "adaptation_contracts",
+      "programme_adapt_ui_contract",
+      "completion_identity",
+      "staging_production_isolation"
+    ],
+    "groups_failed": 0,
+    "exit": 0
+  },
+  "protected": {
+    "base_tracked_entries": 2612,
+    "unchanged_entries_including_absent": 2609,
+    "only_existing_paths_changed": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/presentation/programme_studio_coach_review.dart",
+      "lib/features/programme_studio/presentation/programme_studio_labels.dart"
+    ],
+    "compiler_schema_hash_models": true,
+    "published_artifacts_and_inputs": true,
+    "v1_v2_goldens": true,
+    "migrations_release_dependencies_production": true,
+    "nine_absent_temp_entries_preserved": true,
+    "approved_packet_byte_identical": true,
+    "manifest_sha256": "690f9c142b969ff91e728ba5556d0c572e6fbcb4832d5366b43bb78dae854ad0"
+  },
+  "diff_check": "working and baseline..checked_code_head passed; final acceptance tip diff checked again before push",
+  "local_markdown_links_and_line_targets_checked": 116,
+  "preview": {
+    "original_fixture_restored_using": "native Chrome reload",
+    "selected_and_opened_revision": 1,
+    "source_session_name": "Synthetic strength session",
+    "manual_edits_retained_as_content": false,
+    "verified_owned_preview_process_stopped": true,
+    "port_4195_listener_absent": true,
+    "device_or_hosted_evidence": false
+  },
+  "preservation": {
+    "/Users/leewebber/Developer/cohort_platform": {
+      "branch": "main",
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "outstanding_paths": 95,
+      "all_saved_file_contents_status_index_HEAD_temp_equal": true,
+      "present_temp_regular_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "branch": "codex/programme-studio-stage2",
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "outstanding_paths": 0,
+      "all_saved_file_contents_status_index_HEAD_temp_equal": true,
+      "present_temp_regular_files": 0
+    }
+  },
+  "remote_preflight": {
+    "origin_target": "https://github.com/leewebber/cohort-platform.git",
+    "fetch_command": "git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main",
+    "fetch_exit": 0,
+    "actual_fetched_main": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+    "expected_base": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+    "base_remote_difference": "0/0",
+    "advanced": false,
+    "conflicts_or_scope_change": false
+  },
+  "integration": {
+    "worktree": "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform",
+    "branch": "codex/programme-studio-d2",
+    "preserved_commits": [
+      "c95b26353ee681ba418034305c418404e8158472",
+      "e3eb2508b773a45d6eac5b461347e9a9d8bd4379",
+      "e0dddc1718f93e363f681f627dd7f45af833b8ba",
+      "81ed6b61ef906f632a2e325dcfa63f853c72f5cd"
+    ],
+    "final_tip": "commit adding this checkpoint; full SHA verified in task completion receipt",
+    "expected_total_commits": 5,
+    "merges": 0,
+    "preserve_linear_parentage": true,
+    "push_command": "git -c push.followTags=false push origin HEAD:refs/heads/main",
+    "feature_branch_tags_force_push": false,
+    "postflight_required": [
+      "fetch main",
+      "independent ls-remote main",
+      "HEAD equals fetched/remote main",
+      "divergence 0/0",
+      "five linear commits, zero merges, all original D2 commits",
+      "clean D2 worktree",
+      "protected artifacts and both older checkout snapshots unchanged"
+    ],
+    "original_local_main_after_publication_expected": "a331f52967e1887c4435cccc8f1ecfa192028cd6, eleven behind remote main",
+    "D1_after_publication_expected": "6318f319db15ff7a42283c7719dc22a6dc28daa5, five behind remote main"
+  },
+  "qualifications": {
+    "broader_stage2": "open",
+    "broader_sprint_c": "open",
+    "record_dependent_phone_checks_pending": 4,
+    "hosted_project_operations": false,
+    "migrations": false,
+    "production_wiring": false,
+    "real_programme_content": false,
+    "athlete_writes": false,
+    "device_build_install": false,
+    "next_task": "proposed allocation only, not begun"
+  },
+  "logs_sha256": {
+    "cohort-d2-review-race-red.log": "4f01053a7b616c36f8257c97a0cf07d3990d3459e3bf066f4f869bc0408fb04a",
+    "cohort-d2-review-race-green.log": "8a47255918b1c8d0c0c60444a72ecf37e8094e115f63bf109f2de7360dfaf087",
+    "cohort-d2-review-fix-tests.log": "c98cb4b3c8fbe285b63cfbdf503d069087ae1d6dc4c54a1baa0355b4e5ba2182",
+    "cohort-d2-review-tests.log": "f3d70a45f0646f8e125364ea1c0abbe2c57eb2dd37eeb0d898bccf15d65f0dcd",
+    "cohort-d2-review-final-tests.log": "7b25135bf1ddf299188976c666dc35cd97247d703b21add8624c837a30656d07",
+    "cohort-d2-review-package-tests.log": "d86817096a3cfd4f1aa3ac28fbf6df62e078199acbc1cd6e64ee29a6ce93029f",
+    "cohort-d2-review-analysis-before.log": "ff6d4f6717a98eef671881ff8143f6b350288daba253489cbfb2f19a96ca50df",
+    "cohort-d2-review-analysis-final.log": "060164fb2dc390ee878f869ba44e4f2b98e64b7e705fb06ff916319e6c641ad2",
+    "cohort-d2-review-analysis-scoped.log": "437375caa3ae8390a968c876551f3fc826dc78b34cc715888eda0fff7ceddb8b",
+    "cohort-d2-review-safety.log": "64c6f059aa1db00a7b85c647b4767f5390415ddacbc8e791907fd2f6a36e33ab"
+  }
+}
