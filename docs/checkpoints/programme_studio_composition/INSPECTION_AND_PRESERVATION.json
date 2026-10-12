@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-12",
+  "status": "PROPOSED_COMPOSITION_ALLOCATION_ONLY",
+  "baseline": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+  "worktree": "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform",
+  "branch": "codex/programme-studio-d2",
+  "clean": true,
+  "cached_origin_main": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+  "remote_contact_this_task": false,
+  "read_only_repository_inspection": true,
+  "repository_files_modified": false,
+  "index_or_HEAD_modified": false,
+  "implementation_started": false,
+  "worktree_or_branch_created": false,
+  "tests_analysis_safety_builds_run": false,
+  "historical_analysis": {
+    "source": "docs/checkpoints/programme_studio_d2/FINAL_REVIEW_AND_ACCEPTANCE.md",
+    "total": 367,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "green": false,
+    "rerun_in_allocation": false
+  },
+  "preserved_checkouts": {
+    "/Users/leewebber/Developer/cohort_platform": {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "branch": "main",
+      "outstanding_paths": 95,
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "tracked_and_dirty_file_inventory_entries": 2688,
+      "present_temp_files": 0,
+      "before_after_exact_equal": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "branch": "codex/programme-studio-stage2",
+      "outstanding_paths": 0,
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "tracked_and_dirty_file_inventory_entries": 2612,
+      "present_temp_files": 0,
+      "before_after_exact_equal": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "branch": "codex/programme-studio-d2",
+      "outstanding_paths": 0,
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "tracked_and_dirty_file_inventory_entries": 2637,
+      "present_temp_files": 0,
+      "before_after_exact_equal": true
+    }
+  },
+  "source_evidence_sha256": {
+    "AGENTS.md": "5e4bb1990b1ce7934551ad107c24c4de3d0369a41c6370b14202fe8715a0e383",
+    "docs/architecture/Canonical_Programme_Architecture_Freeze_v1.md": "9679d1730fa7e8f956a05d530661f9beac3363ab9bd956f73c8a4b2e85c88936",
+    "docs/architecture/Launch_Programme_Library_v1.md": "accbce06e327883dea871df3f9d3a5bcfcb015c225ee3d90c6e5c5478ad7461c",
+    "docs/architecture/Programme_Studio_v1.md": "6b6cc8079fd757c03aa98c6654cdcf4ffa2e1fdcb388616faba28b7d1a6c4f5c",
+    "docs/checkpoints/CURRENT_CHECKPOINT.md": "a61b7608e82a6c36f2fe99e955ca714b8ef0ce18c873081bf0cee4e779143308",
+    "docs/checkpoints/programme_studio_d1/FINAL_REVIEW_AND_ACCEPTANCE.md": "4397625ebaa528a7d9b24d9c529fe6af4989766e18e2ffb7c5770413474c782a",
+    "docs/checkpoints/programme_studio_d2/FINAL_REVIEW_AND_ACCEPTANCE.md": "e16e5af55255b45c371e865df96ad245728b65b07f07a76388009af76dda74c1",
+    "docs/checkpoints/programme_studio_d2/NEXT_STAGE2_HANDOFF.md": "0e3b5efca66a16f6356d858df523171a16467733171f83fb10906bb08d90143c",
+    "lib/features/programme_studio/authoring/plan_package_v1_yaml_writer.dart": "d07c7f16aa4b10c86facfdbfa501eb399c9125d7f55ff340b085cf82bdcfad65",
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "e9feeef5c9d4ffa23bf5d3b61b0fc0e4b4c0d931660d40ad5de1937cd9d5a442",
+    "lib/features/programme_studio/authoring/programme_authoring_fixtures.dart": "1806dd10f51383f56a2371c01699e98da8fecbfca79e980e9c7629245c06c0ae",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "6c16899d3795e1b7e7000dfd8091b9c5c3b1528e52fc17e1434b1b7f88f50c14",
+    "lib/features/programme_studio/projection/programme_review_projector.dart": "1d3e504b74d38b6b00f2a48668d05cc8e86fba3ff742b87dea7f48bf2cfdc517",
+    "lib/features/programme_studio/projection/programme_review_source.dart": "c8a60e7ca917bed2a0ec689a17d312e489143bc1291c0ab21f285582233b68ee",
+    "lib/features/programme_studio/protocol_authoring/founder_strength_source_guard.dart": "4910e3d3177a377f9d77795ee72de4499891cbf88e0cedb2783f4c75af1ebd14",
+    "lib/features/programme_studio/protocol_authoring/founder_strength_yaml_writer.dart": "fef4c380f2411bf0e394707bc61a3695363bffc66829362df1dd7ea4464858bb",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart": "5fdc40db367d18dfece4af2dc5eb20952719d1ce846e771ef2d8f912c519f50d",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_fixtures.dart": "3cd65938ee69013209ce2902c4f532d01afc66027baecd3520422a93079ab16a",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart": "25825ac086ea888c81ce27f9da7d77f195c3163c48048cf7f9770ba33ddfc5e2",
+    "lib/features/programme_studio/protocol_authoring/synthetic_fixture_identity_adapter.dart": "bf5acd0f9c04790208b78d8afb1b9f90b0c862f5b810b07f83697b5790bcc25b",
+    "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart": "df0021339b55ce2b39c05e62d27ea2f94652cae2d7d64f3713a883217123a6e2",
+    "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart": "dca147ef5c8ee3453cbc970b3c05f15e59326ef4a5d95d6d2ce211c39e56bb4a",
+    "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart": "af9a8b465fd0e24108916b6e1b8a4499d340980554e0f0958e5e433359228aa8"
+  },
+  "allocation_artifacts_sha256": {
+    "ALLOCATION.md": "5daf81e4bd85cba9767d45d0c47c0489e044e676cd5b02840a5cd11fe7a60266",
+    "IMPLEMENTATION_HANDOFF.md": "615ddf276568e1ac1b7cebf176f3480d45fb5897a79069d04824ff05ae5c740c"
+  },
+  "binding_sequence": "Sprint D exists; composition slice numbering is not established",
+  "actual_gaps": [
+    "D1 id-derived trusted tree and static bundle",
+    "D1 locked sessions and fixed SQL-declaration catalogue check",
+    "D2 bridge fixed-package/first-slot project assumptions",
+    "D2 standalone selection combines admission and selection",
+    "No complete programme-plus-session-source review handoff/reopen"
+  ],
+  "broader_stage2_and_sprint_c": "open",
+  "pending_record_dependent_phone_checks": 4,
+  "proposed_implementation_branch": "codex/programme-studio-composition",
+  "allocation_output_directory": "/private/tmp/cohort-studio-composition-allocation-2026-10-12"
+}
