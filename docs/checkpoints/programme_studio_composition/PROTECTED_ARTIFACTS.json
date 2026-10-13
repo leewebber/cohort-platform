@@ -1,0 +1,13 @@
+{
+  "baseline": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+  "baseline_inventory_entries": 2637,
+  "approved_existing_files_changed": [
+    "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+    "test/programme_studio/protocol_authoring_isolation_test.dart"
+  ],
+  "unchanged_baseline_entries": 2632,
+  "protected_other_baseline_entries_identical": true
+}

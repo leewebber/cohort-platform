@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-13",
+  "status": "COMPOSITION_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW",
+  "baseline": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+  "branch": "codex/programme-studio-composition",
+  "worktree": "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform",
+  "implementation_and_test_HEAD": "2198a78b94872beccf1dd7d15f3b816a79723d29",
+  "affected_root_tests": {
+    "count": 331,
+    "exit_code": 0
+  },
+  "new_composition_focused_tests": {
+    "count": 45,
+    "exit_code": 0
+  },
+  "canonical_package_tests": {
+    "count": 41,
+    "exit_code": 0
+  },
+  "changed_file_analysis": {
+    "dart_files": 15,
+    "diagnostics": 0,
+    "exit_code": 0
+  },
+  "full_analysis": {
+    "green": false,
+    "before": 367,
+    "after": 367,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "diagnostic_lines_exact_equal": true,
+    "added": 0,
+    "removed": 0,
+    "exit_code": 1,
+    "pre_edit_package_configuration_noise_resolved_before_baseline": true
+  },
+  "safety_gate": {
+    "groups_passed": 6,
+    "groups_failed": 0,
+    "exit_code": 0,
+    "gate_script_unchanged": true,
+    "cached_no_pub_wrapper": true
+  },
+  "protected_all_other_baseline_files": true,
+  "older_checkout_preservation": true,
+  "preview": {
+    "address": "http://127.0.0.1:4195/",
+    "entry": "lib/main_programme_studio_composition_preview.dart",
+    "native_chrome_inspected": true,
+    "agent_walkthrough": [
+      "joint validation",
+      "required-name refusal",
+      "no-op freeze refusal",
+      "changed draft and exact-byte freeze",
+      "explicit admission without selection",
+      "confirmed per-slot R2 selection",
+      "actual Studio prescription",
+      "programme edit clears joint receipt/export",
+      "complete declared-source export",
+      "separate read-only reconstruction",
+      "byte-identical reconstructed re-export",
+      "live authoring retained",
+      "full reset original R1-only seed"
+    ],
+    "original_seed_restored": true,
+    "programme_name_from_source": "Synthetic D2 revision selection",
+    "R1_session_title_from_source": "Synthetic strength session",
+    "running_for_founder_review": true,
+    "founder_visual_acceptance": "PENDING"
+  },
+  "local_evidence_log_sha256": {
+    "cohort-composition-analysis-before-ready.log": "cdf7921df85085a258bc1cb164a2aaf65bee9529aceb326545463667225eff3d",
+    "cohort-composition-analysis-final.log": "887cee7f6771906fba69bcba7d1b583ddb7ba23ae5959a1fe82ebe75bd3d2559",
+    "cohort-composition-changed-analysis-final.log": "e0a5352eaf8727180428f7c9a042795510b166d76c4edfc20a200930a222a72b",
+    "cohort-composition-regressions-final.log": "0584ccedc95b0a96a85d675c82eb0194336ec30809dca5816ffb01fc0a07685e",
+    "cohort-composition-package-tests.log": "ce769ddebe7ca4cd2059c878a68f0d85b38cc43f1905c0a9b0b3a1bb1babb5cd",
+    "cohort-composition-focused-final.log": "daa06cd9e431caebd751f78737d8f56ab326168567001364bc1b7af6e66f55c8",
+    "cohort-composition-safety.log": "0d3b9886334d81c7f55f0db1afed1944a92fdccc899686b197ba1807d6601914"
+  },
+  "remote_contact": false,
+  "fetch_push_integration": false,
+  "hosted_operations": false,
+  "device_build_install": false,
+  "broader_stage_2_or_sprint_c_closed": false,
+  "four_record_dependent_phone_checks": "PENDING",
+  "next_task_started": false,
+  "diff_check": {
+    "passed": true
+  },
+  "local_link_check": {
+    "files": 5,
+    "relative_links_checked": 87,
+    "broken": 0
+  }
+}

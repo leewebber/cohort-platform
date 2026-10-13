@@ -1,0 +1,29 @@
+{
+  "/Users/leewebber/Developer/cohort_platform": {
+    "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "branch": "main",
+    "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+    "outstanding_paths": 95,
+    "file_inventory_entries_verified": 2688,
+    "present_temp_files": 0,
+    "unchanged": true
+  },
+  "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+    "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+    "branch": "codex/programme-studio-stage2",
+    "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+    "outstanding_paths": 0,
+    "file_inventory_entries_verified": 2612,
+    "present_temp_files": 0,
+    "unchanged": true
+  },
+  "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+    "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+    "branch": "codex/programme-studio-d2",
+    "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+    "outstanding_paths": 0,
+    "file_inventory_entries_verified": 2637,
+    "present_temp_files": 0,
+    "unchanged": true
+  }
+}

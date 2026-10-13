@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **Programme Studio composition — local implementation, 2026-10-13:**
+> [Handoff and founder walkthrough](./programme_studio_composition/HANDOFF.md) and
+> [fresh verification](./programme_studio_composition/VERIFICATION.json) record the
+> approved synthetic D1/D2 composition: immutable freeze, separate exact admission
+> and per-slot selection, joint all-slot Studio review and complete deterministic
+> source handoff with separate read-only reconstruction.
+> **COMPOSITION_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW**.
+> 331 affected root / 41 canonical-package tests, zero changed-file diagnostics,
+> six safety groups and diff/link checks pass. Full analysis remains non-green:
+> identical 367 inherited diagnostics (110 warnings, 257 info, zero errors).
+> Shared compiler/schema/hash, published artifacts and v1/v2 goldens unchanged.
+> Native Chrome workflow inspected; original synthetic R1-only seed restored.
+> Preview runs at 127.0.0.1:4195 for founder review. Local linear commits only on
+> codex/programme-studio-composition from exact 6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6;
+> no fetch/push/integration or hosted operation. All three older checkout snapshots,
+> original 95 paths/indices/HEADs and .temp preserved. Broader Stage 2/C and four
+> phone checks stay open. No real content, persistence, production/athlete wiring,
+> migrations, release changes, v2 running, tracking or device build/install.
+> **NEXT_IMPLEMENTATION_AUTHORISED=false**. Stop for founder visual review.
+
 > **Programme Studio D2 — accepted final review, 2026-10-12:**
 > [Final review and founder acceptance](./programme_studio_d2/FINAL_REVIEW_AND_ACCEPTANCE.md)
 > and [fresh review evidence](./programme_studio_d2/FINAL_REVIEW_VERIFICATION.json)
