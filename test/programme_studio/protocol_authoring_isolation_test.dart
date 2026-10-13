@@ -67,12 +67,16 @@ void main() {
       );
     }
   });
-  test('no existing application source imports the new D2 folder or entry', () {
+  test('only dedicated D2 and approved composition sources may import D2', () {
     for (final file in Directory(
       'lib',
     ).listSync(recursive: true).whereType<File>()) {
       if (!file.path.endsWith('.dart') ||
           file.path.contains('/protocol_authoring/') ||
+          file.path.contains('/programme_studio/composition/') ||
+          file.path.endsWith(
+            'main_programme_studio_composition_preview.dart',
+          ) ||
           file.path.endsWith(
             'main_programme_studio_protocol_authoring_preview.dart',
           )) {
