@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-13",
+  "status": "COMPOSITION_ACCEPTED_FINAL_REVIEW_PASSED",
+  "founder_visual_acceptance": {
+    "four_walkthrough_steps": "PASS",
+    "reported_issues": 0,
+    "bounded_synthetic_workflow_only": true
+  },
+  "baseline": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+  "reported_review_HEAD": "ec164a9669e6d1c874cba5643c14b92c949327ab",
+  "scoped_fix_HEAD": "4a65e865ae1f537182be7a90aa91a0d3c9a0320c",
+  "review_fixes": {
+    "notification_lifecycle_ownership_completion": "reproduced and fixed",
+    "export_consumption": "current exact receipt gate verified",
+    "new_regressions": 10,
+    "shared_D1_D2_controllers_compilers_modified_by_fixes": false
+  },
+  "affected_root_tests": {
+    "passed": 341,
+    "exit_code": 0
+  },
+  "composition_focused_tests": {
+    "passed": 55,
+    "exit_code": 0
+  },
+  "canonical_package_tests": {
+    "passed": 41,
+    "exit_code": 0
+  },
+  "changed_file_analysis": {
+    "dart_files": 15,
+    "diagnostics": 0,
+    "exit_code": 0
+  },
+  "full_analysis": {
+    "green": false,
+    "before": 367,
+    "after": 367,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "added": 0,
+    "removed": 0,
+    "diagnostic_lines_exact_equal": true,
+    "baseline_log_SHA_matches_immutable_implementation_record": true,
+    "exit_code": 1,
+    "temporary_new_brace_infos_resolved": 3
+  },
+  "safety_gate": {
+    "groups_passed": 6,
+    "groups_failed": 0,
+    "exit_code": 0,
+    "script_unchanged": true,
+    "cached_no_pub_wrapper": true
+  },
+  "protected_artifact_proof": {
+    "baseline": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+    "baseline_inventory_entries": 2637,
+    "approved_existing_files_changed": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+      "test/programme_studio/protocol_authoring_isolation_test.dart"
+    ],
+    "unchanged_baseline_entries": 2632,
+    "protected_other_baseline_entries_identical": true
+  },
+  "older_checkout_preservation": {
+    "/Users/leewebber/Developer/cohort_platform": {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "branch": "main",
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "outstanding_paths": 95,
+      "file_inventory_entries_verified": 2688,
+      "present_temp_files": 0,
+      "unchanged": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "branch": "codex/programme-studio-stage2",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "outstanding_paths": 0,
+      "file_inventory_entries_verified": 2612,
+      "present_temp_files": 0,
+      "unchanged": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "branch": "codex/programme-studio-d2",
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "outstanding_paths": 0,
+      "file_inventory_entries_verified": 2637,
+      "present_temp_files": 0,
+      "unchanged": true
+    }
+  },
+  "preview": {
+    "original_R1_only_seed_restored_via_reset": true,
+    "programme_name_from_source": "Synthetic D2 revision selection",
+    "session_title_from_source": "Synthetic strength session",
+    "stopped": true,
+    "port_4195_has_no_listener": true
+  },
+  "publication_preflight": {
+    "remote": "github.com/leewebber/cohort-platform.git",
+    "fresh_main_only_fetch": true,
+    "actual_origin_main": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+    "expected_baseline_equal": true,
+    "scope_or_conflict_change": false,
+    "reviewed_code_range_commits": 5,
+    "acceptance_commit_extends_range_to": 6,
+    "merges": 0,
+    "clean_at_fetch": true,
+    "worktree": "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform",
+    "branch": "codex/programme-studio-composition",
+    "push_target": "HEAD:refs/heads/main",
+    "normal_push_only": true,
+    "original_local_main_not_advanced": true,
+    "snapshot_before_final_acceptance_commit_and_push": true
+  },
+  "local_evidence_log_sha256": {
+    "cohort-composition-review-races-before.log": "2f84f34fb8ed859483a5548ffff80ea9d81686687245380356a57d9cb050848a",
+    "cohort-composition-review-completion-before.log": "7517f195b37c79ff521f545111b33179cac678bef376bebeec7bcae484dad0de",
+    "cohort-composition-review-regressions.log": "537c929fec4b3b7b558151ef33a7e7ed13a3d0e951946696397b909cc04d8eda",
+    "cohort-composition-review-focused.log": "8f63a01d19805ee3961a6f4b226659bbaea2ec9f5118e2c6ebc3355f08c22b24",
+    "cohort-composition-review-package.log": "c6ed3555db2e1f906c6bde26a75733212a87227594f78a5b2f32cebc25f75476",
+    "cohort-composition-review-safety.log": "586bf79b6e3ff68100ea66ba3cbae07b68ce647f5696c726f67f4128a43e7bb0",
+    "cohort-composition-review-changed-analysis.log": "e0a5352eaf8727180428f7c9a042795510b166d76c4edfc20a200930a222a72b",
+    "cohort-composition-review-analysis.log": "b2e2d09d85dadbb1ceb208bad3818142128a95493c1f70f1e8c373761321b418",
+    "cohort-composition-review-preview-reset.log": "d33e57121c4672b056b0debb628093015a739e103ed63e86f04b837a06dadecd"
+  },
+  "hosted_project_operations": false,
+  "migrations_or_device_build_install": false,
+  "broader_Stage_2_or_Sprint_C_closure": false,
+  "four_record_dependent_phone_checks": "PENDING",
+  "next_task_started": false,
+  "diff_check": {
+    "passed": true
+  },
+  "relative_link_check": {
+    "files": 7,
+    "links": 104,
+    "broken": 0
+  }
+}

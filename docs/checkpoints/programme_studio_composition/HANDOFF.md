@@ -1,5 +1,7 @@
 # Programme Studio composition — local implementation handoff
 
+> **Final review continuation — 2026-10-13:** [Founder acceptance and final review](./FINAL_REVIEW_AND_ACCEPTANCE.md) supersede the visual-review pause below. All four founder walkthrough steps passed; scoped callback-lifecycle/completion and export-consumption guards are verified, original R1-only seed restored and preview stopped. [Fresh final evidence](./FINAL_REVIEW_VERIFICATION.json) retains the inherited non-green analysis qualification and preservation proof. Earlier implementation facts below remain historical; broader Stage 2/C and four phone checks remain open.
+
 **2026-10-13 · COMPOSITION_IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW.**
 This implements only the [approved allocation](./ALLOCATION.md),
 [implementation scope](./IMPLEMENTATION_HANDOFF.md) and [founder authority](./APPROVAL.md).

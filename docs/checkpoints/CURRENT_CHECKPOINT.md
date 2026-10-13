@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **Programme Studio composition — accepted final review, 2026-10-13:**
+> [Founder acceptance and review](./programme_studio_composition/FINAL_REVIEW_AND_ACCEPTANCE.md)
+> and [fresh final verification](./programme_studio_composition/FINAL_REVIEW_VERIFICATION.json)
+> supersede the visual-review pause. **COMPOSITION_ACCEPTED_FINAL_REVIEW_PASSED**:
+> all four founder walkthrough steps passed with no reported issues. Scoped callback
+> lifecycle/completion and export-consumption fixes are locally verified. 341 affected
+> root / 41 canonical-package tests, zero changed-file diagnostics and six safety
+> groups pass. Full analysis remains non-green: exactly 367 inherited diagnostics
+> (110 warnings, 257 info, zero errors), no additions/removals. Compiler/schema/hash,
+> published artifacts and v1/v2 goldens unchanged. Original R1-only seed restored;
+> preview stopped. Fresh origin main equals exact expected baseline
+> 6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6. Founder authorises normal main-only
+> publication of the clean six-commit linear composition range from its managed
+> worktree. Preserve original local main/all 95 paths/indices/HEADs/.temp and both
+> older clean checkouts; their local branches remain unchanged. Broader Stage 2/C
+> and four phone checks stay open. [Next bounded allocation recommendation](./programme_studio_composition/NEXT_STAGE2_HANDOFF.md)
+> is for a new conversation only; **NEXT_IMPLEMENTATION_AUTHORISED=false**.
+> No hosted project operation, migration, production wiring, real content, athlete
+> write, release change or device build/install.
+
 > **Programme Studio composition — local implementation, 2026-10-13:**
 > [Handoff and founder walkthrough](./programme_studio_composition/HANDOFF.md) and
 > [fresh verification](./programme_studio_composition/VERIFICATION.json) record the
