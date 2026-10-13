@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../authoring/programme_authoring_controller.dart';
@@ -23,7 +25,8 @@ class SyntheticCompositionController extends ChangeNotifier {
   SyntheticProgrammeRevisionCatalogue? _catalogue;
   CompositionReviewReceipt? _current, _reconstructed;
   int _operation = 0, _programmeRevision = 0, _sessionGeneration = 0;
-  bool _disposed = false, _busy = false;
+  bool _disposed = false, _busy = false, _disposeNotifierPending = false;
+  int _notificationDepth = 0;
   List<String> _errors = [];
   String? rejectedHandoff;
   static const handoff = SyntheticCompositionHandoff();
@@ -154,17 +157,27 @@ class SyntheticCompositionController extends ChangeNotifier {
           'admission: choose a genuine frozen revision from this workspace, after freeze/cancel.',
         );
       }
+      final catalogue = _catalogue!, editor = programme;
       final verified = await _verify(candidate.compiled);
       if (!_alive(token)) return false;
-      _catalogue!.checkAppend(verified);
-      if (!_catalogue!.contains(verified)) {
+      catalogue.checkAppend(verified);
+      if (!catalogue.contains(verified)) {
         // Both sides commit synchronously before observers can see admission.
-        _catalogue!.appendVerified(verified);
-        programme.refreshSourceCatalogue();
+        catalogue.appendVerified(verified);
+        editor.refreshSourceCatalogue();
       }
-      _busy = false;
+      if (_disposed ||
+          !identical(catalogue, _catalogue) ||
+          !identical(editor, _programme)) {
+        return false;
+      }
+      // Refresh already invalidates busy state. Do not overwrite a newer
+      // operation started by an edit/notification after the completed append.
+      if (_alive(token)) _busy = false;
       notifyListeners();
-      return true; // A subsequent observer edit invalidates review, not this completed append.
+      return !_disposed &&
+          identical(catalogue, _catalogue) &&
+          identical(editor, _programme);
     } catch (error) {
       return _fail(error, token);
     }
@@ -188,7 +201,8 @@ class SyntheticCompositionController extends ChangeNotifier {
           'selection: explicitly admit this frozen revision first.',
         );
       }
-      final snapshot = programme.tree;
+      final editor = programme;
+      final snapshot = editor.tree;
       final target =
           (((((snapshot!['weeks'] as List)[week] as Map)['days'] as List)[day]
                       as Map)['slots']
@@ -202,16 +216,16 @@ class SyntheticCompositionController extends ChangeNotifier {
       }
       final verified = await _verify(choices.single);
       if (!_alive(token)) return false;
-      programme.editSlot(
+      editor.editSlot(
         week,
         day,
         slot,
         'session_key',
         compositionReference(verified)['session_key'] as String,
       );
-      _busy = false;
+      if (_disposed || !identical(editor, _programme)) return false;
       notifyListeners();
-      return true;
+      return !_disposed && identical(editor, _programme);
     } catch (error) {
       return _fail(error, token);
     }
@@ -267,6 +281,16 @@ class SyntheticCompositionController extends ChangeNotifier {
   bool isCurrentReceipt(CompositionReviewReceipt r) =>
       !_disposed && identical(r, _current) && !session.isEditing;
 
+  /// Synchronous consumption gate: an awaited export may be invalidated before
+  /// its caller resumes. Compare against the exact currently owned receipt.
+  bool canConsumeExport(String bytes, {bool reconstructed = false}) {
+    final receipt = reconstructed ? _reconstructed : _current;
+    return !_disposed &&
+        receipt != null &&
+        (reconstructed || isCurrentReceipt(receipt)) &&
+        handoff.write(receipt) == bytes;
+  }
+
   Future<bool> reopen(String text) async {
     final token = _begin();
     rejectedHandoff = text;
@@ -302,17 +326,42 @@ class SyntheticCompositionController extends ChangeNotifier {
   }
 
   void _release() {
-    _programme?.removeListener(_programmeChanged);
-    _programme?.dispose();
-    session.removeListener(_sessionChanged);
-    session.dispose();
+    final oldProgramme = _programme, oldSession = session;
+    oldProgramme?.removeListener(_programmeChanged);
+    oldSession.removeListener(_sessionChanged);
+    // Tokens and ownership detach immediately. Child cleanup waits until any
+    // programme/session notification callback stack has completely unwound.
+    scheduleMicrotask(() {
+      oldProgramme?.dispose();
+      oldSession.dispose();
+    });
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    _notificationDepth++;
+    try {
+      super.notifyListeners();
+    } finally {
+      _notificationDepth--;
+      if (_notificationDepth == 0 && _disposeNotifierPending) {
+        _disposeNotifierPending = false;
+        super.dispose();
+      }
+    }
   }
 
   @override
   void dispose() {
+    if (_disposed) return;
     _disposed = true;
     _invalidate();
     _release();
-    super.dispose();
+    if (_notificationDepth > 0) {
+      _disposeNotifierPending = true;
+    } else {
+      super.dispose();
+    }
   }
 }

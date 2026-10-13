@@ -370,7 +370,12 @@ class _SyntheticCompositionScreenState
 
   Future<void> _export() async {
     final bytes = await controller.exportHandoff(), r = controller.current;
-    if (!mounted || bytes == null || r == null) return;
+    if (!mounted ||
+        bytes == null ||
+        r == null ||
+        !controller.canConsumeExport(bytes)) {
+      return;
+    }
     await _exportDialog(bytes, r, false);
   }
 
@@ -450,8 +455,13 @@ class _SyntheticCompositionScreenState
                         final fresh = reconstructed
                             ? controller.reconstructedExport()
                             : await controller.exportHandoff();
-                        if (fresh == bytes) {
-                          await Clipboard.setData(ClipboardData(text: fresh!));
+                        if (fresh != null &&
+                            fresh == bytes &&
+                            controller.canConsumeExport(
+                              fresh,
+                              reconstructed: reconstructed,
+                            )) {
+                          await Clipboard.setData(ClipboardData(text: fresh));
                           if (dialogContext.mounted) {
                             Navigator.pop(dialogContext);
                           }

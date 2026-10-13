@@ -4,6 +4,7 @@ import 'package:cohort_platform/domain/exercise_knowledge/models/exercise_defini
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/foundation.dart';
 import 'package:cohort_platform/features/programme_studio/composition/synthetic_composition_controller.dart';
 import 'package:cohort_platform/features/programme_studio/composition/synthetic_composition_review_bridge.dart';
 import 'package:cohort_platform/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart';
@@ -543,6 +544,127 @@ void main() {
       expect(slotKey(c), d2SessionKey(1));
     },
   );
+  for (final action in ['admit', 'select']) {
+    test(
+      '$action completion preserves a newer pending validation from notifications',
+      () async {
+        final compiler = PausedCompiler(), c = await open(compiler: compiler);
+        final revision = await changed(c);
+        if (action == 'select') await c.admit(revision);
+        Future<bool>? newer;
+        var once = false;
+        c.addListener(() {
+          final committed = action == 'admit'
+              ? c.admitted.length == 2
+              : slotKey(c) == d2SessionKey(2);
+          if (!once && committed) {
+            once = true;
+            compiler.pauseNext = true;
+            newer = c.validate();
+          }
+        });
+        expect(
+          await (action == 'admit' ? c.admit(revision) : c.select(0, 0, 0, 2)),
+          true,
+        );
+        expect(c.busy, true);
+        expect(c.current, null);
+        compiler.gate!.complete();
+        expect(await newer, true);
+        expect(c.current, isNotNull);
+      },
+    );
+  }
+  for (final action in ['reset', 'dispose']) {
+    test(
+      'admission completion cannot report success after notification $action',
+      () async {
+        final c = SyntheticCompositionController();
+        await c.ready;
+        final revision = await changed(c);
+        Future<void>? reset;
+        var once = false;
+        c.addListener(() {
+          if (!once && c.admitted.length == 2) {
+            once = true;
+            if (action == 'reset') {
+              reset = c.reset();
+            } else {
+              c.dispose();
+            }
+          }
+        });
+        final success = await c.admit(revision);
+        await reset;
+        expect(success, false);
+        expect(c.current, null);
+        if (action == 'reset') {
+          expect(c.admitted.length, 1);
+          expect(slotKey(c), d2SessionKey(1));
+          c.dispose();
+        }
+      },
+    );
+  }
+  test(
+    'selection completion cannot report success after notification reset',
+    () async {
+      final c = await open();
+      await c.admit(await changed(c));
+      Future<void>? reset;
+      var once = false;
+      c.addListener(() {
+        if (!once && c.initialized && slotKey(c) == d2SessionKey(2)) {
+          once = true;
+          reset = c.reset();
+        }
+      });
+      final success = await c.select(0, 0, 0, 2);
+      await reset;
+      expect(success, false);
+      expect(c.admitted.length, 1);
+      expect(slotKey(c), d2SessionKey(1));
+    },
+  );
+  for (final lane in ['programme', 'session']) {
+    test('reset from $lane notification detaches old owners safely', () async {
+      final c = await open();
+      Future<void>? resetting;
+      var once = false;
+      c.addListener(() {
+        if (!once) {
+          once = true;
+          resetting = c.reset();
+        }
+      });
+      if (lane == 'programme') {
+        c.programme.editProgramme('name', 'Synthetic callback reset');
+      } else {
+        c.session.createDraft();
+      }
+      await resetting;
+      expect(c.initialized, true);
+      expect(c.admitted.single.source, d2R1Source());
+      expect(c.session.isEditing, false);
+      expect(slotKey(c), d2SessionKey(1));
+      expect(await c.validate(), true);
+    });
+  }
+  test('dispose during busy notification cancels completion safely', () async {
+    final errors = <FlutterErrorDetails>[];
+    final previous = FlutterError.onError;
+    FlutterError.onError = errors.add;
+    addTearDown(() => FlutterError.onError = previous);
+    final c = SyntheticCompositionController();
+    await c.ready;
+    c.addListener(() {
+      if (c.busy) c.dispose();
+    });
+    expect(await c.validate(), false);
+    expect(c.current, null);
+    await Future<void>.value();
+    expect(errors, isEmpty);
+  });
   test(
     'reset ignores pending operation and restores seed without earlier draft/reservations',
     () async {

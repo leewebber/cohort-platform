@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cohort_platform/app/theme.dart';
 import 'package:cohort_platform/features/programme_studio/authoring/programme_authoring_screen.dart';
@@ -10,10 +12,11 @@ Future<SyntheticCompositionController> mount(
   WidgetTester tester, {
   Size size = const Size(1300, 1000),
   double scale = 1,
+  SyntheticCompositionController? suppliedController,
 }) async {
   await tester.binding.setSurfaceSize(size);
   addTearDown(() => tester.binding.setSurfaceSize(null));
-  final c = SyntheticCompositionController();
+  final c = suppliedController ?? SyntheticCompositionController();
   await c.ready;
   addTearDown(c.dispose);
   await tester.pumpWidget(
@@ -44,7 +47,76 @@ Future<void> tap(WidgetTester t, Finder f) async {
 Finder field(String id) => find.byWidgetPredicate(
   (w) => w is TextFormField && w.key.toString().contains(id),
 );
+
+class ConsumptionRaceController extends SyntheticCompositionController {
+  bool queueEdit = false;
+  @override
+  Future<String?> exportHandoff() async {
+    final bytes = await super.exportHandoff();
+    if (queueEdit) {
+      scheduleMicrotask(
+        () => programme.editProgramme('name', 'Synthetic consumption edit'),
+      );
+      await Future<void>.value();
+    }
+    return bytes;
+  }
+}
+
 void main() {
+  testWidgets('copy consumes the exact freshly validated handoff', (t) async {
+    final c = await mount(t);
+    await c.validate();
+    await t.pumpAndSettle();
+    final expected = (await c.exportHandoff())!;
+    await tap(t, find.byKey(const Key('complete-export')));
+    final copied = <String>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+          if (call.method == 'Clipboard.setData') {
+            copied.add((call.arguments as Map)['text'] as String);
+          }
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, null),
+    );
+    await tap(t, find.byKey(const Key('copy-handoff')));
+    expect(copied, [expected]);
+    expect(
+      find.text('Complete local handoff — canonical sources'),
+      findsNothing,
+    );
+    expect(c.current, isNotNull);
+    expect(t.takeException(), isNull);
+  });
+  testWidgets(
+    'copy refuses a source edit queued between export and UI consumption',
+    (t) async {
+      final c = ConsumptionRaceController();
+      await mount(t, suppliedController: c);
+      await c.validate();
+      await t.pumpAndSettle();
+      await tap(t, find.byKey(const Key('complete-export')));
+      var writes = 0;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+            if (call.method == 'Clipboard.setData') writes++;
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      c.queueEdit = true;
+      await tap(t, find.byKey(const Key('copy-handoff')));
+      expect(c.current, null);
+      expect(writes, 0);
+      expect(find.text('Export invalidated'), findsOneWidget);
+      expect(t.takeException(), isNull);
+    },
+  );
   testWidgets(
     'reused session form: invalid draft, freeze, admit without select, confirmed exact slot choice',
     (t) async {
