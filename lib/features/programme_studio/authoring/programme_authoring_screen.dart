@@ -7,7 +7,15 @@ import 'programme_authoring_controller.dart';
 import 'programme_authoring_fixtures.dart';
 
 class ProgrammeAuthoringScreen extends StatefulWidget {
-  const ProgrammeAuthoringScreen({super.key, this.controller});
+  const ProgrammeAuthoringScreen({
+    super.key,
+    this.controller,
+    this.embedded = false,
+    this.onSelectSlot,
+  });
+  final bool embedded;
+  final Future<void> Function(int week, int day, int slot, String sessionKey)?
+  onSelectSlot;
   final ProgrammeAuthoringController? controller;
   @override
   State<ProgrammeAuthoringScreen> createState() =>
@@ -32,59 +40,64 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: controller,
-    builder: (context, _) => LayoutBuilder(
-      builder: (context, constraints) {
-        final wide = constraints.maxWidth >= 1180;
-        return Scaffold(
-          body: SafeArea(
-            child: Column(
-              children: [
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: wide ? 260 : constraints.maxHeight * .38,
-                  ),
-                  child: SingleChildScrollView(child: _header(wide)),
-                ),
-                Expanded(
-                  child: wide
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(width: 460, child: _editor()),
-                            const VerticalDivider(width: 1),
-                            Expanded(child: _review()),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: SegmentedButton<bool>(
-                                segments: const [
-                                  ButtonSegment(
-                                    value: false,
-                                    label: Text('Author'),
+    builder: (context, _) => widget.embedded
+        ? _editor()
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              final wide = constraints.maxWidth >= 1180;
+              return Scaffold(
+                body: SafeArea(
+                  child: Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: wide ? 260 : constraints.maxHeight * .38,
+                        ),
+                        child: SingleChildScrollView(child: _header(wide)),
+                      ),
+                      Expanded(
+                        child: wide
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  SizedBox(width: 460, child: _editor()),
+                                  const VerticalDivider(width: 1),
+                                  Expanded(child: _review()),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: SegmentedButton<bool>(
+                                      segments: const [
+                                        ButtonSegment(
+                                          value: false,
+                                          label: Text('Author'),
+                                        ),
+                                        ButtonSegment(
+                                          value: true,
+                                          label: Text('Review'),
+                                        ),
+                                      ],
+                                      selected: {showReview},
+                                      onSelectionChanged: (value) => setState(
+                                        () => showReview = value.single,
+                                      ),
+                                    ),
                                   ),
-                                  ButtonSegment(
-                                    value: true,
-                                    label: Text('Review'),
+                                  Expanded(
+                                    child: showReview ? _review() : _editor(),
                                   ),
                                 ],
-                                selected: {showReview},
-                                onSelectionChanged: (value) =>
-                                    setState(() => showReview = value.single),
                               ),
-                            ),
-                            Expanded(child: showReview ? _review() : _editor()),
-                          ],
-                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              );
+            },
           ),
-        );
-      },
-    ),
   );
 
   Widget _header(bool wide) => Container(
@@ -155,65 +168,68 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        DropdownButtonFormField<String>(
-          key: ValueKey('fixture-${controller.fixture.id}'),
-          initialValue: controller.fixture.id,
-          isExpanded: true,
-          decoration: const InputDecoration(labelText: 'Synthetic source'),
-          items: [
-            for (final fixture in programmeAuthoringFixtures)
-              DropdownMenuItem(
-                value: fixture.id,
-                child: Text(
-                  fixture.label,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+        if (widget.embedded) Text(controller.sourceLabel),
+        if (!widget.embedded)
+          DropdownButtonFormField<String>(
+            key: ValueKey('fixture-${controller.fixture.id}'),
+            initialValue: controller.fixture.id,
+            isExpanded: true,
+            decoration: const InputDecoration(labelText: 'Synthetic source'),
+            items: [
+              for (final fixture in programmeAuthoringFixtures)
+                DropdownMenuItem(
+                  value: fixture.id,
+                  child: Text(
+                    fixture.label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+            ],
+            onChanged: widget.controller != null
+                ? null
+                : (value) {
+                    if (value == null) return;
+                    final previous = controller;
+                    setState(() {
+                      controller = ProgrammeAuthoringController(
+                        fixture: programmeAuthoringFixtures.firstWhere(
+                          (f) => f.id == value,
+                        ),
+                      );
+                      week = 0;
+                      day = 0;
+                      sourceEpoch++;
+                      showReview = false;
+                    });
+                    previous.dispose();
+                  },
+          ),
+        const SizedBox(height: 12),
+        if (!widget.embedded)
+          Wrap(
+            spacing: 8,
+            children: [
+              OutlinedButton(
+                key: const Key('reopen-source'),
+                onPressed: _reopen,
+                child: const Text('Reopen YAML'),
               ),
-          ],
-          onChanged: widget.controller != null
-              ? null
-              : (value) {
-                  if (value == null) return;
-                  final previous = controller;
+              TextButton(
+                key: const Key('reset-source'),
+                onPressed: () {
+                  controller.reset();
                   setState(() {
-                    controller = ProgrammeAuthoringController(
-                      fixture: programmeAuthoringFixtures.firstWhere(
-                        (f) => f.id == value,
-                      ),
-                    );
+                    sourceEpoch++;
                     week = 0;
                     day = 0;
-                    sourceEpoch++;
                     showReview = false;
                   });
-                  previous.dispose();
                 },
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          children: [
-            OutlinedButton(
-              key: const Key('reopen-source'),
-              onPressed: _reopen,
-              child: const Text('Reopen YAML'),
-            ),
-            TextButton(
-              key: const Key('reset-source'),
-              onPressed: () {
-                controller.reset();
-                setState(() {
-                  sourceEpoch++;
-                  week = 0;
-                  day = 0;
-                  showReview = false;
-                });
-              },
-              child: const Text('Reset to imported source'),
-            ),
-          ],
-        ),
+                child: const Text('Reset to imported source'),
+              ),
+            ],
+          ),
         if (controller.issues.isNotEmpty)
           _card('Resolve before review or export', [
             for (final issue in controller.issues)
@@ -415,28 +431,38 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                 ),
             ],
             onChanged: required
-                ? (value) async {
-                    if (value == null || value == slot['session_key']) return;
-                    final active = controller;
-                    final revision = active.revision;
-                    final confirmed = await _confirm(
-                      'Change exact session revision?',
-                      'Slot $key will reference $value. Its locked progression and completion contracts remain unchanged.',
-                    );
-                    if (!mounted) return;
-                    if (confirmed &&
-                        identical(active, controller) &&
-                        revision == controller.revision) {
-                      controller.editSlot(
-                        week,
-                        day,
-                        index,
-                        'session_key',
-                        value,
-                      );
-                    }
-                    setState(() => sourceEpoch++);
-                  }
+                ? widget.onSelectSlot != null
+                      ? (value) async {
+                          if (value == null || value == slot['session_key']) {
+                            return;
+                          }
+                          await widget.onSelectSlot!(week, day, index, value);
+                          if (mounted) setState(() => sourceEpoch++);
+                        }
+                      : (value) async {
+                          if (value == null || value == slot['session_key']) {
+                            return;
+                          }
+                          final active = controller;
+                          final revision = active.revision;
+                          final confirmed = await _confirm(
+                            'Change exact session revision?',
+                            'Slot $key will reference $value. Its locked progression and completion contracts remain unchanged.',
+                          );
+                          if (!mounted) return;
+                          if (confirmed &&
+                              identical(active, controller) &&
+                              revision == controller.revision) {
+                            controller.editSlot(
+                              week,
+                              day,
+                              index,
+                              'session_key',
+                              value,
+                            );
+                          }
+                          setState(() => sourceEpoch++);
+                        }
                 : null,
           ),
           for (final field in ['display_title', 'coach_note'])
@@ -682,7 +708,9 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
 
   Future<void> _addSlot() async {
     var newKey = '';
-    var session = 'SYN-SESSION-R1';
+    var session = widget.embedded
+        ? (controller.tree!['sessions'] as List).first['session_key'] as String
+        : 'SYN-SESSION-R1';
     final key = await showDialog<String>(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -704,11 +732,20 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                   labelText: 'Fixture revision',
                 ),
                 items: [
-                  for (final rev in [1, 2])
-                    DropdownMenuItem(
-                      value: 'SYN-SESSION-R$rev',
-                      child: Text('Synthetic revision $rev'),
-                    ),
+                  if (widget.embedded)
+                    for (final entry in controller.tree!['sessions'] as List)
+                      DropdownMenuItem(
+                        value: entry['session_key'] as String,
+                        child: Text(
+                          '${entry['title']} · revision ${entry['revision_number']}',
+                        ),
+                      ),
+                  if (!widget.embedded)
+                    for (final rev in [1, 2])
+                      DropdownMenuItem(
+                        value: 'SYN-SESSION-R$rev',
+                        child: Text('Synthetic revision $rev'),
+                      ),
                 ],
                 onChanged: (value) => update(() => session = value!),
               ),

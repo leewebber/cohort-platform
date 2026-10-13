@@ -9,6 +9,7 @@ import '../projection/programme_review_source.dart';
 import '../projection/sql_values_parser.dart';
 import 'plan_package_v1_yaml_writer.dart';
 import 'programme_authoring_fixtures.dart';
+import 'programme_authoring_source.dart';
 
 /// Transient editing of an allowlisted synthetic canonical source. Every edit
 /// removes the previous successful result; validation always compiles the
@@ -16,15 +17,21 @@ import 'programme_authoring_fixtures.dart';
 class ProgrammeAuthoringController extends ChangeNotifier {
   ProgrammeAuthoringController({
     required this.fixture,
+    this.source,
     this.projector = const ProgrammeReviewProjector(),
   }) {
     _trusted = _clone(
-      _compiler.compile(jsonEncode(fixture.sourceTree)).canonicalJson!,
+      _compiler
+          .compile(jsonEncode(source?.trustedTree ?? fixture.sourceTree))
+          .canonicalJson!,
     );
-    loadSource(fixture.source);
+    loadSource(source?.originalSource ?? fixture.source);
   }
 
   final ProgrammeAuthoringFixture fixture;
+  final ProgrammeAuthoringSource? source;
+  String get sourceId => source?.id ?? fixture.id;
+  String get sourceLabel => source?.label ?? fixture.label;
   final ProgrammeReviewProjector projector;
   static const _compiler = PlanPackageCompiler();
   static const _writer = PlanPackageV1YamlWriter();
@@ -267,7 +274,9 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       if (_issues.isEmpty) {
         try {
           final projected = projector.project(
-            ProgrammeReviewProjectionRequest(bundles: [fixture.bundle(yaml)]),
+            ProgrammeReviewProjectionRequest(
+              bundles: [source?.bundle(yaml) ?? fixture.bundle(yaml)],
+            ),
           );
           final programme = projected.developerFixtures.single;
           for (final session
@@ -342,7 +351,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     Map<String, dynamic> candidate,
   ) {
     final result = <PlanPackageValidationIssue>[];
-    if (!{'contracts', 'empty'}.contains(fixture.id) ||
+    if ((source == null && !{'contracts', 'empty'}.contains(fixture.id)) ||
         !_equal(_scopeSkeleton(candidate), _scopeSkeleton(_trusted))) {
       result.add(
         _issue(
@@ -392,6 +401,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
 
   Map<String, dynamic> _scopeSkeleton(Map<String, dynamic> tree) {
     final value = _clone(jsonEncode(tree));
+    if (source != null) value.remove('sessions');
     (value['programme'] as Map).removeWhere(
       (k, _) => programmeFields.contains(k),
     );
@@ -419,6 +429,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   List<PlanPackageValidationIssue> _protocolIssues(
     PlanPackageManifest manifest,
   ) {
+    if (source != null) return source!.catalogueIssues(manifest);
     final issues = <PlanPackageValidationIssue>[];
     try {
       // The fixture SQL schema/order is fixed, and package catalogue equality
@@ -480,6 +491,15 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     }
     return issues;
   }
+
+  /// Only an injected source policy can supply an exact, detached catalogue.
+  /// The existing draft and original comparison bytes are retained.
+  void refreshSourceCatalogue() => _edit(() {
+    if (source == null) {
+      throw const FormatException('Fixed D1 catalogue is read-only.');
+    }
+    _tree!['sessions'] = jsonDecode(jsonEncode(source!.sessionReferences));
+  });
 
   void _edit(VoidCallback mutation) {
     _invalidate();

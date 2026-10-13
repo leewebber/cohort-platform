@@ -7,7 +7,12 @@ import 'founder_strength_source_guard.dart';
 import 'protocol_authoring_controller.dart';
 
 class ProtocolAuthoringScreen extends StatefulWidget {
-  const ProtocolAuthoringScreen({super.key, this.controller});
+  const ProtocolAuthoringScreen({
+    super.key,
+    this.controller,
+    this.embedded = false,
+  });
+  final bool embedded;
   final ProtocolAuthoringController? controller;
   @override
   State<ProtocolAuthoringScreen> createState() =>
@@ -76,10 +81,11 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
           runSpacing: 10,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text(
-              'Selected programme: R${controller.selectedRevision}',
-              key: const Key('selected-programme'),
-            ),
+            if (!widget.embedded)
+              Text(
+                'Selected programme: R${controller.selectedRevision}',
+                key: const Key('selected-programme'),
+              ),
             Text(
               controller.isEditing
                   ? 'Working candidate: R${controller.activeIdentity.revisionNumber}'
@@ -167,18 +173,20 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
                     },
               child: const Text('Validate and refresh review'),
             ),
-            OutlinedButton(
-              onPressed: current == null ? null : _review,
-              child: const Text('Open Studio review'),
-            ),
+            if (!widget.embedded)
+              OutlinedButton(
+                onPressed: current == null ? null : _review,
+                child: const Text('Open Studio review'),
+              ),
             OutlinedButton(
               onPressed: current == null ? null : () => _export(false),
               child: const Text('Export Founder YAML'),
             ),
-            OutlinedButton(
-              onPressed: current == null ? null : () => _export(true),
-              child: const Text('Export review package YAML'),
-            ),
+            if (!widget.embedded)
+              OutlinedButton(
+                onPressed: current == null ? null : () => _export(true),
+                child: const Text('Export review package YAML'),
+              ),
             if (controller.isEditing)
               OutlinedButton(
                 onPressed: _reopen,
@@ -197,7 +205,7 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
           ],
         ),
         const SizedBox(height: 18),
-        if (!controller.isEditing)
+        if (!controller.isEditing && !widget.embedded)
           Wrap(
             spacing: 12,
             runSpacing: 10,
@@ -246,13 +254,14 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
           ),
         if (current != null) ...[
           const SizedBox(height: 18),
-          Text(
-            current.session.identity.revisionNumber ==
-                        controller.selectedRevision &&
-                    !controller.isEditing
-                ? 'Current review uses the selected programme reference.'
-                : 'Candidate review uses a proposed reference. Selected programme remains R${controller.selectedRevision}.',
-          ),
+          if (!widget.embedded)
+            Text(
+              current.session.identity.revisionNumber ==
+                          controller.selectedRevision &&
+                      !controller.isEditing
+                  ? 'Current review uses the selected programme reference.'
+                  : 'Candidate review uses a proposed reference. Selected programme remains R${controller.selectedRevision}.',
+            ),
           for (final link
               in current.session.protocol.blocks.single.linkedExercises)
             Padding(
@@ -289,14 +298,16 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
                 'Founder source-byte SHA-256',
                 current.session.sourceDigest,
               ),
-              _evidence(
-                'Review package hash — excludes session bodies',
-                current.packageHash,
-              ),
-              _evidence(
-                'Selected programme baseline hash — references only',
-                controller.selectedProgrammeHash,
-              ),
+              if (!widget.embedded)
+                _evidence(
+                  'Review package hash — excludes session bodies',
+                  current.packageHash,
+                ),
+              if (!widget.embedded)
+                _evidence(
+                  'Selected programme baseline hash — references only',
+                  controller.selectedProgrammeHash,
+                ),
               _evidence(
                 'Exact exercise versions',
                 current.session.bindings.toString(),
