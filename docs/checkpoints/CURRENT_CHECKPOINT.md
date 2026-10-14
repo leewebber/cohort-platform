@@ -1,5 +1,23 @@
 # Current repository checkpoint
 
+> **Programme Studio independent strength lineages — local implementation, 2026-10-14:**
+> [Handoff and founder walkthrough](./programme_studio_strength_lineages/HANDOFF.md)
+> and [verification](./programme_studio_strength_lineages/VERIFICATION.json) record
+> the approved bounded A/B workflow: explicit empty B creation, independent immutable
+> revisions, owning-entry admission, confirmed tuple selection, all-slot Studio review
+> and complete transport-v1/v2 with separate read-only reconstruction. **IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW**.
+> 377 affected / 41 canonical-package tests, zero diagnostics across all 16 changed/new
+> Dart files and six unchanged safety groups pass. Fresh full analysis remains non-green:
+> exactly 367 inherited diagnostics (110 warnings, 257 info, zero errors), identical
+> diagnostic lines. Shared compiler/schema/hash, published artifacts and v1/v2 goldens
+> unchanged. Four older checkout inventories/HEADs/indices/.temp and original 95 paths
+> preserved. Separate `codex/studio-strength-lineages` worktree from exact
+> `c75d38358a8a8bc37f6d0444f206b1bffcb81c29`; focused local commits only.
+> Native Chrome inspected; committed candidate runs at 127.0.0.1:4195 on clean A-only
+> seed. No integration/fetch/push, hosted operation, real content, athlete write,
+> production wiring or device build/install. Broader Stage 2/Sprint C and four phone
+> checks remain open. **NEXT_IMPLEMENTATION_AUTHORISED=false**. Stop for founder review.
+
 > **Programme Studio composition — accepted final review, 2026-10-13:**
 > [Founder acceptance and review](./programme_studio_composition/FINAL_REVIEW_AND_ACCEPTANCE.md)
 > and [fresh final verification](./programme_studio_composition/FINAL_REVIEW_VERIFICATION.json)

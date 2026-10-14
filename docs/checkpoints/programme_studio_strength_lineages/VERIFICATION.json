@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-14",
+  "status": "IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW",
+  "base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+  "worktree": "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform",
+  "branch": "codex/studio-strength-lineages",
+  "code_HEAD": "1db2eabae086fdfbfd2bc9c1a7fc9a088602ed69",
+  "allocation_commit": "3246511945890c65fd5d05143832de741fc8bb0c",
+  "allocation_exact_output_sha256": "9513bab031ed2a477ba010272fe7e18d431ce7816fcdbbc69a88dc35f6ecf811",
+  "affected_regressions": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/founder_programme_import/ test/authored_plan_package/ test/architecture/founder_programme_identity_consumer_boundaries_test.dart test/models/strength_exercise_prescription_test.dart test/session_builder/session_block_validation_test.dart test/session/session_execution_projection_test.dart test/session_revision/session_revision_service_test.dart test/domain/exercise_knowledge/founder_approved_identity_mappings_phase_3_1f_test.dart",
+    "passed": 377,
+    "exit": 0,
+    "new_lineage_widget_checks": 36
+  },
+  "canonical_package": {
+    "cwd": "packages/cohort_plan_package",
+    "command": "dart test",
+    "passed": 41,
+    "exit": 0
+  },
+  "scoped_analysis": {
+    "command": "flutter --suppress-analytics analyze --no-pub <all files below>",
+    "files_sha256": {
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "dd7885fefa2594a462d3ae5b082dd7c9e5a106e37a727feacd49133d8375165b",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "eb1fdfa8ee9bd31b9a2a14e604b6fa0a74cc5f77cc89ac6fa04afca6e226ceda",
+      "lib/features/programme_studio/composition/synthetic_composition_fixtures.dart": "ca1bf2a7b5b2d77f0d93b5bdb239e1b46464b2574aacc678fdb86a288c6baaf0",
+      "lib/features/programme_studio/composition/synthetic_composition_handoff.dart": "3dd4bb9411e6d80a56930c6972ecb55db0694280d7fef8d0c4d1b978e5f23ca1",
+      "lib/features/programme_studio/composition/synthetic_composition_review_bridge.dart": "63d8fa8c5a1fffcdb84b1dad7178dd8bed6ec36cb803f479164ef4353a90df61",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "0d274f45f60173083e6c8a74ee46a0cf23b82549c42b91b520f1f735626f3f6c",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart": "c6b0aa877a5c5809941c99f859728cb68cce391d0f86ff272f02296a2e27df6d",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart": "24180f01233e7c5634f2fbd749839232a1921516f346963adfa4b9dc48a45cde",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart": "7e2e81a57b3fd30f77019fff6c7c33aee9092b76fa5bc27f1a434e228ea3d136",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart": "43edb0249b63fb62904bdad2b3074363decc2fb48abbb302c84f28aedce0b950",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_lineage.dart": "3ab1cb1c4703f2ba0df4fca29a954e01ddc8bbd7a767ebd66dae42323fc63f3b",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart": "9f565d639482c4b1b34af6804eada60c8c3c65245359a93fbd8a3cab286a4d5f",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart": "c0b75909889b86d361b5fcf502d2c9a07c8fca3a197fb0d538ae54bfc701d12e",
+      "test/programme_studio/protocol_authoring_screen_test.dart": "5b1bef5dbd728d9359063099ce6b193d4436847cdb7991b1475d3f7b8048bd69",
+      "test/programme_studio/synthetic_composition_screen_test.dart": "e11deaabefdab513d4bb2dfc3fc79e252c873456003c5ed13bbc0eeb8809d167",
+      "test/programme_studio/synthetic_strength_lineages_test.dart": "41e3ac3cecfb78f459327a34456ddea263ebc744e0cfbd51e43c5d465af4e436"
+    },
+    "file_count": 16,
+    "diagnostics": 0,
+    "exit": 0
+  },
+  "full_analysis": {
+    "command": "flutter --suppress-analytics analyze --no-pub",
+    "fresh_before": 367,
+    "final": 367,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "added": 0,
+    "removed": 0,
+    "diagnostic_lines_exact_equal": true,
+    "exit": 1,
+    "green": false,
+    "initial_missing_ignored_package_metadata_resolved_before_source_edits": true
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "groups_passed": 6,
+    "groups_failed": 0,
+    "exit": 0,
+    "script_unchanged": true,
+    "cached_no_pub_runner": true
+  },
+  "old_transport_v1": {
+    "published_writer_base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+    "retained_fixture": "ORIGINAL_V1_HANDOFF.json",
+    "fixture_sha256": "665052f05d5ac26a9e96ad4f98cdb3f25a7a7481449ec4804ca740b83347c1cc",
+    "byte_identical_output_and_reopen_test_passed": true
+  },
+  "protected": {
+    "base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+    "baseline_inventory_entries": 2659,
+    "approved_existing_files_changed": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_fixtures.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_handoff.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_review_bridge.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart",
+      "test/programme_studio/protocol_authoring_screen_test.dart",
+      "test/programme_studio/synthetic_composition_screen_test.dart"
+    ],
+    "unchanged_baseline_entries": 2644,
+    "all_other_baseline_bytes_identical": true,
+    "compiler_schema_hash_resolver_allocator_published_artifacts_and_v1_v2_goldens_unchanged": true,
+    "original_A_fixture_and_writers_unchanged": true,
+    "baseline_manifest_sha256": "2a85cb1f734a43f35c668816a82b6268c7033d2e9ca21430d78114a83300c4fe"
+  },
+  "preservation_summary": {
+    "/Users/leewebber/Developer/cohort_platform": {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "branch": "main",
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "outstanding_paths": 95,
+      "file_inventory_entries_verified": 2687,
+      "present_temp_files": 0,
+      "exact_match": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "branch": "codex/programme-studio-stage2",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "outstanding_paths": 0,
+      "file_inventory_entries_verified": 2612,
+      "present_temp_files": 0,
+      "exact_match": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "branch": "codex/programme-studio-d2",
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "outstanding_paths": 0,
+      "file_inventory_entries_verified": 2637,
+      "present_temp_files": 0,
+      "exact_match": true
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform": {
+      "HEAD": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+      "branch": "codex/programme-studio-composition",
+      "index_sha256": "99d610a54ad179ee59338b5913c7531a08e6bcc08a345f26518ff20928e95344",
+      "outstanding_paths": 0,
+      "file_inventory_entries_verified": 2659,
+      "present_temp_files": 0,
+      "exact_match": true
+    }
+  },
+  "preview": {
+    "url": "http://127.0.0.1:4195/",
+    "entry": "lib/main_programme_studio_composition_preview.dart",
+    "running": true,
+    "native_Chrome_inspection": true,
+    "explicit_creation_freeze_admission_unselected_B_export_copy_readonly_reopen_witnessed": true,
+    "all_slot_and_independent_R2_checks": "automated controller/widget tests",
+    "original_A_only_seed_restored_and_committed_candidate_relaunched": true,
+    "founder_visual_acceptance": "pending"
+  },
+  "logs_sha256": {
+    "analysis-before-ready.log": "709591b9fbd04cbf1b82ad5faaa09c863f00b3df5db8cd1fa670e8557b32aecc",
+    "analysis-before.log": "5194279860c2b382041d1bfaaf791b5e0cabe59e2adbfcbafd17855ccb4b3ce6",
+    "analysis-changed.log": "7a711c289b27c8aefdb0541c6dd5d75169b331d601f1993643001b79b206d58d",
+    "analysis-core.log": "f2d9d09a669c92c0e1564ccac9f58f8fd3de951ed242ebbaece83111bc41fc8a",
+    "analysis-final-current.log": "f96145415986315f28d6c4518efab1cf57e97a2099016bb53c133ec3b48b2294",
+    "analysis-final.log": "0eb8ca93b67b15cedab51d19b8225fab94f1f8d2f484f71a1a20a48f0f404477",
+    "analysis-scoped-final.log": "622dc41653100d04f519bc650f73880db913c26cc2dcef08312417089cdb5f70",
+    "canonical-package.log": "2124db7eee8a6702f2a2ab867db94f67771f95ed207a97ff456b83a4c4215b7e",
+    "extra-format.log": "8a812da4a5a3861605ceb1048f01c13bf309bb638b42ef16ad9b42659f4cd2c0",
+    "fix-braces.log": "b4e3df461422f8e5b9adcdbb98b05288fcb43622a0d76a4f40c14761ff1bf020",
+    "format-choice.log": "2ccd718946510ed38922cb26bb8228cb8dafcdca1f087a96261014eea7cc9a01",
+    "format-navigation.log": "1685974b88bd671112e17334bdc2abb8ef350e01ae026547459ec7a8307375ec",
+    "format-owner.log": "56488af4a8ab2724d34e3ffd9b6ef191fe0737b1287bb96ff18250c00c752314",
+    "format-root.log": "0d973bc59a5a50f625c138e7de39461d30398a9a09df71222022a57530fd4fe0",
+    "format-ui.log": "8dc4ecfeda64da1ecdc285f54ea0d8ddf64588a0613361871cba8f4b28f31ba4",
+    "format.log": "a6d29daf8d8d3e2f574950986e868651714182194502c207c80b0b5fea7eaba2",
+    "lineages-fifth.log": "29e47a613434243d5aaff96798542b3e06502366b909c571dd970a692a639265",
+    "lineages-first.log": "249a800bdf2acde50428ce45b7cf0b0f052c65f6ce78c04abf4a9c606868e85a",
+    "lineages-second.log": "8458aeaa015c676e1fa8a749547bc30e04e28e355f9a85ce00b5c0e46c2bd86f",
+    "lineages-third.log": "fa8273be00a7d4ead7969e559d51b15805f24c2e67452fe08bd117cfd42ae3e1",
+    "preview-final.log": "80ee072b775aca69ba3ab2ed8064cf573558b12ee3527c97f3e37cffccd3f1d3",
+    "preview.log": "9b28658d0b9666afa632cfa725d0de5c0571ed65616c9411f193e0e72c6bec24",
+    "regressions-final.log": "1373ac3b29beacd5006fe87d41639d0cac797781dfb885d77a2acfbd329cb495",
+    "regressions.log": "0ebfb9b6128917db1c704c8da68d75e683281acf386b5a63cb25f03baee70d53",
+    "root-debug.log": "982d04f33683660c5fe9d019986e5a40bbf936874420d1f6178ce3d0b3b6e6e7",
+    "safety-final.log": "663e6fe6d29538901de8fb2ca4e31e7315cc39dad9e3998533bd2d291fff8c84",
+    "safety.log": "e097ed1c3c86d77b4c9e2923b563657b73e1ef2caccea75a7828156d1a8c5f85",
+    "slot-debug.log": "2c9a0e9919f55ad748bbe559298df8d8215933429825315a0e67a54e87db6297",
+    "studio-first.log": "913349d75cac11c6f7a5893df2e603a5d2c3660458a051b8baacc673dd532b51",
+    "test-braces.log": "4e9d84f91e2e3c79563f93c4ffb701d19abb57d9061ba352ba774bdec5cf2ba9",
+    "test-format.log": "962d022ff70cc9ff28b5d6667b777e2a29f44d691c244cc730fbade751651415",
+    "widget-fourth.log": "14c70ba840289eca4cb366e62d3599fce6d92073d81f9af50185733569c31442",
+    "widget-sixth.log": "a151ef6e8cc9b606cc899d6cf3a93e03261ca9778a5f1e0a854a7e487e00ec65"
+  },
+  "no_fetch_push_integration_hosted_device_or_production_operations": true,
+  "broader_Stage2_SprintC_open": true,
+  "pending_phone_checks": 4,
+  "next_implementation_authorised": false,
+  "diff_check": "PASS",
+  "local_links": {
+    "checked": 93,
+    "broken": 0
+  }
+}

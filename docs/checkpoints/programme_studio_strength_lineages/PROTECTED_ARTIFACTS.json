@@ -1,0 +1,26 @@
+{
+  "base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+  "baseline_inventory_entries": 2659,
+  "approved_existing_files_changed": [
+    "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_fixtures.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_handoff.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_review_bridge.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+    "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+    "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart",
+    "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart",
+    "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart",
+    "test/programme_studio/protocol_authoring_screen_test.dart",
+    "test/programme_studio/synthetic_composition_screen_test.dart"
+  ],
+  "unchanged_baseline_entries": 2644,
+  "all_other_baseline_bytes_identical": true,
+  "compiler_schema_hash_resolver_allocator_published_artifacts_and_v1_v2_goldens_unchanged": true,
+  "original_A_fixture_and_writers_unchanged": true,
+  "baseline_manifest_sha256": "2a85cb1f734a43f35c668816a82b6268c7033d2e9ca21430d78114a83300c4fe"
+}
