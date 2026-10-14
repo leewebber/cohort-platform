@@ -1,0 +1,41 @@
+{
+  "fixture_profile": {
+    "fingerprint": "661ae7505cc36a1a1f7eba945ccf1f41d85d72f3fc6e362734bdd6c5e32bf9d6",
+    "id": "d2-strength-fixtures",
+    "version": 1
+  },
+  "kind": "synthetic_programme_review_handoff",
+  "package_hash": "6eff96f2d89265236e57bf93642c0e6ba9bcabe5974b97209e5c5969a865b40a",
+  "programme_yaml": "adaptation_permissions:\n  -\n    athlete_agreement_required: true\n    change_kind: \"reduce_volume\"\n    id: \"SYN-ADAPT\"\n    scope_note: \"Synthetic locked adaptation.\"\n    target_ref: \"W1D1S1\"\nassessments:\n  -\n    comparison_identity_id: \"SYN-COMPARE\"\n    evidence_requirement: \"fixture_evidence\"\n    id: \"SYN-ASSESS\"\n    label: \"Synthetic assessment reference\"\n    slot_ref: \"W1D1S1\"\ncomparison_identities:\n  -\n    id: \"SYN-COMPARE\"\n    label: \"Synthetic comparison reference\"\n    session_lineage_id: \"SYN-D2-STRENGTH-LINEAGE\"\npackage_schema_version: 1\nperformance_evidence_requirements:\n  -\n    comparison_identity_id: \"SYN-COMPARE\"\n    id: \"SYN-EVIDENCE\"\n    metric: \"fixture_metric\"\n    required: true\nphases:\n  -\n    coach_note: \"Locked synthetic phase.\"\n    intent: \"build\"\n    phase_key: \"SYN-PHASE\"\n    phase_order: 1\n    title: \"Synthetic phase\"\nprogramme:\n  coaching_intent: \"Synthetic source inspection only.\"\n  description: \"Local synthetic fixture. No programme publication.\"\n  duration_weeks: 1\n  library_scope: \"organisation\"\n  lineage_code: \"SYN-D2-PROGRAMME\"\n  name: \"Synthetic D2 revision selection\"\n  owner_type: \"organisation\"\n  primary_goal: \"Fixture review\"\n  sessions_per_week: 1\n  version_number: 1\nprotected_invariants:\n  -\n    description: \"Synthetic locked invariant.\"\n    id: \"SYN-INVARIANT\"\n    kind: \"assessment_immutable\"\n    target_ref: \"SYN-ASSESS\"\nsessions:\n  -\n    protocol_id: \"syn-d2-strength-r1-w1-d1-s1\"\n    revision_number: 1\n    session_key: \"SYN-D2-STRENGTH-R1\"\n    session_lineage_id: \"SYN-D2-STRENGTH-LINEAGE\"\n    title: \"Synthetic strength session\"\nweeks:\n  -\n    coach_note: \"Existing week note\"\n    days:\n      -\n        coach_note: \"Existing day note\"\n        day_key: \"day_1\"\n        day_order: 1\n        day_type: \"training\"\n        intent: \"build\"\n        slots:\n          -\n            completion_expectation: \"required\"\n            is_optional: false\n            progression:\n              coach_note: \"Preserve this authored fixture text.\"\n              intensity_note: \"Fixture intensity note\"\n              prescription_summary: \"Synthetic inspection only; no training prescription.\"\n              volume_note: \"Fixture volume note\"\n            session_key: \"SYN-D2-STRENGTH-R1\"\n            session_order: 1\n            slot_key: \"W1D1S1\"\n            time_of_day: \"any\"\n        title: \"Fixture training day\"\n      -\n        day_key: \"day_2\"\n        day_order: 2\n        day_type: \"rest\"\n        slots: []\n        title: \"Fixture rest day\"\n    intent: \"build\"\n    phase_key: \"SYN-PHASE\"\n    title: \"Fixture week 1\"\n    week_number: 1\n",
+  "sessions": [
+    {
+      "exercise_bindings": {
+        "cohort.exercise.d2_fixture_a": "EX-9001@1",
+        "cohort.exercise.d2_fixture_b": "EX-9002@1"
+      },
+      "founder_yaml": "# Retained R1 synthetic source. Not programme content.\nprogramme:\n  code: \"SYN-D2\"\n  description: \"Local fixture only.\"\n  duration_weeks: 1\n  import_key: \"syn-d2-strength-r1\"\n  objective: \"Inspect authored source; no coaching approval.\"\n  sessions_per_week: 1\n  title: \"Synthetic D2 wrapper\"\nschema_version: 1\nweeks:\n  -\n    days:\n      -\n        coach_notes: \"Fixed synthetic wrapper notes.\"\n        day_number: 1\n        display_name: \"Synthetic day\"\n        is_rest_day: false\n        sessions:\n          -\n            blocks:\n              -\n                block_type: \"strength\"\n                coach_notes: \"Synthetic block note.\"\n                exercises:\n                  -\n                    exercise_name: \"Synthetic fixture A\"\n                    order: 1\n                    prescription:\n                      load:\n                        unit: \"kg\"\n                        value: 12.5\n                      notes: \"Synthetic cue only.\"\n                      reps: 5\n                      rest_seconds: 60\n                      sets: 2\n                      tempo: \"3-1-1\"\n                    transitional_exercise_id: \"cohort.exercise.d2_fixture_a\"\n                  -\n                    exercise_name: \"Synthetic fixture B\"\n                    order: 2\n                    prescription:\n                      reps: 3\n                      sets: 1\n                    transitional_exercise_id: \"cohort.exercise.d2_fixture_b\"\n                order: 1\n                title: \"Straight sets\"\n            coach_notes: \"Synthetic session note.\"\n            estimated_duration_minutes: 20\n            session_type: \"strength\"\n            title: \"Synthetic strength session\"\n    title: \"Synthetic week\"\n    week_number: 1\n",
+      "identity": {
+        "protocol_id": "syn-d2-strength-r1-w1-d1-s1",
+        "revision_number": 1,
+        "session_lineage_id": "SYN-D2-STRENGTH-LINEAGE"
+      },
+      "session_key": "SYN-D2-STRENGTH-R1",
+      "source_digest": "effd3544f4f7c1df0d6d98f5538d22d287afed44339fe4ba7c474ec174fab878"
+    }
+  ],
+  "slot_bindings": [
+    {
+      "day_key": "day_1",
+      "exercise_bindings": "{\"cohort.exercise.d2_fixture_a\":\"EX-9001@1\",\"cohort.exercise.d2_fixture_b\":\"EX-9002@1\"}",
+      "protocol_id": "syn-d2-strength-r1-w1-d1-s1",
+      "revision_number": 1,
+      "session_key": "SYN-D2-STRENGTH-R1",
+      "session_lineage_id": "SYN-D2-STRENGTH-LINEAGE",
+      "session_order": 1,
+      "slot_key": "W1D1S1",
+      "source_digest": "effd3544f4f7c1df0d6d98f5538d22d287afed44339fe4ba7c474ec174fab878",
+      "week_number": 1
+    }
+  ],
+  "version": 1
+}

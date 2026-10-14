@@ -7,6 +7,8 @@ import '../authoring/programme_authoring_fixtures.dart';
 import '../protocol_authoring/protocol_authoring_controller.dart';
 import '../protocol_authoring/synthetic_session_revision_catalogue.dart';
 import '../protocol_authoring/synthetic_strength_session_compiler.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
+import '../../session_revision/models/session_revision_usage_models.dart';
 import 'synthetic_composition_fixtures.dart';
 import 'synthetic_composition_handoff.dart';
 import 'synthetic_composition_review_bridge.dart';
@@ -15,16 +17,33 @@ import 'synthetic_programme_revision_catalogue.dart';
 /// Owns both transient source lanes; no store, import/apply or athlete services.
 class SyntheticCompositionController extends ChangeNotifier {
   SyntheticCompositionController({SyntheticStrengthSessionCompiler? compiler})
-    : compiler = compiler ?? SyntheticStrengthSessionCompiler() {
+    : compiler =
+          compiler ??
+          SyntheticStrengthSessionCompiler(allowSecondLineage: true) {
     ready = _initialize();
   }
   final SyntheticStrengthSessionCompiler compiler;
   late Future<void> ready;
-  late ProtocolAuthoringController session;
+  late ProtocolAuthoringController _session, _secondSession;
+  ProtocolAuthoringController get session => _session;
+  ProtocolAuthoringController get secondSession => _secondSession;
+  List<ProtocolAuthoringController> get owners => [session, secondSession];
+  bool get anyDraft => owners.any((owner) => owner.isEditing);
+  ProtocolAuthoringController ownerFor(SessionRevisionIdentity identity) {
+    final lineage = SyntheticStrengthLineage.resolve(identity);
+    return lineage == SyntheticStrengthLineage.a ? session : secondSession;
+  }
+
+  void createSecondSession() {
+    if (!initialized || anyDraft || _disposed) return;
+    secondSession.createRootDraft();
+  }
+
   ProgrammeAuthoringController? _programme;
   SyntheticProgrammeRevisionCatalogue? _catalogue;
   CompositionReviewReceipt? _current, _reconstructed;
-  int _operation = 0, _programmeRevision = 0, _sessionGeneration = 0;
+  int _operation = 0, _programmeRevision = 0;
+  final Map<ProtocolAuthoringController, int> _sessionGenerations = {};
   bool _disposed = false, _busy = false, _disposeNotifierPending = false;
   int _notificationDepth = 0;
   List<String> _errors = [];
@@ -41,7 +60,7 @@ class SyntheticCompositionController extends ChangeNotifier {
   List<String> get errors => List.unmodifiable(_errors);
   String get status => !initialized
       ? 'Opening retained R1 source…'
-      : session.isEditing
+      : anyDraft
       ? 'Working session draft — freeze or cancel before joint review/export'
       : busy
       ? 'Checking exact programme and session sources…'
@@ -53,10 +72,17 @@ class SyntheticCompositionController extends ChangeNotifier {
 
   Future<void> _initialize() async {
     final token = ++_operation;
-    session = ProtocolAuthoringController(compiler: compiler);
-    _sessionGeneration = session.generation;
-    session.addListener(_sessionChanged);
-    await session.ready;
+    _session = ProtocolAuthoringController(compiler: compiler);
+    _secondSession = ProtocolAuthoringController(
+      compiler: compiler,
+      lineage: SyntheticStrengthLineage.b,
+    );
+    _sessionGenerations.clear();
+    for (final owner in owners) {
+      _sessionGenerations[owner] = owner.generation;
+      owner.addListener(_sessionChanged);
+    }
+    await Future.wait(owners.map((owner) => owner.ready));
     if (_disposed || token != _operation) return;
     if (!session.initialized) {
       _errors = session.errors;
@@ -90,10 +116,14 @@ class SyntheticCompositionController extends ChangeNotifier {
   }
 
   void _sessionChanged() {
-    if (session.generation != _sessionGeneration) {
-      _sessionGeneration = session.generation;
-      _invalidate();
+    var changed = false;
+    for (final owner in owners) {
+      if (owner.generation != _sessionGenerations[owner]) {
+        _sessionGenerations[owner] = owner.generation;
+        changed = true;
+      }
     }
+    if (changed) _invalidate();
     if (!_disposed) notifyListeners();
   }
 
@@ -136,6 +166,8 @@ class SyntheticCompositionController extends ChangeNotifier {
     if (v.source != s.source ||
         v.sourceDigest != s.sourceDigest ||
         v.semanticJson != s.semanticJson ||
+        !sameRevision(v.identity, s.identity) ||
+        v.profileFingerprint != s.profileFingerprint ||
         !compositionEqual(v.bindings, s.bindings)) {
       throw const FormatException(
         'source_binding: frozen receipt differs from exact recompiled source.',
@@ -149,10 +181,11 @@ class SyntheticCompositionController extends ChangeNotifier {
     notifyListeners();
     if (!_alive(token)) return false;
     try {
+      final owner = ownerFor(candidate.identity);
       if (!initialized ||
-          session.isEditing ||
+          anyDraft ||
           programme.tree == null ||
-          !session.revisions.any((r) => identical(r, candidate))) {
+          !owner.revisions.any((r) => identical(r, candidate))) {
         throw const FormatException(
           'admission: choose a genuine frozen revision from this workspace, after freeze/cancel.',
         );
@@ -183,18 +216,31 @@ class SyntheticCompositionController extends ChangeNotifier {
     }
   }
 
-  Future<bool> select(int week, int day, int slot, int revision) async {
+  // Compatibility for the original A-only API; cross-lineage callers use tuples.
+  Future<bool> select(int week, int day, int slot, int revision) =>
+      selectRevision(
+        week,
+        day,
+        slot,
+        SyntheticStrengthLineage.a.identity(revision),
+      );
+  Future<bool> selectRevision(
+    int week,
+    int day,
+    int slot,
+    SessionRevisionIdentity identity,
+  ) async {
     final token = _begin();
     notifyListeners();
     if (!_alive(token)) return false;
     try {
-      if (!initialized || session.isEditing) {
+      if (!initialized || anyDraft) {
         throw const FormatException(
           'selection: freeze/cancel the working session draft.',
         );
       }
       final choices = admitted
-          .where((s) => s.identity.revisionNumber == revision)
+          .where((s) => sameRevision(s.identity, identity))
           .toList();
       if (choices.length != 1) {
         throw const FormatException(
@@ -236,7 +282,7 @@ class SyntheticCompositionController extends ChangeNotifier {
     notifyListeners();
     if (!_alive(token)) return false;
     try {
-      if (!initialized || session.isEditing) {
+      if (!initialized || anyDraft) {
         throw const FormatException(
           'joint_review: freeze or cancel the working draft first.',
         );
@@ -279,7 +325,7 @@ class SyntheticCompositionController extends ChangeNotifier {
   }
 
   bool isCurrentReceipt(CompositionReviewReceipt r) =>
-      !_disposed && identical(r, _current) && !session.isEditing;
+      !_disposed && identical(r, _current) && !anyDraft;
 
   /// Synchronous consumption gate: an awaited export may be invalidated before
   /// its caller resumes. Compare against the exact currently owned receipt.
@@ -326,14 +372,19 @@ class SyntheticCompositionController extends ChangeNotifier {
   }
 
   void _release() {
-    final oldProgramme = _programme, oldSession = session;
+    final oldProgramme = _programme;
+    final oldOwners = owners;
     oldProgramme?.removeListener(_programmeChanged);
-    oldSession.removeListener(_sessionChanged);
+    for (final owner in oldOwners) {
+      owner.removeListener(_sessionChanged);
+    }
     // Tokens and ownership detach immediately. Child cleanup waits until any
     // programme/session notification callback stack has completely unwound.
     scheduleMicrotask(() {
       oldProgramme?.dispose();
-      oldSession.dispose();
+      for (final owner in oldOwners) {
+        owner.dispose();
+      }
     });
   }
 

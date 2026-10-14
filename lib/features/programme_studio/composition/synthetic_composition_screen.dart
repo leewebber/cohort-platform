@@ -5,6 +5,9 @@ import '../authoring/programme_authoring_screen.dart';
 import '../presentation/programme_studio_app.dart';
 import '../protocol_authoring/protocol_authoring_screen.dart';
 import 'synthetic_composition_controller.dart';
+import 'synthetic_composition_fixtures.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
+import '../protocol_authoring/protocol_authoring_controller.dart';
 import 'synthetic_composition_handoff.dart';
 import 'synthetic_composition_review_bridge.dart';
 
@@ -20,6 +23,11 @@ class _SyntheticCompositionScreenState
     extends State<SyntheticCompositionScreen> {
   late final controller = widget.controller ?? SyntheticCompositionController();
   int tab = 0;
+  SyntheticStrengthLineage _activeLineage = SyntheticStrengthLineage.a;
+  ProtocolAuthoringController get activeOwner =>
+      _activeLineage == SyntheticStrengthLineage.a
+      ? controller.session
+      : controller.secondSession;
   @override
   void dispose() {
     if (widget.controller == null) controller.dispose();
@@ -81,7 +89,12 @@ class _SyntheticCompositionScreenState
                             'Discard transient drafts, additions and selections; restore original R1 and programme seed.',
                           )) {
                             await controller.reset();
-                            if (mounted) setState(() => tab = 0);
+                            if (mounted) {
+                              setState(() {
+                                tab = 0;
+                                _activeLineage = SyntheticStrengthLineage.a;
+                              });
+                            }
                           }
                         },
                         child: const Text('Reset to original seed'),
@@ -132,16 +145,75 @@ class _SyntheticCompositionScreenState
                 : IndexedStack(
                     index: tab,
                     children: [
-                      ProtocolAuthoringScreen(
-                        key: ValueKey(controller.session),
-                        controller: controller.session,
-                        embedded: true,
+                      Column(
+                        children: [
+                          Wrap(
+                            spacing: 12,
+                            children: [
+                              DropdownButton<SyntheticStrengthLineage>(
+                                key: const Key('lineage-picker'),
+                                value: _activeLineage,
+                                items: [
+                                  for (final lineage in [
+                                    SyntheticStrengthLineage.a,
+                                    SyntheticStrengthLineage.b,
+                                  ])
+                                    DropdownMenuItem(
+                                      value: lineage,
+                                      child: Text(lineage.label),
+                                    ),
+                                ],
+                                onChanged: controller.anyDraft
+                                    ? null
+                                    : (lineage) {
+                                        if (lineage != null) {
+                                          setState(
+                                            () => _activeLineage = lineage,
+                                          );
+                                        }
+                                      },
+                              ),
+                              if (controller.secondSession.canCreateRoot)
+                                FilledButton(
+                                  key: const Key('create-lineage-b'),
+                                  onPressed:
+                                      controller.anyDraft || controller.busy
+                                      ? null
+                                      : () {
+                                          controller.createSecondSession();
+                                          setState(
+                                            () => _activeLineage =
+                                                SyntheticStrengthLineage.b,
+                                          );
+                                        },
+                                  child: const Text(
+                                    'Create second synthetic session',
+                                  ),
+                                ),
+                            ],
+                          ),
+                          Expanded(
+                            child: activeOwner.initialized
+                                ? ProtocolAuthoringScreen(
+                                    key: ValueKey(activeOwner),
+                                    controller: activeOwner,
+                                    embedded: true,
+                                  )
+                                : const Center(
+                                    child: Text(
+                                      'Lineage B has no source. Create it and enter its prescription explicitly.',
+                                    ),
+                                  ),
+                          ),
+                        ],
                       ),
                       ProgrammeAuthoringScreen(
                         key: ValueKey(controller.programme),
                         controller: controller.programme,
                         embedded: true,
                         onSelectSlot: _select,
+                        sessionChoiceLabel: (reference) =>
+                            '${reference['session_lineage_id'] == SyntheticStrengthLineage.a.id ? 'Lineage A' : 'Lineage B'} · revision ${reference['revision_number']} · ${reference['title']} · ${reference['session_key']}',
                       ),
                       _catalogue(),
                       _reviews(),
@@ -160,50 +232,49 @@ class _SyntheticCompositionScreenState
       const Text(
         'Admission adds a reference/source, never selects a programme slot. Choose its exact revision in Programme afterwards.',
       ),
-      for (final r in controller.session.revisions)
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'R${r.identity.revisionNumber} · ${r.compiled.protocol.name}',
-                ),
-                SelectableText(
-                  '${r.identity.protocolId}\n${r.identity.sessionLineageId}\nSource SHA-256: ${r.digest}',
-                ),
-                Text(
-                  controller.admitted.any(
-                        (s) =>
-                            s.identity.revisionNumber ==
-                            r.identity.revisionNumber,
-                      )
-                      ? 'Admitted — programme selection is separate'
-                      : 'Frozen — not admitted',
-                  key: Key('admission-status-${r.identity.revisionNumber}'),
-                ),
-                OutlinedButton(
-                  key: Key('admit-${r.identity.revisionNumber}'),
-                  onPressed: controller.busy || controller.session.isEditing
-                      ? null
-                      : () async {
-                          final generation = controller.generation;
-                          if (await _confirm(
-                            'Admit frozen R${r.identity.revisionNumber}?',
-                            '${r.identity.protocolId}\n${r.identity.sessionLineageId}\nExact source: ${r.digest}\nProgramme slots remain unchanged.',
-                          )) {
-                            if (generation == controller.generation) {
-                              await controller.admit(r);
+      for (final owner in controller.owners)
+        for (final r in owner.revisions)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${owner.lineage.label} · R${r.identity.revisionNumber} · ${r.compiled.protocol.name}',
+                  ),
+                  SelectableText(
+                    '${r.identity.protocolId}\n${r.identity.sessionLineageId}\nSource SHA-256: ${r.digest}',
+                  ),
+                  Text(
+                    controller.admitted.any(
+                          (s) => sameRevision(s.identity, r.identity),
+                        )
+                        ? 'Admitted — programme selection is separate'
+                        : 'Frozen — not admitted',
+                    key: Key('admission-status-${revisionKey(r.identity)}'),
+                  ),
+                  OutlinedButton(
+                    key: Key('admit-${revisionKey(r.identity)}'),
+                    onPressed: controller.busy || controller.anyDraft
+                        ? null
+                        : () async {
+                            final generation = controller.generation;
+                            if (await _confirm(
+                              'Admit frozen R${r.identity.revisionNumber}?',
+                              '${r.identity.protocolId}\n${r.identity.sessionLineageId}\nExact source: ${r.digest}\nProgramme slots remain unchanged.',
+                            )) {
+                              if (generation == controller.generation) {
+                                await controller.admit(r);
+                              }
                             }
-                          }
-                        },
-                  child: const Text('Admit frozen revision'),
-                ),
-              ],
+                          },
+                    child: const Text('Admit frozen revision'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
       const SizedBox(height: 16),
       const Text('Current programme references'),
       for (final w in controller.programme.tree?['weeks'] as List? ?? [])
@@ -218,7 +289,7 @@ class _SyntheticCompositionScreenState
 
   Future<void> _select(int week, int day, int slot, String key) async {
     final candidates = controller.admitted
-        .where((s) => 'SYN-D2-STRENGTH-R${s.identity.revisionNumber}' == key)
+        .where((s) => compositionReference(s)['session_key'] == key)
         .toList();
     if (candidates.length != 1) {
       controller.reportFailure('selection: revision is not admitted.');
@@ -235,7 +306,7 @@ class _SyntheticCompositionScreenState
       '$previous → $key\n${next.identity.protocolId}\n${next.identity.sessionLineageId}\nR${next.identity.revisionNumber}\nSource SHA-256: ${next.sourceDigest}\nOther slots and locked contracts stay unchanged.',
     )) {
       if (generation == controller.generation) {
-        await controller.select(week, day, slot, next.identity.revisionNumber);
+        await controller.selectRevision(week, day, slot, next.identity);
       }
     }
   }
@@ -274,7 +345,7 @@ class _SyntheticCompositionScreenState
     ),
     if (reconstructed)
       const Text(
-        'This view does not restore the live catalogue, drafts or revision history.',
+        'Validated source bindings do not prove historical freeze provenance or founder approval. This view does not restore the live catalogue, drafts or revision history.',
       ),
     OutlinedButton(
       key: Key(reconstructed ? 'reconstructed-studio' : 'joint-studio'),
@@ -293,7 +364,9 @@ class _SyntheticCompositionScreenState
     SelectableText('Exact programme YAML digest\n${r.programmeSourceDigest}'),
     for (final s in r.sessions)
       ExpansionTile(
-        title: Text('R${s.identity.revisionNumber} · ${s.protocol.name}'),
+        title: Text(
+          '${SyntheticStrengthLineage.resolve(s.identity).label} · R${s.identity.revisionNumber} · ${s.protocol.name}',
+        ),
         children: [
           SelectableText(
             '${s.identity.protocolId}\n${s.identity.sessionLineageId}\nSource SHA-256: ${s.sourceDigest}\nExercise versions: ${s.bindings}',

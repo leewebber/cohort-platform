@@ -6,6 +6,7 @@ import '../projection/programme_review_source.dart';
 import '../protocol_authoring/synthetic_session_revision_catalogue.dart';
 import '../protocol_authoring/synthetic_strength_review_bridge.dart';
 import '../protocol_authoring/synthetic_strength_session_compiler.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
 import 'synthetic_composition_fixtures.dart';
 
 /// Append-only detached snapshots; draft allocation belongs solely to D2.
@@ -21,17 +22,19 @@ class SyntheticProgrammeRevisionCatalogue {
     Iterable<D2CompiledSession> entries,
   ) {
     _readOnly = true;
-    for (final s in entries) {
+    final ordered = entries.toList()
+      ..sort((a, b) => compareRevisions(a.identity, b.identity));
+    for (final s in ordered) {
       checkAppend(s);
       if (contains(s)) {
         throw const FormatException('sources: duplicate revision identity.');
       }
       _entries.add(s);
     }
-    _entries.sort(
-      (a, b) => a.identity.revisionNumber.compareTo(b.identity.revisionNumber),
-    );
-    if (_entries.where((s) => s.identity.revisionNumber == 1).length != 1) {
+    _entries.sort((a, b) => compareRevisions(a.identity, b.identity));
+    if (!_entries.any(
+      (s) => sameRevision(s.identity, SyntheticStrengthLineage.a.identity(1)),
+    )) {
       throw const FormatException('sources: original R1 is required.');
     }
   }
@@ -48,11 +51,22 @@ class SyntheticProgrammeRevisionCatalogue {
         e.source == s.source &&
         e.sourceDigest == s.sourceDigest &&
         e.semanticJson == s.semanticJson &&
+        e.profileFingerprint == s.profileFingerprint &&
         compositionEqual(e.bindings, s.bindings),
   );
 
   void checkAppend(D2CompiledSession s) {
     verifyCompositionSession(s);
+    if (s.identity.revisionNumber > 1 &&
+        !_entries.any(
+          (e) =>
+              e.identity.sessionLineageId == s.identity.sessionLineageId &&
+              e.identity.revisionNumber == 1,
+        )) {
+      throw const FormatException(
+        "sources: owning lineage root required before descendants.",
+      );
+    }
     for (final e in _entries) {
       final sameNumber =
           e.identity.sessionLineageId == s.identity.sessionLineageId &&
@@ -71,9 +85,7 @@ class SyntheticProgrammeRevisionCatalogue {
     checkAppend(s);
     if (contains(s)) return false;
     _entries.add(s);
-    _entries.sort(
-      (a, b) => a.identity.revisionNumber.compareTo(b.identity.revisionNumber),
-    );
+    _entries.sort((a, b) => compareRevisions(a.identity, b.identity));
     epoch++;
     return true;
   }

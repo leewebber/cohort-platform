@@ -1,3 +1,4 @@
+import 'package:cohort_platform/features/programme_studio/protocol_authoring/synthetic_strength_lineage.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,14 +50,19 @@ Finder field(String id) => find.byWidgetPredicate(
 );
 
 class ConsumptionRaceController extends SyntheticCompositionController {
-  bool queueEdit = false;
+  bool queueEdit = false, queueSecondOwner = false;
   @override
   Future<String?> exportHandoff() async {
     final bytes = await super.exportHandoff();
     if (queueEdit) {
-      scheduleMicrotask(
-        () => programme.editProgramme('name', 'Synthetic consumption edit'),
-      );
+      scheduleMicrotask(() {
+        if (queueSecondOwner) {
+          secondSession.createDraft();
+          secondSession.editExercise(0, 'reps', '10');
+        } else {
+          programme.editProgramme('name', 'Synthetic consumption edit');
+        }
+      });
       await Future<void>.value();
     }
     return bytes;
@@ -64,6 +70,137 @@ class ConsumptionRaceController extends SyntheticCompositionController {
 }
 
 void main() {
+  testWidgets(
+    'B creation reuses empty form; same-title R1 admission and confirmed second-slot selection',
+    (t) async {
+      final c = await mount(t);
+      await tap(t, find.byKey(const Key('create-lineage-b')));
+      expect(c.secondSession.isCreatingRoot, true);
+      expect(
+        (t.widget<TextFormField>(field('exercise-0-sets'))).initialValue,
+        '',
+      );
+      for (final entry in {
+        'session-title': 'Synthetic strength session',
+        'block-title': 'Straight sets',
+        'exercise-0-sets': '3',
+        'exercise-0-reps': '8',
+      }.entries) {
+        await t.ensureVisible(field(entry.key));
+        await t.enterText(field(entry.key), entry.value);
+      }
+      final picker = find.byWidgetPredicate(
+        (w) =>
+            w is DropdownButton<String> &&
+            w.key.toString().contains('exercise-0-picker'),
+      );
+      await tap(t, picker);
+      await tap(t, find.text('EX-9002 · Synthetic fixture B').last);
+      await tap(t, find.text('Confirm'));
+      await tap(t, find.text('Validate and refresh review'));
+      await tap(t, find.text('Freeze local revision'));
+      final b = c.secondSession.revisions.single;
+      expect(c.admitted.length, 1);
+      expect(
+        c.programme.tree!['weeks'][0]['days'][0]['slots'][0]['session_key'],
+        d2SessionKey(1),
+      );
+      await tap(t, find.byKey(const Key('composition-tab-2')));
+      expect(
+        find.byKey(Key('admission-status-${revisionKey(b.identity)}')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          Key('admission-status-${revisionKey(c.session.activeIdentity)}'),
+        ),
+        findsOneWidget,
+      );
+      await tap(t, find.byKey(Key('admit-${revisionKey(b.identity)}')));
+      await tap(t, find.text('Confirm'));
+      expect(c.admitted.length, 2);
+      expect(
+        c.programme.tree!['weeks'][0]['days'][0]['slots'][0]['session_key'],
+        d2SessionKey(1),
+      );
+      await tap(t, find.byKey(const Key('composition-tab-1')));
+      await tap(t, find.byKey(const Key('add-slot')));
+      await t.enterText(find.byKey(const Key('new-slot-key')), 'W1D1S2');
+      await tap(t, find.text('Add slot'));
+      final slotPicker = find.byWidgetPredicate(
+        (w) =>
+            w is DropdownButtonFormField<String> &&
+            w.key.toString().contains('W1D1S2-'),
+      );
+      await tap(t, slotPicker);
+      await tap(
+        t,
+        find.textContaining(SyntheticStrengthLineage.b.sessionKey(1)).last,
+      );
+      expect(
+        find.text('Select exact revision for this required slot?'),
+        findsOneWidget,
+      );
+      await tap(t, find.text('Cancel'));
+      expect(
+        c.programme.tree!['weeks'][0]['days'][0]['slots'][1]['session_key'],
+        d2SessionKey(1),
+      );
+      await tap(t, slotPicker);
+      await tap(
+        t,
+        find.textContaining(SyntheticStrengthLineage.b.sessionKey(1)).last,
+      );
+      await tap(t, find.text('Confirm'));
+      await tap(t, find.byKey(const Key('joint-validate')));
+      expect(c.current!.slotBindings.length, 2);
+      await tap(t, find.byKey(const Key('composition-tab-3')));
+      await tap(t, find.byKey(const Key('joint-studio')));
+      expect(find.text('Current joint Studio'), findsOneWidget);
+      await t.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await t.pumpAndSettle();
+      expect(find.textContaining('8 reps'), findsWidgets);
+      await t.pageBack();
+      await t.pumpAndSettle();
+      expect(t.takeException(), isNull);
+    },
+  );
+  testWidgets(
+    'copy refuses a queued edit in unselected B after export completion',
+    (t) async {
+      final c = ConsumptionRaceController();
+      await mount(t, suppliedController: c);
+      c.createSecondSession();
+      c.secondSession.editSession('title', 'Synthetic strength session');
+      c.secondSession.editBlock('title', 'Straight sets');
+      c.secondSession.replaceExercise(0, 'cohort.exercise.d2_fixture_b');
+      c.secondSession.editExercise(0, 'sets', '3');
+      c.secondSession.editExercise(0, 'reps', '8');
+      expect(await c.secondSession.freeze(), true);
+      expect(await c.admit(c.secondSession.revisions.single), true);
+      expect(await c.validate(), true);
+      await t.pumpAndSettle();
+      await tap(t, find.byKey(const Key('complete-export')));
+      var writes = 0;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+            if (call.method == 'Clipboard.setData') writes++;
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      c.queueEdit = true;
+      c.queueSecondOwner = true;
+      await tap(t, find.byKey(const Key('copy-handoff')));
+      expect(writes, 0);
+      expect(c.current, null);
+      expect(find.text('Export invalidated'), findsOneWidget);
+      expect(t.takeException(), isNull);
+    },
+  );
+
   testWidgets('copy consumes the exact freshly validated handoff', (t) async {
     final c = await mount(t);
     await c.validate();
@@ -139,11 +276,22 @@ void main() {
       expect(c.admitted.length, 1);
       expect(c.programme.tree!['sessions'].length, 1);
       await tap(t, find.byKey(const Key('composition-tab-2')));
-      expect(find.byKey(const Key('admission-status-2')), findsOneWidget);
-      await tap(t, find.byKey(const Key('admit-2')));
+      expect(
+        find.byKey(
+          Key('admission-status-${revisionKey(c.session.activeIdentity)}'),
+        ),
+        findsOneWidget,
+      );
+      await tap(
+        t,
+        find.byKey(Key('admit-${revisionKey(c.session.activeIdentity)}')),
+      );
       await tap(t, find.text('Cancel'));
       expect(c.admitted.length, 1);
-      await tap(t, find.byKey(const Key('admit-2')));
+      await tap(
+        t,
+        find.byKey(Key('admit-${revisionKey(c.session.activeIdentity)}')),
+      );
       await tap(t, find.text('Confirm'));
       expect(c.admitted.length, 2);
       expect(find.text('W1D1S1 → SYN-D2-STRENGTH-R1'), findsOneWidget);

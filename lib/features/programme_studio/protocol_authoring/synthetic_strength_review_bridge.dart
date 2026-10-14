@@ -9,6 +9,7 @@ import '../projection/programme_review_projector.dart';
 import '../projection/programme_review_source.dart';
 import '../projection/sql_values_parser.dart';
 import 'protocol_authoring_fixtures.dart';
+import 'synthetic_strength_lineage.dart';
 import 'synthetic_strength_session_compiler.dart';
 
 class D2ReviewReceipt {
@@ -32,14 +33,24 @@ class SyntheticStrengthReviewBridge {
     Iterable<D2CompiledSession> entries,
   ) {
     final sessions = _entries(selected, entries);
+    final lineage = SyntheticStrengthLineage.resolve(selected.identity);
     final tree = d2PackageTree(
       identity: selected.identity,
       title: selected.protocol.name,
     );
+    final slots =
+        ((tree['weeks'] as List).single['days'] as List).first['slots'] as List;
+    (slots.single as Map)['session_key'] = lineage.sessionKey(
+      selected.identity.revisionNumber,
+    );
+    (tree['comparison_identities'] as List).single['session_lineage_id'] =
+        lineage.id;
     tree['sessions'] = [
       for (final s in sessions)
         {
-          'session_key': d2SessionKey(s.identity.revisionNumber),
+          'session_key': SyntheticStrengthLineage.resolve(
+            s.identity,
+          ).sessionKey(s.identity.revisionNumber),
           'protocol_id': s.identity.protocolId,
           'session_lineage_id': s.identity.sessionLineageId,
           'revision_number': s.identity.revisionNumber,
@@ -109,9 +120,9 @@ class SyntheticStrengthReviewBridge {
     D2CompiledSession selected,
     Iterable<D2CompiledSession> entries,
   ) {
-    final byNumber = <int, D2CompiledSession>{};
+    final byNumber = <String, D2CompiledSession>{};
     for (final s in [...entries, selected]) {
-      final previous = byNumber[s.identity.revisionNumber];
+      final previous = byNumber[revisionKey(s.identity)];
       if (previous != null &&
           (previous.sourceDigest != s.sourceDigest ||
               previous.identity.protocolId != s.identity.protocolId)) {
@@ -119,13 +130,10 @@ class SyntheticStrengthReviewBridge {
           'revision_collision: conflicting source for revision.',
         );
       }
-      byNumber[s.identity.revisionNumber] = s;
+      byNumber[revisionKey(s.identity)] = s;
     }
     final result = byNumber.values.toList()
-      ..sort(
-        (a, b) =>
-            a.identity.revisionNumber.compareTo(b.identity.revisionNumber),
-      );
+      ..sort((a, b) => compareRevisions(a.identity, b.identity));
     return result;
   }
 

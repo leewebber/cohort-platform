@@ -13,6 +13,7 @@ import 'package:founder_importer/models/programme_lineage.dart';
 import 'package:founder_importer/models/programme_version.dart';
 
 import 'synthetic_fixture_identity_adapter.dart';
+import 'synthetic_strength_lineage.dart';
 import '../../../domain/exercise_knowledge/in_memory/in_memory_transitional_exercise_id_bridge.dart';
 import '../../../domain/exercise_knowledge/models/exercise_definition.dart';
 import '../../../domain/exercise_knowledge/models/exercise_identity_mapping.dart';
@@ -29,7 +30,6 @@ import '../../session_builder/services/protocol_draft_block_resolver.dart';
 import '../../session_builder/services/session_block_validation.dart';
 import '../../session_builder/services/session_execution_plan_builder.dart';
 import '../../session_revision/models/session_revision_usage_models.dart';
-import '../../session_revision/services/session_revision_clone.dart';
 import 'founder_strength_source_guard.dart';
 import 'protocol_authoring_fixtures.dart';
 
@@ -45,6 +45,7 @@ class D2CompiledSession {
     required this.protocol,
     required Map<String, String> bindings,
     required this.semanticJson,
+    required this.profileFingerprint,
   }) : bindings = Map.unmodifiable(bindings),
        sourceDigest = d2SourceDigest(source);
   final String source;
@@ -53,6 +54,7 @@ class D2CompiledSession {
   final ProtocolDraft protocol;
   final Map<String, String> bindings;
   final String semanticJson;
+  final String profileFingerprint;
   SessionExecutionPlan get execution =>
       const SessionExecutionPlanBuilder().build(
         sessionId: identity.protocolId,
@@ -69,6 +71,7 @@ class SyntheticStrengthSessionCompiler {
     List<ExerciseDefinition>? definitions,
     List<ExerciseIdentityMapping>? mappings,
     D2ReadOnlyVersionStore? store,
+    this.allowSecondLineage = false,
   }) : _definitions = List.unmodifiable(
          (definitions ?? d2ExerciseDefinitions()).map(
            (d) => ExerciseDefinition.fromJson(
@@ -85,27 +88,23 @@ class SyntheticStrengthSessionCompiler {
   final List<ExerciseDefinition> _definitions;
   final List<ExerciseIdentityMapping> _mappings;
   final D2ReadOnlyVersionStore store;
+  final bool allowSecondLineage;
+  String get profileFingerprint => fixtureSnapshotFingerprint(
+    _definitions.map((d) => d.toJson()),
+    _mappings.map((m) => m.toJson()),
+  );
 
   Future<D2CompiledSession> compileExact(
     String source,
     SessionRevisionIdentity identity,
   ) async {
-    final expectedId = identity.revisionNumber == 1
-        ? d2RootProtocolId
-        : SessionRevisionClone.revisionProtocolIdForNumber(
-            sourceProtocolId: d2RootProtocolId,
-            revisionNumber: identity.revisionNumber,
-          );
-    if (identity.revisionNumber < 1 ||
-        identity.protocolId != expectedId ||
-        identity.sessionLineageId != d2LineageId) {
-      throw const FormatException(
-        'revision_identity: unknown synthetic revision tuple.',
-      );
-    }
+    final lineage = SyntheticStrengthLineage.resolve(
+      identity,
+      allowSecond: allowSecondLineage,
+    );
     const FounderStrengthSourceGuard().read(
       source,
-      importKey: d2ImportKey(identity.revisionNumber),
+      importKey: lineage.importKey(identity.revisionNumber),
     );
     final document = const FounderProgrammeYamlParser().parse(source);
     if (_mappings.map((m) => m.id).toSet().length != _mappings.length) {
@@ -248,6 +247,7 @@ class SyntheticStrengthSessionCompiler {
       protocol: protocol,
       bindings: bindings,
       semanticJson: jsonEncode(meaning),
+      profileFingerprint: profileFingerprint,
     );
     if (result.execution.blocks.single.linkedExercises.length != links.length) {
       throw const FormatException(

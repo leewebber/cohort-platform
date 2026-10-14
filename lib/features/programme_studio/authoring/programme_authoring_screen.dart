@@ -12,8 +12,10 @@ class ProgrammeAuthoringScreen extends StatefulWidget {
     this.controller,
     this.embedded = false,
     this.onSelectSlot,
+    this.sessionChoiceLabel,
   });
   final bool embedded;
+  final String Function(Map<String, dynamic> reference)? sessionChoiceLabel;
   final Future<void> Function(int week, int day, int slot, String sessionKey)?
   onSelectSlot;
   final ProgrammeAuthoringController? controller;
@@ -425,7 +427,10 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                 DropdownMenuItem(
                   value: session['session_key'] as String,
                   child: Text(
-                    '${session['title']} · revision ${session['revision_number']}',
+                    widget.sessionChoiceLabel?.call(
+                          Map<String, dynamic>.from(session),
+                        ) ??
+                        '${session['title']} · revision ${session['revision_number']}',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -727,6 +732,7 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                 ),
               ),
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 initialValue: session,
                 decoration: const InputDecoration(
                   labelText: 'Fixture revision',
@@ -737,7 +743,11 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                       DropdownMenuItem(
                         value: entry['session_key'] as String,
                         child: Text(
-                          '${entry['title']} · revision ${entry['revision_number']}',
+                          widget.sessionChoiceLabel?.call(
+                                Map<String, dynamic>.from(entry),
+                              ) ??
+                              '${entry['title']} · revision ${entry['revision_number']}',
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                   if (!widget.embedded)

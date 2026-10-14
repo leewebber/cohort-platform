@@ -1,3 +1,4 @@
+import 'package:cohort_platform/features/programme_studio/protocol_authoring/synthetic_strength_lineage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cohort_platform/app/theme.dart';
@@ -70,7 +71,9 @@ void main() {
       expect(c.current, isNotNull);
       await tap(tester, 'Create local draft revision');
       expect(c.current, isNull);
-      final title = find.byKey(const ValueKey('1-session-title'));
+      final title = find.byKey(
+        ValueKey('${revisionKey(c.activeIdentity)}-1-session-title'),
+      );
       await tester.ensureVisible(title);
       await tester.enterText(title, '');
       await tap(tester, 'Validate and refresh review');
@@ -168,7 +171,9 @@ void main() {
       final c = await mount(tester, size: const Size(390, 844), scale: 2);
       await tap(tester, 'Create local draft revision');
       expect(tester.takeException(), isNull);
-      final title = find.byKey(const ValueKey('1-session-title'));
+      final title = find.byKey(
+        ValueKey('${revisionKey(c.activeIdentity)}-1-session-title'),
+      );
       await tester.ensureVisible(title);
       await tester.enterText(title, '');
       await tap(tester, 'Validate and refresh review');

@@ -8,6 +8,7 @@ import '../domain/programme_review_models.dart';
 import '../projection/programme_review_projector.dart';
 import '../projection/programme_review_source.dart';
 import '../protocol_authoring/synthetic_strength_session_compiler.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
 import 'synthetic_composition_fixtures.dart';
 import 'synthetic_programme_revision_catalogue.dart';
 
@@ -50,7 +51,11 @@ CompositionReviewReceipt reviewComposition(
       'programme: ${package.issues.map((i) => '${i.path}: ${i.message}').join('\n')}',
     );
   }
-  final r1 = sessions.where((s) => s.identity.revisionNumber == 1).toList();
+  final r1 = sessions
+      .where(
+        (s) => sameRevision(s.identity, SyntheticStrengthLineage.a.identity(1)),
+      )
+      .toList();
   if (r1.length != 1) {
     throw const FormatException('sources: original R1 is required.');
   }

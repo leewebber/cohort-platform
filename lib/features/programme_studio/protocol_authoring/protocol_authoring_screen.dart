@@ -5,6 +5,8 @@ import '../../../models/strength_prescription_formatter.dart';
 import '../presentation/programme_studio_app.dart';
 import 'founder_strength_source_guard.dart';
 import 'protocol_authoring_controller.dart';
+import 'synthetic_strength_lineage.dart';
+import '../../session_revision/models/session_revision_usage_models.dart';
 
 class ProtocolAuthoringScreen extends StatefulWidget {
   const ProtocolAuthoringScreen({
@@ -22,7 +24,7 @@ class ProtocolAuthoringScreen extends StatefulWidget {
 class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
   late final controller = widget.controller ?? ProtocolAuthoringController();
   int _epoch = 0;
-  int _pick = 1;
+  SessionRevisionIdentity? _pick;
   @override
   void dispose() {
     if (widget.controller == null) controller.dispose();
@@ -68,7 +70,7 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'D2 · local synthetic · unpublished · transient',
+          '${controller.lineage.label} · local synthetic · unpublished · transient',
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
@@ -94,13 +96,13 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
             if (!controller.isEditing)
               SizedBox(
                 width: 180,
-                child: DropdownButton<int>(
+                child: DropdownButton<String>(
                   isExpanded: true,
-                  value: controller.openedRevision,
+                  value: revisionKey(controller.activeIdentity),
                   items: [
                     for (final r in controller.revisions)
                       DropdownMenuItem(
-                        value: r.identity.revisionNumber,
+                        value: revisionKey(r.identity),
                         child: Text(
                           'Open frozen R${r.identity.revisionNumber}',
                         ),
@@ -108,7 +110,15 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
                   ],
                   onChanged: (value) {
                     if (value != null) {
-                      _refresh(() => controller.openRevision(value));
+                      _refresh(
+                        () => controller.openIdentity(
+                          controller.revisions
+                              .singleWhere(
+                                (r) => revisionKey(r.identity) == value,
+                              )
+                              .identity,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -121,7 +131,11 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
             if (controller.isEditing)
               OutlinedButton(
                 onPressed: () => _refresh(controller.resetDraft),
-                child: const Text('Reset to source revision'),
+                child: Text(
+                  controller.isCreatingRoot
+                      ? 'Clear new source fields'
+                      : 'Reset to source revision',
+                ),
               ),
             if (controller.isEditing)
               OutlinedButton(
@@ -214,21 +228,25 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
               const Text('Programme revision selection:'),
               SizedBox(
                 width: 170,
-                child: DropdownButton<int>(
+                child: DropdownButton<String>(
                   key: const Key('programme-revision-picker'),
                   isExpanded: true,
-                  value: _pick,
+                  value: revisionKey(_pick ?? controller.activeIdentity),
                   items: [
                     for (final r in controller.revisions)
                       DropdownMenuItem(
-                        value: r.identity.revisionNumber,
+                        value: revisionKey(r.identity),
                         child: Text('Frozen R${r.identity.revisionNumber}'),
                       ),
                   ],
                   onChanged: (value) {
                     if (value != null) {
                       setState(() {
-                        _pick = value;
+                        _pick = controller.revisions
+                            .singleWhere(
+                              (r) => revisionKey(r.identity) == value,
+                            )
+                            .identity;
                       });
                     }
                   },
@@ -419,7 +437,7 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
   }) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 8),
     child: TextFormField(
-      key: ValueKey('$_epoch-$id'),
+      key: ValueKey('${revisionKey(controller.activeIdentity)}-$_epoch-$id'),
       initialValue: value?.toString() ?? '',
       decoration: InputDecoration(
         labelText: label,
@@ -445,7 +463,9 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             DropdownButton<String>(
-              key: ValueKey('exercise-$i-picker'),
+              key: ValueKey(
+                '${revisionKey(controller.activeIdentity)}-exercise-$i-picker',
+              ),
               isExpanded: true,
               value:
                   {
@@ -515,7 +535,9 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
             ),
             const Text('Load'),
             DropdownButton<String>(
-              key: ValueKey('exercise-$i-load-mode'),
+              key: ValueKey(
+                '${revisionKey(controller.activeIdentity)}-exercise-$i-load-mode',
+              ),
               isExpanded: true,
               value: mode,
               items: const [
@@ -609,12 +631,14 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     if (await controller.freeze() && mounted) {
       setState(() {
         _epoch++;
-        _pick = controller.openedRevision;
+        _pick = controller.activeIdentity;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            'R${controller.openedRevision} frozen. Programme remains R${controller.selectedRevision}.',
+            widget.embedded
+                ? '${controller.lineage.label} R${controller.openedRevision} frozen; admission and selection remain separate.'
+                : 'R${controller.openedRevision} frozen. Programme remains R${controller.selectedRevision}.',
           ),
         ),
       );
@@ -623,10 +647,12 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
 
   Future<void> _select() async {
     if (await _confirm(
-      'Select R$_pick for the synthetic programme?',
-      'Change the exact reference explicitly. Earlier frozen revisions remain unchanged.',
+      'Select exact revision for the synthetic programme?',
+      '${revisionKey(_pick ?? controller.activeIdentity)}\nChange the exact reference explicitly. Earlier frozen revisions remain unchanged.',
     )) {
-      await controller.selectProgrammeRevision(_pick);
+      await controller.selectProgrammeIdentity(
+        _pick ?? controller.activeIdentity,
+      );
       if (mounted) {
         setState(() {
           _epoch++;

@@ -7,16 +7,29 @@ import '../../session_revision/models/session_revision_usage_models.dart';
 import 'founder_strength_source_guard.dart';
 import 'founder_strength_yaml_writer.dart';
 import 'protocol_authoring_fixtures.dart';
+import 'synthetic_strength_lineage.dart';
 import 'synthetic_session_revision_catalogue.dart';
 import 'synthetic_strength_review_bridge.dart';
 import 'synthetic_strength_session_compiler.dart';
 
 class ProtocolAuthoringController extends ChangeNotifier {
-  ProtocolAuthoringController({SyntheticStrengthSessionCompiler? compiler})
-    : compiler = compiler ?? SyntheticStrengthSessionCompiler() {
+  ProtocolAuthoringController({
+    SyntheticStrengthSessionCompiler? compiler,
+    this.lineage = SyntheticStrengthLineage.a,
+  }) : compiler =
+           compiler ??
+           SyntheticStrengthSessionCompiler(
+             allowSecondLineage: lineage == SyntheticStrengthLineage.b,
+           ) {
     ready = _initialize();
   }
   final SyntheticStrengthSessionCompiler compiler;
+  final SyntheticStrengthLineage lineage;
+  bool _rootDraft = false;
+  bool get isCreatingRoot => _rootDraft;
+  bool get hasFrozenRoot => _catalogue?.revisions.isNotEmpty ?? false;
+  bool get canCreateRoot =>
+      lineage == SyntheticStrengthLineage.b && !hasFrozenRoot && !isEditing;
   static const guard = FounderStrengthSourceGuard();
   static const writer = FounderStrengthYamlWriter();
   static const bridge = SyntheticStrengthReviewBridge();
@@ -32,6 +45,10 @@ class ProtocolAuthoringController extends ChangeNotifier {
   bool _disposed = false, _busy = false;
   List<String> _errors = [];
   Future<void> _initialize() async {
+    if (lineage == SyntheticStrengthLineage.b) {
+      _catalogue = SyntheticSessionRevisionCatalogue.emptyRoot();
+      return;
+    }
     try {
       final initial = await compiler.compileExact(
         d2R1Source(),
@@ -49,7 +66,7 @@ class ProtocolAuthoringController extends ChangeNotifier {
     if (!_disposed) notifyListeners();
   }
 
-  bool get initialized => _catalogue != null;
+  bool get initialized => _catalogue != null && (hasFrozenRoot || _rootDraft);
   bool get isEditing => _draftIdentity != null;
   bool get busy => _busy;
   int get selectedRevision => _selected;
@@ -62,8 +79,9 @@ class ProtocolAuthoringController extends ChangeNotifier {
       ? null
       : jsonDecode(jsonEncode(_tree)) as Map<String, dynamic>;
   List<String> get errors => List.unmodifiable(_errors);
-  String get originalSource =>
-      _catalogue?.at(isEditing ? _parent : _opened).source ?? '';
+  String get originalSource => _rootDraft || !hasFrozenRoot
+      ? ''
+      : _catalogue!.at(isEditing ? _parent : _opened).source;
   String get source =>
       _rejectedSource ??
       (_tree == null ? originalSource : writer.write(_tree!));
@@ -71,8 +89,9 @@ class ProtocolAuthoringController extends ChangeNotifier {
       _reviewGeneration == _generation ? _current : null;
   bool get semanticChange =>
       current != null &&
-      current!.session.semanticJson !=
-          _catalogue!.at(_parent).compiled.semanticJson;
+      (_rootDraft ||
+          current!.session.semanticJson !=
+              _catalogue!.at(_parent).compiled.semanticJson);
   String get status => busy
       ? 'Validating exact source…'
       : current != null
@@ -80,8 +99,11 @@ class ProtocolAuthoringController extends ChangeNotifier {
       : errors.isNotEmpty
       ? 'Invalid draft — current review and export unavailable'
       : 'Validate source to refresh review and export';
-  Iterable<D2CompiledSession> get _programmeSessions =>
-      _programmeEntries.map((n) => _catalogue!.at(n).compiled);
+  Iterable<D2CompiledSession> get _programmeSessions => _programmeEntries
+      .where(
+        (n) => _catalogue!.revisions.any((r) => r.identity.revisionNumber == n),
+      )
+      .map((n) => _catalogue!.at(n).compiled);
   String get selectedProgrammeSource => bridge.packageSource(
     _catalogue!.at(_selected).compiled,
     _programmeSessions,
@@ -123,6 +145,24 @@ class ProtocolAuthoringController extends ChangeNotifier {
     }
   }
 
+  void createRootDraft() {
+    if (_disposed || !canCreateRoot) return;
+    _invalidate();
+    _rootDraft = true;
+    _draftIdentity = lineage.identity(1);
+    _tree = lineage.emptyRootTree();
+    _rejectedSource = null;
+    notifyListeners();
+  }
+
+  void openIdentity(SessionRevisionIdentity identity) {
+    if (!sameRevision(identity, lineage.identity(identity.revisionNumber))) {
+      _fail('revision_identity: foreign owner.');
+      return;
+    }
+    openRevision(identity.revisionNumber);
+  }
+
   void createDraft() {
     if (!initialized || isEditing) return;
     _invalidate();
@@ -133,11 +173,16 @@ class ProtocolAuthoringController extends ChangeNotifier {
   }
 
   void _resetTree() {
+    if (_rootDraft) {
+      _tree = lineage.emptyRootTree();
+      _rejectedSource = null;
+      return;
+    }
     final baseline = guard.canonicalTree(
       _catalogue!.at(_parent).source,
-      importKey: d2ImportKey(_parent),
+      importKey: lineage.importKey(_parent),
     );
-    (baseline['programme'] as Map)['import_key'] = d2ImportKey(
+    (baseline['programme'] as Map)['import_key'] = lineage.importKey(
       _draftIdentity!.revisionNumber,
     );
     _tree = baseline;
@@ -153,7 +198,8 @@ class ProtocolAuthoringController extends ChangeNotifier {
 
   void cancelDraft() {
     if (!isEditing) return;
-    _catalogue!.abandon(_draftIdentity!);
+    if (!_rootDraft) _catalogue!.abandon(_draftIdentity!);
+    _rootDraft = false;
     _invalidate();
     _draftIdentity = null;
     _tree = null;
@@ -174,13 +220,13 @@ class ProtocolAuthoringController extends ChangeNotifier {
     try {
       final next = guard.canonicalTree(
         bytes,
-        importKey: d2ImportKey(_draftIdentity!.revisionNumber),
+        importKey: lineage.importKey(_draftIdentity!.revisionNumber),
       );
       final baseline = guard.canonicalTree(
-        _catalogue!.at(_parent).source,
-        importKey: d2ImportKey(_parent),
+        _rootDraft ? d2R1Source() : _catalogue!.at(_parent).source,
+        importKey: _rootDraft ? d2ImportKey(1) : lineage.importKey(_parent),
       );
-      (baseline['programme'] as Map)['import_key'] = d2ImportKey(
+      (baseline['programme'] as Map)['import_key'] = lineage.importKey(
         _draftIdentity!.revisionNumber,
       );
       // All wrapper fields remain locked; only the complete session may differ.
@@ -356,7 +402,7 @@ class ProtocolAuthoringController extends ChangeNotifier {
           ? writer.write(
               guard.canonicalTree(
                 original,
-                importKey: d2ImportKey(identity.revisionNumber),
+                importKey: lineage.importKey(identity.revisionNumber),
               ),
             )
           : original;
@@ -370,7 +416,7 @@ class ProtocolAuthoringController extends ChangeNotifier {
       if (isEditing) {
         _tree = guard.canonicalTree(
           bytes,
-          importKey: d2ImportKey(identity.revisionNumber),
+          importKey: lineage.importKey(identity.revisionNumber),
         );
       }
       notifyListeners();
@@ -401,6 +447,7 @@ class ProtocolAuthoringController extends ChangeNotifier {
 
   Future<bool> freeze() async {
     if (!isEditing) return false;
+    final rootDraft = _rootDraft;
     final token = _generation + 1;
     if (!await validate() || _disposed || token != _generation || !isEditing) {
       return false;
@@ -408,27 +455,44 @@ class ProtocolAuthoringController extends ChangeNotifier {
     final candidate = current?.session;
     if (candidate == null) return false;
     try {
-      final frozen = await _catalogue!.freeze(
-        candidate,
-        compiler,
-        isCurrent: () =>
-            !_disposed &&
-            token == _generation &&
-            _draftIdentity == candidate.identity,
-      );
+      final catalogue = _catalogue!;
+      bool isCurrent() =>
+          !_disposed &&
+          token == _generation &&
+          identical(catalogue, _catalogue) &&
+          _rootDraft == rootDraft &&
+          sameRevision(_draftIdentity!, candidate.identity);
+      final frozen = rootDraft
+          ? await catalogue.freezeRoot(
+              candidate,
+              compiler,
+              isCurrent: isCurrent,
+            )
+          : await catalogue.freeze(candidate, compiler, isCurrent: isCurrent);
       if (_disposed || token != _generation) return false;
       _invalidate();
       _opened = frozen.identity.revisionNumber;
       _parent = _opened;
+      _rootDraft = false;
       _draftIdentity = null;
       _tree = null;
       _rejectedSource = null;
+      final completedGeneration = _generation;
       notifyListeners();
-      return true;
+      await Future<void>.value();
+      return !_disposed && completedGeneration == _generation;
     } catch (error) {
       if (token == _generation && !_disposed) _fail(error);
       return false;
     }
+  }
+
+  Future<bool> selectProgrammeIdentity(SessionRevisionIdentity identity) {
+    if (!sameRevision(identity, lineage.identity(identity.revisionNumber))) {
+      _fail('revision_identity: foreign selection.');
+      return Future.value(false);
+    }
+    return selectProgrammeRevision(identity.revisionNumber);
   }
 
   Future<bool> selectProgrammeRevision(int number) async {

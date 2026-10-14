@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import '../../session_revision/models/session_revision_usage_models.dart';
-import '../protocol_authoring/protocol_authoring_fixtures.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
 import '../protocol_authoring/synthetic_strength_session_compiler.dart';
 import 'synthetic_composition_fixtures.dart';
 import 'synthetic_composition_review_bridge.dart';
@@ -12,12 +12,12 @@ class SyntheticCompositionHandoff {
   String write(CompositionReviewReceipt r) =>
       '${const JsonEncoder.withIndent('  ').convert(compositionSorted({
         'kind': 'synthetic_programme_review_handoff',
-        'version': 1,
+        'version': r.sessions.any((s) => s.identity.sessionLineageId == SyntheticStrengthLineage.b.id) ? 2 : 1,
         'programme_yaml': r.programmeSource,
         'package_hash': r.packageHash,
         'fixture_profile': compositionProfile(),
         'sessions': [
-          for (final s in (r.sessions.toList()..sort((a, b) => a.identity.revisionNumber.compareTo(b.identity.revisionNumber)))) {'session_key': d2SessionKey(s.identity.revisionNumber), 'identity': compositionTuple(s.identity), 'founder_yaml': s.source, 'source_digest': s.sourceDigest, 'exercise_bindings': s.bindings},
+          for (final s in (r.sessions.toList()..sort((a, b) => compareRevisions(a.identity, b.identity)))) {'session_key': SyntheticStrengthLineage.resolve(s.identity).sessionKey(s.identity.revisionNumber), 'identity': compositionTuple(s.identity), 'founder_yaml': s.source, 'source_digest': s.sourceDigest, 'exercise_bindings': s.bindings},
         ],
         'slot_bindings': r.slotBindings,
       }))}\n';
@@ -45,7 +45,7 @@ class SyntheticCompositionHandoff {
       'slot_bindings',
     }, 'handoff');
     if (root['kind'] != 'synthetic_programme_review_handoff' ||
-        root['version'] != 1 ||
+        !{1, 2}.contains(root['version']) ||
         root['version'] is! int) {
       throw const FormatException(
         'handoff: unsupported transport kind/version.',
@@ -66,7 +66,7 @@ class SyntheticCompositionHandoff {
     final sessions = <D2CompiledSession>[],
         keys = <String>{},
         protocols = <String>{},
-        numbers = <int>{};
+        identities = <String>{};
     for (var n = 0; n < rows.length; n++) {
       final path = 'sessions[$n]';
       final row = _object(rows[n], {
@@ -82,7 +82,7 @@ class SyntheticCompositionHandoff {
         'revision_number',
       }, '$path.identity');
       final number = tuple['revision_number'];
-      if (number is! int || number < 1 || !numbers.add(number)) {
+      if (number is! int || number < 1) {
         throw FormatException('$path.identity: invalid/duplicate revision.');
       }
       final identity = SessionRevisionIdentity(
@@ -93,8 +93,15 @@ class SyntheticCompositionHandoff {
         ),
         revisionNumber: number,
       );
+      final lineage = SyntheticStrengthLineage.resolve(
+        identity,
+        allowSecond: root['version'] == 2,
+      );
+      if (!identities.add(revisionKey(identity))) {
+        throw FormatException('$path.identity: duplicate revision tuple.');
+      }
       final key = _string(row['session_key'], '$path.session_key');
-      if (key != d2SessionKey(number) ||
+      if (key != lineage.sessionKey(number) ||
           !keys.add(key) ||
           !protocols.add(identity.protocolId)) {
         throw FormatException(
@@ -116,9 +123,13 @@ class SyntheticCompositionHandoff {
       }
       sessions.add(compiled);
     }
-    sessions.sort(
-      (a, b) => a.identity.revisionNumber.compareTo(b.identity.revisionNumber),
-    );
+    if (root['version'] == 2 &&
+        !sessions.any(
+          (s) => s.identity.sessionLineageId == SyntheticStrengthLineage.b.id,
+        )) {
+      throw const FormatException('handoff: transport v2 requires lineage B.');
+    }
+    sessions.sort((a, b) => compareRevisions(a.identity, b.identity));
     final receipt = reviewComposition(yaml, sessions);
     if (root['package_hash'] != receipt.packageHash ||
         !compositionEqual(root['slot_bindings'], receipt.slotBindings)) {

@@ -4,6 +4,7 @@ import '../authoring/plan_package_v1_yaml_writer.dart';
 import '../protocol_authoring/founder_strength_source_guard.dart';
 import '../protocol_authoring/founder_strength_yaml_writer.dart';
 import '../protocol_authoring/protocol_authoring_fixtures.dart';
+import '../protocol_authoring/synthetic_strength_lineage.dart';
 import '../protocol_authoring/synthetic_strength_session_compiler.dart';
 import '../../session_revision/models/session_revision_usage_models.dart';
 
@@ -48,17 +49,27 @@ Map<String, Object> compositionTuple(SessionRevisionIdentity i) => {
   'revision_number': i.revisionNumber,
 };
 Map<String, dynamic> compositionReference(D2CompiledSession s) => {
-  'session_key': d2SessionKey(s.identity.revisionNumber),
+  'session_key': SyntheticStrengthLineage.resolve(
+    s.identity,
+  ).sessionKey(s.identity.revisionNumber),
   ...compositionTuple(s.identity),
   'title': s.protocol.name,
 };
 
 /// Pure compiler accepts a wider wrapper than D2 authoring. Match its intake too.
 void verifyCompositionSession(D2CompiledSession s) {
+  final lineage = SyntheticStrengthLineage.resolve(s.identity);
+  if (s.profileFingerprint != fixedFixtureFingerprint()) {
+    throw const FormatException(
+      "fixture_profile: actual compiler snapshot differs from fixed profile.",
+    );
+  }
   if (d2SourceDigest(s.source) != s.sourceDigest) {
     throw const FormatException('source_binding: source digest differs.');
   }
-  if (s.identity.revisionNumber == 1 && s.source != d2R1Source()) {
+  if (lineage == SyntheticStrengthLineage.a &&
+      s.identity.revisionNumber == 1 &&
+      s.source != d2R1Source()) {
     throw const FormatException(
       'source_binding: original R1 bytes are required.',
     );
@@ -78,10 +89,10 @@ void verifyCompositionSession(D2CompiledSession s) {
   const guard = FounderStrengthSourceGuard();
   final tree = guard.canonicalTree(
     s.source,
-    importKey: d2ImportKey(s.identity.revisionNumber),
+    importKey: lineage.importKey(s.identity.revisionNumber),
   );
   final original = guard.canonicalTree(d2R1Source(), importKey: d2ImportKey(1));
-  (original['programme'] as Map)['import_key'] = d2ImportKey(
+  (original['programme'] as Map)['import_key'] = lineage.importKey(
     s.identity.revisionNumber,
   );
   FounderStrengthSourceGuard.session(tree).clear();
