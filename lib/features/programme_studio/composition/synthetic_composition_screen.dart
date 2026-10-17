@@ -1,3 +1,4 @@
+import 'workspace/workspace_files.dart';
 import 'source_export/canonical_source_bundle.dart';
 import 'source_export/source_bundle_download.dart';
 import 'programme_first_screen.dart';
@@ -20,8 +21,12 @@ class SyntheticCompositionScreen extends StatefulWidget {
     this.controller,
     this.technicalInspection = false,
     this.downloadSources = downloadSourceBundle,
+    this.downloadWorkspace = downloadEditableWorkspace,
+    this.chooseWorkspace = chooseEditableWorkspace,
   });
   final bool technicalInspection;
+  final void Function(String) downloadWorkspace;
+  final Future<String?> Function() chooseWorkspace;
   final void Function(CanonicalSourceBundle) downloadSources;
   final SyntheticCompositionController? controller;
   @override
@@ -52,6 +57,8 @@ class _SyntheticCompositionScreenState
           builder: (context, _) => ProgrammeFirstScreen(
             controller: controller,
             downloadSources: widget.downloadSources,
+            downloadWorkspace: widget.downloadWorkspace,
+            chooseWorkspace: widget.chooseWorkspace,
             advanced: () => SyntheticCompositionScreen(
               controller: controller,
               technicalInspection: true,

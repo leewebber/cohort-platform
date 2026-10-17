@@ -1,3 +1,4 @@
+import '../workspace_json.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -37,6 +38,29 @@ class PreparedVersionUse {
   List<D2CompiledSession> get includedVersions => _append.entries;
 }
 
+/// Detached reconstructed candidate; no live objects are exposed or merged.
+class PreparedEditableWorkspace {
+  PreparedEditableWorkspace._(
+    this._owner,
+    this._generation,
+    this._transfer,
+    this._candidate,
+  );
+  final SyntheticCompositionController _owner;
+  final int _generation, _transfer;
+  SyntheticCompositionController? _candidate;
+  int get savedVersions =>
+      _candidate!.owners.fold(0, (n, o) => n + o.revisions.length);
+  int get privateVersions => savedVersions - _candidate!.admitted.length;
+  int get drafts => _candidate!.owners.where((o) => o.isEditing).length;
+  String get programmeName =>
+      _candidate!.programme.tree!['programme']['name'] as String? ?? '';
+  void dispose() {
+    _candidate?.dispose();
+    _candidate = null;
+  }
+}
+
 /// Owns both transient source lanes; no store, import/apply or athlete services.
 class SyntheticCompositionController extends ChangeNotifier {
   SyntheticCompositionController({SyntheticStrengthSessionCompiler? compiler})
@@ -44,6 +68,9 @@ class SyntheticCompositionController extends ChangeNotifier {
           compiler ??
           SyntheticStrengthSessionCompiler(allowSecondLineage: true) {
     ready = _initialize();
+  }
+  SyntheticCompositionController._workspace(this.compiler) {
+    ready = Future.value();
   }
   final SyntheticStrengthSessionCompiler compiler;
   late Future<void> ready;
@@ -68,6 +95,9 @@ class SyntheticCompositionController extends ChangeNotifier {
   int _operation = 0, _programmeRevision = 0;
   final Map<ProtocolAuthoringController, int> _sessionGenerations = {};
   bool _disposed = false, _busy = false, _disposeNotifierPending = false;
+  bool _ownsChildren = true;
+  int _workspaceTransfer = 0;
+  String? _savedWorkspaceText;
   int _notificationDepth = 0;
   List<String> _errors = [];
   String? rejectedHandoff;
@@ -478,12 +508,192 @@ class SyntheticCompositionController extends ChangeNotifier {
   String? reconstructedExport() =>
       _reconstructed == null ? null : handoff.write(_reconstructed!);
 
+  Map<String, dynamic> get _workspaceState => {
+    'kind': 'cohort_editable_workspace',
+    'version': 1,
+    'fixture_profile': compositionProfile(),
+    'owners': [for (final owner in owners) owner.workspaceState],
+    'admitted': [for (final s in admitted) compositionTuple(s.identity)],
+    'programme_source': programme.draftSource,
+  };
+  String get workspaceContents => encodeWorkspaceJson(_workspaceState);
+  bool get workspaceSaveRequested => _savedWorkspaceText != null;
+  bool get workspaceHasChanges =>
+      !initialized || _savedWorkspaceText != workspaceContents;
+
+  static Future<SyntheticCompositionController> restoreEditableWorkspace(
+    String text, {
+    SyntheticStrengthSessionCompiler? compiler,
+  }) async {
+    final root = workspaceObject(readWorkspaceJson(text), {
+      'kind',
+      'version',
+      'fixture_profile',
+      'owners',
+      'admitted',
+      'programme_source',
+    }, 'workspace');
+    if (root['kind'] != 'cohort_editable_workspace' ||
+        root['version'] is! int ||
+        root['version'] != 1 ||
+        !compositionEqual(root['fixture_profile'], compositionProfile())) {
+      workspaceInvalid(
+        'Unsupported editable format/profile. Review exports are read-only.',
+      );
+    }
+    final engine =
+        compiler ?? SyntheticStrengthSessionCompiler(allowSecondLineage: true);
+    final rows = workspaceList(root['owners'], 'owners', max: 2);
+    if (rows.length != 2) {
+      workspaceInvalid('Exactly the existing A/B owners are required.');
+    }
+    ProtocolAuthoringController? a, b;
+    ProgrammeAuthoringController? editor;
+    try {
+      a = await ProtocolAuthoringController.restoreWorkspace(
+        rows[0],
+        SyntheticStrengthLineage.a,
+        engine,
+      );
+      b = await ProtocolAuthoringController.restoreWorkspace(
+        rows[1],
+        SyntheticStrengthLineage.b,
+        engine,
+      );
+      final all = [...a.revisions, ...b.revisions];
+      final catalogue = SyntheticProgrammeRevisionCatalogue(a.revisions.first);
+      final declared = <D2LocalRevision>[], keys = <String>{};
+      for (final raw in workspaceList(root['admitted'], 'admitted', max: 256)) {
+        final tuple = workspaceObject(raw, {
+          'protocol_id',
+          'session_lineage_id',
+          'revision_number',
+        }, 'admitted identity');
+        final matches = all
+            .where((r) => compositionEqual(compositionTuple(r.identity), tuple))
+            .toList();
+        if (matches.length != 1 ||
+            !keys.add(revisionKey(matches.single.identity))) {
+          workspaceInvalid('Foreign/duplicate/conflicting admitted identity.');
+        }
+        declared.add(matches.single);
+      }
+      if (!declared.any(
+        (r) => sameRevision(r.identity, SyntheticStrengthLineage.a.identity(1)),
+      )) {
+        workspaceInvalid('A root must be available.');
+      }
+      declared.sort((a, b) => compareRevisions(a.identity, b.identity));
+      for (final r in declared) {
+        catalogue.appendVerified(r.compiled);
+      }
+      editor = ProgrammeAuthoringController(
+        fixture: programmeAuthoringFixtures.first,
+        source: CompositionProgrammeSource(catalogue),
+      );
+      editor.restoreWorkspaceSource(
+        workspaceString(root['programme_source'], 'programme source'),
+      );
+      final result = SyntheticCompositionController._workspace(engine);
+      result._session = a;
+      result._secondSession = b;
+      result._programme = editor;
+      result._catalogue = catalogue;
+      result._attachWorkspaceListeners();
+      result._savedWorkspaceText = result.workspaceContents;
+      return result;
+    } catch (_) {
+      a?.dispose();
+      b?.dispose();
+      editor?.dispose();
+      rethrow;
+    }
+  }
+
+  void _attachWorkspaceListeners() {
+    _sessionGenerations.clear();
+    for (final owner in owners) {
+      _sessionGenerations[owner] = owner.generation;
+      owner.addListener(_sessionChanged);
+    }
+    _programmeRevision = programme.revision;
+    programme.addListener(_programmeChanged);
+  }
+
+  void _detachWorkspaceListeners() {
+    _programme?.removeListener(_programmeChanged);
+    for (final owner in owners) {
+      owner.removeListener(_sessionChanged);
+    }
+  }
+
+  Future<String?> saveEditableWorkspace() async {
+    if (_disposed || !initialized || busy) return null;
+    final token = _operation, text = workspaceContents;
+    SyntheticCompositionController? check;
+    try {
+      check = await restoreEditableWorkspace(text, compiler: compiler);
+      if (!_alive(token) || workspaceContents != text) return null;
+      return text;
+    } finally {
+      check?.dispose();
+    }
+  }
+
+  bool canConsumeWorkspace(String text) =>
+      !_disposed && initialized && !busy && workspaceContents == text;
+  void markWorkspaceDownloadRequested(String text) {
+    if (!canConsumeWorkspace(text)) return;
+    _savedWorkspaceText = text;
+    notifyListeners();
+  }
+
+  Future<PreparedEditableWorkspace?> prepareEditableWorkspace(
+    String text,
+  ) async {
+    if (_disposed || !initialized) return null;
+    final token = _operation, transfer = ++_workspaceTransfer;
+    final candidate = await restoreEditableWorkspace(text, compiler: compiler);
+    if (!_alive(token) || transfer != _workspaceTransfer) {
+      candidate.dispose();
+      return null;
+    }
+    return PreparedEditableWorkspace._(this, token, transfer, candidate);
+  }
+
+  bool isCurrentEditableWorkspace(PreparedEditableWorkspace p) =>
+      identical(p._owner, this) &&
+      _alive(p._generation) &&
+      p._transfer == _workspaceTransfer &&
+      p._candidate != null;
+  Future<bool> replaceEditableWorkspace(PreparedEditableWorkspace p) async {
+    if (!isCurrentEditableWorkspace(p)) return false;
+    final next = p._candidate!;
+    next._detachWorkspaceListeners();
+    _release();
+    _invalidate();
+    _session = next.session;
+    _secondSession = next.secondSession;
+    _programme = next._programme;
+    _catalogue = next._catalogue;
+    _savedWorkspaceText = next._savedWorkspaceText;
+    rejectedHandoff = null;
+    _attachWorkspaceListeners();
+    final installed = _programme;
+    next._ownsChildren = false;
+    p.dispose();
+    notifyListeners();
+    await Future<void>.value();
+    return !_disposed && identical(installed, _programme);
+  }
+
   Future<void> reset() async {
     if (_disposed) return;
     _invalidate();
     _release();
     _programme = null;
     _catalogue = null;
+    _savedWorkspaceText = null;
     rejectedHandoff = null;
     ready = _initialize();
     notifyListeners();
@@ -527,7 +737,7 @@ class SyntheticCompositionController extends ChangeNotifier {
     if (_disposed) return;
     _disposed = true;
     _invalidate();
-    _release();
+    if (_ownsChildren) _release();
     if (_notificationDepth > 0) {
       _disposeNotifierPending = true;
     } else {

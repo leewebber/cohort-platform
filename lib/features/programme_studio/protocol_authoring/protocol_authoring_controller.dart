@@ -1,3 +1,5 @@
+import '../workspace_json.dart';
+import 'workspace_session_draft.dart';
 import 'dart:convert';
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
@@ -23,6 +25,14 @@ class ProtocolAuthoringController extends ChangeNotifier {
            ) {
     ready = _initialize();
   }
+  ProtocolAuthoringController._workspace(
+    this.compiler,
+    this.lineage,
+    this._catalogue,
+  ) {
+    ready = Future.value();
+  }
+
   final SyntheticStrengthSessionCompiler compiler;
   final SyntheticStrengthLineage lineage;
   bool _rootDraft = false;
@@ -391,6 +401,14 @@ class ProtocolAuthoringController extends ChangeNotifier {
   });
   Future<bool> validate() async {
     if (!initialized || _disposed) return false;
+    if (_rejectedSource != null) {
+      _fail(
+        const FormatException(
+          'rejected_source: Reopen supported source or reset/discard this draft before validation. Retained rejected input grants no freeze authority.',
+        ),
+      );
+      return false;
+    }
     _invalidate();
     final token = _generation;
     final identity = activeIdentity;
@@ -554,6 +572,136 @@ class ProtocolAuthoringController extends ChangeNotifier {
       }
     }
     return lines;
+  }
+
+  Map<String, dynamic> get workspaceState => {
+    'lineage': lineage.id,
+    'catalogue': _catalogue!.workspaceState,
+    'opened': _opened,
+    'selected': _selected,
+    'programme_entries': _programmeEntries.toList()..sort(),
+    'draft': !isEditing
+        ? null
+        : {
+            'number': _draftIdentity!.revisionNumber,
+            'parent': _rootDraft ? null : _parent,
+            'tree': tree,
+            'rejected_source': _rejectedSource,
+          },
+  };
+
+  static Future<ProtocolAuthoringController> restoreWorkspace(
+    Object? input,
+    SyntheticStrengthLineage lineage,
+    SyntheticStrengthSessionCompiler compiler,
+  ) async {
+    final state = workspaceObject(input, {
+      'lineage',
+      'catalogue',
+      'opened',
+      'selected',
+      'programme_entries',
+      'draft',
+    }, 'session owner');
+    if (state['lineage'] != lineage.id) {
+      workspaceInvalid('Foreign session owner.');
+    }
+    final catalogue = await SyntheticSessionRevisionCatalogue.restoreWorkspace(
+      state['catalogue'],
+      lineage,
+      compiler,
+    );
+    final c = ProtocolAuthoringController._workspace(
+      compiler,
+      lineage,
+      catalogue,
+    );
+    try {
+      final numbers = catalogue.revisions
+          .map((r) => r.identity.revisionNumber)
+          .toSet();
+      c._opened = workspaceInt(state['opened'], 'opened', min: 1);
+      c._selected = workspaceInt(state['selected'], 'selected', min: 1);
+      c._parent = c._opened;
+      c._programmeEntries.clear();
+      for (final n in workspaceList(
+        state['programme_entries'],
+        'standalone available',
+      )) {
+        final number = workspaceInt(n, 'standalone version', min: 1);
+        // Empty B's inherited standalone placeholder 1 is not a frozen entry.
+        if ((!numbers.contains(number) && !(numbers.isEmpty && number == 1)) ||
+            !c._programmeEntries.add(number)) {
+          workspaceInvalid('Conflicting standalone availability.');
+        }
+      }
+      if (!c._programmeEntries.contains(1) ||
+          !c._programmeEntries.contains(c._selected) ||
+          (numbers.isEmpty
+              ? c._opened != 1 || c._selected != 1
+              : !numbers.contains(c._opened) ||
+                    !numbers.contains(c._selected))) {
+        workspaceInvalid('Unknown opened/selected version.');
+      }
+      final reservations = (catalogue.workspaceState['reservations'] as List);
+      if (state['draft'] == null) {
+        if (reservations.isNotEmpty) {
+          workspaceInvalid('Reservation without draft.');
+        }
+      } else {
+        final draft = workspaceObject(state['draft'], {
+          'number',
+          'parent',
+          'tree',
+          'rejected_source',
+        }, 'draft');
+        final n = workspaceInt(draft['number'], 'draft number', min: 1);
+        c._rootDraft = numbers.isEmpty;
+        if (c._rootDraft) {
+          if (lineage != SyntheticStrengthLineage.b ||
+              n != 1 ||
+              draft['parent'] != null ||
+              reservations.isNotEmpty) {
+            workspaceInvalid('Invalid initial-root draft.');
+          }
+        } else {
+          final parent = workspaceInt(
+            draft['parent'],
+            'draft parent',
+            min: 1,
+            max: n - 1,
+          );
+          if (parent != c._opened ||
+              reservations.length != 1 ||
+              reservations.single['number'] != n ||
+              reservations.single['parent'] != parent) {
+            workspaceInvalid('Draft/reservation mismatch.');
+          }
+          c._parent = parent;
+        }
+        c._draftIdentity = lineage.identity(n);
+        if (draft['tree'] != null && draft['rejected_source'] == null) {
+          final tree = draft['tree'];
+          if (tree is! Map<String, dynamic>) {
+            workspaceInvalid('Draft tree required.');
+          }
+          validateWorkspaceSessionDraft(tree, lineage, n);
+          c._tree = jsonDecode(jsonEncode(tree)) as Map<String, dynamic>;
+        } else if (draft['tree'] == null &&
+            draft['rejected_source'] is String) {
+          c._rejectedSource = workspaceString(
+            draft['rejected_source'],
+            'rejected draft input',
+          );
+        } else {
+          workspaceInvalid('Choose form draft or rejected input, not both.');
+        }
+      }
+      return c;
+    } catch (_) {
+      c.dispose();
+      rethrow;
+    }
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'workspace/workspace_files.dart';
 import 'source_export/canonical_source_bundle.dart';
 import 'source_export/source_bundle_download.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ import 'synthetic_composition_controller.dart';
 import 'synthetic_composition_fixtures.dart';
 
 const temporaryWorkspaceNotice =
-    'Temporary workspace · synthetic example. Changes are lost when you reload or close this preview. Export a complete review to keep a review copy. Reopened exports are read-only; you cannot continue editing from them.';
+    'Local workspace · synthetic example. Browser edits are not autosaved. Save an editable workspace file and keep it to continue later. Review exports open read-only; canonical sources are for compiler/tools. No cloud backup.';
 String sessionVersionLabel(D2CompiledSession s) =>
     '${s.protocol.name} · Session ${s.identity.sessionLineageId == SyntheticStrengthLineage.a.id ? 'A' : 'B'} · Version ${s.identity.revisionNumber}';
 String sessionPrescription(D2CompiledSession s) => s.protocol.blocks
@@ -36,8 +37,12 @@ class ProgrammeFirstScreen extends StatefulWidget {
     required this.controller,
     required this.advanced,
     this.downloadSources = downloadSourceBundle,
+    this.downloadWorkspace = downloadEditableWorkspace,
+    this.chooseWorkspace = chooseEditableWorkspace,
   });
   final SyntheticCompositionController controller;
+  final void Function(String) downloadWorkspace;
+  final Future<String?> Function() chooseWorkspace;
   final Widget Function() advanced;
   final void Function(CanonicalSourceBundle) downloadSources;
   @override
@@ -48,6 +53,8 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
   SyntheticCompositionController get c => widget.controller;
   bool sessions = false, everReviewed = false, openedExport = false;
   String? message;
+  bool transferringWorkspace = false;
+  String? workspaceError;
   List<({String key, String name, String sessionKey})> get workouts {
     if (!c.initialized) return [];
     final result = <({String key, String name, String sessionKey})>[];
@@ -91,7 +98,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Programme Studio · temporary workspace')),
+    appBar: AppBar(title: const Text('Programme Studio · local workspace')),
     body: !c.initialized
         ? const Center(child: Text('Opening example programme…'))
         : Column(
@@ -111,6 +118,18 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                         spacing: 10,
                         runSpacing: 8,
                         children: [
+                          OutlinedButton(
+                            onPressed: c.busy || transferringWorkspace
+                                ? null
+                                : _saveWorkspace,
+                            child: const Text('Save editable workspace'),
+                          ),
+                          OutlinedButton(
+                            onPressed: c.busy || transferringWorkspace
+                                ? null
+                                : _openWorkspace,
+                            child: const Text('Open editable workspace'),
+                          ),
                           FilledButton(
                             onPressed: c.busy ? null : _review,
                             child: const Text('Review programme'),
@@ -125,6 +144,18 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                           ),
                         ],
                       ),
+                      Text(
+                        !c.workspaceSaveRequested
+                            ? 'Workspace file not saved yet.'
+                            : c.workspaceHasChanges
+                            ? 'Unsaved workspace changes since the last file download/open.'
+                            : 'Workspace matches the last file download/open. Keep the file; there is no autosave.',
+                      ),
+                      if (workspaceError != null)
+                        ExpansionTile(
+                          title: const Text('Advanced: workspace file error'),
+                          children: [SelectableText(workspaceError!)],
+                        ),
                       Semantics(
                         liveRegion: true,
                         child: Text(
@@ -368,6 +399,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
           workspaceGeneration: () => c.generation,
           selectionSummary:
               '$used. Unsaved changes do not change the programme.',
+          onSaveWorkspace: _saveWorkspace,
           onSaved: () => Navigator.pop(
             context,
             owner.revisions.singleWhere(
@@ -381,7 +413,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
     if (!mounted || !c.owners.contains(owner)) return;
     if (saved != null) {
       showMessage(
-        'Version ${saved.identity.revisionNumber} saved for this visit. Programme selection has not changed.',
+        'Version ${saved.identity.revisionNumber} saved in this workspace. Programme selection has not changed. Save editable workspace to keep it for later.',
       );
       if (slotKey != null) await _choose(slotKey, saved: saved);
     } else if (workspace != c.generation) {
@@ -810,6 +842,125 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
     }
   }
 
+  void _workspaceMessage(String text) {
+    showMessage(text);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+    }
+  }
+
+  Future<void> _saveWorkspace() async {
+    if (transferringWorkspace) return;
+    setState(() => transferringWorkspace = true);
+    try {
+      final text = await c.saveEditableWorkspace();
+      if (!mounted) return;
+      if (text == null || !c.canConsumeWorkspace(text)) {
+        _workspaceMessage(
+          'Workspace changed while preparing the file. Try saving again.',
+        );
+        return;
+      }
+      widget.downloadWorkspace(text);
+      if (!mounted || !c.canConsumeWorkspace(text)) return;
+      c.markWorkspaceDownloadRequested(text);
+      if (!mounted || !c.canConsumeWorkspace(text)) return;
+      _workspaceMessage(
+        'Editable workspace download requested. Keep the JSON file to continue later. It includes private versions and unvalidated drafts. No autosave or cloud backup.',
+      );
+    } catch (e) {
+      if (mounted) {
+        setState(() => workspaceError = '$e');
+        _workspaceMessage(
+          'Workspace file could not be saved. Your edits are unchanged. See Advanced for the reason.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => transferringWorkspace = false);
+    }
+  }
+
+  Future<void> _openWorkspace() async {
+    if (transferringWorkspace) return;
+    final generation = c.generation;
+    PreparedEditableWorkspace? candidate;
+    setState(() => transferringWorkspace = true);
+    try {
+      final text = await widget.chooseWorkspace();
+      if (!mounted || text == null) return;
+      if (generation != c.generation) {
+        showMessage(
+          'Workspace changed while choosing a file. Open it again to review replacement.',
+        );
+        return;
+      }
+      candidate = await c.prepareEditableWorkspace(text);
+      if (!mounted) return;
+      if (candidate == null) {
+        showMessage('Workspace changed while opening. Try again.');
+        return;
+      }
+      final pending = candidate;
+      final summary =
+          '${pending.programmeName}\n${pending.savedVersions} frozen versions (${pending.privateVersions} private) · ${pending.drafts} unvalidated session drafts.\nThis file was reconstructed separately. Replace the current workspace only if you want to continue from this file. Current work is not merged. Validation/reviews must be refreshed. This does not prove external approval or history.';
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AnimatedBuilder(
+          animation: c,
+          builder: (context, _) => AlertDialog(
+            title: const Text('Replace current workspace?'),
+            content: SingleChildScrollView(
+              child: Text(
+                c.isCurrentEditableWorkspace(pending)
+                    ? summary
+                    : 'Current workspace changed. Close and open the file again.',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Keep current workspace'),
+              ),
+              FilledButton(
+                onPressed: c.isCurrentEditableWorkspace(pending)
+                    ? () => Navigator.pop(context, true)
+                    : null,
+                child: const Text('Replace current workspace'),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (!mounted || confirmed != true) return;
+      if (await c.replaceEditableWorkspace(pending)) {
+        if (!mounted) return;
+        setState(() {
+          sessions = c.anyDraft;
+          everReviewed = false;
+          openedExport = false;
+          workspaceError = null;
+        });
+        showMessage(
+          'Editable workspace opened. Continue editing saved versions or draft inputs. Review the programme again before exporting.',
+        );
+      } else {
+        showMessage(
+          'Workspace changed; the file was not installed. Open it again.',
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => workspaceError = '$e');
+        showMessage(
+          'This editable workspace file is unsupported, incomplete or inconsistent. Current work was not replaced. Read-only review exports use Open exported review.',
+        );
+      }
+    } finally {
+      candidate?.dispose();
+      if (mounted) setState(() => transferringWorkspace = false);
+    }
+  }
+
   Future<void> _reset() async {
     final generation = c.generation;
     final confirm = await showDialog<bool>(
@@ -835,6 +986,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
       if (mounted) {
         setState(() {
           message = null;
+          workspaceError = null;
           sessions = false;
           everReviewed = false;
           openedExport = false;

@@ -1,3 +1,6 @@
+import 'workspace_session_draft.dart';
+import 'founder_strength_source_guard.dart';
+import '../workspace_json.dart';
 import '../../session_revision/models/session_revision_usage_models.dart';
 import 'synthetic_strength_lineage.dart';
 import 'protocol_authoring_fixtures.dart';
@@ -37,6 +40,7 @@ class SyntheticSessionRevisionCatalogue {
   final SyntheticStrengthLineage lineage;
   final Map<int, D2LocalRevision> _frozen = {};
   final Map<int, int> _reservations = {};
+  final Map<int, int> _parents = {};
   int _highestReserved = 1;
   List<D2LocalRevision> get revisions => List.unmodifiable(_frozen.values);
   D2LocalRevision at(int number) =>
@@ -134,7 +138,156 @@ class SyntheticSessionRevisionCatalogue {
     }
     final snapshot = D2LocalRevision._(verified);
     _frozen[number] = snapshot;
+    _parents[number] = parent;
     _reservations.remove(number);
     return snapshot;
+  }
+
+  Map<String, dynamic> get workspaceState => {
+    'highest_reserved': _highestReserved,
+    'abandoned_ranges': _abandonedRanges,
+    'frozen': [
+      for (final r in revisions)
+        {
+          'number': r.identity.revisionNumber,
+          'parent': _parents[r.identity.revisionNumber],
+          'source': r.source,
+        },
+    ],
+    'reservations': [
+      for (final e in _reservations.entries)
+        {'number': e.key, 'parent': e.value},
+    ],
+  };
+
+  List<Map<String, int>> get _abandonedRanges {
+    final used = {
+      ..._frozen.keys,
+      ..._reservations.keys,
+    }.where((n) => n > 1).toList()..sort();
+    final ranges = <Map<String, int>>[];
+    var next = 2;
+    for (final n in used) {
+      if (n > next) ranges.add({'first': next, 'last': n - 1});
+      next = n + 1;
+    }
+    if (next <= _highestReserved) {
+      ranges.add({'first': next, 'last': _highestReserved});
+    }
+    return ranges;
+  }
+
+  static Future<SyntheticSessionRevisionCatalogue> restoreWorkspace(
+    Object? input,
+    SyntheticStrengthLineage lineage,
+    SyntheticStrengthSessionCompiler compiler,
+  ) async {
+    final state = workspaceObject(input, {
+      'highest_reserved',
+      'abandoned_ranges',
+      'frozen',
+      'reservations',
+    }, 'catalogue');
+    final highest = workspaceInt(state['highest_reserved'], 'highest_reserved');
+    final rows = workspaceList(state['frozen'], 'frozen');
+    final compiled = <int, D2CompiledSession>{}, parents = <int, int>{};
+    var previous = 0;
+    for (final raw in rows) {
+      final row = workspaceObject(raw, {
+        'number',
+        'parent',
+        'source',
+      }, 'frozen revision');
+      final n = workspaceInt(
+        row['number'],
+        'revision number',
+        min: 1,
+        max: highest,
+      );
+      if (n <= previous || (previous == 0 && n != 1)) {
+        workspaceInvalid(
+          'Revisions must start with root 1 and be ordered uniquely.',
+        );
+      }
+      previous = n;
+      final source = workspaceString(row['source'], 'frozen source');
+      guardWorkspaceYaml(source);
+      validateWorkspaceSessionDraft(
+        const FounderStrengthSourceGuard().canonicalTree(
+          source,
+          importKey: lineage.importKey(n),
+        ),
+        lineage,
+        n,
+      );
+      final result = await compiler.compileExact(source, lineage.identity(n));
+      if (result.profileFingerprint != fixedFixtureFingerprint()) {
+        workspaceInvalid('Actual compiler profile differs.');
+      }
+      if (n == 1) {
+        if (row['parent'] != null) {
+          workspaceInvalid('Root cannot have a parent.');
+        }
+      } else {
+        final parent = workspaceInt(
+          row['parent'],
+          'frozen parent',
+          min: 1,
+          max: n - 1,
+        );
+        if (!compiled.containsKey(parent) ||
+            compiled[parent]!.semanticJson == result.semanticJson) {
+          workspaceInvalid('Missing parent or no-op frozen descendant.');
+        }
+        parents[n] = parent;
+      }
+      compiled[n] = result;
+    }
+    if (lineage == SyntheticStrengthLineage.a && compiled.isEmpty) {
+      workspaceInvalid('Exact A root required.');
+    }
+    if (compiled.isEmpty && highest != 0) {
+      workspaceInvalid('Empty B owner cannot reserve descendants.');
+    }
+    final restored = compiled.isEmpty
+        ? SyntheticSessionRevisionCatalogue.emptyRoot()
+        : SyntheticSessionRevisionCatalogue(compiled[1]!, lineage: lineage);
+    for (final e in compiled.entries.where((e) => e.key != 1)) {
+      restored._frozen[e.key] = D2LocalRevision._(e.value);
+    }
+    restored._parents.addAll(parents);
+    restored._highestReserved = highest;
+    for (final raw in workspaceList(
+      state['reservations'],
+      'reservations',
+      max: 1,
+    )) {
+      final row = workspaceObject(raw, {'number', 'parent'}, 'reservation');
+      final n = workspaceInt(
+        row['number'],
+        'reservation number',
+        min: 2,
+        max: highest,
+      );
+      final parent = workspaceInt(
+        row['parent'],
+        'reservation parent',
+        min: 1,
+        max: n - 1,
+      );
+      if (n != highest ||
+          compiled.containsKey(n) ||
+          !compiled.containsKey(parent)) {
+        workspaceInvalid('Conflicting reservation.');
+      }
+      restored._reservations[n] = parent;
+    }
+    if (encodeWorkspaceJson(restored._abandonedRanges) !=
+        encodeWorkspaceJson(state['abandoned_ranges'])) {
+      workspaceInvalid(
+        'Abandoned revision ranges conflict with reservations/high-water.',
+      );
+    }
+    return restored;
   }
 }

@@ -17,11 +17,12 @@ class ProtocolAuthoringScreen extends StatefulWidget {
     this.selectionSummary = '',
     this.onSaved,
     this.onDiscard,
+    this.onSaveWorkspace,
     this.workspaceGeneration,
   });
   final bool embedded, authorFacing;
   final String selectionSummary;
-  final VoidCallback? onSaved, onDiscard;
+  final VoidCallback? onSaved, onDiscard, onSaveWorkspace;
   final int Function()? workspaceGeneration;
   final ProtocolAuthoringController? controller;
   @override
@@ -448,7 +449,7 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const Text(
-        'Temporary workspace · synthetic example. Reloading or closing loses changes. Exported reviews reopen read-only, not for editing.',
+        'Local workspace · synthetic example. Save editable workspace to keep drafts for later. No browser autosave. Review exports remain read-only.',
       ),
       Text(widget.selectionSummary),
       Text(
@@ -490,6 +491,11 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
           ),
         ],
       ),
+      if (widget.onSaveWorkspace != null)
+        OutlinedButton(
+          onPressed: controller.busy ? null : widget.onSaveWorkspace,
+          child: const Text('Save editable workspace'),
+        ),
       ExpansionTile(
         title: const Text('Advanced'),
         children: [

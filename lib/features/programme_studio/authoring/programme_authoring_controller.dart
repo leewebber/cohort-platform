@@ -1,3 +1,5 @@
+import 'package:yaml/yaml.dart';
+import '../workspace_json.dart';
 import 'dart:convert';
 
 import 'package:cohort_plan_package/cohort_plan_package.dart';
@@ -164,6 +166,64 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     _tree = candidate;
     notifyListeners();
     return true;
+  }
+
+  /// Restores an unvalidated form draft, keeping the fixed source baseline.
+  /// No compiler/review receipt is restored; only existing editable fields vary.
+  void restoreWorkspaceSource(String text) {
+    guardWorkspaceYaml(text);
+    final decoded = jsonDecode(jsonEncode(loadYaml(text)));
+    if (decoded is! Map<String, dynamic> ||
+        _writer.writeDraft(decoded) != text ||
+        _scopeIssues(decoded).isNotEmpty) {
+      workspaceInvalid('Unsupported programme source/template.');
+    }
+    if (source == null ||
+        encodeWorkspaceJson(decoded['sessions']) !=
+            encodeWorkspaceJson(source!.sessionReferences)) {
+      workspaceInvalid(
+        'Programme availability differs from exact owned revisions.',
+      );
+    }
+    void strings(Map map, Iterable<String> keys) {
+      for (final k in keys) {
+        if (map.containsKey(k) && map[k] != null) workspaceString(map[k], k);
+      }
+    }
+
+    final p = decoded['programme'] as Map;
+    strings(p, programmeFields.where((k) => k != 'sessions_per_week'));
+    if (p['sessions_per_week'] is! int && p['sessions_per_week'] is! String) {
+      workspaceInvalid('Invalid sessions-per-week input.');
+    }
+    final slotKeys = <String>{};
+    final sessionKeys = source!.sessionReferences
+        .map((r) => r['session_key'])
+        .toSet();
+    for (final w in decoded['weeks'] as List) {
+      strings(w as Map, textFields);
+      for (final d in w['days'] as List) {
+        strings(d as Map, textFields);
+        if (!{'training', 'rest', 'optional'}.contains(d['day_type'])) {
+          workspaceInvalid('Unsupported day type.');
+        }
+        final slots = workspaceList(d['slots'], 'slots', max: 64);
+        for (var i = 0; i < slots.length; i++) {
+          final slot = slots[i] as Map;
+          final key = workspaceString(slot['slot_key'], 'slot_key');
+          if (key.trim().isEmpty ||
+              !slotKeys.add(key) ||
+              slot['session_order'] != i + 1 ||
+              !sessionKeys.contains(slot['session_key'])) {
+            workspaceInvalid('Conflicting slot identity/selection/order.');
+          }
+          strings(slot, slotFields);
+        }
+      }
+    }
+    _tree = _clone(jsonEncode(decoded));
+    _invalidate();
+    notifyListeners();
   }
 
   void reset() =>
