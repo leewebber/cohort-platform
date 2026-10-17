@@ -1,0 +1,90 @@
+{
+  "all_seven_older_inventories_identical": true,
+  "checkouts": {
+    "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform": {
+      "HEAD": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+      "branch": "codex/programme-studio-composition",
+      "exact_match": true,
+      "file_inventory_entries": 2659,
+      "git_pointer_sha256": "fc277498553f0f22b527c4ba7ee6c1fca70d619e25f29cdfdc36f31e6741c725",
+      "index_sha256": "99d610a54ad179ee59338b5913c7531a08e6bcc08a345f26518ff20928e95344",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "branch": "codex/programme-studio-d2",
+      "exact_match": true,
+      "file_inventory_entries": 2637,
+      "git_pointer_sha256": "40a2ba4a769feae622a7d0d664c55dd10bf8c4618941192457d37c96e62d8869",
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "branch": "codex/programme-studio-stage2",
+      "exact_match": true,
+      "file_inventory_entries": 2612,
+      "git_pointer_sha256": "e74a83b8a09c1f11b4ca70e683a5c6b2cda2a430fba800740887ef3c24b753da",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform": {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "branch": "codex/studio-strength-lineages-review",
+      "exact_match": true,
+      "file_inventory_entries": 2670,
+      "git_pointer_sha256": "c53202aeb86fd0db2ff13286c80bdec7a79ef905cde5258cf73806aa46aeac43",
+      "index_sha256": "83f80fcaf28e402f27e47fc888d6bc2a7c1f1ee2723f3cc14f7ef9257e0c5469",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform": {
+      "HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+      "branch": "codex/studio-strength-lineages",
+      "exact_match": true,
+      "file_inventory_entries": 2668,
+      "git_pointer_sha256": "860d7550dd420711bd61f764bf5bb1d0c3ca925c0083d6ecc4d0cdcf06cccd43",
+      "index_sha256": "f37ebbe410625fc417a0d40b5f43a6fbe39a803af78c35bcab7c5a86df90b0c5",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-usability-allocation/cohort_platform": {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "branch": "",
+      "exact_match": true,
+      "file_inventory_entries": 2670,
+      "git_pointer_sha256": "50ca679a59e8ca515b17285bc2e3afcf1d83f85753670270dca33313ae820e04",
+      "index_sha256": "a3c4c4422a86447937dec88156c62e8643efdf7b447090d2424f8999d94282b8",
+      "outstanding_paths": 0,
+      "temp_files": 0
+    },
+    "/Users/leewebber/Developer/cohort_platform": {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "branch": "main",
+      "exact_match": true,
+      "file_inventory_entries": 2687,
+      "git_pointer_sha256": null,
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "outstanding_paths": 95,
+      "temp_files": 0
+    }
+  },
+  "inventory_fields": [
+    "HEAD",
+    "branch",
+    "tracked_and_nonignored_file_sha256",
+    "outstanding_path_statuses",
+    "index_sha256",
+    "git_pointer_sha256",
+    "all_present_supabase_temp_files_sha256"
+  ],
+  "inventory_scope_note": "Tracked and nonignored paths plus every present supabase/.temp file. Other ignored caches were not inventoried or modified by this task. No older checkout was written. Nine inherited absent skip-worktree .temp entries were not restored.",
+  "manifests": {
+    "AFTER.json": "4a975abd1ce88f76ed08b3c9eb04984c23ad72185933ff29478d59817f4d8aa4",
+    "BEFORE.json": "4a975abd1ce88f76ed08b3c9eb04984c23ad72185933ff29478d59817f4d8aa4"
+  },
+  "original_main_not_advanced": true
+}

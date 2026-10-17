@@ -1,0 +1,85 @@
+{
+  "affected_regressions": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/founder_programme_import/ test/authored_plan_package/ test/architecture/founder_programme_identity_consumer_boundaries_test.dart test/models/strength_exercise_prescription_test.dart test/session_builder/session_block_validation_test.dart test/session/session_execution_projection_test.dart test/session_revision/session_revision_service_test.dart test/domain/exercise_knowledge/founder_approved_identity_mappings_phase_3_1f_test.dart",
+    "exit": 0,
+    "passed": 411
+  },
+  "agent_chrome_exercise": {
+    "actual_first_exercise_reps": "5 -> 6",
+    "browser": "Chrome",
+    "clean_A_only_seed_restored": true,
+    "dose_seen_in_actual_Studio_and_readonly_reopen": "2 sets / 6 reps, 12.5 kg, rest 1 min, tempo 3-1-1, synthetic cue",
+    "edit_save_explicit_use_review_copy_reopen": true,
+    "export_included_unselected_original": true,
+    "founder_acceptance": false,
+    "url": "http://127.0.0.1:4195/"
+  },
+  "author_facing_widgets": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/programme_first_screen_test.dart",
+    "exit": 0,
+    "included_in_affected_total": true,
+    "passed": 12
+  },
+  "base": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+  "broader_Stage2_SprintC_open": true,
+  "canonical_package": {
+    "command": "dart test",
+    "cwd": "packages/cohort_plan_package",
+    "exit": 0,
+    "passed": 41
+  },
+  "date": "2026-10-17",
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "after_exit": 1,
+    "before": 367,
+    "before_exit": 1,
+    "command": "flutter --suppress-analytics analyze --no-pub",
+    "diagnostic_identities_identical": true,
+    "errors": 0,
+    "green": false,
+    "info": 257,
+    "removed": [],
+    "warnings": 110
+  },
+  "implementation_commit": "b4a95f2b092d0723e26899105abdbe728ae5e21f",
+  "log_sha256": {
+    "analysis-before.log": "1b16353b0aaa8ed53a6ddf8058d661c526d1f641a2f39b1b44ed516d0aa2016f",
+    "analysis-final.log": "4f71545ed86551a1adef05d0d2af0b479b83f167344ba97820b5f30b9f600787",
+    "analysis-scoped.log": "fef61c63852e0b6a0b90f9ee6f1b31ee7b9cb49c6549787eeea899d37b0d8188",
+    "canonical-package.log": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "clipboard-final.log": "4f5c34c945aa1161095e4bd01f87f8acd77f66ec750f9b5d627a49073c44c189",
+    "regressions-final.log": "032836bbd60e9cfac4d7ec274c24ebc9122095b03aa90e452953bee1bf3e84b3",
+    "safety.log": "2b065fdf549d201dc65056b3b107aae38f792168540b4d386158e6b8817d9835"
+  },
+  "no_fetch_push_integration_hosted_or_device_operations": true,
+  "pending_phone_checks": 4,
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "external_wrapper": "Outside-repository flutter wrapper supplies --suppress-analytics test --no-pub for cached offline dependencies; no gate definitions changed.",
+    "groups_failed": 0,
+    "groups_passed": 6,
+    "script_and_definitions_unchanged": true
+  },
+  "scoped_analysis": {
+    "command": "dart analyze <all files below>",
+    "diagnostics": 0,
+    "exit": 0,
+    "file_count": 10,
+    "files_sha256": {
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "5dfc946f5f3c5847db33b0c2d3deee71d2dae60069a503ee1ce061ebabaeecbe",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "2861d84fdf474e1e05a9785395958748fea6658958442c64da29c93c8517464e",
+      "lib/features/programme_studio/composition/programme_first_screen.dart": "c6f0989f52aa342d35a519538bc69fe0267c5e048bdb218083347a81e479eea5",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "28adc41656d711fbaa554283358a558c417c5b1b394ea8da00fe523a86b20c61",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "8bedc87be402239516816973abfee744b5de6978b150b49f6fb7174448380944",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart": "9a5f546f90e5c9795c9af191ca2e8add89aaa092811365e4e49d64fbb431d943",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart": "7d50f0b0d1aa6cb894b5410c2a34ed80612edff3922857e7fd0a6b0eb4edf512",
+      "test/programme_studio/programme_first_controller_test.dart": "e09d6de0e4e1888f9c3e66fd2e86ea2cd762166cb914af538e6d7ee10e8595f9",
+      "test/programme_studio/programme_first_screen_test.dart": "875b23c27a473c6251d3cb387736d0e59879d3057e6c645e5d3473504b77ee5f",
+      "test/programme_studio/synthetic_composition_screen_test.dart": "2d51115bd08cd67baca25c4d82ec1f777504b56a9be339484d9dc859ffe19d24"
+    }
+  },
+  "status": "IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_USABILITY_REVIEW"
+}

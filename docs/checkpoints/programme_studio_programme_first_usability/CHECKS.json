@@ -1,0 +1,18 @@
+{
+  "allocation_sha256": "3f90b26f3e53c68c5c0f07ace62d384751bcdcfe3b7ce4bdb9a318ef7abb634a",
+  "approved_allocation_byte_identical": true,
+  "full_range_diff_check": "PASS",
+  "local_markdown_links": {
+    "broken": [],
+    "checked": 110,
+    "scope": "all changed/new Markdown across base-to-working range; local targets checked, external URLs not contacted"
+  },
+  "preview": {
+    "clean_A_only_seed": true,
+    "committed_implementation_hot_restarted": true,
+    "entry": "lib/main_programme_studio_composition_preview.dart",
+    "founder_review_passed": false,
+    "left_running_for_founder_review": true,
+    "url": "http://127.0.0.1:4195/"
+  }
+}

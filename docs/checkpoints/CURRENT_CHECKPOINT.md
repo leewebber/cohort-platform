@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **Programme Studio programme-first usability — local implementation, 2026-10-17:**
+> [Handoff and founder task](./programme_studio_programme_first_usability/HANDOFF.md),
+> [approved scope/product decision](./programme_studio_programme_first_usability/APPROVAL.md)
+> and [fresh verification](./programme_studio_programme_first_usability/VERIFICATION.json)
+> record the programme-first edit/save/deliberate-use/review/export/read-only-open path.
+> Atomic prepared admission plus one confirmed slot selection; saving never selects.
+> **IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_USABILITY_REVIEW**. Agent checks are
+> not founder acceptance; earlier confusing/not-user-friendly feedback stays qualified.
+> 411 affected / 41 canonical tests, zero diagnostics across 10 changed/new Dart files,
+> six unchanged safety groups. Full analysis remains non-green: identical 367 inherited
+> diagnostics (110 warnings, 257 info, zero errors). Protected artifacts and all seven
+> older checkout inventories/HEADs/indices/.temp, including original 95 paths, preserved.
+> Separate codex/studio-programme-first-usability worktree from exact 0767ac6; local
+> commits only, no fetch/push/integration. Chrome preview left at 127.0.0.1:4195 with
+> clean A-only seed. Temporary authoring/read-only export is accepted as a milestone
+> boundary only, not durable editable authoring or Stage 2/launch readiness. Broader
+> Stage 2/Sprint C and four phone checks remain open. No hosted/content/production/
+> migration/device work. **NEXT_IMPLEMENTATION_AUTHORISED=false**. Stop for founder review.
+
 > **Programme Studio strength lineages — qualified final review, 2026-10-17:**
 > [Technical review and founder feedback](./programme_studio_strength_lineages/FINAL_TECHNICAL_REVIEW.md)
 > and [fresh verification](./programme_studio_strength_lineages/FINAL_REVIEW_VERIFICATION.json)

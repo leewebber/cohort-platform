@@ -1,0 +1,21 @@
+{
+  "absent_skip_worktree_temp_entries": 9,
+  "absent_temp_index_objects_identical": true,
+  "all_other_present_baseline_bytes_identical": true,
+  "allowed_existing_changes": [
+    "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart",
+    "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+    "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+    "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+    "test/programme_studio/synthetic_composition_screen_test.dart"
+  ],
+  "base": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+  "baseline_blob_manifest_sha256": "e5a8afca9688781d049dac89b50d801652c5dc1c2a6765b222ad75f9ab6a7aed",
+  "baseline_entries": 2670,
+  "protected": "Shared compiler/schema/hash, canonical resolver/revision allocator, source writers, fixed fixtures/profile, transport, published artifacts, v1/v2 goldens and safety definitions unchanged. All baseline files outside the explicit allowlist verified, including accepted checkpoint records.",
+  "unchanged_other_baseline_entries": 2662,
+  "unexpected_changes": []
+}
