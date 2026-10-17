@@ -1,3 +1,4 @@
+import 'programme_first_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,7 +13,12 @@ import 'synthetic_composition_handoff.dart';
 import 'synthetic_composition_review_bridge.dart';
 
 class SyntheticCompositionScreen extends StatefulWidget {
-  const SyntheticCompositionScreen({super.key, this.controller});
+  const SyntheticCompositionScreen({
+    super.key,
+    this.controller,
+    this.technicalInspection = false,
+  });
+  final bool technicalInspection;
   final SyntheticCompositionController? controller;
   @override
   State<SyntheticCompositionScreen> createState() =>
@@ -35,7 +41,20 @@ class _SyntheticCompositionScreenState
   }
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
+  Widget build(BuildContext context) => widget.technicalInspection
+      ? _technical(context)
+      : AnimatedBuilder(
+          animation: controller,
+          builder: (context, _) => ProgrammeFirstScreen(
+            controller: controller,
+            advanced: () => SyntheticCompositionScreen(
+              controller: controller,
+              technicalInspection: true,
+            ),
+          ),
+        );
+
+  Widget _technical(BuildContext context) => AnimatedBuilder(
     animation: controller,
     builder: (context, _) => Scaffold(
       appBar: AppBar(title: const Text('Synthetic programme composition')),

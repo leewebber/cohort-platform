@@ -29,7 +29,10 @@ Future<SyntheticCompositionController> mount(
         ).copyWith(textScaler: TextScaler.linear(scale)),
         child: child!,
       ),
-      home: SyntheticCompositionScreen(controller: c),
+      home: SyntheticCompositionScreen(
+        controller: c,
+        technicalInspection: true,
+      ),
     ),
   );
   await tester.pumpAndSettle();

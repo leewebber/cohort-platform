@@ -9,6 +9,13 @@ import '../protocol_authoring/synthetic_strength_session_compiler.dart';
 import '../protocol_authoring/synthetic_strength_lineage.dart';
 import 'synthetic_composition_fixtures.dart';
 
+class PreparedCatalogueAppend {
+  PreparedCatalogueAppend._(this._owner, this._epoch, this.entries);
+  final SyntheticProgrammeRevisionCatalogue _owner;
+  final int _epoch;
+  final List<D2CompiledSession> entries;
+}
+
 /// Append-only detached snapshots; draft allocation belongs solely to D2.
 class SyntheticProgrammeRevisionCatalogue {
   SyntheticProgrammeRevisionCatalogue(D2LocalRevision r1) {
@@ -78,6 +85,37 @@ class SyntheticProgrammeRevisionCatalogue {
         );
       }
     }
+  }
+
+  PreparedCatalogueAppend prepareAppend(Iterable<D2CompiledSession> additions) {
+    if (_readOnly) throw StateError('Reconstructed review is read-only.');
+    final all = [..._entries];
+    for (final s in additions) {
+      if (!all.any(
+        (e) =>
+            sameRevision(e.identity, s.identity) &&
+            e.source == s.source &&
+            e.profileFingerprint == s.profileFingerprint &&
+            e.semanticJson == s.semanticJson &&
+            compositionEqual(e.bindings, s.bindings),
+      )) {
+        all.add(s);
+      }
+    }
+    final checked = SyntheticProgrammeRevisionCatalogue.readOnly(all);
+    return PreparedCatalogueAppend._(this, epoch, checked.entries);
+  }
+
+  bool isCurrentAppend(PreparedCatalogueAppend prepared) =>
+      identical(prepared._owner, this) && prepared._epoch == epoch;
+  void commitAppend(PreparedCatalogueAppend prepared) {
+    if (_readOnly || !isCurrentAppend(prepared)) {
+      throw StateError('Stale catalogue.');
+    }
+    if (prepared.entries.length == _entries.length) return;
+    _entries.clear();
+    _entries.addAll(prepared.entries);
+    epoch++;
   }
 
   bool appendVerified(D2CompiledSession s) {

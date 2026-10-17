@@ -11,6 +11,21 @@ import 'plan_package_v1_yaml_writer.dart';
 import 'programme_authoring_fixtures.dart';
 import 'programme_authoring_source.dart';
 
+/// Opaque, detached candidate. Only its original editor may commit it.
+class PreparedProgrammeSelection {
+  PreparedProgrammeSelection._(
+    this._owner,
+    this._revision,
+    this._source,
+    this._tree,
+  );
+  final ProgrammeAuthoringController _owner;
+  final int _revision;
+  final String _source;
+  final Map<String, dynamic> _tree;
+  String get source => const PlanPackageV1YamlWriter().writeDraft(_tree);
+}
+
 /// Transient editing of an allowlisted synthetic canonical source. Every edit
 /// removes the previous successful result; validation always compiles the
 /// exact YAML that is later reviewed/copied. No durable editor representation.
@@ -490,6 +505,58 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       );
     }
     return issues;
+  }
+
+  PreparedProgrammeSelection prepareCatalogueSelection(
+    List<Map<String, dynamic>> references,
+    String slotKey,
+    String sessionKey,
+  ) {
+    if (source == null || _tree == null) {
+      throw const FormatException('Programme source unavailable.');
+    }
+    final candidate = tree!;
+    final targets = [
+      for (final w in candidate['weeks'] as List)
+        for (final d in w['days'] as List)
+          for (final s in d['slots'] as List)
+            if (s['slot_key'] == slotKey) s as Map<String, dynamic>,
+    ];
+    if (targets.length != 1 ||
+        !_requiredSlot(targets.single) ||
+        references.where((r) => r['session_key'] == sessionKey).length != 1) {
+      throw const FormatException(
+        'Choose an existing required workout and exact version.',
+      );
+    }
+    targets.single['session_key'] = sessionKey;
+    candidate['sessions'] = _clone(jsonEncode({'rows': references}))['rows'];
+    final check = _compiler.compile(_writer.writeDraft(candidate));
+    if (!check.isValid || _scopeIssues(candidate).isNotEmpty) {
+      throw const FormatException(
+        'Programme is invalid or locked contracts changed.',
+      );
+    }
+    return PreparedProgrammeSelection._(this, revision, draftSource, candidate);
+  }
+
+  bool isCurrentSelection(PreparedProgrammeSelection selection) =>
+      identical(selection._owner, this) &&
+      selection._revision == revision &&
+      selection._source == draftSource;
+
+  /// Both source lanes change before the one editor notification. No await or
+  /// observer runs between the checked catalogue commit and detached tree install.
+  bool commitCatalogueSelection(
+    PreparedProgrammeSelection selection,
+    VoidCallback commitCatalogue,
+  ) {
+    if (!isCurrentSelection(selection)) return false;
+    commitCatalogue();
+    _tree = selection._tree;
+    _invalidate();
+    notifyListeners();
+    return true;
   }
 
   /// Only an injected source policy can supply an exact, detached catalogue.

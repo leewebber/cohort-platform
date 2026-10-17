@@ -14,6 +14,29 @@ import 'synthetic_composition_handoff.dart';
 import 'synthetic_composition_review_bridge.dart';
 import 'synthetic_programme_revision_catalogue.dart';
 
+/// Consent is tied to one verified workspace snapshot, not display labels.
+class PreparedVersionUse {
+  PreparedVersionUse._(
+    this._workspace,
+    this._token,
+    this._editor,
+    this._catalogue,
+    this._selection,
+    this._append,
+    this.revision,
+    this.slotKey,
+  );
+  final SyntheticCompositionController _workspace;
+  final int _token;
+  final ProgrammeAuthoringController _editor;
+  final SyntheticProgrammeRevisionCatalogue _catalogue;
+  final PreparedProgrammeSelection _selection;
+  final PreparedCatalogueAppend _append;
+  final D2LocalRevision revision;
+  final String slotKey;
+  List<D2CompiledSession> get includedVersions => _append.entries;
+}
+
 /// Owns both transient source lanes; no store, import/apply or athlete services.
 class SyntheticCompositionController extends ChangeNotifier {
   SyntheticCompositionController({SyntheticStrengthSessionCompiler? compiler})
@@ -217,6 +240,98 @@ class SyntheticCompositionController extends ChangeNotifier {
     } catch (error) {
       return _fail(error, token);
     }
+  }
+
+  Future<PreparedVersionUse?> prepareUseVersion(
+    String slotKey,
+    D2LocalRevision candidate,
+  ) async {
+    final token = _begin();
+    notifyListeners();
+    if (!_alive(token)) return null;
+    try {
+      final owner = ownerFor(candidate.identity);
+      if (!initialized ||
+          anyDraft ||
+          !owner.revisions.any((r) => identical(r, candidate))) {
+        throw const FormatException(
+          'Choose a saved version owned by this workspace.',
+        );
+      }
+      final editor = programme, catalogue = _catalogue!;
+      final verified = <D2CompiledSession>[];
+      if (!admitted.any(
+        (s) =>
+            s.identity.sessionLineageId ==
+                candidate.identity.sessionLineageId &&
+            s.identity.revisionNumber == 1,
+      )) {
+        final root = owner.revisions.singleWhere(
+          (r) => r.identity.revisionNumber == 1,
+        );
+        verified.add(await _verify(root.compiled));
+        if (!_alive(token)) return null;
+      }
+      verified.add(await _verify(candidate.compiled));
+      if (!_alive(token)) return null;
+      final append = catalogue.prepareAppend(verified);
+      final selection = editor.prepareCatalogueSelection(
+        append.entries.map(compositionReference).toList(),
+        slotKey,
+        compositionReference(verified.last)['session_key'] as String,
+      );
+      // Check the complete prospective source lanes using existing all-slot review.
+      reviewComposition(selection.source, append.entries);
+      if (!_alive(token)) return null;
+      final result = PreparedVersionUse._(
+        this,
+        token,
+        editor,
+        catalogue,
+        selection,
+        append,
+        candidate,
+        slotKey,
+      );
+      _busy = false;
+      notifyListeners();
+      await Future<void>.value();
+      return isCurrentVersionUse(result) ? result : null;
+    } catch (error) {
+      _fail(error, token);
+      return null;
+    }
+  }
+
+  bool isCurrentVersionUse(PreparedVersionUse prepared) =>
+      identical(prepared._workspace, this) &&
+      _alive(prepared._token) &&
+      !anyDraft &&
+      identical(prepared._editor, _programme) &&
+      identical(prepared._catalogue, _catalogue) &&
+      prepared._editor.isCurrentSelection(prepared._selection) &&
+      prepared._catalogue.isCurrentAppend(prepared._append) &&
+      ownerFor(
+        prepared.revision.identity,
+      ).revisions.any((r) => identical(r, prepared.revision));
+
+  Future<bool> usePreparedVersion(PreparedVersionUse prepared) async {
+    if (!isCurrentVersionUse(prepared)) return false;
+    final editor = programme, catalogue = _catalogue!;
+    _busy = true;
+    notifyListeners();
+    if (!isCurrentVersionUse(prepared)) return false;
+    final committed = editor.commitCatalogueSelection(
+      prepared._selection,
+      () => catalogue.commitAppend(prepared._append),
+    );
+    if (!committed) return false;
+    // Programme notification invalidates the receipt. Preserve any newer work.
+    notifyListeners();
+    await Future<void>.value();
+    return !_disposed &&
+        identical(editor, _programme) &&
+        identical(catalogue, _catalogue);
   }
 
   // Compatibility for the original A-only API; cross-lineage callers use tuples.

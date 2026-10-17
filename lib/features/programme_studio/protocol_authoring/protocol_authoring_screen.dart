@@ -13,8 +13,16 @@ class ProtocolAuthoringScreen extends StatefulWidget {
     super.key,
     this.controller,
     this.embedded = false,
+    this.authorFacing = false,
+    this.selectionSummary = '',
+    this.onSaved,
+    this.onDiscard,
+    this.workspaceGeneration,
   });
-  final bool embedded;
+  final bool embedded, authorFacing;
+  final String selectionSummary;
+  final VoidCallback? onSaved, onDiscard;
+  final int Function()? workspaceGeneration;
   final ProtocolAuthoringController? controller;
   @override
   State<ProtocolAuthoringScreen> createState() =>
@@ -25,8 +33,13 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
   late final controller = widget.controller ?? ProtocolAuthoringController();
   int _epoch = 0;
   SessionRevisionIdentity? _pick;
+  final Map<String, GlobalKey> _anchors = {};
+  final Map<String, FocusNode> _focus = {};
   @override
   void dispose() {
+    for (final node in _focus.values) {
+      node.dispose();
+    }
     if (widget.controller == null) controller.dispose();
     super.dispose();
   }
@@ -43,7 +56,11 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: controller,
     builder: (context, _) => Scaffold(
-      appBar: AppBar(title: const Text('Synthetic strength authoring')),
+      appBar: AppBar(
+        title: Text(
+          widget.authorFacing ? 'Edit session' : 'Synthetic strength authoring',
+        ),
+      ),
       body: SelectionArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -64,6 +81,7 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     ),
   );
   Widget _editor() {
+    if (widget.authorFacing) return _authorEditor();
     final current = controller.current;
     final tree = controller.tree;
     return Column(
@@ -368,6 +386,121 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     );
   }
 
+  String? _fieldError(String id) {
+    if (!widget.authorFacing) return null;
+    final raw = controller.errors.join('\n');
+    if (id == 'session-title' && raw.contains('session.title:')) {
+      return 'Enter a session title.';
+    }
+    if (id == 'block-title' && raw.contains('block.title:')) {
+      return 'Enter a block title.';
+    }
+    if (id == 'session-duration' &&
+        raw.contains('session.estimated_duration_minutes')) {
+      return 'Enter positive minutes or leave this blank.';
+    }
+    final match = RegExp(
+      r'^exercise-(\d+)-(sets|reps|rest|load|choice)$',
+    ).firstMatch(id);
+    if (match != null) {
+      final path = 'exercises[${match[1]}].prescription.';
+      final field = match[2]!;
+      if (field == 'choice' &&
+          raw.contains('exercises[${match[1]}].transitional_exercise_id')) {
+        return 'Choose an exercise for Exercise ${int.parse(match[1]!) + 1}.';
+      }
+      final errorPath = field == 'load'
+          ? 'exercises[${match[1]}].load'
+          : '$path${field == 'rest' ? 'rest_seconds' : field}';
+      if (raw.contains(errorPath)) {
+        return field == 'reps'
+            ? 'Enter a positive whole number of reps.'
+            : field == 'sets'
+            ? 'Enter a positive whole number of sets.'
+            : field == 'rest'
+            ? 'Enter positive rest seconds or leave this blank.'
+            : 'Enter a supported load value.';
+      }
+    }
+    return null;
+  }
+
+  Future<void> _saveVersion() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (await controller.freeze()) {
+      if (mounted) widget.onSaved?.call();
+      return;
+    }
+    if (!mounted) return;
+    for (final id in _anchors.keys) {
+      if (_fieldError(id) != null) {
+        final target = _anchors[id]!.currentContext;
+        if (target != null && target.mounted) {
+          await Scrollable.ensureVisible(target);
+        }
+        if (mounted) _focus[id]?.requestFocus();
+        break;
+      }
+    }
+  }
+
+  Widget _authorEditor() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Temporary workspace · synthetic example. Reloading or closing loses changes. Exported reviews reopen read-only, not for editing.',
+      ),
+      Text(widget.selectionSummary),
+      Text(
+        controller.isCreatingRoot
+            ? 'New session — enter its prescription.'
+            : 'Editing a copy of Version ${controller.openedRevision}.',
+      ),
+      const Text(
+        'Saving a new version does not change the programme selection.',
+      ),
+      if (controller.errors.isNotEmpty)
+        Semantics(
+          liveRegion: true,
+          child: Text(
+            controller.errors.join().contains('no_semantic_change')
+                ? 'No workout changes to save. Make a change or discard this draft.'
+                : 'Fix the highlighted field before saving. If no field is highlighted, this change is unsupported; see Advanced.',
+          ),
+        ),
+      if (controller.tree != null) ..._form(controller.tree!),
+      Wrap(
+        spacing: 12,
+        runSpacing: 8,
+        children: [
+          FilledButton(
+            onPressed: controller.busy ? null : _saveVersion,
+            child: Text(
+              controller.busy ? 'Checking session…' : 'Save new version',
+            ),
+          ),
+          TextButton(
+            onPressed: controller.busy
+                ? null
+                : () {
+                    controller.cancelDraft();
+                    widget.onDiscard?.call();
+                  },
+            child: const Text('Discard changes'),
+          ),
+        ],
+      ),
+      ExpansionTile(
+        title: const Text('Advanced'),
+        children: [
+          for (final error in controller.errors) SelectableText(error),
+          SelectableText(revisionKey(controller.activeIdentity)),
+          SelectableText(controller.source),
+        ],
+      ),
+    ],
+  );
+
   Widget _evidence(String label, String value) => Padding(
     padding: const EdgeInsets.all(10),
     child: SizedBox(
@@ -435,12 +568,17 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     ValueChanged<String> edit, {
     bool multiline = false,
   }) => Padding(
+    key: widget.authorFacing ? _anchors.putIfAbsent(id, GlobalKey.new) : null,
     padding: const EdgeInsets.symmetric(vertical: 8),
     child: TextFormField(
+      focusNode: widget.authorFacing
+          ? _focus.putIfAbsent(id, FocusNode.new)
+          : null,
       key: ValueKey('${revisionKey(controller.activeIdentity)}-$_epoch-$id'),
       initialValue: value?.toString() ?? '',
       decoration: InputDecoration(
         labelText: label,
+        errorText: _fieldError(id),
         border: const OutlineInputBorder(),
       ),
       minLines: multiline ? 2 : 1,
@@ -453,6 +591,9 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     final mode = (dose['load'] as Map?)?['unit']?.toString() ?? 'unspecified';
     final id = row['transitional_exercise_id'];
     return Card(
+      key: widget.authorFacing
+          ? _anchors.putIfAbsent('exercise-$i-choice', GlobalKey.new)
+          : null,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -463,6 +604,9 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             DropdownButton<String>(
+              focusNode: widget.authorFacing
+                  ? _focus.putIfAbsent('exercise-$i-choice', FocusNode.new)
+                  : null,
               key: ValueKey(
                 '${revisionKey(controller.activeIdentity)}-exercise-$i-picker',
               ),
@@ -474,31 +618,54 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
                   }.contains(id)
                   ? id
                   : null,
-              hint: const Text('Choose an exact fixture identity'),
-              items: const [
+              hint: Text(
+                widget.authorFacing
+                    ? 'Choose an exercise'
+                    : 'Choose an exact fixture identity',
+              ),
+              items: [
                 DropdownMenuItem(
                   value: 'cohort.exercise.d2_fixture_a',
-                  child: Text('EX-9001 · Synthetic fixture A'),
+                  child: Text(
+                    widget.authorFacing
+                        ? 'Synthetic fixture A'
+                        : 'EX-9001 · Synthetic fixture A',
+                  ),
                 ),
                 DropdownMenuItem(
                   value: 'cohort.exercise.d2_fixture_b',
-                  child: Text('EX-9002 · Synthetic fixture B'),
+                  child: Text(
+                    widget.authorFacing
+                        ? 'Synthetic fixture B'
+                        : 'EX-9002 · Synthetic fixture B',
+                  ),
                 ),
               ],
               onChanged: (value) async {
                 if (value != null &&
                     value != id &&
                     await _confirm(
-                      'Replace exercise identity?',
-                      'Keep authored dosage and clear the display label. Names do not resolve identity.',
+                      widget.authorFacing
+                          ? 'Use this exercise?'
+                          : 'Replace exercise identity?',
+                      widget.authorFacing
+                          ? 'Keep the current sets, reps and load. Clear the optional exercise label.'
+                          : 'Keep authored dosage and clear the display label. Names do not resolve identity.',
                     )) {
                   _refresh(() => controller.replaceExercise(i, value));
                 }
               },
             ),
+            if (_fieldError('exercise-$i-choice') case final error?)
+              Text(
+                error,
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
             _field(
               'exercise-$i-label',
-              'Display label (optional; not identity)',
+              widget.authorFacing
+                  ? 'Exercise label (optional)'
+                  : 'Display label (optional; not identity)',
               row['exercise_name'],
               (v) => controller.editExercise(i, 'exercise_name', v),
             ),
@@ -608,25 +775,33 @@ class _ProtocolAuthoringScreenState extends State<ProtocolAuthoringScreen> {
     );
   }
 
-  Future<bool> _confirm(String title, String detail) async =>
-      await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(title),
-          content: Text(detail),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Confirm'),
-            ),
-          ],
-        ),
-      ) ??
-      false;
+  Future<bool> _confirm(String title, String detail) async {
+    final generation = controller.generation;
+    final workspace = widget.workspaceGeneration?.call();
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(detail),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Confirm'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+    return confirmed &&
+        generation == controller.generation &&
+        workspace == widget.workspaceGeneration?.call();
+  }
+
   Future<void> _freeze() async {
     if (await controller.freeze() && mounted) {
       setState(() {

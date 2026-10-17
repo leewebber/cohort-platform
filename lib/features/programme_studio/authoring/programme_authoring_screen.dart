@@ -11,10 +11,13 @@ class ProgrammeAuthoringScreen extends StatefulWidget {
     super.key,
     this.controller,
     this.embedded = false,
+    this.authorFacing = false,
+    this.workspaceGeneration,
     this.onSelectSlot,
     this.sessionChoiceLabel,
   });
-  final bool embedded;
+  final bool embedded, authorFacing;
+  final int Function()? workspaceGeneration;
   final String Function(Map<String, dynamic> reference)? sessionChoiceLabel;
   final Future<void> Function(int week, int day, int slot, String sessionKey)?
   onSelectSlot;
@@ -389,7 +392,9 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
         key: const Key('add-slot'),
         onPressed: selectedDay['day_type'] == 'training' ? _addSlot : null,
         icon: const Icon(Icons.add),
-        label: const Text('Add required fixture slot'),
+        label: Text(
+          widget.authorFacing ? 'Add workout' : 'Add required fixture slot',
+        ),
       ),
     ]);
   }
@@ -411,7 +416,9 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Slot ${slot['session_order']} · $key',
+            widget.authorFacing
+                ? 'Workout ${slot['session_order']}'
+                : 'Slot ${slot['session_order']} · $key',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
@@ -419,8 +426,10 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
             key: ValueKey('session-$sourceEpoch-$key-${slot['session_key']}'),
             initialValue: slot['session_key'] as String,
             isExpanded: true,
-            decoration: const InputDecoration(
-              labelText: 'Exact fixture session revision',
+            decoration: InputDecoration(
+              labelText: widget.authorFacing
+                  ? 'Choose version'
+                  : 'Exact fixture session revision',
             ),
             items: [
               for (final session in sessions)
@@ -512,8 +521,12 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                 onPressed: required
                     ? () async {
                         final confirmed = await _confirm(
-                          'Remove $key?',
-                          'Authored references are preserved. Removing a referenced slot will fail validation.',
+                          widget.authorFacing
+                              ? 'Remove this workout?'
+                              : 'Remove $key?',
+                          widget.authorFacing
+                              ? 'Remove this workout from the day. Programme rules remain protected; review the programme afterward.'
+                              : 'Authored references are preserved. Removing a referenced slot will fail validation.',
                         );
                         if (!mounted) return;
                         if (confirmed) {
@@ -632,25 +645,32 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
     _ => '${field[0].toUpperCase()}${field.substring(1)}',
   };
 
-  Future<bool> _confirm(String title, String detail) async =>
-      await showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(title),
-          content: Text(detail),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Confirm'),
-            ),
-          ],
-        ),
-      ) ??
-      false;
+  Future<bool> _confirm(String title, String detail) async {
+    final revision = controller.revision;
+    final workspace = widget.workspaceGeneration?.call();
+    final confirmed =
+        await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(detail),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Confirm'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+    return confirmed &&
+        revision == controller.revision &&
+        workspace == widget.workspaceGeneration?.call();
+  }
 
   Future<void> _reopen() async {
     final source = await showDialog<String>(
@@ -712,7 +732,18 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
   }
 
   Future<void> _addSlot() async {
-    var newKey = '';
+    final usedKeys = {
+      for (final w in controller.tree!['weeks'] as List)
+        for (final d in w['days'] as List)
+          for (final s in d['slots'] as List) s['slot_key'],
+    };
+    var n = 1;
+    while (usedKeys.contains('W${week + 1}D${day + 1}S$n')) {
+      n++;
+    }
+    var newKey = widget.authorFacing ? 'W${week + 1}D${day + 1}S$n' : '';
+    final capturedRevision = controller.revision;
+    final capturedWorkspace = widget.workspaceGeneration?.call();
     var session = widget.embedded
         ? (controller.tree!['sessions'] as List).first['session_key'] as String
         : 'SYN-SESSION-R1';
@@ -720,22 +751,29 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, update) => AlertDialog(
-          title: const Text('Add required fixture slot'),
+          title: Text(
+            widget.authorFacing
+                ? 'Add workout to this day'
+                : 'Add required fixture slot',
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                key: const Key('new-slot-key'),
-                onChanged: (value) => newKey = value,
-                decoration: const InputDecoration(
-                  labelText: 'Explicit unique slot key',
+              if (!widget.authorFacing)
+                TextField(
+                  key: const Key('new-slot-key'),
+                  onChanged: (value) => newKey = value,
+                  decoration: const InputDecoration(
+                    labelText: 'Explicit unique slot key',
+                  ),
                 ),
-              ),
               DropdownButtonFormField<String>(
                 isExpanded: true,
                 initialValue: session,
-                decoration: const InputDecoration(
-                  labelText: 'Fixture revision',
+                decoration: InputDecoration(
+                  labelText: widget.authorFacing
+                      ? 'Session version'
+                      : 'Fixture revision',
                 ),
                 items: [
                   if (widget.embedded)
@@ -771,20 +809,24 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, newKey),
-              child: const Text('Add slot'),
+              child: Text(widget.authorFacing ? 'Add workout' : 'Add slot'),
             ),
           ],
         ),
       ),
     );
     if (!mounted) return;
-    if (key != null) {
+    if (key != null &&
+        capturedRevision == controller.revision &&
+        capturedWorkspace == widget.workspaceGeneration?.call()) {
       controller.addSlot(week, day, key, session);
       setState(() => sourceEpoch++);
     }
   }
 
   Future<void> _move(int index, Map<String, dynamic> tree) async {
+    final revision = controller.revision;
+    final workspace = widget.workspaceGeneration?.call();
     final targets = <(int, int)>[
       for (var w = 0; w < (tree['weeks'] as List).length; w++)
         for (var d = 0; d < (tree['weeks'][w]['days'] as List).length; d++)
@@ -805,7 +847,11 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                   .length -
               (target == (week, day) ? 1 : 0);
           return AlertDialog(
-            title: const Text('Move / reorder required slot'),
+            title: Text(
+              widget.authorFacing
+                  ? 'Move workout'
+                  : 'Move / reorder required slot',
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -832,12 +878,21 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                   decoration: const InputDecoration(labelText: 'Position'),
                   items: [
                     for (var i = 0; i <= count; i++)
-                      DropdownMenuItem(value: i, child: Text('Slot ${i + 1}')),
+                      DropdownMenuItem(
+                        value: i,
+                        child: Text(
+                          widget.authorFacing
+                              ? 'Workout ${i + 1}'
+                              : 'Slot ${i + 1}',
+                        ),
+                      ),
                   ],
                   onChanged: (value) => update(() => position = value!),
                 ),
-                const Text(
-                  'Slot key and progression remain unchanged. Validate the resulting authored references.',
+                Text(
+                  widget.authorFacing
+                      ? 'Only placement and order change. Review the programme afterward.'
+                      : 'Slot key and progression remain unchanged. Validate the resulting authored references.',
                 ),
               ],
             ),
@@ -856,7 +911,9 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
       ),
     );
     if (!mounted) return;
-    if (confirmed == true) {
+    if (confirmed == true &&
+        revision == controller.revision &&
+        workspace == widget.workspaceGeneration?.call()) {
       final target = targets[destination];
       controller.moveSlot(week, day, index, target.$1, target.$2, position);
       setState(() => sourceEpoch++);
