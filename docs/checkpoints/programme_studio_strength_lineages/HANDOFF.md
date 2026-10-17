@@ -1,3 +1,10 @@
+> **2026-10-17 qualified publication authority:** [Final technical review](./FINAL_TECHNICAL_REVIEW.md)
+> supersedes the dated stop below. Founder tentatively observed functionality but
+> did not confidently establish detailed manual outcomes. Full visual/usability
+> acceptance is NOT granted; the workflow was reported confusing and not user
+> friendly. Technical-gated Git publication is explicitly authorised without a
+> further walkthrough. Broader Stage 2/Sprint C and four phone checks remain open.
+
 # Independent synthetic strength lineages — local implementation handoff
 
 2026-10-14 (Asia/Makassar). **IMPLEMENTED_LOCALLY_AWAITING_FOUNDER_VISUAL_REVIEW**.

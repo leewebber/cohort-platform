@@ -1,0 +1,219 @@
+{
+  "date": "2026-10-17",
+  "status": "TECHNICALLY_REVIEWED_QUALIFIED_PUBLICATION_AUTHORISED",
+  "base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+  "original_implementation_HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+  "review_fix_HEAD": "2c4e84906af2190185a52324b196cb061f01cdf9",
+  "review_worktree": "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform",
+  "review_branch": "codex/studio-strength-lineages-review",
+  "founder": {
+    "feedback": "I think that works, but honestly I have no idea; this is not user friendly. Let\u2019s just push through.",
+    "functionality": "tentatively observed",
+    "detailed_manual_outcomes": "not confidently established",
+    "full_visual_usability_acceptance": false,
+    "workflow_reported": "confusing and not user friendly",
+    "technical_gated_Git_publication_authorised": true,
+    "further_manual_walkthrough_required_now": false
+  },
+  "confirmed_fix": {
+    "problem": "admission/selection could report success after queued notification reset/disposal",
+    "reproduced_before_fix": 4,
+    "new_passing_regressions": 4,
+    "scope": "composition completion only; preserve newer same-workspace operation state"
+  },
+  "affected_regressions": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/ test/founder_programme_import/ test/authored_plan_package/ test/architecture/founder_programme_identity_consumer_boundaries_test.dart test/models/strength_exercise_prescription_test.dart test/session_builder/session_block_validation_test.dart test/session/session_execution_projection_test.dart test/session_revision/session_revision_service_test.dart test/domain/exercise_knowledge/founder_approved_identity_mappings_phase_3_1f_test.dart",
+    "passed": 381,
+    "exit": 0
+  },
+  "focused_composition_lineage_widgets": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/synthetic_strength_lineages_test.dart test/programme_studio/synthetic_composition_test.dart test/programme_studio/synthetic_composition_screen_test.dart",
+    "passed": 93,
+    "exit": 0
+  },
+  "canonical_package": {
+    "cwd": "packages/cohort_plan_package",
+    "command": "dart test",
+    "passed": 41,
+    "exit": 0
+  },
+  "scoped_analysis": {
+    "command": "flutter --suppress-analytics analyze --no-pub <all 16 files below>",
+    "file_count": 16,
+    "diagnostics": 0,
+    "exit": 0,
+    "files_sha256": {
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "dd7885fefa2594a462d3ae5b082dd7c9e5a106e37a727feacd49133d8375165b",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "0172b3ea23611cecf6e55efd720784a026a1e169b6a80070edf8b0afca10f181",
+      "lib/features/programme_studio/composition/synthetic_composition_fixtures.dart": "ca1bf2a7b5b2d77f0d93b5bdb239e1b46464b2574aacc678fdb86a288c6baaf0",
+      "lib/features/programme_studio/composition/synthetic_composition_handoff.dart": "3dd4bb9411e6d80a56930c6972ecb55db0694280d7fef8d0c4d1b978e5f23ca1",
+      "lib/features/programme_studio/composition/synthetic_composition_review_bridge.dart": "63d8fa8c5a1fffcdb84b1dad7178dd8bed6ec36cb803f479164ef4353a90df61",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "0d274f45f60173083e6c8a74ee46a0cf23b82549c42b91b520f1f735626f3f6c",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart": "c6b0aa877a5c5809941c99f859728cb68cce391d0f86ff272f02296a2e27df6d",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart": "24180f01233e7c5634f2fbd749839232a1921516f346963adfa4b9dc48a45cde",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart": "7e2e81a57b3fd30f77019fff6c7c33aee9092b76fa5bc27f1a434e228ea3d136",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart": "43edb0249b63fb62904bdad2b3074363decc2fb48abbb302c84f28aedce0b950",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_lineage.dart": "3ab1cb1c4703f2ba0df4fca29a954e01ddc8bbd7a767ebd66dae42323fc63f3b",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart": "9f565d639482c4b1b34af6804eada60c8c3c65245359a93fbd8a3cab286a4d5f",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart": "c0b75909889b86d361b5fcf502d2c9a07c8fca3a197fb0d538ae54bfc701d12e",
+      "test/programme_studio/protocol_authoring_screen_test.dart": "5b1bef5dbd728d9359063099ce6b193d4436847cdb7991b1475d3f7b8048bd69",
+      "test/programme_studio/synthetic_composition_screen_test.dart": "e11deaabefdab513d4bb2dfc3fc79e252c873456003c5ed13bbc0eeb8809d167",
+      "test/programme_studio/synthetic_strength_lineages_test.dart": "385378ad854d93233b5698c9eb2c58d5ec4e01001cc0812ef0c3328511848229"
+    }
+  },
+  "full_analysis": {
+    "before": 367,
+    "after": 367,
+    "identical": true,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "added": [],
+    "removed": [],
+    "command": "flutter --suppress-analytics analyze --no-pub",
+    "before_exit": 1,
+    "after_exit": 1,
+    "green": false,
+    "recorded_baseline_comparison": {
+      "recorded_original_log_sha256": "709591b9fbd04cbf1b82ad5faaa09c863f00b3df5db8cd1fa670e8557b32aecc",
+      "fresh_log_sha256": "dcf1a671eabf073444abf0f7e9fc2613a9ade7138d5cffbd3c1dbb6935221dc9",
+      "original": 367,
+      "fresh": 367,
+      "warnings": 110,
+      "info": 257,
+      "errors": 0,
+      "identical_diagnostics": true,
+      "added": [],
+      "removed": []
+    }
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "groups_passed": 6,
+    "groups_failed": 0,
+    "exit": 0,
+    "script_and_group_definitions_unchanged": true,
+    "external_cached_no_pub_wrapper": true
+  },
+  "protected": {
+    "base": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+    "baseline_entries": 2659,
+    "changed_existing": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_fixtures.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_handoff.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_review_bridge.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_review_bridge.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_strength_session_compiler.dart",
+      "test/programme_studio/protocol_authoring_screen_test.dart",
+      "test/programme_studio/synthetic_composition_screen_test.dart"
+    ],
+    "unexpected_changes": [],
+    "unchanged_baseline_entries": 2644,
+    "all_other_baseline_git_objects_identical": true,
+    "worktree_uncommitted_changes": [],
+    "absent_skip_worktree_temp_entries": 9,
+    "temp_git_objects_unchanged": true,
+    "note": "Nine inherited skip-worktree .temp entries are absent in this clean checkout; their Git objects and index entries remain unchanged. No .temp contents were read or restored."
+  },
+  "preservation": {
+    "all_equal": true,
+    "checkouts": {
+      "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform": {
+        "HEAD": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+        "branch": "codex/programme-studio-composition",
+        "outstanding_paths": 0,
+        "file_inventory_entries": 2659,
+        "index_sha256": "99d610a54ad179ee59338b5913c7531a08e6bcc08a345f26518ff20928e95344",
+        "temp_files": 0,
+        "exact_match": true
+      },
+      "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+        "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+        "branch": "codex/programme-studio-d2",
+        "outstanding_paths": 0,
+        "file_inventory_entries": 2637,
+        "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+        "temp_files": 0,
+        "exact_match": true
+      },
+      "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+        "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+        "branch": "codex/programme-studio-stage2",
+        "outstanding_paths": 0,
+        "file_inventory_entries": 2612,
+        "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+        "temp_files": 0,
+        "exact_match": true
+      },
+      "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform": {
+        "HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+        "branch": "codex/studio-strength-lineages",
+        "outstanding_paths": 0,
+        "file_inventory_entries": 2668,
+        "index_sha256": "f37ebbe410625fc417a0d40b5f43a6fbe39a803af78c35bcab7c5a86df90b0c5",
+        "temp_files": 0,
+        "exact_match": true
+      },
+      "/Users/leewebber/Developer/cohort_platform": {
+        "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+        "branch": "main",
+        "outstanding_paths": 95,
+        "file_inventory_entries": 2687,
+        "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+        "temp_files": 0,
+        "exact_match": true
+      }
+    }
+  },
+  "diff_check": "PASS",
+  "local_links": {
+    "checked": 102,
+    "broken": [],
+    "files_scope": "all added/changed Markdown in complete baseline-to-review diff; local path existence; URL links not contacted"
+  },
+  "preview": {
+    "port": 4195,
+    "stopped": true,
+    "listener_after_stop": false,
+    "identified_flutter_PID": 14257,
+    "no_unrelated_process_stopped": true
+  },
+  "integration_preflight": {
+    "origin": "github.com/leewebber/cohort-platform.git",
+    "fetch_command": "git fetch --no-tags origin refs/heads/main:refs/remotes/origin/main",
+    "fresh_remote_main": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+    "code_ahead": 4,
+    "code_behind": 0,
+    "merges": 0,
+    "expected_final_commits": 5,
+    "publish_command": "git -c push.followTags=false push origin HEAD:refs/heads/main",
+    "published_SHA": "recorded in separate postflight receipt and task response after this documentation commit"
+  },
+  "logs_sha256": {
+    "analysis-after.log": "709591b9fbd04cbf1b82ad5faaa09c863f00b3df5db8cd1fa670e8557b32aecc",
+    "analysis-before.log": "dcf1a671eabf073444abf0f7e9fc2613a9ade7138d5cffbd3c1dbb6935221dc9",
+    "analysis-scoped.log": "dc456799ee2f36fa1b21487b27dac7d8121e33b1e1529e9faca5f9d18748e3a3",
+    "canonical-package.log": "7a247675135083c4c62faebc1cceda2bc41352c1a4a7ee2f26a8a1c470553794",
+    "format.log": "56488af4a8ab2724d34e3ffd9b6ef191fe0737b1287bb96ff18250c00c752314",
+    "queued-completion-before.log": "0b1685176ee4d00a1c0e5cbc54b680dd7972f7daccf7e0e26fe1028d4358cc1f",
+    "races-after.log": "9cc1fb706e7546be3d5ccbe51e98354dae78d0614f2ed9197e0a6438410e8b8e",
+    "regressions.log": "809665fb93836f476ae59779ac29646eef8f5dd371686a683fb56a7e5422f370",
+    "safety.log": "50003e5468cf1fa288a3d30f0c67cd4e11e294436dedcb55744bf612c02bd03b"
+  },
+  "inventory_manifest_sha256": {
+    "BEFORE.json": "315c6f38f6f13addd97492cc1d132dcb8379c3b6a18dc398af162b89ff82429a",
+    "AFTER_REVIEW.json": "315c6f38f6f13addd97492cc1d132dcb8379c3b6a18dc398af162b89ff82429a"
+  },
+  "broader_Stage2_SprintC_open": true,
+  "pending_phone_checks": 4,
+  "next_implementation_authorised": false,
+  "no_hosted_project_migration_real_content_production_wiring_or_device_operation": true
+}

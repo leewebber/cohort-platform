@@ -1,5 +1,23 @@
 # Current repository checkpoint
 
+> **Programme Studio strength lineages — qualified final review, 2026-10-17:**
+> [Technical review and founder feedback](./programme_studio_strength_lineages/FINAL_TECHNICAL_REVIEW.md)
+> and [fresh verification](./programme_studio_strength_lineages/FINAL_REVIEW_VERIFICATION.json)
+> supersede the dated local-review pause below. Founder tentatively observed
+> functionality; detailed manual outcomes were not confidently established.
+> Full visual/usability acceptance is NOT granted. Workflow reported confusing
+> and not user friendly. Founder explicitly authorises technical-gated normal
+> main publication without another manual walkthrough. One queued reset/disposal
+> completion defect fixed; 381 affected / 41 canonical tests and six safety groups
+> pass. Zero diagnostics across 16 changed/new Dart files. Full analysis remains
+> non-green: identical 367 inherited diagnostics (110 warnings, 257 info, zero errors).
+> Protected artifacts unchanged; all five older checkouts/HEADs/indices/.temp and
+> original 95 outstanding paths preserved. Separate clean review/integration worktree;
+> all original implementation commits retained. Preview stopped. No hosted project,
+> migration, real content, production/athlete wiring or device work. Broader Stage 2/
+> Sprint C and four record-dependent phone checks remain open.
+> **NEXT_IMPLEMENTATION_AUTHORISED=false**. Publication postflight is reported separately.
+
 > **Programme Studio independent strength lineages — local implementation, 2026-10-14:**
 > [Handoff and founder walkthrough](./programme_studio_strength_lineages/HANDOFF.md)
 > and [verification](./programme_studio_strength_lineages/VERIFICATION.json) record
