@@ -1,5 +1,21 @@
 # Current repository checkpoint
 
+> **Programme Studio editable local workspace — technically verified, 2026-10-17:**
+> [Handoff](./programme_studio_editable_workspace/HANDOFF.md),
+> [scope](./programme_studio_editable_workspace/SCOPE.md) and
+> [format/limits](./programme_studio_editable_workspace/FORMAT.md) record portable local
+> save/open/edit for both fixed owners, private versions, programme selections, reservations
+> and invalid form drafts. Separate reconstruction plus explicit atomic replacement; no
+> saved receipt authority. 290 Studio tests, six unchanged safety groups, zero diagnostics
+> across 14 changed/new Dart files. Fresh full analysis remains non-green at identical
+> 367 inherited identities (110 warnings, 257 info, zero errors). Canonical-package
+> evidence reused after unchanged-byte/log checks. Actual Chrome file flow exercised by
+> agent; no founder acceptance inferred. All ten older inventories including original
+> 95 paths/HEADs/indices/.temp preserved. Normal main publication authorised by latest
+> founder instruction. This bounded editable synthetic workspace does not establish
+> real authoring/Stage 2/launch readiness. Stage 2/Sprint C and four phone checks remain
+> open; no hosted mutation, real publication, athlete changes or device distribution.
+
 > **Programme Studio canonical source files — verified implementation, 2026-10-17:**
 > [Continuation handoff](./programme_studio_canonical_source_export/HANDOFF.md) and
 > [scope](./programme_studio_canonical_source_export/SCOPE.md) record the next practical

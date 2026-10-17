@@ -1,0 +1,123 @@
+{
+  "base": "2d97daf71e31c4691eba9cf85e731b4a1b3c2e33",
+  "broader_Stage2_SprintC_open": true,
+  "broken_local_links": [],
+  "browser": {
+    "files": {
+      "cohort-editable-workspace (1).json": {
+        "bytes": 8798,
+        "sha256": "20baff98540718c0a7aa4b2f0a854310d8856d858cd3c2421cdef7f4759a4229"
+      },
+      "cohort-editable-workspace (2).json": {
+        "bytes": 9934,
+        "sha256": "efb19dbcb78aaf273d97def4a64f3025474b7c2b1f9a04d75807d94b3b5b1a2b"
+      },
+      "cohort-editable-workspace.json": {
+        "bytes": 8672,
+        "sha256": "bd74f8b66d048832684b666632cbc2fc611be4fe3d1272ddaf6b26ee6ae56b3f"
+      }
+    },
+    "final_admitted": 1,
+    "final_frozen_counts": [
+      2,
+      2
+    ],
+    "independent_immutable_source_bytes": true,
+    "invalid_draft_retained": true,
+    "private_versions_survive_reopen": true
+  },
+  "browser_limits": "Actual Chrome flow before last rejected-source/reset-error fixes; final focused+full suite after those fixes. Hot-recompiled final bundle. Agent evidence, not founder acceptance.",
+  "canonical_package": {
+    "all_package_bytes_unchanged": true,
+    "passed": 41,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-17",
+  "diff_check": "PASS",
+  "focused_final": {
+    "exit": 0,
+    "passed": 54
+  },
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "errors": 0,
+    "exit_after": 1,
+    "exit_before": 1,
+    "green": false,
+    "identities_equal": true,
+    "info": 257,
+    "removed": [],
+    "warnings": 110
+  },
+  "implementation_commit": "6cca4282f3e25d2a4e421e03d580124067e62cac",
+  "local_links_checked": 97,
+  "logs_sha256": {
+    "analysis-after.log": "4f71545ed86551a1adef05d0d2af0b479b83f167344ba97820b5f30b9f600787",
+    "analysis-before.log": "806aaea1017b2c6a4da2982d31538e0cbfb03a5a7014c3a6ef67d1bbabba498f",
+    "analysis-scoped.log": "288143ed247756ee5e993afd05484dac27f0aaa18399ffe84cd23845bb7179c5",
+    "focused-final.log": "d87a91e541fe1d5b11a9539481fab934f28fa64ed97841b8ae397da119ade778",
+    "rejected-wrapper-before.log": "3671357af3e60adf7765d693086eca9b0ac2b1d297ef93cfff9209ec0207c726",
+    "safety.log": "95829d2420438e29fc78f1827b46b79dbb39775ada7c2afaf8932992e6e3acff",
+    "studio-final.log": "d7659b677485cb961716c35000e6c0d2b63b37b9b4b4a238e4af7d08ba35bb2a"
+  },
+  "pending_phone_checks": 4,
+  "preservation": {
+    "exact_before_after_equality": true,
+    "older_checkouts": 10,
+    "original_95_paths_preserved": true
+  },
+  "protected": {
+    "absent_temp_index_objects_unchanged": 9,
+    "all_other_baseline_entries_identical": 2686,
+    "allow_existing_changes": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart",
+      "lib/features/programme_studio/composition/programme_first_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart"
+    ],
+    "baseline_entries": 2694,
+    "compiler_schema_hash_resolver_allocator_writers_profiles_fixtures_published_artifacts_goldens_dependencies_safety_unchanged": true
+  },
+  "safety": {
+    "cached_no_pub_wrapper_outside_repo": true,
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6,
+    "script_and_definitions_unchanged": true
+  },
+  "scoped_analysis": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files_sha256": {
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "8065d3894e0ab517a80099ff116217775412ae53baefa961af17fb7987c3c301",
+      "lib/features/programme_studio/composition/programme_first_screen.dart": "b34790db213e6b8a3019247bae1854a9243b8508f6b3380844de1443e0782ecc",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "e98efc2a0429c233b03fa62aa0f7bc8f3fb2dbff011135713f031e6e0c5de4ac",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "f3c7735eb15e9e0770abf012a02eeb9b75b9d2de2206adb3e6247589acc0737e",
+      "lib/features/programme_studio/composition/workspace/workspace_files.dart": "6a2395da4f0848e1b101c68ec15ce7f59b1df9caa6b73c00c08041083c79fa78",
+      "lib/features/programme_studio/composition/workspace/workspace_files_stub.dart": "422f438a64fbc48d132b2b131eb080571172a70ede4c7eb8c043bba090f47422",
+      "lib/features/programme_studio/composition/workspace/workspace_files_web.dart": "a7879b9d28df13a794138cad865f0680348d195b6a5f6ce84d07af371dae96c2",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart": "8ad430a7e559b869f1f7fe8c6e2755844aca8285e3df00836578dfccea20f0a3",
+      "lib/features/programme_studio/protocol_authoring/protocol_authoring_screen.dart": "4fd1cc224a6de589e650daece505cf307ead532d58cd32625e5fc9a4d529c47e",
+      "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart": "873f3aa1a248dbbb5b716fcae3e2f475905cbe4f5a7b47a53550b8264fae22a9",
+      "lib/features/programme_studio/protocol_authoring/workspace_session_draft.dart": "ad646f6611515403bf0f151a40a0124842fdfef0c71b86b600616a1993c4e967",
+      "lib/features/programme_studio/workspace_json.dart": "6c783826198c35d402748fc452184ad4d6cf02b725448a88a05976d8404e47b1",
+      "test/programme_studio/editable_workspace_screen_test.dart": "7614c7c294bc2c336d115a4386452e66a3094d7e44a9972d02f6d204eb47a2bc",
+      "test/programme_studio/editable_workspace_test.dart": "8113cc4b212be41db874babcdf05a59743afa6d85f6363acb9a8efccf07c2291"
+    }
+  },
+  "status": "TECHNICALLY_VERIFIED_NORMAL_MAIN_PUBLICATION_AUTHORISED",
+  "studio_tests": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/",
+    "exit": 0,
+    "new_workspace_tests": 38,
+    "passed": 290
+  }
+}
