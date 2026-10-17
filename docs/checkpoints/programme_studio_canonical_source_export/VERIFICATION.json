@@ -1,0 +1,111 @@
+{
+  "base": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+  "broader_Stage2_SprintC_open": true,
+  "broken_local_links": [],
+  "canonical_package": {
+    "passed": 41,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reason": "Every canonical-package byte unchanged; accepted raw log hash verified.",
+    "reused_not_rerun": true
+  },
+  "chrome_download": {
+    "agent_check_not_founder_acceptance": true,
+    "all_source_review_index_digests_match": true,
+    "bytes": 18432,
+    "filename": "cohort-canonical-sources.tar",
+    "independent_python_tarfile_extraction": true,
+    "operator_compile_command": "dart --packages=.dart_tool/package_config.json tool/compile_package.dart <extracted programme.plan-package.yaml>",
+    "operator_compile_package_hash": "6eff96f2d89265236e57bf93642c0e6ba9bcabe5974b97209e5c5969a865b40a",
+    "operator_compile_sessions": 1,
+    "sha256": "13ac453bb86147ca6d568f5914fbdd96b0ea065eb5aba21272307a43ce93fa42",
+    "url": "http://127.0.0.1:4196/"
+  },
+  "date": "2026-10-17",
+  "diff_check": "PASS",
+  "focused": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/canonical_source_export_test.dart test/programme_studio/programme_first_screen_test.dart",
+    "exit": 0,
+    "passed": 19
+  },
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "command": "flutter --suppress-analytics analyze --no-pub",
+    "errors": 0,
+    "exit_after": 1,
+    "exit_before": 1,
+    "green": false,
+    "identities_equal": true,
+    "info": 257,
+    "removed": [],
+    "warnings": 110
+  },
+  "implementation_commit": "2c2fa6e9fe8c4c6c5d3dec31d967758adca43db0",
+  "local_links_checked": 94,
+  "logs_sha256": {
+    "analysis-after.log": "d0af39289cdb454ab7f2c73194ea7889819c97bd6223735be4fa1f9358db1f6c",
+    "analysis-before.log": "b1475782302e4eed6a8b4f5dfb6b8ecc106984ebc2053e30e713e30e133d2b79",
+    "analysis-scoped.log": "eb4621b62859214f89435e77afcb732960d0861ddd5f3e663032975be63cb965",
+    "browser-operator-compile.log": "dea750c79b2fa9093fa47e98b10d3ba3200c865063ce7952afad164b61833365",
+    "focused.log": "a0681f1951a67c8c1902ecefbcbcc57ccba9c636752efa9f81ea2555a18534b1",
+    "isolation-fixed.log": "1450fe3df280d5a2618c64d5cbb4519a15fdfbc4323304a248b0a6fb646cfba9",
+    "safety.log": "07980307cd76ebb23ad9f727e9427d7aac3e5982acf25fd02706f7981ffd6000",
+    "studio-final.log": "74dfc0beeb8fe180f892c811d8dbe6a3776c19e3e19176f080ffca57d2c860ae"
+  },
+  "no_hosted_mutations_real_publication_athlete_changes_payments_destructive_operations_or_device_distribution": true,
+  "pending_phone_checks": 4,
+  "previous_usability_publication": {
+    "base": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+    "clean_integration": true,
+    "commits": 4,
+    "divergence": "0/0",
+    "founder_explicit_acceptance": true,
+    "merges": 0,
+    "published_SHA": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "refetched_equality": true
+  },
+  "protected": {
+    "absent_temp_index_objects_identical": 9,
+    "all_other_baseline_bytes_identical": true,
+    "allow_existing_changes": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/composition/programme_first_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart",
+      "test/programme_studio/programme_first_screen_test.dart"
+    ],
+    "baseline_entries": 2684,
+    "no_shared_compiler_schema_hash_resolver_allocator_writer_profile_fixture_transport_published_golden_dependency_or_isolation_definition_changes": true,
+    "unchanged_baseline_entries": 2680
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6,
+    "outside_repo_cached_no_pub_wrapper": true,
+    "script_and_definitions_unchanged": true
+  },
+  "scoped_analysis": {
+    "command": "dart analyze <all eight paths>",
+    "diagnostics": 0,
+    "exit": 0,
+    "files_sha256": {
+      "lib/features/programme_studio/composition/programme_first_screen.dart": "8823da2c0e6b0382a25916d87b0e60321d64abacdce89f2c318c421c4b2d2dd8",
+      "lib/features/programme_studio/composition/source_export/canonical_source_bundle.dart": "46c0c2e6a22e76cede72dd5783353dd361043e937e740b5e6f127bc536822948",
+      "lib/features/programme_studio/composition/source_export/source_bundle_download.dart": "892c8d30c8895b7e308014ace7536f4082f2fc4d57a1a8321710ffb9e32d5080",
+      "lib/features/programme_studio/composition/source_export/source_bundle_download_stub.dart": "c4839bb124befe3c7d86c7d5780654a1248cf3417efc16a05208411387b843d4",
+      "lib/features/programme_studio/composition/source_export/source_bundle_download_web.dart": "c18f02c5aab7c7fd119381599ad066db8b026f3b96e05526facc934c31092be6",
+      "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "e4848db19dd97c1c93aa069765501efcabac0b70b74c1c8b6d341a6a53dacaee",
+      "test/programme_studio/canonical_source_export_test.dart": "29141f3b05a62d54d6cd1800e6c659760ca174c120245f69ed78a7011eef9ee0",
+      "test/programme_studio/programme_first_screen_test.dart": "c6d7e81e6f9f686ca7ee92d6655311d6ecb76e4125cd25198934a3022b1bf2eb"
+    }
+  },
+  "status": "TECHNICALLY_VERIFIED_NORMAL_MAIN_PUBLICATION_AUTHORISED",
+  "studio_regressions": {
+    "command": "flutter --suppress-analytics test --no-pub test/programme_studio/",
+    "exit": 0,
+    "new_tests": 7,
+    "passed": 252
+  }
+}

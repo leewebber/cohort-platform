@@ -1,5 +1,22 @@
 # Current repository checkpoint
 
+> **Programme Studio canonical source files — verified implementation, 2026-10-17:**
+> [Continuation handoff](./programme_studio_canonical_source_export/HANDOFF.md) and
+> [scope](./programme_studio_canonical_source_export/SCOPE.md) record the next practical
+> milestone under founder's continued-build authority: exact canonical programme/session
+> YAML plus unchanged read-only review download. Programme-first usability accepted and
+> published at 4d78d468; its review pause below is historical. 252 current Studio tests,
+> six unchanged safety groups, zero diagnostics in eight changed/new Dart files. Fresh
+> full analysis is non-green at identical 367 inherited diagnostics (110 warnings,
+> 257 info, zero errors). Canonical-package evidence reused after unchanged-code/hash
+> checks. Actual Chrome archive independently extracted and operator-compiled. Protected
+> artifacts and all nine older inventories preserved, including original 95 paths.
+> Temporary authoring/read-only reopen does not satisfy durable editable authoring or
+> broader Stage 2 closure. Stage 2/Sprint C and four phone checks remain open. Continue
+> useful canonical-source work autonomously within latest founder authority; no routine
+> allocation/walkthrough approval cycle. No hosted mutation, real publication, athlete
+> changes, payments, destructive operation or device distribution.
+
 > **Programme-first usability — founder accepted, 2026-10-17:**
 > [Acceptance and technical review](./programme_studio_programme_first_usability/FINAL_REVIEW_AND_ACCEPTANCE.md)
 > supersedes this milestone's review pause below. Founder confirms the walkthrough
