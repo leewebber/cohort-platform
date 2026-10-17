@@ -208,6 +208,9 @@ class SyntheticCompositionController extends ChangeNotifier {
       // operation started by an edit/notification after the completed append.
       if (_alive(token)) _busy = false;
       notifyListeners();
+      // Settle queued notification callbacks before reporting a committed append.
+      // A newer same-workspace operation remains valid; reset/disposal does not.
+      await Future<void>.value();
       return !_disposed &&
           identical(catalogue, _catalogue) &&
           identical(editor, _programme);
@@ -271,6 +274,7 @@ class SyntheticCompositionController extends ChangeNotifier {
       );
       if (_disposed || !identical(editor, _programme)) return false;
       notifyListeners();
+      await Future<void>.value();
       return !_disposed && identical(editor, _programme);
     } catch (error) {
       return _fail(error, token);

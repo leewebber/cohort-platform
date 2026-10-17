@@ -547,4 +547,49 @@ void main() {
     expect(c.errors, isEmpty);
     expect(compiler.store.mutationAttempts, 0);
   });
+  for (final operation in ['admit', 'select']) {
+    for (final action in ['reset', 'dispose']) {
+      test(
+        'B $operation refuses queued $action at committed notification',
+        () async {
+          final c = await open();
+          await createB(c);
+          final b = c.secondSession.revisions.single;
+          if (operation == 'select') {
+            expect(await c.admit(b), true);
+            c.programme.addSlot(0, 0, 'W1D1S2', d2SessionKey(1));
+          }
+          var queued = false;
+          Future<void>? resetting;
+          c.addListener(() {
+            final committed = operation == 'admit'
+                ? c.admitted.length == 2
+                : c.initialized &&
+                      selectedKey(c, 1) ==
+                          SyntheticStrengthLineage.b.sessionKey(1);
+            if (!queued && committed) {
+              queued = true;
+              scheduleMicrotask(() {
+                if (action == 'reset') {
+                  resetting = c.reset();
+                } else {
+                  c.dispose();
+                }
+              });
+            }
+          });
+          final result = await (operation == 'admit'
+              ? c.admit(b)
+              : c.selectRevision(0, 0, 1, b.identity));
+          await resetting;
+          expect(result, false);
+          expect(c.current, null);
+          if (action == 'reset') {
+            expect(c.admitted.length, 1);
+            expect(selectedKey(c, 0), d2SessionKey(1));
+          }
+        },
+      );
+    }
+  }
 }
