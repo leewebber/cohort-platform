@@ -1,3 +1,5 @@
+import 'source_export/canonical_source_bundle.dart';
+import 'source_export/source_bundle_download.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -33,9 +35,11 @@ class ProgrammeFirstScreen extends StatefulWidget {
     super.key,
     required this.controller,
     required this.advanced,
+    this.downloadSources = downloadSourceBundle,
   });
   final SyntheticCompositionController controller;
   final Widget Function() advanced;
+  final void Function(CanonicalSourceBundle) downloadSources;
   @override
   State<ProgrammeFirstScreen> createState() => _ProgrammeFirstScreenState();
 }
@@ -684,6 +688,9 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                       const Text(
                         'Sources or review changed. Close and export the current programme again.',
                       ),
+                    const Text(
+                      'Download canonical sources also provides the programme YAML, every included session version as exact Founder YAML, a file index, instructions and this read-only review in one archive. It does not save an editable project or publish content.',
+                    ),
                     ExpansionTile(
                       title: const Text('Advanced: complete export text'),
                       children: [SelectableText(bytes)],
@@ -696,6 +703,57 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
+              ),
+              OutlinedButton(
+                onPressed: valid
+                    ? () async {
+                        final fresh = reopened
+                            ? c.reconstructedExport()
+                            : await c.exportHandoff();
+                        if (fresh == null ||
+                            fresh != bytes ||
+                            !c.canConsumeExport(
+                              fresh,
+                              reconstructed: reopened,
+                            )) {
+                          return;
+                        }
+                        try {
+                          final current = reopened
+                              ? c.reconstructed!
+                              : c.current!;
+                          final bundle = CanonicalSourceBundle.fromReview(
+                            current,
+                          );
+                          if (!mounted ||
+                              !context.mounted ||
+                              !c.canConsumeExport(
+                                fresh,
+                                reconstructed: reopened,
+                              )) {
+                            return;
+                          }
+                          widget.downloadSources(bundle);
+                          if (!mounted ||
+                              !context.mounted ||
+                              !c.canConsumeExport(
+                                fresh,
+                                reconstructed: reopened,
+                              )) {
+                            return;
+                          }
+                          Navigator.pop(context);
+                          showMessage(
+                            'Source download requested. Keep the archive somewhere safe. Its review opens read-only; this is not an editable project.',
+                          );
+                        } catch (_) {
+                          showMessage(
+                            'Source download could not start. Use the local Chrome preview, or copy the complete review instead. Your workspace is unchanged.',
+                          );
+                        }
+                      }
+                    : null,
+                child: const Text('Download canonical sources'),
               ),
               FilledButton(
                 onPressed: valid

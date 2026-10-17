@@ -1,3 +1,5 @@
+import 'source_export/canonical_source_bundle.dart';
+import 'source_export/source_bundle_download.dart';
 import 'programme_first_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,8 +19,10 @@ class SyntheticCompositionScreen extends StatefulWidget {
     super.key,
     this.controller,
     this.technicalInspection = false,
+    this.downloadSources = downloadSourceBundle,
   });
   final bool technicalInspection;
+  final void Function(CanonicalSourceBundle) downloadSources;
   final SyntheticCompositionController? controller;
   @override
   State<SyntheticCompositionScreen> createState() =>
@@ -47,6 +51,7 @@ class _SyntheticCompositionScreenState
           animation: controller,
           builder: (context, _) => ProgrammeFirstScreen(
             controller: controller,
+            downloadSources: widget.downloadSources,
             advanced: () => SyntheticCompositionScreen(
               controller: controller,
               technicalInspection: true,

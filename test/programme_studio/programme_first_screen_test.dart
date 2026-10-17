@@ -1,3 +1,4 @@
+import 'package:cohort_platform/features/programme_studio/composition/source_export/canonical_source_bundle.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ Future<SyntheticCompositionController> mount(
   Size size = const Size(1300, 1000),
   double scale = 1,
   SyntheticCompositionController? supplied,
+  void Function(CanonicalSourceBundle)? downloadSources,
 }) async {
   await t.binding.setSurfaceSize(size);
   addTearDown(() => t.binding.setSurfaceSize(null));
@@ -31,7 +33,12 @@ Future<SyntheticCompositionController> mount(
         ).copyWith(textScaler: TextScaler.linear(scale)),
         child: child!,
       ),
-      home: SyntheticCompositionScreen(controller: c),
+      home: downloadSources == null
+          ? SyntheticCompositionScreen(controller: c)
+          : SyntheticCompositionScreen(
+              controller: c,
+              downloadSources: downloadSources,
+            ),
     ),
   );
   await t.pumpAndSettle();
