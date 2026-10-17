@@ -1,5 +1,18 @@
 # Current repository checkpoint
 
+> **Programme-first usability — founder accepted, 2026-10-17:**
+> [Acceptance and technical review](./programme_studio_programme_first_usability/FINAL_REVIEW_AND_ACCEPTANCE.md)
+> supersedes this milestone's review pause below. Founder confirms the walkthrough
+> works and accepts the bounded temporary authoring/read-only review milestone.
+> Exact implementation evidence reused after hash verification: 411 affected tests,
+> 41 canonical tests, six safety groups, zero changed-file diagnostics; full analysis
+> non-green at identical 367 inherited diagnostics (110 warnings, 257 info, zero errors).
+> Founder authorises normal main integration and continued practical local authoring
+> work with autonomous scoped decisions/checks. No routine allocation/visual-review
+> approval loop. Temporary review transport is not durable editable authoring or Stage 2
+> closure. Broader Stage 2/Sprint C and four phone checks remain open. No hosted mutation,
+> real publication, athlete changes or device distribution. Earlier dated pauses are historical.
+
 > **Programme Studio programme-first usability — local implementation, 2026-10-17:**
 > [Handoff and founder task](./programme_studio_programme_first_usability/HANDOFF.md),
 > [approved scope/product decision](./programme_studio_programme_first_usability/APPROVAL.md)
