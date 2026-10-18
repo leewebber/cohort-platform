@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **Programme Studio four-week synthetic strength authoring — technically verified, 2026-10-18:**
+> [Continuation](./programme_studio_four_week_schedule/HANDOFF.md),
+> [scope](./programme_studio_four_week_schedule/SCOPE.md) and
+> [source/workspace v2 contract](./programme_studio_four_week_schedule/FORMAT.md)
+> record two chosen days across four weeks, exact immutable A/B versions, independent
+> occurrence consent, all-eight prescription review, editable save/open/edit and both
+> export paths. Canonical programme source owns supported schedule edits; locked-reference
+> destructive actions refuse atomically. Safe v1 workspace migration; future formats refuse.
+> 312 Studio tests, 44 final affected checks and all six unchanged safety groups pass;
+> zero diagnostics in all 12 changed/new Dart files. Full analysis remains non-green at
+> identical 367 inherited identities (110 warnings, 257 info, zero errors). Accepted 41
+> canonical-package evidence reused after exact byte/log checks. Actual Chrome four-week,
+> later-version, file-reopen/continued-edit and canonical/read-only export flow verified by
+> agent, not founder acceptance. Eleven older checkout inventories, original 95 paths,
+> HEADs/indices/.temp preserved. Normal main-only integration/push authorised by current
+> founder request; publication tip/postflight reported separately. Fixed synthetic profile,
+> two lineages and straight sets only. Broader Stage 2/Sprint C and four phone checks remain
+> open. No hosted mutation, real content/publication/assignment, athlete changes or device
+> distribution. See continuation for the mapped remaining requirements and next source-intake step.
+
 > **Programme Studio editable local workspace — technically verified, 2026-10-17:**
 > [Handoff](./programme_studio_editable_workspace/HANDOFF.md),
 > [scope](./programme_studio_editable_workspace/SCOPE.md) and

@@ -1,0 +1,168 @@
+{
+  "actual_legacy_v1_file_verifier": {
+    "exact_sources_owners_admitted_profile_retained": true,
+    "exit": 0,
+    "passed": 1
+  },
+  "agent_evidence_not_founder_acceptance": true,
+  "base": "3ec4866c5d4583fdb5f7c581b5e6099ee3616ef6",
+  "browser": {
+    "actual_copied_review_reopened_read_only": true,
+    "all_eight_prescriptions_inspected_in_review": true,
+    "archive_files_sha256": {
+      "README.md": "857a7d31346c4ae73d81542fa3dcd8dd9b7732fcca73f1c8ae0335a210a7ff2b",
+      "programme.plan-package.yaml": "86c7d5e0a8d249613718988e13072087463959cd9c249c2823d16a9a78acaff0",
+      "review.json": "911e4ed7643d2136910e01fc1e19a5046cefb70868691019ef37ec733fa31922",
+      "sessions/session-a-v1.founder.yaml": "effd3544f4f7c1df0d6d98f5538d22d287afed44339fe4ba7c474ec174fab878",
+      "sessions/session-a-v2.founder.yaml": "2f9f59537f068a17cc3d736139ccb1e67a04ee0efe98114d5ededb4e72381296",
+      "sessions/session-b-v1.founder.yaml": "e2107a44b6e6b5a0b55b99c4dfbb5583e300b8336ef50b4614c8f07c6bef3ec2",
+      "sessions/session-b-v2.founder.yaml": "c108f896067a21b4148a7c70eaad8901a04fcc11e52cb437a2d6302a52a231a7",
+      "source-index.json": "a57ea4a31c137639f3f9a663d89496acd6c9ad29bb3c27a2d3fbf56bb4f403bf"
+    },
+    "canonical_archive_downloaded_and_independently_extracted": true,
+    "days": [
+      2,
+      5
+    ],
+    "downloaded_files": {
+      "canonical-sources.tar": {
+        "bytes": 52224,
+        "sha256": "d0ff03396a60dbdde439db651774cd6f3bfe4df273ae833f1db12d4d49ba0673"
+      },
+      "workspace-3.json": {
+        "bytes": 19719,
+        "sha256": "c7b90e6429ff8c2cb619b0b424c3c4e40303f7a9a28fc4a96caf80cacd38f311"
+      },
+      "workspace-4.json": {
+        "bytes": 19719,
+        "sha256": "3cc4cfb9cde14dbaaa8425d7c8ccac7b5e1cb60ab0458b85e8d4b329f088d43c"
+      }
+    },
+    "editable_save_reload_reopen_replace_continue_edit_save": true,
+    "frozen_owners_exactly_equal_before_after_reopen_edit": true,
+    "package_hash": "0eaa92afe9d455b2543558a4c0da923097667cb3c1d266c8d66c452772c19ea2",
+    "surface": "Native Google Chrome",
+    "url": "http://127.0.0.1:4198/",
+    "versions_by_week": [
+      [
+        "A1",
+        "B1"
+      ],
+      [
+        "A1",
+        "B2"
+      ],
+      [
+        "A2",
+        "B1"
+      ],
+      [
+        "A1",
+        "B2"
+      ]
+    ],
+    "workouts": 8
+  },
+  "browser_download_verifier": {
+    "exit": 0,
+    "passed": 1
+  },
+  "canonical_package": {
+    "accepted_checkpoint": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "all_package_and_compatibility_bytes_unchanged": true,
+    "package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "passed": 41,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-18",
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "errors": 0,
+    "green": false,
+    "identities_equal": true,
+    "info": 257,
+    "removed": [],
+    "warnings": 110
+  },
+  "implementation_commit": "cca36e9df5e0ef60b653790a8b07120418fce4c0",
+  "logs_sha256": {
+    "analysis-after.log": "fd4cbe32c640e7b67491a1cd6aa96e1c3a4e1410a52ce5387bd6e567efaf6ba2",
+    "analysis-before.log": "247b33f90f3a7b800c3f1d95a55e4dc8cd94506b8e5431441880d59e44ca8af3",
+    "analysis-scoped.log": "7081296dda489d15c18f787b1bef9016c11fbfbcb30c3aa5efe935ae193bee00",
+    "browser-artifacts.log": "87bf3aa759d6fa5aea96d825223e1fbb687e94d1a290f38f76c6312990d034c7",
+    "focused.log": "05f97d1dda97e98653a775c249e2bc2c2371227cdb82e52b9401670f98480261",
+    "legacy-file.log": "9cc26c5cda62c271e0f4af56769ab9f04c7c21f24ab047c008dfb8e4ed242809",
+    "review-final.log": "d260691597621e02947dd3ea622aac1ed9fdfc1739c505fc91ea29cc907ec458",
+    "safety.log": "3bd8d702875dd1be6a15148fa646960c4ec25040d361ed4522eb8d774145d73a",
+    "studio-final.log": "9edb8bb51d91cf2f75a1e321a9b8146e1c34696704b9bc0bcaad22f0b1b797b6"
+  },
+  "post_review_affected": {
+    "change": "Standalone help text and comment only; browser-relevant behaviour unchanged.",
+    "exit": 0,
+    "passed": 44
+  },
+  "preservation": {
+    "checkouts": 11,
+    "exact_inventory_equality": true,
+    "original_outstanding_paths": 95
+  },
+  "protected": {
+    "absent_skipworktree_temp_entries_unchanged": 9,
+    "compiler_schema_hash_resolver_allocator_writers_fixtures_profiles_published_artifacts_goldens_dependencies_safety_unchanged": true,
+    "reviewed_baseline_change_allowlist": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart",
+      "lib/features/programme_studio/authoring/programme_authoring_source.dart",
+      "lib/features/programme_studio/composition/programme_first_screen.dart",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart",
+      "test/programme_studio/editable_workspace_test.dart",
+      "test/programme_studio/four_week_schedule_screen_test.dart",
+      "test/programme_studio/four_week_schedule_test.dart",
+      "test/programme_studio/programme_first_controller_test.dart",
+      "test/programme_studio/programme_first_screen_test.dart",
+      "test/programme_studio/synthetic_composition_test.dart"
+    ],
+    "unchanged_baseline_entries": 2697
+  },
+  "remaining": {
+    "broader_SprintC_open": true,
+    "broader_Stage2_open": true,
+    "phone_checks_open": 4
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "failed_groups": 0,
+    "passed_groups": 6,
+    "script_definitions_unchanged": true
+  },
+  "scope_commit": "4f58a1a",
+  "scoped_analysis": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files_sha256": {
+      "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "c70b68deaa10603cc28dccdc890baa657d30b06f15507d1a4a4c50b18a132da3",
+      "lib/features/programme_studio/authoring/programme_authoring_screen.dart": "991deece6aa7bb47b899a2e840fadf0c8d602bdb5c8fa8db6e028795d20dddbb",
+      "lib/features/programme_studio/authoring/programme_authoring_source.dart": "0a3814065a1f9a6bf5e5336df189ecb694e2364a22290ceb9ce4c328db1975fa",
+      "lib/features/programme_studio/composition/programme_first_screen.dart": "1ca6d873efb9d94c91d3df67cad0e621b0df6131d54233a5d91ceafc5e3b38b6",
+      "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "1bd2b54bd87da2ab3dd1ed0e0064271953a685d234fd4cb778b392f90f872282",
+      "lib/features/programme_studio/composition/synthetic_programme_revision_catalogue.dart": "69fd90fe83a45a9651961869ec5146c29b46a619830bbb6e83f6fb6c9d0a7d55",
+      "test/programme_studio/editable_workspace_test.dart": "4c3e486741de833ce4f027e87448f66fe4b1459164e0170d95561ecf92efe311",
+      "test/programme_studio/four_week_schedule_screen_test.dart": "b176cfe20c8d2dd42f973aad1267d36ceb21a9ffca2ad8521d0501f8fe3c5358",
+      "test/programme_studio/four_week_schedule_test.dart": "6fcba49afb49df804b6497503d728d6f363a89e222a9fecd444214dda8f0c0a9",
+      "test/programme_studio/programme_first_controller_test.dart": "2d5472242f7cb6f2c0b74eaf60a25dd03bc3710e557273c9292ef6bccf16156f",
+      "test/programme_studio/programme_first_screen_test.dart": "0ca8d45cebeea2fee13a966ebf12198722c5beb346065c5ee1bd847dce4ac896",
+      "test/programme_studio/synthetic_composition_test.dart": "8889259a601f666419d9d11ebac774ba856e5944efa010345a7df3b79aa40a49"
+    }
+  },
+  "status": "TECHNICALLY_VERIFIED_NORMAL_MAIN_PUBLICATION_AUTHORISED",
+  "studio_tests": {
+    "exit": 0,
+    "new_schedule_tests": 22,
+    "passed": 312
+  }
+}

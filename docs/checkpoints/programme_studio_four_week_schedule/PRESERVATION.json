@@ -1,0 +1,99 @@
+{
+  "after_sha256": "a90ecc84c2597b9204b96c8a8a45c6eafc4a6e7174bd3379565c8d1c719df6e5",
+  "before_sha256": "a90ecc84c2597b9204b96c8a8a45c6eafc4a6e7174bd3379565c8d1c719df6e5",
+  "checkouts": {
+    "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform": {
+      "HEAD": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+      "branch": "codex/programme-studio-composition",
+      "files": 2659,
+      "index_sha256": "99d610a54ad179ee59338b5913c7531a08e6bcc08a345f26518ff20928e95344",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "branch": "codex/programme-studio-d2",
+      "files": 2637,
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "branch": "codex/programme-studio-stage2",
+      "files": 2612,
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-canonical-source-export/cohort_platform": {
+      "HEAD": "2d97daf71e31c4691eba9cf85e731b4a1b3c2e33",
+      "branch": "codex/studio-canonical-source-export",
+      "files": 2694,
+      "index_sha256": "d63947b0a70e372ca09bdde0e4b8e78041be27bdc3d97e5ed92ed3060b985d6f",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-editable-workspace/cohort_platform": {
+      "HEAD": "3ec4866c5d4583fdb5f7c581b5e6099ee3616ef6",
+      "branch": "codex/studio-editable-workspace",
+      "files": 2708,
+      "index_sha256": "a6e91fcba3f31191312f874ade5853f1dd390a14ec333975c8630d84307952ee",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform": {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "branch": "codex/studio-strength-lineages-review",
+      "files": 2670,
+      "index_sha256": "83f80fcaf28e402f27e47fc888d6bc2a7c1f1ee2723f3cc14f7ef9257e0c5469",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-programme-first-usability/cohort_platform": {
+      "HEAD": "80a917cdf8469dc5690c935da8654bff42214378",
+      "branch": "codex/studio-programme-first-usability",
+      "files": 2683,
+      "index_sha256": "85709651fd3ab9b3f89271ac448c0db98f3763ab4ad3162ab542b1c1e8c0408d",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform": {
+      "HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+      "branch": "codex/studio-strength-lineages",
+      "files": 2668,
+      "index_sha256": "f37ebbe410625fc417a0d40b5f43a6fbe39a803af78c35bcab7c5a86df90b0c5",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-usability-allocation/cohort_platform": {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "branch": "",
+      "files": 2670,
+      "index_sha256": "a3c4c4422a86447937dec88156c62e8643efdf7b447090d2424f8999d94282b8",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/.codex/worktrees/studio-usability-integration/cohort_platform": {
+      "HEAD": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+      "branch": "codex/studio-usability-accepted",
+      "files": 2684,
+      "index_sha256": "3a97e3a1ad6ebd0cb319e0851720cabfdde74bd3127a5cebeca05d627340165d",
+      "outstanding": 0,
+      "present_temp_files": 0
+    },
+    "/Users/leewebber/Developer/cohort_platform": {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "branch": "main",
+      "files": 2687,
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "outstanding": 95,
+      "present_temp_files": 0
+    }
+  },
+  "exact_before_after_equality": true,
+  "older_existing_checkouts": 11,
+  "original_95_outstanding_paths_preserved": true,
+  "original_main_not_advanced": true,
+  "scope": "Tracked/nonignored and outstanding paths; HEADs, branches, indices, git pointers, present .temp bytes and absent tracked .temp. Ignored build caches excluded. Four prior prunable registrations left intact."
+}
