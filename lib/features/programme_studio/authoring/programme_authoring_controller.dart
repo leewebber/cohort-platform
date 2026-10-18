@@ -30,7 +30,8 @@ class PreparedProgrammeSelection {
 
 /// Transient editing of an allowlisted synthetic canonical source. Every edit
 /// removes the previous successful result; validation always compiles the
-/// exact YAML that is later reviewed/copied. No durable editor representation.
+/// exact YAML that is later reviewed/copied. The editable canonical source is
+/// also retained by the separate portable workspace envelope.
 class ProgrammeAuthoringController extends ChangeNotifier {
   ProgrammeAuthoringController({
     required this.fixture,
@@ -47,6 +48,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
 
   final ProgrammeAuthoringFixture fixture;
   final ProgrammeAuthoringSource? source;
+  bool get supportsScheduleEditing => source?.supportsScheduleEditing ?? false;
   String get sourceId => source?.id ?? fixture.id;
   String get sourceLabel => source?.label ?? fixture.label;
   final ProgrammeReviewProjector projector;
@@ -170,12 +172,14 @@ class ProgrammeAuthoringController extends ChangeNotifier {
 
   /// Restores an unvalidated form draft, keeping the fixed source baseline.
   /// No compiler/review receipt is restored; only existing editable fields vary.
-  void restoreWorkspaceSource(String text) {
+  void restoreWorkspaceSource(String text, {bool legacySchedule = false}) {
     guardWorkspaceYaml(text);
     final decoded = jsonDecode(jsonEncode(loadYaml(text)));
     if (decoded is! Map<String, dynamic> ||
         _writer.writeDraft(decoded) != text ||
-        _scopeIssues(decoded).isNotEmpty) {
+        _scopeIssues(decoded).isNotEmpty ||
+        (legacySchedule &&
+            !_equal(_legacySkeleton(decoded), _legacySkeleton(_trusted)))) {
       workspaceInvalid('Unsupported programme source/template.');
     }
     if (source == null ||
@@ -286,6 +290,15 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       throw const FormatException(
         'Choose a training day before adding a slot.',
       );
+    }
+    if (supportsScheduleEditing &&
+        (key.trim().isEmpty ||
+            (_tree!['weeks'] as List).any(
+              (w) => (w['days'] as List).any(
+                (d) => (d['slots'] as List).any((s) => s['slot_key'] == key),
+              ),
+            ))) {
+      throw const FormatException('Choose a unique workout identifier.');
     }
     final template = _trustedSlots.values.first;
     final item = _clone(jsonEncode(template));
@@ -436,6 +449,14 @@ class ProgrammeAuthoringController extends ChangeNotifier {
         ),
       );
     }
+    if (supportsScheduleEditing) {
+      try {
+        _checkScheduleShape(candidate);
+        _checkLockedReferences(candidate);
+      } on FormatException catch (error) {
+        result.add(_issue('schedule', 'unsupported_schedule', error.message));
+      }
+    }
     final trustedSlots = _trustedSlots;
     for (final week in candidate['weeks'] as List) {
       for (final day in week['days'] as List) {
@@ -467,6 +488,229 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     return result;
   }
 
+  // A detached candidate becomes the source only through the existing atomic
+  // catalogue/selection commit. There is no separate schedule persistence model.
+  PreparedProgrammeSelection prepareFourWeekSchedule(
+    List<Map<String, dynamic>> references,
+    String sessionA,
+    String sessionB,
+    int dayA,
+    int dayB,
+  ) {
+    if (!supportsScheduleEditing || _tree == null) {
+      throw const FormatException(
+        'This source has no supported schedule editor.',
+      );
+    }
+    final candidate = tree!;
+    final weeks = candidate['weeks'] as List;
+    final existing = [
+      for (final w in weeks)
+        for (final d in w['days'])
+          for (final s in d['slots']) s,
+    ];
+    if (weeks.length != 1 ||
+        existing.length != 1 ||
+        existing.single['slot_key'] != 'W1D1S1' ||
+        existing.single['session_key'] != sessionA) {
+      throw const FormatException(
+        'Setup preserves the original workout and its selected A version. '
+        'This schedule already has other edits; use the individual workout controls.',
+      );
+    }
+    if (dayA < 1 || dayA > 7 || dayB < 1 || dayB > 7 || dayA == dayB) {
+      throw const FormatException('Choose two different days between 1 and 7.');
+    }
+    final byKey = {for (final r in references) r['session_key']: r};
+    if (byKey[sessionA] == null ||
+        byKey[sessionB] == null ||
+        byKey[sessionA]!['session_lineage_id'] ==
+            byKey[sessionB]!['session_lineage_id']) {
+      throw const FormatException(
+        'Choose exact versions from both independent sessions.',
+      );
+    }
+    final firstWeek = weeks.single as Map<String, dynamic>;
+    final originalDays = firstWeek['days'] as List;
+    final anchor = existing.single;
+    Map<String, dynamic> newSlot(int w, int d, String session) {
+      final slot = _clone(jsonEncode(_trustedSlots.values.first));
+      slot.removeWhere((k, _) => slotFields.contains(k));
+      slot.addAll({
+        'slot_key':
+            'W$w'
+            'D$d'
+            'S${w == 1 && d == 1 ? 2 : 1}',
+        'session_order': 1,
+        'session_key': session,
+        'time_of_day': 'any',
+      });
+      return slot;
+    }
+
+    candidate['weeks'] = [
+      for (var w = 1; w <= 4; w++)
+        {
+          ..._clone(jsonEncode(firstWeek)),
+          'week_number': w,
+          if (w > 1) 'title': 'Synthetic week $w',
+          if (w > 1) 'coach_note': '',
+          'days': [
+            for (var d = 1; d <= 7; d++)
+              {
+                ..._clone(
+                  jsonEncode(
+                    d <= originalDays.length
+                        ? originalDays[d - 1]
+                        : (_trusted['weeks'] as List).first['days'][1],
+                  ),
+                ),
+                'day_key': 'day_$d',
+                'day_order': d,
+                if (w > 1 || d > originalDays.length)
+                  'title': 'Synthetic day $d',
+                if (w > 1 || d > originalDays.length) 'coach_note': '',
+                'day_type': d == dayA || d == dayB ? 'training' : 'rest',
+                'slots': [
+                  if (d == dayA) w == 1 ? anchor : newSlot(w, d, sessionA),
+                  if (d == dayB) newSlot(w, d, sessionB),
+                ],
+              },
+          ],
+        },
+    ];
+    // Preserve the old occurrence key even when it moves to another day.
+    // No new key may collide with it.
+    (candidate['programme'] as Map)['duration_weeks'] = 4;
+    (candidate['programme'] as Map)['sessions_per_week'] = 2;
+    candidate['sessions'] = references;
+    final check = _compiler.compile(_writer.writeDraft(candidate));
+    final scope = _scopeIssues(candidate);
+    if (!check.isValid || scope.isNotEmpty) {
+      throw FormatException(
+        [...check.issues, ...scope].map((i) => i.message).join('\n'),
+      );
+    }
+    return PreparedProgrammeSelection._(this, revision, draftSource, candidate);
+  }
+
+  void _checkScheduleShape(Map<String, dynamic> candidate) {
+    final weeks = candidate['weeks'];
+    if (weeks is! List ||
+        !{1, 4}.contains(weeks.length) ||
+        candidate['programme']['duration_weeks'] != weeks.length) {
+      throw const FormatException(
+        'Supported schedules are the original week or four weeks.',
+      );
+    }
+    final base = (_trusted['weeks'] as List).first as Map;
+    Map strip(Map row, Set<String> keys) =>
+        Map.of(row)..removeWhere((k, _) => keys.contains(k));
+    for (var w = 0; w < weeks.length; w++) {
+      final week = weeks[w] as Map;
+      if (week['week_number'] != w + 1 ||
+          !_equal(
+            strip(week, {'week_number', 'days', ...textFields}),
+            strip(base, {'week_number', 'days', ...textFields}),
+          )) {
+        throw const FormatException(
+          'Preserve the existing week phase and intent.',
+        );
+      }
+      final days = week['days'] as List;
+      if (days.length != (weeks.length == 1 ? 2 : 7)) {
+        throw const FormatException(
+          'Unsupported imported day structure; it cannot be edited.',
+        );
+      }
+      for (var d = 0; d < days.length; d++) {
+        final day = days[d] as Map;
+        final template = base['days'][d == 0 ? 0 : 1] as Map;
+        const editable = {
+          'day_key',
+          'day_order',
+          'day_type',
+          'slots',
+          ...textFields,
+        };
+        if (day['day_key'] != 'day_${d + 1}' ||
+            day['day_order'] != d + 1 ||
+            !{'training', 'rest'}.contains(day['day_type']) ||
+            !_equal(strip(day, editable), strip(template, editable))) {
+          throw const FormatException(
+            'Unsupported imported day fields; preserve source intent.',
+          );
+        }
+      }
+    }
+  }
+
+  Map<String, dynamic> _legacySkeleton(Map<String, dynamic> tree) {
+    final value = _clone(jsonEncode(tree));
+    value.remove('sessions');
+    (value['programme'] as Map).removeWhere(
+      (k, _) => programmeFields.contains(k),
+    );
+    for (final w in value['weeks'] as List) {
+      (w as Map).removeWhere((k, _) => textFields.contains(k));
+      for (final d in w['days'] as List) {
+        (d as Map).removeWhere(
+          (k, _) => textFields.contains(k) || k == 'slots' || k == 'day_type',
+        );
+      }
+    }
+    return value;
+  }
+
+  void _checkLockedReferences(Map<String, dynamic> candidate) {
+    final slots = {
+      for (final w in candidate['weeks'] as List)
+        for (final d in w['days'])
+          for (final s in d['slots']) s['slot_key']: s,
+    };
+    final days = {
+      for (final w in candidate['weeks'] as List)
+        for (final d in w['days']) d['day_key'],
+    };
+    final refs = {
+      for (final s in candidate['sessions'] as List) s['session_key']: s,
+    };
+    final comparisons = {
+      for (final c in candidate['comparison_identities'] as List) c['id']: c,
+    };
+    for (final a in candidate['assessments'] as List) {
+      final slot = slots[a['slot_ref']];
+      if (slot == null) {
+        throw FormatException(
+          'Workout ${a['slot_ref']} is required by locked assessment ${a['id']}. It cannot be removed.',
+        );
+      }
+      final comparison = comparisons[a['comparison_identity_id']];
+      if (refs[slot['session_key']]?['session_lineage_id'] !=
+          comparison?['session_lineage_id']) {
+        throw FormatException(
+          'Workout ${a['slot_ref']} is bound to locked comparison ${a['comparison_identity_id']}. Choose a version from the same session lineage.',
+        );
+      }
+    }
+    for (final key in ['adaptation_permissions', 'protected_invariants']) {
+      for (final declaration in candidate[key] as List) {
+        final target = declaration['target_ref'];
+        if (target is String &&
+            !slots.containsKey(target) &&
+            !days.contains(target) &&
+            !(candidate['assessments'] as List).any((a) => a['id'] == target) &&
+            !(candidate['phases'] as List).any(
+              (p) => p['phase_key'] == target,
+            )) {
+          throw FormatException(
+            'Locked $key declaration ${declaration['id']} requires $target; this schedule action is refused.',
+          );
+        }
+      }
+    }
+  }
+
   Map<String, Map<String, dynamic>> get _trustedSlots => {
     for (final w in _trusted['weeks'] as List)
       for (final d in w['days'] as List)
@@ -477,10 +721,14 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   Map<String, dynamic> _scopeSkeleton(Map<String, dynamic> tree) {
     final value = _clone(jsonEncode(tree));
     if (source != null) value.remove('sessions');
+    if (supportsScheduleEditing) {
+      value.remove('weeks');
+      (value['programme'] as Map).remove('duration_weeks');
+    }
     (value['programme'] as Map).removeWhere(
       (k, _) => programmeFields.contains(k),
     );
-    for (final week in value['weeks'] as List) {
+    for (final week in value['weeks'] as List? ?? []) {
       (week as Map).removeWhere((k, _) => textFields.contains(k));
       for (final day in week['days'] as List) {
         (day as Map).removeWhere(
@@ -592,9 +840,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     targets.single['session_key'] = sessionKey;
     candidate['sessions'] = _clone(jsonEncode({'rows': references}))['rows'];
     final check = _compiler.compile(_writer.writeDraft(candidate));
-    if (!check.isValid || _scopeIssues(candidate).isNotEmpty) {
-      throw const FormatException(
-        'Programme is invalid or locked contracts changed.',
+    final scope = _scopeIssues(candidate);
+    if (!check.isValid || scope.isNotEmpty) {
+      throw FormatException(
+        [...check.issues, ...scope].map((i) => i.message).join('\n'),
       );
     }
     return PreparedProgrammeSelection._(this, revision, draftSource, candidate);
@@ -629,8 +878,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   });
 
   void _edit(VoidCallback mutation) {
-    _invalidate();
+    final before = tree;
+    if (!supportsScheduleEditing) _invalidate();
     if (_tree == null) {
+      _invalidate();
       _issues = [
         _issue(
           'source',
@@ -641,7 +892,10 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     } else {
       try {
         mutation();
+        if (supportsScheduleEditing) _checkLockedReferences(_tree!);
+        if (supportsScheduleEditing) _invalidate();
       } on FormatException catch (error) {
+        if (supportsScheduleEditing) _tree = before;
         _issues = [_issue('edit', 'unsupported_edit', error.message)];
       }
     }

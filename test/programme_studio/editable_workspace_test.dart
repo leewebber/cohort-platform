@@ -258,7 +258,7 @@ void main() {
   );
 
   final mutations = <String, void Function(Map<String, dynamic>)>{
-    'format version': (m) => m['version'] = 2,
+    'format version': (m) => m['version'] = 99,
     'serialized receipt': (m) => m['current'] = {'valid': true},
     'profile': (m) => (m['fixture_profile'] as Map)['fingerprint'] = 'altered',
     'duplicate owner': (m) =>

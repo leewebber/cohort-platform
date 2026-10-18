@@ -133,6 +133,8 @@ class CompositionProgrammeSource implements ProgrammeAuthoringSource {
   CompositionProgrammeSource(this.catalogue);
   final SyntheticProgrammeRevisionCatalogue catalogue;
   @override
+  bool get supportsScheduleEditing => true;
+  @override
   String get id => 'synthetic-composition';
   @override
   String get label => 'Synthetic composition — protected contracts';

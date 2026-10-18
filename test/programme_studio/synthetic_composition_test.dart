@@ -219,9 +219,11 @@ void main() {
       expect(c.current, null);
       expect(c.errors.join(), contains('programme.name'));
       c.programme.editProgramme('name', 'Synthetic');
+      final beforeRemoval = c.programme.draftSource;
       c.programme.removeSlot(0, 0, 0);
-      expect(await c.validate(), false);
-      expect(c.current, null);
+      expect(c.programme.draftSource, beforeRemoval);
+      expect(c.programme.issues.single.message, contains('locked assessment'));
+      expect(await c.validate(), true);
       await c.reset();
       expect(slotKey(c), d2SessionKey(1));
       expect(await c.validate(), true);

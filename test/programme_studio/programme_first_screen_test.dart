@@ -48,6 +48,13 @@ Future<SyntheticCompositionController> mount(
 Future<void> tap(WidgetTester t, Finder f) async {
   FocusManager.instance.primaryFocus?.unfocus();
   await t.pumpAndSettle();
+  if (f.evaluate().isEmpty) {
+    await t.scrollUntilVisible(
+      f,
+      200,
+      scrollable: find.byType(Scrollable).last,
+    );
+  }
   await t.ensureVisible(f.first);
   await t.pumpAndSettle();
   await t.tap(f.first);

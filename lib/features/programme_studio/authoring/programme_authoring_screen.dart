@@ -261,8 +261,10 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
                 (tree['programme'] as Map)[field]?.toString() ?? '',
                 (value) => controller.editProgramme(field, value),
               ),
-            const Text(
-              'Identity, owner, version and duration are locked to this synthetic source.',
+            Text(
+              controller.supportsScheduleEditing
+                  ? 'Identity, owner and version are locked. Use Programme to set up the supported four-week schedule.'
+                  : 'Identity, owner, version and duration are locked to this synthetic source.',
             ),
           ]),
           _schedule(tree),
@@ -292,8 +294,10 @@ class _ProgrammeAuthoringScreenState extends State<ProgrammeAuthoringScreen> {
           ),
         ]),
         _card('Locked authored contracts', [
-          const Text(
-            'Progression, phases, adaptation, invariants, assessments, evidence and comparison declarations remain authored source. Removing a referenced slot fails validation.',
+          Text(
+            controller.supportsScheduleEditing
+                ? 'Progression, phases, adaptation, invariants, assessments, evidence and comparison declarations remain authored source. Actions that would invalidate a locked reference are refused.'
+                : 'Progression, phases, adaptation, invariants, assessments, evidence and comparison declarations remain authored source. Removing a referenced slot fails validation.',
           ),
           if (tree != null)
             ExpansionTile(

@@ -194,6 +194,20 @@ class SyntheticCompositionController extends ChangeNotifier {
     return _operation;
   }
 
+  int _beginPreparation() {
+    _operation++;
+    _errors = [];
+    _busy = true;
+    return _operation;
+  }
+
+  void _failPreparation(Object error, int token) {
+    if (!_alive(token)) return;
+    _busy = false;
+    _errors = ['$error'];
+    notifyListeners();
+  }
+
   bool _alive(int token) => !_disposed && token == _operation;
   bool _fail(Object error, int token) {
     if (_alive(token)) {
@@ -276,7 +290,7 @@ class SyntheticCompositionController extends ChangeNotifier {
     String slotKey,
     D2LocalRevision candidate,
   ) async {
-    final token = _begin();
+    final token = _beginPreparation();
     notifyListeners();
     if (!_alive(token)) return null;
     try {
@@ -328,7 +342,65 @@ class SyntheticCompositionController extends ChangeNotifier {
       await Future<void>.value();
       return isCurrentVersionUse(result) ? result : null;
     } catch (error) {
-      _fail(error, token);
+      _failPreparation(error, token);
+      return null;
+    }
+  }
+
+  /// Uses the same exact-source preparation and atomic commit as one-version
+  /// consent; setup creates occurrences without overwriting existing choices.
+  Future<PreparedVersionUse?> prepareFourWeekSchedule(
+    D2LocalRevision a,
+    D2LocalRevision b,
+    int dayA,
+    int dayB,
+  ) async {
+    final token = _beginPreparation();
+    notifyListeners();
+    if (!_alive(token)) return null;
+    try {
+      if (!initialized ||
+          anyDraft ||
+          a.identity.sessionLineageId != SyntheticStrengthLineage.a.id ||
+          b.identity.sessionLineageId != SyntheticStrengthLineage.b.id ||
+          !session.revisions.any((r) => identical(r, a)) ||
+          !secondSession.revisions.any((r) => identical(r, b))) {
+        throw const FormatException(
+          'Save exact versions of both sessions before schedule setup.',
+        );
+      }
+      final editor = programme, catalogue = _catalogue!;
+      final additions = <D2CompiledSession>[];
+      for (final r in [a, secondSession.revisions.first, b]) {
+        additions.add(await _verify(r.compiled));
+        if (!_alive(token)) return null;
+      }
+      final append = catalogue.prepareAppend(additions);
+      final selection = editor.prepareFourWeekSchedule(
+        append.entries.map(compositionReference).toList(),
+        compositionReference(a.compiled)['session_key'] as String,
+        compositionReference(b.compiled)['session_key'] as String,
+        dayA,
+        dayB,
+      );
+      reviewComposition(selection.source, append.entries);
+      if (!_alive(token)) return null;
+      final result = PreparedVersionUse._(
+        this,
+        token,
+        editor,
+        catalogue,
+        selection,
+        append,
+        b,
+        'four-week-setup',
+      );
+      _busy = false;
+      notifyListeners();
+      await Future<void>.value();
+      return isCurrentVersionUse(result) ? result : null;
+    } catch (error) {
+      _failPreparation(error, token);
       return null;
     }
   }
@@ -417,7 +489,11 @@ class SyntheticCompositionController extends ChangeNotifier {
         'session_key',
         compositionReference(verified)['session_key'] as String,
       );
-      if (_disposed || !identical(editor, _programme)) return false;
+      if (_disposed ||
+          !identical(editor, _programme) ||
+          editor.issues.isNotEmpty) {
+        return false;
+      }
       notifyListeners();
       await Future<void>.value();
       return !_disposed && identical(editor, _programme);
@@ -510,7 +586,7 @@ class SyntheticCompositionController extends ChangeNotifier {
 
   Map<String, dynamic> get _workspaceState => {
     'kind': 'cohort_editable_workspace',
-    'version': 1,
+    'version': 2,
     'fixture_profile': compositionProfile(),
     'owners': [for (final owner in owners) owner.workspaceState],
     'admitted': [for (final s in admitted) compositionTuple(s.identity)],
@@ -535,7 +611,7 @@ class SyntheticCompositionController extends ChangeNotifier {
     }, 'workspace');
     if (root['kind'] != 'cohort_editable_workspace' ||
         root['version'] is! int ||
-        root['version'] != 1 ||
+        !{1, 2}.contains(root['version']) ||
         !compositionEqual(root['fixture_profile'], compositionProfile())) {
       workspaceInvalid(
         'Unsupported editable format/profile. Review exports are read-only.',
@@ -593,6 +669,7 @@ class SyntheticCompositionController extends ChangeNotifier {
       );
       editor.restoreWorkspaceSource(
         workspaceString(root['programme_source'], 'programme source'),
+        legacySchedule: root['version'] == 1,
       );
       final result = SyntheticCompositionController._workspace(engine);
       result._session = a;

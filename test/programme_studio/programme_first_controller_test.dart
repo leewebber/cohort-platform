@@ -124,15 +124,20 @@ void main() {
       c.secondSession.createDraft();
       c.secondSession.editExercise(0, 'reps', '9');
       expect(await c.secondSession.freeze(), true);
+      c.programme.addSlot(0, 0, 'W1D1S2', 'SYN-D2-STRENGTH-R1');
       final p = (await c.prepareUseVersion(
-        'W1D1S1',
+        'W1D1S2',
         c.secondSession.revisions.last,
       ))!;
       expect(c.admitted.length, 1);
       expect(p.includedVersions.length, 3);
       expect(await c.usePreparedVersion(p), true);
       expect(c.admitted.length, 3);
-      expect(selection(c), 'SYN-D2-STRENGTH-B-R2');
+      expect(
+        c.programme.tree!['weeks'][0]['days'][0]['slots'][1]['session_key'],
+        'SYN-D2-STRENGTH-B-R2',
+      );
+      expect(selection(c), 'SYN-D2-STRENGTH-R1');
       expect(c.session.revisions.single.source, a);
       final packet = (await c.exportHandoff())!;
       expect(await c.reopen(packet), true);

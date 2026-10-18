@@ -4,6 +4,7 @@ import '../projection/programme_review_source.dart';
 
 /// A bounded local source policy. Legacy D1 fixtures retain their fixed policy.
 abstract interface class ProgrammeAuthoringSource {
+  bool get supportsScheduleEditing;
   String get id;
   String get label;
   String get originalSource;

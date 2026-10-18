@@ -174,10 +174,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                       ),
                       if (message != null)
                         Semantics(liveRegion: true, child: Text(message!)),
-                      if (c.errors.isNotEmpty)
-                        const Text(
-                          'This action could not be completed. Check the current workout or programme details and try again. Advanced contains the exact reason.',
-                        ),
+                      if (c.errors.isNotEmpty) Text(c.errors.join('\n')),
                     ],
                   ),
                 ),
@@ -218,6 +215,18 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
       c.programme.tree?['programme']['name'] as String? ?? 'Programme',
       style: Theme.of(context).textTheme.headlineSmall,
     ),
+    const Text(
+      'Fixed synthetic exercise profile · two independent strength sessions · straight sets only.',
+    ),
+    Text(
+      '${(c.programme.tree?['weeks'] as List?)?.length ?? 0} weeks · ${workouts.length} scheduled workouts',
+    ),
+    if ((c.programme.tree?['weeks'] as List?)?.length == 1)
+      OutlinedButton(
+        key: const Key('setup-four-weeks'),
+        onPressed: c.busy || c.anyDraft ? null : _setupFourWeeks,
+        child: const Text('Set up four weeks · two sessions per week'),
+      ),
     for (final w in workouts)
       Card(
         child: Padding(
@@ -371,6 +380,118 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
         ),
     ],
   ];
+  Future<void> _setupFourWeeks() async {
+    if (c.secondSession.revisions.isEmpty) {
+      setState(() => sessions = true);
+      showMessage(
+        'First create and save synthetic Session B. Then return to Programme to set up four weeks.',
+      );
+      return;
+    }
+    final generation = c.generation;
+    final firstKey = workouts.first.sessionKey;
+    final a = c.session.revisions
+        .where(
+          (r) => compositionReference(r.compiled)['session_key'] == firstKey,
+        )
+        .toList();
+    if (a.length != 1) {
+      showMessage(
+        'The original workout must keep its exact A version and locked references.',
+      );
+      return;
+    }
+    var b = c.secondSession.revisions.first;
+    var dayA = 1, dayB = 4;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, update) => AlertDialog(
+          title: const Text('Set up four synthetic weeks'),
+          content: SizedBox(
+            width: 560,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Four weeks, two workouts each week. No progression is generated. The original workout and all locked declarations are retained once. Later choices affect only the workout you confirm.',
+                  ),
+                  Text('Session A: ${sessionVersionLabel(a.single.compiled)}'),
+                  DropdownButtonFormField<int>(
+                    initialValue: dayA,
+                    decoration: const InputDecoration(
+                      labelText: 'Session A day each week',
+                    ),
+                    items: [
+                      for (var d = 1; d <= 7; d++)
+                        DropdownMenuItem(value: d, child: Text('Day $d')),
+                    ],
+                    onChanged: (v) => update(() => dayA = v!),
+                  ),
+                  DropdownButtonFormField<D2LocalRevision>(
+                    initialValue: b,
+                    isExpanded: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Session B exact version',
+                    ),
+                    items: [
+                      for (final r in c.secondSession.revisions)
+                        DropdownMenuItem(
+                          value: r,
+                          child: Text(
+                            sessionVersionLabel(r.compiled),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                    onChanged: (v) => update(() => b = v!),
+                  ),
+                  DropdownButtonFormField<int>(
+                    initialValue: dayB,
+                    decoration: const InputDecoration(
+                      labelText: 'Session B day each week',
+                    ),
+                    items: [
+                      for (var d = 1; d <= 7; d++)
+                        DropdownMenuItem(value: d, child: Text('Day $d')),
+                    ],
+                    onChanged: (v) => update(() => dayB = v!),
+                  ),
+                  if (dayA == dayB) const Text('Choose two different days.'),
+                  const Text(
+                    'Confirm creates seven new occurrences and makes the selected versions available. Existing prescriptions stay immutable. This is synthetic software content, not a training prescription.',
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: dayA == dayB
+                  ? null
+                  : () => Navigator.pop(context, true),
+              child: const Text('Create eight-workout schedule'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || confirm != true || c.generation != generation) return;
+    final prepared = await c.prepareFourWeekSchedule(a.single, b, dayA, dayB);
+    if (!mounted || prepared == null) return;
+    if (await c.usePreparedVersion(prepared)) {
+      showMessage(
+        'Four-week schedule created. Review all eight workouts below. Choose version changes one occurrence only.',
+      );
+    }
+  }
+
   Future<void> _edit(
     ProtocolAuthoringController owner,
     String? slotKey,
