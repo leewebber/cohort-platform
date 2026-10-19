@@ -16,7 +16,7 @@ import 'synthetic_composition_controller.dart';
 import 'synthetic_composition_fixtures.dart';
 
 const temporaryWorkspaceNotice =
-    'Local workspace · synthetic example. Browser edits are not autosaved. Save an editable workspace file and keep it to continue later. Review exports open read-only; canonical sources are for compiler/tools. No cloud backup.';
+    'Local workspace · synthetic example. Browser edits are not autosaved. Save an editable workspace file and keep it to continue later. Review exports open read-only; canonical sources are for compiler/tools or new bounded source ownership through Open canonical sources (complete Studio TAR, no editor history). No cloud backup.';
 String sessionVersionLabel(D2CompiledSession s) =>
     '${s.protocol.name} · Session ${s.identity.sessionLineageId == SyntheticStrengthLineage.a.id ? 'A' : 'B'} · Version ${s.identity.revisionNumber}';
 String sessionPrescription(D2CompiledSession s) => s.protocol.blocks
@@ -39,10 +39,12 @@ class ProgrammeFirstScreen extends StatefulWidget {
     this.downloadSources = downloadSourceBundle,
     this.downloadWorkspace = downloadEditableWorkspace,
     this.chooseWorkspace = chooseEditableWorkspace,
+    this.chooseSources = chooseCanonicalSources,
   });
   final SyntheticCompositionController controller;
   final void Function(String) downloadWorkspace;
   final Future<String?> Function() chooseWorkspace;
+  final Future<Uint8List?> Function() chooseSources;
   final Widget Function() advanced;
   final void Function(CanonicalSourceBundle) downloadSources;
   @override
@@ -81,15 +83,19 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
   }
 
   String versionStatus(D2CompiledSession s) {
+    final origin =
+        c.ownerFor(s.identity).isImportedSnapshot(s.identity.revisionNumber)
+        ? 'Validated imported snapshot · historical parent/freeze unknown. '
+        : '';
     final uses = workouts
         .where((w) => w.sessionKey == compositionReference(s)['session_key'])
         .map((w) => w.name)
         .toList();
-    if (uses.isNotEmpty) return 'Used in ${uses.join('; ')}';
+    if (uses.isNotEmpty) return '${origin}Used in ${uses.join('; ')}';
     if (c.admitted.any((a) => sameRevision(a.identity, s.identity))) {
-      return 'Available in programme, not currently used · included in export';
+      return '${origin}Available in programme, not currently used · included in export';
     }
-    return 'Saved here, not added to programme · excluded from complete review export';
+    return '${origin}Saved here, not added to programme · excluded from complete review export';
   }
 
   void showMessage(String text) {
@@ -130,6 +136,12 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                                 : _openWorkspace,
                             child: const Text('Open editable workspace'),
                           ),
+                          OutlinedButton(
+                            onPressed: c.busy || transferringWorkspace
+                                ? null
+                                : _openSources,
+                            child: const Text('Open canonical sources'),
+                          ),
                           FilledButton(
                             onPressed: c.busy ? null : _review,
                             child: const Text('Review programme'),
@@ -144,6 +156,10 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
                           ),
                         ],
                       ),
+                      if (c.hasImportedSnapshots)
+                        const Text(
+                          'Source-import basis retained. Original canonical intake supplied snapshots only; omitted private versions and earlier history remain unknown. Editable workspace files retain subsequent local history, reservations and drafts. Missing earlier version numbers stay unavailable.',
+                        ),
                       Text(
                         !c.workspaceSaveRequested
                             ? 'Workspace file not saved yet.'
@@ -1001,6 +1017,86 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
     }
   }
 
+  Future<void> _openSources() async {
+    if (transferringWorkspace) return;
+    final generation = c.generation;
+    PreparedEditableWorkspace? candidate;
+    setState(() => transferringWorkspace = true);
+    try {
+      final bytes = await widget.chooseSources();
+      if (!mounted || bytes == null) return;
+      if (generation != c.generation) {
+        showMessage(
+          'Workspace changed while choosing canonical sources. Open the archive again.',
+        );
+        return;
+      }
+      candidate = await c.prepareCanonicalSources(bytes);
+      if (!mounted) return;
+      if (candidate == null) {
+        showMessage(
+          'Workspace changed while checking canonical sources. Nothing was replaced. Open the archive again.',
+        );
+        return;
+      }
+      final pending = candidate;
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (context) => AnimatedBuilder(
+          animation: c,
+          builder: (context, _) => AlertDialog(
+            title: const Text('Replace with canonical sources?'),
+            content: SingleChildScrollView(
+              child: Text(
+                c.isCurrentEditableWorkspace(pending)
+                    ? '${pending.programmeName}\n${pending.savedVersions} validated imported snapshots.\nA new editable workspace will own these exact sources. No private versions, abandoned reservations, draft history or historical approval are restored. Imported versions have no inferred parent. Missing earlier numbers remain unavailable with unknown history; new revisions start above each supplied lineage maximum.\nCurrent work will be replaced, not merged. Save editable workspace afterward to retain subsequent edits/history. Reviews must be recomputed.'
+                    : 'Current workspace changed. Close and open canonical sources again.',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Keep current workspace'),
+              ),
+              FilledButton(
+                onPressed: c.isCurrentEditableWorkspace(pending)
+                    ? () => Navigator.pop(context, true)
+                    : null,
+                child: const Text('Replace with source workspace'),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (!mounted || confirmed != true) return;
+      if (await c.replaceEditableWorkspace(pending)) {
+        if (!mounted) return;
+        setState(() {
+          sessions = false;
+          everReviewed = false;
+          openedExport = false;
+          workspaceError = null;
+        });
+        showMessage(
+          'Canonical sources opened as a new editable workspace. Imported versions are validated snapshots, not historical freezes. Review again and save editable workspace to keep new edits.',
+        );
+      } else {
+        showMessage(
+          'Workspace changed; canonical sources were not installed. Open the archive again.',
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        showMessage(
+          'Canonical sources refused: ${e is FormatException ? e.message : e}. Current work was not replaced. Choose the complete supported uncompressed Studio TAR; saved editable JSON and review JSON use their separate Open actions.',
+        );
+      }
+    } finally {
+      candidate?.dispose();
+      if (mounted) setState(() => transferringWorkspace = false);
+    }
+  }
+
   Future<void> _openWorkspace() async {
     if (transferringWorkspace) return;
     final generation = c.generation;
@@ -1023,7 +1119,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
       }
       final pending = candidate;
       final summary =
-          '${pending.programmeName}\n${pending.savedVersions} frozen versions (${pending.privateVersions} private) · ${pending.drafts} unvalidated session drafts.\nThis file was reconstructed separately. Replace the current workspace only if you want to continue from this file. Current work is not merged. Validation/reviews must be refreshed. This does not prove external approval or history.';
+          '${pending.programmeName}\n${pending.savedVersions} immutable versions (${pending.importedVersions} validated imported snapshots; ${pending.privateVersions} private) · ${pending.drafts} unvalidated session drafts.\nThis file was reconstructed separately. Replace the current workspace only if you want to continue from this file. Current work is not merged. Validation/reviews must be refreshed. This does not prove external approval or history.';
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (context) => AnimatedBuilder(

@@ -6,7 +6,8 @@ import 'synthetic_strength_lineage.dart';
 import 'protocol_authoring_fixtures.dart';
 import 'synthetic_strength_session_compiler.dart';
 
-/// A frozen, unpublished local fixture snapshot, not a persisted lifecycle.
+/// An immutable local fixture snapshot. Imported origin is tracked by its owner;
+/// this object alone never proves historical freeze or publication.
 class D2LocalRevision {
   D2LocalRevision._(this.compiled);
   final D2CompiledSession compiled;
@@ -42,11 +43,21 @@ class SyntheticSessionRevisionCatalogue {
   final Map<int, int> _reservations = {};
   final Map<int, int> _parents = {};
   int _highestReserved = 1;
+  int _sourceImportHighWater = 0;
+  final Set<int> _importedSnapshots = {};
+  bool get hasImportedSnapshots => _importedSnapshots.isNotEmpty;
+  bool isImportedSnapshot(int number) => _importedSnapshots.contains(number);
+  int get sourceImportHighWater => _sourceImportHighWater;
   List<D2LocalRevision> get revisions => List.unmodifiable(_frozen.values);
   D2LocalRevision at(int number) =>
       _frozen[number] ?? (throw StateError('Unknown frozen revision $number.'));
   SessionRevisionIdentity reserve(int parent) {
     at(parent);
+    if (_highestReserved >= 1000000) {
+      throw StateError(
+        'revision_limit: no new local number is available above this inventory.',
+      );
+    }
     final number = ++_highestReserved;
     _reservations[number] = parent;
     return lineage.identity(number);
@@ -144,6 +155,11 @@ class SyntheticSessionRevisionCatalogue {
   }
 
   Map<String, dynamic> get workspaceState => {
+    if (hasImportedSnapshots)
+      'source_import': {
+        'high_water': _sourceImportHighWater,
+        'revision_numbers': _importedSnapshots.toList()..sort(),
+      },
     'highest_reserved': _highestReserved,
     'abandoned_ranges': _abandonedRanges,
     'frozen': [
@@ -166,8 +182,8 @@ class SyntheticSessionRevisionCatalogue {
       ..._reservations.keys,
     }.where((n) => n > 1).toList()..sort();
     final ranges = <Map<String, int>>[];
-    var next = 2;
-    for (final n in used) {
+    var next = hasImportedSnapshots ? _sourceImportHighWater + 1 : 2;
+    for (final n in used.where((n) => n >= next)) {
       if (n > next) ranges.add({'first': next, 'last': n - 1});
       next = n + 1;
     }
@@ -180,15 +196,64 @@ class SyntheticSessionRevisionCatalogue {
   static Future<SyntheticSessionRevisionCatalogue> restoreWorkspace(
     Object? input,
     SyntheticStrengthLineage lineage,
-    SyntheticStrengthSessionCompiler compiler,
-  ) async {
-    final state = workspaceObject(input, {
+    SyntheticStrengthSessionCompiler compiler, {
+    bool allowImportedSnapshots = false,
+  }) async {
+    const fields = {
       'highest_reserved',
       'abandoned_ranges',
       'frozen',
       'reservations',
-    }, 'catalogue');
+    };
+    final state = workspaceFields(
+      input,
+      {...fields, if (allowImportedSnapshots) 'source_import'},
+      fields,
+      'catalogue',
+    );
+    final imported = <int>{};
+    var importHigh = 0;
+    if (state.containsKey('source_import')) {
+      final basis = workspaceObject(state['source_import'], {
+        'high_water',
+        'revision_numbers',
+      }, 'source import');
+      importHigh = workspaceInt(
+        basis['high_water'],
+        'source import high-water',
+        min: 1,
+      );
+      var previous = 0;
+      for (final raw in workspaceList(
+        basis['revision_numbers'],
+        'imported snapshots',
+      )) {
+        final n = workspaceInt(
+          raw,
+          'imported snapshot number',
+          min: 1,
+          max: importHigh,
+        );
+        if (n <= previous || (previous == 0 && n != 1)) {
+          workspaceInvalid(
+            'Imported snapshots must start at 1 and be uniquely ordered.',
+          );
+        }
+        previous = n;
+        imported.add(n);
+      }
+      if (imported.isEmpty || imported.last != importHigh) {
+        workspaceInvalid(
+          'Source import high-water must equal its greatest snapshot number.',
+        );
+      }
+    }
     final highest = workspaceInt(state['highest_reserved'], 'highest_reserved');
+    if (highest < importHigh) {
+      workspaceInvalid(
+        'Revision allocation cannot fall below imported inventory.',
+      );
+    }
     final rows = workspaceList(state['frozen'], 'frozen');
     final compiled = <int, D2CompiledSession>{}, parents = <int, int>{};
     var previous = 0;
@@ -221,12 +286,22 @@ class SyntheticSessionRevisionCatalogue {
         n,
       );
       final result = await compiler.compileExact(source, lineage.identity(n));
-      if (result.profileFingerprint != fixedFixtureFingerprint()) {
-        workspaceInvalid('Actual compiler profile differs.');
+      if (!sameRevision(result.identity, lineage.identity(n)) ||
+          result.source != source ||
+          result.sourceDigest != d2SourceDigest(source) ||
+          result.profileFingerprint != fixedFixtureFingerprint()) {
+        workspaceInvalid('Actual compiler identity/source/profile differs.');
       }
-      if (n == 1) {
+      if (imported.isNotEmpty && n <= importHigh && !imported.contains(n)) {
+        workspaceInvalid(
+          'A snapshot below the source-import high-water cannot claim a local parent.',
+        );
+      }
+      if (n == 1 || imported.contains(n)) {
         if (row['parent'] != null) {
-          workspaceInvalid('Root cannot have a parent.');
+          workspaceInvalid(
+            'Root/imported snapshots cannot claim historical parents.',
+          );
         }
       } else {
         final parent = workspaceInt(
@@ -243,6 +318,9 @@ class SyntheticSessionRevisionCatalogue {
       }
       compiled[n] = result;
     }
+    if (!compiled.keys.toSet().containsAll(imported)) {
+      workspaceInvalid('Source import basis references missing snapshots.');
+    }
     if (lineage == SyntheticStrengthLineage.a && compiled.isEmpty) {
       workspaceInvalid('Exact A root required.');
     }
@@ -255,6 +333,8 @@ class SyntheticSessionRevisionCatalogue {
     for (final e in compiled.entries.where((e) => e.key != 1)) {
       restored._frozen[e.key] = D2LocalRevision._(e.value);
     }
+    restored._sourceImportHighWater = importHigh;
+    restored._importedSnapshots.addAll(imported);
     restored._parents.addAll(parents);
     restored._highestReserved = highest;
     for (final raw in workspaceList(

@@ -23,10 +23,12 @@ class SyntheticCompositionScreen extends StatefulWidget {
     this.downloadSources = downloadSourceBundle,
     this.downloadWorkspace = downloadEditableWorkspace,
     this.chooseWorkspace = chooseEditableWorkspace,
+    this.chooseSources = chooseCanonicalSources,
   });
   final bool technicalInspection;
   final void Function(String) downloadWorkspace;
   final Future<String?> Function() chooseWorkspace;
+  final Future<Uint8List?> Function() chooseSources;
   final void Function(CanonicalSourceBundle) downloadSources;
   final SyntheticCompositionController? controller;
   @override
@@ -59,6 +61,7 @@ class _SyntheticCompositionScreenState
             downloadSources: widget.downloadSources,
             downloadWorkspace: widget.downloadWorkspace,
             chooseWorkspace: widget.chooseWorkspace,
+            chooseSources: widget.chooseSources,
             advanced: () => SyntheticCompositionScreen(
               controller: controller,
               technicalInspection: true,

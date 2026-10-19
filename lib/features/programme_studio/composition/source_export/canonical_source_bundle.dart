@@ -8,7 +8,7 @@ import '../../protocol_authoring/synthetic_strength_lineage.dart';
 import '../../protocol_authoring/synthetic_strength_session_compiler.dart';
 
 /// Derived files only. Receipt ownership/freshness is checked by the live caller;
-/// neither this archive nor its index grants publication or editable restore.
+/// neither this archive nor its index grants publication or historical restore.
 class CanonicalSourceBundle {
   CanonicalSourceBundle.fromReview(CompositionReviewReceipt receipt) {
     final checked = reviewComposition(
@@ -69,8 +69,13 @@ class CanonicalSourceBundle {
 
 These files are outputs of the temporary Programme Studio workspace.
 They are not published, founder-approved coaching content or an editable project.
-The workspace still loses changes when reloaded/closed. Retaining these files does
-not allow Studio to resume editing. No upload or database operation was performed.
+Open canonical sources in Studio accepts this complete uncompressed .tar file as
+new editable ownership after validation and explicit replacement. Imported revisions
+are snapshots, not proof of historical freeze/approval. No private versions, omitted
+history, reservations or drafts are restored. New numbers start above the supplied
+inventory, whose missing earlier numbers remain unavailable with unknown history.
+Save editable workspace separately to retain subsequent local history and drafts.
+No upload or database operation was performed.
 
 - programme.plan-package.yaml: exact current Plan Package v1 source.
 - sessions/: exact Founder protocol YAML for EVERY declared version, including
@@ -95,13 +100,13 @@ Session YAML uses the already supported Founder grammar and EXACT fixed syntheti
 exercise/profile identities. It is not real programme intake or general profile
 support. The existing review validator recompiles every session and all slot
 bindings when opening review.json. Do not run hosted import/publication commands
-with these fixture files. Real content, editable authoring and Stage 2/launch
+with these fixture files. Real content, general authoring coverage and Stage 2/launch
 readiness require further work and separate applicable authority.
 ''';
 }
 
 /// Standard uncompressed USTAR container, stable order/metadata and UTF-8 bodies.
-/// Paths are fixed/generated above; no archive reader or arbitrary path intake.
+/// Paths are fixed/generated above. Intake accepts this bounded file set only.
 Uint8List _tar(Map<String, String> files) {
   final output = BytesBuilder(copy: false);
   for (final e in files.entries) {

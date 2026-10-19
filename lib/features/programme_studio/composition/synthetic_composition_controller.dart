@@ -1,4 +1,5 @@
 import '../workspace_json.dart';
+import 'source_intake/canonical_source_intake.dart';
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -44,10 +45,20 @@ class PreparedEditableWorkspace {
     this._owner,
     this._generation,
     this._transfer,
-    this._candidate,
-  );
+    this._candidate, {
+    this.canonicalSources = false,
+  });
   final SyntheticCompositionController _owner;
   final int _generation, _transfer;
+  final bool canonicalSources;
+  int get importedVersions => _candidate!.owners.fold(
+    0,
+    (n, o) =>
+        n +
+        o.revisions
+            .where((r) => o.isImportedSnapshot(r.identity.revisionNumber))
+            .length,
+  );
   SyntheticCompositionController? _candidate;
   int get savedVersions =>
       _candidate!.owners.fold(0, (n, o) => n + o.revisions.length);
@@ -584,9 +595,12 @@ class SyntheticCompositionController extends ChangeNotifier {
   String? reconstructedExport() =>
       _reconstructed == null ? null : handoff.write(_reconstructed!);
 
+  bool get hasImportedSnapshots =>
+      initialized && owners.any((o) => o.hasImportedSnapshots);
+
   Map<String, dynamic> get _workspaceState => {
     'kind': 'cohort_editable_workspace',
-    'version': 2,
+    'version': hasImportedSnapshots ? 3 : 2,
     'fixture_profile': compositionProfile(),
     'owners': [for (final owner in owners) owner.workspaceState],
     'admitted': [for (final s in admitted) compositionTuple(s.identity)],
@@ -611,7 +625,7 @@ class SyntheticCompositionController extends ChangeNotifier {
     }, 'workspace');
     if (root['kind'] != 'cohort_editable_workspace' ||
         root['version'] is! int ||
-        !{1, 2}.contains(root['version']) ||
+        !{1, 2, 3}.contains(root['version']) ||
         !compositionEqual(root['fixture_profile'], compositionProfile())) {
       workspaceInvalid(
         'Unsupported editable format/profile. Review exports are read-only.',
@@ -630,12 +644,21 @@ class SyntheticCompositionController extends ChangeNotifier {
         rows[0],
         SyntheticStrengthLineage.a,
         engine,
+        allowImportedSnapshots: root['version'] == 3,
       );
       b = await ProtocolAuthoringController.restoreWorkspace(
         rows[1],
         SyntheticStrengthLineage.b,
         engine,
+        allowImportedSnapshots: root['version'] == 3,
       );
+      if (root['version'] == 3 &&
+          !a.hasImportedSnapshots &&
+          !b.hasImportedSnapshots) {
+        workspaceInvalid(
+          'Workspace v3 requires explicit source-import basis; ordinary workspaces use v2.',
+        );
+      }
       final all = [...a.revisions, ...b.revisions];
       final catalogue = SyntheticProgrammeRevisionCatalogue(a.revisions.first);
       final declared = <D2LocalRevision>[], keys = <String>{};
@@ -670,6 +693,7 @@ class SyntheticCompositionController extends ChangeNotifier {
       editor.restoreWorkspaceSource(
         workspaceString(root['programme_source'], 'programme source'),
         legacySchedule: root['version'] == 1,
+        retainSourceFormatting: root['version'] == 3,
       );
       final result = SyntheticCompositionController._workspace(engine);
       result._session = a;
@@ -736,6 +760,89 @@ class SyntheticCompositionController extends ChangeNotifier {
       return null;
     }
     return PreparedEditableWorkspace._(this, token, transfer, candidate);
+  }
+
+  /// Source files have snapshots, not saved editor history. Construct an
+  /// explicit v3 source-import basis, then use the existing untrusted workspace
+  /// reconstruction and ownership checks. No historical parent is inferred.
+  static Future<SyntheticCompositionController> fromCanonicalSources(
+    Uint8List bytes, {
+    SyntheticStrengthSessionCompiler? compiler,
+  }) async {
+    final engine =
+        compiler ?? SyntheticStrengthSessionCompiler(allowSecondLineage: true);
+    final checked = await readCanonicalSources(bytes, engine);
+    Map<String, dynamic> owner(SyntheticStrengthLineage lineage) {
+      final sessions = checked.sessions
+          .where((s) => s.identity.sessionLineageId == lineage.id)
+          .toList();
+      final numbers = sessions.map((s) => s.identity.revisionNumber).toList()
+        ..sort();
+      return {
+        'lineage': lineage.id,
+        'opened': 1,
+        'selected': 1,
+        'programme_entries': numbers.isEmpty ? [1] : numbers,
+        'draft': null,
+        'catalogue': {
+          'highest_reserved': numbers.isEmpty ? 0 : numbers.last,
+          'abandoned_ranges': <Object>[],
+          'reservations': <Object>[],
+          if (numbers.isNotEmpty)
+            'source_import': {
+              'high_water': numbers.last,
+              'revision_numbers': numbers,
+            },
+          'frozen': [
+            for (final s in sessions)
+              {
+                'number': s.identity.revisionNumber,
+                'parent': null,
+                'source': s.source,
+              },
+          ],
+        },
+      };
+    }
+
+    final result = await restoreEditableWorkspace(
+      encodeWorkspaceJson({
+        'kind': 'cohort_editable_workspace',
+        'version': 3,
+        'fixture_profile': compositionProfile(),
+        'owners': [
+          owner(SyntheticStrengthLineage.a),
+          owner(SyntheticStrengthLineage.b),
+        ],
+        'admitted': checked.sessions
+            .map((s) => compositionTuple(s.identity))
+            .toList(),
+        'programme_source': checked.programmeSource,
+      }),
+      compiler: engine,
+    );
+    // The author has opened canonical sources, not saved/restored an editable file.
+    result._savedWorkspaceText = null;
+    return result;
+  }
+
+  Future<PreparedEditableWorkspace?> prepareCanonicalSources(
+    Uint8List bytes,
+  ) async {
+    if (_disposed || !initialized) return null;
+    final token = _operation, transfer = ++_workspaceTransfer;
+    final candidate = await fromCanonicalSources(bytes, compiler: compiler);
+    if (!_alive(token) || transfer != _workspaceTransfer) {
+      candidate.dispose();
+      return null;
+    }
+    return PreparedEditableWorkspace._(
+      this,
+      token,
+      transfer,
+      candidate,
+      canonicalSources: true,
+    );
   }
 
   bool isCurrentEditableWorkspace(PreparedEditableWorkspace p) =>

@@ -37,6 +37,10 @@ class ProtocolAuthoringController extends ChangeNotifier {
   final SyntheticStrengthLineage lineage;
   bool _rootDraft = false;
   bool get isCreatingRoot => _rootDraft;
+  bool get hasImportedSnapshots => _catalogue?.hasImportedSnapshots ?? false;
+  bool isImportedSnapshot(int number) =>
+      _catalogue?.isImportedSnapshot(number) ?? false;
+  int get sourceImportHighWater => _catalogue?.sourceImportHighWater ?? 0;
   bool get hasFrozenRoot => _catalogue?.revisions.isNotEmpty ?? false;
   bool get canCreateRoot =>
       lineage == SyntheticStrengthLineage.b && !hasFrozenRoot && !isEditing;
@@ -177,7 +181,12 @@ class ProtocolAuthoringController extends ChangeNotifier {
     if (!initialized || isEditing) return;
     _invalidate();
     _parent = _opened;
-    _draftIdentity = _catalogue!.reserve(_parent);
+    try {
+      _draftIdentity = _catalogue!.reserve(_parent);
+    } on StateError catch (error) {
+      _fail(error);
+      return;
+    }
     _resetTree();
     notifyListeners();
   }
@@ -593,8 +602,9 @@ class ProtocolAuthoringController extends ChangeNotifier {
   static Future<ProtocolAuthoringController> restoreWorkspace(
     Object? input,
     SyntheticStrengthLineage lineage,
-    SyntheticStrengthSessionCompiler compiler,
-  ) async {
+    SyntheticStrengthSessionCompiler compiler, {
+    bool allowImportedSnapshots = false,
+  }) async {
     final state = workspaceObject(input, {
       'lineage',
       'catalogue',
@@ -610,6 +620,7 @@ class ProtocolAuthoringController extends ChangeNotifier {
       state['catalogue'],
       lineage,
       compiler,
+      allowImportedSnapshots: allowImportedSnapshots,
     );
     final c = ProtocolAuthoringController._workspace(
       compiler,

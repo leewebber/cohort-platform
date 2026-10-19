@@ -71,6 +71,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   late final Map<String, dynamic> _trusted;
   Map<String, dynamic>? _tree;
   String _originalSource = '';
+  String? _retainedDraftSource;
   String? _originalCanonical;
   List<PlanPackageValidationIssue> _issues = [];
   PlanPackageCompileResult? _validated;
@@ -83,7 +84,8 @@ class ProgrammeAuthoringController extends ChangeNotifier {
       _tree == null ? null : _clone(jsonEncode(_tree));
   List<PlanPackageValidationIssue> get issues => List.unmodifiable(_issues);
   String get originalSource => _originalSource;
-  String get draftSource => _tree == null ? '' : _writer.writeDraft(_tree!);
+  String get draftSource =>
+      _tree == null ? '' : _retainedDraftSource ?? _writer.writeDraft(_tree!);
   String? get currentHash => isCurrent ? _validated!.contentHashSha256 : null;
   ProgrammeReviewCatalog? get currentReview => isCurrent ? _review : null;
   String? get exportYaml => isCurrent ? _export : null;
@@ -172,19 +174,46 @@ class ProgrammeAuthoringController extends ChangeNotifier {
 
   /// Restores an unvalidated form draft, keeping the fixed source baseline.
   /// No compiler/review receipt is restored; only existing editable fields vary.
-  void restoreWorkspaceSource(String text, {bool legacySchedule = false}) {
+  void restoreWorkspaceSource(
+    String text, {
+    bool legacySchedule = false,
+    bool retainSourceFormatting = false,
+  }) {
     guardWorkspaceYaml(text);
     final decoded = jsonDecode(jsonEncode(loadYaml(text)));
     if (decoded is! Map<String, dynamic> ||
-        _writer.writeDraft(decoded) != text ||
+        (!retainSourceFormatting && _writer.writeDraft(decoded) != text) ||
         _scopeIssues(decoded).isNotEmpty ||
         (legacySchedule &&
             !_equal(_legacySkeleton(decoded), _legacySkeleton(_trusted)))) {
       workspaceInvalid('Unsupported programme source/template.');
     }
+    if (retainSourceFormatting && _writer.writeDraft(decoded) != text) {
+      final original = _compiler.compile(text);
+      final normalized = _compiler.compile(_writer.writeDraft(decoded));
+      if (!original.isValid ||
+          !normalized.isValid ||
+          original.canonicalJson != normalized.canonicalJson) {
+        workspaceInvalid(
+          'Programme source cannot be represented without changing meaning.',
+        );
+      }
+    }
+    final actualReferences = List<dynamic>.of(decoded['sessions'] as List);
+    final expectedReferences = source?.sessionReferences;
+    if (retainSourceFormatting && expectedReferences != null) {
+      actualReferences.sort(
+        (a, b) =>
+            (a['session_key'] as String).compareTo(b['session_key'] as String),
+      );
+      expectedReferences.sort(
+        (a, b) =>
+            (a['session_key'] as String).compareTo(b['session_key'] as String),
+      );
+    }
     if (source == null ||
-        encodeWorkspaceJson(decoded['sessions']) !=
-            encodeWorkspaceJson(source!.sessionReferences)) {
+        encodeWorkspaceJson(actualReferences) !=
+            encodeWorkspaceJson(expectedReferences)) {
       workspaceInvalid(
         'Programme availability differs from exact owned revisions.',
       );
@@ -227,6 +256,14 @@ class ProgrammeAuthoringController extends ChangeNotifier {
     }
     _tree = _clone(jsonEncode(decoded));
     _invalidate();
+    if (retainSourceFormatting) {
+      _retainedDraftSource = text;
+      final baseline = _compiler.compile(text);
+      if (baseline.isValid) {
+        _originalSource = text;
+        _originalCanonical = baseline.canonicalJson;
+      }
+    }
     notifyListeners();
   }
 
@@ -903,6 +940,7 @@ class ProgrammeAuthoringController extends ChangeNotifier {
   }
 
   void _invalidate() {
+    _retainedDraftSource = null;
     revision++;
     _issues = [];
     _validated = null;
