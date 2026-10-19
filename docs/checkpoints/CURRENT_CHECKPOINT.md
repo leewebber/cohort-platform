@@ -1,5 +1,28 @@
 # Current repository checkpoint
 
+> **Programme Studio bounded canonical-source intake — locally technically verified, 2026-10-19:**
+> [Continuation](./programme_studio_canonical_intake/HANDOFF.md),
+> [format/identity policy](./programme_studio_canonical_intake/FORMAT.md),
+> [verification](./programme_studio_canonical_intake/VERIFICATION.json) and
+> [sanitised incident/revised authority](./programme_studio_canonical_intake/INCIDENT.md)
+> record complete existing TAR intake into new editable ownership, exact source/profile/
+> inventory/all-slot checks, explicit atomic replacement and honest imported snapshots.
+> v3 retains source-import basis plus subsequent local history; old v1/v2 and exports
+> remain compatible. Fixed synthetic profile, two lineages, straight sets and supported
+> schedule shapes only. 370 Studio tests, 58 focused, two actual-artifact checks, all six
+> safety groups and local web build pass. Zero diagnostics in all 12 changed/new Dart
+> files; full analysis remains non-green at identical 367 inherited identities (110
+> warnings, 257 info, zero errors). Unchanged accepted 41-test compiler evidence reused.
+> **Browser evidence is partial:** native intake/edit/editable save/reopen observed;
+> final later-week review and both final browser export/reopen paths remain unverified.
+> All browser/desktop control remains revoked and unused after revocation; task preview
+> stopped by verified PID. Revised founder authority permits technical integration on
+> local repository gates. Agent evidence is not founder acceptance. Twelve older checkout
+> inventories, original 95 outstanding paths/HEADs/indices/.temp preserved. Broader Stage
+> 2/Sprint C and four phone checks remain open. No hosted application contact, real
+> publication/assignment/content approval, athlete change or device distribution.
+
+
 > **Programme Studio four-week synthetic strength authoring — technically verified, 2026-10-18:**
 > [Continuation](./programme_studio_four_week_schedule/HANDOFF.md),
 > [scope](./programme_studio_four_week_schedule/SCOPE.md) and

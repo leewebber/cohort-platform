@@ -37,3 +37,12 @@ approved content, complete policies/progression, canonical exercises, editorial 
 real-world acceptance. Stage 2/Sprint C and four phone checks remain open. No shared
 compiler/schema/hash/resolver change, new profile/representation, hosted operation,
 real publication/assignment, athlete write, migration, payment or device distribution.
+
+## Revised execution authority — 2026-10-19
+
+Founder revoked all browser and desktop control after the incident recorded in
+[INCIDENT.md](INCIDENT.md). Local source editing, terminal builds/tests, filesystem
+inspection, stopping only the verified task-owned preview and normal Git fetch/push
+remain authorised. Finish technical integration if repository gates pass; retain
+partial browser evidence honestly. No substitute automation or access-restoration
+request. This supersedes the earlier browser-verification execution authority.

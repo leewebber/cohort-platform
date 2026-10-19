@@ -1,0 +1,171 @@
+{
+  "actual_artifact_verifier": {
+    "actual_browser_workspace_sha256": "b042407c9f3bb9ec15c6a364ad5600be59bf1199e83c413620bffca1f5ad2241",
+    "assertions": [
+      "Original archive complete inventory; exact programme and session sources; same no-edit package hash/review/index; saved v3 round trip.",
+      "Actual saved v3 has version vector [1,1,1,2,2,1,3,2]; continued A4 edit affects only Week 4 A, final vector [1,1,1,2,2,1,4,2].",
+      "Editable save/reopen, exact older sources, canonical re-export/re-intake, read-only export/reopen equality, original live review owner unchanged."
+    ],
+    "exit": 0,
+    "independent_standard_tar_inventory_and_hash_check": {
+      "files": 10,
+      "passed": true,
+      "sources": 6
+    },
+    "original_archive_sha256": "d0ff03396a60dbdde439db651774cd6f3bfe4df273ae833f1db12d4d49ba0673",
+    "passed": 2,
+    "programmatic_outputs_not_native_downloads": {
+      "canonical-sources.tar": {
+        "bytes": 65024,
+        "sha256": "2920b4c00e46c16ae68b93e7df61e2fbe963440c6339d40ed9ddb03c71056463"
+      },
+      "editable-workspace.json": {
+        "bytes": 24521,
+        "sha256": "89959cb6f2d3c234460a29304562345ea37c0cdc225f83b8bf915ccfb9048f52"
+      },
+      "review.json": {
+        "bytes": 28947,
+        "sha256": "00a2b0950d4ee97d460f13c216fb9715368ba2a1d168d63679bc12a5bd9e5a24"
+      }
+    },
+    "script_sha256": "a9fc7e7a16b4ff2136d2b698906e4e1097f43c0b73b8c15b8d6f7dc529849936"
+  },
+  "agent_evidence_not_founder_acceptance": true,
+  "analysis_scoped": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files": 12
+  },
+  "base": "adeea293ae23866b936a7a543cf8a577ecdb7109",
+  "browser": {
+    "latest_banner_copy_only_covered_programmatically": true,
+    "local_tests_do_not_prove_native_picker_or_download_behavior": true,
+    "no_browser_or_desktop_control_after_revocation": true,
+    "observed": [
+      "Actual existing four-week TAR chosen, validated and explicitly installed.",
+      "Synthetic A3 authored and explicitly selected only for Week 4 A; earlier selections visibly retained.",
+      "Editable workspace (5) downloaded; reload, native picker reopen and replacement observed; fresh review opened.",
+      "Week 1 A original prescription inspected."
+    ],
+    "permissions_restoration_not_requested": true,
+    "status": "PARTIAL_BEFORE_REVOCATION",
+    "unverified": [
+      "Final later-week review navigation and all-eight final prescription inspection.",
+      "Canonical re-export native download after source intake and editable reopen.",
+      "Final copied read-only export reopened through browser UI."
+    ]
+  },
+  "canonical_package": {
+    "accepted_checkpoint": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "all_package_and_compatibility_bytes_unchanged": true,
+    "package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "passed": 41,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-19",
+  "focused": {
+    "exit": 0,
+    "passed": 58
+  },
+  "full_analysis": {
+    "added": [],
+    "errors": 0,
+    "exact_equality": true,
+    "exit": 1,
+    "identities": 367,
+    "info": 257,
+    "normalized_identity_sha256": "2666d0511524e83721ced8edc10c6567db20b68f2efde3e7da014650fe48a376",
+    "removed": [],
+    "status": "NON_GREEN_INHERITED",
+    "warnings": 110
+  },
+  "implementation_commit": "2ed486579235049ba1d33d166d7176819c65e8f8",
+  "logs": {
+    "actual-archive-resumed.log": {
+      "sha256": "fbb4dab78552f202e29724c122c5d4a2cd94f014f27dbaf6404fa12647e49ec9"
+    },
+    "analysis-before.log": {
+      "sha256": "f0351661de45bf984c387d4cc2fd82f7b59451aadf5edce7d756baedf084aa44"
+    },
+    "resumed-analysis-full.log": {
+      "sha256": "7a52161a642b8836b1e812cbbe974d519ca7a6490133a8d473017125574d8a1c"
+    },
+    "resumed-analysis-scoped.log": {
+      "sha256": "7a52e2b70d1519545cb9207d3fd6cd5fc52582f4ebfd170c83b520236fef60be"
+    },
+    "resumed-focused.log": {
+      "sha256": "ee3d793d4eff2022cd5c87298db0653c2e1abbe6396f09beb6ae718b14b5e8fa"
+    },
+    "resumed-safety.log": {
+      "sha256": "6753a232fad4de4cc4823461e747f27dbf79e48d04a9178352af6905ddaad8c8"
+    },
+    "resumed-studio.log": {
+      "sha256": "0d55c429a6cc60b70a4a3fe28f460bffec0f0362d4b48b776600e52baeb37e6f"
+    },
+    "resumed-web-build.log": {
+      "sha256": "efdb1b28d653ffde05bd718345f1dc9fa3d8d71d5f869bf87feb19407487a6f9"
+    }
+  },
+  "not_run": [
+    "Entire repository default Flutter suite",
+    "Local database replay (no schema/SQL change)"
+  ],
+  "preview": {
+    "both_exited_verified": true,
+    "identified_compiler_child": 51040,
+    "sigterm_only_to_preview_pid": true,
+    "verified_pid": 50989,
+    "working_directory_verified": true
+  },
+  "protected_artifacts": {
+    "absent_temp_paths_retained_in_git": [
+      "supabase/.temp/cli-latest",
+      "supabase/.temp/gotrue-version",
+      "supabase/.temp/linked-project.json",
+      "supabase/.temp/pooler-url",
+      "supabase/.temp/postgres-version",
+      "supabase/.temp/project-ref",
+      "supabase/.temp/rest-version",
+      "supabase/.temp/storage-migration",
+      "supabase/.temp/storage-version"
+    ],
+    "base": "adeea293ae23866b936a7a543cf8a577ecdb7109",
+    "canonical_package_accepted_bytes_equal": true,
+    "mismatches": [],
+    "protected_present_baseline_blobs_equal": 2696
+  },
+  "raw_evidence_directory": "/private/tmp/cohort-studio-intake",
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/authoring/programme_authoring_controller.dart": "dd89b69dbcb966d83523727c9914fc32f87e18789024f8138fe3f4f7eb4df0ab",
+    "lib/features/programme_studio/composition/programme_first_screen.dart": "9026f6f2801684e93eb30c24b2afac1b7913e3fb94769e96feda3e80c0f1a36b",
+    "lib/features/programme_studio/composition/source_export/canonical_source_bundle.dart": "96262a89318a3c85006711d0d4da8a34e7785e4d3d9844ae63a36647fabce629",
+    "lib/features/programme_studio/composition/source_intake/canonical_source_intake.dart": "33821de2d1f199739a50f48d9df83fa4934e949ae6876408d8eb034a5a0c0607",
+    "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "4adac451e40061d71aac5ccdf8e57e722b87a9f977f1cdd8396548c82c7877cf",
+    "lib/features/programme_studio/composition/synthetic_composition_screen.dart": "826fddc5d9fe933b8572ff9389f6093c5f1db27447e0287911bb0e01129bbedf",
+    "lib/features/programme_studio/composition/workspace/workspace_files_stub.dart": "23ae5b47f3cf171d5706b35c5aa28ee28092bc41cccd4c4fee53ff32e0f80ed4",
+    "lib/features/programme_studio/composition/workspace/workspace_files_web.dart": "1bda31277eb306d063adedf58cce0876a8b91574eda9e1e43dbda33111a8d2d6",
+    "lib/features/programme_studio/protocol_authoring/protocol_authoring_controller.dart": "ad0f50b68c177e41c96754343f7c727c561b9160b4897899b30b6fc0bd1dbeed",
+    "lib/features/programme_studio/protocol_authoring/synthetic_session_revision_catalogue.dart": "345a09c7d81889567d72c00bfc1747f57c6d96b160a8226e93257c62985b4800",
+    "test/programme_studio/canonical_source_intake_screen_test.dart": "3c9b75a3218b4feccf20e1df432b7276edad721a89f852dafc8ae7060eabc1eb",
+    "test/programme_studio/canonical_source_intake_test.dart": "85658f4e0bf162417a5608a9b382e10b8fa6526d264b18bb52a947edca0477f3"
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6
+  },
+  "scope_commit": "23272f74d2b1fdedd8fb69f0f15acf034e80d4fd",
+  "studio": {
+    "command": "flutter test --no-pub test/programme_studio --reporter expanded",
+    "exit": 0,
+    "new_intake_cases": 58,
+    "passed": 370
+  },
+  "web_build": {
+    "browser_launched": false,
+    "command": "flutter build web --no-pub --debug --no-web-resources-cdn --no-wasm-dry-run -t lib/main_programme_studio_composition_preview.dart --output /private/tmp/cohort-studio-intake/web-build",
+    "exit": 0
+  }
+}
