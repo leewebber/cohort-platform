@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **Programme Studio prescription-aware version confirmation — technically verified, 2026-10-20:**
+> [Continuation](./programme_studio_prescription_comparison/HANDOFF.md),
+> [scope](./programme_studio_prescription_comparison/SCOPE.md),
+> [verification](./programme_studio_prescription_comparison/VERIFICATION.json) and
+> [preservation](./programme_studio_prescription_comparison/PRESERVATION.json) record
+> descriptive identity-matched strength changes, explicit no-change/metadata-only/
+> unavailable states and exact occurrence/current/proposed-version review. Both source
+> receipts are verified; stale results disappear and existing atomic consent is retained.
+> 412 Studio tests (42 new), six safety groups and terminal web build pass. Zero changed-
+> file diagnostics; full analysis remains non-green at 367 identical inherited identities
+> (110 warnings, 257 info, zero errors). Unchanged accepted 41-test compiler evidence reused.
+> Thirteen older checkout inventories, original 95 outstanding paths/HEAD/indices/.temp and
+> 2,712 present protected baseline blobs preserved. Fixed synthetic profile/two lineages/
+> straight sets only; editable/canonical/read-only compatibility retained. Latest founder
+> authority permits technical review and normal main publication. All computer/browser
+> control remains revoked and unused; no native browser/founder acceptance is inferred.
+> Prior browser gaps, four phone checks and broader Stage 2/Sprint C remain open. No hosted
+> operation, real content publication, athlete change, migration or device distribution.
+
 > **Programme Studio bounded canonical-source intake — locally technically verified, 2026-10-19:**
 > [Continuation](./programme_studio_canonical_intake/HANDOFF.md),
 > [format/identity policy](./programme_studio_canonical_intake/FORMAT.md),

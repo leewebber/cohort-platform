@@ -1,0 +1,107 @@
+{
+  "base": "cfd9bae736e2eb0a537410328006d4920b4e7548",
+  "canonical_package": {
+    "accepted_checkpoint": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "all_package_and_relevant_compiler_mapper_projection_transport_formatter_paths_unchanged": true,
+    "package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "passed": 41,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-20",
+  "focused": {
+    "controller_and_semantics": 35,
+    "exit": 0,
+    "included_in_studio": true,
+    "passed": 42,
+    "widgets": 7
+  },
+  "founder_acceptance_not_inferred": true,
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "equal": true,
+    "errors": 0,
+    "exit": 1,
+    "identity_sha256": "2666d0511524e83721ced8edc10c6567db20b68f2efde3e7da014650fe48a376",
+    "info": 257,
+    "removed": [],
+    "status": "NON_GREEN_INHERITED",
+    "warnings": 110
+  },
+  "implementation_commit": "0f23abc54321ae38687ab16826ef812defb46565",
+  "logs": {
+    "analysis-before-ready.log": {
+      "sha256": "daf2a79a59d32b798b5bdfce93c841f4b96d4ec1ed41f430b5943bf099a8cd1c"
+    },
+    "analysis-final.log": {
+      "sha256": "887cee7f6771906fba69bcba7d1b583ddb7ba23ae5959a1fe82ebe75bd3d2559"
+    },
+    "analysis-scoped.log": {
+      "sha256": "2c086a86f6271f40a3c67101b05fdf22c9de49c955945c00d6bb2d44585b6efc"
+    },
+    "focused-final.log": {
+      "sha256": "287d44c8238497e8bf2968488f6ad0a200384eb64fdd195207cf9c363d7adf1d"
+    },
+    "importer-pub.log": {
+      "sha256": "d4cb7a3c68b4133b4f6e58c67ff5bfd13725d8021e930388cdc98da8a575919d"
+    },
+    "pub.log": {
+      "sha256": "fc1af9ddb9fe5366cff4a9e080ef931bdf05e1c4d847e38489afb4b42f254140"
+    },
+    "safety-final.log": {
+      "sha256": "54140bb67dfe113270157285320688567c8c7a7a61252710848cc339bcd8c80a"
+    },
+    "studio-final.log": {
+      "sha256": "05cf7368ac1ec6b2d4f8dee11115afdd5440eb1416839acc8e567e5b244b73f4"
+    },
+    "web-build.log": {
+      "sha256": "d88ca13e1a0d0dffeb06bff9cc91bf5c7bf15946919c08caf5306f5839a8366c"
+    }
+  },
+  "no_browser_computer_or_substitute_control": true,
+  "not_run": [
+    "Entire repository default suite",
+    "Local database replay (no SQL/schema change)",
+    "Native browser/file-picker/download verification",
+    "Phone/device verification"
+  ],
+  "pending_unchanged": [
+    "Intake final later-week review navigation/all-eight final native prescription inspection",
+    "Intake final canonical native re-download after source/editable reopen",
+    "Intake final copied read-only review UI reopen",
+    "Four genuine-record-dependent phone checks",
+    "Broader Stage 2 and Sprint C acceptance"
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-studio-comparison",
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/composition/prescription_comparison.dart": "612d736e318d0c94f9c737039b7272455637066e706ec34ecdf63db2e9a9e0d1",
+    "lib/features/programme_studio/composition/programme_first_screen.dart": "a19a291109a89bb17648e9fe4b6b2b8412b89f44e465a79ade35188218c5f38e",
+    "lib/features/programme_studio/composition/synthetic_composition_controller.dart": "eda016fb9677eca31bfd0dfcc3d6f1bce96282cc892405e996d1e600e172a77d",
+    "test/programme_studio/prescription_comparison_screen_test.dart": "d1e9e702d5d201cd205e9362663deedfe1d1192c69124b5b8fbcd7c0c67a1a53",
+    "test/programme_studio/prescription_comparison_test.dart": "daf073ef0134ab20f7133dd1e7387f4d2af3847f2ac0774b1e3d0476935e4f2b"
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6
+  },
+  "scope_commit": "091e8375385daf74ca8dc091c65a1f605d1a3217",
+  "scoped_analysis": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files": 5
+  },
+  "studio": {
+    "command": "flutter test --no-pub test/programme_studio --reporter expanded",
+    "exit": 0,
+    "passed": 412
+  },
+  "web_build": {
+    "browser_launched_or_controlled": false,
+    "command": "flutter build web --no-pub --debug --no-web-resources-cdn --no-wasm-dry-run -t lib/main_programme_studio_composition_preview.dart --output /private/tmp/cohort-studio-comparison/web-build",
+    "exit": 0
+  }
+}
