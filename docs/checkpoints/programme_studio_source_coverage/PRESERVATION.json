@@ -1,0 +1,235 @@
+{
+  "all_older_inventories_exactly_equal": true,
+  "checkouts": [
+    {
+      "HEAD": "c75d38358a8a8bc37f6d0444f206b1bffcb81c29",
+      "all_fields_equal": true,
+      "branch": "codex/programme-studio-composition",
+      "git_pointer_sha256": "fc277498553f0f22b527c4ba7ee6c1fca70d619e25f29cdfdc36f31e6741c725",
+      "index_sha256": "99d610a54ad179ee59338b5913c7531a08e6bcc08a345f26518ff20928e95344",
+      "inventory_sha256": "d5a1afa68c16a274ef0c2b603aaae24a8ea6e230ca308e4f195f3e314e011570",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/programme-studio-composition/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2659
+    },
+    {
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "all_fields_equal": true,
+      "branch": "codex/programme-studio-d2",
+      "git_pointer_sha256": "40a2ba4a769feae622a7d0d664c55dd10bf8c4618941192457d37c96e62d8869",
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "inventory_sha256": "a4079d2cd2267acab64919f15288c2b1376310b9bb240a174e90b8baee0e3612",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2637
+    },
+    {
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "all_fields_equal": true,
+      "branch": "codex/programme-studio-stage2",
+      "git_pointer_sha256": "e74a83b8a09c1f11b4ca70e683a5c6b2cda2a430fba800740887ef3c24b753da",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "inventory_sha256": "576c2ff2f5a91b0a94d240043589f7e424759d37e0224dda553cd3406f355054",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2612
+    },
+    {
+      "HEAD": "cfd9bae736e2eb0a537410328006d4920b4e7548",
+      "all_fields_equal": true,
+      "branch": "codex/studio-canonical-intake",
+      "git_pointer_sha256": "e482f286afb3c656dfdec928ea83ba261f3597cae4f8699b7d37af9c292b4a83",
+      "index_sha256": "c2fcac304c8e38840cc52c73c5fb6279944765efb8aa51405b41b3ae22dd2f08",
+      "inventory_sha256": "1702ca1782c02e83f0738669d7bfedeb67b9b4606c7f400f29e65f680c5e8f29",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-canonical-intake/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2724
+    },
+    {
+      "HEAD": "2d97daf71e31c4691eba9cf85e731b4a1b3c2e33",
+      "all_fields_equal": true,
+      "branch": "codex/studio-canonical-source-export",
+      "git_pointer_sha256": "f53440dfd1a8bf4df967f884420b98e572188b9e3ca3e8d2a9a38220559f9e90",
+      "index_sha256": "d63947b0a70e372ca09bdde0e4b8e78041be27bdc3d97e5ed92ed3060b985d6f",
+      "inventory_sha256": "101e678e4024ab3efebb332febe062dfe91d4659799bc01b2e33c0baa5c51a11",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-canonical-source-export/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2694
+    },
+    {
+      "HEAD": "3ec4866c5d4583fdb5f7c581b5e6099ee3616ef6",
+      "all_fields_equal": true,
+      "branch": "codex/studio-editable-workspace",
+      "git_pointer_sha256": "92165795d891d3c5f88412bec1f5a765546348f3ec6c5e90b8208009f9445a12",
+      "index_sha256": "a6e91fcba3f31191312f874ade5853f1dd390a14ec333975c8630d84307952ee",
+      "inventory_sha256": "be0ae898990db684c0c745c560662105019522c5be6a8310bf319858f3e660e2",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-editable-workspace/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2708
+    },
+    {
+      "HEAD": "adeea293ae23866b936a7a543cf8a577ecdb7109",
+      "all_fields_equal": true,
+      "branch": "codex/studio-four-week-schedule",
+      "git_pointer_sha256": "5e7e3fa2148a1ca1f2a43095f940dd02b794421192ff06275f7aace30a169e2d",
+      "index_sha256": "00fe2e43bfbfa72f1e6d9340e3f1a834ef328e71f4eb7103b2b5cfc876c3c624",
+      "inventory_sha256": "3e865885178e4f223e1e2e831c2335371c6dee2d27a461992e83cc7e721f41f6",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-four-week-schedule/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2715
+    },
+    {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "all_fields_equal": true,
+      "branch": "codex/studio-strength-lineages-review",
+      "git_pointer_sha256": "c53202aeb86fd0db2ff13286c80bdec7a79ef905cde5258cf73806aa46aeac43",
+      "index_sha256": "83f80fcaf28e402f27e47fc888d6bc2a7c1f1ee2723f3cc14f7ef9257e0c5469",
+      "inventory_sha256": "c5122750d1c2018bde8d32f6fb6425d6a51f11e59a215ce11591e82477ac63d5",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2670
+    },
+    {
+      "HEAD": "09c5a0695bf96dee5214e5d5bf0665612ec65f9b",
+      "all_fields_equal": true,
+      "branch": "codex/studio-prescription-comparison",
+      "git_pointer_sha256": "3a2683daf89a006370a783439a88f65a84b09992f8785281c49776e4a9b3d069",
+      "index_sha256": "8ed2cc8e893159d24f08fa54102aa9f5182df6ad8729006ed2c2d93506191098",
+      "inventory_sha256": "41e442bee29044c341631d227f3817c2dfc1934cc0119149665a5f1177218cd5",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-prescription-comparison/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2731
+    },
+    {
+      "HEAD": "80a917cdf8469dc5690c935da8654bff42214378",
+      "all_fields_equal": true,
+      "branch": "codex/studio-programme-first-usability",
+      "git_pointer_sha256": "309d83d4eb76f5ecdc634553011963a3ebc3d17be2f3aba4903e795291fefc26",
+      "index_sha256": "85709651fd3ab9b3f89271ac448c0db98f3763ab4ad3162ab542b1c1e8c0408d",
+      "inventory_sha256": "b745ee83eadb64ca3f1b05eae7c640354d2c26f1ff34e53b925678de65b62fdd",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-programme-first-usability/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2683
+    },
+    {
+      "HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+      "all_fields_equal": true,
+      "branch": "codex/studio-strength-lineages",
+      "git_pointer_sha256": "860d7550dd420711bd61f764bf5bb1d0c3ca925c0083d6ecc4d0cdcf06cccd43",
+      "index_sha256": "f37ebbe410625fc417a0d40b5f43a6fbe39a803af78c35bcab7c5a86df90b0c5",
+      "inventory_sha256": "5de96f6166c4618fdad23372098040ba8f9dbd88d53244e660ce6e8614a6ff84",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2668
+    },
+    {
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "all_fields_equal": true,
+      "branch": "",
+      "git_pointer_sha256": "50ca679a59e8ca515b17285bc2e3afcf1d83f85753670270dca33313ae820e04",
+      "index_sha256": "a3c4c4422a86447937dec88156c62e8643efdf7b447090d2424f8999d94282b8",
+      "inventory_sha256": "5f11fa2a443667c06d13dfd6556ec2d3d7acd2ccd4a744e05a02de5a6059ea13",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-usability-allocation/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2670
+    },
+    {
+      "HEAD": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+      "all_fields_equal": true,
+      "branch": "codex/studio-usability-accepted",
+      "git_pointer_sha256": "27e7a44bf14f761b59a6d40d1e749869ca108d6601eec123a27380b85a79bc87",
+      "index_sha256": "3a97e3a1ad6ebd0cb319e0851720cabfdde74bd3127a5cebeca05d627340165d",
+      "inventory_sha256": "62264301325d8982b865656689aeb185b044fcf04c54fecc9f61c64c351bb6f6",
+      "outstanding_paths": 0,
+      "root": "/Users/leewebber/.codex/worktrees/studio-usability-integration/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2684
+    },
+    {
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "all_fields_equal": true,
+      "branch": "main",
+      "git_pointer_sha256": null,
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "inventory_sha256": "ba3d2db17dfcfff12a7046656cfe7ee5f507663919b3501ca7b67e421ed94426",
+      "outstanding_paths": 95,
+      "root": "/Users/leewebber/Developer/cohort_platform",
+      "temp_files": 0,
+      "tracked_nonignored_paths": 2687
+    }
+  ],
+  "ignored_build_caches_excluded": true,
+  "older_checkouts": 14,
+  "protected_base": {
+    "absent_temp_retained_in_git": [
+      {
+        "git_blob": "e9acfb34f99b20d4d4bff031a3034e74b885e7e3",
+        "path": "supabase/.temp/cli-latest"
+      },
+      {
+        "git_blob": "ff16c1feb5d417c664f4619c21c83a2b3d3176c0",
+        "path": "supabase/.temp/gotrue-version"
+      },
+      {
+        "git_blob": "addf44b80b0fd54e4d15c8a95179f69246a0ee00",
+        "path": "supabase/.temp/linked-project.json"
+      },
+      {
+        "git_blob": "02c8a5ae909869ce65004422879e1622db690a14",
+        "path": "supabase/.temp/pooler-url"
+      },
+      {
+        "git_blob": "de29697db0c6d83c79482c32dfee308e697cfe18",
+        "path": "supabase/.temp/postgres-version"
+      },
+      {
+        "git_blob": "5407a6053a2c436dc934364bf8bdf5eb6898ab22",
+        "path": "supabase/.temp/project-ref"
+      },
+      {
+        "git_blob": "908947a1df147707a8939d8bf8eb980cb0db067d",
+        "path": "supabase/.temp/rest-version"
+      },
+      {
+        "git_blob": "d5c38346723ccb4b2591ff28a4f7fc5a7967b3e1",
+        "path": "supabase/.temp/storage-migration"
+      },
+      {
+        "git_blob": "27200b147bd45b73390cc38af506205f147d7de2",
+        "path": "supabase/.temp/storage-version"
+      }
+    ],
+    "base": "09c5a0695bf96dee5214e5d5bf0665612ec65f9b",
+    "mismatches": [],
+    "only_reviewed_existing_paths": [
+      "docs/checkpoints/CURRENT_CHECKPOINT.md",
+      "lib/features/programme_studio/presentation/programme_studio_coach_review.dart",
+      "lib/features/programme_studio/presentation/programme_studio_labels.dart",
+      "lib/features/programme_studio/projection/programme_review_projector.dart"
+    ],
+    "present_baseline_blobs_equal": 2718,
+    "present_inventory_sha256": "b9d556739a0fe04757c4ad35ae4c00f3fa181071d9270f84e33c6da83896fbf2"
+  },
+  "prunable_registrations": [
+    "worktree /private/tmp/apollo-calendar-authenticated-preview\nHEAD 4e1b60aa093f9541a7c5fc917298ab376e620fec\ndetached\nprunable gitdir file points to non-existent location",
+    "worktree /private/tmp/apollo-preview-macos-release-53181e6\nHEAD 53181e6ba636f0cb6b86246b320b653120b7bc4a\ndetached\nprunable gitdir file points to non-existent location",
+    "worktree /private/tmp/apollo-preview-reconciled-app\nHEAD 0531c6531fdfa81ecd5e7fab6568d07dd0431987\ndetached\nprunable gitdir file points to non-existent location",
+    "worktree /private/tmp/cohort_apollo_macos_preview\nHEAD ab74ebb38e402bf0bb26d2a6dd8c8e7b89a4e48e\ndetached\nprunable gitdir file points to non-existent location"
+  ],
+  "raw_after_sha256": "3d16b434c5e397849cb28ae7d8bf09add28639a44f843f526f7c157d696676ef",
+  "raw_before_sha256": "3d16b434c5e397849cb28ae7d8bf09add28639a44f843f526f7c157d696676ef",
+  "raw_evidence_directory": "/private/tmp/cohort-studio-source-coverage",
+  "temp_explicitly_inventoried": true
+}

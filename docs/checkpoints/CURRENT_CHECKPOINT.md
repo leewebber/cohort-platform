@@ -1,5 +1,25 @@
 # Current repository checkpoint
 
+> **Programme Studio source coverage and loss-aware review — technically verified, 2026-10-20:**
+> [Continuation](./programme_studio_source_coverage/HANDOFF.md),
+> [source authority/matrix](./programme_studio_source_coverage/COVERAGE.md),
+> [source inventory](./programme_studio_source_coverage/SOURCE_INVENTORY.json),
+> [verification](./programme_studio_source_coverage/VERIFICATION.json) and
+> [preservation](./programme_studio_source_coverage/PRESERVATION.json) distinguish approved
+> internal/private references from unauthorised commercial first-family content. HYROX
+> Base remains first but no approved session source was found. Later Bali incident records
+> say ACTIVE_PRIVATE; older blocked/not-assigned snapshots are historical, not fresh hosted
+> evidence. Retained movement RIR/RPE/resistance/eccentric/load and duration/distance are
+> readable; unknown/ambiguous details remain visible and fail full renderability. Source
+> fields/identities/bytes and fixed editable trust remain intact. 455 Studio tests (43 new),
+> six safety groups and both terminal Studio web builds pass. Zero changed-file diagnostics;
+> full analysis remains non-green at 367 identical inherited identities, zero errors.
+> Fourteen older inventories, original 95 paths/HEAD/indices/.temp and 2,718 present protected
+> baseline blobs preserved. No new content/editing/publication approval; residual source
+> review, native browser gaps, four phone checks and broader Stage 2/Sprint C stay open.
+> Browser/computer control remains revoked and unused; no hosted operation, athlete change,
+> migration or device distribution. Current founder authority permits normal main publication.
+
 > **Programme Studio prescription-aware version confirmation — technically verified, 2026-10-20:**
 > [Continuation](./programme_studio_prescription_comparison/HANDOFF.md),
 > [scope](./programme_studio_prescription_comparison/SCOPE.md),

@@ -1,0 +1,125 @@
+{
+  "base": "09c5a0695bf96dee5214e5d5bf0665612ec65f9b",
+  "canonical_package_evidence": {
+    "accepted_checkpoint": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "does_not_claim_derived_review_bytes_unchanged": true,
+    "package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "passed": 41,
+    "pure_package_all_bytes_unchanged": true,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-20",
+  "focused": {
+    "exit": 0,
+    "included_in_studio_total": true,
+    "passed": 43,
+    "semantic_controller": 40,
+    "widgets": 3
+  },
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "errors": 0,
+    "exit": 1,
+    "identities_equal": true,
+    "identity_sha256": "2666d0511524e83721ced8edc10c6567db20b68f2efde3e7da014650fe48a376",
+    "info": 257,
+    "removed": [],
+    "status": "NON_GREEN_INHERITED",
+    "warnings": 110
+  },
+  "implementation_commit": "7211a20f5f101e9cdda8526052c6c82e357f4643",
+  "logs": {
+    "analysis-before.log": {
+      "sha256": "2c01e187f82d2987ed64d7afdc1a5e6f2c924e6084e171251cdf3bf594e8b97d"
+    },
+    "analysis-final.log": {
+      "sha256": "f9740f68caa871ebd3393084a15b594ed139ff8a24b6b2e6548fe0f392980a02"
+    },
+    "analysis-scoped.log": {
+      "sha256": "0dddd13f3cded2e05e8625c7085a8723b444f687f31f48f456b1554314f5477a"
+    },
+    "composition-web-build.log": {
+      "sha256": "1081d33889466da2c9bf8fe844fba011801e51575948f33bec7d243b9332d7fc"
+    },
+    "focused-final.log": {
+      "sha256": "f15e770988ab15c7f02a9183686fc7004417eeccc25db60b8e51b5ae0e54b0c4"
+    },
+    "review-web-build.log": {
+      "sha256": "45d6685f827cfeee6c0b5a0eb6a8770e58fed6625a567c506160c517562eeee8"
+    },
+    "safety-final.log": {
+      "sha256": "a1a8147fdb0de4d49d5d6e8eede3f3136cbab7d0a38f7e07601b80112209a791"
+    },
+    "source-inspection-final.log": {
+      "sha256": "c797cb6a4cc5417f39bbed82bc4288bb680564328dccad35b4f584a1ea38dc17"
+    },
+    "studio-final.log": {
+      "sha256": "d84fe7fb72698ec58b9029e665adf1ecff3d9769422c34aa58f30724ceac7bd8"
+    }
+  },
+  "not_run": [
+    "Entire repository default suite",
+    "Database replay (no SQL/schema change)",
+    "Native browser or device checks"
+  ],
+  "pending_unchanged": [
+    "Prior incomplete native browser checks",
+    "Four record-dependent phone checks",
+    "Broader Stage 2 and Sprint C acceptance",
+    "First-library source content approval and full prescribed-content review"
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-studio-source-coverage",
+  "review_limitations": {
+    "full_renderability_failed_in_existing_sources": {
+      "apollo-build-v2": 141,
+      "bali-hybrid-base-v1": 281,
+      "spartan-physique-v3": 1
+    },
+    "no_first_library_or_founder_acceptance_claim": true,
+    "uninterpreted_fields_remain_raw_and_visible": true
+  },
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/presentation/programme_studio_coach_review.dart": "4b701f5eabc55f040960ad8970b72cb84ad0d463b146181057ce98877bace91e",
+    "lib/features/programme_studio/presentation/programme_studio_labels.dart": "c13c260277817b334a38c004bb698d01ab444dac6a1ea64d931c53a60b5412be",
+    "lib/features/programme_studio/projection/movement_prescription_review.dart": "eccdd49fbbd2f607355971460f7615dc118e15b0ef52addf930de129f37964da",
+    "lib/features/programme_studio/projection/programme_review_projector.dart": "6351cd98136c5525590d70c8956a6ece0f5cf093ba446fd35ce9dd8ee4e6f852",
+    "test/programme_studio/source_prescription_review_screen_test.dart": "f108925dfba0be8a708ab57f0cc71995a10a9b9544234058d982e8ce93bf9e7b",
+    "test/programme_studio/source_prescription_review_test.dart": "d34176ba555b44dbbce2186a4f8fb764c01c96bf3e0f935245869acee850abb8"
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6
+  },
+  "scope_commit": "4d9e97ea716c640b9cfc0139c0202a46b5d0c4ce",
+  "scoped_analysis": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files": 6
+  },
+  "source_preservation": {
+    "all_1570_existing_movement_rows_read_without_mutation": true,
+    "all_registered_existing_source_bytes_unchanged": true,
+    "editable_and_canonical_readonly_transports_unchanged": true,
+    "immutable_prior_v1_handoff_reopened_and_reexported_exactly": true,
+    "unknown_readonly_RIR_cannot_enter_editable_workspace": true
+  },
+  "studio": {
+    "command": "flutter test --no-pub test/programme_studio --reporter expanded",
+    "exit": 0,
+    "passed": 455
+  },
+  "web_builds": {
+    "entries": [
+      "lib/main_programme_studio_preview.dart",
+      "lib/main_programme_studio_composition_preview.dart"
+    ],
+    "exit": 0,
+    "no_browser_or_app_control": true,
+    "options": "--no-pub --debug --no-web-resources-cdn --no-wasm-dry-run"
+  }
+}
