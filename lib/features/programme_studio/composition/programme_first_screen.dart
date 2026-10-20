@@ -618,8 +618,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
       );
       return;
     }
-    final target = targets.single,
-        previous = selected(targets.single.sessionKey);
+    final target = targets.single;
     final availableBefore = c.admitted
         .map((s) => revisionKey(s.identity))
         .toSet();
@@ -627,7 +626,7 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
     if (!mounted) return;
     if (prepared == null) {
       showMessage(
-        "We couldn't use this version. Your programme and available versions were not changed. The saved version is still here; try again.",
+        "Comparison unavailable. We couldn't verify the exact current and proposed prescriptions for this occurrence. Your programme and available versions were not changed. ${c.errors.join(' ')}",
       );
       return;
     }
@@ -644,32 +643,98 @@ class _ProgrammeFirstScreenState extends State<ProgrammeFirstScreen> {
             content: SizedBox(
               width: 640,
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(target.name),
-                    Text(sessionVersionLabel(revision.compiled)),
-                    if (previous != null) ...[
-                      const Text('Currently used'),
-                      Text(sessionPrescription(previous)),
-                    ],
-                    const Text('Use instead'),
-                    Text(sessionPrescription(revision.compiled)),
-                    for (final s in prepared.includedVersions.where(
-                      (s) => !availableBefore.contains(revisionKey(s.identity)),
-                    ))
-                      Text(
-                        'Also makes available in this programme: ${sessionVersionLabel(s)}',
-                      ),
-                    const Text(
-                      'Only this workout changes. Saving a version alone never changes selection.',
-                    ),
-                    if (!valid)
-                      const Text(
+                child: !valid
+                    ? const Text(
                         'The workspace changed. Close this confirmation and choose again.',
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(prepared.targetLabel!),
+                          const Text('Currently selected'),
+                          Text(sessionVersionLabel(prepared.currentVersion!)),
+                          const Text('Proposed version'),
+                          Text(sessionVersionLabel(prepared.revision.compiled)),
+                          const SizedBox(height: 12),
+                          Text(
+                            prepared.comparison!.summary,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          const Text(
+                            'Descriptive authoring review. No performance equivalence or progression advice.',
+                          ),
+                          for (final change in prepared.comparison!.changes)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${change.subject} · ${change.field}',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleSmall,
+                                  ),
+                                  Text('Before: ${change.before}'),
+                                  Text('After: ${change.after}'),
+                                ],
+                              ),
+                            ),
+                          ExpansionTile(
+                            title: const Text('Full prescriptions'),
+                            children: [
+                              ListTile(
+                                title: const Text('Currently selected'),
+                                subtitle: Text(
+                                  sessionPrescription(prepared.currentVersion!),
+                                ),
+                              ),
+                              ListTile(
+                                title: const Text('Proposed version'),
+                                subtitle: Text(
+                                  sessionPrescription(
+                                    prepared.revision.compiled,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ExpansionTile(
+                            title: const Text('Advanced source identities'),
+                            children: [
+                              for (final s in [
+                                prepared.currentVersion!,
+                                prepared.revision.compiled,
+                              ])
+                                ListTile(
+                                  title: Text(sessionVersionLabel(s)),
+                                  subtitle: SelectableText(
+                                    '${s.identity.protocolId} / ${s.identity.sessionLineageId} / ${s.identity.revisionNumber}\nSource SHA-256: ${s.sourceDigest}\nExercise versions: ${s.bindings.values.join(', ')}',
+                                  ),
+                                ),
+                              ListTile(
+                                title: const Text('Exact occurrence key'),
+                                subtitle: Text(prepared.slotKey),
+                              ),
+                            ],
+                          ),
+                          for (final s in prepared.includedVersions.where(
+                            (s) => !availableBefore.contains(
+                              revisionKey(s.identity),
+                            ),
+                          ))
+                            Text(
+                              'Also makes available in this programme: ${sessionVersionLabel(s)}',
+                            ),
+                          const Text(
+                            'Only this confirmed occurrence changes. Shared occurrences retain their existing selections. Saving a version alone never changes selection.',
+                          ),
+                          if (prepared.unchangedOccurrences.isNotEmpty)
+                            Text(
+                              'Keep their current version: ${prepared.unchangedOccurrences.join('; ')}',
+                            ),
+                        ],
                       ),
-                  ],
-                ),
               ),
             ),
             actions: [

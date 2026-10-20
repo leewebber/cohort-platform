@@ -1,3 +1,4 @@
+import 'prescription_comparison.dart';
 import '../workspace_json.dart';
 import 'source_intake/canonical_source_intake.dart';
 import 'dart:async';
@@ -26,8 +27,12 @@ class PreparedVersionUse {
     this._selection,
     this._append,
     this.revision,
-    this.slotKey,
-  );
+    this.slotKey, {
+    this.comparison,
+    this.currentVersion,
+    this.targetLabel,
+    this.unchangedOccurrences = const [],
+  });
   final SyntheticCompositionController _workspace;
   final int _token;
   final ProgrammeAuthoringController _editor;
@@ -36,6 +41,10 @@ class PreparedVersionUse {
   final PreparedCatalogueAppend _append;
   final D2LocalRevision revision;
   final String slotKey;
+  final PrescriptionComparison? comparison;
+  final D2CompiledSession? currentVersion;
+  final String? targetLabel;
+  final List<String> unchangedOccurrences;
   List<D2CompiledSession> get includedVersions => _append.entries;
 }
 
@@ -314,6 +323,25 @@ class SyntheticCompositionController extends ChangeNotifier {
         );
       }
       final editor = programme, catalogue = _catalogue!;
+      final occurrences = [
+        for (final w in editor.tree!['weeks'] as List)
+          for (final d in w['days'] as List)
+            for (final s in d['slots'] as List)
+              (
+                key: s['slot_key'],
+                sessionKey: s['session_key'],
+                label:
+                    'Week ${w['week_number']} · Day ${d['day_order']} · Workout ${s['session_order']}',
+              ),
+      ];
+      final target = occurrences.where((o) => o.key == slotKey).single;
+      final selected = admitted
+          .where(
+            (s) => compositionReference(s)['session_key'] == target.sessionKey,
+          )
+          .single;
+      final currentVersion = await _verify(selected);
+      if (!_alive(token)) return null;
       final verified = <D2CompiledSession>[];
       if (!admitted.any(
         (s) =>
@@ -338,6 +366,13 @@ class SyntheticCompositionController extends ChangeNotifier {
       // Check the complete prospective source lanes using existing all-slot review.
       reviewComposition(selection.source, append.entries);
       if (!_alive(token)) return null;
+      final comparison = PrescriptionComparison.compare(
+        currentVersion,
+        verified.last,
+      );
+      if (!comparison.supported) {
+        throw FormatException(comparison.summary);
+      }
       final result = PreparedVersionUse._(
         this,
         token,
@@ -347,6 +382,16 @@ class SyntheticCompositionController extends ChangeNotifier {
         append,
         candidate,
         slotKey,
+        currentVersion: currentVersion,
+        comparison: comparison,
+        targetLabel: target.label,
+        unchangedOccurrences: List.unmodifiable(
+          occurrences
+              .where(
+                (o) => o.key != slotKey && o.sessionKey == target.sessionKey,
+              )
+              .map((o) => o.label),
+        ),
       );
       _busy = false;
       notifyListeners();
@@ -420,6 +465,7 @@ class SyntheticCompositionController extends ChangeNotifier {
       identical(prepared._workspace, this) &&
       _alive(prepared._token) &&
       !anyDraft &&
+      (prepared.comparison?.supported ?? true) &&
       identical(prepared._editor, _programme) &&
       identical(prepared._catalogue, _catalogue) &&
       prepared._editor.isCurrentSelection(prepared._selection) &&
