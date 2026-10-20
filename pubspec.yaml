@@ -69,6 +69,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - tool/programmes/apollo_build_12_week_implementation_source.md
+    - supabase/migrations/20260724140000_founder_exercise_library_wave1.sql
     - knowledge/manifest.yaml
     - knowledge/reference/
     - knowledge/schemas/
