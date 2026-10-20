@@ -1,5 +1,27 @@
 # Current repository checkpoint
 
+> **Programme Studio Apollo internal pilot — technically verified, 2026-10-20:**
+> [Continuation](./programme_studio_apollo_pilot/HANDOFF.md),
+> [source authority](./programme_studio_apollo_pilot/SOURCE.md),
+> [exact pins](./programme_studio_apollo_pilot/SOURCE_PIN.json),
+> [format boundary](./programme_studio_apollo_pilot/FORMAT.md),
+> [verification](./programme_studio_apollo_pilot/VERIFICATION.json) and
+> [preservation](./programme_studio_apollo_pilot/PRESERVATION.json) record the separately
+> authorised local APOLLO-W4-SAT-R1 working copy. Exact retained sources plus ten explicitly
+> permitted local SQL row snapshots supply its scoped profile; no canonical definition
+> versions or global mappings are invented. Complete prescription review, bounded existing
+> sets/reps/RIR/rest edits, immutable local revisions, source-aware confirmation, explicit
+> local selection, editable reopen and separate pilot source-envelope export/recompile
+> are verified. Original source/programme and synthetic contracts remain unchanged.
+> 512 Studio tests (57 new), six safety groups and two terminal web builds pass; zero
+> diagnostics across eleven new/changed Dart files. Full analysis stays non-green at the
+> same 367 inherited identities, zero errors. All fifteen older inventories, original 95
+> outstanding paths/HEAD/indices/.temp and 2,727 present protected baseline blobs match.
+> HYROX Base retains first-library priority and still needs its exact approved source.
+> Founder usability acceptance, browser gaps, four phone checks and broader Stage 2/Sprint C
+> remain pending. No real publication, athlete change, hosted operation or device work.
+> Computer/browser control remains revoked and unused; normal main publication is authorised.
+
 > **Programme Studio source coverage and loss-aware review — technically verified, 2026-10-20:**
 > [Continuation](./programme_studio_source_coverage/HANDOFF.md),
 > [source authority/matrix](./programme_studio_source_coverage/COVERAGE.md),

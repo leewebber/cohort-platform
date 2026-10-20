@@ -1,0 +1,120 @@
+{
+  "base": "de0f481d86c99c6540e1c2ba26b21e535a6c1d1e",
+  "canonical_package_evidence": {
+    "accepted_checkpoint": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+    "package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "passed": 41,
+    "pure_package_all_bytes_unchanged": true,
+    "raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reused_not_rerun": true
+  },
+  "date": "2026-10-20",
+  "full_analysis": {
+    "added": [],
+    "after": 367,
+    "before": 367,
+    "errors": 0,
+    "exit": 1,
+    "identities_equal": true,
+    "identity_sha256": "2666d0511524e83721ced8edc10c6567db20b68f2efde3e7da014650fe48a376",
+    "info": 257,
+    "inherited_checkpoint_identities_equal": true,
+    "removed": [],
+    "status": "NON_GREEN_INHERITED",
+    "warnings": 110
+  },
+  "implementation_commit": "642ba1a975c9898f638f3d6a406f60965a330c9c",
+  "logs": {
+    "analysis-before.log": {
+      "sha256": "f68d58e388ce5f79c768220a4eab6012265406cf11307a7f88ec253a6894e1e0"
+    },
+    "analysis-final.log": {
+      "sha256": "9cc8fb31ec187d78fbf0bf24d4338aa2d9f2d14fd3738e0771664b12fb1dc682"
+    },
+    "analysis-scoped.log": {
+      "sha256": "4bc37cbddf61d744fd3549cd42b5efe386b10020e8dbe1356c00701ba081801e"
+    },
+    "artifact-identities.log": {
+      "sha256": "115251f2978b1be0977bb83f0ce07cdab8bdd311186dc89fee6dc0b68d0338a5"
+    },
+    "composition-web-build.log": {
+      "sha256": "9a662f35025a3af0b3ca235fd6ea0cdaf6989cdf06172890f523e0c914dc82d3"
+    },
+    "pilot-web-build.log": {
+      "sha256": "5e9d94ce5225e0c8c7c6fe45f8c81120f7e1976f23279b4100ac3f364f687949"
+    },
+    "safety-final.log": {
+      "sha256": "87c75a91f298410034f9ae520edd7f8290146808cf0a3f5a72347e411220cc2a"
+    },
+    "studio-final.log": {
+      "sha256": "9070080c5e88141b1e9257b93236f33ad154fc7efe5520e6dd976e88ecd5e1a5"
+    }
+  },
+  "not_run": [
+    "Entire repository default suite",
+    "Database replay: no SQL/schema change",
+    "Native browser or device checks"
+  ],
+  "pending_unchanged": [
+    "Founder usability/visual acceptance of this pilot",
+    "Prior incomplete browser checks",
+    "Four record-dependent phone checks",
+    "Broader Stage 2/Sprint C acceptance",
+    "Exact approved HYROX Base source and first-library content/production-path/publication acceptance"
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-studio-apollo-pilot",
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/apollo_pilot/apollo_pilot.dart": "0140e2d17183867fd9328abc1e0ba102beda73b90b170153ed9e741b94e939aa",
+    "lib/features/programme_studio/apollo_pilot/apollo_pilot_pin.dart": "0d47fa6982d25b30f2f955647464ddcf5af44451e5ac254e9c64fbb53c22ceec",
+    "lib/features/programme_studio/apollo_pilot/apollo_pilot_screen.dart": "1780012f12d210561514ae8030b60fc08a8785a87e9370d766c07759527bca63",
+    "lib/features/programme_studio/composition/workspace/workspace_files_stub.dart": "7b8a29e06389720995bf2ce6b54836f0b2063661e2f8bc305b7e83f4b018a275",
+    "lib/features/programme_studio/composition/workspace/workspace_files_web.dart": "72ae81c679896b2a40d37216d48db5d84bc993008f17b55fbcb5c29c6e572eae",
+    "lib/features/programme_studio/local_files/studio_json_files.dart": "11c7eda10c80ee8ff4c29c87fe6fa90daf1a9d7ccfe05568859f9158faa9d447",
+    "lib/features/programme_studio/local_files/studio_json_files_stub.dart": "675d1c813d231b5a8056047f8b9295f02e60bd3f7777bcff1da3ffaa69257b13",
+    "lib/features/programme_studio/local_files/studio_json_files_web.dart": "8bf3e26097803ea6c566ee3c3940a7d99e38fa0e3f6f725b68fcbd3ea9a34074",
+    "lib/main_programme_studio_apollo_pilot.dart": "e9bcd46f08fb8bb455c01922c5c4fb8d15fb1263139cf14ea2781db265664309",
+    "test/programme_studio/apollo_pilot_test.dart": "16a0f53a1642a95357058ce9222d88d78ce79130897c165af4a21b55952b58c4",
+    "test/programme_studio/apollo_pilot_widget_test.dart": "8b9a8f9999b98fe1202b961610294a20dca16fea32d7d367d9056bd7112f57fc"
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_failed": 0,
+    "groups_passed": 6
+  },
+  "scope_commit": "f4885c0c19192134fe6e6a12e8696687501a21aa",
+  "scoped_analysis": {
+    "diagnostics": 0,
+    "exit": 0,
+    "files": 11
+  },
+  "source_pin_manifest_sha256": "ca74cac1de155a2f54ed4515fb5216a6e246bc988819b82c614bc63cff209e12",
+  "source_round_trip": {
+    "all_pinned_source_files": 21,
+    "blocks": 2,
+    "local_definition_rows": 10,
+    "local_original_revision_sha256": "0ba144032cb49c14e32a5f4d7295416cf7e271b8ad74766902d1ed24435204f3",
+    "movements": 10,
+    "source_envelope_sha256": "a565d5a52b1597b2882f090f93bb59be14ca713e4cc4f61a6033cea3a31a8b7b",
+    "source_export_bytes": 699010,
+    "source_export_recompiled_exactly": true,
+    "workspace_bytes": 699033
+  },
+  "studio": {
+    "command": "flutter test --no-pub test/programme_studio/",
+    "exit": 0,
+    "new_model_source_identity_tests": 51,
+    "new_pilot_tests_included": 57,
+    "new_widgets": 6,
+    "passed": 512
+  },
+  "web_builds": {
+    "entries": [
+      "lib/main_programme_studio_apollo_pilot.dart",
+      "lib/main_programme_studio_composition_preview.dart"
+    ],
+    "exit": 0,
+    "no_browser_or_app_control": true,
+    "options": "--no-pub --debug --no-web-resources-cdn --no-wasm-dry-run"
+  }
+}
