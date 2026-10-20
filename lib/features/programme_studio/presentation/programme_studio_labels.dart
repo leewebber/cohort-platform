@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import '../../../models/strength_exercise_prescription.dart';
-import '../../../models/strength_prescription_formatter.dart';
-
 import '../domain/programme_review_models.dart';
 import 'programme_studio_copy.dart';
 
@@ -143,36 +140,6 @@ String? humanTimerSummary(String? raw) {
   return parts.isEmpty ? null : parts.join(' · ');
 }
 
-String? movementLoadInstruction(ProgrammeReviewMovement movement) {
-  final decoded = _jsonMap(movement.rawPrescription);
-  if (decoded == null) {
-    return null;
-  }
-  final load = decoded['load'];
-  if (load is Map) {
-    final type = load['type']?.toString();
-    if (type == 'athleteSelected') {
-      final unit = load['unit']?.toString();
-      return unit == null || unit.isEmpty
-          ? 'Load: athlete selected'
-          : 'Load: athlete selected ($unit)';
-    }
-    if ({'fixedKg', 'bodyweight', 'rpe'}.contains(type)) {
-      final typed = StrengthLoadPrescription.fromJson(
-        Map<String, dynamic>.from(load),
-      );
-      return StrengthPrescriptionFormatter.formatLoad(typed);
-    }
-    if (type == 'freeText') {
-      final text = load['text']?.toString();
-      if (text != null && text.isNotEmpty) {
-        return text;
-      }
-    }
-  }
-  return null;
-}
-
 Map<String, dynamic>? _jsonMap(String? raw) {
   if (raw == null || raw.trim().isEmpty || !raw.trim().startsWith('{')) {
     return null;
@@ -189,20 +156,4 @@ Map<String, dynamic>? _jsonMap(String? raw) {
     return null;
   }
   return null;
-}
-
-String? movementTempoInstruction(ProgrammeReviewMovement movement) {
-  final tempo = _jsonMap(movement.rawPrescription)?['tempo'];
-  return tempo is String
-      ? StrengthPrescriptionFormatter.formatTempo(tempo)
-      : null;
-}
-
-String? movementRestInstruction(ProgrammeReviewMovement movement) {
-  final decoded = _jsonMap(movement.rawPrescription);
-  final rest = decoded?['rest_seconds'];
-  if (decoded?['reps'] is Map && rest is int && rest > 0) {
-    return StrengthPrescriptionFormatter.formatRest(rest);
-  }
-  return movement.recovery == null ? null : 'Rest ${movement.recovery}';
 }

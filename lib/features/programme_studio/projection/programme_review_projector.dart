@@ -12,6 +12,7 @@ import 'executable_protocol_sql_reader.dart';
 import 'founder_protocol_review_mapper.dart';
 import 'programme_review_json.dart';
 import 'programme_review_source.dart';
+import 'movement_prescription_review.dart';
 
 class ProgrammeReviewProjector {
   const ProgrammeReviewProjector({
@@ -628,6 +629,18 @@ class ProgrammeReviewProjector {
         );
       }
       for (final movement in block.movements) {
+        final review = MovementPrescriptionReview.fromMovement(movement);
+        if (!review.complete) {
+          sessionFindings.add(
+            ProgrammeReviewFinding(
+              code: 'unsupported_prescription',
+              severity: ProgrammeReviewFindingSeverity.warning,
+              message: review.limitations.join(' '),
+              sourceContext:
+                  '${block.sourceIdentity}:movement-${movement.position}:${movement.exerciseId ?? 'unknown'}',
+            ),
+          );
+        }
         if (movement.unsupportedReason != null) {
           sessionFindings.add(
             ProgrammeReviewFinding(
@@ -990,8 +1003,8 @@ class ProgrammeReviewProjector {
             ? ProgrammeReviewCheckStatus.passed
             : ProgrammeReviewCheckStatus.failed,
         detail: unsupported.isEmpty
-            ? 'Known structures rendered. Nothing was silently dropped.'
-            : 'Unsupported structures were rendered with warnings.',
+            ? 'Known movement fields are readable. This derived check is not editorial, device or publication approval.'
+            : 'Some prescription details are not fully interpreted. Retained source and warnings must be reviewed; this gate does not pass.',
       ),
       ProgrammeReviewCheck(
         id: 'running_structure',

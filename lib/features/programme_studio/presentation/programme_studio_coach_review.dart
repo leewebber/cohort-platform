@@ -5,6 +5,7 @@ import '../../../core/theme/spacing.dart';
 import '../../../core/theme/text_styles.dart';
 import '../../../domain/running_workout/running_workout.dart';
 import '../domain/programme_review_models.dart';
+import '../projection/movement_prescription_review.dart';
 import 'programme_studio_controller.dart';
 import 'programme_studio_copy.dart';
 import 'programme_studio_labels.dart';
@@ -717,24 +718,26 @@ class _MovementLines extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dose = [
-      if (movement.sets != null) '${movement.sets} sets',
-      if (movement.reps != null) '${movement.reps} reps',
-      if (movement.duration != null) movement.duration,
-      if (movement.distance != null) movement.distance,
-      ?movementRestInstruction(movement),
-    ].join(' · ');
-    final load = movementLoadInstruction(movement);
-    final tempo = movementTempoInstruction(movement);
+    final prescription = MovementPrescriptionReview.fromMovement(movement);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(movement.name, style: CohortTextStyles.body),
-        if (dose.isNotEmpty) Text(dose, style: CohortTextStyles.small),
-        if (load != null) Text(load, style: CohortTextStyles.small),
-        if (tempo != null) Text(tempo, style: CohortTextStyles.small),
-        if (movement.notes != null)
-          Text(movement.notes!, style: CohortTextStyles.small),
+        for (final line in prescription.lines)
+          Text(line, style: CohortTextStyles.small),
+        if (!prescription.complete) ...[
+          Text(
+            'Prescription review is incomplete.',
+            style: CohortTextStyles.small.copyWith(color: CohortColors.warning),
+          ),
+          for (final limitation in prescription.limitations)
+            Text(limitation, style: CohortTextStyles.small),
+        ],
+        if (movement.rawPrescription != null)
+          ExpansionTile(
+            title: const Text('Retained prescription source (read-only)'),
+            children: [SelectableText(movement.rawPrescription!)],
+          ),
         if (movement.unsupportedReason != null)
           Text(
             ProgrammeStudioCopy.unsupportedMovement,
