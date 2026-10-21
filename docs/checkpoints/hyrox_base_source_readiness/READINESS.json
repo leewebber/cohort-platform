@@ -1,0 +1,37 @@
+{
+  "report_authority": "derived_read_only_not_content_approval",
+  "catalog_id": "hyrox-base",
+  "candidate_source": {
+    "status": "absent",
+    "file_sha256": {},
+    "planned_duration_weeks": 8
+  },
+  "content_authority": {
+    "status": "missing_source_and_approval",
+    "detail": "Requires separate documented founder approval tied to the exact source/version and operation. Registration, filenames, lifecycle labels, compilation and hashes do not establish that approval."
+  },
+  "canonical_package": {
+    "status": "not_assessed",
+    "detail": "The existing compiler validates the package, not session doses or content approval."
+  },
+  "exercise_bindings": {
+    "status": "not_assessed",
+    "issues": [],
+    "detail": "EX-* syntax is checked with ExerciseId. These source formats do not supply authoritative published ExerciseDefinition version bindings. No definition, version, name mapping or row-snapshot authority is invented."
+  },
+  "unsupported_prescriptions": {
+    "status": "not_assessed",
+    "findings": []
+  },
+  "readable_review": {
+    "status": "not_assessed",
+    "scheduled_sessions": 0,
+    "missing_or_empty_bodies": [],
+    "detail": "Reuses existing projector findings. Absence of detected limitations does not prove complete timer/block coverage, editorial or device review."
+  },
+  "canonical_publication": {
+    "status": "not_established",
+    "detail": "This report is not an import or publication format. It performs no trusted import validation, publication or athlete operation. Pilot envelopes and row snapshots do not become canonical publication inputs or definitions."
+  },
+  "projection_findings": []
+}
