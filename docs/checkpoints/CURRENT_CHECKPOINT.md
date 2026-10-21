@@ -1,4 +1,25 @@
 # Current repository checkpoint
+> **HYROX Base source-readiness decision package — 2026-10-21:**
+> [Founder decision brief](./hyrox_base_source_readiness/DECISION.md),
+> [continuation](./hyrox_base_source_readiness/HANDOFF.md),
+> [exact evidence inventory](./hyrox_base_source_readiness/SOURCE_INVENTORY.json) and
+> [derived report](./hyrox_base_source_readiness/READINESS.json) record the eight-week
+> Base-first strategy and absent commercial prescription candidate. Earlier proposed
+> schedules do not become Base requirements; accepted Phase 3.1F identities supersede
+> historical sled/BBJ gaps without supplying Base exercise/version bindings. The new
+> terminal report separates source/approval absence, compiler results, unresolved bindings,
+> unsupported prescriptions and incomplete/unassessed review; it never confers content
+> approval or publication compatibility. No new source/profile/session intake is added.
+> 56 affected tests (11 new), six safety groups and a compiled terminal executable pass;
+> zero diagnostics in three new Dart files. Full analysis remains non-green at the same
+> 367 inherited identities, zero errors. Existing Studio/web/compiler evidence is reused
+> after exact byte/tree/log checks. Sixteen older inventories, original 95 outstanding
+> paths/HEAD/indices/.temp and 2,746 present protected base blobs match. Choose/provide the
+> exact Base source (or separately authorise a bounded authoring brief) and complete its
+> audience/frequency/equipment. No commercial prescriptions were generated. Content,
+> publication, founder usability, broader Stage 2/Sprint C and browser/phone gates stay open.
+> Computer/browser control remains revoked and unused; no hosted or athlete operation.
+
 
 > **Programme Studio Apollo internal pilot — technically verified, 2026-10-20:**
 > [Continuation](./programme_studio_apollo_pilot/HANDOFF.md),

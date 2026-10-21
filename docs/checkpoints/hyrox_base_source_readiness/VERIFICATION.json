@@ -1,0 +1,100 @@
+{
+  "date": "2026-10-21",
+  "base": "e78ce7e25e1de50fb60d67a932105d8b587d98e8",
+  "scope_commit": "4a9de0aa97e839e3df5c0eaa4c79bcf3788c9e79",
+  "implementation_commit": "869e8e6b47d9b9a679e8571b9b4e9aa92a467556",
+  "focused": {
+    "command": "flutter test --no-pub test/programme_studio/source_readiness_report_test.dart test/programme_studio/programme_review_projection_test.dart test/programme_studio/source_prescription_review_test.dart --reporter expanded",
+    "exit": 0,
+    "passed": 56,
+    "new_readiness_cases": 11
+  },
+  "safety": {
+    "command": "./tool/testing/run_phase2_consolidation_safety_gate.sh",
+    "exit": 0,
+    "groups_passed": 6,
+    "groups_failed": 0
+  },
+  "scoped_analysis": {
+    "files": 3,
+    "diagnostics": 0,
+    "exit": 0
+  },
+  "full_analysis": {
+    "before": 367,
+    "after": 367,
+    "equal": true,
+    "prior_checkpoint_equal": true,
+    "warnings": 110,
+    "info": 257,
+    "errors": 0,
+    "added": [],
+    "removed": [],
+    "identities_sha256": "67bad19aff8dfa6e46e872ee6c6d3fe09084ab4e8a55165d9ea20bab914d6fd5",
+    "status": "NON_GREEN_INHERITED",
+    "exit": 1
+  },
+  "dependency_preparation": "Initial new-worktree analysis exposed missing generated subpackage package configurations. Offline pub get restored root/compiler/importer/server cached dependencies before the usable 367-identity baseline. No tracked dependency or analysis-configuration change. Setup-error logs retained; not counted as inherited diagnostics.",
+  "cli": {
+    "dart_run_hyrox_exit": 0,
+    "compiled_executable_exit": 0,
+    "compiled_report_exactly_matches_durable_report": true,
+    "unknown_registered_id_exit": 65,
+    "unknown_stdout_empty": true,
+    "report_exit_zero_is_not_approval": true,
+    "build": "dart compile exe tool/programme_studio/check_source_readiness.dart -o /private/tmp/cohort-hyrox-source-readiness/check-source-readiness"
+  },
+  "reviewed_dart_sha256": {
+    "lib/features/programme_studio/projection/source_readiness_report.dart": "290723a20b8dffb4bac70125296d93bd4f89d6061f612908e711d62fb0ec82c2",
+    "tool/programme_studio/check_source_readiness.dart": "f3c8e89532f48ba08e3f75499a092a9562b0b6c754c96717e443c3835d48cd23",
+    "test/programme_studio/source_readiness_report_test.dart": "747e7fea06985c9fe6a4af6b0d6e17a1f2003eb43655307cf040b51b006939a2"
+  },
+  "logs": {
+    "analysis-baseline.log": {
+      "sha256": "b2e2d09d85dadbb1ceb208bad3818142128a95493c1f70f1e8c373761321b418"
+    },
+    "analysis-final.log": {
+      "sha256": "edbccef9c6140b564317a34af3838fe8f954fdff1edc9b383e83a22f8a232f8e"
+    },
+    "analysis-scoped-final.log": {
+      "sha256": "03f61fecd860e1d2d36c10352b26ac2751ae51b52513428a27ad52f87fad5e75"
+    },
+    "focused-final.log": {
+      "sha256": "e0f4947c7b423920a0ea60b4754063c7023965752a5763ba3d74473e848eaa67"
+    },
+    "safety-final.log": {
+      "sha256": "73bd18740403ef467c218623c6342a48477734f39a25abb86d33749f13f062d9"
+    },
+    "cli-build.log": {
+      "sha256": "98d5be882869544629915dce8dfd80587d69cc0b093a1e3e05b1c0baaa26a9e6"
+    },
+    "unknown.stderr": {
+      "sha256": "01cc348fae757f010cadf36a10a9e0bc61feb6e4613d52571170a1216cd12395"
+    }
+  },
+  "reused_evidence": {
+    "checkpoint": "e78ce7e25e1de50fb60d67a932105d8b587d98e8",
+    "studio_tests": 512,
+    "canonical_package_tests": 41,
+    "studio_tests_and_web_builds_not_rerun": true,
+    "all_preexisting_source_bytes_unchanged_except_checkpoint_notice": true,
+    "prior_11_reviewed_dart_hashes_and_8_raw_logs_verified": true,
+    "canonical_package_tree": "53e6548d200e3f5c5cad0c3dd5085ca4918e3921",
+    "canonical_package_raw_log_sha256": "65e9d7b73b8d54aef65ed6a7ce8c48ab96571e673cdd1b740a88ce77b1e5121e",
+    "reason": "New report is not imported by existing production/Studio entries. Existing app/compiler/format/source and test bytes remain unchanged. Actual new terminal entry built and exercised separately."
+  },
+  "not_run": [
+    "Full default repository suite",
+    "Database replay (no schema/SQL change)",
+    "New web builds (no UI/entry dependency change)",
+    "Browser/app control or device checks"
+  ],
+  "pending": [
+    "HYROX Base prescription source and brief completion",
+    "Documented content approval of actual source/version",
+    "Canonical identity-version bindings and candidate-specific representation proof",
+    "Founder usability and prior browser/phone checks",
+    "Broader Stage 2/Sprint C"
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-source-readiness"
+}
