@@ -10,10 +10,9 @@ import 'plan_package_session_resolver.dart';
 /// Never writes. Never generates missing coaching. Never includes credentials.
 class PlanPackageImportPreviewService {
   const PlanPackageImportPreviewService({
-    required PlanPackageSessionResolutionService sessionResolution,
-    PlanPackageExistingVersionLookup? existingVersionLookup,
-  }) : _sessionResolution = sessionResolution,
-       _existingVersionLookup = existingVersionLookup;
+    required this._sessionResolution,
+    this._existingVersionLookup,
+  });
 
   final PlanPackageSessionResolutionService _sessionResolution;
   final PlanPackageExistingVersionLookup? _existingVersionLookup;
@@ -21,7 +20,11 @@ class PlanPackageImportPreviewService {
   Future<PlanPackageImportPreview> preview({
     required PlanPackageCompileResult compileResult,
   }) async {
-    if (!compileResult.isValid || compileResult.manifest == null) {
+    final unsupportedVersion =
+        (compileResult.manifest?.packageSchemaVersion ?? 0) >= 3;
+    if (!compileResult.isValid ||
+        compileResult.manifest == null ||
+        unsupportedVersion) {
       return PlanPackageImportPreview(
         lineageCode: '',
         versionNumber: 0,
@@ -44,10 +47,14 @@ class PlanPackageImportPreviewService {
         evidenceRequirementIds: const [],
         comparisonIdentityIds: const [],
         blockingErrors: [
-          const PlanPackageValidationIssue(
+          PlanPackageValidationIssue(
             path: r'$',
-            code: 'invalid_compile_result',
-            message: 'Import preview requires a successful compile result.',
+            code: unsupportedVersion
+                ? 'unsupported_package_version_for_import'
+                : 'invalid_compile_result',
+            message: unsupportedVersion
+                ? 'Plan Package v3 is local compile/review only; production storage admission is not implemented.'
+                : 'Import preview requires a successful compile result.',
           ),
         ],
         warnings: const [],

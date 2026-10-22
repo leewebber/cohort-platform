@@ -1,3 +1,4 @@
+import 'plan_package_personalisation.dart';
 import 'package:yaml/yaml.dart';
 
 import 'programme_vocabulary.dart';
@@ -78,7 +79,7 @@ class PlanPackageYamlParser {
           code: 'unsupported_schema_version',
           message:
               'Unsupported package_schema_version $schemaVersion; '
-              'supported: [1, 2].',
+              'supported: [1, 2, 3].',
         ),
       );
     }
@@ -200,6 +201,43 @@ class PlanPackageYamlParser {
       if (parsed != null) comparisons.add(parsed);
     }
 
+    PlanPackagePersonalisationBinding? personalisation;
+    if (map.containsKey('tracking_profile_binding')) {
+      issues.add(
+        const PlanPackageValidationIssue(
+          path: 'tracking_profile_binding',
+          code: 'reserved_tracking_binding_unsupported',
+          message:
+              'Observational tracking binding remains reserved and unsupported.',
+        ),
+      );
+    }
+    if (map.containsKey('personalisation_binding')) {
+      if (schemaVersion != 3) {
+        issues.add(
+          const PlanPackageValidationIssue(
+            path: 'personalisation_binding',
+            code: 'personalisation_requires_v3',
+            message:
+                'Personalisation binding requires explicit Plan Package v3.',
+          ),
+        );
+      }
+      try {
+        personalisation = PlanPackagePersonalisationBinding.parse(
+          root['personalisation_binding'],
+        );
+      } catch (e) {
+        issues.add(
+          PlanPackageValidationIssue(
+            path: 'personalisation_binding',
+            code: 'invalid_personalisation_binding',
+            message: 'Strict binding decode refused: $e',
+          ),
+        );
+      }
+    }
+
     if (issues.isNotEmpty || programme == null) {
       return PlanPackageParseOutcome.failed(issues);
     }
@@ -207,6 +245,7 @@ class PlanPackageYamlParser {
     return PlanPackageParseOutcome.ok(
       PlanPackageManifest(
         packageSchemaVersion: schemaVersion!,
+        personalisationBinding: personalisation,
         programme: programme,
         sessions: List.unmodifiable(sessions),
         phases: List.unmodifiable(phases),
@@ -1018,6 +1057,8 @@ class PlanPackageYamlParser {
   // --- helpers ---
 
   static const _rootKeys = {
+    'personalisation_binding',
+    'tracking_profile_binding',
     'package_schema_version',
     'programme',
     'sessions',

@@ -1,3 +1,4 @@
+import 'plan_package_personalisation.dart';
 import 'programme_vocabulary.dart';
 import 'adaptation_policy_gate.dart';
 
@@ -14,6 +15,7 @@ import 'adaptation_policy_gate.dart';
 class PlanPackageManifest {
   const PlanPackageManifest({
     required this.packageSchemaVersion,
+    this.personalisationBinding,
     required this.programme,
     required this.sessions,
     required this.phases,
@@ -26,6 +28,7 @@ class PlanPackageManifest {
   });
 
   final int packageSchemaVersion;
+  final PlanPackagePersonalisationBinding? personalisationBinding;
   final PlanPackageProgrammeIdentity programme;
   final List<PlanPackageSessionRevisionRef> sessions;
   final List<PlanPackagePhase> phases;

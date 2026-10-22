@@ -1,3 +1,4 @@
+import 'plan_package_personalisation.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -47,6 +48,13 @@ class PlanPackageCanonicaliser {
   Map<String, Object?> _normalise(PlanPackageManifest manifest) {
     return _sortedMap({
       'package_schema_version': manifest.packageSchemaVersion,
+      if (manifest.packageSchemaVersion == 3 &&
+          manifest.personalisationBinding != null)
+        'personalisation_binding': jsonDecode(
+          personalisationCanonicalJson(
+            manifest.personalisationBinding!.toJson(),
+          ),
+        ),
       'programme': _programme(manifest.programme),
       'sessions': _sortedBy(manifest.sessions, (s) => s.sessionKey, _session),
       'phases': _orderedBy(manifest.phases, (p) => p.phaseOrder, _phase),

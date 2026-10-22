@@ -41,6 +41,11 @@ class PlanPackageImportPayloadBuilder {
     }
 
     final manifest = compileResult.manifest!;
+    if (manifest.packageSchemaVersion >= 3) {
+      throw StateError(
+        'Plan Package v3 requires unimplemented server/storage admission; local compile/review only.',
+      );
+    }
     final hash = compileResult.contentHashSha256!;
     if (!RegExp(r'^[0-9a-f]{64}$').hasMatch(hash)) {
       throw StateError('Compile hash is not lowercase SHA-256 hex.');

@@ -8,11 +8,13 @@ class _FakeSessionResolver implements PlanPackageSessionResolver {
   _FakeSessionResolver(this.rows);
 
   final Map<String, PlanPackageSessionRevisionRecord> rows;
+  int calls = 0;
 
   @override
   Future<PlanPackageSessionRevisionRecord?> getRevision(
     String protocolId,
   ) async {
+    calls++;
     return rows[protocolId.trim()];
   }
 }
@@ -84,6 +86,38 @@ void main() {
   }
 
   group('import preview', () {
+    test(
+      'v3 import preview and application refuse before identity reads or writes',
+      () async {
+        final v3 = compiler.compile(
+          fixtureYaml.replaceFirst(
+            'package_schema_version: 1',
+            'package_schema_version: 3',
+          ),
+        );
+        expect(v3.isValid, true);
+        final rows = _FakeSessionResolver({});
+        final previewService = PlanPackageImportPreviewService(
+          sessionResolution: PlanPackageSessionResolutionService(rows),
+        );
+        final store = _RecordingImportStore();
+        final preview = await previewService.preview(compileResult: v3);
+        expect(preview.isImportable, false);
+        expect(
+          preview.blockingErrors.single.code,
+          'unsupported_package_version_for_import',
+        );
+        final imported = await PlanPackageImportService(
+          previewService: previewService,
+          importStore: store,
+        ).importValidatedPackage(compileResult: v3, importedBy: 'local');
+        expect(imported.status, PlanPackageImportStatus.validationFailure);
+        expect(imported.code, 'unsupported_package_version_for_import');
+        expect(rows.calls, 0);
+        expect(store.callCount, 0);
+      },
+    );
+
     test('valid compile result produces expected preview', () async {
       final service = PlanPackageImportPreviewService(
         sessionResolution: resolvedSessions(),

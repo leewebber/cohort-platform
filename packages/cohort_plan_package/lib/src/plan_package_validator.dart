@@ -1,3 +1,4 @@
+import 'plan_package_personalisation.dart';
 import 'programme_vocabulary.dart';
 import 'adaptation_policy_gate.dart';
 import 'plan_package_manifest.dart';
@@ -8,11 +9,13 @@ import 'plan_package_validation_issue.dart';
 ///
 /// Pure: no database, network, Coach Brain, or generation side effects.
 class PlanPackageValidator {
-  const PlanPackageValidator();
+  const PlanPackageValidator({this.personalisationResolver});
+  final PersonalisationDependencyResolver? personalisationResolver;
 
   List<PlanPackageValidationIssue> validate(PlanPackageManifest manifest) {
     final issues = <PlanPackageValidationIssue>[];
 
+    _validatePersonalisation(manifest, issues);
     _validateUniqueIdentities(manifest, issues);
     _validatePhases(manifest, issues);
     _validateWeekOrdering(manifest, issues);
@@ -25,6 +28,82 @@ class PlanPackageValidator {
     _validateNoMutableBuilderSemantics(manifest, issues);
 
     return List.unmodifiable(issues);
+  }
+
+  void _validatePersonalisation(
+    PlanPackageManifest m,
+    List<PlanPackageValidationIssue> issues,
+  ) {
+    final binding = m.personalisationBinding;
+    if (binding == null) return;
+    void fail(String code) {
+      issues.add(
+        PlanPackageValidationIssue(
+          path: 'personalisation_binding',
+          code: code,
+          message: 'Personalisation validation refused: $code',
+        ),
+      );
+    }
+
+    if (m.packageSchemaVersion != 3) {
+      fail('personalisation_requires_v3');
+      return;
+    }
+    if (binding.targets.isEmpty || binding.targets.length > 512) {
+      fail('invalid_targets');
+      return;
+    }
+    final ids = <String>{}, scopes = <String>{};
+    for (final t in binding.targets) {
+      try {
+        PlanPackagePersonalisationTarget.parse(t.toJson());
+      } catch (_) {
+        fail('invalid_personalisation_target');
+        continue;
+      }
+      if (!ids.add(t.id) ||
+          !scopes.add(personalisationCanonicalJson([t.slotKey, t.blockId]))) {
+        fail('duplicate_personalisation_target');
+      }
+      final sessions = m.sessions
+          .where((s) => s.sessionKey == t.sessionKey)
+          .toList();
+      if (sessions.length != 1 ||
+          sessions.single.protocolId != t.protocolId ||
+          sessions.single.revisionNumber != t.protocolRevision) {
+        fail('personalisation_session_mismatch');
+      }
+      final slots = [
+        for (final w in m.weeks)
+          for (final d in w.days)
+            for (final s in d.slots)
+              if (s.slotKey == t.slotKey &&
+                  w.weekNumber == t.weekNumber &&
+                  s.sessionKey == t.sessionKey)
+                s,
+      ];
+      if (slots.length != 1 ||
+          t.weekNumber < 1 ||
+          t.weekNumber > 8 ||
+          t.protocolRevision < 1) {
+        fail('personalisation_slot_mismatch');
+      }
+      if (slots.any((s) => s.authoredRunningV1 != null)) {
+        fail('conflicting_running_target_authority');
+      }
+      final resolver = personalisationResolver;
+      if (resolver == null) {
+        fail('unresolved_personalisation_dependencies');
+        continue;
+      }
+      try {
+        final problem = resolver.validateTarget(t);
+        if (problem != null) fail(problem);
+      } catch (_) {
+        fail('personalisation_dependency_resolution_failed');
+      }
+    }
   }
 
   void _validateAuthoredRunning(

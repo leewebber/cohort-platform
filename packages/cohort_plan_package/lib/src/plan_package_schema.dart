@@ -10,7 +10,9 @@ class PlanPackageSchema {
 
   /// Accepted interchange schemas. Version 1 remains byte-frozen; version 2
   /// adds an optional, hashed authored-running document on session slots.
-  static const Set<int> supportedPackageSchemaVersions = {1, 2};
+  /// Version 3 adds independently resolved prescription bindings for local
+  /// compile/review; production import and observational tracking remain gated.
+  static const Set<int> supportedPackageSchemaVersions = {1, 2, 3};
 
   static const int authoredRunningPackageSchemaVersion = 2;
 

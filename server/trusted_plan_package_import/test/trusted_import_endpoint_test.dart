@@ -290,6 +290,27 @@ void main() {
 
   group('compiler and persistence orchestration', () {
     test(
+      'v3 local compile capability cannot reach production import RPC',
+      () async {
+        final rpc = _RecordingRpc();
+        final response = await endpoint(rpc: rpc).call(
+          request(
+            body: validYaml.replaceFirst(
+              'package_schema_version: 1',
+              'package_schema_version: 3',
+            ),
+          ),
+        );
+        expect(response.statusCode, 422);
+        expect(
+          (await jsonBody(response))['code'],
+          'unsupported_package_version_for_import',
+        );
+        expect(rpc.payloads, isEmpty);
+      },
+    );
+
+    test(
       'malformed YAML returns structured issues and zero RPC calls',
       () async {
         final rpc = _RecordingRpc();

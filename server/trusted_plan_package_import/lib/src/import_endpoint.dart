@@ -144,6 +144,13 @@ class TrustedFounderPlanPackageImportEndpoint {
       });
     }
 
+    if (compileResult.manifest!.packageSchemaVersion >= 3) {
+      return _json(422, {
+        'status': 'validation_failure',
+        'code': 'unsupported_package_version_for_import',
+      });
+    }
+
     final payload = payloadBuilder.build(
       compileResult: compileResult,
       importedBy: principal.userId,
