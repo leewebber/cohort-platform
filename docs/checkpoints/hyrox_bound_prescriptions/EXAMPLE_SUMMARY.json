@@ -1,0 +1,1319 @@
+{
+  "claim": "derived synthetic review/start summary, not persistence or publication input",
+  "package_hash": "8731534bb80a5ac0d65d7b5b5641e2ea1053fccd10e27517262ed957113c0d8b",
+  "source_text_sha256": "87cb5e2445737c2b7e62119c79743280b4fad8de7bd10299ba65a393fee2422e",
+  "examples": [
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W1-GYM",
+      "frozen_digest": "e0f31617224d59d5bc5bc03e8f7ab522c39e30f0ea2af0700bcb66b501393f68",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 80000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 460000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 480000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W1-RUN",
+      "frozen_digest": "53361f0232a3badb07c9b7445b2daf825eada8710a1216ea92656ec9b027c97a",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 240000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 252000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W2-GYM",
+      "frozen_digest": "50229ea8820a253d73175a49d2dc393d75f3c9414afe53bfeebeba37bca8e4b0",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 82500
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 460000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 480000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W2-RUN",
+      "frozen_digest": "99b7023db77b52e2f68c88f5fd867cdb30129ec65f58c8f4d5d82457e3cf1234",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 240000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 252000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W3-GYM",
+      "frozen_digest": "2a97f71a48a9099dc03b8c9a7312b53da270d776a3f316a05e62597095daf9e7",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 87500
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 468000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 492000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W3-RUN",
+      "frozen_digest": "e49a75648784904ec1065a022a1681d1b52b6a860d9406e563e8345b01959813",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 244800000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 256800000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W4-GYM",
+      "frozen_digest": "0a599bfe3975eaf15611bd4162ac18279de27584d7d6c862d94761417964d885",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 70000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 492000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 512000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W4-RUN",
+      "frozen_digest": "efe7eb45f3221d999e35e4bd23454e6b88593f062dfa08b708b20e4bd61cb500",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 240000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 252000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W5-GYM",
+      "frozen_digest": "12929cb6273a4ebbdd7cef166bb9aa6a05f7cd32e870dcd6761ad542b9fd3f00",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 87500
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 460000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 480000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W5-RUN",
+      "frozen_digest": "be8971ab75682d82bb19b04dac73f097957584d1b5e3c048612dc0a5461df488",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 240000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 252000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W6-GYM",
+      "frozen_digest": "4c7f4fc10ee1bc01e49dc0fd68c6801d4d4613d066b35cf28600132a340b1458",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 90000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 460000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 480000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W6-RUN",
+      "frozen_digest": "1788429db3cffae001fbdd1e9c4cba0738d91e7b33f4c84436381d6596afaff0",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 244800000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 256800000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W7-GYM",
+      "frozen_digest": "9d13a7512ac44545124ea5ca7b5917f6fe6bbb1c4963a744c20ff05f34bc0b9d",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 95000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 468000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 492000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W7-RUN",
+      "frozen_digest": "46d35e296a5dfa6839bf8a39007b953155d185eb7c42f2ab3bcb3db57d89ff60",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 247200000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 259200000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W8-GYM",
+      "frozen_digest": "d718bb486a5f5dd1818f1b816c7e293d498c9848182989e28adae7ce8355eaa5",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 75000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 480000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 500000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "slot": "W8-RUN",
+      "frozen_digest": "6371063c4b9d36417ff7921e2f16dbb83e93ee421ea13e2b278fbd59a01b5701",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 240000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 252000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W1-GYM",
+      "frozen_digest": "4ca10370b204c887fd9e5f2051464351c7f763886b83551b342cbf21b0f40706",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 60000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 580000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 600000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W1-RUN",
+      "frozen_digest": "5036140e1eb05da746bedc891a3aab95c08ee0cc74df1d5d4a1509e643f05312",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 360000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 378000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W2-GYM",
+      "frozen_digest": "4b3fdf1cc5db54263a82512cc46c515f5687cfb9f776a1d03d76b52d1443f658",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 62000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 580000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 600000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W2-RUN",
+      "frozen_digest": "63e0425f1e597095adf56a5f342b81e9bdde75d021c451ab9a6b32eea95dffa4",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 360000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 378000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W3-GYM",
+      "frozen_digest": "6e1c4d42b62ceb4e388fec8a273e2114db442cf97f91d05492b7a439254b2965",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 66000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 588000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 612000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W3-RUN",
+      "frozen_digest": "6d9e22d41cbf30ad3ace8631af169cb7bc57a6084a0942151659131fca86551d",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 367200000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 385200000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W4-GYM",
+      "frozen_digest": "8932b1460c073ee6f56c00e45a9c8536b4fcd800e18431dc44a8afe6ac27a77d",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 52000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 612000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 632000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W4-RUN",
+      "frozen_digest": "e842682ba0f1a6bbbf462220eebc009761f6a5aac7e13f47c465f6e6fb570916",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 360000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 378000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W5-GYM",
+      "frozen_digest": "9ccce7c0cb22f5c8a762aea0f3cfb850e11e0a6d09e379fad32f2b308aa6fdbd",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 66000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 580000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 600000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W5-RUN",
+      "frozen_digest": "5ac8e04de80ff6c0ec8b4e232d463a0c1d92f073d320dece16b2bdbd678ebb50",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 360000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 378000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W6-GYM",
+      "frozen_digest": "aab9d36b7fb78dbff0fe07a9439db1cb7bd6987d7781abbfe8f68eaae3c8d1e5",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 67000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 580000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 600000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W6-RUN",
+      "frozen_digest": "baad441efd8ba0a38277805b5cbce55314d931f63f0f798d920f84a69c659993",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 367200000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 385200000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W7-GYM",
+      "frozen_digest": "27fcedc8a76a17d53ce095f8c2f9d19bdaf6fcd69c344771c09996ae2ce361ce",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 71000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 588000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 612000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W7-RUN",
+      "frozen_digest": "edf7fc931881c1ecfbaabd1d42177787bfd5a1020c6b7d59043d67961ad64680",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 370800000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 388800000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W8-GYM",
+      "frozen_digest": "da545d6cfdc305408c67898e118861c2bd57712f609744f3286ca090767b9fbc",
+      "targets": [
+        {
+          "kind": "backSquat",
+          "state": "calculated",
+          "definition": {
+            "digest": "4489bc954d9cefb1618cdc30ff81860f1938ee659fe024e78bf6a86ac1e13fcf",
+            "id": "hyrox-backSquat5rm",
+            "version": 1
+          },
+          "rule": {
+            "digest": "fb5ad8096dba95606d229bfdec558ce1e7ddc8d007405b11311baa55c1f4a420",
+            "id": "hyrox-base-backSquat",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": 56000
+        },
+        {
+          "kind": "dedicatedRowIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "96e8d00dde0f27a9179069d14e8fd8a2ac0255d48dfaaf18e199ff8e49dcf77e",
+            "id": "hyrox-row2km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "bd46a16e1256b704e56242aa30f5041cf89e68b4f6b4d0a097ecef13dc7cfa58",
+            "id": "hyrox-base-dedicatedRowIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 4,
+              "numerator": 600000
+            },
+            "slower": {
+              "denominator": 4,
+              "numerator": 620000
+            },
+            "unit": "milliseconds_per_500_metres"
+          }
+        }
+      ]
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "slot": "W8-RUN",
+      "frozen_digest": "ed103534703c4f72830776bffc8ee4b5e9ba96828822576a72cf0d5cead06049",
+      "targets": [
+        {
+          "kind": "runningIntervals",
+          "state": "calculated",
+          "definition": {
+            "digest": "7b4d08508499b8971a2e04fc03a70e1713114c00fbc402339b99a42a08993d96",
+            "id": "hyrox-run10km",
+            "version": 1
+          },
+          "rule": {
+            "digest": "86489ce9a72b401fba0b0ad7b9689ab79f9037c5c46fca388797e9169e0e22f7",
+            "id": "hyrox-base-runningIntervals",
+            "version": 1
+          },
+          "selected_revision": 1,
+          "calculated": {
+            "faster": {
+              "denominator": 1000,
+              "numerator": 360000000
+            },
+            "slower": {
+              "denominator": 1000,
+              "numerator": 378000000
+            },
+            "unit": "milliseconds_per_kilometre"
+          }
+        }
+      ]
+    }
+  ]
+}

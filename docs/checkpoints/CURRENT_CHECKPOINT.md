@@ -1,4 +1,20 @@
 # Current repository checkpoint
+> **Versioned bound HYROX personalisation — locally verified, 2026-10-22:**
+> [Contract](./hyrox_bound_prescriptions/CONTRACT.md),
+> [storage findings](./hyrox_bound_prescriptions/STORAGE_FINDINGS.md) and
+> [continuation](./hyrox_bound_prescriptions/HANDOFF.md) record explicit Plan Package v3
+> prescription bindings, unchanged v1/v2 canonical vectors, resolved synthetic source blocks,
+> approved Base calculator dispatch, Studio intent/evidence/target review and atomic local
+> evidence/consent/start snapshots. Benchmark changes affect future unstarted targets only
+> after explicit consent. Observational tracking bindings remain reserved/unsupported;
+> C1/C2/C3 and B2's distinct 5 km policy are unchanged. v3 production import is explicitly
+> refused before reads/writes pending server/storage admission. This is an in-memory local
+> integration, not production persistence or a complete 48-session programme. Already
+> approved run/row/squat doses remain approved; genuinely missing content and canonical
+> source/version bindings are enumerated separately. Broader Stage 2/Sprint C, native browser
+> and four phone checks remain open. No hosted, athlete, payment, device or browser operation.
+> Founder authorises normal main publication after local gates; no routine walkthrough pause.
+
 > **HYROX Base approved rules and independent personalisation — 2026-10-22:**
 > [Approved decisions and remaining source inputs](./hyrox_base_personalisation/DECISIONS.md),
 > [architecture findings / additive contract plan](./hyrox_base_personalisation/ARCHITECTURE.md)
