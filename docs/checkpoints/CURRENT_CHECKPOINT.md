@@ -1,4 +1,22 @@
 # Current repository checkpoint
+> **HYROX declared-evidence persistence prerequisites — locally proved, 2026-10-22:**
+> [Continuation](./hyrox_v3_canonical_storage/HANDOFF.md),
+> [storage contract](./hyrox_v3_canonical_storage/STORAGE_CONTRACT.md),
+> [required authority decision](./hyrox_v3_canonical_storage/AUTHORITY_DECISION.md) and
+> [deployment prerequisites](./hyrox_v3_canonical_storage/DEPLOYMENT.md) record authenticated
+> owner-scoped append-only Base evidence, deliberate future-preview selection/withdrawal,
+> exact private SQL arithmetic and canonical v3 admission/start refusal. Existing canonical
+> start function IDs and legacy bodies are preserved; v1/v2/B2 and observational C1/C2/C3
+> remain unchanged. **Full production v3 admission, programme-scoped consent and atomic
+> v3 start snapshots are NOT delivered**: authoritative retained canonical definition
+> publication/version binding requires an explicit architectural decision. No fixture/hash
+> becomes that authority. Import remains blocked. Local SQL/API/race proof is synthetic,
+> not hosted deployment or athlete/device verification. Supporting content is **not yet
+> transferred/consolidated**, superseding older “genuinely missing” wording; approved
+> run/row/squat rules remain available. Test Week remains unauthored. Broader Stage 2/Sprint C,
+> native browser and four phone checks remain open. No hosted, athlete, browser or device
+> operation. Normal main publication after required local gates is authorised.
+
 > **Versioned bound HYROX personalisation — locally verified, 2026-10-22:**
 > [Contract](./hyrox_bound_prescriptions/CONTRACT.md),
 > [storage findings](./hyrox_bound_prescriptions/STORAGE_FINDINGS.md) and

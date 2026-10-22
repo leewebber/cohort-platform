@@ -1,0 +1,140 @@
+{
+  "base": "ebbe617749a10593180b27858c0daf71ff1fa973",
+  "status": "LOCAL_INDEPENDENT_PREREQUISITES_PROVED_V3_CANONICAL_AUTHORITY_DECISION_REQUIRED",
+  "declared_evidence_and_preview_selection_storage_locally_implemented": true,
+  "production_v3_accepting_admission": false,
+  "programme_scoped_consent": false,
+  "atomic_v3_canonical_start_snapshots": false,
+  "v3_import_start_refused": true,
+  "new_flutter_tests": 4,
+  "focused_hyrox_tests": 44,
+  "affected_app_tests": 380,
+  "pure_compiler_tests": 41,
+  "trusted_server_tests": 36,
+  "required_safety_groups_passed": 6,
+  "required_safety_groups_failed": 0,
+  "database": {
+    "final_exact_migrations_fresh_repeat": true,
+    "reproduced_hosted_defaults_local_only": true,
+    "dart_sql_calculation_vectors_per_pass": 136,
+    "authenticated_http_assertions_per_pass": 60,
+    "cross_owner_and_forged_ownership": true,
+    "effective_public_anon_authenticated_service_acl_rls_checks": true,
+    "private_helpers_not_executable_by_clients": true,
+    "duplicate_commands_and_selection_cas_races": true,
+    "correction_selection_race_and_stale_use_refusal": true,
+    "evidence_selection_rollback_and_immutable_mutation_refusal": true,
+    "composite_ownership_metric_fk_refusal": true,
+    "actual_assignment_version_and_uuid_variant_refusal": true,
+    "b2_snapshot_concurrent_start_preserved": true,
+    "generic_canonical_start_and_concurrency_final_wrapper": true,
+    "full_fresh_repeat_compatibility": true,
+    "existing_permission_completion_identity_link_api_concurrency_gate": true,
+    "v3_start_update_snapshot_proof": false,
+    "evidence_reuse": "Full compatibility/security gates ran after OID-preserving body-copy change. The subsequent UUID-normalization-only fix was covered by exact-final fresh/repeat prerequisite gate and final generic Gate Q SQL/concurrency. Unchanged completion/link/security bodies and all compiler/application code reuse their passing evidence. Initial SQL lint precedes wrapper refinements; final migration replay and runtime refusal/generic regressions validate final wrapper."
+  },
+  "analysis": {
+    "before": 365,
+    "after": 365,
+    "added": [],
+    "removed": [],
+    "prior_before": 367,
+    "prior_after": 365,
+    "prior_added": [],
+    "prior_removed": [
+      "info \u2022 Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._sessionResolution') to initialize the field \u2022 lib/features/authored_plan_package/import/plan_package_import_preview_service.dart:15:8 \u2022 prefer_initializing_formals",
+      "info \u2022 Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._existingVersionLookup') to initialize the field \u2022 lib/features/authored_plan_package/import/plan_package_import_preview_service.dart:16:8 \u2022 prefer_initializing_formals"
+    ],
+    "errors": 0,
+    "warnings": 110,
+    "info": 255
+  },
+  "new_changed_dart_diagnostics": 0,
+  "full_analysis_green": false,
+  "terminal_builds": {
+    "native_vectors": true,
+    "compiled_vectors_equal_committed_dart_outputs": true,
+    "bound_review_web": true,
+    "existing_studio_web": true
+  },
+  "legacy": {
+    "all_old_tracked_bytes_except_additive_current_notice_unchanged": true,
+    "v1_v2_canonical_bytes_hashes_goldens_unchanged_and_tests_passed": true,
+    "synthetic_v3_hash": "8731534bb80a5ac0d65d7b5b5641e2ea1053fccd10e27517262ed957113c0d8b",
+    "b2_separate_policy_and_c1_c2_c3_observational_contracts_preserved": true,
+    "canonical_entrypoint_oids_preserved_by_migration_assertion": true,
+    "copied_legacy_start_prosrc_sha256": {
+      "fixed": "a9c7d9addebfc734ff59f5863bf4580a4b6d8f5b0d16041f5e91eb39830113e9",
+      "generic": "24e315c9996db3e19d0f332e375183230b9554ea33ecf7790b39500d512c3796"
+    }
+  },
+  "code_sha256": {
+    "lib/application/hyrox_base/benchmark_repository.dart": "c70350713b430fc9e06c65c7b56b261165c7fa3f1015e838642ab8f4be8d9d4d",
+    "test/hyrox_base/benchmark_repository_test.dart": "89826631067d75699a6d67e5d9c715d91c3750ac490c4fa1ad08d5410b383b89",
+    "tool/hyrox_base/sql_vectors.dart": "4102088a8f06916ec1072d6f5601c24a6da34df7c3b161ea35219bcdfe253ea7",
+    "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444",
+    "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0",
+    "supabase/tests/fixtures/hyrox_base_calculation_vectors.jsonl": "6de2d47802d909a253349d322a457c6d3a2cc64edecb71b142ed8883cc1cb90c",
+    "supabase/tests/hyrox_base_evidence_http.py": "be1dccf365e0a76801adfbe4079dd18d7de3714fd1504054be374b4a64627beb",
+    "supabase/tests/run_hyrox_base_evidence_gate.sh": "14cba737eddcabc92dbe5eb7dcc0c54f1fb22659991f6bdcfdbad045e2be34e7",
+    "supabase/tests/sql/gate_hyrox_base_evidence.sql": "e53a4e1f172e8719a31c7beb2a81d8841fa2ea66c72d20373bdf65913723810d",
+    "supabase/tests/sql/gate_v3_unresolved_start.sql": "cf905a03a64a7fcd4fe4fc28db3b6c9a6cfd58007a13921dbae72d945ac741b7"
+  },
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-canonical",
+  "raw_evidence_sha256": {
+    "base-sql.log": "16569d8ab0171499f6a0f540f232b7d42797d7543abbcf047cc1c29a1bc339c1",
+    "base-api.log": "6fc1c0b436913e87a1c0f88fb226031a8cc5c8ba3a3fc09895a7f8545720009a",
+    "prerequisite-sealed-retry.log": "150cc24a4297cd6d39cecd3e58a678f0def1e8cc1df0973fc0948733384b4dea",
+    "full-db-final.log": "e643a6461bbf515ffbcbd85ee248cecb1b481196e169c9f956f63968790110c8",
+    "ownership-security-final.log": "c038d77baa2059c34052c63103c97fb478195e20e32c4777104eb66ee3bbc990",
+    "q-final.log": "b775fce4bf54e567cd8c2577dc434ea8e7db6ba826455b26c9ac985ff520d520",
+    "q-concurrency-final.log": "cf555ab33e15bb1a25f67b6024ca0ef209cf95b690ae62df1a384fd5c7946403",
+    "v3-guard-final.log": "b9295e54f1768028acd449bf6ed3731f2ac5bf873b4f624a31782ddc6f27ead7",
+    "app-regressions-corrected.log": "414a2713bc5e012d722629524e3214498a610c4d217e5bbd8425798b494c37f5",
+    "compiler-tests.log": "190c543d09eee45edeb5b49a9bd146c53265a0117da3c2d8d1c24d58bfadd81b",
+    "server-tests.log": "65b7921196e0b1930b5361fb8aaaa15367a2636ec27ba78da15da560aede85d3",
+    "safety.log": "d379171f763b0a3ea62f9c958a9abafaf6ee0fd6e69af5d14ca8570dc497503d",
+    "analysis-before.log": "0db4659c202f4cc430f9ede3f56b4b9578a1919990b930d66021da8628340755",
+    "analysis-final-corrected.log": "85d7ac39080d9afef754c4cec5b44ae5078c40681276ec8e55ee7ed81b223e86",
+    "analysis-comparison.json": "8678f65fce786f63f32be863e16fb5312da061bd44d2374ca66f0d00a195b4d1",
+    "scoped-analysis.log": "8c4bb1de0ced35edfa2ca8a3ea5fc4d97ec904faebd5e4d2bbc50842e611c46d",
+    "cli-build.log": "b8ab6524da5ce8fc2b82ea6a60870fe4b72853999a0cf1117b7aef4bbdec9f51",
+    "compiled-vectors.jsonl": "6de2d47802d909a253349d322a457c6d3a2cc64edecb71b142ed8883cc1cb90c",
+    "web-bound.log": "60dbc7e95410d87b77a6c8f52c7c3a27cf193ed98ecc41d9a57b9ab18195c09f",
+    "web-studio.log": "006c5f0a799487c2afbd55851bc62731b4a12768af2ac0684484cefdf2264878",
+    "db-lint.log": "0fb429f792056250e5288c547a0b007afce5b28d162cac1deb8326a7d18dbe7d",
+    "preflight.log": "3a3f464a8e18a3996dcd87cc49697120f4a49882cdf9b857e32c3f03aff8d9a8",
+    "postcheck.log": "1dfe19661ba5b86f3198ad10d64dc43a8d8cdf0d25c5a5302554898a889a1b52"
+  },
+  "review": {
+    "self_review": true,
+    "independent_agent_review": false,
+    "confirmed_defects_fixed": [
+      "cached unguarded function OID risk avoided by in-place replacement",
+      "uppercase/alternate UUID textual resolution bypass fixed with typed resolution"
+    ],
+    "unresolved_confirmed_defects": []
+  },
+  "task_corrections": [
+    "initial migration CASE expression parse fixed before successful replay",
+    "API mutation tests now use exact filters",
+    "two nonexistent app test paths corrected",
+    "two new tool diagnostics fixed",
+    "final replay port collision retried without changing an existing stack"
+  ],
+  "not_run_or_not_closed": [
+    "full default Flutter suite",
+    "hosted operation",
+    "real athlete/programme write",
+    "native browser",
+    "four phone checks",
+    "device distribution",
+    "Garmin",
+    "Stage 2 or Sprint C closure",
+    "v3 canonical snapshot integration"
+  ],
+  "hosted_contacts": 0,
+  "real_athlete_writes": 0,
+  "real_programme_publications_assignments": 0,
+  "browser_app_control": 0
+}
