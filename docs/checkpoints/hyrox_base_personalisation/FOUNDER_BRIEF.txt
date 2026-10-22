@@ -1,0 +1,138 @@
+Continue Cohort Platform. Last reported published main:
+fa5186fab8c1038fdb1972aea75a3880935c2d2f
+
+Read AGENTS.md, CURRENT_CHECKPOINT.md, binding roadmap and the HYROX Base source-readiness decision/handoff. Verify actual remote state before selecting your baseline; do not assume the reported SHA remains current.
+
+Founder has now supplied the HYROX Base brief and approved its Week 1, eight-week progression and Base-specific personalisation rules. Capture the decisions below durably, distinguishing approved content from remaining implementation details.
+
+Maintain momentum: inspect, scope briefly, implement a coherent end-to-end milestone, verify, review and integrate normally. No allocation-only pause or routine founder walkthrough gate.
+
+PROGRAMME DECISIONS
+
+HYROX Base is eight weeks of aerobic and basic strength development before specific HYROX preparation. Base describes purpose, not beginner status. Athletes can be developing or advanced. Minimum running ability: 45 minutes continuously. Six days/week, one session/day, generally 60–90 minutes.
+
+Weekly order:
+Mon Gym A: back squat; strict overhead press + pull-ups; suitcase carry; rowing intervals.
+Tue easy run.
+Wed Gym B: RDL; incline DB press + chest-supported row; long-lever plank; mixed conditioning.
+Thu quality run.
+Fri Gym C: front-rack reverse lunge; DB shoulder press + split-stance single-arm cable row; Pallof press; SkiErg/wall balls.
+Sat long easy run.
+Sun rest.
+
+All three aerobic sessions intend running; eligible bike substitutions preserve effort/duration, not running pace. Substitutions must use verified app rules and athlete acceptance; do not invent exercise mappings.
+
+Weeks 1–3 build, Week 4 mainly reduces gym volume/finisher demand with modest running reduction, Weeks 5–7 build, Week 8 consolidates. No compulsory post-Base assessment, but athletes need representative benchmarks before the next plan.
+
+SHARED HYROX BENCHMARKS
+
+- 10 km run completion time.
+- 2 km row completion time.
+- Back squat 5RM total external load.
+- Strict overhead press 5RM total external load.
+- Maximum strict pull-ups; zero is valid.
+Each includes test date and clear source/type. Do not invent freshness cutoffs.
+
+Athletes may enter known results and start Base. Optional HYROX Test Week is a separate current programme that records results before starting Base. Test Week's exact sessions/protocols have not been authored or approved: do not invent them or mark that programme complete.
+
+Missing metrics remain missing. Approved effort-based fallbacks may be shown without fabricated numeric targets.
+
+PERSONALISATION RULES V1
+
+Run:
+10 km pace = completion time / 10, in seconds/km.
+Time-based controlled intervals use:
+4–5 min repetitions: pace × 1.00–1.05.
+6–7 min: pace × 1.02–1.07.
+10 min: pace × 1.03–1.08.
+These are authored Base-specific starting windows, not measured physiological thresholds. Approximate RPE 7, repeatable efforts.
+Easy/long running uses conversational effort/RPE about 3–4, with established HR guidance if available; do not manufacture HR zones.
+
+Row:
+2 km split = completion time / 4, seconds/500 m.
+2 min repetitions: +10–15 sec.
+3 min: +12–18 sec.
+Week 4: +18–23 sec.
+Week 8: +15–20 sec.
+These apply to dedicated rowing intervals, not rowing inside mixed WODs.
+
+Back squat:
+W1 3x8, 80% of 5RM, 3 RIR.
+W2 3x8, 82.5%, 2–3 RIR.
+W3 4x6, 87.5%, 2 RIR.
+W4 2x6, 70%, 4 RIR.
+W5 4x6, 87.5%, 3 RIR.
+W6 4x5, 90%, 2–3 RIR.
+W7 4x4, 95%, 2 RIR.
+W8 2x5, 75%, 3–4 RIR.
+
+Round loads to the configured available total-barbell increment, ties down. Do not guess equipment increments. RIR/technique govern athlete adjustments. Record prescribed and actual loads separately.
+Other strength uses authored sets/reps/RIR and previous relevant performance; no inferred squat-to-lunge/RDL conversions.
+
+Benchmark replacement requires explicit acceptance before changing future personalised targets. Preserve completed prescription/result history and do not overwrite a workout already in progress. No automatic progression based on session completion.
+
+RUNNING PROGRESSION
+
+W1 easy 45–60; quality 4x4; long 50–70.
+W2 easy 45–65; quality 5x4; long 55–75.
+W3 easy 50–65; quality 4x6; long 60–80.
+W4 easy 45–60; quality 4x4; long 55–70.
+W5 easy 50–65; quality 5x5; long 60–80.
+W6 easy 50–70; quality 4x7; long 65–80.
+W7 easy 55–70; quality 3x10; long 65–80.
+W8 easy 45–60; quality 4x5; long 55–75.
+Durations are minutes; quality recoveries are 2 min easy jogging between repetitions.
+Athletes choose inside duration windows based on feel/recovery, without assigned beginner/advanced bands.
+Warm-up/cooldown are additional; aim to keep full sessions within about 90 min.
+
+ROWING PROGRESSION
+
+W1 6x2 min / 90 sec easy.
+W2 7x2 / 90 sec.
+W3 5x3 / 90 sec.
+W4 4x2 / 90 sec.
+W5 6x2 / 75 sec.
+W6 7x2 / 75 sec.
+W7 5x3 / 75 sec.
+W8 4x2 / 90 sec.
+Recoveries between repetitions; no need for an extra recovery after the final repetition.
+
+Wall balls use selected target race division's weight and standard target height. Exact current division mappings require verified authority; no guessed default.
+
+IMPLEMENTATION
+
+Inspect existing assessment, metric/profile, admission, derivation, programme-binding, execution and snapshot contracts before adding anything. Prior Sprint C boundaries and reserved future programme bindings must not be silently bypassed.
+
+Find the smallest coherent vertical slice showing benchmark entry/selection → approved calculation → personalised session preview. Cover running, dedicated rowing and squat, using local synthetic athlete examples and exact authored rules.
+
+If production programme bindings require a new contract version, prepare the explicit additive contract and compatibility plan, and implement independent local calculation/review components. Do not change canonical hash meaning or silently insert production bindings into a version that forbids them.
+
+Requirements:
+- Typed units, valid finite inputs, unambiguous pace bounds and deterministic rounding.
+- Benchmark identity/provenance and rule-version traceability.
+- Explicit unavailable states for missing/invalid inputs.
+- Clear authored versus calculated versus actual values.
+- No reuse of unrelated exercise benchmarks.
+- No invented canonical exercise identities.
+- Historical prescription preservation and stale-result protection.
+- Structured work/recovery/pace targets suitable for future Garmin export, without claiming Garmin integration is delivered.
+- Meaningful examples for 40-minute versus 60-minute 10 km athletes, different row times and squat loads.
+
+This brief does not contain every supporting-work/warm-up/finisher detail. Do not regenerate or improvise missing programme content or claim a complete publishable 48-session package. Preserve the existing approved-source record and enumerate the remaining source inputs needed. You can build the personalisation slice without them.
+
+Validate calculation boundaries, invalid/missing metrics, zero pull-ups, unit conversions, rounding/ties, benchmark changes, historical state and async races as relevant. Run proportionate regressions, required safety gates and terminal builds. Require zero new/changed-file diagnostics; report inherited analysis honestly.
+
+Computer/browser control remains revoked. No app opening/control, browser automation/debugging, AppleScript or substitutes. Terminal coding/build/test and normal git fetch/push are authorised.
+
+Use clean worktrees; preserve all older checkout files, indices, HEADs and .temp. Review/fix within scope and publish main normally if gates pass; never force-push.
+
+No hosted mutations, migrations applied to hosted systems, athlete-data writes, real programme publication/assignment, payments or device distribution.
+
+Return:
+- Durable decision specification and actual architecture findings.
+- Personalisation functionality delivered and published SHA.
+- Validation and preserved compatibility.
+- Exact remaining blockers to production integration and complete programme authoring.
+- A continuation handoff.
+
+Broader Stage 2/Sprint C, native browser checks and four phone checks remain open unless actual evidence closes them.
