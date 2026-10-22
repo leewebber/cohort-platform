@@ -1,4 +1,17 @@
 # Current repository checkpoint
+> **HYROX Base approved rules and independent personalisation — 2026-10-22:**
+> [Approved decisions and remaining source inputs](./hyrox_base_personalisation/DECISIONS.md),
+> [architecture findings / additive contract plan](./hyrox_base_personalisation/ARCHITECTURE.md)
+> and [continuation](./hyrox_base_personalisation/HANDOFF.md) record the exact founder brief,
+> eight-week run/row/squat rules and bounded synthetic benchmark entry → explicit selection
+> → calculated session review → immutable local started/completed snapshots. Approved
+> content is partial; no complete 48-session package, Test Week protocols or canonical
+> exercise/version bindings are invented. Existing C1/C2/C3, B2/B3, v1/v2 hashes and all
+> production paths remain unchanged. Future programme binding needs explicit additive
+> contract work. Broader Stage 2/Sprint C, native browser checks and four phone checks
+> remain open. Browser/computer control stays revoked; no hosted, athlete or device work.
+> Normal main-only publication after local gates is authorised by this founder request.
+
 > **HYROX Base source-readiness decision package — 2026-10-21:**
 > [Founder decision brief](./hyrox_base_source_readiness/DECISION.md),
 > [continuation](./hyrox_base_source_readiness/HANDOFF.md),

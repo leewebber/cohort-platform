@@ -1,5 +1,16 @@
 # Athlete Product Completion Plan v1
 
+> **HYROX Base approved brief / local personalisation — 2026-10-22:**
+> Founder approved the partial eight-week brief, Week 1/progression and Base-specific
+> benchmark rules; [decisions](../checkpoints/hyrox_base_personalisation/DECISIONS.md)
+> distinguish those exact approvals from missing supporting prescriptions. The independent
+> synthetic entry/selection/calculation/preview slice proceeds under this explicit authority.
+> [Architecture and additive production contract plan](../checkpoints/hyrox_base_personalisation/ARCHITECTURE.md)
+> preserve C1/C2/C3, B2/B3 and all v1/v2 canonical contracts. Complete programme content,
+> production bindings, broader Stage 2/Sprint C, browser/four-phone and hosted gates remain
+> open. This notice supersedes historical blanket authoring prohibitions only for this brief
+> and bounded local milestone; it does not approve a complete 48-session package.
+
 > **First athlete History visual approval / final review — 2026-10-07:**
 > Founder approved the refined distance view at `86c6224` as a **bounded
 > foundation, not the finished performance dashboard**.

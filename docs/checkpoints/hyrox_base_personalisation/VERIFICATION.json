@@ -1,0 +1,72 @@
+{
+  "base": "fa5186fab8c1038fdb1972aea75a3880935c2d2f",
+  "implementation": "99f5bd51d9be546a36313621d26c7ac97d2eb1ec",
+  "new_tests_passed": 22,
+  "affected_regression_tests_passed": 333,
+  "safety_groups_passed": 6,
+  "safety_groups_failed": 0,
+  "analysis": {
+    "immutable_base_archive": "fa5186fab8c1038fdb1972aea75a3880935c2d2f",
+    "baseline_issues": 367,
+    "final_issues": 367,
+    "exact_diagnostic_identities_equal": true,
+    "errors": 0,
+    "warnings": 110,
+    "info": 257,
+    "changed_dart_file_diagnostics": 0,
+    "full_analysis_green": false,
+    "initial_unprepared_worktree_issues": 989,
+    "initial_preparation_note": "Missing cached nested package configurations restored offline; genuine baseline measured on immutable base archive."
+  },
+  "terminal_native_executable_build": true,
+  "terminal_web_build": true,
+  "web_browser_runtime_verified": false,
+  "wasm_verified": false,
+  "compiled_and_interpreted_examples_byte_equal": true,
+  "synthetic_athlete_week_examples": 16,
+  "source_file_sha256": {
+    "lib/domain/hyrox_base/base_personalisation.dart": "aca4c4450de333a36576ffa60b8e512bb87e1f481f94844536a6e9b77a4157cf",
+    "lib/internal_review/hyrox_base/base_review_controller.dart": "b6c143e01d7247d2dffaa236ae7c7a1ef138a4ed42640898f42e905d4e8b77c2",
+    "lib/internal_review/hyrox_base/base_review_screen.dart": "87297f992209f96b3bc432e1728dc581c99dab6a5c5e5a43709356afebec9581",
+    "lib/main_hyrox_base_review_preview.dart": "6497a2a7c767b70f15bb280834804e3ef6d6c96a37308a3edad1a77c40fcc5f3",
+    "test/hyrox_base/base_personalisation_test.dart": "0885f20eac2f4e82ce8aa595b4be70f2dc9d7a134710e60967ce9c70dc0dfab0",
+    "test/hyrox_base/base_review_screen_test.dart": "8263d7f36cd4db81523ad600472278343a9983486c05832445eec1e945da31a1",
+    "tool/hyrox_base/review_examples.dart": "9194e53199e32711cdc85febebc5d5532b3f6462dc73ca947da503e96aecd981"
+  },
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-personalisation",
+  "raw_evidence_sha256": {
+    "focused-final.log": "ea62a8eec04bca8921faf440ee10f486dddc5a603bf0af5a172f082712e94c0b",
+    "regression-final.log": "ba2053c521673bf9bf490358d619ac93a4af7af32db2b00e5b95e9e21ce12825",
+    "safety-final.log": "f42f583bf105007e06c3495ae9c5e3748a02ef6fb3936b97be32478853724e5f",
+    "analysis-baseline.log": "bfd9e1de616eb6a38f44005be3addeb47fc6a581bb22c002960fd2760e52deb8",
+    "analysis-final.log": "a3e923caf48ce3b1a948da0f459fbb79548c04e9b8a36db8cf626ef09eac0def",
+    "analysis-scoped-final.log": "ed98de005cf168e77e7fbb40a05db8856116b69003c02ffb27990da7bae65f5b",
+    "cli-build-final.log": "4d9a78c1d6a95eb55792cf5171d37ec5df7eef5c1b4bf40978115da480a649ad",
+    "web-build-final.log": "266974b1a2a584537842d771516f5d7f2fa04b6e392c110a431452dfaa9fad52",
+    "EXAMPLES.json": "55a0b2bd21e735385f48d8295d8c873348f3a78366190dd1b357a7d420c647d3",
+    "EXAMPLES-compiled.json": "55a0b2bd21e735385f48d8295d8c873348f3a78366190dd1b357a7d420c647d3"
+  },
+  "review": {
+    "self_review_performed": true,
+    "independent_agent_review": false,
+    "founder_visual_acceptance": false,
+    "unresolved_confirmed_defects": [],
+    "fixed_findings": [
+      "precision-preserving pound conversion using micrograms and BigInt intermediates",
+      "narrow large-text dropdown overflow",
+      "safe retry after worker failure"
+    ],
+    "tooling_retries": [
+      "initial widget test used unsupported TestFlutterView setters, corrected to properties",
+      "concurrent Flutter setup collision; complete final checks rerun serially"
+    ]
+  },
+  "not_run": [
+    "full default suite",
+    "local DB replay",
+    "native browser interactions",
+    "four phone checks",
+    "Garmin provider integration"
+  ],
+  "forbidden_operations_performed": []
+}

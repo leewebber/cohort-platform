@@ -1,0 +1,184 @@
+{
+  "base": "fa5186fab8c1038fdb1972aea75a3880935c2d2f",
+  "all_older_inventories_exactly_equal": true,
+  "older_checkouts": 16,
+  "before_sha256": "8a329460b3fd3ebe089b04925fff111b9f9ff488cacb6521397665c93e1292b5",
+  "after_sha256": "8a329460b3fd3ebe089b04925fff111b9f9ff488cacb6521397665c93e1292b5",
+  "original_outstanding_paths": 95,
+  "present_protected_base_blobs_checked": 2754,
+  "unchanged_absent_base_blobs": [
+    {
+      "path": "supabase/.temp/cli-latest",
+      "git_blob": "e9acfb34f99b20d4d4bff031a3034e74b885e7e3"
+    },
+    {
+      "path": "supabase/.temp/gotrue-version",
+      "git_blob": "ff16c1feb5d417c664f4619c21c83a2b3d3176c0"
+    },
+    {
+      "path": "supabase/.temp/linked-project.json",
+      "git_blob": "addf44b80b0fd54e4d15c8a95179f69246a0ee00"
+    },
+    {
+      "path": "supabase/.temp/pooler-url",
+      "git_blob": "02c8a5ae909869ce65004422879e1622db690a14"
+    },
+    {
+      "path": "supabase/.temp/postgres-version",
+      "git_blob": "de29697db0c6d83c79482c32dfee308e697cfe18"
+    },
+    {
+      "path": "supabase/.temp/project-ref",
+      "git_blob": "5407a6053a2c436dc934364bf8bdf5eb6898ab22"
+    },
+    {
+      "path": "supabase/.temp/rest-version",
+      "git_blob": "908947a1df147707a8939d8bf8eb980cb0db067d"
+    },
+    {
+      "path": "supabase/.temp/storage-migration",
+      "git_blob": "d5c38346723ccb4b2591ff28a4f7fc5a7967b3e1"
+    },
+    {
+      "path": "supabase/.temp/storage-version",
+      "git_blob": "27200b147bd45b73390cc38af506205f147d7de2"
+    }
+  ],
+  "intentionally_changed_base_files": [
+    "docs/checkpoints/CURRENT_CHECKPOINT.md",
+    "docs/planning/Delivery_Roadmap_v1.md",
+    "docs/planning/Athlete_Product_Completion_Plan_v1.md"
+  ],
+  "checkouts": [
+    {
+      "root": "/Users/leewebber/.codex/worktrees/hyrox-base-source-readiness/cohort_platform",
+      "HEAD": "fa5186fab8c1038fdb1972aea75a3880935c2d2f",
+      "index_sha256": "f1cf8503cb88cda631d77a4909d632b0e49d4880badd8743cdb832b65d866d87",
+      "git_pointer_sha256": "139218cca5b72efdd7614ce3d990fe8afb787fcd5af2f4a18932e6adc731d5cf",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform",
+      "HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+      "index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+      "git_pointer_sha256": "40a2ba4a769feae622a7d0d664c55dd10bf8c4618941192457d37c96e62d8869",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform",
+      "HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+      "index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+      "git_pointer_sha256": "e74a83b8a09c1f11b4ca70e683a5c6b2cda2a430fba800740887ef3c24b753da",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-apollo-internal-pilot/cohort_platform",
+      "HEAD": "e78ce7e25e1de50fb60d67a932105d8b587d98e8",
+      "index_sha256": "9ba4dbf821e9600fb84c1a292a4b7ac30d65c9e1139d54eb2425e5651230a028",
+      "git_pointer_sha256": "bfe821bb9c0e2e25d14795871dfa7a006f7e7fd87981ab4582d165724bee2104",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-approved-source-coverage/cohort_platform",
+      "HEAD": "de0f481d86c99c6540e1c2ba26b21e535a6c1d1e",
+      "index_sha256": "07c69c93e822730c30c6bc5c23cbe468243954cdf4e94f491feea657d3a0ff75",
+      "git_pointer_sha256": "be2b7f295721049f7865cba21a72c04db0088a111a6b84aae5c5fdf052b35e08",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-canonical-intake/cohort_platform",
+      "HEAD": "cfd9bae736e2eb0a537410328006d4920b4e7548",
+      "index_sha256": "c2fcac304c8e38840cc52c73c5fb6279944765efb8aa51405b41b3ae22dd2f08",
+      "git_pointer_sha256": "e482f286afb3c656dfdec928ea83ba261f3597cae4f8699b7d37af9c292b4a83",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-canonical-source-export/cohort_platform",
+      "HEAD": "2d97daf71e31c4691eba9cf85e731b4a1b3c2e33",
+      "index_sha256": "d63947b0a70e372ca09bdde0e4b8e78041be27bdc3d97e5ed92ed3060b985d6f",
+      "git_pointer_sha256": "f53440dfd1a8bf4df967f884420b98e572188b9e3ca3e8d2a9a38220559f9e90",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-editable-workspace/cohort_platform",
+      "HEAD": "3ec4866c5d4583fdb5f7c581b5e6099ee3616ef6",
+      "index_sha256": "a6e91fcba3f31191312f874ade5853f1dd390a14ec333975c8630d84307952ee",
+      "git_pointer_sha256": "92165795d891d3c5f88412bec1f5a765546348f3ec6c5e90b8208009f9445a12",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-four-week-schedule/cohort_platform",
+      "HEAD": "adeea293ae23866b936a7a543cf8a577ecdb7109",
+      "index_sha256": "00fe2e43bfbfa72f1e6d9340e3f1a834ef328e71f4eb7103b2b5cfc876c3c624",
+      "git_pointer_sha256": "5e7e3fa2148a1ca1f2a43095f940dd02b794421192ff06275f7aace30a169e2d",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform",
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "index_sha256": "83f80fcaf28e402f27e47fc888d6bc2a7c1f1ee2723f3cc14f7ef9257e0c5469",
+      "git_pointer_sha256": "c53202aeb86fd0db2ff13286c80bdec7a79ef905cde5258cf73806aa46aeac43",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-prescription-comparison/cohort_platform",
+      "HEAD": "09c5a0695bf96dee5214e5d5bf0665612ec65f9b",
+      "index_sha256": "8ed2cc8e893159d24f08fa54102aa9f5182df6ad8729006ed2c2d93506191098",
+      "git_pointer_sha256": "3a2683daf89a006370a783439a88f65a84b09992f8785281c49776e4a9b3d069",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-programme-first-usability/cohort_platform",
+      "HEAD": "80a917cdf8469dc5690c935da8654bff42214378",
+      "index_sha256": "85709651fd3ab9b3f89271ac448c0db98f3763ab4ad3162ab542b1c1e8c0408d",
+      "git_pointer_sha256": "309d83d4eb76f5ecdc634553011963a3ebc3d17be2f3aba4903e795291fefc26",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform",
+      "HEAD": "b81b7e8f79cd77f00353b3c6ea6134eed20d1810",
+      "index_sha256": "f37ebbe410625fc417a0d40b5f43a6fbe39a803af78c35bcab7c5a86df90b0c5",
+      "git_pointer_sha256": "860d7550dd420711bd61f764bf5bb1d0c3ca925c0083d6ecc4d0cdcf06cccd43",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-usability-allocation/cohort_platform",
+      "HEAD": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+      "index_sha256": "a3c4c4422a86447937dec88156c62e8643efdf7b447090d2424f8999d94282b8",
+      "git_pointer_sha256": "50ca679a59e8ca515b17285bc2e3afcf1d83f85753670270dca33313ae820e04",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/.codex/worktrees/studio-usability-integration/cohort_platform",
+      "HEAD": "4d78d4681a1f8a64771f7fbf05f5597cfe77b3cc",
+      "index_sha256": "3a97e3a1ad6ebd0cb319e0851720cabfdde74bd3127a5cebeca05d627340165d",
+      "git_pointer_sha256": "27e7a44bf14f761b59a6d40d1e749869ca108d6601eec123a27380b85a79bc87",
+      "outstanding_paths": 0,
+      "all_fields_equal": true
+    },
+    {
+      "root": "/Users/leewebber/Developer/cohort_platform",
+      "HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+      "index_sha256": "180c952568d16b1eab4831acf2c8550e6880da371f0d6328e548f68b7e231109",
+      "git_pointer_sha256": null,
+      "outstanding_paths": 95,
+      "all_fields_equal": true
+    }
+  ],
+  "ignored_build_caches_excluded": true,
+  "temp_explicitly_inventoried": true
+}

@@ -1,0 +1,1286 @@
+{
+  "format": "derived_example_summary_not_programme_input",
+  "full_terminal_report_sha256": "55a0b2bd21e735385f48d8295d8c873348f3a78366190dd1b357a7d420c647d3",
+  "examples": [
+    {
+      "athlete_id": "synthetic-a",
+      "week": 1,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "a084e17b48eebc7e8d89be3d0d7101e7bbf5636ffc8534b3ce41f5f88e4f41c7",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 240000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 252000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 460000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 480000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 3,
+          "reps": 8,
+          "five_rm_basis_points": 8000,
+          "rir": "3"
+        },
+        "calculated_grams_total_external_load": 80000,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 2,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "4d16546893817b79af80fbddc07d7000c8279f2338ce6fbd43bfec3c8247e32f",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 240000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 252000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 460000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 480000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 3,
+          "reps": 8,
+          "five_rm_basis_points": 8250,
+          "rir": "2–3"
+        },
+        "calculated_grams_total_external_load": 82500,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 3,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "179de3ea436c94f0e8b057f6b76d56207e6667df54bf196384c9fe7770586173",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 244800000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 256800000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 468000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 492000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 6,
+          "five_rm_basis_points": 8750,
+          "rir": "2"
+        },
+        "calculated_grams_total_external_load": 87500,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 4,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "ccb4eb7e49a8e8a4939320b46c0db1d95c5a5e0f32b53869c382f605fcb6e6b8",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 240000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 252000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 492000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 512000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 2,
+          "reps": 6,
+          "five_rm_basis_points": 7000,
+          "rir": "4"
+        },
+        "calculated_grams_total_external_load": 70000,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 5,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "d8e9c979c0a05a37e3ae50735e8dc3659b0c8d696302f76ce0ef0933366fd1bb",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 240000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 252000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 460000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 480000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 6,
+          "five_rm_basis_points": 8750,
+          "rir": "3"
+        },
+        "calculated_grams_total_external_load": 87500,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 6,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "31a3a2ccbc7ab132255e8c4b201f2705f76a27bdee8d3ba36410013b212ad496",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 244800000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 256800000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 460000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 480000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 5,
+          "five_rm_basis_points": 9000,
+          "rir": "2–3"
+        },
+        "calculated_grams_total_external_load": 90000,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 7,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "36dff4153a704e063d0bb6d8afc6cdce66bba93237c9be2bf9b893f8ffc35a9b",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 247200000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 259200000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 468000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 492000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 4,
+          "five_rm_basis_points": 9500,
+          "rir": "2"
+        },
+        "calculated_grams_total_external_load": 95000,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-a",
+      "week": 8,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "5fe0cad71c04bc4a1d109ebe0fa30d1aa382534ed72027867f92ae98a10988b3",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-a-run10km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "run10km",
+          "value": 2400000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 240000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 252000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-a-row2km-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "row2km",
+          "value": 420000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 480000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 500000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 2,
+          "reps": 5,
+          "five_rm_basis_points": 7500,
+          "rir": "3–4"
+        },
+        "calculated_grams_total_external_load": 75000,
+        "configured_increment_grams": 2500,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-a-backSquat5rm-v1",
+          "athlete_id": "synthetic-a",
+          "metric": "backSquat5rm",
+          "value": 100000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "8da304fa5691f979ed5607885f8d422a929a5f50e14b9a3bc64aefada6841e38",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 1,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "3b45eb3b464fdde4518b91030f4c28f7e83693ee0f3c400942946b4a79a5adfb",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 360000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 378000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 580000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 600000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 3,
+          "reps": 8,
+          "five_rm_basis_points": 8000,
+          "rir": "3"
+        },
+        "calculated_grams_total_external_load": 60000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 2,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "5880dc70e0f84c1d22dbcb5ab42ee8aa97e1b1d2adeae6cdd1db87eda5a8f989",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 360000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 378000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 580000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 600000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 3,
+          "reps": 8,
+          "five_rm_basis_points": 8250,
+          "rir": "2–3"
+        },
+        "calculated_grams_total_external_load": 62000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 3,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "9c911d643c3a2c8d65436411b33ef12652f23cf8cde266968586f6226b46a683",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 367200000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 385200000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 588000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 612000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 6,
+          "five_rm_basis_points": 8750,
+          "rir": "2"
+        },
+        "calculated_grams_total_external_load": 66000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 4,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "b93f9a7906a741a463b6cc59478fbd3bf12d73fb28098ac379d857fe16f066f0",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 360000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 378000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 612000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 632000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 2,
+          "reps": 6,
+          "five_rm_basis_points": 7000,
+          "rir": "4"
+        },
+        "calculated_grams_total_external_load": 52000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 5,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "e58bcd50edd19a02ca51c7442aab71adeb2ddd011222b4398db5708d355245de",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 360000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 378000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 580000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 600000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 6,
+          "five_rm_basis_points": 8750,
+          "rir": "3"
+        },
+        "calculated_grams_total_external_load": 66000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 6,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "098048cda9ce90ae3e458a965d566c80636981f8e51dc6cb33d02a56ddd9fc93",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 367200000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 385200000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 580000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 600000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 5,
+          "five_rm_basis_points": 9000,
+          "rir": "2–3"
+        },
+        "calculated_grams_total_external_load": 67000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 7,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "acb5e93be0510616ecfb7a47d4a638d9d1d96cb5a7b3bb70d44739fe65d717b0",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 370800000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 388800000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 588000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 612000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 4,
+          "reps": 4,
+          "five_rm_basis_points": 9500,
+          "rir": "2"
+        },
+        "calculated_grams_total_external_load": 71000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    },
+    {
+      "athlete_id": "synthetic-b",
+      "week": 8,
+      "rule_version": "hyrox-base-personalisation-v1",
+      "approved_brief_sha256": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056",
+      "review_snapshot_sha256": "5d5a7561788facd2ab07c4fca96738252ad9260c6d21f24e6c4afdb287cdc927",
+      "run": {
+        "benchmark": {
+          "id": "synthetic-b-run10km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "run10km",
+          "value": 3600000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:run10km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_kilometre",
+          "faster": {
+            "numerator": 360000000,
+            "denominator": 1000
+          },
+          "slower": {
+            "numerator": 378000000,
+            "denominator": 1000
+          }
+        }
+      },
+      "row": {
+        "benchmark": {
+          "id": "synthetic-b-row2km-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "row2km",
+          "value": 540000,
+          "unit": "milliseconds",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:row2km",
+          "claim": "declared_result_only"
+        },
+        "pace": {
+          "unit": "milliseconds_per_500_metres",
+          "faster": {
+            "numerator": 600000,
+            "denominator": 4
+          },
+          "slower": {
+            "numerator": 620000,
+            "denominator": 4
+          }
+        }
+      },
+      "squat": {
+        "authored": {
+          "sets": 2,
+          "reps": 5,
+          "five_rm_basis_points": 7500,
+          "rir": "3–4"
+        },
+        "calculated_grams_total_external_load": 56000,
+        "configured_increment_grams": 1000,
+        "rounding": "nearest_configured_total_increment_ties_down",
+        "unavailable_reason": null,
+        "benchmark": {
+          "id": "synthetic-b-backSquat5rm-v1",
+          "athlete_id": "synthetic-b",
+          "metric": "backSquat5rm",
+          "value": 75000000000,
+          "unit": "micrograms_total_external_load",
+          "test_date": "2026-10-22",
+          "source_type": "syntheticExample",
+          "source_reference": "local-example:backSquat5rm",
+          "claim": "declared_result_only"
+        },
+        "benchmark_digest": "b52df0b1652b341e05190863ba6ef22859daae5a2d3271ce48ad4016ce460076",
+        "actual": null
+      }
+    }
+  ]
+}
