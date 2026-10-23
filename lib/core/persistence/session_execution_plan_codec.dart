@@ -1,3 +1,4 @@
+import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/timer_configuration.dart';
@@ -12,6 +13,8 @@ class SessionExecutionPlanCodec {
 
   Map<String, dynamic> encodePlan(SessionExecutionPlan plan) {
     return {
+      if (plan.boundPrescriptionSnapshot != null)
+        'boundPrescriptionV1': plan.boundPrescriptionSnapshot,
       'sessionId': plan.sessionId,
       'sessionTitle': plan.sessionTitle,
       'durationMin': plan.durationMin,
@@ -38,6 +41,11 @@ class SessionExecutionPlanCodec {
       overridesRaw.forEach((k, v) => overrides[k.toString()] = v.toString());
     }
     return SessionExecutionPlan(
+      boundPrescriptionSnapshot: map['boundPrescriptionV1'] == null
+          ? null
+          : ProgrammePrescription(
+              Map<String, dynamic>.from(map['boundPrescriptionV1'] as Map),
+            ).json,
       sessionId: map['sessionId']?.toString() ?? '',
       sessionTitle: map['sessionTitle']?.toString() ?? "Today's Training",
       blocks: blocks,
@@ -75,6 +83,7 @@ class SessionExecutionPlanCodec {
 
   Map<String, dynamic> _encodeBlock(SessionExecutionBlock block) {
     return {
+      if (block.boundTarget != null) 'boundTargetV1': block.boundTarget!.json,
       'blockId': block.blockId,
       'title': block.title,
       'blockType': block.blockType.name,
@@ -129,6 +138,11 @@ class SessionExecutionPlanCodec {
       }
     }
     return SessionExecutionBlock(
+      boundTarget: map['boundTargetV1'] == null
+          ? null
+          : ProgrammeTarget(
+              Map<String, dynamic>.from(map['boundTargetV1'] as Map),
+            ),
       blockId: map['blockId']?.toString() ?? '',
       title: map['title']?.toString() ?? 'Block',
       blockType: blockType,

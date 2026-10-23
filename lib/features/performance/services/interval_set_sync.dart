@@ -50,10 +50,7 @@ class IntervalSetSync {
           row,
         ),
     ];
-    return [
-      host.copyWith(sets: sets),
-      ...exercises.skip(1),
-    ];
+    return [host.copyWith(sets: sets), ...exercises.skip(1)];
   }
 
   static SetPerformanceDraft applyRow(
@@ -95,8 +92,7 @@ class IntervalSetSync {
       );
     }
     if (note == paceUnavailableNote ||
-        (set.completed &&
-            (set.distance == null || set.distance! <= 0))) {
+        (set.completed && (set.distance == null || set.distance! <= 0))) {
       return IntervalWorkResult(
         ordinal: set.setNumber,
         workSeconds: set.durationSeconds ?? workSeconds,
@@ -106,7 +102,9 @@ class IntervalSetSync {
     }
     final duration = set.durationSeconds ?? workSeconds;
     final pace = set.distance != null && set.distance! > 0 && duration > 0
-        ? duration / set.distance!
+        ? duration /
+              set.distance! *
+              (paceUnit == IntervalPaceUnit.secondsPer500m ? 0.5 : 1)
         : null;
     return IntervalWorkResult(
       ordinal: set.setNumber,

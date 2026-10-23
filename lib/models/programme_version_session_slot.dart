@@ -18,6 +18,7 @@ class ProgrammeVersionSessionSlot {
     this.coachNote,
     this.athleteNote,
     this.authoredRunningV1,
+    this.packageSlotKey,
     this.createdAt,
   });
 
@@ -26,6 +27,7 @@ class ProgrammeVersionSessionSlot {
   final int sessionOrder;
   final String protocolId;
   final String? displayTitle;
+  final String? packageSlotKey;
   final ProgrammeSessionTimeOfDay timeOfDay;
   final bool isOptional;
   final ProgrammeSessionCompletionExpectation completionExpectation;
@@ -48,6 +50,7 @@ class ProgrammeVersionSessionSlot {
       sessionOrder: map['session_order'] ?? 1,
       protocolId: _trimStringRequired(map['protocol_id']),
       displayTitle: _trimString(map['display_title']),
+      packageSlotKey: _trimString(map['package_slot_key']),
       timeOfDay: ProgrammeSessionTimeOfDayDb.fromDb(
         map['time_of_day']?.toString(),
       ),

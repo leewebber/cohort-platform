@@ -16,7 +16,7 @@ class IntervalResultMath {
     var distance = 0.0;
     for (final row in comparableRows(result)) {
       time += row.workSeconds;
-      distance += row.impliedDistanceKm!;
+      distance += row.workSeconds / row.paceSecondsPerKm!;
     }
     if (distance <= 0 || time <= 0) return null;
     return time / distance;
@@ -49,7 +49,10 @@ class IntervalResultMath {
     return slow - quick;
   }
 
-  static String formatPace(double? secondsPerKm) {
-    return IntervalPaceFormat.display(secondsPerKm);
+  static String formatPace(double? secondsPerKm, {String? paceUnit}) {
+    return IntervalPaceFormat.display(
+      secondsPerKm,
+      suffix: IntervalPaceUnit.suffix(paceUnit),
+    );
   }
 }

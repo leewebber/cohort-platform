@@ -292,9 +292,15 @@ class CompletedIntervalBlockProjection {
             IntervalWorkState.paceUnavailable => 'Pace unavailable',
             IntervalWorkState.skipped => 'Skipped',
             IntervalWorkState.completed =>
-              IntervalPaceFormat.display(row.paceSecondsPerKm).isEmpty
+              IntervalPaceFormat.display(
+                    row.paceSecondsPerKm,
+                    suffix: IntervalPaceUnit.suffix(row.paceUnit),
+                  ).isEmpty
                   ? '—'
-                  : IntervalPaceFormat.display(row.paceSecondsPerKm),
+                  : IntervalPaceFormat.display(
+                      row.paceSecondsPerKm,
+                      suffix: IntervalPaceUnit.suffix(row.paceUnit),
+                    ),
             IntervalWorkState.pending => 'Not recorded',
           },
           isFastest:
@@ -327,9 +333,10 @@ class CompletedIntervalBlockProjection {
     return CompletedIntervalBlockProjection(
       collapsedSummary: [
         '${data.recordedCount}/$prescribed intervals',
-        if (average != null) 'Avg ${IntervalPaceFormat.display(average)}',
+        if (average != null)
+          'Avg ${IntervalPaceFormat.display(average, suffix: IntervalPaceUnit.suffix(data.paceUnit))}',
         if (fastest != null)
-          'Fastest ${IntervalPaceFormat.display(fastest.paceSecondsPerKm)}',
+          'Fastest ${IntervalPaceFormat.display(fastest.paceSecondsPerKm, suffix: IntervalPaceUnit.suffix(data.paceUnit))}',
         comparison.status.label,
       ].join(' · '),
       comparisonStatus: comparison.status,
@@ -342,7 +349,12 @@ class CompletedIntervalBlockProjection {
         CompletedPerformanceMetric(
           key: 'average-pace',
           title: 'Average pace',
-          value: average == null ? '—' : IntervalPaceFormat.display(average),
+          value: average == null
+              ? '—'
+              : IntervalPaceFormat.display(
+                  average,
+                  suffix: IntervalPaceUnit.suffix(data.paceUnit),
+                ),
           deltaLabel: average != null && previousAvg != null
               ? _paceDelta(previousAvg - average)
               : null,
@@ -355,7 +367,10 @@ class CompletedIntervalBlockProjection {
           title: 'Fastest interval',
           value: fastest == null
               ? '—'
-              : IntervalPaceFormat.display(fastest.paceSecondsPerKm),
+              : IntervalPaceFormat.display(
+                  fastest.paceSecondsPerKm,
+                  suffix: IntervalPaceUnit.suffix(data.paceUnit),
+                ),
           deltaLabel:
               fastest != null && previousFastest?.paceSecondsPerKm != null
               ? _paceDelta(

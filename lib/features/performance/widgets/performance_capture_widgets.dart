@@ -638,6 +638,7 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
     return switch (row.state) {
       IntervalWorkState.completed => IntervalPaceFormat.display(
         row.paceSecondsPerKm,
+        suffix: IntervalPaceUnit.suffix(row.paceUnit),
       ),
       IntervalWorkState.paceUnavailable => 'Pace unavailable',
       IntervalWorkState.skipped => 'Skipped',
@@ -712,6 +713,8 @@ class _IntervalWorkRowState extends State<_IntervalWorkRow> {
               IntervalPaceField(
                 key: _paceKey,
                 secondsPerKm: row.paceSecondsPerKm,
+                suffix: IntervalPaceUnit.suffix(row.paceUnit),
+                label: 'Pace (MM:SS ${IntervalPaceUnit.suffix(row.paceUnit)})',
                 enabled:
                     row.state != IntervalWorkState.paceUnavailable &&
                     row.state != IntervalWorkState.skipped,

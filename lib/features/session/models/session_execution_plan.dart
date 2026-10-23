@@ -1,3 +1,4 @@
+import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/exercise.dart';
 import '../../../models/protocol.dart';
@@ -51,6 +52,7 @@ class SessionExecutionBlock {
     required this.content,
     required this.workoutFormat,
     required this.position,
+    this.boundTarget,
     this.timerConfiguration,
     this.timerSummary,
     this.linkedExercises = const [],
@@ -64,6 +66,7 @@ class SessionExecutionBlock {
   final String content;
   final WorkoutFormat workoutFormat;
   final int position;
+  final ProgrammeTarget? boundTarget;
   final TimerConfiguration? timerConfiguration;
   final String? timerSummary;
   final List<SessionExecutionExerciseSummary> linkedExercises;
@@ -158,6 +161,7 @@ class SessionExecutionPlan {
     this.coachNotes,
     this.programmeContextLabel,
     this.prescriptionLoadOverrides = const {},
+    this.boundPrescriptionSnapshot,
   });
 
   final String sessionId;
@@ -168,6 +172,7 @@ class SessionExecutionPlan {
   final String? coachNotes;
   final String? programmeContextLabel;
   final Map<String, String> prescriptionLoadOverrides;
+  final Map<String, dynamic>? boundPrescriptionSnapshot;
 
   bool get hasExecutableBlocks =>
       blocks.any((block) => block.hasAthleteVisibleContent);

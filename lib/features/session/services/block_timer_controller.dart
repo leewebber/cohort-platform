@@ -79,9 +79,11 @@ class BlockTimerController {
     required this.configuration,
     required this.onStateChanged,
     this.stationLabels = const {},
+    this.omitFinalRecovery = false,
   });
 
   final WorkoutFormat format;
+  final bool omitFinalRecovery;
   final TimerConfiguration configuration;
   final void Function(BlockTimerState state) onStateChanged;
   final Map<String, String> stationLabels;
@@ -417,6 +419,10 @@ class BlockTimerController {
         return;
       }
       if (current.phase == BlockTimerPhase.work) {
+        if (omitFinalRecovery && current.currentRound == current.totalRounds) {
+          _finish(current);
+          return;
+        }
         _state = current.copyWith(
           phase: BlockTimerPhase.rest,
           primarySeconds:

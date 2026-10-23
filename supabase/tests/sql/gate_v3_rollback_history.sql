@@ -43,7 +43,7 @@ BEGIN
    'logical_completion_key',o.programmed_session_key,'idempotency_key',gen_random_uuid(),'actuals_fingerprint',repeat('a',64),
    'protocol_id',o.protocol_id,'expected_week',1,'expected_day_key','day_1','expected_slot_order',1,
    'training_session_id',(original->>'training_session_id')::bigint,'record_id',record_id,'status','completed',
-   'completion_record',jsonb_build_object('record_id',record_id,'source_protocol_id',o.protocol_id,'session_snapshot','{}'::jsonb)));
+   'completion_record',jsonb_build_object('record_id',record_id,'source_protocol_id',o.protocol_id,'programme_id',o.programme_version_id,'session_snapshot',jsonb_build_object('boundPrescriptionV1',original))));
  PERFORM public.v3_gate_assert(r->>'status'='committed','existing canonical completion remains functional');
  PERFORM public.v3_gate_assert((SELECT snapshot FROM public.programme_occurrence_v3_prescription_snapshots WHERE occurrence_id=occurrence)=original,'completion never rewrites prescription');
  r:=public.create_or_resume_fixed_programme_occurrence_session(occurrence,consent);

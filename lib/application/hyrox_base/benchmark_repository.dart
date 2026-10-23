@@ -6,8 +6,9 @@ import '../../domain/hyrox_base/base_personalisation.dart';
 typedef BaseBenchmarkRpc =
     Future<Object?> Function(String name, Map<String, Object?> parameters);
 
-/// Deliberately not wired into a programme launcher. Preview selection is not
-/// programme consent, and this repository cannot admit v3 or start a session.
+/// Declared benchmark entry shared by independent previews and programme review.
+/// Preview selection is not programme consent; programme review deliberately
+/// names retained revisions. This repository cannot admit v3 or start a session.
 class BaseBenchmarkRepository {
   BaseBenchmarkRepository({BaseBenchmarkRpc? rpc}) : _rpc = rpc ?? _supabase;
 

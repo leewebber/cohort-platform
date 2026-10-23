@@ -76,9 +76,9 @@ class IntervalPaceFormat {
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 
-  static String display(double? secondsPerKm) {
+  static String display(double? secondsPerKm, {String suffix = '/km'}) {
     final formatted = formatSecondsPerKm(secondsPerKm);
-    return formatted.isEmpty ? '' : '$formatted /km';
+    return formatted.isEmpty ? '' : '$formatted $suffix';
   }
 
   static double? parse(String raw) {

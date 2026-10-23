@@ -16,6 +16,20 @@ class ProgrammePrescriptionRepository {
   static Future<Object?> _supabase(String name, Map<String, Object?> params) =>
       SupabaseService.client.rpc(name, params: params);
 
+  Future<Map<String, Object?>> readState({
+    required String assignmentId,
+    required String programmeVersionId,
+  }) async {
+    final result = await _rpc('read_hyrox_programme_prescription_state', {
+      'p_assignment_id': assignmentId,
+      'p_programme_version_id': programmeVersionId,
+    });
+    if (result is! Map || result['status'] != 'read') {
+      throw StateError('Programme targets are unavailable.');
+    }
+    return Map<String, Object?>.from(result);
+  }
+
   Future<Map<String, Object?>> review({
     required String assignmentId,
     required String programmeVersionId,

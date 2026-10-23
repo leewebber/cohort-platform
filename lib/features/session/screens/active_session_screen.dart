@@ -120,7 +120,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     WidgetsBinding.instance.addObserver(this);
     _persistDraft();
     _loadPreviousStrength();
-    final restoredDraft = widget.openRestoredTimer ||
+    final restoredDraft =
+        widget.openRestoredTimer ||
         _performanceController.draft.blockDrafts.any(
           (block) => block.exerciseResults.any(
             (exercise) => exercise.sets.any(
@@ -139,7 +140,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     if (widget.openRestoredTimer) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        final block = _controller.state.activeBlock ??
+        final block =
+            _controller.state.activeBlock ??
             _controller.state.plan.blocks.firstOrNull;
         if (block != null && block.hasTimer) {
           unawaited(_launchTimer(block));
@@ -286,7 +288,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
         assignmentId: programmeContext.assignmentId,
         trainingSessionId: trainingSessionId,
         occurrenceId: programmeContext.occurrenceId,
-        activeBlockId: state.activeBlock?.blockId ??
+        activeBlockId:
+            state.activeBlock?.blockId ??
             _performanceController.draft.activeBlockId,
         activeBlockIndex: state.activeBlockIndex,
         expandedBlockIds: state.expandedBlockIds,
@@ -457,7 +460,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
     };
     final draft = _blockDraft(block.blockId);
     final existing = draft?.resultData;
-    final initialState = widget.restoredTimerOverride ??
+    final initialState =
+        widget.restoredTimerOverride ??
         CircuitBlockTimerBridge.restoredState(
           block: block,
           result: existing,
@@ -469,6 +473,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
           blockTitle: block.title,
           format: block.workoutFormat,
           configuration: block.timerConfiguration!,
+          boundTarget: block.boundTarget,
           stationLabels: labels,
           prescriptionLines: block.content
               .split('\n')
@@ -511,7 +516,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
       _performanceController.updateBlockResultData(
         block.blockId,
         latest.copyWith(
-          workSeconds: state.primarySeconds,
+          timerCursor: CircuitBlockTimerBridge.cursorFrom(state),
+          workSeconds: block.timerConfiguration?.workSeconds,
           intervalsCompleted: (state.currentRound - 1).clamp(0, 999),
           entered: true,
         ),
@@ -754,8 +760,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                           ? _blockDraft(block.blockId)
                           : null;
                       final isEmom = block.workoutFormat == WorkoutFormat.emom;
-                      final emomResult = blockDraft?.resultData
-                              is CircuitResultData
+                      final emomResult =
+                          blockDraft?.resultData is CircuitResultData
                           ? blockDraft!.resultData as CircuitResultData
                           : null;
                       final timerStarted = emomResult?.usedInAppTimer == true;
@@ -781,8 +787,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                         isActive: isActive,
                         isComplete: state.isBlockComplete(block.blockId),
                         stackActions: isEmom,
-                        timerActionLabel:
-                            restoredTimer != null ? 'Resume' : 'Start timer',
+                        timerActionLabel: restoredTimer != null
+                            ? 'Resume'
+                            : 'Start timer',
                         completeActionLabel: isEmom
                             ? (timerStarted
                                   ? 'End and record result'
@@ -852,11 +859,11 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen>
                                   if (current is ForTimeResultData) {
                                     _performanceController
                                         .updateBlockResultData(
-                                      block.blockId,
-                                      current.copyWith(
-                                        elapsedSeconds: seconds,
-                                      ),
-                                    );
+                                          block.blockId,
+                                          current.copyWith(
+                                            elapsedSeconds: seconds,
+                                          ),
+                                        );
                                     _persistDraft();
                                     _refresh();
                                   }

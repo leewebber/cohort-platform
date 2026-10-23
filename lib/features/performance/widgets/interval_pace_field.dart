@@ -37,6 +37,7 @@ class IntervalPaceField extends StatefulWidget {
     required this.onChanged,
     this.enabled = true,
     this.label = 'Pace (MM:SS /km)',
+    this.suffix = '/km',
     this.autofocus = false,
     this.textInputAction = TextInputAction.next,
     this.errorText,
@@ -48,6 +49,7 @@ class IntervalPaceField extends StatefulWidget {
   final ValueChanged<double?> onChanged;
   final bool enabled;
   final String label;
+  final String suffix;
   final bool autofocus;
   final TextInputAction textInputAction;
   final String? errorText;
@@ -139,14 +141,12 @@ class IntervalPaceFieldState extends State<IntervalPaceField> {
       autofocus: widget.autofocus,
       textInputAction: widget.textInputAction,
       keyboardType: TextInputType.number,
-      inputFormatters: const [
-        IntervalPaceInputFormatter(),
-      ],
+      inputFormatters: const [IntervalPaceInputFormatter()],
       decoration: InputDecoration(
         labelText: widget.label,
         hintText: '410',
-        helperText: IntervalPaceFormat.helperCopy,
-        suffixText: '/km',
+        helperText: 'Type 410 for 4:10 ${widget.suffix}',
+        suffixText: widget.suffix,
         errorText: widget.errorText ?? _draftError,
       ),
       onChanged: _syncDraft,

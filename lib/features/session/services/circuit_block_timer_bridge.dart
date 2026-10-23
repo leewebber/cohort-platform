@@ -25,6 +25,33 @@ class CircuitBlockTimerBridge {
       );
     }
     if (result is IntervalResultData) {
+      if (result.timerCursor != null) {
+        final cursor = result.timerCursor!;
+        if (block.boundTarget != null) {
+          final rounds = configuration.rounds ?? 0;
+          final phaseSeconds = cursor.phase == 'work'
+              ? configuration.workSeconds
+              : cursor.phase == 'rest'
+              ? configuration.restSeconds
+              : null;
+          if (cursor.currentRound < 1 ||
+              cursor.currentRound > rounds ||
+              phaseSeconds == null ||
+              cursor.remainingSeconds < 0 ||
+              cursor.remainingSeconds > phaseSeconds ||
+              (cursor.phase == 'rest' && cursor.currentRound == rounds)) {
+            throw const FormatException(
+              'The saved interval position does not match this started prescription.',
+            );
+          }
+        }
+        return stateFrom(
+          cursor: result.timerCursor!,
+          format: block.workoutFormat,
+          configuration: configuration,
+          stationLabels: stationLabels,
+        );
+      }
       final next = (result.intervalsCompleted + 1).clamp(
         1,
         result.totalIntervals ?? configuration.rounds ?? 1,
@@ -35,8 +62,7 @@ class CircuitBlockTimerBridge {
         isRunning: false,
         isPaused: true,
         isFinished: false,
-        primarySeconds:
-            result.workSeconds ?? configuration.workSeconds ?? 40,
+        primarySeconds: result.workSeconds ?? configuration.workSeconds ?? 40,
         currentRound: next,
         totalRounds: result.totalIntervals ?? configuration.rounds ?? 1,
         phaseLabel: 'Work',
@@ -89,7 +115,8 @@ class CircuitBlockTimerBridge {
     required TimerConfiguration configuration,
     Map<String, String> stationLabels = const {},
   }) {
-    final phase = BlockTimerPhase.values.asNameMap()[cursor.phase] ??
+    final phase =
+        BlockTimerPhase.values.asNameMap()[cursor.phase] ??
         BlockTimerPhase.work;
     final occurrence = format == WorkoutFormat.emom
         ? cursor.currentRound

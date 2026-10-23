@@ -33,8 +33,8 @@ class AuthoredProgrammeSlotResolution {
 /// Does not advance the cursor, fall back to latest, or invent a different slot.
 class AthleteProgrammeAuthoredSlotResolver {
   const AthleteProgrammeAuthoredSlotResolver({
-    required ProgrammeVersionStore versionStore,
-  }) : _versionStore = versionStore;
+    required this._versionStore,
+  });
 
   final ProgrammeVersionStore _versionStore;
 
@@ -161,6 +161,9 @@ class AthleteProgrammeAuthoredSlotResolver {
       effectiveProtocolId: protocolId,
       lineageCode: assignment.lineageCode,
       programmeName: version.name,
+      programmeVersionNumber: version.versionNumber,
+      packageSchemaVersion: version.packageSchemaVersion,
+      packageSlotKey: slot.packageSlotKey,
       packageContentHash: materialisedHash,
       programmedSessionKey: key.value,
     );

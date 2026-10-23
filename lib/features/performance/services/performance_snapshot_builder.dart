@@ -1,3 +1,4 @@
+import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../core/utils/database_uuid.dart';
 import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/session_block_type.dart';
@@ -41,6 +42,9 @@ class PerformanceSnapshotBuilder {
     String? coachDisplayName,
   }) {
     return SessionPerformanceSnapshot(
+      boundPrescription: plan.boundPrescriptionSnapshot == null
+          ? null
+          : ProgrammePrescription(plan.boundPrescriptionSnapshot!),
       sourceProtocolId: plan.sessionId,
       sessionTitle: plan.sessionTitle,
       sessionDescription: plan.coachNotes,
@@ -56,9 +60,7 @@ class PerformanceSnapshotBuilder {
       programmeSessionId: programmeContext?.sessionSlotId,
       lineageCode: programmeContext?.lineageCode,
       blocks: plan.blocks
-          .map(
-            (block) => _blockSnapshot(block),
-          )
+          .map((block) => _blockSnapshot(block))
           .toList(growable: false),
     );
   }

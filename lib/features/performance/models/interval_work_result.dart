@@ -66,7 +66,9 @@ class IntervalWorkResult {
 
   double? get impliedDistanceKm {
     if (!hasValidPace) return null;
-    return workSeconds / paceSecondsPerKm!;
+    return workSeconds /
+        paceSecondsPerKm! *
+        (paceUnit == IntervalPaceUnit.secondsPer500m ? 0.5 : 1);
   }
 
   IntervalWorkResult copyWith({
@@ -146,12 +148,16 @@ class IntervalPaceUnit {
   const IntervalPaceUnit._();
 
   static const secondsPerKm = 'sec_per_km';
+  static const secondsPer500m = 'sec_per_500m';
+  static String suffix(String? unit) =>
+      unit == secondsPer500m ? '/500 m' : '/km';
 
   static bool isSupported(String? unit) {
     final trimmed = unit?.trim();
     return trimmed == null ||
         trimmed.isEmpty ||
         trimmed == secondsPerKm ||
+        trimmed == secondsPer500m ||
         trimmed == 's/km' ||
         trimmed == 'sec/km';
   }

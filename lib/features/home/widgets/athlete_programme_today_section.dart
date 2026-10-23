@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../programme/screens/programme_prescription_review_screen.dart';
 
 import '../../../application/adaptation/programme_adaptation_acceptance_service.dart';
 import '../../../application/adaptation/programme_adaptation_reversion_service.dart';
@@ -188,6 +189,7 @@ class _AthleteProgrammeTodaySectionState
   }
 
   bool get _canAdapt {
+    if (_result?.executionContext?.packageSchemaVersion == 3) return false;
     final package = _result?.package;
     if (_result == null || !_result!.isReady || package == null) return false;
     if (_opening || _adapting || _reverting) return false;
@@ -389,7 +391,8 @@ class _AthleteProgrammeTodaySectionState
     final package = result.package!;
     final ctx = result.executionContext;
     final fixedOccurrence = widget.fixedOccurrence;
-    final dateLabel = widget.dateLabel ??
+    final dateLabel =
+        widget.dateLabel ??
         (fixedOccurrence == null
             ? null
             : AthleteHomeTodayFormatter.fullDate(
@@ -429,7 +432,9 @@ class _AthleteProgrammeTodaySectionState
           primaryBusy: _opening,
           onPrimary: _opening || _adapting || _reverting ? null : _open,
           onViewFullSession: widget.onViewFullSession,
-          adaptLabel: _canAdapt || _adapting ? (_adapting ? 'Preparing…' : 'Adapt Session') : null,
+          adaptLabel: _canAdapt || _adapting
+              ? (_adapting ? 'Preparing…' : 'Adapt Session')
+              : null,
           onAdapt: _adapt,
           adaptEnabled: _canAdapt && !_adapting,
           revertLabel: _canRevert || _reverting
@@ -437,6 +442,21 @@ class _AthleteProgrammeTodaySectionState
               : null,
           onRevert: _canRevert ? _revert : null,
         ),
+        if (ctx?.packageSchemaVersion == 3)
+          TextButton(
+            onPressed: _opening
+                ? null
+                : () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => ProgrammePrescriptionReviewScreen(
+                        athleteId: widget.athleteId,
+                        executionContext: ctx!,
+                        plan: package.plan,
+                      ),
+                    ),
+                  ),
+            child: const Text('Review or withdraw programme targets'),
+          ),
         if (_openError != null) ...[
           const SizedBox(height: CohortSpacing.sm),
           Text(_openError!, style: CohortTextStyles.body),

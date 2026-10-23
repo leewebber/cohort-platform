@@ -1,3 +1,4 @@
+import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
 import '../../../models/workout_format.dart';
@@ -344,6 +345,7 @@ class SessionPerformanceSnapshot {
     this.programmeSessionId,
     this.lineageCode,
     this.blocks = const [],
+    this.boundPrescription,
   });
 
   final String sourceProtocolId;
@@ -357,6 +359,7 @@ class SessionPerformanceSnapshot {
   final String? programmeSessionId;
   final String? lineageCode;
   final List<BlockPerformanceSnapshot> blocks;
+  final ProgrammePrescription? boundPrescription;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
@@ -372,11 +375,18 @@ class SessionPerformanceSnapshot {
     if (programmeSessionId != null) 'programmeSessionId': programmeSessionId,
     if (lineageCode != null) 'lineageCode': lineageCode,
     'blocks': blocks.map((b) => b.toJson()).toList(),
+    if (boundPrescription != null)
+      'boundPrescriptionV1': boundPrescription!.json,
   };
 
   factory SessionPerformanceSnapshot.fromJson(Map<String, dynamic> json) {
     final blocksJson = json['blocks'];
     return SessionPerformanceSnapshot(
+      boundPrescription: json.containsKey('boundPrescriptionV1')
+          ? ProgrammePrescription(
+              Map<String, dynamic>.from(json['boundPrescriptionV1'] as Map),
+            )
+          : null,
       sourceProtocolId: json['sourceProtocolId']?.toString() ?? '',
       sessionTitle: json['sessionTitle']?.toString() ?? '',
       sessionDescription: _trim(json['sessionDescription']),

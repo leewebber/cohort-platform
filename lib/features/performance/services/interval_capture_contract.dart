@@ -28,6 +28,10 @@ class IntervalCaptureContract {
   }
 
   static bool requiresPerIntervalRows(SessionExecutionBlock block) {
+    if (block.boundTarget != null && block.boundTarget!.kind != 'backSquat')
+    {
+      return true;
+    }
     return tracksPerIntervalPace(
       workoutFormat: block.workoutFormat,
       timer: block.timerConfiguration,
@@ -68,11 +72,14 @@ class IntervalCaptureContract {
   static IntervalResultData authoredResult(SessionExecutionBlock block) {
     final rounds = prescribedRounds(block);
     final work = workSeconds(block);
-    final unit = IntervalPaceUnit.secondsPerKm;
+    final unit = block.boundTarget?.isRow == true
+        ? IntervalPaceUnit.secondsPer500m
+        : IntervalPaceUnit.secondsPerKm;
     final family = comparisonFamily(
       workoutFormat: block.workoutFormat,
       workSeconds: work,
       paceUnit: unit,
+      modality: block.boundTarget?.isRow == true ? 'row' : 'run',
     );
     if (!requiresPerIntervalRows(block) ||
         rounds == null ||

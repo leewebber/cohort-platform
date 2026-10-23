@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../programme/widgets/programme_prescription_summary.dart';
 
 import '../../../application/athlete_workout/athlete_workout_completion_application_service.dart';
 import '../../../application/athlete_workout/home_workout_execution_context.dart';
@@ -272,6 +273,9 @@ class _SessionFinishReviewScreenState extends State<SessionFinishReviewScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Review Session', style: CohortTextStyles.h1),
+              if (draft.sessionSnapshot.boundPrescription
+                  case final prescription?)
+                ProgrammePrescriptionSummary(prescription: prescription),
               JourneyAnnouncement(
                 message: switch (_saveState) {
                   PerformanceSaveState.completing =>

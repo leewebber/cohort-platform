@@ -140,6 +140,10 @@ class AthleteBlockCard extends StatelessWidget {
             ),
             if (isExpanded) ...[
               const SizedBox(height: CohortSpacing.md),
+              if (block.boundTarget case final target?) ...[
+                Text(target.dose),
+                Text('Prescribed · ${target.targetLabel}'),
+              ],
               if (!isFixedWork) WorkoutContentText(content: block.content),
               if (block.timerSummary != null && !isFixedWork) ...[
                 const SizedBox(height: CohortSpacing.sm),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../domain/hyrox_base/programme_prescription.dart';
+import '../../../application/hyrox_base/programme_prescription_repository.dart';
+import '../../programme/screens/programme_prescription_review_screen.dart';
+import '../models/bound_programme_execution.dart';
 
 import '../../../models/block_performance_capture_mode.dart';
 import '../../../models/training_session.dart';
@@ -17,6 +21,7 @@ import 'production_recovery_session_policy.dart';
 import 'session_execution_launcher.dart';
 
 enum ProgrammeSessionExecutionFailureCode {
+  prescriptionConsentRequired,
   invalidPreparedIdentity,
   missingPreparedProvenance,
   missingExecutionProvenance,
@@ -79,11 +84,14 @@ class ProgrammeSessionExecutionLauncher {
   ProgrammeSessionExecutionLauncher({
     ProgrammeTrainingSessionStartStore? startStore,
     SessionExecutionLauncher? sessionExecutionLauncher,
-  }) : _startStore =
+    ProgrammePrescriptionRepository? prescriptions,
+  }) : _prescriptions = prescriptions ?? ProgrammePrescriptionRepository(),
+       _startStore =
            startStore ?? const ProgrammeTrainingSessionStartSupabaseStore(),
        _sessionExecution =
            sessionExecutionLauncher ?? SessionExecutionLauncher();
 
+  final ProgrammePrescriptionRepository _prescriptions;
   final ProgrammeTrainingSessionStartStore _startStore;
   final SessionExecutionLauncher _sessionExecution;
 
@@ -95,14 +103,15 @@ class ProgrammeSessionExecutionLauncher {
     required AthleteProgrammePrepareResult prepared,
   }) async {
     final package = prepared.package;
-    final programmeContext = prepared.executionContext;
-    if (package == null || programmeContext == null || !prepared.isReady) {
+    final preparedContext = prepared.executionContext;
+    if (package == null || preparedContext == null || !prepared.isReady) {
       throw const ProgrammeSessionExecutionException(
         ProgrammeSessionExecutionFailureCode.invalidPreparedIdentity,
         'The prepared programme session is incomplete.',
       );
     }
 
+    ProgrammeExecutionContext programmeContext = preparedContext;
     _validateRecoveryTreatment(package.plan);
     _validatePreparedIdentity(
       athleteId: athleteId,
@@ -111,11 +120,92 @@ class ProgrammeSessionExecutionLauncher {
     );
     _validateSupportedPlan(package.plan);
 
-    final launchResult = await createOrResumeLaunchResult(
-      athleteId: athleteId,
-      programmeContext: programmeContext,
-      package: package,
-    );
+    ProgrammeTrainingSessionLaunchResult launchResult;
+    try {
+      launchResult = await createOrResumeLaunchResult(
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+        package: package,
+      );
+    } on ProgrammeSessionExecutionException catch (error) {
+      if (programmeContext.packageSchemaVersion != 3 ||
+          error.code !=
+              ProgrammeSessionExecutionFailureCode
+                  .prescriptionConsentRequired) {
+        rethrow;
+      }
+      if (!context.mounted) return;
+      final state = await _prescriptions.readState(
+        assignmentId: programmeContext.assignmentId,
+        programmeVersionId: programmeContext.programmeVersionId,
+      );
+      final head = state['consent'];
+      final document = state['accepted_document'];
+      String? existingToken;
+      if (head is Map && head['disposition'] == 'accepted' && document is Map) {
+        bindProgrammePrescription(
+          plan: package.plan,
+          prescription: ProgrammePrescription(
+            Map<String, dynamic>.from(document),
+          ),
+          protocolId: programmeContext.effectiveProtocolId,
+          slotKey: programmeContext.packageSlotKey ?? '',
+        );
+        existingToken = head['consent_id'] as String;
+      }
+      ProgrammeTrainingSessionLaunchResult? acceptedStart;
+      if (existingToken != null) {
+        try {
+          programmeContext = programmeContext.copyWith(
+            boundConsentId: existingToken,
+          );
+          acceptedStart = await createOrResumeLaunchResult(
+            athleteId: athleteId,
+            programmeContext: programmeContext,
+            package: package,
+          );
+        } on ProgrammeSessionExecutionException catch (error) {
+          if (error.code !=
+              ProgrammeSessionExecutionFailureCode
+                  .prescriptionConsentRequired) {
+            rethrow;
+          }
+        }
+      }
+      if (acceptedStart != null) {
+        launchResult = acceptedStart;
+      } else {
+        if (!context.mounted) return;
+        final token = await Navigator.of(context).push<String>(
+          MaterialPageRoute(
+            builder: (_) => ProgrammePrescriptionReviewScreen(
+              athleteId: athleteId,
+              executionContext: programmeContext,
+              plan: package.plan,
+              forLaunch: true,
+            ),
+          ),
+        );
+        if (token == null || !context.mounted) return;
+        programmeContext = programmeContext.copyWith(boundConsentId: token);
+        launchResult = await createOrResumeLaunchResult(
+          athleteId: athleteId,
+          programmeContext: programmeContext,
+          package: package,
+        );
+      }
+    }
+    var executablePlan = package.plan;
+    final bound = launchResult.boundPrescriptionSnapshot;
+    if (bound != null) {
+      executablePlan = bindProgrammePrescription(
+        plan: package.plan,
+        prescription: ProgrammePrescription(bound),
+        protocolId: programmeContext.effectiveProtocolId,
+        slotKey: programmeContext.packageSlotKey ?? '',
+      );
+    }
+
     final trainingSession = launchResult.trainingSession;
     VerifiedStructuredRunningExecution? structuredRunningExecution;
     if (launchResult.isStructuredRunningReady) {
@@ -138,7 +228,7 @@ class ProgrammeSessionExecutionLauncher {
     try {
       await _sessionExecution.launchActiveSessionWithPlan(
         context: context,
-        plan: package.plan,
+        plan: executablePlan,
         protocolId: programmeContext.effectiveProtocolId,
         trainingSessionId: trainingSession.id,
         athleteId: athleteId,
@@ -177,6 +267,15 @@ class ProgrammeSessionExecutionLauncher {
       package: package,
       programmeContext: programmeContext,
     );
+    if (programmeContext.packageSchemaVersion == 3 &&
+        (package.hasAcceptedAdaptation ||
+            programmeContext.packageSlotKey == null ||
+            programmeContext.occurrenceId == null)) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
+        'This programme requires its exact supported authored session. Re-prepare the original session.',
+      );
+    }
     final runningAuthority = _runningAuthority(package);
     if (runningAuthority?.isAttachedForExecution == true) {
       _validateRunningExecutionMapping(
@@ -238,7 +337,17 @@ class ProgrammeSessionExecutionLauncher {
         runningAuthority: runningAuthority,
       );
       final bound = response['bound_prescription_snapshot'];
-      if (programmeContext.boundConsentId != null && bound is! Map) {
+      if (programmeContext.packageSchemaVersion != null &&
+          programmeContext.packageSchemaVersion != 3 &&
+          bound != null) {
+        throw const ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+          'Unexpected programme targets. Reopen your authored session.',
+        );
+      }
+      if ((programmeContext.boundConsentId != null ||
+              programmeContext.packageSchemaVersion == 3) &&
+          bound is! Map) {
         throw const ProgrammeSessionExecutionException(
           ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
           'The bound prescription snapshot is missing.',
@@ -278,6 +387,17 @@ class ProgrammeSessionExecutionLauncher {
       );
     }
 
+    if (programmeContext.packageSchemaVersion == 3 &&
+        {
+          'missing_stale_or_withdrawn_consent',
+          'stale_review_or_benchmark',
+          'stale_benchmark_revision',
+        }.contains(response['reason'])) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.prescriptionConsentRequired,
+        'Review and accept programme targets before a new start.',
+      );
+    }
     _throwStartFailure(response);
   }
 

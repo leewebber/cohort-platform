@@ -21,6 +21,9 @@ class ProgrammeExecutionContext {
     this.programmedSessionKey,
     this.occurrenceId,
     this.boundConsentId,
+    this.packageSchemaVersion,
+    this.programmeVersionNumber,
+    this.packageSlotKey,
   });
 
   final String assignmentId;
@@ -45,6 +48,9 @@ class ProgrammeExecutionContext {
 
   /// Exact accepted server review token; absent v3 first starts refuse.
   final String? boundConsentId;
+  final int? packageSchemaVersion;
+  final int? programmeVersionNumber;
+  final String? packageSlotKey;
 
   bool get isProgrammeBacked =>
       assignmentId.isNotEmpty && sessionSlotId.isNotEmpty;
@@ -110,6 +116,7 @@ class ProgrammeExecutionContext {
     String? packageContentHash,
     String? programmedSessionKey,
     String? occurrenceId,
+    String? boundConsentId,
   }) {
     return ProgrammeExecutionContext(
       assignmentId: assignmentId,
@@ -125,6 +132,10 @@ class ProgrammeExecutionContext {
       packageContentHash: packageContentHash ?? this.packageContentHash,
       programmedSessionKey: programmedSessionKey ?? this.programmedSessionKey,
       occurrenceId: occurrenceId ?? this.occurrenceId,
+      boundConsentId: boundConsentId ?? this.boundConsentId,
+      packageSchemaVersion: packageSchemaVersion,
+      programmeVersionNumber: programmeVersionNumber,
+      packageSlotKey: packageSlotKey,
     );
   }
 }

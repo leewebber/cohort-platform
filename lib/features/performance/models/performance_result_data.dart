@@ -214,6 +214,7 @@ class IntervalResultData extends PerformanceResultData {
     this.distanceUnit,
     this.entered = false,
     this.note,
+    this.timerCursor,
     this.workSeconds,
     this.paceUnit = IntervalPaceUnit.secondsPerKm,
     this.comparisonFamily,
@@ -226,6 +227,7 @@ class IntervalResultData extends PerformanceResultData {
   final String? distanceUnit;
   final bool entered;
   final String? note;
+  final CircuitTimerCursor? timerCursor;
   final int? workSeconds;
   final String paceUnit;
   final String? comparisonFamily;
@@ -249,6 +251,7 @@ class IntervalResultData extends PerformanceResultData {
   @override
   Map<String, dynamic> toJson() => {
     'resultType': resultType.dbValue,
+    if (timerCursor != null) 'timerCursor': timerCursor!.toJson(),
     'intervalsCompleted': recordedCount,
     if (totalIntervals != null) 'totalIntervals': totalIntervals,
     if (totalDistance != null) 'totalDistance': totalDistance,
@@ -277,6 +280,11 @@ class IntervalResultData extends PerformanceResultData {
         : const <IntervalWorkResult>[];
     return IntervalResultData(
       intervalsCompleted: _int(json['intervalsCompleted']),
+      timerCursor: json['timerCursor'] is Map
+          ? CircuitTimerCursor.fromJson(
+              Map<String, dynamic>.from(json['timerCursor'] as Map),
+            )
+          : null,
       totalIntervals: _nullableInt(json['totalIntervals']),
       totalDistance: _nullableDouble(json['totalDistance']),
       distanceUnit: _trim(json['distanceUnit']),
@@ -296,6 +304,7 @@ class IntervalResultData extends PerformanceResultData {
     String? distanceUnit,
     bool? entered,
     String? note,
+    CircuitTimerCursor? timerCursor,
     int? workSeconds,
     String? paceUnit,
     String? comparisonFamily,
@@ -316,6 +325,7 @@ class IntervalResultData extends PerformanceResultData {
               ? true
               : this.entered),
       note: note ?? this.note,
+      timerCursor: timerCursor ?? this.timerCursor,
       workSeconds: workSeconds ?? this.workSeconds,
       paceUnit: paceUnit ?? this.paceUnit,
       comparisonFamily: comparisonFamily ?? this.comparisonFamily,
@@ -575,8 +585,7 @@ class CircuitResultData extends PerformanceResultData {
   final bool? prescribedTargetsUsed;
   final bool scoreEntered;
 
-  bool get isFixedWork =>
-      captureStrategy == CircuitCaptureStrategy.fixedWork;
+  bool get isFixedWork => captureStrategy == CircuitCaptureStrategy.fixedWork;
 
   /// One timed EMOM minute is one canonical [completedRounds] unit.
   bool get isEmomScore => format == 'emom' && !isFixedWork;
@@ -622,19 +631,17 @@ class CircuitResultData extends PerformanceResultData {
     }
     var complete = 0;
     for (final entries in byRound.values) {
-      if (entries.isNotEmpty &&
-          entries.every((row) => row.hasRecordedActual)) {
+      if (entries.isNotEmpty && entries.every((row) => row.hasRecordedActual)) {
         complete += 1;
       }
     }
     return complete;
   }
 
-  List<int> get completedRoundSeconds =>
-      rounds
-          .where((round) => round.isCompleted)
-          .map((round) => round.elapsedSeconds!)
-          .toList(growable: false);
+  List<int> get completedRoundSeconds => rounds
+      .where((round) => round.isCompleted)
+      .map((round) => round.elapsedSeconds!)
+      .toList(growable: false);
 
   int? get totalWorkSeconds {
     final times = completedRoundSeconds;
@@ -667,8 +674,7 @@ class CircuitResultData extends PerformanceResultData {
     'stations': stations.map((row) => row.toJson()).toList(),
     if (sharedSetup.isNotEmpty)
       'sharedSetup': sharedSetup.map((row) => row.toJson()).toList(),
-    if (rounds.isNotEmpty)
-      'rounds': rounds.map((row) => row.toJson()).toList(),
+    if (rounds.isNotEmpty) 'rounds': rounds.map((row) => row.toJson()).toList(),
     if (targetRounds != null) 'targetRounds': targetRounds,
     if (intervalSeconds != null) 'intervalSeconds': intervalSeconds,
     if (restBetweenRoundsSeconds != null)

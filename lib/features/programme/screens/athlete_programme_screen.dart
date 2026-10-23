@@ -36,6 +36,8 @@ import '../widgets/fixed_programme_week_view.dart';
 import 'athlete_programme_schedule_screen.dart';
 import 'athlete_programme_selection_screen.dart';
 import 'scheduled_programme_session_preview_screen.dart';
+import 'programme_prescription_review_screen.dart';
+import '../models/programme_execution_context.dart';
 
 /// Athlete-facing programme overview — enrolment, Start Programme, prepare handoff.
 class AthleteProgrammeScreen extends StatefulWidget {
@@ -222,8 +224,9 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
         setState(() {
           _fixedCalendar = null;
           _fixedCalendarLoading = false;
-          _fixedCalendarError =
-              AthleteProgrammeContinuityCopy.failureMessage(error);
+          _fixedCalendarError = AthleteProgrammeContinuityCopy.failureMessage(
+            error,
+          );
         });
       }
     }
@@ -393,6 +396,14 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                     _isCompletedProjection
                         ? _buildCompletedProgrammeCard()
                         : _buildCurrentProgrammeCard(),
+                    if (_controller.activeVersion?.packageSchemaVersion == 3 &&
+                        _controller.currentAssignment != null)
+                      TextButton(
+                        onPressed: _openProgrammeTargets,
+                        child: const Text(
+                          'Review or withdraw programme targets',
+                        ),
+                      ),
                     const SizedBox(height: CohortSpacing.lg),
                     AthletePrivateProgrammesSection(
                       discoveryStore:
@@ -408,6 +419,33 @@ class _AthleteProgrammeScreenState extends State<AthleteProgrammeScreen> {
                   ],
                 ),
               ),
+      ),
+    );
+  }
+
+  Future<void> _openProgrammeTargets() async {
+    final assignment = _controller.currentAssignment;
+    final version = _controller.activeVersion;
+    if (assignment == null || version == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ProgrammePrescriptionReviewScreen(
+          athleteId: widget.athleteId,
+          executionContext: ProgrammeExecutionContext(
+            assignmentId: assignment.id,
+            programmeVersionId: version.id,
+            sessionSlotId: '',
+            weekNumber: assignment.currentWeek,
+            dayKey: assignment.currentDayKey,
+            sessionOrder: assignment.currentSessionOrder,
+            plannedProtocolId: '',
+            effectiveProtocolId: '',
+            programmeName: version.name,
+            programmeVersionNumber: version.versionNumber,
+            packageSchemaVersion: version.packageSchemaVersion,
+            packageContentHash: assignment.materialisedPackageContentHash,
+          ),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../domain/hyrox_base/programme_prescription.dart';
 
 import '../../../core/accessibility/journey_interaction.dart';
 import '../../../core/theme/colors.dart';
@@ -18,6 +19,7 @@ class BlockTimerScreen extends StatefulWidget {
     required this.format,
     required this.configuration,
     this.initialState,
+    this.boundTarget,
     this.stationLabels = const {},
     this.prescriptionLines = const [],
     this.restoredWorkNote,
@@ -28,6 +30,7 @@ class BlockTimerScreen extends StatefulWidget {
   final WorkoutFormat format;
   final TimerConfiguration configuration;
   final BlockTimerState? initialState;
+  final ProgrammeTarget? boundTarget;
   final Map<String, String> stationLabels;
   final List<String> prescriptionLines;
   final String? restoredWorkNote;
@@ -48,6 +51,7 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
     super.initState();
     _controller = BlockTimerController(
       format: widget.format,
+      omitFinalRecovery: widget.boundTarget != null,
       configuration: widget.configuration,
       stationLabels: widget.stationLabels,
       onStateChanged: (state) {
@@ -187,6 +191,9 @@ class _BlockTimerScreenState extends State<BlockTimerScreen>
               const SizedBox(height: CohortSpacing.md),
               if (state != null) ...[
                 Text(state.phaseLabel, style: CohortTextStyles.body),
+                if (widget.boundTarget case final target?)
+                  Text(state.isFinished ? 'Complete' : state.phase == BlockTimerPhase.work
+                      ? 'Prescribed · ${target.targetLabel}' : 'Recovery · no pace target'),
                 const SizedBox(height: CohortSpacing.sm),
                 if (state.totalRounds > 1)
                   Text(

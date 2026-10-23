@@ -90,9 +90,11 @@ class PerformanceResultSummaryFormatter {
         : '${result.recordedCount}/$prescribed intervals';
     final average = IntervalResultMath.formatPace(
       IntervalResultMath.averagePaceSecondsPerKm(result),
+      paceUnit: result.paceUnit,
     );
     final fastest = IntervalResultMath.formatPace(
       IntervalResultMath.fastest(result)?.paceSecondsPerKm,
+      paceUnit: result.paceUnit,
     );
     return [
       count,

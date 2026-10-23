@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../domain/hyrox_base/programme_prescription.dart';
 
 import '../../../core/persistence/athlete_persistence.dart';
 
@@ -194,6 +195,16 @@ class SessionExecutionLauncher {
           );
       hostedCompleted =
           terminal?.status == TrainingSessionRecordStatus.completed;
+    }
+
+    if (existingRecord != null &&
+        !samePrescription(
+          existingRecord.sessionSnapshot.boundPrescription?.json,
+          plan.boundPrescriptionSnapshot,
+        )) {
+      throw const FormatException(
+        'Saved targets do not match the started session. Reopen this session online.',
+      );
     }
 
     final actuals = existingRecord == null

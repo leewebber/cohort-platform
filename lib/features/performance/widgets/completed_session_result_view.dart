@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../programme/widgets/programme_prescription_summary.dart';
 
 import '../../../core/theme/colors.dart';
 import '../../../core/theme/radius.dart';
@@ -82,6 +83,8 @@ class _CompletedSessionResultViewState
       key: const ValueKey('completed-session-result'),
       padding: const EdgeInsets.all(CohortSpacing.lg),
       children: [
+        if (_record.sessionSnapshot.boundPrescription case final prescription?)
+          ProgrammePrescriptionSummary(prescription: prescription),
         Text(
           editing
               ? 'EDIT RESULTS'
@@ -1312,6 +1315,8 @@ class _CorrectionIntervalFields extends StatelessWidget {
           Text('Interval ${row.ordinal}', style: CohortTextStyles.small),
           IntervalPaceField(
             secondsPerKm: row.paceSecondsPerKm,
+            suffix: IntervalPaceUnit.suffix(row.paceUnit),
+            label: 'Pace (MM:SS ${IntervalPaceUnit.suffix(row.paceUnit)})',
             enabled: row.state != IntervalWorkState.paceUnavailable,
             onChanged: (pace) => onChanged(
               result.replaceInterval(
