@@ -91,13 +91,7 @@ class PlanPackagePersonalisationTarget {
       'output_unit',
       'parameters',
     });
-    for (final key in [
-      'id',
-      'slot_key',
-      'session_key',
-      'protocol_id',
-      'block_id',
-    ]) {
+    for (final key in ['id', 'slot_key', 'session_key', 'protocol_id']) {
       if (!_identity.hasMatch(_text(m, key))) {
         throw const FormatException('invalid_target_identity');
       }
@@ -114,6 +108,14 @@ class PlanPackagePersonalisationTarget {
     final ns = _text(m, 'identity_namespace');
     if (!{'synthetic_fixture', 'canonical_exercise'}.contains(ns)) {
       throw const FormatException('unsupported_identity_namespace');
+    }
+    final block = _text(m, 'block_id');
+    if (!_identity.hasMatch(block) &&
+        !(ns == 'canonical_exercise' &&
+            RegExp(
+              r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+            ).hasMatch(block))) {
+      throw const FormatException('invalid_target_block_identity');
     }
     final kind = PersonalisationTargetKind.values.byName(_text(m, 'kind'));
     final params = _object(

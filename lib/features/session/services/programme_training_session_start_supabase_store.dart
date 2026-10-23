@@ -15,7 +15,11 @@ class ProgrammeTrainingSessionStartSupabaseStore
     if (occurrenceId != null && occurrenceId.isNotEmpty) {
       final response = await SupabaseService.client.rpc(
         'create_or_resume_fixed_programme_occurrence_session',
-        params: {'p_occurrence_id': occurrenceId},
+        params: {
+          'p_occurrence_id': occurrenceId,
+          if (payload['bound_consent_id'] != null)
+            'p_consent_id': payload['bound_consent_id'],
+        },
       );
       if (response is Map) return Map<String, dynamic>.from(response);
       throw StateError('Unexpected fixed programme occurrence start response');

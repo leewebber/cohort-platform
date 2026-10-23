@@ -55,10 +55,14 @@ class ProgrammeTrainingSessionLaunchResult {
     required this.wasResumed,
     this.runningTargetSnapshot,
     this.runningExecutionAuthority,
+    this.boundPrescriptionSnapshot,
   });
 
   final TrainingSession trainingSession;
   final bool wasResumed;
+
+  /// Immutable server-frozen v3 source/consent/target handoff; never client math.
+  final Map<String, dynamic>? boundPrescriptionSnapshot;
   final RunningTargetSnapshotAggregate? runningTargetSnapshot;
   final AuthoredRunningExecutionAuthority? runningExecutionAuthority;
 
@@ -187,6 +191,8 @@ class ProgrammeSessionExecutionLauncher {
       response = await _startStore.createOrResume(<String, dynamic>{
         if (programmeContext.occurrenceId != null)
           'occurrence_id': programmeContext.occurrenceId,
+        if (programmeContext.boundConsentId != null)
+          'bound_consent_id': programmeContext.boundConsentId,
         'assignment_id': programmeContext.assignmentId,
         'session_slot_id': programmeContext.sessionSlotId,
         'programme_version_id': programmeContext.programmeVersionId,
@@ -231,7 +237,40 @@ class ProgrammeSessionExecutionLauncher {
         programmeContext: programmeContext,
         runningAuthority: runningAuthority,
       );
+      final bound = response['bound_prescription_snapshot'];
+      if (programmeContext.boundConsentId != null && bound is! Map) {
+        throw const ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+          'The bound prescription snapshot is missing.',
+        );
+      }
+      if (bound is Map &&
+          (bound['athlete_id'] != athleteId ||
+              bound['assignment_id'] != programmeContext.assignmentId ||
+              bound['programme_version_id'] !=
+                  programmeContext.programmeVersionId ||
+              bound['package_hash'] != programmeContext.packageContentHash ||
+              bound['occurrence_id'] != programmeContext.occurrenceId ||
+              bound['session_slot_id'] != programmeContext.sessionSlotId ||
+              bound['training_session_id'].toString() !=
+                  session.id.toString() ||
+              (bound['source'] is! Map ||
+                  bound['source']['protocol_id'] !=
+                      programmeContext.effectiveProtocolId) ||
+              (status == 'created' &&
+                  programmeContext.boundConsentId != null &&
+                  (bound['consent'] is! Map ||
+                      bound['consent']['consent_id'] !=
+                          programmeContext.boundConsentId)))) {
+        throw const ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+          'The bound prescription snapshot does not match this canonical start.',
+        );
+      }
       return ProgrammeTrainingSessionLaunchResult(
+        boundPrescriptionSnapshot: bound is Map
+            ? _freezeBoundSnapshot(bound)
+            : null,
         trainingSession: session,
         wasResumed: status == 'resumed',
         runningTargetSnapshot: snapshot,
@@ -542,4 +581,17 @@ bool _sameStrings(List<String> left, List<String> right) {
     if (left[index] != right[index]) return false;
   }
   return true;
+}
+
+Map<String, dynamic> _freezeBoundSnapshot(Map value) =>
+    Map<String, dynamic>.unmodifiable({
+      for (final entry in value.entries)
+        entry.key as String: _freezeBoundValue(entry.value),
+    });
+Object? _freezeBoundValue(Object? value) {
+  if (value is Map) return _freezeBoundSnapshot(value);
+  if (value is List) {
+    return List<Object?>.unmodifiable(value.map(_freezeBoundValue));
+  }
+  return value;
 }

@@ -659,7 +659,14 @@ void main() {
       expect(source.contains('FounderProgrammeYamlParser'), isFalse);
       expect(source.contains('logRequests'), isFalse);
       expect(source.contains('print(yaml'), isFalse);
-      expect(source.contains('canonicalJson'), isFalse);
+      // The private v3 publisher now canonicalises source; the logging boundary
+      // must remain unable to access or emit canonical bytes.
+      expect(
+        File(
+          'lib/src/runtime_handler.dart',
+        ).readAsStringSync().contains('canonicalJson'),
+        isFalse,
+      );
     });
 
     test('database migration still denies authenticated direct RPC access', () {

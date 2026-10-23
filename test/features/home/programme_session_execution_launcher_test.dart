@@ -28,6 +28,89 @@ const _runningWorkoutId = 'rw1:p:7e50ec7208a5dd0f';
 const _runningStepId = 'rw1:p:7e50ec7208a5dd0f:s:0';
 
 void main() {
+  test(
+    'canonical bound start validates and deeply freezes the exact server handoff',
+    () async {
+      final context = _context(boundConsentId: 'consent-1');
+      final base = await _InMemoryAtomicStartStore().createOrResume({
+        'assignment_id': 'assignment-1',
+        'session_slot_id': 'slot-1',
+        'effective_protocol_id': 'protocol-1',
+        'expected_week': 1,
+        'expected_day_key': 'day_1',
+      });
+      final snapshot = <String, dynamic>{
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assignment-1',
+        'programme_version_id': 'version-1',
+        'package_hash': _hashA,
+        'occurrence_id': 'occurrence-1',
+        'session_slot_id': 'slot-1',
+        'training_session_id': 1,
+        'source': {'protocol_id': 'protocol-1'},
+        'consent': {'consent_id': 'consent-1'},
+        'prescriptions': [
+          {
+            'calculated': {'grams': 80000},
+          },
+        ],
+      };
+      final store = _InMemoryAtomicStartStore(
+        forcedResponse: {...base, 'bound_prescription_snapshot': snapshot},
+      );
+      final result = await ProgrammeSessionExecutionLauncher(startStore: store)
+          .createOrResumeLaunchResult(
+            athleteId: 'athlete-1',
+            programmeContext: context,
+            package: _prepared().package!,
+          );
+      expect(store.calls.single['bound_consent_id'], 'consent-1');
+      expect(
+        () =>
+            ((result.boundPrescriptionSnapshot!['prescriptions'] as List).single
+                    as Map)['calculated'] =
+                {},
+        throwsUnsupportedError,
+      );
+      expect(
+        () =>
+            ((result.boundPrescriptionSnapshot!['prescriptions'] as List)
+                        .single['calculated']
+                    as Map)['grams'] =
+                1,
+        throwsUnsupportedError,
+      );
+      for (final field in [
+        'athlete_id',
+        'assignment_id',
+        'programme_version_id',
+        'package_hash',
+        'occurrence_id',
+        'session_slot_id',
+        'training_session_id',
+        'source',
+        'consent',
+      ]) {
+        final bad = _InMemoryAtomicStartStore(
+          forcedResponse: {
+            ...base,
+            'bound_prescription_snapshot': {...snapshot, field: 'tampered'},
+          },
+        );
+        await expectLater(
+          ProgrammeSessionExecutionLauncher(
+            startStore: bad,
+          ).createOrResumeLaunchResult(
+            athleteId: 'athlete-1',
+            programmeContext: context,
+            package: _prepared().package!,
+          ),
+          throwsA(isA<ProgrammeSessionExecutionException>()),
+        );
+      }
+    },
+  );
+
   testWidgets(
     'Home atomically creates then resumes one stable training session',
     (tester) async {
@@ -710,7 +793,10 @@ Map<String, dynamic> _calculatedSnapshot({
   ],
 };
 
-ProgrammeExecutionContext _context({String? packageHash = _hashA}) {
+ProgrammeExecutionContext _context({
+  String? packageHash = _hashA,
+  String? boundConsentId,
+}) {
   const key = ProgrammedSessionKey(
     planId: 'lineage-1',
     planVersion: 'version-1',
@@ -724,6 +810,8 @@ ProgrammeExecutionContext _context({String? packageHash = _hashA}) {
   );
   return ProgrammeExecutionContext(
     assignmentId: 'assignment-1',
+    boundConsentId: boundConsentId,
+    occurrenceId: boundConsentId == null ? null : 'occurrence-1',
     programmeVersionId: 'version-1',
     sessionSlotId: 'slot-1',
     weekNumber: 1,

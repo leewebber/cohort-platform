@@ -20,6 +20,7 @@ class ProgrammeExecutionContext {
     this.packageContentHash,
     this.programmedSessionKey,
     this.occurrenceId,
+    this.boundConsentId,
   });
 
   final String assignmentId;
@@ -41,6 +42,9 @@ class ProgrammeExecutionContext {
 
   /// Durable fixed-calendar occurrence identity; null selects legacy cursor compatibility.
   final String? occurrenceId;
+
+  /// Exact accepted server review token; absent v3 first starts refuse.
+  final String? boundConsentId;
 
   bool get isProgrammeBacked =>
       assignmentId.isNotEmpty && sessionSlotId.isNotEmpty;
