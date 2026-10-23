@@ -1,0 +1,35 @@
+{
+  "base": "5560cae294db44cf88ae74ba5f67d82c9d240ad8",
+  "older_checkouts_including_original": 19,
+  "before_after_equal": true,
+  "original_HEAD": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_outstanding_paths": 95,
+  "original_index_head_outstanding_bytes_and_temp_preserved": true,
+  "all_older_tracked_and_outstanding_bytes_indices_heads_temp_preserved": true,
+  "protected_present_base_blobs_compared_exactly": 2800,
+  "absent_skip_worktree_temp_paths_left_absent": [
+    "supabase/.temp/cli-latest",
+    "supabase/.temp/gotrue-version",
+    "supabase/.temp/linked-project.json",
+    "supabase/.temp/pooler-url",
+    "supabase/.temp/postgres-version",
+    "supabase/.temp/project-ref",
+    "supabase/.temp/rest-version",
+    "supabase/.temp/storage-migration",
+    "supabase/.temp/storage-version"
+  ],
+  "protected_golden_canonical_hash_paths": 12,
+  "permitted_existing_modifications": [
+    "lib/features/programme/models/programme_execution_context.dart",
+    "lib/features/session/services/programme_session_execution_launcher.dart",
+    "lib/features/session/services/programme_training_session_start_supabase_store.dart",
+    "packages/cohort_plan_package/lib/src/plan_package_personalisation.dart",
+    "server/trusted_plan_package_import/lib/src/supabase_import_rpc.dart",
+    "server/trusted_plan_package_import/lib/trusted_plan_package_import.dart",
+    "server/trusted_plan_package_import/test/trusted_import_endpoint_test.dart",
+    "test/features/home/programme_session_execution_launcher_test.dart",
+    "docs/checkpoints/CURRENT_CHECKPOINT.md"
+  ],
+  "before_sha256": "3c5cc7ac8752bcc95f2b3510482bb4dddfa53785a54239e306509d013675fbad",
+  "after_sha256": "3c5cc7ac8752bcc95f2b3510482bb4dddfa53785a54239e306509d013675fbad"
+}

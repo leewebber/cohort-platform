@@ -1,4 +1,25 @@
 # Current repository checkpoint
+> **Authoritative HYROX v3 retention/consent/canonical start — locally proved, 2026-10-23:**
+> [Continuation](./hyrox_authoritative_start/HANDOFF.md),
+> [contract/scope](./hyrox_authoritative_start/CONTRACT.md),
+> [verification](./hyrox_authoritative_start/VERIFICATION.json) and
+> [deployment/recovery](./hyrox_authoritative_start/DEPLOYMENT.md) implement the founder-approved
+> trusted published ExerciseDefinition version boundary: immutable exact versions/events,
+> explicit retirement, no invented history/backfill or catalogue/hash publication authority.
+> Strict private v3 admission resolves exact published sources and approved bindings; server
+> review/assignment-version consent/withdrawal and atomic existing canonical-start snapshots
+> are locally proved. Unresolved legacy sources and unsupported v3 shapes remain refused.
+> Callable app repository/start handoff is implemented; production review/runner rollout is
+> unfinished. Fresh/repeat full migrations, 129 API/race assertions and 136 Dart–SQL vectors
+> per pass, compatibility/security gates, 404 app/41 compiler/41 server tests, six safety groups
+> and three terminal builds pass. Analysis remains 365 identical inherited findings, zero
+> changed-file diagnostics. Original 95 paths and 19 older checkouts/indices/HEADs/.temp are
+> preserved. No hosted operation, real programme/athlete write, browser or device work.
+> Producer provisioning/approved exact artifacts, hosted deployment, app UI/runner and device
+> validation remain dependencies. Supporting source is not yet transferred/consolidated;
+> full 48 sessions, Test Week and verified race mappings remain incomplete. No production
+> readiness or broader Stage 2/Sprint C closure. Normal main-only publication is authorised.
+
 > **HYROX declared-evidence persistence prerequisites — locally proved, 2026-10-22:**
 > [Continuation](./hyrox_v3_canonical_storage/HANDOFF.md),
 > [storage contract](./hyrox_v3_canonical_storage/STORAGE_CONTRACT.md),

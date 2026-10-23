@@ -1,0 +1,89 @@
+{
+  "base": "5560cae294db44cf88ae74ba5f67d82c9d240ad8",
+  "status": "LOCAL_AUTHORITATIVE_V3_PROFILE_PROVED_NOT_DEPLOYED",
+  "accepting_scope": "Strict private fixed-schedule v3 profile; see CONTRACT.md. Global draft route and unresolved legacy v3 remain refused.",
+  "new_changed_dart_diagnostics": 0,
+  "analysis": {
+    "baseline": 365,
+    "final": 365,
+    "added": [],
+    "removed": [],
+    "errors": 0,
+    "warnings": 110,
+    "infos": 255,
+    "changed_dart_files": 15,
+    "changed_dart_diagnostics": [],
+    "full_analysis_green": false,
+    "prior_367_to_365_removed_identities": [
+      "info \u2022 Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._sessionResolution') to initialize the field \u2022 lib/features/authored_plan_package/import/plan_package_import_preview_service.dart:15:8 \u2022 prefer_initializing_formals",
+      "info \u2022 Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._existingVersionLookup') to initialize the field \u2022 lib/features/authored_plan_package/import/plan_package_import_preview_service.dart:16:8 \u2022 prefer_initializing_formals"
+    ],
+    "initial_992_dependency_setup_run_invalid_baseline": true
+  },
+  "tests": {
+    "focused_flutter": 64,
+    "affected_flutter": 404,
+    "compiler": 41,
+    "server": 41,
+    "required_safety_groups_passed": 6,
+    "required_safety_groups_failed": 0
+  },
+  "database": {
+    "complete_migration_chain_count": 127,
+    "fresh_repeat_final_bytes_passed": true,
+    "metadata_preflight_postcheck_locally_validated": true,
+    "api_security_concurrency_assertions_per_pass": 129,
+    "dart_sql_vectors_per_pass": 136,
+    "exact_capture_retry_conflict_retirement_and_string_versions": true,
+    "effective_PUBLIC_anon_authenticated_service_and_producer_isolation": true,
+    "programme_version_assignment_consent_scope_and_cas": true,
+    "source_binding_units_rules_owner_and_client_target_hash_refusals": true,
+    "deterministic_benchmark_consent_withdrawal_source_and_exact_version_start_races": true,
+    "duplicate_start_and_canonical_snapshot_rollback": true,
+    "started_completed_snapshots_immutable": true,
+    "canonical_q_and_b2_bk_sql_and_concurrency": true,
+    "existing_full_db_compatibility_gate": true,
+    "existing_permission_completion_identity_link_security_gate": true,
+    "evidence_reuse": "Full legacy DB and ownership/security gates ran during this task before later v3-only strict/retirement/retry refinements. Their unchanged canonical/private bodies and security files retain those proofs; final new-chain fresh/repeat gate repeats Q/BK legacy SQL/concurrency and unresolved-source refusal after all final SQL changes. Dart source did not change after reported app/compiler/server/safety/analysis/build passes."
+  },
+  "builds": {
+    "production_flutter_web": true,
+    "trusted_server_native": true,
+    "authoritative_v3_fixture_compiler_native": true,
+    "native_compiler_output_matches_dart_fixture": true,
+    "web_wasm_dry_run": "Existing flutter_timezone JS interop warning; JavaScript release build succeeded. Wasm readiness not claimed."
+  },
+  "legacy": {
+    "v1_v2_bytes_hashes_and_goldens_unchanged": true,
+    "B2_5km_policy_unchanged": true,
+    "C1_C2_C3_observational_contracts_unchanged": true,
+    "old_private_start_body_sha256": {
+      "fixed": "a9c7d9addebfc734ff59f5863bf4580a4b6d8f5b0d16041f5e91eb39830113e9",
+      "generic": "24e315c9996db3e19d0f332e375183230b9554ea33ecf7790b39500d512c3796"
+    }
+  },
+  "review_fixes": [
+    "Producer-only retirement assertion corrected; service never gained retirement execution.",
+    "HTTP fixture subject default and UTF-8 response encoding corrected; owner checks retained.",
+    "Publication retry now reuses established owner/scope/lifecycle validation; forged-owner retry regression passes."
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-authoritative",
+  "raw_evidence_sha256": {
+    "full-v3-release-proof.log": "89a0c9c2b7897514e017243802f7175dc3f751d121fbf004a0903e9909a99e92",
+    "compatibility.log": "3a1122789ef6b0b4a492b4ae898ba995ea6dcfce6e82bf168fd923116d4eae76",
+    "ownership-security.log": "937efe8afb9d13c6d1145108e45e5646c087b318e2b580a3cbb54023abe23911",
+    "app-regressions.log": "7a341ee7894ebe3c9d7f57467d9288b20e7ce9f41dc270785cc87d2664d6913b",
+    "focused.log": "7cf9a8d542e013fa55a056615df22ff1b8219f8d9b4c2b09a2860a610c014cef",
+    "compiler.log": "ab68e89e9b6bfec0e33f9fd5688c23eabb8eccc852f068c4f79bd659fce9aa77",
+    "server-complete.log": "46fffa960d2de60aced8e8c4e736f63fc2b78469ddc30f24b9404ae7663ebb98",
+    "safety.log": "770020fafdcc76a4c89811c20a09df08065ed436185396ecaf53b47c59bc46c0",
+    "analysis-baseline-resolved.log": "df2298ab93467cb26612c5e4397f68bd169ba809c111baaaa4e9c2a3b972b5d6",
+    "analysis-final-clean.log": "6f34d5dda6fba2faeb6b7f686f5c28a119a7a3c3da0201a6f042e59c6bc7398a",
+    "web-build.log": "34c6dad0deb563f14f5d043017f7db33bd510b0e97f77eecd64a184fbfb49127",
+    "server-build.log": "f8763dfbd4a7bc767460571d547c49baefe0f1874f429cc65ed7df8ca7bf5173",
+    "compiler-build.log": "8c07bb4904047abe3929b225a995f953ba3b7ec0fcd386d8e9d36837e43123b5"
+  },
+  "hosted_or_device_operations": false,
+  "real_exercise_programme_athlete_data_writes": false,
+  "implementation_commit": "ffbb86e6d94a391056a3b9db84614afac66a345e"
+}
