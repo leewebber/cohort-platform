@@ -1,0 +1,82 @@
+{
+  "base": "6fff850807a18d025004f5f16b74d5b58a4f2182",
+  "implementation_commit": "70f7c72d0828b4043208dbea41ec4ab6fe6b85f3",
+  "status": "LOCAL_ATHLETE_FLOW_PROVED_NOT_DEPLOYED",
+  "analysis": {
+    "fresh_baseline": 365,
+    "final": 364,
+    "errors": 0,
+    "warnings": 110,
+    "infos": 254,
+    "added": [],
+    "removed": [
+      "prefer_initializing_formals at AthleteProgrammeAuthoredSlotResolver._versionStore"
+    ],
+    "changed_dart_files": 36,
+    "changed_dart_diagnostics": [],
+    "full_analysis_green": false
+  },
+  "tests": {
+    "affected_flutter": 991,
+    "ordinary_suite_skips": 1,
+    "skip_reason": "Authenticated local E2E requires disposable stack; passed independently on fresh/repeat.",
+    "final_UI_timer_restore": 6,
+    "required_safety_groups": 6,
+    "required_safety_groups_failed": 0,
+    "fresh_repeat_app_repository_server_chain_passed": true,
+    "api_security_concurrency_assertions_per_pass": 129,
+    "dart_sql_calculation_vectors_per_pass": 136,
+    "canonical_Q_BK_sql_and_concurrency": true,
+    "migration_count": 128,
+    "final_restore_hardening": "Six focused checks/final analysis/builds after broad regression and safety passes; same protected invariant source."
+  },
+  "builds": {
+    "production_web": true,
+    "macos_release": true,
+    "web_wasm": "Existing flutter_timezone Wasm dry-run warning; JavaScript build passed, no Wasm claim.",
+    "macos_notes": "Existing expired backup provisioning-profile warning; terminal release build succeeded. No app opening/install/distribution."
+  },
+  "reuse": {
+    "checkpoint": "6fff850807a18d025004f5f16b74d5b58a4f2182",
+    "source_trees_unchanged": [
+      "packages/cohort_plan_package",
+      "server/trusted_plan_package_import",
+      "tool/importer",
+      "lib/domain/running_workout",
+      "lib/domain/performance_tracking",
+      "lib/application/performance_tracking"
+    ],
+    "prior_verified_logs_rechecked": [
+      "compatibility.log",
+      "ownership-security.log",
+      "compiler.log",
+      "server-complete.log",
+      "server-build.log",
+      "compiler-build.log"
+    ],
+    "qualification": "Old full legacy DB/ownership and compiler/server evidence reused for unchanged legacy owners; new migration/full v3 chain and Q/BK repeated here. New triggers are inert for unbound legacy sessions; dimensional row admission is additive."
+  },
+  "confirmed_review_fixes": [
+    "No final interval recovery for bound v3; legacy timer default retained.",
+    "Dimensional row actuals/correction and set round-trip; no per-km relabelling.",
+    "Programme-scoped consent reuse and rest-day management; auth/late-reply invalidation.",
+    "Server snapshot equality and bound dose/unit guards.",
+    "Malformed bound timer phases/durations fail closed."
+  ],
+  "preservation_exception": "Four automatically cleaned old checkouts restored with exact recorded file/HEAD/branch/temp/git-pointer match; four index byte streams regenerated. See PRESERVATION.json.",
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-athlete",
+  "raw_evidence_sha256": {
+    "fresh-repeat-final.log": "314b6e824207b815eedbbe9bd9b39201643935a885af2245f5feab5c38ea7194",
+    "regressions-final.log": "53e05f3582edf74496f4466898a1506fb3eea4f6d528bd19286c2383f5e22de0",
+    "safety-final.log": "ccc07e36e4c250225133ec110becf30fcccbea9bcd70d53578598457ec0e4ee9",
+    "restore-sealed.log": "f93db5ad111f463f7c60b792fffd5be52bc3e47250526f5614658aa9ad61df51",
+    "analysis-baseline.log": "14e1c95b50b456ef2891650fd413cca8b7ce0d30a871bbca78571b405e48e3a6",
+    "analysis-final.log": "97352dc0f58b048c6dd96dd4d811464bac9355dda6f11cefd85bf4d7f138706d",
+    "web-build-sealed.log": "c2eb5b8d102bb1d81732cc8869e3252e12e77a33bc12f758bb5da884fe0df3d9",
+    "macos-build-sealed.log": "4480351c94b9e3d09954d7c35bf8b0d1f0eaedcb1f4217181a8240a1e4d5b1d8"
+  },
+  "hosted_operations": false,
+  "real_data_or_publication": false,
+  "browser_app_or_device_control": false,
+  "Garmin_integration": false
+}

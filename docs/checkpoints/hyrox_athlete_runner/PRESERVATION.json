@@ -1,0 +1,58 @@
+{
+  "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_outstanding_paths": 95,
+  "measured_checkout_inventories": 16,
+  "all_measured_inventories_exact": true,
+  "current_older_checkout_count": 20,
+  "automatic_cleanup_exception": {
+    "removed_clean_checkouts_restored": {
+      "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false
+      },
+      "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false
+      },
+      "/Users/leewebber/.codex/worktrees/studio-canonical-source-export/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false
+      },
+      "/Users/leewebber/.codex/worktrees/studio-editable-workspace/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false
+      }
+    },
+    "all_recorded_files_HEADs_branches_git_pointers_temp_match": true,
+    "index_files_byte_preserved": false,
+    "index_semantic_state": "Clean original HEAD, no staged changes; regenerated stat/index files.",
+    "restored_worktrees_locked_against_pruning": true,
+    "ignored_generated_artifacts": "Not represented in the prior tracked/outstanding inventory; not claimed restored."
+  },
+  "raw_evidence": {
+    "BEFORE.json": "0953fd5e08b3abb60f4bc0d1f431517433c292f43b2e98afe0494df0c1d9ae1a",
+    "AFTER.json": "0953fd5e08b3abb60f4bc0d1f431517433c292f43b2e98afe0494df0c1d9ae1a",
+    "RESTORED.json": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "restoration-comparison.json": "4a47044cb40b1017cef26c95a8275b1fd838296de1c39fc8f55ca261eec4406b"
+  }
+}

@@ -1,4 +1,22 @@
 # Current repository checkpoint
+> **Athlete v3 review/consent/frozen runner — locally proved, 2026-10-23:**
+> [Handoff](./hyrox_athlete_runner/HANDOFF.md), [verification](./hyrox_athlete_runner/VERIFICATION.json)
+> and [deployment prerequisites](./hyrox_athlete_runner/DEPLOYMENT.md) deliver authenticated
+> programme/version benchmark review, explicit future-unstarted consent replacement/withdrawal,
+> existing canonical-start/resume wiring and frozen run/row/squat targets through current runner,
+> save/completion/correction/History. Unsupported/stale/unavailable cases refuse; no v3 downgrade.
+> 991 app regressions, full fresh/repeat authenticated repository/server chain, 129 API/race
+> assertions and 136 vectors per pass, six safety groups and terminal web/macOS builds pass.
+> Analysis is 364 inherited findings versus 365, zero errors/new/changed-file diagnostics.
+> Original 95 outstanding paths and 16 measured checkout inventories are exact. Four older
+> automatically cleaned checkouts were restored with recorded files/HEADs/branches/.temp exact;
+> their index byte streams were regenerated, an explicit preservation exception. No hosted,
+> real publication/athlete data, browser/app control or device distribution. Producer/exact
+> approved artifacts/configuration, content transfer, hosted deployment and installed-device/
+> founder usability remain dependencies. No 48-session package/Test Week/race mapping invention,
+> Garmin integration, production readiness or broader Stage 2/Sprint C closure. Main publication
+> under the current founder request is authorised; future implementation remains separately scoped.
+
 > **Authoritative HYROX v3 retention/consent/canonical start — locally proved, 2026-10-23:**
 > [Continuation](./hyrox_authoritative_start/HANDOFF.md),
 > [contract/scope](./hyrox_authoritative_start/CONTRACT.md),
