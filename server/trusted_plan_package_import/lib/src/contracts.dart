@@ -32,3 +32,11 @@ class FounderAuthorityLookupException implements Exception {
 class PlanPackageRpcException implements Exception {
   const PlanPackageRpcException();
 }
+
+class InvalidFounderCredentials extends TrustedAuthenticationException {
+  const InvalidFounderCredentials();
+}
+
+class FounderPermissionRequired extends TrustedAuthenticationException {
+  const FounderPermissionRequired();
+}

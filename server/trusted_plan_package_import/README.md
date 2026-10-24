@@ -75,3 +75,12 @@ Production logs may contain a generated request correlation ID, route class,
 method, status class and duration. They must never contain bearer tokens, YAML,
 canonical package data, package hashes tied to user data, database response
 bodies, founder addresses, secret values or environment dumps.
+
+## Explicit v3 publication integration (disabled by default)
+
+The executable now composes Founder-only event receipt and approved private v3
+publication through the existing authority/resolution services. HTTP callers provide
+only event IDs. See the [exact supported event/authentication contract](../../docs/checkpoints/hyrox_v3_http/CONTRACT.md)
+and [configuration/deployment prerequisites](../../docs/checkpoints/hyrox_v3_http/DEPLOYMENT.md).
+No real upstream producer, capability credential or accepting hosted route is provisioned
+by source publication. The legacy draft import route remains v1/v2-only.

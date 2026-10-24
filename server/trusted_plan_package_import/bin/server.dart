@@ -26,8 +26,41 @@ Future<void> main() async {
     ),
     maxYamlBytes: config.maxYamlBytes,
   );
+  final v3 = TrustedV3PublicationEndpoint(
+    founderPublication: TrustedV3FounderPublication(
+      auth: SupabaseAuthTokenVerifier(
+        supabaseUrl: config.supabaseUrl,
+        anonKey: config.supabaseAnonKey,
+        client: authClient,
+      ),
+      founder: AllowlistedFounderAuthority(config.founderEmails),
+      publication: AuthoritativeV3Publication(
+        SupabaseV3PublicationAuthority(
+          supabaseUrl: config.supabaseUrl,
+          serviceRoleKey: config.supabaseServiceRoleKey,
+          client: rpcClient,
+        ),
+      ),
+    ),
+    events: config.publicationEventsUrl == null
+        ? null
+        : HttpVerifiedPublicationEvents(
+            baseUrl: config.publicationEventsUrl!,
+            credential: config.publicationEventsCredential!,
+            client: rpcClient,
+          ),
+    exerciseProducer: config.exerciseProducerCredential == null
+        ? null
+        : SupabaseExercisePublicationProducer(
+            supabaseUrl: config.supabaseUrl,
+            anonKey: config.supabaseAnonKey,
+            producerCredential: config.exerciseProducerCredential!,
+            client: rpcClient,
+          ),
+  );
   final runtime = TrustedRuntimeHandler(
     importHandler: endpoint.call,
+    v3PublicationHandler: v3.call,
     logSink: stdout.writeln,
   );
 

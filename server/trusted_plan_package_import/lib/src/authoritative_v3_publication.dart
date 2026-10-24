@@ -22,6 +22,7 @@ class AuthoritativeV3Publication {
     required String programmeVersionId,
     required String ownerId,
     required String importedBy,
+    String? approvedContentHash,
   }) async {
     if (utf8.encode(source).length > 1024 * 1024) {
       throw const FormatException('V3 source exceeds the trusted input bound.');
@@ -43,7 +44,9 @@ class AuthoritativeV3Publication {
         personalisationResolver: RetainedV3Resolver(resolved),
       ),
     ).verifyCanonicalArtifact(provisional.canonicalJson!);
-    if (!compile.isValid) {
+    if (!compile.isValid ||
+        (approvedContentHash != null &&
+            compile.contentHashSha256 != approvedContentHash)) {
       throw const FormatException('Unresolved authoritative v3 source.');
     }
     final canonical =
@@ -171,8 +174,8 @@ class RetainedV3Resolver implements PersonalisationDependencyResolver {
   }
 }
 
-/// Founder-authenticated facade for the trusted host. No route is installed by
-/// default, and the legacy global-draft endpoint remains v1/v2-only.
+/// Founder-authenticated facade reused by the explicit, configured HTTP path.
+/// The legacy global-draft endpoint remains v1/v2-only.
 class TrustedV3FounderPublication {
   const TrustedV3FounderPublication({
     required this.auth,
@@ -182,16 +185,22 @@ class TrustedV3FounderPublication {
   final AuthTokenVerifier auth;
   final FounderAuthorityVerifier founder;
   final AuthoritativeV3Publication publication;
+  Future<AuthenticatedPrincipal> requireFounder(String bearerToken) async {
+    final principal = await auth.verifyBearerToken(bearerToken);
+    if (principal == null) throw const InvalidFounderCredentials();
+    if (!await founder.isAuthorisedFounder(principal)) {
+      throw const FounderPermissionRequired();
+    }
+    return principal;
+  }
+
   Future<Map<String, Object?>> publish({
     required String bearerToken,
     required String source,
     required String programmeVersionId,
     required String ownerId,
   }) async {
-    final principal = await auth.verifyBearerToken(bearerToken);
-    if (principal == null || !await founder.isAuthorisedFounder(principal)) {
-      throw const TrustedAuthenticationException();
-    }
+    final principal = await requireFounder(bearerToken);
     return publication.publish(
       source: source,
       programmeVersionId: programmeVersionId,

@@ -9,6 +9,9 @@ class TrustedImportServerConfig {
     this.bindAddress = '127.0.0.1',
     this.port = 8080,
     this.maxYamlBytes = 1024 * 1024,
+    this.publicationEventsUrl,
+    this.publicationEventsCredential,
+    this.exerciseProducerCredential,
   });
 
   final Uri supabaseUrl;
@@ -18,6 +21,9 @@ class TrustedImportServerConfig {
   final String bindAddress;
   final int port;
   final int maxYamlBytes;
+  final Uri? publicationEventsUrl;
+  final String? publicationEventsCredential;
+  final String? exerciseProducerCredential;
 
   factory TrustedImportServerConfig.fromEnvironment(
     Map<String, String> environment,
@@ -66,7 +72,38 @@ class TrustedImportServerConfig {
       throw StateError('Numeric server configuration is malformed.');
     }
 
+    final flag = environment['TRUSTED_V3_PUBLICATION_ENABLED'] ?? 'false';
+    if (flag != 'true' && flag != 'false') {
+      throw StateError('Invalid v3 enablement configuration.');
+    }
+    Uri? eventUrl;
+    String? eventCredential;
+    String? producerCredential;
+    if (flag == 'true') {
+      eventUrl = Uri.tryParse(requireValue('PUBLICATION_EVENT_SOURCE_URL'));
+      if (eventUrl == null ||
+          eventUrl.host.isEmpty ||
+          eventUrl.userInfo.isNotEmpty ||
+          eventUrl.hasQuery ||
+          eventUrl.hasFragment ||
+          !eventUrl.path.endsWith('/') ||
+          !(eventUrl.scheme == 'https' ||
+              eventUrl.scheme == 'http' &&
+                  {'localhost', '127.0.0.1'}.contains(eventUrl.host))) {
+        throw StateError('Invalid trusted publication event source URL.');
+      }
+      eventCredential = requireValue('PUBLICATION_EVENT_SOURCE_TOKEN');
+      producerCredential = requireValue('EXERCISE_VERSION_PRODUCER_TOKEN');
+      if (producerCredential == requireValue('SUPABASE_SERVICE_ROLE_KEY')) {
+        throw StateError(
+          'Exercise producer must not use ordinary service credentials.',
+        );
+      }
+    }
     return TrustedImportServerConfig(
+      publicationEventsUrl: eventUrl,
+      publicationEventsCredential: eventCredential,
+      exerciseProducerCredential: producerCredential,
       supabaseUrl: url,
       supabaseAnonKey: requireValue('SUPABASE_ANON_KEY'),
       supabaseServiceRoleKey: requireValue('SUPABASE_SERVICE_ROLE_KEY'),

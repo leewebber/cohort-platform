@@ -6,3 +6,6 @@ export 'src/server_config.dart';
 export 'src/supabase_auth_verifier.dart';
 export 'src/supabase_import_rpc.dart';
 export 'src/authoritative_v3_publication.dart';
+export 'src/publication_events.dart';
+export 'src/exercise_publication_producer.dart';
+export 'src/v3_publication_endpoint.dart';

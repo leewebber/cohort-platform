@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'contracts.dart';
 import 'authoritative_v3_publication.dart';
+import 'publication_events.dart';
 
 /// Production adapter for the existing service-role-only atomic import RPC.
 class SupabasePlanPackageImportRpc implements PlanPackageImportRpc {
@@ -87,22 +88,27 @@ class SupabaseV3PublicationAuthority implements V3PublicationAuthority {
     String name,
     Map<String, Object?> parameters,
   ) async {
-    final response = await client.post(
-      supabaseUrl.resolve('/rest/v1/rpc/$name'),
-      headers: {
+    try {
+      final request = http.Request(
+        'POST',
+        supabaseUrl.resolve('/rest/v1/rpc/$name'),
+      )..followRedirects = false;
+      request.headers.addAll({
         'apikey': serviceRoleKey,
         'authorization': 'Bearer $serviceRoleKey',
         'content-type': 'application/json',
-      },
-      body: jsonEncode(parameters),
-    );
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+      });
+      request.body = jsonEncode(parameters);
+      final response = await client
+          .send(request)
+          .timeout(const Duration(seconds: 10));
+      final text = await readBounded(response.stream, 8 * 1024 * 1024);
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw const PlanPackageRpcException();
+      }
+      return Map<String, Object?>.from(jsonDecode(text) as Map);
+    } catch (_) {
       throw const PlanPackageRpcException();
     }
-    final body = jsonDecode(response.body);
-    if (body is! Map) {
-      throw const PlanPackageRpcException();
-    }
-    return Map<String, Object?>.from(body);
   }
 }

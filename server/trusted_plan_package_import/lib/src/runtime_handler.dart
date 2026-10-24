@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:shelf/shelf.dart';
+import 'v3_publication_endpoint.dart';
 
 typedef RuntimeLogSink = void Function(String encodedEvent);
 typedef RuntimeRequestIdFactory = String Function();
@@ -9,11 +10,13 @@ typedef RuntimeRequestIdFactory = String Function();
 class TrustedRuntimeHandler {
   factory TrustedRuntimeHandler({
     required Handler importHandler,
+    Handler? v3PublicationHandler,
     required RuntimeLogSink logSink,
     RuntimeRequestIdFactory? requestIdFactory,
   }) {
     return TrustedRuntimeHandler._(
       importHandler,
+      v3PublicationHandler,
       logSink,
       requestIdFactory ?? _secureRequestId,
     );
@@ -21,6 +24,7 @@ class TrustedRuntimeHandler {
 
   TrustedRuntimeHandler._(
     this._importHandler,
+    this._v3PublicationHandler,
     this._logSink,
     this._requestIdFactory,
   );
@@ -29,6 +33,7 @@ class TrustedRuntimeHandler {
   static const importPath = 'v1/founder/plan-packages/import';
 
   final Handler _importHandler;
+  final Handler? _v3PublicationHandler;
   final RuntimeLogSink _logSink;
   final RuntimeRequestIdFactory _requestIdFactory;
 
@@ -40,6 +45,12 @@ class TrustedRuntimeHandler {
     try {
       response = request.url.path == healthPath
           ? _healthResponse(request)
+          : _v3PublicationHandler != null &&
+                {
+                  TrustedV3PublicationEndpoint.exerciseRoute,
+                  TrustedV3PublicationEndpoint.programmeRoute,
+                }.contains(request.url.path)
+          ? await _v3PublicationHandler(request)
           : await _importHandler(request);
     } catch (_) {
       response = _json(500, {
@@ -92,6 +103,9 @@ class TrustedRuntimeHandler {
     return switch (path) {
       healthPath => 'health',
       importPath => 'founder_plan_package_import',
+      TrustedV3PublicationEndpoint.exerciseRoute =>
+        'exercise_publication_event',
+      TrustedV3PublicationEndpoint.programmeRoute => 'founder_v3_publication',
       _ => 'unsupported',
     };
   }
