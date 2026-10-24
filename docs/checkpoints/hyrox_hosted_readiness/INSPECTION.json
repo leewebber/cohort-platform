@@ -1,0 +1,383 @@
+{
+  "scope": "READ_ONLY_HOSTED_METADATA_AND_LOCAL_DOCUMENTATION",
+  "source_head": "55c38bbee7015bc16b25dd6d4fef4eb01900195f",
+  "supabase_identity": {
+    "id": "otnhhdxstdnwccehacku",
+    "ref": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "status": "INACTIVE",
+    "created_at": "2026-07-03T06:53:00.976925Z",
+    "database": {
+      "host": "db.otnhhdxstdnwccehacku.supabase.co",
+      "version": "17.6.1.155",
+      "postgres_engine": "17",
+      "release_channel": "ga"
+    },
+    "observed_at_utc": "2026-10-24T02:58:24.538321+00:00"
+  },
+  "initial_probes": {
+    "health": {
+      "unavailable": "Management API HTTP 400"
+    },
+    "read_only_session": {
+      "unavailable": "Management API HTTP 400"
+    },
+    "migration_metadata": {
+      "unavailable": "Management API HTTP 544"
+    },
+    "edge_function_metadata": {
+      "result": []
+    }
+  },
+  "diagnostic_probes": {
+    "health": {
+      "http_status": 400,
+      "error": {
+        "message": "No active services available"
+      }
+    },
+    "read_only_session": {
+      "http_status": 400,
+      "error": {
+        "message": "Database is possibly not accessible at the moment"
+      }
+    },
+    "postgrest_config": {
+      "http_status": 404,
+      "error": {
+        "message": "Cannot GET /v1/projects/otnhhdxstdnwccehacku/config/postgrest"
+      }
+    },
+    "database_config_keys": {
+      "keys_present": []
+    },
+    "observed_at_utc": "2026-10-24T03:03:24.231258+00:00"
+  },
+  "configuration_metadata": {
+    "auth_config": {
+      "result": {
+        "fields_present": [
+          "disable_signup",
+          "external_email_enabled",
+          "jwt_exp",
+          "site_url",
+          "uri_allow_list"
+        ],
+        "configuration": {
+          "jwt_exp": 3600,
+          "disable_signup": false,
+          "external_email_enabled": true
+        },
+        "redirect_allowlist_present": true
+      }
+    },
+    "database_config": {
+      "result": {}
+    },
+    "postgrest_config": {
+      "unavailable": "Management API HTTP 404"
+    },
+    "secret_names": {
+      "result": {
+        "names": [],
+        "values_retained": false
+      }
+    },
+    "observed_at_utc": "2026-10-24T03:02:50.294074+00:00"
+  },
+  "trusted_transport_metadata": {
+    "project": {
+      "projectId": "cohort-platform-production",
+      "projectNumber": "809647670049",
+      "lifecycleState": "ACTIVE"
+    },
+    "service": {
+      "name": "cohort-trusted-plan-import",
+      "labels": {
+        "component": "trusted-plan-import",
+        "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+      },
+      "runtime_identity": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "latest_ready_revision": "cohort-trusted-plan-import-df97fb2f4797",
+      "conditions": [
+        {
+          "type": "Ready",
+          "status": "True"
+        },
+        {
+          "type": "ConfigurationsReady",
+          "status": "True"
+        },
+        {
+          "type": "RoutesReady",
+          "status": "True"
+        }
+      ],
+      "traffic": [
+        {
+          "revisionName": "cohort-trusted-plan-import-df97fb2f4797",
+          "percent": 100,
+          "latestRevision": true
+        }
+      ],
+      "containers": [
+        {
+          "image": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime/trusted-plan-import@sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9",
+          "environment_metadata": [
+            {
+              "name": "SUPABASE_URL",
+              "matches_field_manual": true,
+              "literal_present": true
+            },
+            {
+              "name": "SUPABASE_ANON_KEY",
+              "literal_present": true
+            },
+            {
+              "name": "BIND_ADDRESS",
+              "literal_present": true
+            },
+            {
+              "name": "MAX_PLAN_PACKAGE_YAML_BYTES",
+              "literal_present": true
+            },
+            {
+              "name": "SUPABASE_SERVICE_ROLE_KEY",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-service-role"
+              }
+            },
+            {
+              "name": "FOUNDER_EMAIL_ALLOWLIST",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-founder-allowlist"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "observed_at_utc": "2026-10-24T03:03:51.775881+00:00"
+  },
+  "trusted_transport_iam_metadata": {
+    "runtime_identity": {
+      "email": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com"
+    },
+    "secret_versions": [
+      {
+        "secret_name": "cohort-trusted-plan-import-service-role",
+        "version": "1",
+        "state": "ENABLED",
+        "createTime": "2026-08-11T01:25:11.299064Z",
+        "direct_runtime_roles": [
+          "roles/secretmanager.secretAccessor"
+        ]
+      },
+      {
+        "secret_name": "cohort-trusted-plan-import-founder-allowlist",
+        "version": "1",
+        "state": "ENABLED",
+        "createTime": "2026-08-11T01:08:39.822356Z",
+        "direct_runtime_roles": [
+          "roles/secretmanager.secretAccessor"
+        ]
+      }
+    ],
+    "direct_runtime_project_roles": [],
+    "observed_at_utc": "2026-10-24T03:04:00.423708+00:00",
+    "project_policy_read_status": "READ_VERIFIED",
+    "project_direct_binding_conditions_evaluated": false
+  },
+  "database_inspection": {
+    "ledger": null,
+    "function_bodies_owners": null,
+    "rls_effective_grants_defaults": null,
+    "protected_data_invariants": null,
+    "producer_memberships_definitions_artifacts": null,
+    "reason": "INACTIVE; database read-only SELECT HTTP 400; ledger API HTTP 544"
+  },
+  "source_audit": {
+    "source_head": "55c38bbee7015bc16b25dd6d4fef4eb01900195f",
+    "repository_migrations_verified": 128,
+    "migration_manifest_sha256": "e45643a5ebf6a197b79ce46e8a2540c04b874ea58f1c7bc9d8bc4166a3b8bf74",
+    "ordered_candidate_suffix": [
+      {
+        "path": "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql",
+        "sha256": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444"
+      },
+      {
+        "path": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+        "sha256": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0"
+      },
+      {
+        "path": "supabase/migrations/20261023120000_authoritative_exercise_versions.sql",
+        "sha256": "78e392109342873d74125982763e6c4629508c9e7282ddd9bd66ba4bc39baa61"
+      },
+      {
+        "path": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+        "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1"
+      },
+      {
+        "path": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+        "sha256": "33f7b9ef63bea7393c1355319b3812cd7d4c461efcb686b9b6aaa7ab0dd97398"
+      },
+      {
+        "path": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+        "sha256": "261619275e9007446f9502b24f61bf3e1d085f50562600e9ab8bb1e9b22cc98d"
+      }
+    ],
+    "earlier_security_prerequisites": [
+      {
+        "path": "supabase/migrations/20261007120000_history_read_permission_remediation.sql",
+        "sha256": "7c5ce19e72ddd438acfe9db23a5b3c4abed65bdeb6db8faa82e8e7df70910ff7"
+      },
+      {
+        "path": "supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql",
+        "sha256": "d0a6a4b16a60376c3d7d97420b9e5e423efaf12d6d636b16064bfa7143fcbbe5"
+      },
+      {
+        "path": "supabase/migrations/20261008120000_completion_result_identity.sql",
+        "sha256": "604309505ca646801951d92fb6e305ae070bf1a6c1854338d633fc015f809320"
+      },
+      {
+        "path": "supabase/migrations/20261008121000_completion_link_locking.sql",
+        "sha256": "33712db05d2439b7c42729b8e5f57f66a6992ef3cf1ce26a807f5bb15cc4e8cd"
+      },
+      {
+        "path": "supabase/migrations/20261009120000_backfill_authenticated_execute.sql",
+        "sha256": "282e8b24ade00ac19370519e5b03b302d763209afe7d847f777e098ae934e976"
+      }
+    ],
+    "actual_hosted_pending_set": null,
+    "hosted_ledger": null,
+    "blocked_reason": "Project INACTIVE; ledger and database queries unavailable",
+    "analysis": {
+      "before": 365,
+      "after": 364,
+      "added": [],
+      "removed": [
+        {
+          "severity": "info",
+          "file": "lib/features/programme/services/athlete_programme_authored_slot_resolver.dart",
+          "code": "prefer_initializing_formals",
+          "message": "Use an initializing formal to assign a parameter to a field. Try using an initialing formal ('this._versionStore') to initialize the field",
+          "original_location": "37:8"
+        }
+      ],
+      "source_commit": "70f7c72d0828b4043208dbea41ec4ab6fe6b85f3",
+      "before_source_sha256": "162da262fdf516beac0cb8088ec7dd3d185c7a3e72e94158bd5063b11c0853ec",
+      "after_source_sha256": "248bb5ca921825962e3559cdd462db31dc628e3296ce9f58da333837dbadf373",
+      "identity_comparison": "severity, file path, code and full message; line/column excluded to avoid mistaking moved diagnostics for new identities"
+    },
+    "reused_log_hashes_verified": {
+      "fresh-repeat-final.log": "314b6e824207b815eedbbe9bd9b39201643935a885af2245f5feab5c38ea7194",
+      "regressions-final.log": "53e05f3582edf74496f4466898a1506fb3eea4f6d528bd19286c2383f5e22de0",
+      "safety-final.log": "ccc07e36e4c250225133ec110becf30fcccbea9bcd70d53578598457ec0e4ee9",
+      "restore-sealed.log": "f93db5ad111f463f7c60b792fffd5be52bc3e47250526f5614658aa9ad61df51",
+      "analysis-baseline.log": "14e1c95b50b456ef2891650fd413cca8b7ce0d30a871bbca78571b405e48e3a6",
+      "analysis-final.log": "97352dc0f58b048c6dd96dd4d811464bac9355dda6f11cefd85bf4d7f138706d",
+      "web-build-sealed.log": "c2eb5b8d102bb1d81732cc8869e3252e12e77a33bc12f758bb5da884fe0df3d9",
+      "macos-build-sealed.log": "4480351c94b9e3d09954d7c35bf8b0d1f0eaedcb1f4217181a8240a1e4d5b1d8"
+    }
+  },
+  "preservation": {
+    "previous_published_post_push_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "current_before_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "older_checkouts_compared": 20,
+    "all_fields_exact": true,
+    "original_outstanding_paths": 95,
+    "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "prior_restoration": {
+      "/Users/leewebber/.codex/worktrees/programme-studio-d2/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false,
+        "original_HEAD": "6f83f7324fe0ea585f6c7f3a4ba34151ee588ec6",
+        "old_index_sha256": "72f2e25dd796e53eb671fcfbb6785b24158b76827f87ad56cd0be9ee8d2dbc4a",
+        "regenerated_index_sha256": "8e2bf25433a56fb4037bfcd36b6694a7224b457ebe3f655ef621a399adad937c"
+      },
+      "/Users/leewebber/.codex/worktrees/programme-studio-stage2/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false,
+        "original_HEAD": "6318f319db15ff7a42283c7719dc22a6dc28daa5",
+        "old_index_sha256": "c4303a37f67ccc2a74b1ee48f53e000abdb74c09a0cc62515af7d587adefaefe",
+        "regenerated_index_sha256": "850a7e6c3dc505dd3e52aa9075ee54d8e17f583036722ff5066536c13a7b51c8"
+      },
+      "/Users/leewebber/.codex/worktrees/studio-canonical-source-export/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false,
+        "original_HEAD": "2d97daf71e31c4691eba9cf85e731b4a1b3c2e33",
+        "old_index_sha256": "d63947b0a70e372ca09bdde0e4b8e78041be27bdc3d97e5ed92ed3060b985d6f",
+        "regenerated_index_sha256": "d401bb46509ce7c0d66fffcb3396df9430fcfee5cc67549a8787a7668239c9da"
+      },
+      "/Users/leewebber/.codex/worktrees/studio-editable-workspace/cohort_platform": {
+        "HEAD": true,
+        "branch": true,
+        "dirty": true,
+        "files": true,
+        "temp": true,
+        "git_pointer_sha256": true,
+        "index_sha256": false,
+        "original_HEAD": "3ec4866c5d4583fdb5f7c581b5e6099ee3616ef6",
+        "old_index_sha256": "a6e91fcba3f31191312f874ade5853f1dd390a14ec333975c8630d84307952ee",
+        "regenerated_index_sha256": "6ba278b3356fda268fd21b41d788f681f15779151e2b65682a061c1ede5fc4d6"
+      }
+    },
+    "after_documentation_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "after_documentation_all_fields_exact": true,
+    "snapshot_refs_reverified": true,
+    "cleanup_mechanism": {
+      "operation": "desktop automatic managed-worktree retention following create_worktree",
+      "planned_at_utc": "2026-10-23T12:51:25.290Z",
+      "keep_count": 15,
+      "total_worktrees": 20,
+      "deletes_planned": 4,
+      "log_file_sha256": "9ab64b347221582aab8f372bbb2c738c78de801ecc64e1f0bc6adb2ca6c442d8",
+      "preventive_global_setting_changed": false,
+      "managed_worktree_creation_or_cleanup_invoked_this_task": false
+    }
+  },
+  "hosted_mutations": false,
+  "secret_payloads_retained": false,
+  "new_regression_or_build_runs": false,
+  "final_supabase_identity": {
+    "id": "otnhhdxstdnwccehacku",
+    "name": "Cohort Field Manual",
+    "region": "eu-west-1",
+    "status": "INACTIVE",
+    "observed_at_utc": "2026-10-24T03:12:35.986080+00:00"
+  },
+  "verification": {
+    "json_parse": true,
+    "relative_links": true,
+    "sql_static_read_only_checks": true,
+    "sql_executed_hosted": false,
+    "sql_parser_or_local_database_execution": false,
+    "regression_build_evidence": "Reused eight exact log hashes from published source, no new runtime change",
+    "review_fixes": [
+      "Ledger statement_count handles absent/JSON-null statement arrays",
+      "Catalog constraints/index bodies fingerprinted rather than exposing arbitrary deployed literals"
+    ],
+    "completed_at_utc": "2026-10-24T03:13:14.373509+00:00",
+    "credential_pattern_scan": true,
+    "diff_check": true,
+    "reviewed_remote_main_before_commit": "55c38bbee7015bc16b25dd6d4fef4eb01900195f"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "source_head": "55c38bbee7015bc16b25dd6d4fef4eb01900195f",
+  "reviewed_inventory": "../hyrox_athlete_runner/MIGRATIONS.json",
+  "reviewed_inventory_sha256": "e45643a5ebf6a197b79ce46e8a2540c04b874ea58f1c7bc9d8bc4166a3b8bf74",
+  "repository_files_verified_against_published_git_blobs": 128,
+  "hosted_ledger": null,
+  "actual_pending_migrations": null,
+  "readiness": "BLOCKED_DATABASE_INACCESSIBLE_DO_NOT_APPLY",
+  "earlier_security_prerequisites_status": "UNKNOWN_CURRENT_HOSTED_STATE",
+  "earlier_security_prerequisites": [
+    {
+      "path": "supabase/migrations/20261007120000_history_read_permission_remediation.sql",
+      "sha256": "7c5ce19e72ddd438acfe9db23a5b3c4abed65bdeb6db8faa82e8e7df70910ff7"
+    },
+    {
+      "path": "supabase/migrations/20261007130000_completion_ownership_and_parent_guard.sql",
+      "sha256": "d0a6a4b16a60376c3d7d97420b9e5e423efaf12d6d636b16064bfa7143fcbbe5"
+    },
+    {
+      "path": "supabase/migrations/20261008120000_completion_result_identity.sql",
+      "sha256": "604309505ca646801951d92fb6e305ae070bf1a6c1854338d633fc015f809320"
+    },
+    {
+      "path": "supabase/migrations/20261008121000_completion_link_locking.sql",
+      "sha256": "33712db05d2439b7c42729b8e5f57f66a6992ef3cf1ce26a807f5bb15cc4e8cd"
+    },
+    {
+      "path": "supabase/migrations/20261009120000_backfill_authenticated_execute.sql",
+      "sha256": "282e8b24ade00ac19370519e5b03b302d763209afe7d847f777e098ae934e976"
+    }
+  ],
+  "candidate_suffix_status": "CONDITIONAL_ONLY_IF_COMPLETE_122_PREFIX_IS_VERIFIED",
+  "candidate_suffix": [
+    {
+      "path": "supabase/migrations/20261022120000_hyrox_base_declared_evidence.sql",
+      "sha256": "2ad14f089cd035bda16599214623a2d3cba9ec178be6855bdf88b71aa647e444"
+    },
+    {
+      "path": "supabase/migrations/20261022121000_v3_unresolved_authority_guard.sql",
+      "sha256": "bffce413245eb8d71e5a4dcbc9f73ab36c91c58ec5ee8fec6e23c71dedba6cf0"
+    },
+    {
+      "path": "supabase/migrations/20261023120000_authoritative_exercise_versions.sql",
+      "sha256": "78e392109342873d74125982763e6c4629508c9e7282ddd9bd66ba4bc39baa61"
+    },
+    {
+      "path": "supabase/migrations/20261023121000_v3_authoritative_publication.sql",
+      "sha256": "3bbb2534706a633e7584a76f076c30e5a815ecf84f55ef85a51c6ebb40b33ef1"
+    },
+    {
+      "path": "supabase/migrations/20261023122000_v3_programme_consent_start.sql",
+      "sha256": "33f7b9ef63bea7393c1355319b3812cd7d4c461efcb686b9b6aaa7ab0dd97398"
+    },
+    {
+      "path": "supabase/migrations/20261023130000_v3_athlete_review_state.sql",
+      "sha256": "261619275e9007446f9502b24f61bf3e1d085f50562600e9ab8bb1e9b22cc98d"
+    }
+  ]
+}

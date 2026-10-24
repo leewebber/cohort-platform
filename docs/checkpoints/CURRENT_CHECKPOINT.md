@@ -1,4 +1,23 @@
 # Current repository checkpoint
+> **Field Manual read-only hosted readiness — blocked, 2026-10-24:**
+> [Handoff](./hyrox_hosted_readiness/HANDOFF.md),
+> [conditional manifest](./hyrox_hosted_readiness/MIGRATIONS.json) and
+> [deployment/recovery plan](./hyrox_hosted_readiness/DEPLOYMENT_PLAN.md) record fresh identity
+> confirmation for `otnhhdxstdnwccehacku`: **INACTIVE**, database/health/ledger unavailable.
+> Current ledger, exact pending set, catalogs/effective security and producer/artifact state
+> remain unverified; old ledger 122 is not adopted. All 128 source migration hashes/order
+> match published `55c38bbee7015bc16b25dd6d4fef4eb01900195f`; six-file suffix including
+> `20261023130000` is conditional only. Existing legacy Cloud Run transport/pinned secret
+> references are verified; no v3 HTTP composition or real publication-event adapter exists
+> in reviewed source. [Preservation/analysis](./hyrox_hosted_readiness/PRESERVATION_AND_ANALYSIS.md)
+> identifies automatic keep-15 cleanup, verifies all 20 older inventories unchanged and
+> explains the single removed info diagnostic (365→364). No indexes were recreated again.
+> Separate project-resume/writer-hold authority and fresh read-only proof precede any exact
+> schema approval. Producer provisioning, transport/content publication, assignment and
+> client/device rollout stay separate. No hosted mutation or browser/app/device control.
+> Supporting content remains not yet transferred/consolidated; no 48-session/Test Week/race
+> mapping invention, hosted availability, production readiness or broader closure claim.
+
 > **Athlete v3 review/consent/frozen runner — locally proved, 2026-10-23:**
 > [Handoff](./hyrox_athlete_runner/HANDOFF.md), [verification](./hyrox_athlete_runner/VERIFICATION.json)
 > and [deployment prerequisites](./hyrox_athlete_runner/DEPLOYMENT.md) deliver authenticated
