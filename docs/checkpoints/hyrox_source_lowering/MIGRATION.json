@@ -1,0 +1,11 @@
+{
+  "hosted_ledger": "UNKNOWN_NOT_CONTACTED",
+  "hosted_pending_set": "UNKNOWN_NOT_APPROVED",
+  "new_file": "supabase/migrations/20261024130000_source_duration_choice.sql",
+  "previous_bytes_unchanged": true,
+  "previous_migrations": 129,
+  "purpose": "Approved squat rest scope; immutable original-range/duration choice at existing canonical start; prescribed snapshot guard on records.",
+  "sha256": "e8c7209635bfb7ff83ba7d9962230613c71704925a8d4eab413e71c81efe8522",
+  "status": "LOCAL_ONLY_NOT_APPLIED_HOSTED",
+  "total_source_migrations": 130
+}

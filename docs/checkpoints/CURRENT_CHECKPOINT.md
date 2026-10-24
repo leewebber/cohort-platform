@@ -1,5 +1,24 @@
 # Current repository checkpoint
 
+> **HYROX source lowering/duration choice — locally verified, 2026-10-24:**
+> [Master](../programmes/hyrox_base/MASTER.md), [all-category audit](../programmes/hyrox_base/COVERAGE.md) and
+> [handoff](./hyrox_source_lowering/HANDOFF.md) record 48 complete main prescriptions, separate preparation gaps
+> (24 gym / eight quality), 29 draft exercise candidates and zero real authoritative bundles.
+> Explicit W1 row/plank, long-run five-plus-five and squat 150–180 s rest corrections apply.
+> Canonical source lowering/export/reopen and immutable athlete duration choice are local
+> implementations; existing capture semantics are reused. All 48 retain T1/B3 binding
+> blockers; eight Gym C also lack race mappings. C1 records gym capture limits, not new
+> mandatory results. 489 affected tests (one authenticated gate skipped), nine final source,
+> 20 duration launcher, 13 offline, 41 compiler and 57 server tests; six safety groups and
+> fresh/repeat SQL-role/save/completion/History proof pass. Full analysis 364→362 inherited,
+> zero errors/new/changed-file diagnostics. New migration is local only; 129 old bytes exact.
+> Desktop keep-15 cleanup removed one older checkout; files/branch/HEAD/status/.temp were
+> restored, but its original raw index was lost and replaced with an equivalent clean index.
+> Other 19 older indices are exact; preservation exception/administrative Git locks are
+> explicit in the handoff. No global cleanup setting, managed creation, Python networking,
+> app/browser/device control, hosted operation, provisioning or real publication/athlete
+> write. Test Week and broader Stage 2/Sprint C/commercial readiness remain separate.
+
 > **HYROX Base content consolidation — locally reviewed, 2026-10-24:**
 > [Master](../programmes/hyrox_base/MASTER.md),
 > [provenance/decisions](../programmes/hyrox_base/DECISIONS.md),

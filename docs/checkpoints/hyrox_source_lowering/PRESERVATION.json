@@ -1,0 +1,55 @@
+{
+  "after_older_sha256": "bdf22687a1eb0876398e377bcdd3a8de3ce6fd05313a6d54f9a23a4b4b011274",
+  "all_recorded_files_heads_branches_status_and_temp_exact": true,
+  "all_recorded_files_indices_heads_status_and_temp_exact": false,
+  "before_sha256": "c5d000814ff1517bbef562140fba29280850967aa9a76c9ba5fd22b014d863e7",
+  "cleanup_setting_changes": false,
+  "differences": [
+    {
+      "fields": [
+        "index"
+      ],
+      "path": "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform"
+    }
+  ],
+  "index_byte_exact_checkouts": 19,
+  "managed_worktree_creation": false,
+  "older_checkouts": 20,
+  "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_index_bytes_preserved_for_every_checkout": false,
+  "original_outstanding_paths": 95,
+  "python_network_used": false,
+  "recovery_exception": {
+    "desktop_cleanup_time_utc": "2026-10-24T10:50:59.910Z",
+    "keep_count": 15,
+    "new_administrative_git_locks": [
+      "/Users/leewebber/.codex/worktrees/hyrox-athlete-runner/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/hyrox-authoritative-start/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/hyrox-base-personalisation/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/hyrox-base-source-readiness/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/hyrox-bound-prescriptions/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/hyrox-v3-canonical-storage/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-apollo-internal-pilot/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-approved-source-coverage/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-canonical-intake/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-four-week-schedule/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-prescription-comparison/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-programme-first-usability/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-strength-lineages/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-usability-allocation/cohort_platform",
+      "/Users/leewebber/.codex/worktrees/studio-usability-integration/cohort_platform"
+    ],
+    "no_global_cleanup_setting_change": true,
+    "no_managed_worktree_creation": true,
+    "old_index_sha256": "83f80fcaf28e402f27e47fc888d6bc2a7c1f1ee2723f3cc14f7ef9257e0c5469",
+    "original_index_bytes_recovered": false,
+    "recorded_files_and_absent_temp_restored": true,
+    "removed_checkout": "/Users/leewebber/.codex/worktrees/studio-lineages-final-review/cohort_platform",
+    "replacement_index_sha256": "a3c4c4422a86447937dec88156c62e8643efdf7b447090d2424f8999d94282b8",
+    "replacement_index_source": "Existing clean same-HEAD checkout with identical recorded files and skip-worktree flags",
+    "restored_branch": "refs/heads/codex/studio-strength-lineages-review",
+    "restored_head": "0767ac6a80fc6611598b9ca5f2c991d3f76125a6",
+    "snapshot_ref": "refs/codex/snapshots/48f089d023de56f9fef95ac342c1d415248dbf62"
+  }
+}

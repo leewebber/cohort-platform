@@ -15,7 +15,7 @@ existing verified-publication authority port. No default fixtures, name lookup, 
 fallback, publication flag or matching untrusted hash supplies authority. Missing, draft,
 wrong-version/digest or unverified definitions refuse before lowering. Local candidate
 definitions remain unadmitted. Software fixtures test every source but certify no real
-Base exercise. Unknown constructs/fields and contradictory interval steps refuse.
+Base exercise. Unknown main working constructs/fields and contradictory interval steps refuse.
 
 Lowering reuses SessionBlock, StrengthExercisePrescription, TimerConfiguration and the
 existing runner. Additive fields retain RIR/rest ranges, per-side carry distance, timed

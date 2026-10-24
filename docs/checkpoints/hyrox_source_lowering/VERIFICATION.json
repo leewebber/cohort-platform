@@ -1,0 +1,94 @@
+{
+  "analysis": {
+    "added": [],
+    "after": 362,
+    "after_severity": {
+      "info": 254,
+      "warning": 108
+    },
+    "before": 364,
+    "before_severity": {
+      "info": 254,
+      "warning": 110
+    },
+    "removed": [
+      [
+        "warning",
+        "lib/features/session_builder/services/session_execution_plan_builder.dart",
+        "unused_import",
+        "Unused import: '../../../models/session_block_exercise_link.dart'. Try removing the import directive"
+      ],
+      [
+        "warning",
+        "lib/features/session_builder/services/session_execution_plan_builder.dart",
+        "unused_import",
+        "Unused import: '../../../models/workout_format.dart'. Try removing the import directive"
+      ]
+    ]
+  },
+  "base": "8f4e57c4f1f61eb28c745cf3e9c0603c0d26f16b",
+  "checks": {
+    "affected_flutter_passed": 489,
+    "affected_flutter_skipped": 1,
+    "changed_dart_diagnostics": 0,
+    "changed_dart_files_analyzed": 23,
+    "compiler_and_goldens": 41,
+    "deterministic_artifacts": 7,
+    "diff_whitespace": "PASS",
+    "duration_launcher_passed": 20,
+    "final_source_lowering_passed": 9,
+    "offline_source_tests": 13,
+    "programme_local_links": "PASS",
+    "safety_groups_failed": 0,
+    "safety_groups_passed": 6,
+    "sql_fresh": "PASS",
+    "sql_repeat": "PASS",
+    "sql_save_completion_history": "PASS",
+    "trusted_server_unit_tests": 57
+  },
+  "implementation": "89059fd90b0ccee8b915e4310c7860534370eb5e",
+  "not_performed": [
+    "New duration-choice concurrency race proof",
+    "Browser or app control",
+    "Hosted inspection or deployment",
+    "Producer provisioning or real publication",
+    "Athlete assignment/writes",
+    "Device build/distribution or native review"
+  ],
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-lowering",
+  "raw_log_sha256": {
+    "analysis-before.log": "b2b8f42b58eeeac9a15bf2d479da9c8484b22b8ec1176b1d103ffc33f15691a9",
+    "analysis-current.log": "810ee0c1fb6410737802ce3a56b8702965a5020ea4a3ba10f0dd4f76490c9468",
+    "changed-analysis.log": "de225c147d6b807252b7f032a38812d022fe656f9bc7e3ae042e823b19cb189f",
+    "compiler-tests.log": "306a02386f263f24fc45a3e83ece9116dfd41349152341272e5371bdb50b81d0",
+    "duration-widget-tests.log": "684e51a85410e2c202fdbf41ab6cd11923f067e1a5483ce44a7e5ddd43e1d80c",
+    "python-tests.log": "88d487dc414a75918fa656a16be00516aa76d98a77e8c3dfc740baa47de5ed6b",
+    "regressions.log": "d7091215cd7a65682647586cc4a3f34af6df8fbe77b2af17f9f6f58daed44ce6",
+    "safety.log": "8dc496ae63796ac0f988ad76f14d1e60b7232b3d98f2535dd1962e20655ce5fd",
+    "server-tests.log": "a0f315c2ad3ab3cdf44130b07c53d41ca0677fafd0ac685914007efb136b019e",
+    "source-final-tests.log": "dcca0333224f9ff8d9b19fe858e709b61be0f71dd1cd6f7c7a948287f93f7dea",
+    "sql-gate.log": "47cef4ca5639bd311e1e9ddb7f7902546689ebb725bbf1a57cf7226b6b6c1a34"
+  },
+  "readiness": {
+    "commercial_readiness": false,
+    "main_prescriptions_complete": 48,
+    "preparation_gaps": 32,
+    "quantified_preparation_complete": 16,
+    "real_authoritative_exercise_bindings": 0,
+    "real_physical_source_versions": 0,
+    "review_exercise_candidates": 29,
+    "stage2_or_sprint_c_closure": false
+  },
+  "reused_unchanged_evidence": {
+    "base": "cbe281bed99eca5807bd2d3c39959ae83469120e",
+    "checkpoint": "docs/checkpoints/hyrox_v3_http/VERIFICATION.json",
+    "proof": "Prior committed HTTP/GoTrue/trusted producer proof is historical; unchanged runtime/package implementation does not prove the new duration RPC over HTTP."
+  },
+  "scope": "LOCAL_SYNTHETIC_IMPLEMENTATION_AND_SQL_ROLE_PROOF",
+  "skip": {
+    "gate": "run_hyrox_authoritative_start_gate.sh also runs Python HTTP probes; denied Python networking was not retried or bypassed.",
+    "reason": "COHORT_LOCAL_V3_CONFIG absent; requires task-owned disposable authenticated local gate.",
+    "sql_proof_limit": "Docker psql over stdin proves actual SQL roles, source/choice transaction and completion/History; not GoTrue HTTP or authenticated Flutter transport.",
+    "test": "test/hyrox_base/athlete_authoritative_local_test.dart"
+  }
+}
