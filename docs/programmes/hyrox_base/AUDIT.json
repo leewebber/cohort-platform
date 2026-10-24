@@ -1,0 +1,1283 @@
+{
+  "canonical_compilation": {
+    "canonical_packages": 0,
+    "detail": "No exact approved published ExerciseDefinition/event bundle or physical session revisions supplied; no authority fabricated.",
+    "reasons": [
+      "T1"
+    ],
+    "source_count": 48,
+    "status": "blocked_before_canonical_compilation"
+  },
+  "identities": [
+    {
+      "authored_label": "assault_bike",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "back_squat",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "bodyweight_squat",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "chest_supported_row",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "dead_bug",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "dumbbell_shoulder_press",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "easy_bike",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "front_rack_reverse_lunge",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "glute_bridge",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "incline_dumbbell_press",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "kettlebell_swing",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "light_band_pull_apart",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "light_row",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "light_scapular_row",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "long_lever_plank",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "pallof_press",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "rdl",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "reverse_lunge",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "rowing",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "running",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "ski_erg",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "split_stance_single_arm_cable_row",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "strict_overhead_press",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "strict_pull_up",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "suitcase_carry",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "two_dumbbell_devils_press",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "unloaded_hip_hinge",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "wall_ball",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    },
+    {
+      "authored_label": "wall_slide",
+      "digest": null,
+      "exact_definition": null,
+      "exact_version": null,
+      "publication_event": null,
+      "resolution": "T1"
+    }
+  ],
+  "sessions": [
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W01-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1170,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W01-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3300,
+          4380
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D2"
+      ],
+      "source_id": "BASE-W01-GYM_B",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 720,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W01-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3260,
+          3560
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D1",
+        "D4"
+      ],
+      "source_id": "BASE-W01-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 900,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W01-LONG",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3600,
+          5100
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W02-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1380,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W02-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3300,
+          4680
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W02-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 840,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W02-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3620,
+          3920
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W02-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1080,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W02-LONG",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3900,
+          5400
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W03-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1260,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W03-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3600,
+          4680
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W03-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 960,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W03-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3740,
+          4040
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W03-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1080,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D3"
+      ],
+      "source_id": "BASE-W03-LONG",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          4200,
+          5700
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W04-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 750,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W04-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3300,
+          4380
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W04-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 600,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W04-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3260,
+          3560
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W04-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 720,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W04-LONG",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3900,
+          5100
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W05-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1095,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W05-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3600,
+          4680
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W05-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 720,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W05-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3920,
+          4220
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W05-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 900,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D3"
+      ],
+      "source_id": "BASE-W05-LONG",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          4200,
+          5700
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W06-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1290,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W06-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3600,
+          4980
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W06-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 840,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W06-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3980,
+          4280
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W06-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1080,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D3"
+      ],
+      "source_id": "BASE-W06-LONG",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          4500,
+          5700
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W07-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1200,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W07-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3900,
+          4980
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W07-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 960,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W07-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3980,
+          4280
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W07-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 1080,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D3"
+      ],
+      "source_id": "BASE-W07-LONG",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          4500,
+          5700
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W08-GYM_A",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 750,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W08-EASY",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3300,
+          4380
+        ],
+        "kind": "bounded"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W08-GYM_B",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 600,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [
+        "D6"
+      ],
+      "source_id": "BASE-W08-QUALITY",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1"
+      ],
+      "timing": {
+        "full_seconds": null,
+        "kind": "partial",
+        "known_seconds": [
+          3500,
+          3800
+        ],
+        "unknown": "dynamic preparation duration and transitions"
+      }
+    },
+    {
+      "content_decisions": [
+        "D4"
+      ],
+      "source_id": "BASE-W08-GYM_C",
+      "status": "awaiting_specific_content_decision",
+      "technical_blockers": [
+        "T1",
+        "T2"
+      ],
+      "timing": {
+        "cooldown_approximate": true,
+        "cooldown_minutes": [
+          5,
+          5
+        ],
+        "finisher_seconds": 720,
+        "full_seconds": null,
+        "kind": "partial",
+        "preparation_minutes": [
+          12,
+          15
+        ],
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
+      }
+    },
+    {
+      "content_decisions": [],
+      "source_id": "BASE-W08-LONG",
+      "status": "technically_blocked",
+      "technical_blockers": [
+        "T1",
+        "T3"
+      ],
+      "timing": {
+        "full_seconds": [
+          3900,
+          5400
+        ],
+        "kind": "bounded"
+      }
+    }
+  ],
+  "summary": {
+    "all_sessions_have_T1": true,
+    "awaiting_specific_content_decision": 29,
+    "canonical_source_complete": 0,
+    "rest_days": 8,
+    "review_sources": 48,
+    "technically_blocked": 19,
+    "training_sessions": 48
+  }
+}

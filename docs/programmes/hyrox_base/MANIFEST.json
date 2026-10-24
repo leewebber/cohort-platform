@@ -1,0 +1,15 @@
+{
+  "files": {
+    "AUDIT.json": "6e29e28f07bfaf42044af4ba9a3f35933e2e26fb2c7106c3003204bb05b145b6",
+    "COVERAGE.md": "af6211a2211058ee57e648c90e9294868f1866653831f5db35cb050c5317115b",
+    "MASTER.md": "77041152061ba6a23b6744139d99dcbf3ca7f6ea52c26d909aed459e8ed0dac5",
+    "REVIEW_EXPORT.json": "c3bd897077984dbbb3a827d67c28eb9efac30cf75d0a2643f21711ea8860151b",
+    "SESSIONS.json": "9d221a0fd2168636dabe259f43decfd4db1e22ebbcd8264c3f6b961f108a11dd"
+  },
+  "format": "hyrox-base-review-source-v1",
+  "inputs": {
+    "PROGRESSION.json": "dafbfced75fa306389afd653afa44c0bb0ef062e3c5fdf461920a2b2b2f0cc07",
+    "TRANSFER_BRIEF.txt": "21344747b34909af82073f669865fdc1d23b37d00339c0d8a1b4b3b8375bbe0e",
+    "approved_brief": "5ae2ebcc020883ce2f496b457296d349ee1793c513818501d616238341d32056"
+  }
+}

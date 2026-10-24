@@ -1,0 +1,136 @@
+Continue Cohort Platform from published main:
+cbe281bed99eca5807bd2d3c39959ae83469120e
+
+Read repository instructions, CURRENT_CHECKPOINT.md, HYROX Base DECISIONS.md, existing approved run/row/squat prescriptions and:
+docs/checkpoints/hyrox_v3_http/HANDOFF.md
+
+Next milestone: consolidate the HYROX Base content into one complete, reviewable source specification and construct all session sources supported by established contracts.
+
+Do not build another publication service in this task. Hosted deployment and trusted producer provisioning remain separate blockers.
+
+The following transfers supporting content discussed with the founder. Retain provenance and distinguish explicit approvals, accepted direction and proposed details. This instruction authorises consolidation and local technical representation, not final commercial publication or a blanket approval of every supporting prescription.
+
+PROGRAMME
+
+Eight weeks, six sessions/week, one session/day. Build aerobic capacity, compound strength, shoulders/pulling, grip and bracing before specific HYROX preparation. Generally 60–90 min; do not add filler to shorter sessions.
+
+Mon Gym A:
+Back squat; strict overhead press + pull-ups; suitcase carry; approved rowing progression.
+Tue easy run.
+Wed Gym B:
+RDL; incline DB press + chest-supported row; long-lever plank; bike conditioning.
+Thu approved quality run.
+Fri Gym C:
+Front-rack reverse lunge; DB shoulder press + split-stance single-arm cable row; Pallof press; SkiErg/wall balls.
+Sat long run.
+Sun rest.
+
+Retain existing eight-week run/row/squat rules. Latest long-run correction is W6 and W7 both 65–80 min of main running. Record the correction's provenance rather than silently overwriting earlier values.
+
+RDL progression:
+W1 3x8 3RIR; W2 3x8 2–3RIR; W3 3x8 2RIR; W4 2x8 4RIR;
+W5 3x6 3RIR; W6 3x6 2–3RIR; W7 4x6 2RIR; W8 2x6 3–4RIR.
+Rest 2–3 min.
+
+Reverse lunge:
+W1 3x8/leg 3RIR; W2 3x8/leg 2–3RIR; W3 3x8/leg 2RIR; W4 2x6/leg 4RIR;
+W5 3x6/leg 3RIR; W6 3x6/leg 2–3RIR; W7 3x6/leg 2RIR; W8 2x6/leg 3–4RIR.
+Rest 2–3 min.
+
+UPPER BODY
+
+W1–3:
+Presses 3x8–10; pull-ups 3x5–8; rows 3x10–12; 2RIR.
+Original W1 single-arm row was 3x10/side; preserve this discrepancy in the decision register instead of silently treating the later range as approved.
+W4: presses 2x8; pull-ups 2x5; rows 2x10; 4RIR.
+W5: presses 3x6–8; pull-ups 3x5–8; rows 3x8–10; 2–3RIR.
+W6–7: same sets/reps, 2RIR.
+W8: presses 2x6–8; pull-ups 2x5–8; rows 2x8–10; 3–4RIR.
+Single-arm reps per side.
+Rest after pairs: A 90–120 sec, B/C 90 sec.
+Build reps within ranges before suggesting load increases; athlete accepts. Do not infer OHP loading from its benchmark: Base's approved explicit percentage loading applies only to back squat.
+
+CORE
+
+Suitcase carries per side, W1–8:
+3x30m, 3x35m, 3x40m, 2x25m lighter,
+3x30m with optional load increase, 3x35m, 3x40m, 2x30m.
+
+Long-lever plank:
+3x20sec, 3x25sec, 3x30sec, 2x20sec,
+3x20sec with optional longer lever, 3x25sec, 3x30sec, 2x20sec.
+Original W1 allowed 20–30 sec; retain that provenance discrepancy.
+
+Pallof press per side:
+3x8, 3x9, 3x10, 2x8 lighter,
+3x8 with optional resistance increase, 3x9, 3x10, 2x8.
+Two-second extended holds. Core rest 45–60 sec as needed.
+No compulsory load/leverage increase irrespective of position.
+
+GYM B FINISHER
+
+Alternating EMOM, RPE about 7:
+W1 12min, W2 14min, W3 16min:
+minute 1 35sec assault bike; minute 2 10 kettlebell swings.
+W4 10min: 30sec bike / 8 light swings, RPE6.
+W5 12min, W6 14min, W7 16min:
+35sec bike / 5 two-dumbbell devil's presses.
+W8 repeats W4.
+Rep work should leave recovery within the minute; record athlete scaling. Loads are effort/technique selected, not invented fixed kilograms.
+
+GYM C FINISHER
+
+Three-minute cycle:
+minute 1 SkiErg, minute 2 wall balls, minute 3 rest.
+W1 5 rounds: 40sec ski/10 WB.
+W2 6 rounds: 40sec/10.
+W3 6 rounds: 45sec/10.
+W4 4 rounds: 35sec/8.
+W5 5 rounds: 45sec/12.
+W6 6 rounds: 45sec/12.
+W7 6 rounds: 50sec/12.
+W8 4 rounds: 40sec/10.
+RPE6–7; W4/8 about6.
+Founder explicitly requires wall balls at selected race weight and race-standard target height. Exact authoritative division mappings remain unresolved: represent that dependency without guessing values.
+
+PREPARATION
+
+Gym A:
+5min easy row; two rounds of 8 BW squats, 8 glute bridges, 6 dead bugs/side, 10 light band pull-aparts; squat ramp-up sets.
+Gym B:
+5min easy bike; two rounds of 8 unloaded hinges, 6 reverse lunges/side, 10 light rows; RDL ramp-up sets.
+Gym C:
+5min easy SkiErg; two rounds of 6 reverse lunges/side, 8 light scapular rows, 8 wall slides; lunge ramp-up sets.
+Gym preparation budget 12–15min; cooldown about5min easy movement.
+
+Quality run:
+10min easy run, dynamic preparation, 3x20sec relaxed accelerations with 40sec easy between; work/recovery per approved week; 15–20min easy running and 5min walking afterward.
+Easy run: 5–8min walk/jog before; 5min walk after.
+Long run: 5–10min gentle preparation, 5min walk after.
+Audit duration windows: an 80min main run plus maximum stated preparation/cooldown exceeds90min. Flag the exact conflict for a compact content decision; do not silently alter approved main running windows or warm-ups.
+
+IMPLEMENTATION
+
+Create one human-readable master specification, structured progression tables and a provenance/decision register. Reconcile against existing decisions. Do not promote an assistant proposal to founder approval merely because it is present here.
+
+Generate all representable session sources with exact exercise/version resolution. Preserve ranges, per-side forms, effort targets, supersets, timed work and recovery. Never flatten unsupported constructs or fabricate canonical identities.
+
+Where schema or identity coverage is missing, complete the independent session sources and produce exact blockers. Add narrowly necessary source-preserving implementation only where semantics are established.
+
+Produce a completeness audit for 48 training sessions plus rest-day schedule entries. Report each session as source-complete, technically blocked or awaiting a specific content decision. Test Week remains separate and unauthored.
+
+Validate progressions, source compilation, personalisation bindings, full readable coverage, session timing and export round trips. Use proportionate tests and required gates for actual code changes; reuse valid evidence.
+
+Use existing clean worktrees safely; avoid triggering keep-15 cleanup. Preserve original outstanding work and older inventories.
+
+Computer/browser control remains revoked. Python local-network permission remains denied; do not bypass the denial or retry blocked access. Use allowed local processing/tests; report a specific blocked test if one arises.
+
+Normal git fetch/push and local focused commits are authorised after review. No hosted operations, producer provisioning, real publication/assignment, athlete writes or device work.
+
+Return:
+- Published SHA and durable master specification.
+- 48-session completeness/coverage audit.
+- Exact remaining decisions in one short consolidated list.
+- Validation and remaining technical gaps.
+
+Do not claim complete content approval, publication readiness or Stage 2 closure.
