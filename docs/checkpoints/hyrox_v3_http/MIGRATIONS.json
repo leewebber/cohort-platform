@@ -522,5 +522,6 @@
   "previous_128_hashes_unchanged": true,
   "hosted_ledger": null,
   "hosted_pending_set": null,
-  "hosted_apply_authorised": false
+  "hosted_apply_authorised": false,
+  "implementation_commit": "f7d9824f6c74b0f800847221dd8e1c16e625a0e5"
 }

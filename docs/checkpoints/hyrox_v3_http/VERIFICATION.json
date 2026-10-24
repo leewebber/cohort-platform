@@ -1,0 +1,98 @@
+{
+  "base": "f8afc4d15552d76325cb94819cc43802871b85d6",
+  "status": "LOCAL_HTTP_AUTH_PRODUCER_SQL_PROVED_NOT_DEPLOYED",
+  "analysis": {
+    "fresh_baseline": 364,
+    "final": 364,
+    "errors": 0,
+    "warnings": 110,
+    "infos": 254,
+    "added": [],
+    "removed": [],
+    "changed_dart_files": [
+      "server/trusted_plan_package_import/bin/server.dart",
+      "server/trusted_plan_package_import/lib/src/authoritative_v3_publication.dart",
+      "server/trusted_plan_package_import/lib/src/contracts.dart",
+      "server/trusted_plan_package_import/lib/src/runtime_handler.dart",
+      "server/trusted_plan_package_import/lib/src/server_config.dart",
+      "server/trusted_plan_package_import/lib/src/supabase_import_rpc.dart",
+      "server/trusted_plan_package_import/lib/trusted_plan_package_import.dart",
+      "server/trusted_plan_package_import/lib/src/exercise_publication_producer.dart",
+      "server/trusted_plan_package_import/lib/src/publication_events.dart",
+      "server/trusted_plan_package_import/lib/src/v3_publication_endpoint.dart",
+      "server/trusted_plan_package_import/test/v3_http_publication_test.dart"
+    ],
+    "changed_file_diagnostics": [],
+    "server_diagnostics": [],
+    "full_repository_analysis_green": false
+  },
+  "tests": {
+    "server": 57,
+    "compiler_and_goldens": 41,
+    "required_safety_groups_passed": 6,
+    "required_safety_groups_failed": 0,
+    "fresh_and_repeat_local_http_auth_sql": true,
+    "local_http_assertions_per_pass": 79,
+    "migration_count": 129,
+    "actual_gotrue_sessions": true,
+    "native_AOT_server_compiled_and_executed": true,
+    "canonical_start_security_rollback_completion_history_gates_repeated": true,
+    "exact_wrapper_metadata_postcheck_before_after_fixture_provisioning": true,
+    "new_migration_has_no_seed_or_usable_producer_membership": true,
+    "native_server_builds_in_sealed_gate": 1,
+    "local_test_baseline_is_additional_fixture_not_production_migration": true
+  },
+  "review_hardening": [
+    "Bound approved canonical fingerprint before SQL publication",
+    "Validate returned private publication identity/schema/hash",
+    "Known retirement acknowledgement must remain retired",
+    "Atomic publication+retirement using existing capability/immutable functions",
+    "No HTTP client source/approval/capability payload accepted",
+    "New upstream and V3 RPC transports refuse redirects, bound responses and use timeouts",
+    "Retirement of an exact retained version still works after catalogue identity withdrawal; normal new capture remains subject to current identity admission"
+  ],
+  "unchanged_protected_source": [
+    "previous 128 migrations",
+    "packages/cohort_plan_package",
+    "lib",
+    "tool/importer"
+  ],
+  "evidence_reuse": {
+    "checkpoint": "55c38bbee7015bc16b25dd6d4fef4eb01900195f",
+    "scope": "Unchanged app runner/benchmark/calculation/B2/C1/C2/C3 source. Prior 991 app tests and app web/macOS terminal builds are inherited evidence only, not rerun. Compiler/server/safety and local canonical SQL gates repeated here.",
+    "verified_old_log_hashes": {
+      "regressions-final.log": "53e05f3582edf74496f4466898a1506fb3eea4f6d528bd19286c2383f5e22de0",
+      "web-build-sealed.log": "c2eb5b8d102bb1d81732cc8869e3252e12e77a33bc12f758bb5da884fe0df3d9",
+      "macos-build-sealed.log": "4480351c94b9e3d09954d7c35bf8b0d1f0eaedcb1f4217181a8240a1e4d5b1d8"
+    }
+  },
+  "raw_evidence_directory": "/private/tmp/cohort-v3-http",
+  "raw_evidence_sha256": {
+    "analysis-baseline.log": "3c83d21597eb020e4a7d3104600fd8dfed96bfdbaaf095aac182cd68290b4e6e",
+    "analysis-final.log": "47091e9d398d540a369374e4907e1f3d2931451a2cc2b6c14c3a0e90f704fe6e",
+    "server-analysis-final.log": "af5abbedd58f096704d77eb534495e00a4aecbffd5838c1721ecb85b581c8648",
+    "server-tests-final.log": "0c0fdc56463c0c83e6233d74f8b11acc913fa81f36dd10a4987644cb25022451",
+    "compiler-tests.log": "0ea3bacdfe20ed6950e3adfd86e8b022d48fedb7b2763a2d2693496ec22ad3ed",
+    "safety.log": "b6e7c5712639db867dbcbaf9fc60c16c57c37d07a05d96b14e4e3c31df8067c9",
+    "local-http-sealed.log": "da0165b64bf348afb038cf9eedb4cc8d8f9616f200dde749c0a7e9a65f7262d6"
+  },
+  "hosted_operations": false,
+  "producer_provisioned_outside_disposable_fixture": false,
+  "real_publication_or_athlete_data": false,
+  "browser_app_or_device_control": false,
+  "production_readiness": false,
+  "preservation": {
+    "BEFORE.json_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "AFTER_IMPLEMENTATION.json_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "older_checkouts_compared": 20,
+    "all_fields_exact": true,
+    "original_dirty_checkout_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "original_outstanding_paths": 95,
+    "existing_regenerated_indexes_recreated_again": false,
+    "managed_worktree_creation_or_cleanup": false,
+    "global_cleanup_setting_changes": false,
+    "before_publication_sha256": "7da2cf169ab963a3946a4a9a075e8b9a921d1579e521a800fa8b7f04c15a561f",
+    "all_fields_exact_before_publication": true
+  },
+  "implementation_commit": "f7d9824f6c74b0f800847221dd8e1c16e625a0e5"
+}

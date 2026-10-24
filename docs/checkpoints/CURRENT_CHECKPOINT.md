@@ -1,4 +1,27 @@
 # Current repository checkpoint
+> **Trusted v3 HTTP/event receiver — locally proved, 2026-10-24:**
+> [Handoff](./hyrox_v3_http/HANDOFF.md), [event/auth contract](./hyrox_v3_http/CONTRACT.md),
+> [verification](./hyrox_v3_http/VERIFICATION.json) and [deployment prerequisites](./hyrox_v3_http/DEPLOYMENT.md)
+> wire existing Founder Auth/capability/source services into the established HTTP executable.
+> Event-ID-only requests resolve verified approved records through an explicitly configured
+> trusted-source adapter; no caller content/hash/approval fields establish authority. No real
+> upstream or producer is invented/provisioned. Additive atomic retention/retirement reuses
+> the existing immutable capability boundary, including retirement-first/late delivery and
+> retirement after catalogue identity withdrawal. Approved canonical fingerprints must match.
+> 57 server tests, 41 compiler/goldens, six safety groups and fresh/repeat disposable HTTP →
+> GoTrue → trusted fixture adapter → capability/SQL proof pass (79 assertions per pass).
+> Native server AOT compiled/executed; old start/security/rollback/completion/history gates
+> pass and frozen snapshots remain exact. Analysis stays 364 identical inherited findings,
+> zero errors/new/changed-file diagnostics. Previous 128 migration hashes and app/B2/C1/C2/C3
+> source remain unchanged. All 20 older inventories and original 95 outstanding paths are
+> exact; no cleanup, setting change or index regeneration. Field Manual remains INACTIVE
+> by task context; current hosted ledger/pending/security are unknown. No hosted contact,
+> mutation, config/secret change, deployment, real data/publication, browser/app/device work.
+> New source manifest has 129 files; no six/seven-file pending/apply approval is implied.
+> Upstream approval/event integration, capability/secret provisioning, hosted/runtime rollout,
+> supporting-content transfer, Test Week/race mappings, Founder usability and device/browser
+> checks remain dependencies. No production readiness or broader Stage 2/Sprint C closure.
+
 > **Field Manual read-only hosted readiness — blocked, 2026-10-24:**
 > [Handoff](./hyrox_hosted_readiness/HANDOFF.md),
 > [conditional manifest](./hyrox_hosted_readiness/MIGRATIONS.json) and

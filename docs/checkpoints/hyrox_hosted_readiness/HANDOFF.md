@@ -1,5 +1,11 @@
 # Field Manual hosted readiness — blocked on inactive database
 
+> **Local continuation, 2026-10-24:** [HTTP/event integration](../hyrox_v3_http/HANDOFF.md)
+> implements the missing receiver/adapter boundary locally. [Updated prerequisites](../hyrox_v3_http/DEPLOYMENT.md)
+> add one exact migration and opt-in configuration. This dated hosted inspection remains
+> unchanged evidence; current ledger/security/pending state is still unknown. No deployment
+> or producer provisioning is authorised by that continuation.
+
 2026-10-24. Source main **55c38bbee7015bc16b25dd6d4fef4eb01900195f**.
 Fresh founder-authorised inspection was read-only; no project resume, migration,
 permission/configuration change, producer provisioning, publication, athlete write or

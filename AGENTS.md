@@ -1,5 +1,23 @@
 # Cohort Platform repository guidance
 
+> **Trusted v3 HTTP/event receiver — locally proved, 2026-10-24:**
+> [Handoff](docs/checkpoints/hyrox_v3_http/HANDOFF.md) and
+> [contract/deployment prerequisites](docs/checkpoints/hyrox_v3_http/DEPLOYMENT.md) compose
+> existing Founder Auth and authoritative services with event-ID-only receipt and configured
+> trusted-source approval resolution. Atomic capability-only retention/retirement handles
+> retries/conflicts/out-of-order delivery and catalogue identity withdrawal. No real upstream,
+> producer or approval is fabricated. 57 server / 41 compiler tests, six safety groups and
+> fresh/repeat HTTP/Auth/SQL gates (79 assertions/pass) pass; analysis stays 364 identical
+> inherited findings, zero new/changed-file diagnostics. Old 128 migrations/authority/source
+> hashes remain unchanged; one additive wrapper migration is local only. All 20 older
+> inventories and original 95 outstanding paths remain exact. Hosted ledger/security/pending
+> state is unknown while Field Manual is inactive; no hosted operation/configuration,
+> provisioning, deployment, real publication/data or browser/app/device work occurred.
+> Supporting content transfer, Test Week/race mappings, usability and installed-device/browser
+> checks remain open. Normal main publication is authorised by the current request only;
+> no production readiness or broader Stage 2/Sprint C closure or future hosted authority.
+
+
 > **Athlete v3 review/consent/frozen runner — locally proved, 2026-10-23:**
 > [Handoff](docs/checkpoints/hyrox_athlete_runner/HANDOFF.md), [verification](docs/checkpoints/hyrox_athlete_runner/VERIFICATION.json)
 > and [deployment prerequisites](docs/checkpoints/hyrox_athlete_runner/DEPLOYMENT.md) deliver authenticated
