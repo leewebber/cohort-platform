@@ -164,6 +164,7 @@ class CircuitBlockTimerBridge {
   ) {
     final spec = _spec(occurrence, configuration);
     if (spec == null) return null;
+    if (spec.isRest) return 'Rest';
     final label = stationLabels[spec.exerciseId]?.trim();
     return (label != null && label.isNotEmpty) ? label : spec.exerciseId;
   }

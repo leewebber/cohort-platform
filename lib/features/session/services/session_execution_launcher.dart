@@ -198,12 +198,20 @@ class SessionExecutionLauncher {
     }
 
     if (existingRecord != null &&
-        !samePrescription(
-          existingRecord.sessionSnapshot.boundPrescription?.json,
-          plan.boundPrescriptionSnapshot,
-        )) {
+        (!samePrescription(
+              existingRecord.sessionSnapshot.boundPrescription?.json,
+              plan.boundPrescriptionSnapshot,
+            ) ||
+            !samePrescription(
+              existingRecord.sessionSnapshot.durationChoiceSnapshot,
+              plan.durationChoiceSnapshot,
+            ) ||
+            !samePrescription(
+              existingRecord.sessionSnapshot.authoredSource,
+              plan.authoredSource,
+            ))) {
       throw const FormatException(
-        'Saved targets do not match the started session. Reopen this session online.',
+        'Saved prescription or duration choice does not match the started session. Reopen this session online.',
       );
     }
 

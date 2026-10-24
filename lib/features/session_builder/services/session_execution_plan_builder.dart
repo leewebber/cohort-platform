@@ -1,7 +1,6 @@
+import '../../../core/utils/frozen_json.dart';
 import '../../../models/exercise.dart';
 import '../../../models/session_block.dart';
-import '../../../models/session_block_exercise_link.dart';
-import '../../../models/workout_format.dart';
 import '../../session/models/session_execution_plan.dart';
 
 /// Builds canonical [SessionExecutionPlan] projections for preview and athlete flows.
@@ -16,6 +15,7 @@ class SessionExecutionPlanBuilder {
     String? programmeContextLabel,
     int? durationMin,
     String? coachNotes,
+    Map<String, dynamic>? authoredSource,
   }) {
     final exerciseById = {
       for (final exercise in exercises) exercise.exerciseId: exercise,
@@ -25,6 +25,9 @@ class SessionExecutionPlanBuilder {
       ..sort((a, b) => a.position.compareTo(b.position));
 
     return SessionExecutionPlan(
+      authoredSource: authoredSource == null
+          ? null
+          : freezePrescriptionJson(authoredSource) as Map<String, dynamic>,
       sessionId: sessionId,
       sessionTitle: sessionTitle.trim().isEmpty
           ? 'Session'

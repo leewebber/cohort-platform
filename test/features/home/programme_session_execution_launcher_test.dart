@@ -1,3 +1,4 @@
+import 'package:cohort_platform/models/authored_int_range.dart';
 import 'package:cohort_platform/features/home/widgets/athlete_programme_today_section.dart';
 import 'package:cohort_platform/features/plans/models/programmed_session_key.dart';
 import 'package:cohort_platform/features/programme/models/athlete_programme_prepared_session.dart';
@@ -28,6 +29,244 @@ const _runningWorkoutId = 'rw1:p:7e50ec7208a5dd0f';
 const _runningStepId = 'rw1:p:7e50ec7208a5dd0f:s:0';
 
 void main() {
+  test(
+    'v3 duration handoff validates exact source/owner and freezes the server choice',
+    () async {
+      final c = _context(boundConsentId: 'consent-1', packageSchemaVersion: 3);
+      final prepared = _prepared().package!;
+      const ranged = SessionExecutionPlan(
+        sessionId: 'protocol-1',
+        sessionTitle: 'Run',
+        blocks: [
+          SessionExecutionBlock(
+            blockId: 'duration-block',
+            title: 'Main run',
+            blockType: SessionBlockType.conditioning,
+            content: '45–60 min',
+            workoutFormat: WorkoutFormat.steadyState,
+            position: 1,
+            timerConfiguration: TimerConfiguration(
+              durationSecondsRange: AuthoredIntRange(2700, 3600),
+            ),
+          ),
+        ],
+      );
+      final package = PreparedExecutionPackage(
+        programmedSessionKey: prepared.programmedSessionKey,
+        plan: ranged,
+        brief: prepared.brief,
+        preparedAt: prepared.preparedAt,
+        assignmentId: prepared.assignmentId,
+        programmeVersionId: prepared.programmeVersionId,
+        packageContentHash: prepared.packageContentHash,
+        dayKey: prepared.dayKey,
+        slotOrder: prepared.slotOrder,
+        protocolId: prepared.protocolId,
+      );
+      final base = await _InMemoryAtomicStartStore().createOrResume({
+        'assignment_id': 'assignment-1',
+        'session_slot_id': 'slot-1',
+        'effective_protocol_id': 'protocol-1',
+        'expected_week': 1,
+        'expected_day_key': 'day_1',
+      });
+      final bound = {
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assignment-1',
+        'programme_version_id': 'version-1',
+        'package_hash': _hashA,
+        'occurrence_id': 'occurrence-1',
+        'session_slot_id': 'slot-1',
+        'training_session_id': 1,
+        'source': {'protocol_id': 'protocol-1'},
+        'consent': {'consent_id': 'consent-1'},
+        'prescriptions': [],
+      };
+      final frozen = {
+        'schema_version': 1,
+        'protocol_id': 'protocol-1',
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assignment-1',
+        'programme_version_id': 'version-1',
+        'occurrence_id': 'occurrence-1',
+        'training_session_id': 1,
+        'choices': {
+          'duration-block': {
+            'authored_range_seconds': [2700, 3600],
+            'selected_seconds': 3300,
+          },
+        },
+      };
+      final store = _InMemoryAtomicStartStore(
+        forcedResponse: {
+          ...base,
+          'bound_prescription_snapshot': bound,
+          'duration_choice_snapshot': frozen,
+        },
+      );
+      final result = await ProgrammeSessionExecutionLauncher(startStore: store)
+          .createOrResumeLaunchResult(
+            athleteId: 'athlete-1',
+            programmeContext: c,
+            package: package,
+            durationChoices: {'duration-block': 3300},
+          );
+      expect(store.calls.single['duration_choices'], {'duration-block': 3300});
+      expect(
+        () =>
+            result.durationChoiceSnapshot!['choices']['duration-block']['selected_seconds'] =
+                2700,
+        throwsUnsupportedError,
+      );
+      for (final field in [
+        'athlete_id',
+        'occurrence_id',
+        'assignment_id',
+        'programme_version_id',
+        'training_session_id',
+        'protocol_id',
+      ]) {
+        final bad = _InMemoryAtomicStartStore(
+          forcedResponse: {
+            ...base,
+            'bound_prescription_snapshot': bound,
+            'duration_choice_snapshot': {...frozen, field: 'wrong'},
+          },
+        );
+        await expectLater(
+          ProgrammeSessionExecutionLauncher(
+            startStore: bad,
+          ).createOrResumeLaunchResult(
+            athleteId: 'athlete-1',
+            programmeContext: c,
+            package: package,
+            durationChoices: {'duration-block': 3300},
+          ),
+          throwsA(isA<Exception>()),
+        );
+      }
+      final missing = _InMemoryAtomicStartStore(
+        forcedResponse: {...base, 'bound_prescription_snapshot': bound},
+      );
+      await expectLater(
+        ProgrammeSessionExecutionLauncher(
+          startStore: missing,
+        ).createOrResumeLaunchResult(
+          athleteId: 'athlete-1',
+          programmeContext: c,
+          package: package,
+        ),
+        throwsA(isA<ProgrammeSessionExecutionException>()),
+      );
+    },
+  );
+
+  testWidgets(
+    'duration prompt has no default, rejects invalid input and cancellation creates no session',
+    (tester) async {
+      final c = _context(boundConsentId: 'consent-1', packageSchemaVersion: 3);
+      final original = _prepared().package!;
+      const plan = SessionExecutionPlan(
+        sessionId: 'protocol-1',
+        sessionTitle: 'Main run',
+        blocks: [
+          SessionExecutionBlock(
+            blockId: 'duration-block',
+            title: 'Main run',
+            blockType: SessionBlockType.conditioning,
+            content: '45–60 minutes',
+            workoutFormat: WorkoutFormat.steadyState,
+            position: 1,
+            timerConfiguration: TimerConfiguration(
+              durationSecondsRange: AuthoredIntRange(2700, 3600),
+            ),
+          ),
+        ],
+      );
+      final prepared = AthleteProgrammePrepareResult(
+        status: AthleteProgrammePrepareStatus.prepared,
+        executionContext: c,
+        programmedSessionKey: original.programmedSessionKey,
+        package: PreparedExecutionPackage(
+          programmedSessionKey: original.programmedSessionKey,
+          plan: plan,
+          brief: original.brief,
+          preparedAt: original.preparedAt,
+          assignmentId: original.assignmentId,
+          programmeVersionId: original.programmeVersionId,
+          packageContentHash: original.packageContentHash,
+          dayKey: original.dayKey,
+          slotOrder: original.slotOrder,
+          protocolId: original.protocolId,
+        ),
+      );
+      final store = _DurationChoiceTestStartStore();
+      final runner = _RecordingSessionExecutionLauncher();
+      final launcher = ProgrammeSessionExecutionLauncher(
+        startStore: store,
+        sessionExecutionLauncher: runner,
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                onPressed: () async {
+                  await launcher.launch(
+                    context: context,
+                    athleteId: 'athlete-1',
+                    prepared: prepared,
+                  );
+                },
+                child: const Text('Launch duration run'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('Launch duration run'));
+      await tester.pumpAndSettle();
+      expect(find.text('Choose main running duration'), findsOneWidget);
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        isEmpty,
+      );
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(store.created, 0);
+      expect(runner.plans, isEmpty);
+      await tester.tap(find.text('Launch duration run'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '20');
+      await tester.tap(find.text('Use duration'));
+      await tester.pumpAndSettle();
+      expect(store.created, 0);
+      expect(
+        find.text('Selected duration lies outside its authored window.'),
+        findsOneWidget,
+      );
+      await tester.enterText(find.byType(TextField), '50');
+      await tester.tap(find.text('Use duration'));
+      await tester.pumpAndSettle();
+      expect(store.created, 1);
+      expect(
+        runner.plans.single.blocks.single.timerConfiguration!.durationSeconds,
+        3000,
+      );
+      expect(
+        runner
+            .plans
+            .single
+            .blocks
+            .single
+            .timerConfiguration!
+            .durationSecondsRange!
+            .toJson(),
+        [2700, 3600],
+      );
+    },
+  );
+
   test(
     'canonical bound start validates and deeply freezes the exact server handoff',
     () async {
@@ -794,6 +1033,7 @@ Map<String, dynamic> _calculatedSnapshot({
 };
 
 ProgrammeExecutionContext _context({
+  int? packageSchemaVersion,
   String? packageHash = _hashA,
   String? boundConsentId,
 }) {
@@ -809,6 +1049,8 @@ ProgrammeExecutionContext _context({
     packageContentHash: _hashA,
   );
   return ProgrammeExecutionContext(
+    packageSchemaVersion: packageSchemaVersion,
+    packageSlotKey: packageSchemaVersion == 3 ? 'slot-key' : null,
     assignmentId: 'assignment-1',
     boundConsentId: boundConsentId,
     occurrenceId: boundConsentId == null ? null : 'occurrence-1',
@@ -899,5 +1141,57 @@ class _RecordingSessionExecutionLauncher extends SessionExecutionLauncher {
     WorkoutSessionLaunchContext? workoutLaunchContext,
   }) async {
     throw UnimplementedError();
+  }
+}
+
+// Software start adapter only; real role/rollback/choice authority is exercised in SQL.
+class _DurationChoiceTestStartStore
+    implements ProgrammeTrainingSessionStartStore {
+  int created = 0;
+  @override
+  Future<Map<String, dynamic>> createOrResume(
+    Map<String, dynamic> payload,
+  ) async {
+    final choices = payload['duration_choices'] as Map;
+    if (choices.isEmpty) {
+      return {
+        'status': 'refused',
+        'code': 'duration_choice_unavailable',
+        'reason': 'explicit_duration_choice_required',
+      };
+    }
+    created++;
+    final base = await _InMemoryAtomicStartStore().createOrResume(payload);
+    return {
+      ...base,
+      'bound_prescription_snapshot': {
+        'schema_version': 1,
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assignment-1',
+        'programme_version_id': 'version-1',
+        'package_hash': _hashA,
+        'occurrence_id': 'occurrence-1',
+        'session_slot_id': 'slot-1',
+        'training_session_id': 1,
+        'source': {'protocol_id': 'protocol-1'},
+        'consent': {'consent_id': 'consent-1'},
+        'prescriptions': [],
+      },
+      'duration_choice_snapshot': {
+        'schema_version': 1,
+        'protocol_id': 'protocol-1',
+        'athlete_id': 'athlete-1',
+        'assignment_id': 'assignment-1',
+        'programme_version_id': 'version-1',
+        'occurrence_id': 'occurrence-1',
+        'training_session_id': 1,
+        'choices': {
+          'duration-block': {
+            'authored_range_seconds': [2700, 3600],
+            'selected_seconds': choices['duration-block'],
+          },
+        },
+      },
+    };
   }
 }

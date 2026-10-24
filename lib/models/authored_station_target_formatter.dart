@@ -9,12 +9,13 @@ class AuthoredStationTargetFormatter {
   const AuthoredStationTargetFormatter._();
 
   static String? fromTimerSpec(TimerStationSpec spec) {
+    if (spec.isRest) return 'Rest';
+    if (spec.workSeconds != null) {
+      return '${spec.workSeconds} s · recover remainder';
+    }
     if (spec.calories != null) return '${spec.calories} cal';
     if (spec.reps != null) return '${spec.reps} reps';
-    return formatDistance(
-      meters: spec.distanceMeters,
-      text: spec.distanceText,
-    );
+    return formatDistance(meters: spec.distanceMeters, text: spec.distanceText);
   }
 
   static String? formatDistance({double? meters, String? text}) {

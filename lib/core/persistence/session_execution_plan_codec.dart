@@ -1,8 +1,10 @@
-import '../../../domain/hyrox_base/programme_prescription.dart';
-import '../../../models/session_block_type.dart';
-import '../../../models/strength_exercise_prescription.dart';
-import '../../../models/timer_configuration.dart';
-import '../../../models/workout_format.dart';
+import '../utils/frozen_json.dart';
+import '../../models/block_performance_capture_mode.dart';
+import '../../domain/hyrox_base/programme_prescription.dart';
+import '../../models/session_block_type.dart';
+import '../../models/strength_exercise_prescription.dart';
+import '../../models/timer_configuration.dart';
+import '../../models/workout_format.dart';
 import '../../features/session/models/session_execution_plan.dart';
 import '../../features/workout_player/models/workout_session_brief.dart';
 import '../../features/workout_player/services/coach_brain_workout_plan_service.dart';
@@ -15,6 +17,9 @@ class SessionExecutionPlanCodec {
     return {
       if (plan.boundPrescriptionSnapshot != null)
         'boundPrescriptionV1': plan.boundPrescriptionSnapshot,
+      if (plan.durationChoiceSnapshot != null)
+        'durationChoiceV1': plan.durationChoiceSnapshot,
+      if (plan.authoredSource != null) 'authoredSourceV1': plan.authoredSource,
       'sessionId': plan.sessionId,
       'sessionTitle': plan.sessionTitle,
       'durationMin': plan.durationMin,
@@ -46,6 +51,14 @@ class SessionExecutionPlanCodec {
           : ProgrammePrescription(
               Map<String, dynamic>.from(map['boundPrescriptionV1'] as Map),
             ).json,
+      durationChoiceSnapshot: map['durationChoiceV1'] == null
+          ? null
+          : freezePrescriptionJson(map['durationChoiceV1'])
+                as Map<String, dynamic>,
+      authoredSource: map['authoredSourceV1'] == null
+          ? null
+          : freezePrescriptionJson(map['authoredSourceV1'])
+                as Map<String, dynamic>,
       sessionId: map['sessionId']?.toString() ?? '',
       sessionTitle: map['sessionTitle']?.toString() ?? "Today's Training",
       blocks: blocks,
@@ -84,6 +97,7 @@ class SessionExecutionPlanCodec {
   Map<String, dynamic> _encodeBlock(SessionExecutionBlock block) {
     return {
       if (block.boundTarget != null) 'boundTargetV1': block.boundTarget!.json,
+      'performanceCaptureMode': block.performanceCaptureMode.dbValue,
       'blockId': block.blockId,
       'title': block.title,
       'blockType': block.blockType.name,
@@ -96,6 +110,10 @@ class SessionExecutionPlanCodec {
       'coachNotes': block.coachNotes,
       'linkedExercises': block.linkedExercises.map((e) {
         return {
+          'position': e.position,
+          'executionGroupKey': e.executionGroupKey,
+          'executionGroupLabel': e.executionGroupLabel,
+          'executionGroupRounds': e.executionGroupRounds,
           'exerciseId': e.exerciseId,
           'displayName': e.displayName,
           'displayLabelOverride': e.displayLabelOverride,
@@ -125,6 +143,10 @@ class SessionExecutionPlanCodec {
         final rx = m['prescription'];
         exercises.add(
           SessionExecutionExerciseSummary(
+            position: (m['position'] as int?) ?? 0,
+            executionGroupKey: m['executionGroupKey'] as String?,
+            executionGroupLabel: m['executionGroupLabel'] as String?,
+            executionGroupRounds: m['executionGroupRounds'] as int?,
             exerciseId: m['exerciseId']?.toString() ?? '',
             displayName: m['displayName']?.toString() ?? 'Movement',
             displayLabelOverride: m['displayLabelOverride']?.toString(),
@@ -143,6 +165,9 @@ class SessionExecutionPlanCodec {
           : ProgrammeTarget(
               Map<String, dynamic>.from(map['boundTargetV1'] as Map),
             ),
+      performanceCaptureMode: BlockPerformanceCaptureModeDb.fromDb(
+        map['performanceCaptureMode'] as String?,
+      ),
       blockId: map['blockId']?.toString() ?? '',
       title: map['title']?.toString() ?? 'Block',
       blockType: blockType,

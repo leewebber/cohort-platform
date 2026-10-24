@@ -113,6 +113,8 @@ SessionExecutionPlan bindProgrammePrescription({
     }
   }
   return SessionExecutionPlan(
+    authoredSource: plan.authoredSource,
+    durationChoiceSnapshot: plan.durationChoiceSnapshot,
     sessionId: plan.sessionId,
     sessionTitle: plan.sessionTitle,
     protocol: plan.protocol,

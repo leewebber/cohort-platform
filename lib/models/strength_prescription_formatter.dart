@@ -10,7 +10,7 @@ class StrengthPrescriptionFormatter {
     final setsLabel = prescription.sets > 0 ? '${prescription.sets}' : '—';
     final distance = prescription.authoredDistanceLabel;
     if (distance != null) {
-      return '$setsLabel × $distance';
+      return '$setsLabel × $distance${prescription.perSide ? ' / side' : ''}';
     }
     final repsLabel =
         '${formatReps(prescription.reps)}'
@@ -70,13 +70,23 @@ class StrengthPrescriptionFormatter {
     final parts = <String>[
       formatSetsReps(prescription),
       ?formatLoad(prescription.load),
+      if (prescription.rirRange != null)
+        '${_range(prescription.rirRange!.min, prescription.rirRange!.max)} RIR',
     ];
     return parts.join(' · ');
   }
 
+  static String _range(int min, int max) => min == max ? '$min' : '$min–$max';
+
   static String detailLine(StrengthExercisePrescription prescription) {
     final parts = <String>[
       ?formatRest(prescription.restSeconds),
+      if (prescription.restSecondsRange != null)
+        'Rest ${_range(prescription.restSecondsRange!.min, prescription.restSecondsRange!.max)} s',
+      if (prescription.restAfterGroupSecondsRange != null)
+        'Rest after pair ${_range(prescription.restAfterGroupSecondsRange!.min, prescription.restAfterGroupSecondsRange!.max)} s',
+      if (prescription.holdSeconds != null)
+        '${prescription.holdSeconds} s extended hold',
       ?formatTempo(prescription.tempo),
     ];
     return parts.join(' · ');

@@ -1,9 +1,10 @@
 {
   "canonical_compilation": {
     "canonical_packages": 0,
-    "detail": "No exact approved published ExerciseDefinition/event bundle or physical session revisions supplied; no authority fabricated.",
+    "detail": "No exact approved published ExerciseDefinition/event bundle or physical session revisions supplied; source lowering is independently implemented and fixture-tested; authority is not fabricated.",
     "reasons": [
-      "T1"
+      "T1",
+      "B3"
     ],
     "source_count": 48,
     "status": "blocked_before_canonical_compilation"
@@ -244,14 +245,20 @@
   ],
   "sessions": [
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W01-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -266,16 +273,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -286,14 +297,20 @@
       }
     },
     {
-      "content_decisions": [
-        "D2"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W01-GYM_B",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -312,13 +329,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W01-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -331,15 +355,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
-        "D1",
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W01-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -358,30 +390,40 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W01-LONG",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           3600,
-          5100
+          4800
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W02-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -396,16 +438,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -416,12 +462,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W02-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -440,13 +494,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W02-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -459,14 +520,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W02-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -485,30 +555,40 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W02-LONG",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           3900,
-          5400
+          5100
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W03-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -523,16 +603,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -543,12 +627,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W03-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -567,13 +659,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W03-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -586,14 +685,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W03-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -612,32 +720,40 @@
       }
     },
     {
-      "content_decisions": [
-        "D3"
-      ],
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W03-LONG",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           4200,
-          5700
+          5400
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W04-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -652,16 +768,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -672,12 +792,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W04-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -696,13 +824,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W04-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -715,14 +850,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W04-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -741,30 +885,40 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W04-LONG",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           3900,
-          5100
+          4800
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W05-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -779,16 +933,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -799,12 +957,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W05-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -823,13 +989,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W05-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -842,14 +1015,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W05-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -868,32 +1050,40 @@
       }
     },
     {
-      "content_decisions": [
-        "D3"
-      ],
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W05-LONG",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           4200,
-          5700
+          5400
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W06-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -908,16 +1098,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -928,12 +1122,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W06-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -952,13 +1154,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W06-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -971,14 +1180,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W06-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -997,32 +1215,40 @@
       }
     },
     {
-      "content_decisions": [
-        "D3"
-      ],
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W06-LONG",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           4500,
-          5700
+          5400
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W07-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1037,16 +1263,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -1057,12 +1287,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W07-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1081,13 +1319,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W07-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -1100,14 +1345,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W07-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1126,32 +1380,40 @@
       }
     },
     {
-      "content_decisions": [
-        "D3"
-      ],
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
+      "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W07-LONG",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           4500,
-          5700
+          5400
         ],
         "kind": "bounded"
       }
     },
     {
-      "content_decisions": [
-        "D6"
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
+      "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
       ],
       "source_id": "BASE-W08-GYM_A",
-      "status": "awaiting_specific_content_decision",
+      "source_status": "working_prescription_complete",
+      "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1166,16 +1428,20 @@
           12,
           15
         ],
-        "unknown": "rep/transition durations, ramp-ups, core rest placement; squat rest absent"
+        "unknown": "rep/transition durations, ramp-ups, core rest placement"
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-EASY",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
@@ -1186,12 +1452,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W08-GYM_B",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1210,13 +1484,20 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [
-        "D6"
+        "P2"
+      ],
+      "preparation_gaps": [
+        "P2"
       ],
       "source_id": "BASE-W08-QUALITY",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
-        "T1"
+        "T1",
+        "B3"
       ],
       "timing": {
         "full_seconds": null,
@@ -1229,14 +1510,23 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [
+        "C1"
+      ],
       "content_decisions": [
         "D4"
       ],
+      "preparation_gaps": [
+        "P1"
+      ],
       "source_id": "BASE-W08-GYM_C",
+      "source_status": "working_prescription_complete",
       "status": "awaiting_specific_content_decision",
       "technical_blockers": [
         "T1",
-        "T2"
+        "B3",
+        "B2"
       ],
       "timing": {
         "cooldown_approximate": true,
@@ -1255,17 +1545,21 @@
       }
     },
     {
+      "binding_readiness": "unresolved_published_versions",
+      "capture_gaps": [],
       "content_decisions": [],
+      "preparation_gaps": [],
       "source_id": "BASE-W08-LONG",
+      "source_status": "working_prescription_complete",
       "status": "technically_blocked",
       "technical_blockers": [
         "T1",
-        "T3"
+        "B3"
       ],
       "timing": {
         "full_seconds": [
           3900,
-          5400
+          5100
         ],
         "kind": "bounded"
       }
@@ -1273,11 +1567,19 @@
   ],
   "summary": {
     "all_sessions_have_T1": true,
-    "awaiting_specific_content_decision": 29,
-    "canonical_source_complete": 0,
+    "authoritative_binding_ready": 0,
+    "binding_blockers_by_code": {
+      "B2": 8,
+      "B3": 48,
+      "T1": 48
+    },
+    "canonical_lowering_implemented": true,
+    "capture_limit_sessions": 24,
+    "full_quantified_preparation_available": 16,
+    "preparation_detail_gaps": 32,
     "rest_days": 8,
     "review_sources": 48,
-    "technically_blocked": 19,
-    "training_sessions": 48
+    "training_sessions": 48,
+    "working_prescription_complete": 48
   }
 }

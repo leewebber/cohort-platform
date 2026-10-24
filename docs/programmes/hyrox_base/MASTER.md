@@ -1,10 +1,10 @@
 # HYROX Base master source specification
 
-2026-10-24. Local review source; commercial content approval and canonical compilation remain open.
+2026-10-24. Working prescriptions approved with explicit corrections. Binding readiness, preparation detail and commercial publication remain separate.
 
-[Exact transfer](TRANSFER_BRIEF.txt) · [Progression input](PROGRESSION.json) · [Decisions and provenance](DECISIONS.md) · [Coverage](COVERAGE.md) · [Technical contract](CONTRACT.md)
+[Exact transfer](TRANSFER_BRIEF.txt) · [Progression input](PROGRESSION.json) · [Decisions and provenance](DECISIONS.md) · [Coverage](COVERAGE.md) · [Technical contract](CONTRACT.md) · [Capture/preparation audit](CAPTURE_AND_PREPARATION.md) · [Exercise candidates](EXERCISE_CANDIDATES.md)
 
-This document expands every authored day, including preparation and cooldown. Unresolved alternatives remain alternatives; source labels are not canonical identities. No Test Week, invented fixed loads, automatic increases or filler is added.
+This document expands every authored day, including preparation and cooldown. W1 row/plank, long preparation and squat rest follow the new explicit decisions; source labels are not canonical identities. No Test Week, invented fixed loads, automatic increases or filler is added.
 
 **Purpose.** Build aerobic capacity, compound strength, shoulders/pulling, grip and bracing before specific HYROX preparation. Base is purpose, not beginner status.
 
@@ -22,7 +22,7 @@ This document expands every authored day, including preparation and cooldown. Un
 
 **Core rest.** 45–60 seconds as needed; exact placement across sides/sets is not supplied.
 
-**Strength rest.** RDL and reverse lunge: 120–180 seconds. Back squat rest not supplied. Upper pair A: 90–120 seconds after pair; B/C: 90 seconds after pair.
+**Strength rest.** Back squat working sets: 150–180 seconds throughout; warm-up sets separate. RDL/reverse lunge: 120–180 seconds. Upper pair A: 90–120 seconds after pair; B/C: 90 seconds.
 
 **Finisher load.** Effort/technique selected, no fixed kilograms. Rep work leaves recovery inside the minute; record athlete scaling. Wall balls require selected race weight and race-standard target height; authoritative division mapping unresolved.
 
@@ -40,6 +40,8 @@ This document expands every authored day, including preparation and cooldown. Un
 
 **Equipment.** Authored work implies barbell/rack, dumbbells, pull-up facility, cable station, carry space, rower, bike, SkiErg, wall ball/standard target, kettlebell (W1–4/8), and light preparation bands; exact variants/equipment prerequisites and exclusions need editorial confirmation. This is derived inventory, not approved marketing copy.
 
+**Capture.** Prescribed targets and actual performance remain separate. Reuse established optional actuals and notes; no new required results are inferred from displayed prescription fields. Exact limits are recorded in CAPTURE_AND_PREPARATION.md.
+
 ## Established approved progression
 
 | Week | Easy min | Quality reps × min | Long min | Row reps × min / recovery s | Squat sets × reps / basis points of 5RM / RIR |
@@ -55,7 +57,7 @@ This document expands every authored day, including preparation and cooldown. Un
 
 ## Supporting progression transferred for review
 
-All rows below retain supporting-direction status, except the separately explicit race-weight/height requirement. W1 plank and cable-row later values are retained for comparison and are not selected in session sources.
+Supporting exercise doses/core/finishers are prescription-approved, with W1 single-arm cable row 3 × 10/side at 2 RIR and plank 3 × 20 s. Earlier alternatives remain in the provenance register.
 
 | Week | RDL sets/reps/RIR | Lunge sets/reps per leg/RIR | Upper | Carry sets/m per side | Plank sets/s | Pallof sets/reps per side | Bike min/s/movement/reps/RPE | Ski rounds/s/WB reps |
 |---|---|---|---|---|---|---|---|---|---|
@@ -70,24 +72,26 @@ All rows below retain supporting-direction status, except the separately explici
 
 ## BASE-W01-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 3; reps: 8; rir: 3; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 8000.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 30; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 3; reps: 8; rir: 3; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 8000.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 30; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 6; work seconds: 120; recovery seconds: 90; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1170; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1170; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 3; reps: 8; five rm basis points: 8000; rir: 3 / kind: dedicatedRowIntervals; parameters: repetitions: 6; work seconds: 120; recovery seconds: 90. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W01-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -97,28 +101,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3300–4380.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W01-GYM_B — day 3
 
-**Status:** awaiting_specific_content_decision. Decisions: D2. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 3; reps: 8; rir: 3; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 10–12; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: UNRESOLVED; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction; decision: id: D2; original: 20–30; later: 20; unit: seconds.
-4. kind: alternating_emom; minutes: 12; interval seconds: 60; cycle minutes: 2; cycles: 6; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: kettlebell_swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 10–12; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 20; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 12; interval seconds: 60; cycle minutes: 2; cycles: 6; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: kettlebell swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 720; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W01-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -128,59 +136,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3260–3560; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 4; work seconds: 240; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W01-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D1 / D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 8; rir: 3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: UNRESOLVED; rir: 2; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; decision: id: D1; original: 10; later: 10–12; unit: reps_per_side; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 8; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 5; interval seconds: 60; minutes: 15; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 40 / exercise: wall_ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 8; rir: 3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 10; rir: 2; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 8; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 5; interval seconds: 60; minutes: 15; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 40 / exercise: wall ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 900; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W01-LONG — day 6
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 50–70; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 3600–5100.
+**Timing:** kind: bounded; full seconds: 3600–4800.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 3; reps: 8; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 8250.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 35; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 3; reps: 8; rir: 2–3; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 8250.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 35; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 7; work seconds: 120; recovery seconds: 90; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1380; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1380; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 3; reps: 8; five rm basis points: 8250; rir: 2–3 / kind: dedicatedRowIntervals; parameters: repetitions: 7; work seconds: 120; recovery seconds: 90. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -190,28 +206,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3300–4680.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 3; reps: 8; rir: 2–3; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 10–12; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: 25; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 14; interval seconds: 60; cycle minutes: 2; cycles: 7; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: kettlebell_swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 10–12; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 25; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 14; interval seconds: 60; cycle minutes: 2; cycles: 7; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: kettlebell swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 840; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -221,59 +241,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3620–3920; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 5; work seconds: 240; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 8; rir: 2–3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: 10–12; rir: 2; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 9; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 40 / exercise: wall_ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 8; rir: 2–3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 10–12; rir: 2; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 9; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 40 / exercise: wall ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1080; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W02-LONG — day 6
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 55–75; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 3900–5400.
+**Timing:** kind: bounded; full seconds: 3900–5100.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 4; reps: 6; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 8750.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 40; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 4; reps: 6; rir: 2; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 8750.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 40; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 5; work seconds: 180; recovery seconds: 90; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1260; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1260; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 4; reps: 6; five rm basis points: 8750; rir: 2 / kind: dedicatedRowIntervals; parameters: repetitions: 5; work seconds: 180; recovery seconds: 90. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -283,28 +311,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3600–4680.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 3; reps: 8; rir: 2; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 10–12; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: 30; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 16; interval seconds: 60; cycle minutes: 2; cycles: 8; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: kettlebell_swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 10–12; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 30; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 16; interval seconds: 60; cycle minutes: 2; cycles: 8; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: kettlebell swing; reps: 10; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 960; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -314,59 +346,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3740–4040; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 4; work seconds: 360; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 8; rir: 2; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: 10–12; rir: 2; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 10; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 45 / exercise: wall_ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 8; rir: 2; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 10–12; rir: 2; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 10; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 45 / exercise: wall ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1080; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W03-LONG — day 6
 
-**Status:** awaiting_specific_content_decision. Decisions: D3. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 60–80; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 4200–5700.
+**Timing:** kind: bounded; full seconds: 4200–5400.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 2; reps: 6; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 7000.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 2; reps: 8; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 2; reps: 5; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 2; distance metres: 25; per side: true; load direction: lighter; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 2; reps: 6; rir: 4; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 7000.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 2; reps: 8; rir: 4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 2; reps: 5; rir: 4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 2; distance metres: 25; per side: true; load direction: lighter; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 4; work seconds: 120; recovery seconds: 90; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 750; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 750; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 2; reps: 6; five rm basis points: 7000; rir: 4 / kind: dedicatedRowIntervals; parameters: repetitions: 4; work seconds: 120; recovery seconds: 90. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -376,28 +416,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3300–4380.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 2; reps: 8; rir: 4; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 2; reps: 8; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 2; reps: 10; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 2; seconds: 20; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 10; interval seconds: 60; cycle minutes: 2; cycles: 5; rpe: 6; rpe approximate: true; stations: exercise: assault_bike; work seconds: 30 / exercise: kettlebell_swing; reps: 8; load direction: light; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 2; reps: 8; rir: 4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 2; reps: 10; rir: 4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 2; seconds: 20; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 10; interval seconds: 60; cycle minutes: 2; cycles: 5; rpe: 6; rpe approximate: true; stations: exercise: assault bike; work seconds: 30 / exercise: kettlebell swing; reps: 8; load direction: light; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 600; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -407,59 +451,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3260–3560; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 4; work seconds: 240; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 2; reps: 6; rir: 4; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 2; reps: 8; rir: 4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 2; reps: 10; rir: 4; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 2; reps: 8; per side: true; extended hold seconds: 2; resistance direction: lighter; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 4; interval seconds: 60; minutes: 12; rpe: 6; rpe approximate: true; stations: exercise: ski_erg; work seconds: 35 / exercise: wall_ball; reps: 8; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 2; reps: 6; rir: 4; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 2; reps: 8; rir: 4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 2; reps: 10; rir: 4; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 2; reps: 8; per side: true; extended hold seconds: 2; resistance direction: lighter; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 4; interval seconds: 60; minutes: 12; rpe: 6; rpe approximate: true; stations: exercise: ski erg; work seconds: 35 / exercise: wall ball; reps: 8; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 720; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W04-LONG — day 6
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 55–70; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 3900–5100.
+**Timing:** kind: bounded; full seconds: 3900–4800.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 4; reps: 6; rir: 3; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 8750.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 30; per side: true; load direction: optional increase; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 4; reps: 6; rir: 3; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 8750.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2–3; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 30; per side: true; load direction: optional increase; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 6; work seconds: 120; recovery seconds: 75; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1095; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1095; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 4; reps: 6; five rm basis points: 8750; rir: 3 / kind: dedicatedRowIntervals; parameters: repetitions: 6; work seconds: 120; recovery seconds: 75. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -469,28 +521,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3600–4680.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 3; reps: 6; rir: 3; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 8–10; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: 20; lever direction: optional longer lever; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 12; interval seconds: 60; cycle minutes: 2; cycles: 6; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: two_dumbbell_devils_press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 8–10; rir: 2–3; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 20; lever direction: optional longer lever; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 12; interval seconds: 60; cycle minutes: 2; cycles: 6; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: two dumbbell devils press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 720; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -500,59 +556,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3920–4220; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 5; work seconds: 300; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 6; rir: 3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: 8–10; rir: 2–3; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 8; per side: true; extended hold seconds: 2; resistance direction: optional increase; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 5; interval seconds: 60; minutes: 15; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 45 / exercise: wall_ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 6; rir: 3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 6–8; rir: 2–3; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 8–10; rir: 2–3; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 8; per side: true; extended hold seconds: 2; resistance direction: optional increase; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 5; interval seconds: 60; minutes: 15; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 45 / exercise: wall ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 900; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W05-LONG — day 6
 
-**Status:** awaiting_specific_content_decision. Decisions: D3. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 60–80; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 4200–5700.
+**Timing:** kind: bounded; full seconds: 4200–5400.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 4; reps: 5; rir: 2–3; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 9000.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 35; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 4; reps: 5; rir: 2–3; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 9000.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 35; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 7; work seconds: 120; recovery seconds: 75; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1290; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1290; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 4; reps: 5; five rm basis points: 9000; rir: 2–3 / kind: dedicatedRowIntervals; parameters: repetitions: 7; work seconds: 120; recovery seconds: 75. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -562,28 +626,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3600–4980.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 3; reps: 6; rir: 2–3; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: 25; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 14; interval seconds: 60; cycle minutes: 2; cycles: 7; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: two_dumbbell_devils_press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 25; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 14; interval seconds: 60; cycle minutes: 2; cycles: 7; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: two dumbbell devils press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 840; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -593,59 +661,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3980–4280; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 4; work seconds: 420; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 6; rir: 2–3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: 8–10; rir: 2; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 9; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 45 / exercise: wall_ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 6; rir: 2–3; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 8–10; rir: 2; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 9; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 45 / exercise: wall ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1080; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W06-LONG — day 6
 
-**Status:** awaiting_specific_content_decision. Decisions: D3. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 65–80; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 4500–5700.
+**Timing:** kind: bounded; full seconds: 4500–5400.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 4; reps: 4; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 9500.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 3; reps: 5–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 3; distance metres: 40; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 4; reps: 4; rir: 2; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 9500.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 3; reps: 5–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 3; distance metres: 40; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 5; work seconds: 180; recovery seconds: 75; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1200; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1200; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 4; reps: 4; five rm basis points: 9500; rir: 2 / kind: dedicatedRowIntervals; parameters: repetitions: 5; work seconds: 180; recovery seconds: 75. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -655,28 +731,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3900–4980.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 4; reps: 6; rir: 2; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 3; reps: 8–10; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 3; seconds: 30; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 16; interval seconds: 60; cycle minutes: 2; cycles: 8; rpe: 7; rpe approximate: true; stations: exercise: assault_bike; work seconds: 35 / exercise: two_dumbbell_devils_press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 3; reps: 8–10; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 3; seconds: 30; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 16; interval seconds: 60; cycle minutes: 2; cycles: 8; rpe: 7; rpe approximate: true; stations: exercise: assault bike; work seconds: 35 / exercise: two dumbbell devils press; reps: 5; load direction: effort/technique selected; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 960; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -686,59 +766,67 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3980–4280; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 3; work seconds: 600; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 3; reps: 6; rir: 2; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 3; reps: 6–8; rir: 2; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 3; reps: 8–10; rir: 2; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 3; reps: 10; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski_erg; work seconds: 50 / exercise: wall_ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 3; reps: 6; rir: 2; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 3; reps: 6–8; rir: 2; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 3; reps: 8–10; rir: 2; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 3; reps: 10; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 6; interval seconds: 60; minutes: 18; rpe: 6–7; rpe approximate: false; stations: exercise: ski erg; work seconds: 50 / exercise: wall ball; reps: 12; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 1080; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W07-LONG — day 6
 
-**Status:** awaiting_specific_content_decision. Decisions: D3. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 65–80; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 4500–5700.
+**Timing:** kind: bounded; full seconds: 4500–5400.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-GYM_A — day 1
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** budget minutes: 12–15; easy: exercise: rowing; seconds: 300; rounds: 2; movements: 8 bodyweight squat, 8 glute bridge, 6 dead bug / side, 10 light band pull apart; ramp up: Back squat ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: back_squat; sets: 2; reps: 5; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: approved_brief; five rm basis points: 7500.
-2. kind: superset; exercises: kind: strength; exercise: strict_overhead_press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: strict_pull_up; sets: 2; reps: 5–8; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: carry; exercise: suitcase_carry; sets: 2; distance metres: 30; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+1. kind: strength; exercise: back squat; sets: 2; reps: 5; rir: 3–4; per side: false; rest seconds: 150–180; provenance: approved_brief; five rm basis points: 7500.
+2. kind: superset; exercises: kind: strength; exercise: strict overhead press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: strict pull up; sets: 2; reps: 5–8; rir: 3–4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90–120; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: carry; exercise: suitcase carry; sets: 2; distance metres: 30; per side: true; load direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
 4. kind: intervals; exercise: rowing; repetitions: 4; work seconds: 120; recovery seconds: 90; recovery placement: between_only; recovery effort: easy rowing; effort: UNRESOLVED; provenance: approved_brief.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
-**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 750; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement; squat rest absent.
+**Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 750; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
+
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** kind: backSquat; parameters: sets: 2; reps: 5; five rm basis points: 7500; rir: 3–4 / kind: dedicatedRowIntervals; parameters: repetitions: 4; work seconds: 120; recovery seconds: 90. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-EASY — day 2
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
 **Preparation:** minutes: 5–8; mode: walk/jog.
 
@@ -748,28 +836,32 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: bounded; full seconds: 3300–4380.
 
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-GYM_B — day 3
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T2.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: easy_bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: easy bike; seconds: 300; rounds: 2; movements: 8 unloaded hip hinge, 6 reverse lunge / side, 10 light row; ramp up: RDL ramp-up sets; counts/loads/rest not specified..
 
 1. kind: strength; exercise: rdl; sets: 2; reps: 6; rir: 3–4; per side: false; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: incline_dumbbell_press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: chest_supported_row; sets: 2; reps: 8–10; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: hold; exercise: long_lever_plank; sets: 2; seconds: 20; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: alternating_emom; minutes: 10; interval seconds: 60; cycle minutes: 2; cycles: 5; rpe: 6; rpe approximate: true; stations: exercise: assault_bike; work seconds: 30 / exercise: kettlebell_swing; reps: 8; load direction: light; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: incline dumbbell press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: chest supported row; sets: 2; reps: 8–10; rir: 3–4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: hold; exercise: long lever plank; sets: 2; seconds: 20; lever direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: alternating_emom; minutes: 10; interval seconds: 60; cycle minutes: 2; cycles: 5; rpe: 6; rpe approximate: true; stations: exercise: assault bike; work seconds: 30 / exercise: kettlebell swing; reps: 8; load direction: light; recovery: remainder_of_each_minute; load: effort/technique selected; record athlete scaling; provenance: supporting_direction.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 600; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-QUALITY — day 4
 
-**Status:** awaiting_specific_content_decision. Decisions: D6. Technical blockers: T1.
+**Status:** awaiting_specific_content_decision. Decisions: P2. Technical blockers: T1 / B3.
 
 **Preparation:** easy run seconds: 600; dynamic preparation: Required; movements/duration not specified.; accelerations: repetitions: 3; work seconds: 20; recovery seconds: 40; recovery placement: between_only; effort: relaxed; recovery effort: easy.
 
@@ -779,36 +871,42 @@ All rows below retain supporting-direction status, except the separately explici
 
 **Timing:** kind: partial; known seconds: 3500–3800; full seconds: UNRESOLVED; unknown: dynamic preparation duration and transitions.
 
+**Other categories:** preparation gaps P2; capture limits none; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** kind: runningIntervals; parameters: repetitions: 4; work seconds: 300; recovery seconds: 120. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-GYM_C — day 5
 
-**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / T2.
+**Status:** awaiting_specific_content_decision. Decisions: D4. Technical blockers: T1 / B3 / B2.
 
-**Preparation:** budget minutes: 12–15; easy: exercise: ski_erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
+**Preparation:** budget minutes: 12–15; easy: exercise: ski erg; seconds: 300; rounds: 2; movements: 6 reverse lunge / side, 8 light scapular row, 8 wall slide; ramp up: Lunge ramp-up sets; counts/loads/rest not specified..
 
-1. kind: strength; exercise: front_rack_reverse_lunge; sets: 2; reps: 6; rir: 3–4; per side: true; rest seconds: 120–180; provenance: supporting_direction.
-2. kind: superset; exercises: kind: strength; exercise: dumbbell_shoulder_press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest seconds: UNRESOLVED; provenance: supporting_direction / kind: strength; exercise: split_stance_single_arm_cable_row; sets: 2; reps: 8–10; rir: 3–4; per side: true; rest seconds: UNRESOLVED; provenance: supporting_direction; rest after pair seconds: 90; transition rest seconds: UNRESOLVED; provenance: supporting_direction.
-3. kind: strength; exercise: pallof_press; sets: 2; reps: 8; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
-4. kind: three_minute_cycle; rounds: 4; interval seconds: 60; minutes: 12; rpe: 6; rpe approximate: true; stations: exercise: ski_erg; work seconds: 40 / exercise: wall_ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
+1. kind: strength; exercise: front rack reverse lunge; sets: 2; reps: 6; rir: 3–4; per side: true; rest seconds: 120–180; provenance: supporting_direction.
+2. kind: superset; exercises: kind: strength; exercise: dumbbell shoulder press; sets: 2; reps: 6–8; rir: 3–4; per side: false; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction / kind: strength; exercise: split stance single arm cable row; sets: 2; reps: 8–10; rir: 3–4; per side: true; rest: not individually prescribed; use the after-pair rest; provenance: supporting_direction; rest after pair seconds: 90; transition rest: not separately prescribed; provenance: supporting_direction.
+3. kind: strength; exercise: pallof press; sets: 2; reps: 8; per side: true; extended hold seconds: 2; resistance direction: not specified; rest seconds: 45–60; provenance: supporting_direction.
+4. kind: three_minute_cycle; rounds: 4; interval seconds: 60; minutes: 12; rpe: 6; rpe approximate: true; stations: exercise: ski erg; work seconds: 40 / exercise: wall ball; reps: 10; load: selected race weight; height: race-standard target; race mapping: UNRESOLVED / kind: rest; seconds: 60; recovery: remainder_of_work_minutes_plus_full_third_minute_including_final_round; provenance: supporting_direction; race requirement provenance: explicit_founder_requirement.
 
 **Cooldown:** minutes: 5; mode: easy movement; approximate: true.
 
 **Timing:** kind: partial; preparation minutes: 12–15; cooldown minutes: 5; cooldown approximate: true; finisher seconds: 720; full seconds: UNRESOLVED; unknown: rep/transition durations, ramp-ups, core rest placement.
 
+**Other categories:** preparation gaps P1; capture limits C1; binding readiness unresolved_published_versions.
+
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 
 ## BASE-W08-LONG — day 6
 
-**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / T3.
+**Status:** technically_blocked. Decisions: none. Technical blockers: T1 / B3.
 
-**Preparation:** minutes: 5–10; mode: gentle preparation.
+**Preparation:** minutes: 5; mode: gentle walking/jogging.
 
 1. kind: continuous_duration_window; exercise: running; minutes: 55–75; effort: conversational; RPE about 3–4; selection: athlete feel/recovery; no level band; provenance: approved_brief.
 
 **Cooldown:** walking minutes: 5.
 
-**Timing:** kind: bounded; full seconds: 3900–5400.
+**Timing:** kind: bounded; full seconds: 3900–5100.
+
+**Other categories:** preparation gaps none; capture limits none; binding readiness unresolved_published_versions.
 
 **Personalisation intent:** none. Exact canonical exercise versions and physical source bindings remain unresolved.
 

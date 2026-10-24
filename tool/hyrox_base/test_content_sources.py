@@ -25,23 +25,25 @@ class ContentSourcesTest(unittest.TestCase):
             self.assertEqual([d['type'] for d in days],['training']*6+['rest'])
             self.assertIsNone(days[-1]['source_id'])
 
-    def test_source_disagreements_are_not_selected(self):
+    def test_founder_corrections_are_selected_without_rewriting_old_evidence(self):
         plank = self.sessions[1,'gym_b']['blocks'][2]
         row = self.sessions[1,'gym_c']['blocks'][1]['exercises'][1]
-        self.assertIsNone(plank['seconds'])
-        self.assertEqual(plank['decision']['original'],[20,30])
-        self.assertEqual(plank['decision']['later'],[20,20])
-        self.assertIsNone(row['reps'])
-        self.assertEqual(row['decision']['original'],[10,10])
-        self.assertEqual(row['decision']['later'],[10,12])
+        self.assertEqual(plank['seconds'],20)
+        self.assertNotIn('decision',plank)
+        self.assertEqual(row['reps'],[10,10])
+        self.assertEqual(row['rir'],'2')
+        self.assertEqual(row['sets'],3)
+        self.assertNotIn('decision',row)
+        for w in range(1,9):
+            self.assertEqual(self.sessions[w,'gym_a']['blocks'][0]['rest_seconds'],[150,180])
 
     def test_latest_long_correction_and_exact_time_conflicts(self):
         for week in [6,7]:
             self.assertEqual(self.sessions[week,'long']['blocks'][0]['minutes'],[65,80])
         conflicts = [w for w in range(1,9) if 'D3' in self.sessions[w,'long']['content_decisions']]
-        self.assertEqual(conflicts,[3,5,6,7])
-        self.assertEqual(self.sessions[6,'long']['timing']['full_seconds'],[4500,5700])
-        self.assertEqual(self.sessions[2,'long']['timing']['full_seconds'][1],5400)
+        self.assertEqual(conflicts,[])
+        self.assertEqual(self.sessions[6,'long']['timing']['full_seconds'],[4500,5400])
+        self.assertEqual(self.sessions[2,'long']['timing']['full_seconds'][1],5100)
 
     def test_dedicated_intervals_do_not_add_final_recovery(self):
         for source in self.bundle['sessions']:

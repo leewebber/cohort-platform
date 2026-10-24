@@ -1,3 +1,4 @@
+import '../../../core/utils/frozen_json.dart';
 import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../core/utils/database_uuid.dart';
 import '../../../models/block_performance_capture_mode.dart';
@@ -45,6 +46,13 @@ class PerformanceSnapshotBuilder {
       boundPrescription: plan.boundPrescriptionSnapshot == null
           ? null
           : ProgrammePrescription(plan.boundPrescriptionSnapshot!),
+      durationChoiceSnapshot: plan.durationChoiceSnapshot == null
+          ? null
+          : freezePrescriptionJson(plan.durationChoiceSnapshot)
+                as Map<String, dynamic>,
+      authoredSource: plan.authoredSource == null
+          ? null
+          : freezePrescriptionJson(plan.authoredSource) as Map<String, dynamic>,
       sourceProtocolId: plan.sessionId,
       sessionTitle: plan.sessionTitle,
       sessionDescription: plan.coachNotes,

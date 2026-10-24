@@ -1,3 +1,5 @@
+import '../core/utils/frozen_json.dart';
+import 'authored_int_range.dart';
 import 'circuit_capture_strategy.dart';
 import 'workout_format.dart';
 
@@ -7,6 +9,8 @@ import 'workout_format.dart';
 class TimerConfiguration {
   const TimerConfiguration({
     this.durationSeconds,
+    this.durationSecondsRange,
+    this.omitFinalRecovery = false,
     this.totalDurationSeconds,
     this.intervalSeconds,
     this.preparationSeconds,
@@ -24,6 +28,8 @@ class TimerConfiguration {
   });
 
   final int? durationSeconds;
+  final AuthoredIntRange? durationSecondsRange;
+  final bool omitFinalRecovery;
   final int? totalDurationSeconds;
   final int? intervalSeconds;
   final int? preparationSeconds;
@@ -46,8 +52,7 @@ class TimerConfiguration {
           : null);
 
   int? get effectiveTargetRounds =>
-      targetRounds ??
-      (rounds != null && rounds! > 0 ? rounds : null);
+      targetRounds ?? (rounds != null && rounds! > 0 ? rounds : null);
 
   TimerConfiguration copyWith({
     int? durationSeconds,
@@ -67,6 +72,8 @@ class TimerConfiguration {
     CircuitCaptureStrategy? captureStrategy,
   }) {
     return TimerConfiguration(
+      omitFinalRecovery: omitFinalRecovery,
+      durationSecondsRange: durationSecondsRange,
       durationSeconds: durationSeconds ?? this.durationSeconds,
       totalDurationSeconds: totalDurationSeconds ?? this.totalDurationSeconds,
       intervalSeconds: intervalSeconds ?? this.intervalSeconds,
@@ -88,6 +95,9 @@ class TimerConfiguration {
 
   Map<String, dynamic> toJson() {
     return {
+      if (omitFinalRecovery) 'omitFinalRecovery': true,
+      if (durationSecondsRange != null)
+        'durationRangeSeconds': durationSecondsRange!.toJson(),
       if (durationSeconds != null) 'durationSeconds': durationSeconds,
       if (totalDurationSeconds != null)
         'totalDurationSeconds': totalDurationSeconds,
@@ -106,8 +116,7 @@ class TimerConfiguration {
       if (tracking.isNotEmpty) 'tracking': tracking,
       if (stations.isNotEmpty)
         'stations': stations.map((station) => station.toJson()).toList(),
-      if (captureStrategy != null)
-        'capture_strategy': captureStrategy!.dbValue,
+      if (captureStrategy != null) 'capture_strategy': captureStrategy!.dbValue,
     };
   }
 
@@ -122,6 +131,10 @@ class TimerConfiguration {
     );
     final authoredRounds = _int(json['rounds']);
     return TimerConfiguration(
+      omitFinalRecovery: json['omitFinalRecovery'] == true,
+      durationSecondsRange: json['durationRangeSeconds'] == null
+          ? null
+          : AuthoredIntRange.fromJson(json['durationRangeSeconds']),
       durationSeconds: duration,
       totalDurationSeconds: explicitTotal ?? duration,
       intervalSeconds: _int(
@@ -135,13 +148,11 @@ class TimerConfiguration {
           json['stopwatchEnabled'] == true || json['stopwatch_enabled'] == true,
       workSeconds: _int(json['workSeconds'] ?? json['work_seconds']),
       restSeconds: _int(
-        json['restSeconds'] ??
-            json['rest_seconds'] ??
-            json['recovery_seconds'],
+        json['restSeconds'] ?? json['rest_seconds'] ?? json['recovery_seconds'],
       ),
       rounds: authoredRounds,
-      targetRounds: _int(json['targetRounds'] ?? json['target_rounds']) ??
-          authoredRounds,
+      targetRounds:
+          _int(json['targetRounds'] ?? json['target_rounds']) ?? authoredRounds,
       restBetweenRoundsSeconds: _int(
         json['restBetweenRoundsSeconds'] ??
             json['rest_between_rounds_seconds'] ??
@@ -205,10 +216,12 @@ class TimerConfiguration {
         timerNotes: base.timerNotes,
       ),
       WorkoutFormat.steadyState => TimerConfiguration(
+        durationSecondsRange: base.durationSecondsRange,
         durationSeconds: base.durationSeconds,
         timerNotes: base.timerNotes,
       ),
       WorkoutFormat.intervals => TimerConfiguration(
+        omitFinalRecovery: base.omitFinalRecovery,
         workSeconds: base.workSeconds,
         restSeconds: base.restSeconds,
         rounds: base.rounds,
@@ -258,7 +271,15 @@ class TimerConfiguration {
       case WorkoutFormat.forTime:
         break;
       case WorkoutFormat.steadyState:
-        if (durationSeconds == null || durationSeconds! <= 0) {
+        if (durationSecondsRange != null &&
+            (!durationSecondsRange!.isValid ||
+                durationSecondsRange!.min <= 0 ||
+                (durationSeconds != null &&
+                    !durationSecondsRange!.contains(durationSeconds!)))) {
+          messages.add('Invalid duration choice window.');
+        }
+        if ((durationSeconds == null || durationSeconds! <= 0) &&
+            durationSecondsRange == null) {
           messages.add('Steady state requires a duration.');
         }
       case WorkoutFormat.intervals:
@@ -323,6 +344,9 @@ class TimerStationSpec {
     required this.exerciseId,
     required this.position,
     this.minute,
+    this.workSeconds,
+    this.isRest = false,
+    this.authoredDetails,
     this.calories,
     this.reps,
     this.distanceMeters,
@@ -332,13 +356,19 @@ class TimerStationSpec {
   final String exerciseId;
   final int position;
   final int? minute;
+  final int? workSeconds;
+  final bool isRest;
+  final Map<String, dynamic>? authoredDetails;
   final int? calories;
   final int? reps;
   final double? distanceMeters;
   final String? distanceText;
 
   Map<String, dynamic> toJson() => {
-    'exercise': exerciseId,
+    if (!isRest) 'exercise': exerciseId,
+    if (isRest) 'kind': 'rest',
+    if (workSeconds != null) 'work_seconds': workSeconds,
+    if (authoredDetails != null) 'authored_details': authoredDetails,
     'position': position,
     if (minute != null) 'minute': minute,
     if (calories != null) 'calories': calories,
@@ -352,41 +382,61 @@ class TimerStationSpec {
     final explicit = json['stations'];
     if (explicit is List) {
       return [
-        for (var i = 0; i < explicit.length; i++)
-          if (explicit[i] is Map)
-            fromMap(Map<String, dynamic>.from(explicit[i] as Map), i + 1),
-      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+            for (var i = 0; i < explicit.length; i++)
+              if (explicit[i] is Map)
+                fromMap(Map<String, dynamic>.from(explicit[i] as Map), i + 1),
+          ]
+          .where((station) => (station.isRest || station.exerciseId.isNotEmpty))
+          .toList(growable: false);
     }
 
     final alternating = json['alternating'];
     if (alternating is List) {
       return [
-        for (var i = 0; i < alternating.length; i++)
-          if (alternating[i] is Map)
-            fromMap(Map<String, dynamic>.from(alternating[i] as Map), i + 1),
-      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+            for (var i = 0; i < alternating.length; i++)
+              if (alternating[i] is Map)
+                fromMap(
+                  Map<String, dynamic>.from(alternating[i] as Map),
+                  i + 1,
+                ),
+          ]
+          .where((station) => (station.isRest || station.exerciseId.isNotEmpty))
+          .toList(growable: false);
     }
 
     final sequence = json['round_sequence'];
     if (sequence is List) {
       return [
-        for (var i = 0; i < sequence.length; i++)
-          TimerStationSpec(
-            exerciseId: sequence[i].toString().trim(),
-            position: i + 1,
-          ),
-      ].where((station) => station.exerciseId.isNotEmpty).toList(growable: false);
+            for (var i = 0; i < sequence.length; i++)
+              TimerStationSpec(
+                exerciseId: sequence[i].toString().trim(),
+                position: i + 1,
+              ),
+          ]
+          .where((station) => (station.isRest || station.exerciseId.isNotEmpty))
+          .toList(growable: false);
     }
     return const [];
   }
 
-  static TimerStationSpec fromMap(Map<String, dynamic> json, int fallbackPosition) {
+  static TimerStationSpec fromMap(
+    Map<String, dynamic> json,
+    int fallbackPosition,
+  ) {
     final distance = json['distance_m'] ?? json['distanceMeters'];
     return TimerStationSpec(
-      exerciseId: (json['exercise'] ?? json['exercise_id'] ?? json['exerciseId'])
-          .toString()
-          .trim(),
-      position: TimerConfiguration._int(json['position'] ?? json['minute']) ??
+      isRest: json['kind'] == 'rest',
+      workSeconds: json['work_seconds'] as int?,
+      authoredDetails: json['authored_details'] == null
+          ? null
+          : freezePrescriptionJson(json['authored_details'])
+                as Map<String, dynamic>,
+      exerciseId:
+          (json['exercise'] ?? json['exercise_id'] ?? json['exerciseId'] ?? '')
+              .toString()
+              .trim(),
+      position:
+          TimerConfiguration._int(json['position'] ?? json['minute']) ??
           fallbackPosition,
       minute: TimerConfiguration._int(json['minute']),
       calories: TimerConfiguration._int(json['calories']),

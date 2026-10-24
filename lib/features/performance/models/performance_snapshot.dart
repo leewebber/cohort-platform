@@ -1,3 +1,4 @@
+import '../../../core/utils/frozen_json.dart';
 import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../models/session_block_type.dart';
 import '../../../models/strength_exercise_prescription.dart';
@@ -346,6 +347,8 @@ class SessionPerformanceSnapshot {
     this.lineageCode,
     this.blocks = const [],
     this.boundPrescription,
+    this.durationChoiceSnapshot,
+    this.authoredSource,
   });
 
   final String sourceProtocolId;
@@ -360,9 +363,14 @@ class SessionPerformanceSnapshot {
   final String? lineageCode;
   final List<BlockPerformanceSnapshot> blocks;
   final ProgrammePrescription? boundPrescription;
+  final Map<String, dynamic>? durationChoiceSnapshot;
+  final Map<String, dynamic>? authoredSource;
 
   Map<String, dynamic> toJson() => {
     'schemaVersion': 1,
+    if (durationChoiceSnapshot != null)
+      'durationChoiceV1': durationChoiceSnapshot,
+    if (authoredSource != null) 'authoredSourceV1': authoredSource,
     'sourceProtocolId': sourceProtocolId,
     'sessionTitle': sessionTitle,
     if (sessionDescription != null) 'sessionDescription': sessionDescription,
@@ -387,6 +395,14 @@ class SessionPerformanceSnapshot {
               Map<String, dynamic>.from(json['boundPrescriptionV1'] as Map),
             )
           : null,
+      durationChoiceSnapshot: json['durationChoiceV1'] == null
+          ? null
+          : freezePrescriptionJson(json['durationChoiceV1'])
+                as Map<String, dynamic>,
+      authoredSource: json['authoredSourceV1'] == null
+          ? null
+          : freezePrescriptionJson(json['authoredSourceV1'])
+                as Map<String, dynamic>,
       sourceProtocolId: json['sourceProtocolId']?.toString() ?? '',
       sessionTitle: json['sessionTitle']?.toString() ?? '',
       sessionDescription: _trim(json['sessionDescription']),

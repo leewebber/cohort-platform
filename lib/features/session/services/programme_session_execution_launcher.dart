@@ -1,3 +1,4 @@
+import '../../../application/hyrox_base/duration_choice.dart';
 import 'package:flutter/material.dart';
 import '../../../domain/hyrox_base/programme_prescription.dart';
 import '../../../application/hyrox_base/programme_prescription_repository.dart';
@@ -22,6 +23,7 @@ import 'session_execution_launcher.dart';
 
 enum ProgrammeSessionExecutionFailureCode {
   prescriptionConsentRequired,
+  durationChoiceRequired,
   invalidPreparedIdentity,
   missingPreparedProvenance,
   missingExecutionProvenance,
@@ -61,6 +63,7 @@ class ProgrammeTrainingSessionLaunchResult {
     this.runningTargetSnapshot,
     this.runningExecutionAuthority,
     this.boundPrescriptionSnapshot,
+    this.durationChoiceSnapshot,
   });
 
   final TrainingSession trainingSession;
@@ -68,6 +71,7 @@ class ProgrammeTrainingSessionLaunchResult {
 
   /// Immutable server-frozen v3 source/consent/target handoff; never client math.
   final Map<String, dynamic>? boundPrescriptionSnapshot;
+  final Map<String, dynamic>? durationChoiceSnapshot;
   final RunningTargetSnapshotAggregate? runningTargetSnapshot;
   final AuthoredRunningExecutionAuthority? runningExecutionAuthority;
 
@@ -102,6 +106,18 @@ class ProgrammeSessionExecutionLauncher {
     required String athleteId,
     required AthleteProgrammePrepareResult prepared,
   }) async {
+    try {
+      await _launch(context: context, athleteId: athleteId, prepared: prepared);
+    } on _DurationChoiceCancelled {
+      return;
+    }
+  }
+
+  Future<void> _launch({
+    required BuildContext context,
+    required String athleteId,
+    required AthleteProgrammePrepareResult prepared,
+  }) async {
     final package = prepared.package;
     final preparedContext = prepared.executionContext;
     if (package == null || preparedContext == null || !prepared.isReady) {
@@ -122,7 +138,8 @@ class ProgrammeSessionExecutionLauncher {
 
     ProgrammeTrainingSessionLaunchResult launchResult;
     try {
-      launchResult = await createOrResumeLaunchResult(
+      launchResult = await _startWithDurationPrompt(
+        context: context,
         athleteId: athleteId,
         programmeContext: programmeContext,
         package: package,
@@ -154,12 +171,14 @@ class ProgrammeSessionExecutionLauncher {
         existingToken = head['consent_id'] as String;
       }
       ProgrammeTrainingSessionLaunchResult? acceptedStart;
+      if (!context.mounted) return;
       if (existingToken != null) {
         try {
           programmeContext = programmeContext.copyWith(
             boundConsentId: existingToken,
           );
-          acceptedStart = await createOrResumeLaunchResult(
+          acceptedStart = await _startWithDurationPrompt(
+            context: context,
             athleteId: athleteId,
             programmeContext: programmeContext,
             package: package,
@@ -188,7 +207,8 @@ class ProgrammeSessionExecutionLauncher {
         );
         if (token == null || !context.mounted) return;
         programmeContext = programmeContext.copyWith(boundConsentId: token);
-        launchResult = await createOrResumeLaunchResult(
+        launchResult = await _startWithDurationPrompt(
+          context: context,
           athleteId: athleteId,
           programmeContext: programmeContext,
           package: package,
@@ -206,6 +226,12 @@ class ProgrammeSessionExecutionLauncher {
       );
     }
 
+    if (launchResult.durationChoiceSnapshot case final frozenDuration?) {
+      executablePlan = applyFrozenDurationChoices(
+        executablePlan,
+        frozenDuration,
+      );
+    }
     final trainingSession = launchResult.trainingSession;
     VerifiedStructuredRunningExecution? structuredRunningExecution;
     if (launchResult.isStructuredRunningReady) {
@@ -245,6 +271,40 @@ class ProgrammeSessionExecutionLauncher {
     }
   }
 
+  Future<ProgrammeTrainingSessionLaunchResult> _startWithDurationPrompt({
+    required BuildContext context,
+    required String athleteId,
+    required ProgrammeExecutionContext programmeContext,
+    required PreparedExecutionPackage package,
+  }) async {
+    try {
+      return await createOrResumeLaunchResult(
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+        package: package,
+      );
+    } on ProgrammeSessionExecutionException catch (error) {
+      if (error.code !=
+          ProgrammeSessionExecutionFailureCode.durationChoiceRequired) {
+        rethrow;
+      }
+      if (!context.mounted) throw const _DurationChoiceCancelled();
+      final choices = await showDialog<Map<String, int>>(
+        context: context,
+        builder: (_) => _DurationChoiceDialog(plan: package.plan),
+      );
+      if (choices == null || !context.mounted) {
+        throw const _DurationChoiceCancelled();
+      }
+      return createOrResumeLaunchResult(
+        athleteId: athleteId,
+        programmeContext: programmeContext,
+        package: package,
+        durationChoices: choices,
+      );
+    }
+  }
+
   Future<TrainingSession> createOrResumeTrainingSession({
     required String athleteId,
     required ProgrammeExecutionContext programmeContext,
@@ -261,6 +321,7 @@ class ProgrammeSessionExecutionLauncher {
     required String athleteId,
     required ProgrammeExecutionContext programmeContext,
     required PreparedExecutionPackage package,
+    Map<String, int>? durationChoices,
   }) async {
     _validatePreparedIdentity(
       athleteId: athleteId,
@@ -285,6 +346,17 @@ class ProgrammeSessionExecutionLauncher {
       );
     }
 
+    final durationWindows = authoredDurationWindows(package.plan);
+    if (durationChoices != null) {
+      validateDurationChoices(package.plan, durationChoices);
+    }
+    if (durationWindows.isNotEmpty &&
+        programmeContext.packageSchemaVersion != 3) {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.unsupportedAuthoredBlock,
+        'Duration windows require the exact v3 source/start contract.',
+      );
+    }
     Map<String, dynamic> response;
     try {
       response = await _startStore.createOrResume(<String, dynamic>{
@@ -292,6 +364,8 @@ class ProgrammeSessionExecutionLauncher {
           'occurrence_id': programmeContext.occurrenceId,
         if (programmeContext.boundConsentId != null)
           'bound_consent_id': programmeContext.boundConsentId,
+        if (durationWindows.isNotEmpty)
+          'duration_choices': durationChoices ?? <String, int>{},
         'assignment_id': programmeContext.assignmentId,
         'session_slot_id': programmeContext.sessionSlotId,
         'programme_version_id': programmeContext.programmeVersionId,
@@ -314,6 +388,13 @@ class ProgrammeSessionExecutionLauncher {
     }
 
     final status = response['status']?.toString();
+    if (response['code'] == 'duration_choice_unavailable' &&
+        response['reason'] == 'explicit_duration_choice_required') {
+      throw const ProgrammeSessionExecutionException(
+        ProgrammeSessionExecutionFailureCode.durationChoiceRequired,
+        'Choose your main running duration.',
+      );
+    }
     if (status == 'created' || status == 'resumed') {
       final sessionJson = response['training_session'];
       if (sessionJson is! Map) {
@@ -376,7 +457,35 @@ class ProgrammeSessionExecutionLauncher {
           'The bound prescription snapshot does not match this canonical start.',
         );
       }
+      final duration = response['duration_choice_snapshot'];
+      if (durationWindows.isNotEmpty) {
+        if (duration is! Map ||
+            duration['athlete_id'] != athleteId ||
+            duration['occurrence_id'] != programmeContext.occurrenceId ||
+            duration['assignment_id'] != programmeContext.assignmentId ||
+            duration['programme_version_id'] !=
+                programmeContext.programmeVersionId ||
+            duration['training_session_id'].toString() !=
+                session.id.toString()) {
+          throw const ProgrammeSessionExecutionException(
+            ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+            'Frozen duration choice does not match the canonical start.',
+          );
+        }
+        applyFrozenDurationChoices(
+          package.plan,
+          Map<String, dynamic>.from(duration),
+        );
+      } else if (duration != null) {
+        throw const ProgrammeSessionExecutionException(
+          ProgrammeSessionExecutionFailureCode.startAuthorityMismatch,
+          'Unexpected duration choice snapshot.',
+        );
+      }
       return ProgrammeTrainingSessionLaunchResult(
+        durationChoiceSnapshot: duration is Map
+            ? _freezeBoundSnapshot(duration)
+            : null,
         boundPrescriptionSnapshot: bound is Map
             ? _freezeBoundSnapshot(bound)
             : null,
@@ -714,4 +823,80 @@ Object? _freezeBoundValue(Object? value) {
     return List<Object?>.unmodifiable(value.map(_freezeBoundValue));
   }
   return value;
+}
+
+class _DurationChoiceCancelled implements Exception {
+  const _DurationChoiceCancelled();
+}
+
+class _DurationChoiceDialog extends StatefulWidget {
+  const _DurationChoiceDialog({required this.plan});
+  final SessionExecutionPlan plan;
+  @override
+  State<_DurationChoiceDialog> createState() => _DurationChoiceDialogState();
+}
+
+class _DurationChoiceDialogState extends State<_DurationChoiceDialog> {
+  final controllers = <String, TextEditingController>{};
+  String? error;
+  @override
+  void initState() {
+    super.initState();
+    for (final id in authoredDurationWindows(widget.plan).keys) {
+      controllers[id] = TextEditingController();
+    }
+  }
+
+  @override
+  void dispose() {
+    for (final c in controllers.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AlertDialog(
+    title: const Text('Choose main running duration'),
+    content: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final e in authoredDurationWindows(widget.plan).entries)
+            TextField(
+              controller: controllers[e.key],
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: '${e.value[0] ~/ 60}–${e.value[1] ~/ 60} minutes',
+                helperText:
+                    'Main running only; preparation and cooldown are additional.',
+              ),
+            ),
+          if (error != null) Text(error!),
+        ],
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancel'),
+      ),
+      FilledButton(
+        onPressed: () {
+          final result = <String, int>{};
+          for (final e in controllers.entries) {
+            final minutes = int.tryParse(e.value.text.trim());
+            if (minutes != null) result[e.key] = minutes * 60;
+          }
+          try {
+            validateDurationChoices(widget.plan, result);
+            Navigator.pop(context, result);
+          } on FormatException catch (e) {
+            setState(() => error = e.message);
+          }
+        },
+        child: const Text('Use duration'),
+      ),
+    ],
+  );
 }

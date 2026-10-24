@@ -1,3 +1,5 @@
+import '../core/utils/frozen_json.dart';
+import 'authored_int_range.dart';
 import 'dart:convert';
 
 /// Structured strength prescription for an exercise inside a Session block (Sprint 10).
@@ -10,6 +12,11 @@ class StrengthExercisePrescription {
     required this.reps,
     this.load,
     this.restSeconds,
+    this.restSecondsRange,
+    this.restAfterGroupSecondsRange,
+    this.rirRange,
+    this.holdSeconds,
+    this.authoredDetails,
     this.tempo,
     this.coachCue,
     this.perSide = false,
@@ -24,6 +31,11 @@ class StrengthExercisePrescription {
   final StrengthRepPrescription reps;
   final StrengthLoadPrescription? load;
   final int? restSeconds;
+  final AuthoredIntRange? restSecondsRange;
+  final AuthoredIntRange? restAfterGroupSecondsRange;
+  final AuthoredIntRange? rirRange;
+  final int? holdSeconds;
+  final Map<String, dynamic>? authoredDetails;
   final String? tempo;
   final String? coachCue;
   final bool perSide;
@@ -72,6 +84,11 @@ class StrengthExercisePrescription {
     bool clearPerformanceCapture = false,
   }) {
     return StrengthExercisePrescription(
+      restSecondsRange: restSecondsRange,
+      restAfterGroupSecondsRange: restAfterGroupSecondsRange,
+      rirRange: rirRange,
+      holdSeconds: holdSeconds,
+      authoredDetails: authoredDetails,
       sets: sets ?? this.sets,
       reps: reps ?? this.reps,
       load: clearLoad ? null : (load ?? this.load),
@@ -96,6 +113,13 @@ class StrengthExercisePrescription {
       'sets': sets,
       'reps': reps.toJson(),
       if (load != null && load!.hasValue) 'load': load!.toJson(),
+      if (restSecondsRange != null)
+        'rest_seconds_range': restSecondsRange!.toJson(),
+      if (restAfterGroupSecondsRange != null)
+        'rest_after_group_seconds_range': restAfterGroupSecondsRange!.toJson(),
+      if (rirRange != null) 'rir_range': rirRange!.toJson(),
+      if (holdSeconds != null) 'hold_seconds': holdSeconds,
+      if (authoredDetails != null) 'authored_details': authoredDetails,
       if (restSeconds != null) 'rest_seconds': restSeconds,
       if (_nonEmpty(tempo) != null) 'tempo': tempo!.trim(),
       if (_nonEmpty(coachCue) != null) 'coach_cue': coachCue!.trim(),
@@ -114,6 +138,7 @@ class StrengthExercisePrescription {
     final distance = _decodeDistance(json['distance_m'] ?? json['distance']);
     var capture = _captureFromJson(json['performance_capture']);
     if (capture == null &&
+        json['authored_details'] == null &&
         (distance.meters != null ||
             (distance.text?.trim().isNotEmpty == true))) {
       capture = ExercisePerformanceCapture(
@@ -125,6 +150,18 @@ class StrengthExercisePrescription {
       sets: _parseInt(json['sets']) ?? 0,
       reps: _decodeReps(json['reps']),
       load: _decodeLoad(json['load']),
+      restSecondsRange: json['rest_seconds_range'] == null
+          ? null
+          : AuthoredIntRange.fromJson(json['rest_seconds_range']),
+      restAfterGroupSecondsRange: json['rest_after_group_seconds_range'] == null
+          ? null
+          : AuthoredIntRange.fromJson(json['rest_after_group_seconds_range']),
+      rirRange: _authoredRirRange(json),
+      holdSeconds: json['hold_seconds'] as int?,
+      authoredDetails: json['authored_details'] == null
+          ? null
+          : freezePrescriptionJson(json['authored_details'])
+                as Map<String, dynamic>,
       restSeconds: _parseInt(json['rest_seconds']),
       tempo: json['tempo']?.toString(),
       coachCue: json['coach_cue']?.toString(),
@@ -137,12 +174,47 @@ class StrengthExercisePrescription {
     );
   }
 
+  static AuthoredIntRange? _authoredRirRange(Map<String, dynamic> json) {
+    if (json['rir_range'] != null) {
+      return AuthoredIntRange.fromJson(json['rir_range']);
+    }
+    if (json['five_rm_basis_points'] != null && json['rir'] is String) {
+      final raw = json['rir'] as String;
+      if (!RegExp(r'^\d+(?:[–-]\d+)?$').hasMatch(raw)) {
+        throw const FormatException('Invalid authored squat RIR.');
+      }
+      final values = raw.split(RegExp('[–-]')).map(int.parse).toList();
+      return AuthoredIntRange.fromJson([values.first, values.last]);
+    }
+    return null;
+  }
+
   StrengthExercisePrescription duplicateIdentity() => this;
 
   List<String> validate({required bool requireComplete}) {
     final messages = <String>[];
     if (requireComplete && sets <= 0) {
       messages.add('sets must be at least 1.');
+    }
+    for (final range in [
+      restSecondsRange,
+      restAfterGroupSecondsRange,
+      rirRange,
+    ]) {
+      if (range != null && !range.isValid) {
+        messages.add('Invalid authored range.');
+      }
+    }
+    if (restSeconds != null && restSecondsRange != null) {
+      messages.add('Ambiguous rest prescription.');
+    }
+    if (holdSeconds != null && holdSeconds! <= 0) {
+      messages.add('Invalid hold duration.');
+    }
+    if (prescribedDistanceMeters != null &&
+        (!prescribedDistanceMeters!.isFinite ||
+            prescribedDistanceMeters! <= 0)) {
+      messages.add('Invalid prescribed distance.');
     }
     messages.addAll(reps.validate(requireComplete: requireComplete));
     if (load != null) {
@@ -324,6 +396,7 @@ class StrengthRepPrescription {
     this.exactReps,
     this.minReps,
     this.maxReps,
+    this.durationSeconds,
     this.text,
   });
 
@@ -331,6 +404,7 @@ class StrengthRepPrescription {
   final int? exactReps;
   final int? minReps;
   final int? maxReps;
+  final int? durationSeconds;
   final String? text;
 
   bool get hasValue => switch (type) {
@@ -357,6 +431,7 @@ class StrengthRepPrescription {
       type: type ?? this.type,
       exactReps: exactReps ?? this.exactReps,
       minReps: minReps ?? this.minReps,
+      durationSeconds: durationSeconds,
       maxReps: maxReps ?? this.maxReps,
       text: text ?? this.text,
     );
@@ -367,6 +442,7 @@ class StrengthRepPrescription {
       'type': type.name,
       if (exactReps != null) 'exact_reps': exactReps,
       if (minReps != null) 'min_reps': minReps,
+      if (durationSeconds != null) 'duration_seconds': durationSeconds,
       if (maxReps != null) 'max_reps': maxReps,
       if (text?.trim().isNotEmpty == true) 'text': text!.trim(),
     };
@@ -377,6 +453,7 @@ class StrengthRepPrescription {
       type: StrengthRepTypeDb.fromDb(json['type']?.toString()),
       exactReps: StrengthExercisePrescription._parseInt(json['exact_reps']),
       minReps: StrengthExercisePrescription._parseInt(json['min_reps']),
+      durationSeconds: json['duration_seconds'] as int?,
       maxReps: StrengthExercisePrescription._parseInt(json['max_reps']),
       text: json['text']?.toString(),
     );
@@ -398,6 +475,10 @@ class StrengthRepPrescription {
   }
 
   List<String> validate({required bool requireComplete}) {
+    if (durationSeconds != null &&
+        (type != StrengthRepType.duration || durationSeconds! <= 0)) {
+      return const ['Invalid prescribed duration.'];
+    }
     if (!requireComplete) return const [];
     if (!hasValue) {
       return const ['reps are required.'];

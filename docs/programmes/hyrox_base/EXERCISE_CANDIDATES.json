@@ -1,0 +1,941 @@
+{
+  "candidates": [
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "assault_bike",
+      "candidate_definition": {
+        "canonical_name": "assault bike",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "erg",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "rpe"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-assault_bike",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Authored assault bike; no equivalence to other bikes inferred.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "back_squat",
+      "candidate_definition": {
+        "canonical_name": "back squat",
+        "id": "EX-073",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-back_squat",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.back_squat",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Barbell/rack; no total-load increment is guessed.",
+      "proposed_existing_canonical_id": "EX-073",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "bodyweight_squat",
+      "candidate_definition": {
+        "canonical_name": "bodyweight squat",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-bodyweight_squat",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "chest_supported_row",
+      "candidate_definition": {
+        "canonical_name": "chest supported row",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-chest_supported_row",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Chest support; rowing implement is not selected by name similarity.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "dead_bug",
+      "candidate_definition": {
+        "canonical_name": "dead bug",
+        "id": "EX-022",
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-dead_bug",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.dead_bug",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": "EX-022",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "dumbbell_shoulder_press",
+      "candidate_definition": {
+        "canonical_name": "dumbbell shoulder press",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-dumbbell_shoulder_press",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Dumbbells; no unprovided seated/standing restriction is added.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "easy_bike",
+      "candidate_definition": {
+        "canonical_name": "easy bike",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "erg",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "rpe"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-easy_bike",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Preparation bike variant requires review.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "front_rack_reverse_lunge",
+      "candidate_definition": {
+        "canonical_name": "front rack reverse lunge",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Front-rack reverse lunge; front-rack implement/variant not selected by name similarity.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-front_rack_reverse_lunge",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Front-rack implement remains an explicit variant input.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "glute_bridge",
+      "candidate_definition": {
+        "canonical_name": "glute bridge",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-glute_bridge",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "incline_dumbbell_press",
+      "candidate_definition": {
+        "canonical_name": "incline dumbbell press",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-incline_dumbbell_press",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Dumbbells and incline bench.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "kettlebell_swing",
+      "candidate_definition": {
+        "canonical_name": "kettlebell swing",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-kettlebell_swing",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Kettlebell; effort/technique-selected load.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "light_band_pull_apart",
+      "candidate_definition": {
+        "canonical_name": "light band pull apart",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-light_band_pull_apart",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Light band; no fixed resistance.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "light_row",
+      "candidate_definition": {
+        "canonical_name": "light row",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Preparation row variant unspecified; do not infer cable/dumbbell or chest support.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-light_row",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact preparation row/implement remains unspecified.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "light_scapular_row",
+      "candidate_definition": {
+        "canonical_name": "light scapular row",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Preparation scapular-row variant unspecified.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-light_scapular_row",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact scapular-row preparation variant remains unspecified.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "long_lever_plank",
+      "candidate_definition": {
+        "canonical_name": "long lever plank",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration"
+        ],
+        "variant": "Long-lever plank; optional longer lever W5, not generic-plank authority.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-long_lever_plank",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Bodyweight long-lever position; no compulsory leverage change.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "pallof_press",
+      "candidate_definition": {
+        "canonical_name": "pallof press",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-pallof_press",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Resistance implement must be reviewed; cable/band equivalence is not granted.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "rdl",
+      "candidate_definition": {
+        "canonical_name": "rdl",
+        "id": "EX-078",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-rdl",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.romanian_deadlift",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Barbell EX-078 is an existing candidate; exact implement/variant still needs binding review.",
+      "proposed_existing_canonical_id": "EX-078",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "reverse_lunge",
+      "candidate_definition": {
+        "canonical_name": "reverse lunge",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Preparation reverse lunge; do not map to walking lunge.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-reverse_lunge",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "rowing",
+      "candidate_definition": {
+        "canonical_name": "rowing",
+        "id": "EX-049",
+        "lifecycle_status": "draft",
+        "modality": "erg",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "rpe"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-rowing",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.rowing",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Row erg; device/protocol semantics stay separate.",
+      "proposed_existing_canonical_id": "EX-049",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "running",
+      "candidate_definition": {
+        "canonical_name": "running",
+        "id": "EX-129",
+        "lifecycle_status": "draft",
+        "modality": "locomotion",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "rpe"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-running",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.running",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": "EX-129",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "ski_erg",
+      "candidate_definition": {
+        "canonical_name": "ski erg",
+        "id": "EX-050",
+        "lifecycle_status": "draft",
+        "modality": "erg",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "duration",
+          "distance",
+          "rpe"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-ski_erg",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.ski_erg",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "SkiErg device; banded patterns remain separate.",
+      "proposed_existing_canonical_id": "EX-050",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "split_stance_single_arm_cable_row",
+      "candidate_definition": {
+        "canonical_name": "split stance single arm cable row",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Split-stance, single-arm cable row; per-side prescription.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-split_stance_single_arm_cable_row",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Cable station; split stance and single arm are explicit.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "strict_overhead_press",
+      "candidate_definition": {
+        "canonical_name": "strict overhead press",
+        "id": "EX-088",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-strict_overhead_press",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.strict_press",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Barbell strict press is the existing EX-088 candidate; exact Base binding requires review.",
+      "proposed_existing_canonical_id": "EX-088",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "strict_pull_up",
+      "candidate_definition": {
+        "canonical_name": "strict pull up",
+        "id": "EX-053",
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-strict_pull_up",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.pull_up",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Strict pull-up facility; no assisted or weighted substitution inferred.",
+      "proposed_existing_canonical_id": "EX-053",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "suitcase_carry",
+      "candidate_definition": {
+        "canonical_name": "suitcase carry",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "load",
+          "distance",
+          "unilateral_side"
+        ],
+        "variant": "Unilateral suitcase carry; not farmer carry.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-suitcase_carry",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Unilateral external load and measured carry space; no fixed kg.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "two_dumbbell_devils_press",
+      "candidate_definition": {
+        "canonical_name": "two dumbbell devils press",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Two-dumbbell devil's press; no single-dumbbell substitution.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-two_dumbbell_devils_press",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Two dumbbells; effort/technique-selected load.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "unloaded_hip_hinge",
+      "candidate_definition": {
+        "canonical_name": "unloaded hip hinge",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-unloaded_hip_hinge",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "wall_ball",
+      "candidate_definition": {
+        "canonical_name": "wall ball",
+        "id": "EX-052",
+        "lifecycle_status": "draft",
+        "modality": "strength",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "height_or_target"
+        ],
+        "variant": "Wall ball at selected race weight/standard target; division mapping unresolved.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-wall_ball",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": "cohort.exercise.wall_ball",
+      "evidence": "docs/architecture/Phase_3_1F_Part2_Founder_Approved_Canonical_Mappings_v1.md",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Wall ball plus standard target; load/height await authoritative selected-division mapping.",
+      "proposed_existing_canonical_id": "EX-052",
+      "publication_event": null,
+      "retained_digest": null
+    },
+    {
+      "approval_required": [
+        "exact source-to-definition variant binding",
+        "complete definition/classification/equipment review",
+        "producer-assigned current version and verified approval/publication event"
+      ],
+      "authored_label": "wall_slide",
+      "candidate_definition": {
+        "canonical_name": "wall slide",
+        "id": null,
+        "lifecycle_status": "draft",
+        "modality": "bodyweight",
+        "published_at": null,
+        "valid_completed_performance_dimensions": [],
+        "valid_prescription_dimensions": [
+          "repetitions",
+          "load",
+          "rir"
+        ],
+        "variant": "Exact authored variant; equipment/classification/valid dimensions require definition review.",
+        "version": null
+      },
+      "candidate_key": "base-candidate-wall_slide",
+      "classification_status": "PROPOSED_FOR_DEFINITION_REVIEW_NOT_APPROVED",
+      "established_transitional_mapping": null,
+      "evidence": "No explicit accepted mapping supplied for this authored label.",
+      "meaning": "Candidate only; neither an EX reservation nor published/historical definition authority.",
+      "proposed_equipment_notes": "Exact authored preparation movement; no extra equipment or coaching standard invented.",
+      "proposed_existing_canonical_id": null,
+      "publication_event": null,
+      "retained_digest": null
+    }
+  ],
+  "format": "hyrox-base-exercise-candidates-v1",
+  "local_authority_audit": {
+    "authoritative_real_exact_version_bundles": 0,
+    "boundary": "PublishedExerciseVersionRetention and existing configured trusted event producer; never a new publication service.",
+    "excluded_sources": [
+      "Historical 132-row catalogue export: identity/lifecycle only.",
+      "Phase 3.2D movement-knowledge draft derivatives: no retained publication event.",
+      "EX-900x/EX-900900 synthetic fixtures: software simulations only."
+    ]
+  },
+  "status": "REQUIRES_EXISTING_TRUSTED_PRODUCER_REVIEW"
+}

@@ -17,7 +17,10 @@ class ProgrammeTrainingSessionStartSupabaseStore
         'create_or_resume_fixed_programme_occurrence_session',
         params: {
           'p_occurrence_id': occurrenceId,
-          if (payload['bound_consent_id'] != null)
+          if (payload.containsKey('duration_choices'))
+            'p_duration_choices': payload['duration_choices'],
+          if (payload['bound_consent_id'] != null ||
+              payload.containsKey('duration_choices'))
             'p_consent_id': payload['bound_consent_id'],
         },
       );

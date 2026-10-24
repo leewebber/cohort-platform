@@ -162,6 +162,8 @@ class SessionExecutionPlan {
     this.programmeContextLabel,
     this.prescriptionLoadOverrides = const {},
     this.boundPrescriptionSnapshot,
+    this.durationChoiceSnapshot,
+    this.authoredSource,
   });
 
   final String sessionId;
@@ -173,6 +175,8 @@ class SessionExecutionPlan {
   final String? programmeContextLabel;
   final Map<String, String> prescriptionLoadOverrides;
   final Map<String, dynamic>? boundPrescriptionSnapshot;
+  final Map<String, dynamic>? durationChoiceSnapshot;
+  final Map<String, dynamic>? authoredSource;
 
   bool get hasExecutableBlocks =>
       blocks.any((block) => block.hasAthleteVisibleContent);

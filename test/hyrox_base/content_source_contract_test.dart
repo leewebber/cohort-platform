@@ -79,8 +79,8 @@ void main() {
       }
       expect(
         count,
-        79,
-      ); // 24 primary + 48 paired + 8 Pallof - 1 unresolved cable row.
+        80,
+      ); // 24 primary + 48 paired + 8 Pallof; W1 cable row now resolved.
     },
   );
 
@@ -104,9 +104,9 @@ void main() {
           final decoded = TimerConfiguration.fromJson(model.toJson());
           expect(decoded.emomTotalSeconds, model.emomTotalSeconds);
           expect(decoded.intervalSeconds, 60);
-          // Station identity/capture/graph proof is still explicitly T1/T2 blocked.
+          // Real exact station identity/publication remains T1 blocked; lowering is independently tested.
           expect(decoded.stations, isEmpty);
-          expect(session['technical_blockers'], containsAll(['T1', 'T2']));
+          expect(session['technical_blockers'], contains('T1'));
           count++;
         }
       }

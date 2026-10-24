@@ -1,7 +1,7 @@
 {
   "format": "hyrox-base-review-source-v1",
-  "base_commit": "cbe281bed99eca5807bd2d3c39959ae83469120e",
-  "authority": "local consolidation and technical representation; not commercial approval",
+  "base_commit": "8f4e57c4f1f61eb28c745cf3e9c0603c0d26f16b",
+  "authority": "Working exercise doses, core and finishers prescription-approved 2026-10-24 with explicit corrections; no unseen capture/publication authority.",
   "approved_weeks": [
     {
       "week": 1,
@@ -741,9 +741,9 @@
     "long": {
       "minutes": [
         5,
-        10
+        5
       ],
-      "mode": "gentle preparation"
+      "mode": "gentle walking/jogging"
     },
     "quality": {
       "easy_run_seconds": 600,
@@ -767,7 +767,7 @@
     "upper_progression": "Build repetitions within ranges before suggesting load increases; athlete accepts. No OHP load inference from its benchmark. No automatic progression on completion.",
     "core_progression": "Optional W5 carry load, longer plank lever or Pallof resistance only with position maintained and athlete choice. No compulsory increase. W4 carry and Pallof lighter.",
     "core_rest": "45–60 seconds as needed; exact placement across sides/sets is not supplied.",
-    "strength_rest": "RDL and reverse lunge: 120–180 seconds. Back squat rest not supplied. Upper pair A: 90–120 seconds after pair; B/C: 90 seconds after pair.",
+    "strength_rest": "Back squat working sets: 150–180 seconds throughout; warm-up sets separate. RDL/reverse lunge: 120–180 seconds. Upper pair A: 90–120 seconds after pair; B/C: 90 seconds.",
     "finisher_load": "Effort/technique selected, no fixed kilograms. Rep work leaves recovery inside the minute; record athlete scaling. Wall balls require selected race weight and race-standard target height; authoritative division mapping unresolved.",
     "running_effort": "Easy/long conversational, RPE about 3–4. Quality RPE about 7, repeatable. Choose within duration windows by feel/recovery; no level bands or invented HR zones.",
     "substitution": "Running intended for all three aerobic sessions. Bike substitution only under verified existing rules plus athlete acceptance, preserving duration/effort, never running pace. No new variants/mappings supplied.",
@@ -775,6 +775,7 @@
     "personalisation": "Only quality running, dedicated rowing and back squat have approved numeric derivation. Pace=10 km seconds/10; 4–5 min x1.00–1.05, 6–7 min x1.02–1.07, 10 min x1.03–1.08. Row split=2 km seconds/4, +10–15 seconds for 2-min reps, +12–18 for 3-min reps; W4 +18–23, W8 +15–20. Squat=5RM x authored basis points/10000, nearest configured total barbell increment, ties down. No guessed increment. Missing means unavailable, plus authored effort only; no invented row fallback.",
     "history": "Explicit benchmark replacement acceptance affects future unstarted sessions only; started/completed prescriptions immutable. Actuals separate. No inferred loads for RDL/lunge/other press/pull-ups.",
     "post_base": "No compulsory post-Base assessment; representative benchmarks needed before next plan. Test Week is a separate unauthored programme, never inserted here.",
-    "equipment": "Authored work implies barbell/rack, dumbbells, pull-up facility, cable station, carry space, rower, bike, SkiErg, wall ball/standard target, kettlebell (W1–4/8), and light preparation bands; exact variants/equipment prerequisites and exclusions need editorial confirmation. This is derived inventory, not approved marketing copy."
+    "equipment": "Authored work implies barbell/rack, dumbbells, pull-up facility, cable station, carry space, rower, bike, SkiErg, wall ball/standard target, kettlebell (W1–4/8), and light preparation bands; exact variants/equipment prerequisites and exclusions need editorial confirmation. This is derived inventory, not approved marketing copy.",
+    "capture": "Prescribed targets and actual performance remain separate. Reuse established optional actuals and notes; no new required results are inferred from displayed prescription fields. Exact limits are recorded in CAPTURE_AND_PREPARATION.md."
   }
 }
