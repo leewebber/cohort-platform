@@ -1,5 +1,25 @@
 # Cohort Platform repository guidance
 
+> **HYROX Base content consolidation — locally reviewed, 2026-10-24:**
+> [Master](docs/programmes/hyrox_base/MASTER.md),
+> [provenance/decisions](docs/programmes/hyrox_base/DECISIONS.md),
+> [48-session audit](docs/programmes/hyrox_base/COVERAGE.md) and
+> [handoff](docs/checkpoints/hyrox_base_content/HANDOFF.md) retain the transferred
+> supporting content as local review direction, distinct from explicit prior approvals.
+> All 48 review sources plus eight Sunday rest entries are retained: 19 primarily
+> technically blocked, 29 awaiting specific content decisions, zero canonical source-complete.
+> Every session lacks exact real published definition/version/event/source binding.
+> W1 cable-row/plank alternatives remain unresolved; W6/W7 long main remains 65–80 min;
+> W3/W5/W6/W7 can total 95 min. Review JSON round trips are not canonical TAR/publication.
+> 13 offline tests, 53 HYROX tests (one gated test skipped), 41 compiler tests and six safety
+> groups pass; new Dart test has no diagnostics. Existing runtime/compiler/server/SQL source
+> stays exact; full analysis is attributed inherited 364, not freshly green. All 20 other
+> checkout inventories and original 95 outstanding paths/indices/HEADs/.temp are exact.
+> No managed worktree creation/cleanup, Python networking, computer/browser/device control,
+> hosted operation, producer provisioning or real publication/athlete write. Six content
+> decisions and T1/T2/T3 remain open; no final approval, publication readiness or Stage 2 closure.
+
+
 > **Trusted v3 HTTP/event receiver — locally proved, 2026-10-24:**
 > [Handoff](docs/checkpoints/hyrox_v3_http/HANDOFF.md) and
 > [contract/deployment prerequisites](docs/checkpoints/hyrox_v3_http/DEPLOYMENT.md) compose

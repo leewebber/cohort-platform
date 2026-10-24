@@ -1,4 +1,25 @@
 # Current repository checkpoint
+
+> **HYROX Base content consolidation — locally reviewed, 2026-10-24:**
+> [Master](../programmes/hyrox_base/MASTER.md),
+> [provenance/decisions](../programmes/hyrox_base/DECISIONS.md),
+> [coverage](../programmes/hyrox_base/COVERAGE.md) and
+> [handoff](./hyrox_base_content/HANDOFF.md) retain 48 structured local review sources,
+> full readable content and eight rest entries. Transferred supporting direction does not
+> become final content approval. Primary counts: 19 technically blocked; 29 awaiting specific
+> content decisions; zero canonical source-complete. All lack exact real published definition/
+> version/event/source binding; existing models/source-lowering gaps remain T2/T3. W1 row/
+> plank alternatives stay unresolved. W6/W7 main long runs remain 65–80 min; W3/W5/W6/W7
+> maxima total 95 min including stated preparation/walk. 24 binding intents match existing
+> parameters; review JSON round trips retain sources without claiming canonical export.
+> Fresh 13 offline/53 HYROX/41 compiler tests and six safety groups pass, one existing gated
+> authenticated test skipped, zero diagnostics in new Dart test. Full analysis is attributed
+> inherited 364; protected app/compiler/server/SQL/importer trees unchanged. All 20 other
+> inventories and original 95 paths/HEADs/indices/.temp are exact. No new managed worktree,
+> cleanup change, Python networking, computer/browser/device control, hosted contact,
+> provisioning, real publication/assignment or athlete write. Existing HTTP/hosted blockers,
+> six content decisions, final commercial approval and broader Stage 2/Sprint C remain open.
+
 > **Trusted v3 HTTP/event receiver — locally proved, 2026-10-24:**
 > [Handoff](./hyrox_v3_http/HANDOFF.md), [event/auth contract](./hyrox_v3_http/CONTRACT.md),
 > [verification](./hyrox_v3_http/VERIFICATION.json) and [deployment prerequisites](./hyrox_v3_http/DEPLOYMENT.md)

@@ -1,0 +1,93 @@
+{
+  "analysis": {
+    "changed_dart_file_diagnostics": 0,
+    "explanation": "Prior committed analysis evidence attributed, not a fresh measurement. All existing app/compiler/server/SQL/importer source unchanged. Only new Dart test analysed directly.",
+    "full_analysis_green": false,
+    "full_analysis_rerun": false,
+    "inherited_checkpoint": "docs/checkpoints/hyrox_v3_http/VERIFICATION.json",
+    "inherited_errors": 0,
+    "inherited_findings": 364,
+    "inherited_infos": 254,
+    "inherited_warnings": 110
+  },
+  "base": "cbe281bed99eca5807bd2d3c39959ae83469120e",
+  "boundaries": {
+    "commercial_content_approval": false,
+    "computer_browser_control": false,
+    "device_work": false,
+    "hosted_operations": 0,
+    "new_publication_service": false,
+    "producer_provisioning": false,
+    "publication_readiness": false,
+    "python_network_used": false,
+    "real_publication_assignment_or_athlete_writes": false,
+    "stage2_closed": false
+  },
+  "canonical_compilation": {
+    "canonical_packages": 0,
+    "detail": "No exact approved published ExerciseDefinition/event bundle or physical session revisions supplied; no authority fabricated.",
+    "reasons": [
+      "T1"
+    ],
+    "source_count": 48,
+    "status": "blocked_before_canonical_compilation"
+  },
+  "coverage": {
+    "all_sessions_have_T1": true,
+    "awaiting_specific_content_decision": 29,
+    "canonical_source_complete": 0,
+    "rest_days": 8,
+    "review_sources": 48,
+    "technically_blocked": 19,
+    "training_sessions": 48
+  },
+  "implementation_commit": "8e6e6ac84df70b52a9bdd68af8bab9b8a725094b",
+  "preservation": {
+    "after_older_sha256": "a24347a650f725bfd1f96b2a15542ece8cc12761232c467591ee6ed1f7de1a2b",
+    "all_recorded_files_indices_heads_status_and_temp_exact": true,
+    "before_sha256": "3da41a8df39821d0f6dab2090b0f8494a79cba4f7af52270d5c53d72b79385fe",
+    "cleanup_setting_changes": false,
+    "differences": [],
+    "managed_worktree_creation": false,
+    "older_checkouts": 20,
+    "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+    "original_outstanding_paths": 95,
+    "python_network_used": false
+  },
+  "protected_source_trees": {
+    "lib": "184c01ab4b5ad40b0614415fe4818d66401d90cc",
+    "packages": "168c99b323ec1b0c6a8a544e5878caa28ec7e0c1",
+    "server": "bebff78bd08d74c42808c9c9494a91adcb7d88e2",
+    "supabase": "d99e4078c0f3c2b520af79772808efa86330cc07",
+    "tool/importer": "7614fd5b6c860c4a38e1759c78f9a7d173f18594"
+  },
+  "raw_evidence_directory": "/private/tmp/cohort-hyrox-content",
+  "raw_evidence_sha256": {
+    "changed-analysis.log": "86a8189f08c8425b07039f3cde1da43749d9e7656b421f390cb8d7673227ef87",
+    "compiler-tests.log": "866791262de55332041fd4a7f319410550c8a90f49360223a9ce4148802dae7c",
+    "flutter-tests.log": "386be40750812fbf5844e3ea9178709d0efc9444bd50692824d8870a89198bfb",
+    "python-tests.log": "f5607b209fc9fe3c0cad5ca369e7a51ef49494691637386102fe52b6ccc98e82",
+    "safety.log": "3d6702dcbc27cbc63217539784f3bd929487aeed9da87c3c8c3f6d197274ae38",
+    "source-check.log": "95e9674fe16382553e45928fbc399f4624437b4b36e684cc952788779d51716e"
+  },
+  "scope": "LOCAL_REVIEW_SOURCES_COMPLETE_CANONICAL_COMPILATION_BLOCKED",
+  "skipped_test": {
+    "name": "authenticated v3 review consent canonical start runner save completion History",
+    "path": "test/hyrox_base/athlete_authoritative_local_test.dart",
+    "reason": "Requires task-owned disposable authenticated local gate; no HTTP/DB gate run in this source-only milestone. Previous network denial was not retried or bypassed."
+  },
+  "source_manifest_sha256": "aef7efffe671999ca5e27f7013c9e5c498e8a9bea95c7374dc66b4d633b0b299",
+  "tests": {
+    "approved_binding_parameter_intents_checked": 24,
+    "compiler_golden_tests_passed": 41,
+    "deterministic_generation": true,
+    "hyrox_authenticated_local_tests_skipped": 1,
+    "hyrox_tests_passed": 53,
+    "offline_semantic_tests_passed": 13,
+    "representable_strength_fragments_checked": 79,
+    "review_export_round_trip": true,
+    "safety_groups_failed": 0,
+    "safety_groups_passed": 6,
+    "timer_total_fragments_checked": 16
+  }
+}

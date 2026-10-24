@@ -1,0 +1,12 @@
+{
+  "after_older_sha256": "a24347a650f725bfd1f96b2a15542ece8cc12761232c467591ee6ed1f7de1a2b",
+  "all_recorded_files_indices_heads_status_and_temp_exact": true,
+  "before_sha256": "3da41a8df39821d0f6dab2090b0f8494a79cba4f7af52270d5c53d72b79385fe",
+  "cleanup_setting_changes": false,
+  "differences": [],
+  "managed_worktree_creation": false,
+  "older_checkouts": 20,
+  "original_head": "a331f52967e1887c4435cccc8f1ecfa192028cd6",
+  "original_outstanding_paths": 95,
+  "python_network_used": false
+}
