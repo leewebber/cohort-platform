@@ -1,0 +1,53 @@
+{
+  "files": [
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/ACCESS_BOUNDARY.md",
+      "sha256": "75b6d3c8642aba6d82a5d42e9c54553fbf84e43adc59bc368b6166d457a828c0"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/ACCESS_GATE.json",
+      "sha256": "d54ad6877b6513fc2d459217010d69bb279c82bd55181b89b2041e8157b4e7dc"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/APPROVED_MANIFEST.json",
+      "sha256": "c75a5a3c7ecf773b4ea97f04bb5ab11c3c24aee076358d761c88138e155c3ed8"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/DISPOSABLE_CLEANUP.json",
+      "sha256": "217b2c4e67befe88960f726d56b6927e273b99af9dc82c2b7623e633db4cdb6b"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/DISPOSABLE_COPY.json",
+      "sha256": "aa6975cee272bfa43f7db88cfa9fa8fd61a4e3af231201ca4d58ddf6412e907f"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/HANDOFF.md",
+      "sha256": "93e23f3dc83e4918c1652c4d5a75b72a2de3bd5509d132fc7a0d44bf06f82737"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/LEDGER.json",
+      "sha256": "dc6c15f3674bc4c5cba036cdf82d2434e8e493f24cfdb8f7261a558b43ba6ae6"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/LINK_RECEIPT.txt",
+      "sha256": "964c9b9e50864a9ba87a98f692882ad81e7a0939ac95c4d446ef9c948f646d8f"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/PRECHECKS.json",
+      "sha256": "f20fc94e6477035db03261bca3d5e24580814e53a12c6bdcbc24ce565317982a"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/PRESERVATION.json",
+      "sha256": "1cb166cfe41abee47c7fb99ce4875880cf315337ccb15e6b277b1f7db0da08c0"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/PROTECTED.json",
+      "sha256": "022ff6df5e66c075f65e67f6700c08576ff9b75fe807830d12237692636fd4cd"
+    },
+    {
+      "path": "docs/checkpoints/hyrox_schema_deployment/VERIFICATION.json",
+      "sha256": "801d250a1c64129934891ddf502c34c881780c8db4ff75e089925d6082014373"
+    }
+  ],
+  "hash_convention": "SHA256 exact retained bytes, self excluded"
+}

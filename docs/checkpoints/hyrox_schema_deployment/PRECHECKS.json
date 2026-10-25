@@ -1,0 +1,716 @@
+{
+  "actual_ledger_entries": 122,
+  "actual_ledger_tip": "20261009120000",
+  "additional_operational_credential_authority_pending": true,
+  "all_130_source_migrations_unchanged": true,
+  "control_plane": {
+    "enabled_services": {
+      "available": true,
+      "data": [
+        {
+          "config": {
+            "name": "analyticshub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "artifactregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquery.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryconnection.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatapolicy.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerydatatransfer.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerymigration.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigqueryreservation.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "bigquerystorage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudapis.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudbuild.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "cloudtrace.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "containerregistry.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataform.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "dataplex.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "datastore.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iam.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "iamcredentials.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "logging.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "monitoring.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "pubsub.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "run.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "secretmanager.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "servicemanagement.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "serviceusage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "sql-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-api.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage-component.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "storage.googleapis.com"
+          }
+        },
+        {
+          "config": {
+            "name": "telemetry.googleapis.com"
+          }
+        }
+      ]
+    },
+    "mutations": false,
+    "observed_at_utc": "2026-10-25T11:36:48Z",
+    "project": "cohort-platform-production",
+    "pubsub_subscriptions": {
+      "available": true,
+      "data": []
+    },
+    "receiver": {
+      "available": true,
+      "data": {
+        "metadata": {
+          "name": "cohort-trusted-plan-import"
+        },
+        "spec": {
+          "template": {
+            "spec": {
+              "serviceAccountName": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+              "timeoutSeconds": 30
+            }
+          }
+        },
+        "status": {
+          "conditions": [
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.197513Z",
+              "status": "True",
+              "type": "Ready"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:18.210142Z",
+              "status": "True",
+              "type": "ConfigurationsReady"
+            },
+            {
+              "lastTransitionTime": "2026-08-11T01:40:29.172551Z",
+              "status": "True",
+              "type": "RoutesReady"
+            }
+          ],
+          "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+          "traffic": [
+            {
+              "latestRevision": true,
+              "percent": 100,
+              "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+            }
+          ]
+        }
+      }
+    },
+    "recent_receiver_request_metadata": {
+      "available": true,
+      "data": []
+    },
+    "region": "europe-west1",
+    "run_jobs": {
+      "available": true,
+      "data": []
+    },
+    "run_services": {
+      "available": true,
+      "data": [
+        {
+          "metadata": {
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1",
+              "component": "trusted-plan-import",
+              "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+            },
+            "name": "cohort-trusted-plan-import"
+          },
+          "status": {
+            "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+            "traffic": [
+              {
+                "latestRevision": true,
+                "percent": 100,
+                "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "scheduler": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    },
+    "tasks": {
+      "available": false,
+      "exit_code": 1,
+      "reason": "SERVICE_DISABLED"
+    }
+  },
+  "corrected_policy": {
+    "data": [
+      {
+        "all_other_policies_unchanged": true
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T11:53:58Z"
+  },
+  "drain": {
+    "data": [
+      {
+        "inspection": {
+          "active_replication_slots": 0,
+          "cron_catalog": false,
+          "database_name": "postgres",
+          "enabled_logical_replication_subscriptions": 0,
+          "extensions": [
+            {
+              "name": "pg_stat_statements",
+              "version": "1.11"
+            },
+            {
+              "name": "pgcrypto",
+              "version": "1.3"
+            },
+            {
+              "name": "plpgsql",
+              "version": "1.0"
+            },
+            {
+              "name": "supabase_vault",
+              "version": "0.3.1"
+            },
+            {
+              "name": "uuid-ossp",
+              "version": "1.1"
+            }
+          ],
+          "http_queue_catalog": false,
+          "inspection_role": "supabase_read_only_user",
+          "job_schemas": [],
+          "observed_at": "2026-10-25T11:58:58.91542+00:00",
+          "other_active_clients": [],
+          "other_active_or_open_client_transactions": 0,
+          "other_client_write_or_idle_transactions": 0,
+          "prepared_transactions": 0,
+          "protected_non_read_relation_locks": 0,
+          "queue_catalog": false,
+          "server_version": "PostgreSQL 17.6 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit",
+          "transaction_read_only": "on",
+          "unobservable_client_activity": 0
+        }
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T11:58:58Z"
+  },
+  "eight_migration_bytes_order_hashes_exact": true,
+  "health": {
+    "data": [
+      {
+        "healthy": true,
+        "name": "db",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "name": "auth",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "name": "rest",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "name": "storage",
+        "status": "ACTIVE_HEALTHY"
+      },
+      {
+        "healthy": true,
+        "name": "realtime",
+        "status": "ACTIVE_HEALTHY"
+      }
+    ],
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T11:59:00Z"
+  },
+  "link_health": {
+    "data": [
+      {
+        "independent_parent_free": 3,
+        "known_protocol_mismatch": 0,
+        "missing_parent": 0,
+        "owner_mismatch": 0,
+        "records": 24
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T11:37:22Z"
+  },
+  "no_new_ledger_entries": true,
+  "prerequisite_catalog_comparison": {
+    "catalog-02": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "36190351e19ff7c66180e20d2b2093c267742feed349696db5cd16e9c6f3f158",
+      "row_count": 122
+    },
+    "catalog-03": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "e6954d4aa78daf7f89c1dae49a3d4e2242c0ead9f521a031722e50fbc8bc9658",
+      "row_count": 10
+    },
+    "catalog-04": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "68f5192710e035a88f01e54b16daaf626698faaa07d867f9468cd85a5917a9b8",
+      "row_count": 5
+    },
+    "catalog-05": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "c7b2aead911872c746985c62265e33512861a89e17eba18e437cb73c93197dcc",
+      "row_count": 1
+    },
+    "catalog-06": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "2e8a031ca2aaf83baef2a0d13ffc40321b08cbf5a6d67485f99efaf24471dc13",
+      "row_count": 3
+    },
+    "catalog-07": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "8f93cd7d347dec252cb5d931319ab31b3daccf15ed842f51cfe416b77a2bd6bb",
+      "row_count": 0
+    },
+    "catalog-08": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "51c009c671c5219626c126b344a3b849369bb546034be1632f9cca69cb7707f7",
+      "row_count": 24
+    },
+    "catalog-09": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "e76a865300feed9cd93988db493883954bf31582de4e146f346f31f345ba6c25",
+      "row_count": 173
+    },
+    "catalog-10": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "b8f080f1e7365cd94b9602fd1425804463a199a8f6e6e0fe8345f5e53736bdc0",
+      "row_count": 519
+    },
+    "catalog-11": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "4b977340c1da1164f2930bead1441f11e128b17834dd6f70cbeb711a0de34aa2",
+      "row_count": 69
+    },
+    "catalog-12": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "b896eab8eb76fed288ae501a9af9560918be64338733cb31d616807455608811",
+      "row_count": 1176
+    },
+    "catalog-13": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "68a6b3163b95f91262411ab42901ec6c9373f3ceb07f09cac8187c360127718d",
+      "row_count": 8592
+    },
+    "catalog-14": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "a06326b0404192cdd1b99cf2a8b173b9fc305e1dba767d4775d2b392a558d287",
+      "row_count": 117
+    },
+    "catalog-15": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "69886e78fae338db5a677b5ef9a993d4fc386abefce1be3200e8ba28707ec8df",
+      "row_count": 111
+    },
+    "catalog-16": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "f8252f9ccc48a593320966517ed3262d8a5d9395324493a50ed13d618ba586ad",
+      "row_count": 45
+    },
+    "catalog-17": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "fe07d0352d06d7f731b5787c97b4ec7d2d2247ac7575e3e669c9c97b17478764",
+      "row_count": 296
+    },
+    "catalog-18": {
+      "exact_reviewed_rows": true,
+      "fresh_result_sha256": "d50939f13d912066d606307bf13d4a1b90e50717668b988214ee2731cfb42b8b",
+      "row_count": 179
+    }
+  },
+  "receiver": {
+    "configuration_changes": false,
+    "observed_at_utc": "2026-10-25T11:37:03Z",
+    "project": {
+      "lifecycleState": "ACTIVE",
+      "projectId": "cohort-platform-production",
+      "projectNumber": "809647670049"
+    },
+    "secret_values_read": false,
+    "secret_version_metadata": [
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:25:11.299064Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-service-role/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-service-role"
+        }
+      },
+      {
+        "metadata": {
+          "createTime": "2026-08-11T01:08:39.822356Z",
+          "name": "projects/809647670049/secrets/cohort-trusted-plan-import-founder-allowlist/versions/1",
+          "state": "ENABLED"
+        },
+        "reference": {
+          "key": "1",
+          "name": "cohort-trusted-plan-import-founder-allowlist"
+        }
+      }
+    ],
+    "service": {
+      "containers": [
+        {
+          "environment_metadata": [
+            {
+              "literal_present": true,
+              "matches_target": true,
+              "name": "SUPABASE_URL"
+            },
+            {
+              "literal_present": true,
+              "name": "SUPABASE_ANON_KEY"
+            },
+            {
+              "literal_present": true,
+              "name": "BIND_ADDRESS"
+            },
+            {
+              "literal_present": true,
+              "name": "MAX_PLAN_PACKAGE_YAML_BYTES"
+            },
+            {
+              "name": "SUPABASE_SERVICE_ROLE_KEY",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-service-role"
+              }
+            },
+            {
+              "name": "FOUNDER_EMAIL_ALLOWLIST",
+              "secret_reference": {
+                "key": "1",
+                "name": "cohort-trusted-plan-import-founder-allowlist"
+              }
+            }
+          ],
+          "image": "europe-west1-docker.pkg.dev/cohort-platform-production/cohort-trusted-runtime/trusted-plan-import@sha256:712ca882fb0bc8f09856679c5a9238b5e9cf00e73c01e4bcdd7cf2d73d8532b9"
+        }
+      ],
+      "metadata": {
+        "labels": {
+          "cloud.googleapis.com/location": "europe-west1",
+          "component": "trusted-plan-import",
+          "source-commit": "df97fb2f47974ce309f7b94d31fa1b0f725c1795"
+        },
+        "name": "cohort-trusted-plan-import"
+      },
+      "service_account": "cohort-trusted-plan-import@cohort-platform-production.iam.gserviceaccount.com",
+      "status": {
+        "latestReadyRevisionName": "cohort-trusted-plan-import-df97fb2f4797",
+        "traffic": [
+          {
+            "latestRevision": true,
+            "percent": 100,
+            "revisionName": "cohort-trusted-plan-import-df97fb2f4797"
+          }
+        ]
+      },
+      "timeout_seconds": 30
+    }
+  },
+  "retained_link_consistency": {
+    "data": [
+      {
+        "parent_guard_contradictions": 0,
+        "physically_linked_records": 21,
+        "records_with_retained_outcome": 19
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T11:37:23Z"
+  },
+  "reviewed_manifest_sha256": "c75a5a3c7ecf773b4ea97f04bb5ab11c3c24aee076358d761c88138e155c3ed8",
+  "schema_apply_authorised_eight_files": true,
+  "security": [
+    {
+      "check": "security-postcheck-backfill-exact-acl",
+      "false_checks": [],
+      "retained_result_sha256": "31cafe562f663bb6b8c3420d3ebf8accd5a471ce979bdcb0504a7e0b893b3dce",
+      "rows": 1
+    },
+    {
+      "check": "security-postcheck-function-security",
+      "false_checks": [],
+      "retained_result_sha256": "c07aeb8085f6f98dc453fb5b82fe3730bfb7f6077d6444de072175b5ed810c00",
+      "rows": 18
+    },
+    {
+      "check": "security-postcheck-function-sources",
+      "false_checks": [],
+      "retained_result_sha256": "f7828d07cd370f9f17a8d320e62dfaaaa31e0c435140539c429321ef9ae32330",
+      "rows": 18
+    },
+    {
+      "check": "security-postcheck-ledger",
+      "false_checks": [],
+      "retained_result_sha256": "db1cfc4740afbd2df7b825c0587d9cbc049e7e13f58a275afa37352dc2c67f40",
+      "rows": 1
+    },
+    {
+      "check": "security-postcheck-new-triggers",
+      "false_checks": [],
+      "retained_result_sha256": "1508b6b9e84f645d2216be5dfb458c4b998f77140853083e097cb5374c4443ea",
+      "rows": 8
+    },
+    {
+      "check": "security-postcheck-preserved-policies",
+      "false_checks": [
+        {
+          "field": "all_other_policies_unchanged",
+          "row": 0
+        }
+      ],
+      "retained_result_sha256": "55c4cc49c787a1ee57dc8192a84bb2ee8a421526e21b90dee44d71f4799e4db2",
+      "rows": 1
+    },
+    {
+      "check": "security-postcheck-preserved-server-table-grants",
+      "false_checks": [],
+      "retained_result_sha256": "77d812a1130abab91d360e37f9bf2b03774136aaa9d9c2a7b51e01e2e7d1af74",
+      "rows": 128
+    },
+    {
+      "check": "security-postcheck-private-function-acls",
+      "false_checks": [],
+      "retained_result_sha256": "53f06e3bf6f241eb7a504b5b04f00bece4487a86d3b60b3e336d6752c003de9e",
+      "rows": 13
+    },
+    {
+      "check": "security-postcheck-public-function-acls",
+      "false_checks": [],
+      "retained_result_sha256": "5bdcc735372bc3ca7d64aeed1d55ecadf3d62588df08a3f02534207013cfff32",
+      "rows": 5
+    },
+    {
+      "check": "security-postcheck-sequence-acls",
+      "false_checks": [],
+      "retained_result_sha256": "7c525d54e589ec5e568b73fdf9cb23df78e43ed9019d63c57fc750140961ea0e",
+      "rows": 6
+    },
+    {
+      "check": "security-postcheck-session-rls",
+      "false_checks": [],
+      "retained_result_sha256": "78d4dfd73960eae16d091c1254141a922f22cd00139e1cbb119a04008ce58de3",
+      "rows": 1
+    },
+    {
+      "check": "security-postcheck-table-acls",
+      "false_checks": [],
+      "retained_result_sha256": "0b439b50afbcdd1f378617eb2fc77a519c9636511616e49258eed7b7a24649b2",
+      "rows": 128
+    },
+    {
+      "check": "security-postcheck-table-public-column-acls",
+      "false_checks": [],
+      "retained_result_sha256": "e2c862b3eb4e66294820c3a1d8e5cbdd706dd7a2b7a59a0a8caa0ed35ca07537",
+      "rows": 8
+    },
+    {
+      "check": "security-postcheck-unaffected-functions",
+      "false_checks": [],
+      "retained_result_sha256": "82d2f558d6cd356cb3215aa300ce3b2a3f6750e1cd27f8d1066cc263be2e5b21",
+      "rows": 155
+    }
+  ],
+  "source_HEAD": "fe0454edd0d1ac533337d288b89f6e7018ae6d70",
+  "source_authority_table_presence": {
+    "data": [
+      {
+        "name": "cohort_v3_publication_claims",
+        "present": false
+      },
+      {
+        "name": "hyrox_base_benchmark_revisions",
+        "present": false
+      },
+      {
+        "name": "hyrox_base_benchmark_selections",
+        "present": false
+      },
+      {
+        "name": "hyrox_prescription_dependencies",
+        "present": false
+      },
+      {
+        "name": "programme_occurrence_duration_choices",
+        "present": false
+      },
+      {
+        "name": "programme_occurrence_v3_prescription_snapshots",
+        "present": false
+      },
+      {
+        "name": "programme_v3_prescription_consents",
+        "present": false
+      },
+      {
+        "name": "programme_v3_prescription_reviews",
+        "present": false
+      },
+      {
+        "name": "programme_v3_publication_artifacts",
+        "present": false
+      },
+      {
+        "name": "published_exercise_definition_versions",
+        "present": false
+      },
+      {
+        "name": "published_exercise_version_retirements",
+        "present": false
+      }
+    ],
+    "http_status": 201,
+    "observed_at_utc": "2026-10-25T11:36:46Z"
+  },
+  "status": "ALL_INDEPENDENT_PRECHECKS_PASS_ACCESS_GATE_PENDING",
+  "target": {
+    "data": {
+      "created_at": "2026-07-03T06:53:00.976925Z",
+      "database": {
+        "host": "db.otnhhdxstdnwccehacku.supabase.co",
+        "postgres_engine": "17",
+        "release_channel": "ga",
+        "version": "17.6.1.155"
+      },
+      "id": "otnhhdxstdnwccehacku",
+      "name": "Cohort Field Manual",
+      "ref": "otnhhdxstdnwccehacku",
+      "region": "eu-west-1",
+      "status": "ACTIVE_HEALTHY"
+    },
+    "http_status": 200,
+    "observed_at_utc": "2026-10-25T11:59:02Z"
+  }
+}

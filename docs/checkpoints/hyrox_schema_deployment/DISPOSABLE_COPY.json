@@ -1,0 +1,9 @@
+{
+  "config_sha256": "db866bbbf429fe1494ea35934eeb92e31ac1fb43c8b29a3b8ac01ed6398010b7",
+  "migration_files": 130,
+  "repository_temp_copied": false,
+  "secrets_env_seeds_copied": false,
+  "source": "fe0454edd0d1ac533337d288b89f6e7018ae6d70",
+  "target": "otnhhdxstdnwccehacku",
+  "workdir": "/private/tmp/cohort-hyrox-schema-linked-zvcipozd"
+}

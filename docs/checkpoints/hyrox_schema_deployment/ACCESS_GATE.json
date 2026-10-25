@@ -1,0 +1,21 @@
+{
+  "apply_executed": false,
+  "awaiting_separate_founder_authority": true,
+  "copied_eight_migration_hashes_exact": true,
+  "credential_endpoint_called": false,
+  "credential_request": {
+    "body": {
+      "read_only": false
+    },
+    "method": "POST",
+    "path": "/v1/projects/otnhhdxstdnwccehacku/cli/login-role",
+    "purpose": "Temporary operational CLI login for exact dry-run/apply/final dry-run; not producer provisioning",
+    "source": "Installed SDK v1CreateLoginRole and missing-password connection branch"
+  },
+  "dry_run_executed": false,
+  "existing_db_password_in_process": false,
+  "existing_target_scoped_pgpass": false,
+  "known_env_target_password_available": false,
+  "link_succeeded": true,
+  "target_ref_exact": true
+}

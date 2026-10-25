@@ -1,5 +1,20 @@
 # Cohort Platform repository guidance
 
+> **HYROX schema apply — stopped before dry-run, 2026-10-25:**
+> [No-apply receipt](docs/checkpoints/hyrox_schema_deployment/HANDOFF.md) acknowledges the founder's exact eight-file schema approval
+> from `fe0454edd0d1ac533337d288b89f6e7018ae6d70`. Manifest/order/hash bytes, ledger 122,
+> prerequisite security/catalogs and all 25 protected/source aggregates match the reviewed
+> baseline; observed drain is clear and services are healthy. The disposable copy linked
+> successfully. No existing target DB password is available; the CLI's normal connection
+> requests a temporary read-write login/password through `/cli/login-role`. The reviewed
+> deployment procedure expressly requires separate authority for that credential action.
+> That decision is pending; no credential endpoint, dry-run, apply or post-apply check ran.
+> No migration/permission/configuration/content/athlete mutation or ledger repair occurred;
+> ledger 130 and successful deployment are not claimed. A later attempt must revalidate
+> hold/target/ledger/hashes and obtain an exact dry-run before apply. No producer provisioning
+> follows from operational CLI access. Older checkouts/indices/original 95 paths/.temp are
+> preserved; only the task-owned disposable linked copy was removed.
+
 > **Field Manual resumed/read-only readiness — 2026-10-25:**
 > [Readiness](docs/checkpoints/hyrox_resumed_readiness/HANDOFF.md) records the authorised one-time resume of
 > `otnhhdxstdnwccehacku`; db/auth/REST/storage/realtime are healthy. Fresh ledger is the
