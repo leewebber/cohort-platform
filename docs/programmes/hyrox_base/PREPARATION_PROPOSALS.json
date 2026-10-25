@@ -1,0 +1,169 @@
+{
+  "applied_to_sessions": false,
+  "approved": false,
+  "format": "hyrox-base-preparation-proposals-v1",
+  "preparations": [
+    {
+      "benchmark_derived_supporting_loads": false,
+      "circuit_budget_minutes": [
+        4,
+        5
+      ],
+      "day": "gym_a",
+      "execution_note": "Set up the next station during recovery. Budget includes ramps and light pair rehearsal; if not ready, extend preparation and record that fact rather than rush or cut approved working sets. Full-session timing is an estimate, not a fixed sum or a new tempo.",
+      "main_prescription_changes": false,
+      "ramp_and_setup_budget_minutes": [
+        3,
+        5
+      ],
+      "ramp_guidance": "After the circuit, perform 2\u20133 short squat ramp sets: empty bar or very light \u00d7 8; add load \u00d7 5; if useful, a final heavier \u00d7 2\u20133. Work towards, never above, the planned first working load; each ramp feels comfortable with several reps spare. Use about 30\u201360 s to change load/recover, then 60\u201390 s before the first working set. If the working load is light, omit the unnecessary heavier ramp. Working sets still rest 150\u2013180 s.",
+      "retained_circuit_movements": [
+        [
+          "bodyweight_squat",
+          8,
+          false
+        ],
+        [
+          "glute_bridge",
+          8,
+          false
+        ],
+        [
+          "dead_bug",
+          6,
+          true
+        ],
+        [
+          "light_band_pull_apart",
+          10,
+          false
+        ]
+      ],
+      "retained_circuit_rounds": 2,
+      "retained_easy": {
+        "exercise": "rowing",
+        "seconds": 300
+      },
+      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "total_budget_minutes": [
+        12,
+        15
+      ],
+      "working_sets_separate": true
+    },
+    {
+      "benchmark_derived_supporting_loads": false,
+      "circuit_budget_minutes": [
+        4,
+        5
+      ],
+      "day": "gym_b",
+      "execution_note": "Set up the next station during recovery. Budget includes ramps and light pair rehearsal; if not ready, extend preparation and record that fact rather than rush or cut approved working sets. Full-session timing is an estimate, not a fixed sum or a new tempo.",
+      "main_prescription_changes": false,
+      "ramp_and_setup_budget_minutes": [
+        3,
+        5
+      ],
+      "ramp_guidance": "Perform two RDL ramp sets: very light \u00d7 8, then a moderate load \u00d7 5, both comfortably short of fatigue; rest about 30\u201360 s while changing load. Choose by feel and hinge control, not a squat benchmark. Before the first press/row pair, take one brief easy rehearsal of each if needed; this is preparation, not another working pair.",
+      "retained_circuit_movements": [
+        [
+          "unloaded_hip_hinge",
+          8,
+          false
+        ],
+        [
+          "reverse_lunge",
+          6,
+          true
+        ],
+        [
+          "light_row",
+          10,
+          false
+        ]
+      ],
+      "retained_circuit_rounds": 2,
+      "retained_easy": {
+        "exercise": "easy_bike",
+        "seconds": 300
+      },
+      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "total_budget_minutes": [
+        12,
+        15
+      ],
+      "working_sets_separate": true
+    },
+    {
+      "benchmark_derived_supporting_loads": false,
+      "circuit_budget_minutes": [
+        4,
+        5
+      ],
+      "day": "gym_c",
+      "execution_note": "Set up the next station during recovery. Budget includes ramps and light pair rehearsal; if not ready, extend preparation and record that fact rather than rush or cut approved working sets. Full-session timing is an estimate, not a fixed sum or a new tempo.",
+      "main_prescription_changes": false,
+      "ramp_and_setup_budget_minutes": [
+        3,
+        5
+      ],
+      "ramp_guidance": "Perform two front-rack reverse-lunge ramp sets: light dumbbells \u00d7 4 per leg, then a moderate pair \u00d7 2 per leg, with about 30\u201360 s to recover/change load. Keep balance and the front rack comfortable. Choose loads by feel, never a squat benchmark. Before the first press/row pair, take one brief easy rehearsal if needed.",
+      "retained_circuit_movements": [
+        [
+          "reverse_lunge",
+          6,
+          true
+        ],
+        [
+          "light_scapular_row",
+          8,
+          false
+        ],
+        [
+          "wall_slide",
+          8,
+          false
+        ]
+      ],
+      "retained_circuit_rounds": 2,
+      "retained_easy": {
+        "exercise": "ski_erg",
+        "seconds": 300
+      },
+      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "total_budget_minutes": [
+        12,
+        15
+      ],
+      "working_sets_separate": true
+    },
+    {
+      "cooldown_changes": false,
+      "day": "quality",
+      "execution_note": "Ten-minute easy run + two-minute dynamic circuit + 2 min 20 s accelerations = 14 min 20 s, plus 40\u2013160 s transitions. Main work and authored 15\u201320 min easy cooldown plus 5 min walking remain unchanged.",
+      "fixed_component_seconds": 860,
+      "main_prescription_changes": false,
+      "new_dynamic_budget_seconds": 120,
+      "new_dynamic_sequence": "One relaxed circuit: 8 bodyweight squats, 6 bodyweight reverse lunges per leg, 8 unloaded hip hinges. Keep moving and use the remainder of two minutes for easy walking/jogging; no stretching into discomfort.",
+      "retained_accelerations": {
+        "effort": "relaxed",
+        "recovery_effort": "easy",
+        "recovery_placement": "between_only",
+        "recovery_seconds": 40,
+        "repetitions": 3,
+        "work_seconds": 20
+      },
+      "retained_easy_run_seconds": 600,
+      "status": "NEW_PROPOSAL_NOT_APPROVED",
+      "total_budget_minutes": [
+        15,
+        17
+      ],
+      "transition_allowance_seconds": [
+        40,
+        160
+      ]
+    }
+  ],
+  "source_base": "97db4f6ce62da26309f934b0c7e652fb6d454780"
+}

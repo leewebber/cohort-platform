@@ -1,5 +1,7 @@
 # Exact exercise candidates requiring review
 
+**Current recommended variants:** [Founder decision packet](FOUNDER_DECISION_PACKET.md) and [exact proposed records](EXERCISE_DEFINITION_PROPOSALS.json) refine this initial register with further retained identity leads. All remain unapproved/unpublished; no exact version authority is added.
+
 No real exact published definition/version/event bundle is available in the local source inputs. All entries below are candidate definitions/mappings for the existing trusted publication boundary. Known EX identities come only from the accepted mapping table; none supplies a version, a Base variant binding or an approval event. Null IDs are not reserved new exercises; a reviewer may select an existing exact identity or propose a new one. Classification/equipment and proposed dimensions require review; proposed dimensions create no actual-result requirements.
 
 [Structured candidate definitions](EXERCISE_CANDIDATES.json) · [Established boundary](../../checkpoints/hyrox_authoritative_start/CONTRACT.md)

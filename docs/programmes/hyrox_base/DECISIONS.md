@@ -1,5 +1,7 @@
 # HYROX Base decisions and provenance
 
+[The consolidated founder decision packet](FOUNDER_DECISION_PACKET.md) now supplies one exact variant recommendation for each of the 29 labels and four preparation proposals. These are awaiting review, not changes to the approved sources or retrospective approvals.
+
 2026-10-24. [Master](MASTER.md) · [All-category session audit](COVERAGE.md) ·
 [Capture/preparation audit](CAPTURE_AND_PREPARATION.md) · [Exercise candidates](EXERCISE_CANDIDATES.md).
 
